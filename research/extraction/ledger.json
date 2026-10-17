@@ -1085,33 +1085,76 @@
    "title": "Master Clement Tells Ralph Concerning the Lands Whereunto They Were Riding",
    "body_paragraphs": 12,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 2,
+    "spatial": 4,
+    "travel": 0,
+    "facts": 7,
+    "events": 0,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "How far east do the lawless lands extend?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C19.txt",
+    "records": "research/extraction/chapters/BTWO-C19.json"
+   }
   },
   {
    "chapter": "BTWO-C20",
    "title": "They Come to the Mid-Mountain Guest-House",
    "body_paragraphs": 20,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 1,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who are \"Mick Hangman's sons\" / \"Sons of the Rope\", nicknames for the strong-thieves?",
+    "Where was the captive taken to market?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C20.txt",
+    "records": "research/extraction/chapters/BTWO-C20.json"
+   }
   },
   {
    "chapter": "BTWO-C21",
    "title": "A Battle in the Mountains",
    "body_paragraphs": 25,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 2,
+    "spatial": 5,
+    "travel": 1,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Who are Bull Shockhead's kindred (the mountain wild men)?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C21.txt",
+    "records": "research/extraction/chapters/BTWO-C21.json"
+   }
   },
   {
    "chapter": "BTWO-C22",

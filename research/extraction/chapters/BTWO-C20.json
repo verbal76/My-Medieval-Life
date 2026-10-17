@@ -1,0 +1,375 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) mountain pass entry",
+   "aliases": [
+    "entry of the mountains"
+   ],
+   "type": "feature",
+   "subtype": "pass",
+   "unnamed": true,
+   "summary": "Deep pass between very high rock walls, entered from the plain.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C20-P002",
+     "q": "a road which led into a deep pass, even the entry of the mountains, a road which went betwixt exceeding high walls of rock"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) great snowy mountain",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "mountain",
+   "unnamed": true,
+   "summary": "Great spreading mountain with plenty of snow on its crest, above the House's ridge.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "a long stony ridge, which lay beneath a great spreading mountain, on the crest whereof the snow lay in plenty"
+    }
+   ]
+  },
+  {
+   "name": "Strong-thieves of the mountains",
+   "aliases": [
+    "Sons of the Rope",
+    "Mick Hangman's sons",
+    "the wild men"
+   ],
+   "type": "group",
+   "subtype": "bandits",
+   "unnamed": false,
+   "summary": "Mountain thieves who drive cattle, bring packs and captives to the House for market.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "those Sons of the Rope often lurk hard by"
+    },
+    {
+     "p": "BTWO-C20-P007",
+     "q": "Thou shalt yet look on Mick Hangman's sons"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) warden of the Mid-Mountain House",
+   "aliases": [
+    "the House-warden"
+   ],
+   "type": "person",
+   "subtype": "warden",
+   "unnamed": true,
+   "summary": "Old hoary man who keeps the house.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C20-P008",
+     "q": "The warden was an old hoar man"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) warden's wife",
+   "aliases": [
+    "the carline",
+    "the dame"
+   ],
+   "type": "person",
+   "subtype": "warden's wife",
+   "unnamed": true,
+   "summary": "Old woman who notices the captive's necklace and takes a lock of Ralph's hair.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C20-P017",
+     "q": "the captive damsel should be bearing a necklace about her neck as like to thine as one lamb is to another"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) scrap of green gown",
+   "aliases": [],
+   "type": "item",
+   "subtype": "cloth",
+   "unnamed": true,
+   "summary": "Hand's breadth of flower-embroidered green cloth found by the road.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "a hands-breadth of fine green cloth embroidered with flowers"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "captive_of",
+   "b": "Strong-thieves of the mountains",
+   "detail": "taken near the House after a sword fight; led to market",
+   "when": "BTWO-C20",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C20-P009",
+     "q": "three of them brought in a woman as goodly as mine eyes have ever seen"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) mountain pass entry",
+   "rel": "distance_from",
+   "b": "Whitwall",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "three days",
+   "travel_mode": "",
+   "terrain_text": "plain to sudden steep mountain walls",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C20-P002",
+     "q": "the third evening they set up their tents on a little hillside by a road which led into a deep pass"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) grassy stream valley in the mountains",
+   "rel": "route_next",
+   "b": "(unnamed) mountain pass entry",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "one day",
+   "travel_mode": "",
+   "terrain_text": "through the pass to heaths, wild stony ways",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C20-P003",
+     "q": "came at even to a grassy valley watered by a little stream"
+    }
+   ]
+  },
+  {
+   "a": "Mid-Mountain House",
+   "rel": "at_foot_of",
+   "b": "(unnamed) great snowy mountain",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "one day's climb from the stream valley",
+   "travel_mode": "",
+   "terrain_text": "top of a long stony ridge",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "At last at the top of a long stony ridge"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "from": "Whitwall",
+   "to": "Mid-Mountain House",
+   "via": [
+    "(unnamed) mountain pass entry",
+    "(unnamed) grassy stream valley in the mountains"
+   ],
+   "mode": "horse with sumpters, tents",
+   "direction_text": "",
+   "duration_text": "five days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "plain, pass, heaths, stony ways, ridge",
+   "chapter": "BTWO-C20",
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "daylong they were going up and up, and it grew cold as the sun got low; though it was yet summer"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "architecture",
+   "subject": "Mid-Mountain House",
+   "statement": "Long and low, walls and roof of great stones, with a garth gate.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "a house, long and low, builded of great stones, both walls and roof"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Strong-thieves of the mountains",
+   "statement": "Thieves keep captives in foot-shackles, treat them well as goods for market.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:warden",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C20-P010",
+     "q": "doth a man make a hole in a piece of cloth which he is taking to market?"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Strong-thieves of the mountains",
+   "statement": "Thieves bring beeves, packs and captives through the House.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:warden",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C20-P009",
+     "q": "a few beeves driven into our garth; a pack or two brought into the hall"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Mid-Mountain House",
+   "statement": "Clement reads an empty House as a sign the thieves plan an ambush.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C20-P005",
+     "q": "I shall look on it as a token that they are about waylaying us if we come on none of them in the Mountain House"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "(unnamed) great snowy mountain",
+   "statement": "Cold at sunset even in summer near the House.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "it grew cold as the sun got low; though it was yet summer"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "News of the captive maiden",
+   "chapter": "BTWO-C20",
+   "layer": "main",
+   "time_text": "evening, fifth day",
+   "participants": [
+    "Ralph",
+    "(unnamed) warden of the Mid-Mountain House",
+    "(unnamed) warden's wife"
+   ],
+   "places": [
+    "Mid-Mountain House"
+   ],
+   "summary": "At the Mid-Mountain House Ralph learns a woman like the maiden of Bourton was taken captive and sent to market.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C20-P021",
+     "q": "he was bound to seek her, and deliver her from thralldom"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The captive is described but not named; her necklace and gown match the maiden of Bourton.",
+   "refs": [
+    {
+     "p": "BTWO-C20-P011",
+     "q": "grey-eyed and brown haired, and great abundance of it"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Where the thieves took the captive to sell.",
+   "refs": [
+    {
+     "p": "BTWO-C20-P009",
+     "q": "a captive led in on the road to the market"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Rescue trails marked by found objects (a scrap of gown) and witness accounts at hostels.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "a hands-breadth of fine green cloth embroidered with flowers"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C20",
+ "chapters": [
+  "BTWO-C20"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C20",
+   "paragraphs_total": 20,
+   "all_paragraphs_read": true,
+   "summary": "Two nights camping by thorps, then a third at the foot of a deep rock-walled pass (the mountains' entry). Next day up to the heaths and stony ways to a grassy stream valley. Next day a slow climb, cold at sunset, to a long stony ridge beneath a great snow-crested mountain where the Mid-Mountain House stands, long and low, of great stones. Below it Ralph finds a scrap of flower-embroidered green cloth like the Bourton maiden's gown. In the empty house the old warden and his wife say strong-thieves brought in a captive woman some days ago, tall, grey-eyed, brown-haired and sun-tanned, who had fought with a sword; she wore a torn green gown and, the wife tells Ralph privately, a necklace like his. Ralph says she is his sister; the wife suspects love and takes a lock of his hair as payment. Ralph resolves to free her.",
+   "geography_notes": "Day 1 and 2: tents by little thorps beside water. Day 3 evening: a hillside by the road at the entry of a deep pass between very high rock walls rising steep from the plain. Day 4: through the pass up to heaths, wild stony ways, a grassy valley with a stream. Day 5: climbing; a long stony ridge under a great spreading snowy mountain; the Mid-Mountain House, long and low, stone-walled and stone-roofed, with a garth.",
+   "open_questions": [
+    "Who are \"Mick Hangman's sons\" / \"Sons of the Rope\", nicknames for the strong-thieves?",
+    "Where was the captive taken to market?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,336 @@
+{
+ "entities": [
+  {
+   "name": "Mid-Mountain House",
+   "aliases": [
+    "Midhouse of the Mountains",
+    "the Mountain House"
+   ],
+   "type": "building",
+   "subtype": "hostel",
+   "unnamed": false,
+   "summary": "Mountain hostelry, built and kept by nearby folk including those of Cheaping Knowe; a hallowed truce-house.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "the Mid-Mountain House, which is as it were an hostelry"
+    }
+   ]
+  },
+  {
+   "name": "Red Robert",
+   "aliases": [],
+   "type": "person",
+   "subtype": "founder",
+   "unnamed": false,
+   "summary": "First winner of Upmeads, Ralph's ancestor.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "the blood of Red Robert, who first won Upmeads"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) eastern tyrant lands",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "region",
+   "unnamed": true,
+   "summary": "Lands beyond the mountains east of Whitwall, ruled by town and castle tyrants with thrall labour.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "they have little might against the tyrants who reign over the towns"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Red Robert",
+   "rel": "other",
+   "b": "Upmeads",
+   "detail": "first won Upmeads; ancestor of the kings",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "Red Robert, who first won Upmeads"
+    }
+   ]
+  },
+  {
+   "a": "Cheaping Knowe",
+   "rel": "other",
+   "b": "Mid-Mountain House",
+   "detail": "helps uphold the house",
+   "when": "BTWO-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "it was built and is upheld by the folks that dwell anigh, amongst whom be the folk of Cheaping Knowe"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) entry of the mountains",
+   "rel": "distance_from",
+   "b": "Whitwall",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "three days",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "In three days' time we shall come to the entry of the mountains"
+    }
+   ]
+  },
+  {
+   "a": "Mid-Mountain House",
+   "rel": "route_next",
+   "b": "(unnamed) entry of the mountains",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "two days without roof, arriving on the third",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "two days thence we shall go without coming under any roof save the naked heavens; the day thereafter shall we come to the Mid-Mountain House"
+    }
+   ]
+  },
+  {
+   "a": "Cheaping Knowe",
+   "rel": "route_next",
+   "b": "Mid-Mountain House",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "a day's ride and a night in the mountains",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "when we depart thence we shall ride all day and sleep amidst the mountains"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) eastern tyrant lands",
+   "rel": "east_of",
+   "b": "Whitwall",
+   "direction": "east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Whitwall is the last lawful land",
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "this good town of Whitwall that lieth behind us is the last of the lands we shall come to wherein folk can any courtesy"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "politics",
+   "subject": "Whitwall",
+   "statement": "Whitwall is the last land with courtesy, manor custom, lawful earls and kings, laws of the Lineage or Port, and guilds.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "or are ruled by the customs of the manor, or by due lawful Earls and Kings, or the laws of the Lineage or the Port, or have any Guilds"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "(unnamed) eastern tyrant lands",
+   "statement": "Nominally Christian but with heathen customs: oaths on devils' altars, eating horse-flesh at high feasts, spell-raising, and blood (even of babes) on the doom-rings.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "as swearing on the altars of devils, and eating horse-flesh at the High-tides, and spell-raising more than enough"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "(unnamed) eastern tyrant lands",
+   "statement": "Towns are ruled by self-made tyrants of no great kindred who won power by cunning and force.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "merely masterful and wise men who have gained their place by cunning and the high hand"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) eastern tyrant lands",
+   "statement": "Tillers, shepherds and workers are thralls sold at market; free men must serve some tyrant by bow and sword.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "their tillers and shepherds and workmen and servants be mere thralls, whom they may sell at any market"
+    }
+   ]
+  },
+  {
+   "category": "economy",
+   "subject": "(unnamed) eastern tyrant lands",
+   "statement": "Rich in wine, oil, wheat, cattle and sheep; metals and gems are mined from the mountains; few crafts, so eager for merchants.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C19-P008",
+     "q": "these lands be fruitful of wine and oil and wheat, and neat and sheep; withal metals and gems are dug up out of the mountains"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Mid-Mountain House",
+   "statement": "The house is hallowed to truce: no one strikes another there; departing foes get an hour's grace.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "that house is hallowed unto truce, and no man smiteth another therein"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) entry of the mountains",
+   "statement": "Fewer than a score of armed men risk death or capture on the mountain road.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C19-P004",
+     "q": "with less than a score of men well-armed the danger of death or captivity is over great"
+    }
+   ]
+  }
+ ],
+ "events": [],
+ "unresolved": [
+  {
+   "kind": "missing_measure",
+   "question": "Distances on the mountain road are given only in days.",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "In three days' time we shall come to the entry of the mountains"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Truce-hostels in dangerous passes where bandits and merchants share a roof under hallowed custom.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "each man or each fellowship departing, hath grace of an hour before his foeman follow"
+    }
+   ]
+  },
+  {
+   "idea": "A legal frontier: lawful guild lands versus lawless tyrant-and-thrall lands, as a world-generation boundary.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "the last of the lands we shall come to wherein folk can any courtesy"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C19",
+ "chapters": [
+  "BTWO-C19"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C19",
+   "paragraphs_total": 12,
+   "all_paragraphs_read": true,
+   "summary": "Clement explains the road. Fewer than a score of armed men risk death or capture on the mountain ways to Cheaping Knowe. Whitwall is the last land of courtesy, manor custom, lawful lords, guilds and laws of Lineage and Port. Beyond, the folk are nominally Christian but keep heathen customs (oaths on devils' altars, horse-flesh at high feasts, spell-raising, blood on the doom-rings, even human sacrifice). Towns and castles are held by self-made tyrants with hired free men; tillers and workers are saleable thralls; free men must serve some tyrant. The lands are rich in wine, oil, wheat, cattle, sheep, mined metals and gems, but poor in crafts, so good for merchants. Clement hopes Ralph will turn back. Itinerary: three days to the mountains' entry, two nights in the open, then the Mid-Mountain House, a truce hostel where foes give each other an hour's grace, then a day and a night in the mountains to Cheaping Knowe.",
+   "geography_notes": "Whitwall is the last lawful land; east over the mountains lie the lawless tyrant lands. Three days from Whitwall to the mountains' entry; two days roofless; the Mid-Mountain House, upheld by nearby folk including Cheaping Knowe; then a day's ride and a night's camp before Cheaping Knowe.",
+   "open_questions": [
+    "How far east do the lawless lands extend?"
+   ]
+  }
+ ]
+}

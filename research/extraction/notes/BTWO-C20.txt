@@ -1,0 +1,32 @@
+@ BTWO-C20
+summary: Two nights camping by thorps, then a third at the foot of a deep rock-walled pass (the mountains' entry). Next day up to the heaths and stony ways to a grassy stream valley. Next day a slow climb, cold at sunset, to a long stony ridge beneath a great snow-crested mountain where the Mid-Mountain House stands, long and low, of great stones. Below it Ralph finds a scrap of flower-embroidered green cloth like the Bourton maiden's gown. In the empty house the old warden and his wife say strong-thieves brought in a captive woman some days ago, tall, grey-eyed, brown-haired and sun-tanned, who had fought with a sword; she wore a torn green gown and, the wife tells Ralph privately, a necklace like his. Ralph says she is his sister; the wife suspects love and takes a lock of his hair as payment. Ralph resolves to free her.
+geo: Day 1 and 2: tents by little thorps beside water. Day 3 evening: a hillside by the road at the entry of a deep pass between very high rock walls rising steep from the plain. Day 4: through the pass up to heaths, wild stony ways, a grassy valley with a stream. Day 5: climbing; a long stony ridge under a great spreading snowy mountain; the Mid-Mountain House, long and low, stone-walled and stone-roofed, with a garth.
+open: Who are "Mick Hangman's sons" / "Sons of the Rope", nicknames for the strong-thieves? || Where was the captive taken to market?
+
+E feature | (unnamed) mountain pass entry | entry of the mountains | pass | Deep pass between very high rock walls, entered from the plain. | P002 `a road which led into a deep pass, even the entry of the mountains, a road which went betwixt exceeding high walls of rock`
+E feature | (unnamed) great snowy mountain | - | mountain | Great spreading mountain with plenty of snow on its crest, above the House's ridge. | P006 `a long stony ridge, which lay beneath a great spreading mountain, on the crest whereof the snow lay in plenty`
+E group | Strong-thieves of the mountains | Sons of the Rope, Mick Hangman's sons, the wild men | bandits | Mountain thieves who drive cattle, bring packs and captives to the House for market. | P006 `those Sons of the Rope often lurk hard by`; P007 `Thou shalt yet look on Mick Hangman's sons`
+E person | (unnamed) warden of the Mid-Mountain House | the House-warden | warden | Old hoary man who keeps the house. | P008 `The warden was an old hoar man`
+E person | (unnamed) warden's wife | the carline, the dame | warden's wife | Old woman who notices the captive's necklace and takes a lock of Ralph's hair. | P017 `the captive damsel should be bearing a necklace about her neck as like to thine as one lamb is to another`
+E item | (unnamed) scrap of green gown | - | cloth | Hand's breadth of flower-embroidered green cloth found by the road. | P006 `a hands-breadth of fine green cloth embroidered with flowers`
+
+R (unnamed) Maiden of Bourton Abbas | captive_of | Strong-thieves of the mountains | taken near the House after a sword fight; led to market | BTWO-C20 | INF/high | P009 `three of them brought in a woman as goodly as mine eyes have ever seen`
+
+S (unnamed) mountain pass entry | distance_from | Whitwall | time=three days; terrain=plain to sudden steep mountain walls; cert=fixed | CANON/high | - | P002 `the third evening they set up their tents on a little hillside by a road which led into a deep pass`
+S (unnamed) grassy stream valley in the mountains | route_next | (unnamed) mountain pass entry | time=one day; terrain=through the pass to heaths, wild stony ways; cert=fixed | CANON/high | - | P003 `came at even to a grassy valley watered by a little stream`
+S Mid-Mountain House | at_foot_of | (unnamed) great snowy mountain | time=one day's climb from the stream valley; terrain=top of a long stony ridge; cert=fixed | CANON/high | - | P006 `At last at the top of a long stony ridge`
+
+T Ralph, Clement's eastward company | Whitwall | Mid-Mountain House | via=(unnamed) mountain pass entry, (unnamed) grassy stream valley in the mountains; mode=horse with sumpters, tents; dur=five days; terrain=plain, pass, heaths, stony ways, ridge | P006 `daylong they were going up and up, and it grew cold as the sun got low; though it was yet summer`
+
+F architecture | Mid-Mountain House | Long and low, walls and roof of great stones, with a garth gate. | CANON/high | P006 `a house, long and low, builded of great stones, both walls and roof`
+F custom | Strong-thieves of the mountains | Thieves keep captives in foot-shackles, treat them well as goods for market. | CANON/high; ctx=dialogue:warden | P010 `doth a man make a hole in a piece of cloth which he is taking to market?`
+F trade | Strong-thieves of the mountains | Thieves bring beeves, packs and captives through the House. | CANON/high; ctx=dialogue:warden | P009 `a few beeves driven into our garth; a pack or two brought into the hall`
+F military | Mid-Mountain House | Clement reads an empty House as a sign the thieves plan an ambush. | CANON/high; ctx=dialogue:Clement Chapman | P005 `I shall look on it as a token that they are about waylaying us if we come on none of them in the Mountain House`
+F climate | (unnamed) great snowy mountain | Cold at sunset even in summer near the House. | CANON/high | P006 `it grew cold as the sun got low; though it was yet summer`
+
+V main | News of the captive maiden | At the Mid-Mountain House Ralph learns a woman like the maiden of Bourton was taken captive and sent to market. | time=evening, fifth day; who=Ralph, (unnamed) warden of the Mid-Mountain House, (unnamed) warden's wife; where=Mid-Mountain House | P021 `he was bound to seek her, and deliver her from thralldom`
+
+U identity | The captive is described but not named; her necklace and gown match the maiden of Bourton. | P011 `grey-eyed and brown haired, and great abundance of it`
+U location | Where the thieves took the captive to sell. | P009 `a captive led in on the road to the market`
+
+O quests | Rescue trails marked by found objects (a scrap of gown) and witness accounts at hostels. | P006 `a hands-breadth of fine green cloth embroidered with flowers`

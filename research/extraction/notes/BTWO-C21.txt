@@ -1,0 +1,35 @@
+@ BTWO-C21
+summary: Next day the road runs downhill with all waters flowing east; they camp at a round knoll in a valley with a view of the fruitful plain and Cheaping Knowe far off. In the morning scouts find the strong-thieves holding the pass below. The company (sixty-two, a score of men-at-arms) charges down a clay cutting six abreast, crying "St. Agnes for the Mercers!" The skin-clad wild men, with wide shields and weak bows, scatter; a foot battle follows on the hillside ("St. Christopher to aid!"), and Ralph, lightly speared above the knee, captures a shaggy blue-eyed hammer-man, Bull Shockhead, who agrees to serve him but not fight his own kin. By afternoon they reach green foothills with herds and homesteads and unfurl their guild banners.
+geo: Beyond the Mid-Mountain House the road descends and all waters run east. A day's ride brings a valley with a round knoll overlooking the fruitful plain where Cheaping Knowe lies blue in the distance. About two hours on, a high bare ridge, then a cleft through a clay bank down into a valley (the thieves' pass), with a steep shaly cliff on its south side. Then a better road down to green unstony foothills with cattle, homesteads and fenced fields.
+open: Who are Bull Shockhead's kindred (the mountain wild men)?
+
+E person | Bull Shockhead | - | wild man | Mountain wild man of middle height, strong, with shaggy black hair and bright blue eyes, in homespun and an ox-skin habergeon; fights with a long hammer; becomes Ralph's thrall-servant. | P022 `Bull Shockhead`; P018 `with black hair like a beast's mane for shagginess, and bright blue eyes`
+E person | (unnamed) captain of Clement's men-at-arms | the Captain | captain | Laconic captain of the men-at-arms. | P013 `quoth the captain, who was a man of few words`
+E item | (unnamed) banners of the Whitwall fellowships | the Agnes, the White Fleece, the Christopher, the Ship and Nicholas | banners | Guild banners of the merchant fellowships; the Ship and Nicholas is the Faring-knights'. | P025 `to wit, the Agnes, the White Fleece, the Christopher, and the Ship and Nicholas, which last was the banner of the Faring-knights of Whitwall`
+E feature | (unnamed) thieves' pass below the ridge | - | pass | Short cleft through a clay bank into a valley where the thieves lay in wait. | P010 `the way went down into the valley, cleaving through a clayey bent`
+E place | Cheaping Knowe | - | town | Town in the fruitful plain below the eastern mountains. | P003 `the fruitful plain, wherein lay Cheaping Knowe all goodly blue in the distance`
+
+R Bull Shockhead | serves | Ralph | captured; agrees to serve but will not fight his kindred | BTWO-C21 | CANON/high | P019 `Guess if I would not rather serve thee!`
+R Bull Shockhead | member_of | Strong-thieves of the mountains | his kindred | BTWO-C21 | CANON/high | P021 `Take note that I will not fight against my kindred`
+
+S (unnamed) eastern slope of the mountains | other | Mid-Mountain House | dir=downhill, all waters run east; cert=fixed | CANON/high | watershed crossed at the House | P002 `it was down hill, and all waters ran east`
+S Cheaping Knowe | visible_from | (unnamed) round knoll camp | terrain=fruitful plain seen from a valley camp; cert=fixed | CANON/high | blue in the distance | P003 `they had a sight of the fruitful plain, wherein lay Cheaping Knowe all goodly blue in the distance`
+S (unnamed) round knoll camp | distance_from | Mid-Mountain House | time=one day's ride; cert=fixed | CANON/high | - | P003 `All day they rode, and at even when the sun had not quite set, they pitched their camp at the foot of a round knoll`
+S (unnamed) thieves' pass below the ridge | distance_from | (unnamed) round knoll camp | time=under two hours' ride; cert=fixed | CANON/high | - | P006 `they had not ridden two hours ere back came the fore-riders`
+S (unnamed) eastern foothills | route_next | (unnamed) thieves' pass below the ridge | time=reached a little past noon; terrain=green unstony foothills with cattle and homesteads; cert=fixed | CANON/high | - | P024 `they came adown to the lower slopes of the mountains and the foot-hills, which were green and unstony`
+
+T Ralph, Clement's eastward company | Mid-Mountain House | (unnamed) eastern foothills | via=(unnamed) round knoll camp, (unnamed) thieves' pass below the ridge; mode=horse; dur=a day and a half; terrain=descending mountain road, valleys, clay cutting | P002 `the way was evil otherwise, but it was down hill`
+
+F military | Strong-thieves of the mountains | Wild men are poorly armed, mostly in beast-skins, with wide shields, weak bows, axes, malls and spears; lithe and strong but not tall. | CANON/high | P011 `save for wide shields which they bore, were but evilly armed, mostly in skins of beasts`
+F military | Clement's eastward company | 62 in all: a score of men-at-arms besides Ralph and Clement, chapmen (three old), lads, many archers. | CANON/high | P007 `they were three-score and two all told, but of these but a score of men-at-arms besides Ralph, and Clement`
+F custom | Clement's eastward company | War-cries invoke guild saints: "St. Agnes for the Mercers!" and "St. Christopher to aid!" | CANON/high | P010 `St. Agnes for the Mercers!`
+F trade | (unnamed) eastern foothills | Merchants show their banners in the peopled lands, where no one dares attack chapmen they depend on. | CANON/high | P025 `no man of the peopled parts would be so hardy as to fall upon the Chapmen`
+F society | Bull Shockhead | He warns he will knife his master if beaten except in hot blood. | CANON/high; ctx=dialogue:Bull Shockhead | P019 `if thou beat me, save in hot blood, I shall put a knife into thee when I may`
+F society | Bull Shockhead | He calls the lowland folk evil and unkind. | CANON/high; ctx=dialogue:Bull Shockhead | P021 `Forsooth down there evil they be, and unkinsome`
+
+V main | Battle in the mountains | The merchant company breaks through the strong-thieves' ambush; Ralph captures Bull Shockhead. | time=morning; who=Ralph, Clement Chapman, (unnamed) captain of Clement's men-at-arms, Bull Shockhead, Strong-thieves of the mountains; where=(unnamed) thieves' pass below the ridge | P015 `Ralph ran in under the stroke and caught him by the throat and drew him out of the press`
+
+U identity | The wild men are Bull Shockhead's kindred; their people is not named here. | P021 `I will not fight against my kindred`
+
+O military | Caravan ambushes at passes with high-ground tactics, archers and dismounted men-at-arms, as encounter design. | P014 `the companions went forward stoutly on foot, and entered into the battle of the thieves`
+O society | Captured foes who may become sworn servants with explicit terms. | P022 `That is the bargain, then, and I yeasay it`

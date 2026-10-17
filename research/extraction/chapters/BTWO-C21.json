@@ -1,0 +1,430 @@
+{
+ "entities": [
+  {
+   "name": "Bull Shockhead",
+   "aliases": [],
+   "type": "person",
+   "subtype": "wild man",
+   "unnamed": false,
+   "summary": "Mountain wild man of middle height, strong, with shaggy black hair and bright blue eyes, in homespun and an ox-skin habergeon; fights with a long hammer; becomes Ralph's thrall-servant.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C21-P022",
+     "q": "Bull Shockhead"
+    },
+    {
+     "p": "BTWO-C21-P018",
+     "q": "with black hair like a beast's mane for shagginess, and bright blue eyes"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) captain of Clement's men-at-arms",
+   "aliases": [
+    "the Captain"
+   ],
+   "type": "person",
+   "subtype": "captain",
+   "unnamed": true,
+   "summary": "Laconic captain of the men-at-arms.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C21-P013",
+     "q": "quoth the captain, who was a man of few words"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) banners of the Whitwall fellowships",
+   "aliases": [
+    "the Agnes",
+    "the White Fleece",
+    "the Christopher",
+    "the Ship and Nicholas"
+   ],
+   "type": "item",
+   "subtype": "banners",
+   "unnamed": true,
+   "summary": "Guild banners of the merchant fellowships; the Ship and Nicholas is the Faring-knights'.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C21-P025",
+     "q": "to wit, the Agnes, the White Fleece, the Christopher, and the Ship and Nicholas, which last was the banner of the Faring-knights of Whitwall"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) thieves' pass below the ridge",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "pass",
+   "unnamed": true,
+   "summary": "Short cleft through a clay bank into a valley where the thieves lay in wait.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C21-P010",
+     "q": "the way went down into the valley, cleaving through a clayey bent"
+    }
+   ]
+  },
+  {
+   "name": "Cheaping Knowe",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": false,
+   "summary": "Town in the fruitful plain below the eastern mountains.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C21-P003",
+     "q": "the fruitful plain, wherein lay Cheaping Knowe all goodly blue in the distance"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Bull Shockhead",
+   "rel": "serves",
+   "b": "Ralph",
+   "detail": "captured; agrees to serve but will not fight his kindred",
+   "when": "BTWO-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C21-P019",
+     "q": "Guess if I would not rather serve thee!"
+    }
+   ]
+  },
+  {
+   "a": "Bull Shockhead",
+   "rel": "member_of",
+   "b": "Strong-thieves of the mountains",
+   "detail": "his kindred",
+   "when": "BTWO-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C21-P021",
+     "q": "Take note that I will not fight against my kindred"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) eastern slope of the mountains",
+   "rel": "other",
+   "b": "Mid-Mountain House",
+   "direction": "downhill, all waters run east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "watershed crossed at the House",
+   "refs": [
+    {
+     "p": "BTWO-C21-P002",
+     "q": "it was down hill, and all waters ran east"
+    }
+   ]
+  },
+  {
+   "a": "Cheaping Knowe",
+   "rel": "visible_from",
+   "b": "(unnamed) round knoll camp",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "fruitful plain seen from a valley camp",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "blue in the distance",
+   "refs": [
+    {
+     "p": "BTWO-C21-P003",
+     "q": "they had a sight of the fruitful plain, wherein lay Cheaping Knowe all goodly blue in the distance"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) round knoll camp",
+   "rel": "distance_from",
+   "b": "Mid-Mountain House",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "one day's ride",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C21-P003",
+     "q": "All day they rode, and at even when the sun had not quite set, they pitched their camp at the foot of a round knoll"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) thieves' pass below the ridge",
+   "rel": "distance_from",
+   "b": "(unnamed) round knoll camp",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "under two hours' ride",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C21-P006",
+     "q": "they had not ridden two hours ere back came the fore-riders"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) eastern foothills",
+   "rel": "route_next",
+   "b": "(unnamed) thieves' pass below the ridge",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "reached a little past noon",
+   "travel_mode": "",
+   "terrain_text": "green unstony foothills with cattle and homesteads",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C21-P024",
+     "q": "they came adown to the lower slopes of the mountains and the foot-hills, which were green and unstony"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "from": "Mid-Mountain House",
+   "to": "(unnamed) eastern foothills",
+   "via": [
+    "(unnamed) round knoll camp",
+    "(unnamed) thieves' pass below the ridge"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "a day and a half",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "descending mountain road, valleys, clay cutting",
+   "chapter": "BTWO-C21",
+   "refs": [
+    {
+     "p": "BTWO-C21-P002",
+     "q": "the way was evil otherwise, but it was down hill"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Strong-thieves of the mountains",
+   "statement": "Wild men are poorly armed, mostly in beast-skins, with wide shields, weak bows, axes, malls and spears; lithe and strong but not tall.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C21-P011",
+     "q": "save for wide shields which they bore, were but evilly armed, mostly in skins of beasts"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Clement's eastward company",
+   "statement": "62 in all: a score of men-at-arms besides Ralph and Clement, chapmen (three old), lads, many archers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C21-P007",
+     "q": "they were three-score and two all told, but of these but a score of men-at-arms besides Ralph, and Clement"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Clement's eastward company",
+   "statement": "War-cries invoke guild saints: \"St. Agnes for the Mercers!\" and \"St. Christopher to aid!\"",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C21-P010",
+     "q": "St. Agnes for the Mercers!"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "(unnamed) eastern foothills",
+   "statement": "Merchants show their banners in the peopled lands, where no one dares attack chapmen they depend on.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C21-P025",
+     "q": "no man of the peopled parts would be so hardy as to fall upon the Chapmen"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Bull Shockhead",
+   "statement": "He warns he will knife his master if beaten except in hot blood.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C21-P019",
+     "q": "if thou beat me, save in hot blood, I shall put a knife into thee when I may"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Bull Shockhead",
+   "statement": "He calls the lowland folk evil and unkind.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C21-P021",
+     "q": "Forsooth down there evil they be, and unkinsome"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Battle in the mountains",
+   "chapter": "BTWO-C21",
+   "layer": "main",
+   "time_text": "morning",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "(unnamed) captain of Clement's men-at-arms",
+    "Bull Shockhead",
+    "Strong-thieves of the mountains"
+   ],
+   "places": [
+    "(unnamed) thieves' pass below the ridge"
+   ],
+   "summary": "The merchant company breaks through the strong-thieves' ambush; Ralph captures Bull Shockhead.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C21-P015",
+     "q": "Ralph ran in under the stroke and caught him by the throat and drew him out of the press"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The wild men are Bull Shockhead's kindred; their people is not named here.",
+   "refs": [
+    {
+     "p": "BTWO-C21-P021",
+     "q": "I will not fight against my kindred"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Caravan ambushes at passes with high-ground tactics, archers and dismounted men-at-arms, as encounter design.",
+   "system": "military",
+   "basis_refs": [
+    {
+     "p": "BTWO-C21-P014",
+     "q": "the companions went forward stoutly on foot, and entered into the battle of the thieves"
+    }
+   ]
+  },
+  {
+   "idea": "Captured foes who may become sworn servants with explicit terms.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTWO-C21-P022",
+     "q": "That is the bargain, then, and I yeasay it"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C21",
+ "chapters": [
+  "BTWO-C21"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C21",
+   "paragraphs_total": 25,
+   "all_paragraphs_read": true,
+   "summary": "Next day the road runs downhill with all waters flowing east; they camp at a round knoll in a valley with a view of the fruitful plain and Cheaping Knowe far off. In the morning scouts find the strong-thieves holding the pass below. The company (sixty-two, a score of men-at-arms) charges down a clay cutting six abreast, crying \"St. Agnes for the Mercers!\" The skin-clad wild men, with wide shields and weak bows, scatter; a foot battle follows on the hillside (\"St. Christopher to aid!\"), and Ralph, lightly speared above the knee, captures a shaggy blue-eyed hammer-man, Bull Shockhead, who agrees to serve him but not fight his own kin. By afternoon they reach green foothills with herds and homesteads and unfurl their guild banners.",
+   "geography_notes": "Beyond the Mid-Mountain House the road descends and all waters run east. A day's ride brings a valley with a round knoll overlooking the fruitful plain where Cheaping Knowe lies blue in the distance. About two hours on, a high bare ridge, then a cleft through a clay bank down into a valley (the thieves' pass), with a steep shaly cliff on its south side. Then a better road down to green unstony foothills with cattle, homesteads and fenced fields.",
+   "open_questions": [
+    "Who are Bull Shockhead's kindred (the mountain wild men)?"
+   ]
+  }
+ ]
+}
