@@ -59,6 +59,16 @@ Limitations: the river terrain has no transitions to sand or sea, so rivers run 
 off the map edge (as in Shade's samples) rather than into the sea. Wide reaches need straight entry and
 exit, so they mostly appear where a river leaves the map.
 
+## miniworld_anims.py / miniworld_buildings.py
+
+Data for the game from the Miniworld sheets, written to `data/` and documented in
+[`docs/ASSET_DATA.md`](../docs/ASSET_DATA.md):
+
+- `miniworld_anims.py`: animation frames and timing for all 44 soldier/worker sheets
+  (`--previews` writes GIFs and aligned frame strips).
+- `miniworld_buildings.py`: building atlas keyed by the names in `Miniworld-Guide.docx`
+  (`--previews` writes labelled contact sheets).
+
 ## Tests
 
 ```sh

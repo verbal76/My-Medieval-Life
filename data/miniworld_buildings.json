@@ -1,0 +1,4559 @@
+{
+ "format": "miniworld-buildings/1",
+ "source": "MiniWorldSprites.zip",
+ "guide": "Miniworld-Guide.docx",
+ "about": "rect = [x, y, w, h] in the sheet. 'teams' gives the same building in the red/cyan/lime/purple sheets where one exists. 'match' 1.0 = pixel-identical to the guide picture.",
+ "buildings": [
+  {
+   "name": "Castle",
+   "category": "Fort",
+   "guide_size": [
+    32,
+    32
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Keep.png",
+     "rect": [
+      0,
+      32,
+      32,
+      32
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Keep.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanKeep.png",
+       "rect": [
+        0,
+        32,
+        32,
+        32
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeKeep.png",
+       "rect": [
+        0,
+        32,
+        32,
+        32
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleKeep.png",
+       "rect": [
+        0,
+        32,
+        32,
+        32
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedKeep.png",
+       "rect": [
+        0,
+        32,
+        32,
+        32
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Mausoleum",
+   "category": "Fort",
+   "guide_size": [
+    32,
+    33
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Enemy/Mausoleum.png",
+     "rect": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Enemy/Mausoleum.png",
+     "teams": {}
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Barracks",
+   "category": "Infantry",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      16,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      32,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      48,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        48,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        48,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        48,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        48,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Garrison / Bunker",
+   "category": "Infantry",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      16,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      32,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      48,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        48,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        48,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        48,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        48,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Archery",
+   "category": "Infantry",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      0,
+      48,
+      32,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        0,
+        48,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        0,
+        48,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        0,
+        48,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        0,
+        48,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Stables",
+   "category": "Infantry",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      16,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      32,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Prison",
+   "category": "Infantry",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      16,
+      64,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      32,
+      64,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        32,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        32,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        32,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        32,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "rect": [
+      48,
+      64,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Barracks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+       "rect": [
+        48,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+       "rect": [
+        48,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+       "rect": [
+        48,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+       "rect": [
+        48,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Church / Sanctuary",
+   "category": "Infantry",
+   "guide_size": [
+    49,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Chapels.png",
+     "rect": [
+      0,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Chapels.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanChapels.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeChapels.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleChapels.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedChapels.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Chapels.png",
+     "rect": [
+      16,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Chapels.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanChapels.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 0.991
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeChapels.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 0.991
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleChapels.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 0.991
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedChapels.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 0.991
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Chapels.png",
+     "rect": [
+      32,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Chapels.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanChapels.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeChapels.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleChapels.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedChapels.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Watchtower",
+   "category": "Defense Structures",
+   "guide_size": [
+    16,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Tower.png",
+     "rect": [
+      16,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Tower.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedTower.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Wall",
+   "category": "Defense Structures",
+   "guide_size": [
+    16,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Tower.png",
+     "rect": [
+      0,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Tower.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedTower.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Blacksmith / Smithy",
+   "category": "Workshops",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "rect": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "rect": [
+      16,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Alchemy",
+   "category": "Workshops",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "rect": [
+      0,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "rect": [
+      16,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Workshop / Factory",
+   "category": "Workshops",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "rect": [
+      0,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "rect": [
+      16,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Workshops.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Shipyard",
+   "category": "Workshops",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Docks.png",
+     "rect": [
+      0,
+      16,
+      32,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Docks.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanDocks.png",
+       "rect": [
+        0,
+        16,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeDocks.png",
+       "rect": [
+        0,
+        16,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleDocks.png",
+       "rect": [
+        0,
+        16,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedDocks.png",
+       "rect": [
+        0,
+        16,
+        32,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Butchery / Meat Shop",
+   "category": "Marketplace",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      16,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      32,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Wheat Shop / Corn Shop",
+   "category": "Marketplace",
+   "guide_size": [
+    16,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      32,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Fish Shop",
+   "category": "Marketplace",
+   "guide_size": [
+    16,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      16,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Fruit Shop",
+   "category": "Marketplace",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      0,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      16,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      0,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Equipment Shop",
+   "category": "Marketplace",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      0,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "rect": [
+      32,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Market.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanMarket.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeMarket.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleMarket.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedMarket.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Hut",
+   "category": "Houses",
+   "guide_size": [
+    32,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Huts.png",
+     "rect": [
+      32,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Huts.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHuts.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHuts.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHuts.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHuts.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Huts.png",
+     "rect": [
+      64,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Huts.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHuts.png",
+       "rect": [
+        64,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHuts.png",
+       "rect": [
+        64,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHuts.png",
+       "rect": [
+        64,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHuts.png",
+       "rect": [
+        64,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Cabin",
+   "category": "Houses",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "rect": [
+      0,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHouses.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "rect": [
+      16,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHouses.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "rect": [
+      32,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHouses.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "House",
+   "category": "Houses",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "rect": [
+      0,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHouses.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "rect": [
+      16,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHouses.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "rect": [
+      32,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Houses.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedHouses.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Tavern",
+   "category": "Houses",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Taverns.png",
+     "rect": [
+      16,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Taverns.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+       "rect": [
+        16,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Taverns.png",
+     "rect": [
+      16,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Taverns.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Taverns.png",
+     "rect": [
+      16,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Taverns.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Lumbermill",
+   "category": "Resource Storage",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      0,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        0,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      16,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        16,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      32,
+      32,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        32,
+        32,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Cave",
+   "category": "Resource Storage",
+   "guide_size": [
+    16,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      0,
+      48,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        0,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Mining Shaft / Quarry",
+   "category": "Resource Storage",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      0,
+      64,
+      16,
+      16
+     ],
+     "match": 0.83,
+     "matched_in": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        0,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        0,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        0,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        0,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      16,
+      64,
+      16,
+      16
+     ],
+     "match": 0.83,
+     "matched_in": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        16,
+        64,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      32,
+      48,
+      16,
+      16
+     ],
+     "match": 0.83,
+     "matched_in": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        32,
+        48,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": "guide picture only partly matches the sheets (best 83%); the listed sprite is the closest candidate, the guide may show an older drawing"
+  },
+  {
+   "name": "Silo / Windmill",
+   "category": "Resource Storage",
+   "guide_size": [
+    47,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      0,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        0,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      16,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        16,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      32,
+      16,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        32,
+        16,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  },
+  {
+   "name": "Ranch",
+   "category": "Resource Storage",
+   "guide_size": [
+    48,
+    16
+   ],
+   "variants": [
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      0,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        0,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      16,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        16,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    },
+    {
+     "file": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "rect": [
+      32,
+      0,
+      16,
+      16
+     ],
+     "match": 1.0,
+     "matched_in": "MiniWorldSprites/Buildings/Wood/Resources.png",
+     "teams": {
+      "cyan": {
+       "file": "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "lime": {
+       "file": "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "purple": {
+       "file": "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      },
+      "red": {
+       "file": "MiniWorldSprites/Buildings/Red/RedResources.png",
+       "rect": [
+        32,
+        0,
+        16,
+        16
+       ],
+       "silhouette_iou": 1.0
+      }
+     }
+    }
+   ],
+   "uncertain": null
+  }
+ ],
+ "unidentified": [
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    0,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    0,
+    32,
+    32,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    32,
+    32,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    48,
+    32,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    32,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    48,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Barracks",
+   "rect": [
+    0,
+    64,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanBarracks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeBarracks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleBarracks.png",
+    "MiniWorldSprites/Buildings/Red/RedBarracks.png",
+    "MiniWorldSprites/Buildings/Wood/Barracks.png"
+   ]
+  },
+  {
+   "sheet_hint": "CaveV2",
+   "rect": [
+    0,
+    0,
+    48,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/CaveV2.png"
+   ]
+  },
+  {
+   "sheet_hint": "CaveV2",
+   "rect": [
+    0,
+    16,
+    48,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/CaveV2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Chapels",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanChapels.png",
+    "MiniWorldSprites/Buildings/Lime/LimeChapels.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleChapels.png",
+    "MiniWorldSprites/Buildings/Red/RedChapels.png",
+    "MiniWorldSprites/Buildings/Wood/Chapels.png"
+   ]
+  },
+  {
+   "sheet_hint": "Chapels",
+   "rect": [
+    16,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanChapels.png",
+    "MiniWorldSprites/Buildings/Lime/LimeChapels.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleChapels.png",
+    "MiniWorldSprites/Buildings/Red/RedChapels.png",
+    "MiniWorldSprites/Buildings/Wood/Chapels.png"
+   ]
+  },
+  {
+   "sheet_hint": "Chapels",
+   "rect": [
+    32,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanChapels.png",
+    "MiniWorldSprites/Buildings/Lime/LimeChapels.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleChapels.png",
+    "MiniWorldSprites/Buildings/Red/RedChapels.png",
+    "MiniWorldSprites/Buildings/Wood/Chapels.png"
+   ]
+  },
+  {
+   "sheet_hint": "Docks",
+   "rect": [
+    0,
+    0,
+    32,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanDocks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeDocks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleDocks.png",
+    "MiniWorldSprites/Buildings/Red/RedDocks.png",
+    "MiniWorldSprites/Buildings/Wood/Docks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Docks",
+   "rect": [
+    32,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanDocks.png",
+    "MiniWorldSprites/Buildings/Lime/LimeDocks.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleDocks.png",
+    "MiniWorldSprites/Buildings/Red/RedDocks.png",
+    "MiniWorldSprites/Buildings/Wood/Docks.png"
+   ]
+  },
+  {
+   "sheet_hint": "Houses",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+    "MiniWorldSprites/Buildings/Red/RedHouses.png",
+    "MiniWorldSprites/Buildings/Wood/Houses.png"
+   ]
+  },
+  {
+   "sheet_hint": "Houses",
+   "rect": [
+    16,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+    "MiniWorldSprites/Buildings/Red/RedHouses.png",
+    "MiniWorldSprites/Buildings/Wood/Houses.png"
+   ]
+  },
+  {
+   "sheet_hint": "Houses",
+   "rect": [
+    32,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+    "MiniWorldSprites/Buildings/Red/RedHouses.png",
+    "MiniWorldSprites/Buildings/Wood/Houses.png"
+   ]
+  },
+  {
+   "sheet_hint": "Houses",
+   "rect": [
+    0,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+    "MiniWorldSprites/Buildings/Red/RedHouses.png",
+    "MiniWorldSprites/Buildings/Wood/Houses.png"
+   ]
+  },
+  {
+   "sheet_hint": "Houses",
+   "rect": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+    "MiniWorldSprites/Buildings/Red/RedHouses.png",
+    "MiniWorldSprites/Buildings/Wood/Houses.png"
+   ]
+  },
+  {
+   "sheet_hint": "Houses",
+   "rect": [
+    32,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHouses.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHouses.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHouses.png",
+    "MiniWorldSprites/Buildings/Red/RedHouses.png",
+    "MiniWorldSprites/Buildings/Wood/Houses.png"
+   ]
+  },
+  {
+   "sheet_hint": "Huts",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHuts.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHuts.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHuts.png",
+    "MiniWorldSprites/Buildings/Red/RedHuts.png",
+    "MiniWorldSprites/Buildings/Wood/Huts.png"
+   ]
+  },
+  {
+   "sheet_hint": "Huts",
+   "rect": [
+    16,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHuts.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHuts.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHuts.png",
+    "MiniWorldSprites/Buildings/Red/RedHuts.png",
+    "MiniWorldSprites/Buildings/Wood/Huts.png"
+   ]
+  },
+  {
+   "sheet_hint": "Huts",
+   "rect": [
+    48,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanHuts.png",
+    "MiniWorldSprites/Buildings/Lime/LimeHuts.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleHuts.png",
+    "MiniWorldSprites/Buildings/Red/RedHuts.png",
+    "MiniWorldSprites/Buildings/Wood/Huts.png"
+   ]
+  },
+  {
+   "sheet_hint": "Keep",
+   "rect": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanKeep.png",
+    "MiniWorldSprites/Buildings/Lime/LimeKeep.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleKeep.png",
+    "MiniWorldSprites/Buildings/Red/RedKeep.png",
+    "MiniWorldSprites/Buildings/Wood/Keep.png"
+   ]
+  },
+  {
+   "sheet_hint": "Keep",
+   "rect": [
+    32,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanKeep.png",
+    "MiniWorldSprites/Buildings/Lime/LimeKeep.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleKeep.png",
+    "MiniWorldSprites/Buildings/Red/RedKeep.png",
+    "MiniWorldSprites/Buildings/Wood/Keep.png"
+   ]
+  },
+  {
+   "sheet_hint": "Keep",
+   "rect": [
+    64,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanKeep.png",
+    "MiniWorldSprites/Buildings/Lime/LimeKeep.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleKeep.png",
+    "MiniWorldSprites/Buildings/Red/RedKeep.png",
+    "MiniWorldSprites/Buildings/Wood/Keep.png"
+   ]
+  },
+  {
+   "sheet_hint": "Keep",
+   "rect": [
+    32,
+    32,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanKeep.png",
+    "MiniWorldSprites/Buildings/Lime/LimeKeep.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleKeep.png",
+    "MiniWorldSprites/Buildings/Red/RedKeep.png",
+    "MiniWorldSprites/Buildings/Wood/Keep.png"
+   ]
+  },
+  {
+   "sheet_hint": "Keep",
+   "rect": [
+    64,
+    32,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanKeep.png",
+    "MiniWorldSprites/Buildings/Lime/LimeKeep.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleKeep.png",
+    "MiniWorldSprites/Buildings/Red/RedKeep.png",
+    "MiniWorldSprites/Buildings/Wood/Keep.png"
+   ]
+  },
+  {
+   "sheet_hint": "Mausoleum",
+   "rect": [
+    32,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Enemy/Mausoleum.png"
+   ]
+  },
+  {
+   "sheet_hint": "Resources",
+   "rect": [
+    16,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+    "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+    "MiniWorldSprites/Buildings/Red/RedResources.png",
+    "MiniWorldSprites/Buildings/Wood/Resources.png"
+   ]
+  },
+  {
+   "sheet_hint": "Resources",
+   "rect": [
+    32,
+    64,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanResources.png",
+    "MiniWorldSprites/Buildings/Lime/LimeResources.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleResources.png",
+    "MiniWorldSprites/Buildings/Red/RedResources.png",
+    "MiniWorldSprites/Buildings/Wood/Resources.png"
+   ]
+  },
+  {
+   "sheet_hint": "Ship",
+   "rect": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanShip.png",
+    "MiniWorldSprites/Buildings/Lime/LimeShip.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleShip.png",
+    "MiniWorldSprites/Buildings/Red/RedShip.png"
+   ]
+  },
+  {
+   "sheet_hint": "Ship",
+   "rect": [
+    32,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanShip.png",
+    "MiniWorldSprites/Buildings/Lime/LimeShip.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleShip.png",
+    "MiniWorldSprites/Buildings/Red/RedShip.png"
+   ]
+  },
+  {
+   "sheet_hint": "Ship",
+   "rect": [
+    64,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanShip.png",
+    "MiniWorldSprites/Buildings/Lime/LimeShip.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleShip.png",
+    "MiniWorldSprites/Buildings/Red/RedShip.png"
+   ]
+  },
+  {
+   "sheet_hint": "SpearWall",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Enemy/SpearWall.png"
+   ]
+  },
+  {
+   "sheet_hint": "SpearWall",
+   "rect": [
+    16,
+    0,
+    32,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Enemy/SpearWall.png"
+   ]
+  },
+  {
+   "sheet_hint": "SpearWall",
+   "rect": [
+    0,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Enemy/SpearWall.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    32,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    0,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    32,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    0,
+    32,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    32,
+    32,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    0,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Taverns",
+   "rect": [
+    32,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTaverns.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTaverns.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTaverns.png",
+    "MiniWorldSprites/Buildings/Red/RedTaverns.png",
+    "MiniWorldSprites/Buildings/Wood/Taverns.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    0,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    16,
+    32,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    0,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    16,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    32,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    0,
+    64,
+    48,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower",
+   "rect": [
+    0,
+    80,
+    48,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanTower.png",
+    "MiniWorldSprites/Buildings/Lime/LimeTower.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleTower.png",
+    "MiniWorldSprites/Buildings/Red/RedTower.png",
+    "MiniWorldSprites/Buildings/Wood/Tower.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    0,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    16,
+    16,
+    16,
+    32
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    0,
+    32,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    0,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    16,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    32,
+    48,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    0,
+    64,
+    48,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Tower2",
+   "rect": [
+    0,
+    80,
+    48,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Wood/Tower2.png"
+   ]
+  },
+  {
+   "sheet_hint": "Well",
+   "rect": [
+    0,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWell.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWell.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWell.png",
+    "MiniWorldSprites/Buildings/Red/RedWell.png"
+   ]
+  },
+  {
+   "sheet_hint": "Well",
+   "rect": [
+    16,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWell.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWell.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWell.png",
+    "MiniWorldSprites/Buildings/Red/RedWell.png"
+   ]
+  },
+  {
+   "sheet_hint": "Well",
+   "rect": [
+    32,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWell.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWell.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWell.png",
+    "MiniWorldSprites/Buildings/Red/RedWell.png"
+   ]
+  },
+  {
+   "sheet_hint": "Well",
+   "rect": [
+    0,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWell.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWell.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWell.png",
+    "MiniWorldSprites/Buildings/Red/RedWell.png"
+   ]
+  },
+  {
+   "sheet_hint": "Well",
+   "rect": [
+    16,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWell.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWell.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWell.png",
+    "MiniWorldSprites/Buildings/Red/RedWell.png"
+   ]
+  },
+  {
+   "sheet_hint": "Well",
+   "rect": [
+    32,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWell.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWell.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWell.png",
+    "MiniWorldSprites/Buildings/Red/RedWell.png"
+   ]
+  },
+  {
+   "sheet_hint": "Workshops",
+   "rect": [
+    32,
+    0,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+    "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+    "MiniWorldSprites/Buildings/Wood/Workshops.png"
+   ]
+  },
+  {
+   "sheet_hint": "Workshops",
+   "rect": [
+    32,
+    16,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+    "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+    "MiniWorldSprites/Buildings/Wood/Workshops.png"
+   ]
+  },
+  {
+   "sheet_hint": "Workshops",
+   "rect": [
+    32,
+    32,
+    16,
+    16
+   ],
+   "files": [
+    "MiniWorldSprites/Buildings/Cyan/CyanWorkshops.png",
+    "MiniWorldSprites/Buildings/Lime/LimeWorkshops.png",
+    "MiniWorldSprites/Buildings/Purple/PurpleWorkshops.png",
+    "MiniWorldSprites/Buildings/Red/RedWorkshops.png",
+    "MiniWorldSprites/Buildings/Wood/Workshops.png"
+   ]
+  }
+ ],
+ "not_sprite_sheets": [
+  "MiniWorldSprites/Buildings/Enemy/Orc/AllBuildings-Preview.png"
+ ]
+}
