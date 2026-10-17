@@ -1,0 +1,277 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) town of the Innocent Folk",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": true,
+   "summary": "Simple, unfenced town of low houses; clean and prosperous; folk in white wool or frieze.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "they came into the town of that folk, which was but simple, wholly unfenced for war, and the houses but low, and not great"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Mote-house of the Innocent Folk",
+   "aliases": [
+    "Temple",
+    "Guest-house"
+   ],
+   "type": "building",
+   "subtype": "moot-hall",
+   "unnamed": true,
+   "summary": "The great building that is the Innocent Folk's temple, assembly hall and guest-house.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "the door of the Temple, or Mote-house, or Guest-house, for it was all these"
+    }
+   ]
+  },
+  {
+   "name": "Land of the Innocent Folk",
+   "aliases": [],
+   "type": "place",
+   "subtype": "country",
+   "unnamed": false,
+   "summary": "Fair country of valleys and little hills east of the mountains, peopled by the Innocent Folk.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "the land was grown goodly, with fair valleys and little hills"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Innocent Folk",
+   "rel": "lives_in",
+   "b": "Land of the Innocent Folk",
+   "detail": "-",
+   "when": "BTHREE-C15",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "the town of that folk"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Land of the Innocent Folk",
+   "rel": "east_of",
+   "b": "Great Mountains",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "out of the mountains in three days from the Vale",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "beyond the mountains from the west",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "in three days' time they were come out of the mountains, and in three more the said mountains were to behold but a cloud behind them"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) town of the Innocent Folk",
+   "rel": "distance_from",
+   "b": "Vale of Sweet Chestnuts",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "nine days by ox pace",
+   "travel_mode": "",
+   "terrain_text": "mountain ways, then fair valleys and little hills, then a wide peopled valley",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "when they were gone eight days from the Valley of Sweet-chestnuts"
+    },
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "On the evening of that day they came into the town of that folk"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) messengers of the Innocent Folk"
+   ],
+   "from": "Vale of Sweet Chestnuts",
+   "to": "(unnamed) town of the Innocent Folk",
+   "via": [],
+   "mode": "horse and riding oxen",
+   "direction_text": "",
+   "duration_text": "nine days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "mountain ways, valleys, hills",
+   "chapter": "BTHREE-C15",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "for oxen are but slow-going nags"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Innocent Folk",
+   "statement": "No filth, famine, poverty or misery; merry, well-fed folk; the town has no war defences.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "Yet was there naught of filth or famine, nor any poverty or misery"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Innocent Folk",
+   "statement": "They treat the seekers with reverence, as kings or gods.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P006",
+     "q": "they set them down on a dais as though they had been kings, or rather gods"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "Land of the Innocent Folk",
+   "statement": "Corn, vineyards, sheep and cattle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "they passed by garths wherein the young corn was waxing, and vineyards on the hillsides"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "Innocent Folk",
+   "statement": "They have never seen horses; the elder saw one knight on horseback in his youth.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P002",
+     "q": "the elder said that once in his young days he had led a man to the Well who was riding a horse and was clad in knightly array"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Innocent Folk",
+   "statement": "Guests are bathed, robed in fine white wool, crowned with flowers and feasted with songs of earth's fairness.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P007",
+     "q": "the words of the songs were simple and harmless, and concerning the fairness of the earth and the happy loves of the creatures"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Welcome by the Innocent Folk",
+   "chapter": "BTHREE-C15",
+   "layer": "main",
+   "time_text": "evening, ninth day",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Innocent Folk"
+   ],
+   "places": [
+    "(unnamed) Mote-house of the Innocent Folk"
+   ],
+   "summary": "The Innocent Folk receive Ralph and Ursula in their Mote-house as \"Seekers after length of days\".",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "Welcome and thrice welcome to the Seekers after length of days"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "A peaceful, prosperous, unwalled people as a contrast culture (no war, no poverty).",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "wholly unfenced for war"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C15",
+ "chapters": [
+  "BTHREE-C15"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C15",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "They leave with the Innocent Folk's messengers, who marvel at the horses (the elder once led a mounted knight to the Well in his youth). After three days they leave the mountains; in three more the mountains are only a cloud behind; then fair valleys and little hills without people. On the eighth day from the Vale they meet ruder shepherds with odd sheep, and on the ninth reach a wide, well-watered valley with cots, corn, cattle and vineyards. That evening they reach the Innocent Folk's town: simple, unwalled, low houses, no filth, famine or poverty, merry folk in white wool. At the Temple or Mote-house or Guest-house the elders hail them as \"Seekers after length of days\"; they are bathed, robed in white, crowned with flowers, seated on the dais like gods, feasted, and sung to.",
+   "geography_notes": "From the Vale of Sweet Chestnuts: three days out of the mountains; three more until they are a cloud behind; fair valleys and little hills, unpeopled; on the eighth day, a green hillside with shepherds; on the ninth, a wide grassy, watered, partly wooded valley with cots, cornfields and hillside vineyards; then the town of the Innocent Folk (unwalled).",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

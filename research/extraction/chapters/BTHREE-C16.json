@@ -1,0 +1,434 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) waste beyond the Innocent Folk",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "desert",
+   "unnamed": true,
+   "summary": "Terrible waste, rocky, stony and sandy, with hills and little foul water; twelve days across.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C16-P002",
+     "q": "a desert it was, rather rocky and stony and sandy than mountainous, though they had hills to cross also: withal there was but little water there, and that foul and stinking"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) woodland of the Sorceress",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": true,
+   "summary": "Pine, then grass waste, then oak, sweet-chestnut and beech woods around the House.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C16-P003",
+     "q": "Thereafter they came on woods of oak and sweet-chestnut, with here and there a beech-wood"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) wardens of the House of the Sorceress",
+   "aliases": [],
+   "type": "person",
+   "subtype": "wardens",
+   "unnamed": true,
+   "summary": "Middle-aged couple of the Innocent Folk, the elder's son and his wife, keeping the House.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C16-P009",
+     "q": "The said wardens, both carle and quean, were goodly folk of middle age, stalwart, and kind of face"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) relics of the Lady",
+   "aliases": [],
+   "type": "item",
+   "subtype": "relics",
+   "unnamed": true,
+   "summary": "The Lady's shoes and smock kept in an ark and worshipped like saints' relics.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "a fair ark wherein they kept matters which had belonged to the Lady, as her shoes and her smock"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) book of the House of the Sorceress",
+   "aliases": [],
+   "type": "text",
+   "subtype": "lore book",
+   "unnamed": true,
+   "summary": "Book of lore about the Well kept at the House; to be read only at the ancient altar in seekers' garb.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "In another ark also they showed the seekers a book wherein was written lore concerning the Well, and the way thereto"
+    }
+   ]
+  },
+  {
+   "name": "Heath above the Vale of Lore",
+   "aliases": [
+    "the Heath"
+   ],
+   "type": "feature",
+   "subtype": "heath",
+   "unnamed": false,
+   "summary": "Where the King's Son and the Lady met.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "the Heath above it where they met, the King's Son and the Lady"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) elder of the Innocent Folk",
+   "rel": "parent_of",
+   "b": "(unnamed) wardens of the House of the Sorceress",
+   "detail": "his son and the son's wife",
+   "when": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P011",
+     "q": "for the man is my son"
+    }
+   ]
+  },
+  {
+   "a": "Innocent Folk",
+   "rel": "other",
+   "b": "House of the Sorceress",
+   "detail": "keep it trim by promise to the Lady",
+   "when": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P006",
+     "q": "we suffer not this house to go to ruin"
+    }
+   ]
+  },
+  {
+   "a": "Innocent Folk",
+   "rel": "other",
+   "b": "Lady of Abundance",
+   "detail": "revere her relics",
+   "when": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "these things they worshipped as folk do with relics of the saints"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) waste beyond the Innocent Folk",
+   "rel": "route_next",
+   "b": "(unnamed) town of the Innocent Folk",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "one day to its edge, then twelve days across",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P003",
+     "q": "Twelve days they rode this waste"
+    }
+   ]
+  },
+  {
+   "a": "House of the Sorceress",
+   "rel": "within",
+   "b": "(unnamed) woodland of the Sorceress",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "entered near May, reached at full June",
+   "travel_mode": "",
+   "terrain_text": "marsh, pines, grass waste, oak-chestnut-beech woods",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P004",
+     "q": "Yet was June at its full when at last they came within sight of the House of the Sorceress"
+    }
+   ]
+  },
+  {
+   "a": "Dale of Lore",
+   "rel": "near",
+   "b": "House of the Sorceress",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "further afield from the House",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "they went further afield till they came to the Vale of Lore"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) elder of the Innocent Folk"
+   ],
+   "from": "(unnamed) town of the Innocent Folk",
+   "to": "House of the Sorceress",
+   "via": [
+    "(unnamed) waste beyond the Innocent Folk",
+    "(unnamed) woodland of the Sorceress"
+   ],
+   "mode": "horse and oxen with five pack oxen",
+   "direction_text": "",
+   "duration_text": "about six to eight weeks",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "desert, marsh, forest",
+   "chapter": "BTHREE-C16",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P002",
+     "q": "they had with them five sumpter oxen instead of two"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Sage of Swevenham",
+   "statement": "The elder saw the Sage come back from the Well strong; fifty years ago his course seemed run.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P013",
+     "q": "and yet fifty years ago his course seemed run"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The Well makes one thrive and live through generations but not for ever; the gods gave death lest men weary of life.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P015",
+     "q": "but it may not keep any man alive for ever; for so have the Gods given us the gift of death lest we weary of life"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Innocent Folk",
+   "statement": "They know no sickness, pestilence or war, and desire nothing hard to attain.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P015",
+     "q": "Of strife and of war also we know naught: nor do we desire aught which we may not easily attain to"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Innocent Folk",
+   "statement": "They fear that a few who drank would become earthly gods and tyrannise the rest.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P015",
+     "q": "those few that sought and drank should be stronger and wiser than the others, and should make themselves earthly gods"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Innocent Folk",
+   "statement": "Care of the quest is hereditary in the elder's family.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P011",
+     "q": "the care of the Quest of the Well at the World's End hath for long been the heritage of our blood"
+    }
+   ]
+  },
+  {
+   "category": "learning",
+   "subject": "Ralph",
+   "statement": "Ralph marks rocks and mounds in the waste for the return.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P002",
+     "q": "he made marks and signs by the wayside, and took note of the bearings of rocks and mounds against the day of return"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Innocent Folk",
+   "statement": "They call Ralph and Ursula \"the Heavenly Folk\" and speak of \"the Gods\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P002",
+     "q": "the Heavenly Folk; for so they called Ralph and Ursula"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Arrival at the House of the Sorceress",
+   "chapter": "BTHREE-C16",
+   "layer": "main",
+   "time_text": "full June",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) elder of the Innocent Folk"
+   ],
+   "places": [
+    "House of the Sorceress"
+   ],
+   "summary": "Ralph and Ursula reach the kept House where the Lady was a thrall; Ralph weeps.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P007",
+     "q": "wept long for the friend whose feet had worn that path so often"
+    }
+   ]
+  },
+  {
+   "label": "Reading at the Sorceress's altar",
+   "chapter": "BTHREE-C16",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) yew ring and stone table"
+   ],
+   "summary": "For eight days they read the House's lore-book at the ancient altar.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "day after day betimes in the morning they bore the said book to the altar and read therein"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Pilgrimage sites and relics tied to a legendary figure, maintained by a devoted people.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "All these and other places were now become as hallowed ground to the Innocent People"
+    }
+   ]
+  },
+  {
+   "idea": "Canon cost of the Well: long life but not immortality, and a risk of tyranny. The quest's moral framing is to be kept in any game system.",
+   "system": "magic",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C16-P015",
+     "q": "should make themselves earthly gods, and, maybe, should torment the others of us"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C16",
+ "chapters": [
+  "BTHREE-C16"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C16",
+   "paragraphs_total": 18,
+   "all_paragraphs_read": true,
+   "summary": "The Innocent Folk, who call Ralph and Ursula \"the Heavenly Folk\", send them on with the elder and his two grandsons and five pack oxen. A day from the town begins a terrible rocky, stony, sandy waste with little foul water; Ralph marks the way for the return. After twelve days it mends; a day of marsh and scrub, then pines, a grass waste with game, then oak, chestnut and beech woods, entered near May. In full June they reach the House of the Sorceress, as on the arras, kept trim by Innocent Folk wardens by promise to the Lady. Ralph weeps for her. The elder's son and his wife are wardens; quest-care is hereditary in their family. Fifty years ago the elder saw the Sage of Swevenham go old and come back strong from the Well. The elder explains that his folk do not seek the Well: they live long and healthy without war or plague, the gods gave death so men would not weary of life, and a few made godlike by the Well might tyrannise the rest; but westerners rightly seek it. They show the Lady's sites and relics. For eight days Ralph and Ursula read the House's lore-book at the ancient altar, then set out alone with water-skins.",
+   "geography_notes": "From the town of the Innocent Folk: one day to a terrible waste (rocky, stony, sandy, some hills, little foul water), crossed in twelve days; then grass and sweet water; a day of marsh and scrubby thicket; pines; a well-watered, nearly treeless grass waste; then woods of oak and sweet chestnut with some beech (entered near May); the House of the Sorceress in full June. Near the House: the ancient altar, the snow-grave of the dead seeker, the place of the Lady's torment, the Vale (Dale) of Lore and the Heath above it.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

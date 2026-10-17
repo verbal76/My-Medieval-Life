@@ -1,0 +1,282 @@
+{
+ "entities": [
+  {
+   "name": "Dry Tree",
+   "aliases": [
+    "THE DRY TREE"
+   ],
+   "type": "feature",
+   "subtype": "sacred tree",
+   "unnamed": false,
+   "summary": "Monstrous leafless tree, about a hundred feet tall with some fifty great limbs, hung with knights' arms of many unknown blazons; its roots in a poisoned, mirror-still pool; perhaps made, perhaps grown.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C18-P003",
+     "q": "rose up a huge and monstrous tree, whose topmost branches were even the horns which they had seen from below the hill's brow"
+    },
+    {
+     "p": "BTHREE-C18-P004",
+     "q": "THE DRY TREE"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) valley of the Dry Tree",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "amphitheatre valley",
+   "unnamed": true,
+   "summary": "Theatre-like valley ringed by the ridge, open by one narrow pass, its stepped slopes lined with the dead.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C18-P003",
+     "q": "the said valley was like to one of those theatres of the ancient Roman Folk"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) poison pool of the Dry Tree",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "poisoned pool",
+   "unnamed": true,
+   "summary": "Clear pool round the tree's roots that does not ripple in the wind; a crow dies after drinking.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C18-P008",
+     "q": "when the wind eddies about, and lifts the skirts of our raiment, it makes no ripple on the face of the pool, and doubtless it is heavy with venom"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Dry Tree",
+   "rel": "within",
+   "b": "(unnamed) valley of the Dry Tree",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "on a mound or islet in a pool at the centre",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P003",
+     "q": "a very midmost of this dreary theatre rose up a huge and monstrous tree"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) valley of the Dry Tree",
+   "rel": "within",
+   "b": "Thirsty Desert",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "ringed by a great ridge, with a narrow pass on the further side",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P003",
+     "q": "about which on all sides went the ridge, save where it was broken down into a narrow pass on the further side"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "(unnamed) poison pool of the Dry Tree",
+   "statement": "The pool is poisonous; a crow that drinks dies at once.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P009",
+     "q": "ere he was many feet off the ground he gave a grievous croak, and turning over in the air fell down stark dead"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Dry Tree",
+   "statement": "The tree seems to have growth in it: its roots spread and waver in the water.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P007",
+     "q": "it seemed to them as though the Tree had verily growth in it"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) valley of the Dry Tree",
+   "statement": "The dead all wear the same grin, \"as though they had died in pain, and yet beguiled\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P006",
+     "q": "each of the dead leathery faces was drawn up in a grin as though they had died in pain, and yet beguiled"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ralph",
+   "statement": "After nearly drinking, Ralph is entranced, collapses, and forgets the danger; Ursula's ruse saves him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P012",
+     "q": "Shall we not go down into the valley?  there is naught there to harm us"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Thirsty Desert",
+   "statement": "No way-token is near the pool, unlike at other watering-places.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P008",
+     "q": "there is no sign of the way hereabout, as at other watering-steads"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Dry Tree",
+   "statement": "The tree is hung with blazoned shields, helms, swords, spears, axes and hauberks of many unknown fashions.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P003",
+     "q": "The limbs of that tree were all behung with blazoned shields and knight's helms, and swords, and spears, and axes, and hawberks"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "At the Dry Tree",
+   "chapter": "BTHREE-C18",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) valley of the Dry Tree"
+   ],
+   "summary": "The lovers find the Dry Tree; Ursula prevents Ralph drinking the poisoned pool and lures him away.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P004",
+     "q": "then from both their lips at once came the cry THE DRY TREE"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Whether the Dry Tree is made by hands or grown.",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P003",
+     "q": "they doubted whether it were not made by men's hands rather than grown up out of the earth"
+    }
+   ]
+  },
+  {
+   "kind": "contradiction",
+   "question": "The Dry Tree here is a deathtrap, while the Swevenham tale said touching its bole would lead to the Well (BTWO-C16).",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P008",
+     "q": "doubtless it is heavy with venom"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A landmark trap (the poisoned pool) with environmental warnings (no ripple, no waymark) that perceptive players can read.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C18-P008",
+     "q": "it makes no ripple on the face of the pool"
+    }
+   ]
+  },
+  {
+   "idea": "The real Dry Tree versus imitations (Utterbol's worshipped tree, Hampton's fellowship name).",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C18-P004",
+     "q": "THE DRY TREE"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C18",
+ "chapters": [
+  "BTHREE-C18"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C18",
+   "paragraphs_total": 14,
+   "all_paragraphs_read": true,
+   "summary": "Over a great ridge they see horn-like branches: a valley like a Roman theatre, ringed by the ridge except for a narrow pass on the far side, its slopes lined with dead men and women, many with drawn swords, all grinning as if beguiled in pain. In the middle stands a monstrous leafless tree about a hundred feet high with some fifty great limbs hung with shields, helms, swords, spears, axes and hauberks of unknown blazons, its roots in a mirror-still pool. Both cry \"The Dry Tree\". Ralph kneels to drink; Ursula sees the water does not ripple in the wind and stops him; a crow drinks and falls dead. Ralph is entranced; Ursula lures him up the slope by crying that their horses are threatened, then revives him with water and cordial. They ride away.",
+   "geography_notes": "In the Thirsty Desert, a great ridge encloses a bowl-shaped valley like an ancient theatre, open only by a narrow pass on the far side. At its centre the Dry Tree stands on a mound or islet in a clear, still, poisonous pool. The slopes are stepped.",
+   "open_questions": [
+    "Is the Dry Tree made or grown? (the text wavers)"
+   ]
+  }
+ ]
+}

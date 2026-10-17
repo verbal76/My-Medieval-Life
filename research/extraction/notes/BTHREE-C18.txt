@@ -1,0 +1,26 @@
+@ BTHREE-C18
+summary: Over a great ridge they see horn-like branches: a valley like a Roman theatre, ringed by the ridge except for a narrow pass on the far side, its slopes lined with dead men and women, many with drawn swords, all grinning as if beguiled in pain. In the middle stands a monstrous leafless tree about a hundred feet high with some fifty great limbs hung with shields, helms, swords, spears, axes and hauberks of unknown blazons, its roots in a mirror-still pool. Both cry "The Dry Tree". Ralph kneels to drink; Ursula sees the water does not ripple in the wind and stops him; a crow drinks and falls dead. Ralph is entranced; Ursula lures him up the slope by crying that their horses are threatened, then revives him with water and cordial. They ride away.
+geo: In the Thirsty Desert, a great ridge encloses a bowl-shaped valley like an ancient theatre, open only by a narrow pass on the far side. At its centre the Dry Tree stands on a mound or islet in a clear, still, poisonous pool. The slopes are stepped.
+open: Is the Dry Tree made or grown? (the text wavers)
+
+E feature | Dry Tree | THE DRY TREE | sacred tree | Monstrous leafless tree, about a hundred feet tall with some fifty great limbs, hung with knights' arms of many unknown blazons; its roots in a poisoned, mirror-still pool; perhaps made, perhaps grown. | P003 `rose up a huge and monstrous tree, whose topmost branches were even the horns which they had seen from below the hill's brow`; P004 `THE DRY TREE`
+E feature | (unnamed) valley of the Dry Tree | - | amphitheatre valley | Theatre-like valley ringed by the ridge, open by one narrow pass, its stepped slopes lined with the dead. | P003 `the said valley was like to one of those theatres of the ancient Roman Folk`
+E feature | (unnamed) poison pool of the Dry Tree | - | poisoned pool | Clear pool round the tree's roots that does not ripple in the wind; a crow dies after drinking. | P008 `when the wind eddies about, and lifts the skirts of our raiment, it makes no ripple on the face of the pool, and doubtless it is heavy with venom`
+
+S Dry Tree | within | (unnamed) valley of the Dry Tree | terrain=on a mound or islet in a pool at the centre; cert=fixed | CANON/high | - | P003 `a very midmost of this dreary theatre rose up a huge and monstrous tree`
+S (unnamed) valley of the Dry Tree | within | Thirsty Desert | terrain=ringed by a great ridge, with a narrow pass on the further side; cert=fixed | CANON/high | - | P003 `about which on all sides went the ridge, save where it was broken down into a narrow pass on the further side`
+
+F magic | (unnamed) poison pool of the Dry Tree | The pool is poisonous; a crow that drinks dies at once. | CANON/high | P009 `ere he was many feet off the ground he gave a grievous croak, and turning over in the air fell down stark dead`
+F magic | Dry Tree | The tree seems to have growth in it: its roots spread and waver in the water. | CANON/high | P007 `it seemed to them as though the Tree had verily growth in it`
+F magic | (unnamed) valley of the Dry Tree | The dead all wear the same grin, "as though they had died in pain, and yet beguiled". | CANON/high | P006 `each of the dead leathery faces was drawn up in a grin as though they had died in pain, and yet beguiled`
+F magic | Ralph | After nearly drinking, Ralph is entranced, collapses, and forgets the danger; Ursula's ruse saves him. | CANON/high | P012 `Shall we not go down into the valley?  there is naught there to harm us`
+F magic | Thirsty Desert | No way-token is near the pool, unlike at other watering-places. | CANON/high; ctx=dialogue:Ursula | P008 `there is no sign of the way hereabout, as at other watering-steads`
+F weapons | Dry Tree | The tree is hung with blazoned shields, helms, swords, spears, axes and hauberks of many unknown fashions. | CANON/high | P003 `The limbs of that tree were all behung with blazoned shields and knight's helms, and swords, and spears, and axes, and hawberks`
+
+V main | At the Dry Tree | The lovers find the Dry Tree; Ursula prevents Ralph drinking the poisoned pool and lures him away. | who=Ralph, Ursula; where=(unnamed) valley of the Dry Tree | P004 `then from both their lips at once came the cry THE DRY TREE`
+
+U ambiguity | Whether the Dry Tree is made by hands or grown. | P003 `they doubted whether it were not made by men's hands rather than grown up out of the earth`
+U contradiction | The Dry Tree here is a deathtrap, while the Swevenham tale said touching its bole would lead to the Well (BTWO-C16). | P008 `doubtless it is heavy with venom`
+
+O world | A landmark trap (the poisoned pool) with environmental warnings (no ripple, no waymark) that perceptive players can read. | P008 `it makes no ripple on the face of the pool`
+O lore | The real Dry Tree versus imitations (Utterbol's worshipped tree, Hampton's fellowship name). | P004 `THE DRY TREE`

@@ -1,0 +1,234 @@
+{
+ "entities": [
+  {
+   "name": "Thirsty Desert",
+   "aliases": [
+    "Dry Waste",
+    "the waste"
+   ],
+   "type": "feature",
+   "subtype": "salt desert",
+   "unnamed": false,
+   "summary": "Stony waste in ridges like sea waves, crusted with salt, with small sage bushes; full of the dried dead of many ages.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C17-P009",
+     "q": "a stony waste like unto that which they had passed through before they came to the House of the Sorceress, save that this lay in ridges as the waves of a great sea"
+    },
+    {
+     "p": "BTHREE-C17-P010",
+     "q": "the face of the wilderness was covered with a salt scurf, and that naught grew there save a sprinkling of small sage bushes"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) dead of the Thirsty Desert",
+   "aliases": [],
+   "type": "group",
+   "subtype": "dead seekers",
+   "unnamed": true,
+   "summary": "Dried corpses of many ages and fashions of armour, including women; none wear the beads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C17-P023",
+     "q": "their raiment and wargear both, is of many fashions, and some much more perished than other"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Thirsty Desert",
+   "rel": "route_next",
+   "b": "(unnamed) woodland of the Sorceress",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "wood ends on the third day",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P009",
+     "q": "on the third day they came to where it thinned and at last died out into a stony waste"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "House of the Sorceress",
+   "to": "Thirsty Desert",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "three days in the wood, then three or more days in the desert",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "wood, then salt ridges",
+   "chapter": "BTHREE-C17",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P009",
+     "q": "They lived well while they were in the wood"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "(unnamed) woodland of the Sorceress",
+   "statement": "Wild creatures there know no man and are tame; a robin perches on Ursula's wrist.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P004",
+     "q": "in that wood most of the creatures, knowing not man, were tame to him"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Thirsty Desert",
+   "statement": "In the dry salt waste the dead dry like leather without rotting.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P014",
+     "q": "in the saltness of the dry desert the flesh had dried on his bones without corrupting, and was as hardened leather"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Thirsty Desert",
+   "statement": "Seekers must cross the ridges at their highest to avoid a maze of hills leading nowhere.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P009",
+     "q": "these same ridges they were bidden to cross over at their highest, lest they should be bewildered in a maze of little hills and dales leading no whither"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Thirsty Desert",
+   "statement": "The dead came over a long time, one, two or three at a time.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P023",
+     "q": "this army of dead men has not come all in one day or one year, but in a long, long while"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "None of the desert's dead wear the seekers' beads.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P021",
+     "q": "ever and anon they looked to them to note if they wore the beads like to them but saw none so dight"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Crossing the Thirsty Desert",
+   "chapter": "BTHREE-C17",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "Thirsty Desert"
+   ],
+   "summary": "The lovers cross the salt ridges among the dried dead, burying some.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P015",
+     "q": "Ralph and Ursula buried these two with the heaping of stones"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Why the dead died: thirst, the Dry Tree's poison, or failure without the beads. Not stated here.",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P019",
+     "q": "would not the Sage or his books have told us of the most deadly?"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A desert of the dead as a hazard zone with environmental storytelling (gear from many eras).",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C17-P023",
+     "q": "their raiment and wargear both, is of many fashions"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C17",
+ "chapters": [
+  "BTHREE-C17"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C17",
+   "paragraphs_total": 24,
+   "all_paragraphs_read": true,
+   "summary": "In the wood past the House the lovers rest under an oak; Ralph fears loneliness in a long life; a tame robin perches on Ursula's wrist, the wood's creatures being tame. After three days the wood ends in a stony waste in wave-like ridges, to be crossed at their highest points, covered with salt scurf and small sage bushes. On the second day they find a dried, unwounded armoured corpse, horses, and a woman who stabbed herself, and bury them under stones; then more dead. On the third day there are too many to bury. Ursula notes none wear the seekers' beads, the dead are from many ages, and the way-tokens still show; they go on.",
+   "geography_notes": "Past the House: wildwood for three days, thinning to a stony waste in long ridges like sea waves, salt-crusted, with small sage bushes. Ridges must be crossed at their highest to avoid a maze of little hills and dales. A last clear brook before the desert. Dead seekers lie along the ridges; the way-token is seen on rocks.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

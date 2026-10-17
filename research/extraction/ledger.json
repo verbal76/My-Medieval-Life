@@ -2017,44 +2017,100 @@
    "title": "They Come to the Land of the Innocent Folk",
    "body_paragraphs": 7,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C15.txt",
+    "records": "research/extraction/chapters/BTHREE-C15.json"
+   }
   },
   {
    "chapter": "BTHREE-C16",
    "title": "They Come to the House of the Sorceress",
    "body_paragraphs": 18,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 3,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 7,
+    "events": 2,
+    "unresolved": 0,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C16.txt",
+    "records": "research/extraction/chapters/BTHREE-C16.json"
+   }
   },
   {
    "chapter": "BTHREE-C17",
    "title": "They Come Through the Woodland to the Thirsty Desert",
    "body_paragraphs": 24,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 0,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C17.txt",
+    "records": "research/extraction/chapters/BTHREE-C17.json"
+   }
   },
   {
    "chapter": "BTHREE-C18",
    "title": "They Come to the Dry Tree",
    "body_paragraphs": 14,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 0,
+    "spatial": 2,
+    "travel": 0,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Is the Dry Tree made or grown? (the text wavers)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C18.txt",
+    "records": "research/extraction/chapters/BTHREE-C18.json"
+   }
   },
   {
    "chapter": "BTHREE-C19",
