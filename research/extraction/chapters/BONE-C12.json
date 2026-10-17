@@ -1,0 +1,568 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) North Gate of the Burg",
+   "aliases": [
+    "master-gate"
+   ],
+   "type": "building",
+   "subtype": "gatehouse",
+   "unnamed": true,
+   "summary": "Master-gate with a walled bailey, deep moat, drawbridge and portcullis; captain checks strangers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P002",
+     "q": "The road led up straight to the master-gate of the Burg, and there was a bailey before it strongly walled"
+    },
+    {
+     "p": "BONE-C12-P004",
+     "q": "captain of the North Gate"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) captain of the North Gate",
+   "aliases": [
+    "the captain"
+   ],
+   "type": "person",
+   "subtype": "gate captain",
+   "unnamed": true,
+   "summary": "Tall man with bare grizzled head, fully armed; dry, cold voice; recruits for the host.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P002",
+     "q": "a tall man with bare grizzled head, but otherwise all-armed"
+    }
+   ]
+  },
+  {
+   "name": "Flower de Luce",
+   "aliases": [
+    "Flower-de-Luce"
+   ],
+   "type": "building",
+   "subtype": "inn",
+   "unnamed": false,
+   "summary": "Large hostelry facing the gallows in the big square.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P006",
+     "q": "the Flower de Luce, which is in the big square"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) armourer's shop of St. Loy",
+   "aliases": [],
+   "type": "building",
+   "subtype": "armourer",
+   "unnamed": true,
+   "summary": "Shop under the sign of St. Loy selling fine arms; master-armourer tall and stark.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P021",
+     "q": "a sign hung out from it whereon was done an image of St. Loy"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) master church of the Burg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": true,
+   "summary": "Strongly built church with a tall tower, not very large, little adorned.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P025",
+     "q": "the master church of the town, which was strongly built and with a tall tower to it"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Dry Tree gallows",
+   "aliases": [
+    "THE DRY TREE"
+   ],
+   "type": "building",
+   "subtype": "gallows",
+   "unnamed": true,
+   "summary": "High gallows with four branch-carved arms and four nooses, labelled THE DRY TREE.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P025",
+     "q": "a high gallows-tree furnished with four forks or arms"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Town Hall of the Burg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "town hall",
+   "unnamed": true,
+   "summary": "Where weapons licences are granted.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P023",
+     "q": "thou shalt get the said license at the Town Hall straight-way"
+    }
+   ]
+  },
+  {
+   "name": "Burg-Reeve",
+   "aliases": [],
+   "type": "office",
+   "subtype": "magistrate",
+   "unnamed": false,
+   "summary": "Officer whose hand and seal license weapon purchases.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P023",
+     "q": "unless he have the Burg-Reeve's hand and seal for it"
+    }
+   ]
+  },
+  {
+   "name": "chiefs of the Port",
+   "aliases": [],
+   "type": "group",
+   "subtype": "council",
+   "unnamed": false,
+   "summary": "Leaders of the Burg to whom the captain can introduce recruits.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P011",
+     "q": "I shall lead thee to the chiefs of the Port"
+    }
+   ]
+  },
+  {
+   "name": "licence to buy weapons",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "law",
+   "unnamed": false,
+   "summary": "Strangers may not buy weapons without a licence under the Burg's seal.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P022",
+     "q": "thy license to buy weapons, under the seal of the Burg"
+    }
+   ]
+  },
+  {
+   "name": "Queen of the Dry Tree",
+   "aliases": [
+    "great witch",
+    "Devil of the Dry Tree"
+   ],
+   "type": "person",
+   "subtype": "sorceress",
+   "unnamed": false,
+   "summary": "Witch-queen of the Dry Tree whom the Burg failed to capture; said to be fair and foul, young and old, by turns.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P027",
+     "q": "the great witch of these dastards"
+    },
+    {
+     "p": "BONE-C12-P035",
+     "q": "whiles she is foul, whiles very fair, whiles young and whiles old"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) franklin of the Burg",
+   "aliases": [],
+   "type": "person",
+   "subtype": "franklin",
+   "unnamed": true,
+   "summary": "Townsman who tells of the coming hanging.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P026",
+     "q": "he stayed a franklin who was passing by"
+    }
+   ]
+  },
+  {
+   "name": "florin",
+   "aliases": [
+    "florins"
+   ],
+   "type": "currency",
+   "subtype": "coin",
+   "unnamed": false,
+   "summary": "Coin Ralph offers for the axe.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P023",
+     "q": "take thy florins, master"
+    }
+   ]
+  },
+  {
+   "name": "Ralph Motherson",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "false name",
+   "unnamed": false,
+   "summary": "Name Ralph gives at the gate.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C12-P004",
+     "q": "Ralph Motherson"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Roger of the Rope-walk",
+   "rel": "serves",
+   "b": "Ralph",
+   "detail": "appointed by the gate captain while Ralph is in the Burg",
+   "when": "BONE-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C12-P010",
+     "q": "be thou even so whiles he abideth in the Burg"
+    }
+   ]
+  },
+  {
+   "a": "Queen of the Dry Tree",
+   "rel": "leader_of",
+   "b": "Fellowship of the Dry Tree",
+   "detail": "Queen, called their goddess",
+   "when": "BONE-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C12-P030",
+     "q": "she is their goddess, their mawmet, their devil"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) North Gate of the Burg",
+   "rel": "on_route",
+   "b": "Burg of the Four Friths",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the highway from the crossroads runs straight to it",
+   "refs": [
+    {
+     "p": "BONE-C12-P002",
+     "q": "The road led up straight to the master-gate of the Burg"
+    }
+   ]
+  },
+  {
+   "a": "Flower de Luce",
+   "rel": "across_from",
+   "b": "(unnamed) master church of the Burg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "market-place",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C12-P025",
+     "q": "Over against it they saw the sign of the Flower de Luce"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Dry Tree gallows",
+   "rel": "within",
+   "b": "Burg of the Four Friths",
+   "direction": "in front of the Flower de Luce, middle of the market-place",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C12-P025",
+     "q": "in the face of the hostelry amidmost the place"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "architecture",
+   "subject": "Burg of the Four Friths",
+   "statement": "Wall of good ashlar with many tall white towers, too high to see the roofs over.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P002",
+     "q": "it was well builded of good ashlar, and so high that they might not see the roofs of the town because of it"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Burg of the Four Friths",
+   "statement": "Strangers need a licence under the Burg's seal, issued at the Town Hall to those certified not foemen, to buy weapons; liegemen buy freely.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:master-armourer",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P023",
+     "q": "When we know thee for a liegeman of the Burg, thou shalt buy what thou wilt without question"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Burg of the Four Friths",
+   "statement": "The Burg welcomes alien warriors into its host because it is beset with foes.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:captain of the North Gate",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P011",
+     "q": "though he be an alien of blood and land"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Captured Dry Tree men are judged quickly, without torture, and hanged the next day.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:franklin",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P027",
+     "q": "The thieves shall be speedily judged, and not questioned with torments"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Queen of the Dry Tree",
+   "statement": "Roger says she shifts between fair and foul, young and old, cruel and kind; her carles are cruellest when she is kindest.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P035",
+     "q": "when she is the kindest then are her carles the cruellest"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Queen of the Dry Tree",
+   "statement": "Roger says the Dry Tree has many women like her, so the Queen herself is hard to take.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P036",
+     "q": "they have many others who are like unto her in one way or other"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Burg of the Four Friths",
+   "statement": "Streets full of open booths; folk stout and strong but plain, busy with their affairs.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P020",
+     "q": "there were many open booths therein, so that the whole street looked like a market"
+    }
+   ]
+  },
+  {
+   "category": "craft",
+   "subject": "(unnamed) armourer's shop of St. Loy",
+   "statement": "Armourers' knaves cry \"what d'ye lack?\"; a gold-inlaid steel axe is offered.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P022",
+     "q": "a very goodly steel axe, gold-inlaid about the shaft"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Entry into the Burg",
+   "chapter": "BONE-C12",
+   "layer": "main",
+   "time_text": "early morning",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "(unnamed) captain of the North Gate"
+   ],
+   "places": [
+    "(unnamed) North Gate of the Burg"
+   ],
+   "summary": "Ralph enters by the North Gate as \"Ralph Motherson\"; Roger is appointed his man.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P004",
+     "q": "Ralph Motherson"
+    }
+   ]
+  },
+  {
+   "label": "Failed escape of the Queen",
+   "chapter": "BONE-C12",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Queen of the Dry Tree"
+   ],
+   "places": [
+    "Wood Perilous"
+   ],
+   "summary": "The Burg hoped to take the Dry Tree's witch but she has slipped away.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C12-P027",
+     "q": "it is to be feared that she hath slipped through our fingers once more"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "Five bound leafless-tree men in BONE-C8 versus \"four woodmen\" and four nooses here.",
+   "refs": [
+    {
+     "p": "BONE-C12-P026",
+     "q": "justice shall be done on the four woodmen to-day"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Whether the Queen of the Dry Tree is the lady Ralph freed in BONE-C9; Ralph himself wonders.",
+   "refs": [
+    {
+     "p": "BONE-C12-P036",
+     "q": "wondered if this were verily the woman whom he had delivered, or some other"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Weapon licences tied to allegiance as a town law mechanic.",
+   "system": "law",
+   "basis_refs": [
+    {
+     "p": "BONE-C12-P022",
+     "q": "thy license to buy weapons, under the seal of the Burg"
+    }
+   ]
+  },
+  {
+   "idea": "Gate captains questioning strangers and offering service in the town's host.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BONE-C12-P011",
+     "q": "thou shalt find them in our host"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C12",
+ "chapters": [
+  "BONE-C12"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C12",
+   "paragraphs_total": 38,
+   "all_paragraphs_read": true,
+   "summary": "Ralph and Roger enter the Burg of the Four Friths by the North Gate. Ralph gives his name as \"Ralph Motherson\"; the gate captain lets Roger serve Ralph while he stays and invites Ralph into the Burg's host. An armourer refuses to sell Ralph an axe without a weapons licence under the Burg's seal. In the market-place a four-armed gallows labelled THE DRY TREE awaits the captured woodmen; a franklin and Roger speak of the Dry Tree's \"great witch\" and Queen, who is sometimes fair and sometimes foul. They lodge at the Flower de Luce.",
+   "geography_notes": "The Burg is walled with white-towered ashlar too high to see the roofs over. The highway runs straight to the master-gate (the North Gate), with a walled bailey in front and a deep clean moat, drawbridge and portcullis. Inside: wide paved streets lined with booths, low stout houses, and a big market-place with the plain master church on one side and the Flower de Luce opposite.",
+   "open_questions": [
+    "The prisoners were five in BONE-C8 but four here.",
+    "Is the Dry Tree's Queen the lady Ralph freed?"
+   ]
+  }
+ ]
+}

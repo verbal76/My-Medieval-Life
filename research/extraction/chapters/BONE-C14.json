@@ -1,0 +1,513 @@
+{
+ "entities": [
+  {
+   "name": "Wheat-wearers",
+   "aliases": [
+    "the Wheat-wearers"
+   ],
+   "type": "group",
+   "subtype": "nation",
+   "unnamed": false,
+   "summary": "A people with towns, castles and land whom the Burg nearly always beats; men are slain and women enslaved; once conquered the Burg.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C14-P010",
+     "q": "these are of the folk of the Wheat-wearers"
+    },
+    {
+     "p": "BONE-C14-P026",
+     "q": "to take their towns and castles"
+    }
+   ]
+  },
+  {
+   "name": "War-smith",
+   "aliases": [],
+   "type": "person",
+   "subtype": "lord",
+   "unnamed": false,
+   "summary": "Son of the Forest Lord, who made all Burg freemen learn war and left other crafts to women, thralls and aliens.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "the son of the Forest Lord, he whom we call the War-smith"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) small cloaked man at the Flower de Luce",
+   "aliases": [],
+   "type": "person",
+   "subtype": "unknown",
+   "unnamed": true,
+   "summary": "Small figure wrapped in a cloak and slouch hat with great bright eyes, companion of the big man.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C14-P003",
+     "q": "his eyes seemed great and wondrous bright"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) old burgher of the Burg",
+   "aliases": [],
+   "type": "person",
+   "subtype": "burgher",
+   "unnamed": true,
+   "summary": "The oldest guest, who tells the Burg's history and warns Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C14-P017",
+     "q": "the oldest and soberest of the guests"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) market-cross of the Burg",
+   "aliases": [
+    "the Cross"
+   ],
+   "type": "building",
+   "subtype": "market-cross",
+   "unnamed": true,
+   "summary": "Where thrall women are sold to the highest bidder, on Saturdays.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C14-P010",
+     "q": "sold at the market-cross to the highest bidder"
+    },
+    {
+     "p": "BONE-C14-P015",
+     "q": "go to the Cross next Saturday"
+    }
+   ]
+  },
+  {
+   "name": "figured silk cloth",
+   "aliases": [],
+   "type": "commodity",
+   "subtype": "textile",
+   "unnamed": false,
+   "summary": "Figured silk woven by thrall women.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C14-P014",
+     "q": "figured cloth of silk would be far-fetched and dear-bought here"
+    }
+   ]
+  },
+  {
+   "name": "leet and assize",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "courts",
+   "unnamed": false,
+   "summary": "Courts of the Burg, which do not try thralls.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C14-P011",
+     "q": "before leet or assize"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "War-smith",
+   "rel": "child_of",
+   "b": "Forest Lord",
+   "detail": "son",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "the son of the Forest Lord"
+    }
+   ]
+  },
+  {
+   "a": "Fair Lady of the Burg",
+   "rel": "kin_of",
+   "b": "(unnamed) old lord of the Burg",
+   "detail": "his son's daughter",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "the son's daughter of him who had been our lord ere the Wheat-wearers overcame us"
+    }
+   ]
+  },
+  {
+   "a": "Forest Lord",
+   "rel": "leader_of",
+   "b": "Burg of the Four Friths",
+   "detail": "chosen captain after the uprising",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "we took for our captain the Forest Lord"
+    }
+   ]
+  },
+  {
+   "a": "Burg of the Four Friths",
+   "rel": "at_war_with",
+   "b": "Wheat-wearers",
+   "detail": "standing war: men slain, women enslaved",
+   "when": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C14-P010",
+     "q": "whenso the host goeth against them and over-cometh"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) man of the leafless tree",
+   "rel": "other",
+   "b": "(unnamed) small cloaked man at the Flower de Luce",
+   "detail": "companions at the inn",
+   "when": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C14-P003",
+     "q": "As for the smaller man Ralph had no knowledge of him"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [],
+ "facts": [
+  {
+   "category": "law",
+   "subject": "Wheat-wearers",
+   "statement": "Wheat-wearer thralls are outside the Burg's law like cattle; a thrall's crimes, even murder, go unpunished unless her master punishes her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P011",
+     "q": "such folk are no more within the law than kine be"
+    }
+   ]
+  },
+  {
+   "category": "price",
+   "subject": "Wheat-wearers",
+   "statement": "Captive women are sold at the market-cross to the highest bidder; fair young ones fetch a good price.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P010",
+     "q": "such of them as be fair, and that is the more part of the younger ones, fetch no ill penny"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Wheat-wearers",
+   "statement": "All Wheat-wearer males taken are slain, by ancient oath; Dry Tree carles taken are also slain.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P031",
+     "q": "thus we swore to do by all the greatest oaths that we might swear"
+    }
+   ]
+  },
+  {
+   "category": "craft",
+   "subject": "Wheat-wearers",
+   "statement": "Wheat-wearer thrall women are good weavers of figured silk.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:townsman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P014",
+     "q": "Yet are the queens good websters"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Burg of the Four Friths",
+   "statement": "Wheat-wearers stormed the lightly fenced town and held it for three generations; the Burg-folk rose at Yule and slew them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P017",
+     "q": "held them enthralled for three generations of men"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Burg of the Four Friths",
+   "statement": "Afterwards the Burg was fortified, and the Forest Lord, captain, wedded the Fair Lady, granddaughter of the old lord.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "did we make the Burg strong and hard to win, as ye see it to-day"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Burg of the Four Friths",
+   "statement": "By the War-smith's order all freemen learn war; women, thralls and aliens do other crafts and trade.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "let the women and thralls and aliens see to other craftsmanship and to chaffer"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "The burgher says the Dry Tree is no peril, its hunting keeps the Burg's men in trim, and they are \"the chief deer\" of the wood.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P022",
+     "q": "they are the chief deer wherewith our wood is stocked"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Sorcery and the wiles of their Queen make them hard to crush.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P023",
+     "q": "because sorcery goes with them, and the wiles of one who is their Queen"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Wheat-wearers",
+   "statement": "The burgher says conquering them outright would mean endless fighting, so the Burg raids instead.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P029",
+     "q": "the battle would be to begin at every sun's uprising"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Burg of the Four Friths",
+   "statement": "Strangers who neither serve nor trade are viewed with suspicion.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P031",
+     "q": "here is the stranger looked upon with doubt, if he neither will take the wages of the Burg for battle, nor hath aught to sell"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Third sighting of the man of the leafless tree",
+   "chapter": "BONE-C14",
+   "layer": "main",
+   "time_text": "dusk",
+   "participants": [
+    "(unnamed) man of the leafless tree",
+    "(unnamed) small cloaked man at the Flower de Luce"
+   ],
+   "places": [
+    "Flower de Luce"
+   ],
+   "summary": "The big man in a sallet and white gaberdine leaves the Flower de Luce with a small cloaked companion.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P003",
+     "q": "he deemed that he was the very man whom he had seen last in the Great Place at Higham"
+    }
+   ]
+  },
+  {
+   "label": "Wheat-wearer conquest and Yule uprising",
+   "chapter": "BONE-C14",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Wheat-wearers"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "summary": "Wheat-wearers took the Burg and ruled three generations; the grandsons rose at Yule and slew them.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P017",
+     "q": "rose up against them as occasion served, in the winter season and the Yule feast"
+    }
+   ]
+  },
+  {
+   "label": "Roger's oath of service",
+   "chapter": "BONE-C14",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Roger of the Rope-walk",
+    "Ralph"
+   ],
+   "places": [
+    "Flower de Luce"
+   ],
+   "summary": "Roger swears to follow Ralph wherever he goes.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C14-P035",
+     "q": "if thou goest I will go with thee"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who is the small bright-eyed companion of the man of the leafless tree?",
+   "refs": [
+    {
+     "p": "BONE-C14-P003",
+     "q": "wrapped up in a cloak, for as warm as the evening was, and wore a slouch hat withal"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "The Wheat-wearers' homeland is not located.",
+   "refs": [
+    {
+     "p": "BONE-C14-P026",
+     "q": "make them your thralls to till the land for you which now they call theirs"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Roger's face is troubled as he takes Ralph's hand; his loyalty is uncertain.",
+   "refs": [
+    {
+     "p": "BONE-C14-P037",
+     "q": "yet therewith his face seemed a little troubled"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Recurring raids between a warrior town and a neighbour nation, as a world conflict that shapes slave markets and trade.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BONE-C14-P010",
+     "q": "whenso the host goeth against them and over-cometh"
+    }
+   ]
+  },
+  {
+   "idea": "Luxury textiles produced by captive weavers as a market good with ethical weight.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BONE-C14-P014",
+     "q": "figured cloth of silk would be far-fetched and dear-bought here"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C14",
+ "chapters": [
+  "BONE-C14"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C14",
+   "paragraphs_total": 36,
+   "all_paragraphs_read": true,
+   "summary": "At the Flower de Luce Ralph sees the big man in a sallet and white gaberdine (the man of the leafless tree) with a small cloaked bright-eyed companion leave the hall. Over supper townsmen explain the thralls: Wheat-wearer women taken in war, sold at the market-cross while all Wheat-wearer males are slain, and outside the Burg's law. An old burgher tells the Burg's history: conquest by the Wheat-wearers, three generations of thraldom, a Yule uprising, the Forest Lord and the Fair Lady, and the War-smith who made every freeman a warrior. He says the Dry Tree is kept alive as sport and protected by sorcery, and warns Ralph against asking questions. Roger swears to follow Ralph.",
+   "geography_notes": "No new places; adds the Wheat-wearers as a neighbouring nation with towns, castles and land, beaten in battle by the Burg.",
+   "open_questions": [
+    "Who is the small bright-eyed companion of the man in the sallet?",
+    "Where do the Wheat-wearers live?"
+   ]
+  }
+ ]
+}

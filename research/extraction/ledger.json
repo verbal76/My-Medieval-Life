@@ -289,33 +289,77 @@
    "title": "Ralph Entereth Into the Burg of the Four Friths",
    "body_paragraphs": 38,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 14,
+    "relations": 2,
+    "spatial": 3,
+    "travel": 0,
+    "facts": 8,
+    "events": 2,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "The prisoners were five in BONE-C8 but four here.",
+    "Is the Dry Tree's Queen the lady Ralph freed?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C12.txt",
+    "records": "research/extraction/chapters/BONE-C12.json"
+   }
   },
   {
    "chapter": "BONE-C13",
    "title": "The Streets of the Burg of the Four Friths",
    "body_paragraphs": 18,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 9,
+    "relations": 0,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 7,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Where do the Wheat-wearers live relative to the Burg? (not stated here)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C13.txt",
+    "records": "research/extraction/chapters/BONE-C13.json"
+   }
   },
   {
    "chapter": "BONE-C14",
    "title": "What Ralph Heard of the Matters of the Burg of the Four Friths",
    "body_paragraphs": 36,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 7,
+    "relations": 5,
+    "spatial": 0,
+    "travel": 0,
+    "facts": 11,
+    "events": 3,
+    "unresolved": 3,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Who is the small bright-eyed companion of the man in the sallet?",
+    "Where do the Wheat-wearers live?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C14.txt",
+    "records": "research/extraction/chapters/BONE-C14.json"
+   }
   },
   {
    "chapter": "BONE-C15",

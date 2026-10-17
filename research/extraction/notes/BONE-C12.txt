@@ -1,0 +1,44 @@
+@ BONE-C12
+summary: Ralph and Roger enter the Burg of the Four Friths by the North Gate. Ralph gives his name as "Ralph Motherson"; the gate captain lets Roger serve Ralph while he stays and invites Ralph into the Burg's host. An armourer refuses to sell Ralph an axe without a weapons licence under the Burg's seal. In the market-place a four-armed gallows labelled THE DRY TREE awaits the captured woodmen; a franklin and Roger speak of the Dry Tree's "great witch" and Queen, who is sometimes fair and sometimes foul. They lodge at the Flower de Luce.
+geo: The Burg is walled with white-towered ashlar too high to see the roofs over. The highway runs straight to the master-gate (the North Gate), with a walled bailey in front and a deep clean moat, drawbridge and portcullis. Inside: wide paved streets lined with booths, low stout houses, and a big market-place with the plain master church on one side and the Flower de Luce opposite.
+open: The prisoners were five in BONE-C8 but four here. || Is the Dry Tree's Queen the lady Ralph freed?
+
+E building | (unnamed) North Gate of the Burg | master-gate | gatehouse | Master-gate with a walled bailey, deep moat, drawbridge and portcullis; captain checks strangers. | P002 `The road led up straight to the master-gate of the Burg, and there was a bailey before it strongly walled`; P004 `captain of the North Gate`
+E person | (unnamed) captain of the North Gate | the captain | gate captain | Tall man with bare grizzled head, fully armed; dry, cold voice; recruits for the host. | P002 `a tall man with bare grizzled head, but otherwise all-armed`
+E building | Flower de Luce | Flower-de-Luce | inn | Large hostelry facing the gallows in the big square. | P006 `the Flower de Luce, which is in the big square`
+E building | (unnamed) armourer's shop of St. Loy | - | armourer | Shop under the sign of St. Loy selling fine arms; master-armourer tall and stark. | P021 `a sign hung out from it whereon was done an image of St. Loy`
+E building | (unnamed) master church of the Burg | - | church | Strongly built church with a tall tower, not very large, little adorned. | P025 `the master church of the town, which was strongly built and with a tall tower to it`
+E building | (unnamed) Dry Tree gallows | THE DRY TREE | gallows | High gallows with four branch-carved arms and four nooses, labelled THE DRY TREE. | P025 `a high gallows-tree furnished with four forks or arms`
+E building | (unnamed) Town Hall of the Burg | - | town hall | Where weapons licences are granted. | P023 `thou shalt get the said license at the Town Hall straight-way`
+E office | Burg-Reeve | - | magistrate | Officer whose hand and seal license weapon purchases. | P023 `unless he have the Burg-Reeve's hand and seal for it`
+E group | chiefs of the Port | - | council | Leaders of the Burg to whom the captain can introduce recruits. | P011 `I shall lead thee to the chiefs of the Port`
+E custom | licence to buy weapons | - | law | Strangers may not buy weapons without a licence under the Burg's seal. | P022 `thy license to buy weapons, under the seal of the Burg`
+E person | Queen of the Dry Tree | great witch, Devil of the Dry Tree | sorceress | Witch-queen of the Dry Tree whom the Burg failed to capture; said to be fair and foul, young and old, by turns. | P027 `the great witch of these dastards`; P035 `whiles she is foul, whiles very fair, whiles young and whiles old`
+E person | (unnamed) franklin of the Burg | - | franklin | Townsman who tells of the coming hanging. | P026 `he stayed a franklin who was passing by`
+E currency | florin | florins | coin | Coin Ralph offers for the axe. | P023 `take thy florins, master`
+E custom | Ralph Motherson | - | false name | Name Ralph gives at the gate. | P004 `Ralph Motherson`
+
+R Roger of the Rope-walk | serves | Ralph | appointed by the gate captain while Ralph is in the Burg | BONE-C12 | CANON/high | P010 `be thou even so whiles he abideth in the Burg`
+R Queen of the Dry Tree | leader_of | Fellowship of the Dry Tree | Queen, called their goddess | BONE-C12 | CANON/high | P030 `she is their goddess, their mawmet, their devil`
+
+S (unnamed) North Gate of the Burg | on_route | Burg of the Four Friths | cert=fixed | CANON/high | the highway from the crossroads runs straight to it | P002 `The road led up straight to the master-gate of the Burg`
+S Flower de Luce | across_from | (unnamed) master church of the Burg | terrain=market-place; cert=fixed | CANON/high | - | P025 `Over against it they saw the sign of the Flower de Luce`
+S (unnamed) Dry Tree gallows | within | Burg of the Four Friths | dir=in front of the Flower de Luce, middle of the market-place; cert=fixed | CANON/high | - | P025 `in the face of the hostelry amidmost the place`
+
+F architecture | Burg of the Four Friths | Wall of good ashlar with many tall white towers, too high to see the roofs over. | CANON/high | P002 `it was well builded of good ashlar, and so high that they might not see the roofs of the town because of it`
+F law | Burg of the Four Friths | Strangers need a licence under the Burg's seal, issued at the Town Hall to those certified not foemen, to buy weapons; liegemen buy freely. | CANON/high; ctx=dialogue:master-armourer | P023 `When we know thee for a liegeman of the Burg, thou shalt buy what thou wilt without question`
+F military | Burg of the Four Friths | The Burg welcomes alien warriors into its host because it is beset with foes. | CANON/high; ctx=dialogue:captain of the North Gate | P011 `though he be an alien of blood and land`
+F law | Fellowship of the Dry Tree | Captured Dry Tree men are judged quickly, without torture, and hanged the next day. | CANON/high; ctx=dialogue:franklin | P027 `The thieves shall be speedily judged, and not questioned with torments`
+F magic | Queen of the Dry Tree | Roger says she shifts between fair and foul, young and old, cruel and kind; her carles are cruellest when she is kindest. | CANON/medium; ctx=dialogue:Roger of the Rope-walk | P035 `when she is the kindest then are her carles the cruellest`
+F magic | Queen of the Dry Tree | Roger says the Dry Tree has many women like her, so the Queen herself is hard to take. | CANON/medium; ctx=dialogue:Roger of the Rope-walk | P036 `they have many others who are like unto her in one way or other`
+F trade | Burg of the Four Friths | Streets full of open booths; folk stout and strong but plain, busy with their affairs. | CANON/high | P020 `there were many open booths therein, so that the whole street looked like a market`
+F craft | (unnamed) armourer's shop of St. Loy | Armourers' knaves cry "what d'ye lack?"; a gold-inlaid steel axe is offered. | CANON/high | P022 `a very goodly steel axe, gold-inlaid about the shaft`
+
+V main | Entry into the Burg | Ralph enters by the North Gate as "Ralph Motherson"; Roger is appointed his man. | time=early morning; who=Ralph, Roger of the Rope-walk, (unnamed) captain of the North Gate; where=(unnamed) North Gate of the Burg | P004 `Ralph Motherson`
+V main | Failed escape of the Queen | The Burg hoped to take the Dry Tree's witch but she has slipped away. | who=Queen of the Dry Tree; where=Wood Perilous | P027 `it is to be feared that she hath slipped through our fingers once more`
+
+U contradiction | Five bound leafless-tree men in BONE-C8 versus "four woodmen" and four nooses here. | P026 `justice shall be done on the four woodmen to-day`
+U identity | Whether the Queen of the Dry Tree is the lady Ralph freed in BONE-C9; Ralph himself wonders. | P036 `wondered if this were verily the woman whom he had delivered, or some other`
+
+O law | Weapon licences tied to allegiance as a town law mechanic. | P022 `thy license to buy weapons, under the seal of the Burg`
+O politics | Gate captains questioning strangers and offering service in the town's host. | P011 `thou shalt find them in our host`

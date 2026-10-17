@@ -1,0 +1,41 @@
+@ BONE-C14
+summary: At the Flower de Luce Ralph sees the big man in a sallet and white gaberdine (the man of the leafless tree) with a small cloaked bright-eyed companion leave the hall. Over supper townsmen explain the thralls: Wheat-wearer women taken in war, sold at the market-cross while all Wheat-wearer males are slain, and outside the Burg's law. An old burgher tells the Burg's history: conquest by the Wheat-wearers, three generations of thraldom, a Yule uprising, the Forest Lord and the Fair Lady, and the War-smith who made every freeman a warrior. He says the Dry Tree is kept alive as sport and protected by sorcery, and warns Ralph against asking questions. Roger swears to follow Ralph.
+geo: No new places; adds the Wheat-wearers as a neighbouring nation with towns, castles and land, beaten in battle by the Burg.
+open: Who is the small bright-eyed companion of the man in the sallet? || Where do the Wheat-wearers live?
+
+E group | Wheat-wearers | the Wheat-wearers | nation | A people with towns, castles and land whom the Burg nearly always beats; men are slain and women enslaved; once conquered the Burg. | P010 `these are of the folk of the Wheat-wearers`; P026 `to take their towns and castles`
+E person | War-smith | - | lord | Son of the Forest Lord, who made all Burg freemen learn war and left other crafts to women, thralls and aliens. | P018 `the son of the Forest Lord, he whom we call the War-smith`
+E person | (unnamed) small cloaked man at the Flower de Luce | - | unknown | Small figure wrapped in a cloak and slouch hat with great bright eyes, companion of the big man. | P003 `his eyes seemed great and wondrous bright`
+E person | (unnamed) old burgher of the Burg | - | burgher | The oldest guest, who tells the Burg's history and warns Ralph. | P017 `the oldest and soberest of the guests`
+E building | (unnamed) market-cross of the Burg | the Cross | market-cross | Where thrall women are sold to the highest bidder, on Saturdays. | P010 `sold at the market-cross to the highest bidder`; P015 `go to the Cross next Saturday`
+E commodity | figured silk cloth | - | textile | Figured silk woven by thrall women. | P014 `figured cloth of silk would be far-fetched and dear-bought here`
+E custom | leet and assize | - | courts | Courts of the Burg, which do not try thralls. | P011 `before leet or assize`
+
+R War-smith | child_of | Forest Lord | son | backstory | CANON/high | P018 `the son of the Forest Lord`
+R Fair Lady of the Burg | kin_of | (unnamed) old lord of the Burg | his son's daughter | backstory | CANON/high | P018 `the son's daughter of him who had been our lord ere the Wheat-wearers overcame us`
+R Forest Lord | leader_of | Burg of the Four Friths | chosen captain after the uprising | backstory | CANON/high | P018 `we took for our captain the Forest Lord`
+R Burg of the Four Friths | at_war_with | Wheat-wearers | standing war: men slain, women enslaved | BONE-C14 | CANON/high | P010 `whenso the host goeth against them and over-cometh`
+R (unnamed) man of the leafless tree | other | (unnamed) small cloaked man at the Flower de Luce | companions at the inn | BONE-C14 | CANON/high | P003 `As for the smaller man Ralph had no knowledge of him`
+
+F law | Wheat-wearers | Wheat-wearer thralls are outside the Burg's law like cattle; a thrall's crimes, even murder, go unpunished unless her master punishes her. | CANON/high; ctx=dialogue:old burgher | P011 `such folk are no more within the law than kine be`
+F price | Wheat-wearers | Captive women are sold at the market-cross to the highest bidder; fair young ones fetch a good price. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P010 `such of them as be fair, and that is the more part of the younger ones, fetch no ill penny`
+F law | Wheat-wearers | All Wheat-wearer males taken are slain, by ancient oath; Dry Tree carles taken are also slain. | CANON/high; ctx=dialogue:old burgher | P031 `thus we swore to do by all the greatest oaths that we might swear`
+F craft | Wheat-wearers | Wheat-wearer thrall women are good weavers of figured silk. | CANON/high; ctx=dialogue:townsman | P014 `Yet are the queens good websters`
+F history | Burg of the Four Friths | Wheat-wearers stormed the lightly fenced town and held it for three generations; the Burg-folk rose at Yule and slew them. | CANON/high; ctx=dialogue:old burgher | P017 `held them enthralled for three generations of men`
+F history | Burg of the Four Friths | Afterwards the Burg was fortified, and the Forest Lord, captain, wedded the Fair Lady, granddaughter of the old lord. | CANON/high; ctx=dialogue:old burgher | P018 `did we make the Burg strong and hard to win, as ye see it to-day`
+F society | Burg of the Four Friths | By the War-smith's order all freemen learn war; women, thralls and aliens do other crafts and trade. | CANON/high; ctx=dialogue:old burgher | P018 `let the women and thralls and aliens see to other craftsmanship and to chaffer`
+F politics | Fellowship of the Dry Tree | The burgher says the Dry Tree is no peril, its hunting keeps the Burg's men in trim, and they are "the chief deer" of the wood. | CANON/high; ctx=dialogue:old burgher | P022 `they are the chief deer wherewith our wood is stocked`
+F magic | Fellowship of the Dry Tree | Sorcery and the wiles of their Queen make them hard to crush. | CANON/high; ctx=dialogue:old burgher | P023 `because sorcery goes with them, and the wiles of one who is their Queen`
+F politics | Wheat-wearers | The burgher says conquering them outright would mean endless fighting, so the Burg raids instead. | CANON/high; ctx=dialogue:old burgher | P029 `the battle would be to begin at every sun's uprising`
+F society | Burg of the Four Friths | Strangers who neither serve nor trade are viewed with suspicion. | CANON/high; ctx=dialogue:old burgher | P031 `here is the stranger looked upon with doubt, if he neither will take the wages of the Burg for battle, nor hath aught to sell`
+
+V main | Third sighting of the man of the leafless tree | The big man in a sallet and white gaberdine leaves the Flower de Luce with a small cloaked companion. | time=dusk; who=(unnamed) man of the leafless tree, (unnamed) small cloaked man at the Flower de Luce; where=Flower de Luce | P003 `he deemed that he was the very man whom he had seen last in the Great Place at Higham`
+V backstory | Wheat-wearer conquest and Yule uprising | Wheat-wearers took the Burg and ruled three generations; the grandsons rose at Yule and slew them. | who=Wheat-wearers; where=Burg of the Four Friths | P017 `rose up against them as occasion served, in the winter season and the Yule feast`
+V main | Roger's oath of service | Roger swears to follow Ralph wherever he goes. | who=Roger of the Rope-walk, Ralph; where=Flower de Luce | P035 `if thou goest I will go with thee`
+
+U identity | Who is the small bright-eyed companion of the man of the leafless tree? | P003 `wrapped up in a cloak, for as warm as the evening was, and wore a slouch hat withal`
+U location | The Wheat-wearers' homeland is not located. | P026 `make them your thralls to till the land for you which now they call theirs`
+U ambiguity | Roger's face is troubled as he takes Ralph's hand; his loyalty is uncertain. | P037 `yet therewith his face seemed a little troubled`
+
+O politics | Recurring raids between a warrior town and a neighbour nation, as a world conflict that shapes slave markets and trade. | P010 `whenso the host goeth against them and over-cometh`
+O economy | Luxury textiles produced by captive weavers as a market good with ethical weight. | P014 `figured cloth of silk would be far-fetched and dear-bought here`

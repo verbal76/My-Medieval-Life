@@ -1,0 +1,423 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) yellow-gowned thrall women",
+   "aliases": [],
+   "type": "group",
+   "subtype": "thralls",
+   "unnamed": true,
+   "summary": "Taller, whiter women of another blood in short wheat-yellow embroidered gowns, sandals and an iron ring on the right arm; thralls of the Burg.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P002",
+     "q": "their gowns yellow like wheat-straw, but gaily embroidered"
+    },
+    {
+     "p": "BONE-C13-P002",
+     "q": "each bore an iron ring about her right arm"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) merchants in the Burg",
+   "aliases": [],
+   "type": "group",
+   "subtype": "merchants",
+   "unnamed": true,
+   "summary": "Taller unarmed men in long coloured gowns with thin coloured cloth wound about their heads, standing at booths.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P003",
+     "q": "clad in long gowns of fair colours with cloths of thin and gay-coloured web twisted about their heads"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) South Gate of the Burg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "gate",
+   "unnamed": true,
+   "summary": "Gate opposite the North Gate where the host enters.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "a gate right over against that whereby he had entered the Burg"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) East Gate of the Burg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "gate",
+   "unnamed": true,
+   "summary": "Gate on the east side of the wall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P018",
+     "q": "till he came to the East Gate"
+    }
+   ]
+  },
+  {
+   "name": "Great Place of the Burg",
+   "aliases": [
+    "the great place"
+   ],
+   "type": "building",
+   "subtype": "market square",
+   "unnamed": false,
+   "summary": "Central square from which a wide way leads to each gate; the host is mustered and spoil blessed there.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "a wide way led from each port out of the great place, and each ended not but in a gate"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) fish and fowl market of the Burg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "market",
+   "unnamed": true,
+   "summary": "One of the Burg's markets.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "which was the fish and fowl market"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) carline of the Burg",
+   "aliases": [],
+   "type": "person",
+   "subtype": "old woman",
+   "unnamed": true,
+   "summary": "Old spinning woman who sings a raiding song and curses the thrall girl.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P009",
+     "q": "she sang as she sat spinning"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) carline's raiding song",
+   "aliases": [],
+   "type": "text",
+   "subtype": "song",
+   "unnamed": true,
+   "summary": "Song of burning, slaying yeomen, driving off maidens and shaking lots in the helm for spoil.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P011",
+     "q": "Shake the lots in the helm then for brethren are we"
+    }
+   ]
+  },
+  {
+   "name": "Lady of the Wildwood",
+   "aliases": [],
+   "type": "person",
+   "subtype": "epithet",
+   "unnamed": false,
+   "summary": "Ralph's name for the lady he delivered.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C13-P018",
+     "q": "that Lady of the Wildwood standing before the men-at-arms in her scanty raiment"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "(unnamed) South Gate of the Burg",
+   "rel": "across_from",
+   "b": "(unnamed) North Gate of the Burg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "joined by a long street",
+   "refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "a long street that led him down to a gate right over against that whereby he had entered the Burg"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) wall-way of the Burg",
+   "rel": "within",
+   "b": "Burg of the Four Friths",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "wide way clear of houses inside the wall",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "for moving men-at-arms",
+   "refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "there was a wide way clear of all houses inside of the wall, so that men-at-arms might go freely"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) East Gate of the Burg",
+   "rel": "east_of",
+   "b": "Great Place of the Burg",
+   "direction": "east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Ralph walks east along the wall from the South Gate to the East Gate",
+   "refs": [
+    {
+     "p": "BONE-C13-P008",
+     "q": "meaning to come about the inside of the wall till he should hit the East Gate"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "(unnamed) host of the Burg"
+   ],
+   "from": "(unknown)",
+   "to": "Burg of the Four Friths",
+   "via": [
+    "(unnamed) South Gate of the Burg"
+   ],
+   "mode": "foot and horse, with wains",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C13",
+   "refs": [
+    {
+     "p": "BONE-C13-P005",
+     "q": "the gates were thrown wide open"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "architecture",
+   "subject": "Burg of the Four Friths",
+   "statement": "No castle; the burghers say the whole Burg is a castle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:burgher",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "the whole Burg, houses and all, was a castle"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Burg of the Four Friths",
+   "statement": "Houses stout, plain, neither poor nor lordly; folk dark and low, plainly but stoutly clad.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P002",
+     "q": "he saw no poor or wretched houses, and none very big as of great lords"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Burg of the Four Friths",
+   "statement": "Most men carry weapons and staves and wear short brown or blue jerkins, ready for battle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P003",
+     "q": "The more part of the men wore weapons at their sides and had staves in hand"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) host of the Burg",
+   "statement": "The host includes foot with bills and bows and mounted knights and sergeants; men small but warlike, showing battle wear.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P005",
+     "q": "foot-men, with bills some, and some with bows, and all-armed knights and sergeants a-horseback"
+    }
+   ]
+  },
+  {
+   "category": "economy",
+   "subject": "(unnamed) host of the Burg",
+   "statement": "Raid spoil: cattle, sheep, horses, wains of weapons, goods and household stuff, and women and girl captives only.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P007",
+     "q": "all these war-taken thralls were women and women-children; of males there was not so much as a little lad"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) yellow-gowned thrall women",
+   "statement": "The carline implies thralls are whipped and bought with money.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:carline",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P016",
+     "q": "if I had but money to buy some one of you"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "(unnamed) carline's raiding song",
+   "statement": "The song describes sharing spoil by lots shaken in a helmet.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P011",
+     "q": "Shake the lots in the helm"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Return of the Burg's host",
+   "chapter": "BONE-C13",
+   "layer": "main",
+   "time_text": "afternoon",
+   "participants": [
+    "(unnamed) host of the Burg"
+   ],
+   "places": [
+    "(unnamed) South Gate of the Burg",
+    "Great Place of the Burg"
+   ],
+   "summary": "The host returns through the South Gate with spoil and women captives; it is mustered and the spoil blessed in the Great Place.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C13-P018",
+     "q": "to see the host mustered and the spoil blessed"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where the captives' homeland lies is not stated in this chapter.",
+   "refs": [
+    {
+     "p": "BONE-C13-P007",
+     "q": "they must be of the kindred and nation of the fair white women he had seen in the streets"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Visible social castes by dress (thralls, merchants, armed burghers) for town NPC generation.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BONE-C13-P002",
+     "q": "each bore an iron ring about her right arm"
+    }
+   ]
+  },
+  {
+   "idea": "Town plan of four gates on wide ways from a central square with an inner wall-road, as a settlement template.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "a wide way led from each port out of the great place"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C13",
+ "chapters": [
+  "BONE-C13"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C13",
+   "paragraphs_total": 18,
+   "all_paragraphs_read": true,
+   "summary": "Ralph walks the Burg alone. Its folk are dark, short and plainly but stoutly dressed; tall fair women in short yellow embroidered gowns with an iron ring on the right arm are thralls. Merchants in long gowns and turbans trade in booths. At the South Gate the Burg's host returns with wounded men, cattle, sheep, horses, spoil and women captives only. A carline sings a raiding song. A yellow-gowned damsel takes offence at his question about the captives, and the carline curses her as a thrall. Ralph longs to see the Lady of the Wildwood again.",
+   "geography_notes": "The Burg has a North and a South Gate facing each other, an East Gate, a wide clear way inside the wall, and wide ways running from the Great Place to each gate. There is no castle: the burghers say the whole Burg is a castle. There is a fish and fowl market. A narrow street runs east from the South Gate.",
+   "open_questions": [
+    "Where do the Wheat-wearers live relative to the Burg? (not stated here)"
+   ]
+  }
+ ]
+}
