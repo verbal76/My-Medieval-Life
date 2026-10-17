@@ -1,0 +1,49 @@
+@ BONE-C18
+summary: Ralph wakes at noon in the House (Castle) of Abundance; Roger has gone, asking him to wait two days. The old carline flatters him and says the land is ruled by the Lady of Abundance, fairest of women, and that a book in the house tells of the Well. Haymakers say they are free yeomen and vavassors without thralldom, and that the Lady has been the same unchanging fair woman through an old man's whole life; they never go beyond the wood. Ralph explores the empty but fully armed castle and finds the Lady's chamber of estate, whose arras shows a richly dressed old woman and a poorly dressed young woman who looks like the lady he rescued. He hunts a hart; the carline says the Lady may be long in coming, as the way is long. That night she gives him the book.
+geo: The castle stands in a plain amid the wildwood (the Plain of Abundance): meadows, tillage, a river winding close to the gate and the north-west corner, a wooden footbridge with a willow-fringed bathing pool below, thatched cots between river and wood, and a small white church. The wasted land with the wide river lies north beyond the wildwood. Ralph hunts west and north of the house.
+open: Is the Lady of Abundance the lady of the crossroads? || Is the ageless Lady one woman (as the old carle insists) or a line?
+
+E place | Plain of Abundance | Land of Abundance, the little land | plain | Plain within the wildwood around the castle; peaceful husbandmen, no thralldom; formerly a battleground. | P013 `this Plain of Abundance, where are nought but peaceful husbandmen`
+E person | Lady of Abundance | the Lady, my Lady | lady | Lady of the land; called fairest of women; kind to husbandmen; seen unchanged over an old man's lifetime; comes at all seasons from far away. | P014 `We call her the Lady of Abundance`; P029 `she is the same as she was always`
+E person | (unnamed) old haymaker of Abundance | the old carle | yeoman | Old man minding the haymakers' gear under an elm; praises the Lady. | P022 `under the shade of a tall elm-tree he saw an old man sitting heeding the outer raiment of the haymakers`
+E group | yeomen of Abundance | field-folk, carles and queens | yeomen | Comely, well-clad free yeomen and vavassors of the Lady; they never go beyond the wood. | P025 `We be yeomen and her vavassors; there is no thralldom in our land`
+E building | (unnamed) Lady's chamber of estate | chamber with the ivory throne | throne room | Gold and blue roof, Alexandrine pavement, carved ivory throne under baudekin, hunting carpet, and an arras of the greenwood. | P039 `On the dais was a throne of carven ivory`; P044 `yonder chamber is the chamber of estate of our Lady`
+E item | (unnamed) arras of the two women | - | tapestry | Greenwood arras with a garden, goat garth and thatched cot; a richly dressed old woman watches a scantily clad young woman toil. | P039 `two women, whereof one old and the other young`
+E item | (unnamed) arras of the Story of Alexander | - | tapestry | Hangings in the hall of the castle. | P008 `arras of the Story of Alexander`
+E text | (unnamed) book of the Well | the book | illuminated book | Book in the castle that tells of the Well; the carline knows it but cannot read. | P016 `there is a book in this house that telleth of it`
+E building | Our Lady of the Thorn | - | church | Church with an image of St. Michael in the choir. | P020 `the image of St. Michael in the Choir of Our Lady of the Thorn`
+E item | Arms of Upmeads | coat-armour of Upmead | heraldry | On a gold ground a fruited apple-tree by a river-side. | P021 `on a gold ground an apple-tree fruited, standing by a river-side`
+E building | (unnamed) little white church of Abundance | - | church | Small white delicate church among the cots. | P006 `amidst them a little church, white and delicate of fashion`
+E feature | (unnamed) bathing pool of Abundance | - | pool | Clear sandy pool below a wooden footbridge, ringed by willows unpollarded for eight years. | P006 `He came to a pool a little below where a wooden foot-bridge crossed the water`
+E person | (unnamed) carline of the House of Abundance | the garland-maker | servant | Old servant who once was called the garland-maker; serves the Lady. | P019 `when I was young I was called the garland-maker`; P014 `She is my lady`
+
+R Lady of Abundance | ruler_of | Plain of Abundance | lady, not lord | BONE-C18 | CANON/high | P014 `There is no lord, but a lady`
+R (unnamed) carline of the House of Abundance | serves | Lady of Abundance | - | BONE-C18 | CANON/high | P014 `She is my lady`
+R yeomen of Abundance | vassal_of | Lady of Abundance | vavassors | BONE-C18 | CANON/high | P025 `We be yeomen and her vavassors`
+
+S (unnamed) wasted downland | north_of | Plain of Abundance | dir=north-away beyond the wildwood; ctx=dialogue:Ralph; cert=fixed | CANON/high | Ralph's description; the old carle knows nothing beyond the wood | P030 `that land north-away beyond the wildwood`
+S (unnamed) river of Abundance | adjacent_to | House of Abundance | dir=close to the gate and the north-west corner; cert=fixed | CANON/high | - | P022 `the winding of the stream brought it near to the castle gate`; P033 `at the north-west corner, whereas the river drew quite close to the wall`
+S (unnamed) cots of Abundance | between | (unnamed) river of Abundance | terrain=between the river and the wood; cert=fixed | CANON/high | - | P006 `between the river and the wood many cots of the husbandmen trimly builded and thatched`
+S (unnamed) bathing pool of Abundance | downstream_of | (unnamed) wooden footbridge of Abundance | cert=fixed | CANON/high | a little below | P006 `a pool a little below where a wooden foot-bridge crossed the water`
+S Lady of Abundance | distance_from | Plain of Abundance | dist=a long way; ctx=dialogue:carline; cert=flexible | CANON/high | where she dwells is far | P052 `the way is long betwixt us and her`
+
+F society | Plain of Abundance | No thralldom; the folk are yeomen and vavassors, gay and well clad. | CANON/high; ctx=dialogue:old haymaker | P025 `there is no thralldom in our land`
+F history | Plain of Abundance | Cruel battles were once fought here, before the Lady came. | CANON/high; ctx=dialogue:old haymaker | P025 `Time has been when cruel battles were fought in these wood-lawns`
+F magic | Lady of Abundance | The old man says he has seen her young and old and she never changes, and denies she could be a granddaughter. | CANON/high; ctx=dialogue:old haymaker | P029 `never has there been another like to her in all ways`
+F society | yeomen of Abundance | They rarely go into the wood beyond sight of open daylight and never beyond it. | CANON/high; ctx=dialogue:old haymaker | P030 `for beyond the wood go we never`
+F military | House of Abundance | Guard-chamber and towers are stocked with weapons ready for battle, but no men-at-arms. | CANON/high | P039 `found weapons both for hand, and for cast and shot in each one of them, and all ready as if for present battle`
+F law | Lady of Abundance | She sits in the chamber of estate to hear cases and give judgements. | CANON/high; ctx=dialogue:carline | P044 `she sitteth there to hear the cases of folk and to give dooms`
+F agriculture | Plain of Abundance | Hay harvest begins in June; neatherds and shepherds graze one side of the river. | CANON/high | P002 `the carles and queens were awork at the beginning of hay harvest`
+F ecology | (unnamed) bathing pool of Abundance | Willows not pollarded for eight years. | CANON/high | P006 `which had not been shrouded these eight years`
+F magic | Plain of Abundance | The carline says the folk are as if they had drunk of the Well. | CANON/medium; ctx=dialogue:carline | P013 `all these are as if they had drunk a draught of the WELL AT THE WORLD'S END`
+F religion | Ralph | Ralph fears the lady may be a devil, one of the goddesses of the ancient world. | CANON/high | P038 `one of the goddesses of the ancient world`
+
+V main | Waiting at the Castle of Abundance | Ralph waits the two days Roger asked, explores the castle and land, and hunts a hart. | time=June, hay harvest; who=Ralph, (unnamed) carline of the House of Abundance; where=House of Abundance, Plain of Abundance | P046 `there he slew a hart with one shaft`
+V backstory | The Lady's coming to Abundance | Peace came to the land with the Lady of Abundance, before the old man's birth. | who=Lady of Abundance; where=Plain of Abundance | P025 `but that was before the coming of the Lady of Abundance`
+
+U identity | Is the Lady of Abundance the lady Ralph freed? The arras's young woman looks like her. | P040 `then it must have been done from her twin sister`
+U location | Where the Lady dwells when away is unknown. | P028 `I wot not`
+U ambiguity | Why the carline crosses herself on speaking of the Lady's chamber. | P045 `The old woman crossed herself as she spoke`
+
+O politics | A lordship whose ruler is often absent, run by a single steward, with an armoury that has no garrison. | P039 `though there was never a man-at-arms there, nor any soul except the old woman`
+O lore | An in-world book as a lore item that reveals legends when read. | P016 `there is a book in this house that telleth of it`

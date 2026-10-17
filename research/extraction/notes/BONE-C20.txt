@@ -1,0 +1,34 @@
+@ BONE-C20
+summary: Ralph crosses the river by a ford with stepping stones and at a cot gets milk from an old woman and her niece. The old woman hints that others have waited at the castle before him, that the Lady is long-lived but young and fair, and describes seeing her bathe. Ralph walks south and east into the wood and at noon meets a priest on a belled hackney, the Vicar appointed by the fathers of the Thorn to serve the church of the Little Plain and the chapel of St. Anthony. The priest swears the Lady is a holy woman, describes her going barefoot by night to St. Anthony's chapel, weeps, and says she will love none but saints, save a man all women love.
+geo: A wide ford with stepping stones below the bathing pool; a cot across the river near the wood. Ralph goes south and east of the House this day (the day before he went west and north). The Little Plain, Land of Abundance and Forest Land are names for this region. The chapel of St. Anthony lies in the wood. The priest's cell is by the church near the ford.
+open: Where is the house of the fathers of the Thorn? || Why does the priest weep?
+
+E feature | (unnamed) ford with stepping stones of Abundance | - | ford | Wide ford with stepping stones somewhat below the bathing pool. | P002 `He crossed the river by a wide ford and stepping stones somewhat below the pool`
+E person | (unnamed) old spinning woman of Abundance | the goody | cottager | Old woman at a cot across the river who has seen the Lady bathe; scornful of her goodness. | P002 `an old woman sat spinning in the door`
+E person | (unnamed) niece of the old spinning woman | - | maiden | One of the fishing maidens; has a sweetheart but is drawn to Ralph. | P006 `she is not my daughter, but my brother's`
+E person | (unnamed) Vicar of the Little Plain | the priest | priest | Vicar appointed by the fathers of the Thorn to serve the church of the Little Plain and St. Anthony's chapel; rides a hackney with a horse-bell. | P013 `I am the Vicar appointed by the fathers of the Thorn to serve the church of the Little Plain`
+E group | fathers of the Thorn | - | religious house | Religious who appoint the Vicar. | P013 `the fathers of the Thorn`
+E building | (unnamed) chapel of St. Anthony | - | chapel | Chapel in the wood which the Lady visits by night. | P013 `the chapel of St. Anthony yonder in the wood`
+E place | Little Plain | Little Land, Forest Land | plain | Names for the Plain of Abundance. | P012 `I am for the Little Plain and the Land of Abundance`; P010 `she is the saint of the Forest Land`
+
+R (unnamed) Vicar of the Little Plain | serves | fathers of the Thorn | appointed vicar | BONE-C20 | CANON/high | P013 `I am the Vicar appointed by the fathers of the Thorn`
+R (unnamed) niece of the old spinning woman | kin_of | (unnamed) old spinning woman of Abundance | niece | BONE-C20 | CANON/high | P006 `she is not my daughter, but my brother's`
+
+S (unnamed) ford with stepping stones of Abundance | downstream_of | (unnamed) bathing pool of Abundance | cert=fixed | CANON/high | somewhat below | P002 `somewhat below the pool wherein he had bathed on that first day`
+S (unnamed) chapel of St. Anthony | within | (unnamed) evil-named wood before the House of Abundance | ctx=dialogue:Vicar; cert=constrained | CANON/medium | in the wood around the plain | P013 `the chapel of St. Anthony yonder in the wood`
+
+T Ralph | House of Abundance | (unnamed) wood south-east of the House of Abundance | via=(unnamed) ford with stepping stones of Abundance; mode=foot; dir=south and east; start=morning; end=noon | P012 `going south and east of the House: whereas the last day he had gone west and north`
+
+F magic | Lady of Abundance | The old woman says the Lady has lived long yet looks young and fair, and that others have waited for her at the castle. | CANON/high; ctx=dialogue:old spinning woman | P007 `long hath she lived, but she is not old to look on, nor foul`; P002 `as others have done before thee`
+F custom | Lady of Abundance | In summer the Lady bathes in the pool behind a silk cloth held by four women. | CANON/high; ctx=dialogue:old spinning woman | P008 `It is her way here in the summer-tide to bathe her in yonder pool`
+F religion | Lady of Abundance | The Vicar says she gives to the church, is merciful to the poor, confesses and does penance, and goes barefoot by night to St. Anthony's chapel. | CANON/high; ctx=dialogue:Vicar | P018 `she barefoot in her smock amidst the rugged wood`
+F religion | Lady of Abundance | Ralph asks whether she is of the race of ancient devils, the gods of the Gentiles. | CANON/high; ctx=dialogue:Ralph | P015 `of the race of the ancient devils, the gods of the Gentiles`
+F religion | (unnamed) Vicar of the Little Plain | The Vicar says she will love none but saints, save a man all women love. | CANON/high; ctx=dialogue:Vicar | P021 `save it be some man with whom all women are in love`
+F transport | (unnamed) Vicar of the Little Plain | He rides a hackney with a horse-bell and carries a bagged book. | CANON/high | P012 `riding on a hackney, to whose neck hung a horse-bell`
+
+V main | Meeting the Vicar | Ralph meets the Vicar in the wood and walks back with him; the Vicar praises the Lady and weeps. | time=noon to sunset; who=Ralph, (unnamed) Vicar of the Little Plain; where=Plain of Abundance | P020 `therewith suddenly he fell a-weeping`
+
+U location | Where the fathers of the Thorn have their house (cf. Our Lady of the Thorn, BONE-C18). | P013 `the fathers of the Thorn`
+U ambiguity | The Vicar's weeping and dreaming suggest he too is caught in love of the Lady. | P019 `he sighed heavily`
+
+O society | NPCs whose testimony about a ruler conflicts (pious priest, scornful crone), leaving the player to judge. | P010 `she is the saint of the Forest Land, and the guardian of all poor folk.  Ask the carles else!`

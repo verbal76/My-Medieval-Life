@@ -1,0 +1,666 @@
+{
+ "entities": [
+  {
+   "name": "Plain of Abundance",
+   "aliases": [
+    "Land of Abundance",
+    "the little land"
+   ],
+   "type": "place",
+   "subtype": "plain",
+   "unnamed": false,
+   "summary": "Plain within the wildwood around the castle; peaceful husbandmen, no thralldom; formerly a battleground.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P013",
+     "q": "this Plain of Abundance, where are nought but peaceful husbandmen"
+    }
+   ]
+  },
+  {
+   "name": "Lady of Abundance",
+   "aliases": [
+    "the Lady",
+    "my Lady"
+   ],
+   "type": "person",
+   "subtype": "lady",
+   "unnamed": false,
+   "summary": "Lady of the land; called fairest of women; kind to husbandmen; seen unchanged over an old man's lifetime; comes at all seasons from far away.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P014",
+     "q": "We call her the Lady of Abundance"
+    },
+    {
+     "p": "BONE-C18-P029",
+     "q": "she is the same as she was always"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) old haymaker of Abundance",
+   "aliases": [
+    "the old carle"
+   ],
+   "type": "person",
+   "subtype": "yeoman",
+   "unnamed": true,
+   "summary": "Old man minding the haymakers' gear under an elm; praises the Lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P022",
+     "q": "under the shade of a tall elm-tree he saw an old man sitting heeding the outer raiment of the haymakers"
+    }
+   ]
+  },
+  {
+   "name": "yeomen of Abundance",
+   "aliases": [
+    "field-folk",
+    "carles and queens"
+   ],
+   "type": "group",
+   "subtype": "yeomen",
+   "unnamed": false,
+   "summary": "Comely, well-clad free yeomen and vavassors of the Lady; they never go beyond the wood.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P025",
+     "q": "We be yeomen and her vavassors; there is no thralldom in our land"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Lady's chamber of estate",
+   "aliases": [
+    "chamber with the ivory throne"
+   ],
+   "type": "building",
+   "subtype": "throne room",
+   "unnamed": true,
+   "summary": "Gold and blue roof, Alexandrine pavement, carved ivory throne under baudekin, hunting carpet, and an arras of the greenwood.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P039",
+     "q": "On the dais was a throne of carven ivory"
+    },
+    {
+     "p": "BONE-C18-P044",
+     "q": "yonder chamber is the chamber of estate of our Lady"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) arras of the two women",
+   "aliases": [],
+   "type": "item",
+   "subtype": "tapestry",
+   "unnamed": true,
+   "summary": "Greenwood arras with a garden, goat garth and thatched cot; a richly dressed old woman watches a scantily clad young woman toil.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P039",
+     "q": "two women, whereof one old and the other young"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) arras of the Story of Alexander",
+   "aliases": [],
+   "type": "item",
+   "subtype": "tapestry",
+   "unnamed": true,
+   "summary": "Hangings in the hall of the castle.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P008",
+     "q": "arras of the Story of Alexander"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) book of the Well",
+   "aliases": [
+    "the book"
+   ],
+   "type": "text",
+   "subtype": "illuminated book",
+   "unnamed": true,
+   "summary": "Book in the castle that tells of the Well; the carline knows it but cannot read.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P016",
+     "q": "there is a book in this house that telleth of it"
+    }
+   ]
+  },
+  {
+   "name": "Our Lady of the Thorn",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": false,
+   "summary": "Church with an image of St. Michael in the choir.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P020",
+     "q": "the image of St. Michael in the Choir of Our Lady of the Thorn"
+    }
+   ]
+  },
+  {
+   "name": "Arms of Upmeads",
+   "aliases": [
+    "coat-armour of Upmead"
+   ],
+   "type": "item",
+   "subtype": "heraldry",
+   "unnamed": false,
+   "summary": "On a gold ground a fruited apple-tree by a river-side.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P021",
+     "q": "on a gold ground an apple-tree fruited, standing by a river-side"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) little white church of Abundance",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": true,
+   "summary": "Small white delicate church among the cots.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P006",
+     "q": "amidst them a little church, white and delicate of fashion"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) bathing pool of Abundance",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "pool",
+   "unnamed": true,
+   "summary": "Clear sandy pool below a wooden footbridge, ringed by willows unpollarded for eight years.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P006",
+     "q": "He came to a pool a little below where a wooden foot-bridge crossed the water"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) carline of the House of Abundance",
+   "aliases": [
+    "the garland-maker"
+   ],
+   "type": "person",
+   "subtype": "servant",
+   "unnamed": true,
+   "summary": "Old servant who once was called the garland-maker; serves the Lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C18-P019",
+     "q": "when I was young I was called the garland-maker"
+    },
+    {
+     "p": "BONE-C18-P014",
+     "q": "She is my lady"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Lady of Abundance",
+   "rel": "ruler_of",
+   "b": "Plain of Abundance",
+   "detail": "lady, not lord",
+   "when": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C18-P014",
+     "q": "There is no lord, but a lady"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) carline of the House of Abundance",
+   "rel": "serves",
+   "b": "Lady of Abundance",
+   "detail": "-",
+   "when": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C18-P014",
+     "q": "She is my lady"
+    }
+   ]
+  },
+  {
+   "a": "yeomen of Abundance",
+   "rel": "vassal_of",
+   "b": "Lady of Abundance",
+   "detail": "vavassors",
+   "when": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C18-P025",
+     "q": "We be yeomen and her vavassors"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) wasted downland",
+   "rel": "north_of",
+   "b": "Plain of Abundance",
+   "direction": "north-away beyond the wildwood",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Ralph",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Ralph's description; the old carle knows nothing beyond the wood",
+   "refs": [
+    {
+     "p": "BONE-C18-P030",
+     "q": "that land north-away beyond the wildwood"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) river of Abundance",
+   "rel": "adjacent_to",
+   "b": "House of Abundance",
+   "direction": "close to the gate and the north-west corner",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C18-P022",
+     "q": "the winding of the stream brought it near to the castle gate"
+    },
+    {
+     "p": "BONE-C18-P033",
+     "q": "at the north-west corner, whereas the river drew quite close to the wall"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) cots of Abundance",
+   "rel": "between",
+   "b": "(unnamed) river of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "between the river and the wood",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C18-P006",
+     "q": "between the river and the wood many cots of the husbandmen trimly builded and thatched"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) bathing pool of Abundance",
+   "rel": "downstream_of",
+   "b": "(unnamed) wooden footbridge of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "a little below",
+   "refs": [
+    {
+     "p": "BONE-C18-P006",
+     "q": "a pool a little below where a wooden foot-bridge crossed the water"
+    }
+   ]
+  },
+  {
+   "a": "Lady of Abundance",
+   "rel": "distance_from",
+   "b": "Plain of Abundance",
+   "direction": "",
+   "distance_text": "a long way",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:carline",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "where she dwells is far",
+   "refs": [
+    {
+     "p": "BONE-C18-P052",
+     "q": "the way is long betwixt us and her"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Plain of Abundance",
+   "statement": "No thralldom; the folk are yeomen and vavassors, gay and well clad.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old haymaker",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P025",
+     "q": "there is no thralldom in our land"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Plain of Abundance",
+   "statement": "Cruel battles were once fought here, before the Lady came.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old haymaker",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P025",
+     "q": "Time has been when cruel battles were fought in these wood-lawns"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "The old man says he has seen her young and old and she never changes, and denies she could be a granddaughter.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old haymaker",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P029",
+     "q": "never has there been another like to her in all ways"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "yeomen of Abundance",
+   "statement": "They rarely go into the wood beyond sight of open daylight and never beyond it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old haymaker",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P030",
+     "q": "for beyond the wood go we never"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "House of Abundance",
+   "statement": "Guard-chamber and towers are stocked with weapons ready for battle, but no men-at-arms.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P039",
+     "q": "found weapons both for hand, and for cast and shot in each one of them, and all ready as if for present battle"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Lady of Abundance",
+   "statement": "She sits in the chamber of estate to hear cases and give judgements.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:carline",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P044",
+     "q": "she sitteth there to hear the cases of folk and to give dooms"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "Plain of Abundance",
+   "statement": "Hay harvest begins in June; neatherds and shepherds graze one side of the river.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P002",
+     "q": "the carles and queens were awork at the beginning of hay harvest"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) bathing pool of Abundance",
+   "statement": "Willows not pollarded for eight years.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P006",
+     "q": "which had not been shrouded these eight years"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Plain of Abundance",
+   "statement": "The carline says the folk are as if they had drunk of the Well.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:carline",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P013",
+     "q": "all these are as if they had drunk a draught of the WELL AT THE WORLD'S END"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Ralph",
+   "statement": "Ralph fears the lady may be a devil, one of the goddesses of the ancient world.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P038",
+     "q": "one of the goddesses of the ancient world"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Waiting at the Castle of Abundance",
+   "chapter": "BONE-C18",
+   "layer": "main",
+   "time_text": "June, hay harvest",
+   "participants": [
+    "Ralph",
+    "(unnamed) carline of the House of Abundance"
+   ],
+   "places": [
+    "House of Abundance",
+    "Plain of Abundance"
+   ],
+   "summary": "Ralph waits the two days Roger asked, explores the castle and land, and hunts a hart.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P046",
+     "q": "there he slew a hart with one shaft"
+    }
+   ]
+  },
+  {
+   "label": "The Lady's coming to Abundance",
+   "chapter": "BONE-C18",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Lady of Abundance"
+   ],
+   "places": [
+    "Plain of Abundance"
+   ],
+   "summary": "Peace came to the land with the Lady of Abundance, before the old man's birth.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C18-P025",
+     "q": "but that was before the coming of the Lady of Abundance"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Is the Lady of Abundance the lady Ralph freed? The arras's young woman looks like her.",
+   "refs": [
+    {
+     "p": "BONE-C18-P040",
+     "q": "then it must have been done from her twin sister"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Where the Lady dwells when away is unknown.",
+   "refs": [
+    {
+     "p": "BONE-C18-P028",
+     "q": "I wot not"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Why the carline crosses herself on speaking of the Lady's chamber.",
+   "refs": [
+    {
+     "p": "BONE-C18-P045",
+     "q": "The old woman crossed herself as she spoke"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A lordship whose ruler is often absent, run by a single steward, with an armoury that has no garrison.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BONE-C18-P039",
+     "q": "though there was never a man-at-arms there, nor any soul except the old woman"
+    }
+   ]
+  },
+  {
+   "idea": "An in-world book as a lore item that reveals legends when read.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BONE-C18-P016",
+     "q": "there is a book in this house that telleth of it"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C18",
+ "chapters": [
+  "BONE-C18"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C18",
+   "paragraphs_total": 54,
+   "all_paragraphs_read": true,
+   "summary": "Ralph wakes at noon in the House (Castle) of Abundance; Roger has gone, asking him to wait two days. The old carline flatters him and says the land is ruled by the Lady of Abundance, fairest of women, and that a book in the house tells of the Well. Haymakers say they are free yeomen and vavassors without thralldom, and that the Lady has been the same unchanging fair woman through an old man's whole life; they never go beyond the wood. Ralph explores the empty but fully armed castle and finds the Lady's chamber of estate, whose arras shows a richly dressed old woman and a poorly dressed young woman who looks like the lady he rescued. He hunts a hart; the carline says the Lady may be long in coming, as the way is long. That night she gives him the book.",
+   "geography_notes": "The castle stands in a plain amid the wildwood (the Plain of Abundance): meadows, tillage, a river winding close to the gate and the north-west corner, a wooden footbridge with a willow-fringed bathing pool below, thatched cots between river and wood, and a small white church. The wasted land with the wide river lies north beyond the wildwood. Ralph hunts west and north of the house.",
+   "open_questions": [
+    "Is the Lady of Abundance the lady of the crossroads?",
+    "Is the ageless Lady one woman (as the old carle insists) or a line?"
+   ]
+  }
+ ]
+}

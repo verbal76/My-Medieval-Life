@@ -443,33 +443,78 @@
    "title": "Of Ralph in the Castle of Abundance",
    "body_paragraphs": 54,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 13,
+    "relations": 3,
+    "spatial": 5,
+    "travel": 0,
+    "facts": 10,
+    "events": 2,
+    "unresolved": 3,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Is the Lady of Abundance the lady of the crossroads?",
+    "Is the ageless Lady one woman (as the old carle insists) or a line?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C18.txt",
+    "records": "research/extraction/chapters/BONE-C18.json"
+   }
   },
   {
    "chapter": "BONE-C19",
    "title": "Ralph Readeth in a Book Concerning the Well at the World's End",
    "body_paragraphs": 2,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 2,
+    "spatial": 0,
+    "travel": 0,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the book's woman the lady of the crossroads and the Lady of Abundance?",
+    "Who is the sorceress of the tale?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C19.txt",
+    "records": "research/extraction/chapters/BONE-C19.json"
+   }
   },
   {
    "chapter": "BONE-C20",
    "title": "Ralph Meeteth a Man in the Wood",
    "body_paragraphs": 21,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 7,
+    "relations": 2,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Where is the house of the fathers of the Thorn?",
+    "Why does the priest weep?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C20.txt",
+    "records": "research/extraction/chapters/BONE-C20.json"
+   }
   },
   {
    "chapter": "BONE-C21",

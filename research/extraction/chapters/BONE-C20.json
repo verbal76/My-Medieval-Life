@@ -1,0 +1,397 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) ford with stepping stones of Abundance",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "ford",
+   "unnamed": true,
+   "summary": "Wide ford with stepping stones somewhat below the bathing pool.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C20-P002",
+     "q": "He crossed the river by a wide ford and stepping stones somewhat below the pool"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) old spinning woman of Abundance",
+   "aliases": [
+    "the goody"
+   ],
+   "type": "person",
+   "subtype": "cottager",
+   "unnamed": true,
+   "summary": "Old woman at a cot across the river who has seen the Lady bathe; scornful of her goodness.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C20-P002",
+     "q": "an old woman sat spinning in the door"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) niece of the old spinning woman",
+   "aliases": [],
+   "type": "person",
+   "subtype": "maiden",
+   "unnamed": true,
+   "summary": "One of the fishing maidens; has a sweetheart but is drawn to Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C20-P006",
+     "q": "she is not my daughter, but my brother's"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Vicar of the Little Plain",
+   "aliases": [
+    "the priest"
+   ],
+   "type": "person",
+   "subtype": "priest",
+   "unnamed": true,
+   "summary": "Vicar appointed by the fathers of the Thorn to serve the church of the Little Plain and St. Anthony's chapel; rides a hackney with a horse-bell.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "I am the Vicar appointed by the fathers of the Thorn to serve the church of the Little Plain"
+    }
+   ]
+  },
+  {
+   "name": "fathers of the Thorn",
+   "aliases": [],
+   "type": "group",
+   "subtype": "religious house",
+   "unnamed": false,
+   "summary": "Religious who appoint the Vicar.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "the fathers of the Thorn"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) chapel of St. Anthony",
+   "aliases": [],
+   "type": "building",
+   "subtype": "chapel",
+   "unnamed": true,
+   "summary": "Chapel in the wood which the Lady visits by night.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "the chapel of St. Anthony yonder in the wood"
+    }
+   ]
+  },
+  {
+   "name": "Little Plain",
+   "aliases": [
+    "Little Land",
+    "Forest Land"
+   ],
+   "type": "place",
+   "subtype": "plain",
+   "unnamed": false,
+   "summary": "Names for the Plain of Abundance.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C20-P012",
+     "q": "I am for the Little Plain and the Land of Abundance"
+    },
+    {
+     "p": "BONE-C20-P010",
+     "q": "she is the saint of the Forest Land"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Vicar of the Little Plain",
+   "rel": "serves",
+   "b": "fathers of the Thorn",
+   "detail": "appointed vicar",
+   "when": "BONE-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "I am the Vicar appointed by the fathers of the Thorn"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) niece of the old spinning woman",
+   "rel": "kin_of",
+   "b": "(unnamed) old spinning woman of Abundance",
+   "detail": "niece",
+   "when": "BONE-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C20-P006",
+     "q": "she is not my daughter, but my brother's"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) ford with stepping stones of Abundance",
+   "rel": "downstream_of",
+   "b": "(unnamed) bathing pool of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "somewhat below",
+   "refs": [
+    {
+     "p": "BONE-C20-P002",
+     "q": "somewhat below the pool wherein he had bathed on that first day"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) chapel of St. Anthony",
+   "rel": "within",
+   "b": "(unnamed) evil-named wood before the House of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Vicar",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "in the wood around the plain",
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "the chapel of St. Anthony yonder in the wood"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "House of Abundance",
+   "to": "(unnamed) wood south-east of the House of Abundance",
+   "via": [
+    "(unnamed) ford with stepping stones of Abundance"
+   ],
+   "mode": "foot",
+   "direction_text": "south and east",
+   "duration_text": "",
+   "start_time_text": "morning",
+   "end_time_text": "noon",
+   "terrain_text": "",
+   "chapter": "BONE-C20",
+   "refs": [
+    {
+     "p": "BONE-C20-P012",
+     "q": "going south and east of the House: whereas the last day he had gone west and north"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "The old woman says the Lady has lived long yet looks young and fair, and that others have waited for her at the castle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old spinning woman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C20-P007",
+     "q": "long hath she lived, but she is not old to look on, nor foul"
+    },
+    {
+     "p": "BONE-C20-P002",
+     "q": "as others have done before thee"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Lady of Abundance",
+   "statement": "In summer the Lady bathes in the pool behind a silk cloth held by four women.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old spinning woman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C20-P008",
+     "q": "It is her way here in the summer-tide to bathe her in yonder pool"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Lady of Abundance",
+   "statement": "The Vicar says she gives to the church, is merciful to the poor, confesses and does penance, and goes barefoot by night to St. Anthony's chapel.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Vicar",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C20-P018",
+     "q": "she barefoot in her smock amidst the rugged wood"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Lady of Abundance",
+   "statement": "Ralph asks whether she is of the race of ancient devils, the gods of the Gentiles.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C20-P015",
+     "q": "of the race of the ancient devils, the gods of the Gentiles"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "(unnamed) Vicar of the Little Plain",
+   "statement": "The Vicar says she will love none but saints, save a man all women love.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Vicar",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C20-P021",
+     "q": "save it be some man with whom all women are in love"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "(unnamed) Vicar of the Little Plain",
+   "statement": "He rides a hackney with a horse-bell and carries a bagged book.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C20-P012",
+     "q": "riding on a hackney, to whose neck hung a horse-bell"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Meeting the Vicar",
+   "chapter": "BONE-C20",
+   "layer": "main",
+   "time_text": "noon to sunset",
+   "participants": [
+    "Ralph",
+    "(unnamed) Vicar of the Little Plain"
+   ],
+   "places": [
+    "Plain of Abundance"
+   ],
+   "summary": "Ralph meets the Vicar in the wood and walks back with him; the Vicar praises the Lady and weeps.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C20-P020",
+     "q": "therewith suddenly he fell a-weeping"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where the fathers of the Thorn have their house (cf. Our Lady of the Thorn, BONE-C18).",
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "the fathers of the Thorn"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "The Vicar's weeping and dreaming suggest he too is caught in love of the Lady.",
+   "refs": [
+    {
+     "p": "BONE-C20-P019",
+     "q": "he sighed heavily"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "NPCs whose testimony about a ruler conflicts (pious priest, scornful crone), leaving the player to judge.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BONE-C20-P010",
+     "q": "she is the saint of the Forest Land, and the guardian of all poor folk.  Ask the carles else!"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C20",
+ "chapters": [
+  "BONE-C20"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C20",
+   "paragraphs_total": 21,
+   "all_paragraphs_read": true,
+   "summary": "Ralph crosses the river by a ford with stepping stones and at a cot gets milk from an old woman and her niece. The old woman hints that others have waited at the castle before him, that the Lady is long-lived but young and fair, and describes seeing her bathe. Ralph walks south and east into the wood and at noon meets a priest on a belled hackney, the Vicar appointed by the fathers of the Thorn to serve the church of the Little Plain and the chapel of St. Anthony. The priest swears the Lady is a holy woman, describes her going barefoot by night to St. Anthony's chapel, weeps, and says she will love none but saints, save a man all women love.",
+   "geography_notes": "A wide ford with stepping stones below the bathing pool; a cot across the river near the wood. Ralph goes south and east of the House this day (the day before he went west and north). The Little Plain, Land of Abundance and Forest Land are names for this region. The chapel of St. Anthony lies in the wood. The priest's cell is by the church near the ford.",
+   "open_questions": [
+    "Where is the house of the fathers of the Thorn?",
+    "Why does the priest weep?"
+   ]
+  }
+ ]
+}

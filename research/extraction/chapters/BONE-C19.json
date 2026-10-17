@@ -1,0 +1,224 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) woman of the book",
+   "aliases": [],
+   "type": "person",
+   "subtype": "legendary woman",
+   "unnamed": true,
+   "summary": "Woman no man could see without loving; drank of the Well and became its servant to entangle seekers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "a certain woman whom no man that saw her could forbear to love"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) sorceress of the book",
+   "aliases": [],
+   "type": "person",
+   "subtype": "sorceress",
+   "unnamed": true,
+   "summary": "Woman in the wildwood who made the heroine her thrall and beat her.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "she found there another woman a sorceress, who made her her thrall"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) king's son of the book",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": true,
+   "summary": "Found the woman in the wildwood, wedded her, lost his kingdom over her.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "how a king's son found her there and brought her to his father's kingdom and wedded her"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) knight of the book",
+   "aliases": [],
+   "type": "person",
+   "subtype": "knight",
+   "unnamed": true,
+   "summary": "Seeker of the Well who bore the woman away and was slain.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "there came a knight to that place who was seeking the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) woman of the book",
+   "rel": "spouse_of",
+   "b": "(unnamed) king's son of the book",
+   "detail": "legend",
+   "when": "legend",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "brought her to his father's kingdom and wedded her"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) woman of the book",
+   "rel": "slave_of",
+   "b": "(unnamed) sorceress of the book",
+   "detail": "legend",
+   "when": "legend",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "who made her her thrall"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "By the book, the woman drank of the Well, thrives ever after and lives yet.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "found it at the long last, and drank thereof, and throve ever after"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) woman of the book",
+   "statement": "By the book, she now serves the Well, keeping seekers from drinking by binding them in love.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "is become the servant of the Well to entangle the seekers in her love and keep them from drinking thereof"
+    }
+   ]
+  },
+  {
+   "category": "text",
+   "subject": "(unnamed) book of the Well",
+   "statement": "The book is fairly written with many pictures, including the image of the woman Ralph freed.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "amongst them was the image of the fair woman whom he had holpen at the want-ways of the wood"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Tale of the woman of the book",
+   "chapter": "BONE-C19",
+   "layer": "legend",
+   "time_text": "",
+   "participants": [
+    "(unnamed) woman of the book",
+    "(unnamed) king's son of the book",
+    "(unnamed) sorceress of the book",
+    "(unnamed) knight of the book"
+   ],
+   "places": [
+    "wildwood"
+   ],
+   "summary": "Wildwood maiden wed by a king's son, war over her, thraldom to a sorceress, rescue by a Well-seeker, escape from robbers, drinking of the Well.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "whereof befel long and grievous war which she abode not to the end"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether the book's woman is the Lady of Abundance and the lady of the crossroads; Ralph assumes so but does not know.",
+   "refs": [
+    {
+     "p": "BONE-C19-P003",
+     "q": "Though he knew not for certain whether this tale had to do with the Lady of the Forest"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "Ralph met the lady four days before.",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "but four days ago was that"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Legends in books that may be partial or slanted; the player can compare written lore with witnesses.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "The book told not much about the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C19",
+ "chapters": [
+  "BONE-C19"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C19",
+   "paragraphs_total": 2,
+   "all_paragraphs_read": true,
+   "summary": "Ralph reads the book all night. Among its pictures is the woman he rescued. The book tells of a woman no man can help loving: found in the wildwood by a king's son, wed, his kingdom lost and long war over her; she returns to the wildwood, becomes thrall to a sorceress, is carried off by a Well-seeking knight who is slain, escapes robbers who fight over her, finds the Well and drinks, lives on and now serves the Well by ensnaring seekers in love so they never drink. Ralph is lovesick.",
+   "geography_notes": "none; the Well story places the woman's old dwelling in the wildwood.",
+   "open_questions": [
+    "Is the book's woman the lady of the crossroads and the Lady of Abundance?",
+    "Who is the sorceress of the tale?"
+   ]
+  }
+ ]
+}

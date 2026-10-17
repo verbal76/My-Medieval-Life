@@ -1,8 +1,8 @@
 # Research progress
 
-- Chapters complete: **17 / 119**
-- Remaining: 102 (next: BONE-C18, BONE-C19, BONE-C20, BONE-C21, BONE-C22)
-- Records: entities 161, relations 48, spatial 74, travel 19, facts 115, events 31, unresolved 35, opportunities 31
+- Chapters complete: **20 / 119**
+- Remaining: 99 (next: BONE-C21, BONE-C22, BONE-C23, BONE-C24, BTWO-C1)
+- Records: entities 185, relations 55, spatial 81, travel 20, facts 134, events 35, unresolved 42, opportunities 35
 - Verification failures in the last compile: 0
 - Active subagents: 0 (owner limit: none without explicit approval)
 - Method: single-session contextual reading; notes compiled and quote-checked by script

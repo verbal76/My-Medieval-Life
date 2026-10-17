@@ -1,0 +1,23 @@
+@ BONE-C19
+summary: Ralph reads the book all night. Among its pictures is the woman he rescued. The book tells of a woman no man can help loving: found in the wildwood by a king's son, wed, his kingdom lost and long war over her; she returns to the wildwood, becomes thrall to a sorceress, is carried off by a Well-seeking knight who is slain, escapes robbers who fight over her, finds the Well and drinks, lives on and now serves the Well by ensnaring seekers in love so they never drink. Ralph is lovesick.
+geo: none; the Well story places the woman's old dwelling in the wildwood.
+open: Is the book's woman the lady of the crossroads and the Lady of Abundance? || Who is the sorceress of the tale?
+
+E person | (unnamed) woman of the book | - | legendary woman | Woman no man could see without loving; drank of the Well and became its servant to entangle seekers. | P002 `a certain woman whom no man that saw her could forbear to love`
+E person | (unnamed) sorceress of the book | - | sorceress | Woman in the wildwood who made the heroine her thrall and beat her. | P002 `she found there another woman a sorceress, who made her her thrall`
+E person | (unnamed) king's son of the book | - | prince | Found the woman in the wildwood, wedded her, lost his kingdom over her. | P002 `how a king's son found her there and brought her to his father's kingdom and wedded her`
+E person | (unnamed) knight of the book | - | knight | Seeker of the Well who bore the woman away and was slain. | P002 `there came a knight to that place who was seeking the Well at the World's End`
+
+R (unnamed) woman of the book | spouse_of | (unnamed) king's son of the book | legend | legend | CANON/high | P002 `brought her to his father's kingdom and wedded her`
+R (unnamed) woman of the book | slave_of | (unnamed) sorceress of the book | legend | legend | CANON/high | P002 `who made her her thrall`
+
+F magic | Well at the World's End | By the book, the woman drank of the Well, thrives ever after and lives yet. | CANON/high; ctx=written | P002 `found it at the long last, and drank thereof, and throve ever after`
+F magic | (unnamed) woman of the book | By the book, she now serves the Well, keeping seekers from drinking by binding them in love. | CANON/high; ctx=written | P002 `is become the servant of the Well to entangle the seekers in her love and keep them from drinking thereof`
+F text | (unnamed) book of the Well | The book is fairly written with many pictures, including the image of the woman Ralph freed. | CANON/high | P002 `amongst them was the image of the fair woman whom he had holpen at the want-ways of the wood`
+
+V legend | Tale of the woman of the book | Wildwood maiden wed by a king's son, war over her, thraldom to a sorceress, rescue by a Well-seeker, escape from robbers, drinking of the Well. | who=(unnamed) woman of the book, (unnamed) king's son of the book, (unnamed) sorceress of the book, (unnamed) knight of the book; where=wildwood | P002 `whereof befel long and grievous war which she abode not to the end`
+
+U identity | Whether the book's woman is the Lady of Abundance and the lady of the crossroads; Ralph assumes so but does not know. | P003 `Though he knew not for certain whether this tale had to do with the Lady of the Forest`
+U missing_measure | Ralph met the lady four days before. | P002 `but four days ago was that`
+
+O lore | Legends in books that may be partial or slanted; the player can compare written lore with witnesses. | P002 `The book told not much about the Well at the World's End`
