@@ -1,0 +1,366 @@
+{
+ "entities": [
+  {
+   "name": "Bull Shockhead",
+   "aliases": [
+    "Lord of Utterbol",
+    "the new Lord"
+   ],
+   "type": "person",
+   "subtype": "lord",
+   "unnamed": false,
+   "summary": "Formerly Ralph's war-taken thrall; now Lord of Utterbol by conquest; trim, nobly bearing, rough-spoken and jovial.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C3-P007",
+     "q": "I am Lord of Utterbol and therewithal Bull Shockhead"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Lady of Utterbol",
+   "aliases": [
+    "widow of Gandolf",
+    "wife of Bull"
+   ],
+   "type": "person",
+   "subtype": "lady",
+   "unnamed": true,
+   "summary": "The former Lord's widow, now married to Bull Shockhead; said to live happily.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "I made atonement to his widow, and wedded her"
+    }
+   ]
+  },
+  {
+   "name": "Red Pillar",
+   "aliases": [
+    "Red",
+    "White and Black Pillars"
+   ],
+   "type": "building",
+   "subtype": "punishment posts",
+   "unnamed": false,
+   "summary": "Utterbol's punishment pillars, now cast down.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "We have cast down the Red Pillar, and the White and the Black also"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Bull Shockhead",
+   "rel": "other",
+   "b": "(unnamed) new Lord of Utterbol",
+   "detail": "same person",
+   "when": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P007",
+     "q": "I am Lord of Utterbol and therewithal Bull Shockhead"
+    }
+   ]
+  },
+  {
+   "a": "Bull Shockhead",
+   "rel": "ruler_of",
+   "b": "Utterbol",
+   "detail": "by conquest",
+   "when": "BFOUR-C3 onward",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P007",
+     "q": "I am Lord of Utterbol"
+    }
+   ]
+  },
+  {
+   "a": "Bull Shockhead",
+   "rel": "spouse_of",
+   "b": "(unnamed) Lady of Utterbol",
+   "detail": "wed in atonement after slaying her husband",
+   "when": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "I made atonement to his widow, and wedded her"
+    }
+   ]
+  },
+  {
+   "a": "Gandolf",
+   "rel": "killed_by",
+   "b": "Bull Shockhead",
+   "detail": "in revenge for Bull Nosy",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "when I slew the tyrant, who forsooth owed me no less than his life for the murder of my brother"
+    }
+   ]
+  },
+  {
+   "a": "Otter",
+   "rel": "serves",
+   "b": "Bull Shockhead",
+   "detail": "right-hand man; refused the lordship",
+   "when": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P020",
+     "q": "he is now my right-hand man, as he was of the dead man"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Vale Turris",
+   "rel": "distance_from",
+   "b": "(unnamed) house of the Sage of Swevenham",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "four days through the wood",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the Sage knows a short way",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P004",
+     "q": "he made a long story short by bringing them to Vale Turris in four days' time"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "from": "(unnamed) house of the Sage of Swevenham",
+   "to": "Vale Turris",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "four days",
+   "start_time_text": "near May",
+   "end_time_text": "",
+   "terrain_text": "wood",
+   "chapter": "BFOUR-C3",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P004",
+     "q": "when May was at hand they set out on their road"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "politics",
+   "subject": "Bull Shockhead",
+   "statement": "He means to put down all raiding in his lands; his patrols question all travellers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull's rider",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P004",
+     "q": "my lord is minded to put down all lifting throughout his lands; therefore hath he made the meshes of his net small"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Utterbol",
+   "statement": "Under Bull the punishment pillars are gone; Utterbol is no longer a place of torment, and thralls are happy and free-spoken.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "it is no longer a place of torment and fear, and cozening and murder; but the very thralls are happy and free-spoken"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Bull Shockhead",
+   "statement": "He made atonement to the slain lord's widow by marrying her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "I made atonement to his widow, and wedded her"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Ralph",
+   "statement": "Ralph's name and likeness are known in the mountains beyond Cheaping Knowe; all there will help him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P020",
+     "q": "beyond Cheaping Knowe and the plain country, thy name is known, and the likeness of thee told in words"
+    }
+   ]
+  },
+  {
+   "category": "economy",
+   "subject": "Vale Turris",
+   "statement": "A market with booths and new timber houses is growing in the Dale of the Tower.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P006",
+     "q": "about those tents and those half-finished frame-houses (whereof they saw six) was a market toward"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Goldburg",
+   "statement": "Winter closes the mountains west of Goldburg and west of Cheaping Knowe.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P002",
+     "q": "it was not to be looked for that they should cross even the mountains west of Goldburg, let alone those to the west of Cheaping Knowe, when winter had once set in"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Winter with the Sage",
+   "chapter": "BFOUR-C3",
+   "layer": "main",
+   "time_text": "winter",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "places": [
+    "(unnamed) house of the Sage of Swevenham"
+   ],
+   "summary": "Ralph and Ursula winter at the hermitage and learn more from the Sage.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P003",
+     "q": "So they dwelt there happily enough"
+    }
+   ]
+  },
+  {
+   "label": "Meeting Bull, Lord of Utterbol",
+   "chapter": "BFOUR-C3",
+   "layer": "main",
+   "time_text": "May",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Bull Shockhead"
+   ],
+   "places": [
+    "Vale Turris"
+   ],
+   "summary": "At Vale Turris Ralph finds his former thrall Bull Shockhead now Lord of Utterbol.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P007",
+     "q": "though the feathers be fine 'tis the same bird"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "A reforming lord who abolishes punishments and builds markets, as a positive faction arc.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "We have cast down the Red Pillar"
+    }
+   ]
+  },
+  {
+   "idea": "Former captives and servants who rise to power and repay kindness, so the player's earlier choices have consequences.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C3-P011",
+     "q": "time was thou wert a kind lad and a good master"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C3",
+ "chapters": [
+  "BFOUR-C3"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C3",
+   "paragraphs_total": 20,
+   "all_paragraphs_read": true,
+   "summary": "They winter at the Sage's hermitage, since the mountains west of Goldburg and of Cheaping Knowe cannot be crossed in winter. In May the Sage brings them through the wood to Vale Turris in four days. The dale is full of tents, booths, a market and six half-built timber houses; the Bull banner flies from the Tower. Riders bring them to the new Lord on a knoll by the river: Bull Shockhead. He jokes that Ursula, his brother's thrall, is his by heritage, then that as Ralph's thrall he cannot inherit, so both are free. He has cast down the Red, White and Black Pillars and made Utterbol merry; he slew the tyrant for his brother's murder, married the widow in atonement, and knows from Agatha of the trap set for Ralph. Ralph declines to come to Utterbol, wishing to help his own folk. Bull offers a feast, twenty spears to Goldburg, and says Ralph's name and description are known in the mountains beyond Cheaping Knowe, where all will help him. Otter is now Bull's right-hand man; Otter refused the lordship.",
+   "geography_notes": "The Sage's hermitage is four days through the wood from Vale Turris. Winter closes the mountains west of Goldburg and west of Cheaping Knowe. Vale Turris now holds a market, booths and six half-built frame houses; the Lord sits on a green knoll by the river.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

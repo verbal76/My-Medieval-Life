@@ -1,0 +1,231 @@
+{
+ "entities": [
+  {
+   "name": "Red Pavilion",
+   "aliases": [
+    "Red Pavilion of Utterbol"
+   ],
+   "type": "building",
+   "subtype": "pavilion",
+   "unnamed": false,
+   "summary": "Gandolf's rich pavilion embroidered with pearls and gems; the Bull now replaces the Bear.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C4-P002",
+     "q": "the feast in the Red Pavillion of Utterbol, which awhile ago the now-slain Lord of Utterbol had let make; and it was exceeding rich with broidery of pearl and gems"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) golden bull cup",
+   "aliases": [
+    "the Bull"
+   ],
+   "type": "item",
+   "subtype": "oath cup",
+   "unnamed": true,
+   "summary": "Great golden cup shaped like a bull, carried under a canopy, used for oath-taking.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C4-P007",
+     "q": "a great golden cup fashioned like to a bull"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) oath on the Bull",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "oath",
+   "unnamed": true,
+   "summary": "Oaths sworn at feasts by drinking from the bull cup.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C4-P008",
+     "q": "I swear by the Bull, and they that made him"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Otter",
+   "rel": "other",
+   "b": "Bull Shockhead",
+   "detail": "swears to follow the Bull through all fortunes",
+   "when": "BFOUR-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P009",
+     "q": "I will follow the Bull through thick and thin"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Utterbol",
+   "rel": "other",
+   "b": "Goldburg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Bull Shockhead",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Utterbol's lands reach from the mountains to the mark of Goldburg",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P008",
+     "q": "till all be peace betwixt the mountains and the mark of Goldburg"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "politics",
+   "subject": "Bull Shockhead",
+   "statement": "He swears to purge his lands of strong-thieves and tyrants within three years, or die.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P008",
+     "q": "in three years' time or less I will have purged all the lands of Utterbol of all strong-thieves and cruel tyrants"
+    }
+   ]
+  },
+  {
+   "category": "economy",
+   "subject": "Vale Turris",
+   "statement": "The Lord plans a cheaping town in the Dale of the Tower and tillage of the wilderness beyond.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P006",
+     "q": "it was the Lord's intent that a cheaping town should grow up in the Dale of the Tower, and that the wilderness beyond it should be tilled and builded"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph's oath: go home to his kindred and refuse help to none on the road.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P014",
+     "q": "I will go home to my kindred, yet on the road will I not gainsay help to any that craveth it"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Gandolf",
+   "statement": "Gandolf lusted most for gems and fair women.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P002",
+     "q": "gems and fair women were what the late lord had lusted for the most"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Bull Shockhead",
+   "statement": "Bull is young.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P006",
+     "q": "being but young of years"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Feast in the Red Pavilion",
+   "chapter": "BFOUR-C4",
+   "layer": "main",
+   "time_text": "night",
+   "participants": [
+    "Bull Shockhead",
+    "Otter",
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "places": [
+    "Red Pavilion"
+   ],
+   "summary": "At a feast Bull, Otter and Ralph swear oaths on the golden bull cup.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P009",
+     "q": "Therewith he drank of the cup, and all men shouted"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Public oath-feasts as faction commitment events with world consequences.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C4-P008",
+     "q": "I swear by the Bull"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C4",
+ "chapters": [
+  "BFOUR-C4"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C4",
+   "paragraphs_total": 15,
+   "all_paragraphs_read": true,
+   "summary": "The feast is held in the Red Pavilion, Gandolf's gem- and pearl-embroidered tent, now with the Bull in place of the Bear. Ralph sits at the Lord's right and Ursula at his left; Otter arrives in worn arming clothes and greets Ralph. Ralph thinks kindly of the Captain of the Dry Tree and Roger. Otter says the Lord means to grow a cheaping town in the Dale of the Tower and till the wilderness. A golden bull-shaped cup is carried in under a canopy: Bull swears by the Bull to purge Utterbol's lands of thieves and tyrants within three years, \"betwixt the mountains and the mark of Goldburg\", or die. Otter swears to follow the Bull. Ralph swears to go home to his kindred and refuse help to none on the road. They retire to the Tower to hear how Bull won Utterbol.",
+   "geography_notes": "Bull plans to purge his lands between the mountains and the mark (border) of Goldburg; the Dale of the Tower is to become a cheaping town, with the wilderness beyond tilled and built on.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

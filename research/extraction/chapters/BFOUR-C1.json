@@ -1,0 +1,215 @@
+{
+ "entities": [
+  {
+   "name": "Wall of Strife",
+   "aliases": [
+    "Wall of the World",
+    "Great Mountains"
+   ],
+   "type": "feature",
+   "subtype": "mountain range",
+   "unnamed": false,
+   "summary": "The Innocent Folk's name for the Great Mountains.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C1-P005",
+     "q": "those huge mountains they called the Wall of Strife, even as they on the other side called them the Wall of the World"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Innocent Folk",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "guide and supply the returning seekers",
+   "when": "BFOUR-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P004",
+     "q": "led Ralph and Ursula back through the wood and over the desert to the town of the Innocent Folk"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Wall of Strife",
+   "rel": "other",
+   "b": "Wall of the World",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "same range named from both sides",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P005",
+     "q": "even as they on the other side called them the Wall of the World"
+    }
+   ]
+  },
+  {
+   "a": "Innocent Folk",
+   "rel": "east_of",
+   "b": "Great Mountains",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "they go no further west than the pass mouth",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P005",
+     "q": "Further than that indeed they would not, or durst not go"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "Well at the World's End",
+   "to": "(unnamed) pass of the Fighting Man",
+   "via": [
+    "Thirsty Desert",
+    "House of the Sorceress",
+    "(unnamed) town of the Innocent Folk",
+    "Vale of Sweet Chestnuts"
+   ],
+   "mode": "horse with Innocent Folk escorts and pack oxen",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "late autumn",
+   "terrain_text": "",
+   "chapter": "BFOUR-C1",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P002",
+     "q": "journeyed happily with naught evil befalling them till they came back to the House of the Sorceress"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "After drinking, the Innocent Folk say Ralph and Ursula look like the gods who rule the world.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P003",
+     "q": "ye, who before were lovely, are now become as the very Gods who rule the world"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Innocent Folk",
+   "statement": "The elder asks them not to be \"overmuch of Gods\" but kind and lowly to those who must worship them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P003",
+     "q": "that ye will not be overmuch of Gods, but will be kind and lowly with them that needs must worship you"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Great Mountains",
+   "statement": "Late autumn weather was fair and calm for the pass.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "BFOUR-C1",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P006",
+     "q": "though the turn of autumn was come again and winter was at hand, yet the weather was fair and calm"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Return through the Great Mountains",
+   "chapter": "BFOUR-C1",
+   "layer": "main",
+   "time_text": "autumn",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Innocent Folk"
+   ],
+   "places": [
+    "Great Mountains"
+   ],
+   "summary": "The lovers return west with the Innocent Folk's help and cross the mountains.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P006",
+     "q": "their journey through the dreary pass was as light as it might be to any men"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Place names that differ by culture for the same feature (Wall of the World vs Wall of Strife) as a naming-perspective system.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C1-P005",
+     "q": "those huge mountains they called the Wall of Strife"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C1",
+ "chapters": [
+  "BFOUR-C1"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C1",
+   "paragraphs_total": 5,
+   "all_paragraphs_read": true,
+   "summary": "Ralph and Ursula leave the Well, cross the Dry Desert easily back to the House of the Sorceress, where the Innocent Folk see them as like gods and ask them to be kind and lowly. The elder's son and his wife guide them back to the Innocent Folk's town, where they stay two days and refuse to winter, longing for home. Ten gaily dressed men with pack beasts take them to Chestnut Vale and on to the mouth of the pass to the Fighting Man, which the Innocent Folk will not pass. They call the mountains the Wall of Strife, as the westerners call them the Wall of the World. With a pack ox and supplies the two pass the mountains in calm late autumn.",
+   "geography_notes": "The return route reverses the outward one: the Well's ness, the grass hills, the Dry Desert, the House of the Sorceress, the waste, the town of the Innocent Folk, Chestnut Vale, the jaws of the pass to the Rock of the Fighting Man. The Innocent Folk do not go beyond the pass mouth.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

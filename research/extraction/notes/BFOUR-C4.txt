@@ -1,0 +1,22 @@
+@ BFOUR-C4
+summary: The feast is held in the Red Pavilion, Gandolf's gem- and pearl-embroidered tent, now with the Bull in place of the Bear. Ralph sits at the Lord's right and Ursula at his left; Otter arrives in worn arming clothes and greets Ralph. Ralph thinks kindly of the Captain of the Dry Tree and Roger. Otter says the Lord means to grow a cheaping town in the Dale of the Tower and till the wilderness. A golden bull-shaped cup is carried in under a canopy: Bull swears by the Bull to purge Utterbol's lands of thieves and tyrants within three years, "betwixt the mountains and the mark of Goldburg", or die. Otter swears to follow the Bull. Ralph swears to go home to his kindred and refuse help to none on the road. They retire to the Tower to hear how Bull won Utterbol.
+geo: Bull plans to purge his lands between the mountains and the mark (border) of Goldburg; the Dale of the Tower is to become a cheaping town, with the wilderness beyond tilled and built on.
+open: none
+
+E building | Red Pavilion | Red Pavilion of Utterbol | pavilion | Gandolf's rich pavilion embroidered with pearls and gems; the Bull now replaces the Bear. | P002 `the feast in the Red Pavillion of Utterbol, which awhile ago the now-slain Lord of Utterbol had let make; and it was exceeding rich with broidery of pearl and gems`
+E item | (unnamed) golden bull cup | the Bull | oath cup | Great golden cup shaped like a bull, carried under a canopy, used for oath-taking. | P007 `a great golden cup fashioned like to a bull`
+E custom | (unnamed) oath on the Bull | - | oath | Oaths sworn at feasts by drinking from the bull cup. | P008 `I swear by the Bull, and they that made him`
+
+R Otter | other | Bull Shockhead | swears to follow the Bull through all fortunes | BFOUR-C4 | CANON/high | P009 `I will follow the Bull through thick and thin`
+
+S Utterbol | other | Goldburg | ctx=dialogue:Bull Shockhead; cert=constrained | CANON/high | Utterbol's lands reach from the mountains to the mark of Goldburg | P008 `till all be peace betwixt the mountains and the mark of Goldburg`
+
+F politics | Bull Shockhead | He swears to purge his lands of strong-thieves and tyrants within three years, or die. | CANON/high; ctx=dialogue:Bull Shockhead | P008 `in three years' time or less I will have purged all the lands of Utterbol of all strong-thieves and cruel tyrants`
+F economy | Vale Turris | The Lord plans a cheaping town in the Dale of the Tower and tillage of the wilderness beyond. | CANON/high; ctx=dialogue:Otter | P006 `it was the Lord's intent that a cheaping town should grow up in the Dale of the Tower, and that the wilderness beyond it should be tilled and builded`
+F custom | Ralph | Ralph's oath: go home to his kindred and refuse help to none on the road. | CANON/high; ctx=dialogue:Ralph | P014 `I will go home to my kindred, yet on the road will I not gainsay help to any that craveth it`
+F society | Gandolf | Gandolf lusted most for gems and fair women. | CANON/high | P002 `gems and fair women were what the late lord had lusted for the most`
+F society | Bull Shockhead | Bull is young. | CANON/high; ctx=dialogue:Otter | P006 `being but young of years`
+
+V main | Feast in the Red Pavilion | At a feast Bull, Otter and Ralph swear oaths on the golden bull cup. | time=night; who=Bull Shockhead, Otter, Ralph, Ursula, Sage of Swevenham; where=Red Pavilion | P009 `Therewith he drank of the cup, and all men shouted`
+
+O politics | Public oath-feasts as faction commitment events with world consequences. | P008 `I swear by the Bull`

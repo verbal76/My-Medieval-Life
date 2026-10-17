@@ -1,0 +1,30 @@
+@ BFOUR-C2
+summary: In late autumn they leave the Gates of the Mountains at the Fighting Man. On the plain between the mountains and the lava river the Sage of Swevenham waits in a bough-and-rush bower by a blackthorn copse, having waited since spring. He will go back to Swevenham; Ralph invites him to Upmeads. They cross the lava-sea and see no earth-fires; the Sage says they stopped late last year and that the Giant's Candle foretold a change of masters at Utterbol. In March a knight on a red roan, with a white bull on green and a gold coronet, black-haired and blue-eyed, gave the Sage a safe-conduct sealed with the Bull and said he was Lord of Utterbol by conquest, having slain the old lord, "heathen though I be". Wanderers confirm Utterbol is now merry. Ralph suspects Bull Shockhead. Ursula says no one would have avenged Gandolf of the Bear.
+geo: West of the Rock of the Fighting Man: a green plain between the mountains and the River of Lava, with a blackthorn copse where the Sage waited. The lava-sea is crossed again.
+open: none
+
+E building | (unnamed) Sage's bower by the blackthorn copse | - | shelter | Bower of boughs and rushes by a blackthorn copse on the plain west of the Gate. | P003 `a little bower or cot, builded of boughs and rushes by a blackthorn copse`
+E item | Arms of the new Lord of Utterbol | the Bull | heraldry | A white bull on a green field; the seal of Utterbol now bears the Bull. | P010 `his surcoat blazoned with a white bull on a green field`
+E person | Gervaise | - | squire | Squire of the new Lord of Utterbol. | P010 `Ho, Gervaise! give me one of those scrolls!`
+E person | Gandolf of the Bear | Gandolf, Lord of Utterbol | tyrant | Ursula's name for the slain Lord of Utterbol. | P011 `had Gandolf of the Bear been slain when I was at Utterbol`
+
+R Gandolf | killed_by | (unnamed) new Lord of Utterbol | slain; lordship won by conquest | BFOUR-C2 | CANON/high | P010 `that mighty runagate have I slain`
+R Gandolf of the Bear | other | Gandolf | same person | BFOUR-C2 | CANON/high | P011 `Gandolf of the Bear`
+R Gervaise | serves | (unnamed) new Lord of Utterbol | squire | BFOUR-C2 | CANON/high | P010 `Ho, Gervaise!`
+
+S (unnamed) Sage's bower by the blackthorn copse | west_of | Rock of the Fighting Man | terrain=green plain between the mountains and the lava river; cert=fixed | CANON/high | - | P003 `when they came out with joyful hearts into the green plain betwixt the mountains and the River of Lava, they looked westward`
+
+T Ralph, Ursula, Sage of Swevenham | (unnamed) Sage's bower by the blackthorn copse | Sea of Molten Rocks | mode=horse and foot with milch goats | P008 `the Sage drove together three or four milch goats that he pastured there, and went their ways over the plain`
+
+F magic | Candle of the Giants | The earth-fires stopped late last year; the Giant's Candle's warning came true with a change of masters at Utterbol. | CANON/high; ctx=dialogue:Sage of Swevenham | P008 `sooth it is that the foreboding of the Giant's Candle was not for naught.  For there hath verily been a change of masters at Utterbol`
+F politics | Utterbol | The new Lord took Utterbol by conquest; folk now say all at Utterbol, bond and free, are merry. | CANON/high; ctx=rumour | P010 `great was the change of days at Utterbol, whereas all men there, both bond and free, were as merry as they deserved to be`
+F religion | (unnamed) new Lord of Utterbol | He calls himself heathen. | CANON/high; ctx=dialogue:new Lord of Utterbol | P010 `heathen though I be`
+F magic | Sage of Swevenham | The Sage says drinking of the Well has been good to him in his own way. | CANON/high; ctx=dialogue:Sage of Swevenham | P003 `though for me also the world has not gone ill after my fashion since I drank of that water`
+F politics | Gandolf | Ursula says no one at Utterbol would have avenged Gandolf, but all feared him. | CANON/high; ctx=dialogue:Ursula | P011 `neither man nor woman had stirred a finger to avenge him`
+
+V main | Reunion with the Sage | The Sage, waiting since spring, meets the returning lovers at the Gate. | time=late autumn evening; who=Ralph, Ursula, Sage of Swevenham; where=(unnamed) Sage's bower by the blackthorn copse | P003 `he deemed that it could be none other than the Sage of Swevenham`
+V main | Fall of Gandolf | The Lord of Utterbol (Gandolf) is slain and a new lord with the Bull arms takes Utterbol. | time=before March; who=Gandolf, (unnamed) new Lord of Utterbol; where=Utterbol | P010 `I am verily Lord of Utterbol, and that by conquest`
+
+U identity | Is the new Bull lord Bull Shockhead? Ralph suspects so (confirmed in BFOUR-C3). | P011 `Ralph pondered this tale, and was not so sure but that this new lord was not Bull Shockhead`
+
+O politics | Regime change in a tyranny as a dynamic world event that alters regional safety and trade. | P008 `there hath verily been a change of masters at Utterbol`

@@ -1,0 +1,21 @@
+@ BFOUR-C1
+summary: Ralph and Ursula leave the Well, cross the Dry Desert easily back to the House of the Sorceress, where the Innocent Folk see them as like gods and ask them to be kind and lowly. The elder's son and his wife guide them back to the Innocent Folk's town, where they stay two days and refuse to winter, longing for home. Ten gaily dressed men with pack beasts take them to Chestnut Vale and on to the mouth of the pass to the Fighting Man, which the Innocent Folk will not pass. They call the mountains the Wall of Strife, as the westerners call them the Wall of the World. With a pack ox and supplies the two pass the mountains in calm late autumn.
+geo: The return route reverses the outward one: the Well's ness, the grass hills, the Dry Desert, the House of the Sorceress, the waste, the town of the Innocent Folk, Chestnut Vale, the jaws of the pass to the Rock of the Fighting Man. The Innocent Folk do not go beyond the pass mouth.
+open: none
+
+E feature | Wall of Strife | Wall of the World, Great Mountains | mountain range | The Innocent Folk's name for the Great Mountains. | P005 `those huge mountains they called the Wall of Strife, even as they on the other side called them the Wall of the World`
+
+R Innocent Folk | other | Ralph | guide and supply the returning seekers | BFOUR-C1 | CANON/high | P004 `led Ralph and Ursula back through the wood and over the desert to the town of the Innocent Folk`
+
+S Wall of Strife | other | Wall of the World | ctx=narration; cert=fixed | CANON/high | same range named from both sides | P005 `even as they on the other side called them the Wall of the World`
+S Innocent Folk | east_of | Great Mountains | cert=fixed | CANON/high | they go no further west than the pass mouth | P005 `Further than that indeed they would not, or durst not go`
+
+T Ralph, Ursula | Well at the World's End | (unnamed) pass of the Fighting Man | via=Thirsty Desert, House of the Sorceress, (unnamed) town of the Innocent Folk, Vale of Sweet Chestnuts; mode=horse with Innocent Folk escorts and pack oxen; end=late autumn | P002 `journeyed happily with naught evil befalling them till they came back to the House of the Sorceress`
+
+F magic | Well at the World's End | After drinking, the Innocent Folk say Ralph and Ursula look like the gods who rule the world. | CANON/high; ctx=dialogue:elder of the Innocent Folk | P003 `ye, who before were lovely, are now become as the very Gods who rule the world`
+F society | Innocent Folk | The elder asks them not to be "overmuch of Gods" but kind and lowly to those who must worship them. | CANON/high; ctx=dialogue:elder of the Innocent Folk | P003 `that ye will not be overmuch of Gods, but will be kind and lowly with them that needs must worship you`
+F climate | Great Mountains | Late autumn weather was fair and calm for the pass. | CANON/high; when=BFOUR-C1 | P006 `though the turn of autumn was come again and winter was at hand, yet the weather was fair and calm`
+
+V main | Return through the Great Mountains | The lovers return west with the Innocent Folk's help and cross the mountains. | time=autumn; who=Ralph, Ursula, Innocent Folk; where=Great Mountains | P006 `their journey through the dreary pass was as light as it might be to any men`
+
+O world | Place names that differ by culture for the same feature (Wall of the World vs Wall of Strife) as a naming-perspective system. | P005 `those huge mountains they called the Wall of Strife`

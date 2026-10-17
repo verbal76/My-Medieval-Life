@@ -1,0 +1,31 @@
+@ BFOUR-C3
+summary: They winter at the Sage's hermitage, since the mountains west of Goldburg and of Cheaping Knowe cannot be crossed in winter. In May the Sage brings them through the wood to Vale Turris in four days. The dale is full of tents, booths, a market and six half-built timber houses; the Bull banner flies from the Tower. Riders bring them to the new Lord on a knoll by the river: Bull Shockhead. He jokes that Ursula, his brother's thrall, is his by heritage, then that as Ralph's thrall he cannot inherit, so both are free. He has cast down the Red, White and Black Pillars and made Utterbol merry; he slew the tyrant for his brother's murder, married the widow in atonement, and knows from Agatha of the trap set for Ralph. Ralph declines to come to Utterbol, wishing to help his own folk. Bull offers a feast, twenty spears to Goldburg, and says Ralph's name and description are known in the mountains beyond Cheaping Knowe, where all will help him. Otter is now Bull's right-hand man; Otter refused the lordship.
+geo: The Sage's hermitage is four days through the wood from Vale Turris. Winter closes the mountains west of Goldburg and west of Cheaping Knowe. Vale Turris now holds a market, booths and six half-built frame houses; the Lord sits on a green knoll by the river.
+open: none
+
+E person | Bull Shockhead | Lord of Utterbol, the new Lord | lord | Formerly Ralph's war-taken thrall; now Lord of Utterbol by conquest; trim, nobly bearing, rough-spoken and jovial. | P007 `I am Lord of Utterbol and therewithal Bull Shockhead`
+E person | (unnamed) Lady of Utterbol | widow of Gandolf, wife of Bull | lady | The former Lord's widow, now married to Bull Shockhead; said to live happily. | P017 `I made atonement to his widow, and wedded her`
+E building | Red Pillar | Red, White and Black Pillars | punishment posts | Utterbol's punishment pillars, now cast down. | P017 `We have cast down the Red Pillar, and the White and the Black also`
+
+R Bull Shockhead | other | (unnamed) new Lord of Utterbol | same person | BFOUR-C3 | CANON/high | P007 `I am Lord of Utterbol and therewithal Bull Shockhead`
+R Bull Shockhead | ruler_of | Utterbol | by conquest | BFOUR-C3 onward | CANON/high | P007 `I am Lord of Utterbol`
+R Bull Shockhead | spouse_of | (unnamed) Lady of Utterbol | wed in atonement after slaying her husband | BFOUR-C3 | CANON/high | P017 `I made atonement to his widow, and wedded her`
+R Gandolf | killed_by | Bull Shockhead | in revenge for Bull Nosy | backstory | CANON/high | P017 `when I slew the tyrant, who forsooth owed me no less than his life for the murder of my brother`
+R Otter | serves | Bull Shockhead | right-hand man; refused the lordship | BFOUR-C3 | CANON/high | P020 `he is now my right-hand man, as he was of the dead man`
+
+S Vale Turris | distance_from | (unnamed) house of the Sage of Swevenham | time=four days through the wood; cert=fixed | CANON/high | the Sage knows a short way | P004 `he made a long story short by bringing them to Vale Turris in four days' time`
+
+T Ralph, Ursula, Sage of Swevenham | (unnamed) house of the Sage of Swevenham | Vale Turris | mode=horse; dur=four days; start=near May; terrain=wood | P004 `when May was at hand they set out on their road`
+
+F politics | Bull Shockhead | He means to put down all raiding in his lands; his patrols question all travellers. | CANON/high; ctx=dialogue:Bull's rider | P004 `my lord is minded to put down all lifting throughout his lands; therefore hath he made the meshes of his net small`
+F politics | Utterbol | Under Bull the punishment pillars are gone; Utterbol is no longer a place of torment, and thralls are happy and free-spoken. | CANON/high; ctx=dialogue:Bull Shockhead | P017 `it is no longer a place of torment and fear, and cozening and murder; but the very thralls are happy and free-spoken`
+F law | Bull Shockhead | He made atonement to the slain lord's widow by marrying her. | CANON/high; ctx=dialogue:Bull Shockhead | P017 `I made atonement to his widow, and wedded her`
+F politics | Ralph | Ralph's name and likeness are known in the mountains beyond Cheaping Knowe; all there will help him. | CANON/high; ctx=dialogue:Bull Shockhead | P020 `beyond Cheaping Knowe and the plain country, thy name is known, and the likeness of thee told in words`
+F economy | Vale Turris | A market with booths and new timber houses is growing in the Dale of the Tower. | CANON/high | P006 `about those tents and those half-finished frame-houses (whereof they saw six) was a market toward`
+F climate | Goldburg | Winter closes the mountains west of Goldburg and west of Cheaping Knowe. | CANON/high | P002 `it was not to be looked for that they should cross even the mountains west of Goldburg, let alone those to the west of Cheaping Knowe, when winter had once set in`
+
+V main | Winter with the Sage | Ralph and Ursula winter at the hermitage and learn more from the Sage. | time=winter; who=Ralph, Ursula, Sage of Swevenham; where=(unnamed) house of the Sage of Swevenham | P003 `So they dwelt there happily enough`
+V main | Meeting Bull, Lord of Utterbol | At Vale Turris Ralph finds his former thrall Bull Shockhead now Lord of Utterbol. | time=May; who=Ralph, Ursula, Bull Shockhead; where=Vale Turris | P007 `though the feathers be fine 'tis the same bird`
+
+O politics | A reforming lord who abolishes punishments and builds markets, as a positive faction arc. | P017 `We have cast down the Red Pillar`
+O quests | Former captives and servants who rise to power and repay kindness, so the player's earlier choices have consequences. | P011 `time was thou wert a kind lad and a good master`

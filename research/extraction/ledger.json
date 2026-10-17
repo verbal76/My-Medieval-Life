@@ -2217,44 +2217,100 @@
    "title": "Ralph and Ursula Come Back Again Through the Great Mountains",
    "body_paragraphs": 5,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C1.txt",
+    "records": "research/extraction/chapters/BFOUR-C1.json"
+   }
   },
   {
    "chapter": "BFOUR-C2",
    "title": "They Hear New Tidings of Utterbol",
    "body_paragraphs": 11,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 3,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 5,
+    "events": 2,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C2.txt",
+    "records": "research/extraction/chapters/BFOUR-C2.json"
+   }
   },
   {
    "chapter": "BFOUR-C3",
    "title": "They Winter With the Sage; and Thereafter Come Again to Vale Turris",
    "body_paragraphs": 20,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 5,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 6,
+    "events": 2,
+    "unresolved": 0,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C3.txt",
+    "records": "research/extraction/chapters/BFOUR-C3.json"
+   }
   },
   {
    "chapter": "BFOUR-C4",
    "title": "A Feast in the Red Pavilion",
    "body_paragraphs": 15,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 1,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C4.txt",
+    "records": "research/extraction/chapters/BFOUR-C4.json"
+   }
   },
   {
    "chapter": "BFOUR-C5",
