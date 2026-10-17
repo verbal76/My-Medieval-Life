@@ -1,0 +1,192 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Utterness highway",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "road",
+   "unnamed": true,
+   "summary": "Good beaten highway from Vale Turris toward Utterness, running along the edge of the forest.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "So they rode by a good highway, well beaten, past the Tower and over the ridge of the valley"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "(unnamed) great forest of Utterness",
+   "rel": "other",
+   "b": "(unnamed) Utterness highway",
+   "direction": "always on the right hand",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "wildwood on one side, tillage and fenced pastures on the other",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the road marks the forest's edge",
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "They had the wildwood ever on their right hand"
+    }
+   ]
+  },
+  {
+   "a": "Great Mountains",
+   "rel": "visible_from",
+   "b": "(unnamed) Utterness highway",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "seen from the ridges, hidden in the bottoms by tall trees",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "when the way mounted on the ridges, and the trees gave back a little, they had sight of the woodland and the mountains"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "David the Sage",
+    "Lord of Utterbol",
+    "Joyce",
+    "Otter"
+   ],
+   "from": "Vale Turris",
+   "to": "(unnamed) first camp toward Utterness",
+   "via": [
+    "(unnamed) Utterness highway"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C40",
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "They went as the way led, down hill"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "agriculture",
+   "subject": "(unnamed) Utterness highway",
+   "statement": "Tillage and fenced pastures lie along the highway opposite the forest.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "along their highway parted the tillage and fenced pastures from the rough edges of the woodland like as a ditch sunders field from field"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Lord of Utterbol",
+   "statement": "Servants of the Lord do not speak of the Lord's women.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:David the Sage",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C40-P005",
+     "q": "there be matters whereof we servants of my Lord say little or nothing"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The false Queen revealed",
+   "chapter": "BTWO-C40",
+   "layer": "main",
+   "time_text": "evening",
+   "participants": [
+    "Ralph",
+    "David the Sage",
+    "Lord of Utterbol",
+    "Joyce"
+   ],
+   "places": [
+    "(unnamed) Utterness highway"
+   ],
+   "summary": "Ralph sees the woman riding with the Lord and realises she is not the Queen.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C40-P004",
+     "q": "What then! this woman is not the Queen?"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "The road's orientation relative to the mountains (forest \"on the right hand\").",
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "They had the wildwood ever on their right hand"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Hard forest-edge roads dividing settled farmland from wildwood as a generator boundary feature.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "like as a ditch sunders field from field"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C40",
+ "chapters": [
+  "BTWO-C40"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C40",
+   "paragraphs_total": 4,
+   "all_paragraphs_read": true,
+   "summary": "Leaving Vale Turris by a good highway past the Tower and over the valley ridge, they see the Great Mountains and a sea of woodland breaking grey against the mountain wall. The road runs downhill and then along the boundary between tillage and fenced pasture on one side and the wildwood, always on their right, on the other. David keeps Ralph from mingling with the Queen's people. Toward evening the Lord gallops past with Otter's men and, beside him on a white palfrey, the yellow-haired woman Ralph took for the Queen. Ralph realises she is not the Queen; David will not discuss it.",
+   "geography_notes": "From the Dale of the Tower the highway crosses the valley ridge, then descends; thereafter the road divides tillage and fenced pastures from the rough edge of the woodland \"as a ditch sunders field from field\". The wildwood is on the right (toward the mountains), with tall trees; the mountain wall shows from the ridges.",
+   "open_questions": [
+    "Which side is east here? (wildwood on the right suggests the road runs roughly north with the mountains east)"
+   ]
+  }
+ ]
+}

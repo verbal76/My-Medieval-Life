@@ -1,0 +1,235 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) doddered oak at the forest camp",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "landmark tree",
+   "unnamed": true,
+   "summary": "Dead old oak like a haystack under the stars, near the camp; the escape meeting point.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C41-P011",
+     "q": "Lo thou that doddered oak yonder; like a piece of a hay-rick it looks under the stars"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) woman of the Queen of Utterbol",
+   "aliases": [],
+   "type": "person",
+   "subtype": "thrall",
+   "unnamed": true,
+   "summary": "A woman of the Lady's household whom Redhead hopes to win (probably Agatha's informant).",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C41-P016",
+     "q": "It is even that woman of the Queen's whereof I told thee"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Redhead",
+   "rel": "lover_of",
+   "b": "(unnamed) woman of the Queen of Utterbol",
+   "detail": "seeks her at Utterbol",
+   "when": "BTWO-C41",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C41-P016",
+     "q": "It is even that woman of the Queen's whereof I told thee"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) first camp toward Utterness",
+   "rel": "distance_from",
+   "b": "Vale Turris",
+   "direction": "",
+   "distance_text": "not above a dozen miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "meadows by the forest",
+   "refs": [
+    {
+     "p": "BTWO-C41-P002",
+     "q": "They rode not above a dozen miles that day"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) second camp toward Utterness",
+   "rel": "distance_from",
+   "b": "(unnamed) first camp toward Utterness",
+   "direction": "",
+   "distance_text": "some twenty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "a clearing, trees a furlong to the left and a stone's throw to the right",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C41-P007",
+     "q": "Thus they rode some twenty miles, and made stay at sunset in a place that seemed rather a clearing of the wood than a meadow"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Lord of Utterbol",
+    "David the Sage"
+   ],
+   "from": "(unnamed) first camp toward Utterness",
+   "to": "(unnamed) second camp toward Utterness",
+   "via": [
+    "(unnamed) Utterness highway"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "two hours before noon",
+   "end_time_text": "sunset",
+   "terrain_text": "forest edge, ridges",
+   "chapter": "BTWO-C41",
+   "refs": [
+    {
+     "p": "BTWO-C41-P006",
+     "q": "About two hours before noon they got to horse again"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Redhead says those who have drunk of the Well are well regarded in this land.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Redhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C41-P016",
+     "q": "they (if there be any such) who have drunk of the Well at the World's End are well looked to in this land"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Ursula",
+   "statement": "Redhead says whoever sees the damsel loves her and does her will; she is wise and wary.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Redhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C41-P016",
+     "q": "such is she, that whoso loveth her is like to do her will"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) great forest of Utterness",
+   "statement": "From the ridges, leagues of thicket lie under the brooding mountain wall.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C41-P006",
+     "q": "looked down on the thicket, leagues and leagues thereof, which yet seemed but a little space because of the hugeness of the mountain wall"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Redhead keeps tryst",
+   "chapter": "BTWO-C41",
+   "layer": "main",
+   "time_text": "evening of the second day",
+   "participants": [
+    "Ralph",
+    "Redhead"
+   ],
+   "places": [
+    "(unnamed) second camp toward Utterness"
+   ],
+   "summary": "Redhead arranges Ralph's night escape at the dead oak with a fresh horse.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C41-P013",
+     "q": "I shall be behind it abiding thee"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Why David leaves Ralph early that evening.",
+   "refs": [
+    {
+     "p": "BTWO-C41-P008",
+     "q": "must I depart from thee, if I may, to meet a man who will sell me a noble horse good cheap"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Escape assisted by an insider with a hidden horse at a landmark tree.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BTWO-C41-P013",
+     "q": "I have a horse for thee"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C41",
+ "chapters": [
+  "BTWO-C41"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C41",
+   "paragraphs_total": 17,
+   "all_paragraphs_read": true,
+   "summary": "The company rides about a dozen miles and camps in meadows by the forest; Redhead, as a horse-boy, checks that Ralph will flee the next night. Next dawn the wains and herds go ahead. Redhead urges \"Fail not to-night!\" They ride about twenty miles along the forest edge and camp at sunset in a clearing. David leaves Ralph early, saying he will buy a horse. Redhead shows Ralph a dead old oak at the forest edge where he will wait with a fresh horse in two hours. He will not come himself, because he hopes to win the Lady's woman at Utterbol. He says the damsel is wise and wary, that whoever sees her loves her and does her will, and that those who have drunk of the Well are well regarded in this land; he will tell her of Ralph. Ralph waits, anxious for the damsel.",
+   "geography_notes": "Day 1 from Vale Turris: about a dozen miles, camping in meadows by the forest. Day 2: about twenty miles along the wildwood's edge, sometimes on ridges overlooking leagues of forest under the mountain wall; the camp is in a clearing, with trees a furlong to the left and a stone's throw to the right. A dead old oak at the forest edge by the camp is the meeting point.",
+   "open_questions": [
+    "Is David's early departure part of Agatha's plot?"
+   ]
+  }
+ ]
+}

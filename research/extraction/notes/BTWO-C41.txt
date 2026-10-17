@@ -1,0 +1,24 @@
+@ BTWO-C41
+summary: The company rides about a dozen miles and camps in meadows by the forest; Redhead, as a horse-boy, checks that Ralph will flee the next night. Next dawn the wains and herds go ahead. Redhead urges "Fail not to-night!" They ride about twenty miles along the forest edge and camp at sunset in a clearing. David leaves Ralph early, saying he will buy a horse. Redhead shows Ralph a dead old oak at the forest edge where he will wait with a fresh horse in two hours. He will not come himself, because he hopes to win the Lady's woman at Utterbol. He says the damsel is wise and wary, that whoever sees her loves her and does her will, and that those who have drunk of the Well are well regarded in this land; he will tell her of Ralph. Ralph waits, anxious for the damsel.
+geo: Day 1 from Vale Turris: about a dozen miles, camping in meadows by the forest. Day 2: about twenty miles along the wildwood's edge, sometimes on ridges overlooking leagues of forest under the mountain wall; the camp is in a clearing, with trees a furlong to the left and a stone's throw to the right. A dead old oak at the forest edge by the camp is the meeting point.
+open: Is David's early departure part of Agatha's plot?
+
+E feature | (unnamed) doddered oak at the forest camp | - | landmark tree | Dead old oak like a haystack under the stars, near the camp; the escape meeting point. | P011 `Lo thou that doddered oak yonder; like a piece of a hay-rick it looks under the stars`
+E person | (unnamed) woman of the Queen of Utterbol | - | thrall | A woman of the Lady's household whom Redhead hopes to win (probably Agatha's informant). | P016 `It is even that woman of the Queen's whereof I told thee`
+
+R Redhead | lover_of | (unnamed) woman of the Queen of Utterbol | seeks her at Utterbol | BTWO-C41 | CANON/high | P016 `It is even that woman of the Queen's whereof I told thee`
+
+S (unnamed) first camp toward Utterness | distance_from | Vale Turris | dist=not above a dozen miles; cert=fixed | CANON/high | meadows by the forest | P002 `They rode not above a dozen miles that day`
+S (unnamed) second camp toward Utterness | distance_from | (unnamed) first camp toward Utterness | dist=some twenty miles; terrain=a clearing, trees a furlong to the left and a stone's throw to the right; cert=fixed | CANON/high | - | P007 `Thus they rode some twenty miles, and made stay at sunset in a place that seemed rather a clearing of the wood than a meadow`
+
+T Ralph, Lord of Utterbol, David the Sage | (unnamed) first camp toward Utterness | (unnamed) second camp toward Utterness | via=(unnamed) Utterness highway; mode=horse; start=two hours before noon; end=sunset; terrain=forest edge, ridges | P006 `About two hours before noon they got to horse again`
+
+F magic | Well at the World's End | Redhead says those who have drunk of the Well are well regarded in this land. | CANON/medium; ctx=dialogue:Redhead | P016 `they (if there be any such) who have drunk of the Well at the World's End are well looked to in this land`
+F society | Ursula | Redhead says whoever sees the damsel loves her and does her will; she is wise and wary. | CANON/medium; ctx=dialogue:Redhead | P016 `such is she, that whoso loveth her is like to do her will`
+F ecology | (unnamed) great forest of Utterness | From the ridges, leagues of thicket lie under the brooding mountain wall. | CANON/high | P006 `looked down on the thicket, leagues and leagues thereof, which yet seemed but a little space because of the hugeness of the mountain wall`
+
+V main | Redhead keeps tryst | Redhead arranges Ralph's night escape at the dead oak with a fresh horse. | time=evening of the second day; who=Ralph, Redhead; where=(unnamed) second camp toward Utterness | P013 `I shall be behind it abiding thee`
+
+U ambiguity | Why David leaves Ralph early that evening. | P008 `must I depart from thee, if I may, to meet a man who will sell me a noble horse good cheap`
+
+O quests | Escape assisted by an insider with a hidden horse at a landmark tree. | P013 `I have a horse for thee`

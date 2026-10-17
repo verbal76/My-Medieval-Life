@@ -1617,22 +1617,50 @@
    "title": "They Ride Toward Utterness From Out of Vale Turris",
    "body_paragraphs": 4,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 0,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 2,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Which side is east here? (wildwood on the right suggests the road runs roughly north with the mountains east)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C40.txt",
+    "records": "research/extraction/chapters/BTWO-C40.json"
+   }
   },
   {
    "chapter": "BTWO-C41",
    "title": "Redhead Keeps Tryst",
    "body_paragraphs": 17,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is David's early departure part of Agatha's plot?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C41.txt",
+    "records": "research/extraction/chapters/BTWO-C41.json"
+   }
   },
   {
    "chapter": "BTHREE-C1",
