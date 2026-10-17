@@ -17,7 +17,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY-WORLD-PAID_v1.zip` | paid | 32 | 15.3 MB | Puny World medieval tileset: 3520x2112 tile sheet, atlas, 9 sample Tiled maps, sample 32x32 characters, GIF previews. |
 | `PUNY_CHARACTERS_v2.1.zip` | paid | 515 | 59.5 MB | Puny Characters Editor Edition: pre-made 8-direction spritesheets, GIMP layer file, Tiled ortho/iso/hex demo maps (ortho tileset has a terrain wangset). |
 | `PUNY_CHARACTERS_v2.1_tdsm-2026.zip` | paid | 116 | 689.5 KB | Puny Characters as a Top-Down Sprite Maker style: manifest.tds, per-layer part sheets, CSV part lists, palette ramps. This is the headless character generator's source (tools/puny_chargen.py). |
-| `PUNY_DUNGEON_v1.zip` | verify | 15 | 139.6 KB | Puny Dungeon tileset (416x320), 5 sample Tiled maps with preview images, sample characters. |
+| `PUNY_DUNGEON_v1.zip` | CC0 | 15 | 139.6 KB | Puny Dungeon tileset (416x320): 2-edge wang walls laid out for procedural maps, floor variations, animated water and torches, traps (boulder, spikes, blades, flamethrowers, pits, bear traps), interactables (pressure plates, crates, portals, keys). 5 sample Tiled maps with preview images, sample characters. Note: the .tsx defines animations but no wangset, so the wall layout must be mapped by hand before auto-tiling. |
 | `PUNY_MYTH-CREATURES-RPGMAKER_v1.zip` | CC0 | 74 | 531.6 KB | Puny Myth Creatures (Philippine folklore), RPG Maker format: 30 overworld 4-direction walk sheets (72x96, 3x4 frames of 24px), 25 unanimated enemy battle sprites, 10 hero side-view battlers (576x384, 9x6 frames of 64px), and 9 RPG Maker character sheets (288x192). Shade's thesis pack; CC0, credit optional. |
 | `PUNY_SKILLS_v1.zip` | paid | 1719 | 1.8 MB | Puny skill icons, skill FX animation spritesheets, indicators. |
 | `Puny-Characters.zip` | CC0 | 24 | 547.4 KB | Free Puny Characters: 19 8-direction sheets (768x256 = 24 frames x 8 directions, 32px cells; idle, walk, sword, bow, stave, throw, hurt, death): Character-Base plus soldiers, warriors, archers, mages, workers and orcs in team colours; a 480x32 single-row Slime sheet; 4 environment tiles (16x16). Older/smaller layout than the 29-frame Editor Edition. |
@@ -25,7 +25,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `miniworld +__rainbow-refresh.zip` | verify | 10 | 642.9 KB | Recoloured 'rainbow refresh' Miniworld remix sheets, same layout as the octoshrimpy update plus chests. |
 | `16x16 Assorted RPG Icons (partial)/` (folder) | free | 9 | 113.9 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
-| `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip). |
+| `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0. |
 
 Licence key: **paid** = bought in the itch.io bundle; its licence allows use in games
 but forbids redistributing the original files. **free** = Shade's own terms say free to use.
