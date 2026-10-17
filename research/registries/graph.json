@@ -1,0 +1,3856 @@
+{
+ "format": "morris-graph/1",
+ "nodes": [
+  {
+   "id": "bld-castle-of-the-scaur",
+   "name": "Castle of the Scaur",
+   "type": "building"
+  },
+  {
+   "id": "bld-foxworth-castle",
+   "name": "Foxworth Castle",
+   "type": "building"
+  },
+  {
+   "id": "bld-house-of-abundance",
+   "name": "House of Abundance",
+   "type": "building"
+  },
+  {
+   "id": "bld-house-of-black-canons-of-wulstead",
+   "name": "House of Black Canons of Wulstead",
+   "type": "building"
+  },
+  {
+   "id": "bld-house-of-the-sorceress",
+   "name": "House of the Sorceress",
+   "type": "building"
+  },
+  {
+   "id": "bld-mid-mountain-house",
+   "name": "Mid-Mountain House",
+   "type": "building"
+  },
+  {
+   "id": "bld-nineways-garth",
+   "name": "Nineways Garth",
+   "type": "building"
+  },
+  {
+   "id": "bld-st-marys-of-higham",
+   "name": "St. Mary's of Higham",
+   "type": "building"
+  },
+  {
+   "id": "cre-bulls-lion",
+   "name": "(unnamed) Bull's lion",
+   "type": "creature"
+  },
+  {
+   "id": "cre-falcon",
+   "name": "Falcon",
+   "type": "creature"
+  },
+  {
+   "id": "fea-dry-tree",
+   "name": "Dry Tree",
+   "type": "feature"
+  },
+  {
+   "id": "fea-utterbol-moorland",
+   "name": "(unnamed) Utterbol moorland",
+   "type": "feature"
+  },
+  {
+   "id": "fea-well-at-the-worlds-end",
+   "name": "Well at the World's End",
+   "type": "feature"
+  },
+  {
+   "id": "grp-banded-barons",
+   "name": "Banded Barons",
+   "type": "group"
+  },
+  {
+   "id": "grp-black-riders",
+   "name": "Black Riders",
+   "type": "group"
+  },
+  {
+   "id": "grp-chapmen-of-higham",
+   "name": "Chapmen of Higham",
+   "type": "group"
+  },
+  {
+   "id": "grp-chiefs-of-the-port",
+   "name": "chiefs of the Port",
+   "type": "group"
+  },
+  {
+   "id": "grp-clements-eastward-company",
+   "name": "Clement's eastward company",
+   "type": "group"
+  },
+  {
+   "id": "grp-clothiers-and-webbers-of-higham",
+   "name": "clothiers and webbers of Higham",
+   "type": "group"
+  },
+  {
+   "id": "grp-companions",
+   "name": "Companions",
+   "type": "group"
+  },
+  {
+   "id": "grp-dead-of-the-thirsty-desert",
+   "name": "(unnamed) dead of the Thirsty Desert",
+   "type": "group"
+  },
+  {
+   "id": "grp-easterlings",
+   "name": "Easterlings",
+   "type": "group"
+  },
+  {
+   "id": "grp-expelled-burgers",
+   "name": "(unnamed) expelled Burgers",
+   "type": "group"
+  },
+  {
+   "id": "grp-faring-knights",
+   "name": "Faring-Knights",
+   "type": "group"
+  },
+  {
+   "id": "grp-fathers-of-the-thorn",
+   "name": "fathers of the Thorn",
+   "type": "group"
+  },
+  {
+   "id": "grp-fellowship-of-champions",
+   "name": "Fellowship of Champions",
+   "type": "group"
+  },
+  {
+   "id": "grp-fellowship-of-the-dry-tree",
+   "name": "Fellowship of the Dry Tree",
+   "type": "group"
+  },
+  {
+   "id": "grp-folk-of-the-fells",
+   "name": "Folk of the Fells",
+   "type": "group"
+  },
+  {
+   "id": "grp-four-armed-seekers",
+   "name": "(unnamed) four armed seekers",
+   "type": "group"
+  },
+  {
+   "id": "grp-gangrel-wanderers-east-of-goldburg",
+   "name": "(unnamed) gangrel wanderers east of Goldburg",
+   "type": "group"
+  },
+  {
+   "id": "grp-garton-volunteers",
+   "name": "(unnamed) Garton volunteers",
+   "type": "group"
+  },
+  {
+   "id": "grp-geirings",
+   "name": "Geirings",
+   "type": "group"
+  },
+  {
+   "id": "grp-heathen-simple-folk-beyond-the-mountains",
+   "name": "(unnamed) heathen simple folk beyond the mountains",
+   "type": "group"
+  },
+  {
+   "id": "grp-innocent-folk",
+   "name": "Innocent Folk",
+   "type": "group"
+  },
+  {
+   "id": "grp-kindred-of-the-bull",
+   "name": "(unnamed) kindred of the Bull",
+   "type": "group"
+  },
+  {
+   "id": "grp-men-at-arms-of-the-abbot",
+   "name": "men-at-arms of the Abbot",
+   "type": "group"
+  },
+  {
+   "id": "grp-men-of-the-burg-of-the-four-friths",
+   "name": "men of the Burg of the Four Friths",
+   "type": "group"
+  },
+  {
+   "id": "grp-men-of-the-leafless-tree",
+   "name": "men of the leafless tree",
+   "type": "group"
+  },
+  {
+   "id": "grp-men-of-the-port-of-whitwall",
+   "name": "men of the Port of Whitwall",
+   "type": "group"
+  },
+  {
+   "id": "grp-merchant-company-to-whitwall",
+   "name": "(unnamed) merchant company to Whitwall",
+   "type": "group"
+  },
+  {
+   "id": "grp-merchants-in-the-burg",
+   "name": "(unnamed) merchants in the Burg",
+   "type": "group"
+  },
+  {
+   "id": "grp-messengers-of-the-innocent-folk",
+   "name": "(unnamed) messengers of the Innocent Folk",
+   "type": "group"
+  },
+  {
+   "id": "grp-officers-of-the-porte-of-goldburg",
+   "name": "officers of the Porte of Goldburg",
+   "type": "group"
+  },
+  {
+   "id": "grp-outlaws-of-the-wood-debateable",
+   "name": "outlaws of the Wood Debateable",
+   "type": "group"
+  },
+  {
+   "id": "grp-riders-of-utterbol",
+   "name": "Riders of Utterbol",
+   "type": "group"
+  },
+  {
+   "id": "grp-scribes-and-limners-of-higham",
+   "name": "scribes and limners of Higham",
+   "type": "group"
+  },
+  {
+   "id": "grp-shepherds-of-the-downs",
+   "name": "shepherds of the Downs",
+   "type": "group"
+  },
+  {
+   "id": "grp-strong-thieves-of-the-mountains",
+   "name": "Strong-thieves of the mountains",
+   "type": "group"
+  },
+  {
+   "id": "grp-the-ancient-folk",
+   "name": "the ancient folk",
+   "type": "group"
+  },
+  {
+   "id": "grp-three-swevenham-seekers",
+   "name": "(unnamed) three Swevenham seekers",
+   "type": "group"
+  },
+  {
+   "id": "grp-twenty-one-seekers-of-the-dry-tree",
+   "name": "(unnamed) twenty-one seekers of the Dry Tree",
+   "type": "group"
+  },
+  {
+   "id": "grp-vavassors-of-upmeads",
+   "name": "vavassors of Upmeads",
+   "type": "group"
+  },
+  {
+   "id": "grp-westland-barons",
+   "name": "Westland Barons",
+   "type": "group"
+  },
+  {
+   "id": "grp-wheat-wearers",
+   "name": "Wheat-wearers",
+   "type": "group"
+  },
+  {
+   "id": "grp-white-armoured-company-of-the-dry-tree",
+   "name": "(unnamed) white-armoured company of the Dry Tree",
+   "type": "group"
+  },
+  {
+   "id": "grp-yellow-gowned-thrall-women",
+   "name": "(unnamed) yellow-gowned thrall women",
+   "type": "group"
+  },
+  {
+   "id": "grp-yeomen-of-abundance",
+   "name": "yeomen of Abundance",
+   "type": "group"
+  },
+  {
+   "id": "imp-baron-of-the-waste-march",
+   "name": "(unnamed) Baron of the Waste March",
+   "type": "implicit"
+  },
+  {
+   "id": "imp-fairest-woman-of-the-world",
+   "name": "(unnamed) fairest woman of the world",
+   "type": "implicit"
+  },
+  {
+   "id": "imp-michael-of-the-hatch",
+   "name": "(unnamed) Michael of the Hatch",
+   "type": "implicit"
+  },
+  {
+   "id": "imp-old-lord-of-the-burg",
+   "name": "(unnamed) old lord of the Burg",
+   "type": "implicit"
+  },
+  {
+   "id": "imp-unknown-slayer",
+   "name": "(unnamed) unknown slayer",
+   "type": "implicit"
+  },
+  {
+   "id": "imp-vassals-and-villeins-of-the-abbot",
+   "name": "(unnamed) vassals and villeins of the Abbot",
+   "type": "implicit"
+  },
+  {
+   "id": "imp-war-booty",
+   "name": "(unnamed) war booty",
+   "type": "implicit"
+  },
+  {
+   "id": "itm-dame-katherines-necklace",
+   "name": "Dame Katherine's necklace",
+   "type": "item"
+  },
+  {
+   "id": "itm-dead-seekers-necklace",
+   "name": "(unnamed) dead seeker's necklace",
+   "type": "item"
+  },
+  {
+   "id": "per-abbot-of-st-marys-of-higham",
+   "name": "Abbot of St. Mary's of Higham",
+   "type": "person"
+  },
+  {
+   "id": "per-abbot-of-st-peters",
+   "name": "(unnamed) Abbot of St. Peter's",
+   "type": "person"
+  },
+  {
+   "id": "per-agatha",
+   "name": "Agatha",
+   "type": "person"
+  },
+  {
+   "id": "per-alexander",
+   "name": "Alexander",
+   "type": "person"
+  },
+  {
+   "id": "per-alice-of-queenhough",
+   "name": "Alice of Queenhough",
+   "type": "person"
+  },
+  {
+   "id": "per-andrew",
+   "name": "Andrew",
+   "type": "person"
+  },
+  {
+   "id": "per-arnold-wright",
+   "name": "Arnold Wright",
+   "type": "person"
+  },
+  {
+   "id": "per-bishop-baron-beyond-the-wood-debateable",
+   "name": "(unnamed) bishop-baron beyond the Wood Debateable",
+   "type": "person"
+  },
+  {
+   "id": "per-black-anselm",
+   "name": "Black Anselm",
+   "type": "person"
+  },
+  {
+   "id": "per-blackfriar-hermit-of-the-lake",
+   "name": "(unnamed) Blackfriar hermit of the lake",
+   "type": "person"
+  },
+  {
+   "id": "per-blaise",
+   "name": "Blaise",
+   "type": "person"
+  },
+  {
+   "id": "per-brother-hospitaller-of-st-marys",
+   "name": "(unnamed) brother hospitaller of St. Mary's",
+   "type": "person"
+  },
+  {
+   "id": "per-brother-of-roger",
+   "name": "(unnamed) brother of Roger",
+   "type": "person"
+  },
+  {
+   "id": "per-brother-of-the-carline-of-the-house-of-abundance",
+   "name": "(unnamed) brother of the carline of the House of Abundance",
+   "type": "person"
+  },
+  {
+   "id": "per-brother-of-the-utterbol-nephew",
+   "name": "(unnamed) brother of the Utterbol nephew",
+   "type": "person"
+  },
+  {
+   "id": "per-brother-of-ursula",
+   "name": "(unnamed) brother of Ursula",
+   "type": "person"
+  },
+  {
+   "id": "per-bull-nosy",
+   "name": "Bull Nosy",
+   "type": "person"
+  },
+  {
+   "id": "per-bull-shockhead",
+   "name": "Bull Shockhead",
+   "type": "person"
+  },
+  {
+   "id": "per-burger-herald-in-white-steel",
+   "name": "(unnamed) Burger herald in white steel",
+   "type": "person"
+  },
+  {
+   "id": "per-burly-shepherd-at-the-mote",
+   "name": "(unnamed) burly shepherd at the mote",
+   "type": "person"
+  },
+  {
+   "id": "per-captain-of-clements-men-at-arms",
+   "name": "(unnamed) captain of Clement's men-at-arms",
+   "type": "person"
+  },
+  {
+   "id": "per-captain-of-higham",
+   "name": "(unnamed) Captain of Higham",
+   "type": "person"
+  },
+  {
+   "id": "per-captain-of-the-dry-tree",
+   "name": "Captain of the Dry Tree",
+   "type": "person"
+  },
+  {
+   "id": "per-captain-of-the-north-gate",
+   "name": "(unnamed) captain of the North Gate",
+   "type": "person"
+  },
+  {
+   "id": "per-captain-of-the-utterbol-men-at-arms",
+   "name": "(unnamed) captain of the Utterbol men-at-arms",
+   "type": "person"
+  },
+  {
+   "id": "per-carline-of-swevenham",
+   "name": "(unnamed) carline of Swevenham",
+   "type": "person"
+  },
+  {
+   "id": "per-carline-of-the-burg",
+   "name": "(unnamed) carline of the Burg",
+   "type": "person"
+  },
+  {
+   "id": "per-carline-of-the-house-of-abundance",
+   "name": "(unnamed) carline of the House of Abundance",
+   "type": "person"
+  },
+  {
+   "id": "per-clement-chapman",
+   "name": "Clement Chapman",
+   "type": "person"
+  },
+  {
+   "id": "per-clement-the-black",
+   "name": "Clement the Black",
+   "type": "person"
+  },
+  {
+   "id": "per-crabbed-sergeant-of-utterbol",
+   "name": "(unnamed) crabbed sergeant of Utterbol",
+   "type": "person"
+  },
+  {
+   "id": "per-dame-joyce",
+   "name": "Dame Joyce",
+   "type": "person"
+  },
+  {
+   "id": "per-dame-katherine",
+   "name": "Dame Katherine",
+   "type": "person"
+  },
+  {
+   "id": "per-david-the-sage",
+   "name": "David the Sage",
+   "type": "person"
+  },
+  {
+   "id": "per-dead-seeker-in-the-snow",
+   "name": "(unnamed) dead seeker in the snow",
+   "type": "person"
+  },
+  {
+   "id": "per-dorothea",
+   "name": "Dorothea",
+   "type": "person"
+  },
+  {
+   "id": "per-duke-of-the-bulls",
+   "name": "(unnamed) Duke of the Bulls",
+   "type": "person"
+  },
+  {
+   "id": "per-duke-osmond",
+   "name": "Duke Osmond",
+   "type": "person"
+  },
+  {
+   "id": "per-earl-walter-the-black",
+   "name": "Earl Walter the Black",
+   "type": "person"
+  },
+  {
+   "id": "per-elder-of-the-innocent-folk",
+   "name": "(unnamed) elder of the Innocent Folk",
+   "type": "person"
+  },
+  {
+   "id": "per-fair-lady-of-the-burg",
+   "name": "Fair Lady of the Burg",
+   "type": "person"
+  },
+  {
+   "id": "per-father-of-king-peter",
+   "name": "(unnamed) father of King Peter",
+   "type": "person"
+  },
+  {
+   "id": "per-felon-baron",
+   "name": "(unnamed) felon baron",
+   "type": "person"
+  },
+  {
+   "id": "per-felon-knight-at-the-chapel",
+   "name": "(unnamed) felon knight at the chapel",
+   "type": "person"
+  },
+  {
+   "id": "per-first-son-of-the-lady",
+   "name": "(unnamed) first son of the Lady",
+   "type": "person"
+  },
+  {
+   "id": "per-forest-lord",
+   "name": "Forest Lord",
+   "type": "person"
+  },
+  {
+   "id": "per-founder-of-goldburg",
+   "name": "(unnamed) founder of Goldburg",
+   "type": "person"
+  },
+  {
+   "id": "per-franklin-of-the-burg",
+   "name": "(unnamed) franklin of the Burg",
+   "type": "person"
+  },
+  {
+   "id": "per-gandolf",
+   "name": "Gandolf",
+   "type": "person"
+  },
+  {
+   "id": "per-geoffrey",
+   "name": "Geoffrey",
+   "type": "person"
+  },
+  {
+   "id": "per-geoffrey-the-minstrel",
+   "name": "Geoffrey the Minstrel",
+   "type": "person"
+  },
+  {
+   "id": "per-gervaise",
+   "name": "Gervaise",
+   "type": "person"
+  },
+  {
+   "id": "per-giles",
+   "name": "Giles",
+   "type": "person"
+  },
+  {
+   "id": "per-greasy-wat",
+   "name": "Greasy Wat",
+   "type": "person"
+  },
+  {
+   "id": "per-gregory",
+   "name": "Gregory",
+   "type": "person"
+  },
+  {
+   "id": "per-hermit-sage-near-utterbol",
+   "name": "(unnamed) hermit sage near Utterbol",
+   "type": "person"
+  },
+  {
+   "id": "per-holy-richard",
+   "name": "holy Richard",
+   "type": "person"
+  },
+  {
+   "id": "per-host-of-the-goldburg-hostel",
+   "name": "(unnamed) host of the Goldburg hostel",
+   "type": "person"
+  },
+  {
+   "id": "per-hugh",
+   "name": "Hugh",
+   "type": "person"
+  },
+  {
+   "id": "per-hugh-of-bourton-abbas",
+   "name": "Hugh of Bourton Abbas",
+   "type": "person"
+  },
+  {
+   "id": "per-joyce",
+   "name": "Joyce",
+   "type": "person"
+  },
+  {
+   "id": "per-king-father-of-the-kings-son",
+   "name": "(unnamed) king, father of the king's son",
+   "type": "person"
+  },
+  {
+   "id": "per-king-of-cheaping-knowe",
+   "name": "(unnamed) King of Cheaping Knowe",
+   "type": "person"
+  },
+  {
+   "id": "per-king-peter",
+   "name": "King Peter",
+   "type": "person"
+  },
+  {
+   "id": "per-king-rainald",
+   "name": "King Rainald",
+   "type": "person"
+  },
+  {
+   "id": "per-kings-son-of-the-book",
+   "name": "(unnamed) king's son of the book",
+   "type": "person"
+  },
+  {
+   "id": "per-kings-son-of-the-ladys-youth",
+   "name": "(unnamed) king's son of the Lady's youth",
+   "type": "person"
+  },
+  {
+   "id": "per-knight-of-higham-at-the-barrier",
+   "name": "(unnamed) knight of Higham at the barrier",
+   "type": "person"
+  },
+  {
+   "id": "per-knight-of-the-book",
+   "name": "(unnamed) knight of the book",
+   "type": "person"
+  },
+  {
+   "id": "per-knight-of-the-sun",
+   "name": "Knight of the Sun",
+   "type": "person"
+  },
+  {
+   "id": "per-lady-delivered-at-the-crossroads",
+   "name": "(unnamed) lady delivered at the crossroads",
+   "type": "person"
+  },
+  {
+   "id": "per-lady-of-abundance",
+   "name": "Lady of Abundance",
+   "type": "person"
+  },
+  {
+   "id": "per-lady-of-the-wildwood",
+   "name": "Lady of the Wildwood",
+   "type": "person"
+  },
+  {
+   "id": "per-lady-of-utterbol",
+   "name": "(unnamed) Lady of Utterbol",
+   "type": "person"
+  },
+  {
+   "id": "per-ladys-captain-of-war",
+   "name": "(unnamed) lady's captain of war",
+   "type": "person"
+  },
+  {
+   "id": "per-lancelot-longtongue",
+   "name": "Lancelot Longtongue",
+   "type": "person"
+  },
+  {
+   "id": "per-lord-of-the-burg",
+   "name": "(unnamed) Lord of the Burg",
+   "type": "person"
+  },
+  {
+   "id": "per-lord-of-whiteness",
+   "name": "(unnamed) lord of Whiteness",
+   "type": "person"
+  },
+  {
+   "id": "per-maidens-of-the-flower-de-luce",
+   "name": "(unnamed) maidens of the Flower de Luce",
+   "type": "person"
+  },
+  {
+   "id": "per-martha",
+   "name": "Martha",
+   "type": "person"
+  },
+  {
+   "id": "per-mayor-of-wulstead",
+   "name": "(unnamed) mayor of Wulstead",
+   "type": "person"
+  },
+  {
+   "id": "per-michael-a-dale",
+   "name": "Michael-a-dale",
+   "type": "person"
+  },
+  {
+   "id": "per-michael-a-green",
+   "name": "Michael-a-green",
+   "type": "person"
+  },
+  {
+   "id": "per-michael-a-hurst",
+   "name": "Michael a-Hurst",
+   "type": "person"
+  },
+  {
+   "id": "per-monk-of-higham",
+   "name": "(unnamed) monk of Higham",
+   "type": "person"
+  },
+  {
+   "id": "per-monk-who-sold-the-book",
+   "name": "(unnamed) monk who sold the book",
+   "type": "person"
+  },
+  {
+   "id": "per-morfinn-the-minstrel",
+   "name": "Morfinn the Minstrel",
+   "type": "person"
+  },
+  {
+   "id": "per-nephew-of-the-lord-of-utterbol",
+   "name": "(unnamed) nephew of the Lord of Utterbol",
+   "type": "person"
+  },
+  {
+   "id": "per-new-captain-of-the-dry-tree",
+   "name": "(unnamed) new Captain of the Dry Tree",
+   "type": "person"
+  },
+  {
+   "id": "per-new-come-thrall-of-the-lord-of-utterbol",
+   "name": "(unnamed) new-come thrall of the Lord of Utterbol",
+   "type": "person"
+  },
+  {
+   "id": "per-nicholas-longshanks",
+   "name": "Nicholas Longshanks",
+   "type": "person"
+  },
+  {
+   "id": "per-niece-of-the-old-spinning-woman",
+   "name": "(unnamed) niece of the old spinning woman",
+   "type": "person"
+  },
+  {
+   "id": "per-old-burgher-of-the-burg",
+   "name": "(unnamed) old burgher of the Burg",
+   "type": "person"
+  },
+  {
+   "id": "per-old-fisherman-of-goldburg",
+   "name": "(unnamed) old fisherman of Goldburg",
+   "type": "person"
+  },
+  {
+   "id": "per-old-haymaker-of-abundance",
+   "name": "(unnamed) old haymaker of Abundance",
+   "type": "person"
+  },
+  {
+   "id": "per-old-man-of-the-mountains",
+   "name": "(unnamed) old man of the mountains",
+   "type": "person"
+  },
+  {
+   "id": "per-old-queen-of-the-dry-tree",
+   "name": "(unnamed) old Queen of the Dry Tree",
+   "type": "person"
+  },
+  {
+   "id": "per-old-spearman-shepherd",
+   "name": "(unnamed) old spearman shepherd",
+   "type": "person"
+  },
+  {
+   "id": "per-old-spinning-woman-of-abundance",
+   "name": "(unnamed) old spinning woman of Abundance",
+   "type": "person"
+  },
+  {
+   "id": "per-oliver",
+   "name": "Oliver",
+   "type": "person"
+  },
+  {
+   "id": "per-otter",
+   "name": "Otter",
+   "type": "person"
+  },
+  {
+   "id": "per-prior-of-st-johns-by-the-bridge",
+   "name": "(unnamed) Prior of St. John's by the Bridge",
+   "type": "person"
+  },
+  {
+   "id": "per-prior-of-st-marys",
+   "name": "(unnamed) prior of St. Mary's",
+   "type": "person"
+  },
+  {
+   "id": "per-prior-of-the-austin-canons-of-wulstead",
+   "name": "(unnamed) Prior of the Austin Canons of Wulstead",
+   "type": "person"
+  },
+  {
+   "id": "per-prior-of-the-thorn",
+   "name": "(unnamed) Prior of the Thorn",
+   "type": "person"
+  },
+  {
+   "id": "per-queen-of-goldburg",
+   "name": "Queen of Goldburg",
+   "type": "person"
+  },
+  {
+   "id": "per-queen-of-the-dry-tree",
+   "name": "Queen of the Dry Tree",
+   "type": "person"
+  },
+  {
+   "id": "per-queen-of-the-tower",
+   "name": "(unnamed) Queen of the Tower",
+   "type": "person"
+  },
+  {
+   "id": "per-queen-of-upmeads",
+   "name": "(unnamed) Queen of Upmeads",
+   "type": "person"
+  },
+  {
+   "id": "per-ralph",
+   "name": "Ralph",
+   "type": "person"
+  },
+  {
+   "id": "per-red-robert",
+   "name": "Red Robert",
+   "type": "person"
+  },
+  {
+   "id": "per-redhead",
+   "name": "Redhead",
+   "type": "person"
+  },
+  {
+   "id": "per-richard-the-red",
+   "name": "Richard the Red",
+   "type": "person"
+  },
+  {
+   "id": "per-roger-of-the-rope-walk",
+   "name": "Roger of the Rope-walk",
+   "type": "person"
+  },
+  {
+   "id": "per-rogers-master",
+   "name": "(unnamed) Roger's master",
+   "type": "person"
+  },
+  {
+   "id": "per-runner-of-the-burg",
+   "name": "(unnamed) runner of the Burg",
+   "type": "person"
+  },
+  {
+   "id": "per-sage-near-utterness",
+   "name": "(unnamed) sage near Utterness",
+   "type": "person"
+  },
+  {
+   "id": "per-sage-of-swevenham",
+   "name": "Sage of Swevenham",
+   "type": "person"
+  },
+  {
+   "id": "per-scribe-monk-of-st-austins",
+   "name": "(unnamed) scribe-monk of St. Austin's",
+   "type": "person"
+  },
+  {
+   "id": "per-second-son-of-the-lady",
+   "name": "(unnamed) second son of the Lady",
+   "type": "person"
+  },
+  {
+   "id": "per-simon-bowyer",
+   "name": "Simon Bowyer",
+   "type": "person"
+  },
+  {
+   "id": "per-sir-aymer",
+   "name": "Sir Aymer",
+   "type": "person"
+  },
+  {
+   "id": "per-sir-cyprian",
+   "name": "Sir Cyprian",
+   "type": "person"
+  },
+  {
+   "id": "per-sir-karr-wood-neb",
+   "name": "Sir Karr Wood-neb",
+   "type": "person"
+  },
+  {
+   "id": "per-slain-axeman",
+   "name": "(unnamed) slain axeman",
+   "type": "person"
+  },
+  {
+   "id": "per-slain-spearman",
+   "name": "(unnamed) slain spearman",
+   "type": "person"
+  },
+  {
+   "id": "per-slender-youth",
+   "name": "(unnamed) slender youth",
+   "type": "person"
+  },
+  {
+   "id": "per-small-cloaked-man-at-the-flower-de-luce",
+   "name": "(unnamed) small cloaked man at the Flower de Luce",
+   "type": "person"
+  },
+  {
+   "id": "per-sons-of-geoffrey",
+   "name": "(unnamed) sons of Geoffrey",
+   "type": "person"
+  },
+  {
+   "id": "per-sorceress-of-the-book",
+   "name": "(unnamed) sorceress of the book",
+   "type": "person"
+  },
+  {
+   "id": "per-st-george",
+   "name": "St. George",
+   "type": "person"
+  },
+  {
+   "id": "per-st-julian",
+   "name": "St. Julian",
+   "type": "person"
+  },
+  {
+   "id": "per-st-nicholas",
+   "name": "St. Nicholas",
+   "type": "person"
+  },
+  {
+   "id": "per-stephen-a-hurst",
+   "name": "Stephen a-Hurst",
+   "type": "person"
+  },
+  {
+   "id": "per-subprior-of-st-marys",
+   "name": "(unnamed) subprior of St. Mary's",
+   "type": "person"
+  },
+  {
+   "id": "per-tall-thomas",
+   "name": "Tall Thomas",
+   "type": "person"
+  },
+  {
+   "id": "per-teacher-of-lore",
+   "name": "Teacher of Lore",
+   "type": "person"
+  },
+  {
+   "id": "per-thrall-merchant-of-cheaping-knowe",
+   "name": "(unnamed) thrall-merchant of Cheaping Knowe",
+   "type": "person"
+  },
+  {
+   "id": "per-tyrant-of-cheaping-knowe",
+   "name": "(unnamed) tyrant of Cheaping Knowe",
+   "type": "person"
+  },
+  {
+   "id": "per-upmeads-spy-carle",
+   "name": "(unnamed) Upmeads spy carle",
+   "type": "person"
+  },
+  {
+   "id": "per-ursula",
+   "name": "Ursula",
+   "type": "person"
+  },
+  {
+   "id": "per-ursulas-former-lover",
+   "name": "(unnamed) Ursula's former lover",
+   "type": "person"
+  },
+  {
+   "id": "per-valerius",
+   "name": "Valerius",
+   "type": "person"
+  },
+  {
+   "id": "per-vicar-of-the-little-plain",
+   "name": "(unnamed) Vicar of the Little Plain",
+   "type": "person"
+  },
+  {
+   "id": "per-walter-the-black",
+   "name": "Walter the Black",
+   "type": "person"
+  },
+  {
+   "id": "per-war-smith",
+   "name": "War-smith",
+   "type": "person"
+  },
+  {
+   "id": "per-warden-of-the-mid-mountain-house",
+   "name": "(unnamed) warden of the Mid-Mountain House",
+   "type": "person"
+  },
+  {
+   "id": "per-wardens-of-the-house-of-the-sorceress",
+   "name": "(unnamed) wardens of the House of the Sorceress",
+   "type": "person"
+  },
+  {
+   "id": "per-wardens-wife",
+   "name": "(unnamed) warden's wife",
+   "type": "person"
+  },
+  {
+   "id": "per-wat-miller",
+   "name": "Wat Miller",
+   "type": "person"
+  },
+  {
+   "id": "per-wise-carline-of-the-dale-of-lore",
+   "name": "(unnamed) wise carline of the Dale of Lore",
+   "type": "person"
+  },
+  {
+   "id": "per-wise-woman-of-sarras",
+   "name": "(unnamed) Wise Woman of Sarras",
+   "type": "person"
+  },
+  {
+   "id": "per-witch-mistress-of-the-lady",
+   "name": "(unnamed) witch-mistress of the Lady",
+   "type": "person"
+  },
+  {
+   "id": "per-wizard-of-the-mountains",
+   "name": "(unnamed) wizard of the mountains",
+   "type": "person"
+  },
+  {
+   "id": "per-woman-of-the-book",
+   "name": "(unnamed) woman of the book",
+   "type": "person"
+  },
+  {
+   "id": "per-woman-of-the-queen-of-utterbol",
+   "name": "(unnamed) woman of the Queen of Utterbol",
+   "type": "person"
+  },
+  {
+   "id": "per-yellow-haired-lad-of-swevenham",
+   "name": "(unnamed) yellow-haired lad of Swevenham",
+   "type": "person"
+  },
+  {
+   "id": "per-young-burger-captive",
+   "name": "(unnamed) young Burger captive",
+   "type": "person"
+  },
+  {
+   "id": "per-young-champion-abductor",
+   "name": "(unnamed) young champion abductor",
+   "type": "person"
+  },
+  {
+   "id": "per-young-knight-of-the-barons-house",
+   "name": "(unnamed) young knight of the baron's house",
+   "type": "person"
+  },
+  {
+   "id": "plc-bourton-abbas",
+   "name": "Bourton Abbas",
+   "type": "place"
+  },
+  {
+   "id": "plc-burg-of-the-four-friths",
+   "name": "Burg of the Four Friths",
+   "type": "place"
+  },
+  {
+   "id": "plc-cheaping-knowe",
+   "name": "Cheaping Knowe",
+   "type": "place"
+  },
+  {
+   "id": "plc-goldburg",
+   "name": "Goldburg",
+   "type": "place"
+  },
+  {
+   "id": "plc-hampton-under-scaur",
+   "name": "Hampton under Scaur",
+   "type": "place"
+  },
+  {
+   "id": "plc-higham-on-the-way",
+   "name": "Higham-on-the-Way",
+   "type": "place"
+  },
+  {
+   "id": "plc-land-of-the-innocent-folk",
+   "name": "Land of the Innocent Folk",
+   "type": "place"
+  },
+  {
+   "id": "plc-plain-of-abundance",
+   "name": "Plain of Abundance",
+   "type": "place"
+  },
+  {
+   "id": "plc-sunway",
+   "name": "Sunway",
+   "type": "place"
+  },
+  {
+   "id": "plc-swevenham",
+   "name": "Swevenham",
+   "type": "place"
+  },
+  {
+   "id": "plc-town-of-the-folk-of-the-fells",
+   "name": "(unnamed) town of the Folk of the Fells",
+   "type": "place"
+  },
+  {
+   "id": "plc-utterbol",
+   "name": "Utterbol",
+   "type": "place"
+  },
+  {
+   "id": "plc-whitwall",
+   "name": "Whitwall",
+   "type": "place"
+  },
+  {
+   "id": "plc-wulstead",
+   "name": "Wulstead",
+   "type": "place"
+  },
+  {
+   "id": "pol-kingdom-of-the-kings-son",
+   "name": "(unnamed) kingdom of the king's son",
+   "type": "polity"
+  },
+  {
+   "id": "pol-kingdom-of-the-tower",
+   "name": "Kingdom of the Tower",
+   "type": "polity"
+  },
+  {
+   "id": "pol-upmeads",
+   "name": "Upmeads",
+   "type": "polity"
+  },
+  {
+   "id": "sup-bear-father",
+   "name": "Bear-father",
+   "type": "supernatural"
+  },
+  {
+   "id": "sup-gods-of-the-earth",
+   "name": "Gods of the Earth",
+   "type": "supernatural"
+  },
+  {
+   "id": "sup-wood-wights",
+   "name": "wood-wights",
+   "type": "supernatural"
+  }
+ ],
+ "edges": [
+  {
+   "id": "rel-21090302f3",
+   "source": "per-king-peter",
+   "target": "per-blaise",
+   "rel": "parent_of",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5adcfa7c82",
+   "source": "per-king-peter",
+   "target": "per-ralph",
+   "rel": "parent_of",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-82a6e9b3b7",
+   "source": "per-king-peter",
+   "target": "pol-upmeads",
+   "rel": "ruler_of",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9122035e41",
+   "source": "per-richard-the-red",
+   "target": "per-blaise",
+   "rel": "serves",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-358565babe",
+   "source": "per-lancelot-longtongue",
+   "target": "per-hugh",
+   "rel": "serves",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-cd10d3dea7",
+   "source": "per-clement-the-black",
+   "target": "per-gregory",
+   "rel": "serves",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c48110ec30",
+   "source": "pol-upmeads",
+   "target": "per-bishop-baron-beyond-the-wood-debateable",
+   "rel": "other",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e6653b01d8",
+   "source": "per-queen-of-upmeads",
+   "target": "per-ralph",
+   "rel": "parent_of",
+   "when": "BONE-C2",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-56e50bf2a5",
+   "source": "per-queen-of-upmeads",
+   "target": "per-king-peter",
+   "rel": "spouse_of",
+   "when": "BONE-C2",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d153fc84df",
+   "source": "per-dame-katherine",
+   "target": "per-clement-chapman",
+   "rel": "spouse_of",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-bf394a9346",
+   "source": "per-dame-katherine",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-654134283b",
+   "source": "per-clement-chapman",
+   "target": "per-king-peter",
+   "rel": "trades_with",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-6b9352e09e",
+   "source": "per-ralph",
+   "target": "cre-falcon",
+   "rel": "owns",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-83e30c8d75",
+   "source": "per-ralph",
+   "target": "itm-dame-katherines-necklace",
+   "rel": "owns",
+   "when": "BONE-C3 onward",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-20922a15d5",
+   "source": "per-abbot-of-st-marys-of-higham",
+   "target": "plc-higham-on-the-way",
+   "rel": "ruler_of",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-2631d5e330",
+   "source": "per-andrew",
+   "target": "per-clement-chapman",
+   "rel": "kin_of",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-95e9a0c32a",
+   "source": "grp-shepherds-of-the-downs",
+   "target": "per-ralph",
+   "rel": "allied_with",
+   "when": "BONE-C4 onward",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8587f6e5f0",
+   "source": "per-abbot-of-st-marys-of-higham",
+   "target": "grp-men-at-arms-of-the-abbot",
+   "rel": "lord_of",
+   "when": "BONE-C5",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-fec6d9f0cf",
+   "source": "per-abbot-of-st-marys-of-higham",
+   "target": "imp-vassals-and-villeins-of-the-abbot",
+   "rel": "lord_of",
+   "when": "BONE-C5",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1a1b3cb1cb",
+   "source": "per-ursula",
+   "target": "per-hugh-of-bourton-abbas",
+   "rel": "sibling_of",
+   "when": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8da8555858",
+   "source": "per-ursula",
+   "target": "per-ursulas-former-lover",
+   "rel": "lover_of",
+   "when": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-86a68cdda0",
+   "source": "plc-bourton-abbas",
+   "target": "bld-st-marys-of-higham",
+   "rel": "holds_land_of",
+   "when": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-4d26fb5190",
+   "source": "per-sir-aymer",
+   "target": "grp-men-of-the-burg-of-the-four-friths",
+   "rel": "leader_of",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0103d5df2e",
+   "source": "per-oliver",
+   "target": "per-sir-aymer",
+   "rel": "serves",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-04e47f306a",
+   "source": "per-oliver",
+   "target": "per-nicholas-longshanks",
+   "rel": "other",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-da8e104d2b",
+   "source": "grp-men-of-the-burg-of-the-four-friths",
+   "target": "grp-men-of-the-leafless-tree",
+   "rel": "enemy_of",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-aa1c67eddd",
+   "source": "per-slain-spearman",
+   "target": "per-ralph",
+   "rel": "killed_by",
+   "when": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0e65850ba2",
+   "source": "per-lady-delivered-at-the-crossroads",
+   "target": "per-ralph",
+   "rel": "freed_by",
+   "when": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e0cac7cb41",
+   "source": "per-lady-delivered-at-the-crossroads",
+   "target": "plc-burg-of-the-four-friths",
+   "rel": "enemy_of",
+   "when": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-00a6aea0a3",
+   "source": "per-ursula",
+   "target": "fea-well-at-the-worlds-end",
+   "rel": "other",
+   "when": "BONE-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-27fb36cdd1",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "plc-hampton-under-scaur",
+   "rel": "lives_in",
+   "when": "BONE-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-252e81f44b",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "plc-hampton-under-scaur",
+   "rel": "lord_of",
+   "when": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7183200882",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "bld-castle-of-the-scaur",
+   "rel": "lives_in",
+   "when": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-6787111c50",
+   "source": "per-roger-of-the-rope-walk",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "enemy_of",
+   "when": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-bda444333f",
+   "source": "per-fair-lady-of-the-burg",
+   "target": "per-forest-lord",
+   "rel": "spouse_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-fff8bb5acf",
+   "source": "plc-burg-of-the-four-friths",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "at_war_with",
+   "when": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d94c6c1520",
+   "source": "per-roger-of-the-rope-walk",
+   "target": "per-ralph",
+   "rel": "serves",
+   "when": "BONE-C12",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1b2d7815cb",
+   "source": "per-queen-of-the-dry-tree",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "leader_of",
+   "when": "BONE-C12",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7058b8fa0e",
+   "source": "per-war-smith",
+   "target": "per-forest-lord",
+   "rel": "child_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-22a4e5f404",
+   "source": "per-fair-lady-of-the-burg",
+   "target": "imp-old-lord-of-the-burg",
+   "rel": "kin_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-45ca00b600",
+   "source": "per-forest-lord",
+   "target": "plc-burg-of-the-four-friths",
+   "rel": "leader_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-98fc02df5e",
+   "source": "plc-burg-of-the-four-friths",
+   "target": "grp-wheat-wearers",
+   "rel": "at_war_with",
+   "when": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e46d35f14e",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "per-small-cloaked-man-at-the-flower-de-luce",
+   "rel": "other",
+   "when": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-525da36baf",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "member_of",
+   "when": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-08a5440898",
+   "source": "per-roger-of-the-rope-walk",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "member_of",
+   "when": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d832f91e20",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "grp-white-armoured-company-of-the-dry-tree",
+   "rel": "leader_of",
+   "when": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-3283662829",
+   "source": "per-roger-of-the-rope-walk",
+   "target": "per-rogers-master",
+   "rel": "serves",
+   "when": "BONE-C16",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-947eba4762",
+   "source": "per-father-of-king-peter",
+   "target": "per-king-peter",
+   "rel": "parent_of",
+   "when": "backstory",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-046c096f32",
+   "source": "per-lady-of-abundance",
+   "target": "plc-plain-of-abundance",
+   "rel": "ruler_of",
+   "when": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3b9e48d61e",
+   "source": "per-carline-of-the-house-of-abundance",
+   "target": "per-lady-of-abundance",
+   "rel": "serves",
+   "when": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3f0277ffb6",
+   "source": "grp-yeomen-of-abundance",
+   "target": "per-lady-of-abundance",
+   "rel": "vassal_of",
+   "when": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-26275dd21e",
+   "source": "per-woman-of-the-book",
+   "target": "per-kings-son-of-the-book",
+   "rel": "spouse_of",
+   "when": "legend",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-f1c0f7fabf",
+   "source": "per-woman-of-the-book",
+   "target": "per-sorceress-of-the-book",
+   "rel": "slave_of",
+   "when": "legend",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b28977685c",
+   "source": "per-vicar-of-the-little-plain",
+   "target": "grp-fathers-of-the-thorn",
+   "rel": "serves",
+   "when": "BONE-C20",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e8a426a7ce",
+   "source": "per-niece-of-the-old-spinning-woman",
+   "target": "per-old-spinning-woman-of-abundance",
+   "rel": "kin_of",
+   "when": "BONE-C20",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-a073bf7446",
+   "source": "per-brother-of-the-carline-of-the-house-of-abundance",
+   "target": "grp-fathers-of-the-thorn",
+   "rel": "member_of",
+   "when": "BONE-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-429c7a1825",
+   "source": "per-carline-of-the-house-of-abundance",
+   "target": "per-brother-of-the-carline-of-the-house-of-abundance",
+   "rel": "sibling_of",
+   "when": "BONE-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7b42b63ef5",
+   "source": "per-knight-of-the-sun",
+   "target": "per-walter-the-black",
+   "rel": "other",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0da584faa3",
+   "source": "per-knight-of-the-sun",
+   "target": "per-lady-delivered-at-the-crossroads",
+   "rel": "lover_of",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9d30fb2ec8",
+   "source": "per-ralph",
+   "target": "per-knight-of-the-sun",
+   "rel": "captive_of",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d014973744",
+   "source": "per-knight-of-the-sun",
+   "target": "per-captain-of-the-dry-tree",
+   "rel": "kin_of",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-5d78598d09",
+   "source": "per-lady-delivered-at-the-crossroads",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "leader_of",
+   "when": "BONE-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-ce2322aae7",
+   "source": "per-lady-delivered-at-the-crossroads",
+   "target": "per-slender-youth",
+   "rel": "other",
+   "when": "BONE-C23",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-727b01a642",
+   "source": "per-ladys-captain-of-war",
+   "target": "per-lady-delivered-at-the-crossroads",
+   "rel": "serves",
+   "when": "BONE-C23",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-03906ad6df",
+   "source": "per-lady-delivered-at-the-crossroads",
+   "target": "per-lady-of-abundance",
+   "rel": "other",
+   "when": "BONE-C24",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-2570f19dd2",
+   "source": "per-knight-of-the-sun",
+   "target": "plc-sunway",
+   "rel": "ruler_of",
+   "when": "BONE-C24",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8a1887e38f",
+   "source": "per-lady-of-abundance",
+   "target": "per-knight-of-the-sun",
+   "rel": "spouse_of",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b8af50a2d2",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "per-knight-of-the-sun",
+   "rel": "sibling_of",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-f4af117236",
+   "source": "per-walter-the-black",
+   "target": "per-lady-of-abundance",
+   "rel": "enemy_of",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-82686d328c",
+   "source": "per-lady-of-abundance",
+   "target": "per-ralph",
+   "rel": "lover_of",
+   "when": "BTWO-C1 onward",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-6d3b085b16",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "per-captain-of-the-dry-tree",
+   "rel": "other",
+   "when": "BTWO-C1",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-706b528a5f",
+   "source": "per-lady-of-abundance",
+   "target": "per-roger-of-the-rope-walk",
+   "rel": "other",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-655bb81e67",
+   "source": "grp-fellowship-of-champions",
+   "target": "plc-hampton-under-scaur",
+   "rel": "lives_in",
+   "when": "BTWO-C2",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8c602e431b",
+   "source": "per-lady-of-abundance",
+   "target": "per-witch-mistress-of-the-lady",
+   "rel": "slave_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3163cc8085",
+   "source": "per-witch-mistress-of-the-lady",
+   "target": "per-lady-of-abundance",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-da5905343d",
+   "source": "per-lady-of-abundance",
+   "target": "per-kings-son-of-the-ladys-youth",
+   "rel": "lover_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3c6c12aa01",
+   "source": "per-witch-mistress-of-the-lady",
+   "target": "per-lady-of-abundance",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-919ffdf54f",
+   "source": "per-wise-carline-of-the-dale-of-lore",
+   "target": "per-lady-of-abundance",
+   "rel": "teaches",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-aca51e10cc",
+   "source": "per-kings-son-of-the-ladys-youth",
+   "target": "fea-well-at-the-worlds-end",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0b9045da1c",
+   "source": "per-king-father-of-the-kings-son",
+   "target": "per-kings-son-of-the-ladys-youth",
+   "rel": "parent_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-f4b20bb16e",
+   "source": "per-felon-baron",
+   "target": "per-lady-of-abundance",
+   "rel": "enemy_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1a80a67c46",
+   "source": "per-young-champion-abductor",
+   "target": "per-kings-son-of-the-ladys-youth",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-bea03f8bc7",
+   "source": "per-king-father-of-the-kings-son",
+   "target": "pol-kingdom-of-the-tower",
+   "rel": "ruler_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c8d6059d9e",
+   "source": "per-lady-of-abundance",
+   "target": "per-kings-son-of-the-ladys-youth",
+   "rel": "spouse_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-61c51d9794",
+   "source": "per-lady-of-abundance",
+   "target": "pol-kingdom-of-the-tower",
+   "rel": "ruler_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-df54e7954f",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "per-lady-of-abundance",
+   "rel": "allied_with",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-87c54da0ad",
+   "source": "per-kings-son-of-the-ladys-youth",
+   "target": "bld-house-of-abundance",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-ef66e4c555",
+   "source": "per-teacher-of-lore",
+   "target": "per-lady-of-abundance",
+   "rel": "teaches",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9a6d65b7a2",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "bld-st-marys-of-higham",
+   "rel": "at_war_with",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-79e6aa77f1",
+   "source": "per-geoffrey",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "member_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-f115ece9d5",
+   "source": "per-geoffrey",
+   "target": "per-sons-of-geoffrey",
+   "rel": "parent_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-cd19721521",
+   "source": "per-lady-of-abundance",
+   "target": "bld-house-of-abundance",
+   "rel": "lives_in",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-f00d26defd",
+   "source": "grp-yeomen-of-abundance",
+   "target": "grp-fathers-of-the-thorn",
+   "rel": "vassal_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-059630cb42",
+   "source": "per-old-queen-of-the-dry-tree",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "leader_of",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-fba3635430",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "per-lady-of-abundance",
+   "rel": "other",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-4e73000141",
+   "source": "per-ursula",
+   "target": "per-lady-of-abundance",
+   "rel": "freed_by",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-511b3f2666",
+   "source": "per-ursula",
+   "target": "itm-dead-seekers-necklace",
+   "rel": "owns",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-47b395926f",
+   "source": "per-lady-of-abundance",
+   "target": "per-knight-of-the-sun",
+   "rel": "killed_by",
+   "when": "BTWO-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-65b1502d5a",
+   "source": "per-knight-of-the-sun",
+   "target": "per-ralph",
+   "rel": "killed_by",
+   "when": "BTWO-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3020e2d312",
+   "source": "per-blaise",
+   "target": "imp-war-booty",
+   "rel": "trades_in",
+   "when": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e433b33fd1",
+   "source": "per-richard-the-red",
+   "target": "per-blaise",
+   "rel": "serves",
+   "when": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-ff49beb0cc",
+   "source": "per-blaise",
+   "target": "per-ralph",
+   "rel": "sibling_of",
+   "when": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c510076f43",
+   "source": "per-richard-the-red",
+   "target": "plc-swevenham",
+   "rel": "born_in",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-4c3812682c",
+   "source": "per-richard-the-red",
+   "target": "imp-baron-of-the-waste-march",
+   "rel": "serves",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-983f1de54b",
+   "source": "per-clement-chapman",
+   "target": "per-blaise",
+   "rel": "trades_with",
+   "when": "BTWO-C14",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-639bab7519",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "fea-dry-tree",
+   "rel": "other",
+   "when": "BTWO-C14",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8a921c3f63",
+   "source": "per-ursula",
+   "target": "per-dorothea",
+   "rel": "other",
+   "when": "BTWO-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "low"
+  },
+  {
+   "id": "rel-d5e3d3c3e9",
+   "source": "per-simon-bowyer",
+   "target": "per-alice-of-queenhough",
+   "rel": "lover_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-27c803cb21",
+   "source": "per-wat-miller",
+   "target": "per-alice-of-queenhough",
+   "rel": "lover_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-2b01a45646",
+   "source": "per-earl-walter-the-black",
+   "target": "plc-whitwall",
+   "rel": "enemy_of",
+   "when": "BTWO-C17",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-aae94b6098",
+   "source": "per-earl-walter-the-black",
+   "target": "per-walter-the-black",
+   "rel": "other",
+   "when": "BTWO-C17",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-541bbdf724",
+   "source": "per-richard-the-red",
+   "target": "per-blaise",
+   "rel": "serves",
+   "when": "BTWO-C17",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8e71c88dbd",
+   "source": "per-clement-chapman",
+   "target": "grp-clements-eastward-company",
+   "rel": "leader_of",
+   "when": "BTWO-C18",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5a7c2cce04",
+   "source": "per-blaise",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BTWO-C18",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-489869d03b",
+   "source": "per-red-robert",
+   "target": "pol-upmeads",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-894a2cc2a8",
+   "source": "plc-cheaping-knowe",
+   "target": "bld-mid-mountain-house",
+   "rel": "other",
+   "when": "BTWO-C19",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-95e94f1139",
+   "source": "per-ursula",
+   "target": "grp-strong-thieves-of-the-mountains",
+   "rel": "captive_of",
+   "when": "BTWO-C20",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b1425c6f1a",
+   "source": "per-bull-shockhead",
+   "target": "per-ralph",
+   "rel": "serves",
+   "when": "BTWO-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e7aa396ca1",
+   "source": "per-bull-shockhead",
+   "target": "grp-strong-thieves-of-the-mountains",
+   "rel": "member_of",
+   "when": "BTWO-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5d79c81307",
+   "source": "per-bull-nosy",
+   "target": "per-bull-shockhead",
+   "rel": "kin_of",
+   "when": "BTWO-C22",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-05d1810983",
+   "source": "per-ursula",
+   "target": "per-bull-nosy",
+   "rel": "captive_of",
+   "when": "BTWO-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-84985b38a3",
+   "source": "per-tyrant-of-cheaping-knowe",
+   "target": "plc-cheaping-knowe",
+   "rel": "ruler_of",
+   "when": "BTWO-C23",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-af3987f458",
+   "source": "per-gandolf",
+   "target": "plc-utterbol",
+   "rel": "ruler_of",
+   "when": "BTWO-C24",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-83d1cec4e5",
+   "source": "per-bull-nosy",
+   "target": "per-gandolf",
+   "rel": "other",
+   "when": "BTWO-C24",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-5d4e26e7a1",
+   "source": "per-lord-of-whiteness",
+   "target": "per-tyrant-of-cheaping-knowe",
+   "rel": "vassal_of",
+   "when": "BTWO-C25",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7fc689ed26",
+   "source": "per-bull-nosy",
+   "target": "per-bull-shockhead",
+   "rel": "sibling_of",
+   "when": "BTWO-C26",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-be237564dc",
+   "source": "per-bull-nosy",
+   "target": "imp-unknown-slayer",
+   "rel": "killed_by",
+   "when": "BTWO-C26",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d75f9fdd7a",
+   "source": "per-founder-of-goldburg",
+   "target": "plc-goldburg",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-395c64de7e",
+   "source": "per-queen-of-goldburg",
+   "target": "plc-goldburg",
+   "rel": "ruler_of",
+   "when": "BTWO-C28",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e962de3714",
+   "source": "per-queen-of-goldburg",
+   "target": "per-ralph",
+   "rel": "lover_of",
+   "when": "BTWO-C29",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c6e2ab64f0",
+   "source": "per-queen-of-goldburg",
+   "target": "per-founder-of-goldburg",
+   "rel": "kin_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-afb39f736f",
+   "source": "per-duke-osmond",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-366e1e44bc",
+   "source": "per-gandolf",
+   "target": "per-gandolf",
+   "rel": "other",
+   "when": "BTWO-C30",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3fde9efd44",
+   "source": "per-morfinn-the-minstrel",
+   "target": "per-gandolf",
+   "rel": "other",
+   "when": "BTWO-C30",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-ab0f1d8a5d",
+   "source": "per-bull-shockhead",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BTWO-C31",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-022145fadb",
+   "source": "per-ursula",
+   "target": "per-gandolf",
+   "rel": "captive_of",
+   "when": "BTWO-C31",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-04bbea6b94",
+   "source": "per-morfinn-the-minstrel",
+   "target": "per-gandolf",
+   "rel": "serves",
+   "when": "BTWO-C32",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-33b250c17a",
+   "source": "per-ralph",
+   "target": "per-gandolf",
+   "rel": "captive_of",
+   "when": "BTWO-C32",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-ed7bb0e565",
+   "source": "per-david-the-sage",
+   "target": "per-gandolf",
+   "rel": "serves",
+   "when": "BTWO-C32",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-190478c8ed",
+   "source": "per-gandolf",
+   "target": "fea-utterbol-moorland",
+   "rel": "ruler_of",
+   "when": "BTWO-C33",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-07c805f979",
+   "source": "per-gandolf",
+   "target": "plc-goldburg",
+   "rel": "enemy_of",
+   "when": "BTWO-C33",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-cf48343ebe",
+   "source": "per-gandolf",
+   "target": "per-morfinn-the-minstrel",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b3de1c3ad6",
+   "source": "per-otter",
+   "target": "per-gandolf",
+   "rel": "serves",
+   "when": "BTWO-C34",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7cfb82948e",
+   "source": "per-gandolf",
+   "target": "per-lady-of-utterbol",
+   "rel": "spouse_of",
+   "when": "BTWO-C34",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-446c8c66e5",
+   "source": "per-sir-karr-wood-neb",
+   "target": "per-ralph",
+   "rel": "teaches",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0443e70599",
+   "source": "per-otter",
+   "target": "per-gandolf",
+   "rel": "other",
+   "when": "BTWO-C35",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-f72df01038",
+   "source": "per-lady-of-utterbol",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BTWO-C35",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7beeb52161",
+   "source": "per-agatha",
+   "target": "per-lady-of-utterbol",
+   "rel": "serves",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1876c9b2c3",
+   "source": "per-lady-of-utterbol",
+   "target": "per-ralph",
+   "rel": "lover_of",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3f6da49994",
+   "source": "per-gandolf",
+   "target": "per-new-come-thrall-of-the-lord-of-utterbol",
+   "rel": "lover_of",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-60becf9c30",
+   "source": "per-gandolf",
+   "target": "per-agatha",
+   "rel": "lover_of",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c555c83838",
+   "source": "per-ralph",
+   "target": "per-redhead",
+   "rel": "other",
+   "when": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1f74c3a1a4",
+   "source": "per-gandolf",
+   "target": "per-ursula",
+   "rel": "lover_of",
+   "when": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d411ca8154",
+   "source": "per-gandolf",
+   "target": "per-joyce",
+   "rel": "lover_of",
+   "when": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e0a53857b0",
+   "source": "per-ursula",
+   "target": "per-ursula",
+   "rel": "other",
+   "when": "BTWO-C37",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-d81b18d4aa",
+   "source": "per-redhead",
+   "target": "per-ralph",
+   "rel": "friend_of",
+   "when": "BTWO-C38",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9d4080db71",
+   "source": "per-ralph",
+   "target": "per-gandolf",
+   "rel": "freed_by",
+   "when": "BTWO-C39",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-bb2b24605d",
+   "source": "per-otter",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BTWO-C39",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-db3595d0ac",
+   "source": "per-redhead",
+   "target": "per-woman-of-the-queen-of-utterbol",
+   "rel": "lover_of",
+   "when": "BTWO-C41",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9b4d0a3788",
+   "source": "per-agatha",
+   "target": "per-lady-of-utterbol",
+   "rel": "serves",
+   "when": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-21c00bc4e8",
+   "source": "per-gandolf",
+   "target": "per-ursula",
+   "rel": "lover_of",
+   "when": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8b27f0a7a7",
+   "source": "per-redhead",
+   "target": "per-ralph",
+   "rel": "friend_of",
+   "when": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-6083ea5c92",
+   "source": "per-ursula",
+   "target": "per-ursula",
+   "rel": "other",
+   "when": "BTHREE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-95f90f778b",
+   "source": "per-ursula",
+   "target": "per-dorothea",
+   "rel": "other",
+   "when": "BTHREE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1086833df2",
+   "source": "per-ursula",
+   "target": "per-lady-of-abundance",
+   "rel": "freed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-13ce44ba71",
+   "source": "per-ursula",
+   "target": "per-gandolf",
+   "rel": "captive_of",
+   "when": "BTHREE-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-94cbbe83af",
+   "source": "per-sage-of-swevenham",
+   "target": "per-sage-of-swevenham",
+   "rel": "other",
+   "when": "BTHREE-C3",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b7bc5dc423",
+   "source": "per-bull-nosy",
+   "target": "per-gandolf",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9da90f7d3b",
+   "source": "per-bull-nosy",
+   "target": "per-ursula",
+   "rel": "lover_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0fb47c9f12",
+   "source": "per-nephew-of-the-lord-of-utterbol",
+   "target": "per-gandolf",
+   "rel": "kin_of",
+   "when": "BTHREE-C4",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d0ee037f05",
+   "source": "per-sage-of-swevenham",
+   "target": "per-lady-of-abundance",
+   "rel": "other",
+   "when": "BTHREE-C5",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-f0e2897e84",
+   "source": "per-sage-of-swevenham",
+   "target": "per-wizard-of-the-mountains",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e50dd9cff5",
+   "source": "per-sage-of-swevenham",
+   "target": "per-ralph",
+   "rel": "teaches",
+   "when": "BTHREE-C6",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-be9cfbe83f",
+   "source": "per-sage-of-swevenham",
+   "target": "per-ursula",
+   "rel": "teaches",
+   "when": "BTHREE-C6",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8d9bc19eb2",
+   "source": "per-sage-of-swevenham",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-161321bc94",
+   "source": "per-nephew-of-the-lord-of-utterbol",
+   "target": "grp-riders-of-utterbol",
+   "rel": "leader_of",
+   "when": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7b739bea59",
+   "source": "per-otter",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-89aaedec2c",
+   "source": "per-sage-of-swevenham",
+   "target": "per-ralph",
+   "rel": "teaches",
+   "when": "BTHREE-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-02000fc9a6",
+   "source": "per-ursulas-former-lover",
+   "target": "grp-men-of-the-burg-of-the-four-friths",
+   "rel": "member_of",
+   "when": "BTHREE-C11",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e156581c67",
+   "source": "per-ursulas-former-lover",
+   "target": "per-ursulas-former-lover",
+   "rel": "other",
+   "when": "BTHREE-C11",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-a90e6e3029",
+   "source": "per-ralph",
+   "target": "per-ursula",
+   "rel": "lover_of",
+   "when": "BTHREE-C12",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-99c9860a88",
+   "source": "per-ralph",
+   "target": "per-ursula",
+   "rel": "betrothed_to",
+   "when": "BTHREE-C13",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-56b6e4ad49",
+   "source": "grp-messengers-of-the-innocent-folk",
+   "target": "grp-innocent-folk",
+   "rel": "member_of",
+   "when": "BTHREE-C14",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5186ed1eba",
+   "source": "per-ralph",
+   "target": "per-ursula",
+   "rel": "spouse_of",
+   "when": "BTHREE-C14",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-80f914b46a",
+   "source": "grp-innocent-folk",
+   "target": "imp-fairest-woman-of-the-world",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9362662df5",
+   "source": "grp-innocent-folk",
+   "target": "plc-land-of-the-innocent-folk",
+   "rel": "lives_in",
+   "when": "BTHREE-C15",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9528644c26",
+   "source": "per-elder-of-the-innocent-folk",
+   "target": "per-wardens-of-the-house-of-the-sorceress",
+   "rel": "parent_of",
+   "when": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-bbef01a542",
+   "source": "grp-innocent-folk",
+   "target": "bld-house-of-the-sorceress",
+   "rel": "other",
+   "when": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8d364b5095",
+   "source": "grp-innocent-folk",
+   "target": "per-lady-of-abundance",
+   "rel": "other",
+   "when": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-94c60e57dd",
+   "source": "per-ralph",
+   "target": "per-nicholas-longshanks",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-819e082f08",
+   "source": "grp-innocent-folk",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BFOUR-C1",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5d5bf52e71",
+   "source": "per-gandolf",
+   "target": "per-bull-shockhead",
+   "rel": "killed_by",
+   "when": "BFOUR-C2",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-a251d0aac6",
+   "source": "per-gandolf",
+   "target": "per-gandolf",
+   "rel": "other",
+   "when": "BFOUR-C2",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-bff6b593f6",
+   "source": "per-gervaise",
+   "target": "per-bull-shockhead",
+   "rel": "serves",
+   "when": "BFOUR-C2",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-2ffdfe85e6",
+   "source": "per-bull-shockhead",
+   "target": "per-bull-shockhead",
+   "rel": "other",
+   "when": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-dfde8fc905",
+   "source": "per-bull-shockhead",
+   "target": "plc-utterbol",
+   "rel": "ruler_of",
+   "when": "BFOUR-C3 onward",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5f0d99d569",
+   "source": "per-bull-shockhead",
+   "target": "per-lady-of-utterbol",
+   "rel": "spouse_of",
+   "when": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-aa35e32b0a",
+   "source": "per-gandolf",
+   "target": "per-bull-shockhead",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-ab5649b8d3",
+   "source": "per-otter",
+   "target": "per-bull-shockhead",
+   "rel": "serves",
+   "when": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9d0a8fb28a",
+   "source": "per-otter",
+   "target": "per-bull-shockhead",
+   "rel": "other",
+   "when": "BFOUR-C4",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-517808a845",
+   "source": "per-bull-shockhead",
+   "target": "cre-bulls-lion",
+   "rel": "owns",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9fbda380b3",
+   "source": "per-gandolf",
+   "target": "per-bull-shockhead",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0bf4b1a95a",
+   "source": "per-agatha",
+   "target": "per-bull-shockhead",
+   "rel": "freed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-fd36b25bf3",
+   "source": "per-otter",
+   "target": "per-bull-shockhead",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0116b8f65d",
+   "source": "per-redhead",
+   "target": "per-agatha",
+   "rel": "lover_of",
+   "when": "BFOUR-C6",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-4c524eec6e",
+   "source": "per-nephew-of-the-lord-of-utterbol",
+   "target": "per-redhead",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e79b45432f",
+   "source": "per-bull-shockhead",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BFOUR-C6",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-dac85c7071",
+   "source": "per-brother-of-the-utterbol-nephew",
+   "target": "grp-black-riders",
+   "rel": "leader_of",
+   "when": "BFOUR-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-413c4d1f9d",
+   "source": "grp-black-riders",
+   "target": "per-bull-shockhead",
+   "rel": "enemy_of",
+   "when": "BFOUR-C7",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-6aca826c70",
+   "source": "per-king-rainald",
+   "target": "plc-goldburg",
+   "rel": "ruler_of",
+   "when": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1678c63f03",
+   "source": "per-king-rainald",
+   "target": "per-queen-of-goldburg",
+   "rel": "kin_of",
+   "when": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-759af03eae",
+   "source": "plc-goldburg",
+   "target": "per-bull-shockhead",
+   "rel": "allied_with",
+   "when": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-890bb6d485",
+   "source": "per-king-of-cheaping-knowe",
+   "target": "per-tyrant-of-cheaping-knowe",
+   "rel": "other",
+   "when": "BFOUR-C9",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-87d59d3190",
+   "source": "per-michael-a-dale",
+   "target": "imp-michael-of-the-hatch",
+   "rel": "kin_of",
+   "when": "BFOUR-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9f42548fa4",
+   "source": "per-michael-a-dale",
+   "target": "per-king-of-cheaping-knowe",
+   "rel": "serves",
+   "when": "BFOUR-C9",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-dfb8c2e70f",
+   "source": "per-bull-shockhead",
+   "target": "per-bull-nosy",
+   "rel": "other",
+   "when": "BFOUR-C9",
+   "classification": "CANON-INFERRED",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-411abd709a",
+   "source": "per-king-of-cheaping-knowe",
+   "target": "grp-folk-of-the-fells",
+   "rel": "killed_by",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-145417be4d",
+   "source": "per-duke-of-the-bulls",
+   "target": "grp-folk-of-the-fells",
+   "rel": "leader_of",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-936fb34d20",
+   "source": "grp-folk-of-the-fells",
+   "target": "per-ralph",
+   "rel": "allied_with",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-654ea3805a",
+   "source": "per-bull-shockhead",
+   "target": "grp-folk-of-the-fells",
+   "rel": "member_of",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8b8c0dd7a1",
+   "source": "grp-folk-of-the-fells",
+   "target": "plc-town-of-the-folk-of-the-fells",
+   "rel": "lives_in",
+   "when": "BFOUR-C11",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-2231e695ee",
+   "source": "per-walter-the-black",
+   "target": "per-richard-the-red",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b10cf26412",
+   "source": "per-blaise",
+   "target": "grp-men-of-the-port-of-whitwall",
+   "rel": "leader_of",
+   "when": "BFOUR-C13",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7e6a388385",
+   "source": "per-sage-of-swevenham",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BFOUR-C13",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-a26ed21de5",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "per-richard-the-red",
+   "rel": "killed_by",
+   "when": "BFOUR-C15",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-6ca130f97c",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "per-lady-of-abundance",
+   "rel": "lover_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-73a33c7bbc",
+   "source": "per-captain-of-the-dry-tree",
+   "target": "per-captain-of-the-dry-tree",
+   "rel": "other",
+   "when": "BFOUR-C15",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-a84346e66c",
+   "source": "per-ralph",
+   "target": "grp-yeomen-of-abundance",
+   "rel": "lord_of",
+   "when": "BFOUR-C16 onward",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-bc05a78719",
+   "source": "per-prior-of-the-thorn",
+   "target": "bld-house-of-abundance",
+   "rel": "other",
+   "when": "BFOUR-C16",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-7092a7b0af",
+   "source": "per-roger-of-the-rope-walk",
+   "target": "per-roger-of-the-rope-walk",
+   "rel": "other",
+   "when": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5d0e142c99",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "grp-wheat-wearers",
+   "rel": "allied_with",
+   "when": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-519404d5f8",
+   "source": "grp-wheat-wearers",
+   "target": "plc-burg-of-the-four-friths",
+   "rel": "at_war_with",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3520d4530c",
+   "source": "per-lady-of-abundance",
+   "target": "per-roger-of-the-rope-walk",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-09acf6a56b",
+   "source": "per-stephen-a-hurst",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "member_of",
+   "when": "BFOUR-C18",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e5dbb4c6f3",
+   "source": "per-old-queen-of-the-dry-tree",
+   "target": "per-roger-of-the-rope-walk",
+   "rel": "killed_by",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-744d726854",
+   "source": "per-new-captain-of-the-dry-tree",
+   "target": "plc-burg-of-the-four-friths",
+   "rel": "leader_of",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-ece62da06e",
+   "source": "per-ralph",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "allied_with",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-096729a135",
+   "source": "per-ralph",
+   "target": "bld-castle-of-the-scaur",
+   "rel": "owns",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-3c28355f56",
+   "source": "grp-expelled-burgers",
+   "target": "pol-upmeads",
+   "rel": "enemy_of",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8fcf1fa26c",
+   "source": "grp-banded-barons",
+   "target": "bld-st-marys-of-higham",
+   "rel": "enemy_of",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9617ea71d4",
+   "source": "per-hugh",
+   "target": "per-ralph",
+   "rel": "sibling_of",
+   "when": "BFOUR-C20",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-309dde9348",
+   "source": "per-hugh",
+   "target": "bld-st-marys-of-higham",
+   "rel": "serves",
+   "when": "BFOUR-C20",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-736d8d34ff",
+   "source": "per-gregory",
+   "target": "bld-st-marys-of-higham",
+   "rel": "member_of",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-30ea8859a8",
+   "source": "per-lancelot-longtongue",
+   "target": "bld-st-marys-of-higham",
+   "rel": "serves",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d1c5e354e3",
+   "source": "grp-westland-barons",
+   "target": "bld-st-marys-of-higham",
+   "rel": "at_war_with",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c847d3fae1",
+   "source": "per-abbot-of-st-marys-of-higham",
+   "target": "grp-westland-barons",
+   "rel": "captive_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d0c6de50e6",
+   "source": "grp-expelled-burgers",
+   "target": "grp-westland-barons",
+   "rel": "at_war_with",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-a2491de0c1",
+   "source": "grp-garton-volunteers",
+   "target": "per-ralph",
+   "rel": "allied_with",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b6202c9549",
+   "source": "per-giles",
+   "target": "grp-shepherds-of-the-downs",
+   "rel": "member_of",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-4b6d00ec9e",
+   "source": "per-giles",
+   "target": "per-old-spearman-shepherd",
+   "rel": "other",
+   "when": "BFOUR-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-db4377faaf",
+   "source": "per-martha",
+   "target": "per-giles",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-2fc9c8f603",
+   "source": "grp-expelled-burgers",
+   "target": "grp-shepherds-of-the-downs",
+   "rel": "enemy_of",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-65150a0024",
+   "source": "grp-expelled-burgers",
+   "target": "bld-foxworth-castle",
+   "rel": "owns",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-3c3b9572a0",
+   "source": "grp-expelled-burgers",
+   "target": "bld-nineways-garth",
+   "rel": "owns",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-89bf717668",
+   "source": "per-martha",
+   "target": "sup-bear-father",
+   "rel": "other",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-9e9bdc83b5",
+   "source": "grp-expelled-burgers",
+   "target": "grp-outlaws-of-the-wood-debateable",
+   "rel": "allied_with",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e882eddc77",
+   "source": "grp-expelled-burgers",
+   "target": "pol-upmeads",
+   "rel": "enemy_of",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-8d9368827a",
+   "source": "per-young-burger-captive",
+   "target": "grp-expelled-burgers",
+   "rel": "killed_by",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-524b297097",
+   "source": "grp-shepherds-of-the-downs",
+   "target": "per-ralph",
+   "rel": "allied_with",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-27c57bc1b4",
+   "source": "per-ralph",
+   "target": "grp-shepherds-of-the-downs",
+   "rel": "leader_of",
+   "when": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-d060ba6669",
+   "source": "per-tall-thomas",
+   "target": "grp-shepherds-of-the-downs",
+   "rel": "leader_of",
+   "when": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-d1560ba897",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "grp-shepherds-of-the-downs",
+   "rel": "allied_with",
+   "when": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5116db7adb",
+   "source": "grp-fellowship-of-the-dry-tree",
+   "target": "grp-shepherds-of-the-downs",
+   "rel": "enemy_of",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-418e5ae88d",
+   "source": "plc-wulstead",
+   "target": "pol-upmeads",
+   "rel": "allied_with",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-99934f0095",
+   "source": "per-clement-chapman",
+   "target": "plc-wulstead",
+   "rel": "leader_of",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "medium"
+  },
+  {
+   "id": "rel-f7342399a4",
+   "source": "per-nicholas-longshanks",
+   "target": "pol-upmeads",
+   "rel": "leader_of",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-86d2f635ef",
+   "source": "per-king-peter",
+   "target": "bld-house-of-black-canons-of-wulstead",
+   "rel": "other",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-cd9c623189",
+   "source": "per-ursula",
+   "target": "grp-geirings",
+   "rel": "member_of",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-39f9e61ec1",
+   "source": "per-ursula",
+   "target": "per-brother-of-ursula",
+   "rel": "sibling_of",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-b6849e6f40",
+   "source": "per-ralph",
+   "target": "grp-shepherds-of-the-downs",
+   "rel": "leader_of",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-bedd1c2deb",
+   "source": "per-ralph",
+   "target": "plc-plain-of-abundance",
+   "rel": "ruler_of",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-01a52609ed",
+   "source": "per-queen-of-upmeads",
+   "target": "per-ralph",
+   "rel": "parent_of",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-65d73a9f9c",
+   "source": "per-dame-katherine",
+   "target": "per-ralph",
+   "rel": "other",
+   "when": "BFOUR-C27",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-2f46e5d918",
+   "source": "grp-expelled-burgers",
+   "target": "pol-upmeads",
+   "rel": "at_war_with",
+   "when": "BFOUR-C27",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-0745626de9",
+   "source": "per-wise-woman-of-sarras",
+   "target": "per-dame-katherine",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c1a0cbffe3",
+   "source": "per-dame-katherine",
+   "target": "itm-dame-katherines-necklace",
+   "rel": "owns",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-58cfee2f01",
+   "source": "per-dame-katherine",
+   "target": "per-clement-chapman",
+   "rel": "spouse_of",
+   "when": "BFOUR-C28",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-246e38b2b6",
+   "source": "per-wise-woman-of-sarras",
+   "target": "per-lady-of-abundance",
+   "rel": "other",
+   "when": "backstory",
+   "classification": "CANON-INFERRED",
+   "confidence": "low"
+  },
+  {
+   "id": "rel-70f104f577",
+   "source": "per-ralph",
+   "target": "grp-expelled-burgers",
+   "rel": "at_war_with",
+   "when": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-95c1011acd",
+   "source": "per-hugh",
+   "target": "grp-fellowship-of-the-dry-tree",
+   "rel": "member_of",
+   "when": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c1d2facdc8",
+   "source": "plc-wulstead",
+   "target": "per-ralph",
+   "rel": "allied_with",
+   "when": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c6bfa77509",
+   "source": "per-prior-of-the-austin-canons-of-wulstead",
+   "target": "per-king-peter",
+   "rel": "other",
+   "when": "BFOUR-C30",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-c5dca0bb29",
+   "source": "per-ralph",
+   "target": "plc-wulstead",
+   "rel": "other",
+   "when": "BFOUR-C30",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e44489a480",
+   "source": "per-ralph",
+   "target": "pol-upmeads",
+   "rel": "ruler_of",
+   "when": "BFOUR-C31",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e4adedca70",
+   "source": "per-ursula",
+   "target": "pol-upmeads",
+   "rel": "ruler_of",
+   "when": "BFOUR-C31",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1fa7fbec73",
+   "source": "per-king-peter",
+   "target": "per-ralph",
+   "rel": "serves",
+   "when": "BFOUR-C31",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-1286a27896",
+   "source": "per-ralph",
+   "target": "bld-castle-of-the-scaur",
+   "rel": "ruler_of",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-e77feaf400",
+   "source": "per-ralph",
+   "target": "plc-burg-of-the-four-friths",
+   "rel": "leader_of",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-5d8b07e074",
+   "source": "per-ralph",
+   "target": "per-abbot-of-st-marys-of-higham",
+   "rel": "serves",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-68ea3347b4",
+   "source": "per-bull-shockhead",
+   "target": "per-ralph",
+   "rel": "allied_with",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high"
+  },
+  {
+   "id": "rel-273037f105",
+   "source": "per-ursula",
+   "target": "per-ralph",
+   "rel": "spouse_of",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high"
+  }
+ ]
+}
