@@ -1,0 +1,18 @@
+@ BFOUR-C14
+summary: By moonlight Richard asks whether to take the beaten road by the Swelling Flood ford, or the shorter wildwood way over downs and forest to the Burg of the Four Friths; both Richard and the Sage know the wilds. Rumour says the Burg's old fierceness is broken and it is now peaceful. The Sage says they have lore enough to hoodwink foes. Richard quietly warns that the short way passes the places of the past; Ralph wants to test his heart. They leave the ford road and ride a deep ghyll in the waste so that Blaise's riders will search the ford, and sleep at an empty shepherd's cot with an old dog, bread, cheese and a well.
+geo: From Whitwall two routes lead toward the Burg of the Four Friths: down to the ford of the Swelling Flood and the beaten way, or the shorter route over downland and forest. The Burg is "not very far from Whitwall". The shortcut leaves the ford road into a deep ghyll of the waste.
+open: none
+
+E building | (unnamed) empty shepherd's cot | - | cot | Shepherd's hut with an old dog, bread, white cheese and a well. | P009 `a shepherd's cot, empty of men, with naught therein save an old dog, and some victual, as bread and white cheese, and a well for drinking`
+
+S Burg of the Four Friths | near | Whitwall | dist=not very far; ctx=dialogue:Richard the Red; cert=constrained | CANON/high | - | P005 `Though the Burg be not very far from Whitwall`
+S (unnamed) wildwood shortcut to the Burg | other | (unnamed) highway ford of the Swelling Flood | ctx=dialogue:Richard the Red; cert=constrained | CANON/high | two routes: the ford and the beaten way, or downland and forest | P002 `shall we ride down to the ford of the Swelling Flood, and ride the beaten way, or take to the downland and the forest`
+
+T Ralph, Ursula, Sage of Swevenham, Richard the Red | Whitwall | (unnamed) empty shepherd's cot | via=(unnamed) wildwood shortcut to the Burg; mode=horse; start=night; end=moonset | P008 `they rode on, and turned off from the road that led down to the ford of the Swelling Flood`
+
+F politics | Burg of the Four Friths | Rumour says the Burg's old fierceness is broken and folk there live in peace. | CANON/medium; ctx=rumour | P005 `one rumour sayeth, and none denieth it, that the old fierceness and stout headstrong mood of the Burg is broken down`
+F trade | Burg of the Four Friths | Whitwall chapmen seldom go to the Burg and little news comes from it. | CANON/high; ctx=dialogue:Richard the Red | P005 `our chapmen but seldom go there`
+
+V main | Ride from Whitwall | The four ride from Whitwall by the wildwood shortcut to avoid pursuit. | time=night; who=Ralph, Ursula, Sage of Swevenham, Richard the Red | P008 `It is well that we are here`
+
+O world | Alternative routes (beaten road versus wild shortcut) with different risks, as route choice. | P003 `by the wildwood ye may ride shorter, if ye know it as I do`

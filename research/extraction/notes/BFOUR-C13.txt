@@ -1,0 +1,29 @@
+@ BFOUR-C13
+summary: At a thorp where the Swevenham byway leaves the Whitwall highway, they stay at a poor hostel. The Sage chooses to go on to Upmeads with them; Ursula asks him to teach their children. Michael-a-dale leaves for Swevenham; the Sage reads in his palm that he will live long and may come to Upmeads. On a Saturday market day in late May they reach Whitwall, where Richard the Red meets them in Petergate. Blaise is rich and now Lord of the Porte; Richard killed Earl Walter the Black in battle, and his men sued for peace. At the Lamb (Ralph's old hostel) Richard recognises the Sage from his own boyhood and is convinced the Well is real. In private he questions Ralph about Ursula and is glad Ralph has wedded "into the World of living men, and not to a dream of the Land of Fairy". Hearing the tale, Ralph senses trouble at Upmeads and resolves to leave by moonlight; Richard insists on coming, and the Sage arms himself. They leave by the West-gate Bar.
+geo: A little thorp where the highway to Whitwall and the byway to Swevenham part, with a poor hostel. Whitwall's streets include Petergate; the hostel of the Lamb; the West-gate Bar.
+open: none
+
+E building | The Lamb | hostel of the Lamb | inn | The Whitwall hostel where Ralph stayed before. | P018 `the hostel of the Lamb which was the very same house wherein Ralph had abided aforetime`
+E building | West-gate Bar | Westgate | gate | Whitwall's west gate. | P044 `the captain of the watch at West-gate Bar`
+E place | (unnamed) thorp at the Swevenham parting | - | thorp | Little thorp where the Whitwall highway and the Swevenham byway part, with a poor hostel. | P002 `a little thorp where the way sundered, for the highway went on to Whitwall, and a byway turned off to Swevenham`
+E office | Lord of the Porte | - | civic office | Office Blaise now holds in Whitwall. | P044 `he is become a chief and Lord of the Porte`
+
+R Walter the Black | killed_by | Richard the Red | slain in battle | backstory | CANON/high | P017 `I slew him in shock of battle, and his men craved peace of the good town`
+R Blaise | leader_of | men of the Port of Whitwall | Lord of the Porte | BFOUR-C13 | CANON/high | P044 `he is become a chief and Lord of the Porte`
+R Sage of Swevenham | other | Ralph | will go with him to Upmeads | BFOUR-C13 | CANON/high | P004 `I will leave thee no more till thou biddest me go from thee`
+
+S (unnamed) thorp at the Swevenham parting | near | Whitwall | time=a morning's ride, arriving at Whitwall before noon; cert=constrained | CANON/high | - | P012 `it was barely noon when they came to the gate thereof`
+
+T Ralph, Ursula, Sage of Swevenham, Richard the Red | Whitwall | (unknown) | via=West-gate Bar; mode=horse; start=night, by moonlight | P047 `anon were they on the moonlit road outside of Whitwall`
+T Michael-a-dale | (unnamed) thorp at the Swevenham parting | Swevenham | mode=horse | P011 `rode his ways to Swevenham, going hastily`
+
+F magic | Sage of Swevenham | The Sage reads palms and foretells Michael's long life. | CANON/high; ctx=dialogue:Sage of Swevenham | P010 `This man shall make old bones`
+F magic | Sage of Swevenham | Richard remembers him from forty years ago looking much the same. | CANON/high; ctx=dialogue:Richard the Red | P019 `somewhat like am I yet to myself of forty years ago`
+F magic | Ralph | Ursula says Ralph as a Friend of the Well knows far-off tidings better than the Sage; Ralph senses danger at Upmeads. | CANON/high; ctx=dialogue:Ursula | P041 `he speaketh as a Friend of the Well, and wotteth more of far-off tidings than even this wise man of many years`
+F politics | Whitwall | Whitwall made peace after Walter the Black's death; Richard says many were glad, for he was a cruel tyrant. | CANON/high; ctx=dialogue:Richard the Red | P017 `Many were glad of his death, and few sorrowed for it`
+F society | Richard the Red | Richard is relieved Ralph married into "the World of living men" and not a fairy dream. | CANON/high; ctx=dialogue:Richard the Red | P028 `now hast thou wedded into the World of living men, and not to a dream of the Land of Fairy`
+F trade | Whitwall | Market day on Saturday in latter May. | CANON/high | P012 `on a Saturday of latter May, It was a market-day`
+
+V main | Return to Whitwall | Ralph meets Richard again, learns Walter the Black is dead, and leaves for Upmeads by night. | time=late May; who=Ralph, Ursula, Sage of Swevenham, Richard the Red; where=Whitwall | P043 `he thrust the board from him, and arose and went to his harness`
+
+O magic | Friends of the Well sense distant danger (canon, narrative only). | P042 `Or how were it if the torch were even now drawing nigh to the High House of Upmeads`

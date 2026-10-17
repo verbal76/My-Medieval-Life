@@ -1,0 +1,32 @@
+@ BFOUR-C16
+summary: Next day they reach the Water of the Oak by late afternoon; Ralph refuses to camp there. They sleep by a westward stream and, guided by the Sage, reach the Plain of Abundance two hours after noon, unchanged. An old carle asks if Ursula is the Lady; he says she may be her sister but is not. Ralph tells them the Lady is dead, slain by the baron of the golden sun on blue whom Ralph killed, and that the baron's mighty brother is also dead. The folk ask Ralph to be their lord; he accepts in her memory, asking only that they keep the castle and give guesting, and promising to come if they send to "Ralph of Upmeads, down by the water". The Prior of the Thorn has said no one of the Lady's line, nor anyone but the Baron of Sunway, could claim the castle. They feast under an oak; the folk tell of wood-wights, wodehouses, elf-women and dwarfs, and a hermit north-west in the wood; the wood is a wall to them. The Fathers of the Thorn would carry any message.
+geo: From the cave, through the wood to the Water of the Oak by late afternoon; a westward stream for the night; next day two hours after noon to the Plain of Abundance (ford, cots, white church, castle on its mound). The House of the Thorn is not far away. A hermit lives in a clearing a little north-west of the plain. The plain folk know only the plain, the wood's edges and the Thorn.
+open: none
+
+E person | (unnamed) Prior of the Thorn | - | prior | Prior of the House of the Thorn, who says no heir can claim the Castle of Abundance. | P031 `The Prior of the Thorn hath told us that there is no lineage of the Lady left to claim it`
+E person | (unnamed) hermit north-west of Abundance | - | hermit | Holy man newly dwelling in a clearing a little north-west of the Plain of Abundance. | P034 `a hermit, a holy man, had come to dwell in the wood, in a clearing but a little way thence toward the north-west`
+E supernatural | wood-wights | wodehouses, elf-women, dwarfs | folk spirits | Creatures the plain folk say dwell in the wood. | P034 `tales of the wights that dwelt in the wood, wodehouses, and elf-women, and dwarfs`
+E building | House of the Thorn | Brethren of the House of the Thorn | religious house | Religious house not far from the Plain of Abundance. | P024 `the Brethren of the House of the Thorn, who are not far hence`
+
+R Ralph | lord_of | yeomen of Abundance | accepted as their lord in the Lady's memory | BFOUR-C16 onward | CANON/high | P030 `Hail to our lord! and long life to our helper`
+R (unnamed) Prior of the Thorn | other | House of Abundance | says no heir of the Lady remains to claim it | BFOUR-C16 | CANON/high | P031 `there is no lineage of the Lady left to claim it`
+
+S House of the Thorn | near | Plain of Abundance | dist=not far; ctx=dialogue:old haymaker; cert=constrained | CANON/high | - | P024 `the Brethren of the House of the Thorn, who are not far hence`
+S (unnamed) hermit north-west of Abundance | north_of | Plain of Abundance | dir=north-west, a little way; ctx=dialogue:yeomen of Abundance; cert=constrained | CANON/high | in a wood clearing | P034 `in a clearing but a little way thence toward the north-west`
+S Water of the Oak | route_next | (unnamed) desert cave-house | time=a day's ride, reached with an hour of daylight left; cert=fixed | CANON/high | - | P003 `by then the sun was well westering they came out at the Water of the Oak`
+S Plain of Abundance | route_next | Water of the Oak | time=a night by a westward stream, then to two hours after noon; cert=fixed | CANON/high | the Sage knows the ways | P008 `came into the little plain but two hours after noon`
+
+T Ralph, Ursula, Sage of Swevenham, Richard the Red | (unnamed) desert cave-house | Plain of Abundance | via=Water of the Oak; mode=horse; dur=about two days | P007 `lay that night by a stream that ran west`
+
+F politics | Plain of Abundance | The folk ask Ralph to be lord in the Lady's memory; he asks only castle-keeping and hospitality to travellers. | CANON/high; ctx=dialogue:Ralph | P029 `give guesting therein to any wandering knight or pilgrim, or honest goodman, who shall come to you`
+F economy | Lady of Abundance | She never taxed them and gave from her store; they think harvests have been poorer since she stopped coming. | CANON/high; ctx=dialogue:old haymaker | P026 `never did she lay tax or tale on us, and whiles she would give us of her store`
+F magic | Lady of Abundance | Folk say grass grew greener and flowers fairer where she walked. | CANON/high; ctx=dialogue:old haymaker | P027 `where she set her feet the grass grew greener`
+F society | yeomen of Abundance | The wood is a wall to them; they would send a Thorn brother as messenger. | CANON/high | P034 `for the wood was to them as a wall`
+F food | yeomen of Abundance | The feast: bread, cheeses, honey, wild strawberries, eggs, skewered roast lamb, salad, wine and orchard cider. | CANON/high | P037 `bread in baskets, and cheeses both fresh and old, and honey, and wood-strawberries`
+
+V main | Ralph becomes lord of Abundance | Ralph tells the folk of Abundance the Lady is dead and accepts their lordship. | time=afternoon to sunset; who=Ralph, Ursula, yeomen of Abundance; where=Plain of Abundance | P014 `Lament, ye people! for the Lady of Abundance is dead`
+
+U ambiguity | Ralph says "my sword lay in his body yesterday" of the brother, though the dying man said Richard struck. | P023 `for my sword lay in his body yesterday`
+
+O politics | A lordship gained by acclaim rather than conquest, with light obligations. | P029 `if ye will it in sooth, I will be called your Lord, in memory of your Lady`
+O lore | Folk beliefs in wood-wights and elf-women (CANON as belief only). | P034 `wodehouses, and elf-women, and dwarfs, and such like`

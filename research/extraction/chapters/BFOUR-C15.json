@@ -1,0 +1,244 @@
+{
+ "entities": [
+  {
+   "name": "Captain of the Dry Tree",
+   "aliases": [
+    "the wild-man",
+    "the tall champion",
+    "duke of the men of the Dry Tree"
+   ],
+   "type": "person",
+   "subtype": "champion",
+   "unnamed": false,
+   "summary": "The tall champion, brother of the Knight of the Sun, gone wild with grief: brown, hairy, shock-haired, naked but for a green wreath, with a club; dies at the cave.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C15-P012",
+     "q": "a man brown and hairy, and naked, save for a green wreath about his middle"
+    },
+    {
+     "p": "BFOUR-C15-P028",
+     "q": "this was the great champion and duke of the men of the Dry Tree"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Captain of the Dry Tree",
+   "rel": "killed_by",
+   "b": "Richard the Red",
+   "detail": "Richard and Ralph strike him; he says it was Richard",
+   "when": "BFOUR-C15",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P026",
+     "q": "Richard it was; not thou"
+    }
+   ]
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "rel": "lover_of",
+   "b": "Lady of Abundance",
+   "detail": "loved her without return",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P021",
+     "q": "I came to her and forgat all but her; yea, my very life I forgat"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) man of the leafless tree",
+   "rel": "other",
+   "b": "Captain of the Dry Tree",
+   "detail": "confirmed the same man",
+   "when": "BFOUR-C15",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P025",
+     "q": "he was the tall champion whom he had met first at the churchyard gate of Netherton"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) desert cave-house",
+   "rel": "route_next",
+   "b": "(unnamed) empty shepherd's cot",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "a day's ride, arriving before sunset",
+   "travel_mode": "",
+   "terrain_text": "sheep downs, then the valley of the stream",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "on the shortest way to the Castle of Abundance",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P011",
+     "q": "a little before sunset, they came on that steep cliff with the cave therein"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "from": "(unnamed) empty shepherd's cot",
+   "to": "(unnamed) desert cave-house",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "one day",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "sheep downs with clefts, valley",
+   "chapter": "BFOUR-C15",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P002",
+     "q": "the country at first, though it was scanty of tillage, was not unfurnished of sheep"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "custom",
+   "subject": "Captain of the Dry Tree",
+   "statement": "He asks to be buried beside the Lady; they lay him in the cave beside her cairn under stones.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P030",
+     "q": "laid him down there beside the howe which Ralph had erewhile heaped over the Lady; and now over him also they heaped stones"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Captain of the Dry Tree",
+   "statement": "Richard knew him in old fights and says he always won; he haunted these passes as a wild giant.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P029",
+     "q": "Now is the riddle areded of the wild-man and the mighty giant that haunted these passes"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Captain of the Dry Tree",
+   "statement": "His last words complete the count: \"The last time!\"",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P027",
+     "q": "The last time!"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) sheep downs by the Swelling Flood",
+   "statement": "Few, poor houses; shepherds short of speech.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P002",
+     "q": "They saw but few houses, and those small and poor"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Death of the Captain of the Dry Tree",
+   "chapter": "BFOUR-C15",
+   "layer": "main",
+   "time_text": "before sunset",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Richard the Red",
+    "Sage of Swevenham",
+    "Captain of the Dry Tree"
+   ],
+   "places": [
+    "(unnamed) desert cave-house"
+   ],
+   "summary": "The wild man attacks Ursula at the cave, is cut down, and dying is revealed as the Dry Tree's captain; he is buried beside the Lady.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P028",
+     "q": "Thus hath thy wish been accomplished"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Recurring figures whose arcs end in tragic reveals (the counted meetings ending at \"the last time\").",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C15-P027",
+     "q": "The last time!"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C15",
+ "chapters": [
+  "BFOUR-C15"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C15",
+   "paragraphs_total": 30,
+   "all_paragraphs_read": true,
+   "summary": "They cross sheep downs with deep clefts, few poor houses and taciturn shepherds. At the noon halt Ralph realises the shortest way to the Burg passes the Castle of Abundance and the scene of the Lady's death; Ursula weeps and he comforts her. Ralph wishes to meet the tall Dry Tree champion again; the Sage warns of grief. About an hour later they reach the stream from the Lady's bathing pool, and before sunset the cliff and cave. A huge brown hairy wild man, naked but for a green wreath, rushes from the pool, drags Ursula from her horse, and raises a club; Richard and Ralph strike him down. Dying, he knows them both: he is the tall champion of the Dry Tree who loved the Lady, never dared enter the cave, and asks to lie beside her. He whispers \"The last time!\" and dies. The Sage calls him the Dry Tree's great champion and duke. Ursula shears his hair and beard; they wrap him in Ralph's scarlet cloak and bury him beside the Lady's cairn, then ride three miles on by moonlight.",
+   "geography_notes": "From the shepherd's cot, sheep downs with deep clefts; at noon, the foot of a wide hillside; about an hour later, the stream running to the Swelling Flood from the Lady's bathing pool; before sunset, the cliff and cave, the little green plain, and the sheer bank to the water. Three miles beyond, bushes of the waste.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,178 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) empty shepherd's cot",
+   "aliases": [],
+   "type": "building",
+   "subtype": "cot",
+   "unnamed": true,
+   "summary": "Shepherd's hut with an old dog, bread, white cheese and a well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C14-P009",
+     "q": "a shepherd's cot, empty of men, with naught therein save an old dog, and some victual, as bread and white cheese, and a well for drinking"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Burg of the Four Friths",
+   "rel": "near",
+   "b": "Whitwall",
+   "direction": "",
+   "distance_text": "not very far",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Richard the Red",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C14-P005",
+     "q": "Though the Burg be not very far from Whitwall"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) wildwood shortcut to the Burg",
+   "rel": "other",
+   "b": "(unnamed) highway ford of the Swelling Flood",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Richard the Red",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "two routes: the ford and the beaten way, or downland and forest",
+   "refs": [
+    {
+     "p": "BFOUR-C14-P002",
+     "q": "shall we ride down to the ford of the Swelling Flood, and ride the beaten way, or take to the downland and the forest"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "from": "Whitwall",
+   "to": "(unnamed) empty shepherd's cot",
+   "via": [
+    "(unnamed) wildwood shortcut to the Burg"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "night",
+   "end_time_text": "moonset",
+   "terrain_text": "",
+   "chapter": "BFOUR-C14",
+   "refs": [
+    {
+     "p": "BFOUR-C14-P008",
+     "q": "they rode on, and turned off from the road that led down to the ford of the Swelling Flood"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "politics",
+   "subject": "Burg of the Four Friths",
+   "statement": "Rumour says the Burg's old fierceness is broken and folk there live in peace.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C14-P005",
+     "q": "one rumour sayeth, and none denieth it, that the old fierceness and stout headstrong mood of the Burg is broken down"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Burg of the Four Friths",
+   "statement": "Whitwall chapmen seldom go to the Burg and little news comes from it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C14-P005",
+     "q": "our chapmen but seldom go there"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ride from Whitwall",
+   "chapter": "BFOUR-C14",
+   "layer": "main",
+   "time_text": "night",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "places": [],
+   "summary": "The four ride from Whitwall by the wildwood shortcut to avoid pursuit.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C14-P008",
+     "q": "It is well that we are here"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Alternative routes (beaten road versus wild shortcut) with different risks, as route choice.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C14-P003",
+     "q": "by the wildwood ye may ride shorter, if ye know it as I do"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C14",
+ "chapters": [
+  "BFOUR-C14"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C14",
+   "paragraphs_total": 8,
+   "all_paragraphs_read": true,
+   "summary": "By moonlight Richard asks whether to take the beaten road by the Swelling Flood ford, or the shorter wildwood way over downs and forest to the Burg of the Four Friths; both Richard and the Sage know the wilds. Rumour says the Burg's old fierceness is broken and it is now peaceful. The Sage says they have lore enough to hoodwink foes. Richard quietly warns that the short way passes the places of the past; Ralph wants to test his heart. They leave the ford road and ride a deep ghyll in the waste so that Blaise's riders will search the ford, and sleep at an empty shepherd's cot with an old dog, bread, cheese and a well.",
+   "geography_notes": "From Whitwall two routes lead toward the Burg of the Four Friths: down to the ford of the Swelling Flood and the beaten way, or the shorter route over downland and forest. The Burg is \"not very far from Whitwall\". The shortcut leaves the ford road into a deep ghyll of the waste.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

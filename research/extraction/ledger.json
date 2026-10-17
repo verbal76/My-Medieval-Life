@@ -2517,44 +2517,100 @@
    "title": "They Come to Whitwall Again",
    "body_paragraphs": 46,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 3,
+    "spatial": 1,
+    "travel": 2,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C13.txt",
+    "records": "research/extraction/chapters/BFOUR-C13.json"
+   }
   },
   {
    "chapter": "BFOUR-C14",
    "title": "They Ride Away From Whitwall",
    "body_paragraphs": 8,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 0,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 2,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C14.txt",
+    "records": "research/extraction/chapters/BFOUR-C14.json"
+   }
   },
   {
    "chapter": "BFOUR-C15",
    "title": "A Strange Meeting in the Wilderness",
    "body_paragraphs": 30,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 3,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C15.txt",
+    "records": "research/extraction/chapters/BFOUR-C15.json"
+   }
   },
   {
    "chapter": "BFOUR-C16",
    "title": "They Come to the Castle of Abundance Once More",
    "body_paragraphs": 37,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 2,
+    "spatial": 4,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C16.txt",
+    "records": "research/extraction/chapters/BFOUR-C16.json"
+   }
   },
   {
    "chapter": "BFOUR-C17",

@@ -1,0 +1,23 @@
+@ BFOUR-C15
+summary: They cross sheep downs with deep clefts, few poor houses and taciturn shepherds. At the noon halt Ralph realises the shortest way to the Burg passes the Castle of Abundance and the scene of the Lady's death; Ursula weeps and he comforts her. Ralph wishes to meet the tall Dry Tree champion again; the Sage warns of grief. About an hour later they reach the stream from the Lady's bathing pool, and before sunset the cliff and cave. A huge brown hairy wild man, naked but for a green wreath, rushes from the pool, drags Ursula from her horse, and raises a club; Richard and Ralph strike him down. Dying, he knows them both: he is the tall champion of the Dry Tree who loved the Lady, never dared enter the cave, and asks to lie beside her. He whispers "The last time!" and dies. The Sage calls him the Dry Tree's great champion and duke. Ursula shears his hair and beard; they wrap him in Ralph's scarlet cloak and bury him beside the Lady's cairn, then ride three miles on by moonlight.
+geo: From the shepherd's cot, sheep downs with deep clefts; at noon, the foot of a wide hillside; about an hour later, the stream running to the Swelling Flood from the Lady's bathing pool; before sunset, the cliff and cave, the little green plain, and the sheer bank to the water. Three miles beyond, bushes of the waste.
+open: none
+
+E person | Captain of the Dry Tree | the wild-man, the tall champion, duke of the men of the Dry Tree | champion | The tall champion, brother of the Knight of the Sun, gone wild with grief: brown, hairy, shock-haired, naked but for a green wreath, with a club; dies at the cave. | P012 `a man brown and hairy, and naked, save for a green wreath about his middle`; P028 `this was the great champion and duke of the men of the Dry Tree`
+
+R Captain of the Dry Tree | killed_by | Richard the Red | Richard and Ralph strike him; he says it was Richard | BFOUR-C15 | CANON/high | P026 `Richard it was; not thou`
+R Captain of the Dry Tree | lover_of | Lady of Abundance | loved her without return | backstory | CANON/high | P021 `I came to her and forgat all but her; yea, my very life I forgat`
+R (unnamed) man of the leafless tree | other | Captain of the Dry Tree | confirmed the same man | BFOUR-C15 | CANON/high | P025 `he was the tall champion whom he had met first at the churchyard gate of Netherton`
+
+S (unnamed) desert cave-house | route_next | (unnamed) empty shepherd's cot | time=a day's ride, arriving before sunset; terrain=sheep downs, then the valley of the stream; cert=fixed | CANON/high | on the shortest way to the Castle of Abundance | P011 `a little before sunset, they came on that steep cliff with the cave therein`
+
+T Ralph, Ursula, Sage of Swevenham, Richard the Red | (unnamed) empty shepherd's cot | (unnamed) desert cave-house | mode=horse; dur=one day; terrain=sheep downs with clefts, valley | P002 `the country at first, though it was scanty of tillage, was not unfurnished of sheep`
+
+F custom | Captain of the Dry Tree | He asks to be buried beside the Lady; they lay him in the cave beside her cairn under stones. | CANON/high | P030 `laid him down there beside the howe which Ralph had erewhile heaped over the Lady; and now over him also they heaped stones`
+F history | Captain of the Dry Tree | Richard knew him in old fights and says he always won; he haunted these passes as a wild giant. | CANON/high; ctx=dialogue:Richard the Red | P029 `Now is the riddle areded of the wild-man and the mighty giant that haunted these passes`
+F magic | Captain of the Dry Tree | His last words complete the count: "The last time!" | CANON/high | P027 `The last time!`
+F society | (unnamed) sheep downs by the Swelling Flood | Few, poor houses; shepherds short of speech. | CANON/high | P002 `They saw but few houses, and those small and poor`
+
+V main | Death of the Captain of the Dry Tree | The wild man attacks Ursula at the cave, is cut down, and dying is revealed as the Dry Tree's captain; he is buried beside the Lady. | time=before sunset; who=Ralph, Ursula, Richard the Red, Sage of Swevenham, Captain of the Dry Tree; where=(unnamed) desert cave-house | P028 `Thus hath thy wish been accomplished`
+
+O quests | Recurring figures whose arcs end in tragic reveals (the counted meetings ending at "the last time"). | P027 `The last time!`
