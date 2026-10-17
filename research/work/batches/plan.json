@@ -1,0 +1,205 @@
+[
+ {
+  "batch": "batch_01",
+  "chapters": [
+   "BONE-C1",
+   "BONE-C2",
+   "BONE-C3",
+   "BONE-C4",
+   "BONE-C5",
+   "BONE-C6",
+   "BONE-C7",
+   "BONE-C8",
+   "BONE-C9"
+  ],
+  "words": 19687,
+  "lines": 577
+ },
+ {
+  "batch": "batch_02",
+  "chapters": [
+   "BONE-C10",
+   "BONE-C11",
+   "BONE-C12",
+   "BONE-C13",
+   "BONE-C14",
+   "BONE-C15",
+   "BONE-C16",
+   "BONE-C17",
+   "BONE-C18"
+  ],
+  "words": 21309,
+  "lines": 543
+ },
+ {
+  "batch": "batch_03",
+  "chapters": [
+   "BONE-C19",
+   "BONE-C20",
+   "BONE-C21",
+   "BONE-C22",
+   "BONE-C23",
+   "BONE-C24",
+   "BTWO-C1",
+   "BTWO-C2"
+  ],
+  "words": 15806,
+  "lines": 334
+ },
+ {
+  "batch": "batch_04",
+  "chapters": [
+   "BTWO-C3",
+   "BTWO-C4",
+   "BTWO-C5",
+   "BTWO-C6",
+   "BTWO-C7",
+   "BTWO-C8",
+   "BTWO-C9"
+  ],
+  "words": 19293,
+  "lines": 321
+ },
+ {
+  "batch": "batch_05",
+  "chapters": [
+   "BTWO-C10",
+   "BTWO-C11",
+   "BTWO-C12",
+   "BTWO-C13",
+   "BTWO-C14",
+   "BTWO-C15",
+   "BTWO-C16",
+   "BTWO-C17",
+   "BTWO-C18",
+   "BTWO-C19",
+   "BTWO-C20",
+   "BTWO-C21"
+  ],
+  "words": 19276,
+  "lines": 386
+ },
+ {
+  "batch": "batch_06",
+  "chapters": [
+   "BTWO-C22",
+   "BTWO-C23",
+   "BTWO-C24",
+   "BTWO-C25",
+   "BTWO-C26",
+   "BTWO-C27",
+   "BTWO-C28",
+   "BTWO-C29",
+   "BTWO-C30",
+   "BTWO-C31",
+   "BTWO-C32"
+  ],
+  "words": 17422,
+  "lines": 393
+ },
+ {
+  "batch": "batch_07",
+  "chapters": [
+   "BTWO-C33",
+   "BTWO-C34",
+   "BTWO-C35",
+   "BTWO-C36",
+   "BTWO-C37",
+   "BTWO-C38",
+   "BTWO-C39",
+   "BTWO-C40",
+   "BTWO-C41",
+   "BTHREE-C1"
+  ],
+  "words": 20097,
+  "lines": 544
+ },
+ {
+  "batch": "batch_08",
+  "chapters": [
+   "BTHREE-C2",
+   "BTHREE-C3",
+   "BTHREE-C4",
+   "BTHREE-C5",
+   "BTHREE-C6",
+   "BTHREE-C7",
+   "BTHREE-C8",
+   "BTHREE-C9",
+   "BTHREE-C10",
+   "BTHREE-C11",
+   "BTHREE-C12"
+  ],
+  "words": 16898,
+  "lines": 397
+ },
+ {
+  "batch": "batch_09",
+  "chapters": [
+   "BTHREE-C13",
+   "BTHREE-C14",
+   "BTHREE-C15",
+   "BTHREE-C16",
+   "BTHREE-C17",
+   "BTHREE-C18",
+   "BTHREE-C19",
+   "BTHREE-C20",
+   "BTHREE-C21",
+   "BTHREE-C22",
+   "BFOUR-C1",
+   "BFOUR-C2",
+   "BFOUR-C3",
+   "BFOUR-C4"
+  ],
+  "words": 18381,
+  "lines": 424
+ },
+ {
+  "batch": "batch_10",
+  "chapters": [
+   "BFOUR-C5",
+   "BFOUR-C6",
+   "BFOUR-C7",
+   "BFOUR-C8",
+   "BFOUR-C9",
+   "BFOUR-C10",
+   "BFOUR-C11",
+   "BFOUR-C12",
+   "BFOUR-C13",
+   "BFOUR-C14",
+   "BFOUR-C15"
+  ],
+  "words": 18639,
+  "lines": 467
+ },
+ {
+  "batch": "batch_11",
+  "chapters": [
+   "BFOUR-C16",
+   "BFOUR-C17",
+   "BFOUR-C18",
+   "BFOUR-C19",
+   "BFOUR-C20",
+   "BFOUR-C21",
+   "BFOUR-C22"
+  ],
+  "words": 20092,
+  "lines": 447
+ },
+ {
+  "batch": "batch_12",
+  "chapters": [
+   "BFOUR-C23",
+   "BFOUR-C24",
+   "BFOUR-C25",
+   "BFOUR-C26",
+   "BFOUR-C27",
+   "BFOUR-C28",
+   "BFOUR-C29",
+   "BFOUR-C30",
+   "BFOUR-C31",
+   "BFOUR-C32"
+  ],
+  "words": 17211,
+  "lines": 396
+ }
+]
