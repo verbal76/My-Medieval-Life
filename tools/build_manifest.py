@@ -29,6 +29,7 @@ NOTES = {
     "PUNY_CHARACTERS_v2.1.zip": ("paid", "Puny Characters Editor Edition: pre-made 8-direction spritesheets, GIMP layer file, Tiled ortho/iso/hex demo maps (ortho tileset has a terrain wangset)."),
     "PUNY_CHARACTERS_v2.1_tdsm-2026.zip": ("paid", "Puny Characters as a Top-Down Sprite Maker style: manifest.tds, per-layer part sheets, CSV part lists, palette ramps. This is the headless character generator's source (tools/puny_chargen.py)."),
     "PUNY_SKILLS_v1.zip": ("paid", "Puny skill icons, skill FX animation spritesheets, indicators."),
+    "PUNY_MYTH-CREATURES-RPGMAKER_v1.zip": ("CC0", "Puny Myth Creatures (Philippine folklore), RPG Maker format: 30 overworld 4-direction walk sheets (72x96, 3x4 frames of 24px), 25 unanimated enemy battle sprites, 10 hero side-view battlers (576x384, 9x6 frames of 64px), and 9 RPG Maker character sheets (288x192). Shade's thesis pack; CC0, credit optional."),
     "PUNY_DUNGEON_v1.zip": ("verify", "Puny Dungeon tileset (416x320), 5 sample Tiled maps with preview images, sample characters."),
     "MiniWorldSprites.zip": ("free", "16x16 Miniworld: buildings in 5 team colours, units, monsters, animals, nature, ground, UI. Shade's guide: free to use, no credit needed, do not resell."),
     "16x16 miniworld - octoshrimpy  -  indoor update.zip": ("verify", "Miniworld remix sheets by octoshrimpy (a different artist), adding indoor tiles and walls."),
@@ -110,7 +111,7 @@ def main():
                      else "Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip).") + " |")
     md += ["", "Licence key: **paid** = bought in the itch.io bundle; its licence allows use in games",
            "but forbids redistributing the original files. **free** = Shade's own terms say free to use.",
-           "**verify** = no licence file in the archive; check the itch.io page.", ""]
+           "**CC0** = public domain per Shade's itch.io page. **verify** = no licence file in the archive; check the itch.io page.", ""]
 
     exts = Counter(PurePosixPath(r["path"]).suffix.lower() or "(none)" for r in rows)
     md += ["## File types", "", "| Extension | Count |", "|---|---:|"]

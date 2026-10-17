@@ -18,28 +18,32 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY_CHARACTERS_v2.1.zip` | paid | 515 | 59.5 MB | Puny Characters Editor Edition: pre-made 8-direction spritesheets, GIMP layer file, Tiled ortho/iso/hex demo maps (ortho tileset has a terrain wangset). |
 | `PUNY_CHARACTERS_v2.1_tdsm-2026.zip` | paid | 116 | 689.5 KB | Puny Characters as a Top-Down Sprite Maker style: manifest.tds, per-layer part sheets, CSV part lists, palette ramps. This is the headless character generator's source (tools/puny_chargen.py). |
 | `PUNY_DUNGEON_v1.zip` | verify | 15 | 139.6 KB | Puny Dungeon tileset (416x320), 5 sample Tiled maps with preview images, sample characters. |
+| `PUNY_MYTH-CREATURES-RPGMAKER_v1.zip` | CC0 | 74 | 531.6 KB | Puny Myth Creatures (Philippine folklore), RPG Maker format: 30 overworld 4-direction walk sheets (72x96, 3x4 frames of 24px), 25 unanimated enemy battle sprites, 10 hero side-view battlers (576x384, 9x6 frames of 64px), and 9 RPG Maker character sheets (288x192). Shade's thesis pack; CC0, credit optional. |
 | `PUNY_SKILLS_v1.zip` | paid | 1719 | 1.8 MB | Puny skill icons, skill FX animation spritesheets, indicators. |
 | `miniworld +__rainbow-refresh.zip` | verify | 10 | 642.9 KB | Recoloured 'rainbow refresh' Miniworld remix sheets, same layout as the octoshrimpy update plus chests. |
+| `ASSET_MANIFEST.md` (loose file) | | 1 | 44.1 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip). |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
+| `asset_manifest.csv` (loose file) | | 1 | 1.9 MB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip). |
 | `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip). |
 
 Licence key: **paid** = bought in the itch.io bundle; its licence allows use in games
 but forbids redistributing the original files. **free** = Shade's own terms say free to use.
-**verify** = no licence file in the archive; check the itch.io page.
+**CC0** = public domain per Shade's itch.io page. **verify** = no licence file in the archive; check the itch.io page.
 
 ## File types
 
 | Extension | Count |
 |---|---:|
-| `.png` | 12270 |
+| `.png` | 12344 |
 | `.tmj` | 18 |
+| `.csv` | 12 |
 | `.tsx` | 12 |
-| `.csv` | 11 |
 | `.gif` | 9 |
 | `.txt` | 3 |
 | `.docx` | 2 |
 | `.xcf` | 2 |
 | `.json` | 2 |
+| `.md` | 1 |
 | `.psd` | 1 |
 | `.tds` | 1 |
 
@@ -247,6 +251,15 @@ Each folder lists its file count and the most common image sizes.
 | `PUNY_DUNGEON_v1` | 1 | 416x320 | `punyworld-dungeon-tileset.png` |
 | `PUNY_DUNGEON_v1/Tiled` | 9 | 416x320 (1), 96x96 (1) | `puny-dungeon-tiles.tsx`, `punyworld-dungeon-tileset.png`, `sample-characters.png`, `sample-characters.tsx`, ... |
 | `PUNY_DUNGEON_v1/Tiled/Sample Images` | 5 | 240x240 | `sample-map1.png`, `sample-map2.png`, `sample-map3.png`, `sample-map4.png`, ... |
+
+### PUNY_MYTH-CREATURES-RPGMAKER_v1.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `PUNY_MYTH-CREATURES-RPGMAKER_v1` | 9 | 288x192 | `Avatar1.png`, `Avatar2.png`, `Farmer.png`, `Hero-Angel.png`, ... |
+| `PUNY_MYTH-CREATURES-RPGMAKER_v1/Battle Sprites` | 25 | 48x48 (3), 64x64 (2), 48x64 (1), ... | `Amaranhig-Enemy.png`, `Amomongo-Enemy.png`, `Boar-Enemy.png`, `Bungisngis-Enemy.png`, ... |
+| `PUNY_MYTH-CREATURES-RPGMAKER_v1/Hero Battle Sprites` | 10 | 576x384 | `Aswang-Mage.png`, `Katipunero-Blue.png`, `Katipunero-Red.png`, `Katipunero.png`, ... |
+| `PUNY_MYTH-CREATURES-RPGMAKER_v1/Overworld Sprites` | 30 | 72x96 | `Aghoy.png`, `Amaranhig.png`, `Amomongo.png`, `Boar.png`, ... |
 
 ### PUNY_SKILLS_v1.zip
 
