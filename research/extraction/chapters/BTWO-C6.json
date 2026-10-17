@@ -1,0 +1,510 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) heathen simple folk beyond the mountains",
+   "aliases": [],
+   "type": "group",
+   "subtype": "people",
+   "unnamed": true,
+   "summary": "Kind, happy, simple heathen folk living in woodland halls on a plain; ride horned cattle; know no horses; took the travellers for gods.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P009",
+     "q": "they would have it that we were gods sent down to them from the world beyond the mountains by their fathers of old time"
+    },
+    {
+     "p": "BTWO-C6-P011",
+     "q": "riding on horned neat (for they knew not of horses)"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) kingdom of the king's son",
+   "aliases": [],
+   "type": "polity",
+   "subtype": "kingdom",
+   "unnamed": true,
+   "summary": "Fair rich country of the king's son's father, with a chief city and castle.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P018",
+     "q": "we came soon into my lord's country, and fair and rich and lovely was it in those days"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) king, father of the king's son",
+   "aliases": [
+    "the king"
+   ],
+   "type": "person",
+   "subtype": "king",
+   "unnamed": true,
+   "summary": "Tall, big man of fifty-five, mighty; asks his son if he found the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P020",
+     "q": "a tall man and big, of fifty-five winters, goodly of body and like to my lord to look upon"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) young champion abductor",
+   "aliases": [],
+   "type": "person",
+   "subtype": "champion",
+   "unnamed": true,
+   "summary": "Masterful young champion who carried off the Lady near a town; slain by the king's son.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P013",
+     "q": "a certain young man, a great champion and exceeding masterful, came upon me with his squires"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) felon baron",
+   "aliases": [],
+   "type": "person",
+   "subtype": "baron",
+   "unnamed": true,
+   "summary": "Baron near the king's land who drugged the king's son, called the Lady a runaway thrall, and became one of her worst foes.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P014",
+     "q": "he gave my lord a sleeping potion in his good-night cup"
+    },
+    {
+     "p": "BTWO-C6-P015",
+     "q": "he was ever after one of my worst foes"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) young knight of the baron's house",
+   "aliases": [],
+   "type": "person",
+   "subtype": "knight",
+   "unnamed": true,
+   "summary": "Swore to slay the baron unless he let them go, then rode with them, loving the Lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P014",
+     "q": "a young knight of his house been, who swore that he would slay him unless he let us go"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) dreadful stony waste",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "waste",
+   "unnamed": true,
+   "summary": "Waste between the wilderness and the peopled lands, crossed only on the fourth try.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P008",
+     "q": "a dreadful stony waste which we strove to cross thrice, and thrice were driven back into the greenwood by thirst and hunger"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) mountains beyond the wilderness",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "mountains",
+   "unnamed": true,
+   "summary": "Mountains the travellers came out of before reaching the heathen folk.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C6-P012",
+     "q": "that poverty and nakedness wherewith we came out of the mountains"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) king, father of the king's son",
+   "rel": "parent_of",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C6-P020",
+     "q": "Well, son, hast thou found it, the Well at the World's End?"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) felon baron",
+   "rel": "enemy_of",
+   "b": "Lady of Abundance",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C6-P015",
+     "q": "he was ever after one of my worst foes"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) young champion abductor",
+   "rel": "killed_by",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "detail": "battle with burghers' help",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C6-P013",
+     "q": "the young champion he slew"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Well at the World's End",
+   "rel": "other",
+   "b": "(unnamed) uttermost wilderness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the westward road from the wilderness is the road from the Well, to be travelled the other way",
+   "refs": [
+    {
+     "p": "BTWO-C6-P005",
+     "q": "it is the road from the Well at the World's End, where I myself have been"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) heathen simple folk beyond the mountains",
+   "rel": "beyond",
+   "b": "(unnamed) dreadful stony waste",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "plain below desolate stony heaths",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C6-P009",
+     "q": "as we, my lord and I, came down from the desolate stony heaths, and went hand and hand across the plain"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) kingdom of the king's son",
+   "rel": "beyond",
+   "b": "(unnamed) heathen simple folk beyond the mountains",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "reached after richer peoples with castles and towns",
+   "refs": [
+    {
+     "p": "BTWO-C6-P012",
+     "q": "We came to other peoples, richer and mightier than these"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "from": "Dale of Lore",
+   "to": "(unnamed) kingdom of the king's son",
+   "via": [
+    "(unnamed) dreadful stony waste",
+    "(unnamed) mountains beyond the wilderness",
+    "(unnamed) heathen simple folk beyond the mountains"
+   ],
+   "mode": "horse and foot, then riding cattle",
+   "direction_text": "westward",
+   "duration_text": "autumn and winter to spring and beyond",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "deserts of wood and heath, stony waste, mountains",
+   "chapter": "BTWO-C6",
+   "refs": [
+    {
+     "p": "BTWO-C6-P004",
+     "q": "then we went our ways westward, according to the rede of the carline"
+    },
+    {
+     "p": "BTWO-C6-P008",
+     "q": "It was springtime when we came to that folk"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The Lady says the Well holds no evil but the Quenching of Sorrow and Clearing of the Eyes; her long life and beauty come from it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P006",
+     "q": "in the Well at the World's End is no evil, but only the Quenching of Sorrow, and Clearing of the Eyes that they may behold"
+    }
+   ]
+  },
+  {
+   "category": "text",
+   "subject": "(unnamed) book of the Well",
+   "statement": "The Lady says the book was made by her foes, partly false on purpose and partly confused.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P006",
+     "q": "the said book was made not by my friends but my foes"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "(unnamed) heathen simple folk beyond the mountains",
+   "statement": "They are heathen, without knowledge of the Church, and revere their fathers of old.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P009",
+     "q": "were heathen, as the Gentiles of yore agone"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "(unnamed) heathen simple folk beyond the mountains",
+   "statement": "They have no horses and ride horned cattle; they gave bows and arrows.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P011",
+     "q": "we went our ways from them riding on horned neat"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "(unnamed) dreadful stony waste",
+   "statement": "The way was not long but they strayed; they crossed the stony waste on the fourth try with food from her woodcraft.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P008",
+     "q": "Not that the way was long, as I found out afterwards, but that we went astray in the woodland"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "(unnamed) kingdom of the king's son",
+   "statement": "The king's foes lay mostly on the far side of his land.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P012",
+     "q": "whereas they were not of his foes (who lay for the more part on the other side of his land)"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) kingdom of the king's son",
+   "statement": "It was a peaceful land of tillers and craftsmen in those days.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P018",
+     "q": "a happy abode for the tillers of the soil, and the fashioners of wares"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Journey west out of the wilderness",
+   "chapter": "BTWO-C6",
+   "layer": "backstory",
+   "time_text": "autumn to spring",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "places": [
+    "(unnamed) dreadful stony waste",
+    "(unnamed) heathen simple folk beyond the mountains"
+   ],
+   "summary": "The Lady and the king's son cross the wilderness, stony waste and mountains to the heathen folk.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P007",
+     "q": "After we had passed long deserts of wood and heath, and gone through lands exceeding evil and perilous"
+    }
+   ]
+  },
+  {
+   "label": "Welcome by the king",
+   "chapter": "BTWO-C6",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "(unnamed) king",
+    "father of the king's son",
+    "(unnamed) king's son of the Lady's youth",
+    "Lady of Abundance"
+   ],
+   "places": [
+    "(unnamed) kingdom of the king's son"
+   ],
+   "summary": "The king meets his son outside the chief city; the son says he found the Well and kisses the Lady's hand.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C6-P021",
+     "q": "'Yea,' said my lord, and therewith lifted my hand to his lips and kissed it"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "The Lady says she has drunk of the Well, but has not yet told how; at this point in her tale she has not.",
+   "refs": [
+    {
+     "p": "BTWO-C6-P005",
+     "q": "where I myself have been, or else never had thine eyes fallen on me"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "The kingdom of the king's son is unnamed.",
+   "refs": [
+    {
+     "p": "BTWO-C6-P018",
+     "q": "we came soon into my lord's country"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "The heathen folk beyond the mountains are not located beyond \"westward\".",
+   "refs": [
+    {
+     "p": "BTWO-C6-P009",
+     "q": "sent down to them from the world beyond the mountains"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Simple heathen peoples with cattle-riding cultures beyond the mountain range, as distinct world cultures.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C6-P011",
+     "q": "riding on horned neat (for they knew not of horses)"
+    }
+   ]
+  },
+  {
+   "idea": "A jealous lord's rivals and false witnesses claiming a free woman is a runaway thrall, as a legal-intrigue quest.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C6-P014",
+     "q": "bore false witness that I was a thrall and a runaway"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C6",
+ "chapters": [
+  "BTWO-C6"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C6",
+   "paragraphs_total": 21,
+   "all_paragraphs_read": true,
+   "summary": "The Lady says she has drunk of the Well; the book was written by her foes, and the Well holds no evil but the Quenching of Sorrow and Clearing of the Eyes. She and the king's son go west through long deserts of wood and heath, perilous lands and a dreadful stony waste (crossed on the fourth attempt), and come out of the mountains in spring among a kind heathen folk who think them gods sent from beyond the mountains, and who ride horned cattle, having no horses. Leaving them, they reach richer lands with castles, abbeys and walled towns where the king's son is known. A champion abducts her and is slain; a felon baron drugs her lord and later becomes her enemy; a young knight helps and follows them. They reach the king's son's rich country, and the king asks if he has found the Well; he says yes and kisses her hand.",
+   "geography_notes": "West from the uttermost wilderness: deserts of wood and heath, evil lands, a dreadful stony waste, the mountains, then a heathen simple folk in woodland halls on a plain beyond the stony heaths; then richer peoples with castles, abbeys, churches and walled towns; the king's son's kingdom (his father's foes mostly on its far side), with a chief city and castle. The Lady says the road west from the witch's wilderness is the road from the Well, which she and Ralph will tread the other way.",
+   "open_questions": [
+    "What is the king's son's kingdom?",
+    "Is the heathen folk beyond the mountains a people met later?"
+   ]
+  }
+ ]
+}

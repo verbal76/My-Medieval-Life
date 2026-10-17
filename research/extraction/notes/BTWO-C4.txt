@@ -1,0 +1,38 @@
+@ BTWO-C4
+summary: The Lady continues: one May she bathed in a whitethorn dell far from the house and met a grey old carline with bright eyes, who taught her of the world and her letters in that dell, the Dale of Lore, and told her that to escape she should go a little north of west. On Midsummer Day a young knight with yellow hair, a king's son seeking the Well, met her; they loved each other at once, and he gave her his necklace (like the dead seeker's and Ralph's) as a token. The carline gave her a sharp knife; that evening the witch, seeing the collar, said she had not yet drunk of the Well and rushed at her, and the girl killed her with the knife. She took bread and the dead seeker's necklace, left three great books untouched, and went to the Dale of Lore.
+geo: The witch's house lies in "this uttermost wilderness, and the woods before the mountains". The Dale of Lore is a flowery whitethorn dell with a stream, reachable before noon from the house; above it lies a wide plain of waste. The way out to the world of folk is a little north of west.
+open: Who is the wise old carline of the Dale of Lore? || Who is the yellow-haired king's son (dead "many a year")?
+
+E feature | Dale of Lore | the dale | dell | Little flowery dale with whitethorns and a stream with a pool, where the old carline taught the girl. | P002 `a little flowery dell, beset with blossoming whitethorns and with a fair stream running through it`; P013 `my feet had worn a path through the wilderness to the Dale of Lore`
+E person | (unnamed) wise carline of the Dale of Lore | the carline, the old woman | wise woman | Grey-haired old woman with shining bright eyes, poorly dressed; teaches the girl of the world and letters, foresees, gives her a knife. | P004 `an old woman grey haired, uncomely of raiment, but with shining bright eyes in her wrinkled face`
+E person | (unnamed) king's son of the Lady's youth | the fair knight, my lord | prince | Young beardless knight with yellow hair, green flowered surcoat, white horse; seeking the Well; dead "many a year" by the Lady's account. | P014 `the yellow locks of his hair flowed down from under, and fell on his shoulders`; P015 `many a year he has been dead`
+E item | (unnamed) king's son's necklace | the collar | amulet | Necklace the king's son gave the girl, like the dead seeker's and Ralph's; his dearest possession. | P021 `I saw that it was like that which my mistress took from the neck of the dead woman`
+E item | (unnamed) carline's knife | - | knife | Strong sharp knife given to the girl by the wise carline. | P025 `she took from her pouch a strong sharp knife`
+E feature | (unnamed) uttermost wilderness | the woods before the mountains | wilderness | The wilderness and woods before the mountains where the witch's house lies. | P024 `this uttermost wilderness, and the woods before the mountains`
+E text | (unnamed) three great books of the witch | - | grimoires | Three great books on the witch's lectern, left unopened for fear of spells. | P029 `saw three great books there laid on the lectern`
+
+R Lady of Abundance | lover_of | (unnamed) king's son of the Lady's youth | - | backstory | CANON/high | P020 `there in that place, and in a little while, we loved each other sorely`
+R (unnamed) witch-mistress of the Lady | killed_by | Lady of Abundance | stabbed in self-defence | backstory | CANON/high | P028 `she touched me not till the blade had sunk into her breast`
+R (unnamed) wise carline of the Dale of Lore | teaches | Lady of Abundance | world-wisdom and letters | backstory | CANON/high | P011 `showed me letters and told me what they were`
+
+S Dale of Lore | distance_from | (unnamed) witch's forest house | time=reachable before noon on any long day; ctx=dialogue:wise carline; cert=constrained | CANON/high | far from the house | P009 `thou mayst easily win thy way hither before noon on any day`
+S (unnamed) waste plain above the Dale of Lore | adjacent_to | Dale of Lore | terrain=wide-spreading plain of the waste; cert=fixed | CANON/high | - | P010 `we went up together out of the dale, and were in the wide-spreading plain of the waste`
+S (unnamed) world of folk | other | (unnamed) witch's forest house | dir=a little north of west; ctx=dialogue:wise carline; cert=fixed | CANON/high | the way out to peopled lands | P010 `set thy face a little north of west, and thou shalt fall in with something or somebody before long`
+S (unnamed) uttermost wilderness | near | (unnamed) mountains beyond the wilderness | terrain=woods before the mountains; ctx=dialogue:wise carline; cert=constrained | CANON/high | - | P024 `the woods before the mountains`
+
+F magic | Lady of Abundance | The carline foretells as her fate (weird) that no man who sees her will forget her or stop longing for her. | CANON/high; ctx=dialogue:wise carline | P006 `henceforth no man who seeth thee once will forget thee ever, or cease to long for thee: of a surety this is thy weird`
+F magic | (unnamed) witch-mistress of the Lady | The witch says the girl has not drunk of the Well and cannot escape her reach while she lives. | CANON/high; ctx=dialogue:witch | P027 `thou hast not yet drunk of the Well at the World's End`
+F learning | (unnamed) wise carline of the Dale of Lore | She teaches the girl letters "like a little lad in the chorister's school". | CANON/high; ctx=dialogue:Lady of Abundance | P011 `I learned like a little lad in the chorister's school`
+F clothing | Lady of Abundance | As a thrall she wore rough cloth and goatskin shoes. | CANON/high; ctx=dialogue:Lady of Abundance | P010 `I tied my goatskin shoes to my feet`
+F magic | (unnamed) three great books of the witch | The girl feared spells might work if the books were opened. | CANON/high; ctx=dialogue:Lady of Abundance | P029 `for fear that some spell might get to work in them if they were opened`
+
+V backstory | Meeting the wise carline | In May the girl meets the wise old woman in the Dale of Lore and is taught there daily. | time=May into June; who=Lady of Abundance, (unnamed) wise carline of the Dale of Lore; where=Dale of Lore | P011 `fell to teaching me wisdom`
+V backstory | The king's son on Midsummer Day | A Well-seeking king's son meets the girl, loves her, gives her his necklace and rides on. | time=Midsummer Day; who=Lady of Abundance, (unnamed) king's son of the Lady's youth; where=(unnamed) waste plain above the Dale of Lore | P021 `I am as one whom the Avenger of Blood followeth`
+V backstory | Death of the witch | The witch attacks the girl, who kills her with the carline's knife. | time=Midsummer evening; who=Lady of Abundance, (unnamed) witch-mistress of the Lady; where=(unnamed) witch's forest house | P028 `she fell across my feet`
+
+U identity | Who is the wise carline of the Dale of Lore? | P004 `with shining bright eyes in her wrinkled face`
+U identity | Who is the yellow-haired king's son, dead many years? | P015 `many a year he has been dead`
+U missing_measure | The Lady's age: the king's son is "many a year" dead, yet she looks young. | P016 `as I am now, so shall I be for thee many a year`
+
+O lore | A mentor figure who appears and vanishes, teaching letters and lore. | P011 `showed me letters`
+O world | Wilderness edges near mountains as the far frontier zone of the world map. | P024 `the woods before the mountains`

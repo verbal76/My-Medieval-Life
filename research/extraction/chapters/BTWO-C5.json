@@ -1,0 +1,125 @@
+{
+ "entities": [],
+ "relations": [
+  {
+   "a": "(unnamed) king's son of the Lady's youth",
+   "rel": "other",
+   "b": "Well at the World's End",
+   "detail": "failed in his quest",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C5-P006",
+     "q": "I have failed of that I sought, and suffered shame and hunger and many ills"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) world of folk",
+   "rel": "west_of",
+   "b": "Dale of Lore",
+   "direction": "west",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C5-P003",
+     "q": "that way to the west and the peopled parts, whereof the carline had told me"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "food",
+   "subject": "Lady of Abundance",
+   "statement": "She lives on goats' milk, curds made with woodland roots, and berries.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C5-P003",
+     "q": "made curds thereof with the woodland roots"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Return of the king's son",
+   "chapter": "BTWO-C5",
+   "layer": "backstory",
+   "time_text": "late July",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "places": [
+    "Dale of Lore"
+   ],
+   "summary": "Starving and defeated, the king's son returns to the Dale of Lore; the girl agrees to go with him.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C5-P004",
+     "q": "O my beloved, I have found thee, but I am faint with hunger"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "What the king's son sought and failed at; the girl wonders if he might have overcome \"the evil things\".",
+   "refs": [
+    {
+     "p": "BTWO-C5-P006",
+     "q": "Else maybe thou hadst found what thou soughtest, and overcome the evil things"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Failed questers returning from the Well-road as NPC encounters.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BTWO-C5-P006",
+     "q": "For now am I a beaten man"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C5",
+ "chapters": [
+  "BTWO-C5"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C5",
+   "paragraphs_total": 6,
+   "all_paragraphs_read": true,
+   "summary": "The girl lives in the Dale of Lore on goats' milk, curds, roots and berries, waiting for the carline, who never returns. She wanders and thinks of the westward way. Late in July the king's son returns, starving and beaten, having failed in his quest. She feeds him, tells him she slew her mistress, and agrees to go with him.",
+   "geography_notes": "The girl ranges far from the Dale, sometimes sleeping out three nights; the peopled parts lie west.",
+   "open_questions": [
+    "What did the king's son fail at, and what \"evil things\" did he face?"
+   ]
+  }
+ ]
+}

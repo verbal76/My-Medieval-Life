@@ -1,8 +1,8 @@
 # Research progress
 
-- Chapters complete: **27 / 119**
-- Remaining: 92 (next: BTWO-C4, BTWO-C5, BTWO-C6, BTWO-C7, BTWO-C8)
-- Records: entities 211, relations 75, spatial 92, travel 25, facts 167, events 46, unresolved 52, opportunities 43
+- Chapters complete: **30 / 119**
+- Remaining: 89 (next: BTWO-C7, BTWO-C8, BTWO-C9, BTWO-C10, BTWO-C11)
+- Records: entities 226, relations 82, spatial 100, travel 26, facts 180, events 52, unresolved 59, opportunities 48
 - Verification failures in the last compile: 0
 - Active subagents: 0 (owner limit: none without explicit approval)
 - Method: single-session contextual reading; notes compiled and quote-checked by script

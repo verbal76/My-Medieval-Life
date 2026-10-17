@@ -699,33 +699,77 @@
    "title": "The Lady Tells of Her Deliverance",
    "body_paragraphs": 28,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 7,
+    "relations": 3,
+    "spatial": 4,
+    "travel": 0,
+    "facts": 5,
+    "events": 3,
+    "unresolved": 3,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Who is the wise old carline of the Dale of Lore?",
+    "Who is the yellow-haired king's son (dead \"many a year\")?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C4.txt",
+    "records": "research/extraction/chapters/BTWO-C4.json"
+   }
   },
   {
    "chapter": "BTWO-C5",
    "title": "Yet More of the Lady's Story",
    "body_paragraphs": 6,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 0,
+    "relations": 1,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 1,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "What did the king's son fail at, and what \"evil things\" did he face?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C5.txt",
+    "records": "research/extraction/chapters/BTWO-C5.json"
+   }
   },
   {
    "chapter": "BTWO-C6",
    "title": "The Lady Tells Somewhat of Her Doings After She Left the Wilderness",
    "body_paragraphs": 21,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 8,
+    "relations": 3,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 7,
+    "events": 2,
+    "unresolved": 3,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "What is the king's son's kingdom?",
+    "Is the heathen folk beyond the mountains a people met later?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C6.txt",
+    "records": "research/extraction/chapters/BTWO-C6.json"
+   }
   },
   {
    "chapter": "BTWO-C7",

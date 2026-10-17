@@ -1,0 +1,481 @@
+{
+ "entities": [
+  {
+   "name": "Dale of Lore",
+   "aliases": [
+    "the dale"
+   ],
+   "type": "feature",
+   "subtype": "dell",
+   "unnamed": false,
+   "summary": "Little flowery dale with whitethorns and a stream with a pool, where the old carline taught the girl.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C4-P002",
+     "q": "a little flowery dell, beset with blossoming whitethorns and with a fair stream running through it"
+    },
+    {
+     "p": "BTWO-C4-P013",
+     "q": "my feet had worn a path through the wilderness to the Dale of Lore"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) wise carline of the Dale of Lore",
+   "aliases": [
+    "the carline",
+    "the old woman"
+   ],
+   "type": "person",
+   "subtype": "wise woman",
+   "unnamed": true,
+   "summary": "Grey-haired old woman with shining bright eyes, poorly dressed; teaches the girl of the world and letters, foresees, gives her a knife.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C4-P004",
+     "q": "an old woman grey haired, uncomely of raiment, but with shining bright eyes in her wrinkled face"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) king's son of the Lady's youth",
+   "aliases": [
+    "the fair knight",
+    "my lord"
+   ],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": true,
+   "summary": "Young beardless knight with yellow hair, green flowered surcoat, white horse; seeking the Well; dead \"many a year\" by the Lady's account.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C4-P014",
+     "q": "the yellow locks of his hair flowed down from under, and fell on his shoulders"
+    },
+    {
+     "p": "BTWO-C4-P015",
+     "q": "many a year he has been dead"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) king's son's necklace",
+   "aliases": [
+    "the collar"
+   ],
+   "type": "item",
+   "subtype": "amulet",
+   "unnamed": true,
+   "summary": "Necklace the king's son gave the girl, like the dead seeker's and Ralph's; his dearest possession.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C4-P021",
+     "q": "I saw that it was like that which my mistress took from the neck of the dead woman"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) carline's knife",
+   "aliases": [],
+   "type": "item",
+   "subtype": "knife",
+   "unnamed": true,
+   "summary": "Strong sharp knife given to the girl by the wise carline.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C4-P025",
+     "q": "she took from her pouch a strong sharp knife"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) uttermost wilderness",
+   "aliases": [
+    "the woods before the mountains"
+   ],
+   "type": "feature",
+   "subtype": "wilderness",
+   "unnamed": true,
+   "summary": "The wilderness and woods before the mountains where the witch's house lies.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C4-P024",
+     "q": "this uttermost wilderness, and the woods before the mountains"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) three great books of the witch",
+   "aliases": [],
+   "type": "text",
+   "subtype": "grimoires",
+   "unnamed": true,
+   "summary": "Three great books on the witch's lectern, left unopened for fear of spells.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C4-P029",
+     "q": "saw three great books there laid on the lectern"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Lady of Abundance",
+   "rel": "lover_of",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C4-P020",
+     "q": "there in that place, and in a little while, we loved each other sorely"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) witch-mistress of the Lady",
+   "rel": "killed_by",
+   "b": "Lady of Abundance",
+   "detail": "stabbed in self-defence",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C4-P028",
+     "q": "she touched me not till the blade had sunk into her breast"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) wise carline of the Dale of Lore",
+   "rel": "teaches",
+   "b": "Lady of Abundance",
+   "detail": "world-wisdom and letters",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C4-P011",
+     "q": "showed me letters and told me what they were"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Dale of Lore",
+   "rel": "distance_from",
+   "b": "(unnamed) witch's forest house",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "reachable before noon on any long day",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:wise carline",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "far from the house",
+   "refs": [
+    {
+     "p": "BTWO-C4-P009",
+     "q": "thou mayst easily win thy way hither before noon on any day"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) waste plain above the Dale of Lore",
+   "rel": "adjacent_to",
+   "b": "Dale of Lore",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "wide-spreading plain of the waste",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C4-P010",
+     "q": "we went up together out of the dale, and were in the wide-spreading plain of the waste"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) world of folk",
+   "rel": "other",
+   "b": "(unnamed) witch's forest house",
+   "direction": "a little north of west",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:wise carline",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the way out to peopled lands",
+   "refs": [
+    {
+     "p": "BTWO-C4-P010",
+     "q": "set thy face a little north of west, and thou shalt fall in with something or somebody before long"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) uttermost wilderness",
+   "rel": "near",
+   "b": "(unnamed) mountains beyond the wilderness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "woods before the mountains",
+   "context": "dialogue:wise carline",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C4-P024",
+     "q": "the woods before the mountains"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "The carline foretells as her fate (weird) that no man who sees her will forget her or stop longing for her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:wise carline",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P006",
+     "q": "henceforth no man who seeth thee once will forget thee ever, or cease to long for thee: of a surety this is thy weird"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) witch-mistress of the Lady",
+   "statement": "The witch says the girl has not drunk of the Well and cannot escape her reach while she lives.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:witch",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P027",
+     "q": "thou hast not yet drunk of the Well at the World's End"
+    }
+   ]
+  },
+  {
+   "category": "learning",
+   "subject": "(unnamed) wise carline of the Dale of Lore",
+   "statement": "She teaches the girl letters \"like a little lad in the chorister's school\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P011",
+     "q": "I learned like a little lad in the chorister's school"
+    }
+   ]
+  },
+  {
+   "category": "clothing",
+   "subject": "Lady of Abundance",
+   "statement": "As a thrall she wore rough cloth and goatskin shoes.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P010",
+     "q": "I tied my goatskin shoes to my feet"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) three great books of the witch",
+   "statement": "The girl feared spells might work if the books were opened.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P029",
+     "q": "for fear that some spell might get to work in them if they were opened"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Meeting the wise carline",
+   "chapter": "BTWO-C4",
+   "layer": "backstory",
+   "time_text": "May into June",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) wise carline of the Dale of Lore"
+   ],
+   "places": [
+    "Dale of Lore"
+   ],
+   "summary": "In May the girl meets the wise old woman in the Dale of Lore and is taught there daily.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P011",
+     "q": "fell to teaching me wisdom"
+    }
+   ]
+  },
+  {
+   "label": "The king's son on Midsummer Day",
+   "chapter": "BTWO-C4",
+   "layer": "backstory",
+   "time_text": "Midsummer Day",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "places": [
+    "(unnamed) waste plain above the Dale of Lore"
+   ],
+   "summary": "A Well-seeking king's son meets the girl, loves her, gives her his necklace and rides on.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P021",
+     "q": "I am as one whom the Avenger of Blood followeth"
+    }
+   ]
+  },
+  {
+   "label": "Death of the witch",
+   "chapter": "BTWO-C4",
+   "layer": "backstory",
+   "time_text": "Midsummer evening",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "summary": "The witch attacks the girl, who kills her with the carline's knife.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C4-P028",
+     "q": "she fell across my feet"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who is the wise carline of the Dale of Lore?",
+   "refs": [
+    {
+     "p": "BTWO-C4-P004",
+     "q": "with shining bright eyes in her wrinkled face"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Who is the yellow-haired king's son, dead many years?",
+   "refs": [
+    {
+     "p": "BTWO-C4-P015",
+     "q": "many a year he has been dead"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "The Lady's age: the king's son is \"many a year\" dead, yet she looks young.",
+   "refs": [
+    {
+     "p": "BTWO-C4-P016",
+     "q": "as I am now, so shall I be for thee many a year"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A mentor figure who appears and vanishes, teaching letters and lore.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTWO-C4-P011",
+     "q": "showed me letters"
+    }
+   ]
+  },
+  {
+   "idea": "Wilderness edges near mountains as the far frontier zone of the world map.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C4-P024",
+     "q": "the woods before the mountains"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C4",
+ "chapters": [
+  "BTWO-C4"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C4",
+   "paragraphs_total": 28,
+   "all_paragraphs_read": true,
+   "summary": "The Lady continues: one May she bathed in a whitethorn dell far from the house and met a grey old carline with bright eyes, who taught her of the world and her letters in that dell, the Dale of Lore, and told her that to escape she should go a little north of west. On Midsummer Day a young knight with yellow hair, a king's son seeking the Well, met her; they loved each other at once, and he gave her his necklace (like the dead seeker's and Ralph's) as a token. The carline gave her a sharp knife; that evening the witch, seeing the collar, said she had not yet drunk of the Well and rushed at her, and the girl killed her with the knife. She took bread and the dead seeker's necklace, left three great books untouched, and went to the Dale of Lore.",
+   "geography_notes": "The witch's house lies in \"this uttermost wilderness, and the woods before the mountains\". The Dale of Lore is a flowery whitethorn dell with a stream, reachable before noon from the house; above it lies a wide plain of waste. The way out to the world of folk is a little north of west.",
+   "open_questions": [
+    "Who is the wise old carline of the Dale of Lore?",
+    "Who is the yellow-haired king's son (dead \"many a year\")?"
+   ]
+  }
+ ]
+}

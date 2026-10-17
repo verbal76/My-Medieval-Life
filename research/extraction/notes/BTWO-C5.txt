@@ -1,0 +1,16 @@
+@ BTWO-C5
+summary: The girl lives in the Dale of Lore on goats' milk, curds, roots and berries, waiting for the carline, who never returns. She wanders and thinks of the westward way. Late in July the king's son returns, starving and beaten, having failed in his quest. She feeds him, tells him she slew her mistress, and agrees to go with him.
+geo: The girl ranges far from the Dale, sometimes sleeping out three nights; the peopled parts lie west.
+open: What did the king's son fail at, and what "evil things" did he face?
+
+R (unnamed) king's son of the Lady's youth | other | Well at the World's End | failed in his quest | backstory | CANON/high | P006 `I have failed of that I sought, and suffered shame and hunger and many ills`
+
+S (unnamed) world of folk | west_of | Dale of Lore | dir=west; ctx=dialogue:Lady of Abundance; cert=constrained | CANON/high | - | P003 `that way to the west and the peopled parts, whereof the carline had told me`
+
+F food | Lady of Abundance | She lives on goats' milk, curds made with woodland roots, and berries. | CANON/high; ctx=dialogue:Lady of Abundance | P003 `made curds thereof with the woodland roots`
+
+V backstory | Return of the king's son | Starving and defeated, the king's son returns to the Dale of Lore; the girl agrees to go with him. | time=late July; who=Lady of Abundance, (unnamed) king's son of the Lady's youth; where=Dale of Lore | P004 `O my beloved, I have found thee, but I am faint with hunger`
+
+U ambiguity | What the king's son sought and failed at; the girl wonders if he might have overcome "the evil things". | P006 `Else maybe thou hadst found what thou soughtest, and overcome the evil things`
+
+O quests | Failed questers returning from the Well-road as NPC encounters. | P006 `For now am I a beaten man`
