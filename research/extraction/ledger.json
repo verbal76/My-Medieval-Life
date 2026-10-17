@@ -2818,44 +2818,101 @@
    "title": "They Come to Wulstead",
    "body_paragraphs": 12,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 4,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C25.txt",
+    "records": "research/extraction/chapters/BFOUR-C25.json"
+   }
   },
   {
    "chapter": "BFOUR-C26",
    "title": "Ralph Sees His Father and Mother Again",
    "body_paragraphs": 26,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 5,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C26.txt",
+    "records": "research/extraction/chapters/BFOUR-C26.json"
+   }
   },
   {
    "chapter": "BFOUR-C27",
    "title": "Ralph Holds Converse With Katherine His Gossip",
    "body_paragraphs": 18,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 2,
+    "spatial": 0,
+    "travel": 0,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C27.txt",
+    "records": "research/extraction/chapters/BFOUR-C27.json"
+   }
   },
   {
    "chapter": "BFOUR-C28",
    "title": "Dame Katherine Tells of the Pair of Beads, and Whence She Had Them",
    "body_paragraphs": 17,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 4,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 6,
+    "events": 2,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Is the Wise Woman of Sarras the Lady of Abundance's teacher (Ralph's belief)?",
+    "Where does Sarras lie relative to the Well's road?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C28.txt",
+    "records": "research/extraction/chapters/BFOUR-C28.json"
+   }
   },
   {
    "chapter": "BFOUR-C29",

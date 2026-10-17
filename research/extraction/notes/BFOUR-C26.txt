@@ -1,0 +1,30 @@
+@ BFOUR-C26
+summary: In Wulstead's market-place Clement says Katherine is on the north gate in war-gear. Ralph and Ursula go to the House of the Austin Canons, walled on the town's west side, with a newly finished church. Old Upmeads carles guard its gate. In the church King Peter and the Dame stand near the Jesus altar. Peter, not recognising Ralph, speaks wryly of being a kinglet with no craft left. The Dame recognises her son outside and embraces him. Ursula says she is a yeoman's daughter, an orphan with one unloving brother, of the Geirings of old time, and that "churl" means "earl", a man. Ralph lists his titles: Lord of the Little Land of Abundance, sworn brother of the Dry Tree, Lord of the Scaur, brother and Warduke of the Shepherds, a Friend of the Well. The Prior feasts them; Ralph tells a little of the lands beyond Whitwall. Ursula means to go to battle with him.
+geo: Wulstead has a market-place with Clement's house nearby and a north gate. The House of the Canons is well walled toward the fields on the west of the town and serves as its chief defence on that side. Its church is newly finished, with white pinnacles and a cross on the eastern gable over the dortoir.
+open: none
+
+E person | (unnamed) Prior of the Austin Canons of Wulstead | the Prior | prior | Prior who feasts Ralph and his parents. | P026 `bade him and the Dame of Upmeads to supper in the name of the Prior`
+E group | Geirings | - | kindred | Ancient yeoman kindred from which Ursula comes; now labouring folk who remember their forefathers. | P019 `We be come of the Geirings of old time`
+E person | (unnamed) brother of Ursula | - | yeoman | Ursula's only near kin, who does not love her. | P018 `I have no nigh kin save one brother who loveth me not`
+
+R Ursula | member_of | Geirings | descent | BFOUR-C26 | CANON/high | P019 `We be come of the Geirings of old time`
+R Ursula | sibling_of | (unnamed) brother of Ursula | estranged brother | BFOUR-C26 | CANON/high | P018 `one brother who loveth me not`
+R Ralph | leader_of | shepherds of the Downs | Warduke and brother | BFOUR-C26 | CANON/high | P023 `the brother and Warduke of the Shepherds`
+R Ralph | ruler_of | Plain of Abundance | Lord of the Little Land of Abundance | BFOUR-C26 | CANON/high | P023 `I have become the Lord of the Little Land of Abundance`
+R (unnamed) Queen of Upmeads | parent_of | Ralph | mother | BFOUR-C26 | CANON/high | P012 `I durst not halse thee till I knew it was mine own flesh and blood`
+
+S House of Black Canons of Wulstead | west_of | Wulstead | dir=at the west of the town, walled toward the fields; cert=fixed | CANON/high | its chief defence on that side | P004 `well walled toward the fields at the west of the town, so that it was its chief defence of that side`
+
+F military | Dame Katherine | Katherine stands on Wulstead's north gate in war-gear; Wulstead is too short of folk to spare her. | CANON/high; ctx=dialogue:Clement Chapman | P002 `she is upon the north gate in war-gear`
+F architecture | House of Black Canons of Wulstead | The canons' church is newly finished, with new white pinnacles, a cross on the eastern gable, and painted windows. | CANON/high | P004 `It was a fair house with a church but just finished`
+F society | Geirings | Ursula says "churl" is another way of saying "earl" and means a man; her kin remember their forefathers though they labour afield. | CANON/high; ctx=dialogue:Ursula | P019 `It is told amongst us that that word is but another way of saying earl and that it meaneth a man`
+F politics | King Peter | Peter calls himself a king, or rather a kinglet, and says Upmeads has failed them. | CANON/high; ctx=dialogue:King Peter | P008 `my business is to be a king, or a kinglet rather`
+F history | Ralph | Ralph's parents had no news of him for nearly two years. | CANON/medium; ctx=dialogue:(unnamed) Queen of Upmeads | P010 `who have heard not tidings of their best beloved son for two years well nigh`
+F history | Blaise | King Peter hears that his eldest son is thriving and has grown great. | CANON/medium; ctx=dialogue:King Peter | P011 `of the eldest, who meseems was born with a long head, we hear that he is thriving`
+
+V main | Ralph meets his parents | Ralph and Ursula meet King Peter and the Dame in the canons' church at Wulstead. | time=evening after sunset; who=Ralph, Ursula, King Peter, (unnamed) Queen of Upmeads; where=House of Black Canons of Wulstead | P015 `here is a daughter and a darling that I have brought back to thee, for this is my wedded wife`
+
+U contradiction | The Dame says nearly two years without news; Ralph's journey from the last summer day through Wulstead seems shorter. | P010 `two years well nigh`
+
+O politics | Titles accumulated from different factions (lordship, sworn brotherhood, war-duke) as a reputation and title system. | P023 `the sworn brother of the Champions of the Dry Tree, the Lord of the Castle of the Scaur`
+O society | Yeoman lineages with proud ancestry as a social layer between churls and nobles. | P019 `it may be that the spear is broken, and the banner torn; but we forget not our forefathers`

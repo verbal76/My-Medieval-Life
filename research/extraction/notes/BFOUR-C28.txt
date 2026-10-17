@@ -1,0 +1,35 @@
+@ BFOUR-C28
+summary: Katherine tells how, as a young wife travelling with Clement and chapmen on a very long journey, she came east to Sarras the Holy, an ancient city full of marvels. She longed to meet a Wise Woman there and promised a merchant, Valerius, an improper payment for an introduction. The Wise Woman, who lived alone in a nook of the ruined palace of Sarras's ancientest kings, looked about forty, slender, with dark red hair and small brown eyes. She knew Katherine's bargain and would undo it; she taught her wisdom and made her swear to give the pair of beads to a man she loved well, not of her own blood, in his greatest need. The beads lead a man to the Well but no woman; others like them exist. As foretold, Valerius was suddenly called away and never seen again. Ralph believes the Wise Woman is the one who taught the Lady of Abundance. Katherine had thought of giving the beads to Clement, but he scoffed at the Well. At dawn four trumpets sound the muster.
+geo: Sarras the Holy is a very ancient city in the eastern parts of the earth, reached by an exceedingly long chapman's journey. The Wise Woman lived in a nook of the ruined palace of the ancientest kings of Sarras. Wulstead has four quarters, each with a muster trumpet, and a market-place.
+open: Is the Wise Woman of Sarras the Lady of Abundance's teacher (Ralph's belief)? || Where does Sarras lie relative to the Well's road?
+
+E place | Sarras the Holy | Sarras | city | Very ancient eastern city full of marvels, reached by an exceedingly long journey. | P002 `came into the eastern parts of the earth to a city right ancient, and fulfilled of marvels, which hight Sarras the Holy`
+E person | (unnamed) Wise Woman of Sarras | the Wise Woman | sorceress | Woman of the wisdom of ten lives, seeming about forty, slender, dark red hair, small brown eyes; gave Katherine the beads. | P002 `a woman dwelling there, who was not old by seeming, but had in her the wisdom of ten lives`
+E person | Valerius | merchant Valerius | merchant | Merchant wise in ancient lore who led Katherine to the Wise Woman for a promised price; called away and never seen again. | P012 `merchant Valerius is ridden away hastily`
+E building | (unnamed) ruined palace of the kings of Sarras | - | ruin | Ancient ruined palace of the ancientest kings of Sarras, where the Wise Woman lived in a nook. | P002 `She dwelt all by herself in a nook of an ancient ruined palace, erst the house of the ancientest of all the kings of Sarras`
+
+R (unnamed) Wise Woman of Sarras | other | Dame Katherine | taught her wisdom and laid the beads charge on her | backstory | CANON/high | P006 `Sit down before me, and I will teach thee wisdom`
+R Dame Katherine | owns | Dame Katherine's necklace | received from the Wise Woman of Sarras | backstory | CANON/high | P012 `took thence the self-same pair of beads which I gave to thee`
+R Dame Katherine | spouse_of | Clement Chapman | wife | BFOUR-C28 | CANON/high | P002 `In the days when I was first wedded to Master Clement yonder`
+R (unnamed) Wise Woman of Sarras | other | Lady of Abundance | possibly her teacher (Ralph's belief) | backstory | INF/low | P015 `he deemed it certain that the Wise Woman of Sarras would be none other than she who had taught lore to the Lady of Abundance`
+
+S (unnamed) ruined palace of the kings of Sarras | within | Sarras the Holy | cert=fixed | CANON/high | - | P002 `erst the house of the ancientest of all the kings of Sarras`
+S Sarras the Holy | east_of | Wulstead | dir=in the eastern parts of the earth; dist=a journey exceeding long; ctx=dialogue:Dame Katherine; cert=flexible | CANON/high | - | P002 `a journey exceeding long, in the company of certain chapmen`
+
+T Dame Katherine, Clement Chapman, (unnamed) chapmen | (unknown) | Sarras the Holy | mode=chapman caravan; dur=exceeding long; dir=east | P002 `So it befell us on a time to make a journey together, a journey exceeding long`
+
+F magic | Dame Katherine's necklace | The beads lead a man to the Well at the World's End but not a woman; in a woman's hands they are only a token; others like them exist. | CANON/high; ctx=dialogue:(unnamed) Wise Woman of Sarras | P012 `This pair of beads shall one day lead a man unto the Well at the World's End, but no woman`
+F magic | Dame Katherine's necklace | They must go to a man the bearer loves well, not of her blood, in his greatest need; failing brings harm. | CANON/high; ctx=dialogue:(unnamed) Wise Woman of Sarras | P012 `only he shall not be of thine own blood`
+F magic | (unnamed) Wise Woman of Sarras | She drew Katherine to her deliberately, foretold Valerius's sudden departure, and expected to die soon. | CANON/high; ctx=dialogue:Dame Katherine | P012 `this meeting betwixt us is not by chance-hap, but of my bringing about`
+F history | Dame Katherine | As a young wife Katherine travelled with Clement on perilous journeys to see the world. | CANON/high; ctx=dialogue:Dame Katherine | P002 `I was wishful to see the ways of the world even at the risk of being thrust out of the world`
+F history | Clement Chapman | Clement scoffed at the Well, saying that where the world ends the clouds begin. | CANON/high; ctx=dialogue:Dame Katherine | P016 `where the world endeth the clouds begin`
+F military | Wulstead | Four trumpets in the four quarters of the town blow the muster at dawn. | CANON/high | P018 `four trumpets, which were sounding in the four quarters of the town`
+
+V backstory | Katherine and the Wise Woman of Sarras | In Sarras the Holy the Wise Woman teaches Katherine and gives her the beads destined for Ralph. | who=Dame Katherine, (unnamed) Wise Woman of Sarras, Valerius; where=Sarras the Holy | P012 `Thou shalt take this pair of beads, and do with them as I bid thee`
+V main | Muster at Wulstead | At dawn the four trumpets call the host to the market-place. | time=dawn; who=Ralph, Clement Chapman; where=Wulstead | P018 `blowing men to the gathering`
+
+U identity | Ralph believes the Wise Woman of Sarras taught the Lady of Abundance, but the text gives no confirmation; the Lady's witch-mistress was described differently (big, black-haired). | P015 `he deemed it certain that the Wise Woman of Sarras would be none other than she who had taught lore to the Lady of Abundance`
+U location | Sarras the Holy is only "in the eastern parts of the earth"; its relation to Whitwall, Goldburg and the Well's road is not given. | P002 `came into the eastern parts of the earth`
+
+O magic | Talismans gendered or conditioned in what they do (a token for one bearer, a guide for another): GAME EXPANSION item rules, not Morris's magic system. | P012 `they may serve her for a token; but will be no talisman or leading-stone to her`
+O world | Distant holy city (Sarras) as far-off lore, unreachable or late-game; certainty Flexible. | P002 `Sarras the Holy`

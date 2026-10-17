@@ -1,8 +1,8 @@
 # Research progress
 
-- Chapters complete: **111 / 119**
-- Remaining: 8 (next: BFOUR-C25, BFOUR-C26, BFOUR-C27, BFOUR-C28, BFOUR-C29)
-- Records: entities 553, relations 263, spatial 278, travel 99, facts 603, events 157, unresolved 140, opportunities 158
+- Chapters complete: **115 / 119**
+- Remaining: 4 (next: BFOUR-C29, BFOUR-C30, BFOUR-C31, BFOUR-C32)
+- Records: entities 563, relations 278, spatial 284, travel 101, facts 624, events 162, unresolved 143, opportunities 166
 - Verification failures in the last compile: 0
 - Active subagents: 0 (owner limit: none without explicit approval)
 - Method: single-session contextual reading; notes compiled and quote-checked by script

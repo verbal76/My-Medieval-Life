@@ -1,0 +1,29 @@
+@ BFOUR-C25
+summary: The host reaches Wulstead near sunset. The town, once unwalled, is now fenced with pales, with two timber towers at the gate and a barrier of beams. Wulstead is not in Upmeads' lands but is a friendly neighbour. Ralph and Ursula walk up to the barrier, and Clement Chapman comes out, embraces Ralph and kneels to Ursula. Clement says about two thousand Burgers lie beyond; Upmeads was still free that morning. Ralph's parents have been lodged in the House of Black Canons inside the walls for two days, with other women, children and old men. Nicholas Longshanks leads the carles holding the High House. Wulstead will send a band. Ursula carries the hallowed guisarme at the head of the host as it enters.
+geo: Wulstead stands on a little hill or swelling, approached across plain meadows with few trees, so anyone coming is seen from the gate. It is now fenced with pales, with two timber gate towers and a barrier of big beams before the gate. It lies outside Upmeads' lands.
+open: none
+
+E building | (unnamed) gate towers of Wulstead | - | fortification | Pale fence, two strongly framed timber towers either side of the gate, and a barrier of big beams. | P002 `he now found it fenced with pales, and with two towers strongly framed of timber, one on either side the gate`
+E building | House of Black Canons of Wulstead | House of St. Austin, House of the Canons, St. Austin's | priory | Walled Austin canons' house within Wulstead where King Peter and the Dame shelter. | P010 `the House of Black Canons within our walls`
+
+R Wulstead | allied_with | Upmeads | always a friendly neighbour | BFOUR-C25 | CANON/high | P002 `though Wulstead was not in the lands of Upmeads, yet it was always a friendly neighbour`
+R Clement Chapman | leader_of | Wulstead | captain of the townsfolk at the barrier | BFOUR-C25 | CANON/medium | P004 `Is there a captain of the townsfolk within the timber there?`
+R Nicholas Longshanks | leader_of | Upmeads | leads the carles holding the High House | BFOUR-C25 | CANON/high | P011 `Nicholas Longshanks is the leader of them down there`
+R King Peter | other | House of Black Canons of Wulstead | refugee there two days | BFOUR-C25 | CANON/high | P010 `there are they dwelling in all honour and dignity these two days past`
+
+S Wulstead | on | (unnamed) little hill of Wulstead | terrain=little hill or swelling of the earth amid plain meadows with scattered trees; cert=fixed | CANON/high | - | P003 `Wulstead standeth on a little hill or swelling of the earth`
+S Wulstead | outside | Upmeads | ctx=narrator; cert=fixed | CANON/high | not in the lands of Upmeads but neighbouring | P002 `Wulstead was not in the lands of Upmeads`
+S House of Black Canons of Wulstead | within | Wulstead | cert=fixed | CANON/high | - | P010 `the House of Black Canons within our walls`
+
+T Ralph and company | Bear Castle | Wulstead | mode=foot and horse; end=hard on sunset; terrain=plain meadows before the town | P002 `till they came anigh the gates of Wulstead hard on sunset`
+
+F military | Wulstead | Wulstead, formerly unwalled, is now fenced with pales and gate towers, manned with spears and horns. | CANON/high | P003 `came the sound of the blowing of great horns, and the spears thickened in the towers`
+F military | (unnamed) expelled Burgers | Clement reckons about two thousand Burgers beyond Wulstead. | CANON/medium; ctx=dialogue:Clement Chapman | P008 `I deem there be some two thousand devils`
+F politics | Upmeads | Upmeads' women, children and old men have fled to Wulstead; the carles hold the High House under Nicholas. | CANON/high; ctx=dialogue:Clement Chapman | P011 `they have fled, with many another, women and children and old men`
+F magic | Ralph | The Sage says no arrow will be suffered to hurt a Friend of the Well. | CANON/medium; ctx=dialogue:Sage of Swevenham | P003 `which shall not suffer that a Friend of the Well shall be hurt`
+F history | Ursula | Ursula credits Clement with saving her, since he brought Ralph through the mountains to Goldburg. | CANON/high; ctx=dialogue:Ursula | P006 `whereas thou didst bring him safe through the mountains unto Goldburg`
+
+V main | Arrival at Wulstead | Clement welcomes Ralph and Ursula; the host enters Wulstead behind Ursula bearing the guisarme. | time=sunset; who=Ralph, Ursula, Clement Chapman, Sage of Swevenham, Roger of the Rope-walk, Stephen a-Hurst; where=Wulstead | P013 `they all streamed into the street`
+
+O world | Towns that fortify in wartime: settlement state changes from unwalled to paled with timber towers. | P002 `whereas Ralph left Wulstead a town unwalled, he now found it fenced with pales`
+O settlement | Refugee flows to friendly towns during raids, as a world-event system. | P011 `women and children and old men, who should but hinder the carles who have abided behind`

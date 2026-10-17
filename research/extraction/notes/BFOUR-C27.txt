@@ -1,0 +1,19 @@
+@ BFOUR-C27
+summary: At Clement's house Ralph hears from a bold carle who mingled with the foe that the Burgers entered Upmeads at noon and skirmished with Nicholas at the High House without gain. They do not know of the Shepherds or the Dry Tree and await their Higham-land folk. They will not burn the High House or steadings, meaning to keep them for themselves. Ralph orders an early start and briefs all his leaders on the order of battle. Katherine, Ralph's gossip and foster-mother, greets him in tears. Ralph tells his journeys, then asks whether she has drunk of the Well (she looks young) and how she came by the beads. Clement says she has not drunk; such wise, valiant women wear well.
+geo: The Burgers entered Upmeads-land at noon and attacked the High House. The fighting men are quartered in Wulstead. Katherine's bower is upstairs in Clement's house.
+open: none
+
+E person | (unnamed) Upmeads spy carle | - | scout | Bold carle from Upmeads who mingled with the Burgers and brought word. | P002 `there had come in a carle from out of Upmeads, who had told them by sure tokens`
+
+R Dame Katherine | other | Ralph | gossip and foster-mother | BFOUR-C27 | CANON/high | P009 `though he but kisses me as his gossip and foster-mother`
+R (unnamed) expelled Burgers | at_war_with | Upmeads | entered Upmeads at noon and skirmished at the High House | BFOUR-C27 | CANON/high | P002 `the foe were come into the Upmeads-land at noon that day`
+
+F military | (unnamed) expelled Burgers | The Burgers skirmished with Nicholas at the High House without gain. They know nothing of the Shepherds or the Dry Tree and await their Higham-land folk. | CANON/high; ctx=dialogue:Clement Chapman | P002 `they had no inkling of the Shepherds or the Dry Tree coming against them`
+F military | (unnamed) expelled Burgers | The Burgers will not burn the High House or steadings, meaning to keep them for their own. | CANON/high; ctx=dialogue:Clement Chapman | P002 `nor would they burn either the High House or the other steadings`
+F military | Ralph | Ralph briefs all leaders on how footmen and horsemen shall stand and fall on, and they marvel at his wisdom in war. | CANON/high | P006 `so young in years, being so old in the wisdom of war`
+F magic | Dame Katherine | Katherine looks younger than her age; Clement says she has not drunk of the Well, but such wise women wear well. | CANON/high; ctx=dialogue:Clement Chapman | P019 `as for her drinking of the Well at the World's End, it is not so`
+
+V main | Night council at Wulstead | Ralph hears that the Burgers are in Upmeads, orders the muster, and is reunited with Katherine. | time=night; who=Ralph, Clement Chapman, Dame Katherine, Roger of the Rope-walk, Sage of Swevenham; where=Wulstead | P008 `O my lord, my lord, thou art come again to us!`
+
+O systems | Spies who infiltrate enemy camps for intelligence on intent and numbers. | P002 `being both bold and of good sleight had mingled with the foe`
+O npc | Foster-mother and gossip NPCs as emotional anchors in a home town. | P009 `his gossip and foster-mother`

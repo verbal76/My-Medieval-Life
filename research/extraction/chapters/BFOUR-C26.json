@@ -1,0 +1,325 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Prior of the Austin Canons of Wulstead",
+   "aliases": [
+    "the Prior"
+   ],
+   "type": "person",
+   "subtype": "prior",
+   "unnamed": true,
+   "summary": "Prior who feasts Ralph and his parents.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C26-P026",
+     "q": "bade him and the Dame of Upmeads to supper in the name of the Prior"
+    }
+   ]
+  },
+  {
+   "name": "Geirings",
+   "aliases": [],
+   "type": "group",
+   "subtype": "kindred",
+   "unnamed": false,
+   "summary": "Ancient yeoman kindred from which Ursula comes; now labouring folk who remember their forefathers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C26-P019",
+     "q": "We be come of the Geirings of old time"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) brother of Ursula",
+   "aliases": [],
+   "type": "person",
+   "subtype": "yeoman",
+   "unnamed": true,
+   "summary": "Ursula's only near kin, who does not love her.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C26-P018",
+     "q": "I have no nigh kin save one brother who loveth me not"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ursula",
+   "rel": "member_of",
+   "b": "Geirings",
+   "detail": "descent",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P019",
+     "q": "We be come of the Geirings of old time"
+    }
+   ]
+  },
+  {
+   "a": "Ursula",
+   "rel": "sibling_of",
+   "b": "(unnamed) brother of Ursula",
+   "detail": "estranged brother",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P018",
+     "q": "one brother who loveth me not"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "leader_of",
+   "b": "shepherds of the Downs",
+   "detail": "Warduke and brother",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P023",
+     "q": "the brother and Warduke of the Shepherds"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "ruler_of",
+   "b": "Plain of Abundance",
+   "detail": "Lord of the Little Land of Abundance",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P023",
+     "q": "I have become the Lord of the Little Land of Abundance"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Queen of Upmeads",
+   "rel": "parent_of",
+   "b": "Ralph",
+   "detail": "mother",
+   "when": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P012",
+     "q": "I durst not halse thee till I knew it was mine own flesh and blood"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "House of Black Canons of Wulstead",
+   "rel": "west_of",
+   "b": "Wulstead",
+   "direction": "at the west of the town, walled toward the fields",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "its chief defence on that side",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P004",
+     "q": "well walled toward the fields at the west of the town, so that it was its chief defence of that side"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Dame Katherine",
+   "statement": "Katherine stands on Wulstead's north gate in war-gear; Wulstead is too short of folk to spare her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P002",
+     "q": "she is upon the north gate in war-gear"
+    }
+   ]
+  },
+  {
+   "category": "architecture",
+   "subject": "House of Black Canons of Wulstead",
+   "statement": "The canons' church is newly finished, with new white pinnacles, a cross on the eastern gable, and painted windows.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P004",
+     "q": "It was a fair house with a church but just finished"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Geirings",
+   "statement": "Ursula says \"churl\" is another way of saying \"earl\" and means a man; her kin remember their forefathers though they labour afield.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P019",
+     "q": "It is told amongst us that that word is but another way of saying earl and that it meaneth a man"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "King Peter",
+   "statement": "Peter calls himself a king, or rather a kinglet, and says Upmeads has failed them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:King Peter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P008",
+     "q": "my business is to be a king, or a kinglet rather"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Ralph",
+   "statement": "Ralph's parents had no news of him for nearly two years.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:(unnamed) Queen of Upmeads",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P010",
+     "q": "who have heard not tidings of their best beloved son for two years well nigh"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Blaise",
+   "statement": "King Peter hears that his eldest son is thriving and has grown great.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:King Peter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P011",
+     "q": "of the eldest, who meseems was born with a long head, we hear that he is thriving"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph meets his parents",
+   "chapter": "BFOUR-C26",
+   "layer": "main",
+   "time_text": "evening after sunset",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "King Peter",
+    "(unnamed) Queen of Upmeads"
+   ],
+   "places": [
+    "House of Black Canons of Wulstead"
+   ],
+   "summary": "Ralph and Ursula meet King Peter and the Dame in the canons' church at Wulstead.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P015",
+     "q": "here is a daughter and a darling that I have brought back to thee, for this is my wedded wife"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "The Dame says nearly two years without news; Ralph's journey from the last summer day through Wulstead seems shorter.",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P010",
+     "q": "two years well nigh"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Titles accumulated from different factions (lordship, sworn brotherhood, war-duke) as a reputation and title system.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C26-P023",
+     "q": "the sworn brother of the Champions of the Dry Tree, the Lord of the Castle of the Scaur"
+    }
+   ]
+  },
+  {
+   "idea": "Yeoman lineages with proud ancestry as a social layer between churls and nobles.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C26-P019",
+     "q": "it may be that the spear is broken, and the banner torn; but we forget not our forefathers"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C26",
+ "chapters": [
+  "BFOUR-C26"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C26",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "In Wulstead's market-place Clement says Katherine is on the north gate in war-gear. Ralph and Ursula go to the House of the Austin Canons, walled on the town's west side, with a newly finished church. Old Upmeads carles guard its gate. In the church King Peter and the Dame stand near the Jesus altar. Peter, not recognising Ralph, speaks wryly of being a kinglet with no craft left. The Dame recognises her son outside and embraces him. Ursula says she is a yeoman's daughter, an orphan with one unloving brother, of the Geirings of old time, and that \"churl\" means \"earl\", a man. Ralph lists his titles: Lord of the Little Land of Abundance, sworn brother of the Dry Tree, Lord of the Scaur, brother and Warduke of the Shepherds, a Friend of the Well. The Prior feasts them; Ralph tells a little of the lands beyond Whitwall. Ursula means to go to battle with him.",
+   "geography_notes": "Wulstead has a market-place with Clement's house nearby and a north gate. The House of the Canons is well walled toward the fields on the west of the town and serves as its chief defence on that side. Its church is newly finished, with white pinnacles and a cross on the eastern gable over the dortoir.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

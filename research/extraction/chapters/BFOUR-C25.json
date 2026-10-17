@@ -1,0 +1,336 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) gate towers of Wulstead",
+   "aliases": [],
+   "type": "building",
+   "subtype": "fortification",
+   "unnamed": true,
+   "summary": "Pale fence, two strongly framed timber towers either side of the gate, and a barrier of big beams.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "he now found it fenced with pales, and with two towers strongly framed of timber, one on either side the gate"
+    }
+   ]
+  },
+  {
+   "name": "House of Black Canons of Wulstead",
+   "aliases": [
+    "House of St. Austin",
+    "House of the Canons",
+    "St. Austin's"
+   ],
+   "type": "building",
+   "subtype": "priory",
+   "unnamed": false,
+   "summary": "Walled Austin canons' house within Wulstead where King Peter and the Dame shelter.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C25-P010",
+     "q": "the House of Black Canons within our walls"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Wulstead",
+   "rel": "allied_with",
+   "b": "Upmeads",
+   "detail": "always a friendly neighbour",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "though Wulstead was not in the lands of Upmeads, yet it was always a friendly neighbour"
+    }
+   ]
+  },
+  {
+   "a": "Clement Chapman",
+   "rel": "leader_of",
+   "b": "Wulstead",
+   "detail": "captain of the townsfolk at the barrier",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P004",
+     "q": "Is there a captain of the townsfolk within the timber there?"
+    }
+   ]
+  },
+  {
+   "a": "Nicholas Longshanks",
+   "rel": "leader_of",
+   "b": "Upmeads",
+   "detail": "leads the carles holding the High House",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P011",
+     "q": "Nicholas Longshanks is the leader of them down there"
+    }
+   ]
+  },
+  {
+   "a": "King Peter",
+   "rel": "other",
+   "b": "House of Black Canons of Wulstead",
+   "detail": "refugee there two days",
+   "when": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P010",
+     "q": "there are they dwelling in all honour and dignity these two days past"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Wulstead",
+   "rel": "on",
+   "b": "(unnamed) little hill of Wulstead",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "little hill or swelling of the earth amid plain meadows with scattered trees",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P003",
+     "q": "Wulstead standeth on a little hill or swelling of the earth"
+    }
+   ]
+  },
+  {
+   "a": "Wulstead",
+   "rel": "outside",
+   "b": "Upmeads",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narrator",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "not in the lands of Upmeads but neighbouring",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "Wulstead was not in the lands of Upmeads"
+    }
+   ]
+  },
+  {
+   "a": "House of Black Canons of Wulstead",
+   "rel": "within",
+   "b": "Wulstead",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P010",
+     "q": "the House of Black Canons within our walls"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph and company"
+   ],
+   "from": "Bear Castle",
+   "to": "Wulstead",
+   "via": [],
+   "mode": "foot and horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "hard on sunset",
+   "terrain_text": "plain meadows before the town",
+   "chapter": "BFOUR-C25",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "till they came anigh the gates of Wulstead hard on sunset"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Wulstead",
+   "statement": "Wulstead, formerly unwalled, is now fenced with pales and gate towers, manned with spears and horns.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P003",
+     "q": "came the sound of the blowing of great horns, and the spears thickened in the towers"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) expelled Burgers",
+   "statement": "Clement reckons about two thousand Burgers beyond Wulstead.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P008",
+     "q": "I deem there be some two thousand devils"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Upmeads",
+   "statement": "Upmeads' women, children and old men have fled to Wulstead; the carles hold the High House under Nicholas.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P011",
+     "q": "they have fled, with many another, women and children and old men"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ralph",
+   "statement": "The Sage says no arrow will be suffered to hurt a Friend of the Well.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P003",
+     "q": "which shall not suffer that a Friend of the Well shall be hurt"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Ursula",
+   "statement": "Ursula credits Clement with saving her, since he brought Ralph through the mountains to Goldburg.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P006",
+     "q": "whereas thou didst bring him safe through the mountains unto Goldburg"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Arrival at Wulstead",
+   "chapter": "BFOUR-C25",
+   "layer": "main",
+   "time_text": "sunset",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Clement Chapman",
+    "Sage of Swevenham",
+    "Roger of the Rope-walk",
+    "Stephen a-Hurst"
+   ],
+   "places": [
+    "Wulstead"
+   ],
+   "summary": "Clement welcomes Ralph and Ursula; the host enters Wulstead behind Ursula bearing the guisarme.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P013",
+     "q": "they all streamed into the street"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Towns that fortify in wartime: settlement state changes from unwalled to paled with timber towers.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "whereas Ralph left Wulstead a town unwalled, he now found it fenced with pales"
+    }
+   ]
+  },
+  {
+   "idea": "Refugee flows to friendly towns during raids, as a world-event system.",
+   "system": "settlement",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C25-P011",
+     "q": "women and children and old men, who should but hinder the carles who have abided behind"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C25",
+ "chapters": [
+  "BFOUR-C25"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C25",
+   "paragraphs_total": 12,
+   "all_paragraphs_read": true,
+   "summary": "The host reaches Wulstead near sunset. The town, once unwalled, is now fenced with pales, with two timber towers at the gate and a barrier of beams. Wulstead is not in Upmeads' lands but is a friendly neighbour. Ralph and Ursula walk up to the barrier, and Clement Chapman comes out, embraces Ralph and kneels to Ursula. Clement says about two thousand Burgers lie beyond; Upmeads was still free that morning. Ralph's parents have been lodged in the House of Black Canons inside the walls for two days, with other women, children and old men. Nicholas Longshanks leads the carles holding the High House. Wulstead will send a band. Ursula carries the hallowed guisarme at the head of the host as it enters.",
+   "geography_notes": "Wulstead stands on a little hill or swelling, approached across plain meadows with few trees, so anyone coming is seen from the gate. It is now fenced with pales, with two timber gate towers and a barrier of big beams before the gate. It lies outside Upmeads' lands.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}
