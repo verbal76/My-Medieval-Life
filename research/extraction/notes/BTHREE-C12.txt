@@ -1,0 +1,21 @@
+@ BTHREE-C12
+summary: Ralph and Ursula winter busily: both are country-bred and skilled. They love each other but live as friends; Ralph fears her refusal. They rarely wear armour, use the horses to haul sledges, and graze them on wild oats in the sandy bight toward the northern mountains. They see no one. Snow and great winds come, but they can mostly go out to hunt. Ursula tells more of Utterbol's horrors; Ralph vows to kill its Lord after the quest, and Ursula will share his fate. Ursula says she has no home now except her brother. At Candlemas the thaw floods the valley, they hunt waterfowl by raft, and spring arrives with flowers and birds; Ralph longs for Ursula.
+geo: At the upper end of the vale's bight, toward the northern mountains, is sandy ground with wild oats. Winter brings snow and great winds from the mountains; the Candlemas thaw floods the valley floor, leaving only the green mound (toft) at the cave mouth dry.
+open: none
+
+E feature | (unnamed) sandy bight of the Vale | - | meadow | Sandy ground with wild oats at the upper end of the vale toward the northern mountains. | P004 `the wild-oats withal, which grew at the upper end of the bight of the valley, toward the northern mountains, where the ground was sandy`
+E feature | (unnamed) toft at the cavern mouth | - | mound | Green mound before the cave mouth, above floods. | P011 `no further than the green mound or toft which lay at the mouth thereof`
+
+R Ralph | lover_of | Ursula | love unspoken; living as friends | BTHREE-C12 | CANON/high | P006 `they lived still as dear friends, and not as lovers`
+
+S (unnamed) sandy bight of the Vale | north_of | Vale of Sweet Chestnuts | dir=toward the northern mountains; cert=fixed | CANON/high | upper end of the bight | P004 `toward the northern mountains`
+
+F society | Ursula | Ursula is country-bred, of a lineage of field-folk. | CANON/high | P002 `she also was country-bred, of a lineage of field-folk`
+F climate | Vale of Sweet Chestnuts | Frost, snow and prodigious winds in winter; Candlemas thaw floods the valley. | CANON/high | P011 `the river rose over its banks and its waters covered the plain parts of the valley`
+F ecology | Vale of Sweet Chestnuts | Spring floods bring mallard, teal and coots; spring flowers (snowdrop, celandine, blackthorn, Lent-lilies) and birds. | CANON/high | P011 `the waters were thronged with fowl, as mallard and teal and coots`
+F transport | Ralph | Horses haul supplies on bough sledges. | CANON/high | P004 `used them to draw stuff to their rock-house on sledges, which they made of tree-boughs`
+F politics | Lord of Utterbol | Ralph resolves to return and kill the Lord of Utterbol; Ursula will share his fate. | CANON/high; ctx=dialogue:Ralph | P007 `it were a good deed, once we are past the mountains again, to ride to Utterbol and drag that swine and wittol from his hall and slay him`
+
+V main | Winter in the mountains | Ralph and Ursula winter in the Vale of Sweet Chestnuts as friends. | time=autumn to spring; who=Ralph, Ursula; where=Vale of Sweet Chestnuts | P005 `So wore autumn into winter, and the frost came, and the snow`
+
+O world | Seasonal mechanics (snow, thaw floods, spring renewal) on the long route, forcing wintering. | P011 `So wore the days till Candlemass, when the frost broke and the snows began to melt`

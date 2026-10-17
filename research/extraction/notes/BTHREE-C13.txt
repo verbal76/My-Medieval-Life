@@ -1,0 +1,18 @@
+@ BTHREE-C13
+summary: In spring, bears return. Ralph sees that Ursula has left her sword behind, runs to the river, and finds her naked and chased by a huge he-bear; she strikes at it with a little axe, which it knocks away. Ralph spears it in the side and kills it with his sword. They kiss as lovers and pledge themselves. Ursula asks to wait to wed until the messengers of the Innocent Folk come, as they do each spring to the cave, so there will be witnesses as in old custom. She tells Ralph it was seeing him that showed her she did not love her former lover. She says they cannot go home without drinking of the Well, since the homeward road's perils would overcome them. Ralph skins the bear about two furlongs from the house.
+geo: A chestnut grove lies between the cave and the river; grass runs down to the water. The bear lay about two furlongs from the dwelling.
+open: none
+
+E group | Innocent Folk | Folk Innocent | people | A people whose messengers come every spring to the winter cave to help seekers on to the Well. | P012 `those messengers of the Innocent Folk, who come every spring to this cave to see if there be any whom they may speed on the way to the Well at the World's End`
+
+R Ralph | betrothed_to | Ursula | troth-plight | BTHREE-C13 | CANON/high | P013 `such kissing and caressing as is meet betwixt troth-plight lovers`
+
+S Innocent Folk | other | (unnamed) winter cavern | ctx=dialogue:Ursula; cert=constrained | CANON/high | their messengers visit the cave every spring | P012 `who come every spring to this cave`
+
+F ecology | Vale of Sweet Chestnuts | Bears are fierce in these wastes; a he-bear "as big as a bullock" chases Ursula. | CANON/high | P003 `held in chase by a huge bear as big as a bullock`
+F custom | Ursula | Ursula wants witnesses at the wedding, as in the old heathen custom of a public wedding. | CANON/high; ctx=dialogue:Ursula | P012 `when a man should wed a maid all the folk knew of it, and were witnesses of the day and the hour thereof`
+F magic | Well at the World's End | Ursula believes the homeward road's perils will overcome them if they have not drunk. | CANON/high; ctx=dialogue:Ursula | P018 `the perils of the homeward road shall overcome us, despite of love, if we have not drunk of the Well at the World's End`
+
+V main | Ursula and the bear | Ralph kills a bear chasing Ursula; they declare their love and pledge to wed. | time=spring morning; who=Ralph, Ursula; where=Vale of Sweet Chestnuts | P004 `he cast himself upon her without a word, and kissed her greedily`
+
+O ecology | Large predators (bears) in seasonal cycles as threats near resource-rich valleys. | P002 `with the waxing spring the bears were often in the meadows again`

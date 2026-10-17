@@ -1,0 +1,337 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) elder of the Innocent Folk",
+   "aliases": [
+    "the elder"
+   ],
+   "type": "person",
+   "subtype": "messenger",
+   "unnamed": true,
+   "summary": "Long white beard, bright eyes, firm smooth hand; leads the messengers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "The elder had a long white beard, but his eye was bright, and his hand firm and smooth"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) messengers of the Innocent Folk",
+   "aliases": [],
+   "type": "group",
+   "subtype": "messengers",
+   "unnamed": true,
+   "summary": "Two young men and an elder, brown-skinned, tall, cheerful, in white wool, with green-stone axes and bows, riding oxen.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "they had with them five oxen, three for riding, and two sumpter beasts, laden"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) green-stone axe",
+   "aliases": [],
+   "type": "item",
+   "subtype": "axe",
+   "unnamed": true,
+   "summary": "Axe with a green stone blade bound to the haft.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "each had an axe with a green stone blade, curiously tied to the heft"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) bridal bower",
+   "aliases": [],
+   "type": "building",
+   "subtype": "wattle bower",
+   "unnamed": true,
+   "summary": "Wattled willow bower roofed with skins, hung with garlands, strewn with flowers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "they had made a very goodly wattled bower, and roofed it with the skins that were in the cave"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) messengers of the Innocent Folk",
+   "rel": "member_of",
+   "b": "Innocent Folk",
+   "detail": "-",
+   "when": "BTHREE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P006",
+     "q": "then is this our errand with you, to be your way-leaders as far as the House of the Sorceress"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "spouse_of",
+   "b": "Ursula",
+   "detail": "wed before the Innocent Folk as witnesses",
+   "when": "BTHREE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "bade him and the young men bear witness that they were wedded"
+    }
+   ]
+  },
+  {
+   "a": "Innocent Folk",
+   "rel": "other",
+   "b": "(unnamed) fairest woman of the world",
+   "detail": "yearly errand from a promise made to her on her return from the Well",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "according to the behest that we made to the fairest woman of the world, when she came back to us from the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "House of the Sorceress",
+   "rel": "on_route",
+   "b": "(unnamed) winter cavern",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:elder of the Innocent Folk",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the messengers guide seekers from the cave to the House",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P006",
+     "q": "to be your way-leaders as far as the House of the Sorceress"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "(unnamed) messengers of the Innocent Folk"
+   ],
+   "from": "Innocent Folk",
+   "to": "(unnamed) winter cavern",
+   "via": [],
+   "mode": "riding oxen with pack oxen",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTHREE-C14",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "three for riding, and two sumpter beasts, laden"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "transport",
+   "subject": "Innocent Folk",
+   "statement": "They ride and pack oxen.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "five oxen, three for riding, and two sumpter beasts"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Innocent Folk",
+   "statement": "Green-stone-bladed axes and strong bows; no armour.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "bore no armour, but each had an axe with a green stone blade"
+    }
+   ]
+  },
+  {
+   "category": "clothing",
+   "subject": "Innocent Folk",
+   "statement": "White wool clothing; wedding robes embroidered with bright bird feathers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "raiment of fine white wool for those twain, broidered in strange but beauteous fashion with the feathers of bright-hued birds"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Innocent Folk",
+   "statement": "They build a wattled bower for a wedding night, as for their own folk.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "such a bower as we build for our own folk on the night of the wedding"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The elder says wedding does not harm the quest.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "we hear not that it shall be the worse for you in any wise that ye shall become one flesh"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Innocent Folk",
+   "statement": "It is many years since they found seekers at the cave.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:elder of the Innocent Folk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "it is many and many a year ago since we found any seekers after the Well dwelling here"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "Innocent Folk",
+   "statement": "They bring meal, wine in hooped kegs and carved wooden cups.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "there was wine there in well-hooped kegs, and wooden cups fairly carven"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Wedding of Ralph and Ursula",
+   "chapter": "BTHREE-C14",
+   "layer": "main",
+   "time_text": "spring evening",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) messengers of the Innocent Folk"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "summary": "Witnessed by the Innocent Folk's messengers, Ralph and Ursula wed by moonlight.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "then those twain kissed the newcomers and departed to their bridal bower hand in hand"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The \"fairest woman of the world\" who returned from the Well is probably the Lady of Abundance; not named here.",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "the fairest woman of the world, when she came back to us from the Well"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Peaceful ox-riding peoples with stone tools as a distinct culture near the world's edge.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "each had an axe with a green stone blade, curiously tied to the heft"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C14",
+ "chapters": [
+  "BTHREE-C14"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C14",
+   "paragraphs_total": 11,
+   "all_paragraphs_read": true,
+   "summary": "Returning, Ralph finds the messengers of the Innocent Folk at the cave: two young men and an elder, brown-skinned, tall and cheerful, in white wool, with green-stone axes and bows, riding oxen with two pack oxen. They will guide the seekers to the House of the Sorceress, where others will help. Asked whether wedding will harm the quest, the elder says no and rejoices. They come yearly by a promise made to the fairest woman of the world when she came back from the Well, and have found no seekers for many years. They build a wattled bridal bower roofed with skins and garlanded, provide meal, wine in hooped kegs, carved wooden cups, and white wool robes embroidered with bright feathers. At moonrise Ralph and Ursula are wed before them as witnesses.",
+   "geography_notes": "The Innocent Folk come from beyond the Vale, on the way to the House of the Sorceress (their home lies toward it).",
+   "open_questions": [
+    "Is the \"fairest woman of the world\" who returned from the Well the Lady of Abundance? (very likely)"
+   ]
+  }
+ ]
+}

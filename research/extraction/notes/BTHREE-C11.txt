@@ -1,0 +1,28 @@
+@ BTHREE-C11
+summary: The pass continues the next day; they camp by water running from the rocks. Ursula tells of her home: her parents, a sister who died, her brother, and suitors. Her lover at Bourton faked his death to join the Burg's riders, being weary of her; she already knew she loved him little. For many days the pass opens into small grassy valleys with water and trees, then becomes one high valley, "a trench of the great mountain", and they find the Sage's tokens throughout. Thirty days after leaving the Sage, as days shorten, they descend a rugged neck into a wide valley with a river and great groves of sweet chestnut and walnut, half split by a rock reef from the northern mountain. They ford the river and find at the reef's head a cavern marked with the sword-and-branch token: their winter house. They gather and dry chestnuts into meal, gather walnuts, hunt deer and bears (Ralph kills two), and Ursula sews furs.
+geo: The pass of the Fighting Man runs for many days, first a narrow cleft, then opening into small grassy valleys and finally one long high valley. After thirty days from the Sage: the Vale of Sweet Chestnuts, a much wider valley with a great rock reef thrusting from the high mountain and nearly cleaving its northern half, a fair river with a ford, and groves of chestnuts and walnuts on both banks. The cavern is in the face of the reef at its head, with a low creeping entry and a high clean rock-hall inside.
+open: none
+
+E place | Vale of Sweet Chestnuts | the vale | mountain valley | Wide well-grassed valley with a river, great chestnut and walnut groves, and plentiful game; the wintering place. | P012 `there were on either side the water great groves of tall and great sweet-chestnuts and walnut trees, whereon the nuts were now ripe`
+E feature | (unnamed) rock reef of the Vale | rocky ness | rock spur | Great reef of rocks from the high mountain that nearly cleaves the northern half of the vale. | P012 `a great reef of rocks thrust out from the high mountain, so that the northern half of the said vale was nigh cleft atwain by it`
+E building | (unnamed) winter cavern | rock-house, rock-hall | cave | Cavern at the head of the rocky ness with a low entry and a high, clean, sweet-smelling rock-hall; marked with the sword-and-branch token. | P013 `they found in the face of the rock the mouth of a cavern, and beside it the token of the sword and the branch`
+E feature | (unnamed) river of the Vale of Sweet Chestnuts | - | river | Fair river through the Vale, with a ford. | P013 `So they found a ford of the river and crossed it`
+E person | (unnamed) Ursula's former lover | the speech-friend | man of Bourton | Faked his death with a bloody saddle to join the Burg's riders, weary of Ursula. | P006 `his masterless horse and bloodstained saddle were but a device to throw dust into our eyes`
+
+R (unnamed) Ursula's former lover | member_of | men of the Burg of the Four Friths | swore himself into the Burg's riders | BTHREE-C11 | CANON/high | P006 `to wit, swear himself into the riders of the Burg of the Four Friths`
+R (unnamed) lover of the Maiden of Bourton Abbas | other | (unnamed) Ursula's former lover | same person | BTHREE-C11 | INF/high | P005 `how was it with the man for whom thou wert weeping when I first fell in with thee at Bourton Abbas?`
+
+S Vale of Sweet Chestnuts | distance_from | Rock of the Fighting Man | time=thirty days' riding; terrain=narrow pass, then small valleys, then a high trench valley, then a rugged neck; cert=fixed | CANON/high | - | P012 `now they had worn away thirty days since they had parted from the Sage`
+S (unnamed) winter cavern | within | (unnamed) rock reef of the Vale | dir=at the head of the rocky ness; cert=fixed | CANON/high | across the river from the entry | P013 `went straight to the head of the rocky ness`
+
+T Ralph, Ursula | Rock of the Fighting Man | Vale of Sweet Chestnuts | via=(unnamed) pass of the Fighting Man; mode=horse; dur=thirty days; terrain=narrow pass, small valleys, high trench valley | P010 `Many days they rode that pass of the mountains`
+
+F food | Vale of Sweet Chestnuts | Chestnuts are dried and ground into meal for bread; walnuts gathered; venison plentiful. | CANON/high | P014 `they fell to on the in-gathering of their chestnut harvest, and they dried them, and made them into meal`
+F ecology | Vale of Sweet Chestnuts | Bears come down to feed on nuts and berries; Ralph kills two great bears. | CANON/high | P014 `Ralph, not without some peril, slew two great bears`
+F craft | Ursula | Ursula knows all needlework and makes fur clothing and bedding. | CANON/high | P014 `which Ursula fell to work on deftly, for she knew all the craft of needlework`
+F climate | Vale of Sweet Chestnuts | They arrive in autumn as the days shorten. | CANON/high; when=BTHREE-C11 | P012 `the days began to shorten and the nights to lengthen apace`
+F society | Ursula | Ursula had parents, a sister who died, and a brother; several suitors. | CANON/high; ctx=dialogue:Ursula | P005 `of her father and mother, and of her sister that had died, and the brother whom Ralph had seen at Bourton Abbas`
+
+V main | Arrival in the Vale of Sweet Chestnuts | After thirty days in the mountains they reach the wintering vale and its marked cavern. | time=autumn; who=Ralph, Ursula; where=Vale of Sweet Chestnuts | P013 `they knew that they had come to their winter house`
+
+O world | Waymarked wintering caves in rich mountain valleys as scheduled safe havens on long routes. | P013 `beside it the token of the sword and the branch`

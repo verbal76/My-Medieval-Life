@@ -1,0 +1,209 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) sandy bight of the Vale",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "meadow",
+   "unnamed": true,
+   "summary": "Sandy ground with wild oats at the upper end of the vale toward the northern mountains.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C12-P004",
+     "q": "the wild-oats withal, which grew at the upper end of the bight of the valley, toward the northern mountains, where the ground was sandy"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) toft at the cavern mouth",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "mound",
+   "unnamed": true,
+   "summary": "Green mound before the cave mouth, above floods.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C12-P011",
+     "q": "no further than the green mound or toft which lay at the mouth thereof"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "lover_of",
+   "b": "Ursula",
+   "detail": "love unspoken; living as friends",
+   "when": "BTHREE-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P006",
+     "q": "they lived still as dear friends, and not as lovers"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) sandy bight of the Vale",
+   "rel": "north_of",
+   "b": "Vale of Sweet Chestnuts",
+   "direction": "toward the northern mountains",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "upper end of the bight",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P004",
+     "q": "toward the northern mountains"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Ursula",
+   "statement": "Ursula is country-bred, of a lineage of field-folk.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P002",
+     "q": "she also was country-bred, of a lineage of field-folk"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Vale of Sweet Chestnuts",
+   "statement": "Frost, snow and prodigious winds in winter; Candlemas thaw floods the valley.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P011",
+     "q": "the river rose over its banks and its waters covered the plain parts of the valley"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Vale of Sweet Chestnuts",
+   "statement": "Spring floods bring mallard, teal and coots; spring flowers (snowdrop, celandine, blackthorn, Lent-lilies) and birds.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P011",
+     "q": "the waters were thronged with fowl, as mallard and teal and coots"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "Ralph",
+   "statement": "Horses haul supplies on bough sledges.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P004",
+     "q": "used them to draw stuff to their rock-house on sledges, which they made of tree-boughs"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Lord of Utterbol",
+   "statement": "Ralph resolves to return and kill the Lord of Utterbol; Ursula will share his fate.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P007",
+     "q": "it were a good deed, once we are past the mountains again, to ride to Utterbol and drag that swine and wittol from his hall and slay him"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Winter in the mountains",
+   "chapter": "BTHREE-C12",
+   "layer": "main",
+   "time_text": "autumn to spring",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "summary": "Ralph and Ursula winter in the Vale of Sweet Chestnuts as friends.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P005",
+     "q": "So wore autumn into winter, and the frost came, and the snow"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Seasonal mechanics (snow, thaw floods, spring renewal) on the long route, forcing wintering.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C12-P011",
+     "q": "So wore the days till Candlemass, when the frost broke and the snows began to melt"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C12",
+ "chapters": [
+  "BTHREE-C12"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C12",
+   "paragraphs_total": 10,
+   "all_paragraphs_read": true,
+   "summary": "Ralph and Ursula winter busily: both are country-bred and skilled. They love each other but live as friends; Ralph fears her refusal. They rarely wear armour, use the horses to haul sledges, and graze them on wild oats in the sandy bight toward the northern mountains. They see no one. Snow and great winds come, but they can mostly go out to hunt. Ursula tells more of Utterbol's horrors; Ralph vows to kill its Lord after the quest, and Ursula will share his fate. Ursula says she has no home now except her brother. At Candlemas the thaw floods the valley, they hunt waterfowl by raft, and spring arrives with flowers and birds; Ralph longs for Ursula.",
+   "geography_notes": "At the upper end of the vale's bight, toward the northern mountains, is sandy ground with wild oats. Winter brings snow and great winds from the mountains; the Candlemas thaw floods the valley floor, leaving only the green mound (toft) at the cave mouth dry.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

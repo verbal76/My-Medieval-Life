@@ -1,0 +1,164 @@
+{
+ "entities": [
+  {
+   "name": "Innocent Folk",
+   "aliases": [
+    "Folk Innocent"
+   ],
+   "type": "group",
+   "subtype": "people",
+   "unnamed": false,
+   "summary": "A people whose messengers come every spring to the winter cave to help seekers on to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "those messengers of the Innocent Folk, who come every spring to this cave to see if there be any whom they may speed on the way to the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "betrothed_to",
+   "b": "Ursula",
+   "detail": "troth-plight",
+   "when": "BTHREE-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P013",
+     "q": "such kissing and caressing as is meet betwixt troth-plight lovers"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Innocent Folk",
+   "rel": "other",
+   "b": "(unnamed) winter cavern",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Ursula",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "their messengers visit the cave every spring",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "who come every spring to this cave"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "Vale of Sweet Chestnuts",
+   "statement": "Bears are fierce in these wastes; a he-bear \"as big as a bullock\" chases Ursula.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P003",
+     "q": "held in chase by a huge bear as big as a bullock"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ursula",
+   "statement": "Ursula wants witnesses at the wedding, as in the old heathen custom of a public wedding.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "when a man should wed a maid all the folk knew of it, and were witnesses of the day and the hour thereof"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Ursula believes the homeward road's perils will overcome them if they have not drunk.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P018",
+     "q": "the perils of the homeward road shall overcome us, despite of love, if we have not drunk of the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ursula and the bear",
+   "chapter": "BTHREE-C13",
+   "layer": "main",
+   "time_text": "spring morning",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "summary": "Ralph kills a bear chasing Ursula; they declare their love and pledge to wed.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P004",
+     "q": "he cast himself upon her without a word, and kissed her greedily"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Large predators (bears) in seasonal cycles as threats near resource-rich valleys.",
+   "system": "ecology",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "with the waxing spring the bears were often in the meadows again"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C13",
+ "chapters": [
+  "BTHREE-C13"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C13",
+   "paragraphs_total": 21,
+   "all_paragraphs_read": true,
+   "summary": "In spring, bears return. Ralph sees that Ursula has left her sword behind, runs to the river, and finds her naked and chased by a huge he-bear; she strikes at it with a little axe, which it knocks away. Ralph spears it in the side and kills it with his sword. They kiss as lovers and pledge themselves. Ursula asks to wait to wed until the messengers of the Innocent Folk come, as they do each spring to the cave, so there will be witnesses as in old custom. She tells Ralph it was seeing him that showed her she did not love her former lover. She says they cannot go home without drinking of the Well, since the homeward road's perils would overcome them. Ralph skins the bear about two furlongs from the house.",
+   "geography_notes": "A chestnut grove lies between the cave and the river; grass runs down to the water. The bear lay about two furlongs from the dwelling.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

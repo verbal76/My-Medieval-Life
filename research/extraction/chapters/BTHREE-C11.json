@@ -1,0 +1,324 @@
+{
+ "entities": [
+  {
+   "name": "Vale of Sweet Chestnuts",
+   "aliases": [
+    "the vale"
+   ],
+   "type": "place",
+   "subtype": "mountain valley",
+   "unnamed": false,
+   "summary": "Wide well-grassed valley with a river, great chestnut and walnut groves, and plentiful game; the wintering place.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C11-P012",
+     "q": "there were on either side the water great groves of tall and great sweet-chestnuts and walnut trees, whereon the nuts were now ripe"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) rock reef of the Vale",
+   "aliases": [
+    "rocky ness"
+   ],
+   "type": "feature",
+   "subtype": "rock spur",
+   "unnamed": true,
+   "summary": "Great reef of rocks from the high mountain that nearly cleaves the northern half of the vale.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C11-P012",
+     "q": "a great reef of rocks thrust out from the high mountain, so that the northern half of the said vale was nigh cleft atwain by it"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) winter cavern",
+   "aliases": [
+    "rock-house",
+    "rock-hall"
+   ],
+   "type": "building",
+   "subtype": "cave",
+   "unnamed": true,
+   "summary": "Cavern at the head of the rocky ness with a low entry and a high, clean, sweet-smelling rock-hall; marked with the sword-and-branch token.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C11-P013",
+     "q": "they found in the face of the rock the mouth of a cavern, and beside it the token of the sword and the branch"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) river of the Vale of Sweet Chestnuts",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": true,
+   "summary": "Fair river through the Vale, with a ford.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C11-P013",
+     "q": "So they found a ford of the river and crossed it"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Ursula's former lover",
+   "aliases": [
+    "the speech-friend"
+   ],
+   "type": "person",
+   "subtype": "man of Bourton",
+   "unnamed": true,
+   "summary": "Faked his death with a bloody saddle to join the Burg's riders, weary of Ursula.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C11-P006",
+     "q": "his masterless horse and bloodstained saddle were but a device to throw dust into our eyes"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Ursula's former lover",
+   "rel": "member_of",
+   "b": "men of the Burg of the Four Friths",
+   "detail": "swore himself into the Burg's riders",
+   "when": "BTHREE-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P006",
+     "q": "to wit, swear himself into the riders of the Burg of the Four Friths"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) lover of the Maiden of Bourton Abbas",
+   "rel": "other",
+   "b": "(unnamed) Ursula's former lover",
+   "detail": "same person",
+   "when": "BTHREE-C11",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P005",
+     "q": "how was it with the man for whom thou wert weeping when I first fell in with thee at Bourton Abbas?"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Vale of Sweet Chestnuts",
+   "rel": "distance_from",
+   "b": "Rock of the Fighting Man",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "thirty days' riding",
+   "travel_mode": "",
+   "terrain_text": "narrow pass, then small valleys, then a high trench valley, then a rugged neck",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P012",
+     "q": "now they had worn away thirty days since they had parted from the Sage"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) winter cavern",
+   "rel": "within",
+   "b": "(unnamed) rock reef of the Vale",
+   "direction": "at the head of the rocky ness",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "across the river from the entry",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P013",
+     "q": "went straight to the head of the rocky ness"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "Rock of the Fighting Man",
+   "to": "Vale of Sweet Chestnuts",
+   "via": [
+    "(unnamed) pass of the Fighting Man"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "thirty days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "narrow pass, small valleys, high trench valley",
+   "chapter": "BTHREE-C11",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P010",
+     "q": "Many days they rode that pass of the mountains"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "food",
+   "subject": "Vale of Sweet Chestnuts",
+   "statement": "Chestnuts are dried and ground into meal for bread; walnuts gathered; venison plentiful.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P014",
+     "q": "they fell to on the in-gathering of their chestnut harvest, and they dried them, and made them into meal"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Vale of Sweet Chestnuts",
+   "statement": "Bears come down to feed on nuts and berries; Ralph kills two great bears.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P014",
+     "q": "Ralph, not without some peril, slew two great bears"
+    }
+   ]
+  },
+  {
+   "category": "craft",
+   "subject": "Ursula",
+   "statement": "Ursula knows all needlework and makes fur clothing and bedding.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P014",
+     "q": "which Ursula fell to work on deftly, for she knew all the craft of needlework"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Vale of Sweet Chestnuts",
+   "statement": "They arrive in autumn as the days shorten.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "BTHREE-C11",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P012",
+     "q": "the days began to shorten and the nights to lengthen apace"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Ursula",
+   "statement": "Ursula had parents, a sister who died, and a brother; several suitors.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P005",
+     "q": "of her father and mother, and of her sister that had died, and the brother whom Ralph had seen at Bourton Abbas"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Arrival in the Vale of Sweet Chestnuts",
+   "chapter": "BTHREE-C11",
+   "layer": "main",
+   "time_text": "autumn",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "summary": "After thirty days in the mountains they reach the wintering vale and its marked cavern.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P013",
+     "q": "they knew that they had come to their winter house"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Waymarked wintering caves in rich mountain valleys as scheduled safe havens on long routes.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C11-P013",
+     "q": "beside it the token of the sword and the branch"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C11",
+ "chapters": [
+  "BTHREE-C11"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C11",
+   "paragraphs_total": 13,
+   "all_paragraphs_read": true,
+   "summary": "The pass continues the next day; they camp by water running from the rocks. Ursula tells of her home: her parents, a sister who died, her brother, and suitors. Her lover at Bourton faked his death to join the Burg's riders, being weary of her; she already knew she loved him little. For many days the pass opens into small grassy valleys with water and trees, then becomes one high valley, \"a trench of the great mountain\", and they find the Sage's tokens throughout. Thirty days after leaving the Sage, as days shorten, they descend a rugged neck into a wide valley with a river and great groves of sweet chestnut and walnut, half split by a rock reef from the northern mountain. They ford the river and find at the reef's head a cavern marked with the sword-and-branch token: their winter house. They gather and dry chestnuts into meal, gather walnuts, hunt deer and bears (Ralph kills two), and Ursula sews furs.",
+   "geography_notes": "The pass of the Fighting Man runs for many days, first a narrow cleft, then opening into small grassy valleys and finally one long high valley. After thirty days from the Sage: the Vale of Sweet Chestnuts, a much wider valley with a great rock reef thrusting from the high mountain and nearly cleaving its northern half, a fair river with a ford, and groves of chestnuts and walnuts on both banks. The cavern is in the face of the reef at its head, with a low creeping entry and a high clean rock-hall inside.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

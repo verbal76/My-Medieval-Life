@@ -1917,44 +1917,100 @@
    "title": "They Come to the Vale of Sweet Chestnuts",
    "body_paragraphs": 13,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 2,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C11.txt",
+    "records": "research/extraction/chapters/BTHREE-C11.json"
+   }
   },
   {
    "chapter": "BTHREE-C12",
    "title": "Winter Amidst of the Mountains",
    "body_paragraphs": 10,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 1,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C12.txt",
+    "records": "research/extraction/chapters/BTHREE-C12.json"
+   }
   },
   {
    "chapter": "BTHREE-C13",
    "title": "Of Ursula and the Bear",
    "body_paragraphs": 21,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 1,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C13.txt",
+    "records": "research/extraction/chapters/BTHREE-C13.json"
+   }
   },
   {
    "chapter": "BTHREE-C14",
    "title": "Now Come the Messengers of the Innocent Folk",
    "body_paragraphs": 11,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 3,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 7,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the \"fairest woman of the world\" who returned from the Well the Lady of Abundance? (very likely)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C14.txt",
+    "records": "research/extraction/chapters/BTHREE-C14.json"
+   }
   },
   {
    "chapter": "BTHREE-C15",
