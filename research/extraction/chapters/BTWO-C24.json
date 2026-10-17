@@ -1,0 +1,352 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) thrall-merchant of Cheaping Knowe",
+   "aliases": [],
+   "type": "person",
+   "subtype": "slave dealer",
+   "unnamed": true,
+   "summary": "Tall, black-bearded, sober, slow-spoken man in scarlet; master of the thrall-market.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C24-P004",
+     "q": "a tall man, goodly of presence, black bearded, clad in scarlet; and this was the merchant"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) thrall-market stone",
+   "aliases": [],
+   "type": "building",
+   "subtype": "auction block",
+   "unnamed": true,
+   "summary": "Stone like a mounting-block in a corner of the market-place where thralls stand to be bid on.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C24-P004",
+     "q": "beside a stone like a leaping-on stone"
+    }
+   ]
+  },
+  {
+   "name": "Whiteness",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": false,
+   "summary": "Town where the company will soon go and where the Lord of Utterbol may be met.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "he will have gone first of all to the town of Whiteness, whither thy Fellowship will betake them ere long"
+    }
+   ]
+  },
+  {
+   "name": "Lord of Utterbol",
+   "aliases": [
+    "my lord of Utterbol"
+   ],
+   "type": "person",
+   "subtype": "tyrant",
+   "unnamed": false,
+   "summary": "Lord who buys fair women and values his will above money; feared by all; called the worst and maybe mightiest tyrant.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "the Lord of Utterbol, who is for such like wares"
+    },
+    {
+     "p": "BTWO-C24-P010",
+     "q": "he is deemed by all men as the worst of the tyrants who vex these lands, and, maybe, the mightiest"
+    }
+   ]
+  },
+  {
+   "name": "Utterbol",
+   "aliases": [],
+   "type": "place",
+   "subtype": "lordship",
+   "unnamed": false,
+   "summary": "Domain of the Lord of Utterbol.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "the Lord of Utterbol"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Lord of Utterbol",
+   "rel": "ruler_of",
+   "b": "Utterbol",
+   "detail": "-",
+   "when": "BTWO-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "the Lord of Utterbol"
+    }
+   ]
+  },
+  {
+   "a": "Bull Nosy",
+   "rel": "other",
+   "b": "Lord of Utterbol",
+   "detail": "likely to give or sell the damsel to him",
+   "when": "BTWO-C24",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "he will either give her to him as a gift, for which he will have a gift in return, or he will sell her to my lord at a price"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Whiteness",
+   "rel": "on_route",
+   "b": "Cheaping Knowe",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:thrall-merchant",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the fellowship goes there next",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "whither thy Fellowship will betake them ere long"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Bull Nosy",
+    "(unnamed) Maiden of Bourton Abbas"
+   ],
+   "from": "Cheaping Knowe",
+   "to": "Whiteness",
+   "via": [],
+   "mode": "she on horseback, he on foot",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C24",
+   "refs": [
+    {
+     "p": "BTWO-C24-P007",
+     "q": "she riding on a horse and he going afoot beside her; for the mountain-men be no horsemen"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "law",
+   "subject": "Cheaping Knowe",
+   "statement": "Lawful wives, guarded damsels and concubine slaves dare not look at men; other women may befriend strangers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P002",
+     "q": "such women as were wedded according to law, or damsels in the care of their kindred, or slaves who were concubines, had not dared so much as to look on a man"
+    }
+   ]
+  },
+  {
+   "category": "price",
+   "subject": "(unnamed) thrall-market stone",
+   "statement": "Thralls are bid on like horses; buyers strip them in the booth to check for damage; hansel is paid at sale.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P004",
+     "q": "most of them before they bid their highest had the chattels away into the merchant's booth to strip them"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "(unnamed) thrall-market stone",
+   "statement": "Thirteen chattels sold in one session, four young women among them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P004",
+     "q": "There was a half score and three of these chattels to be sold"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "Mountain men are named by the kindred of the Bull plus a nickname.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:thrall-merchant",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P007",
+     "q": "the longnosed man of the kindred of the Bull, for in such wise are named the men of that unhappy folk"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "The mountain men are no horsemen.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:thrall-merchant",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P007",
+     "q": "for the mountain-men be no horsemen"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Upmeads",
+   "statement": "Upmeads has no thralls, only vavassors and good yeomen.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P005",
+     "q": "he came from a land where were no thralls, none but vavassors and good yeomen"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Lord of Utterbol",
+   "statement": "Money and goods are nothing to him beside doing his will.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:thrall-merchant",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "money and goods are naught to him beside the doing of his will"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Visit to the thrall-merchant",
+   "chapter": "BTWO-C24",
+   "layer": "main",
+   "time_text": "fourth day at Cheaping Knowe",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "(unnamed) thrall-merchant of Cheaping Knowe"
+   ],
+   "places": [
+    "Cheaping Knowe"
+   ],
+   "summary": "Ralph learns the damsel was refused sale and probably taken toward Whiteness and the Lord of Utterbol.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C24-P007",
+     "q": "Sir, I believe surely that I have seen this damsel"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Locations of Whiteness and Utterbol are not given.",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "the town of Whiteness"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Slave markets as dark-economy locations that a game may portray critically; canon shows them as cruel.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BTWO-C24-P005",
+     "q": "this cheaping irked Ralph sorely"
+    }
+   ]
+  },
+  {
+   "idea": "A feared regional tyrant whom merchants will not name, as an antagonist faction.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C24-P009",
+     "q": "thou must pardon me if I say no more of him"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C24",
+ "chapters": [
+  "BTWO-C24"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C24",
+   "paragraphs_total": 10,
+   "all_paragraphs_read": true,
+   "summary": "In Cheaping Knowe married women, guarded damsels and concubine slaves may not look at men. On the fourth day Clement takes Ralph to the thrall-market, where a black-bearded merchant in scarlet sells thirteen captives from a stone after buyers inspect them stripped. Privately the merchant says Bull Nosy brought the damsel but she was too proud to sell, refusing to be stripped, so he led her away (she riding, he on foot, since mountain men are no horsemen), probably to Whiteness to give or sell her to the dreaded Lord of Utterbol. Clement calls Utterbol the worst and perhaps mightiest tyrant of these lands.",
+   "geography_notes": "Whiteness is a town on the company's road beyond Cheaping Knowe, where the Lord of Utterbol may be met. Utterbol is the lord's domain (location not given).",
+   "open_questions": [
+    "Where are Whiteness and Utterbol?"
+   ]
+  }
+ ]
+}

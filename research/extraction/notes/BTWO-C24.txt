@@ -1,0 +1,32 @@
+@ BTWO-C24
+summary: In Cheaping Knowe married women, guarded damsels and concubine slaves may not look at men. On the fourth day Clement takes Ralph to the thrall-market, where a black-bearded merchant in scarlet sells thirteen captives from a stone after buyers inspect them stripped. Privately the merchant says Bull Nosy brought the damsel but she was too proud to sell, refusing to be stripped, so he led her away (she riding, he on foot, since mountain men are no horsemen), probably to Whiteness to give or sell her to the dreaded Lord of Utterbol. Clement calls Utterbol the worst and perhaps mightiest tyrant of these lands.
+geo: Whiteness is a town on the company's road beyond Cheaping Knowe, where the Lord of Utterbol may be met. Utterbol is the lord's domain (location not given).
+open: Where are Whiteness and Utterbol?
+
+E person | (unnamed) thrall-merchant of Cheaping Knowe | - | slave dealer | Tall, black-bearded, sober, slow-spoken man in scarlet; master of the thrall-market. | P004 `a tall man, goodly of presence, black bearded, clad in scarlet; and this was the merchant`
+E building | (unnamed) thrall-market stone | - | auction block | Stone like a mounting-block in a corner of the market-place where thralls stand to be bid on. | P004 `beside a stone like a leaping-on stone`
+E place | Whiteness | - | town | Town where the company will soon go and where the Lord of Utterbol may be met. | P008 `he will have gone first of all to the town of Whiteness, whither thy Fellowship will betake them ere long`
+E person | Lord of Utterbol | my lord of Utterbol | tyrant | Lord who buys fair women and values his will above money; feared by all; called the worst and maybe mightiest tyrant. | P008 `the Lord of Utterbol, who is for such like wares`; P010 `he is deemed by all men as the worst of the tyrants who vex these lands, and, maybe, the mightiest`
+E place | Utterbol | - | lordship | Domain of the Lord of Utterbol. | P008 `the Lord of Utterbol`
+
+R Lord of Utterbol | ruler_of | Utterbol | - | BTWO-C24 | CANON/high | P008 `the Lord of Utterbol`
+R Bull Nosy | other | Lord of Utterbol | likely to give or sell the damsel to him | BTWO-C24 | CANON/medium | P008 `he will either give her to him as a gift, for which he will have a gift in return, or he will sell her to my lord at a price`
+
+S Whiteness | on_route | Cheaping Knowe | ctx=dialogue:thrall-merchant; cert=constrained | CANON/high | the fellowship goes there next | P008 `whither thy Fellowship will betake them ere long`
+
+T Bull Nosy, (unnamed) Maiden of Bourton Abbas | Cheaping Knowe | Whiteness | mode=she on horseback, he on foot | P007 `she riding on a horse and he going afoot beside her; for the mountain-men be no horsemen`
+
+F law | Cheaping Knowe | Lawful wives, guarded damsels and concubine slaves dare not look at men; other women may befriend strangers. | CANON/high | P002 `such women as were wedded according to law, or damsels in the care of their kindred, or slaves who were concubines, had not dared so much as to look on a man`
+F price | (unnamed) thrall-market stone | Thralls are bid on like horses; buyers strip them in the booth to check for damage; hansel is paid at sale. | CANON/high | P004 `most of them before they bid their highest had the chattels away into the merchant's booth to strip them`
+F trade | (unnamed) thrall-market stone | Thirteen chattels sold in one session, four young women among them. | CANON/high | P004 `There was a half score and three of these chattels to be sold`
+F custom | (unnamed) kindred of the Bull | Mountain men are named by the kindred of the Bull plus a nickname. | CANON/high; ctx=dialogue:thrall-merchant | P007 `the longnosed man of the kindred of the Bull, for in such wise are named the men of that unhappy folk`
+F transport | (unnamed) kindred of the Bull | The mountain men are no horsemen. | CANON/high; ctx=dialogue:thrall-merchant | P007 `for the mountain-men be no horsemen`
+F society | Upmeads | Upmeads has no thralls, only vavassors and good yeomen. | CANON/high | P005 `he came from a land where were no thralls, none but vavassors and good yeomen`
+F politics | Lord of Utterbol | Money and goods are nothing to him beside doing his will. | CANON/high; ctx=dialogue:thrall-merchant | P008 `money and goods are naught to him beside the doing of his will`
+
+V main | Visit to the thrall-merchant | Ralph learns the damsel was refused sale and probably taken toward Whiteness and the Lord of Utterbol. | time=fourth day at Cheaping Knowe; who=Ralph, Clement Chapman, (unnamed) thrall-merchant of Cheaping Knowe; where=Cheaping Knowe | P007 `Sir, I believe surely that I have seen this damsel`
+
+U location | Locations of Whiteness and Utterbol are not given. | P008 `the town of Whiteness`
+
+O economy | Slave markets as dark-economy locations that a game may portray critically; canon shows them as cruel. | P005 `this cheaping irked Ralph sorely`
+O politics | A feared regional tyrant whom merchants will not name, as an antagonist faction. | P009 `thou must pardon me if I say no more of him`

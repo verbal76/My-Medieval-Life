@@ -1,0 +1,23 @@
+@ BTWO-C22
+summary: Riding on, Bull Shockhead, now cheerful, defends his people's man-stealing as no worse than creditors and manor lords, and says thralls are often treated softly. He begs not to be sold. He says his kinsman Bull Nosy recently took a fair, strong, patient woman with a necklace like Ralph's and took her to market at Cheaping Knowe. Ralph says he would ransom her, and Bull promises to help find her.
+geo: Bull Nosy took his captive down to the market at Cheaping Knowe.
+open: Are the mountain people's names (Bull Shockhead, Bull Nosy) a kindred naming system?
+
+E person | Bull Nosy | the long-nosed man of the kindred of the Bull | wild man | Bull Shockhead's kinsman who captured the woman with the necklace and took her to Cheaping Knowe. | P008 `such an one was taken by my kinsman Bull Nosy but a little while agone, whom he took down to the market at Cheaping Knowe`
+E group | (unnamed) kindred of the Bull | - | mountain kindred | Mountain folk who prey on all who pass except kin and known friends; prize lineage. | P003 `but they be of the kindred or their known friends`
+
+R Bull Nosy | kin_of | Bull Shockhead | kinsman | BTWO-C22 | CANON/high | P008 `my kinsman Bull Nosy`
+R (unnamed) Maiden of Bourton Abbas | captive_of | Bull Nosy | captured and taken to market | BTWO-C22 | INF/high | P009 `this same woman had about her neck a pair of beads as like to thine as if they had been the very same`
+
+T Bull Nosy, (unnamed) Maiden of Bourton Abbas | Mid-Mountain House | Cheaping Knowe | mode=foot and captive | P008 `whom he took down to the market at Cheaping Knowe`
+
+F society | (unnamed) kindred of the Bull | The mountain folk count all passers-by as foes except kin and known friends. | CANON/high; ctx=dialogue:Bull Shockhead | P003 `And are all men your foemen who pass through these mountains?`
+F society | (unnamed) kindred of the Bull | Bull values lineage and despises kinless chapmen and their hired swordsmen. | CANON/high; ctx=dialogue:Bull Shockhead | P002 `they know not the name of their mother's mother, nor have heard one word of the beginner of their kindred`
+F society | Bull Shockhead | He says a bought thrall's life is not so bad; some have thralls of their own under them. | CANON/high; ctx=dialogue:Bull Shockhead | P005 `this life of a bought thrall is not such an exceeding evil life`
+F society | (unnamed) Maiden of Bourton Abbas | Captured, she showed no weeping but patience and intent to endure. | CANON/high; ctx=dialogue:Bull Shockhead | P008 `there was no weeping or screeching in her, but patience rather and quietness, and intent to bear all and live`
+
+V main | Ralph learns of the captor | Bull tells Ralph his kinsman Bull Nosy took the maiden to Cheaping Knowe. | who=Ralph, Bull Shockhead; where=(unnamed) eastern foothills | P012 `But, lord, I will do my best to find her for thee`
+
+U identity | Whether "Bull" names a whole kindred (later the merchant says men of that folk are so named). | P008 `my kinsman Bull Nosy`
+
+O society | Clan-based naming conventions (kindred name plus nickname) for a mountain culture's NPC names. | P008 `my kinsman Bull Nosy`

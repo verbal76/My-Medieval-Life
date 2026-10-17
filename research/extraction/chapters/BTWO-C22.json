@@ -1,0 +1,222 @@
+{
+ "entities": [
+  {
+   "name": "Bull Nosy",
+   "aliases": [
+    "the long-nosed man of the kindred of the Bull"
+   ],
+   "type": "person",
+   "subtype": "wild man",
+   "unnamed": false,
+   "summary": "Bull Shockhead's kinsman who captured the woman with the necklace and took her to Cheaping Knowe.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "such an one was taken by my kinsman Bull Nosy but a little while agone, whom he took down to the market at Cheaping Knowe"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) kindred of the Bull",
+   "aliases": [],
+   "type": "group",
+   "subtype": "mountain kindred",
+   "unnamed": true,
+   "summary": "Mountain folk who prey on all who pass except kin and known friends; prize lineage.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C22-P003",
+     "q": "but they be of the kindred or their known friends"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Bull Nosy",
+   "rel": "kin_of",
+   "b": "Bull Shockhead",
+   "detail": "kinsman",
+   "when": "BTWO-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "my kinsman Bull Nosy"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "captive_of",
+   "b": "Bull Nosy",
+   "detail": "captured and taken to market",
+   "when": "BTWO-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C22-P009",
+     "q": "this same woman had about her neck a pair of beads as like to thine as if they had been the very same"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [
+  {
+   "travellers": [
+    "Bull Nosy",
+    "(unnamed) Maiden of Bourton Abbas"
+   ],
+   "from": "Mid-Mountain House",
+   "to": "Cheaping Knowe",
+   "via": [],
+   "mode": "foot and captive",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C22",
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "whom he took down to the market at Cheaping Knowe"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "The mountain folk count all passers-by as foes except kin and known friends.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C22-P003",
+     "q": "And are all men your foemen who pass through these mountains?"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "Bull values lineage and despises kinless chapmen and their hired swordsmen.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C22-P002",
+     "q": "they know not the name of their mother's mother, nor have heard one word of the beginner of their kindred"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Bull Shockhead",
+   "statement": "He says a bought thrall's life is not so bad; some have thralls of their own under them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C22-P005",
+     "q": "this life of a bought thrall is not such an exceeding evil life"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) Maiden of Bourton Abbas",
+   "statement": "Captured, she showed no weeping but patience and intent to endure.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "there was no weeping or screeching in her, but patience rather and quietness, and intent to bear all and live"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph learns of the captor",
+   "chapter": "BTWO-C22",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Bull Shockhead"
+   ],
+   "places": [
+    "(unnamed) eastern foothills"
+   ],
+   "summary": "Bull tells Ralph his kinsman Bull Nosy took the maiden to Cheaping Knowe.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C22-P012",
+     "q": "But, lord, I will do my best to find her for thee"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether \"Bull\" names a whole kindred (later the merchant says men of that folk are so named).",
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "my kinsman Bull Nosy"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Clan-based naming conventions (kindred name plus nickname) for a mountain culture's NPC names.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "my kinsman Bull Nosy"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C22",
+ "chapters": [
+  "BTWO-C22"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C22",
+   "paragraphs_total": 12,
+   "all_paragraphs_read": true,
+   "summary": "Riding on, Bull Shockhead, now cheerful, defends his people's man-stealing as no worse than creditors and manor lords, and says thralls are often treated softly. He begs not to be sold. He says his kinsman Bull Nosy recently took a fair, strong, patient woman with a necklace like Ralph's and took her to market at Cheaping Knowe. Ralph says he would ransom her, and Bull promises to help find her.",
+   "geography_notes": "Bull Nosy took his captive down to the market at Cheaping Knowe.",
+   "open_questions": [
+    "Are the mountain people's names (Bull Shockhead, Bull Nosy) a kindred naming system?"
+   ]
+  }
+ ]
+}

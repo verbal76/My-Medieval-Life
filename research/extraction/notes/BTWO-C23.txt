@@ -1,0 +1,33 @@
+@ BTWO-C23
+summary: They camp under elms in the plain and reach Cheaping Knowe before sunset the next day. The town is ringed by cleared ground and strong walls, with a great castle on a hill inside, so the town is a town within a town. Many townsfolk are ragged and hungry; many warriors wear the tyrant's token, a blood-reddened sword. The lord leaves merchants alone for the sake of trade. They lodge at the Fleece. The chapmen bring gifts to the castle and get Ralph a pass as a sergeant of the chapmen's guard; Bull is disguised with docked hair. On the castle hill they see gibbets and impaled men, women and babes. The master church is small and strange; the town gardens have lemons, oranges and pomegranates, with water in stone runnels.
+geo: From the foothills a day's ride, with a camp among tall elms in the plain, to Cheaping Knowe. Ground near the walls is cleared of trees. The castle stands high on a hill with the town built around it. A wide market-place holds the best houses.
+open: Who is the tyrant of Cheaping Knowe?
+
+E building | The Fleece | hostel of the Merchants | inn | Big merchants' hostel in the market-place of Cheaping Knowe. | P007 `the hostel of the Merchants, called the Fleece`
+E building | (unnamed) castle of Cheaping Knowe | - | castle | Great castle high on a hill around which the town is built; its slopes hung with gibbets and stakes. | P005 `a great castle stood high up on a hill, about which the town was builded`
+E person | (unnamed) tyrant of Cheaping Knowe | the lord | tyrant | Lord who seized the castle; his men wear a blood-red sword token; rules by terror but spares merchants. | P006 `this was the token of the lord who had gotten the castle in those days, and was tyrant of the town`
+E item | (unnamed) token of the bloody sword | - | badge | A sword reddened with blood, worn on the sleeve by the tyrant's men. | P006 `a token on their sleeves, to wit, a sword reddened with blood`
+E building | (unnamed) gardens of Cheaping Knowe | - | gardens | Great town gardens with lemons, oranges, pomegranates and water in stone runnels. | P012 `as lemons, and oranges, and pomegranates; and the waters were running through them in runnels of ashlar`
+E building | (unnamed) master church of Cheaping Knowe | - | church | Small church of strange, uncouth fashion. | P011 `it was nowise great, albeit it was strange and uncouth of fashion`
+
+R (unnamed) tyrant of Cheaping Knowe | ruler_of | Cheaping Knowe | took the castle by force | BTWO-C23 | CANON/high | P006 `the lord who had gotten the castle in those days, and was tyrant of the town`
+
+S (unnamed) castle of Cheaping Knowe | within | Cheaping Knowe | terrain=on a hill with the town built about it; cert=fixed | CANON/high | a town within a town | P005 `so that if the town were taken there would yet be another town within it to be taken also`
+S Cheaping Knowe | route_next | (unnamed) eastern foothills | time=evening camp in the plain, then next day to the gates before sunset; terrain=fair country, then cleared land near the walls; cert=fixed | CANON/high | - | P005 `They came to the gates a little before sunset, after they had passed through much fair country`
+
+T Ralph, Clement's eastward company | (unnamed) eastern foothills | Cheaping Knowe | mode=horse; dur=about a day and a half with an elm-grove camp; end=a little before sunset | P002 `they pitched their camp down in the plain fields amidst tall elmtrees`
+
+F military | Cheaping Knowe | Trees and thickets near the walls are cut down to deny cover to thieves and attackers. | CANON/high; ctx=dialogue:Clement Chapman | P005 `they had been cut down lest they should serve as cover to strong-thieves or folk assailing the town`
+F law | (unnamed) tyrant of Cheaping Knowe | Men, women and babes hang on gibbets or are impaled on the castle hill; townsfolk will not say why. | CANON/high | P010 `there were men and women there, yea, and babes also, hanging on gibbets and thrust through with sharp pales`
+F trade | (unnamed) tyrant of Cheaping Knowe | He does not meddle with chapmen lest trade end; they bring him gifts. | CANON/high; ctx=dialogue:Clement Chapman | P006 `he will not meddle, lest there be an end of chaffer in the town`
+F law | Cheaping Knowe | The lord issues parchment safe-conducts; Ralph gets one as a sergeant of the chapmen's guard. | CANON/high | P009 `a parchment from the lord, which bade all men help and let pass Ralph of Upmeads, as a sergeant of the chapmen's guard`
+F society | Cheaping Knowe | Many townsfolk are ragged and hunger-pinched. | CANON/high | P006 `many had but foul clouts to cover their nakedness, and seemed needy and hunger-pinched`
+F agriculture | (unnamed) gardens of Cheaping Knowe | Lemons, oranges and pomegranates grow there; the climate is hot. | CANON/high | P012 `the weather was fair and hot`
+F law | Bull Shockhead | Clement advises keeping a war-caught thrall hidden and disguised lest he be taken. | CANON/high; ctx=dialogue:Clement Chapman | P008 `to keep his war-caught thrall, Bull Shockhead, safe at home, lest he be taken from him`
+
+V main | Arrival at Cheaping Knowe | The merchant company enters Cheaping Knowe with banners and lodges at the Fleece. | time=a little before sunset; who=Ralph, Clement Chapman; where=Cheaping Knowe | P007 `so came to the hostel of the Merchants, called the Fleece`
+
+U identity | The tyrant of Cheaping Knowe is unnamed. | P006 `the token of the lord who had gotten the castle in those days`
+
+O politics | Tyrant towns that protect trade while terrorising residents, with safe-conduct documents for merchants' guards. | P009 `a parchment from the lord`
+O world | Warm-climate gardens (citrus, pomegranate) east of the mountains as a biome marker. | P012 `lemons, and oranges, and pomegranates`

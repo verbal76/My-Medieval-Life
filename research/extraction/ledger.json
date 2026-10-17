@@ -1161,33 +1161,75 @@
    "title": "Ralph Talks With Bull Shockhead",
    "body_paragraphs": 12,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 2,
+    "spatial": 0,
+    "travel": 1,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Are the mountain people's names (Bull Shockhead, Bull Nosy) a kindred naming system?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C22.txt",
+    "records": "research/extraction/chapters/BTWO-C22.json"
+   }
   },
   {
    "chapter": "BTWO-C23",
    "title": "Of the Town of Cheaping Knowe",
    "body_paragraphs": 11,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 7,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Who is the tyrant of Cheaping Knowe?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C23.txt",
+    "records": "research/extraction/chapters/BTWO-C23.json"
+   }
   },
   {
    "chapter": "BTWO-C24",
    "title": "Ralph Heareth More Tidings of the Damsel",
    "body_paragraphs": 10,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 2,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 7,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Where are Whiteness and Utterbol?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C24.txt",
+    "records": "research/extraction/chapters/BTWO-C24.json"
+   }
   },
   {
    "chapter": "BTWO-C25",

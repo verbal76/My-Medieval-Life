@@ -1,0 +1,370 @@
+{
+ "entities": [
+  {
+   "name": "The Fleece",
+   "aliases": [
+    "hostel of the Merchants"
+   ],
+   "type": "building",
+   "subtype": "inn",
+   "unnamed": false,
+   "summary": "Big merchants' hostel in the market-place of Cheaping Knowe.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C23-P007",
+     "q": "the hostel of the Merchants, called the Fleece"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) castle of Cheaping Knowe",
+   "aliases": [],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": true,
+   "summary": "Great castle high on a hill around which the town is built; its slopes hung with gibbets and stakes.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C23-P005",
+     "q": "a great castle stood high up on a hill, about which the town was builded"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) tyrant of Cheaping Knowe",
+   "aliases": [
+    "the lord"
+   ],
+   "type": "person",
+   "subtype": "tyrant",
+   "unnamed": true,
+   "summary": "Lord who seized the castle; his men wear a blood-red sword token; rules by terror but spares merchants.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "this was the token of the lord who had gotten the castle in those days, and was tyrant of the town"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) token of the bloody sword",
+   "aliases": [],
+   "type": "item",
+   "subtype": "badge",
+   "unnamed": true,
+   "summary": "A sword reddened with blood, worn on the sleeve by the tyrant's men.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "a token on their sleeves, to wit, a sword reddened with blood"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) gardens of Cheaping Knowe",
+   "aliases": [],
+   "type": "building",
+   "subtype": "gardens",
+   "unnamed": true,
+   "summary": "Great town gardens with lemons, oranges, pomegranates and water in stone runnels.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C23-P012",
+     "q": "as lemons, and oranges, and pomegranates; and the waters were running through them in runnels of ashlar"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) master church of Cheaping Knowe",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": true,
+   "summary": "Small church of strange, uncouth fashion.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C23-P011",
+     "q": "it was nowise great, albeit it was strange and uncouth of fashion"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) tyrant of Cheaping Knowe",
+   "rel": "ruler_of",
+   "b": "Cheaping Knowe",
+   "detail": "took the castle by force",
+   "when": "BTWO-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "the lord who had gotten the castle in those days, and was tyrant of the town"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) castle of Cheaping Knowe",
+   "rel": "within",
+   "b": "Cheaping Knowe",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "on a hill with the town built about it",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "a town within a town",
+   "refs": [
+    {
+     "p": "BTWO-C23-P005",
+     "q": "so that if the town were taken there would yet be another town within it to be taken also"
+    }
+   ]
+  },
+  {
+   "a": "Cheaping Knowe",
+   "rel": "route_next",
+   "b": "(unnamed) eastern foothills",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "evening camp in the plain, then next day to the gates before sunset",
+   "travel_mode": "",
+   "terrain_text": "fair country, then cleared land near the walls",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C23-P005",
+     "q": "They came to the gates a little before sunset, after they had passed through much fair country"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "from": "(unnamed) eastern foothills",
+   "to": "Cheaping Knowe",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "about a day and a half with an elm-grove camp",
+   "start_time_text": "",
+   "end_time_text": "a little before sunset",
+   "terrain_text": "",
+   "chapter": "BTWO-C23",
+   "refs": [
+    {
+     "p": "BTWO-C23-P002",
+     "q": "they pitched their camp down in the plain fields amidst tall elmtrees"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Cheaping Knowe",
+   "statement": "Trees and thickets near the walls are cut down to deny cover to thieves and attackers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P005",
+     "q": "they had been cut down lest they should serve as cover to strong-thieves or folk assailing the town"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "(unnamed) tyrant of Cheaping Knowe",
+   "statement": "Men, women and babes hang on gibbets or are impaled on the castle hill; townsfolk will not say why.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P010",
+     "q": "there were men and women there, yea, and babes also, hanging on gibbets and thrust through with sharp pales"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "(unnamed) tyrant of Cheaping Knowe",
+   "statement": "He does not meddle with chapmen lest trade end; they bring him gifts.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "he will not meddle, lest there be an end of chaffer in the town"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Cheaping Knowe",
+   "statement": "The lord issues parchment safe-conducts; Ralph gets one as a sergeant of the chapmen's guard.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P009",
+     "q": "a parchment from the lord, which bade all men help and let pass Ralph of Upmeads, as a sergeant of the chapmen's guard"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Cheaping Knowe",
+   "statement": "Many townsfolk are ragged and hunger-pinched.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "many had but foul clouts to cover their nakedness, and seemed needy and hunger-pinched"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "(unnamed) gardens of Cheaping Knowe",
+   "statement": "Lemons, oranges and pomegranates grow there; the climate is hot.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P012",
+     "q": "the weather was fair and hot"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Bull Shockhead",
+   "statement": "Clement advises keeping a war-caught thrall hidden and disguised lest he be taken.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P008",
+     "q": "to keep his war-caught thrall, Bull Shockhead, safe at home, lest he be taken from him"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Arrival at Cheaping Knowe",
+   "chapter": "BTWO-C23",
+   "layer": "main",
+   "time_text": "a little before sunset",
+   "participants": [
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "places": [
+    "Cheaping Knowe"
+   ],
+   "summary": "The merchant company enters Cheaping Knowe with banners and lodges at the Fleece.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C23-P007",
+     "q": "so came to the hostel of the Merchants, called the Fleece"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The tyrant of Cheaping Knowe is unnamed.",
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "the token of the lord who had gotten the castle in those days"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Tyrant towns that protect trade while terrorising residents, with safe-conduct documents for merchants' guards.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C23-P009",
+     "q": "a parchment from the lord"
+    }
+   ]
+  },
+  {
+   "idea": "Warm-climate gardens (citrus, pomegranate) east of the mountains as a biome marker.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C23-P012",
+     "q": "lemons, and oranges, and pomegranates"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C23",
+ "chapters": [
+  "BTWO-C23"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C23",
+   "paragraphs_total": 11,
+   "all_paragraphs_read": true,
+   "summary": "They camp under elms in the plain and reach Cheaping Knowe before sunset the next day. The town is ringed by cleared ground and strong walls, with a great castle on a hill inside, so the town is a town within a town. Many townsfolk are ragged and hungry; many warriors wear the tyrant's token, a blood-reddened sword. The lord leaves merchants alone for the sake of trade. They lodge at the Fleece. The chapmen bring gifts to the castle and get Ralph a pass as a sergeant of the chapmen's guard; Bull is disguised with docked hair. On the castle hill they see gibbets and impaled men, women and babes. The master church is small and strange; the town gardens have lemons, oranges and pomegranates, with water in stone runnels.",
+   "geography_notes": "From the foothills a day's ride, with a camp among tall elms in the plain, to Cheaping Knowe. Ground near the walls is cleared of trees. The castle stands high on a hill with the town built around it. A wide market-place holds the best houses.",
+   "open_questions": [
+    "Who is the tyrant of Cheaping Knowe?"
+   ]
+  }
+ ]
+}
