@@ -23,6 +23,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY_WORLD_v1.zip` | verify | 7 | 206.2 KB | FREE Puny World overworld tileset (432x1040, 1755 tiles) with 5 sample Tiled maps. Its .tsx has a full Tiled terrain setup: corner wangset 'overworld' (grass, dirt, sand, cliff, river, 3 sea depths; trees/trees2/cliff-transparent as an overlay over 'air') and edge wangset 'pathways' (dirt, sand, water paths). Basis for tools/puny_world_terrain.py. Linked as 'Free 16x16 Puny World Tileset' from Shade's pages; licence page not yet seen. |
 | `Puny-Characters.zip` | CC0 | 24 | 547.4 KB | Free Puny Characters: 19 8-direction sheets (768x256 = 24 frames x 8 directions, 32px cells; idle, walk, sword, bow, stave, throw, hurt, death): Character-Base plus soldiers, warriors, archers, mages, workers and orcs in team colours; a 480x32 single-row Slime sheet; 4 environment tiles (16x16). Older/smaller layout than the 29-frame Editor Edition. |
 | `PunyMonsters.zip` | CC0 | 9 | 133.4 KB | Puny Monsters: 9 animals/monsters (panther, dog, 2 boars, 2 spiders, wolf, rat, cat), each 384x256 = 12 frames x 8 directions, 32px cells. Second download on the free Puny Characters itch.io page, under its CC0 licence. |
+| `TinyRanch_Assets.zip` | free | 7 | 21.9 KB | Tiny Ranch by Gustavo Vituri, drawn on an 8x8 grid (half the 16x16 scale of the Puny packs): farm animals with walk frames (cows, pigs, sheep, chickens, ducks, geese, horses and more), 8 crops with seed, growth stages and harvest icons, farm items, trees and rocks, barns, silos, windmill and well, tilled soil and grass tiles, and 8x8 farmer characters. No licence file in the archive; per the itch.io page (screenshot from the owner): free for personal and commercial use, modification allowed, crediting not required but appreciated (credit Gustavo Vituri), do not redistribute, no NFTs. |
 | `miniworld +__rainbow-refresh.zip` | CC BY 4.0 | 10 | 642.9 KB | 16x16 miniworld + by octoshrimpy, rainbow refresh (02/15/2023, newer): recoloured sheets plus chests. terrain.png has 20 terrain modules (water depths, sand, grasses, forest, snow, ice, dirts, cave floors) in one shared autotile layout; no Tiled/wang data included. |
 | `16x16 Assorted RPG Icons (partial)/` (folder) | free | 9 | 113.9 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
@@ -36,7 +37,7 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 12387 |
+| `.png` | 12394 |
 | `.tmj` | 23 |
 | `.tsx` | 13 |
 | `.csv` | 11 |
@@ -373,6 +374,12 @@ Each folder lists its file count and the most common image sizes.
 | Folder | Files | Image sizes | Examples |
 |---|---:|---|---|
 | `PunyMonsters` | 9 | 384x256 | `Black-Panther-32x32.png`, `Blonde-Dog-32x32.png`, `Brown-Boar-32x32.png`, `Brown-Spider-32x32.png`, ... |
+
+### TinyRanch_Assets.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `TinyRanch_Assets` | 7 | 128x48 (1), 24x192 (1), 56x120 (1), ... | `TinyFarm_Animals.png`, `TinyFarm_Characters.png`, `TinyFarm_Crops.png`, `TinyFarm_Items.png`, ... |
 
 ### miniworld +__rainbow-refresh.zip
 
