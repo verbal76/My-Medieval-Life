@@ -1,0 +1,21 @@
+@ BTHREE-C2
+summary: Ralph rides east alone through the wood by the sun, glad to be free. He follows a woodland stream from the mountains until it turns too far north and sleeps by a pool in a wood-lawn. Next day the thick wood ends in hills and dales with harts and wild swine; he drives a bear from a honey tree and eats the comb, and eats grapes from wild vines on a south-facing slope. He finds the stream again, now running from the east, and sleeps by it; next day he follows it until it turns north, then goes east over hilly land of coarse grass, whin and thorn, seeing the black mountain wall, always climbing, until a great pine wood with no visible end north or south blocks the way late in the afternoon. He rides into it.
+geo: The wood beyond the highway thins; a woodland stream flows from the mountains, its upper course from the east and its lower course turning north. After the thick wood: hills and dales, open, with deer, wild swine, a bear and wild vines on south slopes. Further east: patchy thickets, hilly land with long coarse grass, whin and thorns, rising steadily; then a great pine forest stretching north and south out of sight. The mountain wall is visible like a great black cloud.
+open: none
+
+E feature | (unnamed) woodland stream from the mountains | - | stream | Stream cleaving the thicket, flowing from the mountains; runs straight from the east upstream and bends north. | P003 `a woodland stream that cleft the thicket, coming down as he deemed from the mountains`
+E feature | (unnamed) great pine wood under the mountains | - | pine forest | Great pine wood with no ending north or south, west of the mountains. | P006 `there was a great pine-wood before him, so that he could see no ending to it either north or south`
+E feature | (unnamed) hill-and-dale country under the mountains | - | hills | Open hills and dales with deer, wild swine, bears and wild vines. | P004 `the land was no longer flat, as it had been, but was of dales and of hills, not blinded by trees`
+
+S (unnamed) woodland stream from the mountains | flows_from | Great Mountains | dir=from the east, turning north; cert=constrained | CANON/high | - | P005 `it was now running straight from the east`
+S (unnamed) great pine wood under the mountains | east_of | (unnamed) hill-and-dale country under the mountains | dir=east, uphill; terrain=hilly coarse grass, whin, thorn, then pine wood; cert=constrained | CANON/high | - | P006 `So far he rode, going on the whole up-hill, till at last there was a great pine-wood before him`
+
+T Ralph | (unnamed) oak glade in the wood | (unnamed) great pine wood under the mountains | via=(unnamed) woodland stream from the mountains, (unnamed) hill-and-dale country under the mountains; mode=horse; dir=east by the sun; dur=about three days; terrain=wood, hills and dales, coarse-grass hills, uphill | P003 `rode east as far as he could judge it`
+
+F ecology | (unnamed) hill-and-dale country under the mountains | Harts and wild swine; a bear raiding wild bees' honey. | CANON/high | P004 `he happened also on a bear, who was about a honey tree, and had taken much comb from the wild bees`
+F food | (unnamed) hill-and-dale country under the mountains | Wild vines fruit on a south-facing bank, grapes ripening. | CANON/high | P004 `a bent where on the south side grew vines well fruited, and the grapes a-ripening`
+F ecology | (unnamed) great pine wood under the mountains | Before the pine wood the land is rough and waterless. | CANON/high | P007 `he was in a place both rough and waterless`
+
+V main | Ralph rides alone toward the mountains | Free, Ralph rides east through wood and hills toward the mountain wall. | dur=three days; who=Ralph | P006 `though the sight was terrible, yet it gladdened him, since he knew that he was on the right way`
+
+O world | Biome sequence west of the mountains: forest, open hill-and-dale, coarse uplands, a great pine belt, then the mountain wall. | P006 `there was a great pine-wood before him`

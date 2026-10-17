@@ -1,0 +1,30 @@
+@ BTHREE-C3
+summary: In the dark pine wood a rider calls out with a sweet voice, offering food and fellowship, and strikes a fire: a slender figure in local armour with a green surcoat. Ralph realises it is the damsel of Bourton Abbas. She says she is now a runaway thrall from Utterbol, where no shame befell her, and that the Lord is "brought up out of hell". She has the bead necklace from the lovely lady who freed her, who taught her the way and spoke of Ralph. Her name is Ursula, not Dorothy as Ralph's dream said. She knows of the Rock of the Fighting Man and the sage in this wood, now called the Sage of Swevenham, whom they will reach in a day or two, though Utterbol's riders know his dwelling. She will lead Ralph to the Well and says that coming back he shall lead. She watches over him while he sleeps.
+geo: The pine wood is very thick with no undergrowth, dark and still, with few animals. The Sage of Swevenham lives in this wood, a day or two from the meeting place; Utterbol's riders know where.
+open: none newly; the Ursula/Dorothea question is resolved by narration.
+
+E person | Ursula | the damsel of Bourton Abbas, the Maiden of Bourton | maiden | Slender, smooth-faced, sweet-voiced; travelling in local armour with a sallet and a green surcoat; a runaway thrall from Utterbol; seeking the Well; christened Ursula after the Friend of Maidens. | P025 `They that held me at the font bid the priest call me Ursula, after the Friend of Maidens`
+E person | Sage of Swevenham | the Sage | sage | The sage dwelling in the wood under the mountains. | P035 `he is now called the Sage of Swevenham`
+E feature | Rock of the Fighting Man | the Fighting Man rock | carved rock | Landmark on the way to the Well. | P035 `Knowest thou of the Rock of the Fighting Man?`
+
+R Ursula | other | (unnamed) Maiden of Bourton Abbas | same person | BTHREE-C3 | CANON/high | P011 `Yea, I am a woman, and I was thy friend for a little while at Bourton Abbas, and at the want-ways of the Wood Perilous`
+R Ursula | other | Dorothea | the dream gave a wrong name | BTHREE-C3 | CANON/high | P025 `tell me thy name; is it not Dorothy?`
+R Ursula | freed_by | Lady of Abundance | freed from the Dry Tree prison; given the beads | backstory | CANON/high | P021 `it was given unto me by a lady, mighty as I deem, and certainly most lovely, who delivered me from an evil plight`
+R Ursula | captive_of | Lord of Utterbol | escaped from Utterbol | BTHREE-C3 | CANON/high | P017 `now am I but a runaway thrall`
+R (unnamed) sage of the wildwood | other | Sage of Swevenham | same person | BTHREE-C3 | INF/high | P035 `And of the Sage that dwelleth in this same wood?`
+
+S Sage of Swevenham | within | (unnamed) great pine wood under the mountains | time=reached the next evening or the one after; ctx=dialogue:Ursula; cert=constrained | CANON/high | Utterbol riders know his dwelling | P035 `to-morrow evening or the morrow after we shall find him`
+
+T Ursula | Utterbol | (unnamed) great pine wood under the mountains | mode=horse; dur=five days without meeting anyone | P007 `it is five days since I have spoken to a child of Adam`
+
+F magic | Ralph | Ralph's dream named the damsel Dorothea; her real name is Ursula. The dream misled him about the name though he believed the rest of it. | CANON/high | P026 `pondering his dream and how it had betrayed him as to her name`
+F society | Ursula | She says no shame befell her at Utterbol besides thraldom; she fled before the tormentors were ready. | CANON/high; ctx=dialogue:Ursula | P031 `no shame befell me, save that I was a thrall and not free to depart`
+F magic | Ursula | She says the Lady who freed her taught her the way to the Well and spoke of Ralph. | CANON/high; ctx=dialogue:Ursula | P036 `She taught it to me who spake to me in the wood by Hampton under Scaur`
+F ecology | (unnamed) great pine wood under the mountains | The pine wood is very thick, without undergrowth, dark and still, with few, mostly silent animals. | CANON/high | P002 `there were but few wild things, and those mostly voiceless, in the wood, and it was without wind and very still`
+F religion | Ursula | Named for St. Ursula, "the Friend of Maidens". | CANON/high; ctx=dialogue:Ursula | P025 `after the Friend of Maidens`
+
+V main | Ralph and Ursula meet in the pine wood | In the dark wood Ralph meets Ursula, who has escaped Utterbol, and they agree to seek the Well together. | time=night; who=Ralph, Ursula; where=(unnamed) great pine wood under the mountains | P010 `O, but I have kissed thy face before!  O, my friend, my friend!`
+
+U identity | Whether the Sage of Swevenham is the wizard of the mountains who vanished from Swevenham's lore (BTWO-C16). | P035 `he is now called the Sage of Swevenham`
+
+O quests | A companion who knows the route and leads, with the promise that roles reverse on the return. | P034 `the time shall come when thou shalt lead me`

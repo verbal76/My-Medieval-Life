@@ -1667,33 +1667,75 @@
    "title": "An Adventure in the Wood Under the Mountains",
    "body_paragraphs": 35,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 3,
+    "spatial": 0,
+    "travel": 1,
+    "facts": 4,
+    "events": 2,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "\"Burnt Rock\" and \"Red Rock\" are both named in Agatha's lie: two names, or a slip?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C1.txt",
+    "records": "research/extraction/chapters/BTHREE-C1.json"
+   }
   },
   {
    "chapter": "BTHREE-C2",
    "title": "Ralph Rides the Wood Under the Mountains",
    "body_paragraphs": 6,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 0,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C2.txt",
+    "records": "research/extraction/chapters/BTHREE-C2.json"
+   }
   },
   {
    "chapter": "BTHREE-C3",
    "title": "Ralph Meeteth With Another Adventure in the Wood Under the Mountain",
    "body_paragraphs": 38,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 5,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none newly; the Ursula/Dorothea question is resolved by narration."
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C3.txt",
+    "records": "research/extraction/chapters/BTHREE-C3.json"
+   }
   },
   {
    "chapter": "BTHREE-C4",

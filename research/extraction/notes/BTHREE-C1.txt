@@ -1,0 +1,26 @@
+@ BTHREE-C1
+summary: At two hours after midnight Ralph meets Redhead at the dead oak, takes the horse, and rides into the wood. At sunrise a dishevelled dark woman runs to him crying that her lady, the "Lady of the Burnt Rock", has been taken by Riders of Utterbol. It is Agatha, unscratched despite the briars. She then admits the ruse: her mistress is the Queen of Utterbol, who hoped Ralph would rescue her and come to love her. The Lord agreed, wanting his wife's jealousy diverted from his new beloved damsel, and meant to seize Ralph later. Agatha says Redhead is honest and his warnings true; the Lord loves and even fears the damsel, who has refused him, and Agatha wishes she were gone from Utterbol. Ralph pardons Agatha; she promises to keep the Queen in the woods two or three days, asks a kiss, and says she will suffer for him.
+geo: Beyond the highway the wood is not very thick after the first mile, with clearings and wood-lawns. Near the camp is a pleasant oak glade.
+open: "Burnt Rock" and "Red Rock" are both named in Agatha's lie: two names, or a slip?
+
+E place | Burnt Rock | Red Rock | lordship (feigned) | Lordship invented by Agatha for her feigned mistress, said to be at feud with Utterbol. | P009 `She is the Lady of the Burnt Rock`; P018 `as to the Red Rock, I lied`
+E group | Riders of Utterbol | - | horsemen | Utterbol's riders, feared in the woods. | P009 `I fear me that these men are of the Riders of Utterbol`
+E building | (unnamed) strong-house of Utterbol | - | strong-house | A strong-house belonging to Utterbol and near it, where the Queen meant Ralph to take her. | P027 `a certain strong-house appertaining to Utterbol, and nigh unto it`
+
+R Agatha | serves | (unnamed) Lady of Utterbol | her thrall | BTHREE-C1 | CANON/high | P018 `my lady is the Queen of Utterbol, and I am her thrall`
+R Lord of Utterbol | lover_of | Ursula | loves and fears the damsel, who refuses him | BTHREE-C1 | CANON/high | P023 `my lord loveth her after his fashion, and withal as I deem feareth her`
+R Redhead | friend_of | Ralph | Agatha says he is true and loves Ralph | BTHREE-C1 | CANON/high | P020 `he is a true man and loveth thee`
+
+T Ralph | (unnamed) second camp toward Utterness | (unnamed) oak glade in the wood | mode=horse; start=two hours after midnight; end=sunrise; terrain=wood with clearings | P002 `it was two hours after midnight`
+
+F society | Ursula | The damsel has refused the Lord, and he has hardly threatened her, which is unheard of at Utterbol. | CANON/high; ctx=dialogue:Agatha | P023 `though she hath utterly gainsaid his desire, he hath scarce so much as threatened her.  A thing unheard of`
+F society | Agatha | She gains secrets by wit and by her body. | CANON/high; ctx=dialogue:Agatha | P023 `whiles I conquer the tidings with my wits, and whiles buy it with my body`
+F politics | Lord of Utterbol | He freed Ralph in words only, meaning to seize him at Utterbol; he hates Ralph. | CANON/high; ctx=dialogue:Agatha | P027 `Therefore did he set thee free (in words)`
+F society | Agatha | She expects punishment at Utterbol for letting Ralph go. | CANON/high; ctx=dialogue:Agatha | P032 `since forsooth other reward awaiteth me at Utterbol`
+
+V main | Agatha's ruse | Agatha lures Ralph with a staged rescue, then confesses and lets him go. | time=sunrise; who=Ralph, Agatha; where=(unnamed) oak glade in the wood | P018 `it is I who have drawn thee hither from the camp`
+V main | Ralph's escape from the Utterbol camp | Ralph flees the camp at night on Redhead's horse. | time=two hours after midnight; who=Ralph, Redhead; where=(unnamed) doddered oak at the forest camp | P002 `Redhead kneeled to him one moment of time and then arose and went off into the night`
+
+U contradiction | Agatha names the "Lady of the Burnt Rock" but then says "as to the Red Rock, I lied". | P018 `as to the Red Rock, I lied`
+
+O quests | Staged-rescue lures by intriguers as a deception encounter type. | P027 `like to a minstrel's tale done in the flesh`

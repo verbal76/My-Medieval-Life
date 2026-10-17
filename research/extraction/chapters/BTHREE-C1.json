@@ -1,0 +1,276 @@
+{
+ "entities": [
+  {
+   "name": "Burnt Rock",
+   "aliases": [
+    "Red Rock"
+   ],
+   "type": "place",
+   "subtype": "lordship (feigned)",
+   "unnamed": false,
+   "summary": "Lordship invented by Agatha for her feigned mistress, said to be at feud with Utterbol.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C1-P009",
+     "q": "She is the Lady of the Burnt Rock"
+    },
+    {
+     "p": "BTHREE-C1-P018",
+     "q": "as to the Red Rock, I lied"
+    }
+   ]
+  },
+  {
+   "name": "Riders of Utterbol",
+   "aliases": [],
+   "type": "group",
+   "subtype": "horsemen",
+   "unnamed": false,
+   "summary": "Utterbol's riders, feared in the woods.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C1-P009",
+     "q": "I fear me that these men are of the Riders of Utterbol"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) strong-house of Utterbol",
+   "aliases": [],
+   "type": "building",
+   "subtype": "strong-house",
+   "unnamed": true,
+   "summary": "A strong-house belonging to Utterbol and near it, where the Queen meant Ralph to take her.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C1-P027",
+     "q": "a certain strong-house appertaining to Utterbol, and nigh unto it"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Agatha",
+   "rel": "serves",
+   "b": "(unnamed) Lady of Utterbol",
+   "detail": "her thrall",
+   "when": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P018",
+     "q": "my lady is the Queen of Utterbol, and I am her thrall"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "lover_of",
+   "b": "Ursula",
+   "detail": "loves and fears the damsel, who refuses him",
+   "when": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P023",
+     "q": "my lord loveth her after his fashion, and withal as I deem feareth her"
+    }
+   ]
+  },
+  {
+   "a": "Redhead",
+   "rel": "friend_of",
+   "b": "Ralph",
+   "detail": "Agatha says he is true and loves Ralph",
+   "when": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P020",
+     "q": "he is a true man and loveth thee"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "(unnamed) second camp toward Utterness",
+   "to": "(unnamed) oak glade in the wood",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "two hours after midnight",
+   "end_time_text": "sunrise",
+   "terrain_text": "wood with clearings",
+   "chapter": "BTHREE-C1",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P002",
+     "q": "it was two hours after midnight"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Ursula",
+   "statement": "The damsel has refused the Lord, and he has hardly threatened her, which is unheard of at Utterbol.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Agatha",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P023",
+     "q": "though she hath utterly gainsaid his desire, he hath scarce so much as threatened her.  A thing unheard of"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Agatha",
+   "statement": "She gains secrets by wit and by her body.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Agatha",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P023",
+     "q": "whiles I conquer the tidings with my wits, and whiles buy it with my body"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Lord of Utterbol",
+   "statement": "He freed Ralph in words only, meaning to seize him at Utterbol; he hates Ralph.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Agatha",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P027",
+     "q": "Therefore did he set thee free (in words)"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Agatha",
+   "statement": "She expects punishment at Utterbol for letting Ralph go.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Agatha",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P032",
+     "q": "since forsooth other reward awaiteth me at Utterbol"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Agatha's ruse",
+   "chapter": "BTHREE-C1",
+   "layer": "main",
+   "time_text": "sunrise",
+   "participants": [
+    "Ralph",
+    "Agatha"
+   ],
+   "places": [
+    "(unnamed) oak glade in the wood"
+   ],
+   "summary": "Agatha lures Ralph with a staged rescue, then confesses and lets him go.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P018",
+     "q": "it is I who have drawn thee hither from the camp"
+    }
+   ]
+  },
+  {
+   "label": "Ralph's escape from the Utterbol camp",
+   "chapter": "BTHREE-C1",
+   "layer": "main",
+   "time_text": "two hours after midnight",
+   "participants": [
+    "Ralph",
+    "Redhead"
+   ],
+   "places": [
+    "(unnamed) doddered oak at the forest camp"
+   ],
+   "summary": "Ralph flees the camp at night on Redhead's horse.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P002",
+     "q": "Redhead kneeled to him one moment of time and then arose and went off into the night"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "Agatha names the \"Lady of the Burnt Rock\" but then says \"as to the Red Rock, I lied\".",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P018",
+     "q": "as to the Red Rock, I lied"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Staged-rescue lures by intriguers as a deception encounter type.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C1-P027",
+     "q": "like to a minstrel's tale done in the flesh"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C1",
+ "chapters": [
+  "BTHREE-C1"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C1",
+   "paragraphs_total": 35,
+   "all_paragraphs_read": true,
+   "summary": "At two hours after midnight Ralph meets Redhead at the dead oak, takes the horse, and rides into the wood. At sunrise a dishevelled dark woman runs to him crying that her lady, the \"Lady of the Burnt Rock\", has been taken by Riders of Utterbol. It is Agatha, unscratched despite the briars. She then admits the ruse: her mistress is the Queen of Utterbol, who hoped Ralph would rescue her and come to love her. The Lord agreed, wanting his wife's jealousy diverted from his new beloved damsel, and meant to seize Ralph later. Agatha says Redhead is honest and his warnings true; the Lord loves and even fears the damsel, who has refused him, and Agatha wishes she were gone from Utterbol. Ralph pardons Agatha; she promises to keep the Queen in the woods two or three days, asks a kiss, and says she will suffer for him.",
+   "geography_notes": "Beyond the highway the wood is not very thick after the first mile, with clearings and wood-lawns. Near the camp is a pleasant oak glade.",
+   "open_questions": [
+    "\"Burnt Rock\" and \"Red Rock\" are both named in Agatha's lie: two names, or a slip?"
+   ]
+  }
+ ]
+}

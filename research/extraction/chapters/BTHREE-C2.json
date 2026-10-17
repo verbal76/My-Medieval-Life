@@ -1,0 +1,219 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) woodland stream from the mountains",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "stream",
+   "unnamed": true,
+   "summary": "Stream cleaving the thicket, flowing from the mountains; runs straight from the east upstream and bends north.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C2-P003",
+     "q": "a woodland stream that cleft the thicket, coming down as he deemed from the mountains"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) great pine wood under the mountains",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "pine forest",
+   "unnamed": true,
+   "summary": "Great pine wood with no ending north or south, west of the mountains.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C2-P006",
+     "q": "there was a great pine-wood before him, so that he could see no ending to it either north or south"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) hill-and-dale country under the mountains",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "hills",
+   "unnamed": true,
+   "summary": "Open hills and dales with deer, wild swine, bears and wild vines.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C2-P004",
+     "q": "the land was no longer flat, as it had been, but was of dales and of hills, not blinded by trees"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "(unnamed) woodland stream from the mountains",
+   "rel": "flows_from",
+   "b": "Great Mountains",
+   "direction": "from the east, turning north",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P005",
+     "q": "it was now running straight from the east"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) great pine wood under the mountains",
+   "rel": "east_of",
+   "b": "(unnamed) hill-and-dale country under the mountains",
+   "direction": "east, uphill",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "hilly coarse grass, whin, thorn, then pine wood",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P006",
+     "q": "So far he rode, going on the whole up-hill, till at last there was a great pine-wood before him"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "(unnamed) oak glade in the wood",
+   "to": "(unnamed) great pine wood under the mountains",
+   "via": [
+    "(unnamed) woodland stream from the mountains",
+    "(unnamed) hill-and-dale country under the mountains"
+   ],
+   "mode": "horse",
+   "direction_text": "east by the sun",
+   "duration_text": "about three days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "wood, hills and dales, coarse-grass hills, uphill",
+   "chapter": "BTHREE-C2",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P003",
+     "q": "rode east as far as he could judge it"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "(unnamed) hill-and-dale country under the mountains",
+   "statement": "Harts and wild swine; a bear raiding wild bees' honey.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P004",
+     "q": "he happened also on a bear, who was about a honey tree, and had taken much comb from the wild bees"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "(unnamed) hill-and-dale country under the mountains",
+   "statement": "Wild vines fruit on a south-facing bank, grapes ripening.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P004",
+     "q": "a bent where on the south side grew vines well fruited, and the grapes a-ripening"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) great pine wood under the mountains",
+   "statement": "Before the pine wood the land is rough and waterless.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P007",
+     "q": "he was in a place both rough and waterless"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph rides alone toward the mountains",
+   "chapter": "BTHREE-C2",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph"
+   ],
+   "places": [],
+   "summary": "Free, Ralph rides east through wood and hills toward the mountain wall.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P006",
+     "q": "though the sight was terrible, yet it gladdened him, since he knew that he was on the right way"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Biome sequence west of the mountains: forest, open hill-and-dale, coarse uplands, a great pine belt, then the mountain wall.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C2-P006",
+     "q": "there was a great pine-wood before him"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C2",
+ "chapters": [
+  "BTHREE-C2"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C2",
+   "paragraphs_total": 6,
+   "all_paragraphs_read": true,
+   "summary": "Ralph rides east alone through the wood by the sun, glad to be free. He follows a woodland stream from the mountains until it turns too far north and sleeps by a pool in a wood-lawn. Next day the thick wood ends in hills and dales with harts and wild swine; he drives a bear from a honey tree and eats the comb, and eats grapes from wild vines on a south-facing slope. He finds the stream again, now running from the east, and sleeps by it; next day he follows it until it turns north, then goes east over hilly land of coarse grass, whin and thorn, seeing the black mountain wall, always climbing, until a great pine wood with no visible end north or south blocks the way late in the afternoon. He rides into it.",
+   "geography_notes": "The wood beyond the highway thins; a woodland stream flows from the mountains, its upper course from the east and its lower course turning north. After the thick wood: hills and dales, open, with deer, wild swine, a bear and wild vines on south slopes. Further east: patchy thickets, hilly land with long coarse grass, whin and thorns, rising steadily; then a great pine forest stretching north and south out of sight. The mountain wall is visible like a great black cloud.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}
