@@ -34,8 +34,8 @@ NOTES = {
     "PunyMonsters.zip": ("CC0", "Puny Monsters: 9 animals/monsters (panther, dog, 2 boars, 2 spiders, wolf, rat, cat), each 384x256 = 12 frames x 8 directions, 32px cells. Second download on the free Puny Characters itch.io page, under its CC0 licence."),
     "PUNY_DUNGEON_v1.zip": ("CC0", "Puny Dungeon tileset (416x320): 2-edge wang walls laid out for procedural maps, floor variations, animated water and torches, traps (boulder, spikes, blades, flamethrowers, pits, bear traps), interactables (pressure plates, crates, portals, keys). 5 sample Tiled maps with preview images, sample characters. Note: the .tsx defines animations but no wangset, so the wall layout must be mapped by hand before auto-tiling."),
     "MiniWorldSprites.zip": ("free", "16x16 Miniworld: buildings in 5 team colours, units, monsters, animals, nature, ground, UI. Shade's guide: free to use, no credit needed, do not resell."),
-    "16x16 miniworld - octoshrimpy  -  indoor update.zip": ("verify", "Miniworld remix sheets by octoshrimpy (a different artist), adding indoor tiles and walls."),
-    "miniworld +__rainbow-refresh.zip": ("verify", "Recoloured 'rainbow refresh' Miniworld remix sheets, same layout as the octoshrimpy update plus chests."),
+    "16x16 miniworld - octoshrimpy  -  indoor update.zip": ("CC0", "16x16 miniworld + by octoshrimpy (remix/extension of Shade's Miniworld), indoor update: characters, buildings, nature, walls, indoor things, terrain + terrain decor sheets."),
+    "miniworld +__rainbow-refresh.zip": ("CC0", "16x16 miniworld + by octoshrimpy, rainbow refresh (02/15/2023, newer): recoloured sheets plus chests. terrain.png has 20 terrain modules (water depths, sand, grasses, forest, snow, ice, dirts, cave floors) in one shared autotile layout; no Tiled/wang data included."),
     "Character-Customizer.zip": ("verify", "Manual character customiser: GIMP .xcf and Photoshop layer files plus ReadMe. Not scriptable as-is."),
     "ClimbUp_restore_backup.zip": ("n/a", "NOT an art pack: backup of a separate 'Climb up' game-designer project (project.json + splash image)."),
 }

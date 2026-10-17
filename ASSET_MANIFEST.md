@@ -10,7 +10,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `16x16 Armour RPG Icons.zip` | paid | 5 | 931.6 KB | Armour icon sheets: boots, breastplates, headgear, trousers. |
 | `16x16 Jewelry RPG Icons.zip` | paid | 7807 | 4.4 MB | Jewelry icons (rings, necklaces, bracelets, brooches...) as sheets plus thousands of individual 16x16 PNGs. Includes LICENSE.txt. |
 | `16x16 Survival RPG Icons.zip` | paid | 1887 | 1.4 MB | Survival/crafting icons by category (food, gems, plants & alchemy, textile, armour, dirt & clay...). Includes LICENSE.txt. |
-| `16x16 miniworld - octoshrimpy  -  indoor update.zip` | verify | 9 | 505.7 KB | Miniworld remix sheets by octoshrimpy (a different artist), adding indoor tiles and walls. |
+| `16x16 miniworld - octoshrimpy  -  indoor update.zip` | CC0 | 9 | 505.7 KB | 16x16 miniworld + by octoshrimpy (remix/extension of Shade's Miniworld), indoor update: characters, buildings, nature, walls, indoor things, terrain + terrain decor sheets. |
 | `Character-Customizer.zip` | verify | 3 | 1.6 MB | Manual character customiser: GIMP .xcf and Photoshop layer files plus ReadMe. Not scriptable as-is. |
 | `ClimbUp_restore_backup.zip` | n/a | 3 | 2.9 MB | NOT an art pack: backup of a separate 'Climb up' game-designer project (project.json + splash image). |
 | `MiniWorldSprites.zip` | free | 208 | 2.1 MB | 16x16 Miniworld: buildings in 5 team colours, units, monsters, animals, nature, ground, UI. Shade's guide: free to use, no credit needed, do not resell. |
@@ -22,7 +22,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY_SKILLS_v1.zip` | paid | 1719 | 1.8 MB | Puny skill icons, skill FX animation spritesheets, indicators. |
 | `Puny-Characters.zip` | CC0 | 24 | 547.4 KB | Free Puny Characters: 19 8-direction sheets (768x256 = 24 frames x 8 directions, 32px cells; idle, walk, sword, bow, stave, throw, hurt, death): Character-Base plus soldiers, warriors, archers, mages, workers and orcs in team colours; a 480x32 single-row Slime sheet; 4 environment tiles (16x16). Older/smaller layout than the 29-frame Editor Edition. |
 | `PunyMonsters.zip` | CC0 | 9 | 133.4 KB | Puny Monsters: 9 animals/monsters (panther, dog, 2 boars, 2 spiders, wolf, rat, cat), each 384x256 = 12 frames x 8 directions, 32px cells. Second download on the free Puny Characters itch.io page, under its CC0 licence. |
-| `miniworld +__rainbow-refresh.zip` | verify | 10 | 642.9 KB | Recoloured 'rainbow refresh' Miniworld remix sheets, same layout as the octoshrimpy update plus chests. |
+| `miniworld +__rainbow-refresh.zip` | CC0 | 10 | 642.9 KB | 16x16 miniworld + by octoshrimpy, rainbow refresh (02/15/2023, newer): recoloured sheets plus chests. terrain.png has 20 terrain modules (water depths, sand, grasses, forest, snow, ice, dirts, cave floors) in one shared autotile layout; no Tiled/wang data included. |
 | `16x16 Assorted RPG Icons (partial)/` (folder) | free | 9 | 113.9 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
 | `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0. |
