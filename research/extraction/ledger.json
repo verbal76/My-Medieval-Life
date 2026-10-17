@@ -1742,33 +1742,75 @@
    "title": "They Ride the Wood Under the Mountains",
    "body_paragraphs": 21,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 3,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 6,
+    "events": 2,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who is the Lord of Utterbol's nephew?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C4.txt",
+    "records": "research/extraction/chapters/BTHREE-C4.json"
+   }
   },
   {
    "chapter": "BTHREE-C5",
    "title": "They Come on the Sage of Swevenham",
    "body_paragraphs": 28,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 9,
+    "relations": 2,
+    "spatial": 4,
+    "travel": 1,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Is the Sage the vanished wizard of the mountains from Swevenham lore (BTWO-C16)?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C5.txt",
+    "records": "research/extraction/chapters/BTHREE-C5.json"
+   }
   },
   {
    "chapter": "BTHREE-C6",
    "title": "Those Two Are Learned Lore by the Sage of Swevenham",
    "body_paragraphs": 5,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 2,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "What exactly does the book say? (narration defers: \"shall be seen hereafter\")"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C6.txt",
+    "records": "research/extraction/chapters/BTHREE-C6.json"
+   }
   },
   {
    "chapter": "BTHREE-C7",

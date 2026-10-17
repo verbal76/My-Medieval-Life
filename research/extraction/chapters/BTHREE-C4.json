@@ -1,0 +1,345 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) nephew of the Lord of Utterbol",
+   "aliases": [],
+   "type": "person",
+   "subtype": "lord's nephew",
+   "unnamed": true,
+   "summary": "Youth at Utterbol, half lover and half tyrant to Ursula; she stole his gay armour.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C4-P003",
+     "q": "to steal this gay armour from a lad at Utterbol, the nephew of the lord"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Ursula's stolen armour",
+   "aliases": [],
+   "type": "item",
+   "subtype": "armour",
+   "unnamed": true,
+   "summary": "Gilded hauberk of gold and silver rings with a gemmed collar, light plates, a strange helm; bears Utterbol's token.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C4-P004",
+     "q": "my coat is but a toy to it, with its gold and silver rings and its gemmed collar"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) short Turk bow",
+   "aliases": [],
+   "type": "item",
+   "subtype": "bow",
+   "unnamed": true,
+   "summary": "Short Turk bow and quiver Ursula brought, given to Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C4-P004",
+     "q": "she showed him a short Turk bow and a quiver of arrows"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Bull Nosy",
+   "rel": "killed_by",
+   "b": "Lord of Utterbol",
+   "detail": "his swordsman clove Bull's skull on the Lord's signal",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P019",
+     "q": "smote Bull, and clave his skull"
+    }
+   ]
+  },
+  {
+   "a": "Bull Nosy",
+   "rel": "lover_of",
+   "b": "Ursula",
+   "detail": "loved her, but was gentle as a brother",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P016",
+     "q": "I love thee sorely, and would have thee to wife"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) nephew of the Lord of Utterbol",
+   "rel": "kin_of",
+   "b": "Lord of Utterbol",
+   "detail": "nephew",
+   "when": "BTHREE-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P003",
+     "q": "the nephew of the lord; who like his eme was half my lover, half my tyrant"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) woodland stream from the mountains",
+   "rel": "leads_to",
+   "b": "Utterbol",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Ursula",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "it turns north and would lead to Utterbol",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P006",
+     "q": "it would have brought thee to Utterbol at last"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) stream of the Sage's high ground",
+   "rel": "flows_from",
+   "b": "Sage of Swevenham",
+   "direction": "straight down from the high ground of the Sage's dwelling",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Ursula",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "not from the Great Mountains",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P006",
+     "q": "another that runneth straight down from the hills: not the Great Mountains, but the high ground whereon is the Sage's dwelling"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "(unnamed) great pine wood under the mountains",
+   "to": "(unnamed) stream of the Sage's high ground",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "close, still pine wood",
+   "chapter": "BTHREE-C4",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P006",
+     "q": "they mounted and went their ways through a close pine-wood"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "law",
+   "subject": "Lord of Utterbol",
+   "statement": "The Utterbol token on armour makes strong-thieves meek.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P009",
+     "q": "the token of Utterbol on mine armour shall make them meek enough"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "Bull Nosy says he is bound to marry within his blood.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P016",
+     "q": "though thou art not of the blood wherein I am bound to wed"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Bull Nosy",
+   "statement": "He believed he had seen his fetch and was fey, his grave awaiting him in the mountains.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P018",
+     "q": "My end draweth nigh; I have seen my fetch, and am fey"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ursula",
+   "statement": "She swears by the beads they must live as long as they may.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P010",
+     "q": "By this token we must live as long as we may, whatsoever may befall"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "Utterbol",
+   "statement": "Utterbol is a very great house with many roofs, fair chambers and gardens; Ursula was given a chamber, baths and fine clothes.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P022",
+     "q": "Utterbol is a very great house in a fair land, and there are sundry roofs and many fair chambers"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) great pine wood under the mountains",
+   "statement": "Men fear the wood, so thieves are few there.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P009",
+     "q": "men fear the wood, therefore is there little prey for thieves therein"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Death of Bull Nosy",
+   "chapter": "BTHREE-C4",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Bull Nosy",
+    "Ursula",
+    "Lord of Utterbol"
+   ],
+   "places": [
+    "(unnamed) Goldburg mountains"
+   ],
+   "summary": "The Lord of Utterbol meets Bull Nosy and Ursula in the Goldburg mountains; Bull refuses to sell her and is killed.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P019",
+     "q": "lifted up his hand twice, and let it fall twice"
+    }
+   ]
+  },
+  {
+   "label": "Ursula resists the Lord",
+   "chapter": "BTHREE-C4",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Ursula",
+    "Lord of Utterbol"
+   ],
+   "places": [],
+   "summary": "On the road to Utterbol the Lord threatens Ursula; she threatens to kill him or herself; he backs down.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P021",
+     "q": "bade him beware lest I should slay him or myself"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The Lord of Utterbol's nephew is unnamed.",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P003",
+     "q": "the nephew of the lord"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Armour bearing a feared lord's token as a disguise and protective item.",
+   "system": "items",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C4-P009",
+     "q": "the token of Utterbol on mine armour"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C4",
+ "chapters": [
+  "BTHREE-C4"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C4",
+   "paragraphs_total": 21,
+   "all_paragraphs_read": true,
+   "summary": "At dawn Ursula reveals herself unarmed, then re-arms. She stole her gilded armour, marked with Utterbol's token, from the Lord's nephew, half lover and half tyrant to her. She gives Ralph a short Turk bow. They ride through the pine wood seeking a stream that runs straight down from the high ground where the Sage lives (not from the Great Mountains); the stream Ralph followed turns north toward Utterbol. Men fear the wood, so thieves are few, but Utterbol riders may pursue. She swears by the beads to live as long as they can. She tells how Bull Nosy loved her, was gentle as a brother, foresaw his death, and was slain when the Lord of Utterbol came upon them in the Goldburg mountains: Bull refused to sell her and threatened the Lord, who had his swordsman cleave Bull's skull. She resisted the Lord's demands by threatening to kill him or herself, and came to Utterbol unharmed.",
+   "geography_notes": "The stream Ralph followed would lead at last to Utterbol (it turns north). Another stream runs straight down from the high ground of the Sage's dwelling. The Lord's camp was under a big rock by the cliffs in the mountains of Goldburg.",
+   "open_questions": [
+    "Who is the Lord of Utterbol's nephew?"
+   ]
+  }
+ ]
+}

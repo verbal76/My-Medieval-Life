@@ -1,0 +1,23 @@
+@ BTHREE-C6
+summary: The Sage leads them to a lawn in the wood with an ancient stone table, like the witch's altar. He says such places are common in these wilds, where ancient folk worshipped the Gods of the Earth, and that his book's lore comes from such folk. He reads them the full way to the Well and drills them with questions like schoolchildren until they answer rightly, then again the next day. He says he saw Utterbol's men seeking them and will lead them out a little.
+geo: Many ancient stone tables (altars) stand in these wastes. The Sage's reading altar is a grassy lawn in the wood near his house.
+open: What exactly does the book say? (narration defers: "shall be seen hereafter")
+
+E feature | (unnamed) stone table of the Sage | ancient altar | altar | Ancient stone table on a grassy lawn in the wood near the Sage's house. | P002 `a grassy lawn amidst of which was a table of stone`
+E supernatural | Gods of the Earth | - | ancient gods | Gods the ancient folk worshipped at stone tables in the wilds. | P002 `where of old time the ancient folks did worship to the Gods of the Earth as they imagined them`
+
+R Sage of Swevenham | teaches | Ralph | the way to the Well | BTHREE-C6 | CANON/high | P003 `he bade now one, now the other answer him questions as to what he had read`
+R Sage of Swevenham | teaches | Ursula | the way to the Well | BTHREE-C6 | CANON/high | P003 `as children are taught in the school`
+
+S (unnamed) stone table of the Sage | near | (unnamed) house of the Sage of Swevenham | cert=constrained | CANON/high | reached through the wood | P002 `the Sage led them through the wood till they came to a grassy lawn`
+
+F religion | ancient folk | In these wastes are many stone-table sites where ancient folk worshipped the Gods of the Earth. | CANON/high; ctx=dialogue:Sage of Swevenham | P002 `In these wastes and wilds are many such-like places`
+F text | (unnamed) book of the Sage of Swevenham | The book's lore comes from the ancient folk of the stone tables. | CANON/high; ctx=dialogue:Sage of Swevenham | P002 `whereas the lore in this book cometh of such folk`
+F learning | Sage of Swevenham | The Sage teaches by reading and questioning until answers are correct. | CANON/high | P003 `if they answered amiss he read that part again, and yet again, as children are taught in the school`
+F military | Lord of Utterbol | The Sage says he saw Utterbol's men seeking them. | CANON/high; ctx=dialogue:Sage of Swevenham | P004 `whereas I seem to-day to have seen the foes of Utterbol seeking you`
+
+V main | Lessons at the ancient altar | Over two days the Sage reads and drills Ralph and Ursula in the way to the Well. | dur=two days; who=Sage of Swevenham, Ralph, Ursula; where=(unnamed) stone table of the Sage | P006 `till they were waxen wise in the matters of the Well at the World's End`
+
+U missing_measure | The book's full content is deferred: the narration says it will appear later in the tale. | P003 `What he read shall be seen hereafter in the process of this tale`
+
+O lore | Ancient altars as recurring landmarks where lore is read or rites performed. | P002 `In these wastes and wilds are many such-like places`

@@ -1,0 +1,222 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) stone table of the Sage",
+   "aliases": [
+    "ancient altar"
+   ],
+   "type": "feature",
+   "subtype": "altar",
+   "unnamed": true,
+   "summary": "Ancient stone table on a grassy lawn in the wood near the Sage's house.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C6-P002",
+     "q": "a grassy lawn amidst of which was a table of stone"
+    }
+   ]
+  },
+  {
+   "name": "Gods of the Earth",
+   "aliases": [],
+   "type": "supernatural",
+   "subtype": "ancient gods",
+   "unnamed": false,
+   "summary": "Gods the ancient folk worshipped at stone tables in the wilds.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C6-P002",
+     "q": "where of old time the ancient folks did worship to the Gods of the Earth as they imagined them"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Sage of Swevenham",
+   "rel": "teaches",
+   "b": "Ralph",
+   "detail": "the way to the Well",
+   "when": "BTHREE-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P003",
+     "q": "he bade now one, now the other answer him questions as to what he had read"
+    }
+   ]
+  },
+  {
+   "a": "Sage of Swevenham",
+   "rel": "teaches",
+   "b": "Ursula",
+   "detail": "the way to the Well",
+   "when": "BTHREE-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P003",
+     "q": "as children are taught in the school"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) stone table of the Sage",
+   "rel": "near",
+   "b": "(unnamed) house of the Sage of Swevenham",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "reached through the wood",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P002",
+     "q": "the Sage led them through the wood till they came to a grassy lawn"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "religion",
+   "subject": "ancient folk",
+   "statement": "In these wastes are many stone-table sites where ancient folk worshipped the Gods of the Earth.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P002",
+     "q": "In these wastes and wilds are many such-like places"
+    }
+   ]
+  },
+  {
+   "category": "text",
+   "subject": "(unnamed) book of the Sage of Swevenham",
+   "statement": "The book's lore comes from the ancient folk of the stone tables.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P002",
+     "q": "whereas the lore in this book cometh of such folk"
+    }
+   ]
+  },
+  {
+   "category": "learning",
+   "subject": "Sage of Swevenham",
+   "statement": "The Sage teaches by reading and questioning until answers are correct.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P003",
+     "q": "if they answered amiss he read that part again, and yet again, as children are taught in the school"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Lord of Utterbol",
+   "statement": "The Sage says he saw Utterbol's men seeking them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P004",
+     "q": "whereas I seem to-day to have seen the foes of Utterbol seeking you"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Lessons at the ancient altar",
+   "chapter": "BTHREE-C6",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Sage of Swevenham",
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) stone table of the Sage"
+   ],
+   "summary": "Over two days the Sage reads and drills Ralph and Ursula in the way to the Well.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P006",
+     "q": "till they were waxen wise in the matters of the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "missing_measure",
+   "question": "The book's full content is deferred: the narration says it will appear later in the tale.",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P003",
+     "q": "What he read shall be seen hereafter in the process of this tale"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Ancient altars as recurring landmarks where lore is read or rites performed.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C6-P002",
+     "q": "In these wastes and wilds are many such-like places"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C6",
+ "chapters": [
+  "BTHREE-C6"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C6",
+   "paragraphs_total": 5,
+   "all_paragraphs_read": true,
+   "summary": "The Sage leads them to a lawn in the wood with an ancient stone table, like the witch's altar. He says such places are common in these wilds, where ancient folk worshipped the Gods of the Earth, and that his book's lore comes from such folk. He reads them the full way to the Well and drills them with questions like schoolchildren until they answer rightly, then again the next day. He says he saw Utterbol's men seeking them and will lead them out a little.",
+   "geography_notes": "Many ancient stone tables (altars) stand in these wastes. The Sage's reading altar is a grassy lawn in the wood near his house.",
+   "open_questions": [
+    "What exactly does the book say? (narration defers: \"shall be seen hereafter\")"
+   ]
+  }
+ ]
+}

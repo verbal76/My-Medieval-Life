@@ -1,0 +1,31 @@
+@ BTHREE-C4
+summary: At dawn Ursula reveals herself unarmed, then re-arms. She stole her gilded armour, marked with Utterbol's token, from the Lord's nephew, half lover and half tyrant to her. She gives Ralph a short Turk bow. They ride through the pine wood seeking a stream that runs straight down from the high ground where the Sage lives (not from the Great Mountains); the stream Ralph followed turns north toward Utterbol. Men fear the wood, so thieves are few, but Utterbol riders may pursue. She swears by the beads to live as long as they can. She tells how Bull Nosy loved her, was gentle as a brother, foresaw his death, and was slain when the Lord of Utterbol came upon them in the Goldburg mountains: Bull refused to sell her and threatened the Lord, who had his swordsman cleave Bull's skull. She resisted the Lord's demands by threatening to kill him or herself, and came to Utterbol unharmed.
+geo: The stream Ralph followed would lead at last to Utterbol (it turns north). Another stream runs straight down from the high ground of the Sage's dwelling. The Lord's camp was under a big rock by the cliffs in the mountains of Goldburg.
+open: Who is the Lord of Utterbol's nephew?
+
+E person | (unnamed) nephew of the Lord of Utterbol | - | lord's nephew | Youth at Utterbol, half lover and half tyrant to Ursula; she stole his gay armour. | P003 `to steal this gay armour from a lad at Utterbol, the nephew of the lord`
+E item | (unnamed) Ursula's stolen armour | - | armour | Gilded hauberk of gold and silver rings with a gemmed collar, light plates, a strange helm; bears Utterbol's token. | P004 `my coat is but a toy to it, with its gold and silver rings and its gemmed collar`
+E item | (unnamed) short Turk bow | - | bow | Short Turk bow and quiver Ursula brought, given to Ralph. | P004 `she showed him a short Turk bow and a quiver of arrows`
+
+R Bull Nosy | killed_by | Lord of Utterbol | his swordsman clove Bull's skull on the Lord's signal | backstory | CANON/high | P019 `smote Bull, and clave his skull`
+R Bull Nosy | lover_of | Ursula | loved her, but was gentle as a brother | backstory | CANON/high | P016 `I love thee sorely, and would have thee to wife`
+R (unnamed) nephew of the Lord of Utterbol | kin_of | Lord of Utterbol | nephew | BTHREE-C4 | CANON/high | P003 `the nephew of the lord; who like his eme was half my lover, half my tyrant`
+
+S (unnamed) woodland stream from the mountains | leads_to | Utterbol | ctx=dialogue:Ursula; cert=constrained | CANON/high | it turns north and would lead to Utterbol | P006 `it would have brought thee to Utterbol at last`
+S (unnamed) stream of the Sage's high ground | flows_from | Sage of Swevenham | dir=straight down from the high ground of the Sage's dwelling; ctx=dialogue:Ursula; cert=constrained | CANON/high | not from the Great Mountains | P006 `another that runneth straight down from the hills: not the Great Mountains, but the high ground whereon is the Sage's dwelling`
+
+T Ralph, Ursula | (unnamed) great pine wood under the mountains | (unnamed) stream of the Sage's high ground | mode=horse; terrain=close, still pine wood | P006 `they mounted and went their ways through a close pine-wood`
+
+F law | Lord of Utterbol | The Utterbol token on armour makes strong-thieves meek. | CANON/high; ctx=dialogue:Ursula | P009 `the token of Utterbol on mine armour shall make them meek enough`
+F society | (unnamed) kindred of the Bull | Bull Nosy says he is bound to marry within his blood. | CANON/high; ctx=dialogue:Ursula | P016 `though thou art not of the blood wherein I am bound to wed`
+F magic | Bull Nosy | He believed he had seen his fetch and was fey, his grave awaiting him in the mountains. | CANON/high; ctx=dialogue:Ursula | P018 `My end draweth nigh; I have seen my fetch, and am fey`
+F magic | Ursula | She swears by the beads they must live as long as they may. | CANON/high; ctx=dialogue:Ursula | P010 `By this token we must live as long as we may, whatsoever may befall`
+F household | Utterbol | Utterbol is a very great house with many roofs, fair chambers and gardens; Ursula was given a chamber, baths and fine clothes. | CANON/high; ctx=dialogue:Ursula | P022 `Utterbol is a very great house in a fair land, and there are sundry roofs and many fair chambers`
+F ecology | (unnamed) great pine wood under the mountains | Men fear the wood, so thieves are few there. | CANON/high; ctx=dialogue:Ursula | P009 `men fear the wood, therefore is there little prey for thieves therein`
+
+V backstory | Death of Bull Nosy | The Lord of Utterbol meets Bull Nosy and Ursula in the Goldburg mountains; Bull refuses to sell her and is killed. | who=Bull Nosy, Ursula, Lord of Utterbol; where=(unnamed) Goldburg mountains | P019 `lifted up his hand twice, and let it fall twice`
+V backstory | Ursula resists the Lord | On the road to Utterbol the Lord threatens Ursula; she threatens to kill him or herself; he backs down. | who=Ursula, Lord of Utterbol | P021 `bade him beware lest I should slay him or myself`
+
+U identity | The Lord of Utterbol's nephew is unnamed. | P003 `the nephew of the lord`
+
+O items | Armour bearing a feared lord's token as a disguise and protective item. | P009 `the token of Utterbol on mine armour`

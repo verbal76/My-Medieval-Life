@@ -1,0 +1,463 @@
+{
+ "entities": [
+  {
+   "name": "Sage of Swevenham",
+   "aliases": [
+    "the elder",
+    "the long-hoary"
+   ],
+   "type": "person",
+   "subtype": "sage",
+   "unnamed": false,
+   "summary": "Tall, white-bearded, strong, ruddy, unwrinkled; wears seeker's beads; once a sage near Swevenham; drank of the Well in old age; speaks little.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P010",
+     "q": "about his neck was a pair of beads like unto his own gossip's gift"
+    },
+    {
+     "p": "BTHREE-C5-P020",
+     "q": "when I was gotten very old, fared thither a-seeking it, and I found it"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) house of the Sage of Swevenham",
+   "aliases": [],
+   "type": "building",
+   "subtype": "hermitage",
+   "unnamed": true,
+   "summary": "Strong timber house thatched with wheat straw, a carved rood over the door, a bow and spear in the porch, by a spring, in a twelve-acre clearing with goat crofts, wheat and pot-herbs.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P013",
+     "q": "a little house builded of timber, strong and goodly, and thatched with wheat-straw"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) book of the Sage of Swevenham",
+   "aliases": [],
+   "type": "text",
+   "subtype": "ancient book",
+   "unnamed": true,
+   "summary": "Heirloom from the Sage's father's grandsire, wrapped in silk and gold, bound in tooled cuir-bouilly; holds old lore of the way to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P026",
+     "q": "This book was mine heritage at Swevenham or ever I became wise, and it came from my father's grandsire"
+    }
+   ]
+  },
+  {
+   "name": "Winter Valley",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "valley",
+   "unnamed": false,
+   "summary": "A stage on the way to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P018",
+     "q": "the Winter Valley"
+    }
+   ]
+  },
+  {
+   "name": "Folk Innocent",
+   "aliases": [],
+   "type": "group",
+   "subtype": "people",
+   "unnamed": false,
+   "summary": "A people on the way to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P018",
+     "q": "the Folk Innocent"
+    }
+   ]
+  },
+  {
+   "name": "Cot on the Way",
+   "aliases": [],
+   "type": "building",
+   "subtype": "cottage",
+   "unnamed": false,
+   "summary": "A stage on the way to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P018",
+     "q": "the Cot on the Way"
+    }
+   ]
+  },
+  {
+   "name": "Forest of Strange Things",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": false,
+   "summary": "A stage on the way to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P018",
+     "q": "the Forest of Strange Things"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) stream of the Sage's high ground",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": true,
+   "summary": "High-banked, deep, strong stream from the Sage's uplands through the pine wood.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P002",
+     "q": "The stream was high-banked and ran deep and strong"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) seekers' albs",
+   "aliases": [],
+   "type": "item",
+   "subtype": "ritual garments",
+   "unnamed": true,
+   "summary": "Long white linen gowns like albs, embroidered at hems, girt with red silk.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C5-P028",
+     "q": "a long gown of white linen, much like to an alb, broidered about the wrists and the hems and collar with apparels of gold and silk, girt with a red silk girdle"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Sage of Swevenham",
+   "rel": "other",
+   "b": "Lady of Abundance",
+   "detail": "his friend of past years",
+   "when": "BTHREE-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P025",
+     "q": "I wot now that my friend of past years would have me make you both wise"
+    }
+   ]
+  },
+  {
+   "a": "Sage of Swevenham",
+   "rel": "other",
+   "b": "(unnamed) wizard of the mountains",
+   "detail": "probably the same: lived near Swevenham, consulted for lore, went to seek the Well when very old",
+   "when": "backstory",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P020",
+     "q": "when a many years ago I dwelt nigh to Swevenham, and folk sought to me for lore"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Well at the World's End",
+   "rel": "beyond",
+   "b": "Wall of the World",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Sage of Swevenham",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "ordered way: mountains and Wall, Winter Valley, Folk Innocent, Cot on the Way, Forest of Strange Things, Dry Tree",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P018",
+     "q": "the way through the mountains and the Wall of the World, and the Winter Valley, and the Folk Innocent, and the Cot on the Way, and the Forest of Strange Things and the Dry Tree"
+    }
+   ]
+  },
+  {
+   "a": "House of the Sorceress",
+   "rel": "on_route",
+   "b": "Well at the World's End",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Sage of Swevenham",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "far away, but they will come to it",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P014",
+     "q": "that house is far away hence; yet shalt thou come thereto"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) house of the Sage of Swevenham",
+   "rel": "distance_from",
+   "b": "(unnamed) camp by the half-ring bank",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "about an hour's ride",
+   "travel_mode": "",
+   "terrain_text": "beech wood, down a long hill and up another",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P012",
+     "q": "Thus they went for an hour"
+    }
+   ]
+  },
+  {
+   "a": "Great Mountains",
+   "rel": "visible_from",
+   "b": "(unnamed) shaggy upland",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "seems no nearer than from Vale Turris",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P004",
+     "q": "which yet seemed to Ralph scarce nigher, if at all, than when he had beheld it ere he had come to Vale Turris"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "(unnamed) great pine wood under the mountains",
+   "to": "(unnamed) house of the Sage of Swevenham",
+   "via": [
+    "(unnamed) stream of the Sage's high ground",
+    "(unnamed) shaggy upland"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "two days and a morning",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "pine wood, rough upland, cliff gorges, beech wood",
+   "chapter": "BTHREE-C5",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P004",
+     "q": "rode up the stream, and began to go up hill"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "(unnamed) great pine wood under the mountains",
+   "statement": "Lions are heard roaring at night.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P003",
+     "q": "twice in the night Ralph deemed that he heard a lion roar"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Sage of Swevenham",
+   "statement": "Though very old to look at, he is strong, ruddy and unwrinkled: the effect of the Well.",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P010",
+     "q": "the skin of his face and hands was nowise wrinkled"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Sage of Swevenham",
+   "statement": "He says the Well's seekers he advised long ago never returned.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P020",
+     "q": "they never came back; but died belike or ever they had seen the Well"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Sage of Swevenham",
+   "statement": "The book must not be read under a roof, nor heard in armour or in a tyrant's clothes.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P026",
+     "q": "Yet were it not well to read in this book under a roof"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "(unnamed) house of the Sage of Swevenham",
+   "statement": "Goats, wheat shocks, coleworts and pot-herbs in the clearing.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P013",
+     "q": "fenced crofts with goats therein, and three garths of tillage, wherein the wheat-shocks were yet standing"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) shaggy upland",
+   "statement": "A distant roar of falling water and floating foam suggest a great waterfall upstream.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P007",
+     "q": "they thought themselves to be near some great mountain-neck whereover the water was falling from some high place"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Meeting the Sage of Swevenham",
+   "chapter": "BTHREE-C5",
+   "layer": "main",
+   "time_text": "dawn",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "places": [
+    "(unnamed) camp by the half-ring bank"
+   ],
+   "summary": "The Sage finds them at dawn and takes them to his house to teach them.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P009",
+     "q": "I am glad that ye are come at last; for I looked for you no later than this"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether the Sage is the vanished wizard of Swevenham lore.",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P020",
+     "q": "when a many years ago I dwelt nigh to Swevenham"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Named canonical route stages to the Well, to be placed in order by the generator.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C5-P018",
+     "q": "the Winter Valley, and the Folk Innocent, and the Cot on the Way, and the Forest of Strange Things and the Dry Tree"
+    }
+   ]
+  },
+  {
+   "idea": "Lore-giving sages who require ritual dress and an open-air reading, as quest-gate mechanics.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C5-P027",
+     "q": "doff thy worldly raiment"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C5",
+ "chapters": [
+  "BTHREE-C5"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C5",
+   "paragraphs_total": 28,
+   "all_paragraphs_read": true,
+   "summary": "At nightfall they reach the stream cleaving the pine wood, high-banked, deep and strong; they hear a lion in the night. Next day they climb along it into rough shaggy upland, the mountain wall seeming no nearer than from Vale Turris; the stream sometimes runs between sheer cliffs. Ralph shoots heath-fowl. They camp on greensward between the water and a half-ring of steep bank, hear a distant roar of falling water, and see foam on the river. At dawn the Sage of Swevenham appears: white-bearded but strong, ruddy and unwrinkled, wearing beads like Ralph's. He leads them through beech wood to his clearing (about twelve acres, goat crofts, wheat, pot-herbs, a timber house with a carved rood, a spring) and says it is not the witch's house, which is far away but which they will reach. He lived near Swevenham, gave lore to seekers who never returned, and in old age sought and found the Well himself. He lists the way: the mountains and the Wall of the World, the Winter Valley, the Folk Innocent, the Cot on the Way, the Forest of Strange Things, and the Dry Tree. He has an ancestral book and dresses them in white linen albs with red girdles to hear it.",
+   "geography_notes": "The stream is high-banked, deep and strong, cleaving the pine wood. Upstream lies rough shaggy upland with cliff gorges. A half-ring of steep bank gives a sheltered greensward by the water. A distant waterfall over a mountain neck is heard. From that camp: round a bank, a beech wood with hollies and thorns, down a long hill and up another (about an hour) to a plain hilltop with the Sage's clearing. The witch's cot is far away but on the route.",
+   "open_questions": [
+    "Is the Sage the vanished wizard of the mountains from Swevenham lore (BTWO-C16)?"
+   ]
+  }
+ ]
+}
