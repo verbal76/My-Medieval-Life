@@ -1,0 +1,32 @@
+@ BTWO-C1
+summary: Before dawn the Lady wakes Ralph and leads him, armed, through the pine wood and across a waste into thick wood to a hazel-ringed clearing with great grey stones like a broken doom-ring. Weeping, she tells him the Knight of the Sun is her husband, who cursed and drove her out before they were bedded, misled by Walter the Black's tale that she was a wise-wife and enchantress. The Knight's brother is the Captain of the Dry Tree, the tall man Ralph has met four times. She sent Roger to bring Ralph to Abundance but was caught by her husband and Walter near the Water of the Oak. She swears she will be good and true to him, and they become lovers.
+geo: From the lake, more than half an hour through dark pine wood to its edge, a grassy lawn with maples and thorns, a waste with few trees, then thick wood, and three hours after sunrise a hazel copse around a clearing with great grey stones. The lake is called the Water of the Oak. The Dry Tree riders had gone north against the Burg.
+open: Is the doom-ring of grey stones a recurring ancient-folk monument?
+
+E feature | (unnamed) clearing of grey stones | - | stone ring | Grassy clearing behind a hazel copse with great grey stones lying about like a broken doom-ring of a forgotten folk. | P010 `great grey stones lying about, as if it had been the broken doom-ring of a forgotten folk`
+E feature | Water of the Oak | - | lake | Name for the lake where the Lady met her husband and Walter. | P025 `as I drew near to the Water of the Oak`
+E person | Captain of the Dry Tree | the tall man, the big captain | captain | Brother of the Knight of the Sun; the tall man seen with the Lady; Ralph has met him four times. | P022 `his brother is the Captain of the Dry Tree; the tall man whom thou hast seen with me`
+
+R Lady of Abundance | spouse_of | Knight of the Sun | wedded but driven out before they were bedded | BTWO-C1 | CANON/high | P018 `Fair creature, he is my husband`; P019 `or ever we were bedded he must needs curse me and drive me away from his house`
+R Captain of the Dry Tree | sibling_of | Knight of the Sun | brother | BTWO-C1 | CANON/high | P022 `his brother is the Captain of the Dry Tree`
+R Walter the Black | enemy_of | Lady of Abundance | loved and betrayed her | BTWO-C1 | CANON/high | P027 `I may not hide that he hath loved me: but he hath also betrayed me`
+R Lady of Abundance | lover_of | Ralph | - | BTWO-C1 onward | CANON/high | P030 `loved him no less than he loved her`
+R (unnamed) man of the leafless tree | other | Captain of the Dry Tree | same person (the tall man met four times) | BTWO-C1 | INF/high | P023 `the big captain that I have come across these four times`
+R Lady of Abundance | other | Roger of the Rope-walk | she sent Roger to bring Ralph to Abundance | BTWO-C1 | CANON/high | P024 `have I not told thee that I bade Roger lead thee thither?`
+
+S (unnamed) clearing of grey stones | route_next | (unnamed) long lake south of Abundance | time=about three hours after sunrise, on foot from before dawn; terrain=pine wood, lawn, a waste, thick wood, hazel copse; cert=constrained | CANON/high | - | P010 `when the sun had been up for some three hours`
+S (unnamed) long lake south of Abundance | other | Water of the Oak | cert=constrained | INF/medium | probably the same lake; the Lady met her husband near the Water of the Oak and was at the lake | P025 `as I drew near to the Water of the Oak`
+
+T Lady of Abundance, Ralph | (unnamed) three oaks by the lake | (unnamed) clearing of grey stones | mode=foot; start=before dawn; end=three hours after sunrise; terrain=pine wood, waste, thick wood | P010 `So they sped across a waste not much beset with trees`
+T (unnamed) Dry Tree riders | (unknown) | Burg of the Four Friths | dir=north | P025 `our riders had gone to the north against them of the Burg`
+
+F history | Lady of Abundance | Walter told a tale, true and false mingled, that she was a wise-wife and enchantress; she was shamed and driven out barefoot and bleeding. | CANON/high; ctx=dialogue:Lady of Abundance | P027 `he made a tale of me of true and false mingled, that I was a wise-wife and an enchantress`
+F history | Ralph | The Captain of the Dry Tree desires her "as others have", but would not kill for her. | CANON/high; ctx=dialogue:Lady of Abundance | P023 `he will not slay any man for my sake`
+F history | ancient folk | A broken stone ring in the forest is likened to a doom-ring (court circle) of a forgotten folk. | INF/medium | P010 `the broken doom-ring of a forgotten folk`
+
+V main | The Lady takes Ralph from the lake | Before dawn the Lady leads Ralph away from the Knight of the Sun; in a stone-ring clearing she reveals her marriage and they become lovers. | time=dawn to midday, June; who=Lady of Abundance, Ralph; where=(unnamed) clearing of grey stones | P011 `now I have brought thee away from death`
+V backstory | The Lady's expulsion from Sunway | On Walter's tale the Knight of the Sun cursed and drove out his bride before they were bedded. | who=Lady of Abundance, Knight of the Sun, Walter the Black; where=Sunway | P027 `driven forth wrung with anguish, barefoot and bleeding`
+
+U contradiction | The Lady contradicts her BONE-C22 bargain: there she promised to go home with the Knight; here she flees with Ralph. | P020 `we will not go back to him, for he is stronger than thou`
+
+O world | Ancient stone rings ("doom-rings") as procedural monument types. | P010 `the broken doom-ring of a forgotten folk`

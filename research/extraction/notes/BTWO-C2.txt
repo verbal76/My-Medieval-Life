@@ -1,0 +1,26 @@
+@ BTWO-C2
+summary: At noon they go on afoot. The Lady says her husband will follow alone on Silverfax, but she has spoken a word in the horse's ear to lead him a little astray. She says her woodcraft is not sorcery: she was bred in woods, though not these. They are heading for Hampton under Scaur and the Fellowship of Champions on the rock, two days afoot. She says the book has errors. At a brook north of their path she gathers strawberries and they eat.
+geo: Hampton under Scaur is two days' walk from the stone-ring clearing; the Fellowship of Champions dwells "on the rock" there. A short detour north from the route leads to a brook with a green bank and wild strawberries.
+open: What errors does the book contain?
+
+E group | Fellowship of Champions | the Champions | fellowship | Fellowship who dwell on the rock at Hampton under Scaur (the Dry Tree company). | P006 `the Fellowship of Champions who dwell on the rock`
+E feature | (unnamed) strawberry brook | - | brook | Clear brook with a green bank, thorn bushes and wild strawberries, a little north of the way. | P012 `a little space about a brook, grassy and clear of trees save a few big thorn-bushes, with a green ridge or bank on the other side`
+
+R Fellowship of Champions | lives_in | Hampton under Scaur | on the rock | BTWO-C2 | CANON/high | P006 `that which leadeth to Hampton under Scaur, and the Fellowship of Champions who dwell on the rock`
+
+S Hampton under Scaur | distance_from | (unnamed) clearing of grey stones | time=more than two days afoot; ctx=dialogue:Lady of Abundance; cert=constrained | CANON/high | - | P009 `which we shall not reach these two days if we go afoot all the way`
+S (unnamed) strawberry brook | north_of | (unnamed) route to Hampton under Scaur | dir=north, a little aside the straight way; cert=fixed | CANON/high | - | P012 `she led north through a thicket of mingled trees till Ralph heard water running`
+
+T Lady of Abundance, Ralph | (unnamed) clearing of grey stones | (unnamed) strawberry brook | mode=foot; start=about noon; end=two hours after noon; dir=toward Hampton under Scaur, detour north | P011 `it is now past two hours after noon`
+
+F magic | Silverfax | The Lady says she whispered in Silverfax's ear so the horse will lead her husband a little astray. | CANON/high; ctx=dialogue:Lady of Abundance | P004 `I said a word in the ear of Silverfax or ever I departed, and now the good beast knows my mind`
+F magic | Lady of Abundance | She says her knowledge of the woods is no sorcery: she was bred in woods. | CANON/high; ctx=dialogue:Lady of Abundance | P005 `in my knowing of these woods, there is no sorcery at all`
+F custom | Knight of the Sun | The Lady says he would never gather folk to chase one man; he would come alone. | CANON/high; ctx=dialogue:Lady of Abundance | P002 `if he come, he will be by himself alone`
+F food | (unnamed) strawberry brook | Wild strawberries grow along the bank in June. | CANON/high | P012 `went hither and thither gathering strawberries about the bank`
+F religion | Lady of Abundance | She compares herself to the Wood-wife and Goddess of old, Diana. | CANON/high; ctx=dialogue:Lady of Abundance | P005 `light-foot as the Wood-wife and Goddess of yore agone`; P011 `even Diana, the Wood-wife of yore agone`
+
+V main | Rest by the brook | The lovers rest and eat at a brook before the Lady tells her story. | time=past two hours after noon; who=Lady of Abundance, Ralph; where=(unnamed) strawberry brook | P013 `fell to speaking to him, as a tale is told in the ingle nook`
+
+U document_error | The Lady says the book about her has errors; the book is not a reliable source. | P008 `there are matters written wrong in the book`
+
+O lore | Unreliable written sources that a living witness corrects. | P008 `there are matters written wrong in the book`

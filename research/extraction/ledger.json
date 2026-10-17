@@ -623,33 +623,76 @@
    "title": "Ralph Meets With Love in the Wilderness",
    "body_paragraphs": 29,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 6,
+    "spatial": 2,
+    "travel": 2,
+    "facts": 3,
+    "events": 2,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the doom-ring of grey stones a recurring ancient-folk monument?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C1.txt",
+    "records": "research/extraction/chapters/BTWO-C1.json"
+   }
   },
   {
    "chapter": "BTWO-C2",
    "title": "They Break Their Fast in the Wildwood",
    "body_paragraphs": 12,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "What errors does the book contain?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C2.txt",
+    "records": "research/extraction/chapters/BTWO-C2.json"
+   }
   },
   {
    "chapter": "BTWO-C3",
    "title": "The Lady Telleth Ralph of the Past Days of Her Life",
    "body_paragraphs": 15,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 7,
+    "relations": 2,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 9,
+    "events": 4,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Where is the witch's forest relative to the known lands?",
+    "What is the stone table, an ancient work?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C3.txt",
+    "records": "research/extraction/chapters/BTWO-C3.json"
+   }
   },
   {
    "chapter": "BTWO-C4",

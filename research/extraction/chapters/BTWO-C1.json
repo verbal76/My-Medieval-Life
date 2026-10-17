@@ -1,0 +1,372 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) clearing of grey stones",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "stone ring",
+   "unnamed": true,
+   "summary": "Grassy clearing behind a hazel copse with great grey stones lying about like a broken doom-ring of a forgotten folk.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C1-P010",
+     "q": "great grey stones lying about, as if it had been the broken doom-ring of a forgotten folk"
+    }
+   ]
+  },
+  {
+   "name": "Water of the Oak",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "lake",
+   "unnamed": false,
+   "summary": "Name for the lake where the Lady met her husband and Walter.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C1-P025",
+     "q": "as I drew near to the Water of the Oak"
+    }
+   ]
+  },
+  {
+   "name": "Captain of the Dry Tree",
+   "aliases": [
+    "the tall man",
+    "the big captain"
+   ],
+   "type": "person",
+   "subtype": "captain",
+   "unnamed": false,
+   "summary": "Brother of the Knight of the Sun; the tall man seen with the Lady; Ralph has met him four times.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C1-P022",
+     "q": "his brother is the Captain of the Dry Tree; the tall man whom thou hast seen with me"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Lady of Abundance",
+   "rel": "spouse_of",
+   "b": "Knight of the Sun",
+   "detail": "wedded but driven out before they were bedded",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C1-P018",
+     "q": "Fair creature, he is my husband"
+    },
+    {
+     "p": "BTWO-C1-P019",
+     "q": "or ever we were bedded he must needs curse me and drive me away from his house"
+    }
+   ]
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "rel": "sibling_of",
+   "b": "Knight of the Sun",
+   "detail": "brother",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C1-P022",
+     "q": "his brother is the Captain of the Dry Tree"
+    }
+   ]
+  },
+  {
+   "a": "Walter the Black",
+   "rel": "enemy_of",
+   "b": "Lady of Abundance",
+   "detail": "loved and betrayed her",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C1-P027",
+     "q": "I may not hide that he hath loved me: but he hath also betrayed me"
+    }
+   ]
+  },
+  {
+   "a": "Lady of Abundance",
+   "rel": "lover_of",
+   "b": "Ralph",
+   "detail": "-",
+   "when": "BTWO-C1 onward",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C1-P030",
+     "q": "loved him no less than he loved her"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) man of the leafless tree",
+   "rel": "other",
+   "b": "Captain of the Dry Tree",
+   "detail": "same person (the tall man met four times)",
+   "when": "BTWO-C1",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C1-P023",
+     "q": "the big captain that I have come across these four times"
+    }
+   ]
+  },
+  {
+   "a": "Lady of Abundance",
+   "rel": "other",
+   "b": "Roger of the Rope-walk",
+   "detail": "she sent Roger to bring Ralph to Abundance",
+   "when": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C1-P024",
+     "q": "have I not told thee that I bade Roger lead thee thither?"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) clearing of grey stones",
+   "rel": "route_next",
+   "b": "(unnamed) long lake south of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "about three hours after sunrise, on foot from before dawn",
+   "travel_mode": "",
+   "terrain_text": "pine wood, lawn, a waste, thick wood, hazel copse",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C1-P010",
+     "q": "when the sun had been up for some three hours"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) long lake south of Abundance",
+   "rel": "other",
+   "b": "Water of the Oak",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "note": "probably the same lake; the Lady met her husband near the Water of the Oak and was at the lake",
+   "refs": [
+    {
+     "p": "BTWO-C1-P025",
+     "q": "as I drew near to the Water of the Oak"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "from": "(unnamed) three oaks by the lake",
+   "to": "(unnamed) clearing of grey stones",
+   "via": [],
+   "mode": "foot",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "before dawn",
+   "end_time_text": "three hours after sunrise",
+   "terrain_text": "pine wood, waste, thick wood",
+   "chapter": "BTWO-C1",
+   "refs": [
+    {
+     "p": "BTWO-C1-P010",
+     "q": "So they sped across a waste not much beset with trees"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "(unnamed) Dry Tree riders"
+   ],
+   "from": "(unknown)",
+   "to": "Burg of the Four Friths",
+   "via": [],
+   "mode": "",
+   "direction_text": "north",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C1",
+   "refs": [
+    {
+     "p": "BTWO-C1-P025",
+     "q": "our riders had gone to the north against them of the Burg"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Lady of Abundance",
+   "statement": "Walter told a tale, true and false mingled, that she was a wise-wife and enchantress; she was shamed and driven out barefoot and bleeding.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C1-P027",
+     "q": "he made a tale of me of true and false mingled, that I was a wise-wife and an enchantress"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Ralph",
+   "statement": "The Captain of the Dry Tree desires her \"as others have\", but would not kill for her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C1-P023",
+     "q": "he will not slay any man for my sake"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "ancient folk",
+   "statement": "A broken stone ring in the forest is likened to a doom-ring (court circle) of a forgotten folk.",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C1-P010",
+     "q": "the broken doom-ring of a forgotten folk"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The Lady takes Ralph from the lake",
+   "chapter": "BTWO-C1",
+   "layer": "main",
+   "time_text": "dawn to midday, June",
+   "participants": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) clearing of grey stones"
+   ],
+   "summary": "Before dawn the Lady leads Ralph away from the Knight of the Sun; in a stone-ring clearing she reveals her marriage and they become lovers.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C1-P011",
+     "q": "now I have brought thee away from death"
+    }
+   ]
+  },
+  {
+   "label": "The Lady's expulsion from Sunway",
+   "chapter": "BTWO-C1",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Lady of Abundance",
+    "Knight of the Sun",
+    "Walter the Black"
+   ],
+   "places": [
+    "Sunway"
+   ],
+   "summary": "On Walter's tale the Knight of the Sun cursed and drove out his bride before they were bedded.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C1-P027",
+     "q": "driven forth wrung with anguish, barefoot and bleeding"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "The Lady contradicts her BONE-C22 bargain: there she promised to go home with the Knight; here she flees with Ralph.",
+   "refs": [
+    {
+     "p": "BTWO-C1-P020",
+     "q": "we will not go back to him, for he is stronger than thou"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Ancient stone rings (\"doom-rings\") as procedural monument types.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C1-P010",
+     "q": "the broken doom-ring of a forgotten folk"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C1",
+ "chapters": [
+  "BTWO-C1"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C1",
+   "paragraphs_total": 29,
+   "all_paragraphs_read": true,
+   "summary": "Before dawn the Lady wakes Ralph and leads him, armed, through the pine wood and across a waste into thick wood to a hazel-ringed clearing with great grey stones like a broken doom-ring. Weeping, she tells him the Knight of the Sun is her husband, who cursed and drove her out before they were bedded, misled by Walter the Black's tale that she was a wise-wife and enchantress. The Knight's brother is the Captain of the Dry Tree, the tall man Ralph has met four times. She sent Roger to bring Ralph to Abundance but was caught by her husband and Walter near the Water of the Oak. She swears she will be good and true to him, and they become lovers.",
+   "geography_notes": "From the lake, more than half an hour through dark pine wood to its edge, a grassy lawn with maples and thorns, a waste with few trees, then thick wood, and three hours after sunrise a hazel copse around a clearing with great grey stones. The lake is called the Water of the Oak. The Dry Tree riders had gone north against the Burg.",
+   "open_questions": [
+    "Is the doom-ring of grey stones a recurring ancient-folk monument?"
+   ]
+  }
+ ]
+}

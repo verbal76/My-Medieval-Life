@@ -1,0 +1,270 @@
+{
+ "entities": [
+  {
+   "name": "Fellowship of Champions",
+   "aliases": [
+    "the Champions"
+   ],
+   "type": "group",
+   "subtype": "fellowship",
+   "unnamed": false,
+   "summary": "Fellowship who dwell on the rock at Hampton under Scaur (the Dry Tree company).",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C2-P006",
+     "q": "the Fellowship of Champions who dwell on the rock"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) strawberry brook",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "brook",
+   "unnamed": true,
+   "summary": "Clear brook with a green bank, thorn bushes and wild strawberries, a little north of the way.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C2-P012",
+     "q": "a little space about a brook, grassy and clear of trees save a few big thorn-bushes, with a green ridge or bank on the other side"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Fellowship of Champions",
+   "rel": "lives_in",
+   "b": "Hampton under Scaur",
+   "detail": "on the rock",
+   "when": "BTWO-C2",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C2-P006",
+     "q": "that which leadeth to Hampton under Scaur, and the Fellowship of Champions who dwell on the rock"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Hampton under Scaur",
+   "rel": "distance_from",
+   "b": "(unnamed) clearing of grey stones",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "more than two days afoot",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C2-P009",
+     "q": "which we shall not reach these two days if we go afoot all the way"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) strawberry brook",
+   "rel": "north_of",
+   "b": "(unnamed) route to Hampton under Scaur",
+   "direction": "north, a little aside the straight way",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C2-P012",
+     "q": "she led north through a thicket of mingled trees till Ralph heard water running"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "from": "(unnamed) clearing of grey stones",
+   "to": "(unnamed) strawberry brook",
+   "via": [],
+   "mode": "foot",
+   "direction_text": "toward Hampton under Scaur, detour north",
+   "duration_text": "",
+   "start_time_text": "about noon",
+   "end_time_text": "two hours after noon",
+   "terrain_text": "",
+   "chapter": "BTWO-C2",
+   "refs": [
+    {
+     "p": "BTWO-C2-P011",
+     "q": "it is now past two hours after noon"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Silverfax",
+   "statement": "The Lady says she whispered in Silverfax's ear so the horse will lead her husband a little astray.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C2-P004",
+     "q": "I said a word in the ear of Silverfax or ever I departed, and now the good beast knows my mind"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "She says her knowledge of the woods is no sorcery: she was bred in woods.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C2-P005",
+     "q": "in my knowing of these woods, there is no sorcery at all"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Knight of the Sun",
+   "statement": "The Lady says he would never gather folk to chase one man; he would come alone.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C2-P002",
+     "q": "if he come, he will be by himself alone"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "(unnamed) strawberry brook",
+   "statement": "Wild strawberries grow along the bank in June.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C2-P012",
+     "q": "went hither and thither gathering strawberries about the bank"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Lady of Abundance",
+   "statement": "She compares herself to the Wood-wife and Goddess of old, Diana.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C2-P005",
+     "q": "light-foot as the Wood-wife and Goddess of yore agone"
+    },
+    {
+     "p": "BTWO-C2-P011",
+     "q": "even Diana, the Wood-wife of yore agone"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Rest by the brook",
+   "chapter": "BTWO-C2",
+   "layer": "main",
+   "time_text": "past two hours after noon",
+   "participants": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) strawberry brook"
+   ],
+   "summary": "The lovers rest and eat at a brook before the Lady tells her story.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C2-P013",
+     "q": "fell to speaking to him, as a tale is told in the ingle nook"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "document_error",
+   "question": "The Lady says the book about her has errors; the book is not a reliable source.",
+   "refs": [
+    {
+     "p": "BTWO-C2-P008",
+     "q": "there are matters written wrong in the book"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Unreliable written sources that a living witness corrects.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTWO-C2-P008",
+     "q": "there are matters written wrong in the book"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C2",
+ "chapters": [
+  "BTWO-C2"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C2",
+   "paragraphs_total": 12,
+   "all_paragraphs_read": true,
+   "summary": "At noon they go on afoot. The Lady says her husband will follow alone on Silverfax, but she has spoken a word in the horse's ear to lead him a little astray. She says her woodcraft is not sorcery: she was bred in woods, though not these. They are heading for Hampton under Scaur and the Fellowship of Champions on the rock, two days afoot. She says the book has errors. At a brook north of their path she gathers strawberries and they eat.",
+   "geography_notes": "Hampton under Scaur is two days' walk from the stone-ring clearing; the Fellowship of Champions dwells \"on the rock\" there. A short detour north from the route leads to a brook with a green bank and wild strawberries.",
+   "open_questions": [
+    "What errors does the book contain?"
+   ]
+  }
+ ]
+}

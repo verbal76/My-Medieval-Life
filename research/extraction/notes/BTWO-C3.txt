@@ -1,0 +1,38 @@
+@ BTWO-C3
+summary: The Lady tells her childhood: she does not know her birth or parents; she grew up in a thatched timber house in a forest garden with goats, under a richly dressed, stern woman she called mother. The wild creatures loved her. At about fifteen, in a storm, she saw a loom weaving by itself and the woman naked, singing from a great book. Next day the woman sacrificed the girl's white goat on a stone table in a ring of yews. That winter she found a dead woman in scarlet and fur in the snow; the mistress took from her a blue and green necklace like Ralph's, calling her another seeker who did not find the Well. Four armed men later visited, hoping for a guide to the Well.
+geo: A forest house of timber and reed thatch with garden, crofts and goat garth; the great forest all around; a lawn walled by great yews with a stone table of four uprights and a plank, the only man-made thing in the wood besides the house. The Lady says she was bred in woods, though not these.
+open: Where is the witch's forest relative to the known lands? || What is the stone table, an ancient work?
+
+E person | (unnamed) witch-mistress of the Lady | the woman, mistress, tyrant | sorceress | Big, black-haired, stern woman in rich raiment and jewels who raised the Lady; works magic from a great book, sacrifices on a stone altar. | P004 `she was a big woman, black-haired and stern of aspect`; P002 `clad in glittering raiment, and with jewels on her neck and fingers`
+E building | (unnamed) witch's forest house | - | cottage | Thatched timber house with a garden, crofts and goat shed, deep in the forest; has a weaving chamber. | P002 `a little house built of timber and thatched with reed`
+E feature | (unnamed) yew ring and stone table | the altar | altar | Lawn walled by great yews with a stone table of four uprights and a great stone plank. | P006 `round which was a wall, as it were, of great yew trees, and amidst, a table of stone, made of four uprights and a great stone plank`
+E text | (unnamed) witch's great book | - | grimoire | Great open book from which the witch sang. | P004 `with a great open book before her`
+E person | (unnamed) dead seeker in the snow | - | seeker | Woman in scarlet and fur found dead in the snow, wearing a blue and green necklace; buried by the Lady. | P013 `a woman clad in fair raiment of scarlet and fur`
+E item | (unnamed) dead seeker's necklace | - | amulet | Blue and green stones with gold between, like Ralph's; taken by the witch. | P013 `a necklace of blue stones and green, with gold between`
+E group | (unnamed) four armed seekers | - | knights | Four armoured riders who wished the girl could guide them to the Well. | P016 `If she might but be our guide to the Well at the World's End!`
+
+R Lady of Abundance | slave_of | (unnamed) witch-mistress of the Lady | raised as her servant | backstory | CANON/high | P003 `the woman set me to do such work as I had strength for`
+R (unnamed) witch-mistress of the Lady | other | Lady of Abundance | not her mother though called so | backstory | CANON/high | P002 `now I know that she was not my mother`
+
+S (unnamed) yew ring and stone table | near | (unnamed) witch's forest house | time=walking distance through the wood; cert=constrained | CANON/high | - | P006 `she led me through the wood into a lawn which I knew well`
+
+F magic | (unnamed) witch-mistress of the Lady | A loom wove by itself while she sat naked singing from a great book in a storm. | CANON/high; ctx=dialogue:Lady of Abundance | P004 `the shuttle was flying from side to side, and the shed opening and changing`
+F magic | (unnamed) witch-mistress of the Lady | She sacrificed the white goat on the stone table, marked the girl and herself with blood, burned it on seven faggots and sang. | CANON/high; ctx=dialogue:Lady of Abundance | P010 `dipped her fingers in the blood and reddened both herself and me on the breast, and the hands, and the feet`
+F magic | (unnamed) witch-mistress of the Lady | She says something must be offered on the altar "lest all come to naught". | CANON/high; ctx=dialogue:witch | P008 `something must be slain and offered up here on this altar, lest all come to naught`
+F magic | (unnamed) witch-mistress of the Lady | She lit the fire, but the girl did not see how. | CANON/high; ctx=dialogue:Lady of Abundance | P010 `she made fire, but I saw not how`
+F magic | Lady of Abundance | Wild creatures loved her and did not fear her. | CANON/high; ctx=dialogue:Lady of Abundance | P002 `the wild things, even to the conies and fawns loved me`
+F magic | Well at the World's End | The witch calls the dead woman "another seeker who hath not found". | CANON/high; ctx=dialogue:witch | P015 `Here, then, is another seeker who hath not found`
+F household | (unnamed) witch's forest house | The girl spun flax or hair, herded and milked goats, snared birds and small deer, and slept among the goats. | CANON/high; ctx=dialogue:Lady of Abundance | P003 `Nought else I knew save how to spin, and to tend our goats and milk them, and to set snares`
+F ecology | (unnamed) witch's forest house | Wolves roam the forest in winter. | CANON/high; ctx=dialogue:witch | P013 `be before the wolves`
+F history | (unnamed) yew ring and stone table | The stone table was the only man-made thing in the wood apart from the house. | CANON/high; ctx=dialogue:Lady of Abundance | P006 `the only thing in all the wood wherein I was used to wander which was of man's handiwork`
+
+V backstory | The self-weaving loom | At fifteen, in a storm, the girl sees a loom weaving alone and the woman singing naked from a book. | time=late summer, the Lady about fifteen; who=Lady of Abundance, (unnamed) witch-mistress of the Lady; where=(unnamed) witch's forest house | P004 `At last one day of late summer when I, now of some fifteen summers`
+V backstory | Sacrifice of the white goat | The witch sacrifices the girl's goat on the yew-ring altar. | who=Lady of Abundance, (unnamed) witch-mistress of the Lady; where=(unnamed) yew ring and stone table | P010 `cut the beast's throat`
+V backstory | The dead seeker in the snow | The girl finds a dead woman seeker; the witch takes her necklace; the girl buries her. | time=winter; who=Lady of Abundance, (unnamed) dead seeker in the snow; where=(unnamed) witch's forest house | P015 `dug a pit, and buried the poor damsel there with all her gear`
+V backstory | Four seekers visit the witch | Four armed riders come seeking a guide to the Well; the witch meets them in poor homespun. | time=summer; who=(unnamed) four armed seekers, (unnamed) witch-mistress of the Lady; where=(unnamed) witch's forest house | P016 `there came from the wood four men, a-horseback and weaponed`
+
+U location | Where the witch's forest lies; the Lady says she was bred in woods, though not these. | P002 `the great trees of the forest were all about the garden`
+U identity | What the blue and green necklaces signify: worn by Ralph, the dead seeker, and the Lady. | P013 `like unto thine as one peascod is to another`
+
+O lore | Recurring amulets carried by Well-seekers as a quest-item motif. | P013 `a necklace of blue stones and green, with gold between`
+O world | Isolated witch-cottages and yew-ringed altars as forest landmarks. | P006 `a wall, as it were, of great yew trees`

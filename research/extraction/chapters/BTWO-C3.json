@@ -1,0 +1,468 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) witch-mistress of the Lady",
+   "aliases": [
+    "the woman",
+    "mistress",
+    "tyrant"
+   ],
+   "type": "person",
+   "subtype": "sorceress",
+   "unnamed": true,
+   "summary": "Big, black-haired, stern woman in rich raiment and jewels who raised the Lady; works magic from a great book, sacrifices on a stone altar.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C3-P004",
+     "q": "she was a big woman, black-haired and stern of aspect"
+    },
+    {
+     "p": "BTWO-C3-P002",
+     "q": "clad in glittering raiment, and with jewels on her neck and fingers"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) witch's forest house",
+   "aliases": [],
+   "type": "building",
+   "subtype": "cottage",
+   "unnamed": true,
+   "summary": "Thatched timber house with a garden, crofts and goat shed, deep in the forest; has a weaving chamber.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C3-P002",
+     "q": "a little house built of timber and thatched with reed"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) yew ring and stone table",
+   "aliases": [
+    "the altar"
+   ],
+   "type": "feature",
+   "subtype": "altar",
+   "unnamed": true,
+   "summary": "Lawn walled by great yews with a stone table of four uprights and a great stone plank.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C3-P006",
+     "q": "round which was a wall, as it were, of great yew trees, and amidst, a table of stone, made of four uprights and a great stone plank"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) witch's great book",
+   "aliases": [],
+   "type": "text",
+   "subtype": "grimoire",
+   "unnamed": true,
+   "summary": "Great open book from which the witch sang.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C3-P004",
+     "q": "with a great open book before her"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) dead seeker in the snow",
+   "aliases": [],
+   "type": "person",
+   "subtype": "seeker",
+   "unnamed": true,
+   "summary": "Woman in scarlet and fur found dead in the snow, wearing a blue and green necklace; buried by the Lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C3-P013",
+     "q": "a woman clad in fair raiment of scarlet and fur"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) dead seeker's necklace",
+   "aliases": [],
+   "type": "item",
+   "subtype": "amulet",
+   "unnamed": true,
+   "summary": "Blue and green stones with gold between, like Ralph's; taken by the witch.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C3-P013",
+     "q": "a necklace of blue stones and green, with gold between"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) four armed seekers",
+   "aliases": [],
+   "type": "group",
+   "subtype": "knights",
+   "unnamed": true,
+   "summary": "Four armoured riders who wished the girl could guide them to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C3-P016",
+     "q": "If she might but be our guide to the Well at the World's End!"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Lady of Abundance",
+   "rel": "slave_of",
+   "b": "(unnamed) witch-mistress of the Lady",
+   "detail": "raised as her servant",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C3-P003",
+     "q": "the woman set me to do such work as I had strength for"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) witch-mistress of the Lady",
+   "rel": "other",
+   "b": "Lady of Abundance",
+   "detail": "not her mother though called so",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C3-P002",
+     "q": "now I know that she was not my mother"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) yew ring and stone table",
+   "rel": "near",
+   "b": "(unnamed) witch's forest house",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "walking distance through the wood",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C3-P006",
+     "q": "she led me through the wood into a lawn which I knew well"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "(unnamed) witch-mistress of the Lady",
+   "statement": "A loom wove by itself while she sat naked singing from a great book in a storm.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P004",
+     "q": "the shuttle was flying from side to side, and the shed opening and changing"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) witch-mistress of the Lady",
+   "statement": "She sacrificed the white goat on the stone table, marked the girl and herself with blood, burned it on seven faggots and sang.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P010",
+     "q": "dipped her fingers in the blood and reddened both herself and me on the breast, and the hands, and the feet"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) witch-mistress of the Lady",
+   "statement": "She says something must be offered on the altar \"lest all come to naught\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:witch",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P008",
+     "q": "something must be slain and offered up here on this altar, lest all come to naught"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) witch-mistress of the Lady",
+   "statement": "She lit the fire, but the girl did not see how.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P010",
+     "q": "she made fire, but I saw not how"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "Wild creatures loved her and did not fear her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P002",
+     "q": "the wild things, even to the conies and fawns loved me"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The witch calls the dead woman \"another seeker who hath not found\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:witch",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P015",
+     "q": "Here, then, is another seeker who hath not found"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "(unnamed) witch's forest house",
+   "statement": "The girl spun flax or hair, herded and milked goats, snared birds and small deer, and slept among the goats.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P003",
+     "q": "Nought else I knew save how to spin, and to tend our goats and milk them, and to set snares"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) witch's forest house",
+   "statement": "Wolves roam the forest in winter.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:witch",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P013",
+     "q": "be before the wolves"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "(unnamed) yew ring and stone table",
+   "statement": "The stone table was the only man-made thing in the wood apart from the house.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P006",
+     "q": "the only thing in all the wood wherein I was used to wander which was of man's handiwork"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The self-weaving loom",
+   "chapter": "BTWO-C3",
+   "layer": "backstory",
+   "time_text": "late summer, the Lady about fifteen",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "summary": "At fifteen, in a storm, the girl sees a loom weaving alone and the woman singing naked from a book.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P004",
+     "q": "At last one day of late summer when I, now of some fifteen summers"
+    }
+   ]
+  },
+  {
+   "label": "Sacrifice of the white goat",
+   "chapter": "BTWO-C3",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "places": [
+    "(unnamed) yew ring and stone table"
+   ],
+   "summary": "The witch sacrifices the girl's goat on the yew-ring altar.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P010",
+     "q": "cut the beast's throat"
+    }
+   ]
+  },
+  {
+   "label": "The dead seeker in the snow",
+   "chapter": "BTWO-C3",
+   "layer": "backstory",
+   "time_text": "winter",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) dead seeker in the snow"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "summary": "The girl finds a dead woman seeker; the witch takes her necklace; the girl buries her.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P015",
+     "q": "dug a pit, and buried the poor damsel there with all her gear"
+    }
+   ]
+  },
+  {
+   "label": "Four seekers visit the witch",
+   "chapter": "BTWO-C3",
+   "layer": "backstory",
+   "time_text": "summer",
+   "participants": [
+    "(unnamed) four armed seekers",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "summary": "Four armed riders come seeking a guide to the Well; the witch meets them in poor homespun.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C3-P016",
+     "q": "there came from the wood four men, a-horseback and weaponed"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where the witch's forest lies; the Lady says she was bred in woods, though not these.",
+   "refs": [
+    {
+     "p": "BTWO-C3-P002",
+     "q": "the great trees of the forest were all about the garden"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "What the blue and green necklaces signify: worn by Ralph, the dead seeker, and the Lady.",
+   "refs": [
+    {
+     "p": "BTWO-C3-P013",
+     "q": "like unto thine as one peascod is to another"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Recurring amulets carried by Well-seekers as a quest-item motif.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTWO-C3-P013",
+     "q": "a necklace of blue stones and green, with gold between"
+    }
+   ]
+  },
+  {
+   "idea": "Isolated witch-cottages and yew-ringed altars as forest landmarks.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C3-P006",
+     "q": "a wall, as it were, of great yew trees"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C3",
+ "chapters": [
+  "BTWO-C3"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C3",
+   "paragraphs_total": 15,
+   "all_paragraphs_read": true,
+   "summary": "The Lady tells her childhood: she does not know her birth or parents; she grew up in a thatched timber house in a forest garden with goats, under a richly dressed, stern woman she called mother. The wild creatures loved her. At about fifteen, in a storm, she saw a loom weaving by itself and the woman naked, singing from a great book. Next day the woman sacrificed the girl's white goat on a stone table in a ring of yews. That winter she found a dead woman in scarlet and fur in the snow; the mistress took from her a blue and green necklace like Ralph's, calling her another seeker who did not find the Well. Four armed men later visited, hoping for a guide to the Well.",
+   "geography_notes": "A forest house of timber and reed thatch with garden, crofts and goat garth; the great forest all around; a lawn walled by great yews with a stone table of four uprights and a plank, the only man-made thing in the wood besides the house. The Lady says she was bred in woods, though not these.",
+   "open_questions": [
+    "Where is the witch's forest relative to the known lands?",
+    "What is the stone table, an ancient work?"
+   ]
+  }
+ ]
+}
