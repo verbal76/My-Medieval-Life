@@ -1,0 +1,31 @@
+@ BTWO-C9
+summary: In the waning afternoon the Lady leads Ralph on through pine woods toward a desert dwelling where she has stored food. She explains her marriage: the Knight of the Sun pressed her to wed and took her to Sunway, near the Castle of Abundance, where Walter the Black falsely swore she had taught him witchcraft. Cast out, she was found by the Knight's brother, the tall champion, and went with him to Hampton and the Dry Tree, living between Hampton and Abundance since. The Dry Tree has another, older, fierce Queen, mightier than she. The night after Ralph left the Burg she freed a young woman condemned as a spy, the maiden of Bourton, gave her the dead seeker's chaplet, and taught her the way to the Well.
+geo: Sunway is no great way from the Castle of Abundance. Hampton and the Scaur are not very far from the crossroads of the Wood Perilous. Fields lie between the thorp of Hampton and the wood.
+open: Who is the Dry Tree's other, fiercer Queen? || Is the Queen the Burg feared this fiercer one?
+
+E person | (unnamed) old Queen of the Dry Tree | the other Queen | queen | Mightier than the Lady; a fierce, hard woman no longer young; condemned the maiden as a spy. | P008 `have they another who is mightier than I, and might, if she durst, hang me over the battlements of the Scaur`
+E feature | (unnamed) desert dwelling | a fairer dwelling of the desert | shelter | A place where the Lady once lived and stored food. | P002 `I would take thee to a fairer dwelling of the desert, and one where I have erst abided`
+
+R (unnamed) old Queen of the Dry Tree | leader_of | Fellowship of the Dry Tree | mightier than the Lady | BTWO-C9 | CANON/high | P008 `yet have they another who is mightier than I`
+R Captain of the Dry Tree | other | Lady of Abundance | like a brother to her | BTWO-C9 | CANON/high | P007 `that tall champion has been ever as a brother unto me`
+R (unnamed) Maiden of Bourton Abbas | freed_by | Lady of Abundance | freed from the Dry Tree prison | BTWO-C9 | CANON/high | P011 `I went to the prison and brought her forth, and led her past all the gates and wards`
+R (unnamed) Maiden of Bourton Abbas | owns | (unnamed) dead seeker's necklace | given by the Lady | BTWO-C9 | CANON/high | P012 `I gave her the chaplet which my witch-mistress took from the dead woman's neck`
+
+S Sunway | near | House of Abundance | dist=no great way; ctx=dialogue:Lady of Abundance; cert=fixed | CANON/high | - | P007 `I went with him to Sunway, which is no great way from the Castle of Abundance`
+S Hampton under Scaur | near | (unnamed) crossroads in the Wood Perilous | dist=not very far; ctx=dialogue:Lady of Abundance; cert=fixed | CANON/high | - | P011 `I came to Hampton and the Scaur; for it is not very far from the want-ways of the wood`
+S (unnamed) fields of Hampton | between | Hampton under Scaur | terrain=fields between the thorp of Hampton and the wood; cert=fixed | CANON/high | - | P011 `came with her into the fields betwixt the thorp of Hampton and the wood`
+
+T (unnamed) Maiden of Bourton Abbas, Lady of Abundance | Castle of the Scaur | Wood Perilous | mode=foot; start=night; end=dawn | P011 `when it was more daylight than dawn`
+
+F history | Lady of Abundance | After being cast out she went with the tall champion to Hampton and has lived between Hampton and the Castle of Abundance. | CANON/high; ctx=dialogue:Lady of Abundance | P007 `there have I dwelt ever since betwixt Hampton and the Castle of Abundance`
+F magic | Lady of Abundance | She says she cannot foresee everything; she only knew they must pass this way and stored food. | CANON/high; ctx=dialogue:Lady of Abundance | P004 `I foresaw not, any more than I can foresee to-morrow`
+F magic | Lady of Abundance | She led the prisoner past all gates and guards, an easy thing for her with what she had learned. | CANON/high; ctx=dialogue:Lady of Abundance | P011 `which was an easy thing to me, so much as I had learned`
+F politics | (unnamed) old Queen of the Dry Tree | Some ill deeds told of the Lady were the older Queen's doing; the Lady secretly frees those she condemns. | CANON/high; ctx=dialogue:Lady of Abundance | P010 `I use my wisdom which I have learned, to set free luckless wights from her anger and malice`
+F magic | Well at the World's End | The maiden calls the Well the thing that quenches all sorrow. | CANON/high; ctx=dialogue:Lady of Abundance | P012 `the Well at the World's End, which quencheth all sorrow`
+F law | Fellowship of the Dry Tree | The maiden was judged a spy by the old Queen and would be slain. | CANON/high; ctx=dialogue:Lady of Abundance | P011 `who had been haled before our old Queen for a spy and doomed by her`
+
+V main | The maiden of Bourton freed | The Lady frees the maiden from the Dry Tree's prison and sends her toward the Well with the dead seeker's chaplet. | time=night after Ralph left the Burg; who=Lady of Abundance, (unnamed) Maiden of Bourton Abbas; where=Castle of the Scaur | P012 `went with her into the wildwood, and taught her wisdom of the way`
+
+U identity | Is the Burg's dreaded "Queen of the Dry Tree" this older Queen or the Lady? | P008 `for she is a fierce and hard woman, and now no longer young in years`
+
+O politics | A faction with rival queens (one merciful, one cruel) whose orders the player may defy. | P010 `whiles when she has spoken the word I may not be against her openly`

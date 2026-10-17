@@ -1,0 +1,536 @@
+{
+ "entities": [
+  {
+   "name": "Geoffrey",
+   "aliases": [
+    "old Geoffrey"
+   ],
+   "type": "person",
+   "subtype": "knight of the Dry Tree",
+   "unnamed": false,
+   "summary": "The young knight who loved the Lady, saved her from the felon baron and was wounded in the flight; later a Dry Tree man and the last of 21 sworn seekers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P012",
+     "q": "this old man had been that swain who had nigh died for me when I fled with my husband from the old king"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) sons of Geoffrey",
+   "aliases": [],
+   "type": "person",
+   "subtype": "knights",
+   "unnamed": true,
+   "summary": "Geoffrey's two sons, about forty.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P013",
+     "q": "his sons, who were men of some forty summers, tall and warrior-like"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) twenty-one seekers of the Dry Tree",
+   "aliases": [],
+   "type": "group",
+   "subtype": "sworn band",
+   "unnamed": true,
+   "summary": "Band of one score and one Dry Tree men who swore to find the vanished Queen.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "of that band of one score and one, am I the last one left that seeketh"
+    }
+   ]
+  },
+  {
+   "name": "Castle of the Scaur",
+   "aliases": [
+    "the castle on the Scaur"
+   ],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": false,
+   "summary": "Great castle the Dry Tree built on the height of the Scaur above Hampton.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P016",
+     "q": "upon the height of the said Scaur is our castle builded"
+    }
+   ]
+  },
+  {
+   "name": "Up-castle",
+   "aliases": [],
+   "type": "place",
+   "subtype": "place",
+   "unnamed": false,
+   "summary": "Place the Dry Tree rode to in the old days.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P011",
+     "q": "when we rode to Up-castle"
+    }
+   ]
+  },
+  {
+   "name": "Dame Joyce",
+   "aliases": [],
+   "type": "person",
+   "subtype": "Dry Tree woman",
+   "unnamed": false,
+   "summary": "A woman of the old days whose youngest daughter was left sick.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P011",
+     "q": "What betid to dame Joyce's youngest born"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) most ancient parts of the world",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "region",
+   "unnamed": true,
+   "summary": "Where the Teacher went to seek the innermost of wisdom.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P005",
+     "q": "I am minded to go to the most ancient parts of the world"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) monk who sold the book",
+   "aliases": [],
+   "type": "person",
+   "subtype": "monk",
+   "unnamed": true,
+   "summary": "Monk who came by the Castle of Abundance and sold the Lady the book.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C8-P023",
+     "q": "I bought of a monk who came our way"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Geoffrey",
+   "rel": "member_of",
+   "b": "Champions of the Dry Tree",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "a fellowship of free men and champions hight the Men of the Dry Tree"
+    }
+   ]
+  },
+  {
+   "a": "Geoffrey",
+   "rel": "parent_of",
+   "b": "(unnamed) sons of Geoffrey",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "these two men, they are my sons"
+    }
+   ]
+  },
+  {
+   "a": "Lady of Abundance",
+   "rel": "lives_in",
+   "b": "House of Abundance",
+   "detail": "dwelt there after returning",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C8-P023",
+     "q": "I took up my dwelling in the castle"
+    }
+   ]
+  },
+  {
+   "a": "yeomen of Abundance",
+   "rel": "vassal_of",
+   "b": "fathers of the Thorn",
+   "detail": "the Fathers of the Thorn are their masters",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C8-P020",
+     "q": "were it not for the Fathers of the Thorn who are their masters"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Castle of the Scaur",
+   "rel": "overlooks",
+   "b": "Hampton under Scaur",
+   "direction": "above, on the height of the Scaur",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Geoffrey",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "name origin of Hampton under Scaur",
+   "refs": [
+    {
+     "p": "BTWO-C8-P016",
+     "q": "built them a great castle above the little town hight Hampton; so that is now called Hampton under Scaur"
+    }
+   ]
+  },
+  {
+   "a": "Plain of Abundance",
+   "rel": "within",
+   "b": "(unnamed) evil-named wood before the House of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "clearing of the wood",
+   "context": "dialogue:Geoffrey",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C8-P020",
+     "q": "there is a simple folk dwelling there in the clearing of the wood"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "from": "House of the Sorceress",
+   "to": "Well at the World's End",
+   "via": [],
+   "mode": "unknown",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C8",
+   "refs": [
+    {
+     "p": "BTWO-C8-P004",
+     "q": "we found the Well, and drank of its waters after abundant toil and peril"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Lady of Abundance",
+    "Geoffrey",
+    "(unnamed) sons of Geoffrey"
+   ],
+   "from": "House of the Sorceress",
+   "to": "Plain of Abundance",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C8",
+   "refs": [
+    {
+     "p": "BTWO-C8-P023",
+     "q": "Geoffrey and his sons brought me to the Land of Abundance"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Seekers wore bead necklaces like those Ralph and the Lady wear, marking them for the quest.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P002",
+     "q": "each of us signed and marked out for the quest by bearing such-like beads as thou and I both bear upon our necks today"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Drinking renewed the Lady's youth; the Teacher became like a woman of forty.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P004",
+     "q": "my youth was renewed in me, and I became as thou seest me to-day"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Kingdom of the Tower",
+   "statement": "Geoffrey says it was fifty years since the Queen vanished.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Geoffrey",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "Fifty years ago, when I was yet but a young man"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Kingdom of the Tower",
+   "statement": "The Land of the Tower is ruined by folly, war and greed; grass grows in the Great City's streets and merchants avoid it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Geoffrey",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P017",
+     "q": "in the Great City are but few people, grass grows in its streets"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Burg of the Four Friths",
+   "statement": "The Burg has thriven greatly and is the greatest power in the lands about.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Geoffrey",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P016",
+     "q": "there is none so great as the Burg in all the lands about"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Champions of the Dry Tree",
+   "statement": "They are warriors from father to son and have not thriven much.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Geoffrey",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P016",
+     "q": "They are warriors and champions from father to son; therefore have they thriven not over well"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "yeomen of Abundance",
+   "statement": "The folk of Abundance honour the Lady like a saint but with fear.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P023",
+     "q": "they loved me, yet it was with fear"
+    }
+   ]
+  },
+  {
+   "category": "clothing",
+   "subject": "Champions of the Dry Tree",
+   "statement": "The seekers wore white gaberdines over hauberks with no coat-armour or token.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P007",
+     "q": "they had naught but white gaberdines over their hauberks, with no coat-armour or token upon them"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The Lady drinks of the Well",
+   "chapter": "BTWO-C8",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "places": [
+    "Well at the World's End"
+   ],
+   "summary": "The Lady and the Teacher find the Well and drink.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P004",
+     "q": "Shortly to say it, we found the Well, and drank of its waters"
+    }
+   ]
+  },
+  {
+   "label": "The Teacher departs",
+   "chapter": "BTWO-C8",
+   "layer": "backstory",
+   "time_text": "about five years ago",
+   "participants": [
+    "Teacher of Lore"
+   ],
+   "places": [
+    "House of the Sorceress"
+   ],
+   "summary": "About five years ago the Teacher leaves for the most ancient parts of the world.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P005",
+     "q": "At last, and that was but some five years ago"
+    }
+   ]
+  },
+  {
+   "label": "Geoffrey finds the Lady",
+   "chapter": "BTWO-C8",
+   "layer": "backstory",
+   "time_text": "a month after the Teacher left",
+   "participants": [
+    "Geoffrey",
+    "Lady of Abundance"
+   ],
+   "places": [
+    "House of the Sorceress"
+   ],
+   "summary": "Geoffrey and his sons reach the House of the Sorceress; she proves herself by old memories.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C8-P011",
+     "q": "Geoffrey, what became of the white hind after the banners had left the wildwood"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where Up-castle is.",
+   "refs": [
+    {
+     "p": "BTWO-C8-P011",
+     "q": "when we rode to Up-castle"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "How long ago the Lady drank of the Well; only \"a long time\" in the desert house before.",
+   "refs": [
+    {
+     "p": "BTWO-C8-P002",
+     "q": "after we had lived thus a long time"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Where the \"most ancient parts of the world\" lie.",
+   "refs": [
+    {
+     "p": "BTWO-C8-P005",
+     "q": "the most ancient parts of the world"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Deep in-world chronology (the Tower war fifty years ago, the Dry Tree's move to the Scaur) for a timeline the player can uncover.",
+   "system": "history",
+   "basis_refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "Fifty years ago, when I was yet but a young man"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C8",
+ "chapters": [
+  "BTWO-C8"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C8",
+   "paragraphs_total": 22,
+   "all_paragraphs_read": true,
+   "summary": "The Lady and the Teacher, marked by bead necklaces, sought and found the Well after much toil and drank; the Lady became as now and the Teacher about forty. About five years ago the Teacher left for the most ancient parts of the world. A month later three Dry Tree men came: old Geoffrey (the young knight who loved her long ago) and his two sons, last of twenty-one sworn seekers, saying it was fifty years since she vanished. She proved who she was. Geoffrey told her the Dry Tree had built a castle on the Scaur above Hampton, the Burg had grown great, and the Land of the Tower was ruined with grass in its Great City streets. They brought her to the Land of Abundance, where she lived; she bought the book from a monk. Dry Tree men often visited and asked her love.",
+   "geography_notes": "The Dry Tree castle stands on the height of the Scaur above the little town of Hampton, hence \"Hampton under Scaur\". The Burg is the greatest power in the lands about. The Land of Abundance is a clearing in the wood whose folk are under the Fathers of the Thorn. Up-castle is named. The Teacher went to \"the most ancient parts of the world\".",
+   "open_questions": [
+    "Where is Up-castle?",
+    "How long ago did the Lady drink of the Well?"
+   ]
+  }
+ ]
+}

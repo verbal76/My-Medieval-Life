@@ -1,0 +1,351 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) old Queen of the Dry Tree",
+   "aliases": [
+    "the other Queen"
+   ],
+   "type": "person",
+   "subtype": "queen",
+   "unnamed": true,
+   "summary": "Mightier than the Lady; a fierce, hard woman no longer young; condemned the maiden as a spy.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C9-P008",
+     "q": "have they another who is mightier than I, and might, if she durst, hang me over the battlements of the Scaur"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) desert dwelling",
+   "aliases": [
+    "a fairer dwelling of the desert"
+   ],
+   "type": "feature",
+   "subtype": "shelter",
+   "unnamed": true,
+   "summary": "A place where the Lady once lived and stored food.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C9-P002",
+     "q": "I would take thee to a fairer dwelling of the desert, and one where I have erst abided"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) old Queen of the Dry Tree",
+   "rel": "leader_of",
+   "b": "Fellowship of the Dry Tree",
+   "detail": "mightier than the Lady",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C9-P008",
+     "q": "yet have they another who is mightier than I"
+    }
+   ]
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "rel": "other",
+   "b": "Lady of Abundance",
+   "detail": "like a brother to her",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C9-P007",
+     "q": "that tall champion has been ever as a brother unto me"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "freed_by",
+   "b": "Lady of Abundance",
+   "detail": "freed from the Dry Tree prison",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "I went to the prison and brought her forth, and led her past all the gates and wards"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "owns",
+   "b": "(unnamed) dead seeker's necklace",
+   "detail": "given by the Lady",
+   "when": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C9-P012",
+     "q": "I gave her the chaplet which my witch-mistress took from the dead woman's neck"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Sunway",
+   "rel": "near",
+   "b": "House of Abundance",
+   "direction": "",
+   "distance_text": "no great way",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C9-P007",
+     "q": "I went with him to Sunway, which is no great way from the Castle of Abundance"
+    }
+   ]
+  },
+  {
+   "a": "Hampton under Scaur",
+   "rel": "near",
+   "b": "(unnamed) crossroads in the Wood Perilous",
+   "direction": "",
+   "distance_text": "not very far",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "I came to Hampton and the Scaur; for it is not very far from the want-ways of the wood"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) fields of Hampton",
+   "rel": "between",
+   "b": "Hampton under Scaur",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "fields between the thorp of Hampton and the wood",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "came with her into the fields betwixt the thorp of Hampton and the wood"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "(unnamed) Maiden of Bourton Abbas",
+    "Lady of Abundance"
+   ],
+   "from": "Castle of the Scaur",
+   "to": "Wood Perilous",
+   "via": [],
+   "mode": "foot",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "night",
+   "end_time_text": "dawn",
+   "terrain_text": "",
+   "chapter": "BTWO-C9",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "when it was more daylight than dawn"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Lady of Abundance",
+   "statement": "After being cast out she went with the tall champion to Hampton and has lived between Hampton and the Castle of Abundance.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C9-P007",
+     "q": "there have I dwelt ever since betwixt Hampton and the Castle of Abundance"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "She says she cannot foresee everything; she only knew they must pass this way and stored food.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C9-P004",
+     "q": "I foresaw not, any more than I can foresee to-morrow"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "She led the prisoner past all gates and guards, an easy thing for her with what she had learned.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "which was an easy thing to me, so much as I had learned"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "(unnamed) old Queen of the Dry Tree",
+   "statement": "Some ill deeds told of the Lady were the older Queen's doing; the Lady secretly frees those she condemns.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C9-P010",
+     "q": "I use my wisdom which I have learned, to set free luckless wights from her anger and malice"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The maiden calls the Well the thing that quenches all sorrow.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C9-P012",
+     "q": "the Well at the World's End, which quencheth all sorrow"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "The maiden was judged a spy by the old Queen and would be slain.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "who had been haled before our old Queen for a spy and doomed by her"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The maiden of Bourton freed",
+   "chapter": "BTWO-C9",
+   "layer": "main",
+   "time_text": "night after Ralph left the Burg",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) Maiden of Bourton Abbas"
+   ],
+   "places": [
+    "Castle of the Scaur"
+   ],
+   "summary": "The Lady frees the maiden from the Dry Tree's prison and sends her toward the Well with the dead seeker's chaplet.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C9-P012",
+     "q": "went with her into the wildwood, and taught her wisdom of the way"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Is the Burg's dreaded \"Queen of the Dry Tree\" this older Queen or the Lady?",
+   "refs": [
+    {
+     "p": "BTWO-C9-P008",
+     "q": "for she is a fierce and hard woman, and now no longer young in years"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A faction with rival queens (one merciful, one cruel) whose orders the player may defy.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C9-P010",
+     "q": "whiles when she has spoken the word I may not be against her openly"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C9",
+ "chapters": [
+  "BTWO-C9"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C9",
+   "paragraphs_total": 14,
+   "all_paragraphs_read": true,
+   "summary": "In the waning afternoon the Lady leads Ralph on through pine woods toward a desert dwelling where she has stored food. She explains her marriage: the Knight of the Sun pressed her to wed and took her to Sunway, near the Castle of Abundance, where Walter the Black falsely swore she had taught him witchcraft. Cast out, she was found by the Knight's brother, the tall champion, and went with him to Hampton and the Dry Tree, living between Hampton and Abundance since. The Dry Tree has another, older, fierce Queen, mightier than she. The night after Ralph left the Burg she freed a young woman condemned as a spy, the maiden of Bourton, gave her the dead seeker's chaplet, and taught her the way to the Well.",
+   "geography_notes": "Sunway is no great way from the Castle of Abundance. Hampton and the Scaur are not very far from the crossroads of the Wood Perilous. Fields lie between the thorp of Hampton and the wood.",
+   "open_questions": [
+    "Who is the Dry Tree's other, fiercer Queen?",
+    "Is the Queen the Burg feared this fiercer one?"
+   ]
+  }
+ ]
+}

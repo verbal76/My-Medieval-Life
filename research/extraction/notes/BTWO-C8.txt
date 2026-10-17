@@ -1,0 +1,43 @@
+@ BTWO-C8
+summary: The Lady and the Teacher, marked by bead necklaces, sought and found the Well after much toil and drank; the Lady became as now and the Teacher about forty. About five years ago the Teacher left for the most ancient parts of the world. A month later three Dry Tree men came: old Geoffrey (the young knight who loved her long ago) and his two sons, last of twenty-one sworn seekers, saying it was fifty years since she vanished. She proved who she was. Geoffrey told her the Dry Tree had built a castle on the Scaur above Hampton, the Burg had grown great, and the Land of the Tower was ruined with grass in its Great City streets. They brought her to the Land of Abundance, where she lived; she bought the book from a monk. Dry Tree men often visited and asked her love.
+geo: The Dry Tree castle stands on the height of the Scaur above the little town of Hampton, hence "Hampton under Scaur". The Burg is the greatest power in the lands about. The Land of Abundance is a clearing in the wood whose folk are under the Fathers of the Thorn. Up-castle is named. The Teacher went to "the most ancient parts of the world".
+open: Where is Up-castle? || How long ago did the Lady drink of the Well?
+
+E person | Geoffrey | old Geoffrey | knight of the Dry Tree | The young knight who loved the Lady, saved her from the felon baron and was wounded in the flight; later a Dry Tree man and the last of 21 sworn seekers. | P012 `this old man had been that swain who had nigh died for me when I fled with my husband from the old king`
+E person | (unnamed) sons of Geoffrey | - | knights | Geoffrey's two sons, about forty. | P013 `his sons, who were men of some forty summers, tall and warrior-like`
+E group | (unnamed) twenty-one seekers of the Dry Tree | - | sworn band | Band of one score and one Dry Tree men who swore to find the vanished Queen. | P010 `of that band of one score and one, am I the last one left that seeketh`
+E building | Castle of the Scaur | the castle on the Scaur | castle | Great castle the Dry Tree built on the height of the Scaur above Hampton. | P016 `upon the height of the said Scaur is our castle builded`
+E place | Up-castle | - | place | Place the Dry Tree rode to in the old days. | P011 `when we rode to Up-castle`
+E person | Dame Joyce | - | Dry Tree woman | A woman of the old days whose youngest daughter was left sick. | P011 `What betid to dame Joyce's youngest born`
+E feature | (unnamed) most ancient parts of the world | - | region | Where the Teacher went to seek the innermost of wisdom. | P005 `I am minded to go to the most ancient parts of the world`
+E person | (unnamed) monk who sold the book | - | monk | Monk who came by the Castle of Abundance and sold the Lady the book. | P023 `I bought of a monk who came our way`
+
+R Geoffrey | member_of | Champions of the Dry Tree | - | backstory | CANON/high | P010 `a fellowship of free men and champions hight the Men of the Dry Tree`
+R Geoffrey | parent_of | (unnamed) sons of Geoffrey | - | backstory | CANON/high | P010 `these two men, they are my sons`
+R Lady of Abundance | lives_in | House of Abundance | dwelt there after returning | backstory | CANON/high | P023 `I took up my dwelling in the castle`
+R yeomen of Abundance | vassal_of | fathers of the Thorn | the Fathers of the Thorn are their masters | backstory | CANON/high | P020 `were it not for the Fathers of the Thorn who are their masters`
+
+S Castle of the Scaur | overlooks | Hampton under Scaur | dir=above, on the height of the Scaur; ctx=dialogue:Geoffrey; cert=fixed | CANON/high | name origin of Hampton under Scaur | P016 `built them a great castle above the little town hight Hampton; so that is now called Hampton under Scaur`
+S Plain of Abundance | within | (unnamed) evil-named wood before the House of Abundance | terrain=clearing of the wood; ctx=dialogue:Geoffrey; cert=fixed | CANON/high | - | P020 `there is a simple folk dwelling there in the clearing of the wood`
+
+T Lady of Abundance, Teacher of Lore | House of the Sorceress | Well at the World's End | mode=unknown | P004 `we found the Well, and drank of its waters after abundant toil and peril`
+T Lady of Abundance, Geoffrey, (unnamed) sons of Geoffrey | House of the Sorceress | Plain of Abundance | mode=horse | P023 `Geoffrey and his sons brought me to the Land of Abundance`
+
+F magic | Well at the World's End | Seekers wore bead necklaces like those Ralph and the Lady wear, marking them for the quest. | CANON/high; ctx=dialogue:Lady of Abundance | P002 `each of us signed and marked out for the quest by bearing such-like beads as thou and I both bear upon our necks today`
+F magic | Well at the World's End | Drinking renewed the Lady's youth; the Teacher became like a woman of forty. | CANON/high; ctx=dialogue:Lady of Abundance | P004 `my youth was renewed in me, and I became as thou seest me to-day`
+F history | Kingdom of the Tower | Geoffrey says it was fifty years since the Queen vanished. | CANON/high; ctx=dialogue:Geoffrey | P010 `Fifty years ago, when I was yet but a young man`
+F history | Kingdom of the Tower | The Land of the Tower is ruined by folly, war and greed; grass grows in the Great City's streets and merchants avoid it. | CANON/high; ctx=dialogue:Geoffrey | P017 `in the Great City are but few people, grass grows in its streets`
+F politics | Burg of the Four Friths | The Burg has thriven greatly and is the greatest power in the lands about. | CANON/high; ctx=dialogue:Geoffrey | P016 `there is none so great as the Burg in all the lands about`
+F society | Champions of the Dry Tree | They are warriors from father to son and have not thriven much. | CANON/high; ctx=dialogue:Geoffrey | P016 `They are warriors and champions from father to son; therefore have they thriven not over well`
+F society | yeomen of Abundance | The folk of Abundance honour the Lady like a saint but with fear. | CANON/high; ctx=dialogue:Lady of Abundance | P023 `they loved me, yet it was with fear`
+F clothing | Champions of the Dry Tree | The seekers wore white gaberdines over hauberks with no coat-armour or token. | CANON/high; ctx=dialogue:Lady of Abundance | P007 `they had naught but white gaberdines over their hauberks, with no coat-armour or token upon them`
+
+V backstory | The Lady drinks of the Well | The Lady and the Teacher find the Well and drink. | who=Lady of Abundance, Teacher of Lore; where=Well at the World's End | P004 `Shortly to say it, we found the Well, and drank of its waters`
+V backstory | The Teacher departs | About five years ago the Teacher leaves for the most ancient parts of the world. | time=about five years ago; who=Teacher of Lore; where=House of the Sorceress | P005 `At last, and that was but some five years ago`
+V backstory | Geoffrey finds the Lady | Geoffrey and his sons reach the House of the Sorceress; she proves herself by old memories. | time=a month after the Teacher left; who=Geoffrey, Lady of Abundance; where=House of the Sorceress | P011 `Geoffrey, what became of the white hind after the banners had left the wildwood`
+
+U location | Where Up-castle is. | P011 `when we rode to Up-castle`
+U missing_measure | How long ago the Lady drank of the Well; only "a long time" in the desert house before. | P002 `after we had lived thus a long time`
+U location | Where the "most ancient parts of the world" lie. | P005 `the most ancient parts of the world`
+
+O history | Deep in-world chronology (the Tower war fifty years ago, the Dry Tree's move to the Scaur) for a timeline the player can uncover. | P010 `Fifty years ago, when I was yet but a young man`

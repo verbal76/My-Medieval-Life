@@ -1,0 +1,909 @@
+{
+ "entities": [
+  {
+   "name": "Kingdom of the Tower",
+   "aliases": [
+    "Land of the Tower",
+    "Land of Tower"
+   ],
+   "type": "polity",
+   "subtype": "kingdom",
+   "unnamed": false,
+   "summary": "The king's son's kingdom: rich and peaceful, then torn by years of war over the Lady; she ruled it in all but name.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P017",
+     "q": "we were driven clean out of the Kingdom of the Tower"
+    },
+    {
+     "p": "BTWO-C7-P025",
+     "q": "the sunny fields of the Land of the Tower"
+    }
+   ]
+  },
+  {
+   "name": "Arms of the King of the Tower",
+   "aliases": [],
+   "type": "item",
+   "subtype": "heraldry",
+   "unnamed": false,
+   "summary": "A silver tower on a blue sky starred with gold.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P008",
+     "q": "a silver tower on a blue sky bestarred with gold"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Great Square of the Tower city",
+   "aliases": [
+    "the market place"
+   ],
+   "type": "building",
+   "subtype": "square",
+   "unnamed": true,
+   "summary": "Square of the king's city where the Lady was to be burned and later enthroned.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P006",
+     "q": "doomed to be burned in the Great Square in three days time"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) master City of the Tower",
+   "aliases": [
+    "the king's chief city",
+    "Great City"
+   ],
+   "type": "place",
+   "subtype": "city",
+   "unnamed": true,
+   "summary": "Chief city of the Kingdom of the Tower with the King's House and High House.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P025",
+     "q": "We entered the master City in triumph"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Queen of the Tower",
+   "aliases": [
+    "the king's son's mother"
+   ],
+   "type": "person",
+   "subtype": "queen",
+   "unnamed": true,
+   "summary": "Fair, meek woman, afraid of the king.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P002",
+     "q": "she was a fair woman, and looked rather meek than high-hearted"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Abbot of St. Peter's",
+   "aliases": [],
+   "type": "person",
+   "subtype": "abbot",
+   "unnamed": true,
+   "summary": "With the Bishop, stopped the battle in the Great Square.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P009",
+     "q": "the Bishop and the Abbot of St. Peter's and his monks with him"
+    }
+   ]
+  },
+  {
+   "name": "St. Peter's",
+   "aliases": [],
+   "type": "building",
+   "subtype": "abbey",
+   "unnamed": false,
+   "summary": "Abbey in the city of the Tower.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P009",
+     "q": "the Abbot of St. Peter's"
+    }
+   ]
+  },
+  {
+   "name": "Teacher of Lore",
+   "aliases": [
+    "the wise carline of the Dale of Lore"
+   ],
+   "type": "person",
+   "subtype": "wise woman",
+   "unnamed": false,
+   "summary": "Returned middle-aged with dark red hair and small brown eyes, having drunk of the Well; wise in hidden lore; disguised the Lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P029",
+     "q": "of dark red hair, and brown eyes somewhat small"
+    },
+    {
+     "p": "BTWO-C7-P035",
+     "q": "I longed for the coming of the Teacher of Lore"
+    }
+   ]
+  },
+  {
+   "name": "House of the Sorceress",
+   "aliases": [
+    "House of the Sorcerer",
+    "the little house in the uttermost wilderness"
+   ],
+   "type": "building",
+   "subtype": "cottage",
+   "unnamed": false,
+   "summary": "The witch's old house where the Lady and the Teacher lived for years.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P042",
+     "q": "we abode in that House of the Sorceress ere we durst seek further"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) first son of the Lady",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": true,
+   "summary": "Slain before her eyes in war.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P017",
+     "q": "after I had seen my son that I had borne to my lord slain before mine eyes"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) second son of the Lady",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": true,
+   "summary": "Died of a pestilence brought by war and famine.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P035",
+     "q": "a second son that I bore had died of a pestilence"
+    }
+   ]
+  },
+  {
+   "name": "Woman of the Waste",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "epithet",
+   "unnamed": false,
+   "summary": "The name of the Lady's reign.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P026",
+     "q": "There then began the reign of the Woman of the Waste"
+    }
+   ]
+  },
+  {
+   "name": "Champions of the Dry Tree",
+   "aliases": [],
+   "type": "group",
+   "subtype": "fellowship",
+   "unnamed": false,
+   "summary": "Same as the Fellowship of the Dry Tree; then without the Scaur stronghold.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "I first fell in with the Champions of the Dry Tree"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Captain of Higham",
+   "aliases": [],
+   "type": "person",
+   "subtype": "captain",
+   "unnamed": true,
+   "summary": "Higham's war-captain who fought the Dry Tree at Bear Castle.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "fought a battle there with the Captain of Higham"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) king, father of the king's son",
+   "rel": "ruler_of",
+   "b": "Kingdom of the Tower",
+   "detail": "King of the Tower",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C7-P023",
+     "q": "his father, the King of the Tower, died in his bed in these days"
+    }
+   ]
+  },
+  {
+   "a": "Lady of Abundance",
+   "rel": "spouse_of",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "detail": "wedded by a Bishop; made Lady and Queen",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C7-P014",
+     "q": "There was I duly wedded to my lord by a Bishop of Holy Church, and made his Lady and Queen"
+    }
+   ]
+  },
+  {
+   "a": "Lady of Abundance",
+   "rel": "ruler_of",
+   "b": "Kingdom of the Tower",
+   "detail": "real ruler while her lord wore the crown",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C7-P026",
+     "q": "my lord left to my hands the real ruling of the kingdom"
+    }
+   ]
+  },
+  {
+   "a": "Champions of the Dry Tree",
+   "rel": "allied_with",
+   "b": "Lady of Abundance",
+   "detail": "brothers in arms in the wildwood; helped win the Tower",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "they became our fellows and brothers in arms in the wildwood"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) king's son of the Lady's youth",
+   "rel": "other",
+   "b": "House of Abundance",
+   "detail": "had the Castle of Abundance built and the arras made",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C7-P027",
+     "q": "my lord had the Castle of Abundance built up very fairly for me and him"
+    }
+   ]
+  },
+  {
+   "a": "Teacher of Lore",
+   "rel": "teaches",
+   "b": "Lady of Abundance",
+   "detail": "hidden lore, including what is called sorcery",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C7-P042",
+     "q": "I learned yet more wisdom of the Teacher of Lore"
+    }
+   ]
+  },
+  {
+   "a": "Champions of the Dry Tree",
+   "rel": "at_war_with",
+   "b": "St. Mary's of Higham",
+   "detail": "raided the Abbot's lands, fought at Bear Castle",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "harried the lands of the Abbot of Higham"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Champions of the Dry Tree",
+   "rel": "within",
+   "b": "Wood Perilous",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "then living in the wildwood, no stronghold",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "they had not as yet builded their stronghold of the Scaur"
+    }
+   ]
+  },
+  {
+   "a": "St. Mary's of Higham",
+   "rel": "north_of",
+   "b": "Wood Perilous",
+   "direction": "north",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the Dry Tree went north to harry Higham's lands",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "they went to the North and harried the lands of the Abbot of Higham"
+    }
+   ]
+  },
+  {
+   "a": "Bear Castle",
+   "rel": "beyond",
+   "b": "the Downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "over the Downs from the Higham side",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "rode as far even as over the Downs to Bear Castle"
+    }
+   ]
+  },
+  {
+   "a": "Kingdom of the Tower",
+   "rel": "adjacent_to",
+   "b": "Wood Perilous",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "the outlaws came out of the forest into the fields of the Tower",
+   "refs": [
+    {
+     "p": "BTWO-C7-P025",
+     "q": "when at last we came out from the twilight of the woods into the sunny fields of the Land of the Tower"
+    }
+   ]
+  },
+  {
+   "a": "Hampton under Scaur",
+   "rel": "distance_from",
+   "b": "(unnamed) clearing of grey stones",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "two days",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "whereas thou and I shall be in two days time"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) exile limit",
+   "rel": "distance_from",
+   "b": "(unnamed) master City of the Tower",
+   "direction": "",
+   "distance_text": "no nearer than fifty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "truce terms",
+   "refs": [
+    {
+     "p": "BTWO-C7-P011",
+     "q": "abode no nearer than fifty miles thereof"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "from": "(unnamed) master City of the Tower",
+   "to": "House of the Sorceress",
+   "via": [],
+   "mode": "unknown",
+   "direction_text": "back along the westward road, reversed",
+   "duration_text": "",
+   "start_time_text": "early April",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C7",
+   "refs": [
+    {
+     "p": "BTWO-C7-P039",
+     "q": "Back again went my feet over the ways they had trodden before, though the Teacher shortened the road much for us by her wisdom"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "law",
+   "subject": "Kingdom of the Tower",
+   "statement": "The Lady was tried by the king's bishops for sorcery and sentenced to burn.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P006",
+     "q": "I was brought in guilty of sorcery, and doomed to be burned in the Great Square in three days time"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Kingdom of the Tower",
+   "statement": "A Bishop bearing the Host and the Abbot of St. Peter's with monks halted the battle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P009",
+     "q": "the Bishop bore in his hand the Blessed Host"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Kingdom of the Tower",
+   "statement": "War between father and son lasted year after year until fighting was the land's chief business.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P016",
+     "q": "it endured year after year, till fighting became the chief business of all in the land"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Lady of Abundance",
+   "statement": "As outlaws they robbed only rich men, lords and hard chapmen and protected tillers, yet got a name as devils and witches.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P017",
+     "q": "we robbed no poor folk and needy, but rewarded them rather"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Champions of the Dry Tree",
+   "statement": "The Lady calls the Dry Tree's fierceness kindness beside the cruelty of the Burg.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P019",
+     "q": "their fierceness was and is but kindness and pity when set against the cruelty of the Burg of the Four Friths"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "She swore by the Water of the Well to return to the Dry Tree as their Lady, setting no date.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P026",
+     "q": "I promised them and swore to them by the Water of the Well at the World's End"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Teacher of Lore",
+   "statement": "The Teacher says the dead cannot drink of the Well, but the living, even the old, can, and are young again for a long while.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Teacher of Lore",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P032",
+     "q": "The dead may not drink of the Well at the World's End; yet the living may, even if they be old"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Teacher of Lore",
+   "statement": "She could give the Lady another appearance so none knew her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P036",
+     "q": "it was no hard matter for her to give me another semblance than mine own"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "She learned foreseeing, sending dreams or visions and other things called sorcery; she sent the friar his dream.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P042",
+     "q": "as the foreseeing of things to come, and the sending of dreams or visions"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "House of the Sorceress",
+   "statement": "In the desert house she grew no older, and stronger, \"as though some foretaste of the Well was there\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P042",
+     "q": "as though some foretaste of the Well was there for us in the loneliness of the desert"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Kingdom of the Tower",
+   "statement": "Women especially blamed the Lady; tales said she was sent from hell to wreck the land.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P028",
+     "q": "sent by the lords of hell to wreck that fair Land of the Tower"
+    }
+   ]
+  },
+  {
+   "category": "medicine",
+   "subject": "Kingdom of the Tower",
+   "statement": "War and famine brought pestilence.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P035",
+     "q": "a pestilence that war and famine had brought upon the land"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "House of Abundance",
+   "statement": "A little manor house stood there before the castle was built; it was a refuge during the war.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P027",
+     "q": "we had before that dwelt at a little manor house that was there"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Trial and rescue of the Lady",
+   "chapter": "BTWO-C7",
+   "layer": "backstory",
+   "time_text": "midsummer, after two months' imprisonment",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth",
+    "(unnamed) king",
+    "father of the king's son"
+   ],
+   "places": [
+    "(unnamed) Great Square of the Tower city"
+   ],
+   "summary": "Condemned for sorcery, the Lady is rescued at the stake by the prince's friends; the Bishop stops the fighting; truce and exile.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P008",
+     "q": "Life for our Lord's Lady!"
+    }
+   ]
+  },
+  {
+   "label": "War of the Tower",
+   "chapter": "BTWO-C7",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Lady of Abundance",
+    "Champions of the Dry Tree"
+   ],
+   "places": [
+    "Kingdom of the Tower",
+    "Wood Perilous"
+   ],
+   "summary": "Years of war between the king and his son; the Lady loses two sons; two years as outlaws with the Dry Tree.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P017",
+     "q": "abode a long while, some two years, in the wilderness, living like outlaws and wolves' heads"
+    }
+   ]
+  },
+  {
+   "label": "Dry Tree battle at Bear Castle",
+   "chapter": "BTWO-C7",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Champions of the Dry Tree",
+    "(unnamed) Captain of Higham"
+   ],
+   "places": [
+    "Bear Castle"
+   ],
+   "summary": "The Dry Tree rode over the Downs to Bear Castle and fought the Captain of Higham.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "fought a battle there with the Captain of Higham"
+    }
+   ]
+  },
+  {
+   "label": "Triumph and reign",
+   "chapter": "BTWO-C7",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "places": [
+    "(unnamed) master City of the Tower"
+   ],
+   "summary": "After the old king's death the Lady and her lord enter the master city and she is enthroned where she was to be burned.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P025",
+     "q": "I sat a crowned Queen upon the throne"
+    }
+   ]
+  },
+  {
+   "label": "Return of the Teacher of Lore",
+   "chapter": "BTWO-C7",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Teacher of Lore",
+    "Lady of Abundance"
+   ],
+   "places": [
+    "Kingdom of the Tower"
+   ],
+   "summary": "About twenty years after the Dale, the Teacher comes young again and invites the Lady to seek the Well.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P031",
+     "q": "'tis a score of years since we two sat in the Dale"
+    }
+   ]
+  },
+  {
+   "label": "Flight from the Tower",
+   "chapter": "BTWO-C7",
+   "layer": "backstory",
+   "time_text": "April",
+   "participants": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "places": [
+    "Kingdom of the Tower"
+   ],
+   "summary": "After her lord's death the Lady leaves her throne disguised, in April, with the Teacher.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C7-P036",
+     "q": "So I vanished away from my throne and my kingdom"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "The Kingdom of the Tower adjoins the wildwood, but its direction from the Wood Perilous is not stated.",
+   "refs": [
+    {
+     "p": "BTWO-C7-P025",
+     "q": "came out from the twilight of the woods"
+    }
+   ]
+  },
+  {
+   "kind": "contradiction",
+   "question": "Earlier (BTWO-C6) the westward road ran from the witch's wilderness to the Tower; here the Teacher \"shortened the road\", so the distance is unreliable.",
+   "refs": [
+    {
+     "p": "BTWO-C7-P039",
+     "q": "the Teacher shortened the road much for us by her wisdom"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "The length of the Lady's reign in the Tower is not given (\"the days and the years wore\").",
+   "refs": [
+    {
+     "p": "BTWO-C7-P027",
+     "q": "But the days and the years wore"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A ruined kingdom (the Tower), its capital's streets grown with grass, as a ruin-region in the generator.",
+   "system": "history",
+   "basis_refs": [
+    {
+     "p": "BTWO-C7-P016",
+     "q": "till fighting became the chief business of all in the land"
+    }
+   ]
+  },
+  {
+   "idea": "Sanctuary by procession (a Bishop with the Host halting battle) as a world rule that clergy can impose truces.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C7-P009",
+     "q": "he stood between the two companies and faced the king"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C7",
+ "chapters": [
+  "BTWO-C7"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C7",
+   "paragraphs_total": 42,
+   "all_paragraphs_read": true,
+   "summary": "The Lady tells of the Land (Kingdom) of the Tower. The old king plotted against her; she and the king's son fled with friends, were caught, and she was tried by bishops for sorcery and condemned to burn. The prince's friends and the townsfolk rescued her; a Bishop with the Host and the Abbot of St. Peter's stopped the battle, and a truce exiled them fifty miles. She was wedded and made Queen, and years of civil war followed: her first son was slain before her and a second died of pestilence. Two years as outlaws in the wildwood brought alliance with the Champions of the Dry Tree (who raided Higham's lands and fought at Bear Castle). After the old king died they took the kingdom; she ruled as \"the Woman of the Waste\" and swore by the Water of the Well to return to the Dry Tree one day. Her lord built the Castle of Abundance and its arras. Hatred grew; the Teacher of Lore returned young, having drunk of the Well. After her lord died, the Lady fled disguised and lived for years with the Teacher in the House of the Sorceress, learning foresight and dream-sending. She sent the dream to the friar.",
+   "geography_notes": "The Kingdom of the Tower has a master or great city with the King's House, a Great Square, a city wall with posterns, hill-castles, a town that was the prince's own, and mountain strongholds; it borders the wildwood. The Dry Tree then lived in the wildwood (the Wood Perilous) without a stronghold; they harried north into the Abbot of Higham's lands and over the Downs to Bear Castle. The Lady's party never went north out of the Wood Perilous. The Castle of Abundance was their refuge in the Land of Abundance, which suggests the Land of Abundance was within reach of the Tower lands. The Lady and the Teacher retraced the westward road back to the House of the Sorceress, the Teacher shortening the road by her wisdom.",
+   "open_questions": [
+    "Where is the Kingdom of the Tower relative to the Wood Perilous (south?)",
+    "How many years the Lady reigned",
+    "Was the Up-castle (BTWO-C8) in the Tower lands?"
+   ]
+  }
+ ]
+}
