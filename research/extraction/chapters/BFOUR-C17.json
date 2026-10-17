@@ -1,0 +1,367 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Roger's hermitage",
+   "aliases": [],
+   "type": "building",
+   "subtype": "hut",
+   "unnamed": true,
+   "summary": "One-room hut of rough tree-limbs and reed thatch on a lawn by a stream.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C17-P008",
+     "q": "a little house in it, simple enough, of one hall, built with rough tree-limbs and reed thatch"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) expelled Burgers",
+   "aliases": [
+    "old Burgers"
+   ],
+   "type": "group",
+   "subtype": "outcasts",
+   "unnamed": true,
+   "summary": "The former people of the Burg, driven out unarmed after its fall; proud and skilled in war; expected to raid.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C17-P030",
+     "q": "they were all thrust out a-gates, rich and poor, old and young, man, woman and child"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) land of the Wheat-wearers",
+   "aliases": [],
+   "type": "place",
+   "subtype": "country",
+   "unnamed": true,
+   "summary": "Homeland of the Wheat-wearers, a long road from the Burg; short of men because the Burg killed males.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C17-P022",
+     "q": "Now the road to the Wheat-wearing country was long"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Roger of the Rope-walk",
+   "rel": "other",
+   "b": "(unnamed) hermit north-west of Abundance",
+   "detail": "same person",
+   "when": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P004",
+     "q": "I am that holy man"
+    }
+   ]
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "rel": "allied_with",
+   "b": "Wheat-wearers",
+   "detail": "freed their women, armed them, and with them took the Burg",
+   "when": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P025",
+     "q": "the Champions became their doctors and teachers of battle"
+    }
+   ]
+  },
+  {
+   "a": "Wheat-wearers",
+   "rel": "at_war_with",
+   "b": "Burg of the Four Friths",
+   "detail": "rose and took the Burg",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P029",
+     "q": "in an hour's space the pride and the estate of the Burg of the Four Friths was utterly fallen"
+    }
+   ]
+  },
+  {
+   "a": "Lady of Abundance",
+   "rel": "other",
+   "b": "Roger of the Rope-walk",
+   "detail": "had Roger draw Ralph to the Burg and Abundance",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P013",
+     "q": "she first spake to me of thee and bade me bring about that meeting with her"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) Roger's hermitage",
+   "rel": "distance_from",
+   "b": "(unnamed) night camp beyond Abundance",
+   "direction": "",
+   "distance_text": "about a mile by thicket path",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P008",
+     "q": "who led them by a thicket path about a mile, till they came to a lawn where-through ran a stream"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red",
+    "Roger of the Rope-walk"
+   ],
+   "from": "(unnamed) Roger's hermitage",
+   "to": "(unnamed) far side of the Swelling Flood",
+   "via": [],
+   "mode": "horse, Roger on foot leading",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "near noon",
+   "end_time_text": "night",
+   "terrain_text": "",
+   "chapter": "BFOUR-C17",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P043",
+     "q": "they lay down that night on the farther side of the Swelling Flood"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Burg of the Four Friths",
+   "statement": "Grieving Dry Tree riders ambushed a Burg host with Wheat-wearer captives and freed the women.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P020",
+     "q": "by night and cloud fell upon these faineants of the Burg, and won them good cheap"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Wheat-wearers",
+   "statement": "With few men left, Wheat-wearer women do fieldwork and crafts; they proved strong and quick at arms.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P023",
+     "q": "our land is ill-furnished of carles, so that we women, high and low, go afield and do many things"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Burg of the Four Friths",
+   "statement": "The Burg's men fled at the push; the gates could not be shut; the town fell in an hour.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P029",
+     "q": "they fled before the spears had met, and in such evil order that the gates could not be shut"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Burg of the Four Friths",
+   "statement": "Freed Wheat-wearer thrall women came out in green and garlands; there were about two thousand former bondwomen.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P033",
+     "q": "of whom there were some two thousand alive after the Burg was taken"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Burg of the Four Friths",
+   "statement": "The Burg is now a mixed folk (freed thralls, Wheat-wearers, Dry Tree men, incomers) under a Dry Tree captain, well ordered for defence.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P034",
+     "q": "now a mixed folk are dwelling in the Burg"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Hampton under Scaur",
+   "statement": "The Scaur holds only two or three carles and a dozen women.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P032",
+     "q": "two or three carles and a dozen of women dwell now in the halls and chambers of the Scaur"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "(unnamed) expelled Burgers",
+   "statement": "Roger expects the expelled Burgers to raid peaceful folk and Ralph to be called to hunt them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P030",
+     "q": "the day shall come meseemeth when folk shall call on thee to lead the hunt after these famished wolves"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "The Sage says the Lady ordained Ursula as Ralph's mate and fellow Friend of the Well.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P041",
+     "q": "she it was who ordained this Ursula to be Ralph's bedmate"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Fall of the Burg of the Four Friths",
+   "chapter": "BFOUR-C17",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Fellowship of the Dry Tree",
+    "Wheat-wearers",
+    "Burg of the Four Friths"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "summary": "The Dry Tree and the Wheat-wearers rout the Burg's hosts, take the Burg, and expel its people.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P029",
+     "q": "there befell that marvel which sometimes befalleth even to very valiant men"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "The land of the Wheat-wearers is a long road from the Burg; direction not stated.",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P022",
+     "q": "Now the road to the Wheat-wearing country was long"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A world-state change (the Burg's fall and a mixed new polity) between the outward and return journeys: world-state versioning by timeline.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C17-P034",
+     "q": "now a mixed folk are dwelling in the Burg"
+    }
+   ]
+  },
+  {
+   "idea": "Expelled populations becoming roaming raider bands, as a world event generator.",
+   "system": "events",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C17-P030",
+     "q": "woe betide the peaceful folk whom they shall first fall on"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C17",
+ "chapters": [
+  "BFOUR-C17"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C17",
+   "paragraphs_total": 42,
+   "all_paragraphs_read": true,
+   "summary": "At sunrise near Abundance, Ralph finds Roger of the Ropewalk, now the \"hermit\", shaggy, staffed, in russet, living in a rough reed-thatched one-room hut by a stream about a mile away, grieving the Lady. He feeds them and hears Ralph's tale. He says the Lady had him draw Ralph to the Burg and then Abundance, and that Ralph's luck took hers. He tells how the Burg fell: grieving Dry Tree riders ambushed a Burg host bringing Wheat-wearer captives, freed the women and armed them; the women helped rout a second Burg host; the Wheat-wearers rose; with Dry Tree help they beat the Burg's best and then stormed the Burg, whose men fled at the push. The Burgers were expelled, unarmed, all ages, to roam as wolves. The Fellowship of the Dry Tree is scattered: Hampton holds only a few; many live in the Burg with Wheat-wearer wives; the Burg is now a mixed folk under a Dry Tree captain, well defended. Roger agrees to come, though he resents Ursula as having \"gotten my Lady's luck\"; the Sage says the Lady ordained Ursula as Ralph's mate. They camp beyond the Swelling Flood.",
+   "geography_notes": "Roger's hut is in a stream lawn about a mile through thickets from their camp, a little north-west of the Plain of Abundance. The Wheat-wearers' land is a long road beyond the Burg's range. The company crosses the Swelling Flood the same day.",
+   "open_questions": [
+    "Where is the Wheat-wearers' land?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,580 @@
+{
+ "entities": [
+  {
+   "name": "Castle of the Scaur",
+   "aliases": [
+    "the Scaur"
+   ],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": false,
+   "summary": "Great white-walled castle climbing a reef of grey rocks in a green plain, crowned by a huge round tower; a high, broad, empty hall with a stone table and high-seat on the dais; a great horn behind the seat.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C19-P014",
+     "q": "on the said reef, and climbing up as it were to the topmost of it, the white walls of a great castle, the crown whereof was a huge round tower"
+    }
+   ]
+  },
+  {
+   "name": "Grey Goose Thicket",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "thicket",
+   "unnamed": false,
+   "summary": "Close thicket with a narrow winding path, once a Dry Tree ambush place.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C19-P009",
+     "q": "fetch a compass round about Grey Goose Thicket as it hight amongst us"
+    }
+   ]
+  },
+  {
+   "name": "Michael a-Hurst",
+   "aliases": [],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": false,
+   "summary": "Dry Tree man with news of the old Burgers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C19-P016",
+     "q": "Spake Michael a-Hurst"
+    }
+   ]
+  },
+  {
+   "name": "Banded Barons",
+   "aliases": [],
+   "type": "group",
+   "subtype": "baronial league",
+   "unnamed": false,
+   "summary": "Foes of the Abbot of Higham, from the West.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C19-P017",
+     "q": "we know where his foemen came from, the West to wit, and the Banded Barons"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) new Captain of the Dry Tree",
+   "aliases": [
+    "the Captain of the Burg"
+   ],
+   "type": "person",
+   "subtype": "captain",
+   "unnamed": true,
+   "summary": "Tall, gallantly armed captain of the Dry Tree and of the whole Burg; gives Ralph men and the Scaur.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C19-P053",
+     "q": "I am the Captain of the Dry Tree for lack of a better"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Dry Tree mote horn",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "assembly signal",
+   "unnamed": true,
+   "summary": "Great horn blown thrice to hallow a Mote of the Dry Tree.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C19-P033",
+     "q": "This is the token that the men of the Dry Tree are met for matters of import; thus is the Mote hallowed"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) stone high-seat of the Scaur",
+   "aliases": [],
+   "type": "item",
+   "subtype": "throne",
+   "unnamed": true,
+   "summary": "Stone high-seat on the dais where the Lady once sat as Queen.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C19-P034",
+     "q": "he set down Ursula in the stone high-seat"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) old Queen of the Dry Tree",
+   "rel": "killed_by",
+   "b": "Roger of the Rope-walk",
+   "detail": "after news of the Lady's death",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P031",
+     "q": "as to her, I slew her not three feet from where thou standest now"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) new Captain of the Dry Tree",
+   "rel": "leader_of",
+   "b": "Burg of the Four Friths",
+   "detail": "captain of the Burg and the Dry Tree",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P003",
+     "q": "the Captain of the Burg (e'en he of the Dry Tree, who in these latest days is made captain of all)"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "allied_with",
+   "b": "Fellowship of the Dry Tree",
+   "detail": "mutual oaths at the Scaur",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P039",
+     "q": "we swear to follow the Lord Ralph of Upmeads for a year and a day"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "owns",
+   "b": "Castle of the Scaur",
+   "detail": "offered the Scaur and Hampton as a gift; accepts if he survives",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P055",
+     "q": "the Scaur, and Hampton therewith is a gift from us to thee"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "enemy_of",
+   "b": "Upmeads",
+   "detail": "plan to attack Upmeads, then Higham, then the Burg",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P055",
+     "q": "they would gather to them other bands of strong-thieves who haunt that wood, and go with them upon Upmeads"
+    }
+   ]
+  },
+  {
+   "a": "Banded Barons",
+   "rel": "enemy_of",
+   "b": "St. Mary's of Higham",
+   "detail": "war from the West",
+   "when": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P017",
+     "q": "the Abbot has had unpeace on his hands"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Castle of the Scaur",
+   "rel": "within",
+   "b": "(unnamed) green plain of Hampton",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "on a great reef of grey rocks rising from a green plain",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P014",
+     "q": "a great heap of grey rocks rising out of it like a reef out of the sea"
+    }
+   ]
+  },
+  {
+   "a": "Hampton under Scaur",
+   "rel": "at_foot_of",
+   "b": "(unnamed) ridge above Hampton",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "white thatched houses scattered on the plain at the ridge foot",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P014",
+     "q": "At the foot of the ridge was a thorp of white houses thatched with straw scattered over a good piece of the plain"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "north_of",
+   "b": "Wood Debateable",
+   "direction": "in the woodland north of the Wood Debateable",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Michael a-Hurst",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "rumour",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P016",
+     "q": "be come into the woodland north of the Wood Debateable"
+    }
+   ]
+  },
+  {
+   "a": "Higham-on-the-Way",
+   "rel": "near",
+   "b": "Castle of the Scaur",
+   "direction": "",
+   "distance_text": "no great way",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:new Captain of the Dry Tree",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "reached by sunset by the shortest road",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P055",
+     "q": "Higham is no great way hence"
+    }
+   ]
+  },
+  {
+   "a": "Banded Barons",
+   "rel": "west_of",
+   "b": "St. Mary's of Higham",
+   "direction": "from the West",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Roger of the Rope-walk",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P017",
+     "q": "the West to wit, and the Banded Barons"
+    }
+   ]
+  },
+  {
+   "a": "Grey Goose Thicket",
+   "rel": "between",
+   "b": "Burg of the Four Friths",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "close thicket on the rides from the Burg to Hampton",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "between the Burg and Hampton",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P009",
+     "q": "they came into a very close thicket where there was but a narrow and winding way"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Roger of the Rope-walk",
+    "Stephen a-Hurst",
+    "(unnamed) Dry Tree champions"
+   ],
+   "from": "Burg of the Four Friths",
+   "to": "Castle of the Scaur",
+   "via": [
+    "(unnamed) North Gate of the Burg",
+    "Frank of the Burg",
+    "Grey Goose Thicket"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "afternoon",
+   "terrain_text": "",
+   "chapter": "BFOUR-C19",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P009",
+     "q": "Herewith they ride a little trot through the Freedom of the Burg"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Ralph and company"
+   ],
+   "from": "Castle of the Scaur",
+   "to": "Higham-on-the-Way",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "by the shortest by-ways",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C19",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P062",
+     "q": "there is a nigher road by the by-ways to Higham"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Ralph's first band: fifty-five Dry Tree champions plus Roger and the travellers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P007",
+     "q": "they were threescore save five, besides Roger and the way-farers"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "The Dry Tree swears on a sword's blade, hilt, point and edge, kissing it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P039",
+     "q": "By the hilts and the blade, by the point and the edge, we swear"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Burg of the Four Friths",
+   "statement": "Five hundred Wheat-wearer foot are coming to garrison the Scaur and bring remounts.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:new Captain of the Dry Tree",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P058",
+     "q": "five hundred good men of the Wheat-wearers, men who have not learned the feat of arms a-horseback, are coming through the woods hither"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Lady of Abundance",
+   "statement": "Roger says the Duke brought the cast-out Lady into the hall in his scarlet cloak, where she blessed the house as the abode of the valiant and shelter of the hapless.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P029",
+     "q": "May God bless this House and the abode of the valiant, and the shelter of the hapless"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) old Queen of the Dry Tree",
+   "statement": "A rumour says her ghost walks in the Scaur's hall.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P031",
+     "q": "A rumour there is that she walketh"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Ursula",
+   "statement": "Ursula was taken by women of the thorp, mishandled, and condemned in the hall by the old Queen (\"hair like a grey she-bear\").",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P020",
+     "q": "the evil hag with hair like a grey she-bear"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Mote at the Scaur",
+   "chapter": "BFOUR-C19",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Roger of the Rope-walk",
+    "Stephen a-Hurst",
+    "Fellowship of the Dry Tree"
+   ],
+   "places": [
+    "Castle of the Scaur"
+   ],
+   "summary": "In the Castle of the Scaur Ralph and the Dry Tree swear mutual oaths; the Scaur is offered to him.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P035",
+     "q": "I swear that whensoever the Captain of the Dry Tree calleth on me"
+    }
+   ]
+  },
+  {
+   "label": "Death of the old Queen of the Dry Tree",
+   "chapter": "BFOUR-C19",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Roger of the Rope-walk",
+    "(unnamed) old Queen of the Dry Tree"
+   ],
+   "places": [
+    "Castle of the Scaur"
+   ],
+   "summary": "After news of the Lady's death the Dry Tree fell on the old Queen; Roger slew her in the hall.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P031",
+     "q": "we fell on the she-bear, as thou callest her, and her company of men and women"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The Banded Barons of the West are not otherwise identified.",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P017",
+     "q": "the Banded Barons"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Fortress grants by allied factions conditional on proving oneself.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C19-P042",
+     "q": "we will give thee this Castle of the Scaur, for thee and those that shall spring from thy loins"
+    }
+   ]
+  },
+  {
+   "idea": "Mega-castle on a rock reef in a plain as a unique landmark (CANON, fixed).",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C19-P014",
+     "q": "a great heap of grey rocks rising out of it like a reef out of the sea"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C19",
+ "chapters": [
+  "BFOUR-C19"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C19",
+   "paragraphs_total": 63,
+   "all_paragraphs_read": true,
+   "summary": "Roger and Stephen bring fifty-five champions of the Dry Tree, granted by the Burg's captain, on condition that Ralph swear at the Castle of the Scaur, with Ursula on the Lady's high-seat, to help the Burg and the Wheat-wearers when called. They ride out by the North Gate through the Freedom of the Burg, through Grey Goose Thicket (once an ambush place), to a ridge above a green plain: a great reef of grey rocks with the white Castle of the Scaur and a huge round crown-tower, and the thorp of Hampton below. Michael a-Hurst says the old Burgers have armed and come into the woodland north of the Wood Debateable; the Abbot of Higham's recent foes are the Banded Barons from the West. Ursula fears the hall where the old she-bear Queen condemned her; Roger says he killed that Queen there after the Lady's death. In the vast empty hall Roger blows a great horn to hallow the Mote; Ursula sits on the stone high-seat; Ralph swears on his sword and her head; the champions swear to follow him a year and a day, and offer him the Scaur and Hampton if he proves himself. Ten score Dry Tree riders arrive with the new Captain of the Dry Tree, who says the expelled Burgers in the Wood Debateable plan to attack Upmeads, then Higham, then the Burg. He leaves a hundred to hold the Scaur, gives Ralph a hundred, and says five hundred Wheat-wearers are coming with remounts. Ralph accepts the Scaur if he survives. They ride for Higham by the shortest by-ways.",
+   "geography_notes": "From the Burg's North Gate across the Freedom of the Burg, off the woodland highway, along forest rides to Grey Goose Thicket (narrow, single-file), then a valley trench to a bare ridge overlooking a green plain with a great reef of grey rocks crowned by the white Castle of the Scaur and its great round tower; the thorp of Hampton (white thatched houses) at the ridge foot; a walled stair from the bailey up the rock to the hall level. Higham is \"no great way hence\". The old Burgers are now in the woodland north of the Wood Debateable.",
+   "open_questions": [
+    "Who are the Banded Barons of the West?"
+   ]
+  }
+ ]
+}

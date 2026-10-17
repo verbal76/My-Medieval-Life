@@ -1,0 +1,22 @@
+@ BFOUR-C20
+summary: By the shortest road they reach Higham a little before sunset; the gate is barricaded with men-at-arms and bowmen. A knight of the town refuses entry to men bearing the Dry Tree, calling them strong-thieves. Ralph's brother Hugh, a poorly armed man-at-arms sworn to Higham, slips through the barrier and joins him. The knight threatens to sally; Ralph offers to meet them man for man. The hundred Dry Tree riders arrive over the hill and the knight retreats behind the barrier, shooting a bolt and some arrows harmlessly. Ralph will not fight; they skirt the walls out of bowshot and ride by moonlight for the down country, Hugh riding beside Ralph.
+geo: Higham-on-the-Way is reached before sunset from the Scaur by the shortest road. Strong barriers stand before the gate. The company skirts the town walls out of bowshot and heads for the down country by moonlight.
+open: none
+
+E person | Hugh | - | prince | Ralph's brother, now a poorly armed man-at-arms sworn to Higham. | P006 `for lo! it was his own brother Hugh`
+E person | (unnamed) knight of Higham at the barrier | - | knight | Bravely armed knight commanding Higham's barrier, hostile to the Dry Tree. | P002 `a knight of the town, very bravely armed, came forth from the barriers`
+
+R Hugh | sibling_of | Ralph | brother | BFOUR-C20 | CANON/high | P006 `He is mine own brother`
+R Hugh | serves | St. Mary's of Higham | sworn man of Higham, then leaves | BFOUR-C20 | CANON/high | P006 `he was none the less our sworn man`
+
+S Higham-on-the-Way | distance_from | Castle of the Scaur | time=from early afternoon to a little before sunset; cert=constrained | CANON/high | by the shortest road | P002 `they made for Higham by the shortest road, so that they came before the gate a little before sunset`
+
+T Ralph and company, Hugh | Higham-on-the-Way | the Downs | mode=horse; start=evening; dir=skirting the walls toward the down country, by moonlight | P014 `presently were skirting the walls of Higham out of bow-shot, and making for the Down country by the clear of the moon`
+
+F military | Higham-on-the-Way | Higham has barriers before its gate and expects attack. | CANON/high | P002 `there were strong barriers before it, and men-at-arms within them, as though they were looking for an onfall`
+F politics | Fellowship of the Dry Tree | Higham's men still regard the Dry Tree as strong-thieves. | CANON/high; ctx=dialogue:knight of Higham | P003 `Wilt thou then lodge thy company of strong-thieves with honest men?`
+F custom | Ralph | Ralph approaches bareheaded with a white cloth on a truncheon to show peaceful intent. | CANON/high | P002 `all three of them bare-headed with their swords in the sheaths; and Stephen moreover bearing a white cloth on a truncheon`
+
+V main | Turned away from Higham | Higham refuses Ralph's Dry Tree band; Hugh escapes to join Ralph. | time=sunset; who=Ralph, Hugh, (unnamed) knight of Higham at the barrier; where=Higham-on-the-Way | P006 `Get thee behind us, Hugh, if thou wilt come with us, lad`
+
+O politics | Faction reputation persisting despite reform (the Dry Tree still mistrusted). | P005 `for the tale of them is over long for honest men to hearken to`

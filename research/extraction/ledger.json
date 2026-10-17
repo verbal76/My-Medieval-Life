@@ -2617,44 +2617,100 @@
    "title": "They Fall in With That Hermit",
    "body_paragraphs": 42,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 4,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 8,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Where is the Wheat-wearers' land?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C17.txt",
+    "records": "research/extraction/chapters/BFOUR-C17.json"
+   }
   },
   {
    "chapter": "BFOUR-C18",
    "title": "A Change of Days in the Burg of the Four Friths",
    "body_paragraphs": 13,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 1,
+    "spatial": 0,
+    "travel": 1,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C18.txt",
+    "records": "research/extraction/chapters/BFOUR-C18.json"
+   }
   },
   {
    "chapter": "BFOUR-C19",
    "title": "Ralph Sees Hampton and the Scaur",
    "body_paragraphs": 63,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 7,
+    "relations": 6,
+    "spatial": 6,
+    "travel": 2,
+    "facts": 6,
+    "events": 2,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Who are the Banded Barons of the West?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C19.txt",
+    "records": "research/extraction/chapters/BFOUR-C19.json"
+   }
   },
   {
    "chapter": "BFOUR-C20",
    "title": "They Come to the Gate of Higham By the Way",
    "body_paragraphs": 13,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 2,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C20.txt",
+    "records": "research/extraction/chapters/BFOUR-C20.json"
+   }
   },
   {
    "chapter": "BFOUR-C21",

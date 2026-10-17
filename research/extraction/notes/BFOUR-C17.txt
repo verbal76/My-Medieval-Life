@@ -1,0 +1,33 @@
+@ BFOUR-C17
+summary: At sunrise near Abundance, Ralph finds Roger of the Ropewalk, now the "hermit", shaggy, staffed, in russet, living in a rough reed-thatched one-room hut by a stream about a mile away, grieving the Lady. He feeds them and hears Ralph's tale. He says the Lady had him draw Ralph to the Burg and then Abundance, and that Ralph's luck took hers. He tells how the Burg fell: grieving Dry Tree riders ambushed a Burg host bringing Wheat-wearer captives, freed the women and armed them; the women helped rout a second Burg host; the Wheat-wearers rose; with Dry Tree help they beat the Burg's best and then stormed the Burg, whose men fled at the push. The Burgers were expelled, unarmed, all ages, to roam as wolves. The Fellowship of the Dry Tree is scattered: Hampton holds only a few; many live in the Burg with Wheat-wearer wives; the Burg is now a mixed folk under a Dry Tree captain, well defended. Roger agrees to come, though he resents Ursula as having "gotten my Lady's luck"; the Sage says the Lady ordained Ursula as Ralph's mate. They camp beyond the Swelling Flood.
+geo: Roger's hut is in a stream lawn about a mile through thickets from their camp, a little north-west of the Plain of Abundance. The Wheat-wearers' land is a long road beyond the Burg's range. The company crosses the Swelling Flood the same day.
+open: Where is the Wheat-wearers' land?
+
+E building | (unnamed) Roger's hermitage | - | hut | One-room hut of rough tree-limbs and reed thatch on a lawn by a stream. | P008 `a little house in it, simple enough, of one hall, built with rough tree-limbs and reed thatch`
+E group | (unnamed) expelled Burgers | old Burgers | outcasts | The former people of the Burg, driven out unarmed after its fall; proud and skilled in war; expected to raid. | P030 `they were all thrust out a-gates, rich and poor, old and young, man, woman and child`
+E place | (unnamed) land of the Wheat-wearers | - | country | Homeland of the Wheat-wearers, a long road from the Burg; short of men because the Burg killed males. | P022 `Now the road to the Wheat-wearing country was long`
+
+R Roger of the Rope-walk | other | (unnamed) hermit north-west of Abundance | same person | BFOUR-C17 | CANON/high | P004 `I am that holy man`
+R Fellowship of the Dry Tree | allied_with | Wheat-wearers | freed their women, armed them, and with them took the Burg | BFOUR-C17 | CANON/high | P025 `the Champions became their doctors and teachers of battle`
+R Wheat-wearers | at_war_with | Burg of the Four Friths | rose and took the Burg | backstory | CANON/high | P029 `in an hour's space the pride and the estate of the Burg of the Four Friths was utterly fallen`
+R Lady of Abundance | other | Roger of the Rope-walk | had Roger draw Ralph to the Burg and Abundance | backstory | CANON/high | P013 `she first spake to me of thee and bade me bring about that meeting with her`
+
+S (unnamed) Roger's hermitage | distance_from | (unnamed) night camp beyond Abundance | dist=about a mile by thicket path; cert=fixed | CANON/high | - | P008 `who led them by a thicket path about a mile, till they came to a lawn where-through ran a stream`
+
+T Ralph, Ursula, Sage of Swevenham, Richard the Red, Roger of the Rope-walk | (unnamed) Roger's hermitage | (unnamed) far side of the Swelling Flood | mode=horse, Roger on foot leading; start=near noon; end=night | P043 `they lay down that night on the farther side of the Swelling Flood`
+
+F history | Burg of the Four Friths | Grieving Dry Tree riders ambushed a Burg host with Wheat-wearer captives and freed the women. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P020 `by night and cloud fell upon these faineants of the Burg, and won them good cheap`
+F society | Wheat-wearers | With few men left, Wheat-wearer women do fieldwork and crafts; they proved strong and quick at arms. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P023 `our land is ill-furnished of carles, so that we women, high and low, go afield and do many things`
+F history | Burg of the Four Friths | The Burg's men fled at the push; the gates could not be shut; the town fell in an hour. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P029 `they fled before the spears had met, and in such evil order that the gates could not be shut`
+F history | Burg of the Four Friths | Freed Wheat-wearer thrall women came out in green and garlands; there were about two thousand former bondwomen. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P033 `of whom there were some two thousand alive after the Burg was taken`
+F politics | Burg of the Four Friths | The Burg is now a mixed folk (freed thralls, Wheat-wearers, Dry Tree men, incomers) under a Dry Tree captain, well ordered for defence. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P034 `now a mixed folk are dwelling in the Burg`
+F politics | Hampton under Scaur | The Scaur holds only two or three carles and a dozen women. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P032 `two or three carles and a dozen of women dwell now in the halls and chambers of the Scaur`
+F politics | (unnamed) expelled Burgers | Roger expects the expelled Burgers to raid peaceful folk and Ralph to be called to hunt them. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P030 `the day shall come meseemeth when folk shall call on thee to lead the hunt after these famished wolves`
+F magic | Lady of Abundance | The Sage says the Lady ordained Ursula as Ralph's mate and fellow Friend of the Well. | CANON/medium; ctx=dialogue:Sage of Swevenham | P041 `she it was who ordained this Ursula to be Ralph's bedmate`
+
+V backstory | Fall of the Burg of the Four Friths | The Dry Tree and the Wheat-wearers rout the Burg's hosts, take the Burg, and expel its people. | who=Fellowship of the Dry Tree, Wheat-wearers, Burg of the Four Friths; where=Burg of the Four Friths | P029 `there befell that marvel which sometimes befalleth even to very valiant men`
+
+U location | The land of the Wheat-wearers is a long road from the Burg; direction not stated. | P022 `Now the road to the Wheat-wearing country was long`
+
+O politics | A world-state change (the Burg's fall and a mixed new polity) between the outward and return journeys: world-state versioning by timeline. | P034 `now a mixed folk are dwelling in the Burg`
+O events | Expelled populations becoming roaming raider bands, as a world event generator. | P030 `woe betide the peaceful folk whom they shall first fall on`

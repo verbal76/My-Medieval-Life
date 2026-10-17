@@ -1,0 +1,216 @@
+{
+ "entities": [
+  {
+   "name": "Hugh",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": false,
+   "summary": "Ralph's brother, now a poorly armed man-at-arms sworn to Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C20-P006",
+     "q": "for lo! it was his own brother Hugh"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) knight of Higham at the barrier",
+   "aliases": [],
+   "type": "person",
+   "subtype": "knight",
+   "unnamed": true,
+   "summary": "Bravely armed knight commanding Higham's barrier, hostile to the Dry Tree.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C20-P002",
+     "q": "a knight of the town, very bravely armed, came forth from the barriers"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Hugh",
+   "rel": "sibling_of",
+   "b": "Ralph",
+   "detail": "brother",
+   "when": "BFOUR-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P006",
+     "q": "He is mine own brother"
+    }
+   ]
+  },
+  {
+   "a": "Hugh",
+   "rel": "serves",
+   "b": "St. Mary's of Higham",
+   "detail": "sworn man of Higham, then leaves",
+   "when": "BFOUR-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P006",
+     "q": "he was none the less our sworn man"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Higham-on-the-Way",
+   "rel": "distance_from",
+   "b": "Castle of the Scaur",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "from early afternoon to a little before sunset",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "by the shortest road",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P002",
+     "q": "they made for Higham by the shortest road, so that they came before the gate a little before sunset"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph and company",
+    "Hugh"
+   ],
+   "from": "Higham-on-the-Way",
+   "to": "the Downs",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "skirting the walls toward the down country, by moonlight",
+   "duration_text": "",
+   "start_time_text": "evening",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C20",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P014",
+     "q": "presently were skirting the walls of Higham out of bow-shot, and making for the Down country by the clear of the moon"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Higham-on-the-Way",
+   "statement": "Higham has barriers before its gate and expects attack.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P002",
+     "q": "there were strong barriers before it, and men-at-arms within them, as though they were looking for an onfall"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Higham's men still regard the Dry Tree as strong-thieves.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:knight of Higham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P003",
+     "q": "Wilt thou then lodge thy company of strong-thieves with honest men?"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph approaches bareheaded with a white cloth on a truncheon to show peaceful intent.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P002",
+     "q": "all three of them bare-headed with their swords in the sheaths; and Stephen moreover bearing a white cloth on a truncheon"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Turned away from Higham",
+   "chapter": "BFOUR-C20",
+   "layer": "main",
+   "time_text": "sunset",
+   "participants": [
+    "Ralph",
+    "Hugh",
+    "(unnamed) knight of Higham at the barrier"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "summary": "Higham refuses Ralph's Dry Tree band; Hugh escapes to join Ralph.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P006",
+     "q": "Get thee behind us, Hugh, if thou wilt come with us, lad"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Faction reputation persisting despite reform (the Dry Tree still mistrusted).",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C20-P005",
+     "q": "for the tale of them is over long for honest men to hearken to"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C20",
+ "chapters": [
+  "BFOUR-C20"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C20",
+   "paragraphs_total": 13,
+   "all_paragraphs_read": true,
+   "summary": "By the shortest road they reach Higham a little before sunset; the gate is barricaded with men-at-arms and bowmen. A knight of the town refuses entry to men bearing the Dry Tree, calling them strong-thieves. Ralph's brother Hugh, a poorly armed man-at-arms sworn to Higham, slips through the barrier and joins him. The knight threatens to sally; Ralph offers to meet them man for man. The hundred Dry Tree riders arrive over the hill and the knight retreats behind the barrier, shooting a bolt and some arrows harmlessly. Ralph will not fight; they skirt the walls out of bowshot and ride by moonlight for the down country, Hugh riding beside Ralph.",
+   "geography_notes": "Higham-on-the-Way is reached before sunset from the Scaur by the shortest road. Strong barriers stand before the gate. The company skirts the town walls out of bowshot and heads for the down country by moonlight.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

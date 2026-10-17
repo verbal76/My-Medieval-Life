@@ -1,0 +1,22 @@
+@ BFOUR-C18
+summary: Emerging from the thicket into the Burg's fields, they see a better life: townsfolk strolling merrily, few weapons, but helms on the walls and watchmen on the South Gate's towers. Stephen a-Hurst, a gate guard and Roger's old comrade, warns that alien riders are reported in Higham's lands and bids them lodge at the Flower de Luce. Roger stays with him. The town is gayer; the women resemble the former thralls but dress less wantonly; the master church is being enlarged; armed men wear the Dry Tree token. At the inn two maidens, one formerly a thrall, say rumour already knows they drank of the Well, and that the town's women helped chase the Burgers and will hold the walls. The Sage foresees war and victory; Ralph agrees.
+geo: The Burg's fields lie outside the thicket; its husbandmen are mostly aliens doing war-service. The South Gate has towers with watchmen. The master church in the great square is being enlarged.
+open: none
+
+E person | Stephen a-Hurst | Stephen | man-at-arms | Gate guard of the Burg and Roger's old comrade; later a leader of Ralph's Dry Tree band. | P005 `Stephen a-Hurst, hast thou time for a word with an old friend?`
+E person | (unnamed) maidens of the Flower de Luce | - | servants | Two maidens at the inn, one a former thrall, who say they helped fight the Burgers. | P010 `came two of the maids there and asked them if it were lawful to talk with them`
+
+R Stephen a-Hurst | member_of | Fellowship of the Dry Tree | old comrade of Roger | BFOUR-C18 | CANON/high | P005 `I deemed that thou hadst fled away from all of us to live in the wilds`
+
+T Ralph, Ursula, Sage of Swevenham, Richard the Red, Roger of the Rope-walk | (unnamed) far side of the Swelling Flood | Burg of the Four Friths | via=(unnamed) South Gate of the Burg; mode=horse; end=sunset | P002 `till they came out of the thicket into the fields about the Burg of the Four Friths`
+
+F society | Burg of the Four Friths | Townsfolk now walk outside the gates merrily; the town is gayer; women dress gaily but less wantonly than the former thralls. | CANON/high | P009 `the women like to those fair thralls whom he had seen that other time, saving that they were not clad so wantonly, however gaily`
+F military | Burg of the Four Friths | Few carry weapons in the fields, but helms gleam on the walls and watchmen are on the South Gate towers. | CANON/high | P003 `they saw a watchman on each of the high towers of the south gate`
+F military | Burg of the Four Friths | The women of the new Burg helped chase the Burgers and will hold the walls. | CANON/high; ctx=dialogue:maiden of the Flower de Luce | P011 `If the Burgers come back, they will find them upon the walls who have already chaced them`
+F architecture | Burg of the Four Friths | The master church is being enlarged and beautified. | CANON/high | P009 `the masons and builders had begun on the master church to make it fairer and bigger`
+F politics | Higham-on-the-Way | Rumour says alien riders have come into Higham's lands. | CANON/high; ctx=dialogue:Stephen a-Hurst | P004 `rumour goes that there are alien riders come into the lands of Higham`
+F magic | Ralph | Rumour already says they have drunk of the Well. | CANON/high; ctx=dialogue:maiden of the Flower de Luce | P010 `already rumour was abroad that they were in the Burg who had drunk of the Water of the Well at the World's End`
+
+V main | Return to the Burg | Ralph's party enters the transformed Burg and lodges at the Flower de Luce. | time=evening, early summer; who=Ralph, Ursula, Sage of Swevenham, Richard the Red, Roger of the Rope-walk, Stephen a-Hurst; where=Burg of the Four Friths | P010 `So they entered the Flower de Luce, and had good welcome there`
+
+O society | Post-revolution towns with freed thralls as new citizens, as a regional state. | P010 `some of us from very thralldom of the most grievous, and I am of those`
