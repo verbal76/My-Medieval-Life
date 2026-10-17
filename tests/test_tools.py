@@ -1,4 +1,5 @@
 """Smoke tests for the earlier asset tools, so later changes don't break them."""
+import csv
 import random
 import sys
 import unittest
@@ -6,7 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 
-from assetzip import AssetZip  # noqa: E402
+from assetzip import REPO, AssetZip  # noqa: E402
+import build_manifest  # noqa: E402
 import miniworld_terrain  # noqa: E402
 import puny_chargen  # noqa: E402
 import puny_terrain  # noqa: E402
@@ -56,6 +58,19 @@ class ToolsTest(unittest.TestCase):
         img = render_tmj.render(AssetZip("PUNY_DUNGEON_v1.zip"),
                                 "PUNY_DUNGEON_v1/Tiled/sample-map1.tmj")
         self.assertGreater(opaque_fraction(img), 0.5)
+
+    def test_manifest_covers_exactly_the_assets(self):
+        """Every top-level entry is a listed asset or explicitly not an asset, so a new
+        doc or folder can't silently land in the asset manifest."""
+        with open(REPO / "asset_manifest.csv") as f:
+            sources = {r["archive"] for r in csv.DictReader(f)}
+            f.seek(0)
+            loose = {r["path"] for r in csv.DictReader(f) if r["archive"] == "(repo root)"}
+        for p in REPO.iterdir():
+            if p.name in build_manifest.NOT_ASSETS or p.name.startswith("."):
+                continue
+            listed = p.name in sources or p.name + "/" in sources or p.name in loose
+            self.assertTrue(listed, f"{p.name} is neither in the manifest nor in NOT_ASSETS")
 
 
 if __name__ == "__main__":

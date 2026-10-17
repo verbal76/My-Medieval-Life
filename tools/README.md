@@ -8,6 +8,10 @@ Python 3 + Pillow. Everything reads straight from the zips in the repo root; not
 | `puny_terrain.py` | Procedural terrain from the Puny Characters orthogonal tileset's corner terrain set. Writes a PNG and a Tiled `.tmj`. |
 | `render_tmj.py` | Renders the packs' Tiled sample maps (orthogonal) to PNG. |
 | `build_manifest.py` | Regenerates `ASSET_MANIFEST.md` and `asset_manifest.csv`. |
+| `puny_world_terrain.py` | Overworld maps from the free Puny World tileset with rivers, roads, bridges and sites (see below). |
+| `miniworld_terrain.py` | Layered biome terrain from the miniworld+ modules. |
+| `miniworld_anims.py` | `data/miniworld_animations.json`: soldier/worker animation frames and timing. |
+| `miniworld_buildings.py` | `data/miniworld_buildings.json`: building atlas keyed by the guide's names. |
 
 ```sh
 python3 tools/puny_chargen.py -n 16 --seed 42 --none-prob facial-hair=0.7
