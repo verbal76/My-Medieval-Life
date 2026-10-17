@@ -16,13 +16,26 @@ On branch `claude/charming-albattani-8jjfya` (draft PR #1).
 - ✅ Project rules, design draft, architecture proposal (this phase)
 - ✅ 28 automated tests
 
+## R0. Morris world research ✅
+
+On branch `claude/charming-albattani-8jjfya` (draft PR #1).
+
+- ✅ Novel corpus with stable paragraph ids; Gutenberg material excluded (`research/corpus/novel.json`)
+- ✅ All 119 chapters read in context and extracted; every quote verified by script
+- ✅ Merged registries with stable ids, identity decisions, checks (`research/registries/`)
+- ✅ Deliverables A–J and the magic register (`docs/world/`)
+- 🔒 Owner decisions in `docs/world/J_OPEN_DECISIONS.md` (era, starting county, scale, magic)
+- ⬜ Optional second pass over uncited paragraphs for material culture (J Part 3)
+
 ## Gate A: owner decisions 🔒
 
 Nothing below starts until the owner answers the essential questions in `docs/GAME_DESIGN.md`:
 
 - U1, the primary platform
 - U2, the engine
-- U3–U5, the player, the core loop and the world structure
+- U3–U5, the player, the core loop and the world structure (U3 answered in outline by the world
+  directive: an ordinary inhabitant, not the chosen one)
+- J-D1 and J-D2, the era and the starting county (`docs/world/J_OPEN_DECISIONS.md`)
 
 The answers go into `docs/DECISIONS.md`.
 

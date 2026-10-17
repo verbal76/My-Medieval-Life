@@ -206,6 +206,9 @@ def build(chapters, merges, old_ids):
                     r[fld + "_ids"] = [ids[n] for n in r[fld]]
             rows.append(dict(sorted(r.items())))
         out[sec] = rows
+    for u in out["unresolved"]:
+        if u["id"] in merges.get("resolved", {}):
+            u["resolution"] = merges["resolved"][u["id"]]
 
     spatial_types = {"place", "feature", "building", "polity", "implicit"}
     entities = []
@@ -301,6 +304,8 @@ def checks(chapters, novel, reg, dangling, merges):
         "implicit_entities": sorted(dangling),
         "duplicate_candidates": dups,
         "spatial_contradictions": contra,
+        "unresolved_resolved_later": sum(1 for u in reg["unresolved"] if "resolution" in u),
+        "unknown_resolution_ids": sorted(set(merges.get("resolved", {})) - {u["id"] for u in reg["unresolved"]}),
         "unresolved_by_kind": dict(sorted(
             {k: sum(1 for u in reg["unresolved"] if u["kind"] == k)
              for k in {u["kind"] for u in reg["unresolved"]}}.items())),
@@ -319,7 +324,9 @@ def render_checks(c):
          f"| Names merged by `merges.json` | {c['merged_names']} |",
          f"| Implicit entities (named only in relations, journeys or events) | {len(c['implicit_entities'])} |",
          f"| Duplicate candidates for review | {len(c['duplicate_candidates'])} |",
-         f"| Spatial contradictions | {len(c['spatial_contradictions'])} |", "",
+         f"| Spatial contradictions | {len(c['spatial_contradictions'])} |",
+         f"| Unresolved records answered later in the novel | {c['unresolved_resolved_later']} |",
+         f"| Resolutions naming an unknown record | {len(c['unknown_resolution_ids'])} |", "",
          "Gutenberg exclusion: the tale is lines "
          f"{c['gutenberg']['tale_lines'][0]}-{c['gutenberg']['tale_lines'][1]} of `pg169.txt`; header lines "
          f"{c['gutenberg']['excluded_header'][0]}-{c['gutenberg']['excluded_header'][1]} and footer lines "
@@ -367,7 +374,7 @@ def main():
           f"quote problems {len(chk['quote_problems'])}, contradictions {len(chk['spatial_contradictions'])}, "
           f"duplicate candidates {len(chk['duplicate_candidates'])}, "
           f"cited {chk['body_paragraphs_cited']}/{chk['body_paragraphs']}")
-    return 1 if chk["quote_problems"] or chk["refs_outside_tale"] else 0
+    return 1 if chk["quote_problems"] or chk["refs_outside_tale"] or chk["unknown_resolution_ids"] else 0
 
 
 if __name__ == "__main__":

@@ -95,7 +95,11 @@
      "p": "BONE-C4-P003",
      "q": "The first time!"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "The Captain of the Dry Tree, brother of the Knight of the Sun.",
+    "basis": "Confirmed the same man (BTWO-C1); his last words complete the count (BFOUR-C15)."
+   }
   },
   {
    "chapter": "BONE-C4",
@@ -119,7 +123,11 @@
      "p": "BONE-C4-P002",
      "q": "an image of a tree leafless"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Yes: the leafless tree is the token of the Fellowship of the Dry Tree.",
+    "basis": "BONE-C11, BONE-C15."
+   }
   },
   {
    "chapter": "BONE-C5",
@@ -167,7 +175,11 @@
      "p": "BONE-C7-P009",
      "q": "As for me, I am no servant"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Ursula.",
+    "basis": "BTHREE-C11."
+   }
   },
   {
    "chapter": "BONE-C7",
@@ -191,7 +203,11 @@
      "p": "BONE-C8-P007",
      "q": "with a leafless tree done on them in gold"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Yes: both are of the Fellowship of the Dry Tree.",
+    "basis": "BONE-C15, BTWO-C1."
+   }
   },
   {
    "chapter": "BONE-C8",
@@ -215,7 +231,11 @@
      "p": "BONE-C9-P019",
      "q": "he deemed he had never seen woman so fair"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "The Lady of Abundance.",
+    "basis": "Identity established in BONE-C22 to BTWO-C1."
+   }
   },
   {
    "chapter": "BONE-C9",
@@ -371,7 +391,11 @@
      "p": "BONE-C15-P019",
      "q": "no man embraced that slender youth"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "The Lady of Abundance in disguise.",
+    "basis": "BTWO-C1, BTWO-C9."
+   }
   },
   {
    "chapter": "BONE-C15",
@@ -431,7 +455,11 @@
      "p": "BONE-C18-P040",
      "q": "then it must have been done from her twin sister"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Yes: the Lady of Abundance is the lady Ralph freed.",
+    "basis": "BONE-C22 to BTWO-C1."
+   }
   },
   {
    "chapter": "BONE-C18",
@@ -467,7 +495,11 @@
      "p": "BONE-C19-P003",
      "q": "Though he knew not for certain whether this tale had to do with the Lady of the Forest"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Yes, with errors: the Lady says the book about her is not wholly true.",
+    "basis": "BTWO-C2 (document error unr-b44a39cc54)."
+   }
   },
   {
    "chapter": "BONE-C19",
@@ -551,7 +583,11 @@
      "p": "BONE-C22-P014",
      "q": "or my brother's man"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "The Captain of the Dry Tree.",
+    "basis": "BTWO-C1, BFOUR-C15."
+   }
   },
   {
    "chapter": "BONE-C23",
@@ -635,7 +671,11 @@
      "p": "BTWO-C4-P004",
      "q": "with shining bright eyes in her wrinkled face"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "The Teacher of Lore, who returned from the Well a score of years later.",
+    "basis": "BTWO-C7-P031."
+   }
   },
   {
    "chapter": "BTWO-C4",
@@ -911,7 +951,11 @@
      "p": "BTWO-C15-P005",
      "q": "I hight Dorothea"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "No: her name is Ursula; the dream misled Ralph about the name.",
+    "basis": "BTHREE-C3."
+   }
   },
   {
    "chapter": "BTWO-C15",
@@ -995,7 +1039,11 @@
      "p": "BTWO-C20-P011",
      "q": "grey-eyed and brown haired, and great abundance of it"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Ursula.",
+    "basis": "BTWO-C37, BTHREE-C3."
+   }
   },
   {
    "chapter": "BTWO-C20",
@@ -1079,7 +1127,11 @@
      "p": "BTWO-C26-P014",
      "q": "this is the stroke of a strong man wielding a good weapon"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Bull Shockhead says the Lord of Utterbol (Gandolf) murdered his brother.",
+    "basis": "BFOUR-C3 (Bull's own account)."
+   }
   },
   {
    "chapter": "BTWO-C26",
@@ -1271,7 +1323,11 @@
      "p": "BTWO-C36-P006",
      "q": "that new-come thrall of his (whom ye left at home at Utterbol in his despite)"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Yes: Ursula.",
+    "basis": "BTHREE-C1, BTHREE-C3."
+   }
   },
   {
    "chapter": "BTWO-C37",
@@ -1283,7 +1339,11 @@
      "p": "BTWO-C37-P025",
      "q": "this new thrall, this Ursula"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Yes: Ursula; 'Dorothea' was the dream's error.",
+    "basis": "BTHREE-C3."
+   }
   },
   {
    "chapter": "BTWO-C38",
@@ -1511,7 +1571,11 @@
      "p": "BFOUR-C2-P011",
      "q": "Ralph pondered this tale, and was not so sure but that this new lord was not Bull Shockhead"
     }
-   ]
+   ],
+   "resolution": {
+    "answer": "Yes: Bull Shockhead.",
+    "basis": "BFOUR-C3-P007."
+   }
   },
   {
    "chapter": "BFOUR-C7",

@@ -28,17 +28,27 @@ Each change is recorded in `docs/DECISIONS.md`.
    established by the owner's asset-preparation instructions.
 6. **Workflow rules:** the owner approves the engine, the primary platform and every gameplay
    mechanic before implementation. Design must not be invented from the art packs.
+7. **World foundation:** William Morris's *The Well at the World's End*. Its story is the world's
+   history, not the player's quest. The research is in `docs/world/`.
+8. **The player is not the chosen one.** They begin as an ordinary inhabitant of an original village
+   in an original county, free to stay home or travel. It is an open-world life simulation with
+   RPG mechanics (answers U3 in outline; the core loop U4 is still open).
+9. **Magic is a learnable discipline** that keeps knowledge, proficiency and capacity separate. Its
+   scientific framing is GAME EXPANSION. Details are open (`docs/world/J_OPEN_DECISIONS.md`
+   J-M1 to J-M4).
+10. **Multiplayer:** player-hosted worlds for about 3–4 players; no always-on server (answers U9).
+11. **Visual direction:** 2D/2.5D isometric with 8-direction animated sprites (supersedes P2).
 
 ## Proposed (agent recommendations, not approved)
 
 | # | Proposal | Why |
 |---|---|---|
 | P1 | First playable is a small vertical slice: one generated map, one controllable character with 4- or 8-direction animation, camera follow, collision, a few buildings, a fixed seed, basic save/load | Proves the technical foundation without committing to mechanics (see `docs/DEVELOPMENT_PLAN.md`) |
-| P2 | Top-down orthogonal view | Every terrain and building asset is drawn top-down orthogonal; the Puny packs also ship isometric and hex demos, but only as samples |
+| P2 | ~~Top-down orthogonal view~~ **Superseded** by the owner's isometric direction (Confirmed 11) | Every terrain and building asset is drawn top-down orthogonal; the Puny packs also ship isometric and hex demos, but only as samples |
 | P3 | Overworld built by the existing Puny World generator (terrain, rivers, roads, bridges, settlement sites) | Already working, tested and deterministic |
 | P4 | Player character drawn with the Puny Characters sprite system (8 directions; customisable by layered parts and palettes) | It is the only pack that supports character variety and matches the Puny World tileset |
 | P5 | Save = world seed + generator version + player state + changes to the world | Small saves, and deterministic regeneration makes it possible |
-| P6 | Fully offline, single player | Matches the owner's other project; avoids server cost. **Needs confirmation (U9)** |
+| P6 | ~~Fully offline, single player~~ **Superseded** by player-hosted multiplayer (Confirmed 10) | Matches the owner's other project; avoids server cost. **Needs confirmation (U9)** |
 
 ## Undecided: owner input needed
 

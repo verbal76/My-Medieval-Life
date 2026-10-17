@@ -7,10 +7,12 @@ Reads research/registries/*.json (built by build_registries.py) and writes:
     docs/world/C_RELATIONSHIPS.md    the relationship graph as readable lists
     docs/world/E_ECONOMY.md          economy, trade, prices, crafts and production
     docs/world/F_TIMELINE.md         events by layer, in reading order
+    docs/world/I2_OPPORTUNITY_NOTES.md   game ideas noted while reading, by system
+    docs/world/J2_UNRESOLVED_REGISTER.md every unresolved record, by kind
     research/registries/graph.json   nodes and edges for tools
 
 These files are generated: edit the chapter notes or merges.json and rebuild, never the output.
-The hand-written deliverables (D, G, H, I, J) live beside them.
+The hand-written deliverables (D, G, H, I, J, the magic register) live beside them.
 
 Usage:
     python3 tools/lore/build_registries.py && python3 tools/lore/render_world_docs.py
@@ -235,7 +237,35 @@ def main():
             L.append("| " + " | ".join(x.replace("|", "/") for x in row) + " |")
         L.append("")
     (DOCS / "F_TIMELINE.md").write_text("\n".join(L))
-    print("wrote A, B, C, E, F and graph.json")
+    # J (generated part): every unresolved record
+    unres = load("unresolved")
+    L = ["# J2. Unresolved evidence register", "", HEADER, "",
+         "Every contradiction, uncertain identity, unplaced location, missing measure, ambiguity "
+         "and document error logged while reading the novel. The owner decisions and research "
+         "priorities drawn from these are in `J_OPEN_DECISIONS.md`.", ""]
+    for uk in sorted({u["kind"] for u in unres}):
+        us = sorted((u for u in unres if u["kind"] == uk), key=lambda u: (ckey(u["chapter"]), u["id"]))
+        L += [f"## {uk.replace('_', ' ').capitalize()} ({len(us)})", ""]
+        for u in us:
+            L.append(f"- ({short_ch(u['chapter'])}) {u['question']} `{u['id']}`: {cite(u['refs'], 2)}")
+            if "resolution" in u:
+                L.append(f"  - **Answered later:** {u['resolution']['answer']} ({u['resolution']['basis']})")
+        L.append("")
+    (DOCS / "J2_UNRESOLVED_REGISTER.md").write_text("\n".join(L))
+
+    # I (generated part): every opportunity noted while reading
+    opps = load("opportunities")
+    L = ["# I2. Opportunity notes from the reading", "", HEADER, "",
+         "Game ideas noted chapter by chapter. All are **GAME EXPANSION**: the cited passage is the "
+         "evidence that inspired the idea, not a claim that Morris describes the mechanic. The "
+         "prioritised register is `I_GAME_SYSTEMS.md`.", ""]
+    for system in sorted({o["system"] for o in opps}):
+        os_ = sorted((o for o in opps if o["system"] == system), key=lambda o: (ckey(o["chapter"]), o["id"]))
+        L += [f"## {system.capitalize()} ({len(os_)})", ""]
+        L += [f"- ({short_ch(o['chapter'])}) {o['idea']}: {cite(o['basis_refs'], 1)}" for o in os_]
+        L.append("")
+    (DOCS / "I2_OPPORTUNITY_NOTES.md").write_text("\n".join(L))
+    print("wrote A, B, C, E, F, I2, J2 and graph.json")
 
 
 if __name__ == "__main__":

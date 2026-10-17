@@ -421,6 +421,8 @@
   }
  ],
  "spatial_contradictions": [],
+ "unresolved_resolved_later": 16,
+ "unknown_resolution_ids": [],
  "unresolved_by_kind": {
   "ambiguity": 28,
   "contradiction": 16,

@@ -2,42 +2,221 @@
   "format": "morris-merges/1",
   "note": "Hand-curated identity decisions applied by tools/lore/build_registries.py. 'merge' folds a name into a canonical record; only identities the text states, or puts beyond reasonable doubt, are merged. 'link' keeps both records but marks them as possibly the same. 'drop' lists placeholder names that are not entities. Every entry gives its basis.",
   "merge": {
-    "Gandolf of the Bear": {"into": "Gandolf", "basis": "Ursula names the slain Lord of Utterbol Gandolf of the Bear (BFOUR-C2)."},
-    "Lord of Utterbol": {"into": "Gandolf", "basis": "Every reference to 'Lord of Utterbol' falls in BTWO-C24 to BTHREE-C12, before Bull Shockhead's lordship; the safe-conduct names him Gandolf (BTWO-C30)."},
-    "(unnamed) new Lord of Utterbol": {"into": "Bull Shockhead", "basis": "'I am Lord of Utterbol and therewithal Bull Shockhead' (BFOUR-C3-P007)."},
-    "(unnamed) hermit north-west of Abundance": {"into": "Roger of the Rope-walk", "basis": "'I am that holy man' (BFOUR-C17-P004)."},
-    "(unnamed) man of the leafless tree": {"into": "Captain of the Dry Tree", "basis": "Confirmed the same man (BTWO-C1)."},
-    "(unnamed) brother of the Knight of the Sun": {"into": "Captain of the Dry Tree", "basis": "The Captain of the Dry Tree is the Knight of the Sun's brother (BTWO-C1, BFOUR-C15)."},
-    "(unnamed) Maiden of Bourton Abbas": {"into": "Ursula", "basis": "Identity stated in the text (BTHREE-C11)."},
-    "(unnamed) lover of the Maiden of Bourton Abbas": {"into": "(unnamed) Ursula's former lover", "basis": "Follows from the Maiden being Ursula; same bloody-saddle story (BONE-C7, BTHREE-C11)."},
-    "(unnamed) wise carline of the Dale of Lore": {"into": "Teacher of Lore", "basis": "The Teacher of Lore is the wise carline of the Dale of Lore, who sat with the Lady in the Dale and returned from the Well a score of years later (BTWO-C7-P031)."},
-    "(unnamed) sage of the wildwood": {"into": "Sage of Swevenham", "basis": "The sage dwelling in the wood under the mountains is the Sage of Swevenham (BTHREE-C3)."},
-    "Folk Innocent": {"into": "Innocent Folk", "basis": "Word-order variant of the same name."},
-    "(unnamed) Fighting Man rock": {"into": "Rock of the Fighting Man", "basis": "Same carved black rock at the pass (BTWO-C39, BTHREE-C10)."},
-    "Gate of the Mountains": {"into": "Rock of the Fighting Man", "basis": "'the Rock of the Fighting Man ... the gate of the mountains' (BTHREE-C8)."},
-    "Vale Turris": {"into": "Dale of the Tower", "basis": "Given as another name for the Dale of the Tower (BTWO-C39)."},
-    "Little Plain": {"into": "Plain of Abundance", "basis": "Names for the Plain of Abundance (BONE-C20)."},
-    "Champions of the Dry Tree": {"into": "Fellowship of the Dry Tree", "basis": "Same fellowship (BTWO-C7)."},
-    "(unnamed) Dry Tree champions": {"into": "Fellowship of the Dry Tree", "basis": "Members of the fellowship referred to as a body."},
-    "(unnamed) Dry Tree riders": {"into": "Fellowship of the Dry Tree", "basis": "Members of the fellowship referred to as a body."},
-    "Wall of Strife": {"into": "Great Mountains", "basis": "The Innocent Folk's name for the Great Mountains (BFOUR-C1)."},
-    "ancient folk": {"into": "the ancient folk", "basis": "Capitalisation variant."},
-    "(unnamed) king": {"into": "(unnamed) king, father of the king's son", "basis": "Short form used in the same tale (BTWO-C6, C7)."},
-    "father of the king's son": {"into": "(unnamed) king, father of the king's son", "basis": "Short form used in the same tale (BTWO-C6, C7)."},
-    "Ralph and company": {"into": "(unnamed) Ralph's company", "basis": "Placeholder for Ralph's travelling party."},
-    "Ralph's host": {"into": "(unnamed) Ralph's company", "basis": "Placeholder for Ralph's travelling party."},
-    "(unnamed) expelled Burgers (prisoners)": {"into": "(unnamed) expelled Burgers", "basis": "Subset of the same group."}
+    "Gandolf of the Bear": {
+      "into": "Gandolf",
+      "basis": "Ursula names the slain Lord of Utterbol Gandolf of the Bear (BFOUR-C2)."
+    },
+    "Lord of Utterbol": {
+      "into": "Gandolf",
+      "basis": "Every reference to 'Lord of Utterbol' falls in BTWO-C24 to BTHREE-C12, before Bull Shockhead's lordship; the safe-conduct names him Gandolf (BTWO-C30)."
+    },
+    "(unnamed) new Lord of Utterbol": {
+      "into": "Bull Shockhead",
+      "basis": "'I am Lord of Utterbol and therewithal Bull Shockhead' (BFOUR-C3-P007)."
+    },
+    "(unnamed) hermit north-west of Abundance": {
+      "into": "Roger of the Rope-walk",
+      "basis": "'I am that holy man' (BFOUR-C17-P004)."
+    },
+    "(unnamed) man of the leafless tree": {
+      "into": "Captain of the Dry Tree",
+      "basis": "Confirmed the same man (BTWO-C1)."
+    },
+    "(unnamed) brother of the Knight of the Sun": {
+      "into": "Captain of the Dry Tree",
+      "basis": "The Captain of the Dry Tree is the Knight of the Sun's brother (BTWO-C1, BFOUR-C15)."
+    },
+    "(unnamed) Maiden of Bourton Abbas": {
+      "into": "Ursula",
+      "basis": "Identity stated in the text (BTHREE-C11)."
+    },
+    "(unnamed) lover of the Maiden of Bourton Abbas": {
+      "into": "(unnamed) Ursula's former lover",
+      "basis": "Follows from the Maiden being Ursula; same bloody-saddle story (BONE-C7, BTHREE-C11)."
+    },
+    "(unnamed) wise carline of the Dale of Lore": {
+      "into": "Teacher of Lore",
+      "basis": "The Teacher of Lore is the wise carline of the Dale of Lore, who sat with the Lady in the Dale and returned from the Well a score of years later (BTWO-C7-P031)."
+    },
+    "(unnamed) sage of the wildwood": {
+      "into": "Sage of Swevenham",
+      "basis": "The sage dwelling in the wood under the mountains is the Sage of Swevenham (BTHREE-C3)."
+    },
+    "Folk Innocent": {
+      "into": "Innocent Folk",
+      "basis": "Word-order variant of the same name."
+    },
+    "(unnamed) Fighting Man rock": {
+      "into": "Rock of the Fighting Man",
+      "basis": "Same carved black rock at the pass (BTWO-C39, BTHREE-C10)."
+    },
+    "Gate of the Mountains": {
+      "into": "Rock of the Fighting Man",
+      "basis": "'the Rock of the Fighting Man ... the gate of the mountains' (BTHREE-C8)."
+    },
+    "Vale Turris": {
+      "into": "Dale of the Tower",
+      "basis": "Given as another name for the Dale of the Tower (BTWO-C39)."
+    },
+    "Little Plain": {
+      "into": "Plain of Abundance",
+      "basis": "Names for the Plain of Abundance (BONE-C20)."
+    },
+    "Champions of the Dry Tree": {
+      "into": "Fellowship of the Dry Tree",
+      "basis": "Same fellowship (BTWO-C7)."
+    },
+    "(unnamed) Dry Tree champions": {
+      "into": "Fellowship of the Dry Tree",
+      "basis": "Members of the fellowship referred to as a body."
+    },
+    "(unnamed) Dry Tree riders": {
+      "into": "Fellowship of the Dry Tree",
+      "basis": "Members of the fellowship referred to as a body."
+    },
+    "Wall of Strife": {
+      "into": "Great Mountains",
+      "basis": "The Innocent Folk's name for the Great Mountains (BFOUR-C1)."
+    },
+    "ancient folk": {
+      "into": "the ancient folk",
+      "basis": "Capitalisation variant."
+    },
+    "(unnamed) king": {
+      "into": "(unnamed) king, father of the king's son",
+      "basis": "Short form used in the same tale (BTWO-C6, C7)."
+    },
+    "father of the king's son": {
+      "into": "(unnamed) king, father of the king's son",
+      "basis": "Short form used in the same tale (BTWO-C6, C7)."
+    },
+    "Ralph and company": {
+      "into": "(unnamed) Ralph's company",
+      "basis": "Placeholder for Ralph's travelling party."
+    },
+    "Ralph's host": {
+      "into": "(unnamed) Ralph's company",
+      "basis": "Placeholder for Ralph's travelling party."
+    },
+    "(unnamed) expelled Burgers (prisoners)": {
+      "into": "(unnamed) expelled Burgers",
+      "basis": "Subset of the same group."
+    }
   },
   "link": [
-    {"a": "Giles", "b": "(unnamed) old spearman shepherd", "basis": "Probably the shepherd Ralph met on the Greenway; the earlier passage gives no name (BFOUR-C22)."},
-    {"a": "Sage of Swevenham", "b": "(unnamed) wizard of the mountains", "basis": "Probably the same: lived near Swevenham, consulted for lore, went to seek the Well when old."},
-    {"a": "Earl Walter the Black", "b": "Walter the Black", "basis": "Probably the same man, hurt in a fray."},
-    {"a": "(unnamed) King of Cheaping Knowe", "b": "(unnamed) tyrant of Cheaping Knowe", "basis": "Probably the same ruler, now styled King."},
-    {"a": "(unnamed) Wise Woman of Sarras", "b": "Teacher of Lore", "basis": "Ralph deems it certain she taught the Lady (BFOUR-C28-P015); her looks (about forty, dark red hair, small brown eyes) match the Teacher after drinking of the Well (BTWO-C7-P029). Not stated."},
-    {"a": "Queen of the Dry Tree", "b": "(unnamed) old Queen of the Dry Tree", "basis": "The Burg's rumoured witch-queen may be the old Queen or a confusion with the Lady; unresolved."},
-    {"a": "(unnamed) house of good canons in Upmeads", "b": "(unnamed) house of Canons north of Upmeads Water", "basis": "Probably the same house; not stated."},
-    {"a": "Westland Barons", "b": "Banded Barons", "basis": "Both foes of Higham from the West; not stated to be the same."},
-    {"a": "Wall of the World", "b": "Great Mountains", "basis": "Often read as the same range; the text is inconsistent about which side the Dry Tree lies."}
+    {
+      "a": "Giles",
+      "b": "(unnamed) old spearman shepherd",
+      "basis": "Probably the shepherd Ralph met on the Greenway; the earlier passage gives no name (BFOUR-C22)."
+    },
+    {
+      "a": "Sage of Swevenham",
+      "b": "(unnamed) wizard of the mountains",
+      "basis": "Probably the same: lived near Swevenham, consulted for lore, went to seek the Well when old."
+    },
+    {
+      "a": "Earl Walter the Black",
+      "b": "Walter the Black",
+      "basis": "Probably the same man, hurt in a fray."
+    },
+    {
+      "a": "(unnamed) King of Cheaping Knowe",
+      "b": "(unnamed) tyrant of Cheaping Knowe",
+      "basis": "Probably the same ruler, now styled King."
+    },
+    {
+      "a": "(unnamed) Wise Woman of Sarras",
+      "b": "Teacher of Lore",
+      "basis": "Ralph deems it certain she taught the Lady (BFOUR-C28-P015); her looks (about forty, dark red hair, small brown eyes) match the Teacher after drinking of the Well (BTWO-C7-P029). Not stated."
+    },
+    {
+      "a": "Queen of the Dry Tree",
+      "b": "(unnamed) old Queen of the Dry Tree",
+      "basis": "The Burg's rumoured witch-queen may be the old Queen or a confusion with the Lady; unresolved."
+    },
+    {
+      "a": "(unnamed) house of good canons in Upmeads",
+      "b": "(unnamed) house of Canons north of Upmeads Water",
+      "basis": "Probably the same house; not stated."
+    },
+    {
+      "a": "Westland Barons",
+      "b": "Banded Barons",
+      "basis": "Both foes of Higham from the West; not stated to be the same."
+    },
+    {
+      "a": "Wall of the World",
+      "b": "Great Mountains",
+      "basis": "Often read as the same range; the text is inconsistent about which side the Dry Tree lies."
+    }
   ],
-  "drop": ["(unknown)"]
+  "drop": [
+    "(unknown)"
+  ],
+  "resolved": {
+    "unr-04d18363f9": {
+      "answer": "The Captain of the Dry Tree, brother of the Knight of the Sun.",
+      "basis": "Confirmed the same man (BTWO-C1); his last words complete the count (BFOUR-C15)."
+    },
+    "unr-a9941965ea": {
+      "answer": "Yes: the leafless tree is the token of the Fellowship of the Dry Tree.",
+      "basis": "BONE-C11, BONE-C15."
+    },
+    "unr-946e4dfd14": {
+      "answer": "Yes: both are of the Fellowship of the Dry Tree.",
+      "basis": "BONE-C15, BTWO-C1."
+    },
+    "unr-e16e3a399c": {
+      "answer": "The Lady of Abundance.",
+      "basis": "Identity established in BONE-C22 to BTWO-C1."
+    },
+    "unr-636944f342": {
+      "answer": "The Lady of Abundance in disguise.",
+      "basis": "BTWO-C1, BTWO-C9."
+    },
+    "unr-f6b50cc2a7": {
+      "answer": "Yes: the Lady of Abundance is the lady Ralph freed.",
+      "basis": "BONE-C22 to BTWO-C1."
+    },
+    "unr-1241cff3cc": {
+      "answer": "Yes, with errors: the Lady says the book about her is not wholly true.",
+      "basis": "BTWO-C2 (document error unr-b44a39cc54)."
+    },
+    "unr-28a1fd0971": {
+      "answer": "The Captain of the Dry Tree.",
+      "basis": "BTWO-C1, BFOUR-C15."
+    },
+    "unr-a4544264b2": {
+      "answer": "The Teacher of Lore, who returned from the Well a score of years later.",
+      "basis": "BTWO-C7-P031."
+    },
+    "unr-9f3b031a4d": {
+      "answer": "No: her name is Ursula; the dream misled Ralph about the name.",
+      "basis": "BTHREE-C3."
+    },
+    "unr-8fbe79c549": {
+      "answer": "Ursula.",
+      "basis": "BTHREE-C11."
+    },
+    "unr-a50928d509": {
+      "answer": "Ursula.",
+      "basis": "BTWO-C37, BTHREE-C3."
+    },
+    "unr-d110ed965c": {
+      "answer": "Yes: Ursula.",
+      "basis": "BTHREE-C1, BTHREE-C3."
+    },
+    "unr-372259edcd": {
+      "answer": "Yes: Ursula; 'Dorothea' was the dream's error.",
+      "basis": "BTHREE-C3."
+    },
+    "unr-3a211977d2": {
+      "answer": "Yes: Bull Shockhead.",
+      "basis": "BFOUR-C3-P007."
+    },
+    "unr-25ecf73ec6": {
+      "answer": "Bull Shockhead says the Lord of Utterbol (Gandolf) murdered his brother.",
+      "basis": "BFOUR-C3 (Bull's own account)."
+    }
+  }
 }
