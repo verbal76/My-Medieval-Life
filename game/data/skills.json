@@ -1,0 +1,14 @@
+{
+  "format": "mml-skills/1",
+  "note": "The laid-out skill tree. XP per level = 100 * level. Every unlock changes what the player can do (Bob's anti-slop rule: progression must be felt).",
+  "skills": {
+    "mining":     {"name": "Mining",      "unlocks": {"1": "Mine iron, copper, coal and stone", "2": "+25% ore per swing", "3": "Mine gold ore", "4": "Tools wear half as fast"}},
+    "woodcutting":{"name": "Woodcutting", "unlocks": {"1": "Fell trees for logs", "2": "+1 log per tree", "3": "Chop 30% faster"}},
+    "smithing":   {"name": "Smithing",    "unlocks": {"1": "Smelt iron and copper; forge tools", "2": "Forge iron swords", "3": "Forge iron armour; smelt gold"}},
+    "crafting":   {"name": "Crafting",    "unlocks": {"1": "Saw planks; tan leather", "2": "Make leather armour"}},
+    "cooking":    {"name": "Cooking",     "unlocks": {"1": "Cook pottage; roast meat", "2": "Brew ale"}},
+    "combat":     {"name": "Combat",      "unlocks": {"1": "Sword swings", "2": "+20% damage", "3": "Power strike (hold attack)", "4": "+20% damage"}},
+    "magic":      {"name": "Magic",       "unlocks": {"1": "Fireball (learned from the Sage)", "2": "Fireball cooldown 4s", "3": "Fireball damage +50%"}},
+    "trading":    {"name": "Trading",     "unlocks": {"1": "Buy and sell", "2": "5% better prices", "3": "10% better prices"}}
+  }
+}

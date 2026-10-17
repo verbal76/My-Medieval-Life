@@ -1,0 +1,21 @@
+{
+  "format": "mml-recipes/1",
+  "note": "Shared by NPCs and the player. minutes = game minutes of work. Simplifications are recorded in docs/BUILD_DECISIONS.md.",
+  "recipes": {
+    "smelt_iron":    {"station": "forge",     "in": {"iron_ore": 2, "coal": 1},   "out": {"iron_bar": 1},  "minutes": 40, "skill": "smithing", "xp": 10, "level": 1},
+    "smelt_copper":  {"station": "forge",     "in": {"copper_ore": 2, "coal": 1}, "out": {"copper_bar": 1}, "minutes": 40, "skill": "smithing", "xp": 8, "level": 1},
+    "smelt_gold":    {"station": "forge",     "in": {"gold_ore": 2, "coal": 1},   "out": {"gold_bar": 1},  "minutes": 60, "skill": "smithing", "xp": 20, "level": 3},
+    "forge_pickaxe": {"station": "anvil",     "in": {"iron_bar": 2, "plank": 1},  "out": {"pickaxe": 1},   "minutes": 60, "skill": "smithing", "xp": 18, "level": 1},
+    "forge_axe":     {"station": "anvil",     "in": {"iron_bar": 2, "plank": 1},  "out": {"axe": 1},       "minutes": 60, "skill": "smithing", "xp": 18, "level": 1},
+    "forge_hammer":  {"station": "anvil",     "in": {"iron_bar": 1, "plank": 1},  "out": {"hammer": 1},    "minutes": 40, "skill": "smithing", "xp": 10, "level": 1},
+    "forge_copper_sword": {"station": "anvil", "in": {"copper_bar": 2, "plank": 1}, "out": {"copper_sword": 1}, "minutes": 60, "skill": "smithing", "xp": 18, "level": 1},
+    "forge_iron_sword":   {"station": "anvil", "in": {"iron_bar": 3, "leather": 1}, "out": {"iron_sword": 1},  "minutes": 90, "skill": "smithing", "xp": 30, "level": 2},
+    "forge_iron_armor":   {"station": "anvil", "in": {"iron_bar": 5, "leather": 2}, "out": {"iron_armor": 1},  "minutes": 150, "skill": "smithing", "xp": 50, "level": 3},
+    "tan_leather":   {"station": "workbench", "in": {"hide": 1},                   "out": {"leather": 1},   "minutes": 40, "skill": "crafting", "xp": 6, "level": 1},
+    "leather_armor": {"station": "workbench", "in": {"leather": 4},                "out": {"leather_armor": 1}, "minutes": 90, "skill": "crafting", "xp": 25, "level": 2},
+    "saw_planks":    {"station": "sawhorse",  "in": {"log": 1},                    "out": {"plank": 2},     "minutes": 20, "skill": "crafting", "xp": 4, "level": 1},
+    "cook_pottage":  {"station": "stove",     "in": {"wheat": 2},                  "out": {"pottage": 6},   "minutes": 30, "skill": "cooking", "xp": 5, "level": 1},
+    "roast_meat":    {"station": "oven",      "in": {"meat": 1, "log": 1},         "out": {"roast_meat": 2}, "minutes": 40, "skill": "cooking", "xp": 7, "level": 1},
+    "brew_ale":      {"station": "stove",     "in": {"wheat": 3},                  "out": {"ale": 4},       "minutes": 60, "skill": "cooking", "xp": 6, "level": 2}
+  }
+}

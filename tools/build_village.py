@@ -1,0 +1,487 @@
+"""Build the playable village map for the Godot game (game/data/village.json).
+
+The village is 120 x 90 tiles (16 px), assembled from twelve 30 x 30 districts:
+
+    row 0:  forest       | mine highland (Shade's cave sample) | forest | forest + bandit camp
+    row 1:  houses (Shade's village sample 1) | tavern (sample 3) | smithy + armory (sample 2) | houses
+    row 2:  houses       | market square + houses | farms | houses
+
+Shade's sample maps (PUNY-WORLD-PAID_v1.zip) are used as they are, minus the people Shade baked into
+them as tiles; the live NPCs replace them. The generated districts reuse objects cut from those
+samples (the small house, single trees, stumps, tables, crates), ore rocks and field tiles from the
+paid atlas, and grass and dirt-road tiles from the free PUNY_WORLD_v1 wangsets (the same ones
+tools/puny_world_terrain.py uses).
+
+Output (deterministic for a given seed):
+  game/data/village.json   tile layers, collision, and every gameplay entity: buildings with doors,
+                           homes, workstations, trees, ore deposits, fields, stalls, build plots,
+                           spawn points
+  game/assets/tiles/       the two tile atlases, copied from the archives (provenance in
+                           game/assets/PROVENANCE.json, written by tools/import_game_assets.py)
+
+Tile values: atlas * 100000 + tile id (atlas 0 = paid punyworld-tiles, 1 = free overworld tiles),
+-1 = empty.
+
+Usage:
+    python3 tools/build_village.py [--seed 1]
+"""
+import argparse
+import heapq
+import json
+import random
+from pathlib import Path
+
+from assetzip import AssetZip, REPO
+import puny_world_terrain as pwt
+
+PAID = "PUNY-WORLD-PAID_v1.zip"
+SAMPLE = "PUNY-WORLD-PAID_v1/Tiled/sample-{}.tmj"
+FREE = 100000           # atlas offset for the free overworld tiles
+CH = 30                 # district size in tiles
+W, H = 4 * CH, 3 * CH
+OUT = REPO / "game" / "data" / "village.json"
+
+# --- atlas facts (tile ids in punyworld-tiles.png, 220 columns) -------------------------------
+DOORS = {3875, 3799, 3801}                   # doors and archways: walkable
+PEOPLE_MIN = 126 * 220                       # rows 126+ hold the tiny people Shade drew into maps
+ORE = {"iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "stone": 1743, "gold_ore": 1965}
+DEPLETED_ROCK = 1964
+STUMP = 459
+SAPLING = 4304
+FIELD_TILES = {"tilled": 3737, "growing": 1971, "ripe": 2851}
+FRAME = 3499                                 # wooden construction frame (build sites)
+CAMPFIRE = 5958                              # animated in the tileset (5958-5961)
+CRATE, BARREL = 3500, 3502
+
+CATS = ("ground", "path", "below", "above")
+
+
+def tile_val(atlas, tid):
+    return atlas * FREE + tid
+
+
+class Village:
+    def __init__(self, seed):
+        self.rng = random.Random(seed)
+        self.seed = seed
+        self.layers = {}            # (cat, index) -> list
+        self.walkable_override = set()
+        self.decor = set()          # cells whose only object is 1x1 decor (walkable)
+        self.roof = set()           # cells under a roof (solid)
+        self.solid_extra = set()
+        self.ents = {"buildings": [], "stations": [], "trees": [], "deposits": [], "fields": [],
+                     "stalls": [], "plots": [], "spawns": {}, "mine": None}
+        self.free = pwt.load(AssetZip(pwt.ZIP))
+        self.paid = AssetZip(PAID)
+        self.samples = {}
+
+    # ---- layers -----------------------------------------------------------------------------
+    def layer(self, cat, i):
+        key = (cat, i)
+        if key not in self.layers:
+            self.layers[key] = [-1] * (W * H)
+        return self.layers[key]
+
+    def put(self, cat, i, x, y, val):
+        if 0 <= x < W and 0 <= y < H:
+            self.layer(cat, i)[y * W + x] = val
+
+    def get(self, cat, i, x, y):
+        key = (cat, i)
+        return self.layers[key][y * W + x] if key in self.layers else -1
+
+    def has_object(self, x, y):
+        return any(v[y * W + x] >= 0 for (c, _), v in self.layers.items() if c in ("below",))
+
+    # ---- sample maps ------------------------------------------------------------------------
+    def sample(self, name):
+        if name not in self.samples:
+            d = json.loads(self.paid.text(SAMPLE.format(name)))
+            out = []
+
+            def walk(ls, prefix="", vis=True):
+                for lay in ls:
+                    v = vis and lay.get("visible", True)
+                    if lay["type"] == "group":
+                        walk(lay["layers"], prefix + lay["name"] + "/", v)
+                    elif lay["type"] == "tilelayer" and v:
+                        out.append((prefix + lay["name"], [(g & 0x1FFFFFFF) - 1 for g in lay["data"]]))
+            walk(d["layers"])
+            self.samples[name] = out
+        return self.samples[name]
+
+    @staticmethod
+    def category(layer_name):
+        n = layer_name.split("/")[-1]
+        if "Grass" in n or n.startswith("Ground") or n == "Dirt" or n.startswith("Floor") or n == "Roof":
+            return "ground"     # the cave sample's raised plateau ("Roof/Roof") is walkable rock floor
+        if "Top" in n or "Roof" in layer_name:
+            return "above"
+        return "below"
+
+    def paste_sample(self, name, ox, oy, rect=None):
+        """Copy a sample map (or a rect of it) to (ox, oy). Returns nothing; records roofs and
+        1x1 decorations for the collision pass."""
+        rx, ry, rw, rh = rect or (0, 0, 30, 30)
+        counters = {c: 0 for c in CATS}
+        objs = {}
+        for lname, data in self.sample(name):
+            cat = self.category(lname)
+            idx = counters[cat]
+            counters[cat] += 1
+            roof = "Roof" in lname and name != "cave-1"
+            for y in range(rh):
+                for x in range(rw):
+                    t = data[(ry + y) * 30 + rx + x]
+                    if t < 0 or t >= PEOPLE_MIN:
+                        continue
+                    self.put(cat, idx, ox + x, oy + y, tile_val(0, t))
+                    if roof:
+                        self.roof.add((ox + x, oy + y))
+                    if cat == "below":
+                        objs.setdefault((x, y), []).append(t)
+                        if t in DOORS:
+                            self.walkable_override.add((ox + x, oy + y))
+        # 1x1 objects with nothing around them and nothing on top are decorations (flowers, rocks)
+        for (x, y), ts in objs.items():
+            alone = all((x + dx, y + dy) not in objs for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+            top = any(self.get("above", i, ox + x, oy + y - 1) >= 0 or self.get("above", i, ox + x, oy + y) >= 0
+                      for i in range(4))
+            if alone and not top and len(ts) == 1:
+                self.decor.add((ox + x, oy + y))
+
+    def stamp_from_sample(self, name, rect, ox, oy):
+        self.paste_sample(name, ox, oy, rect)
+
+    # ---- generated content ------------------------------------------------------------------
+    def grass(self, x0, y0, w, h):
+        _, _, ids, tiles, _ = self.free
+        g = ids["grass"]
+        opts = tiles[(g, g, g, g)]
+        for y in range(y0, y0 + h):
+            for x in range(x0, x0 + w):
+                self.put("ground", 0, x, y, tile_val(1, self.rng.choice(opts)))
+
+    def tree_stamps(self):
+        """(trunk, top) pairs from sample village 1: an Objects tile with a Tree Top tile above."""
+        layers = dict(self.sample("village-1"))
+        objs, tops = layers["Objects"], layers["Tree Top"]
+        pairs = set()
+        for y in range(1, 30):
+            for x in range(30):
+                if objs[y * 30 + x] >= 0 and tops[(y - 1) * 30 + x] >= 0:
+                    pairs.add((objs[y * 30 + x], tops[(y - 1) * 30 + x]))
+        return sorted(pairs)
+
+    def place_tree(self, x, y, kind=None):
+        trunk, top = kind or self.rng.choice(self.trees)
+        self.put("below", 0, x, y, tile_val(0, trunk))
+        self.put("above", 0, x, y - 1, tile_val(0, top))
+        self.ents["trees"].append({"x": x, "y": y, "trunk": trunk, "top": top})
+
+    def free_cell(self, x, y):
+        return (0 <= x < W and 0 <= y < H and not self.has_object(x, y) and (x, y) not in self.roof
+                and all(self.get("above", i, x, y) < 0 for i in range(4)))
+
+    def forest(self, x0, y0, w, h, density, clear=()):
+        for y in range(y0 + 1, y0 + h):
+            for x in range(x0, x0 + w):
+                if any(cx <= x < cx + cw and cy <= y < cy + chh for cx, cy, cw, chh in clear):
+                    continue
+                if (self.rng.random() < density and self.free_cell(x, y) and self.free_cell(x, y - 1)
+                        and not any(abs(t["x"] - x) + abs(t["y"] - y) < 2 for t in self.ents["trees"][-40:])):
+                    self.place_tree(x, y)
+
+    def house(self, ox, oy, kind="house"):
+        """Shade's small house from sample village 1 (9 x 10 tiles, door at (4, 8))."""
+        self.stamp_from_sample("village-1", (2, 10, 9, 10), ox, oy)
+        b = {"id": f"b{len(self.ents['buildings'])}", "type": kind, "x": ox, "y": oy, "w": 9, "h": 10,
+             "door": [ox + 4, oy + 9]}
+        self.walkable_override.add((ox + 4, oy + 8))
+        self.ents["buildings"].append(b)
+        return b
+
+    def building(self, kind, x, y, w, h, door, **extra):
+        b = {"id": f"b{len(self.ents['buildings'])}", "type": kind, "x": x, "y": y, "w": w, "h": h,
+             "door": list(door), **extra}
+        self.ents["buildings"].append(b)
+        return b
+
+    def station(self, kind, use, building=None, at=None):
+        self.ents["stations"].append({"id": f"s{len(self.ents['stations'])}", "type": kind,
+                                      "use": list(use), "at": list(at or use), "building": building})
+
+    # ---- districts --------------------------------------------------------------------------
+    def build(self):
+        self.trees = self.tree_stamps()
+        for cy in range(3):
+            for cx in range(4):
+                self.grass(cx * CH, cy * CH, CH, CH)
+
+        # row 1: Shade's three village samples
+        self.paste_sample("village-1", 0, CH)
+        self.ents["buildings"].append({"id": "b_v1_house", "type": "house", "x": 2, "y": CH + 10, "w": 9, "h": 10,
+                                       "door": [6, CH + 19]})
+        self.ents["buildings"].append({"id": "b_manor", "type": "manor", "x": 14, "y": CH + 6, "w": 15, "h": 18,
+                                       "door": [23, CH + 22]})
+        self.paste_sample("village-3", CH, CH)
+        ox, oy = CH, CH
+        tav = self.building("tavern", ox + 4, oy + 8, 23, 14, (ox + 8, oy + 22), name="The Well House")
+        self.station("tavern_counter", (ox + 12, oy + 11), tav["id"], at=(ox + 12, oy + 10))
+        self.station("oven", (ox + 23, oy + 18), tav["id"], at=(ox + 24, oy + 17))
+        self.station("stove", (ox + 22, oy + 18), tav["id"], at=(ox + 22, oy + 17))
+        self.station("well", (ox + 15, oy + 25), None, at=(ox + 16, oy + 25))
+        self.building("hut", ox + 8, oy + 1, 3, 3, (ox + 9, oy + 4), name="Sage's hut")
+        self.paste_sample("village-2", 2 * CH, CH)
+        ox = 2 * CH
+        smithy = self.building("smithy", ox + 7, oy + 10, 16, 14, (ox + 11, oy + 24), name="Smithy and Armory")
+        self.station("forge", (ox + 17, oy + 12), smithy["id"], at=(ox + 17, oy + 11))
+        self.station("anvil", (ox + 18, oy + 14), smithy["id"], at=(ox + 17, oy + 13))
+        self.station("workbench", (ox + 19, oy + 16), smithy["id"], at=(ox + 19, oy + 17))
+        self.station("sawhorse", (ox + 18, oy + 15), smithy["id"], at=(ox + 17, oy + 15))
+        self.station("armory_counter", (ox + 11, oy + 14), smithy["id"], at=(ox + 11, oy + 13))
+
+        # row 0: mine highland (Shade's cave sample) between forests
+        self.paste_sample("cave-1", CH, 0)
+        self.ents["mine"] = {"entrance": [CH + 21, 15], "yard": [CH + 9, 22]}
+        self.station("mine_cart", (CH + 9, 22), None, at=(CH + 9, 21))
+        self.place_deposits(CH, 0)
+        self.forest(0, 0, CH, CH, 0.16)
+        self.forest(2 * CH, 0, CH, CH, 0.15)
+        camp = (3 * CH + 14, 12)
+        self.forest(3 * CH, 0, CH, CH, 0.15, clear=[(camp[0] - 4, camp[1] - 4, 9, 9)])
+        self.put("below", 0, camp[0], camp[1], tile_val(0, CAMPFIRE))
+        for dx, dy, t in ((-2, -1, CRATE), (2, -1, BARREL), (-2, 2, BARREL), (2, 2, CRATE)):
+            self.put("below", 0, camp[0] + dx, camp[1] + dy, tile_val(0, t))
+        self.ents["spawns"]["bandit_camp"] = [camp[0], camp[1] + 1]
+
+        # rows 1-2: generated house districts, market and farms
+        homes = []
+        for cx, cy in ((3, 1), (0, 2), (3, 2)):
+            ox, oy = cx * CH, cy * CH
+            for j in range(2):
+                for i in range(3):
+                    homes.append(self.house(ox + 1 + i * 10, oy + 2 + j * 14))
+            self.forest(ox, oy, CH, CH, 0.06)
+        # market square with stalls, plus two houses
+        ox, oy = CH, 2 * CH
+        for i in range(2):
+            homes.append(self.house(ox + 1 + i * 20, oy + 2))
+        self.market(ox + 4, oy + 15)
+        # farms
+        ox = 2 * CH
+        for j in range(3):
+            for i in range(2):
+                self.field(ox + 2 + i * 14, oy + 2 + j * 9, 11, 6)
+        self.forest(ox, oy, CH, CH, 0.03, clear=[(ox, oy, CH, CH - 2)])
+        # plots the player can buy and build on (east house district, empty strip)
+        self.plots(3 * CH, 2 * CH + 28)
+        self.ents["spawns"]["player"] = [CH + 14, CH + 23]
+        self.roads()
+        return self
+
+    def place_deposits(self, ox, oy):
+        """Ore rocks on bare highland floor of the cave sample: cells with only ground tiles whose
+        ground is rock (not grass), at least one tile from cliffs."""
+        rng = self.rng
+        cands = []
+        layers = self.sample("cave-1")
+        ground = [d for n, d in layers if self.category(n) == "ground"]
+        grass_ids = set(dict(self.sample("village-1"))["Grass 1"]) | set(dict(layers)["Roof/Grass Top"])
+        for y in range(2, 28):
+            for x in range(2, 28):
+                X, Y = ox + x, oy + y
+                if self.has_object(X, Y) or any(self.get("above", i, X, Y) >= 0 for i in range(4)):
+                    continue
+                top = [d[y * 30 + x] for d in ground if d[y * 30 + x] >= 0]
+                if not top or top[-1] in grass_ids:
+                    continue        # grass, not rock floor
+                if any(self.has_object(X + dx, Y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                    continue
+                cands.append((X, Y))
+        rng.shuffle(cands)
+        plan = ["iron_ore", "coal", "stone", "iron_ore", "copper_ore", "coal", "iron_ore", "stone"] * 5 + ["gold_ore"]
+        taken = []
+        for ore in plan:
+            for c in cands:
+                if all(abs(c[0] - t[0]) + abs(c[1] - t[1]) >= 2 for t in taken):
+                    taken.append(c)
+                    cands.remove(c)
+                    self.put("below", 0, c[0], c[1], tile_val(0, ORE[ore]))
+                    self.ents["deposits"].append({"x": c[0], "y": c[1], "ore": ore,
+                                                  "amount": {"gold_ore": 8, "stone": 80, "coal": 50,
+                                                             "copper_ore": 30}.get(ore, 60)})
+                    break
+
+    def market(self, x0, y0):
+        """Open square: a row of stalls (table + crate/barrel) facing a central lane."""
+        tables = dict(self.sample("village-3"))["Floor 1/Objects"]
+        table = tables[22 * 30 + 6]          # wooden table from the tavern terrace
+        for i in range(6):
+            x = x0 + 2 + i * 4
+            for (dx, dy, t) in ((0, 0, table), (1, 0, CRATE if i % 2 else BARREL)):
+                self.put("below", 0, x + dx, y0 + dy, tile_val(0, t))
+            self.ents["stalls"].append({"id": f"stall{i}", "x": x, "y": y0, "use": [x, y0 + 1]})
+
+    def field(self, x, y, w, h):
+        self.ents["fields"].append({"id": f"f{len(self.ents['fields'])}", "x": x, "y": y, "w": w, "h": h})
+        for j in range(h):
+            for i in range(w):
+                self.put("path", 1, x + i, y + j, tile_val(0, FIELD_TILES["ripe"]))
+
+    def plots(self, x0, y0):
+        for i in range(2):
+            self.ents["plots"].append({"id": f"plot{i}", "x": x0 + 4 + i * 12, "y": y0 - 10, "w": 9, "h": 10,
+                                       "door": [x0 + 8 + i * 12, y0 - 1], "price": 60})
+
+    # ---- collision and roads ----------------------------------------------------------------
+    def solid_grid(self):
+        solid = [[False] * W for _ in range(H)]
+        for y in range(H):
+            for x in range(W):
+                c = (x, y)
+                s = (self.has_object(x, y) and c not in self.decor) or c in self.roof
+                if c in self.walkable_override:
+                    s = False
+                solid[y][x] = s
+        for p in self.ents["plots"]:                      # plots are clear land
+            for y in range(p["y"], p["y"] + p["h"]):
+                for x in range(p["x"], p["x"] + p["w"]):
+                    solid[y][x] = False
+        return solid
+
+    def roads(self):
+        solid = self.solid_grid()
+        targets = [tuple(b["door"]) for b in self.ents["buildings"]]
+        targets += [tuple(s["use"]) for s in self.ents["stalls"]]
+        targets += [tuple(self.ents["mine"]["yard"]), tuple(self.ents["spawns"]["bandit_camp"])]
+        targets += [(f["x"] + f["w"] // 2, f["y"] + f["h"]) for f in self.ents["fields"]]
+        targets += [tuple(p["door"]) for p in self.ents["plots"]]
+        hub = tuple(self.ents["spawns"]["player"])
+        assert not solid[hub[1]][hub[0]], "road hub must be walkable"
+        road = {hub}
+        dirs = ((0, -1), (1, 0), (0, 1), (-1, 0))
+        for t in sorted(targets, key=lambda c: abs(c[0] - hub[0]) + abs(c[1] - hub[1])):
+            if solid[t[1]][t[0]]:
+                continue
+            dist, prev, heap = {t: 0}, {}, [(0, t)]
+            end = None
+            while heap:
+                d, c = heapq.heappop(heap)
+                if c in road:
+                    end = c
+                    break
+                if d > dist[c]:
+                    continue
+                for dx, dy in dirs:
+                    n = (c[0] + dx, c[1] + dy)
+                    if not (0 <= n[0] < W and 0 <= n[1] < H) or solid[n[1]][n[0]]:
+                        continue
+                    nd = d + (1 if n in road else 3)
+                    if nd < dist.get(n, 1e9):
+                        dist[n], prev[n] = nd, c
+                        heapq.heappush(heap, (nd, n))
+            if end is None:
+                continue
+            path = [end]
+            while path[-1] != t:
+                path.append(prev[path[-1]])
+            road.update(path)
+        self.road = road
+        _, _, _, _, paths = self.free
+        grass = set(dict(self.sample("village-1"))["Grass 1"])
+        for (x, y) in road:
+            grounds = [self.get("ground", i, x, y) for i in range(6)]
+            grounds = [g for g in grounds if g >= 0]
+            if (x, y) in self.walkable_override or not all(g >= FREE or g in grass for g in grounds):
+                continue            # sample dirt, rock, floors or a doorway: keep the original art
+            con = tuple((x + dx, y + dy) in road for dx, dy in dirs)
+            key = con if con in paths["dirt"] else None
+            if key is None:
+                continue
+            self.put("path", 0, x, y, tile_val(1, self.rng.choice(paths["dirt"][key])))
+
+    # ---- output -----------------------------------------------------------------------------
+    def to_json(self):
+        solid = self.solid_grid()
+        layers = []
+        order = [("ground", i) for i in range(6)] + [("path", 0), ("path", 1)] + \
+                [("below", i) for i in range(6)] + [("above", i) for i in range(6)]
+        for key in order:
+            if key in self.layers:
+                layers.append({"name": f"{key[0]}{key[1]}", "z": key[0], "data": self.layers[key]})
+        free_img = self.free[0]
+        # the house stamp, for houses the player builds at runtime (cut from the first generated house)
+        hb = next(b for b in self.ents["buildings"] if b["type"] == "house" and b["id"].startswith("b") and b["id"][1:].isdigit())
+        stamp = {"w": hb["w"], "h": hb["h"], "door": [4, 9], "layers": {}}
+        for (cat, i), data in sorted(self.layers.items()):
+            if cat == "ground":
+                continue
+            cells = [data[(hb["y"] + y) * W + hb["x"] + x] for y in range(hb["h"]) for x in range(hb["w"])]
+            if any(v >= 0 for v in cells):
+                stamp["layers"][f"{cat}{i}"] = cells
+        return {
+            "format": "mml-village/1", "seed": self.seed, "w": W, "h": H, "tile": 16,
+            "atlases": [{"name": "paid", "image": "res://assets/tiles/punyworld-tiles.png", "columns": 220},
+                        {"name": "free", "image": "res://assets/tiles/punyworld-overworld-tiles.png",
+                         "columns": free_img.width // 16}],
+            "animated": {str(CAMPFIRE): [CAMPFIRE, CAMPFIRE + 1, CAMPFIRE + 2, CAMPFIRE + 3]},
+            "tiles": {"ore": ORE, "depleted_rock": DEPLETED_ROCK, "stump": STUMP, "sapling": SAPLING,
+                      "field": FIELD_TILES, "frame": FRAME},
+            "layers": layers,
+            "stamps": {"house": stamp},
+            "solid": ["".join("1" if s else "0" for s in row) for row in solid],
+            "road": sorted([list(c) for c in self.road]),
+            **self.ents,
+        }
+
+
+def render(data, solid=False):
+    """Preview PNG of a built village (and optionally its collision)."""
+    from PIL import Image
+    paid = AssetZip(PAID).image("PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png").convert("RGBA")
+    free = pwt.load(AssetZip(pwt.ZIP))[0].convert("RGBA")
+    sheets = [(paid, 220), (free, free.width // 16)]
+    img = Image.new("RGBA", (W * 16, H * 16), (0, 0, 0, 255))
+    cache = {}
+    for lay in data["layers"]:
+        for i, v in enumerate(lay["data"]):
+            if v < 0:
+                continue
+            if v not in cache:
+                sheet, cols = sheets[v // FREE]
+                t = v % FREE
+                cache[v] = sheet.crop(((t % cols) * 16, (t // cols) * 16, (t % cols) * 16 + 16, (t // cols) * 16 + 16))
+            img.alpha_composite(cache[v], ((i % W) * 16, (i // W) * 16))
+    if solid:
+        red = Image.new("RGBA", (16, 16), (255, 0, 0, 90))
+        for y, row in enumerate(data["solid"]):
+            for x, ch in enumerate(row):
+                if ch == "1":
+                    img.alpha_composite(red, (x * 16, y * 16))
+    return img
+
+
+def build(seed=1):
+    return Village(seed).build().to_json()
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--preview", help="also write a preview PNG here")
+    ap.add_argument("--solid", action="store_true", help="tint solid cells in the preview")
+    args = ap.parse_args()
+    data = build(args.seed)
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(data, separators=(",", ":")) + "\n")
+    n = data
+    print(f"wrote {OUT.relative_to(REPO)}: {len(n['buildings'])} buildings, {len(n['stations'])} stations, "
+          f"{len(n['trees'])} trees, {len(n['deposits'])} deposits, {len(n['fields'])} fields, "
+          f"{len(n['stalls'])} stalls, {len(n['plots'])} plots, {len(n['road'])} road cells")
+    if args.preview:
+        render(data, args.solid).save(args.preview)
+
+
+if __name__ == "__main__":
+    main()

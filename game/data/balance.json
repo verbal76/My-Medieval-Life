@@ -1,0 +1,52 @@
+{
+  "format": "mml-balance/1",
+  "note": "All tunable numbers in one place (GAME EXPANSION; Bob's spec: balance lives in data files).",
+  "game_minutes_per_second": 2.0,
+  "population": 100,
+  "walk_tiles_per_second": 2.6,
+  "player_tiles_per_second": 4.5,
+  "hunger_per_hour": 3.0,
+  "eat_below": 55,
+  "starve_damage_per_hour": 2.0,
+  "player_hunger_per_hour": 3.0,
+  "player_stamina_regen_per_second": 8.0,
+  "start_coins_villager": [
+    8,
+    30
+  ],
+  "start_coins_trader": 120,
+  "start_coins_player": 40,
+  "price_min": 0.6,
+  "price_max": 1.8,
+  "sell_ratio": 0.6,
+  "tree_regrow_days": [
+    3,
+    6
+  ],
+  "field_grow_days": 2,
+  "field_yield": 60,
+  "deer_population": 30,
+  "deer_regrow_per_day": 4,
+  "caravan_every_days": 2,
+  "caravan_coins": 600,
+  "guard_wage_per_day": 6,
+  "bandits": 6,
+  "carry_ore": 6,
+  "carry_logs": 6,
+  "mine_minutes": 25,
+  "chop_minutes": 40,
+  "hunt_minutes": 180,
+  "plot_price": 60,
+  "house_cost": {
+    "plank": 30,
+    "stone": 20,
+    "log": 10
+  },
+  "fireball_price": 50,
+  "fireball_cooldown": 6.0,
+  "fireball_stamina": 30,
+  "tax_threshold": 60,
+  "tax_rate": 0.15,
+  "repairs_budget_share": 0.4,
+  "relief_coins_per_member": 2
+}
