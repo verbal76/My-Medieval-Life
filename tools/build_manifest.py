@@ -67,7 +67,7 @@ FOLDER_NOTES = {
     "16x16 Assorted RPG Icons (partial)": ("free", "Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items."),
 }
 NOT_ASSETS = {"ASSET_MANIFEST.md", "asset_manifest.csv", ".gitignore", "tools", "out", ".git",
-              "data", "docs", "tests", "CLAUDE.md", "README.md"}
+              "data", "docs", "tests", "research", "CLAUDE.md", "README.md"}
 
 
 def main():
