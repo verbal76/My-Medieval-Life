@@ -1,0 +1,33 @@
+@ BTWO-C34
+summary: The Lord of Utterbol questions Ralph's skills and makes him sing, on pain of beating. Ralph sings a love song and then a battle song learned from Sir Karr Wood-neb, a Northland chieftain who wintered at Upmeads. The Lord prefers the love song but says his lady wife wants war songs and tales of fays, and plans to test Ralph in the tilt-yard. They travel on with Otter, captain of the guard: three hazy days, four rainy days climbing steadily, then on the ninth day of captivity long, low treeless downs with willow and alder hollows. Otter says they will reach the Dale of the Tower next day, where the Lord will hold a tourney to try Ralph. David says it is four days' ride from Bull-mead in the Dale of the Tower to Utterness, and twelve hours from Utterness to Utterbol, and that the mountains will be visible next day.
+geo: After the moorland: pinewoods; three hazy days; four days of rain, generally uphill; then long, low treeless downs with stream hollows of willow and alder. The Dale of the Tower (Bull-mead) lies among the downs, four days' ride from Utterness; Utterbol is twelve hours from Utterness.
+open: Where is the Northland that Sir Karr Wood-neb came from?
+
+E person | Sir Karr Wood-neb | - | chieftain | Chieftain from the far Northland who wintered at Upmeads and taught Ralph songs. | P028 `his name was Sir Karr Wood-neb`
+E place | Northland | the far-away Northland | region | Far northern land, home of Sir Karr Wood-neb. | P028 `a chieftain who had come to Upmeads from the far-away Northland`
+E person | Otter | Captain Otter | captain of the guard | The Lord of Utterbol's guard captain; cheerful, but would kill on order. | P036 `Otter, the captain of the guard, who was good company`
+E place | Dale of the Tower | Bull-mead, Vale of the Tower | dale | Fair dale amid the downs with houses and a tower of the Lord's. | P040 `that place is called the Dale of the Tower`; P043 `After we have left Bull-mead in the Dale of the Tower`
+E person | (unnamed) Lady of Utterbol | the Lord's lady wife | lady | The Lord's wife, who likes songs of war and tales of fays. | P027 `it shall please my lady wife less`
+
+R Otter | serves | Lord of Utterbol | captain of the guard | BTWO-C34 | CANON/high | P036 `Otter, the captain of the guard`
+R Lord of Utterbol | spouse_of | (unnamed) Lady of Utterbol | - | BTWO-C34 | CANON/high | P027 `my lady wife`
+R Sir Karr Wood-neb | teaches | Ralph | taught songs | backstory | CANON/high | P028 `he taught Ralph this song and many things else`
+
+S Utterness | distance_from | Dale of the Tower | time=four days' ride; ctx=dialogue:David the Sage; cert=fixed | CANON/high | - | P043 `it is four days' ride to Utterness`
+S Utterbol | distance_from | Utterness | time=twelve hours; ctx=dialogue:David the Sage; cert=fixed | CANON/high | - | P043 `from Utterness ye may come (if my lord will) unto Utterbol in twelve hours`
+S Dale of the Tower | route_next | (unnamed) Utterbol moorland | time=about nine days of travel (three hazy, four rainy, then downs); terrain=pinewoods, uphill, then treeless downs; cert=constrained | CANON/high | - | P038 `they went up at whiles, and never so much down as up, so that they were wending up hill on the whole`; P039 `the land near-hand rose in long, low downs now, and was quite treeless`
+
+T Ralph, Lord of Utterbol, David the Sage, Otter | (unnamed) Utterbol moorland | Dale of the Tower | mode=horse; dur=about nine to ten days; terrain=pinewoods, rising land, downs | P039 `On the ninth day of his captivity the rain ceased`
+
+F custom | (unnamed) Lady of Utterbol | She delights in war songs, old tales and fay-lore. | CANON/high; ctx=dialogue:Lord of Utterbol | P033 `And canst thou tell tales of yore agone, and of the fays and such-like? All that she must have`
+F text | Ralph | Ralph sings a love song of the Hall of the Garden, and a battle song of a night raid from the hills learned from Sir Karr. | CANON/high | P028 `a song which he had learned one yule-tide from a chieftain`
+F society | Lord of Utterbol | Thralls are beaten for disobedience; refusing to sing means a beating. | CANON/high; ctx=dialogue:Lord of Utterbol | P015 `sing, or thou shalt be beaten`
+F society | Lord of Utterbol | If Ralph fails the test he will be a house or field serving-thrall at Utterbol, well fed save in scarcity, likely beaten. | CANON/high; ctx=dialogue:Otter | P041 `there shalt thou be a mere serving-thrall, either in the house or the field`
+F military | Lord of Utterbol | Tilting is "not much our manner here". | CANON/high; ctx=dialogue:Lord of Utterbol | P034 `though it is not much our manner here`
+F ecology | Dale of the Tower | The downs are treeless except stream hollows with willows and alders. | CANON/high | P039 `where grew a few willows, but alders more abundantly`
+
+V main | Ralph sings for the Lord of Utterbol | Ordered to sing on pain of beating, Ralph sings two songs; the Lord plans to test him at arms. | time=evening; who=Ralph, Lord of Utterbol, David the Sage; where=(unnamed) Utterbol pavilion camp | P016 `knew this for the first hour of his thralldom`
+
+U location | Where the Northland lies. | P028 `from the far-away Northland`
+
+O society | Performance skills (song, tale, chess, horsemanship) that change a captive's standing. | P014 `can'st thou play at the chess?`

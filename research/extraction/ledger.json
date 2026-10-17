@@ -1465,33 +1465,76 @@
    "title": "The Lord of Utterbol Will Wot of Ralph's Might and Minstrelsy",
    "body_paragraphs": 43,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 3,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Where is the Northland that Sir Karr Wood-neb came from?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C34.txt",
+    "records": "research/extraction/chapters/BTWO-C34.json"
+   }
   },
   {
    "chapter": "BTWO-C35",
    "title": "Ralph Cometh To the Vale of the Tower",
    "body_paragraphs": 22,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 2,
+    "spatial": 4,
+    "travel": 1,
+    "facts": 8,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Where is the \"worshipped\" Dry Tree near Utterbol?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C35.txt",
+    "records": "research/extraction/chapters/BTWO-C35.json"
+   }
   },
   {
    "chapter": "BTWO-C36",
    "title": "The Talk of Two Women Concerning Ralph",
    "body_paragraphs": 26,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 4,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the Lord's favoured \"new-come thrall\" left at Utterbol the damsel Ralph seeks?",
+    "What is Agatha's plan?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C36.txt",
+    "records": "research/extraction/chapters/BTWO-C36.json"
+   }
   },
   {
    "chapter": "BTWO-C37",

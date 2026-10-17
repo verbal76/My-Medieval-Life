@@ -1,0 +1,322 @@
+{
+ "entities": [
+  {
+   "name": "Agatha",
+   "aliases": [],
+   "type": "person",
+   "subtype": "thrall confidante",
+   "unnamed": false,
+   "summary": "The Lady's favourite thrall; slender, dark, sleek, sly, past first youth; takes caresses and blows for gifts.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C36-P003",
+     "q": "the woman aforesaid, who was sly and sleek, and somewhat past her first youth"
+    },
+    {
+     "p": "BTWO-C36-P004",
+     "q": "Agatha"
+    }
+   ]
+  },
+  {
+   "name": "Joyce",
+   "aliases": [],
+   "type": "person",
+   "subtype": "thrall",
+   "unnamed": false,
+   "summary": "Tall, fair thrall woman, somewhat like the Lady, set in the Lady's seat at the joust.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C36-P021",
+     "q": "I shall set Joyce in thy seat by my Lord's leave; she is tall and fair"
+    }
+   ]
+  },
+  {
+   "name": "White Pillar",
+   "aliases": [
+    "the White",
+    "the Red",
+    "the Black Pillars"
+   ],
+   "type": "building",
+   "subtype": "punishment post",
+   "unnamed": false,
+   "summary": "Punishment pillars at Utterbol.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C36-P005",
+     "q": "I will send thee to the White Pillar when we come home to Utterbol"
+    },
+    {
+     "p": "BTWO-C36-P006",
+     "q": "the White Pillar, or the Red, or the Black"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) new-come thrall of the Lord of Utterbol",
+   "aliases": [],
+   "type": "person",
+   "subtype": "thrall",
+   "unnamed": true,
+   "summary": "A new thrall the Lord loves more than his wife, left at Utterbol despite the Lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C36-P006",
+     "q": "that new-come thrall of his (whom ye left at home at Utterbol in his despite)"
+    }
+   ]
+  },
+  {
+   "name": "Geoffrey the Minstrel",
+   "aliases": [],
+   "type": "person",
+   "subtype": "minstrel",
+   "unnamed": false,
+   "summary": "Chess-player named by Agatha.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C36-P020",
+     "q": "Geoffrey the Minstrel and Black Anselm"
+    }
+   ]
+  },
+  {
+   "name": "Black Anselm",
+   "aliases": [],
+   "type": "person",
+   "subtype": "chess player",
+   "unnamed": false,
+   "summary": "Named by Agatha as easily mated at chess.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C36-P020",
+     "q": "Geoffrey the Minstrel and Black Anselm"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Agatha",
+   "rel": "serves",
+   "b": "(unnamed) Lady of Utterbol",
+   "detail": "favourite thrall and confidante",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C36-P003",
+     "q": "save one whom she loved, and to whom she was wont to tell the innermost of her mind"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Lady of Utterbol",
+   "rel": "lover_of",
+   "b": "Ralph",
+   "detail": "sudden unrequited love",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C36-P008",
+     "q": "love of this young man hath suddenly entered into my heart"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "lover_of",
+   "b": "(unnamed) new-come thrall of the Lord of Utterbol",
+   "detail": "loves her more than his wife",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C36-P006",
+     "q": "he loveth the little finger of that new-come thrall of his"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "lover_of",
+   "b": "Agatha",
+   "detail": "fondles her; grants her requests",
+   "when": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C36-P024",
+     "q": "The Lord looked on her greedily, and let his hand and arm go over her shoulder"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "White Pillar",
+   "rel": "within",
+   "b": "Utterbol",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Utterbol",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C36-P005",
+     "q": "I will send thee to the White Pillar when we come home to Utterbol"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "law",
+   "subject": "Utterbol",
+   "statement": "Thralls are punished by being sent to the White, Red or Black Pillar.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Agatha",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C36-P006",
+     "q": "when thou hast sent me to the White Pillar, or the Red, or the Black, my stripes will not mend the matter"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) Lady of Utterbol",
+   "statement": "She describes herself as hot-tempered, masterful, slothful, and taking lovers while the Lord takes thralls.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Utterbol",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C36-P011",
+     "q": "I suffer my husband to go after other women, and this new thrall in especial, so that I may take my pleasure unstayed"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Ralph",
+   "statement": "His armour is too light for tilting and his shield is a sergeant's target from Cheaping Knowe.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C36-P002",
+     "q": "his shield in especial was but a target for a sergeant, which he had brought at Cheaping Knowe"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Agatha",
+   "statement": "Agatha asks the Lord's sworn immunity before acting.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Agatha",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C36-P016",
+     "q": "cause him to swear immunity to me, whatsoever I shall say or do herein"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The Lady's confession to Agatha",
+   "chapter": "BTWO-C36",
+   "layer": "main",
+   "time_text": "after dinner",
+   "participants": [
+    "(unnamed) Lady of Utterbol",
+    "Agatha"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "summary": "The Lady of Utterbol confesses love for Ralph; Agatha agrees to plot for her.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C36-P014",
+     "q": "I may help thee somewhat therein"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Is the Lord's beloved new-come thrall at Utterbol the damsel Ralph seeks?",
+   "refs": [
+    {
+     "p": "BTWO-C36-P006",
+     "q": "that new-come thrall of his (whom ye left at home at Utterbol in his despite)"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Court intrigue among thralls, favourites and spouses as a social-sim layer in tyrant households.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C36-P014",
+     "q": "thou must promise in all wise to obey me, though I be the thrall, and thou the Lady"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C36",
+ "chapters": [
+  "BTWO-C36"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C36",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "Ralph is armed for the tilt in light gear with a sergeant's target bought at Cheaping Knowe. In her pavilion the Lady of Utterbol confides in her sly thrall confidante Agatha that she suddenly loves Ralph and wants his love. Agatha mocks, then says the Lord will not mind because he loves a new thrall he keeps at Utterbol (left there against the Lady's will) more than his wife. The Lady confesses she is coarse, hot-tempered and unfaithful, and hopes Ralph might pity her. Agatha promises a plan if the Lady obeys her: the Lord must grant Agatha immunity, the Lady must stay away from the joust, and the tall thrall Joyce shall sit in her place. Agatha flirts with the Lord and gets his promise. The Lady threatens punishment at the White Pillar at Utterbol.",
+   "geography_notes": "Utterbol has punishment pillars called the White, Red and Black Pillars.",
+   "open_questions": [
+    "Is the Lord's favoured \"new-come thrall\" left at Utterbol the damsel Ralph seeks?",
+    "What is Agatha's plan?"
+   ]
+  }
+ ]
+}

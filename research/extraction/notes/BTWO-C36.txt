@@ -1,0 +1,29 @@
+@ BTWO-C36
+summary: Ralph is armed for the tilt in light gear with a sergeant's target bought at Cheaping Knowe. In her pavilion the Lady of Utterbol confides in her sly thrall confidante Agatha that she suddenly loves Ralph and wants his love. Agatha mocks, then says the Lord will not mind because he loves a new thrall he keeps at Utterbol (left there against the Lady's will) more than his wife. The Lady confesses she is coarse, hot-tempered and unfaithful, and hopes Ralph might pity her. Agatha promises a plan if the Lady obeys her: the Lord must grant Agatha immunity, the Lady must stay away from the joust, and the tall thrall Joyce shall sit in her place. Agatha flirts with the Lord and gets his promise. The Lady threatens punishment at the White Pillar at Utterbol.
+geo: Utterbol has punishment pillars called the White, Red and Black Pillars.
+open: Is the Lord's favoured "new-come thrall" left at Utterbol the damsel Ralph seeks? || What is Agatha's plan?
+
+E person | Agatha | - | thrall confidante | The Lady's favourite thrall; slender, dark, sleek, sly, past first youth; takes caresses and blows for gifts. | P003 `the woman aforesaid, who was sly and sleek, and somewhat past her first youth`; P004 `Agatha`
+E person | Joyce | - | thrall | Tall, fair thrall woman, somewhat like the Lady, set in the Lady's seat at the joust. | P021 `I shall set Joyce in thy seat by my Lord's leave; she is tall and fair`
+E building | White Pillar | the White, the Red, the Black Pillars | punishment post | Punishment pillars at Utterbol. | P005 `I will send thee to the White Pillar when we come home to Utterbol`; P006 `the White Pillar, or the Red, or the Black`
+E person | (unnamed) new-come thrall of the Lord of Utterbol | - | thrall | A new thrall the Lord loves more than his wife, left at Utterbol despite the Lady. | P006 `that new-come thrall of his (whom ye left at home at Utterbol in his despite)`
+E person | Geoffrey the Minstrel | - | minstrel | Chess-player named by Agatha. | P020 `Geoffrey the Minstrel and Black Anselm`
+E person | Black Anselm | - | chess player | Named by Agatha as easily mated at chess. | P020 `Geoffrey the Minstrel and Black Anselm`
+
+R Agatha | serves | (unnamed) Lady of Utterbol | favourite thrall and confidante | BTWO-C36 | CANON/high | P003 `save one whom she loved, and to whom she was wont to tell the innermost of her mind`
+R (unnamed) Lady of Utterbol | lover_of | Ralph | sudden unrequited love | BTWO-C36 | CANON/high | P008 `love of this young man hath suddenly entered into my heart`
+R Lord of Utterbol | lover_of | (unnamed) new-come thrall of the Lord of Utterbol | loves her more than his wife | BTWO-C36 | CANON/high | P006 `he loveth the little finger of that new-come thrall of his`
+R Lord of Utterbol | lover_of | Agatha | fondles her; grants her requests | BTWO-C36 | CANON/high | P024 `The Lord looked on her greedily, and let his hand and arm go over her shoulder`
+
+S White Pillar | within | Utterbol | ctx=dialogue:Lady of Utterbol; cert=constrained | CANON/high | - | P005 `I will send thee to the White Pillar when we come home to Utterbol`
+
+F law | Utterbol | Thralls are punished by being sent to the White, Red or Black Pillar. | CANON/high; ctx=dialogue:Agatha | P006 `when thou hast sent me to the White Pillar, or the Red, or the Black, my stripes will not mend the matter`
+F society | (unnamed) Lady of Utterbol | She describes herself as hot-tempered, masterful, slothful, and taking lovers while the Lord takes thralls. | CANON/high; ctx=dialogue:Lady of Utterbol | P011 `I suffer my husband to go after other women, and this new thrall in especial, so that I may take my pleasure unstayed`
+F weapons | Ralph | His armour is too light for tilting and his shield is a sergeant's target from Cheaping Knowe. | CANON/high | P002 `his shield in especial was but a target for a sergeant, which he had brought at Cheaping Knowe`
+F politics | Agatha | Agatha asks the Lord's sworn immunity before acting. | CANON/high; ctx=dialogue:Agatha | P016 `cause him to swear immunity to me, whatsoever I shall say or do herein`
+
+V main | The Lady's confession to Agatha | The Lady of Utterbol confesses love for Ralph; Agatha agrees to plot for her. | time=after dinner; who=(unnamed) Lady of Utterbol, Agatha; where=Dale of the Tower | P014 `I may help thee somewhat therein`
+
+U identity | Is the Lord's beloved new-come thrall at Utterbol the damsel Ralph seeks? | P006 `that new-come thrall of his (whom ye left at home at Utterbol in his despite)`
+
+O politics | Court intrigue among thralls, favourites and spouses as a social-sim layer in tyrant households. | P014 `thou must promise in all wise to obey me, though I be the thrall, and thou the Lady`

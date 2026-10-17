@@ -1,0 +1,429 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Tower of the Dale",
+   "aliases": [],
+   "type": "building",
+   "subtype": "tower keep",
+   "unnamed": true,
+   "summary": "Great square tower with barriers and bailey on a mound, flying the Lord's banner.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "a great square tower, with barriers and bailey all dight ready for war, and with a banner of the Lord's hanging out"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) grange of the Dale of the Tower",
+   "aliases": [],
+   "type": "building",
+   "subtype": "grange",
+   "unnamed": true,
+   "summary": "Homestead with many roofs among tall old elms, in a bend of the river.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "in an ingle of it stood a grange or homestead, with many roofs half hidden by clumps of tall old elm trees"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) river of the Dale of the Tower",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": true,
+   "summary": "Little river with leats and hatches making water-meadows.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "a little river ran through it, from which went narrow leats held up by hatches, so that the more part of the valley bottom was a water-meadow"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Lady of Utterbol",
+   "aliases": [
+    "the Lady",
+    "the Queen"
+   ],
+   "type": "person",
+   "subtype": "lady",
+   "unnamed": true,
+   "summary": "Very tall, as tall as a tall man; abundant yellow hair; wide-set blue eyes; snub nose; wide smiling mouth; big white arms; husky voice; dressed in linen and gold.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C35-P016",
+     "q": "She was very tall, a full half-head taller than any of her women"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) worshipped Dry Tree near Utterbol",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "sacred tree",
+   "unnamed": true,
+   "summary": "A much-worshipped Dry Tree not far from Utterbol on the hither side of the mountains, said to be an image of the true one.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C35-P007",
+     "q": "Such a tree, much beworshipped"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Otter",
+   "rel": "other",
+   "b": "Lord of Utterbol",
+   "detail": "formerly and still in effect a thrall who rose by usefulness",
+   "when": "BTWO-C35",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C35-P013",
+     "q": "even such was I, time was.  Nay, such am I now"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Lady of Utterbol",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "given Ralph as a thrall; smitten at first sight",
+   "when": "BTWO-C35",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C35-P021",
+     "q": "she flushed bright red all over her face and even to her bosom"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Wall of the World",
+   "rel": "east_of",
+   "b": "Dale of the Tower",
+   "direction": "east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "huge black wall of mountains, range behind range",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "far away",
+   "refs": [
+    {
+     "p": "BTWO-C35-P002",
+     "q": "he saw that what he had taken for clouds was a huge wall of mountains, black and terrible"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Tower of the Dale",
+   "rel": "within",
+   "b": "Dale of the Tower",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "on a mound away from the river and grange",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "on a mound somewhat away from the river and the grange, a great square tower"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) worshipped Dry Tree near Utterbol",
+   "rel": "near",
+   "b": "Utterbol",
+   "direction": "",
+   "distance_text": "not very far",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Otter",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "on the hither side of the mountains",
+   "refs": [
+    {
+     "p": "BTWO-C35-P007",
+     "q": "not very far from Utterbol, on the hither side of the mountains"
+    }
+   ]
+  },
+  {
+   "a": "Dale of the Tower",
+   "rel": "route_next",
+   "b": "(unnamed) Utterbol downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "two hours before noon from the morning camp",
+   "travel_mode": "",
+   "terrain_text": "over the brow of a long down",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "two hours before noon, coming over the brow of a long down, they had before them a shallow dale"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Lord of Utterbol",
+    "Otter"
+   ],
+   "from": "(unnamed) morning camp in the downs",
+   "to": "Dale of the Tower",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "morning",
+   "end_time_text": "two hours before noon",
+   "terrain_text": "",
+   "chapter": "BTWO-C35",
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "Thus they rode the down country"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Wall of the World",
+   "statement": "Otter says no living person of these parts has seen the true Wall of the World; the name may mean something else.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P006",
+     "q": "this word is at whiles said of something else, which no man alive amongst us has yet seen"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) worshipped Dry Tree near Utterbol",
+   "statement": "Old men say it is a toy, an image of the real Dry Tree near the Well.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P007",
+     "q": "it is but a toy, and an image of that which is verily anigh the Well at the World's End"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Well at the World's End",
+   "statement": "Seekers from Utterbol's land never returned.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P007",
+     "q": "they never came back again to us"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Lord of Utterbol",
+   "statement": "Free men count for little; useful thralls rule.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P013",
+     "q": "in my Lord's land the free men are of little account, since they must oftenest do as my Lord and my Lord's thralls bid them"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "Dale of the Tower",
+   "statement": "Water-meadows managed with leats and hatches; kine and sheep grazing.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "wherein as now were grazing many kine and sheep"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Lord of Utterbol",
+   "statement": "Otter says the Lord is no great warrior; his men are his shield.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P014",
+     "q": "he is no great man of war; nor need he be, since he hath us for his shield and his hauberk"
+    }
+   ]
+  },
+  {
+   "category": "clothing",
+   "subject": "(unnamed) Lady of Utterbol",
+   "statement": "Her thrall women wear silk gowns but go barefoot with iron arm-rings.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P015",
+     "q": "but with naked feet, and having iron rings on their arms, so that Ralph saw that they were thralls"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Utterbol",
+   "statement": "Otter says the mountains make the local people harsher, as if thralls of the mountains.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P005",
+     "q": "It is as if we were thralls of the great mountains"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The Lord meets his Lady at the Dale of the Tower",
+   "chapter": "BTWO-C35",
+   "layer": "main",
+   "time_text": "noon",
+   "participants": [
+    "Lord of Utterbol",
+    "(unnamed) Lady of Utterbol",
+    "Ralph"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "summary": "The Lady of Utterbol comes to meet the Lord; he offers her Ralph as a gift; she is struck by him.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C35-P019",
+     "q": "I have cheapened a likely thrall of Morfinn the Unmanned, and he is a gift to thee"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Otter's competing ideas of what lies beyond the mountains (plain, endless mountains, world-edge gulf).",
+   "refs": [
+    {
+     "p": "BTWO-C35-P005",
+     "q": "a place where is naught but a ledge, and then below it a gulf filled with nothing but the howling of winds"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Dramatic mountain-wall horizon east of the inland plains: a fixed world boundary for generation.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C35-P002",
+     "q": "a huge wall of mountains, black and terrible, that rose up sharp and clear into the morning air"
+    }
+   ]
+  },
+  {
+   "idea": "Local \"false\" sacred sites that imitate the true quest landmark.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTWO-C35-P007",
+     "q": "an image of that which is verily anigh the Well"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C35",
+ "chapters": [
+  "BTWO-C35"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C35",
+   "paragraphs_total": 22,
+   "all_paragraphs_read": true,
+   "summary": "At dawn Ralph sees the mountains in the east as a huge black wall, ranges rising one behind another, still far off. Otter muses that beyond may be a plain, endless mountains, or the world's edge over a howling gulf, and that the mountains make the local folk harsh, \"thralls of the great mountains\". He says \"Wall of the World\" may also mean something else no living man has seen; a much-worshipped Dry Tree stands not far from Utterbol on the hither side, said to be only an image of the true one near the Well; seekers from here never came back. Two hours before noon they reach the Dale of the Tower: a shallow dale with a river channelled into water-meadows by leats and hatches, a grange among elms, cots, and a great square tower on a mound flying the Lord's banner. The Lady of Utterbol's white, gold and purple pavilion is there. Otter says he was once a thrall and that in Utterbol the clever thralls rise above free men. The Lady is very tall with yellow hair and blue eyes; her women are barefoot thralls with iron arm-rings. When the Lord offers Ralph to her as a gift, she blushes and looks down at the sight of him.",
+   "geography_notes": "The mountains lie east, dark blue and huge, one range behind another, far away. The Dale of the Tower: over a long down, a shallow, well-grassed dale; a little river with leats and hatches feeding water-meadows; willows; a grange with many roofs among tall elms in a bend of the river; two or three cots on the near slope and about six by the grange; a great square tower with barriers and bailey on a mound away from the river and grange; a causeway above the meadows.",
+   "open_questions": [
+    "Where is the \"worshipped\" Dry Tree near Utterbol?"
+   ]
+  }
+ ]
+}

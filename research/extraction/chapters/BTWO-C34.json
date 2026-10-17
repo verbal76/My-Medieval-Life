@@ -1,0 +1,396 @@
+{
+ "entities": [
+  {
+   "name": "Sir Karr Wood-neb",
+   "aliases": [],
+   "type": "person",
+   "subtype": "chieftain",
+   "unnamed": false,
+   "summary": "Chieftain from the far Northland who wintered at Upmeads and taught Ralph songs.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C34-P028",
+     "q": "his name was Sir Karr Wood-neb"
+    }
+   ]
+  },
+  {
+   "name": "Northland",
+   "aliases": [
+    "the far-away Northland"
+   ],
+   "type": "place",
+   "subtype": "region",
+   "unnamed": false,
+   "summary": "Far northern land, home of Sir Karr Wood-neb.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C34-P028",
+     "q": "a chieftain who had come to Upmeads from the far-away Northland"
+    }
+   ]
+  },
+  {
+   "name": "Otter",
+   "aliases": [
+    "Captain Otter"
+   ],
+   "type": "person",
+   "subtype": "captain of the guard",
+   "unnamed": false,
+   "summary": "The Lord of Utterbol's guard captain; cheerful, but would kill on order.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C34-P036",
+     "q": "Otter, the captain of the guard, who was good company"
+    }
+   ]
+  },
+  {
+   "name": "Dale of the Tower",
+   "aliases": [
+    "Bull-mead",
+    "Vale of the Tower"
+   ],
+   "type": "place",
+   "subtype": "dale",
+   "unnamed": false,
+   "summary": "Fair dale amid the downs with houses and a tower of the Lord's.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C34-P040",
+     "q": "that place is called the Dale of the Tower"
+    },
+    {
+     "p": "BTWO-C34-P043",
+     "q": "After we have left Bull-mead in the Dale of the Tower"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Lady of Utterbol",
+   "aliases": [
+    "the Lord's lady wife"
+   ],
+   "type": "person",
+   "subtype": "lady",
+   "unnamed": true,
+   "summary": "The Lord's wife, who likes songs of war and tales of fays.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C34-P027",
+     "q": "it shall please my lady wife less"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Otter",
+   "rel": "serves",
+   "b": "Lord of Utterbol",
+   "detail": "captain of the guard",
+   "when": "BTWO-C34",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C34-P036",
+     "q": "Otter, the captain of the guard"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "spouse_of",
+   "b": "(unnamed) Lady of Utterbol",
+   "detail": "-",
+   "when": "BTWO-C34",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C34-P027",
+     "q": "my lady wife"
+    }
+   ]
+  },
+  {
+   "a": "Sir Karr Wood-neb",
+   "rel": "teaches",
+   "b": "Ralph",
+   "detail": "taught songs",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C34-P028",
+     "q": "he taught Ralph this song and many things else"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Utterness",
+   "rel": "distance_from",
+   "b": "Dale of the Tower",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "four days' ride",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:David the Sage",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C34-P043",
+     "q": "it is four days' ride to Utterness"
+    }
+   ]
+  },
+  {
+   "a": "Utterbol",
+   "rel": "distance_from",
+   "b": "Utterness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "twelve hours",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:David the Sage",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C34-P043",
+     "q": "from Utterness ye may come (if my lord will) unto Utterbol in twelve hours"
+    }
+   ]
+  },
+  {
+   "a": "Dale of the Tower",
+   "rel": "route_next",
+   "b": "(unnamed) Utterbol moorland",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "about nine days of travel (three hazy, four rainy, then downs)",
+   "travel_mode": "",
+   "terrain_text": "pinewoods, uphill, then treeless downs",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C34-P038",
+     "q": "they went up at whiles, and never so much down as up, so that they were wending up hill on the whole"
+    },
+    {
+     "p": "BTWO-C34-P039",
+     "q": "the land near-hand rose in long, low downs now, and was quite treeless"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Lord of Utterbol",
+    "David the Sage",
+    "Otter"
+   ],
+   "from": "(unnamed) Utterbol moorland",
+   "to": "Dale of the Tower",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "about nine to ten days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "pinewoods, rising land, downs",
+   "chapter": "BTWO-C34",
+   "refs": [
+    {
+     "p": "BTWO-C34-P039",
+     "q": "On the ninth day of his captivity the rain ceased"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "custom",
+   "subject": "(unnamed) Lady of Utterbol",
+   "statement": "She delights in war songs, old tales and fay-lore.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lord of Utterbol",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C34-P033",
+     "q": "And canst thou tell tales of yore agone, and of the fays and such-like? All that she must have"
+    }
+   ]
+  },
+  {
+   "category": "text",
+   "subject": "Ralph",
+   "statement": "Ralph sings a love song of the Hall of the Garden, and a battle song of a night raid from the hills learned from Sir Karr.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C34-P028",
+     "q": "a song which he had learned one yule-tide from a chieftain"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Lord of Utterbol",
+   "statement": "Thralls are beaten for disobedience; refusing to sing means a beating.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lord of Utterbol",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C34-P015",
+     "q": "sing, or thou shalt be beaten"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Lord of Utterbol",
+   "statement": "If Ralph fails the test he will be a house or field serving-thrall at Utterbol, well fed save in scarcity, likely beaten.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C34-P041",
+     "q": "there shalt thou be a mere serving-thrall, either in the house or the field"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Lord of Utterbol",
+   "statement": "Tilting is \"not much our manner here\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lord of Utterbol",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C34-P034",
+     "q": "though it is not much our manner here"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Dale of the Tower",
+   "statement": "The downs are treeless except stream hollows with willows and alders.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C34-P039",
+     "q": "where grew a few willows, but alders more abundantly"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph sings for the Lord of Utterbol",
+   "chapter": "BTWO-C34",
+   "layer": "main",
+   "time_text": "evening",
+   "participants": [
+    "Ralph",
+    "Lord of Utterbol",
+    "David the Sage"
+   ],
+   "places": [
+    "(unnamed) Utterbol pavilion camp"
+   ],
+   "summary": "Ordered to sing on pain of beating, Ralph sings two songs; the Lord plans to test him at arms.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C34-P016",
+     "q": "knew this for the first hour of his thralldom"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where the Northland lies.",
+   "refs": [
+    {
+     "p": "BTWO-C34-P028",
+     "q": "from the far-away Northland"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Performance skills (song, tale, chess, horsemanship) that change a captive's standing.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTWO-C34-P014",
+     "q": "can'st thou play at the chess?"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C34",
+ "chapters": [
+  "BTWO-C34"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C34",
+   "paragraphs_total": 43,
+   "all_paragraphs_read": true,
+   "summary": "The Lord of Utterbol questions Ralph's skills and makes him sing, on pain of beating. Ralph sings a love song and then a battle song learned from Sir Karr Wood-neb, a Northland chieftain who wintered at Upmeads. The Lord prefers the love song but says his lady wife wants war songs and tales of fays, and plans to test Ralph in the tilt-yard. They travel on with Otter, captain of the guard: three hazy days, four rainy days climbing steadily, then on the ninth day of captivity long, low treeless downs with willow and alder hollows. Otter says they will reach the Dale of the Tower next day, where the Lord will hold a tourney to try Ralph. David says it is four days' ride from Bull-mead in the Dale of the Tower to Utterness, and twelve hours from Utterness to Utterbol, and that the mountains will be visible next day.",
+   "geography_notes": "After the moorland: pinewoods; three hazy days; four days of rain, generally uphill; then long, low treeless downs with stream hollows of willow and alder. The Dale of the Tower (Bull-mead) lies among the downs, four days' ride from Utterness; Utterbol is twelve hours from Utterness.",
+   "open_questions": [
+    "Where is the Northland that Sir Karr Wood-neb came from?"
+   ]
+  }
+ ]
+}
