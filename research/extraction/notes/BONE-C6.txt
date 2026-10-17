@@ -1,0 +1,27 @@
+@ BONE-C6
+summary: The monk wakes Ralph, warns him that the Wood Perilous begins soon on his road and that he should reach the Burg of the Four Friths before dark, and tries to swap Dame Katherine's necklace for a blessed chaplet. Ralph refuses, sings an Upmeads hall-song, spars with the monk about the world, pays a gold crown for a mass for the shepherds, and rides through Higham's streets to the southern gate.
+geo: The road south from Higham soon enters the Wood Perilous; the Burg of the Four Friths lies beyond, reachable before nightfall if one rides early and hard. Higham has a southern gate, chapmen's shops and craft booths.
+open: Why did the monk want Dame Katherine's necklace so badly?
+
+E item | (unnamed) monk's chaplet | pair of beads | blessed chaplet | Beads like Dame Katherine's but ending in a cross-shaped box; blessed by "the holy Richard". | P006 `at the end thereof was a little box shapen crosswise`; P008 `which hath been blessed time was by the holy Richard`
+E person | holy Richard | - | holy man | A holy man who once blessed the monk's chaplet. | P008 `blessed time was by the holy Richard`
+E place | Burg of the Four Friths | the Burg | town | Town beyond the Wood Perilous, the next goal south of Higham. | P005 `it were well for thee to reach the Burg of the Four Friths ere thou be benighted`
+E text | Hall-song of Upmeads | Even-song of the High House | song | An evening song of the High House of Upmeads about a barefoot lass among mowers and shepherds. | P009 `a song of eventide of the High House of Upmeads`; P029 `that Hall-song of Upmeads`
+E person | (unnamed) brother hospitaller of St. Mary's | - | monk | Brings Ralph his wallet of food. | P028 `the brother hospitalier brought him his wallet`
+
+S Wood Perilous | on_route | Higham-on-the-Way | ctx=dialogue:monk; cert=fixed | CANON/high | begins soon on the way from Higham | P005 `the Wood Perilous beginneth presently as ye wend your ways`
+S Burg of the Four Friths | beyond | Wood Perilous | time=reachable within a day's hard ride from Higham; ctx=dialogue:monk; cert=constrained | CANON/high | - | P005 `ride betimes, and ride hard; for the Wood Perilous beginneth presently`
+S (unnamed) southern gate of Higham | within | Higham-on-the-Way | dir=south; cert=fixed | CANON/high | - | P029 `as he rode toward the southern gate`
+
+F magic | Wood Perilous | The monk says the wood holds lawless men who have forgotten hell, and worse wights besides. | CANON/high; ctx=dialogue:monk | P005 `there are worse wights in the wood than they be`
+F religion | St. Mary's of Higham | Some men of the house read heathen sages and Church doctors and make books for scribes to copy. | CANON/high; ctx=dialogue:monk | P027 `men who have read the books of the wise men of the heathen, and the doctors of Holy Church`
+F price | Ralph | Ralph gives a gold crown as the offering for a mass for the shepherds. | CANON/high | P027 `took a gold crown from his pouch`
+F craft | Higham-on-the-Way | Street trades: chapmen's shops and booths of shoe-smiths, glovers, tinsmiths, coppersmiths and horners. | CANON/high | P029 `shoe-smiths and glovers, and tinsmiths and coppersmiths, and horners`
+F trade | Higham-on-the-Way | Countryfolk bring food and wares into the town and Abbey. | CANON/high | P029 `folk were coming in from the countryside with victual and other wares for the town and the Abbey`
+F custom | Wood Perilous | The by-word of the wood's outlaws is "Thou shalt lack ere I lack". | CANON/high; ctx=dialogue:monk | P005 `Thou shalt lack ere I lack`
+
+V main | The monk's offer of the chaplet | The monk tries to have Ralph leave Dame Katherine's necklace with him in exchange for a blessed chaplet; Ralph refuses. | time=morning after St. John's Eve; who=Ralph, (unnamed) monk of Higham; where=St. Mary's of Higham | P009 `he was determined not to chaffer away his gossip's gift for any shaveling's token`
+
+U identity | Why the monk looked "greedily" at Ralph and wanted the necklace kept. | P009 `it may be said greedily`
+
+O items | Rival amulets (blessed versus unblessed) that factions try to obtain from the player. | P008 `thou wert best do it off and let me keep it for thee`

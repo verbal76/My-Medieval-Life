@@ -1,0 +1,46 @@
+@ BONE-C7
+summary: Ralph rides south from Higham through the faubourg, river meadows and a vine-and-orchard country of little hills to the thorp of Bourton Abbas, the Abbey's outermost land. At the tavern of the Nicholas a sad maiden tells him her lover rode toward the Burg through the Wood Perilous five days ago and his horse came back bloody; she begs Ralph to wait for the chapmen's company. She knows hearsay of the Well but will not tell it. They kiss and he rides on.
+geo: Outside Higham's gate: a faubourg of houses with gardens and orchards, then meadows along the river, which the straight road crosses three times (one stone bridge, two fords). Then little hills and dales with vineyards, orchards and cornfields hiding Higham. By noon Ralph reaches Bourton Abbas, a thorp of grey stone houses in a more wooded valley. The Wood Perilous lies between Bourton Abbas and the Burg of the Four Friths and all about the Burg; from Bourton Abbas at noon one cannot reach the Burg before nightfall.
+open: Who is the maiden of Bourton Abbas (unnamed here)? || Is her lost lover connected to later events?
+
+E place | Bourton Abbas | the Thorp | thorp | Thorp of grey stone houses in a wooded valley; the outermost land of the Abbey of Higham. | P009 `this thorp, which is called Bourton Abbas, is a land of the Abbey of Higham`
+E building | (unnamed) tavern of the Nicholas at Bourton Abbas | - | tavern | Tavern with the sign of the Nicholas, owned by the maiden and her brother with a croft and vineyard. | P007 `In the thorp was a tavern with the sign of the Nicholas`
+E person | (unnamed) Maiden of Bourton Abbas | the damsel | tavern-keeper | Fair maiden, barefoot, in a green gown wrought with flowers; co-owns the tavern; her lover is lost in the Wood. | P009 `this house and the croft, and a vineyard hard by, all that is mine own and my brother's`; P027 `clad goodly withal, in a green gown wrought with flowers`
+E person | Hugh of Bourton Abbas | Hugh, the lad | tavern-keeper's brother | The maiden's brother, about fifteen, who scowls at Ralph and handles his knife. | P026 `Ho Hugh! bring hither the Knight's horse`; P007 `a lad of fifteen winters`
+E person | (unnamed) lover of the Maiden of Bourton Abbas | speech-friend | traveller | Rode alone toward the Burg five days before; his horse returned with bloody saddle. | P012 `my very earthly love and speech-friend rode five days ago toward the Burg of the Four Friths all alone`
+E group | Chapmen of Higham | the Chapmen | merchant caravan | Merchants who travel from Higham to the Burg in a large company. | P012 `abide till the Chapmen wend thither from Higham, who ride many in company`
+E currency | gold piece of Upmeads | - | gold coin | Upmeads gold, of the touch (assay standard) of the Easterlings. | P022 `a gold piece of Upmeads, which was good, and of the touch of the Easterlings`
+E group | Easterlings | - | people or traders | Named as the assay standard for gold. | P022 `of the touch of the Easterlings`
+
+R (unnamed) Maiden of Bourton Abbas | sibling_of | Hugh of Bourton Abbas | brother | BONE-C7 | CANON/high | P009 `that is the lad who hath gone to tend thine horse`
+R (unnamed) Maiden of Bourton Abbas | lover_of | (unnamed) lover of the Maiden of Bourton Abbas | - | BONE-C7 | CANON/high | P012 `my very earthly love and speech-friend`
+R Bourton Abbas | holds_land_of | St. Mary's of Higham | outermost land of the Abbey | BONE-C7 | CANON/high | P009 `though it be the outermost of its lands`
+
+S (unnamed) faubourg of Higham | adjacent_to | Higham-on-the-Way | terrain=fair houses with gardens and orchards; cert=fixed | CANON/high | outside the southern gate | P003 `There was a goodly fauburg outside the gate`
+S (unnamed) river of Higham | crossing_of | (unnamed) road south from Higham | terrain=excellent meadows; cert=fixed | CANON/high | road crosses the winding river thrice: one stone bridge, two fords | P003 `which he crossed thrice, once by a goodly stone bridge and twice by fords`
+S (unnamed) vine country south of Higham | south_of | Higham-on-the-Way | terrain=little hills and dales with vineyards, orchards and cornfields; cert=constrained | CANON/high | Higham hidden among the dales | P004 `a country of little hills and dales, the hill-sides covered with vineyards and orchards, and the dales plenteous of corn-fields`
+S Bourton Abbas | route_next | (unnamed) vine country south of Higham | time=reached by noon from Higham; terrain=valley with more wild-wood trees; cert=fixed | CANON/high | - | P007 `So he rode till it was noon, and he was amidst a little thorp of grey stone houses`
+S Wood Perilous | between | Bourton Abbas | ctx=dialogue:Maiden of Bourton Abbas; cert=fixed | CANON/high | between Bourton Abbas and the Burg, and all about the Burg | P012 `The Wood Perilous, that lieth betwixt us and the Burg of the Four Friths, and all about the Burg`
+S Burg of the Four Friths | distance_from | Bourton Abbas | time=more than an afternoon's ride; ctx=dialogue:Maiden of Bourton Abbas; cert=constrained | CANON/high | cannot reach the Burg before nightfall leaving after noon | P024 `yet shalt thou not get to the Burg before nightfall`
+S Burg of the Four Friths | distance_from | Bourton Abbas | time=round trip expected in three days; ctx=dialogue:Maiden of Bourton Abbas; cert=constrained | CANON/medium | lover was expected back within three days | P012 `we looked to see him in three days' wearing`
+
+T Ralph | Higham-on-the-Way | Bourton Abbas | via=(unnamed) faubourg of Higham, (unnamed) vine country south of Higham; mode=horse; end=noon; terrain=meadows, river crossings, vine-hills | P003 `he rode through very excellent meadows lying along the water`; P007 `So he rode till it was noon`
+
+F agriculture | (unnamed) vine country south of Higham | Hillsides of vineyards and orchards; dales of corn. | CANON/high | P004 `the hill-sides covered with vineyards and orchards`
+F society | (unnamed) vine country south of Higham | The country people are well clad, unhurried and unafraid. | CANON/high | P006 `as if they had no fear either of a blow or a hard word for loitering`
+F food | Bourton Abbas | The tavern serves bread, flesh and wine of the hillside. | CANON/high | P007 `bread and flesh, and good wine of the hill-side`
+F transport | Chapmen of Higham | Chapmen ride to the Burg in large companies for safety. | CANON/high; ctx=dialogue:Maiden of Bourton Abbas | P012 `who ride many in company`
+F politics | Abbot of St. Mary's of Higham | The maiden calls the Abbot a good lord and a defence against tyrants. | CANON/high; ctx=dialogue:Maiden of Bourton Abbas | P009 `the Abbot is a good lord and a defence against tyrants`
+F price | Ralph | Ralph pays for his meal with a gold piece of Upmeads. | CANON/high | P022 `held it out to her`
+F currency | gold piece of Upmeads | Upmeads gold is of good alloy, matching the Easterlings' standard. | CANON/high | P022 `of the touch of the Easterlings`
+F magic | Well at the World's End | The maiden knows hearsay of the Well but refuses to tell it. | CANON/high; ctx=dialogue:Maiden of Bourton Abbas | P020 `At least I know the hearsay thereof`
+F clothing | (unnamed) Maiden of Bourton Abbas | Field-working maidens go barefoot. | CANON/high | P027 `she went barefoot after the manner of maidens who work afield`
+
+V main | The maiden of Bourton Abbas | Ralph meets the grieving maiden, who warns him of the Wood and kisses him farewell. | time=noon to afternoon; who=Ralph, (unnamed) Maiden of Bourton Abbas, Hugh of Bourton Abbas; where=Bourton Abbas | P031 `kissed her many times`
+V backstory | Loss of the maiden's lover | Her lover rode alone into the Wood Perilous five days ago; his horse returned bloody. | who=(unnamed) lover of the Maiden of Bourton Abbas; where=Wood Perilous | P012 `his horse has come back, and the reins and the saddle all bloody`
+
+U identity | The maiden of Bourton Abbas is not named in this chapter. | P009 `As for me, I am no servant`
+U missing_measure | Distance from Bourton Abbas to the Burg is only bounded by riding time. | P024 `yet shalt thou not get to the Burg before nightfall`
+
+O economy | Armed merchant caravans that travellers can wait for and join through dangerous woods. | P012 `abide till the Chapmen wend thither from Higham, who ride many in company`
+O world | Frontier thorps at the edge of a lordship as last safe stops before wilderness. | P009 `though it be the outermost of its lands`

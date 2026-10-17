@@ -135,33 +135,77 @@
    "title": "Ralph Goeth His Ways From the Abbey of St. Mary at Higham",
    "body_paragraphs": 28,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 0,
+    "spatial": 3,
+    "travel": 0,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Why did the monk want Dame Katherine's necklace so badly?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C6.txt",
+    "records": "research/extraction/chapters/BONE-C6.json"
+   }
   },
   {
    "chapter": "BONE-C7",
    "title": "The Maiden of Bourton Abbas",
    "body_paragraphs": 36,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 8,
+    "relations": 3,
+    "spatial": 7,
+    "travel": 1,
+    "facts": 9,
+    "events": 2,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Who is the maiden of Bourton Abbas (unnamed here)?",
+    "Is her lost lover connected to later events?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C7.txt",
+    "records": "research/extraction/chapters/BONE-C7.json"
+   }
   },
   {
    "chapter": "BONE-C8",
    "title": "Ralph Cometh to the Wood Perilous.  An Adventure Therein",
    "body_paragraphs": 26,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 9,
+    "relations": 4,
+    "spatial": 4,
+    "travel": 2,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Which road at the crossroads leads to the Burg?",
+    "What is the relationship between the leafless-tree men and the Burg?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C8.txt",
+    "records": "research/extraction/chapters/BONE-C8.json"
+   }
   },
   {
    "chapter": "BONE-C9",

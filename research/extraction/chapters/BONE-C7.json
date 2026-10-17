@@ -1,0 +1,620 @@
+{
+ "entities": [
+  {
+   "name": "Bourton Abbas",
+   "aliases": [
+    "the Thorp"
+   ],
+   "type": "place",
+   "subtype": "thorp",
+   "unnamed": false,
+   "summary": "Thorp of grey stone houses in a wooded valley; the outermost land of the Abbey of Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "this thorp, which is called Bourton Abbas, is a land of the Abbey of Higham"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) tavern of the Nicholas at Bourton Abbas",
+   "aliases": [],
+   "type": "building",
+   "subtype": "tavern",
+   "unnamed": true,
+   "summary": "Tavern with the sign of the Nicholas, owned by the maiden and her brother with a croft and vineyard.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P007",
+     "q": "In the thorp was a tavern with the sign of the Nicholas"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Maiden of Bourton Abbas",
+   "aliases": [
+    "the damsel"
+   ],
+   "type": "person",
+   "subtype": "tavern-keeper",
+   "unnamed": true,
+   "summary": "Fair maiden, barefoot, in a green gown wrought with flowers; co-owns the tavern; her lover is lost in the Wood.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "this house and the croft, and a vineyard hard by, all that is mine own and my brother's"
+    },
+    {
+     "p": "BONE-C7-P027",
+     "q": "clad goodly withal, in a green gown wrought with flowers"
+    }
+   ]
+  },
+  {
+   "name": "Hugh of Bourton Abbas",
+   "aliases": [
+    "Hugh",
+    "the lad"
+   ],
+   "type": "person",
+   "subtype": "tavern-keeper's brother",
+   "unnamed": false,
+   "summary": "The maiden's brother, about fifteen, who scowls at Ralph and handles his knife.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P026",
+     "q": "Ho Hugh! bring hither the Knight's horse"
+    },
+    {
+     "p": "BONE-C7-P007",
+     "q": "a lad of fifteen winters"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) lover of the Maiden of Bourton Abbas",
+   "aliases": [
+    "speech-friend"
+   ],
+   "type": "person",
+   "subtype": "traveller",
+   "unnamed": true,
+   "summary": "Rode alone toward the Burg five days before; his horse returned with bloody saddle.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "my very earthly love and speech-friend rode five days ago toward the Burg of the Four Friths all alone"
+    }
+   ]
+  },
+  {
+   "name": "Chapmen of Higham",
+   "aliases": [
+    "the Chapmen"
+   ],
+   "type": "group",
+   "subtype": "merchant caravan",
+   "unnamed": false,
+   "summary": "Merchants who travel from Higham to the Burg in a large company.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "abide till the Chapmen wend thither from Higham, who ride many in company"
+    }
+   ]
+  },
+  {
+   "name": "gold piece of Upmeads",
+   "aliases": [],
+   "type": "currency",
+   "subtype": "gold coin",
+   "unnamed": false,
+   "summary": "Upmeads gold, of the touch (assay standard) of the Easterlings.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P022",
+     "q": "a gold piece of Upmeads, which was good, and of the touch of the Easterlings"
+    }
+   ]
+  },
+  {
+   "name": "Easterlings",
+   "aliases": [],
+   "type": "group",
+   "subtype": "people or traders",
+   "unnamed": false,
+   "summary": "Named as the assay standard for gold.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C7-P022",
+     "q": "of the touch of the Easterlings"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "sibling_of",
+   "b": "Hugh of Bourton Abbas",
+   "detail": "brother",
+   "when": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "that is the lad who hath gone to tend thine horse"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "lover_of",
+   "b": "(unnamed) lover of the Maiden of Bourton Abbas",
+   "detail": "-",
+   "when": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "my very earthly love and speech-friend"
+    }
+   ]
+  },
+  {
+   "a": "Bourton Abbas",
+   "rel": "holds_land_of",
+   "b": "St. Mary's of Higham",
+   "detail": "outermost land of the Abbey",
+   "when": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "though it be the outermost of its lands"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) faubourg of Higham",
+   "rel": "adjacent_to",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "fair houses with gardens and orchards",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "outside the southern gate",
+   "refs": [
+    {
+     "p": "BONE-C7-P003",
+     "q": "There was a goodly fauburg outside the gate"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) river of Higham",
+   "rel": "crossing_of",
+   "b": "(unnamed) road south from Higham",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "excellent meadows",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "road crosses the winding river thrice: one stone bridge, two fords",
+   "refs": [
+    {
+     "p": "BONE-C7-P003",
+     "q": "which he crossed thrice, once by a goodly stone bridge and twice by fords"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) vine country south of Higham",
+   "rel": "south_of",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "little hills and dales with vineyards, orchards and cornfields",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Higham hidden among the dales",
+   "refs": [
+    {
+     "p": "BONE-C7-P004",
+     "q": "a country of little hills and dales, the hill-sides covered with vineyards and orchards, and the dales plenteous of corn-fields"
+    }
+   ]
+  },
+  {
+   "a": "Bourton Abbas",
+   "rel": "route_next",
+   "b": "(unnamed) vine country south of Higham",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "reached by noon from Higham",
+   "travel_mode": "",
+   "terrain_text": "valley with more wild-wood trees",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C7-P007",
+     "q": "So he rode till it was noon, and he was amidst a little thorp of grey stone houses"
+    }
+   ]
+  },
+  {
+   "a": "Wood Perilous",
+   "rel": "between",
+   "b": "Bourton Abbas",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "between Bourton Abbas and the Burg, and all about the Burg",
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "The Wood Perilous, that lieth betwixt us and the Burg of the Four Friths, and all about the Burg"
+    }
+   ]
+  },
+  {
+   "a": "Burg of the Four Friths",
+   "rel": "distance_from",
+   "b": "Bourton Abbas",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "more than an afternoon's ride",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "cannot reach the Burg before nightfall leaving after noon",
+   "refs": [
+    {
+     "p": "BONE-C7-P024",
+     "q": "yet shalt thou not get to the Burg before nightfall"
+    }
+   ]
+  },
+  {
+   "a": "Burg of the Four Friths",
+   "rel": "distance_from",
+   "b": "Bourton Abbas",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "round trip expected in three days",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "lover was expected back within three days",
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "we looked to see him in three days' wearing"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "Higham-on-the-Way",
+   "to": "Bourton Abbas",
+   "via": [
+    "(unnamed) faubourg of Higham",
+    "(unnamed) vine country south of Higham"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "noon",
+   "terrain_text": "meadows, river crossings, vine-hills",
+   "chapter": "BONE-C7",
+   "refs": [
+    {
+     "p": "BONE-C7-P003",
+     "q": "he rode through very excellent meadows lying along the water"
+    },
+    {
+     "p": "BONE-C7-P007",
+     "q": "So he rode till it was noon"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "agriculture",
+   "subject": "(unnamed) vine country south of Higham",
+   "statement": "Hillsides of vineyards and orchards; dales of corn.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P004",
+     "q": "the hill-sides covered with vineyards and orchards"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) vine country south of Higham",
+   "statement": "The country people are well clad, unhurried and unafraid.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P006",
+     "q": "as if they had no fear either of a blow or a hard word for loitering"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "Bourton Abbas",
+   "statement": "The tavern serves bread, flesh and wine of the hillside.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P007",
+     "q": "bread and flesh, and good wine of the hill-side"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "Chapmen of Higham",
+   "statement": "Chapmen ride to the Burg in large companies for safety.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "who ride many in company"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Abbot of St. Mary's of Higham",
+   "statement": "The maiden calls the Abbot a good lord and a defence against tyrants.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "the Abbot is a good lord and a defence against tyrants"
+    }
+   ]
+  },
+  {
+   "category": "price",
+   "subject": "Ralph",
+   "statement": "Ralph pays for his meal with a gold piece of Upmeads.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P022",
+     "q": "held it out to her"
+    }
+   ]
+  },
+  {
+   "category": "currency",
+   "subject": "gold piece of Upmeads",
+   "statement": "Upmeads gold is of good alloy, matching the Easterlings' standard.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P022",
+     "q": "of the touch of the Easterlings"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The maiden knows hearsay of the Well but refuses to tell it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P020",
+     "q": "At least I know the hearsay thereof"
+    }
+   ]
+  },
+  {
+   "category": "clothing",
+   "subject": "(unnamed) Maiden of Bourton Abbas",
+   "statement": "Field-working maidens go barefoot.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P027",
+     "q": "she went barefoot after the manner of maidens who work afield"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The maiden of Bourton Abbas",
+   "chapter": "BONE-C7",
+   "layer": "main",
+   "time_text": "noon to afternoon",
+   "participants": [
+    "Ralph",
+    "(unnamed) Maiden of Bourton Abbas",
+    "Hugh of Bourton Abbas"
+   ],
+   "places": [
+    "Bourton Abbas"
+   ],
+   "summary": "Ralph meets the grieving maiden, who warns him of the Wood and kisses him farewell.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P031",
+     "q": "kissed her many times"
+    }
+   ]
+  },
+  {
+   "label": "Loss of the maiden's lover",
+   "chapter": "BONE-C7",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "(unnamed) lover of the Maiden of Bourton Abbas"
+   ],
+   "places": [
+    "Wood Perilous"
+   ],
+   "summary": "Her lover rode alone into the Wood Perilous five days ago; his horse returned bloody.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "his horse has come back, and the reins and the saddle all bloody"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The maiden of Bourton Abbas is not named in this chapter.",
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "As for me, I am no servant"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "Distance from Bourton Abbas to the Burg is only bounded by riding time.",
+   "refs": [
+    {
+     "p": "BONE-C7-P024",
+     "q": "yet shalt thou not get to the Burg before nightfall"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Armed merchant caravans that travellers can wait for and join through dangerous woods.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "abide till the Chapmen wend thither from Higham, who ride many in company"
+    }
+   ]
+  },
+  {
+   "idea": "Frontier thorps at the edge of a lordship as last safe stops before wilderness.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "though it be the outermost of its lands"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C7",
+ "chapters": [
+  "BONE-C7"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C7",
+   "paragraphs_total": 36,
+   "all_paragraphs_read": true,
+   "summary": "Ralph rides south from Higham through the faubourg, river meadows and a vine-and-orchard country of little hills to the thorp of Bourton Abbas, the Abbey's outermost land. At the tavern of the Nicholas a sad maiden tells him her lover rode toward the Burg through the Wood Perilous five days ago and his horse came back bloody; she begs Ralph to wait for the chapmen's company. She knows hearsay of the Well but will not tell it. They kiss and he rides on.",
+   "geography_notes": "Outside Higham's gate: a faubourg of houses with gardens and orchards, then meadows along the river, which the straight road crosses three times (one stone bridge, two fords). Then little hills and dales with vineyards, orchards and cornfields hiding Higham. By noon Ralph reaches Bourton Abbas, a thorp of grey stone houses in a more wooded valley. The Wood Perilous lies between Bourton Abbas and the Burg of the Four Friths and all about the Burg; from Bourton Abbas at noon one cannot reach the Burg before nightfall.",
+   "open_questions": [
+    "Who is the maiden of Bourton Abbas (unnamed here)?",
+    "Is her lost lover connected to later events?"
+   ]
+  }
+ ]
+}

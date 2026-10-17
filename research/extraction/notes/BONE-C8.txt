@@ -1,0 +1,41 @@
+@ BONE-C8
+summary: Beyond Bourton Abbas Ralph crosses a dry waste and enters the Wood Perilous on a ridge: first beech, then a stately oak forest with deer. At a crossroads he falls asleep and is seized by about two hundred men of the Burg of the Four Friths under Sir Aymer, with five bound prisoners wearing the leafless tree. Old Oliver recognises Ralph's gear and knows Nicholas; a runner brings news and the company rides off south-east, leaving Ralph.
+geo: From the dale's brow beyond Bourton Abbas: a rough dry waste fit only for mountain sheep and goats, then a long ridge covered with unbroken wood (the Wood Perilous). A highway pierces it: beech first, then well-spaced oaks with greensward. A crossroads where the ground falls to a little dale with holly and thorn. The Burg company rides off south-east, slantwise of the crossroads. Ralph says Upmeads is "beyond the down country".
+open: Which road at the crossroads leads to the Burg? || What is the relationship between the leafless-tree men and the Burg?
+
+E feature | (unnamed) dry waste beyond Bourton Abbas | - | waste | Rough, dry, parched waste with scattered bushes, fit only for mountain sheep or goats. | P002 `the road went straight through a rough waste, no pasture, save for mountain sheep or goats`
+E feature | Wood Perilous | - | forest | On a long ridge; thick beech then stately oaks with fine greensward; deer; a highway pierces it. | P002 `on the ridge was a wood thick with trees, and no break in them`; P003 `he came into a place where great oaks grew, fair and stately`
+E feature | (unnamed) crossroads in the Wood Perilous | - | crossroads | Crossing of two roads in a clearing, ground falling to a little dale with holly and thorn. | P004 `he came to where another road crossed the way he followed`
+E person | Sir Aymer | the Knight | knight | Knight leading the Burg's company on a white horse, with the Tower and Four Ways on his green surcoat. | P017 `Yea, Sir Aymer`
+E person | Oliver | old Oliver | man-at-arms | Ancient white-bearded man-at-arms wearing an oak wreath; knows Nicholas Longshanks as friend and foe; guides the company. | P007 `an ancient man-at-arms, with nought but an oak wreath on his bare head`; P022 `Nicholas and I have been friends in a way, as well as foes`
+E item | Banner of the Burg of the Four Friths | Tower and Four Ways | heraldry | Green pennon with a golden embattled tower amid four white ways. | P007 `there was a pennon with them, green, whereon was done a golden tower, embattled, amidst of four white ways`
+E group | men of the Burg of the Four Friths | the Good Town | soldiery | About ten score armed men in plate and cuir-bouilly with long spears. | P007 `The company of those about the Knight, Ralph deemed, would number ten score men`
+E group | men of the leafless tree | - | faction | Men in green coats with a gold leafless tree; five held prisoner by the Burg, called robbers and runagates, to be hanged; they deny being robbers. | P007 `five men, unarmed, clad in green coats, with a leafless tree done on them in gold`; P015 `Thou liest, lad, we be no robbers`
+E person | (unnamed) runner of the Burg | - | scout | Long lean carle in brogues and shirt who brings the Knight a message. | P025 `a long, lean carle, meet for running, with brogues on his feet`
+
+R Sir Aymer | leader_of | men of the Burg of the Four Friths | - | BONE-C8 | CANON/high | P007 `sat a Knight bravely armed at all points with the Tower and Four Ways on his green surcoat`
+R Oliver | serves | Sir Aymer | - | BONE-C8 | CANON/high | P017 `Yea, Sir Aymer`
+R Oliver | other | Nicholas Longshanks | old acquaintance, friend and foe | BONE-C8 | CANON/high | P022 `Nicholas and I have been friends in a way, as well as foes`
+R men of the Burg of the Four Friths | enemy_of | men of the leafless tree | holds five prisoners for hanging | BONE-C8 | CANON/high | P015 `Thou shalt give tongue to-morrow when the hangman hath thee under his hands`
+
+S (unnamed) dry waste beyond Bourton Abbas | route_next | Bourton Abbas | cert=fixed | CANON/high | over the dale's brow | P002 `when he was on the hill's brow he saw that the land was of other fashion`
+S Wood Perilous | beyond | (unnamed) dry waste beyond Bourton Abbas | terrain=long ridge, thick wood; cert=fixed | CANON/high | - | P002 `beyond this the land rose into a long ridge`
+S (unnamed) crossroads in the Wood Perilous | within | Wood Perilous | terrain=clearing, ground falling to a little dale; cert=fixed | CANON/high | in the oak wood | P004 `as the ground fell off as towards a little dale`
+S Upmeads | beyond | the Downs | ctx=dialogue:Ralph; cert=fixed | CANON/high | Ralph's own description | P014 `I am of Upmeads beyond the down country`
+
+T Ralph | Bourton Abbas | (unnamed) crossroads in the Wood Perilous | via=(unnamed) dry waste beyond Bourton Abbas, Wood Perilous; mode=horse; start=afternoon; terrain=waste, beech wood, oak wood | P002 `So on he rode, and soon passed that waste`; P004 `The afternoon wore and still he rode the oak wood`
+T men of the Burg of the Four Friths | (unnamed) crossroads in the Wood Perilous | (unknown) | dir=somewhat south-east; mode=horse | P027 `the whole company went off at a smart trot somewhat south-east, slantwise of the cross-roads`
+
+F ecology | Wood Perilous | Beech gives way to well-spaced oaks over unbroken flowery greensward, as if tended by a wood-reeve; buck, hart and roe. | CANON/high | P003 `as though some lord's wood-reeve had taken care that they should not grow over close together`
+F military | men of the Burg of the Four Friths | Armour of plate, cuir-bouilly or bright steel; long spears and swords; horn signal. | CANON/high | P007 `bore coats of plate, and cuir-bouilly, or of bright steel`
+F law | men of the leafless tree | The Burg calls them robbers and means to hang them. | CANON/high; ctx=dialogue:men of the Burg | P015 `Hold thy peace, runagate!`
+F society | Oliver | Oliver hints the leafless-tree folk have maidens among them. | CANON/medium; ctx=dialogue:Oliver | P011 `else might ye have taken him for a maid of theirs, one of those of whom we wot`
+F politics | Burg of the Four Friths | The Burg is called the Good Town and has many foes in the wildwood. | CANON/high; ctx=dialogue:Sir Aymer | P011 `the bread of the Good Town`; P013 `for we have many foes in the wildwood`
+
+V main | Capture at the crossroads | Ralph is seized by the Burg's company, questioned, recognised by Oliver, and left behind when a runner arrives. | time=late afternoon; who=Ralph, Sir Aymer, Oliver, men of the leafless tree; where=(unnamed) crossroads in the Wood Perilous | P026 `Oliver!  Oliver! lead on the way thou wottest!`
+
+U identity | Whether the men of the leafless tree are the same company as the green rider of BONE-C4. | P007 `with a leafless tree done on them in gold`
+U location | Which arm of the crossroads leads to the Burg of the Four Friths. | P005 `he doubted in his mind which was his right road toward the Burg of the Four Friths`
+
+O politics | Two armed factions in the same forest (town militia and the leafless-tree company) whose quarrel the player stumbles into. | P013 `for we have many foes in the wildwood`
+O world | Forest biome bands (beech, then managed oak) along a ridge as generator rules. | P003 `After a while the thick beech-wood gave out`

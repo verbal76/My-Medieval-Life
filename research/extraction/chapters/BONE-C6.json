@@ -1,0 +1,321 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) monk's chaplet",
+   "aliases": [
+    "pair of beads"
+   ],
+   "type": "item",
+   "subtype": "blessed chaplet",
+   "unnamed": true,
+   "summary": "Beads like Dame Katherine's but ending in a cross-shaped box; blessed by \"the holy Richard\".",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C6-P006",
+     "q": "at the end thereof was a little box shapen crosswise"
+    },
+    {
+     "p": "BONE-C6-P008",
+     "q": "which hath been blessed time was by the holy Richard"
+    }
+   ]
+  },
+  {
+   "name": "holy Richard",
+   "aliases": [],
+   "type": "person",
+   "subtype": "holy man",
+   "unnamed": false,
+   "summary": "A holy man who once blessed the monk's chaplet.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C6-P008",
+     "q": "blessed time was by the holy Richard"
+    }
+   ]
+  },
+  {
+   "name": "Burg of the Four Friths",
+   "aliases": [
+    "the Burg"
+   ],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": false,
+   "summary": "Town beyond the Wood Perilous, the next goal south of Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C6-P005",
+     "q": "it were well for thee to reach the Burg of the Four Friths ere thou be benighted"
+    }
+   ]
+  },
+  {
+   "name": "Hall-song of Upmeads",
+   "aliases": [
+    "Even-song of the High House"
+   ],
+   "type": "text",
+   "subtype": "song",
+   "unnamed": false,
+   "summary": "An evening song of the High House of Upmeads about a barefoot lass among mowers and shepherds.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C6-P009",
+     "q": "a song of eventide of the High House of Upmeads"
+    },
+    {
+     "p": "BONE-C6-P029",
+     "q": "that Hall-song of Upmeads"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) brother hospitaller of St. Mary's",
+   "aliases": [],
+   "type": "person",
+   "subtype": "monk",
+   "unnamed": true,
+   "summary": "Brings Ralph his wallet of food.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C6-P028",
+     "q": "the brother hospitalier brought him his wallet"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Wood Perilous",
+   "rel": "on_route",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:monk",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "begins soon on the way from Higham",
+   "refs": [
+    {
+     "p": "BONE-C6-P005",
+     "q": "the Wood Perilous beginneth presently as ye wend your ways"
+    }
+   ]
+  },
+  {
+   "a": "Burg of the Four Friths",
+   "rel": "beyond",
+   "b": "Wood Perilous",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "reachable within a day's hard ride from Higham",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:monk",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C6-P005",
+     "q": "ride betimes, and ride hard; for the Wood Perilous beginneth presently"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) southern gate of Higham",
+   "rel": "within",
+   "b": "Higham-on-the-Way",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C6-P029",
+     "q": "as he rode toward the southern gate"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Wood Perilous",
+   "statement": "The monk says the wood holds lawless men who have forgotten hell, and worse wights besides.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C6-P005",
+     "q": "there are worse wights in the wood than they be"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "St. Mary's of Higham",
+   "statement": "Some men of the house read heathen sages and Church doctors and make books for scribes to copy.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C6-P027",
+     "q": "men who have read the books of the wise men of the heathen, and the doctors of Holy Church"
+    }
+   ]
+  },
+  {
+   "category": "price",
+   "subject": "Ralph",
+   "statement": "Ralph gives a gold crown as the offering for a mass for the shepherds.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C6-P027",
+     "q": "took a gold crown from his pouch"
+    }
+   ]
+  },
+  {
+   "category": "craft",
+   "subject": "Higham-on-the-Way",
+   "statement": "Street trades: chapmen's shops and booths of shoe-smiths, glovers, tinsmiths, coppersmiths and horners.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C6-P029",
+     "q": "shoe-smiths and glovers, and tinsmiths and coppersmiths, and horners"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Higham-on-the-Way",
+   "statement": "Countryfolk bring food and wares into the town and Abbey.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C6-P029",
+     "q": "folk were coming in from the countryside with victual and other wares for the town and the Abbey"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Wood Perilous",
+   "statement": "The by-word of the wood's outlaws is \"Thou shalt lack ere I lack\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C6-P005",
+     "q": "Thou shalt lack ere I lack"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The monk's offer of the chaplet",
+   "chapter": "BONE-C6",
+   "layer": "main",
+   "time_text": "morning after St. John's Eve",
+   "participants": [
+    "Ralph",
+    "(unnamed) monk of Higham"
+   ],
+   "places": [
+    "St. Mary's of Higham"
+   ],
+   "summary": "The monk tries to have Ralph leave Dame Katherine's necklace with him in exchange for a blessed chaplet; Ralph refuses.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C6-P009",
+     "q": "he was determined not to chaffer away his gossip's gift for any shaveling's token"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Why the monk looked \"greedily\" at Ralph and wanted the necklace kept.",
+   "refs": [
+    {
+     "p": "BONE-C6-P009",
+     "q": "it may be said greedily"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Rival amulets (blessed versus unblessed) that factions try to obtain from the player.",
+   "system": "items",
+   "basis_refs": [
+    {
+     "p": "BONE-C6-P008",
+     "q": "thou wert best do it off and let me keep it for thee"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C6",
+ "chapters": [
+  "BONE-C6"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C6",
+   "paragraphs_total": 28,
+   "all_paragraphs_read": true,
+   "summary": "The monk wakes Ralph, warns him that the Wood Perilous begins soon on his road and that he should reach the Burg of the Four Friths before dark, and tries to swap Dame Katherine's necklace for a blessed chaplet. Ralph refuses, sings an Upmeads hall-song, spars with the monk about the world, pays a gold crown for a mass for the shepherds, and rides through Higham's streets to the southern gate.",
+   "geography_notes": "The road south from Higham soon enters the Wood Perilous; the Burg of the Four Friths lies beyond, reachable before nightfall if one rides early and hard. Higham has a southern gate, chapmen's shops and craft booths.",
+   "open_questions": [
+    "Why did the monk want Dame Katherine's necklace so badly?"
+   ]
+  }
+ ]
+}

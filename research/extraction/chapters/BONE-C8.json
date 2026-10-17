@@ -1,0 +1,530 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) dry waste beyond Bourton Abbas",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "waste",
+   "unnamed": true,
+   "summary": "Rough, dry, parched waste with scattered bushes, fit only for mountain sheep or goats.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P002",
+     "q": "the road went straight through a rough waste, no pasture, save for mountain sheep or goats"
+    }
+   ]
+  },
+  {
+   "name": "Wood Perilous",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": false,
+   "summary": "On a long ridge; thick beech then stately oaks with fine greensward; deer; a highway pierces it.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P002",
+     "q": "on the ridge was a wood thick with trees, and no break in them"
+    },
+    {
+     "p": "BONE-C8-P003",
+     "q": "he came into a place where great oaks grew, fair and stately"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) crossroads in the Wood Perilous",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "crossroads",
+   "unnamed": true,
+   "summary": "Crossing of two roads in a clearing, ground falling to a little dale with holly and thorn.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P004",
+     "q": "he came to where another road crossed the way he followed"
+    }
+   ]
+  },
+  {
+   "name": "Sir Aymer",
+   "aliases": [
+    "the Knight"
+   ],
+   "type": "person",
+   "subtype": "knight",
+   "unnamed": false,
+   "summary": "Knight leading the Burg's company on a white horse, with the Tower and Four Ways on his green surcoat.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P017",
+     "q": "Yea, Sir Aymer"
+    }
+   ]
+  },
+  {
+   "name": "Oliver",
+   "aliases": [
+    "old Oliver"
+   ],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": false,
+   "summary": "Ancient white-bearded man-at-arms wearing an oak wreath; knows Nicholas Longshanks as friend and foe; guides the company.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "an ancient man-at-arms, with nought but an oak wreath on his bare head"
+    },
+    {
+     "p": "BONE-C8-P022",
+     "q": "Nicholas and I have been friends in a way, as well as foes"
+    }
+   ]
+  },
+  {
+   "name": "Banner of the Burg of the Four Friths",
+   "aliases": [
+    "Tower and Four Ways"
+   ],
+   "type": "item",
+   "subtype": "heraldry",
+   "unnamed": false,
+   "summary": "Green pennon with a golden embattled tower amid four white ways.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "there was a pennon with them, green, whereon was done a golden tower, embattled, amidst of four white ways"
+    }
+   ]
+  },
+  {
+   "name": "men of the Burg of the Four Friths",
+   "aliases": [
+    "the Good Town"
+   ],
+   "type": "group",
+   "subtype": "soldiery",
+   "unnamed": false,
+   "summary": "About ten score armed men in plate and cuir-bouilly with long spears.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "The company of those about the Knight, Ralph deemed, would number ten score men"
+    }
+   ]
+  },
+  {
+   "name": "men of the leafless tree",
+   "aliases": [],
+   "type": "group",
+   "subtype": "faction",
+   "unnamed": false,
+   "summary": "Men in green coats with a gold leafless tree; five held prisoner by the Burg, called robbers and runagates, to be hanged; they deny being robbers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "five men, unarmed, clad in green coats, with a leafless tree done on them in gold"
+    },
+    {
+     "p": "BONE-C8-P015",
+     "q": "Thou liest, lad, we be no robbers"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) runner of the Burg",
+   "aliases": [],
+   "type": "person",
+   "subtype": "scout",
+   "unnamed": true,
+   "summary": "Long lean carle in brogues and shirt who brings the Knight a message.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C8-P025",
+     "q": "a long, lean carle, meet for running, with brogues on his feet"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Sir Aymer",
+   "rel": "leader_of",
+   "b": "men of the Burg of the Four Friths",
+   "detail": "-",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "sat a Knight bravely armed at all points with the Tower and Four Ways on his green surcoat"
+    }
+   ]
+  },
+  {
+   "a": "Oliver",
+   "rel": "serves",
+   "b": "Sir Aymer",
+   "detail": "-",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C8-P017",
+     "q": "Yea, Sir Aymer"
+    }
+   ]
+  },
+  {
+   "a": "Oliver",
+   "rel": "other",
+   "b": "Nicholas Longshanks",
+   "detail": "old acquaintance, friend and foe",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C8-P022",
+     "q": "Nicholas and I have been friends in a way, as well as foes"
+    }
+   ]
+  },
+  {
+   "a": "men of the Burg of the Four Friths",
+   "rel": "enemy_of",
+   "b": "men of the leafless tree",
+   "detail": "holds five prisoners for hanging",
+   "when": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C8-P015",
+     "q": "Thou shalt give tongue to-morrow when the hangman hath thee under his hands"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) dry waste beyond Bourton Abbas",
+   "rel": "route_next",
+   "b": "Bourton Abbas",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "over the dale's brow",
+   "refs": [
+    {
+     "p": "BONE-C8-P002",
+     "q": "when he was on the hill's brow he saw that the land was of other fashion"
+    }
+   ]
+  },
+  {
+   "a": "Wood Perilous",
+   "rel": "beyond",
+   "b": "(unnamed) dry waste beyond Bourton Abbas",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "long ridge, thick wood",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C8-P002",
+     "q": "beyond this the land rose into a long ridge"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) crossroads in the Wood Perilous",
+   "rel": "within",
+   "b": "Wood Perilous",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "clearing, ground falling to a little dale",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "in the oak wood",
+   "refs": [
+    {
+     "p": "BONE-C8-P004",
+     "q": "as the ground fell off as towards a little dale"
+    }
+   ]
+  },
+  {
+   "a": "Upmeads",
+   "rel": "beyond",
+   "b": "the Downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Ralph",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Ralph's own description",
+   "refs": [
+    {
+     "p": "BONE-C8-P014",
+     "q": "I am of Upmeads beyond the down country"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "Bourton Abbas",
+   "to": "(unnamed) crossroads in the Wood Perilous",
+   "via": [
+    "(unnamed) dry waste beyond Bourton Abbas",
+    "Wood Perilous"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "afternoon",
+   "end_time_text": "",
+   "terrain_text": "waste, beech wood, oak wood",
+   "chapter": "BONE-C8",
+   "refs": [
+    {
+     "p": "BONE-C8-P002",
+     "q": "So on he rode, and soon passed that waste"
+    },
+    {
+     "p": "BONE-C8-P004",
+     "q": "The afternoon wore and still he rode the oak wood"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "men of the Burg of the Four Friths"
+   ],
+   "from": "(unnamed) crossroads in the Wood Perilous",
+   "to": "(unknown)",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "somewhat south-east",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C8",
+   "refs": [
+    {
+     "p": "BONE-C8-P027",
+     "q": "the whole company went off at a smart trot somewhat south-east, slantwise of the cross-roads"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "Wood Perilous",
+   "statement": "Beech gives way to well-spaced oaks over unbroken flowery greensward, as if tended by a wood-reeve; buck, hart and roe.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C8-P003",
+     "q": "as though some lord's wood-reeve had taken care that they should not grow over close together"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "men of the Burg of the Four Friths",
+   "statement": "Armour of plate, cuir-bouilly or bright steel; long spears and swords; horn signal.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "bore coats of plate, and cuir-bouilly, or of bright steel"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "men of the leafless tree",
+   "statement": "The Burg calls them robbers and means to hang them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:men of the Burg",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C8-P015",
+     "q": "Hold thy peace, runagate!"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Oliver",
+   "statement": "Oliver hints the leafless-tree folk have maidens among them.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Oliver",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C8-P011",
+     "q": "else might ye have taken him for a maid of theirs, one of those of whom we wot"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Burg of the Four Friths",
+   "statement": "The Burg is called the Good Town and has many foes in the wildwood.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sir Aymer",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C8-P011",
+     "q": "the bread of the Good Town"
+    },
+    {
+     "p": "BONE-C8-P013",
+     "q": "for we have many foes in the wildwood"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Capture at the crossroads",
+   "chapter": "BONE-C8",
+   "layer": "main",
+   "time_text": "late afternoon",
+   "participants": [
+    "Ralph",
+    "Sir Aymer",
+    "Oliver",
+    "men of the leafless tree"
+   ],
+   "places": [
+    "(unnamed) crossroads in the Wood Perilous"
+   ],
+   "summary": "Ralph is seized by the Burg's company, questioned, recognised by Oliver, and left behind when a runner arrives.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C8-P026",
+     "q": "Oliver!  Oliver! lead on the way thou wottest!"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether the men of the leafless tree are the same company as the green rider of BONE-C4.",
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "with a leafless tree done on them in gold"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Which arm of the crossroads leads to the Burg of the Four Friths.",
+   "refs": [
+    {
+     "p": "BONE-C8-P005",
+     "q": "he doubted in his mind which was his right road toward the Burg of the Four Friths"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Two armed factions in the same forest (town militia and the leafless-tree company) whose quarrel the player stumbles into.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BONE-C8-P013",
+     "q": "for we have many foes in the wildwood"
+    }
+   ]
+  },
+  {
+   "idea": "Forest biome bands (beech, then managed oak) along a ridge as generator rules.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BONE-C8-P003",
+     "q": "After a while the thick beech-wood gave out"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C8",
+ "chapters": [
+  "BONE-C8"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C8",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "Beyond Bourton Abbas Ralph crosses a dry waste and enters the Wood Perilous on a ridge: first beech, then a stately oak forest with deer. At a crossroads he falls asleep and is seized by about two hundred men of the Burg of the Four Friths under Sir Aymer, with five bound prisoners wearing the leafless tree. Old Oliver recognises Ralph's gear and knows Nicholas; a runner brings news and the company rides off south-east, leaving Ralph.",
+   "geography_notes": "From the dale's brow beyond Bourton Abbas: a rough dry waste fit only for mountain sheep and goats, then a long ridge covered with unbroken wood (the Wood Perilous). A highway pierces it: beech first, then well-spaced oaks with greensward. A crossroads where the ground falls to a little dale with holly and thorn. The Burg company rides off south-east, slantwise of the crossroads. Ralph says Upmeads is \"beyond the down country\".",
+   "open_questions": [
+    "Which road at the crossroads leads to the Burg?",
+    "What is the relationship between the leafless-tree men and the Burg?"
+   ]
+  }
+ ]
+}
