@@ -1,0 +1,394 @@
+{
+ "entities": [
+  {
+   "name": "Goldburg",
+   "aliases": [],
+   "type": "place",
+   "subtype": "walled city",
+   "unnamed": false,
+   "summary": "Great city on three hills, a ridge and both banks of a wide river, girt by a great white wall that bridges the river; ruled by a Queen.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C28-P002",
+     "q": "It was built partly on three hills, the buttresses of a long ridge which turned a wide river"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) lower bridge-castle of Goldburg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "bridge-castle",
+   "unnamed": true,
+   "summary": "Vaulted bridge-hall over the river with the castle rising above it to the height of the hill towers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C28-P003",
+     "q": "above the vault of this long bridge rose up the castle, chamber on chamber"
+    }
+   ]
+  },
+  {
+   "name": "Water-Street of Goldburg",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "street",
+   "unnamed": false,
+   "summary": "Street along the river with wide quays and palatial arcaded houses.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C28-P004",
+     "q": "came into the Water-Street of Goldburg, where the river, with wide quays on either side thereof, ran betwixt the houses"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) river of Goldburg",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": true,
+   "summary": "Wide river through Goldburg, carrying barges and river-ships with lowering masts.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C28-P004",
+     "q": "river-ships that might get them through the bridges and furnished with masts that might be lowered and shipped"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) hostel of Goldburg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "inn",
+   "unnamed": true,
+   "summary": "Hostel in the market-place with a great garden court, fountain of coloured marble, and a vaulted, pillared hall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C28-P007",
+     "q": "amidst it was a fountain of fresh water, built in the goodliest fashion of many-coloured marble-stones"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) great church of Goldburg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": true,
+   "summary": "Delicate church along one side of the market-place with tall, richly adorned steeples.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C28-P006",
+     "q": "the great church was all along one side of the market place"
+    }
+   ]
+  },
+  {
+   "name": "Queen of Goldburg",
+   "aliases": [
+    "the Queen"
+   ],
+   "type": "person",
+   "subtype": "queen",
+   "unnamed": false,
+   "summary": "Woman who rules Goldburg.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C28-P006",
+     "q": "for a woman ruled in Goldburg"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Queen of Goldburg",
+   "rel": "ruler_of",
+   "b": "Goldburg",
+   "detail": "-",
+   "when": "BTWO-C28",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C28-P006",
+     "q": "for a woman ruled in Goldburg"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Goldburg",
+   "rel": "distance_from",
+   "b": "(unnamed) stream pass above the Goldburg plain",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "one night in the foothills and four days' ride",
+   "travel_mode": "",
+   "terrain_text": "little hills, hollows and rising ground, well-tilled",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C28-P002",
+     "q": "they rode four days through lands well-tilled, but for the most part ill-housed"
+    }
+   ]
+  },
+  {
+   "a": "Goldburg",
+   "rel": "adjacent_to",
+   "b": "(unnamed) river of Goldburg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "on three hills, the ridge, and both flat banks",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the wall bridges the river",
+   "refs": [
+    {
+     "p": "BTWO-C28-P002",
+     "q": "a great white wall girt it all about, which went right over the river as a bridge"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) hostel of Goldburg",
+   "rel": "within",
+   "b": "Goldburg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "in an angle of the ridge and one of its buttresses, a little back from the river",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "in the market-place",
+   "refs": [
+    {
+     "p": "BTWO-C28-P006",
+     "q": "their hostel in the market place, which lay a little back from the river in an ingle of the ridge and one of its buttresses"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "from": "(unnamed) stream pass above the Goldburg plain",
+   "to": "Goldburg",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "about five days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C28",
+   "refs": [
+    {
+     "p": "BTWO-C28-P002",
+     "q": "they rode four days through lands well-tilled"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "architecture",
+   "subject": "Goldburg",
+   "statement": "Water-Street houses are palaces of white, red and grey stone, arcaded like an abbey cloister, carved, with glazed windows.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P004",
+     "q": "The houses were built of white stones and red and grey; with shapely pillars to the cloister"
+    }
+   ]
+  },
+  {
+   "category": "architecture",
+   "subject": "Goldburg",
+   "statement": "Above the market, hillside houses are low post-and-pan with straw, reed or shingle roofs.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P006",
+     "q": "poorly built of post and pan, and thatched with straw, or reed, or shingle"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Goldburg",
+   "statement": "Many are ragged and beg from the chapmen; others are richly dressed.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P005",
+     "q": "many of the folk were clad foully, and were haggard of countenance, and cried on the chapmen for alms"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Goldburg",
+   "statement": "Tillers and labourers are masterless, but rich men buy men and women as house-servants.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P005",
+     "q": "rich men might and did buy both men and women for servants in their houses"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Goldburg",
+   "statement": "The folk are somewhat wild and strange of faith for Christians.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P006",
+     "q": "albeit this folk was somewhat wild and strange of faith for Christian men"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "(unnamed) river of Goldburg",
+   "statement": "Great barges and river-ships, not sea-going, with masts lowered for bridges.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P004",
+     "q": "On the river were great barges, and other craft such as were not sea-goers"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "(unnamed) hostel of Goldburg",
+   "statement": "Splendid buildings but ordinary furnishings.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P008",
+     "q": "the hangings and beds, and stools, and chairs, and other plenishing were no richer or better than might be seen in the hostelry of any good town"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Arrival at Goldburg",
+   "chapter": "BTWO-C28",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "summary": "The merchant company enters Goldburg through the bridge-gate.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C28-P003",
+     "q": "One by one they passed through the wicket of the gate"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "missing_measure",
+   "question": "The distance from the mountains to Goldburg is given only as four days' ride.",
+   "refs": [
+    {
+     "p": "BTWO-C28-P002",
+     "q": "they rode four days"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "River-spanning walled cities with bridge-castles as a landmark settlement type.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C28-P003",
+     "q": "this was naught but the lower bridge of the city"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C28",
+ "chapters": [
+  "BTWO-C28"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C28",
+   "paragraphs_total": 8,
+   "all_paragraphs_read": true,
+   "summary": "After a night in the foothills and four days through well-tilled but poorly housed rolling land, the company reaches Goldburg. It is built on three hills (buttresses of a long ridge that turns a wide river), on the ridge itself, and on both flat riverbanks, all girt by a great white wall that crosses the river as a bridge; the castle rises above the lower bridge. The vaulted gate-hall leads over the bridge-hall into the Water-Street, lined with quays and palatial arcaded houses of white, red and grey stone, with river barges whose masts lower for the bridges. Many folk are ragged and beg; others are rich; scantily dressed women recall the Wheat-wearers, and rich men buy house-servants. A woman, the Queen, rules Goldburg. The hostel in the market-place has a garden court and a marble fountain, but its furnishings are ordinary.",
+   "geography_notes": "From the mountains' feet, four days through a country of little hills and hollows to Goldburg. Goldburg straddles a wide river turned by a long ridge with three buttress hills; a great white wall surrounds it and bridges the river, very high on the plain side. The lower bridge carries the castle. The market-place lies a little back from the river in an angle of the ridge and a buttress. On the hillsides are poor post-and-pan houses, apart from the castle and the Queen's palace.",
+   "open_questions": [
+    "Is the Goldburg river navigable to the sea? (barges are \"not sea-goers\")"
+   ]
+  }
+ ]
+}

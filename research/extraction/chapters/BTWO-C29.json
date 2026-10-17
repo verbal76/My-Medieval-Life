@@ -1,0 +1,324 @@
+{
+ "entities": [
+  {
+   "name": "Duke Osmond",
+   "aliases": [],
+   "type": "person",
+   "subtype": "duke",
+   "unnamed": false,
+   "summary": "Made Ralph a knight last year in the church of St. Laurence of Upmeads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C29-P003",
+     "q": "when Duke Osmond made me knight last year, in the church of St. Laurence of Upmeads"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) High House of the Queen of Goldburg",
+   "aliases": [
+    "the Queen's House"
+   ],
+   "type": "building",
+   "subtype": "palace",
+   "unnamed": true,
+   "summary": "Palace of gilded marble pillars, carved and painted walls, dainty floors, set among unequalled gardens; the inner chamber like goldsmiths' work.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C29-P011",
+     "q": "the High House of the Queen, which was like a piece of the Kingdom of Heaven for loveliness"
+    }
+   ]
+  },
+  {
+   "name": "Utterness",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": false,
+   "summary": "Last town known to Goldburg, no great way from Utterbol, on a way to the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C29-P021",
+     "q": "Utterness, which is no great way from Utterbol, and is the last town whereof we know aught"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Queen's letter to the Lord of Utterbol",
+   "aliases": [],
+   "type": "item",
+   "subtype": "letter",
+   "unnamed": true,
+   "summary": "Letter of the Queen of Goldburg for Ralph to give the Lord of Utterbol.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C29-P025",
+     "q": "here is the letter which thou shalt give to the Lord of Utterbol if thou meet him"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Queen of Goldburg",
+   "rel": "lover_of",
+   "b": "Ralph",
+   "detail": "confesses love; unreturned",
+   "when": "BTWO-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C29-P027",
+     "q": "I have come on thee so suddenly, and loved thee so sorely"
+    }
+   ]
+  },
+  {
+   "a": "Queen of Goldburg",
+   "rel": "kin_of",
+   "b": "(unnamed) founder of Goldburg",
+   "detail": "kinsman of old",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C29-P024",
+     "q": "my kinsman of old, who first raised up Goldburg in the wilderness"
+    }
+   ]
+  },
+  {
+   "a": "Duke Osmond",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "knighted Ralph",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C29-P003",
+     "q": "when Duke Osmond made me knight last year"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Utterness",
+   "rel": "near",
+   "b": "Utterbol",
+   "direction": "",
+   "distance_text": "no great way",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Queen of Goldburg",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C29-P021",
+     "q": "Utterness, which is no great way from Utterbol"
+    }
+   ]
+  },
+  {
+   "a": "Well at the World's End",
+   "rel": "beyond",
+   "b": "Utterness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Queen of Goldburg",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "a way to the Well runs through Utterness and by Utterbol",
+   "refs": [
+    {
+     "p": "BTWO-C29-P024",
+     "q": "through Utterness and by Utterbol is a way whereby folk seek thither"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "politics",
+   "subject": "Lord of Utterbol",
+   "statement": "He has not been in Goldburg for three months; his name makes men fall silent.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:merchant",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C29-P009",
+     "q": "seemed to freeze the speech of men's tongues"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Queen of Goldburg",
+   "statement": "A merchant says no one does well to cross the Queen's will.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:merchant",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C29-P008",
+     "q": "it does not do for any man to go against the will of our Lady and Queen"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Goldburg",
+   "statement": "Hunters from the mountain feet and plain forests, and mariners, come to Goldburg.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C29-P009",
+     "q": "hunters from the mountain-feet and the forests of the plain, and mariners and such like"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph holds that his knightly oath binds him to rescue the damsel.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C29-P003",
+     "q": "according to the duty bounden on me by mine oath"
+    }
+   ]
+  },
+  {
+   "category": "architecture",
+   "subject": "(unnamed) High House of the Queen of Goldburg",
+   "statement": "Walls carved and painted rather than hung; inner chamber like goldsmiths' and jewellers' work.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C29-P012",
+     "q": "it seemed wrought rather by goldsmiths and jewellers than by masons and carvers"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Audience with the Queen of Goldburg",
+   "chapter": "BTWO-C29",
+   "layer": "main",
+   "time_text": "fifth and eighth days in Goldburg",
+   "participants": [
+    "Ralph",
+    "Queen of Goldburg"
+   ],
+   "places": [
+    "(unnamed) High House of the Queen of Goldburg"
+   ],
+   "summary": "Ralph tells the Queen his story; she promises help and later gives him a letter and confesses her love.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C29-P027",
+     "q": "O that I might be thy friend in such-wise!"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Duke Osmond is not otherwise identified (overlord of Upmeads?).",
+   "refs": [
+    {
+     "p": "BTWO-C29-P003",
+     "q": "Duke Osmond"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Where Utterness and Utterbol lie relative to Goldburg.",
+   "refs": [
+    {
+     "p": "BTWO-C29-P021",
+     "q": "the last town whereof we know aught"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Patron rulers who grant letters of introduction usable with rival lords.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C29-P025",
+     "q": "here is the letter which thou shalt give to the Lord of Utterbol"
+    }
+   ]
+  },
+  {
+   "idea": "An unrequited royal admirer offering refuge, as a fallback safe haven.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTWO-C29-P026",
+     "q": "here will be the open door for thee and the welcome of a friend"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C29",
+ "chapters": [
+  "BTWO-C29"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C29",
+   "paragraphs_total": 28,
+   "all_paragraphs_read": true,
+   "summary": "Clement will turn back in about twenty days and begs Ralph to return; Ralph refuses if the damsel is not found, citing his knightly oath (knighted last year by Duke Osmond in St. Laurence of Upmeads). Merchants know nothing of her; the Lord of Utterbol has not been in Goldburg for three months, and his name silences men. A merchant advises seeing the good Queen of Goldburg. The Queen, young, fair and wise, in a marble-pillared, painted palace set in gardens, hears Ralph's story and visibly loves him. In three days she gives him a letter for the Lord of Utterbol, speeds him toward Utterness (the last known town, near Utterbol and on a way to the Well), offers him refuge whatever happens, and confesses her love. Her kinsman of old founded Goldburg and was slain in a quarrel.",
+   "geography_notes": "Utterness is no great way from Utterbol and is the last town Goldburg knows of; a way to the Well runs through Utterness and by Utterbol. Hunters come to Goldburg from the mountain feet and the forests of the plain; mariners frequent it.",
+   "open_questions": [
+    "Who is Duke Osmond?",
+    "Where is Utterness?"
+   ]
+  }
+ ]
+}

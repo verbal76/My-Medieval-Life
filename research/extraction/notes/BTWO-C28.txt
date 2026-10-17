@@ -1,0 +1,34 @@
+@ BTWO-C28
+summary: After a night in the foothills and four days through well-tilled but poorly housed rolling land, the company reaches Goldburg. It is built on three hills (buttresses of a long ridge that turns a wide river), on the ridge itself, and on both flat riverbanks, all girt by a great white wall that crosses the river as a bridge; the castle rises above the lower bridge. The vaulted gate-hall leads over the bridge-hall into the Water-Street, lined with quays and palatial arcaded houses of white, red and grey stone, with river barges whose masts lower for the bridges. Many folk are ragged and beg; others are rich; scantily dressed women recall the Wheat-wearers, and rich men buy house-servants. A woman, the Queen, rules Goldburg. The hostel in the market-place has a garden court and a marble fountain, but its furnishings are ordinary.
+geo: From the mountains' feet, four days through a country of little hills and hollows to Goldburg. Goldburg straddles a wide river turned by a long ridge with three buttress hills; a great white wall surrounds it and bridges the river, very high on the plain side. The lower bridge carries the castle. The market-place lies a little back from the river in an angle of the ridge and a buttress. On the hillsides are poor post-and-pan houses, apart from the castle and the Queen's palace.
+open: Is the Goldburg river navigable to the sea? (barges are "not sea-goers")
+
+E place | Goldburg | - | walled city | Great city on three hills, a ridge and both banks of a wide river, girt by a great white wall that bridges the river; ruled by a Queen. | P002 `It was built partly on three hills, the buttresses of a long ridge which turned a wide river`
+E building | (unnamed) lower bridge-castle of Goldburg | - | bridge-castle | Vaulted bridge-hall over the river with the castle rising above it to the height of the hill towers. | P003 `above the vault of this long bridge rose up the castle, chamber on chamber`
+E feature | Water-Street of Goldburg | - | street | Street along the river with wide quays and palatial arcaded houses. | P004 `came into the Water-Street of Goldburg, where the river, with wide quays on either side thereof, ran betwixt the houses`
+E feature | (unnamed) river of Goldburg | - | river | Wide river through Goldburg, carrying barges and river-ships with lowering masts. | P004 `river-ships that might get them through the bridges and furnished with masts that might be lowered and shipped`
+E building | (unnamed) hostel of Goldburg | - | inn | Hostel in the market-place with a great garden court, fountain of coloured marble, and a vaulted, pillared hall. | P007 `amidst it was a fountain of fresh water, built in the goodliest fashion of many-coloured marble-stones`
+E building | (unnamed) great church of Goldburg | - | church | Delicate church along one side of the market-place with tall, richly adorned steeples. | P006 `the great church was all along one side of the market place`
+E person | Queen of Goldburg | the Queen | queen | Woman who rules Goldburg. | P006 `for a woman ruled in Goldburg`
+
+R Queen of Goldburg | ruler_of | Goldburg | - | BTWO-C28 | CANON/high | P006 `for a woman ruled in Goldburg`
+
+S Goldburg | distance_from | (unnamed) stream pass above the Goldburg plain | time=one night in the foothills and four days' ride; terrain=little hills, hollows and rising ground, well-tilled; cert=fixed | CANON/high | - | P002 `they rode four days through lands well-tilled, but for the most part ill-housed`
+S Goldburg | adjacent_to | (unnamed) river of Goldburg | terrain=on three hills, the ridge, and both flat banks; cert=fixed | CANON/high | the wall bridges the river | P002 `a great white wall girt it all about, which went right over the river as a bridge`
+S (unnamed) hostel of Goldburg | within | Goldburg | terrain=in an angle of the ridge and one of its buttresses, a little back from the river; cert=fixed | CANON/high | in the market-place | P006 `their hostel in the market place, which lay a little back from the river in an ingle of the ridge and one of its buttresses`
+
+T Ralph, Clement's eastward company | (unnamed) stream pass above the Goldburg plain | Goldburg | mode=horse; dur=about five days | P002 `they rode four days through lands well-tilled`
+
+F architecture | Goldburg | Water-Street houses are palaces of white, red and grey stone, arcaded like an abbey cloister, carved, with glazed windows. | CANON/high | P004 `The houses were built of white stones and red and grey; with shapely pillars to the cloister`
+F architecture | Goldburg | Above the market, hillside houses are low post-and-pan with straw, reed or shingle roofs. | CANON/high | P006 `poorly built of post and pan, and thatched with straw, or reed, or shingle`
+F society | Goldburg | Many are ragged and beg from the chapmen; others are richly dressed. | CANON/high | P005 `many of the folk were clad foully, and were haggard of countenance, and cried on the chapmen for alms`
+F society | Goldburg | Tillers and labourers are masterless, but rich men buy men and women as house-servants. | CANON/high; ctx=dialogue:Clement Chapman | P005 `rich men might and did buy both men and women for servants in their houses`
+F religion | Goldburg | The folk are somewhat wild and strange of faith for Christians. | CANON/high | P006 `albeit this folk was somewhat wild and strange of faith for Christian men`
+F transport | (unnamed) river of Goldburg | Great barges and river-ships, not sea-going, with masts lowered for bridges. | CANON/high | P004 `On the river were great barges, and other craft such as were not sea-goers`
+F household | (unnamed) hostel of Goldburg | Splendid buildings but ordinary furnishings. | CANON/high | P008 `the hangings and beds, and stools, and chairs, and other plenishing were no richer or better than might be seen in the hostelry of any good town`
+
+V main | Arrival at Goldburg | The merchant company enters Goldburg through the bridge-gate. | who=Ralph, Clement Chapman; where=Goldburg | P003 `One by one they passed through the wicket of the gate`
+
+U missing_measure | The distance from the mountains to Goldburg is given only as four days' ride. | P002 `they rode four days`
+
+O world | River-spanning walled cities with bridge-castles as a landmark settlement type. | P003 `this was naught but the lower bridge of the city`

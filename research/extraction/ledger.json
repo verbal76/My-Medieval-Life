@@ -1311,33 +1311,77 @@
    "title": "Now They Come to Goldburg",
    "body_paragraphs": 8,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 7,
+    "relations": 1,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 7,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the Goldburg river navigable to the sea? (barges are \"not sea-goers\")"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C28.txt",
+    "records": "research/extraction/chapters/BTWO-C28.json"
+   }
   },
   {
    "chapter": "BTWO-C29",
    "title": "Of Goldburg and the Queen Thereof",
    "body_paragraphs": 28,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 3,
+    "spatial": 2,
+    "travel": 0,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Who is Duke Osmond?",
+    "Where is Utterness?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C29.txt",
+    "records": "research/extraction/chapters/BTWO-C29.json"
+   }
   },
   {
    "chapter": "BTWO-C30",
    "title": "Ralph Hath Hope of Tidings Concerning the Well at the World's End",
    "body_paragraphs": 15,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 2,
+    "spatial": 2,
+    "travel": 0,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is Morfinn trustworthy?",
+    "Who is the sage near Utterness?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C30.txt",
+    "records": "research/extraction/chapters/BTWO-C30.json"
+   }
   },
   {
    "chapter": "BTWO-C31",

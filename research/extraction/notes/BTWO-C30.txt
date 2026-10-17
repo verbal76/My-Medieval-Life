@@ -1,0 +1,28 @@
+@ BTWO-C30
+summary: A man seeks Ralph: Morfinn the Minstrel, short, fat, pale with pink cheeks, long curling yellow hair, a thin red beard and blue eyes, unlike the local folk, in orange-tawny and silver. He claims to know Well-lore, the way through Utterness, and a sage near Utterness who can set seekers on the road, and says he has news of the damsel for Ralph's ear alone. He shows a three-month-old safe-conduct from Gandolf, Lord of Utterbol, sealed with the Bear upon the Castle Wall, without which the road is deadly. Ralph chooses to go with him alone rather than with an armed escort or Bull. Clement distrusts Morfinn; Ralph is drawn on by thoughts of the damsel.
+geo: Between Goldburg and Utterbol's lands lies a debatable land; no small unknown band can cross it or Utterbol's lands. They will leave by Goldburg's east gate.
+open: Is Morfinn trustworthy? || Who is the sage near Utterness?
+
+E person | Morfinn the Minstrel | Morfinn | minstrel | Short, fat, white-faced, pink-cheeked, long curling yellow hair, thin red beard, blue eyes; gaily dressed in orange-tawny laced with silver; shy, small-voiced; Clement thinks he "hath lost his manhood". | P004 `he was fat and somewhat short, white-faced and pink-cheeked, with yellow hair long and curling, and with a little thin red beard and blue eyes`; P007 `Morfinn the Minstrel`
+E person | Gandolf | Lord of Utterbol | tyrant | Name of the Lord of Utterbol on the safe-conduct. | P007 `under pain of falling into the displeasure of Gandolf, Lord of Utterbol`
+E item | (unnamed) let-pass of Utterbol | - | safe-conduct | Scroll bidding all to let Morfinn pass, under pain of Gandolf's displeasure, dated three months before. | P007 `a writing charging all men so let pass and aid Morfinn the Minstrel`
+E item | Seal of Utterbol | the Bear upon the Castle Wall | seal | Utterbol's seal: a bear upon a castle wall; none would dare forge it. | P008 `the seal of Utterbol, the Bear upon the Castle Wall`
+E person | (unnamed) sage near Utterness | - | sage | A wise man near Utterness said to set Well-seekers on the right road. | P006 `I know of a sage who dwelleth not far from the town of Utterness`
+E feature | (unnamed) debatable land between Goldburg and Utterbol | - | march | Contested land between Goldburg and Utterbol's lands. | P012 `the land debatable that lieth betwixt them and Goldburg`
+
+R Gandolf | other | Lord of Utterbol | same person | BTWO-C30 | CANON/high | P007 `Gandolf, Lord of Utterbol`
+R Morfinn the Minstrel | other | Gandolf | holds his safe-conduct | BTWO-C30 | CANON/high | P007 `charging all men so let pass and aid Morfinn the Minstrel`
+
+S (unnamed) debatable land between Goldburg and Utterbol | between | Goldburg | ctx=dialogue:Morfinn the Minstrel; cert=constrained | CANON/high | between Goldburg and Utterbol's lands | P012 `the land debatable that lieth betwixt them and Goldburg`
+S Utterness | on_route | Well at the World's End | ctx=dialogue:Morfinn the Minstrel; cert=constrained | CANON/high | - | P006 `the way thereto is through Utterness`
+
+F law | Lord of Utterbol | Without his let-pass the road to Utterness is deadly; with one even a child may pass. | CANON/high; ctx=dialogue:Morfinn the Minstrel | P007 `Thou mayst rather call it deadly, to any who is not furnished with a let-pass from the Lord of Utterbol`
+F law | Seal of Utterbol | Forging the seal would bring torments; none would dare. | CANON/high; ctx=dialogue:Clement Chapman | P008 `None would dare to counterfeit this seal, save one who was weary of life, and longed for torments`
+F military | (unnamed) debatable land between Goldburg and Utterbol | Morfinn and Ralph say no small band or even a hundred men could fight through to Utterbol; two men attract less notice. | CANON/high; ctx=dialogue:Ralph | P011 `an hundred men-at-arms would not be enough to fight a way to Utterbol`
+
+V main | Morfinn offers to guide Ralph | Morfinn shows Utterbol's let-pass and offers to lead Ralph through Utterness to a sage. | who=Ralph, Clement Chapman, Morfinn the Minstrel; where=Goldburg | P006 `I can be a shower of the way and a leader to any worthy knight`
+
+U ambiguity | Morfinn's trustworthiness: Clement scowls; the narration notes he looks innocent. | P013 `the man beheld his scowling face innocently, and took no heed of it`
+U identity | Who is the sage near Utterness? | P006 `I know of a sage who dwelleth not far from the town of Utterness`
+
+O law | Safe-conducts sealed by a regional tyrant, required to cross his lands, as an item-gate mechanic. | P007 `with such a scroll a child or a woman may wend the road unharmed`

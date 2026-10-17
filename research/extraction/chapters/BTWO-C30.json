@@ -1,0 +1,306 @@
+{
+ "entities": [
+  {
+   "name": "Morfinn the Minstrel",
+   "aliases": [
+    "Morfinn"
+   ],
+   "type": "person",
+   "subtype": "minstrel",
+   "unnamed": false,
+   "summary": "Short, fat, white-faced, pink-cheeked, long curling yellow hair, thin red beard, blue eyes; gaily dressed in orange-tawny laced with silver; shy, small-voiced; Clement thinks he \"hath lost his manhood\".",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C30-P004",
+     "q": "he was fat and somewhat short, white-faced and pink-cheeked, with yellow hair long and curling, and with a little thin red beard and blue eyes"
+    },
+    {
+     "p": "BTWO-C30-P007",
+     "q": "Morfinn the Minstrel"
+    }
+   ]
+  },
+  {
+   "name": "Gandolf",
+   "aliases": [
+    "Lord of Utterbol"
+   ],
+   "type": "person",
+   "subtype": "tyrant",
+   "unnamed": false,
+   "summary": "Name of the Lord of Utterbol on the safe-conduct.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "under pain of falling into the displeasure of Gandolf, Lord of Utterbol"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) let-pass of Utterbol",
+   "aliases": [],
+   "type": "item",
+   "subtype": "safe-conduct",
+   "unnamed": true,
+   "summary": "Scroll bidding all to let Morfinn pass, under pain of Gandolf's displeasure, dated three months before.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "a writing charging all men so let pass and aid Morfinn the Minstrel"
+    }
+   ]
+  },
+  {
+   "name": "Seal of Utterbol",
+   "aliases": [
+    "the Bear upon the Castle Wall"
+   ],
+   "type": "item",
+   "subtype": "seal",
+   "unnamed": false,
+   "summary": "Utterbol's seal: a bear upon a castle wall; none would dare forge it.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C30-P008",
+     "q": "the seal of Utterbol, the Bear upon the Castle Wall"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) sage near Utterness",
+   "aliases": [],
+   "type": "person",
+   "subtype": "sage",
+   "unnamed": true,
+   "summary": "A wise man near Utterness said to set Well-seekers on the right road.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C30-P006",
+     "q": "I know of a sage who dwelleth not far from the town of Utterness"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) debatable land between Goldburg and Utterbol",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "march",
+   "unnamed": true,
+   "summary": "Contested land between Goldburg and Utterbol's lands.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C30-P012",
+     "q": "the land debatable that lieth betwixt them and Goldburg"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Gandolf",
+   "rel": "other",
+   "b": "Lord of Utterbol",
+   "detail": "same person",
+   "when": "BTWO-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "Gandolf, Lord of Utterbol"
+    }
+   ]
+  },
+  {
+   "a": "Morfinn the Minstrel",
+   "rel": "other",
+   "b": "Gandolf",
+   "detail": "holds his safe-conduct",
+   "when": "BTWO-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "charging all men so let pass and aid Morfinn the Minstrel"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) debatable land between Goldburg and Utterbol",
+   "rel": "between",
+   "b": "Goldburg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Morfinn the Minstrel",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "between Goldburg and Utterbol's lands",
+   "refs": [
+    {
+     "p": "BTWO-C30-P012",
+     "q": "the land debatable that lieth betwixt them and Goldburg"
+    }
+   ]
+  },
+  {
+   "a": "Utterness",
+   "rel": "on_route",
+   "b": "Well at the World's End",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Morfinn the Minstrel",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C30-P006",
+     "q": "the way thereto is through Utterness"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "law",
+   "subject": "Lord of Utterbol",
+   "statement": "Without his let-pass the road to Utterness is deadly; with one even a child may pass.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Morfinn the Minstrel",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "Thou mayst rather call it deadly, to any who is not furnished with a let-pass from the Lord of Utterbol"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Seal of Utterbol",
+   "statement": "Forging the seal would bring torments; none would dare.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C30-P008",
+     "q": "None would dare to counterfeit this seal, save one who was weary of life, and longed for torments"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) debatable land between Goldburg and Utterbol",
+   "statement": "Morfinn and Ralph say no small band or even a hundred men could fight through to Utterbol; two men attract less notice.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C30-P011",
+     "q": "an hundred men-at-arms would not be enough to fight a way to Utterbol"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Morfinn offers to guide Ralph",
+   "chapter": "BTWO-C30",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "Morfinn the Minstrel"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "summary": "Morfinn shows Utterbol's let-pass and offers to lead Ralph through Utterness to a sage.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C30-P006",
+     "q": "I can be a shower of the way and a leader to any worthy knight"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Morfinn's trustworthiness: Clement scowls; the narration notes he looks innocent.",
+   "refs": [
+    {
+     "p": "BTWO-C30-P013",
+     "q": "the man beheld his scowling face innocently, and took no heed of it"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Who is the sage near Utterness?",
+   "refs": [
+    {
+     "p": "BTWO-C30-P006",
+     "q": "I know of a sage who dwelleth not far from the town of Utterness"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Safe-conducts sealed by a regional tyrant, required to cross his lands, as an item-gate mechanic.",
+   "system": "law",
+   "basis_refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "with such a scroll a child or a woman may wend the road unharmed"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C30",
+ "chapters": [
+  "BTWO-C30"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C30",
+   "paragraphs_total": 15,
+   "all_paragraphs_read": true,
+   "summary": "A man seeks Ralph: Morfinn the Minstrel, short, fat, pale with pink cheeks, long curling yellow hair, a thin red beard and blue eyes, unlike the local folk, in orange-tawny and silver. He claims to know Well-lore, the way through Utterness, and a sage near Utterness who can set seekers on the road, and says he has news of the damsel for Ralph's ear alone. He shows a three-month-old safe-conduct from Gandolf, Lord of Utterbol, sealed with the Bear upon the Castle Wall, without which the road is deadly. Ralph chooses to go with him alone rather than with an armed escort or Bull. Clement distrusts Morfinn; Ralph is drawn on by thoughts of the damsel.",
+   "geography_notes": "Between Goldburg and Utterbol's lands lies a debatable land; no small unknown band can cross it or Utterbol's lands. They will leave by Goldburg's east gate.",
+   "open_questions": [
+    "Is Morfinn trustworthy?",
+    "Who is the sage near Utterness?"
+   ]
+  }
+ ]
+}
