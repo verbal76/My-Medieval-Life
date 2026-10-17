@@ -1,0 +1,335 @@
+{
+ "entities": [
+  {
+   "name": "Whiteness",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": false,
+   "summary": "Long, straggling town of whitened pargeted timber on a steep ridge under the mountains; low walls; no great castle; more cheerful than Cheaping Knowe.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C25-P006",
+     "q": "the houses here were of timber for the most part, done over with pargeting and whitened well"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) lord of Whiteness",
+   "aliases": [],
+   "type": "person",
+   "subtype": "lord",
+   "unnamed": true,
+   "summary": "Pays tribute to Cheaping Knowe for peace; a decent lord under whom free men live well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C25-P007",
+     "q": "he paid tribute to him of Cheaping Knowe, rather for love of peace than for fear of him; for he was no ill lord"
+    }
+   ]
+  },
+  {
+   "name": "Deacon of the Chapmen",
+   "aliases": [],
+   "type": "office",
+   "subtype": "guild officer",
+   "unnamed": false,
+   "summary": "Head of the merchants of Whiteness.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the Deacon of the Chapmen of the Town"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) thrall stables",
+   "aliases": [],
+   "type": "building",
+   "subtype": "barracks",
+   "unnamed": true,
+   "summary": "Hovels and long foul houses where field-thralls are kept.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C25-P003",
+     "q": "those hovels and the long and foul houses, they are the stables wherein this kind of cattle is harboured"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) great mountains beyond Whiteness",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "mountains",
+   "unnamed": true,
+   "summary": "Huge, dark, bare, stony mountains behind Whiteness.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C25-P006",
+     "q": "they seemed very great and terrible; dark and bare and stony"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) lord of Whiteness",
+   "rel": "vassal_of",
+   "b": "(unnamed) tyrant of Cheaping Knowe",
+   "detail": "pays tribute for peace",
+   "when": "BTWO-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C25-P007",
+     "q": "he paid tribute to him of Cheaping Knowe"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Whiteness",
+   "rel": "distance_from",
+   "b": "Cheaping Knowe",
+   "direction": "",
+   "distance_text": "some fifty miles",
+   "travel_time_text": "sunset of the third day",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C25-P003",
+     "q": "It was some fifty miles thence to Whiteness"
+    },
+    {
+     "p": "BTWO-C25-P006",
+     "q": "It was not till the third day at sunset that they came to Whiteness"
+    }
+   ]
+  },
+  {
+   "a": "Whiteness",
+   "rel": "at_foot_of",
+   "b": "(unnamed) great mountains beyond Whiteness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "long steep ridge at the end of a valley",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "door of the passes to Goldburg",
+   "refs": [
+    {
+     "p": "BTWO-C25-P003",
+     "q": "which lay close underneath the mountains, and was, as it were, the door of the passes whereby men rode to Goldburg"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "from": "Cheaping Knowe",
+   "to": "Whiteness",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "three days",
+   "start_time_text": "mid-morning",
+   "end_time_text": "sunset",
+   "terrain_text": "fertile tillage and pasture, then confused hills",
+   "chapter": "BTWO-C25",
+   "refs": [
+    {
+     "p": "BTWO-C25-P002",
+     "q": "rode out a-gates of a mid-morning with banners displayed"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Bull Nosy",
+    "(unnamed) Maiden of Bourton Abbas"
+   ],
+   "from": "Whiteness",
+   "to": "(unnamed) Goldburg pass",
+   "via": [],
+   "mode": "she riding a little horse, he on foot",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C25",
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the wild man led her away toward the mountain pass that goeth to Goldburg"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "(unnamed) eastern tyrant lands",
+   "statement": "All field workers are bought or born thralls who work only under the whip; there are no free farmers or villeins.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C25-P003",
+     "q": "here be no freemen who work afield, nay, nor villeins either"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "(unnamed) eastern tyrant lands",
+   "statement": "The land between Cheaping Knowe and Whiteness is fair tillage and pasture with much cattle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C25-P003",
+     "q": "The land which they passed through was fair, both of tillage and pasture, with much cattle therein"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) eastern tyrant lands",
+   "statement": "Fair house-thralls are kept for great men's houses; field labour is a punishment.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C25-P004",
+     "q": "such goodly wares are kept for the adornment of great men's houses"
+    }
+   ]
+  },
+  {
+   "category": "architecture",
+   "subject": "Whiteness",
+   "statement": "Its walls are low because the hill is steep.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C25-P006",
+     "q": "so steep was the hill whereon the town stood, that it needed not"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Lord of Utterbol",
+   "statement": "He has not been in Whiteness for six months.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Deacon of the Chapmen",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the lord of Utterbol had not been in Whiteness these six months"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "News at Whiteness",
+   "chapter": "BTWO-C25",
+   "layer": "main",
+   "time_text": "two days after arrival",
+   "participants": [
+    "Ralph",
+    "Deacon of the Chapmen"
+   ],
+   "places": [
+    "Whiteness"
+   ],
+   "summary": "The Deacon says the wild man left Whiteness with the damsel toward the Goldburg pass.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the damsel and he alone, and she with her hands unbound and riding a little horse"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where Utterbol lies relative to Whiteness.",
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the lord of Utterbol had not been in Whiteness these six months"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Plantation-thrall landscapes (barracks, castles, no yeoman farms) as a distinct settlement pattern.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C25-P003",
+     "q": "long rows of ugly hovels"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C25",
+ "chapters": [
+  "BTWO-C25"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C25",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "The company rides about fifty miles from Cheaping Knowe to Whiteness through fertile land worked entirely by thralls housed in hovels and long foul barracks, with castles and strong-houses scattered about. Clement says a fair house-thrall like the damsel would not be sent to the fields. At sunset on the third day they reach Whiteness: a long, straggling town of whitened, pargeted timber on a steep ridge at the end of a valley, under bare, terrible mountains, with low walls and no great castle; its lord pays tribute to Cheaping Knowe for peace and is a decent lord. The Deacon of the Chapmen says the Lord of Utterbol has not been in Whiteness for six months, and that the wild man brought the damsel to market but left suddenly without selling her, leading her alone toward the Goldburg pass, she riding a little horse with hands unbound.",
+   "geography_notes": "Whiteness is about fifty miles from Cheaping Knowe (three days' ride), close under the mountains: the door of the passes to Goldburg. The last day crosses confused hills before the great mountains, which are dark, bare and stony. Whiteness sits on a long ridge at the end of a valley, with nothing green behind it but bare mountains.",
+   "open_questions": [
+    "Where is Utterbol relative to Whiteness?"
+   ]
+  }
+ ]
+}

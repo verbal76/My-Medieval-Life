@@ -1,0 +1,30 @@
+@ BTWO-C25
+summary: The company rides about fifty miles from Cheaping Knowe to Whiteness through fertile land worked entirely by thralls housed in hovels and long foul barracks, with castles and strong-houses scattered about. Clement says a fair house-thrall like the damsel would not be sent to the fields. At sunset on the third day they reach Whiteness: a long, straggling town of whitened, pargeted timber on a steep ridge at the end of a valley, under bare, terrible mountains, with low walls and no great castle; its lord pays tribute to Cheaping Knowe for peace and is a decent lord. The Deacon of the Chapmen says the Lord of Utterbol has not been in Whiteness for six months, and that the wild man brought the damsel to market but left suddenly without selling her, leading her alone toward the Goldburg pass, she riding a little horse with hands unbound.
+geo: Whiteness is about fifty miles from Cheaping Knowe (three days' ride), close under the mountains: the door of the passes to Goldburg. The last day crosses confused hills before the great mountains, which are dark, bare and stony. Whiteness sits on a long ridge at the end of a valley, with nothing green behind it but bare mountains.
+open: Where is Utterbol relative to Whiteness?
+
+E place | Whiteness | - | town | Long, straggling town of whitened pargeted timber on a steep ridge under the mountains; low walls; no great castle; more cheerful than Cheaping Knowe. | P006 `the houses here were of timber for the most part, done over with pargeting and whitened well`
+E person | (unnamed) lord of Whiteness | - | lord | Pays tribute to Cheaping Knowe for peace; a decent lord under whom free men live well. | P007 `he paid tribute to him of Cheaping Knowe, rather for love of peace than for fear of him; for he was no ill lord`
+E office | Deacon of the Chapmen | - | guild officer | Head of the merchants of Whiteness. | P008 `the Deacon of the Chapmen of the Town`
+E building | (unnamed) thrall stables | - | barracks | Hovels and long foul houses where field-thralls are kept. | P003 `those hovels and the long and foul houses, they are the stables wherein this kind of cattle is harboured`
+E feature | (unnamed) great mountains beyond Whiteness | - | mountains | Huge, dark, bare, stony mountains behind Whiteness. | P006 `they seemed very great and terrible; dark and bare and stony`
+
+R (unnamed) lord of Whiteness | vassal_of | (unnamed) tyrant of Cheaping Knowe | pays tribute for peace | BTWO-C25 | CANON/high | P007 `he paid tribute to him of Cheaping Knowe`
+
+S Whiteness | distance_from | Cheaping Knowe | dist=some fifty miles; time=sunset of the third day; cert=fixed | CANON/high | - | P003 `It was some fifty miles thence to Whiteness`; P006 `It was not till the third day at sunset that they came to Whiteness`
+S Whiteness | at_foot_of | (unnamed) great mountains beyond Whiteness | terrain=long steep ridge at the end of a valley; cert=fixed | CANON/high | door of the passes to Goldburg | P003 `which lay close underneath the mountains, and was, as it were, the door of the passes whereby men rode to Goldburg`
+
+T Ralph, Clement's eastward company | Cheaping Knowe | Whiteness | mode=horse; dur=three days; start=mid-morning; end=sunset; terrain=fertile tillage and pasture, then confused hills | P002 `rode out a-gates of a mid-morning with banners displayed`
+T Bull Nosy, (unnamed) Maiden of Bourton Abbas | Whiteness | (unnamed) Goldburg pass | mode=she riding a little horse, he on foot | P008 `the wild man led her away toward the mountain pass that goeth to Goldburg`
+
+F society | (unnamed) eastern tyrant lands | All field workers are bought or born thralls who work only under the whip; there are no free farmers or villeins. | CANON/high; ctx=dialogue:Clement Chapman | P003 `here be no freemen who work afield, nay, nor villeins either`
+F agriculture | (unnamed) eastern tyrant lands | The land between Cheaping Knowe and Whiteness is fair tillage and pasture with much cattle. | CANON/high | P003 `The land which they passed through was fair, both of tillage and pasture, with much cattle therein`
+F society | (unnamed) eastern tyrant lands | Fair house-thralls are kept for great men's houses; field labour is a punishment. | CANON/high; ctx=dialogue:Clement Chapman | P004 `such goodly wares are kept for the adornment of great men's houses`
+F architecture | Whiteness | Its walls are low because the hill is steep. | CANON/high | P006 `so steep was the hill whereon the town stood, that it needed not`
+F politics | Lord of Utterbol | He has not been in Whiteness for six months. | CANON/high; ctx=dialogue:Deacon of the Chapmen | P008 `the lord of Utterbol had not been in Whiteness these six months`
+
+V main | News at Whiteness | The Deacon says the wild man left Whiteness with the damsel toward the Goldburg pass. | time=two days after arrival; who=Ralph, Deacon of the Chapmen; where=Whiteness | P008 `the damsel and he alone, and she with her hands unbound and riding a little horse`
+
+U location | Where Utterbol lies relative to Whiteness. | P008 `the lord of Utterbol had not been in Whiteness these six months`
+
+O world | Plantation-thrall landscapes (barracks, castles, no yeoman farms) as a distinct settlement pattern. | P003 `long rows of ugly hovels`

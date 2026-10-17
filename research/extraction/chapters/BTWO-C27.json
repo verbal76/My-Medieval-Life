@@ -1,0 +1,294 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) founder of Goldburg",
+   "aliases": [
+    "the happy lord"
+   ],
+   "type": "person",
+   "subtype": "lord",
+   "unnamed": true,
+   "summary": "Lord who built Goldburg fair with craftsmen from over the mountains, meaning to drink of the Well and live long there; slain in a tumult before it was finished.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "the lord who had built it had brought from over the mountains masons and wood-wrights and artificers of all kinds"
+    },
+    {
+     "p": "BTWO-C27-P004",
+     "q": "Goldburg was not done building ere that lord was slain in a tumult"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Goldburg plain",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "plain",
+   "unnamed": true,
+   "summary": "Great plain below the mountains, rolling into downs and low hills.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "the land below them seemed but a great spreading plain with no hills rising from it"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) stream pass above the Goldburg plain",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "pass",
+   "unnamed": true,
+   "summary": "Deep pass cut through rock by a swift stream once much greater.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "a pass cleft deep through the rocks by a swift stream which had once been far greater than then"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) founder of Goldburg",
+   "rel": "other",
+   "b": "Goldburg",
+   "detail": "built the city",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "therefore had he builded this city, to be the house and home of his long-enduring joyance"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Goldburg",
+   "rel": "within",
+   "b": "(unnamed) Goldburg plain",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "on a gathering of small steep hills in the plain",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "seen far off as a bright break in the plain",
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "Goldburg and that it was built on a gathering of hills, not great, but going up steep from the plain"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Goldburg plain",
+   "rel": "visible_from",
+   "b": "(unnamed) stream pass above the Goldburg plain",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "steep ridge across the road",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "climbed up a steep ridge that lay across the road, and looking down from the top of it, beheld the open country again"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "from": "(unnamed) place of Bull Nosy's death",
+   "to": "(unnamed) stream pass above the Goldburg plain",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "morning",
+   "end_time_text": "a little after noon",
+   "terrain_text": "descending, improving wilderness",
+   "chapter": "BTWO-C27",
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "A little after noon they came out of a pass"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Goldburg",
+   "statement": "Built with great cost and skill to be fair; finished after the founder's death in the uncomely local fashion.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C27-P004",
+     "q": "what was then undone was cobbled up after the uncomely fashion of the towns thereabout"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) founder of Goldburg",
+   "statement": "Some say he found and drank of the Well; others deny it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C27-P004",
+     "q": "Now some said that he had found the Well, and drank thereof; others naysaid that"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Goldburg",
+   "statement": "Goldburg's toilers are mostly not thralls but unprotected labourers who starve and are easily replaced: \"slaves without a price\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C27-P006",
+     "q": "these poor wretches were slaves without a price"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Goldburg",
+   "statement": "The founder meant all to thrive, but there are many poor and few wealthy.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C27-P005",
+     "q": "there were many poor folk there, and few wealthy"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) stream pass above the Goldburg plain",
+   "statement": "The stream was once much greater (a cut deeper than its present flow).",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "a swift stream which had once been far greater than then"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Founding of Goldburg",
+   "chapter": "BTWO-C27",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "(unnamed) founder of Goldburg"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "summary": "A lord built Goldburg as his home for the long life he hoped the Well would give; he was slain in a tumult.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C27-P004",
+     "q": "that lord was slain in a tumult"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Whether Goldburg's founder drank of the Well.",
+   "refs": [
+    {
+     "p": "BTWO-C27-P004",
+     "q": "others naysaid that"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Contrast of chattel slavery and wage poverty as competing economic systems in neighbouring regions.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BTWO-C27-P006",
+     "q": "whereas they belonged not to a master, who must at worst feed them"
+    }
+   ]
+  },
+  {
+   "idea": "Cities founded by Well-seekers as a lore thread linking settlements to the quest.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "he deemed that he should find the Well at the World's End, and drink thereof"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C27",
+ "chapters": [
+  "BTWO-C27"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C27",
+   "paragraphs_total": 5,
+   "all_paragraphs_read": true,
+   "summary": "The search finds nothing. Descending, the wilderness improves; after noon they leave a deep pass cut by a swift stream (once much larger), climb a ridge, and see a great spreading plain with a bright break far off: Goldburg on a cluster of steep hills. Clement says Goldburg was built very fair by a lord who brought craftsmen from over the mountains, meaning to drink of the Well and live there in long joy; some say he drank, some deny it, and he was slain in a tumult before it was finished, the rest being cobbled up. His wish that all should thrive failed: Goldburg's toilers are mostly not thralls, but unsupported wage-workers without master or manor, worse off and starving, and easily replaced.",
+   "geography_notes": "Descending from the watershed: grass and bushes return; a deep pass by a swift stream that was once greater; a steep ridge across the road; below, a great spreading plain (rolling into downs and low hills on closer view) with Goldburg far off on a cluster of steep small hills, bright. From above Cheaping Knowe the mountains beyond Whiteness looked like a wall; here no such wall is seen.",
+   "open_questions": [
+    "Did Goldburg's founder drink of the Well?"
+   ]
+  }
+ ]
+}

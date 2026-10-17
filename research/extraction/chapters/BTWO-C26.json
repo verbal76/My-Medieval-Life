@@ -1,0 +1,329 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) howe of Bull Nosy",
+   "aliases": [],
+   "type": "building",
+   "subtype": "grave mound",
+   "unnamed": true,
+   "summary": "Mound Bull Shockhead heaped over his brother in the mountains.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C26-P018",
+     "q": "there was Bull Shockhead standing by the howe of his brother Bull Nosy"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Goldburg mountains",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "mountains",
+   "unnamed": true,
+   "summary": "Stony maze of rocks between Whiteness and Goldburg where nothing lives but dwarf willow.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C26-P004",
+     "q": "it was naught but a stony maze of the rocks where nothing living dwelt, and nothing grew, save now and again a little dwarf willow"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Bull Nosy",
+   "rel": "sibling_of",
+   "b": "Bull Shockhead",
+   "detail": "brother, his own mother's son",
+   "when": "BTWO-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C26-P011",
+     "q": "the dead corpse of his brother, his own mother's son"
+    }
+   ]
+  },
+  {
+   "a": "Bull Nosy",
+   "rel": "killed_by",
+   "b": "(unnamed) unknown slayer",
+   "detail": "skull cloven by a strong man with a big sword",
+   "when": "BTWO-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C26-P014",
+     "q": "this is the stroke of a strong man wielding a good weapon"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) Goldburg mountains",
+   "rel": "route_next",
+   "b": "Whiteness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "seven days",
+   "travel_mode": "",
+   "terrain_text": "stony maze",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C26-P004",
+     "q": "Seven days they rode the mountains"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) eastern slope of the Goldburg mountains",
+   "rel": "other",
+   "b": "(unnamed) Goldburg mountains",
+   "direction": "downhill, all waters run east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "watershed reached on the seventh day",
+   "refs": [
+    {
+     "p": "BTWO-C26-P005",
+     "q": "since now the way was down-hill, and all waters ran east"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company",
+    "Bull Shockhead"
+   ],
+   "from": "Whiteness",
+   "to": "(unnamed) place of Bull Nosy's death",
+   "via": [
+    "(unnamed) Goldburg mountains"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "seven days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "stony maze",
+   "chapter": "BTWO-C26",
+   "refs": [
+    {
+     "p": "BTWO-C26-P002",
+     "q": "they entered the gates of the mountains a goodly company of four score and ten"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Clement's eastward company",
+   "statement": "Clement hires the lord of Whiteness's men-at-arms and beast-servants; ninety in all.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P002",
+     "q": "Clement waged men-at-arms of the lord of the town, besides servants to look to the beasts amongst the mountains"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) Goldburg mountains",
+   "statement": "In the high cold clear air a corpse dries rather than rots.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P010",
+     "q": "in that high and clear cold air, his carcase, whistled by the wind, had dried rather than rotted"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "Kin bury their dead under a howe; blood-feud vengeance is expected.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P011",
+     "q": "I be suffered to lay my brother in earth and heap a howe over him in these mountains"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "Bull asks whether he must forgo vengeance or take blood-money (\"bear him to purse\").",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P015",
+     "q": "will my master bid me forego vengeance for my brother's slaying, or that I bear him to purse?"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Bull Nosy",
+   "statement": "He wore an iron headpiece bought at Cheaping Knowe.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P013",
+     "q": "this iron headpiece, which he will have bought at Cheaping Knowe"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) Goldburg mountains",
+   "statement": "The kindreds in these mountains are feeble.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P004",
+     "q": "whereas the kindreds thereabout were but feeble"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Discovery of Bull Nosy's body",
+   "chapter": "BTWO-C26",
+   "layer": "main",
+   "time_text": "sunset, seventh day",
+   "participants": [
+    "Ralph",
+    "Bull Shockhead",
+    "Clement Chapman"
+   ],
+   "places": [
+    "(unnamed) place of Bull Nosy's death"
+   ],
+   "summary": "The company finds the damsel's captor dead in the mountains; Ralph searches for her in vain.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P005",
+     "q": "It is a man of my kindred, even he that was leading away thy she-friend"
+    }
+   ]
+  },
+  {
+   "label": "Vision of Dorothea",
+   "chapter": "BTWO-C26",
+   "layer": "main",
+   "time_text": "night",
+   "participants": [
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) place of Bull Nosy's death"
+   ],
+   "summary": "Ralph sees her in a vision, alive and lamenting in a marble and gold chamber.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C26-P020",
+     "q": "a great chamber builded of marble and done about with gold and bright colours"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who slew Bull Nosy and took the damsel?",
+   "refs": [
+    {
+     "p": "BTWO-C26-P014",
+     "q": "this is the stroke of a strong man wielding a good weapon"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Whether Ralph's vision is true sight or longing.",
+   "refs": [
+    {
+     "p": "BTWO-C26-P020",
+     "q": "he deemed this to be a vision of what then was, rather than a memory of what had been"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Blood-feud and blood-money customs of mountain kindreds.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTWO-C26-P015",
+     "q": "or that I bear him to purse"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C26",
+ "chapters": [
+  "BTWO-C26"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C26",
+   "paragraphs_total": 19,
+   "all_paragraphs_read": true,
+   "summary": "After five days in Whiteness, Clement hires the lord's men-at-arms and servants; ninety enter the mountains. Ralph arms Bull with sword and shield. Seven days through a lifeless stony maze with dwarf willows; the local kindreds are too feeble to attack. On the seventh evening, going downhill with waters flowing east, Ralph and Bull find Bull Nosy's dried corpse under a cliff, skull cloven through an iron cap. Bull wails and vows to kill the damsel; Ralph, frantic, is tripped and bound. The captain and Clement judge the blow a strong man's with a big sword, not a woman's. Bull buries his brother under a howe and recommits to Ralph. Ralph has a vision of Dorothea alive in a gilded marble chamber.",
+   "geography_notes": "From Whiteness the Goldburg road crosses seven days of stony, barren mountain maze with dwarf willows. On the seventh day the way goes downhill and waters run east (a second watershed). A water source and cliff lie where Bull Nosy fell.",
+   "open_questions": [
+    "Who killed Bull Nosy and took the damsel? (likely Utterbol's men; not stated)"
+   ]
+  }
+ ]
+}

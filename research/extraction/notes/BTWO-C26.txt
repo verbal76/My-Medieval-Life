@@ -1,0 +1,30 @@
+@ BTWO-C26
+summary: After five days in Whiteness, Clement hires the lord's men-at-arms and servants; ninety enter the mountains. Ralph arms Bull with sword and shield. Seven days through a lifeless stony maze with dwarf willows; the local kindreds are too feeble to attack. On the seventh evening, going downhill with waters flowing east, Ralph and Bull find Bull Nosy's dried corpse under a cliff, skull cloven through an iron cap. Bull wails and vows to kill the damsel; Ralph, frantic, is tripped and bound. The captain and Clement judge the blow a strong man's with a big sword, not a woman's. Bull buries his brother under a howe and recommits to Ralph. Ralph has a vision of Dorothea alive in a gilded marble chamber.
+geo: From Whiteness the Goldburg road crosses seven days of stony, barren mountain maze with dwarf willows. On the seventh day the way goes downhill and waters run east (a second watershed). A water source and cliff lie where Bull Nosy fell.
+open: Who killed Bull Nosy and took the damsel? (likely Utterbol's men; not stated)
+
+E building | (unnamed) howe of Bull Nosy | - | grave mound | Mound Bull Shockhead heaped over his brother in the mountains. | P018 `there was Bull Shockhead standing by the howe of his brother Bull Nosy`
+E feature | (unnamed) Goldburg mountains | - | mountains | Stony maze of rocks between Whiteness and Goldburg where nothing lives but dwarf willow. | P004 `it was naught but a stony maze of the rocks where nothing living dwelt, and nothing grew, save now and again a little dwarf willow`
+
+R Bull Nosy | sibling_of | Bull Shockhead | brother, his own mother's son | BTWO-C26 | CANON/high | P011 `the dead corpse of his brother, his own mother's son`
+R Bull Nosy | killed_by | (unnamed) unknown slayer | skull cloven by a strong man with a big sword | BTWO-C26 | CANON/high | P014 `this is the stroke of a strong man wielding a good weapon`
+
+S (unnamed) Goldburg mountains | route_next | Whiteness | time=seven days; terrain=stony maze; cert=fixed | CANON/high | - | P004 `Seven days they rode the mountains`
+S (unnamed) eastern slope of the Goldburg mountains | other | (unnamed) Goldburg mountains | dir=downhill, all waters run east; cert=fixed | CANON/high | watershed reached on the seventh day | P005 `since now the way was down-hill, and all waters ran east`
+
+T Ralph, Clement's eastward company, Bull Shockhead | Whiteness | (unnamed) place of Bull Nosy's death | via=(unnamed) Goldburg mountains; mode=horse; dur=seven days; terrain=stony maze | P002 `they entered the gates of the mountains a goodly company of four score and ten`
+
+F military | Clement's eastward company | Clement hires the lord of Whiteness's men-at-arms and beast-servants; ninety in all. | CANON/high | P002 `Clement waged men-at-arms of the lord of the town, besides servants to look to the beasts amongst the mountains`
+F ecology | (unnamed) Goldburg mountains | In the high cold clear air a corpse dries rather than rots. | CANON/high | P010 `in that high and clear cold air, his carcase, whistled by the wind, had dried rather than rotted`
+F custom | (unnamed) kindred of the Bull | Kin bury their dead under a howe; blood-feud vengeance is expected. | CANON/high; ctx=dialogue:Bull Shockhead | P011 `I be suffered to lay my brother in earth and heap a howe over him in these mountains`
+F law | (unnamed) kindred of the Bull | Bull asks whether he must forgo vengeance or take blood-money ("bear him to purse"). | CANON/high; ctx=dialogue:Bull Shockhead | P015 `will my master bid me forego vengeance for my brother's slaying, or that I bear him to purse?`
+F weapons | Bull Nosy | He wore an iron headpiece bought at Cheaping Knowe. | CANON/high; ctx=dialogue:Clement Chapman | P013 `this iron headpiece, which he will have bought at Cheaping Knowe`
+F society | (unnamed) Goldburg mountains | The kindreds in these mountains are feeble. | CANON/high | P004 `whereas the kindreds thereabout were but feeble`
+
+V main | Discovery of Bull Nosy's body | The company finds the damsel's captor dead in the mountains; Ralph searches for her in vain. | time=sunset, seventh day; who=Ralph, Bull Shockhead, Clement Chapman; where=(unnamed) place of Bull Nosy's death | P005 `It is a man of my kindred, even he that was leading away thy she-friend`
+V main | Vision of Dorothea | Ralph sees her in a vision, alive and lamenting in a marble and gold chamber. | time=night; who=Ralph; where=(unnamed) place of Bull Nosy's death | P020 `a great chamber builded of marble and done about with gold and bright colours`
+
+U identity | Who slew Bull Nosy and took the damsel? | P014 `this is the stroke of a strong man wielding a good weapon`
+U ambiguity | Whether Ralph's vision is true sight or longing. | P020 `he deemed this to be a vision of what then was, rather than a memory of what had been`
+
+O society | Blood-feud and blood-money customs of mountain kindreds. | P015 `or that I bear him to purse`

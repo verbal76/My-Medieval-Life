@@ -1,0 +1,28 @@
+@ BTWO-C27
+summary: The search finds nothing. Descending, the wilderness improves; after noon they leave a deep pass cut by a swift stream (once much larger), climb a ridge, and see a great spreading plain with a bright break far off: Goldburg on a cluster of steep hills. Clement says Goldburg was built very fair by a lord who brought craftsmen from over the mountains, meaning to drink of the Well and live there in long joy; some say he drank, some deny it, and he was slain in a tumult before it was finished, the rest being cobbled up. His wish that all should thrive failed: Goldburg's toilers are mostly not thralls, but unsupported wage-workers without master or manor, worse off and starving, and easily replaced.
+geo: Descending from the watershed: grass and bushes return; a deep pass by a swift stream that was once greater; a steep ridge across the road; below, a great spreading plain (rolling into downs and low hills on closer view) with Goldburg far off on a cluster of steep small hills, bright. From above Cheaping Knowe the mountains beyond Whiteness looked like a wall; here no such wall is seen.
+open: Did Goldburg's founder drink of the Well?
+
+E person | (unnamed) founder of Goldburg | the happy lord | lord | Lord who built Goldburg fair with craftsmen from over the mountains, meaning to drink of the Well and live long there; slain in a tumult before it was finished. | P003 `the lord who had built it had brought from over the mountains masons and wood-wrights and artificers of all kinds`; P004 `Goldburg was not done building ere that lord was slain in a tumult`
+E feature | (unnamed) Goldburg plain | - | plain | Great plain below the mountains, rolling into downs and low hills. | P003 `the land below them seemed but a great spreading plain with no hills rising from it`
+E feature | (unnamed) stream pass above the Goldburg plain | - | pass | Deep pass cut through rock by a swift stream once much greater. | P003 `a pass cleft deep through the rocks by a swift stream which had once been far greater than then`
+
+R (unnamed) founder of Goldburg | other | Goldburg | built the city | backstory | CANON/high | P003 `therefore had he builded this city, to be the house and home of his long-enduring joyance`
+
+S Goldburg | within | (unnamed) Goldburg plain | terrain=on a gathering of small steep hills in the plain; ctx=dialogue:Clement Chapman; cert=fixed | CANON/high | seen far off as a bright break in the plain | P003 `Goldburg and that it was built on a gathering of hills, not great, but going up steep from the plain`
+S (unnamed) Goldburg plain | visible_from | (unnamed) stream pass above the Goldburg plain | terrain=steep ridge across the road; cert=fixed | CANON/high | - | P003 `climbed up a steep ridge that lay across the road, and looking down from the top of it, beheld the open country again`
+
+T Ralph, Clement's eastward company | (unnamed) place of Bull Nosy's death | (unnamed) stream pass above the Goldburg plain | mode=horse; start=morning; end=a little after noon; terrain=descending, improving wilderness | P003 `A little after noon they came out of a pass`
+
+F history | Goldburg | Built with great cost and skill to be fair; finished after the founder's death in the uncomely local fashion. | CANON/high; ctx=dialogue:Clement Chapman | P004 `what was then undone was cobbled up after the uncomely fashion of the towns thereabout`
+F magic | (unnamed) founder of Goldburg | Some say he found and drank of the Well; others deny it. | CANON/high; ctx=rumour | P004 `Now some said that he had found the Well, and drank thereof; others naysaid that`
+F society | Goldburg | Goldburg's toilers are mostly not thralls but unprotected labourers who starve and are easily replaced: "slaves without a price". | CANON/high; ctx=dialogue:Clement Chapman | P006 `these poor wretches were slaves without a price`
+F society | Goldburg | The founder meant all to thrive, but there are many poor and few wealthy. | CANON/high; ctx=dialogue:Clement Chapman | P005 `there were many poor folk there, and few wealthy`
+F ecology | (unnamed) stream pass above the Goldburg plain | The stream was once much greater (a cut deeper than its present flow). | CANON/high | P003 `a swift stream which had once been far greater than then`
+
+V backstory | Founding of Goldburg | A lord built Goldburg as his home for the long life he hoped the Well would give; he was slain in a tumult. | who=(unnamed) founder of Goldburg; where=Goldburg | P004 `that lord was slain in a tumult`
+
+U ambiguity | Whether Goldburg's founder drank of the Well. | P004 `others naysaid that`
+
+O economy | Contrast of chattel slavery and wage poverty as competing economic systems in neighbouring regions. | P006 `whereas they belonged not to a master, who must at worst feed them`
+O world | Cities founded by Well-seekers as a lore thread linking settlements to the quest. | P003 `he deemed that he should find the Well at the World's End, and drink thereof`

@@ -1236,33 +1236,75 @@
    "title": "The Fellowship Comes to Whiteness",
    "body_paragraphs": 7,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 2,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Where is Utterbol relative to Whiteness?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C25.txt",
+    "records": "research/extraction/chapters/BTWO-C25.json"
+   }
   },
   {
    "chapter": "BTWO-C26",
    "title": "They Ride the Mountains Toward Goldburg",
    "body_paragraphs": 19,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 2,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 6,
+    "events": 2,
+    "unresolved": 2,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who killed Bull Nosy and took the damsel? (likely Utterbol's men; not stated)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C26.txt",
+    "records": "research/extraction/chapters/BTWO-C26.json"
+   }
   },
   {
    "chapter": "BTWO-C27",
    "title": "Clement Tells of Goldburg",
    "body_paragraphs": 5,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Did Goldburg's founder drink of the Well?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C27.txt",
+    "records": "research/extraction/chapters/BTWO-C27.json"
+   }
   },
   {
    "chapter": "BTWO-C28",
