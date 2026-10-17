@@ -19,8 +19,9 @@ Output (deterministic for a given seed):
   game/assets/tiles/       the two tile atlases, copied from the archives (provenance in
                            game/assets/PROVENANCE.json, written by tools/import_game_assets.py)
 
-Tile values: atlas * 100000 + tile id (atlas 0 = paid punyworld-tiles, 1 = free overworld tiles),
--1 = empty.
+Tile values: atlas * 100000 + tile id (atlas 0 = paid punyworld-tiles, 1 = free overworld tiles,
+2 = Cozy Farm tiles), -1 = empty. Pens are fenced with Cozy Farm fence tiles; "woods" are the forest
+districts where wild animals live.
 
 Usage:
     python3 tools/build_village.py [--seed 1]
@@ -37,6 +38,8 @@ import puny_world_terrain as pwt
 PAID = "PUNY-WORLD-PAID_v1.zip"
 SAMPLE = "PUNY-WORLD-PAID_v1/Tiled/sample-{}.tmj"
 FREE = 100000           # atlas offset for the free overworld tiles
+COZY = 2 * FREE         # atlas offset for the Cozy Farm tiles (fences, gates)
+COZY_COLS = 54
 CH = 30                 # district size in tiles
 W, H = 4 * CH, 3 * CH
 OUT = REPO / "game" / "data" / "village.json"
@@ -52,6 +55,11 @@ FIELD_TILES = {"tilled": 3737, "growing": 1971, "ripe": 2851}
 FRAME = 3499                                 # wooden construction frame (build sites)
 CAMPFIRE = 5958                              # animated in the tileset (5958-5961)
 CRATE, BARREL = 3500, 3502
+# Cozy Farm tiles.png (54 columns): the wooden fence ring at columns 4-6, rows 29-31, and a closed gate
+FENCE = {"tl": 29 * 54 + 4, "t": 29 * 54 + 5, "tr": 29 * 54 + 6, "l": 30 * 54 + 4, "r": 30 * 54 + 6,
+         "bl": 31 * 54 + 4, "b": 31 * 54 + 5, "br": 31 * 54 + 6}
+GATE = 29 * 54 + 0
+PENS = ("cow", "pig", "sheep", "chicken")   # one fenced pen per kind of livestock
 
 CATS = ("ground", "path", "below", "above")
 
@@ -70,7 +78,7 @@ class Village:
         self.roof = set()           # cells under a roof (solid)
         self.solid_extra = set()
         self.ents = {"buildings": [], "stations": [], "trees": [], "deposits": [], "fields": [],
-                     "stalls": [], "plots": [], "spawns": {}, "mine": None}
+                     "stalls": [], "plots": [], "pens": [], "woods": [], "spawns": {}, "mine": None}
         self.free = pwt.load(AssetZip(pwt.ZIP))
         self.paid = AssetZip(PAID)
         self.samples = {}
@@ -248,6 +256,8 @@ class Village:
         self.place_deposits(CH, 0)
         self.forest(0, 0, CH, CH, 0.16)
         self.forest(2 * CH, 0, CH, CH, 0.15)
+        self.ents["woods"] = [{"id": "woods_w", "x": 1, "y": 1, "w": CH - 2, "h": CH - 2},
+                              {"id": "woods_e", "x": 2 * CH + 1, "y": 1, "w": CH - 2, "h": CH - 2}]
         camp = (3 * CH + 14, 12)
         self.forest(3 * CH, 0, CH, CH, 0.15, clear=[(camp[0] - 4, camp[1] - 4, 9, 9)])
         self.put("below", 0, camp[0], camp[1], tile_val(0, CAMPFIRE))
@@ -268,6 +278,8 @@ class Village:
         for i in range(2):
             homes.append(self.house(ox + 1 + i * 20, oy + 2))
         self.market(ox + 4, oy + 15)
+        for i, kind in enumerate(PENS):
+            self.pen(kind, ox + 1 + i * 7, oy + 20, 7, 6)
         # farms
         ox = 2 * CH
         for j in range(3):
@@ -329,6 +341,23 @@ class Village:
             for i in range(w):
                 self.put("path", 1, x + i, y + j, tile_val(0, FIELD_TILES["ripe"]))
 
+    def pen(self, kind, x, y, w, h):
+        """A fenced pen with a gate in the middle of the top side. The fence is solid, the gate is
+        walkable; animals stay on the inner cells."""
+        gate = (x + w // 2, y)
+        for j in range(h):
+            for i in range(w):
+                X, Y = x + i, y + j
+                edge = {(0, 0): "tl", (w - 1, 0): "tr", (0, h - 1): "bl", (w - 1, h - 1): "br"}.get((i, j))
+                if edge is None:
+                    edge = "t" if j == 0 else "b" if j == h - 1 else "l" if i == 0 else "r" if i == w - 1 else None
+                if edge is None:
+                    continue
+                self.put("below", 5, X, Y, COZY + (GATE if (X, Y) == gate else FENCE[edge]))
+        self.walkable_override.add(gate)
+        self.ents["pens"].append({"id": f"pen_{kind}", "kind": kind, "x": x, "y": y, "w": w, "h": h,
+                                  "gate": list(gate), "feed_at": [gate[0], gate[1] - 1]})
+
     def plots(self, x0, y0):
         for i in range(2):
             self.ents["plots"].append({"id": f"plot{i}", "x": x0 + 4 + i * 12, "y": y0 - 10, "w": 9, "h": 10,
@@ -357,6 +386,7 @@ class Village:
         targets += [tuple(self.ents["mine"]["yard"]), tuple(self.ents["spawns"]["bandit_camp"])]
         targets += [(f["x"] + f["w"] // 2, f["y"] + f["h"]) for f in self.ents["fields"]]
         targets += [tuple(p["door"]) for p in self.ents["plots"]]
+        targets += [tuple(p["feed_at"]) for p in self.ents["pens"]]
         hub = tuple(self.ents["spawns"]["player"])
         assert not solid[hub[1]][hub[0]], "road hub must be walkable"
         road = {hub}
@@ -424,7 +454,8 @@ class Village:
             "format": "mml-village/1", "seed": self.seed, "w": W, "h": H, "tile": 16,
             "atlases": [{"name": "paid", "image": "res://assets/tiles/punyworld-tiles.png", "columns": 220},
                         {"name": "free", "image": "res://assets/tiles/punyworld-overworld-tiles.png",
-                         "columns": free_img.width // 16}],
+                         "columns": free_img.width // 16},
+                        {"name": "cozy", "image": "res://assets/tiles/cozyfarm-tiles.png", "columns": COZY_COLS}],
             "animated": {str(CAMPFIRE): [CAMPFIRE, CAMPFIRE + 1, CAMPFIRE + 2, CAMPFIRE + 3]},
             "tiles": {"ore": ORE, "depleted_rock": DEPLETED_ROCK, "stump": STUMP, "sapling": SAPLING,
                       "field": FIELD_TILES, "frame": FRAME},
@@ -441,7 +472,8 @@ def render(data, solid=False):
     from PIL import Image
     paid = AssetZip(PAID).image("PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png").convert("RGBA")
     free = pwt.load(AssetZip(pwt.ZIP))[0].convert("RGBA")
-    sheets = [(paid, 220), (free, free.width // 16)]
+    cozy = AssetZip("CozyFarm_full_version.zip").image("full version/tiles/tiles.png").convert("RGBA")
+    sheets = [(paid, 220), (free, free.width // 16), (cozy, COZY_COLS)]
     img = Image.new("RGBA", (W * 16, H * 16), (0, 0, 0, 255))
     cache = {}
     for lay in data["layers"]:
@@ -478,7 +510,7 @@ def main():
     n = data
     print(f"wrote {OUT.relative_to(REPO)}: {len(n['buildings'])} buildings, {len(n['stations'])} stations, "
           f"{len(n['trees'])} trees, {len(n['deposits'])} deposits, {len(n['fields'])} fields, "
-          f"{len(n['stalls'])} stalls, {len(n['plots'])} plots, {len(n['road'])} road cells")
+          f"{len(n['stalls'])} stalls, {len(n['plots'])} plots, {len(n['pens'])} pens, {len(n['road'])} road cells")
     if args.preview:
         render(data, args.solid).save(args.preview)
 

@@ -23,6 +23,7 @@ func _init() -> void:
 	test_inventory()
 	test_trade_is_atomic()
 	test_population()
+	test_animals()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -75,6 +76,78 @@ func test_population() -> void:
 	print("population: ", jobs)
 
 
+## The owner's breeding rule, checked in a pen on its own: a fed pair breeds, an unfed one does
+## not, one sex alone does not, babies grow up after grow_days, and a pen never passes its cap.
+func test_animals() -> void:
+	var w := new_world()
+	var f := w.fauna
+	var pen: Dictionary = f.pen_of("pig")
+	check(not pen.is_empty() and pen.owner != -1, "the pig pen has a keeper")
+	check(f.count("woods_w", "boar") > 0 and f.count("woods_e", "rabbit") > 0, "wild boar and rabbits in the woods")
+	var s: Dictionary = GameData.b("animals")["pig"]
+	var day := 1440.0
+	# a fed pair: births once the female is due
+	for a: Animal in f.animals.duplicate():
+		if a.area == pen.id:
+			f.remove(a)
+	var m := f.spawn(pen.id, "pig", "m", null)
+	var fe := f.spawn(pen.id, "pig", "f", null)
+	m.born = w.minutes - 10 * day
+	fe.born = w.minutes - 10 * day
+	fe.next_birth = w.minutes
+	pen.trough = 100
+	f.new_day()
+	var piglets := f.count(pen.id, "pig") - 2
+	check(piglets == int(s.litter), "a fed male and female breed (%d young)" % piglets)
+	var baby: Animal = f.animals.back()
+	check(not baby.adult(w.minutes), "the young start as babies (half scale)")
+	# no second litter before breed_days
+	f.new_day()
+	check(f.count(pen.id, "pig") - 2 == piglets, "no second litter before it is due")
+	w.minutes += float(s.grow_days) * day
+	check(baby.adult(w.minutes), "babies grow up after %d days" % int(s.grow_days))
+	# unfed: no births, and starvation after animal_starve_days
+	for a: Animal in f.animals.duplicate():
+		if a.area == pen.id:
+			f.remove(a)
+	m = f.spawn(pen.id, "pig", "m", null)
+	fe = f.spawn(pen.id, "pig", "f", null)
+	m.born = w.minutes - 10 * day
+	fe.born = w.minutes - 10 * day
+	fe.next_birth = w.minutes
+	pen.trough = 0
+	f.new_day()
+	check(f.count(pen.id, "pig") == 2, "an unfed pair does not breed")
+	for i in int(GameData.b("animal_starve_days")):
+		f.new_day()
+	check(f.count(pen.id, "pig") == 0, "animals left unfed starve")
+	# one sex alone does not breed
+	for i in 2:
+		var g := f.spawn(pen.id, "pig", "f", null)
+		g.born = w.minutes - 10 * day
+		g.next_birth = w.minutes
+	pen.trough = 100
+	f.new_day()
+	check(f.count(pen.id, "pig") == 2, "females without a male do not breed")
+	# the cap holds
+	var lone := f.spawn(pen.id, "pig", "m", null)
+	lone.born = w.minutes - 10 * day
+	for i in 30:
+		w.minutes += day
+		pen.trough = 100
+		f.new_day()
+	check(f.count(pen.id, "pig") <= int(s.pen_cap), "the pen never passes its cap (%d)" % f.count(pen.id, "pig"))
+	# meat: an adult gives its meat and hide, a baby half the meat
+	var adult := f.spawn(pen.id, "pig", "m", null)
+	adult.born = w.minutes - 10 * day
+	var bag := f.kill(adult)
+	check(bag.count("meat") == int(s.meat) and bag.count("hide") == int(s.hide), "an adult becomes meat and hide")
+	var young := f.spawn(pen.id, "pig", "f", null)
+	bag = f.kill(young)
+	check(bag.count("meat") == maxi(1, int(s.meat) / 2) and not bag.has("hide"), "a young animal gives half the meat")
+	w.dispose()
+
+
 func test_simulation(days: int) -> void:
 	var w := new_world()
 	var coins0 := w.total_coins()
@@ -106,6 +179,8 @@ func test_simulation(days: int) -> void:
 	check(c.alive_villagers >= 90, "most villagers alive after %d days (%d)" % [days, c.alive_villagers])
 	check(int(c.made.get("iron_bar", 0)) + int(c.made.get("pickaxe", 0)) + int(c.made.get("axe", 0)) > 0, "smith produced something")
 	check(c.lost == 0, "nobody lost (no path) at the end")
+	for k in ["cow", "pig", "sheep", "chicken", "boar", "rabbit"]:
+		check(int(c.animals.get(k, 0)) >= 2, "%s still kept or living wild after %d days (%d)" % [k, days, int(c.animals.get(k, 0))])
 	print("deaths: ", deaths)
 	print("last events:")
 	for l in w.log_lines.slice(-25):
@@ -133,7 +208,10 @@ func _census(w: World) -> Dictionary:
 	var ore := 0
 	for d in w.deposits:
 		ore += int(d.amount)
-	return {"alive_villagers": alive, "hungry": hungry, "lost": lost, "ore_left": ore, "deer": w.deer,
+	var beasts := {}
+	for a: Animal in w.fauna.animals:
+		beasts[a.species] = int(beasts.get(a.species, 0)) + 1
+	return {"alive_villagers": alive, "hungry": hungry, "lost": lost, "ore_left": ore, "animals": beasts,
 		"coins": w.total_coins(), "made": made, "doing": doing}
 
 
@@ -152,3 +230,13 @@ func test_save_round_trip() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(d2))
 	check(JSON.stringify(w3.to_dict()) == d2, "load -> save -> load -> save is stable")
+	check(w2.fauna.animals.size() == w.fauna.animals.size(), "same animals after load")
+	# a save from before animals (save_version 1, with the old deer count) still loads
+	var old: Dictionary = JSON.parse_string(text)
+	old.erase("fauna")
+	old.save_version = 1
+	old.deer = 30
+	var w4 := World.new()
+	w4.load_dict(VillageMap.load_default(), old)
+	check(w4.npcs.size() == w.npcs.size() and w4.fauna.animals.size() > 0, "a version 1 save loads and gets its animals")
+	check(w4.fauna.pen_of("cow").owner != -1, "pens get keepers after loading a version 1 save")

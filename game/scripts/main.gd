@@ -13,6 +13,7 @@ var above: Node2D
 var camera: Camera2D
 var ui: GameUI
 var sprites := {}              # npc id -> ActorSprite
+var animal_sprites := {}       # animal id -> AnimalSprite
 var player_sprite: ActorSprite
 var loot_nodes: Array = []
 var projectiles: Array = []    # {node, pos, dir, left}
@@ -61,6 +62,7 @@ func _ready() -> void:
 		# fast-forward the simulation (game minutes) for screenshots of the living village
 		var steps := int(shot_advance / float(GameData.b("game_minutes_per_second")) / 0.5)
 		for k in steps:
+			world.player.hunger = 100.0          # the camera's stand-in does not starve while it waits
 			world.update(0.5)
 		if shot_warp != Vector2.INF:
 			world.player.pos = shot_warp
@@ -128,7 +130,7 @@ func new_game() -> void:
 func continue_game() -> void:
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
 	var d = JSON.parse_string(text)
-	if not d is Dictionary or int(d.get("save_version", 0)) != 1:
+	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2]:
 		ui.message("The save file could not be read; it was kept unchanged. Starting a new game.")
 		new_game()
 		return
@@ -156,6 +158,7 @@ func _clear_world() -> void:
 		if c != ui:
 			c.queue_free()
 	sprites.clear()
+	animal_sprites.clear()
 	loot_nodes.clear()
 	projectiles.clear()
 
@@ -277,7 +280,29 @@ func _sync_sprites() -> void:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
 	camera.position = p.pos * T
+	_sync_animals()
 	_sync_loot()
+
+
+func _sync_animals() -> void:
+	var cam := camera.get_screen_center_position() / T
+	var seen := {}
+	for a: Animal in world.fauna.animals:
+		seen[a.id] = true
+		var s: AnimalSprite = animal_sprites.get(a.id)
+		if s == null:
+			s = AnimalSprite.new()
+			s.setup(a)
+			actors.add_child(s)
+			animal_sprites[a.id] = s
+		s.visible = a.pos.distance_to(cam) < 30.0
+		if s.visible:
+			s.position = a.pos * T
+			s.show_state(a, world.minutes, get_process_delta_time())
+	for id in animal_sprites.keys():
+		if not seen.has(id):
+			animal_sprites[id].queue_free()
+			animal_sprites.erase(id)
 
 
 func _sync_loot() -> void:
@@ -369,7 +394,14 @@ func _find_target() -> void:
 		var d: float = world.loot[i].pos.distance_to(probe)
 		if d < bd:
 			bd = d
-			best = {"kind": "loot", "i": i, "label": "Search %s's belongings" % world.loot[i].from}
+			var from: String = world.loot[i].from
+			best = {"kind": "loot", "i": i, "label": ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}
+	for a: Animal in world.fauna.near(probe, 1.2):
+		var d := a.pos.distance_to(probe)
+		if d < bd:
+			bd = d
+			var what := "%s (%s%s)" % [a.label().to_lower(), "young, " if not a.adult(world.minutes) else "", "male" if a.sex == "m" else "female"]
+			best = {"kind": "animal", "animal": a, "label": ("A " if a.wild() else "The keeper's ") + what + (": attack to hunt it" if a.wild() else "")}
 	var c := Vector2i(floori(probe.x), floori(probe.y))
 	if best.is_empty():
 		for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
@@ -393,6 +425,11 @@ func _find_target() -> void:
 			if r.has_point(p.pos):
 				var lab := "Building plot (%d coins)" % int(pl.price) if pl.owner == "" else ("Your building site" if not pl.site.get("done", false) else "Your house")
 				best = {"kind": "plot", "plot": pl, "label": lab}
+		for id in world.fauna.pens:
+			var pen: Dictionary = world.fauna.pens[id]
+			var fa := Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
+			if fa.distance_to(p.pos) < 1.3:
+				best = {"kind": "pen", "pen": pen, "label": "%s pen: trough %d wheat (they eat %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, int(pen.trough), world.fauna.daily_need(pen)]}
 		if p.home != "" and world.buildings.has(p.home):
 			var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
 			if door.distance_to(p.pos) < 1.3:
@@ -416,12 +453,14 @@ func interact() -> void:
 			ui.show_talk(target.npc)
 		"loot":
 			var l: Dictionary = world.loot[target.i]
+			var taken: int = l.inv.total()
 			for id in l.inv.ids():
 				var n: int = l.inv.count(id)
 				if p.inv.add(id, n):
 					l.inv.remove(id, n)
+			taken -= l.inv.total()
 			p.coins += int(l.coins)
-			ui.message("You take %d coins and %d items." % [int(l.coins), 0])
+			ui.message("You take %d coins and %d items." % [int(l.coins), taken])
 			l.coins = 0
 			if l.inv.total() == 0:
 				world.loot.remove_at(target.i)
@@ -465,6 +504,11 @@ func interact() -> void:
 					_xp("woodcutting", 12))
 		"station":
 			ui.show_craft(target.id)
+		"pen":
+			var put := world.fauna.feed(target.pen, p.inv, 5)
+			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
+		"animal":
+			ui.message("Attack (Space) to hunt it." if target.animal.wild() else "These belong to the keeper. Killing them is theft.")
 		"plot":
 			ui.show_build(target.plot)
 		"home":
@@ -516,7 +560,28 @@ func attack() -> void:
 	for n: NPC in world.near(probe, 1.1):
 		_hit(n, p.damage())
 		_xp("combat", 4)
-		break
+		return
+	for a: Animal in world.fauna.near(probe, 1.1):
+		_hit_animal(a, p.damage())
+		return
+
+
+## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing
+## livestock is theft from its keeper, a crime like attacking a villager.
+func _hit_animal(a: Animal, dmg: float) -> void:
+	a.hp -= dmg
+	_xp("combat", 2)
+	if a.hp > 0.0:
+		return
+	var keeper: NPC = null
+	if not a.wild():
+		keeper = world.npc(int(world.fauna.pens[a.area].owner))
+	var what := a.label().to_lower()
+	var bag: Inventory = world.fauna.kill(a)
+	world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what})
+	if keeper != null:
+		_crime(keeper)
+		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
 
 
 func _hit(n: NPC, dmg: float) -> void:
@@ -569,11 +634,16 @@ func _projectiles_step(delta: float) -> void:
 		pr.node.position = pr.pos * T
 		pr.node.rotation += delta * 12.0
 		var hit := false
+		var dmg := 14.0 * (1.5 if world.player.level("magic") >= 3 else 1.0)
 		for n: NPC in world.near(pr.pos, 0.6):
-			var dmg := 14.0 * (1.5 if world.player.level("magic") >= 3 else 1.0)
 			_hit(n, dmg)
 			hit = true
 			break
+		if not hit:
+			for a: Animal in world.fauna.near(pr.pos, 0.6):
+				_hit_animal(a, dmg)
+				hit = true
+				break
 		if hit or pr.left <= 0.0 or map.is_solid(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
 			pr.node.queue_free()
 			projectiles.erase(pr)

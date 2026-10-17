@@ -10,10 +10,16 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/characters/player_NN.png
     game/assets/characters/guard_NN.png
     game/assets/icons/<item>.png                     16x16 Survival RPG Icons.zip, one icon per item
+    game/assets/tiles/cozyfarm-tiles.png             CozyFarm_full_version.zip (fences, gates)
+    game/assets/animals/<species>.png                CozyFarm_full_version.zip (livestock, bunnies) and
+                                                     PunyMonsters.zip (boars)
     game/assets/PROVENANCE.json                      source, path and transformation of every file
 
 Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E, NE, N, NW, W,
 SW), columns as listed in tools/puny_chargen.py ANIMS.
+
+Cozy Farm animal sheets are 4 frames x 5 rows (down, up, left, right, sleep), square frames of the size
+in the pack's info.txt; Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
 
 Usage:
     python3 tools/import_game_assets.py
@@ -29,6 +35,21 @@ import puny_world_terrain as pwt
 OUT = REPO / "game" / "assets"
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
 ICON_ZIP = "16x16 Survival RPG Icons.zip"
+COZY_ZIP = "CozyFarm_full_version.zip"
+MONSTER_ZIP = "PunyMonsters.zip"
+# game species -> (archive, member)
+ANIMALS = {
+    "cow": (COZY_ZIP, "full version/animals/cow animation.png"),
+    "cow_brown": (COZY_ZIP, "full version/animals/cow_brown animation.png"),
+    "pig": (COZY_ZIP, "full version/animals/pig animation.png"),
+    "sheep": (COZY_ZIP, "full version/animals/sheep animation.png"),
+    "chicken": (COZY_ZIP, "full version/animals/chicken animation.png"),
+    "chicken_brown": (COZY_ZIP, "full version/animals/chicken_brown animation.png"),
+    "rabbit": (COZY_ZIP, "full version/animals/bunny_animations.png"),
+    "rabbit_grey": (COZY_ZIP, "full version/animals/bunny_grey animation.png"),
+    "boar": (MONSTER_ZIP, "PunyMonsters/Brown-Boar-32x32.png"),
+    "boar_grey": (MONSTER_ZIP, "PunyMonsters/Dirty-Gray-Boar-32x32.png"),
+}
 # item id -> icon file in the survival pack (variant numbers chosen for the metal or colour)
 ICONS = {
     "copper_ore": "Metal/Metal-Ore-01", "iron_ore": "Metal/Metal-Ore-02", "gold_ore": "Metal/Metal-Ore-08",
@@ -100,6 +121,15 @@ def main():
         dest = icons / f"{item}.png"
         dest.write_bytes(iz.read(member))
         record(dest, ICON_ZIP, member, "copied unchanged")
+    member = "full version/tiles/tiles.png"
+    (tiles / "cozyfarm-tiles.png").write_bytes(AssetZip(COZY_ZIP).read(member))
+    record(tiles / "cozyfarm-tiles.png", COZY_ZIP, member, "copied unchanged")
+    animals = OUT / "animals"
+    animals.mkdir(parents=True, exist_ok=True)
+    for species, (zname, member) in sorted(ANIMALS.items()):
+        dest = animals / f"{species}.png"
+        dest.write_bytes(AssetZip(zname).read(member))
+        record(dest, zname, member, "copied unchanged")
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

@@ -6,7 +6,8 @@ marked *Proposed* until the owner approves it.
 
 | Date | Decision | By | Notes |
 |---|---|---|---|
-| 2026-10-17 | Animal breeding: one male and one female of a species reproduce as long as they are fed; babies show at half scale and switch to full scale at a set age | Owner | Owner message with the Cozy Farm pack. Open: the feeding rule, the litter size, the time between births, the growing age, and whether animals are livestock, decoration or huntable (asked, not yet answered) |
+| 2026-10-17 | Animal breeding: one male and one female of a species reproduce as long as they are fed; babies show at half scale and switch to full scale at a set age | Owner | Owner message with the Cozy Farm pack. The numbers (feed, litter, time between births, growing age) are agent proposals in `game/data/balance.json`, see `docs/BUILD_DECISIONS.md` |
+| 2026-10-17 | Farm animals are livestock that become meat; wild animals live in the woods and are hunted for meat | Owner | Owner answer: "not just decoration, they become meat" |
 | 2026-10-17 | Living world: an interdependent production economy with real movement of goods and money; persistent NPCs with occupations, inventories and finances; persistent consequences of robbery and death; productive and criminal paths | Owner | `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` §2 "established intent". Its other proposals stay open (U20). Review: `docs/LIVING_WORLD_ALIGNMENT.md` |
 | 2026-10-17 | Adopt the simulation tier names Detailed / Abstract / Dormant | Agent | Aligns H §7 with the living-world document §11 |
 | 2026-10-17 | The game's world is built on William Morris's *The Well at the World's End*; the novel's story is the world's history, not the player's quest | Owner | Master design directive §1, §15 |

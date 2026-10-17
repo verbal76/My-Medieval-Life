@@ -25,8 +25,6 @@
   ],
   "field_grow_days": 2,
   "field_yield": 60,
-  "deer_population": 30,
-  "deer_regrow_per_day": 4,
   "caravan_every_days": 2,
   "caravan_coins": 600,
   "guard_wage_per_day": 6,
@@ -35,7 +33,7 @@
   "carry_logs": 6,
   "mine_minutes": 25,
   "chop_minutes": 40,
-  "hunt_minutes": 180,
+  "hunt_minutes": 40,
   "plot_price": 60,
   "house_cost": {
     "plank": 30,
@@ -48,5 +46,158 @@
   "tax_threshold": 60,
   "tax_rate": 0.15,
   "repairs_budget_share": 0.4,
-  "relief_coins_per_member": 2
+  "relief_coins_per_member": 2,
+  "animal_starve_days": 4,
+  "animals": {
+    "_note": "Owner rule: a fed male and female breed; babies are half scale until grown; animals become meat. The numbers are agent proposals (docs/BUILD_DECISIONS.md). start = [males, females] per pen or per woods; keep = breeding adults that hunters and keepers leave; feed = wheat per day.",
+    "cow": {
+      "name": "Cows",
+      "kind": "livestock",
+      "skins": [
+        "cow",
+        "cow_brown"
+      ],
+      "frame": 24,
+      "layout": "cozy",
+      "hp": 30,
+      "speed": 0.8,
+      "feed": 2,
+      "grow_days": 6,
+      "breed_days": 6,
+      "litter": 1,
+      "meat": 6,
+      "hide": 1,
+      "start": [
+        1,
+        2
+      ],
+      "pen_cap": 6,
+      "keep": 2,
+      "one": "cow"
+    },
+    "pig": {
+      "name": "Pigs",
+      "kind": "livestock",
+      "skins": [
+        "pig"
+      ],
+      "frame": 20,
+      "layout": "cozy",
+      "hp": 20,
+      "speed": 0.9,
+      "feed": 1,
+      "grow_days": 4,
+      "breed_days": 4,
+      "litter": 2,
+      "meat": 4,
+      "hide": 1,
+      "start": [
+        1,
+        2
+      ],
+      "pen_cap": 8,
+      "keep": 2,
+      "one": "pig"
+    },
+    "sheep": {
+      "name": "Sheep",
+      "kind": "livestock",
+      "skins": [
+        "sheep"
+      ],
+      "frame": 17,
+      "layout": "cozy",
+      "hp": 15,
+      "speed": 0.9,
+      "feed": 1,
+      "grow_days": 4,
+      "breed_days": 5,
+      "litter": 1,
+      "meat": 3,
+      "hide": 1,
+      "start": [
+        1,
+        2
+      ],
+      "pen_cap": 8,
+      "keep": 2,
+      "one": "sheep"
+    },
+    "chicken": {
+      "name": "Chickens",
+      "kind": "livestock",
+      "skins": [
+        "chicken",
+        "chicken_brown"
+      ],
+      "frame": 16,
+      "layout": "cozy",
+      "hp": 5,
+      "speed": 1.2,
+      "feed": 1,
+      "grow_days": 2,
+      "breed_days": 3,
+      "litter": 2,
+      "meat": 1,
+      "hide": 0,
+      "start": [
+        1,
+        3
+      ],
+      "pen_cap": 12,
+      "keep": 3,
+      "one": "chicken"
+    },
+    "boar": {
+      "name": "Wild boar",
+      "kind": "wild",
+      "skins": [
+        "boar",
+        "boar_grey"
+      ],
+      "frame": 32,
+      "layout": "puny",
+      "hp": 25,
+      "speed": 1.0,
+      "grow_days": 5,
+      "breed_days": 5,
+      "litter": 2,
+      "meat": 4,
+      "hide": 1,
+      "start": [
+        2,
+        3
+      ],
+      "woods_cap": 14,
+      "keep": 2,
+      "flee": 0.0,
+      "one": "wild boar"
+    },
+    "rabbit": {
+      "name": "Rabbits",
+      "kind": "wild",
+      "skins": [
+        "rabbit",
+        "rabbit_grey"
+      ],
+      "frame": 17,
+      "layout": "cozy",
+      "hp": 4,
+      "speed": 1.6,
+      "grow_days": 2,
+      "breed_days": 3,
+      "litter": 2,
+      "meat": 1,
+      "hide": 0,
+      "start": [
+        2,
+        3
+      ],
+      "woods_cap": 16,
+      "keep": 2,
+      "flee": 3.5,
+      "one": "rabbit"
+    }
+  },
+  "trader_cash_floor": 15
 }

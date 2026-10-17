@@ -211,10 +211,62 @@ func _run() -> void:
 			loot_found = true
 	check(loot_found, "the bandit dropped what they actually carried")
 
-	# 7. economy invariants survive all of the above
+	# 7. animals: hunt a wild boar with the sword, take its meat, feed a pen, and killing livestock is a crime
+	var boar: Animal = null
+	for a: Animal in w.fauna.animals:
+		if a.species == "boar" and a.adult(w.minutes):
+			boar = a
+			break
+	check(boar != null, "a wild boar in the woods")
+	var meat0 := p.inv.count("meat")
+	var blows := 0
+	while boar.alive and blows < 40:
+		p.attack_cd = 0.0
+		p.pos = boar.pos + Vector2(-0.9, 0)
+		main.player_sprite.face(Vector2(1, 0))
+		main.attack()
+		blows += 1
+	check(not boar.alive, "hunted the boar in %d blows" % blows)
+	var carcass := -1
+	for i in w.loot.size():
+		if w.loot[i].from == "the wild boar":
+			carcass = i
+	check(carcass >= 0, "the boar left its carcass")
+	if carcass >= 0:
+		main.target = {"kind": "loot", "i": carcass}
+		main.interact()
+	check(p.inv.count("meat") == meat0 + int(GameData.b("animals").boar.meat) and p.inv.has("hide"), "took the boar's meat and hide (meat %d)" % p.inv.count("meat"))
+	var pen: Dictionary = w.fauna.pen_of("sheep")
+	var trough0 := int(pen.trough)
+	p.inv.add("wheat", 5)
+	p.pos = Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
+	main._find_target()
+	check(main.target.get("kind", "") == "pen", "standing at the sheep pen's gate")
+	main.interact()
+	check(int(pen.trough) == trough0 + 5, "fed the sheep 5 wheat")
+	var sheep: Animal = null
+	for a: Animal in w.fauna.animals:
+		if a.area == pen.id:
+			sheep = a
+	var keeper := w.npc(int(pen.owner))
+	keeper.target = -1
+	for i in 20:
+		if not sheep.alive:
+			break
+		p.attack_cd = 0.0
+		p.pos = sheep.pos + Vector2(-0.9, 0)
+		main.player_sprite.face(Vector2(1, 0))
+		main.attack()
+	check(not sheep.alive and keeper.target == -2, "killing the keeper's sheep is a crime: %s comes after you" % keeper.name)
+	keeper.target = -1
+	for g: NPC in w.npcs:
+		if g.target == -2:
+			g.target = -1
+
+	# 8. economy invariants survive all of the above
 	check(w.total_coins() == coins0 + w.coin_sources, "coins conserved through the player's actions")
 
-	# 8. permadeath and the heir
+	# 9. permadeath and the heir
 	var gen := p.generation
 	w.damage_player(9999, "test")
 	check(not w.player.alive, "the player can die")

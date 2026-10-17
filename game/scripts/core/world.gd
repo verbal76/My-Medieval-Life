@@ -5,7 +5,7 @@ extends RefCounted
 ##
 ## Invariants (tested in tests/run_tests.gd):
 ##  - coins are only created by the explicit caravan source and never destroyed;
-##  - items only appear through extraction (mining, felling, hunting, harvest) or recipes that
+##  - items only appear through extraction (mining, felling, hunting, slaughter, harvest) or recipes that
 ##    consume their inputs, and only vanish by being eaten, used up in a recipe or a building,
 ##    or worn out;
 ##  - a deposit never yields more than its amount; dead people stay dead.
@@ -32,7 +32,7 @@ var deposits: Array = []           # {x, y, ore, amount}
 var fields: Array = []             # {id, x, y, w, h, state, ready, owner}
 var plots: Array = []              # {id, x, y, w, h, door, price, owner, site}
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
-var deer := 30
+var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var player := PlayerState.new()
 var coin_sources := 0              # coins that entered the village (caravan)
 var log_lines: Array = []
@@ -82,9 +82,11 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		pd.site = {}
 		plots.append(pd)
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
-	deer = int(GameData.b("deer_population"))
 	_guard_posts()
 	Population.populate(self)
+	fauna = Fauna.new(self)
+	fauna.populate()
+	_assign_keepers()
 	var sp = m.data.spawns.player
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	player.coins = int(GameData.b("start_coins_player"))
@@ -92,6 +94,21 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	note("Day 1 begins in the village.")
+
+
+## Each pen gets a keeper: the farmers in id order, one pen each, and a start of feed in the trough.
+func _assign_keepers() -> void:
+	var farmers := []
+	for n: NPC in npcs:
+		if n.alive and n.job == "farmer":
+			farmers.append(n)
+	var ids := fauna.pens.keys()
+	ids.sort()
+	for i in ids.size():
+		var pen: Dictionary = fauna.pens[ids[i]]
+		if i < farmers.size():
+			pen.owner = farmers[i].id
+		pen.trough = fauna.daily_need(pen) * 2
 
 
 ## Patrol points along the village roads, away from the bandits' woods.
@@ -144,6 +161,7 @@ func update(real_dt: float) -> void:
 			if n.tick_acc >= 0.5:
 				_update_npc(n, n.tick_acc)
 				n.tick_acc = 0.0
+	fauna.update(real_dt)
 	_update_player(real_dt, gm)
 
 
@@ -175,7 +193,7 @@ func _new_day() -> void:
 		if f.state == "growing" and minutes >= f.ready:
 			f.state = "ripe"
 			_field_tiles(f)
-	deer = mini(deer + int(GameData.b("deer_regrow_per_day")), int(GameData.b("deer_population")))
+	fauna.new_day()
 	var cold := 0
 	for hh in households:
 		if not hh.pantry.remove("log"):
@@ -589,6 +607,7 @@ func deliver(p: Dictionary, inv: Inventory) -> bool:
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
 	brain = null
+	fauna = null
 
 
 # ---------------------------------------------------------------- save / load ----------------
@@ -605,10 +624,10 @@ func to_dict() -> Dictionary:
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
 	return {
-		"save_version": 1, "format": "mml-save/1", "seed": seed, "minutes": minutes,
+		"save_version": 2, "format": "mml-save/2", "seed": seed, "minutes": minutes,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
-		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "deer": deer,
+		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "log": log_lines,
 		"sage_id": sage_id, "reeve_id": reeve_id,
 	}
@@ -631,7 +650,6 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	deposits = d.deposits
 	fields = d.fields
 	plots = d.plots
-	deer = int(d.deer)
 	coin_sources = int(d.coin_sources)
 	log_lines = d.log
 	sage_id = int(d.sage_id)
@@ -647,6 +665,14 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	fauna = Fauna.new(self)
+	if d.has("fauna"):
+		fauna.load_dict(d.fauna)
+	else:
+		# save_version 1 (before animals): the deer count is dropped and the pens and woods are
+		# stocked as in a new game. Nothing the player owned is lost.
+		fauna.populate()
+		_assign_keepers()
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
 	# re-apply world changes to the collision map

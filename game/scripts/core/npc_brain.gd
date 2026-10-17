@@ -373,10 +373,12 @@ func _cook(n: NPC) -> bool:
 
 
 func _farmer(n: NPC) -> bool:
+	if _keeper(n):
+		return true
 	var f := _field(n.workplace)
 	if f.is_empty():
 		return false
-	if n.inv.count("wheat") >= 8 and _buyer_for(n, "wheat") != null:
+	if n.inv.count("wheat") - reserve(n, "wheat") >= 8 and _buyer_for(n, "wheat") != null:
 		return _plan_sell(n, "wheat")
 	var spot := Vector2i(int(f.x) + w.rng.randi_range(0, int(f.w) - 1), int(f.y) + int(f.h))
 	match f.state:
@@ -387,23 +389,83 @@ func _farmer(n: NPC) -> bool:
 			n.doing = "sowing"
 			n.plan = [go(spot), work(45, "sow", {"field": f.id}, "work")]
 		_:
-			if n.inv.has("wheat") and _buyer_for(n, "wheat") != null:
+			if n.inv.count("wheat") > reserve(n, "wheat") and _buyer_for(n, "wheat") != null:
 				return _plan_sell(n, "wheat")
 			n.doing = "tending the field"
 			n.plan = [go(spot), work(60, "", {}, "work")]
 	return true
 
 
+## A farmer who keeps a pen feeds it from their wheat and slaughters what the pen cannot hold.
+func _keeper_pen(n: NPC) -> Dictionary:
+	for id in w.fauna.pens:
+		if w.fauna.pens[id].owner == n.id:
+			return w.fauna.pens[id]
+	return {}
+
+
+## Stock an NPC holds back instead of selling: a keeper keeps four days of feed for the pen.
+func reserve(n: NPC, id: String) -> int:
+	if id != "wheat" or n.job != "farmer":
+		return 0
+	var pen := _keeper_pen(n)
+	return 0 if pen.is_empty() else w.fauna.daily_need(pen) * 4
+
+
+func _keeper(n: NPC) -> bool:
+	var pen := _keeper_pen(n)
+	if pen.is_empty():
+		return false
+	if n.inv.has("meat") or n.inv.has("hide"):
+		var buyer := _buyer_for(n, "meat" if n.inv.has("meat") else "hide")
+		if buyer != null:
+			return _plan_sell(n, "meat" if n.inv.has("meat") else "hide")
+	var at := Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))
+	var need := w.fauna.daily_need(pen)
+	if int(pen.trough) < need * 2:
+		var feed_step := work(15, "feed_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))
+		n.doing = "feeding the %s" % GameData.b("animals")[pen.kind].name.to_lower()
+		if n.inv.has("wheat"):
+			n.plan = [go(at), feed_step]
+			return true
+		# no grain in hand: the household's store first, then buy feed
+		var pantry: Inventory = w.households[n.household].pantry
+		if pantry.has("wheat"):
+			n.plan = [go(w.building_door(n.home)), doit("take_pantry", {"item": "wheat", "qty": need * 3}), go(at), feed_step]
+			return true
+		var qty := need * 3
+		for o: NPC in w.npcs:
+			if o.alive and o != n and not o.hidden and (o.job == "farmer" or buy_role(o) == "merchant_food") \
+					and o.inv.count("wheat") - reserve(o, "wheat") >= qty and n.coins >= w.sell_price(o, "wheat") * qty:
+				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": qty}), go(at), feed_step]
+				return true
+		# no feed to be had and not enough for tomorrow morning: cull beyond the breeding stock and
+		# sell the meat for feed money
+		var cull: Animal = w.fauna.surplus(pen, true) if int(pen.trough) < need else null
+		if cull != null:
+			once("cull_%d_%d" % [n.id, w.day()], "%s %s has no feed for the %s and culls one." % [n.name, n.family, GameData.b("animals")[pen.kind].name.to_lower()])
+			n.doing = "culling a %s" % pen.kind
+			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cull.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+			return true
+	var spare: Animal = w.fauna.surplus(pen)
+	if spare != null:
+		n.doing = "slaughtering a %s" % pen.kind
+		n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": spare.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+		return true
+	return false
+
+
 func _hunter(n: NPC) -> bool:
-	if n.inv.count("meat") >= 3 or n.inv.count("hide") >= 2:
+	if n.inv.count("meat") >= 4 or n.inv.count("hide") >= 2:
 		return _plan_sell_all(n)
-	if w.deer <= 8:
-		n.doing = "letting the deer recover"
+	var prey: Animal = w.fauna.nearest_game(n.pos)
+	if prey == null:
+		n.doing = "letting the game recover"
 		n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(120, "", {}, "idle")]
 		return true
-	var c := wander_cell(Vector2i(w.rng.randi_range(4, 26) + (60 if w.rng.randf() < 0.5 else 0), w.rng.randi_range(4, 24)), 3)
-	n.doing = "hunting in the woods"
-	n.plan = [go(c), work(float(GameData.b("hunt_minutes")), "hunt", {}, "idle")]
+	w.fauna.claims[prey.id] = n.id
+	n.doing = "hunting %s" % prey.label().to_lower()
+	n.plan = [go(beside(prey.cell(), n.cell())), work(float(GameData.b("hunt_minutes")), "hunt", {"animal": prey.id}, "work", prey.cell())]
 	return true
 
 
@@ -481,7 +543,7 @@ func _plan_sell(n: NPC, id: String) -> bool:
 func _buyer_for(n: NPC, id: String) -> NPC:
 	for outlet in OUTLETS.get(id, []):
 		for b in _with_buy_role(outlet):
-			if b != n and b.alive and wants(b, id) > 0 and b.coins >= w.buy_price(b, id):
+			if b != n and b.alive and wants(b, id) > 0 and b.coins - w.buy_price(b, id) >= int(GameData.b("trader_cash_floor")):
 				return b
 	return null
 
@@ -699,9 +761,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var b := w.npc(int(a.buyer))
 			if b == null or not b.alive:
 				return false
-			var qty := mini(n.inv.count(a.item), wants(b, a.item))
+			var qty := mini(n.inv.count(a.item) - reserve(n, a.item), wants(b, a.item))
 			var sold := 0
-			while qty > 0:
+			while qty > 0 and b.coins - w.buy_price(b, a.item) >= int(GameData.b("trader_cash_floor")):
 				if w.trade(b, n, a.item, 1, w.buy_price(b, a.item)):
 					sold += 1
 					qty -= 1
@@ -741,6 +803,14 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if f.is_empty() or f.state != "ripe":
 				return false
 			n.inv.add("wheat", int(GameData.b("field_yield")))
+			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
+			# who shares this field before anything is sold
+			for pid in w.fauna.pens:
+				var pen: Dictionary = w.fauna.pens[pid]
+				var need := w.fauna.daily_need(pen)
+				if f.owner.has(int(pen.owner)) and int(pen.trough) < need * 4 and need > 0:
+					n.plan.push_front(work(15, "feed_pen", {"pen": pen.id, "qty": need * 4 - int(pen.trough)}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1]))))
+					n.plan.push_front(go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))))
 			var pantry: Inventory = w.households[n.household].pantry
 			var keep := maxi(0, 10 - pantry.count("wheat"))
 			w.transfer(n.inv, pantry, "wheat", mini(keep, n.inv.count("wheat")))
@@ -753,18 +823,38 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			w.set_field(f, "growing")
 			return true
 		"hunt":
-			if w.deer <= 0:
-				once("no_deer_%d" % w.day(), "The hunters find no deer left in the woods today.")
+			var prey: Animal = w.fauna.by_id(int(a.animal))
+			w.fauna.claims.erase(int(a.animal))
+			if prey == null or prey.pos.distance_to(n.pos) > 3.0:
+				return true            # it got away; the hunter picks another
+			var bag: Inventory = w.fauna.kill(prey)
+			for id in bag.ids():
+				n.inv.add(id, bag.count(id))
+			return true
+		"take_pantry":
+			var pantry: Inventory = w.households[n.household].pantry
+			w.transfer(pantry, n.inv, a.item, mini(int(a.qty), pantry.count(a.item)))
+			return true
+		"feed_pen":
+			var pen: Dictionary = w.fauna.pens[a.pen]
+			w.fauna.feed(pen, n.inv, int(a.get("qty", maxi(1, w.fauna.daily_need(pen) * 3 - int(pen.trough)))))
+			return true
+		"slaughter":
+			var beast: Animal = w.fauna.by_id(int(a.animal))
+			if beast == null or beast.area != a.pen:
 				return true
-			w.deer -= 1
-			n.inv.add("meat", 2)
-			n.inv.add("hide", 1)
+			once("slaughter_%d_%d" % [n.id, w.day()], "%s %s slaughtered a %s." % [n.name, n.family, beast.label()])
+			var meat: Inventory = w.fauna.kill(beast)
+			for id in meat.ids():
+				n.inv.add(id, meat.count(id))
 			return true
 		"poach":
 			if n.hunger < 60.0:
 				n.hunger = 100.0
-				if w.rng.randf() < 0.25 and w.deer > 0:
-					w.deer -= 1
+				if w.rng.randf() < 0.25:
+					var game: Animal = w.fauna.nearest_game(Vector2(w.bandit_camp), 30.0)
+					if game != null:
+						w.fauna.kill(game)          # eaten at the camp
 			return true
 		"look_out":
 			var foe := _bandit_near(n.pos, 10.0)
@@ -917,7 +1007,7 @@ func caravan() -> void:
 	var budget := int(GameData.b("caravan_coins"))
 	var bought := 0
 	for o: NPC in w.npcs:
-		if not o.alive or o.job != "merchant":
+		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
 		var caps: Dictionary = BUYS.get(buy_role(o), {})
 		if o.job == "smith":
