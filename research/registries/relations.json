@@ -1,0 +1,5546 @@
+{
+ "format": "morris-relations/1",
+ "records": [
+  {
+   "a": "King Peter",
+   "a_id": "per-king-peter",
+   "b": "Blaise",
+   "b_id": "per-blaise",
+   "chapter": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "eldest son",
+   "id": "rel-21090302f3",
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "King Peter"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "BONE-C1"
+  },
+  {
+   "a": "King Peter",
+   "a_id": "per-king-peter",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "youngest of four sons",
+   "id": "rel-5adcfa7c82",
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "King Peter"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "BONE-C1"
+  },
+  {
+   "a": "King Peter",
+   "a_id": "per-king-peter",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "kinglet",
+   "id": "rel-82a6e9b3b7",
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "King Peter"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BONE-C1"
+  },
+  {
+   "a": "Richard the Red",
+   "a_id": "per-richard-the-red",
+   "b": "Blaise",
+   "b_id": "per-blaise",
+   "chapter": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "squire",
+   "id": "rel-9122035e41",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Blaise fareth eastward and Richard with him"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C1"
+  },
+  {
+   "a": "Lancelot Longtongue",
+   "a_id": "per-lancelot-longtongue",
+   "b": "Hugh",
+   "b_id": "per-hugh",
+   "chapter": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "squire",
+   "id": "rel-358565babe",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C1"
+  },
+  {
+   "a": "Clement the Black",
+   "a_id": "per-clement-the-black",
+   "b": "Gregory",
+   "b_id": "per-gregory",
+   "chapter": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "squire",
+   "id": "rel-cd10d3dea7",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Gregory westward with Clement"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C1"
+  },
+  {
+   "a": "Upmeads",
+   "a_id": "pol-upmeads",
+   "b": "(unnamed) bishop-baron beyond the Wood Debateable",
+   "b_id": "per-bishop-baron-beyond-the-wood-debateable",
+   "chapter": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "disputed border forest; hostile neighbour",
+   "id": "rel-c48110ec30",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "this wood was debateable"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C1"
+  },
+  {
+   "a": "(unnamed) Queen of Upmeads",
+   "a_id": "per-queen-of-upmeads",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BONE-C2",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "mother",
+   "id": "rel-e6653b01d8",
+   "refs": [
+    {
+     "p": "BONE-C2-P003",
+     "q": "a noble dame"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "BONE-C2"
+  },
+  {
+   "a": "(unnamed) Queen of Upmeads",
+   "a_id": "per-queen-of-upmeads",
+   "b": "King Peter",
+   "b_id": "per-king-peter",
+   "chapter": "BONE-C2",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "queen",
+   "id": "rel-56e50bf2a5",
+   "refs": [
+    {
+     "p": "BONE-C2-P003",
+     "q": "a noble dame"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "BONE-C2"
+  },
+  {
+   "a": "Dame Katherine",
+   "a_id": "per-dame-katherine",
+   "b": "Clement Chapman",
+   "b_id": "per-clement-chapman",
+   "chapter": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-d153fc84df",
+   "refs": [
+    {
+     "p": "BONE-C3-P058",
+     "q": "my husband"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "BONE-C3"
+  },
+  {
+   "a": "Dame Katherine",
+   "a_id": "per-dame-katherine",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "godmother (held him at the font)",
+   "id": "rel-bf394a9346",
+   "refs": [
+    {
+     "p": "BONE-C3-P008",
+     "q": "who had held Ralph at the font"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C3"
+  },
+  {
+   "a": "Clement Chapman",
+   "a_id": "per-clement-chapman",
+   "b": "King Peter",
+   "b_id": "per-king-peter",
+   "chapter": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "King Peter deals with him often",
+   "id": "rel-654134283b",
+   "refs": [
+    {
+     "p": "BONE-C3-P005",
+     "q": "King Peter dealt with him much and often"
+    }
+   ],
+   "rel": "trades_with",
+   "when": "BONE-C3"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Falcon",
+   "b_id": "cre-falcon",
+   "chapter": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "destrier",
+   "id": "rel-6b9352e09e",
+   "refs": [
+    {
+     "p": "BONE-C3-P003",
+     "q": "Falcon his horse"
+    }
+   ],
+   "rel": "owns",
+   "when": "BONE-C3"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Dame Katherine's necklace",
+   "b_id": "itm-dame-katherines-necklace",
+   "chapter": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "gift",
+   "id": "rel-83e30c8d75",
+   "refs": [
+    {
+     "p": "BONE-C3-P028",
+     "q": "did the beads on his neck"
+    }
+   ],
+   "rel": "owns",
+   "when": "BONE-C3 onward"
+  },
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "a_id": "per-abbot-of-st-marys-of-higham",
+   "b": "Higham-on-the-Way",
+   "b_id": "plc-higham-on-the-way",
+   "chapter": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "lord of the town, keeps peace with hired men",
+   "id": "rel-20922a15d5",
+   "refs": [
+    {
+     "p": "BONE-C3-P031",
+     "q": "the father abbot wages a many men to guard him and his"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BONE-C3"
+  },
+  {
+   "a": "Andrew",
+   "a_id": "per-andrew",
+   "b": "Clement Chapman",
+   "b_id": "per-clement-chapman",
+   "chapter": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "nephew",
+   "id": "rel-2631d5e330",
+   "refs": [
+    {
+     "p": "BONE-C3-P021",
+     "q": "Andrew, my nephew"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "BONE-C3"
+  },
+  {
+   "a": "shepherds of the Downs",
+   "a_id": "grp-shepherds-of-the-downs",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BONE-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "offer to rally to Ralph's beacon",
+   "id": "rel-95e9a0c32a",
+   "refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "then shalt thou see what shall betide thee for thy good-hap"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BONE-C4 onward"
+  },
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "a_id": "per-abbot-of-st-marys-of-higham",
+   "b": "men-at-arms of the Abbot",
+   "b_id": "grp-men-at-arms-of-the-abbot",
+   "chapter": "BONE-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-8587f6e5f0",
+   "refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "the men-at-arms of our lord Abbot"
+    }
+   ],
+   "rel": "lord_of",
+   "when": "BONE-C5"
+  },
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "a_id": "per-abbot-of-st-marys-of-higham",
+   "b": "(unnamed) vassals and villeins of the Abbot",
+   "b_id": "imp-vassals-and-villeins-of-the-abbot",
+   "chapter": "BONE-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "bale-fires lit by his vassals east and west",
+   "id": "rel-fec6d9f0cf",
+   "refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "all these bales are piled up and lighted by vassals and villeins of my lord Abbot"
+    }
+   ],
+   "rel": "lord_of",
+   "when": "BONE-C5"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Hugh of Bourton Abbas",
+   "b_id": "per-hugh-of-bourton-abbas",
+   "chapter": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "brother",
+   "id": "rel-1a1b3cb1cb",
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "that is the lad who hath gone to tend thine horse"
+    }
+   ],
+   "rel": "sibling_of",
+   "when": "BONE-C7"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "(unnamed) Ursula's former lover",
+   "b_id": "per-ursulas-former-lover",
+   "chapter": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-8da8555858",
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "my very earthly love and speech-friend"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BONE-C7"
+  },
+  {
+   "a": "Bourton Abbas",
+   "a_id": "plc-bourton-abbas",
+   "b": "St. Mary's of Higham",
+   "b_id": "bld-st-marys-of-higham",
+   "chapter": "BONE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "outermost land of the Abbey",
+   "id": "rel-86a68cdda0",
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "though it be the outermost of its lands"
+    }
+   ],
+   "rel": "holds_land_of",
+   "when": "BONE-C7"
+  },
+  {
+   "a": "Sir Aymer",
+   "a_id": "per-sir-aymer",
+   "b": "men of the Burg of the Four Friths",
+   "b_id": "grp-men-of-the-burg-of-the-four-friths",
+   "chapter": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-4d26fb5190",
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "sat a Knight bravely armed at all points with the Tower and Four Ways on his green surcoat"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BONE-C8"
+  },
+  {
+   "a": "Oliver",
+   "a_id": "per-oliver",
+   "b": "Sir Aymer",
+   "b_id": "per-sir-aymer",
+   "chapter": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-0103d5df2e",
+   "refs": [
+    {
+     "p": "BONE-C8-P017",
+     "q": "Yea, Sir Aymer"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C8"
+  },
+  {
+   "a": "Oliver",
+   "a_id": "per-oliver",
+   "b": "Nicholas Longshanks",
+   "b_id": "per-nicholas-longshanks",
+   "chapter": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "old acquaintance, friend and foe",
+   "id": "rel-04e47f306a",
+   "refs": [
+    {
+     "p": "BONE-C8-P022",
+     "q": "Nicholas and I have been friends in a way, as well as foes"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C8"
+  },
+  {
+   "a": "men of the Burg of the Four Friths",
+   "a_id": "grp-men-of-the-burg-of-the-four-friths",
+   "b": "men of the leafless tree",
+   "b_id": "grp-men-of-the-leafless-tree",
+   "chapter": "BONE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "holds five prisoners for hanging",
+   "id": "rel-da8e104d2b",
+   "refs": [
+    {
+     "p": "BONE-C8-P015",
+     "q": "Thou shalt give tongue to-morrow when the hangman hath thee under his hands"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BONE-C8"
+  },
+  {
+   "a": "(unnamed) slain spearman",
+   "a_id": "per-slain-spearman",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sword stroke to the neck",
+   "id": "rel-aa1c67eddd",
+   "refs": [
+    {
+     "p": "BONE-C9-P014",
+     "q": "the man's head was nigh smitten off"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BONE-C9"
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "a_id": "per-lady-delivered-at-the-crossroads",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-0e65850ba2",
+   "refs": [
+    {
+     "p": "BONE-C9-P016",
+     "q": "so he thrust his sword through him, and the man died at once"
+    }
+   ],
+   "rel": "freed_by",
+   "when": "BONE-C9"
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "a_id": "per-lady-delivered-at-the-crossroads",
+   "b": "Burg of the Four Friths",
+   "b_id": "plc-burg-of-the-four-friths",
+   "chapter": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "calls them robbers and murderers",
+   "id": "rel-e0cac7cb41",
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "they of that Burg be robbers and murderers merciless"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BONE-C9"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Well at the World's End",
+   "b_id": "fea-well-at-the-worlds-end",
+   "chapter": "BONE-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sets out to seek it",
+   "id": "rel-00a6aea0a3",
+   "refs": [
+    {
+     "p": "BONE-C10-P006",
+     "q": "I am going to seek the WELL AT THE WORLD'S END"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C10"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "Hampton under Scaur",
+   "b_id": "plc-hampton-under-scaur",
+   "chapter": "BONE-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "hearsay",
+   "id": "rel-27fb36cdd1",
+   "refs": [
+    {
+     "p": "BONE-C10-P016",
+     "q": "at Hampton dwelleth the Fellowship of the Dry Tree"
+    }
+   ],
+   "rel": "lives_in",
+   "when": "BONE-C10"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "Hampton under Scaur",
+   "b_id": "plc-hampton-under-scaur",
+   "chapter": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "not their true lords; oppress the townsfolk",
+   "id": "rel-252e81f44b",
+   "refs": [
+    {
+     "p": "BONE-C11-P015",
+     "q": "but that they be under evil lords who are not their true lords"
+    }
+   ],
+   "rel": "lord_of",
+   "when": "BONE-C11"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "Castle of the Scaur",
+   "b_id": "bld-castle-of-the-scaur",
+   "chapter": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-7183200882",
+   "refs": [
+    {
+     "p": "BONE-C11-P015",
+     "q": "who dwell in the Castle of the Scaur"
+    }
+   ],
+   "rel": "lives_in",
+   "when": "BONE-C11"
+  },
+  {
+   "a": "Roger of the Rope-walk",
+   "a_id": "per-roger-of-the-rope-walk",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "says they took his croft; seeks revenge",
+   "id": "rel-6787111c50",
+   "refs": [
+    {
+     "p": "BONE-C11-P015",
+     "q": "therefore have these tyrants robbed me of my croft"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BONE-C11"
+  },
+  {
+   "a": "Fair Lady of the Burg",
+   "a_id": "per-fair-lady-of-the-burg",
+   "b": "Forest Lord",
+   "b_id": "per-forest-lord",
+   "chapter": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "legend",
+   "id": "rel-bda444333f",
+   "refs": [
+    {
+     "p": "BONE-C11-P034",
+     "q": "when she was first wedded to the Forest Lord"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Burg of the Four Friths",
+   "a_id": "plc-burg-of-the-four-friths",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BONE-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "strife between Hampton and the Burg",
+   "id": "rel-fff8bb5acf",
+   "refs": [
+    {
+     "p": "BONE-C11-P018",
+     "q": "the strife betwixt Hampton and the Burg"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "BONE-C11"
+  },
+  {
+   "a": "Roger of the Rope-walk",
+   "a_id": "per-roger-of-the-rope-walk",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BONE-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "appointed by the gate captain while Ralph is in the Burg",
+   "id": "rel-d94c6c1520",
+   "refs": [
+    {
+     "p": "BONE-C12-P010",
+     "q": "be thou even so whiles he abideth in the Burg"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C12"
+  },
+  {
+   "a": "Queen of the Dry Tree",
+   "a_id": "per-queen-of-the-dry-tree",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BONE-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Queen, called their goddess",
+   "id": "rel-1b2d7815cb",
+   "refs": [
+    {
+     "p": "BONE-C12-P030",
+     "q": "she is their goddess, their mawmet, their devil"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BONE-C12"
+  },
+  {
+   "a": "War-smith",
+   "a_id": "per-war-smith",
+   "b": "Forest Lord",
+   "b_id": "per-forest-lord",
+   "chapter": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "son",
+   "id": "rel-7058b8fa0e",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "the son of the Forest Lord"
+    }
+   ],
+   "rel": "child_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Fair Lady of the Burg",
+   "a_id": "per-fair-lady-of-the-burg",
+   "b": "(unnamed) old lord of the Burg",
+   "b_id": "imp-old-lord-of-the-burg",
+   "chapter": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "his son's daughter",
+   "id": "rel-22a4e5f404",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "the son's daughter of him who had been our lord ere the Wheat-wearers overcame us"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Forest Lord",
+   "a_id": "per-forest-lord",
+   "b": "Burg of the Four Friths",
+   "b_id": "plc-burg-of-the-four-friths",
+   "chapter": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "chosen captain after the uprising",
+   "id": "rel-45ca00b600",
+   "refs": [
+    {
+     "p": "BONE-C14-P018",
+     "q": "we took for our captain the Forest Lord"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Burg of the Four Friths",
+   "a_id": "plc-burg-of-the-four-friths",
+   "b": "Wheat-wearers",
+   "b_id": "grp-wheat-wearers",
+   "chapter": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "standing war: men slain, women enslaved",
+   "id": "rel-98fc02df5e",
+   "refs": [
+    {
+     "p": "BONE-C14-P010",
+     "q": "whenso the host goeth against them and over-cometh"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "BONE-C14"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "(unnamed) small cloaked man at the Flower de Luce",
+   "b_id": "per-small-cloaked-man-at-the-flower-de-luce",
+   "chapter": "BONE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "companions at the inn",
+   "id": "rel-e46d35f14e",
+   "refs": [
+    {
+     "p": "BONE-C14-P003",
+     "q": "As for the smaller man Ralph had no knowledge of him"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C14"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "Ralph is sure the company are Dry Tree men",
+   "id": "rel-525da36baf",
+   "refs": [
+    {
+     "p": "BONE-C15-P026",
+     "q": "he scarce needed to be told that these were men of the Dry Tree"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BONE-C15"
+  },
+  {
+   "a": "Roger of the Rope-walk",
+   "a_id": "per-roger-of-the-rope-walk",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "Ralph judges Roger is theirs; watchword \"rope-twiner\"",
+   "id": "rel-08a5440898",
+   "refs": [
+    {
+     "p": "BONE-C15-P006",
+     "q": "Nay, rope-twiner"
+    },
+    {
+     "p": "BONE-C15-P027",
+     "q": "though to me he seemeth to be yours"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BONE-C15"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "(unnamed) white-armoured company of the Dry Tree",
+   "b_id": "grp-white-armoured-company-of-the-dry-tree",
+   "chapter": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "detail": "-",
+   "id": "rel-d832f91e20",
+   "refs": [
+    {
+     "p": "BONE-C15-P021",
+     "q": "Then stood forth the big man and said"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BONE-C15"
+  },
+  {
+   "a": "Roger of the Rope-walk",
+   "a_id": "per-roger-of-the-rope-walk",
+   "b": "(unnamed) Roger's master",
+   "b_id": "per-rogers-master",
+   "chapter": "BONE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-3283662829",
+   "refs": [
+    {
+     "p": "BONE-C16-P010",
+     "q": "a noble house of a master of mine"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C16"
+  },
+  {
+   "a": "(unnamed) father of King Peter",
+   "a_id": "per-father-of-king-peter",
+   "b": "King Peter",
+   "b_id": "per-king-peter",
+   "chapter": "BONE-C17",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-947eba4762",
+   "refs": [
+    {
+     "p": "BONE-C17-P018",
+     "q": "the image of his father's father"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "Plain of Abundance",
+   "b_id": "plc-plain-of-abundance",
+   "chapter": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "lady, not lord",
+   "id": "rel-046c096f32",
+   "refs": [
+    {
+     "p": "BONE-C18-P014",
+     "q": "There is no lord, but a lady"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BONE-C18"
+  },
+  {
+   "a": "(unnamed) carline of the House of Abundance",
+   "a_id": "per-carline-of-the-house-of-abundance",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-3b9e48d61e",
+   "refs": [
+    {
+     "p": "BONE-C18-P014",
+     "q": "She is my lady"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C18"
+  },
+  {
+   "a": "yeomen of Abundance",
+   "a_id": "grp-yeomen-of-abundance",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BONE-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "vavassors",
+   "id": "rel-3f0277ffb6",
+   "refs": [
+    {
+     "p": "BONE-C18-P025",
+     "q": "We be yeomen and her vavassors"
+    }
+   ],
+   "rel": "vassal_of",
+   "when": "BONE-C18"
+  },
+  {
+   "a": "(unnamed) woman of the book",
+   "a_id": "per-woman-of-the-book",
+   "b": "(unnamed) king's son of the book",
+   "b_id": "per-kings-son-of-the-book",
+   "chapter": "BONE-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "legend",
+   "id": "rel-26275dd21e",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "brought her to his father's kingdom and wedded her"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "legend"
+  },
+  {
+   "a": "(unnamed) woman of the book",
+   "a_id": "per-woman-of-the-book",
+   "b": "(unnamed) sorceress of the book",
+   "b_id": "per-sorceress-of-the-book",
+   "chapter": "BONE-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "legend",
+   "id": "rel-f1c0f7fabf",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "who made her her thrall"
+    }
+   ],
+   "rel": "slave_of",
+   "when": "legend"
+  },
+  {
+   "a": "(unnamed) Vicar of the Little Plain",
+   "a_id": "per-vicar-of-the-little-plain",
+   "b": "fathers of the Thorn",
+   "b_id": "grp-fathers-of-the-thorn",
+   "chapter": "BONE-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "appointed vicar",
+   "id": "rel-b28977685c",
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "I am the Vicar appointed by the fathers of the Thorn"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C20"
+  },
+  {
+   "a": "(unnamed) niece of the old spinning woman",
+   "a_id": "per-niece-of-the-old-spinning-woman",
+   "b": "(unnamed) old spinning woman of Abundance",
+   "b_id": "per-old-spinning-woman-of-abundance",
+   "chapter": "BONE-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "niece",
+   "id": "rel-e8a426a7ce",
+   "refs": [
+    {
+     "p": "BONE-C20-P006",
+     "q": "she is not my daughter, but my brother's"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "BONE-C20"
+  },
+  {
+   "a": "(unnamed) brother of the carline of the House of Abundance",
+   "a_id": "per-brother-of-the-carline-of-the-house-of-abundance",
+   "b": "fathers of the Thorn",
+   "b_id": "grp-fathers-of-the-thorn",
+   "chapter": "BONE-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-a073bf7446",
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "one of the brethren of the Thorn"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BONE-C21"
+  },
+  {
+   "a": "(unnamed) carline of the House of Abundance",
+   "a_id": "per-carline-of-the-house-of-abundance",
+   "b": "(unnamed) brother of the carline of the House of Abundance",
+   "b_id": "per-brother-of-the-carline-of-the-house-of-abundance",
+   "chapter": "BONE-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-429c7a1825",
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "my brother in the flesh"
+    }
+   ],
+   "rel": "sibling_of",
+   "when": "BONE-C21"
+  },
+  {
+   "a": "Knight of the Sun",
+   "a_id": "per-knight-of-the-sun",
+   "b": "Walter the Black",
+   "b_id": "per-walter-the-black",
+   "chapter": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sworn friend and brother-in-arms; fought him from jealousy",
+   "id": "rel-7b42b63ef5",
+   "refs": [
+    {
+     "p": "BONE-C22-P006",
+     "q": "slain my very earthly friend of friends for thy sake"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C22"
+  },
+  {
+   "a": "Knight of the Sun",
+   "a_id": "per-knight-of-the-sun",
+   "b": "(unnamed) lady delivered at the crossroads",
+   "b_id": "per-lady-delivered-at-the-crossroads",
+   "chapter": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "claims her; she goes with him only under the bargain",
+   "id": "rel-0da584faa3",
+   "refs": [
+    {
+     "p": "BONE-C22-P022",
+     "q": "then will I go home with thee and will ride with thee in all the love and duty that I owe thee"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BONE-C22"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Knight of the Sun",
+   "b_id": "per-knight-of-the-sun",
+   "chapter": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "taken as prisoner under the bargain",
+   "id": "rel-9d30fb2ec8",
+   "refs": [
+    {
+     "p": "BONE-C22-P026",
+     "q": "he shall come with me, will he, nill he, unarmed, and as a prisoner"
+    }
+   ],
+   "rel": "captive_of",
+   "when": "BONE-C22"
+  },
+  {
+   "a": "Knight of the Sun",
+   "a_id": "per-knight-of-the-sun",
+   "b": "Captain of the Dry Tree",
+   "b_id": "per-captain-of-the-dry-tree",
+   "chapter": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "brother",
+   "id": "rel-d014973744",
+   "refs": [
+    {
+     "p": "BONE-C22-P014",
+     "q": "or my brother's man"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "BONE-C22"
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "a_id": "per-lady-delivered-at-the-crossroads",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BONE-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "the Knight calls her \"my Queen\"; she freed four of \"our people\"",
+   "id": "rel-5d78598d09",
+   "refs": [
+    {
+     "p": "BONE-C22-P018",
+     "q": "Thou art merciful, my Queen"
+    },
+    {
+     "p": "BONE-C22-P017",
+     "q": "in delivering four of our people"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BONE-C22"
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "a_id": "per-lady-delivered-at-the-crossroads",
+   "b": "(unnamed) slender youth",
+   "b_id": "per-slender-youth",
+   "chapter": "BONE-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "the lady was the cloaked youth",
+   "id": "rel-ce2322aae7",
+   "refs": [
+    {
+     "p": "BONE-C23-P004",
+     "q": "I was that lad in the cloak that ye saw in the Flower de Luce"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C23"
+  },
+  {
+   "a": "(unnamed) lady's captain of war",
+   "a_id": "per-ladys-captain-of-war",
+   "b": "(unnamed) lady delivered at the crossroads",
+   "b_id": "per-lady-delivered-at-the-crossroads",
+   "chapter": "BONE-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-727b01a642",
+   "refs": [
+    {
+     "p": "BONE-C23-P004",
+     "q": "with my captain of war"
+    }
+   ],
+   "rel": "serves",
+   "when": "BONE-C23"
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "a_id": "per-lady-delivered-at-the-crossroads",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BONE-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "the friar names her the Lady of Abundance",
+   "id": "rel-03906ad6df",
+   "refs": [
+    {
+     "p": "BONE-C24-P020",
+     "q": "well it is for him that the Lady of Abundance was here for his helping"
+    }
+   ],
+   "rel": "other",
+   "when": "BONE-C24"
+  },
+  {
+   "a": "Knight of the Sun",
+   "a_id": "per-knight-of-the-sun",
+   "b": "Sunway",
+   "b_id": "plc-sunway",
+   "chapter": "BONE-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "baron of Sunway",
+   "id": "rel-2570f19dd2",
+   "refs": [
+    {
+     "p": "BONE-C24-P024",
+     "q": "Baron of Sunway"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BONE-C24"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "Knight of the Sun",
+   "b_id": "per-knight-of-the-sun",
+   "chapter": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "wedded but driven out before they were bedded",
+   "id": "rel-8a1887e38f",
+   "refs": [
+    {
+     "p": "BTWO-C1-P018",
+     "q": "Fair creature, he is my husband"
+    },
+    {
+     "p": "BTWO-C1-P019",
+     "q": "or ever we were bedded he must needs curse me and drive me away from his house"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "BTWO-C1"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "Knight of the Sun",
+   "b_id": "per-knight-of-the-sun",
+   "chapter": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "brother",
+   "id": "rel-b8af50a2d2",
+   "refs": [
+    {
+     "p": "BTWO-C1-P022",
+     "q": "his brother is the Captain of the Dry Tree"
+    }
+   ],
+   "rel": "sibling_of",
+   "when": "BTWO-C1"
+  },
+  {
+   "a": "Walter the Black",
+   "a_id": "per-walter-the-black",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "loved and betrayed her",
+   "id": "rel-f4af117236",
+   "refs": [
+    {
+     "p": "BTWO-C1-P027",
+     "q": "I may not hide that he hath loved me: but he hath also betrayed me"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BTWO-C1"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-82686d328c",
+   "refs": [
+    {
+     "p": "BTWO-C1-P030",
+     "q": "loved him no less than he loved her"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C1 onward"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "Captain of the Dry Tree",
+   "b_id": "per-captain-of-the-dry-tree",
+   "chapter": "BTWO-C1",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "same person (the tall man met four times)",
+   "id": "rel-6d3b085b16",
+   "refs": [
+    {
+     "p": "BTWO-C1-P023",
+     "q": "the big captain that I have come across these four times"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C1"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "Roger of the Rope-walk",
+   "b_id": "per-roger-of-the-rope-walk",
+   "chapter": "BTWO-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "she sent Roger to bring Ralph to Abundance",
+   "id": "rel-706b528a5f",
+   "refs": [
+    {
+     "p": "BTWO-C1-P024",
+     "q": "have I not told thee that I bade Roger lead thee thither?"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C1"
+  },
+  {
+   "a": "Fellowship of Champions",
+   "a_id": "grp-fellowship-of-champions",
+   "b": "Hampton under Scaur",
+   "b_id": "plc-hampton-under-scaur",
+   "chapter": "BTWO-C2",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "on the rock",
+   "id": "rel-655bb81e67",
+   "refs": [
+    {
+     "p": "BTWO-C2-P006",
+     "q": "that which leadeth to Hampton under Scaur, and the Fellowship of Champions who dwell on the rock"
+    }
+   ],
+   "rel": "lives_in",
+   "when": "BTWO-C2"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "(unnamed) witch-mistress of the Lady",
+   "b_id": "per-witch-mistress-of-the-lady",
+   "chapter": "BTWO-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "raised as her servant",
+   "id": "rel-8c602e431b",
+   "refs": [
+    {
+     "p": "BTWO-C3-P003",
+     "q": "the woman set me to do such work as I had strength for"
+    }
+   ],
+   "rel": "slave_of",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) witch-mistress of the Lady",
+   "a_id": "per-witch-mistress-of-the-lady",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "not her mother though called so",
+   "id": "rel-3163cc8085",
+   "refs": [
+    {
+     "p": "BTWO-C3-P002",
+     "q": "now I know that she was not my mother"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "b_id": "per-kings-son-of-the-ladys-youth",
+   "chapter": "BTWO-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-da5905343d",
+   "refs": [
+    {
+     "p": "BTWO-C4-P020",
+     "q": "there in that place, and in a little while, we loved each other sorely"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) witch-mistress of the Lady",
+   "a_id": "per-witch-mistress-of-the-lady",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "stabbed in self-defence",
+   "id": "rel-3c6c12aa01",
+   "refs": [
+    {
+     "p": "BTWO-C4-P028",
+     "q": "she touched me not till the blade had sunk into her breast"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) wise carline of the Dale of Lore",
+   "a_id": "per-wise-carline-of-the-dale-of-lore",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "world-wisdom and letters",
+   "id": "rel-919ffdf54f",
+   "refs": [
+    {
+     "p": "BTWO-C4-P011",
+     "q": "showed me letters and told me what they were"
+    }
+   ],
+   "rel": "teaches",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) king's son of the Lady's youth",
+   "a_id": "per-kings-son-of-the-ladys-youth",
+   "b": "Well at the World's End",
+   "b_id": "fea-well-at-the-worlds-end",
+   "chapter": "BTWO-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "failed in his quest",
+   "id": "rel-aca51e10cc",
+   "refs": [
+    {
+     "p": "BTWO-C5-P006",
+     "q": "I have failed of that I sought, and suffered shame and hunger and many ills"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) king, father of the king's son",
+   "a_id": "per-king-father-of-the-kings-son",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "b_id": "per-kings-son-of-the-ladys-youth",
+   "chapter": "BTWO-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-0b9045da1c",
+   "refs": [
+    {
+     "p": "BTWO-C6-P020",
+     "q": "Well, son, hast thou found it, the Well at the World's End?"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) felon baron",
+   "a_id": "per-felon-baron",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-f4b20bb16e",
+   "refs": [
+    {
+     "p": "BTWO-C6-P015",
+     "q": "he was ever after one of my worst foes"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) young champion abductor",
+   "a_id": "per-young-champion-abductor",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "b_id": "per-kings-son-of-the-ladys-youth",
+   "chapter": "BTWO-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "battle with burghers' help",
+   "id": "rel-1a80a67c46",
+   "refs": [
+    {
+     "p": "BTWO-C6-P013",
+     "q": "the young champion he slew"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) king, father of the king's son",
+   "a_id": "per-king-father-of-the-kings-son",
+   "b": "Kingdom of the Tower",
+   "b_id": "pol-kingdom-of-the-tower",
+   "chapter": "BTWO-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "King of the Tower",
+   "id": "rel-bea03f8bc7",
+   "refs": [
+    {
+     "p": "BTWO-C7-P023",
+     "q": "his father, the King of the Tower, died in his bed in these days"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "(unnamed) king's son of the Lady's youth",
+   "b_id": "per-kings-son-of-the-ladys-youth",
+   "chapter": "BTWO-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "wedded by a Bishop; made Lady and Queen",
+   "id": "rel-c8d6059d9e",
+   "refs": [
+    {
+     "p": "BTWO-C7-P014",
+     "q": "There was I duly wedded to my lord by a Bishop of Holy Church, and made his Lady and Queen"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "Kingdom of the Tower",
+   "b_id": "pol-kingdom-of-the-tower",
+   "chapter": "BTWO-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "real ruler while her lord wore the crown",
+   "id": "rel-61c51d9794",
+   "refs": [
+    {
+     "p": "BTWO-C7-P026",
+     "q": "my lord left to my hands the real ruling of the kingdom"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "brothers in arms in the wildwood; helped win the Tower",
+   "id": "rel-df54e7954f",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "they became our fellows and brothers in arms in the wildwood"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) king's son of the Lady's youth",
+   "a_id": "per-kings-son-of-the-ladys-youth",
+   "b": "House of Abundance",
+   "b_id": "bld-house-of-abundance",
+   "chapter": "BTWO-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "had the Castle of Abundance built and the arras made",
+   "id": "rel-87c54da0ad",
+   "refs": [
+    {
+     "p": "BTWO-C7-P027",
+     "q": "my lord had the Castle of Abundance built up very fairly for me and him"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Teacher of Lore",
+   "a_id": "per-teacher-of-lore",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "hidden lore, including what is called sorcery",
+   "id": "rel-ef66e4c555",
+   "refs": [
+    {
+     "p": "BTWO-C7-P042",
+     "q": "I learned yet more wisdom of the Teacher of Lore"
+    }
+   ],
+   "rel": "teaches",
+   "when": "backstory"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "St. Mary's of Higham",
+   "b_id": "bld-st-marys-of-higham",
+   "chapter": "BTWO-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "raided the Abbot's lands, fought at Bear Castle",
+   "id": "rel-9a6d65b7a2",
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "harried the lands of the Abbot of Higham"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "backstory"
+  },
+  {
+   "a": "Geoffrey",
+   "a_id": "per-geoffrey",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BTWO-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-79e6aa77f1",
+   "refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "a fellowship of free men and champions hight the Men of the Dry Tree"
+    }
+   ],
+   "rel": "member_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Geoffrey",
+   "a_id": "per-geoffrey",
+   "b": "(unnamed) sons of Geoffrey",
+   "b_id": "per-sons-of-geoffrey",
+   "chapter": "BTWO-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-f115ece9d5",
+   "refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "these two men, they are my sons"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "House of Abundance",
+   "b_id": "bld-house-of-abundance",
+   "chapter": "BTWO-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "dwelt there after returning",
+   "id": "rel-cd19721521",
+   "refs": [
+    {
+     "p": "BTWO-C8-P023",
+     "q": "I took up my dwelling in the castle"
+    }
+   ],
+   "rel": "lives_in",
+   "when": "backstory"
+  },
+  {
+   "a": "yeomen of Abundance",
+   "a_id": "grp-yeomen-of-abundance",
+   "b": "fathers of the Thorn",
+   "b_id": "grp-fathers-of-the-thorn",
+   "chapter": "BTWO-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "the Fathers of the Thorn are their masters",
+   "id": "rel-f00d26defd",
+   "refs": [
+    {
+     "p": "BTWO-C8-P020",
+     "q": "were it not for the Fathers of the Thorn who are their masters"
+    }
+   ],
+   "rel": "vassal_of",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) old Queen of the Dry Tree",
+   "a_id": "per-old-queen-of-the-dry-tree",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "mightier than the Lady",
+   "id": "rel-059630cb42",
+   "refs": [
+    {
+     "p": "BTWO-C9-P008",
+     "q": "yet have they another who is mightier than I"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BTWO-C9"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "like a brother to her",
+   "id": "rel-fba3635430",
+   "refs": [
+    {
+     "p": "BTWO-C9-P007",
+     "q": "that tall champion has been ever as a brother unto me"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C9"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "freed from the Dry Tree prison",
+   "id": "rel-4e73000141",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "I went to the prison and brought her forth, and led her past all the gates and wards"
+    }
+   ],
+   "rel": "freed_by",
+   "when": "BTWO-C9"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "(unnamed) dead seeker's necklace",
+   "b_id": "itm-dead-seekers-necklace",
+   "chapter": "BTWO-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "given by the Lady",
+   "id": "rel-511b3f2666",
+   "refs": [
+    {
+     "p": "BTWO-C9-P012",
+     "q": "I gave her the chaplet which my witch-mistress took from the dead woman's neck"
+    }
+   ],
+   "rel": "owns",
+   "when": "BTWO-C9"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "Knight of the Sun",
+   "b_id": "per-knight-of-the-sun",
+   "chapter": "BTWO-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sword wound in the breast",
+   "id": "rel-47b395926f",
+   "refs": [
+    {
+     "p": "BTWO-C10-P022",
+     "q": "The blood was flowing fast from a great wound in her breast"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BTWO-C10"
+  },
+  {
+   "a": "Knight of the Sun",
+   "a_id": "per-knight-of-the-sun",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "arrow through the eye",
+   "id": "rel-65b1502d5a",
+   "refs": [
+    {
+     "p": "BTWO-C10-P021",
+     "q": "the shaft, sped by that fell archer, smote the huge man through the eye into the brain"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BTWO-C10"
+  },
+  {
+   "a": "Blaise",
+   "a_id": "per-blaise",
+   "b": "(unnamed) war booty",
+   "b_id": "imp-war-booty",
+   "chapter": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "bought cheap from Companions, sold in other towns",
+   "id": "rel-3020e2d312",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "the Companions, who were eager to depart, had sold him thieves' penny-worths"
+    }
+   ],
+   "rel": "trades_in",
+   "when": "BTWO-C12"
+  },
+  {
+   "a": "Richard the Red",
+   "a_id": "per-richard-the-red",
+   "b": "Blaise",
+   "b_id": "per-blaise",
+   "chapter": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-e433b33fd1",
+   "refs": [
+    {
+     "p": "BTWO-C12-P003",
+     "q": "Blaise, his eldest brother, and Richard the Red with him"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTWO-C12"
+  },
+  {
+   "a": "Blaise",
+   "a_id": "per-blaise",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-ff49beb0cc",
+   "refs": [
+    {
+     "p": "BTWO-C12-P004",
+     "q": "when two of the Upmeads kindred meet thus in an alien land"
+    }
+   ],
+   "rel": "sibling_of",
+   "when": "BTWO-C12"
+  },
+  {
+   "a": "Richard the Red",
+   "a_id": "per-richard-the-red",
+   "b": "Swevenham",
+   "b_id": "plc-swevenham",
+   "chapter": "BTWO-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-c510076f43",
+   "refs": [
+    {
+     "p": "BTWO-C13-P010",
+     "q": "I was born and bred at Swevenham"
+    }
+   ],
+   "rel": "born_in",
+   "when": "backstory"
+  },
+  {
+   "a": "Richard the Red",
+   "a_id": "per-richard-the-red",
+   "b": "(unnamed) Baron of the Waste March",
+   "b_id": "imp-baron-of-the-waste-march",
+   "chapter": "BTWO-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "served the Baron in his youth",
+   "id": "rel-4c3812682c",
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "the Baron took me in and made me his man"
+    }
+   ],
+   "rel": "serves",
+   "when": "backstory"
+  },
+  {
+   "a": "Clement Chapman",
+   "a_id": "per-clement-chapman",
+   "b": "Blaise",
+   "b_id": "per-blaise",
+   "chapter": "BTWO-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sold Blaise cloth",
+   "id": "rel-983f1de54b",
+   "refs": [
+    {
+     "p": "BTWO-C14-P004",
+     "q": "I have now done my matters with this cloth-lord, Blaise, and he has my florins in his pouch"
+    }
+   ],
+   "rel": "trades_with",
+   "when": "BTWO-C14"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "Dry Tree",
+   "b_id": "fea-dry-tree",
+   "chapter": "BTWO-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "named for the Dry Tree on the hither side of the Wall of the World",
+   "id": "rel-639bab7519",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "Is it not by the token of the Dry Tree that standeth in the lands on the hither side of the Wall of the World?"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C14"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Dorothea",
+   "b_id": "per-dorothea",
+   "chapter": "BTWO-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "low",
+   "detail": "the name given in a dream; unconfirmed",
+   "id": "rel-8a921c3f63",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I hight Dorothea"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C15"
+  },
+  {
+   "a": "Simon Bowyer",
+   "a_id": "per-simon-bowyer",
+   "b": "Alice of Queenhough",
+   "b_id": "per-alice-of-queenhough",
+   "chapter": "BTWO-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-d5e3d3c3e9",
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "whom Simon loved as well as might be"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Wat Miller",
+   "a_id": "per-wat-miller",
+   "b": "Alice of Queenhough",
+   "b_id": "per-alice-of-queenhough",
+   "chapter": "BTWO-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "loved her too",
+   "id": "rel-27c803cb21",
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "and Wat somewhat more than well"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Earl Walter the Black",
+   "a_id": "per-earl-walter-the-black",
+   "b": "Whitwall",
+   "b_id": "plc-whitwall",
+   "chapter": "BTWO-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "expected to send a herald to defy the Port",
+   "id": "rel-2b01a45646",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "it was looked for that he should send his herald here to defy the Port"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BTWO-C17"
+  },
+  {
+   "a": "Earl Walter the Black",
+   "a_id": "per-earl-walter-the-black",
+   "b": "Walter the Black",
+   "b_id": "per-walter-the-black",
+   "chapter": "BTWO-C17",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "probably the same man, wounded by the Knight of the Sun",
+   "id": "rel-aae94b6098",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "he was hurt in a fray as we hear, and may not back a horse in battle yet"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C17"
+  },
+  {
+   "a": "Richard the Red",
+   "a_id": "per-richard-the-red",
+   "b": "Blaise",
+   "b_id": "per-blaise",
+   "chapter": "BTWO-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "bound to serve Blaise",
+   "id": "rel-541bbdf724",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "it is Blaise whom I am bound to serve in all ways"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTWO-C17"
+  },
+  {
+   "a": "Clement Chapman",
+   "a_id": "per-clement-chapman",
+   "b": "Clement's eastward company",
+   "b_id": "grp-clements-eastward-company",
+   "chapter": "BTWO-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "orders the march",
+   "id": "rel-8e71c88dbd",
+   "refs": [
+    {
+     "p": "BTWO-C18-P009",
+     "q": "And master Clement it was that ordered them, riding up and down along the array"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BTWO-C18"
+  },
+  {
+   "a": "Blaise",
+   "a_id": "per-blaise",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "gives him a purse of gold and an anlace",
+   "id": "rel-5a7c2cce04",
+   "refs": [
+    {
+     "p": "BTWO-C18-P004",
+     "q": "he gave Ralph a purse of gold, and an anlace very fair of fashion"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C18"
+  },
+  {
+   "a": "Red Robert",
+   "a_id": "per-red-robert",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BTWO-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "first won Upmeads; ancestor of the kings",
+   "id": "rel-489869d03b",
+   "refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "Red Robert, who first won Upmeads"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Cheaping Knowe",
+   "a_id": "plc-cheaping-knowe",
+   "b": "Mid-Mountain House",
+   "b_id": "bld-mid-mountain-house",
+   "chapter": "BTWO-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "helps uphold the house",
+   "id": "rel-894a2cc2a8",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "it was built and is upheld by the folks that dwell anigh, amongst whom be the folk of Cheaping Knowe"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C19"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Strong-thieves of the mountains",
+   "b_id": "grp-strong-thieves-of-the-mountains",
+   "chapter": "BTWO-C20",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "taken near the House after a sword fight; led to market",
+   "id": "rel-95e94f1139",
+   "refs": [
+    {
+     "p": "BTWO-C20-P009",
+     "q": "three of them brought in a woman as goodly as mine eyes have ever seen"
+    }
+   ],
+   "rel": "captive_of",
+   "when": "BTWO-C20"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "captured; agrees to serve but will not fight his kindred",
+   "id": "rel-b1425c6f1a",
+   "refs": [
+    {
+     "p": "BTWO-C21-P019",
+     "q": "Guess if I would not rather serve thee!"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTWO-C21"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Strong-thieves of the mountains",
+   "b_id": "grp-strong-thieves-of-the-mountains",
+   "chapter": "BTWO-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "his kindred",
+   "id": "rel-e7aa396ca1",
+   "refs": [
+    {
+     "p": "BTWO-C21-P021",
+     "q": "Take note that I will not fight against my kindred"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BTWO-C21"
+  },
+  {
+   "a": "Bull Nosy",
+   "a_id": "per-bull-nosy",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BTWO-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "kinsman",
+   "id": "rel-5d79c81307",
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "my kinsman Bull Nosy"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "BTWO-C22"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Bull Nosy",
+   "b_id": "per-bull-nosy",
+   "chapter": "BTWO-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "captured and taken to market",
+   "id": "rel-05d1810983",
+   "refs": [
+    {
+     "p": "BTWO-C22-P009",
+     "q": "this same woman had about her neck a pair of beads as like to thine as if they had been the very same"
+    }
+   ],
+   "rel": "captive_of",
+   "when": "BTWO-C22"
+  },
+  {
+   "a": "(unnamed) tyrant of Cheaping Knowe",
+   "a_id": "per-tyrant-of-cheaping-knowe",
+   "b": "Cheaping Knowe",
+   "b_id": "plc-cheaping-knowe",
+   "chapter": "BTWO-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "took the castle by force",
+   "id": "rel-84985b38a3",
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "the lord who had gotten the castle in those days, and was tyrant of the town"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BTWO-C23"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Utterbol",
+   "b_id": "plc-utterbol",
+   "chapter": "BTWO-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-af3987f458",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "the Lord of Utterbol"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BTWO-C24"
+  },
+  {
+   "a": "Bull Nosy",
+   "a_id": "per-bull-nosy",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C24",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "likely to give or sell the damsel to him",
+   "id": "rel-83d1cec4e5",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "he will either give her to him as a gift, for which he will have a gift in return, or he will sell her to my lord at a price"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C24"
+  },
+  {
+   "a": "(unnamed) lord of Whiteness",
+   "a_id": "per-lord-of-whiteness",
+   "b": "(unnamed) tyrant of Cheaping Knowe",
+   "b_id": "per-tyrant-of-cheaping-knowe",
+   "chapter": "BTWO-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "pays tribute for peace",
+   "id": "rel-5d4e26e7a1",
+   "refs": [
+    {
+     "p": "BTWO-C25-P007",
+     "q": "he paid tribute to him of Cheaping Knowe"
+    }
+   ],
+   "rel": "vassal_of",
+   "when": "BTWO-C25"
+  },
+  {
+   "a": "Bull Nosy",
+   "a_id": "per-bull-nosy",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BTWO-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "brother, his own mother's son",
+   "id": "rel-7fc689ed26",
+   "refs": [
+    {
+     "p": "BTWO-C26-P011",
+     "q": "the dead corpse of his brother, his own mother's son"
+    }
+   ],
+   "rel": "sibling_of",
+   "when": "BTWO-C26"
+  },
+  {
+   "a": "Bull Nosy",
+   "a_id": "per-bull-nosy",
+   "b": "(unnamed) unknown slayer",
+   "b_id": "imp-unknown-slayer",
+   "chapter": "BTWO-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "skull cloven by a strong man with a big sword",
+   "id": "rel-be237564dc",
+   "refs": [
+    {
+     "p": "BTWO-C26-P014",
+     "q": "this is the stroke of a strong man wielding a good weapon"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BTWO-C26"
+  },
+  {
+   "a": "(unnamed) founder of Goldburg",
+   "a_id": "per-founder-of-goldburg",
+   "b": "Goldburg",
+   "b_id": "plc-goldburg",
+   "chapter": "BTWO-C27",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "built the city",
+   "id": "rel-d75f9fdd7a",
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "therefore had he builded this city, to be the house and home of his long-enduring joyance"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Queen of Goldburg",
+   "a_id": "per-queen-of-goldburg",
+   "b": "Goldburg",
+   "b_id": "plc-goldburg",
+   "chapter": "BTWO-C28",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-395c64de7e",
+   "refs": [
+    {
+     "p": "BTWO-C28-P006",
+     "q": "for a woman ruled in Goldburg"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BTWO-C28"
+  },
+  {
+   "a": "Queen of Goldburg",
+   "a_id": "per-queen-of-goldburg",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "confesses love; unreturned",
+   "id": "rel-e962de3714",
+   "refs": [
+    {
+     "p": "BTWO-C29-P027",
+     "q": "I have come on thee so suddenly, and loved thee so sorely"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C29"
+  },
+  {
+   "a": "Queen of Goldburg",
+   "a_id": "per-queen-of-goldburg",
+   "b": "(unnamed) founder of Goldburg",
+   "b_id": "per-founder-of-goldburg",
+   "chapter": "BTWO-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "kinsman of old",
+   "id": "rel-c6e2ab64f0",
+   "refs": [
+    {
+     "p": "BTWO-C29-P024",
+     "q": "my kinsman of old, who first raised up Goldburg in the wilderness"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Duke Osmond",
+   "a_id": "per-duke-osmond",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "knighted Ralph",
+   "id": "rel-afb39f736f",
+   "refs": [
+    {
+     "p": "BTWO-C29-P003",
+     "q": "when Duke Osmond made me knight last year"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "same person",
+   "id": "rel-366e1e44bc",
+   "refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "Gandolf, Lord of Utterbol"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C30"
+  },
+  {
+   "a": "Morfinn the Minstrel",
+   "a_id": "per-morfinn-the-minstrel",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "holds his safe-conduct",
+   "id": "rel-3fde9efd44",
+   "refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "charging all men so let pass and aid Morfinn the Minstrel"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C30"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C31",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sworn brother; freed with gold",
+   "id": "rel-ab0f1d8a5d",
+   "refs": [
+    {
+     "p": "BTWO-C31-P003",
+     "q": "henceforth thou shalt be as a brother to me"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C31"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C31",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "brought into Utterbol a month ago, taken from the wild men",
+   "id": "rel-022145fadb",
+   "refs": [
+    {
+     "p": "BTWO-C31-P009",
+     "q": "she had not been bought, but taken out of the hands of the wild men from the further mountains"
+    }
+   ],
+   "rel": "captive_of",
+   "when": "BTWO-C31"
+  },
+  {
+   "a": "Morfinn the Minstrel",
+   "a_id": "per-morfinn-the-minstrel",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "delivers captives for gold",
+   "id": "rel-04bbea6b94",
+   "refs": [
+    {
+     "p": "BTWO-C32-P032",
+     "q": "the catch is good, lucky man:  David will give thee gold for it"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTWO-C32"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "taken at the pavilion",
+   "id": "rel-33b250c17a",
+   "refs": [
+    {
+     "p": "BTWO-C32-P024",
+     "q": "he made no show of defence, but suffered them to lead him away"
+    }
+   ],
+   "rel": "captive_of",
+   "when": "BTWO-C32"
+  },
+  {
+   "a": "David the Sage",
+   "a_id": "per-david-the-sage",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "chief counsellor",
+   "id": "rel-ed7bb0e565",
+   "refs": [
+    {
+     "p": "BTWO-C32-P036",
+     "q": "being the chief counsellor of the Lord of Utterbol"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTWO-C32"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "(unnamed) Utterbol moorland",
+   "b_id": "fea-utterbol-moorland",
+   "chapter": "BTWO-C33",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "tribute from its few dwellers; nominal land",
+   "id": "rel-190478c8ed",
+   "refs": [
+    {
+     "p": "BTWO-C33-P021",
+     "q": "None shall dwell in it save as he willeth, and they shall pay him tribute"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BTWO-C33"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Goldburg",
+   "b_id": "plc-goldburg",
+   "chapter": "BTWO-C33",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "keeps the land between them barren",
+   "id": "rel-07c805f979",
+   "refs": [
+    {
+     "p": "BTWO-C33-P019",
+     "q": "deemest thou that he should suffer a rich land betwixt him and Goldburg"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BTWO-C33"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Morfinn the Minstrel",
+   "b_id": "per-morfinn-the-minstrel",
+   "chapter": "BTWO-C33",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "unmanned him \"for some good reason\"",
+   "id": "rel-cf48343ebe",
+   "refs": [
+    {
+     "p": "BTWO-C33-P022",
+     "q": "But my Lord unmanned him for some good reason"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Otter",
+   "a_id": "per-otter",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C34",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "captain of the guard",
+   "id": "rel-b3de1c3ad6",
+   "refs": [
+    {
+     "p": "BTWO-C34-P036",
+     "q": "Otter, the captain of the guard"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTWO-C34"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "(unnamed) Lady of Utterbol",
+   "b_id": "per-lady-of-utterbol",
+   "chapter": "BTWO-C34",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-7cfb82948e",
+   "refs": [
+    {
+     "p": "BTWO-C34-P027",
+     "q": "my lady wife"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "BTWO-C34"
+  },
+  {
+   "a": "Sir Karr Wood-neb",
+   "a_id": "per-sir-karr-wood-neb",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C34",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "taught songs",
+   "id": "rel-446c8c66e5",
+   "refs": [
+    {
+     "p": "BTWO-C34-P028",
+     "q": "he taught Ralph this song and many things else"
+    }
+   ],
+   "rel": "teaches",
+   "when": "backstory"
+  },
+  {
+   "a": "Otter",
+   "a_id": "per-otter",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C35",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "formerly and still in effect a thrall who rose by usefulness",
+   "id": "rel-0443e70599",
+   "refs": [
+    {
+     "p": "BTWO-C35-P013",
+     "q": "even such was I, time was.  Nay, such am I now"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C35"
+  },
+  {
+   "a": "(unnamed) Lady of Utterbol",
+   "a_id": "per-lady-of-utterbol",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C35",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "given Ralph as a thrall; smitten at first sight",
+   "id": "rel-f72df01038",
+   "refs": [
+    {
+     "p": "BTWO-C35-P021",
+     "q": "she flushed bright red all over her face and even to her bosom"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C35"
+  },
+  {
+   "a": "Agatha",
+   "a_id": "per-agatha",
+   "b": "(unnamed) Lady of Utterbol",
+   "b_id": "per-lady-of-utterbol",
+   "chapter": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "favourite thrall and confidante",
+   "id": "rel-7beeb52161",
+   "refs": [
+    {
+     "p": "BTWO-C36-P003",
+     "q": "save one whom she loved, and to whom she was wont to tell the innermost of her mind"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTWO-C36"
+  },
+  {
+   "a": "(unnamed) Lady of Utterbol",
+   "a_id": "per-lady-of-utterbol",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sudden unrequited love",
+   "id": "rel-1876c9b2c3",
+   "refs": [
+    {
+     "p": "BTWO-C36-P008",
+     "q": "love of this young man hath suddenly entered into my heart"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C36"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "(unnamed) new-come thrall of the Lord of Utterbol",
+   "b_id": "per-new-come-thrall-of-the-lord-of-utterbol",
+   "chapter": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "loves her more than his wife",
+   "id": "rel-3f6da49994",
+   "refs": [
+    {
+     "p": "BTWO-C36-P006",
+     "q": "he loveth the little finger of that new-come thrall of his"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C36"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Agatha",
+   "b_id": "per-agatha",
+   "chapter": "BTWO-C36",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "fondles her; grants her requests",
+   "id": "rel-60becf9c30",
+   "refs": [
+    {
+     "p": "BTWO-C36-P024",
+     "q": "The Lord looked on her greedily, and let his hand and arm go over her shoulder"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C36"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Redhead",
+   "b_id": "per-redhead",
+   "chapter": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "won his pardon from the Lord",
+   "id": "rel-c555c83838",
+   "refs": [
+    {
+     "p": "BTWO-C37-P018",
+     "q": "If thou be still angry with the carle whom I first unhorsed, I pray thee pardon him his ill-luck"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C37"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "the Lady says he will return to his new thrall",
+   "id": "rel-1f74c3a1a4",
+   "refs": [
+    {
+     "p": "BTWO-C37-P025",
+     "q": "my lord will see his new thrall again"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C37"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Joyce",
+   "b_id": "per-joyce",
+   "chapter": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "takes her into the Tower",
+   "id": "rel-d411ca8154",
+   "refs": [
+    {
+     "p": "BTWO-C37-P024",
+     "q": "now he hath taken her by the hand and led her into the Tower"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C37"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTWO-C37",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "detail": "probably the same woman (beads, new thrall at Utterbol)",
+   "id": "rel-e0a53857b0",
+   "refs": [
+    {
+     "p": "BTWO-C37-P025",
+     "q": "as to why she weareth ever that pair of beads about her neck"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C37"
+  },
+  {
+   "a": "Redhead",
+   "a_id": "per-redhead",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C38",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "warns and offers to help him escape",
+   "id": "rel-d81b18d4aa",
+   "refs": [
+    {
+     "p": "BTWO-C38-P009",
+     "q": "I love thee for thy kindness to me, and thy manliness"
+    }
+   ],
+   "rel": "friend_of",
+   "when": "BTWO-C38"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTWO-C39",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "declared free, nominally",
+   "id": "rel-9d4080db71",
+   "refs": [
+    {
+     "p": "BTWO-C39-P012",
+     "q": "Have I not told thee that thou art free?"
+    }
+   ],
+   "rel": "freed_by",
+   "when": "BTWO-C39"
+  },
+  {
+   "a": "Otter",
+   "a_id": "per-otter",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTWO-C39",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "proposes they might rule Utterbol together or seek the Well together",
+   "id": "rel-bb2b24605d",
+   "refs": [
+    {
+     "p": "BTWO-C39-P017",
+     "q": "but thou and I together may rule in Utterbol and make better days there"
+    }
+   ],
+   "rel": "other",
+   "when": "BTWO-C39"
+  },
+  {
+   "a": "Redhead",
+   "a_id": "per-redhead",
+   "b": "(unnamed) woman of the Queen of Utterbol",
+   "b_id": "per-woman-of-the-queen-of-utterbol",
+   "chapter": "BTWO-C41",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "seeks her at Utterbol",
+   "id": "rel-db3595d0ac",
+   "refs": [
+    {
+     "p": "BTWO-C41-P016",
+     "q": "It is even that woman of the Queen's whereof I told thee"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTWO-C41"
+  },
+  {
+   "a": "Agatha",
+   "a_id": "per-agatha",
+   "b": "(unnamed) Lady of Utterbol",
+   "b_id": "per-lady-of-utterbol",
+   "chapter": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "her thrall",
+   "id": "rel-9b4d0a3788",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P018",
+     "q": "my lady is the Queen of Utterbol, and I am her thrall"
+    }
+   ],
+   "rel": "serves",
+   "when": "BTHREE-C1"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "loves and fears the damsel, who refuses him",
+   "id": "rel-21c00bc4e8",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P023",
+     "q": "my lord loveth her after his fashion, and withal as I deem feareth her"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTHREE-C1"
+  },
+  {
+   "a": "Redhead",
+   "a_id": "per-redhead",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTHREE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Agatha says he is true and loves Ralph",
+   "id": "rel-8b27f0a7a7",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P020",
+     "q": "he is a true man and loveth thee"
+    }
+   ],
+   "rel": "friend_of",
+   "when": "BTHREE-C1"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTHREE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "same person",
+   "id": "rel-6083ea5c92",
+   "refs": [
+    {
+     "p": "BTHREE-C3-P011",
+     "q": "Yea, I am a woman, and I was thy friend for a little while at Bourton Abbas, and at the want-ways of the Wood Perilous"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C3"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Dorothea",
+   "b_id": "per-dorothea",
+   "chapter": "BTHREE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "the dream gave a wrong name",
+   "id": "rel-95f90f778b",
+   "refs": [
+    {
+     "p": "BTHREE-C3-P025",
+     "q": "tell me thy name; is it not Dorothy?"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C3"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTHREE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "freed from the Dry Tree prison; given the beads",
+   "id": "rel-1086833df2",
+   "refs": [
+    {
+     "p": "BTHREE-C3-P021",
+     "q": "it was given unto me by a lady, mighty as I deem, and certainly most lovely, who delivered me from an evil plight"
+    }
+   ],
+   "rel": "freed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTHREE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "escaped from Utterbol",
+   "id": "rel-13ce44ba71",
+   "refs": [
+    {
+     "p": "BTHREE-C3-P017",
+     "q": "now am I but a runaway thrall"
+    }
+   ],
+   "rel": "captive_of",
+   "when": "BTHREE-C3"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "Sage of Swevenham",
+   "b_id": "per-sage-of-swevenham",
+   "chapter": "BTHREE-C3",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "same person",
+   "id": "rel-94cbbe83af",
+   "refs": [
+    {
+     "p": "BTHREE-C3-P035",
+     "q": "And of the Sage that dwelleth in this same wood?"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C3"
+  },
+  {
+   "a": "Bull Nosy",
+   "a_id": "per-bull-nosy",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTHREE-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "his swordsman clove Bull's skull on the Lord's signal",
+   "id": "rel-b7bc5dc423",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P019",
+     "q": "smote Bull, and clave his skull"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "Bull Nosy",
+   "a_id": "per-bull-nosy",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTHREE-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "loved her, but was gentle as a brother",
+   "id": "rel-9da90f7d3b",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P016",
+     "q": "I love thee sorely, and would have thee to wife"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) nephew of the Lord of Utterbol",
+   "a_id": "per-nephew-of-the-lord-of-utterbol",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BTHREE-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "nephew",
+   "id": "rel-0fb47c9f12",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P003",
+     "q": "the nephew of the lord; who like his eme was half my lover, half my tyrant"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "BTHREE-C4"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTHREE-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "his friend of past years",
+   "id": "rel-d0ee037f05",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P025",
+     "q": "I wot now that my friend of past years would have me make you both wise"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C5"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "(unnamed) wizard of the mountains",
+   "b_id": "per-wizard-of-the-mountains",
+   "chapter": "BTHREE-C5",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "probably the same: lived near Swevenham, consulted for lore, went to seek the Well when very old",
+   "id": "rel-f0e2897e84",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P020",
+     "q": "when a many years ago I dwelt nigh to Swevenham, and folk sought to me for lore"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTHREE-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "the way to the Well",
+   "id": "rel-e50dd9cff5",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P003",
+     "q": "he bade now one, now the other answer him questions as to what he had read"
+    }
+   ],
+   "rel": "teaches",
+   "when": "BTHREE-C6"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTHREE-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "the way to the Well",
+   "id": "rel-be9cfbe83f",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P003",
+     "q": "as children are taught in the school"
+    }
+   ],
+   "rel": "teaches",
+   "when": "BTHREE-C6"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "guide and protector",
+   "id": "rel-8d9bc19eb2",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P011",
+     "q": "leave me to deal with the men of Utterbol"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C7"
+  },
+  {
+   "a": "(unnamed) nephew of the Lord of Utterbol",
+   "a_id": "per-nephew-of-the-lord-of-utterbol",
+   "b": "Riders of Utterbol",
+   "b_id": "grp-riders-of-utterbol",
+   "chapter": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "leads the pursuit",
+   "id": "rel-161321bc94",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "There goes my Lord's nephew"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BTHREE-C7"
+  },
+  {
+   "a": "Otter",
+   "a_id": "per-otter",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sympathises; would rather ride with him than serve the Lord",
+   "id": "rel-7b739bea59",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "better were it to ride with my mate than serve the Devil and his Nephew"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C7"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BTHREE-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "charge on the right use of the Well's gift",
+   "id": "rel-89aaedec2c",
+   "refs": [
+    {
+     "p": "BTHREE-C8-P006",
+     "q": "I bid you be no tyrants or builders of cities"
+    }
+   ],
+   "rel": "teaches",
+   "when": "BTHREE-C8"
+  },
+  {
+   "a": "(unnamed) Ursula's former lover",
+   "a_id": "per-ursulas-former-lover",
+   "b": "men of the Burg of the Four Friths",
+   "b_id": "grp-men-of-the-burg-of-the-four-friths",
+   "chapter": "BTHREE-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "swore himself into the Burg's riders",
+   "id": "rel-02000fc9a6",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P006",
+     "q": "to wit, swear himself into the riders of the Burg of the Four Friths"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BTHREE-C11"
+  },
+  {
+   "a": "(unnamed) Ursula's former lover",
+   "a_id": "per-ursulas-former-lover",
+   "b": "(unnamed) Ursula's former lover",
+   "b_id": "per-ursulas-former-lover",
+   "chapter": "BTHREE-C11",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "same person",
+   "id": "rel-e156581c67",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P005",
+     "q": "how was it with the man for whom thou wert weeping when I first fell in with thee at Bourton Abbas?"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C11"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTHREE-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "love unspoken; living as friends",
+   "id": "rel-a90e6e3029",
+   "refs": [
+    {
+     "p": "BTHREE-C12-P006",
+     "q": "they lived still as dear friends, and not as lovers"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BTHREE-C12"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTHREE-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "troth-plight",
+   "id": "rel-99c9860a88",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P013",
+     "q": "such kissing and caressing as is meet betwixt troth-plight lovers"
+    }
+   ],
+   "rel": "betrothed_to",
+   "when": "BTHREE-C13"
+  },
+  {
+   "a": "(unnamed) messengers of the Innocent Folk",
+   "a_id": "grp-messengers-of-the-innocent-folk",
+   "b": "Innocent Folk",
+   "b_id": "grp-innocent-folk",
+   "chapter": "BTHREE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-56b6e4ad49",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P006",
+     "q": "then is this our errand with you, to be your way-leaders as far as the House of the Sorceress"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BTHREE-C14"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Ursula",
+   "b_id": "per-ursula",
+   "chapter": "BTHREE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "wed before the Innocent Folk as witnesses",
+   "id": "rel-5186ed1eba",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "bade him and the young men bear witness that they were wedded"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "BTHREE-C14"
+  },
+  {
+   "a": "Innocent Folk",
+   "a_id": "grp-innocent-folk",
+   "b": "(unnamed) fairest woman of the world",
+   "b_id": "imp-fairest-woman-of-the-world",
+   "chapter": "BTHREE-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "yearly errand from a promise made to her on her return from the Well",
+   "id": "rel-80f914b46a",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "according to the behest that we made to the fairest woman of the world, when she came back to us from the Well at the World's End"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Innocent Folk",
+   "a_id": "grp-innocent-folk",
+   "b": "Land of the Innocent Folk",
+   "b_id": "plc-land-of-the-innocent-folk",
+   "chapter": "BTHREE-C15",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-9362662df5",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "the town of that folk"
+    }
+   ],
+   "rel": "lives_in",
+   "when": "BTHREE-C15"
+  },
+  {
+   "a": "(unnamed) elder of the Innocent Folk",
+   "a_id": "per-elder-of-the-innocent-folk",
+   "b": "(unnamed) wardens of the House of the Sorceress",
+   "b_id": "per-wardens-of-the-house-of-the-sorceress",
+   "chapter": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "his son and the son's wife",
+   "id": "rel-9528644c26",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P011",
+     "q": "for the man is my son"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "BTHREE-C16"
+  },
+  {
+   "a": "Innocent Folk",
+   "a_id": "grp-innocent-folk",
+   "b": "House of the Sorceress",
+   "b_id": "bld-house-of-the-sorceress",
+   "chapter": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "keep it trim by promise to the Lady",
+   "id": "rel-bbef01a542",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P006",
+     "q": "we suffer not this house to go to ruin"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C16"
+  },
+  {
+   "a": "Innocent Folk",
+   "a_id": "grp-innocent-folk",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BTHREE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "revere her relics",
+   "id": "rel-8d364b5095",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "these things they worshipped as folk do with relics of the saints"
+    }
+   ],
+   "rel": "other",
+   "when": "BTHREE-C16"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Nicholas Longshanks",
+   "b_id": "per-nicholas-longshanks",
+   "chapter": "BTHREE-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "rode with him against raiders at sixteen",
+   "id": "rel-94c60e57dd",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P006",
+     "q": "Nicholas Longshanks, who is a wise man of war, gathered force and went against them, and I must needs ride beside him"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Innocent Folk",
+   "a_id": "grp-innocent-folk",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "guide and supply the returning seekers",
+   "id": "rel-819e082f08",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P004",
+     "q": "led Ralph and Ursula back through the wood and over the desert to the town of the Innocent Folk"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C1"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C2",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "slain; lordship won by conquest",
+   "id": "rel-5d5bf52e71",
+   "refs": [
+    {
+     "p": "BFOUR-C2-P010",
+     "q": "that mighty runagate have I slain"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BFOUR-C2"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Gandolf",
+   "b_id": "per-gandolf",
+   "chapter": "BFOUR-C2",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "same person",
+   "id": "rel-a251d0aac6",
+   "refs": [
+    {
+     "p": "BFOUR-C2-P011",
+     "q": "Gandolf of the Bear"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C2"
+  },
+  {
+   "a": "Gervaise",
+   "a_id": "per-gervaise",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C2",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "squire",
+   "id": "rel-bff6b593f6",
+   "refs": [
+    {
+     "p": "BFOUR-C2-P010",
+     "q": "Ho, Gervaise!"
+    }
+   ],
+   "rel": "serves",
+   "when": "BFOUR-C2"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "same person",
+   "id": "rel-2ffdfe85e6",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P007",
+     "q": "I am Lord of Utterbol and therewithal Bull Shockhead"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C3"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Utterbol",
+   "b_id": "plc-utterbol",
+   "chapter": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "by conquest",
+   "id": "rel-dfde8fc905",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P007",
+     "q": "I am Lord of Utterbol"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BFOUR-C3 onward"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "(unnamed) Lady of Utterbol",
+   "b_id": "per-lady-of-utterbol",
+   "chapter": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "wed in atonement after slaying her husband",
+   "id": "rel-5f0d99d569",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "I made atonement to his widow, and wedded her"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "BFOUR-C3"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "in revenge for Bull Nosy",
+   "id": "rel-aa35e32b0a",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "when I slew the tyrant, who forsooth owed me no less than his life for the murder of my brother"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "Otter",
+   "a_id": "per-otter",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "right-hand man; refused the lordship",
+   "id": "rel-ab5649b8d3",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P020",
+     "q": "he is now my right-hand man, as he was of the dead man"
+    }
+   ],
+   "rel": "serves",
+   "when": "BFOUR-C3"
+  },
+  {
+   "a": "Otter",
+   "a_id": "per-otter",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C4",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "swears to follow the Bull through all fortunes",
+   "id": "rel-9d0a8fb28a",
+   "refs": [
+    {
+     "p": "BFOUR-C4-P009",
+     "q": "I will follow the Bull through thick and thin"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C4"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "(unnamed) Bull's lion",
+   "b_id": "cre-bulls-lion",
+   "chapter": "BFOUR-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "bought and tamed",
+   "id": "rel-517808a845",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P009",
+     "q": "I turned to my new-bought thrall and bade him come with me"
+    }
+   ],
+   "rel": "owns",
+   "when": "backstory"
+  },
+  {
+   "a": "Gandolf",
+   "a_id": "per-gandolf",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "skull cloven with a short-sword in his chamber",
+   "id": "rel-9fbda380b3",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P021",
+     "q": "hove up my short-sword, and clave his skull, in front and with mine own hand"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "Agatha",
+   "a_id": "per-agatha",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "freed with gifts and lands",
+   "id": "rel-0bf4b1a95a",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P027",
+     "q": "I gave her rich gifts and good lands, and freedom, to boot her for her many stripes"
+    }
+   ],
+   "rel": "freed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "Otter",
+   "a_id": "per-otter",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "gave him the choice of lordship or death; became his man",
+   "id": "rel-fd36b25bf3",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P024",
+     "q": "either that thou be Lord of Utterbol, or that we slay thee here and now"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Redhead",
+   "a_id": "per-redhead",
+   "b": "Agatha",
+   "b_id": "per-agatha",
+   "chapter": "BFOUR-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "courting her",
+   "id": "rel-0116b8f65d",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P013",
+     "q": "none may say that she is not fair and sweet enough for a better man than me"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "BFOUR-C6"
+  },
+  {
+   "a": "(unnamed) nephew of the Lord of Utterbol",
+   "a_id": "per-nephew-of-the-lord-of-utterbol",
+   "b": "Redhead",
+   "b_id": "per-redhead",
+   "chapter": "BFOUR-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "bound and drowned in the Ram's Bane",
+   "id": "rel-4c524eec6e",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P018",
+     "q": "I tied him neck and heels and cast him, with a stone round his neck, into a deep woodland pool"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sworn to visit Upmeads within ten years",
+   "id": "rel-e79b45432f",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P007",
+     "q": "I should be of mind to swear by him to come and see you at Upmeads ere ten years have worn"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C6"
+  },
+  {
+   "a": "(unnamed) brother of the Utterbol nephew",
+   "a_id": "per-brother-of-the-utterbol-nephew",
+   "b": "Black Riders",
+   "b_id": "grp-black-riders",
+   "chapter": "BFOUR-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-dac85c7071",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "these are the men of the brother of thy hot wooer"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C7"
+  },
+  {
+   "a": "Black Riders",
+   "a_id": "grp-black-riders",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "fight the Utterbol escort",
+   "id": "rel-413c4d1f9d",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P008",
+     "q": "the Black men-at-arms came on at a trot"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BFOUR-C7"
+  },
+  {
+   "a": "King Rainald",
+   "a_id": "per-king-rainald",
+   "b": "Goldburg",
+   "b_id": "plc-goldburg",
+   "chapter": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "succeeds his cousin the Queen",
+   "id": "rel-6aca826c70",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "the King Rainald her cousin reigns in her stead"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BFOUR-C8"
+  },
+  {
+   "a": "King Rainald",
+   "a_id": "per-king-rainald",
+   "b": "Queen of Goldburg",
+   "b_id": "per-queen-of-goldburg",
+   "chapter": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "cousin",
+   "id": "rel-1678c63f03",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "the King Rainald her cousin"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "BFOUR-C8"
+  },
+  {
+   "a": "Goldburg",
+   "a_id": "plc-goldburg",
+   "b": "Bull Shockhead",
+   "b_id": "per-bull-shockhead",
+   "chapter": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "firm peace",
+   "id": "rel-759af03eae",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P002",
+     "q": "the new Lord of Utterbol had made firm and fast peace with Goldburg"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C8"
+  },
+  {
+   "a": "(unnamed) King of Cheaping Knowe",
+   "a_id": "per-king-of-cheaping-knowe",
+   "b": "(unnamed) tyrant of Cheaping Knowe",
+   "b_id": "per-tyrant-of-cheaping-knowe",
+   "chapter": "BFOUR-C9",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "detail": "probably the same ruler, now styled King",
+   "id": "rel-890bb6d485",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P002",
+     "q": "the King there; who was a close-fist and a cruel lord"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C9"
+  },
+  {
+   "a": "Michael-a-dale",
+   "a_id": "per-michael-a-dale",
+   "b": "(unnamed) Michael of the Hatch",
+   "b_id": "imp-michael-of-the-hatch",
+   "chapter": "BFOUR-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "of the same kindred",
+   "id": "rel-87d59d3190",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P020",
+     "q": "the kindred of Michael of the Hatch of Swevenham"
+    }
+   ],
+   "rel": "kin_of",
+   "when": "BFOUR-C9"
+  },
+  {
+   "a": "Michael-a-dale",
+   "a_id": "per-michael-a-dale",
+   "b": "(unnamed) King of Cheaping Knowe",
+   "b_id": "per-king-of-cheaping-knowe",
+   "chapter": "BFOUR-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "councillor held against his will",
+   "id": "rel-9f42548fa4",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P016",
+     "q": "I am of the King's Council"
+    }
+   ],
+   "rel": "serves",
+   "when": "BFOUR-C9"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Bull Nosy",
+   "b_id": "per-bull-nosy",
+   "chapter": "BFOUR-C9",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "detail": "raised the standing stone over his brother's howe",
+   "id": "rel-dfb8c2e70f",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P005",
+     "q": "whereby the wayfarers wotted that this had been done in his memory by his brother, the new Lord of Utterbol"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C9"
+  },
+  {
+   "a": "(unnamed) King of Cheaping Knowe",
+   "a_id": "per-king-of-cheaping-knowe",
+   "b": "Folk of the Fells",
+   "b_id": "grp-folk-of-the-fells",
+   "chapter": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "arrow through the throat",
+   "id": "rel-411abd709a",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P012",
+     "q": "the King threw up his arms, and fell forward on his horse's neck with a great arrow through his throat"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BFOUR-C10"
+  },
+  {
+   "a": "(unnamed) Duke of the Bulls",
+   "a_id": "per-duke-of-the-bulls",
+   "b": "Folk of the Fells",
+   "b_id": "grp-folk-of-the-fells",
+   "chapter": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-145417be4d",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P018",
+     "q": "Ralph hailed the new-comer as Lord or Duke of the Bulls"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C10"
+  },
+  {
+   "a": "Folk of the Fells",
+   "a_id": "grp-folk-of-the-fells",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "through Bull Shockhead's token",
+   "id": "rel-936fb34d20",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P020",
+     "q": "Verily our brother's hand hath met thine when he gave thee this"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C10"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Folk of the Fells",
+   "b_id": "grp-folk-of-the-fells",
+   "chapter": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "their kinsman",
+   "id": "rel-654ea3805a",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P019",
+     "q": "that Friend of the Well and of our kinsman concerning whom he sent us a message"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BFOUR-C10"
+  },
+  {
+   "a": "Folk of the Fells",
+   "a_id": "grp-folk-of-the-fells",
+   "b": "(unnamed) town of the Folk of the Fells",
+   "b_id": "plc-town-of-the-folk-of-the-fells",
+   "chapter": "BFOUR-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "-",
+   "id": "rel-8b8c0dd7a1",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "the dwelling or town of this Folk of the Fells"
+    }
+   ],
+   "rel": "lives_in",
+   "when": "BFOUR-C11"
+  },
+  {
+   "a": "Walter the Black",
+   "a_id": "per-walter-the-black",
+   "b": "Richard the Red",
+   "b_id": "per-richard-the-red",
+   "chapter": "BFOUR-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "slain in battle",
+   "id": "rel-2231e695ee",
+   "refs": [
+    {
+     "p": "BFOUR-C13-P017",
+     "q": "I slew him in shock of battle, and his men craved peace of the good town"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "Blaise",
+   "a_id": "per-blaise",
+   "b": "men of the Port of Whitwall",
+   "b_id": "grp-men-of-the-port-of-whitwall",
+   "chapter": "BFOUR-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Lord of the Porte",
+   "id": "rel-b10cf26412",
+   "refs": [
+    {
+     "p": "BFOUR-C13-P044",
+     "q": "he is become a chief and Lord of the Porte"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C13"
+  },
+  {
+   "a": "Sage of Swevenham",
+   "a_id": "per-sage-of-swevenham",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "will go with him to Upmeads",
+   "id": "rel-7e6a388385",
+   "refs": [
+    {
+     "p": "BFOUR-C13-P004",
+     "q": "I will leave thee no more till thou biddest me go from thee"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C13"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "Richard the Red",
+   "b_id": "per-richard-the-red",
+   "chapter": "BFOUR-C15",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Richard and Ralph strike him; he says it was Richard",
+   "id": "rel-a26ed21de5",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P026",
+     "q": "Richard it was; not thou"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BFOUR-C15"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BFOUR-C15",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "loved her without return",
+   "id": "rel-6ca130f97c",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P021",
+     "q": "I came to her and forgat all but her; yea, my very life I forgat"
+    }
+   ],
+   "rel": "lover_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "a_id": "per-captain-of-the-dry-tree",
+   "b": "Captain of the Dry Tree",
+   "b_id": "per-captain-of-the-dry-tree",
+   "chapter": "BFOUR-C15",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "confirmed the same man",
+   "id": "rel-73a33c7bbc",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P025",
+     "q": "he was the tall champion whom he had met first at the churchyard gate of Netherton"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C15"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "yeomen of Abundance",
+   "b_id": "grp-yeomen-of-abundance",
+   "chapter": "BFOUR-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "accepted as their lord in the Lady's memory",
+   "id": "rel-a84346e66c",
+   "refs": [
+    {
+     "p": "BFOUR-C16-P030",
+     "q": "Hail to our lord! and long life to our helper"
+    }
+   ],
+   "rel": "lord_of",
+   "when": "BFOUR-C16 onward"
+  },
+  {
+   "a": "(unnamed) Prior of the Thorn",
+   "a_id": "per-prior-of-the-thorn",
+   "b": "House of Abundance",
+   "b_id": "bld-house-of-abundance",
+   "chapter": "BFOUR-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "says no heir of the Lady remains to claim it",
+   "id": "rel-bc05a78719",
+   "refs": [
+    {
+     "p": "BFOUR-C16-P031",
+     "q": "there is no lineage of the Lady left to claim it"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C16"
+  },
+  {
+   "a": "Roger of the Rope-walk",
+   "a_id": "per-roger-of-the-rope-walk",
+   "b": "Roger of the Rope-walk",
+   "b_id": "per-roger-of-the-rope-walk",
+   "chapter": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "same person",
+   "id": "rel-7092a7b0af",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P004",
+     "q": "I am that holy man"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C17"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "Wheat-wearers",
+   "b_id": "grp-wheat-wearers",
+   "chapter": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "freed their women, armed them, and with them took the Burg",
+   "id": "rel-5d0e142c99",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P025",
+     "q": "the Champions became their doctors and teachers of battle"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C17"
+  },
+  {
+   "a": "Wheat-wearers",
+   "a_id": "grp-wheat-wearers",
+   "b": "Burg of the Four Friths",
+   "b_id": "plc-burg-of-the-four-friths",
+   "chapter": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "rose and took the Burg",
+   "id": "rel-519404d5f8",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P029",
+     "q": "in an hour's space the pride and the estate of the Burg of the Four Friths was utterly fallen"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "backstory"
+  },
+  {
+   "a": "Lady of Abundance",
+   "a_id": "per-lady-of-abundance",
+   "b": "Roger of the Rope-walk",
+   "b_id": "per-roger-of-the-rope-walk",
+   "chapter": "BFOUR-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "had Roger draw Ralph to the Burg and Abundance",
+   "id": "rel-3520d4530c",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P013",
+     "q": "she first spake to me of thee and bade me bring about that meeting with her"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Stephen a-Hurst",
+   "a_id": "per-stephen-a-hurst",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BFOUR-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "old comrade of Roger",
+   "id": "rel-09acf6a56b",
+   "refs": [
+    {
+     "p": "BFOUR-C18-P005",
+     "q": "I deemed that thou hadst fled away from all of us to live in the wilds"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BFOUR-C18"
+  },
+  {
+   "a": "(unnamed) old Queen of the Dry Tree",
+   "a_id": "per-old-queen-of-the-dry-tree",
+   "b": "Roger of the Rope-walk",
+   "b_id": "per-roger-of-the-rope-walk",
+   "chapter": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "after news of the Lady's death",
+   "id": "rel-e5dbb4c6f3",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P031",
+     "q": "as to her, I slew her not three feet from where thou standest now"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) new Captain of the Dry Tree",
+   "a_id": "per-new-captain-of-the-dry-tree",
+   "b": "Burg of the Four Friths",
+   "b_id": "plc-burg-of-the-four-friths",
+   "chapter": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "captain of the Burg and the Dry Tree",
+   "id": "rel-744d726854",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P003",
+     "q": "the Captain of the Burg (e'en he of the Dry Tree, who in these latest days is made captain of all)"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C19"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "mutual oaths at the Scaur",
+   "id": "rel-ece62da06e",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P039",
+     "q": "we swear to follow the Lord Ralph of Upmeads for a year and a day"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C19"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Castle of the Scaur",
+   "b_id": "bld-castle-of-the-scaur",
+   "chapter": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "offered the Scaur and Hampton as a gift; accepts if he survives",
+   "id": "rel-096729a135",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P055",
+     "q": "the Scaur, and Hampton therewith is a gift from us to thee"
+    }
+   ],
+   "rel": "owns",
+   "when": "BFOUR-C19"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "plan to attack Upmeads, then Higham, then the Burg",
+   "id": "rel-3c28355f56",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P055",
+     "q": "they would gather to them other bands of strong-thieves who haunt that wood, and go with them upon Upmeads"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BFOUR-C19"
+  },
+  {
+   "a": "Banded Barons",
+   "a_id": "grp-banded-barons",
+   "b": "St. Mary's of Higham",
+   "b_id": "bld-st-marys-of-higham",
+   "chapter": "BFOUR-C19",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "war from the West",
+   "id": "rel-8fcf1fa26c",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P017",
+     "q": "the Abbot has had unpeace on his hands"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BFOUR-C19"
+  },
+  {
+   "a": "Hugh",
+   "a_id": "per-hugh",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "brother",
+   "id": "rel-9617ea71d4",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P006",
+     "q": "He is mine own brother"
+    }
+   ],
+   "rel": "sibling_of",
+   "when": "BFOUR-C20"
+  },
+  {
+   "a": "Hugh",
+   "a_id": "per-hugh",
+   "b": "St. Mary's of Higham",
+   "b_id": "bld-st-marys-of-higham",
+   "chapter": "BFOUR-C20",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sworn man of Higham, then leaves",
+   "id": "rel-309dde9348",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P006",
+     "q": "he was none the less our sworn man"
+    }
+   ],
+   "rel": "serves",
+   "when": "BFOUR-C20"
+  },
+  {
+   "a": "Gregory",
+   "a_id": "per-gregory",
+   "b": "St. Mary's of Higham",
+   "b_id": "bld-st-marys-of-higham",
+   "chapter": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "novice monk",
+   "id": "rel-736d8d34ff",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "he is turned monk, brother; that is, he is already a novice"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BFOUR-C21"
+  },
+  {
+   "a": "Lancelot Longtongue",
+   "a_id": "per-lancelot-longtongue",
+   "b": "St. Mary's of Higham",
+   "b_id": "bld-st-marys-of-higham",
+   "chapter": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "sergeant of the Abbot's men",
+   "id": "rel-30ea8859a8",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "he is a sergeant of theirs"
+    }
+   ],
+   "rel": "serves",
+   "when": "BFOUR-C21"
+  },
+  {
+   "a": "Westland Barons",
+   "a_id": "grp-westland-barons",
+   "b": "St. Mary's of Higham",
+   "b_id": "bld-st-marys-of-higham",
+   "chapter": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "defeated and hold the Abbot",
+   "id": "rel-d1c5e354e3",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "there was Holy Church overthrown"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "backstory"
+  },
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "a_id": "per-abbot-of-st-marys-of-higham",
+   "b": "Westland Barons",
+   "b_id": "grp-westland-barons",
+   "chapter": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "held at the Red Mount",
+   "id": "rel-c847d3fae1",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "as none would slay him, might they help it, they had to lead him away"
+    }
+   ],
+   "rel": "captive_of",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "Westland Barons",
+   "b_id": "grp-westland-barons",
+   "chapter": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "have taken some of their strongholds",
+   "id": "rel-d0c6de50e6",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P005",
+     "q": "they have taken from them some of their strong-holds"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "BFOUR-C21"
+  },
+  {
+   "a": "(unnamed) Garton volunteers",
+   "a_id": "grp-garton-volunteers",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "volunteer to follow him",
+   "id": "rel-a2491de0c1",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P019",
+     "q": "we have little will to abide behind, but were fain to follow thee"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C21"
+  },
+  {
+   "a": "Giles",
+   "a_id": "per-giles",
+   "b": "shepherds of the Downs",
+   "b_id": "grp-shepherds-of-the-downs",
+   "chapter": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "shepherd",
+   "id": "rel-b6202c9549",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "I am of the folk of the shepherds of the Downs"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BFOUR-C22"
+  },
+  {
+   "a": "Giles",
+   "a_id": "per-giles",
+   "b": "(unnamed) old spearman shepherd",
+   "b_id": "per-old-spearman-shepherd",
+   "chapter": "BFOUR-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "detail": "probably the same man (met on the Greenway, Thirly)",
+   "id": "rel-4b6d00ec9e",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P008",
+     "q": "he had seen him but that once when he rode the Greenway across the downs to Higham"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C22"
+  },
+  {
+   "a": "Martha",
+   "a_id": "per-martha",
+   "b": "Giles",
+   "b_id": "per-giles",
+   "chapter": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "old friend and sweetheart",
+   "id": "rel-db4377faaf",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "time was we have had many a fair play in the ingles of the downs in the July weather"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "shepherds of the Downs",
+   "b_id": "grp-shepherds-of-the-downs",
+   "chapter": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "lifted sheep, slew men, took women",
+   "id": "rel-2fc9c8f603",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "they have lifted our sheep, and slain some of us who withstood them"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BFOUR-C22"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "Foxworth Castle",
+   "b_id": "bld-foxworth-castle",
+   "chapter": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "Burger stronghold",
+   "id": "rel-65150a0024",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "turn not aside to fall on the Burgers in this land, either at Foxworth Castle"
+    }
+   ],
+   "rel": "owns",
+   "when": "BFOUR-C22"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "Nineways Garth",
+   "b_id": "bld-nineways-garth",
+   "chapter": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "Burger stronghold",
+   "id": "rel-3c3b9572a0",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "or the Nineways Garth"
+    }
+   ],
+   "rel": "owns",
+   "when": "BFOUR-C22"
+  },
+  {
+   "a": "Martha",
+   "a_id": "per-martha",
+   "b": "Bear-father",
+   "b_id": "sup-bear-father",
+   "chapter": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "names Ralph well-beloved of Bear-father",
+   "id": "rel-89bf717668",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "the well-beloved of Bear-father"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C22"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "outlaws of the Wood Debateable",
+   "b_id": "grp-outlaws-of-the-wood-debateable",
+   "chapter": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "bargain to take Upmeads together",
+   "id": "rel-9e9bdc83b5",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "There we struck a bargain with the main band of strong-thieves of the wood"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C23"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "march to seize it as a new home",
+   "id": "rel-e882eddc77",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "we and they together would get us a new home in Upmeads, which is a fat and pleasant land"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "BFOUR-C23"
+  },
+  {
+   "a": "(unnamed) young Burger captive",
+   "a_id": "per-young-burger-captive",
+   "b": "(unnamed) expelled Burgers",
+   "b_id": "grp-expelled-burgers",
+   "chapter": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "stabbed by a fellow captive, whom Stephen then cut down",
+   "id": "rel-8d9368827a",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P009",
+     "q": "Stephen, who had his sword naked in his hand, straightway hewed down the slayer"
+    }
+   ],
+   "rel": "killed_by",
+   "when": "BFOUR-C23"
+  },
+  {
+   "a": "shepherds of the Downs",
+   "a_id": "grp-shepherds-of-the-downs",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "muster to Bear Castle at his token",
+   "id": "rel-524b297097",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P012",
+     "q": "There then is thine answer, lord"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C23"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "shepherds of the Downs",
+   "b_id": "grp-shepherds-of-the-downs",
+   "chapter": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Captain and sworn brother",
+   "id": "rel-27c57bc1b4",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P009",
+     "q": "he swore in a loud voice to be a true brother of the Shepherd-folk"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C24"
+  },
+  {
+   "a": "Tall Thomas",
+   "a_id": "per-tall-thomas",
+   "b": "shepherds of the Downs",
+   "b_id": "grp-shepherds-of-the-downs",
+   "chapter": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "Elder of the mote",
+   "id": "rel-d060ba6669",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P002",
+     "q": "straightway he proclaimed the hallowing of the Mote"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C24"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "shepherds of the Downs",
+   "b_id": "grp-shepherds-of-the-downs",
+   "chapter": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "fight as friends, unpaid by them",
+   "id": "rel-d1560ba897",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P013",
+     "q": "we will be paid by our foes and not by our friends"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C24"
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "a_id": "grp-fellowship-of-the-dry-tree",
+   "b": "shepherds of the Downs",
+   "b_id": "grp-shepherds-of-the-downs",
+   "chapter": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "past raids on their flocks",
+   "id": "rel-5116db7adb",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P013",
+     "q": "True it is that we have whiles driven prey in your country"
+    }
+   ],
+   "rel": "enemy_of",
+   "when": "backstory"
+  },
+  {
+   "a": "Wulstead",
+   "a_id": "plc-wulstead",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "always a friendly neighbour",
+   "id": "rel-418e5ae88d",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "though Wulstead was not in the lands of Upmeads, yet it was always a friendly neighbour"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C25"
+  },
+  {
+   "a": "Clement Chapman",
+   "a_id": "per-clement-chapman",
+   "b": "Wulstead",
+   "b_id": "plc-wulstead",
+   "chapter": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "medium",
+   "detail": "captain of the townsfolk at the barrier",
+   "id": "rel-99934f0095",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P004",
+     "q": "Is there a captain of the townsfolk within the timber there?"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C25"
+  },
+  {
+   "a": "Nicholas Longshanks",
+   "a_id": "per-nicholas-longshanks",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "leads the carles holding the High House",
+   "id": "rel-f7342399a4",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P011",
+     "q": "Nicholas Longshanks is the leader of them down there"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C25"
+  },
+  {
+   "a": "King Peter",
+   "a_id": "per-king-peter",
+   "b": "House of Black Canons of Wulstead",
+   "b_id": "bld-house-of-black-canons-of-wulstead",
+   "chapter": "BFOUR-C25",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "refugee there two days",
+   "id": "rel-86d2f635ef",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P010",
+     "q": "there are they dwelling in all honour and dignity these two days past"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C25"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Geirings",
+   "b_id": "grp-geirings",
+   "chapter": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "descent",
+   "id": "rel-cd9c623189",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P019",
+     "q": "We be come of the Geirings of old time"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BFOUR-C26"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "(unnamed) brother of Ursula",
+   "b_id": "per-brother-of-ursula",
+   "chapter": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "estranged brother",
+   "id": "rel-39f9e61ec1",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P018",
+     "q": "one brother who loveth me not"
+    }
+   ],
+   "rel": "sibling_of",
+   "when": "BFOUR-C26"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "shepherds of the Downs",
+   "b_id": "grp-shepherds-of-the-downs",
+   "chapter": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Warduke and brother",
+   "id": "rel-b6849e6f40",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P023",
+     "q": "the brother and Warduke of the Shepherds"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "BFOUR-C26"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Plain of Abundance",
+   "b_id": "plc-plain-of-abundance",
+   "chapter": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Lord of the Little Land of Abundance",
+   "id": "rel-bedd1c2deb",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P023",
+     "q": "I have become the Lord of the Little Land of Abundance"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BFOUR-C26"
+  },
+  {
+   "a": "(unnamed) Queen of Upmeads",
+   "a_id": "per-queen-of-upmeads",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C26",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "mother",
+   "id": "rel-01a52609ed",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P012",
+     "q": "I durst not halse thee till I knew it was mine own flesh and blood"
+    }
+   ],
+   "rel": "parent_of",
+   "when": "BFOUR-C26"
+  },
+  {
+   "a": "Dame Katherine",
+   "a_id": "per-dame-katherine",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C27",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "gossip and foster-mother",
+   "id": "rel-65d73a9f9c",
+   "refs": [
+    {
+     "p": "BFOUR-C27-P009",
+     "q": "though he but kisses me as his gossip and foster-mother"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C27"
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "a_id": "grp-expelled-burgers",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BFOUR-C27",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "entered Upmeads at noon and skirmished at the High House",
+   "id": "rel-2f46e5d918",
+   "refs": [
+    {
+     "p": "BFOUR-C27-P002",
+     "q": "the foe were come into the Upmeads-land at noon that day"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "BFOUR-C27"
+  },
+  {
+   "a": "(unnamed) Wise Woman of Sarras",
+   "a_id": "per-wise-woman-of-sarras",
+   "b": "Dame Katherine",
+   "b_id": "per-dame-katherine",
+   "chapter": "BFOUR-C28",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "taught her wisdom and laid the beads charge on her",
+   "id": "rel-0745626de9",
+   "refs": [
+    {
+     "p": "BFOUR-C28-P006",
+     "q": "Sit down before me, and I will teach thee wisdom"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Dame Katherine",
+   "a_id": "per-dame-katherine",
+   "b": "Dame Katherine's necklace",
+   "b_id": "itm-dame-katherines-necklace",
+   "chapter": "BFOUR-C28",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "received from the Wise Woman of Sarras",
+   "id": "rel-c1a0cbffe3",
+   "refs": [
+    {
+     "p": "BFOUR-C28-P012",
+     "q": "took thence the self-same pair of beads which I gave to thee"
+    }
+   ],
+   "rel": "owns",
+   "when": "backstory"
+  },
+  {
+   "a": "Dame Katherine",
+   "a_id": "per-dame-katherine",
+   "b": "Clement Chapman",
+   "b_id": "per-clement-chapman",
+   "chapter": "BFOUR-C28",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "wife",
+   "id": "rel-58cfee2f01",
+   "refs": [
+    {
+     "p": "BFOUR-C28-P002",
+     "q": "In the days when I was first wedded to Master Clement yonder"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "BFOUR-C28"
+  },
+  {
+   "a": "(unnamed) Wise Woman of Sarras",
+   "a_id": "per-wise-woman-of-sarras",
+   "b": "Lady of Abundance",
+   "b_id": "per-lady-of-abundance",
+   "chapter": "BFOUR-C28",
+   "classification": "CANON-INFERRED",
+   "confidence": "low",
+   "detail": "possibly her teacher (Ralph's belief)",
+   "id": "rel-246e38b2b6",
+   "refs": [
+    {
+     "p": "BFOUR-C28-P015",
+     "q": "he deemed it certain that the Wise Woman of Sarras would be none other than she who had taught lore to the Lady of Abundance"
+    }
+   ],
+   "rel": "other",
+   "when": "backstory"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "(unnamed) expelled Burgers",
+   "b_id": "grp-expelled-burgers",
+   "chapter": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Battle of Upmeads",
+   "id": "rel-70f104f577",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P030",
+     "q": "Home now!  Home to Upmeads!"
+    }
+   ],
+   "rel": "at_war_with",
+   "when": "BFOUR-C29"
+  },
+  {
+   "a": "Hugh",
+   "a_id": "per-hugh",
+   "b": "Fellowship of the Dry Tree",
+   "b_id": "grp-fellowship-of-the-dry-tree",
+   "chapter": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "rides with the Champions in battle",
+   "id": "rel-95c1011acd",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P002",
+     "q": "had fallen into the company of the Champions"
+    }
+   ],
+   "rel": "member_of",
+   "when": "BFOUR-C29"
+  },
+  {
+   "a": "Wulstead",
+   "a_id": "plc-wulstead",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "men of Wulstead march with him",
+   "id": "rel-c1d2facdc8",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P002",
+     "q": "what with the men of the town"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "BFOUR-C29"
+  },
+  {
+   "a": "(unnamed) Prior of the Austin Canons of Wulstead",
+   "a_id": "per-prior-of-the-austin-canons-of-wulstead",
+   "b": "King Peter",
+   "b_id": "per-king-peter",
+   "chapter": "BFOUR-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "ancient friend",
+   "id": "rel-c6bfa77509",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P007",
+     "q": "an ancient friend of King Peter"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C30"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Wulstead",
+   "b_id": "plc-wulstead",
+   "chapter": "BFOUR-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "promises to keep its peace",
+   "id": "rel-c5dca0bb29",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P003",
+     "q": "I will see to it in time to come that ye live in peace and quiet here"
+    }
+   ],
+   "rel": "other",
+   "when": "BFOUR-C30"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BFOUR-C31",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "proclaimed King by Peter",
+   "id": "rel-e44489a480",
+   "refs": [
+    {
+     "p": "BFOUR-C31-P013",
+     "q": "this man is the King of Upmeads, and this woman is his Lady and Queen"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BFOUR-C31"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Upmeads",
+   "b_id": "pol-upmeads",
+   "chapter": "BFOUR-C31",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "Queen",
+   "id": "rel-e4adedca70",
+   "refs": [
+    {
+     "p": "BFOUR-C31-P013",
+     "q": "this woman is his Lady and Queen"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "BFOUR-C31"
+  },
+  {
+   "a": "King Peter",
+   "a_id": "per-king-peter",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C31",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "kneels and swears service",
+   "id": "rel-1fa7fbec73",
+   "refs": [
+    {
+     "p": "BFOUR-C31-P015",
+     "q": "took Ralph's hand in his and swore service to him such as was due"
+    }
+   ],
+   "rel": "serves",
+   "when": "BFOUR-C31"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Castle of the Scaur",
+   "b_id": "bld-castle-of-the-scaur",
+   "chapter": "BFOUR-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "held until death",
+   "id": "rel-1286a27896",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "Till his deathday he held the Castle of the Scaur"
+    }
+   ],
+   "rel": "ruler_of",
+   "when": "epilogue"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Burg of the Four Friths",
+   "b_id": "plc-burg-of-the-four-friths",
+   "chapter": "BFOUR-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "lord and captain chosen by the new folk",
+   "id": "rel-e77feaf400",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "The new folk of the Burg of the Four Friths made him their lord and captain"
+    }
+   ],
+   "rel": "leader_of",
+   "when": "epilogue"
+  },
+  {
+   "a": "Ralph",
+   "a_id": "per-ralph",
+   "b": "Abbot of St. Mary's of Higham",
+   "b_id": "per-abbot-of-st-marys-of-higham",
+   "chapter": "BFOUR-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "captain; drove out the tyrants",
+   "id": "rel-5d8b07e074",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "He rode to Higham and offered himself as captain to the abbot thereof"
+    }
+   ],
+   "rel": "serves",
+   "when": "epilogue"
+  },
+  {
+   "a": "Bull Shockhead",
+   "a_id": "per-bull-shockhead",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "rides with him to battle about two years after the homecoming",
+   "id": "rel-68ea3347b4",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "came to him the Lord Bull of Utterbol with a chosen band"
+    }
+   ],
+   "rel": "allied_with",
+   "when": "epilogue"
+  },
+  {
+   "a": "Ursula",
+   "a_id": "per-ursula",
+   "b": "Ralph",
+   "b_id": "per-ralph",
+   "chapter": "BFOUR-C32",
+   "classification": "CANON",
+   "confidence": "high",
+   "detail": "eight children; buried together",
+   "id": "rel-273037f105",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P008",
+     "q": "Eight goodly children she bore him"
+    }
+   ],
+   "rel": "spouse_of",
+   "when": "epilogue"
+  }
+ ]
+}

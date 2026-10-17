@@ -1,0 +1,2288 @@
+{
+ "format": "morris-opportunities/1",
+ "records": [
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "this wood was debateable"
+    }
+   ],
+   "chapter": "BONE-C1",
+   "classification": "GAME EXPANSION",
+   "id": "opp-344f8b7bd2",
+   "idea": "A disputed border forest between a weak kinglet and a church baron as a starting tension.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "lawful silver of Upmeads and the Wolds and the Overhill-Countries"
+    }
+   ],
+   "chapter": "BONE-C1",
+   "classification": "GAME EXPANSION",
+   "id": "opp-10e1cdf8b6",
+   "idea": "Shared silver standard of neighbouring lands as a regional currency zone.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "prey on the rich, and the lawful prey on the poor"
+    }
+   ],
+   "chapter": "BONE-C2",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a9b89af7a4",
+   "idea": "Outlaw bands in border woods who may aid travellers, with a moral code distinct from lawful lords.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C3-P038",
+     "q": "the wool of the downs is good, good, good!"
+    }
+   ],
+   "chapter": "BONE-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d2c41c7637",
+   "idea": "Wool of the downs as a regional trade good bought by travelling chapmen.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "the little house of a holy man with a little chapel thereby"
+    }
+   ],
+   "chapter": "BONE-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-882b45aa6d",
+   "idea": "Wayside hermit chapels at water pools as rest points on waterless downland.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C3-P027",
+     "q": "Who wotteth what shall betide to thee or me if he do so?"
+    }
+   ],
+   "chapter": "BONE-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d375441b18",
+   "idea": "An unblessed amulet whose powers are unknown, with tension between faith and folk magic.",
+   "system": "items"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "let light a great fire upon each corner of the topmost wall of Bear Castle"
+    }
+   ],
+   "chapter": "BONE-C4",
+   "classification": "GAME EXPANSION",
+   "id": "opp-5acfae1c2d",
+   "idea": "A beacon-and-watchword pact with lordless shepherds that the player can earn and later call on.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "an earth-work of the ancient folk"
+    },
+    {
+     "p": "BONE-C4-P009",
+     "q": "seven grave-mounds of the ancient folk"
+    }
+   ],
+   "chapter": "BONE-C4",
+   "classification": "GAME EXPANSION",
+   "id": "opp-9034c825b8",
+   "idea": "Ancient earthworks, hill figures, green roads and barrows as procedural landmark types on downland.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "after each sight of him followed evil days and the death of men"
+    }
+   ],
+   "chapter": "BONE-C4",
+   "classification": "GAME EXPANSION",
+   "id": "opp-ed33021d8c",
+   "idea": "An omen-rider whose sightings precede regional troubles.",
+   "system": "events"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C5-P028",
+     "q": "become his Captain of Captains"
+    }
+   ],
+   "chapter": "BONE-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-642247af53",
+   "idea": "A church lordship that recruits adventurers and promises promotion as a faction to join or refuse.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "that is done by the scribes and the limners"
+    }
+   ],
+   "chapter": "BONE-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-1d16c80c82",
+   "idea": "Seasonal town festivals with guild-staged plays as world events.",
+   "system": "events"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "each one of these bales would mean at least a half-score of stout men"
+    }
+   ],
+   "chapter": "BONE-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a5abe52ce2",
+   "idea": "Beacon networks linking vassal thorps as a muster mechanic.",
+   "system": "military"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C6-P008",
+     "q": "thou wert best do it off and let me keep it for thee"
+    }
+   ],
+   "chapter": "BONE-C6",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d630a21c04",
+   "idea": "Rival amulets (blessed versus unblessed) that factions try to obtain from the player.",
+   "system": "items"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "abide till the Chapmen wend thither from Higham, who ride many in company"
+    }
+   ],
+   "chapter": "BONE-C7",
+   "classification": "GAME EXPANSION",
+   "id": "opp-df6f0fb4d1",
+   "idea": "Armed merchant caravans that travellers can wait for and join through dangerous woods.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "though it be the outermost of its lands"
+    }
+   ],
+   "chapter": "BONE-C7",
+   "classification": "GAME EXPANSION",
+   "id": "opp-bb61636e28",
+   "idea": "Frontier thorps at the edge of a lordship as last safe stops before wilderness.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C8-P013",
+     "q": "for we have many foes in the wildwood"
+    }
+   ],
+   "chapter": "BONE-C8",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a05f56089c",
+   "idea": "Two armed factions in the same forest (town militia and the leafless-tree company) whose quarrel the player stumbles into.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C8-P003",
+     "q": "After a while the thick beech-wood gave out"
+    }
+   ],
+   "chapter": "BONE-C8",
+   "classification": "GAME EXPANSION",
+   "id": "opp-1a2de18af1",
+   "idea": "Forest biome bands (beech, then managed oak) along a ridge as generator rules.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C9-P020",
+     "q": "yet it may be that I should have delivered myself ere long"
+    }
+   ],
+   "chapter": "BONE-C9",
+   "classification": "GAME EXPANSION",
+   "id": "opp-05ef75d552",
+   "idea": "Rescue encounters where the rescued person's account of local factions may be self-serving.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C10-P006",
+     "q": "I am going to seek the WELL AT THE WORLD'S END, and to find it and live, or to find it not, and die"
+    }
+   ],
+   "chapter": "BONE-C10",
+   "classification": "GAME EXPANSION",
+   "id": "opp-91adeddc32",
+   "idea": "Several independent seekers pursuing the same legendary goal, so the player is not uniquely chosen.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C11-P034",
+     "q": "all round the outskirts of the Frank of the Burg are there such-like towers"
+    }
+   ],
+   "chapter": "BONE-C11",
+   "classification": "GAME EXPANSION",
+   "id": "opp-db033aced7",
+   "idea": "A ring of watch-towers marking a town's franchise, with farms clustered beneath, as a settlement-generation pattern.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C11-P019",
+     "q": "whiles held by them of the Burg, whiles by the Dry Tree"
+    }
+   ],
+   "chapter": "BONE-C11",
+   "classification": "GAME EXPANSION",
+   "id": "opp-7606c0cb2e",
+   "idea": "Debateable villages that change hands between factions.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C12-P022",
+     "q": "thy license to buy weapons, under the seal of the Burg"
+    }
+   ],
+   "chapter": "BONE-C12",
+   "classification": "GAME EXPANSION",
+   "id": "opp-af4e5dfb3d",
+   "idea": "Weapon licences tied to allegiance as a town law mechanic.",
+   "system": "law"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C12-P011",
+     "q": "thou shalt find them in our host"
+    }
+   ],
+   "chapter": "BONE-C12",
+   "classification": "GAME EXPANSION",
+   "id": "opp-57d1a8aa38",
+   "idea": "Gate captains questioning strangers and offering service in the town's host.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C13-P002",
+     "q": "each bore an iron ring about her right arm"
+    }
+   ],
+   "chapter": "BONE-C13",
+   "classification": "GAME EXPANSION",
+   "id": "opp-cd142fc9c6",
+   "idea": "Visible social castes by dress (thralls, merchants, armed burghers) for town NPC generation.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C13-P004",
+     "q": "a wide way led from each port out of the great place"
+    }
+   ],
+   "chapter": "BONE-C13",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a801bc1d33",
+   "idea": "Town plan of four gates on wide ways from a central square with an inner wall-road, as a settlement template.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C14-P010",
+     "q": "whenso the host goeth against them and over-cometh"
+    }
+   ],
+   "chapter": "BONE-C14",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f2e601076b",
+   "idea": "Recurring raids between a warrior town and a neighbour nation, as a world conflict that shapes slave markets and trade.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C14-P014",
+     "q": "figured cloth of silk would be far-fetched and dear-bought here"
+    }
+   ],
+   "chapter": "BONE-C14",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d95418a682",
+   "idea": "Luxury textiles produced by captive weavers as a market good with ethical weight.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C15-P028",
+     "q": "that will make the fourth time"
+    }
+   ],
+   "chapter": "BONE-C15",
+   "classification": "GAME EXPANSION",
+   "id": "opp-618f926822",
+   "idea": "A recurring mysterious figure who counts each meeting with the player.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C16-P005",
+     "q": "what I have told thee of myself and my griefs is not all mere lying"
+    }
+   ],
+   "chapter": "BONE-C16",
+   "classification": "GAME EXPANSION",
+   "id": "opp-86c2beb862",
+   "idea": "A guide with mixed loyalties whose promises the player must judge.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C17-P005",
+     "q": "seen neither house nor herd, neither sheep-cote nor shepherd"
+    }
+   ],
+   "chapter": "BONE-C17",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d9f0a488e3",
+   "idea": "Depopulated lands (wasted by old war or sorcery) as generator zones with ruins and no settlements.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "for that same reason it is the way whereby men mostly cross the water into the wildwood"
+    }
+   ],
+   "chapter": "BONE-C17",
+   "classification": "GAME EXPANSION",
+   "id": "opp-7d86021f7e",
+   "idea": "Known fords as chokepoints where travellers are likely questioned.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C18-P039",
+     "q": "though there was never a man-at-arms there, nor any soul except the old woman"
+    }
+   ],
+   "chapter": "BONE-C18",
+   "classification": "GAME EXPANSION",
+   "id": "opp-ac08b7755b",
+   "idea": "A lordship whose ruler is often absent, run by a single steward, with an armoury that has no garrison.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C18-P016",
+     "q": "there is a book in this house that telleth of it"
+    }
+   ],
+   "chapter": "BONE-C18",
+   "classification": "GAME EXPANSION",
+   "id": "opp-c911f2c9dd",
+   "idea": "An in-world book as a lore item that reveals legends when read.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "The book told not much about the Well at the World's End"
+    }
+   ],
+   "chapter": "BONE-C19",
+   "classification": "GAME EXPANSION",
+   "id": "opp-dd4698ceec",
+   "idea": "Legends in books that may be partial or slanted; the player can compare written lore with witnesses.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C20-P010",
+     "q": "she is the saint of the Forest Land, and the guardian of all poor folk.  Ask the carles else!"
+    }
+   ],
+   "chapter": "BONE-C20",
+   "classification": "GAME EXPANSION",
+   "id": "opp-891062d451",
+   "idea": "NPCs whose testimony about a ruler conflicts (pious priest, scornful crone), leaving the player to judge.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C21-P018",
+     "q": "thou wilt certainly go into the wood to-morrow and see what may befall"
+    }
+   ],
+   "chapter": "BONE-C21",
+   "classification": "GAME EXPANSION",
+   "id": "opp-4ead16ca0a",
+   "idea": "Waiting for an NPC who may never arrive, with the player choosing to seek instead.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C22-P026",
+     "q": "the bargain is struck betwixt us"
+    }
+   ],
+   "chapter": "BONE-C22",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f0473af879",
+   "idea": "A jealous lord and his rivals contesting a powerful woman, where the player can be drawn in as captive or ally.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C23-P016",
+     "q": "the learning which it hath learned"
+    }
+   ],
+   "chapter": "BONE-C23",
+   "classification": "GAME EXPANSION",
+   "id": "opp-900f00dc75",
+   "idea": "Healing as a learned skill some characters have (canon shows the Lady's leechcraft; any game system is expansion).",
+   "system": "medicine"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BONE-C24-P004",
+     "q": "so that it made a circle about them"
+    },
+    {
+     "p": "BONE-C24-P021",
+     "q": "I heard the thornbushes speaking to me like men"
+    }
+   ],
+   "chapter": "BONE-C24",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f25d65d88d",
+   "idea": "Canon shows ambiguous enchantments (gestures, speaking plants). Any learnable magic system is GAME EXPANSION, not Morris.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C1-P010",
+     "q": "the broken doom-ring of a forgotten folk"
+    }
+   ],
+   "chapter": "BTWO-C1",
+   "classification": "GAME EXPANSION",
+   "id": "opp-988feef92f",
+   "idea": "Ancient stone rings (\"doom-rings\") as procedural monument types.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C2-P008",
+     "q": "there are matters written wrong in the book"
+    }
+   ],
+   "chapter": "BTWO-C2",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b27fb2f61d",
+   "idea": "Unreliable written sources that a living witness corrects.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C3-P013",
+     "q": "a necklace of blue stones and green, with gold between"
+    }
+   ],
+   "chapter": "BTWO-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-c140d4a4a4",
+   "idea": "Recurring amulets carried by Well-seekers as a quest-item motif.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C3-P006",
+     "q": "a wall, as it were, of great yew trees"
+    }
+   ],
+   "chapter": "BTWO-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-9f2894bd9f",
+   "idea": "Isolated witch-cottages and yew-ringed altars as forest landmarks.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C4-P011",
+     "q": "showed me letters"
+    }
+   ],
+   "chapter": "BTWO-C4",
+   "classification": "GAME EXPANSION",
+   "id": "opp-71355417ef",
+   "idea": "A mentor figure who appears and vanishes, teaching letters and lore.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C4-P024",
+     "q": "the woods before the mountains"
+    }
+   ],
+   "chapter": "BTWO-C4",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f0dfe38e60",
+   "idea": "Wilderness edges near mountains as the far frontier zone of the world map.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C5-P006",
+     "q": "For now am I a beaten man"
+    }
+   ],
+   "chapter": "BTWO-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-34d304b12d",
+   "idea": "Failed questers returning from the Well-road as NPC encounters.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C6-P011",
+     "q": "riding on horned neat (for they knew not of horses)"
+    }
+   ],
+   "chapter": "BTWO-C6",
+   "classification": "GAME EXPANSION",
+   "id": "opp-81f28ac563",
+   "idea": "Simple heathen peoples with cattle-riding cultures beyond the mountain range, as distinct world cultures.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C6-P014",
+     "q": "bore false witness that I was a thrall and a runaway"
+    }
+   ],
+   "chapter": "BTWO-C6",
+   "classification": "GAME EXPANSION",
+   "id": "opp-149d2c5e41",
+   "idea": "A jealous lord's rivals and false witnesses claiming a free woman is a runaway thrall, as a legal-intrigue quest.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C7-P016",
+     "q": "till fighting became the chief business of all in the land"
+    }
+   ],
+   "chapter": "BTWO-C7",
+   "classification": "GAME EXPANSION",
+   "id": "opp-69d8c86d46",
+   "idea": "A ruined kingdom (the Tower), its capital's streets grown with grass, as a ruin-region in the generator.",
+   "system": "history"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C7-P009",
+     "q": "he stood between the two companies and faced the king"
+    }
+   ],
+   "chapter": "BTWO-C7",
+   "classification": "GAME EXPANSION",
+   "id": "opp-89a325e7ad",
+   "idea": "Sanctuary by procession (a Bishop with the Host halting battle) as a world rule that clergy can impose truces.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C8-P010",
+     "q": "Fifty years ago, when I was yet but a young man"
+    }
+   ],
+   "chapter": "BTWO-C8",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a870c08cfc",
+   "idea": "Deep in-world chronology (the Tower war fifty years ago, the Dry Tree's move to the Scaur) for a timeline the player can uncover.",
+   "system": "history"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C9-P010",
+     "q": "whiles when she has spoken the word I may not be against her openly"
+    }
+   ],
+   "chapter": "BTWO-C9",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f176b7bd6f",
+   "idea": "A faction with rival queens (one merciful, one cruel) whose orders the player may defy.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "are tofts of house-walls long ago sunken into the earth of the valley"
+    }
+   ],
+   "chapter": "BTWO-C10",
+   "classification": "GAME EXPANSION",
+   "id": "opp-5bf2e47aa7",
+   "idea": "Abandoned lands with sunken house mounds, cliffs and caves as a generator biome with memorial sites (graves, cairns).",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C11-P004",
+     "q": "two Companions armed and bearing long swords over their shoulders"
+    }
+   ],
+   "chapter": "BTWO-C11",
+   "classification": "GAME EXPANSION",
+   "id": "opp-66cb71a799",
+   "idea": "Roadside traffic types (mercenary pairs, pedlars, merchant trains, couriers) as encounter tables on highways.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "had sold him thieves' penny-worths"
+    }
+   ],
+   "chapter": "BTWO-C12",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a00a497ea3",
+   "idea": "War-booty arbitrage: buying loot from departing mercenaries and selling elsewhere, as a trade mechanic.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "much lore they had concerning it"
+    }
+   ],
+   "chapter": "BTWO-C13",
+   "classification": "GAME EXPANSION",
+   "id": "opp-cdfffe5d9f",
+   "idea": "Small towns at the foot of mountains that keep Well-lore and send off seekers, as quest hubs.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "paid him due scot for the passage of the Wood"
+    }
+   ],
+   "chapter": "BTWO-C14",
+   "classification": "GAME EXPANSION",
+   "id": "opp-4c74b3aa4a",
+   "idea": "Toll-taking outlaw fellowships that tax forest roads, as a faction-economy mechanic.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "beyond the mountains that lie the other side of those"
+    }
+   ],
+   "chapter": "BTWO-C14",
+   "classification": "GAME EXPANSION",
+   "id": "opp-ec6a54e571",
+   "idea": "A long-distance trade road east over two mountain ranges toward a world-edge barrier, as the main expedition corridor.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I am a sending of the woman whom thou hast loved"
+    }
+   ],
+   "chapter": "BTWO-C15",
+   "classification": "GAME EXPANSION",
+   "id": "opp-47ceaff481",
+   "idea": "Dream-sendings as a canon motif (the Lady used them); any game system built on them is GAME EXPANSION.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "I will tell thee all about it"
+    }
+   ],
+   "chapter": "BTWO-C16",
+   "classification": "GAME EXPANSION",
+   "id": "opp-8e82ea6f2d",
+   "idea": "A village \"seeker roll\" of those who left for the Well over generations, as discoverable lore.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "when he is whole again, we may look for him at our gates"
+    }
+   ],
+   "chapter": "BTWO-C17",
+   "classification": "GAME EXPANSION",
+   "id": "opp-bff10eb41e",
+   "idea": "A city-state threatened by a neighbouring earl, raising a civic host, as a regional conflict the player can join.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C18-P003",
+     "q": "the cupboard was of five shelves"
+    }
+   ],
+   "chapter": "BTWO-C18",
+   "classification": "GAME EXPANSION",
+   "id": "opp-5b86b851e7",
+   "idea": "Status display by tiers of plate shelves as a wealth signal in town houses.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "each man or each fellowship departing, hath grace of an hour before his foeman follow"
+    }
+   ],
+   "chapter": "BTWO-C19",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f997914b3c",
+   "idea": "Truce-hostels in dangerous passes where bandits and merchants share a roof under hallowed custom.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C19-P006",
+     "q": "the last of the lands we shall come to wherein folk can any courtesy"
+    }
+   ],
+   "chapter": "BTWO-C19",
+   "classification": "GAME EXPANSION",
+   "id": "opp-8af3e9318a",
+   "idea": "A legal frontier: lawful guild lands versus lawless tyrant-and-thrall lands, as a world-generation boundary.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "a hands-breadth of fine green cloth embroidered with flowers"
+    }
+   ],
+   "chapter": "BTWO-C20",
+   "classification": "GAME EXPANSION",
+   "id": "opp-e3ef2e0a11",
+   "idea": "Rescue trails marked by found objects (a scrap of gown) and witness accounts at hostels.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C21-P014",
+     "q": "the companions went forward stoutly on foot, and entered into the battle of the thieves"
+    }
+   ],
+   "chapter": "BTWO-C21",
+   "classification": "GAME EXPANSION",
+   "id": "opp-4961cc79c4",
+   "idea": "Caravan ambushes at passes with high-ground tactics, archers and dismounted men-at-arms, as encounter design.",
+   "system": "military"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C21-P022",
+     "q": "That is the bargain, then, and I yeasay it"
+    }
+   ],
+   "chapter": "BTWO-C21",
+   "classification": "GAME EXPANSION",
+   "id": "opp-7fa7bbedd7",
+   "idea": "Captured foes who may become sworn servants with explicit terms.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "my kinsman Bull Nosy"
+    }
+   ],
+   "chapter": "BTWO-C22",
+   "classification": "GAME EXPANSION",
+   "id": "opp-c7c0fbba43",
+   "idea": "Clan-based naming conventions (kindred name plus nickname) for a mountain culture's NPC names.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C23-P009",
+     "q": "a parchment from the lord"
+    }
+   ],
+   "chapter": "BTWO-C23",
+   "classification": "GAME EXPANSION",
+   "id": "opp-cb929ab747",
+   "idea": "Tyrant towns that protect trade while terrorising residents, with safe-conduct documents for merchants' guards.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C23-P012",
+     "q": "lemons, and oranges, and pomegranates"
+    }
+   ],
+   "chapter": "BTWO-C23",
+   "classification": "GAME EXPANSION",
+   "id": "opp-77ef89afcc",
+   "idea": "Warm-climate gardens (citrus, pomegranate) east of the mountains as a biome marker.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C24-P005",
+     "q": "this cheaping irked Ralph sorely"
+    }
+   ],
+   "chapter": "BTWO-C24",
+   "classification": "GAME EXPANSION",
+   "id": "opp-3fe42ed56c",
+   "idea": "Slave markets as dark-economy locations that a game may portray critically; canon shows them as cruel.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C24-P009",
+     "q": "thou must pardon me if I say no more of him"
+    }
+   ],
+   "chapter": "BTWO-C24",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b2dbe1dbc7",
+   "idea": "A feared regional tyrant whom merchants will not name, as an antagonist faction.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C25-P003",
+     "q": "long rows of ugly hovels"
+    }
+   ],
+   "chapter": "BTWO-C25",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f04872eb68",
+   "idea": "Plantation-thrall landscapes (barracks, castles, no yeoman farms) as a distinct settlement pattern.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C26-P015",
+     "q": "or that I bear him to purse"
+    }
+   ],
+   "chapter": "BTWO-C26",
+   "classification": "GAME EXPANSION",
+   "id": "opp-22baa5d092",
+   "idea": "Blood-feud and blood-money customs of mountain kindreds.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C27-P006",
+     "q": "whereas they belonged not to a master, who must at worst feed them"
+    }
+   ],
+   "chapter": "BTWO-C27",
+   "classification": "GAME EXPANSION",
+   "id": "opp-fb5af75990",
+   "idea": "Contrast of chattel slavery and wage poverty as competing economic systems in neighbouring regions.",
+   "system": "economy"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "he deemed that he should find the Well at the World's End, and drink thereof"
+    }
+   ],
+   "chapter": "BTWO-C27",
+   "classification": "GAME EXPANSION",
+   "id": "opp-5e734c401a",
+   "idea": "Cities founded by Well-seekers as a lore thread linking settlements to the quest.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C28-P003",
+     "q": "this was naught but the lower bridge of the city"
+    }
+   ],
+   "chapter": "BTWO-C28",
+   "classification": "GAME EXPANSION",
+   "id": "opp-56a8f823e9",
+   "idea": "River-spanning walled cities with bridge-castles as a landmark settlement type.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C29-P025",
+     "q": "here is the letter which thou shalt give to the Lord of Utterbol"
+    }
+   ],
+   "chapter": "BTWO-C29",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d3106593c0",
+   "idea": "Patron rulers who grant letters of introduction usable with rival lords.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C29-P026",
+     "q": "here will be the open door for thee and the welcome of a friend"
+    }
+   ],
+   "chapter": "BTWO-C29",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f1d6572f37",
+   "idea": "An unrequited royal admirer offering refuge, as a fallback safe haven.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C30-P007",
+     "q": "with such a scroll a child or a woman may wend the road unharmed"
+    }
+   ],
+   "chapter": "BTWO-C30",
+   "classification": "GAME EXPANSION",
+   "id": "opp-36173c86a6",
+   "idea": "Safe-conducts sealed by a regional tyrant, required to cross his lands, as an item-gate mechanic.",
+   "system": "law"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C31-P004",
+     "q": "I am the brother of Bull Shockhead"
+    }
+   ],
+   "chapter": "BTWO-C31",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b19a182621",
+   "idea": "Brotherhood tokens that turn hostile clans into allies when invoked.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C31-P024",
+     "q": "This knight shalt bid thee to a courteous joust"
+    }
+   ],
+   "chapter": "BTWO-C31",
+   "classification": "GAME EXPANSION",
+   "id": "opp-34bb3be45d",
+   "idea": "Robber knights who lure travellers with courtesy challenges.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C32-P032",
+     "q": "David will give thee gold for it"
+    }
+   ],
+   "chapter": "BTWO-C32",
+   "classification": "GAME EXPANSION",
+   "id": "opp-339b964149",
+   "idea": "A tyrant's network of informer-procurers (like Morfinn) who sell travellers.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C32-P014",
+     "q": "I never saw the like of this cloud"
+    }
+   ],
+   "chapter": "BTWO-C32",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b02e91463e",
+   "idea": "The Wall of the World visible from great distances as a fixed horizon landmark (useful for world-gen orientation).",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C33-P019",
+     "q": "deemest thou that he should suffer a rich land betwixt him and Goldburg"
+    }
+   ],
+   "chapter": "BTWO-C33",
+   "classification": "GAME EXPANSION",
+   "id": "opp-2db3aad3cc",
+   "idea": "Deliberate scorched-buffer zones kept barren by a strategic tyrant, as a world-gen policy for border lands.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C33-P029",
+     "q": "under each tower of Goldburg lieth a youth and a maiden that have drunk of the water"
+    }
+   ],
+   "chapter": "BTWO-C33",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a702ac9a0b",
+   "idea": "City foundation myths of hidden immortals under towers, as discoverable legends.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C34-P014",
+     "q": "can'st thou play at the chess?"
+    }
+   ],
+   "chapter": "BTWO-C34",
+   "classification": "GAME EXPANSION",
+   "id": "opp-1e948cea79",
+   "idea": "Performance skills (song, tale, chess, horsemanship) that change a captive's standing.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C35-P002",
+     "q": "a huge wall of mountains, black and terrible, that rose up sharp and clear into the morning air"
+    }
+   ],
+   "chapter": "BTWO-C35",
+   "classification": "GAME EXPANSION",
+   "id": "opp-8097d9de7c",
+   "idea": "Dramatic mountain-wall horizon east of the inland plains: a fixed world boundary for generation.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C35-P007",
+     "q": "an image of that which is verily anigh the Well"
+    }
+   ],
+   "chapter": "BTWO-C35",
+   "classification": "GAME EXPANSION",
+   "id": "opp-89e7b19ab0",
+   "idea": "Local \"false\" sacred sites that imitate the true quest landmark.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C36-P014",
+     "q": "thou must promise in all wise to obey me, though I be the thrall, and thou the Lady"
+    }
+   ],
+   "chapter": "BTWO-C36",
+   "classification": "GAME EXPANSION",
+   "id": "opp-1a8fab5a69",
+   "idea": "Court intrigue among thralls, favourites and spouses as a social-sim layer in tyrant households.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C37-P017",
+     "q": "if thou wilt now ask a boon of me, if it be not over great, I will grant it thee"
+    }
+   ],
+   "chapter": "BTWO-C37",
+   "classification": "GAME EXPANSION",
+   "id": "opp-6432cd1896",
+   "idea": "Tournaments as faction tests where outsiders can earn standing or boons.",
+   "system": "military"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C38-P025",
+     "q": "How would it be if I came hither in other guise than mine own"
+    }
+   ],
+   "chapter": "BTWO-C38",
+   "classification": "GAME EXPANSION",
+   "id": "opp-dc204c0241",
+   "idea": "Escape-and-disguise plans: leave the captors, seek a sage's transformation, return to rescue.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C39-P023",
+     "q": "the image of a Fighting Man, or monstrous giant"
+    }
+   ],
+   "chapter": "BTWO-C39",
+   "classification": "GAME EXPANSION",
+   "id": "opp-abd5fa8376",
+   "idea": "Landmark \"gate\" carvings (giant figures on black rock) that mark legendary passes.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C39-P020",
+     "q": "yea, and lions to boot"
+    }
+   ],
+   "chapter": "BTWO-C39",
+   "classification": "GAME EXPANSION",
+   "id": "opp-9275f48604",
+   "idea": "Lions descending from mountains into forest as a high-danger fauna band near the world's edge.",
+   "system": "ecology"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "like as a ditch sunders field from field"
+    }
+   ],
+   "chapter": "BTWO-C40",
+   "classification": "GAME EXPANSION",
+   "id": "opp-37346ca10a",
+   "idea": "Hard forest-edge roads dividing settled farmland from wildwood as a generator boundary feature.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTWO-C41-P013",
+     "q": "I have a horse for thee"
+    }
+   ],
+   "chapter": "BTWO-C41",
+   "classification": "GAME EXPANSION",
+   "id": "opp-54ee4a71bd",
+   "idea": "Escape assisted by an insider with a hidden horse at a landmark tree.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C1-P027",
+     "q": "like to a minstrel's tale done in the flesh"
+    }
+   ],
+   "chapter": "BTHREE-C1",
+   "classification": "GAME EXPANSION",
+   "id": "opp-2e684141d7",
+   "idea": "Staged-rescue lures by intriguers as a deception encounter type.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C2-P006",
+     "q": "there was a great pine-wood before him"
+    }
+   ],
+   "chapter": "BTHREE-C2",
+   "classification": "GAME EXPANSION",
+   "id": "opp-66db367a3b",
+   "idea": "Biome sequence west of the mountains: forest, open hill-and-dale, coarse uplands, a great pine belt, then the mountain wall.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C3-P034",
+     "q": "the time shall come when thou shalt lead me"
+    }
+   ],
+   "chapter": "BTHREE-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d4d202470e",
+   "idea": "A companion who knows the route and leads, with the promise that roles reverse on the return.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C4-P009",
+     "q": "the token of Utterbol on mine armour"
+    }
+   ],
+   "chapter": "BTHREE-C4",
+   "classification": "GAME EXPANSION",
+   "id": "opp-95fb26847d",
+   "idea": "Armour bearing a feared lord's token as a disguise and protective item.",
+   "system": "items"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C5-P018",
+     "q": "the Winter Valley, and the Folk Innocent, and the Cot on the Way, and the Forest of Strange Things and the Dry Tree"
+    }
+   ],
+   "chapter": "BTHREE-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-72b79c8411",
+   "idea": "Named canonical route stages to the Well, to be placed in order by the generator.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C5-P027",
+     "q": "doff thy worldly raiment"
+    }
+   ],
+   "chapter": "BTHREE-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-df192b75c0",
+   "idea": "Lore-giving sages who require ritual dress and an open-air reading, as quest-gate mechanics.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C6-P002",
+     "q": "In these wastes and wilds are many such-like places"
+    }
+   ],
+   "chapter": "BTHREE-C6",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d39429afd8",
+   "idea": "Ancient altars as recurring landmarks where lore is read or rites performed.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C7-P013",
+     "q": "making strange signs with his right hand; so that he deemed that he would ward them by wizardry"
+    }
+   ],
+   "chapter": "BTHREE-C7",
+   "classification": "GAME EXPANSION",
+   "id": "opp-521f170a36",
+   "idea": "Canon \"glamour\" (illusion) by the Sage. Any player-usable illusion system would be GAME EXPANSION.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C8-P005",
+     "q": "like a huge river or firth of the sea it seemed"
+    }
+   ],
+   "chapter": "BTHREE-C8",
+   "classification": "GAME EXPANSION",
+   "id": "opp-c6a1b39c20",
+   "idea": "Ancient lava seas as a hard biome barrier with few safe routes.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C8-P006",
+     "q": "to live in peace and patience without fear or hatred, and to succour the oppressed and love the lovely"
+    }
+   ],
+   "chapter": "BTHREE-C8",
+   "classification": "GAME EXPANSION",
+   "id": "opp-bad2187c9a",
+   "idea": "The quest's ethic (love the earth, no tyranny) as a moral system: canon intent, never mechanised as magic.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C9-P003",
+     "q": "a sword crossed by a three-leaved bough"
+    }
+   ],
+   "chapter": "BTHREE-C9",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d576ecbbee",
+   "idea": "Waymarked safe paths through hazardous terrain (carved tokens) as navigation mechanics.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "forebodeth ill to the lord"
+    }
+   ],
+   "chapter": "BTHREE-C9",
+   "classification": "GAME EXPANSION",
+   "id": "opp-a22826496e",
+   "idea": "Volcanic omens that foretell a ruler's fall.",
+   "system": "events"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C10-P004",
+     "q": "the image of a warrior in mail and helm of ancient fashion"
+    }
+   ],
+   "chapter": "BTHREE-C10",
+   "classification": "GAME EXPANSION",
+   "id": "opp-04267765ad",
+   "idea": "Gigantic ancient carvings as world-gate landmarks (fixed placement relative to the lava field and mountain ness).",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C11-P013",
+     "q": "beside it the token of the sword and the branch"
+    }
+   ],
+   "chapter": "BTHREE-C11",
+   "classification": "GAME EXPANSION",
+   "id": "opp-4170ba583d",
+   "idea": "Waymarked wintering caves in rich mountain valleys as scheduled safe havens on long routes.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C12-P011",
+     "q": "So wore the days till Candlemass, when the frost broke and the snows began to melt"
+    }
+   ],
+   "chapter": "BTHREE-C12",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b7e6241307",
+   "idea": "Seasonal mechanics (snow, thaw floods, spring renewal) on the long route, forcing wintering.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "with the waxing spring the bears were often in the meadows again"
+    }
+   ],
+   "chapter": "BTHREE-C13",
+   "classification": "GAME EXPANSION",
+   "id": "opp-7f325c74ef",
+   "idea": "Large predators (bears) in seasonal cycles as threats near resource-rich valleys.",
+   "system": "ecology"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "each had an axe with a green stone blade, curiously tied to the heft"
+    }
+   ],
+   "chapter": "BTHREE-C14",
+   "classification": "GAME EXPANSION",
+   "id": "opp-70d61ee4c7",
+   "idea": "Peaceful ox-riding peoples with stone tools as a distinct culture near the world's edge.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "wholly unfenced for war"
+    }
+   ],
+   "chapter": "BTHREE-C15",
+   "classification": "GAME EXPANSION",
+   "id": "opp-c3931e90a4",
+   "idea": "A peaceful, prosperous, unwalled people as a contrast culture (no war, no poverty).",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "All these and other places were now become as hallowed ground to the Innocent People"
+    }
+   ],
+   "chapter": "BTHREE-C16",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b82e9b4de8",
+   "idea": "Pilgrimage sites and relics tied to a legendary figure, maintained by a devoted people.",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C16-P015",
+     "q": "should make themselves earthly gods, and, maybe, should torment the others of us"
+    }
+   ],
+   "chapter": "BTHREE-C16",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d949184f5d",
+   "idea": "Canon cost of the Well: long life but not immortality, and a risk of tyranny. The quest's moral framing is to be kept in any game system.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C17-P023",
+     "q": "their raiment and wargear both, is of many fashions"
+    }
+   ],
+   "chapter": "BTHREE-C17",
+   "classification": "GAME EXPANSION",
+   "id": "opp-c1c5c14e2c",
+   "idea": "A desert of the dead as a hazard zone with environmental storytelling (gear from many eras).",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C18-P008",
+     "q": "it makes no ripple on the face of the pool"
+    }
+   ],
+   "chapter": "BTHREE-C18",
+   "classification": "GAME EXPANSION",
+   "id": "opp-2f5387255e",
+   "idea": "A landmark trap (the poisoned pool) with environmental warnings (no ripple, no waymark) that perceptive players can read.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C18-P004",
+     "q": "THE DRY TREE"
+    }
+   ],
+   "chapter": "BTHREE-C18",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d91377e04c",
+   "idea": "The real Dry Tree versus imitations (Utterbol's worshipped tree, Hampton's fellowship name).",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "Close to the water was a black rock, as big as a man, whereon was graven the sign of the way"
+    }
+   ],
+   "chapter": "BTHREE-C19",
+   "classification": "GAME EXPANSION",
+   "id": "opp-c84b1491e8",
+   "idea": "Safe-water waymarks contrasted with the poisoned pool.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C20-P005",
+     "q": "there was an end of earth, with its grass and trees and streams, and a beginning of the ocean"
+    }
+   ],
+   "chapter": "BTHREE-C20",
+   "classification": "GAME EXPANSION",
+   "id": "opp-26dbfb0dc4",
+   "idea": "The world's edge as an ocean-bounded promontory: the eastern map limit for generation (canon, fixed).",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C21-P005",
+     "q": "IF YE DEEM THAT YE BE STRONG ENOUGH IN DESIRE TO BEAR LENGTH OF DAYS"
+    }
+   ],
+   "chapter": "BTHREE-C21",
+   "classification": "GAME EXPANSION",
+   "id": "opp-3d7c790488",
+   "idea": "The Well as a canon moral threshold: drinking is a choice that requires strength of desire. Game systems must not make the Well a casual consumable.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BTHREE-C22-P008",
+     "q": "There is no mark of the sword's pilgrimage on thy shoulder"
+    }
+   ],
+   "chapter": "BTHREE-C22",
+   "classification": "GAME EXPANSION",
+   "id": "opp-0affffd07f",
+   "idea": "Canon proof of renewal: old scars vanish. Keep as narrative marker; any stat-based system is GAME EXPANSION.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C1-P005",
+     "q": "those huge mountains they called the Wall of Strife"
+    }
+   ],
+   "chapter": "BFOUR-C1",
+   "classification": "GAME EXPANSION",
+   "id": "opp-e90d53fc55",
+   "idea": "Place names that differ by culture for the same feature (Wall of the World vs Wall of Strife) as a naming-perspective system.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C2-P008",
+     "q": "there hath verily been a change of masters at Utterbol"
+    }
+   ],
+   "chapter": "BFOUR-C2",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d69ef83609",
+   "idea": "Regime change in a tyranny as a dynamic world event that alters regional safety and trade.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C3-P017",
+     "q": "We have cast down the Red Pillar"
+    }
+   ],
+   "chapter": "BFOUR-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-467a6990e4",
+   "idea": "A reforming lord who abolishes punishments and builds markets, as a positive faction arc.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C3-P011",
+     "q": "time was thou wert a kind lad and a good master"
+    }
+   ],
+   "chapter": "BFOUR-C3",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d38f81c779",
+   "idea": "Former captives and servants who rise to power and repay kindness, so the player's earlier choices have consequences.",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C4-P008",
+     "q": "I swear by the Bull"
+    }
+   ],
+   "chapter": "BFOUR-C4",
+   "classification": "GAME EXPANSION",
+   "id": "opp-67b5ba060c",
+   "idea": "Public oath-feasts as faction commitment events with world consequences.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C5-P005",
+     "q": "I have a gift that wild things love and will do my bidding"
+    }
+   ],
+   "chapter": "BFOUR-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-6c92e39cd8",
+   "idea": "Canon: some folk (the Lady, Bull, the Sage) have a natural rapport with beasts. Any game \"beast-bond\" mechanic is GAME EXPANSION.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C5-P024",
+     "q": "either that thou be Lord of Utterbol, or that we slay thee here and now"
+    }
+   ],
+   "chapter": "BFOUR-C5",
+   "classification": "GAME EXPANSION",
+   "id": "opp-5e38070850",
+   "idea": "Usurpation by a single blow when a hated ruler's guards consent, as a dynamic-politics rule.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C6-P017",
+     "q": "so that, to make a long story short, he feared her, and feared her more dead than living"
+    }
+   ],
+   "chapter": "BFOUR-C6",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b33f4b7986",
+   "idea": "Survival by reputation (feigned curses), as a social-defence mechanic for vulnerable NPCs.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "'tis not unlike that we shall have to speak to his men again, either out-going or home-coming"
+    }
+   ],
+   "chapter": "BFOUR-C7",
+   "classification": "GAME EXPANSION",
+   "id": "opp-bf0d22f8e1",
+   "idea": "Rival heirs of a deposed tyrant as ongoing border raiders, a source of escort encounters.",
+   "system": "military"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C8-P008",
+     "q": "a golden shoe all begemmed came out from under gown-hem"
+    }
+   ],
+   "chapter": "BFOUR-C8",
+   "classification": "GAME EXPANSION",
+   "id": "opp-31f5ce37a9",
+   "idea": "NPCs who disappear and may reappear elsewhere, with trail evidence.",
+   "system": "events"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C9-P013",
+     "q": "bent their heads before him"
+    }
+   ],
+   "chapter": "BFOUR-C9",
+   "classification": "GAME EXPANSION",
+   "id": "opp-2b544aab18",
+   "idea": "Social standing gained by the Well (\"Friend of the Well\") as a reputation effect in canon. Any stat effect would be GAME EXPANSION.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C10-P020",
+     "q": "Verily our brother's hand hath met thine when he gave thee this"
+    }
+   ],
+   "chapter": "BFOUR-C10",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d4efae1c3a",
+   "idea": "Earlier alliances (Bull's token) paying off as faction intervention.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "but never brought them home to their stead"
+    }
+   ],
+   "chapter": "BFOUR-C11",
+   "classification": "GAME EXPANSION",
+   "id": "opp-da27c32da3",
+   "idea": "A clan culture with ancestor-gods, no slavery at home, adoption of captured children, and fierce loyalty.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C12-P002",
+     "q": "I bade thee remember that thou wert a King's son and I a yeoman's daughter"
+    }
+   ],
+   "chapter": "BFOUR-C12",
+   "classification": "GAME EXPANSION",
+   "id": "opp-2f434b65f2",
+   "idea": "Rank and lineage tension (yeoman versus royal) as a social system the player navigates.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C13-P042",
+     "q": "Or how were it if the torch were even now drawing nigh to the High House of Upmeads"
+    }
+   ],
+   "chapter": "BFOUR-C13",
+   "classification": "GAME EXPANSION",
+   "id": "opp-222d6afe27",
+   "idea": "Friends of the Well sense distant danger (canon, narrative only).",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C14-P003",
+     "q": "by the wildwood ye may ride shorter, if ye know it as I do"
+    }
+   ],
+   "chapter": "BFOUR-C14",
+   "classification": "GAME EXPANSION",
+   "id": "opp-9cae7ed70e",
+   "idea": "Alternative routes (beaten road versus wild shortcut) with different risks, as route choice.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C15-P027",
+     "q": "The last time!"
+    }
+   ],
+   "chapter": "BFOUR-C15",
+   "classification": "GAME EXPANSION",
+   "id": "opp-dc777fb312",
+   "idea": "Recurring figures whose arcs end in tragic reveals (the counted meetings ending at \"the last time\").",
+   "system": "quests"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C16-P029",
+     "q": "if ye will it in sooth, I will be called your Lord, in memory of your Lady"
+    }
+   ],
+   "chapter": "BFOUR-C16",
+   "classification": "GAME EXPANSION",
+   "id": "opp-8bbb613e48",
+   "idea": "A lordship gained by acclaim rather than conquest, with light obligations.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C16-P034",
+     "q": "wodehouses, and elf-women, and dwarfs, and such like"
+    }
+   ],
+   "chapter": "BFOUR-C16",
+   "classification": "GAME EXPANSION",
+   "id": "opp-0a0c8bc186",
+   "idea": "Folk beliefs in wood-wights and elf-women (CANON as belief only).",
+   "system": "lore"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C17-P034",
+     "q": "now a mixed folk are dwelling in the Burg"
+    }
+   ],
+   "chapter": "BFOUR-C17",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f7461a3758",
+   "idea": "A world-state change (the Burg's fall and a mixed new polity) between the outward and return journeys: world-state versioning by timeline.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C17-P030",
+     "q": "woe betide the peaceful folk whom they shall first fall on"
+    }
+   ],
+   "chapter": "BFOUR-C17",
+   "classification": "GAME EXPANSION",
+   "id": "opp-7aedb2c262",
+   "idea": "Expelled populations becoming roaming raider bands, as a world event generator.",
+   "system": "events"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C18-P010",
+     "q": "some of us from very thralldom of the most grievous, and I am of those"
+    }
+   ],
+   "chapter": "BFOUR-C18",
+   "classification": "GAME EXPANSION",
+   "id": "opp-885347c822",
+   "idea": "Post-revolution towns with freed thralls as new citizens, as a regional state.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C19-P042",
+     "q": "we will give thee this Castle of the Scaur, for thee and those that shall spring from thy loins"
+    }
+   ],
+   "chapter": "BFOUR-C19",
+   "classification": "GAME EXPANSION",
+   "id": "opp-ae7498b950",
+   "idea": "Fortress grants by allied factions conditional on proving oneself.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C19-P014",
+     "q": "a great heap of grey rocks rising out of it like a reef out of the sea"
+    }
+   ],
+   "chapter": "BFOUR-C19",
+   "classification": "GAME EXPANSION",
+   "id": "opp-e62c95647d",
+   "idea": "Mega-castle on a rock reef in a plain as a unique landmark (CANON, fixed).",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C20-P005",
+     "q": "for the tale of them is over long for honest men to hearken to"
+    }
+   ],
+   "chapter": "BFOUR-C20",
+   "classification": "GAME EXPANSION",
+   "id": "opp-2c062e7fc0",
+   "idea": "Faction reputation persisting despite reform (the Dry Tree still mistrusted).",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the lands of Higham are half ruined"
+    }
+   ],
+   "chapter": "BFOUR-C21",
+   "classification": "GAME EXPANSION",
+   "id": "opp-d68e4cb020",
+   "idea": "Ruined monastic county (fortified town, lost castles, captured lord) as a war-torn region.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "he sits to this day in their strongest castle"
+    }
+   ],
+   "chapter": "BFOUR-C21",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b9082d216b",
+   "idea": "Captured lord held for ransom in an enemy castle as a political hook.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C21-P019",
+     "q": "we have little will to abide behind, but were fain to follow thee"
+    }
+   ],
+   "chapter": "BFOUR-C21",
+   "classification": "GAME EXPANSION",
+   "id": "opp-8ada241ea8",
+   "idea": "Villages volunteering militia when a trusted lord arrives, scaled by reputation.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "ever it fell out according to her spaedom"
+    }
+   ],
+   "chapter": "BFOUR-C22",
+   "classification": "GAME EXPANSION",
+   "id": "opp-0a3e9c708b",
+   "idea": "Local seers whose prophecies steer quests without making the player a chosen one.",
+   "system": "npc"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "we move about easily from one hill-side to another"
+    }
+   ],
+   "chapter": "BFOUR-C22",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f5d043e8d8",
+   "idea": "Semi-nomadic armed shepherd clans as a recruitable faction with a beacon signal.",
+   "system": "factions"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C22-P017",
+     "q": "the strong-places of the Burg-devils that are hereabouts"
+    }
+   ],
+   "chapter": "BFOUR-C22",
+   "classification": "GAME EXPANSION",
+   "id": "opp-51d48e0f36",
+   "idea": "Occupied strongholds (Foxworth Castle, the Longford, Nineways Garth) as GAME EXPANSION liberation sites; placement Flexible.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C23-P009",
+     "q": "I have given life to these others, and so it must be held to"
+    }
+   ],
+   "chapter": "BFOUR-C23",
+   "classification": "GAME EXPANSION",
+   "id": "opp-4f76648bec",
+   "idea": "Interrogation and quarter with oath-binding, and reputation effects for keeping or breaking it.",
+   "system": "systems"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C23-P013",
+     "q": "that stronghold of the Ancient Folk"
+    }
+   ],
+   "chapter": "BFOUR-C23",
+   "classification": "GAME EXPANSION",
+   "id": "opp-123d455502",
+   "idea": "Hilltop earthwork of the Ancient Folk as a muster point lit by beacons.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C24-P006",
+     "q": "as an alien and a hireling, or as a brother"
+    }
+   ],
+   "chapter": "BFOUR-C24",
+   "classification": "GAME EXPANSION",
+   "id": "opp-27e55dca66",
+   "idea": "Faction adoption ritual: join as hireling or as sworn brother, with different obligations.",
+   "system": "systems"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C24-P016",
+     "q": "appointed them leaders of tens and hundreds"
+    }
+   ],
+   "chapter": "BFOUR-C24",
+   "classification": "GAME EXPANSION",
+   "id": "opp-686d056d4f",
+   "idea": "Army muster with unit counts by faction (a mustering screen).",
+   "system": "systems"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "whereas Ralph left Wulstead a town unwalled, he now found it fenced with pales"
+    }
+   ],
+   "chapter": "BFOUR-C25",
+   "classification": "GAME EXPANSION",
+   "id": "opp-37e9e75587",
+   "idea": "Towns that fortify in wartime: settlement state changes from unwalled to paled with timber towers.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C25-P011",
+     "q": "women and children and old men, who should but hinder the carles who have abided behind"
+    }
+   ],
+   "chapter": "BFOUR-C25",
+   "classification": "GAME EXPANSION",
+   "id": "opp-7d915561db",
+   "idea": "Refugee flows to friendly towns during raids, as a world-event system.",
+   "system": "settlement"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C26-P023",
+     "q": "the sworn brother of the Champions of the Dry Tree, the Lord of the Castle of the Scaur"
+    }
+   ],
+   "chapter": "BFOUR-C26",
+   "classification": "GAME EXPANSION",
+   "id": "opp-09272fb4e6",
+   "idea": "Titles accumulated from different factions (lordship, sworn brotherhood, war-duke) as a reputation and title system.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C26-P019",
+     "q": "it may be that the spear is broken, and the banner torn; but we forget not our forefathers"
+    }
+   ],
+   "chapter": "BFOUR-C26",
+   "classification": "GAME EXPANSION",
+   "id": "opp-8bfa8beba9",
+   "idea": "Yeoman lineages with proud ancestry as a social layer between churls and nobles.",
+   "system": "society"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C27-P002",
+     "q": "being both bold and of good sleight had mingled with the foe"
+    }
+   ],
+   "chapter": "BFOUR-C27",
+   "classification": "GAME EXPANSION",
+   "id": "opp-8eae38070c",
+   "idea": "Spies who infiltrate enemy camps for intelligence on intent and numbers.",
+   "system": "systems"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C27-P009",
+     "q": "his gossip and foster-mother"
+    }
+   ],
+   "chapter": "BFOUR-C27",
+   "classification": "GAME EXPANSION",
+   "id": "opp-bb360535e5",
+   "idea": "Foster-mother and gossip NPCs as emotional anchors in a home town.",
+   "system": "npc"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C28-P012",
+     "q": "they may serve her for a token; but will be no talisman or leading-stone to her"
+    }
+   ],
+   "chapter": "BFOUR-C28",
+   "classification": "GAME EXPANSION",
+   "id": "opp-1771cbd93a",
+   "idea": "Talismans gendered or conditioned in what they do (a token for one bearer, a guide for another): GAME EXPANSION item rules, not Morris's magic system.",
+   "system": "magic"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C28-P002",
+     "q": "Sarras the Holy"
+    }
+   ],
+   "chapter": "BFOUR-C28",
+   "classification": "GAME EXPANSION",
+   "id": "opp-6dd88408bc",
+   "idea": "Distant holy city (Sarras) as far-off lore, unreachable or late-game; certainty Flexible.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C29-P031",
+     "q": "all they who beheld him cast down their weapons and fled wildly down the hill"
+    }
+   ],
+   "chapter": "BFOUR-C29",
+   "classification": "GAME EXPANSION",
+   "id": "opp-f9b8eb2c61",
+   "idea": "Morale-break by presence: reputation and visibility affecting enemy morale (Ralph's rout is supernatural in Morris; in-game morale is GAME EXPANSION).",
+   "system": "systems"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C29-P026",
+     "q": "one reach of it went nigh to the House, and made wellnigh a quarter of a circle about it"
+    }
+   ],
+   "chapter": "BFOUR-C29",
+   "classification": "GAME EXPANSION",
+   "id": "opp-b6c0dff86f",
+   "idea": "Upmeads home valley: river loop around the High House, stone bridge, meadows, hill to Wulstead (CANON, constrained layout).",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C29-P036",
+     "q": "strip them of all armour and weapons"
+    }
+   ],
+   "chapter": "BFOUR-C29",
+   "classification": "GAME EXPANSION",
+   "id": "opp-4e79eacbc6",
+   "idea": "Prisoner handling choices (strip and release, ransom, kill) with consequences.",
+   "system": "systems"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C30-P011",
+     "q": "digging trenches wherein to bury them"
+    }
+   ],
+   "chapter": "BFOUR-C30",
+   "classification": "GAME EXPANSION",
+   "id": "opp-ccdffdb509",
+   "idea": "Post-battle world state: burial trenches and battlefield remnants as persistent map features.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C31-P013",
+     "q": "of all the kindred he is meetest to sit therein"
+    }
+   ],
+   "chapter": "BFOUR-C31",
+   "classification": "GAME EXPANSION",
+   "id": "opp-469c101111",
+   "idea": "Succession by merit within the kindred; abdication rites.",
+   "system": "politics"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C31-P013",
+     "q": "this man is the King of Upmeads"
+    }
+   ],
+   "chapter": "BFOUR-C31",
+   "classification": "GAME EXPANSION",
+   "id": "opp-09641aa29b",
+   "idea": "The High House as the player's home seat is NOT canon for the player: Ralph is king. Use it as a key NPC seat; the player is not the chosen one.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "no lord was ever more beloved"
+    }
+   ],
+   "chapter": "BFOUR-C32",
+   "classification": "GAME EXPANSION",
+   "id": "opp-5e22716976",
+   "idea": "A post-canon era: Ralph reigns as a living legend with an ordered realm. Game time can be set inside it, with the player not the chosen one.",
+   "system": "timeline"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "so that no high-street of a good town was safer than its glades and its byways"
+    }
+   ],
+   "chapter": "BFOUR-C32",
+   "classification": "GAME EXPANSION",
+   "id": "opp-64db39fc18",
+   "idea": "Clearing bandit woods as regional quest arcs that change danger levels.",
+   "system": "world"
+  },
+  {
+   "basis_refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "three good towns beyond the wood"
+    }
+   ],
+   "chapter": "BFOUR-C32",
+   "classification": "GAME EXPANSION",
+   "id": "opp-4d11cfc7e3",
+   "idea": "Three unnamed towns beyond the Wood Debateable as GAME EXPANSION settlement slots (Flexible placement).",
+   "system": "world"
+  }
+ ]
+}

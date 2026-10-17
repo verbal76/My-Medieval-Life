@@ -1,0 +1,432 @@
+{
+ "format": "morris-checks/1",
+ "chapters_extracted": 119,
+ "chapters_in_novel": 119,
+ "body_paragraphs": 2412,
+ "body_paragraphs_cited": 1102,
+ "chapters_below_50pct_cited": [
+  {
+   "chapter": "BONE-C3",
+   "body_paragraphs": 59,
+   "cited": 24
+  },
+  {
+   "chapter": "BONE-C5",
+   "body_paragraphs": 46,
+   "cited": 18
+  },
+  {
+   "chapter": "BONE-C6",
+   "body_paragraphs": 28,
+   "cited": 7
+  },
+  {
+   "chapter": "BONE-C7",
+   "body_paragraphs": 36,
+   "cited": 12
+  },
+  {
+   "chapter": "BONE-C10",
+   "body_paragraphs": 18,
+   "cited": 8
+  },
+  {
+   "chapter": "BONE-C11",
+   "body_paragraphs": 34,
+   "cited": 13
+  },
+  {
+   "chapter": "BONE-C12",
+   "body_paragraphs": 38,
+   "cited": 15
+  },
+  {
+   "chapter": "BONE-C14",
+   "body_paragraphs": 36,
+   "cited": 14
+  },
+  {
+   "chapter": "BONE-C18",
+   "body_paragraphs": 54,
+   "cited": 22
+  },
+  {
+   "chapter": "BONE-C21",
+   "body_paragraphs": 18,
+   "cited": 6
+  },
+  {
+   "chapter": "BONE-C22",
+   "body_paragraphs": 26,
+   "cited": 12
+  },
+  {
+   "chapter": "BONE-C23",
+   "body_paragraphs": 19,
+   "cited": 8
+  },
+  {
+   "chapter": "BONE-C24",
+   "body_paragraphs": 26,
+   "cited": 8
+  },
+  {
+   "chapter": "BTWO-C1",
+   "body_paragraphs": 29,
+   "cited": 11
+  },
+  {
+   "chapter": "BTWO-C10",
+   "body_paragraphs": 26,
+   "cited": 12
+  },
+  {
+   "chapter": "BTWO-C12",
+   "body_paragraphs": 14,
+   "cited": 6
+  },
+  {
+   "chapter": "BTWO-C17",
+   "body_paragraphs": 13,
+   "cited": 4
+  },
+  {
+   "chapter": "BTWO-C19",
+   "body_paragraphs": 12,
+   "cited": 4
+  },
+  {
+   "chapter": "BTWO-C29",
+   "body_paragraphs": 28,
+   "cited": 10
+  },
+  {
+   "chapter": "BTWO-C30",
+   "body_paragraphs": 15,
+   "cited": 7
+  },
+  {
+   "chapter": "BTWO-C31",
+   "body_paragraphs": 27,
+   "cited": 12
+  },
+  {
+   "chapter": "BTWO-C33",
+   "body_paragraphs": 29,
+   "cited": 11
+  },
+  {
+   "chapter": "BTWO-C34",
+   "body_paragraphs": 43,
+   "cited": 13
+  },
+  {
+   "chapter": "BTWO-C36",
+   "body_paragraphs": 26,
+   "cited": 12
+  },
+  {
+   "chapter": "BTWO-C37",
+   "body_paragraphs": 27,
+   "cited": 12
+  },
+  {
+   "chapter": "BTWO-C38",
+   "body_paragraphs": 27,
+   "cited": 9
+  },
+  {
+   "chapter": "BTWO-C39",
+   "body_paragraphs": 25,
+   "cited": 8
+  },
+  {
+   "chapter": "BTWO-C41",
+   "body_paragraphs": 17,
+   "cited": 7
+  },
+  {
+   "chapter": "BTHREE-C1",
+   "body_paragraphs": 35,
+   "cited": 7
+  },
+  {
+   "chapter": "BTHREE-C3",
+   "body_paragraphs": 38,
+   "cited": 12
+  },
+  {
+   "chapter": "BTHREE-C4",
+   "body_paragraphs": 21,
+   "cited": 10
+  },
+  {
+   "chapter": "BTHREE-C7",
+   "body_paragraphs": 19,
+   "cited": 9
+  },
+  {
+   "chapter": "BTHREE-C9",
+   "body_paragraphs": 19,
+   "cited": 8
+  },
+  {
+   "chapter": "BTHREE-C11",
+   "body_paragraphs": 13,
+   "cited": 6
+  },
+  {
+   "chapter": "BTHREE-C13",
+   "body_paragraphs": 21,
+   "cited": 6
+  },
+  {
+   "chapter": "BTHREE-C14",
+   "body_paragraphs": 11,
+   "cited": 5
+  },
+  {
+   "chapter": "BTHREE-C17",
+   "body_paragraphs": 24,
+   "cited": 8
+  },
+  {
+   "chapter": "BTHREE-C21",
+   "body_paragraphs": 19,
+   "cited": 6
+  },
+  {
+   "chapter": "BFOUR-C2",
+   "body_paragraphs": 11,
+   "cited": 4
+  },
+  {
+   "chapter": "BFOUR-C3",
+   "body_paragraphs": 20,
+   "cited": 8
+  },
+  {
+   "chapter": "BFOUR-C4",
+   "body_paragraphs": 15,
+   "cited": 6
+  },
+  {
+   "chapter": "BFOUR-C5",
+   "body_paragraphs": 29,
+   "cited": 13
+  },
+  {
+   "chapter": "BFOUR-C6",
+   "body_paragraphs": 18,
+   "cited": 8
+  },
+  {
+   "chapter": "BFOUR-C7",
+   "body_paragraphs": 21,
+   "cited": 7
+  },
+  {
+   "chapter": "BFOUR-C12",
+   "body_paragraphs": 7,
+   "cited": 3
+  },
+  {
+   "chapter": "BFOUR-C13",
+   "body_paragraphs": 46,
+   "cited": 14
+  },
+  {
+   "chapter": "BFOUR-C15",
+   "body_paragraphs": 30,
+   "cited": 10
+  },
+  {
+   "chapter": "BFOUR-C16",
+   "body_paragraphs": 37,
+   "cited": 13
+  },
+  {
+   "chapter": "BFOUR-C17",
+   "body_paragraphs": 42,
+   "cited": 14
+  },
+  {
+   "chapter": "BFOUR-C19",
+   "body_paragraphs": 63,
+   "cited": 18
+  },
+  {
+   "chapter": "BFOUR-C20",
+   "body_paragraphs": 13,
+   "cited": 5
+  },
+  {
+   "chapter": "BFOUR-C21",
+   "body_paragraphs": 23,
+   "cited": 8
+  },
+  {
+   "chapter": "BFOUR-C26",
+   "body_paragraphs": 26,
+   "cited": 11
+  },
+  {
+   "chapter": "BFOUR-C27",
+   "body_paragraphs": 18,
+   "cited": 5
+  },
+  {
+   "chapter": "BFOUR-C28",
+   "body_paragraphs": 17,
+   "cited": 6
+  },
+  {
+   "chapter": "BFOUR-C29",
+   "body_paragraphs": 38,
+   "cited": 17
+  },
+  {
+   "chapter": "BFOUR-C31",
+   "body_paragraphs": 18,
+   "cited": 8
+  }
+ ],
+ "quote_problems": [],
+ "refs_outside_tale": [],
+ "gutenberg": {
+  "tale_lines": [
+   185,
+   21047
+  ],
+  "excluded_header": [
+   1,
+   27
+  ],
+  "excluded_footer": [
+   21052,
+   21403
+  ],
+  "tale_paragraphs_matching_gutenberg_terms": []
+ },
+ "counts": {
+  "relations": 291,
+  "spatial": 296,
+  "travel": 108,
+  "facts": 649,
+  "events": 169,
+  "unresolved": 147,
+  "opportunities": 175,
+  "entities": 620
+ },
+ "merged_names": 24,
+ "implicit_entities": [
+  "(unnamed) Baron of the Waste March",
+  "(unnamed) Cheaping Knowe highway",
+  "(unnamed) Goldburg pass",
+  "(unnamed) Michael of the Hatch",
+  "(unnamed) Ralph's company",
+  "(unnamed) Utterbol downs",
+  "(unnamed) Utterbol pavilion camp",
+  "(unnamed) camp by the half-ring bank",
+  "(unnamed) captured rich town",
+  "(unnamed) chapmen",
+  "(unnamed) cots of Abundance",
+  "(unnamed) crossing point of Ralph and Roger",
+  "(unnamed) dale below a low green ridge",
+  "(unnamed) desert stream",
+  "(unnamed) eastern foothills",
+  "(unnamed) eastern ridge above the rock-sea",
+  "(unnamed) eastern slope of the Goldburg mountains",
+  "(unnamed) eastern slope of the mountains",
+  "(unnamed) entry of the mountains",
+  "(unnamed) exile limit",
+  "(unnamed) fairest woman of the world",
+  "(unnamed) far side of the Swelling Flood",
+  "(unnamed) faubourg of Higham",
+  "(unnamed) fields of Hampton",
+  "(unnamed) fields south of Upmeads",
+  "(unnamed) first camp toward Utterness",
+  "(unnamed) grassy stream valley in the mountains",
+  "(unnamed) green belt below the ridge",
+  "(unnamed) green plain of Hampton",
+  "(unnamed) hazel lane by-road",
+  "(unnamed) highway east of Whitwall",
+  "(unnamed) hill-country north of Upmeads",
+  "(unnamed) hill-country south of Wulstead",
+  "(unnamed) horses in the wood",
+  "(unnamed) host of the Burg",
+  "(unnamed) lands east of Goldburg",
+  "(unnamed) lands of the bishop-baron",
+  "(unnamed) little hill of Wulstead",
+  "(unnamed) low ridge south of Upmeads Water",
+  "(unnamed) meadows before the Burg",
+  "(unnamed) morning camp in the downs",
+  "(unnamed) night camp beyond Abundance",
+  "(unnamed) oak glade in the wood",
+  "(unnamed) old lord of the Burg",
+  "(unnamed) peopled parts west of the Wood Perilous",
+  "(unnamed) place of Bull Nosy's death",
+  "(unnamed) place of the shepherds' meeting",
+  "(unnamed) plain west of the mountains",
+  "(unnamed) planned ambush site",
+  "(unnamed) ridge above Hampton",
+  "(unnamed) river of Abundance",
+  "(unnamed) river of Higham",
+  "(unnamed) road across the downs",
+  "(unnamed) road south from Higham",
+  "(unnamed) round knoll camp",
+  "(unnamed) route to Hampton under Scaur",
+  "(unnamed) sea beyond Goldburg",
+  "(unnamed) second camp toward Utterness",
+  "(unnamed) shaggy upland",
+  "(unnamed) small thorp before the Burg",
+  "(unnamed) southern gate of Higham",
+  "(unnamed) southern higher hills",
+  "(unnamed) stony waste of low hills",
+  "(unnamed) stream in the dale below the crossroads",
+  "(unnamed) tillage near the Burg",
+  "(unnamed) unknown slayer",
+  "(unnamed) vassals and villeins of the Abbot",
+  "(unnamed) vine country south of Higham",
+  "(unnamed) wall-way of the Burg",
+  "(unnamed) war booty",
+  "(unnamed) waste between Vale Turris and Goldburg",
+  "(unnamed) waste plain above the Dale of Lore",
+  "(unnamed) western hills of the rock-sea",
+  "(unnamed) wildwood shortcut to the Burg",
+  "(unnamed) wood south-east of the House of Abundance",
+  "(unnamed) wood-lawn south of the Burg",
+  "(unnamed) wooden footbridge of Abundance",
+  "(unnamed) world of folk",
+  "base-court",
+  "orchard",
+  "wastes and mountains",
+  "wildwood"
+ ],
+ "duplicate_candidates": [
+  {
+   "a": "(unnamed) eastern slope of the Goldburg mountains",
+   "b": "(unnamed) eastern slope of the mountains",
+   "score": 0.75
+  },
+  {
+   "a": "(unnamed) brother of the carline of the House of Abundance",
+   "b": "(unnamed) carline of the House of Abundance",
+   "score": 0.75
+  },
+  {
+   "a": "Captain of the Dry Tree",
+   "b": "(unnamed) new Captain of the Dry Tree",
+   "score": 0.75
+  }
+ ],
+ "spatial_contradictions": [],
+ "unresolved_by_kind": {
+  "ambiguity": 28,
+  "contradiction": 16,
+  "document_error": 2,
+  "identity": 57,
+  "location": 33,
+  "missing_measure": 11
+ }
+}

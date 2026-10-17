@@ -1,0 +1,1769 @@
+{
+ "format": "morris-unresolved/1",
+ "records": [
+  {
+   "chapter": "BONE-C1",
+   "id": "unr-fd0e78255b",
+   "kind": "location",
+   "question": "Where is St. John's by the Bridge, and which bridge (over Upmeads Water?)",
+   "refs": [
+    {
+     "p": "BONE-C1-P005",
+     "q": "the Prior of St. John's by the Bridge"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C1",
+   "id": "unr-97fa97118c",
+   "kind": "missing_measure",
+   "question": "How far north the king's land runs beyond the Want-way before the Wood Debateable is not stated.",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "over a good stretch of land"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C1",
+   "id": "unr-16e4ce1b3c",
+   "kind": "location",
+   "question": "Whether the Wolds and Overhill-Countries are the southern neighbours or other directions.",
+   "refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "the Wolds and the Overhill-Countries"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C2",
+   "id": "unr-24bf0fccfb",
+   "kind": "identity",
+   "question": "Whether the outlaws are an organised band and who leads them.",
+   "refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "outlaws and wolfheads"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C3",
+   "id": "unr-0a5e259385",
+   "kind": "identity",
+   "question": "Is the newly built bridge over Upmeads Water the bridge of St. John's by the Bridge (BONE-C1)?",
+   "refs": [
+    {
+     "p": "BONE-C3-P004",
+     "q": "a fair bridge late builded between King Peter and a house of Canons on the north side"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C3",
+   "id": "unr-6153f10690",
+   "kind": "ambiguity",
+   "question": "The ten-mile distance to Upmeads Water is measured from the fields Ralph rides through, not a fixed place.",
+   "refs": [
+    {
+     "p": "BONE-C3-P003",
+     "q": "a half-score miles to the north-ward"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C3",
+   "id": "unr-b4770eb809",
+   "kind": "identity",
+   "question": "What is hidden in the gold box of the necklace is not said here.",
+   "refs": [
+    {
+     "p": "BONE-C3-P018",
+     "q": "a little box of gold with something hidden therein"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C4",
+   "id": "unr-04d18363f9",
+   "kind": "identity",
+   "question": "Who is the man of the leafless tree and why does he count his meetings with Ralph?",
+   "refs": [
+    {
+     "p": "BONE-C4-P003",
+     "q": "The first time!"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C4",
+   "id": "unr-d5f1ba2713",
+   "kind": "ambiguity",
+   "question": "Meaning of the cry \"the red water amidst of the hills\".",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "THE RED WATER AMIDST OF THE HILLS!"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C4",
+   "id": "unr-a9941965ea",
+   "kind": "identity",
+   "question": "Whether the leafless tree badge relates to the Dry Tree.",
+   "refs": [
+    {
+     "p": "BONE-C4-P002",
+     "q": "an image of a tree leafless"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C5",
+   "id": "unr-2bc718fbff",
+   "kind": "identity",
+   "question": "Is the river lapping Higham the Coldlake named by Clement?",
+   "refs": [
+    {
+     "p": "BONE-C5-P002",
+     "q": "even as Clement had told"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C5",
+   "id": "unr-b02ad8cc43",
+   "kind": "missing_measure",
+   "question": "How far west and east the Abbot's lands extend is not stated.",
+   "refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "if we stood over the high altar and looked east, ye would see more of such fires"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C6",
+   "id": "unr-1bfc1f9596",
+   "kind": "identity",
+   "question": "Why the monk looked \"greedily\" at Ralph and wanted the necklace kept.",
+   "refs": [
+    {
+     "p": "BONE-C6-P009",
+     "q": "it may be said greedily"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C7",
+   "id": "unr-8fbe79c549",
+   "kind": "identity",
+   "question": "The maiden of Bourton Abbas is not named in this chapter.",
+   "refs": [
+    {
+     "p": "BONE-C7-P009",
+     "q": "As for me, I am no servant"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C7",
+   "id": "unr-0846d0ce88",
+   "kind": "missing_measure",
+   "question": "Distance from Bourton Abbas to the Burg is only bounded by riding time.",
+   "refs": [
+    {
+     "p": "BONE-C7-P024",
+     "q": "yet shalt thou not get to the Burg before nightfall"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C8",
+   "id": "unr-946e4dfd14",
+   "kind": "identity",
+   "question": "Whether the men of the leafless tree are the same company as the green rider of BONE-C4.",
+   "refs": [
+    {
+     "p": "BONE-C8-P007",
+     "q": "with a leafless tree done on them in gold"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C8",
+   "id": "unr-00d25cb2cd",
+   "kind": "location",
+   "question": "Which arm of the crossroads leads to the Burg of the Four Friths.",
+   "refs": [
+    {
+     "p": "BONE-C8-P005",
+     "q": "he doubted in his mind which was his right road toward the Burg of the Four Friths"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C9",
+   "id": "unr-e16e3a399c",
+   "kind": "identity",
+   "question": "Who is the lady Ralph delivered? She is unnamed here.",
+   "refs": [
+    {
+     "p": "BONE-C9-P019",
+     "q": "he deemed he had never seen woman so fair"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C9",
+   "id": "unr-3adbaa521f",
+   "kind": "identity",
+   "question": "Whose red-haired head the spearman carried.",
+   "refs": [
+    {
+     "p": "BONE-C9-P006",
+     "q": "a man's head, red-haired and red-bearded"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C9",
+   "id": "unr-c7a30dda8a",
+   "kind": "contradiction",
+   "question": "The lady calls the Burg folk robbers and murderers; Sir Aymer's men call the leafless-tree men robbers. Each side calls the other robbers.",
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "they of that Burg be robbers and murderers merciless"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C10",
+   "id": "unr-61581ee7c5",
+   "kind": "contradiction",
+   "question": "The lady (BONE-C9) calls Hampton's folk peaceable; the maiden has heard it is home to the robber Fellowship of the Dry Tree.",
+   "refs": [
+    {
+     "p": "BONE-C10-P016",
+     "q": "those of the fellowship are robbers and reivers"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C11",
+   "id": "unr-ff68346dee",
+   "kind": "ambiguity",
+   "question": "Roger may not be truthful: Ralph notes he speaks coldly for a man with so much wrath.",
+   "refs": [
+    {
+     "p": "BONE-C11-P017",
+     "q": "found that he spake coldly for a man with so much wrath in his heart"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C11",
+   "id": "unr-8301c2d53d",
+   "kind": "contradiction",
+   "question": "Roger says the Burg is good and Hampton oppressed by the Dry Tree; the lady (BONE-C9) says the reverse.",
+   "refs": [
+    {
+     "p": "BONE-C11-P015",
+     "q": "the Burg is a good town under a good lord"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C11",
+   "id": "unr-bce6e368b0",
+   "kind": "location",
+   "question": "Location of the Castle of the Scaur relative to Hampton is not given.",
+   "refs": [
+    {
+     "p": "BONE-C11-P015",
+     "q": "who dwell in the Castle of the Scaur"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C12",
+   "id": "unr-39fae80ca5",
+   "kind": "contradiction",
+   "question": "Five bound leafless-tree men in BONE-C8 versus \"four woodmen\" and four nooses here.",
+   "refs": [
+    {
+     "p": "BONE-C12-P026",
+     "q": "justice shall be done on the four woodmen to-day"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C12",
+   "id": "unr-8f73e44bba",
+   "kind": "identity",
+   "question": "Whether the Queen of the Dry Tree is the lady Ralph freed in BONE-C9; Ralph himself wonders.",
+   "refs": [
+    {
+     "p": "BONE-C12-P036",
+     "q": "wondered if this were verily the woman whom he had delivered, or some other"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C13",
+   "id": "unr-e739de4087",
+   "kind": "location",
+   "question": "Where the captives' homeland lies is not stated in this chapter.",
+   "refs": [
+    {
+     "p": "BONE-C13-P007",
+     "q": "they must be of the kindred and nation of the fair white women he had seen in the streets"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C14",
+   "id": "unr-d00b113cfa",
+   "kind": "identity",
+   "question": "Who is the small bright-eyed companion of the man of the leafless tree?",
+   "refs": [
+    {
+     "p": "BONE-C14-P003",
+     "q": "wrapped up in a cloak, for as warm as the evening was, and wore a slouch hat withal"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C14",
+   "id": "unr-de1e6bde55",
+   "kind": "location",
+   "question": "The Wheat-wearers' homeland is not located.",
+   "refs": [
+    {
+     "p": "BONE-C14-P026",
+     "q": "make them your thralls to till the land for you which now they call theirs"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C14",
+   "id": "unr-57d2f94080",
+   "kind": "ambiguity",
+   "question": "Roger's face is troubled as he takes Ralph's hand; his loyalty is uncertain.",
+   "refs": [
+    {
+     "p": "BONE-C14-P037",
+     "q": "yet therewith his face seemed a little troubled"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C15",
+   "id": "unr-636944f342",
+   "kind": "identity",
+   "question": "Who is the slender youth to whom all show reverence?",
+   "refs": [
+    {
+     "p": "BONE-C15-P019",
+     "q": "no man embraced that slender youth"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C15",
+   "id": "unr-9c2501a312",
+   "kind": "ambiguity",
+   "question": "\"All we four\" supports the four prisoners of BONE-C12 against the five of BONE-C8.",
+   "refs": [
+    {
+     "p": "BONE-C15-P020",
+     "q": "here be all we four well met again"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C16",
+   "id": "unr-cd8eb28134",
+   "kind": "identity",
+   "question": "Roger's master is not named.",
+   "refs": [
+    {
+     "p": "BONE-C16-P010",
+     "q": "a noble house of a master of mine"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C17",
+   "id": "unr-802a385f14",
+   "kind": "ambiguity",
+   "question": "What war and sorcery emptied the downland.",
+   "refs": [
+    {
+     "p": "BONE-C17-P006",
+     "q": "A story of war and wasting"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C17",
+   "id": "unr-8a36333d88",
+   "kind": "identity",
+   "question": "Who the armed riders spurring toward the river were.",
+   "refs": [
+    {
+     "p": "BONE-C17-P003",
+     "q": "I see the riding of folk down below there, and meseems they be spurring toward the water"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C18",
+   "id": "unr-f6b50cc2a7",
+   "kind": "identity",
+   "question": "Is the Lady of Abundance the lady Ralph freed? The arras's young woman looks like her.",
+   "refs": [
+    {
+     "p": "BONE-C18-P040",
+     "q": "then it must have been done from her twin sister"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C18",
+   "id": "unr-fc97c87516",
+   "kind": "location",
+   "question": "Where the Lady dwells when away is unknown.",
+   "refs": [
+    {
+     "p": "BONE-C18-P028",
+     "q": "I wot not"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C18",
+   "id": "unr-6ea38fe5ea",
+   "kind": "ambiguity",
+   "question": "Why the carline crosses herself on speaking of the Lady's chamber.",
+   "refs": [
+    {
+     "p": "BONE-C18-P045",
+     "q": "The old woman crossed herself as she spoke"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C19",
+   "id": "unr-1241cff3cc",
+   "kind": "identity",
+   "question": "Whether the book's woman is the Lady of Abundance and the lady of the crossroads; Ralph assumes so but does not know.",
+   "refs": [
+    {
+     "p": "BONE-C19-P003",
+     "q": "Though he knew not for certain whether this tale had to do with the Lady of the Forest"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C19",
+   "id": "unr-eb2f8387a1",
+   "kind": "missing_measure",
+   "question": "Ralph met the lady four days before.",
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "but four days ago was that"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C20",
+   "id": "unr-94026f495e",
+   "kind": "location",
+   "question": "Where the fathers of the Thorn have their house (cf. Our Lady of the Thorn, BONE-C18).",
+   "refs": [
+    {
+     "p": "BONE-C20-P013",
+     "q": "the fathers of the Thorn"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C20",
+   "id": "unr-61a49dd6c2",
+   "kind": "ambiguity",
+   "question": "The Vicar's weeping and dreaming suggest he too is caught in love of the Lady.",
+   "refs": [
+    {
+     "p": "BONE-C20-P019",
+     "q": "he sighed heavily"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C21",
+   "id": "unr-d612fa7807",
+   "kind": "location",
+   "question": "Where the fathers of the Thorn dwell (about a day's return trip from the castle).",
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "over yonder"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C22",
+   "id": "unr-764ae3f9a1",
+   "kind": "identity",
+   "question": "\"Sunhome\" (lady) and \"Sunway\" (elsewhere) seem to name the same home of the Knight of the Sun.",
+   "refs": [
+    {
+     "p": "BONE-C22-P022",
+     "q": "I would not go back with thee to Sunhome"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C22",
+   "id": "unr-7f24f1bb58",
+   "kind": "location",
+   "question": "Where the Gliding River lies relative to the lake and the Dry Tree.",
+   "refs": [
+    {
+     "p": "BONE-C22-P020",
+     "q": "beyond the Gliding River"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C22",
+   "id": "unr-28a1fd0971",
+   "kind": "identity",
+   "question": "Who is the Knight of the Sun's brother?",
+   "refs": [
+    {
+     "p": "BONE-C22-P014",
+     "q": "or my brother's man"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C23",
+   "id": "unr-d353813539",
+   "kind": "identity",
+   "question": "Is the lady's \"captain of war\" the man of the leafless tree?",
+   "refs": [
+    {
+     "p": "BONE-C23-P004",
+     "q": "I had come into the Burg with my captain of war"
+    }
+   ]
+  },
+  {
+   "chapter": "BONE-C24",
+   "id": "unr-db0c8940d9",
+   "kind": "ambiguity",
+   "question": "Whether the lady's finger-ring gesture summoned the friar; the text shows only the sequence.",
+   "refs": [
+    {
+     "p": "BONE-C24-P004",
+     "q": "she spake something therewith in a low voice"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C1",
+   "id": "unr-f2a160c230",
+   "kind": "contradiction",
+   "question": "The Lady contradicts her BONE-C22 bargain: there she promised to go home with the Knight; here she flees with Ralph.",
+   "refs": [
+    {
+     "p": "BTWO-C1-P020",
+     "q": "we will not go back to him, for he is stronger than thou"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C2",
+   "id": "unr-b44a39cc54",
+   "kind": "document_error",
+   "question": "The Lady says the book about her has errors; the book is not a reliable source.",
+   "refs": [
+    {
+     "p": "BTWO-C2-P008",
+     "q": "there are matters written wrong in the book"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C3",
+   "id": "unr-4d8ab8b029",
+   "kind": "location",
+   "question": "Where the witch's forest lies; the Lady says she was bred in woods, though not these.",
+   "refs": [
+    {
+     "p": "BTWO-C3-P002",
+     "q": "the great trees of the forest were all about the garden"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C3",
+   "id": "unr-8b9809a334",
+   "kind": "identity",
+   "question": "What the blue and green necklaces signify: worn by Ralph, the dead seeker, and the Lady.",
+   "refs": [
+    {
+     "p": "BTWO-C3-P013",
+     "q": "like unto thine as one peascod is to another"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C4",
+   "id": "unr-a4544264b2",
+   "kind": "identity",
+   "question": "Who is the wise carline of the Dale of Lore?",
+   "refs": [
+    {
+     "p": "BTWO-C4-P004",
+     "q": "with shining bright eyes in her wrinkled face"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C4",
+   "id": "unr-6fe1da2dc8",
+   "kind": "identity",
+   "question": "Who is the yellow-haired king's son, dead many years?",
+   "refs": [
+    {
+     "p": "BTWO-C4-P015",
+     "q": "many a year he has been dead"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C4",
+   "id": "unr-b18aaa03af",
+   "kind": "missing_measure",
+   "question": "The Lady's age: the king's son is \"many a year\" dead, yet she looks young.",
+   "refs": [
+    {
+     "p": "BTWO-C4-P016",
+     "q": "as I am now, so shall I be for thee many a year"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C5",
+   "id": "unr-27b966a390",
+   "kind": "ambiguity",
+   "question": "What the king's son sought and failed at; the girl wonders if he might have overcome \"the evil things\".",
+   "refs": [
+    {
+     "p": "BTWO-C5-P006",
+     "q": "Else maybe thou hadst found what thou soughtest, and overcome the evil things"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C6",
+   "id": "unr-08656a920d",
+   "kind": "contradiction",
+   "question": "The Lady says she has drunk of the Well, but has not yet told how; at this point in her tale she has not.",
+   "refs": [
+    {
+     "p": "BTWO-C6-P005",
+     "q": "where I myself have been, or else never had thine eyes fallen on me"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C6",
+   "id": "unr-37f60e88b7",
+   "kind": "identity",
+   "question": "The kingdom of the king's son is unnamed.",
+   "refs": [
+    {
+     "p": "BTWO-C6-P018",
+     "q": "we came soon into my lord's country"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C6",
+   "id": "unr-3c2d35e49c",
+   "kind": "location",
+   "question": "The heathen folk beyond the mountains are not located beyond \"westward\".",
+   "refs": [
+    {
+     "p": "BTWO-C6-P009",
+     "q": "sent down to them from the world beyond the mountains"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C7",
+   "id": "unr-93655a41b3",
+   "kind": "location",
+   "question": "The Kingdom of the Tower adjoins the wildwood, but its direction from the Wood Perilous is not stated.",
+   "refs": [
+    {
+     "p": "BTWO-C7-P025",
+     "q": "came out from the twilight of the woods"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C7",
+   "id": "unr-555abf86e3",
+   "kind": "contradiction",
+   "question": "Earlier (BTWO-C6) the westward road ran from the witch's wilderness to the Tower; here the Teacher \"shortened the road\", so the distance is unreliable.",
+   "refs": [
+    {
+     "p": "BTWO-C7-P039",
+     "q": "the Teacher shortened the road much for us by her wisdom"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C7",
+   "id": "unr-1243f25141",
+   "kind": "missing_measure",
+   "question": "The length of the Lady's reign in the Tower is not given (\"the days and the years wore\").",
+   "refs": [
+    {
+     "p": "BTWO-C7-P027",
+     "q": "But the days and the years wore"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C8",
+   "id": "unr-0cfb8d2554",
+   "kind": "location",
+   "question": "Where Up-castle is.",
+   "refs": [
+    {
+     "p": "BTWO-C8-P011",
+     "q": "when we rode to Up-castle"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C8",
+   "id": "unr-60c6de0c11",
+   "kind": "missing_measure",
+   "question": "How long ago the Lady drank of the Well; only \"a long time\" in the desert house before.",
+   "refs": [
+    {
+     "p": "BTWO-C8-P002",
+     "q": "after we had lived thus a long time"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C8",
+   "id": "unr-272f346878",
+   "kind": "location",
+   "question": "Where the \"most ancient parts of the world\" lie.",
+   "refs": [
+    {
+     "p": "BTWO-C8-P005",
+     "q": "the most ancient parts of the world"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C9",
+   "id": "unr-da4f661221",
+   "kind": "identity",
+   "question": "Is the Burg's dreaded \"Queen of the Dry Tree\" this older Queen or the Lady?",
+   "refs": [
+    {
+     "p": "BTWO-C9-P008",
+     "q": "for she is a fierce and hard woman, and now no longer young in years"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C10",
+   "id": "unr-72ccb62dcc",
+   "kind": "ambiguity",
+   "question": "Direction of travel: the sun \"westering behind them\" implies they were heading east.",
+   "refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "the sun was westering behind them"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C10",
+   "id": "unr-9a45bffbdb",
+   "kind": "contradiction",
+   "question": "The Lady and her foretelling did not foresee her death, though she claimed some foresight.",
+   "refs": [
+    {
+     "p": "BTWO-C10-P007",
+     "q": "I said that when I brought thee hither I would stay thereon and talk with thee"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C11",
+   "id": "unr-7e065b5140",
+   "kind": "identity",
+   "question": "Whether this highway ford is the ford a mile and a half downstream that Roger avoided (BONE-C17).",
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "this was the ford of a highway"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C12",
+   "id": "unr-b882d5159c",
+   "kind": "identity",
+   "question": "The rich town taken by Companions is unnamed.",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "till he came to a rich town which had just been taken in war"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C12",
+   "id": "unr-51d7319ed0",
+   "kind": "location",
+   "question": "Whitwall's direction from the ford is not stated.",
+   "refs": [
+    {
+     "p": "BTWO-C12-P014",
+     "q": "came to Whitwall"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C13",
+   "id": "unr-56541fd9de",
+   "kind": "location",
+   "question": "The direction of the Castle of the Waste March from Swevenham.",
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "sixty miles from Swevenham town"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C13",
+   "id": "unr-644075cf4d",
+   "kind": "identity",
+   "question": "Whether the three Swevenham seekers returned.",
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "I wot not"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C14",
+   "id": "unr-2096217872",
+   "kind": "identity",
+   "question": "The three fair cities on Clement's road east are unnamed here.",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "three very fair cities"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C14",
+   "id": "unr-d4a52c0322",
+   "kind": "ambiguity",
+   "question": "Clement says the folk with him \"called\" what he saw the Wall of the World; uncertain identification.",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "or what the folk with me called so"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C15",
+   "id": "unr-9f3b031a4d",
+   "kind": "identity",
+   "question": "Whether \"Dorothea\" is the maiden's true name; it comes only from a dream and is not confirmed by narration here.",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I hight Dorothea"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C15",
+   "id": "unr-d1c6a7ac1e",
+   "kind": "ambiguity",
+   "question": "Whether the vision is a real sending or a dream; the narration does not say.",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "Then he knew not if he awoke, or if it were a change in his dream"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C16",
+   "id": "unr-09b46bbc02",
+   "kind": "identity",
+   "question": "Who were the two women seekers on the highway? Ralph believes the recent one was the maiden of Bourton.",
+   "refs": [
+    {
+     "p": "BTWO-C16-P021",
+     "q": "he doubted not that the said woman was the damsel of Bourton Abbas"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C16",
+   "id": "unr-0ac5a1f81c",
+   "kind": "contradiction",
+   "question": "Swevenham tellers disagree whether the Dry Tree is on the hither or further side of the Wall of the World.",
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "Then another and an older man"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C16",
+   "id": "unr-4594bcf8ee",
+   "kind": "identity",
+   "question": "Who was the knight who asked about the Lady with the beads?",
+   "refs": [
+    {
+     "p": "BTWO-C16-P012",
+     "q": "he asked many questions, but most of the Lady with the pair of beads"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C17",
+   "id": "unr-f8233abccf",
+   "kind": "identity",
+   "question": "Earl Walter the Black and the wounded Walter the Black of the lake are probably the same; not stated.",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "he was hurt in a fray as we hear"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C19",
+   "id": "unr-aeab8d1baa",
+   "kind": "missing_measure",
+   "question": "Distances on the mountain road are given only in days.",
+   "refs": [
+    {
+     "p": "BTWO-C19-P012",
+     "q": "In three days' time we shall come to the entry of the mountains"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C20",
+   "id": "unr-a50928d509",
+   "kind": "identity",
+   "question": "The captive is described but not named; her necklace and gown match the maiden of Bourton.",
+   "refs": [
+    {
+     "p": "BTWO-C20-P011",
+     "q": "grey-eyed and brown haired, and great abundance of it"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C20",
+   "id": "unr-6fab17c716",
+   "kind": "location",
+   "question": "Where the thieves took the captive to sell.",
+   "refs": [
+    {
+     "p": "BTWO-C20-P009",
+     "q": "a captive led in on the road to the market"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C21",
+   "id": "unr-54193a7825",
+   "kind": "identity",
+   "question": "The wild men are Bull Shockhead's kindred; their people is not named here.",
+   "refs": [
+    {
+     "p": "BTWO-C21-P021",
+     "q": "I will not fight against my kindred"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C22",
+   "id": "unr-d84d34fd78",
+   "kind": "identity",
+   "question": "Whether \"Bull\" names a whole kindred (later the merchant says men of that folk are so named).",
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "my kinsman Bull Nosy"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C23",
+   "id": "unr-9e2af0bbba",
+   "kind": "identity",
+   "question": "The tyrant of Cheaping Knowe is unnamed.",
+   "refs": [
+    {
+     "p": "BTWO-C23-P006",
+     "q": "the token of the lord who had gotten the castle in those days"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C24",
+   "id": "unr-6748aac158",
+   "kind": "location",
+   "question": "Locations of Whiteness and Utterbol are not given.",
+   "refs": [
+    {
+     "p": "BTWO-C24-P008",
+     "q": "the town of Whiteness"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C25",
+   "id": "unr-a95359ad84",
+   "kind": "location",
+   "question": "Where Utterbol lies relative to Whiteness.",
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the lord of Utterbol had not been in Whiteness these six months"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C26",
+   "id": "unr-25ecf73ec6",
+   "kind": "identity",
+   "question": "Who slew Bull Nosy and took the damsel?",
+   "refs": [
+    {
+     "p": "BTWO-C26-P014",
+     "q": "this is the stroke of a strong man wielding a good weapon"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C26",
+   "id": "unr-7849830f1d",
+   "kind": "ambiguity",
+   "question": "Whether Ralph's vision is true sight or longing.",
+   "refs": [
+    {
+     "p": "BTWO-C26-P020",
+     "q": "he deemed this to be a vision of what then was, rather than a memory of what had been"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C27",
+   "id": "unr-6732aa9a7a",
+   "kind": "ambiguity",
+   "question": "Whether Goldburg's founder drank of the Well.",
+   "refs": [
+    {
+     "p": "BTWO-C27-P004",
+     "q": "others naysaid that"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C28",
+   "id": "unr-3996900664",
+   "kind": "missing_measure",
+   "question": "The distance from the mountains to Goldburg is given only as four days' ride.",
+   "refs": [
+    {
+     "p": "BTWO-C28-P002",
+     "q": "they rode four days"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C29",
+   "id": "unr-68bc9fdd8f",
+   "kind": "identity",
+   "question": "Duke Osmond is not otherwise identified (overlord of Upmeads?).",
+   "refs": [
+    {
+     "p": "BTWO-C29-P003",
+     "q": "Duke Osmond"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C29",
+   "id": "unr-a335f3883c",
+   "kind": "location",
+   "question": "Where Utterness and Utterbol lie relative to Goldburg.",
+   "refs": [
+    {
+     "p": "BTWO-C29-P021",
+     "q": "the last town whereof we know aught"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C30",
+   "id": "unr-562fa259c0",
+   "kind": "ambiguity",
+   "question": "Morfinn's trustworthiness: Clement scowls; the narration notes he looks innocent.",
+   "refs": [
+    {
+     "p": "BTWO-C30-P013",
+     "q": "the man beheld his scowling face innocently, and took no heed of it"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C30",
+   "id": "unr-3a0da4cabc",
+   "kind": "identity",
+   "question": "Who is the sage near Utterness?",
+   "refs": [
+    {
+     "p": "BTWO-C30-P006",
+     "q": "I know of a sage who dwelleth not far from the town of Utterness"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C31",
+   "id": "unr-82a2b23724",
+   "kind": "ambiguity",
+   "question": "Morfinn's mocking smile suggests deceit.",
+   "refs": [
+    {
+     "p": "BTWO-C31-P008",
+     "q": "there was mocking in the smile"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C31",
+   "id": "unr-f7192ef19a",
+   "kind": "identity",
+   "question": "Who took the damsel from Bull Nosy? Morfinn says Utterbol's men took her from the wild men.",
+   "refs": [
+    {
+     "p": "BTWO-C31-P009",
+     "q": "taken out of the hands of the wild men from the further mountains"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C32",
+   "id": "unr-ab335c3b2a",
+   "kind": "ambiguity",
+   "question": "Why the Lord wants Ralph: Ralph fears he is being led to sacrifice.",
+   "refs": [
+    {
+     "p": "BTWO-C32-P037",
+     "q": "I scarce deem that I am being led to the slaughter"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C32",
+   "id": "unr-6e31f4c30c",
+   "kind": "location",
+   "question": "Where the hermit sage near Utterbol lives.",
+   "refs": [
+    {
+     "p": "BTWO-C32-P010",
+     "q": "in the woods not right far from Utterbol"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C33",
+   "id": "unr-f7e71166b3",
+   "kind": "identity",
+   "question": "Whether the learned woman who helped Goldburg's founder is the Lady of Abundance or the Teacher of Lore.",
+   "refs": [
+    {
+     "p": "BTWO-C33-P007",
+     "q": "helped by one who had learned many things, a woman to wit"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C33",
+   "id": "unr-c5c3db3d23",
+   "kind": "contradiction",
+   "question": "Clement (BTWO-C27) reported the founder's drinking as disputed; David says he certainly crossed the mountains and drank, then calls it \"but a tale\".",
+   "refs": [
+    {
+     "p": "BTWO-C33-P007",
+     "q": "Moreover, when all is said, 'tis but a tale"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C34",
+   "id": "unr-fb6e65dbdc",
+   "kind": "location",
+   "question": "Where the Northland lies.",
+   "refs": [
+    {
+     "p": "BTWO-C34-P028",
+     "q": "from the far-away Northland"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C35",
+   "id": "unr-20a23aa69c",
+   "kind": "ambiguity",
+   "question": "Otter's competing ideas of what lies beyond the mountains (plain, endless mountains, world-edge gulf).",
+   "refs": [
+    {
+     "p": "BTWO-C35-P005",
+     "q": "a place where is naught but a ledge, and then below it a gulf filled with nothing but the howling of winds"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C36",
+   "id": "unr-d110ed965c",
+   "kind": "identity",
+   "question": "Is the Lord's beloved new-come thrall at Utterbol the damsel Ralph seeks?",
+   "refs": [
+    {
+     "p": "BTWO-C36-P006",
+     "q": "that new-come thrall of his (whom ye left at home at Utterbol in his despite)"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C37",
+   "id": "unr-372259edcd",
+   "kind": "identity",
+   "question": "Ursula wears beads like Ralph's: probably the damsel of Bourton, named Dorothea in Ralph's dream (BTWO-C15).",
+   "refs": [
+    {
+     "p": "BTWO-C37-P025",
+     "q": "this new thrall, this Ursula"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C38",
+   "id": "unr-9b8bde0632",
+   "kind": "identity",
+   "question": "The woman in the Lady's confidence who spread the tale to Redhead (likely Agatha's planted tidings).",
+   "refs": [
+    {
+     "p": "BTWO-C38-P009",
+     "q": "It was told me yester-eve by a woman who is in the very privity of the Lady of Utterbol"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C39",
+   "id": "unr-0f29ba39ed",
+   "kind": "location",
+   "question": "Where the Fighting Man rock and the mountain pass are.",
+   "refs": [
+    {
+     "p": "BTWO-C39-P023",
+     "q": "the road and the pass through the Great Mountains"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C39",
+   "id": "unr-f93982e3a4",
+   "kind": "ambiguity",
+   "question": "Otter's motives (ally, or the Lord's instrument).",
+   "refs": [
+    {
+     "p": "BTWO-C39-P016",
+     "q": "he will make thee my mate, to use with me, or against me as occasion may serve"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C40",
+   "id": "unr-81c1a92866",
+   "kind": "ambiguity",
+   "question": "The road's orientation relative to the mountains (forest \"on the right hand\").",
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "They had the wildwood ever on their right hand"
+    }
+   ]
+  },
+  {
+   "chapter": "BTWO-C41",
+   "id": "unr-beef055247",
+   "kind": "ambiguity",
+   "question": "Why David leaves Ralph early that evening.",
+   "refs": [
+    {
+     "p": "BTWO-C41-P008",
+     "q": "must I depart from thee, if I may, to meet a man who will sell me a noble horse good cheap"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C1",
+   "id": "unr-d7a29407a4",
+   "kind": "contradiction",
+   "question": "Agatha names the \"Lady of the Burnt Rock\" but then says \"as to the Red Rock, I lied\".",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P018",
+     "q": "as to the Red Rock, I lied"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C3",
+   "id": "unr-da9019af92",
+   "kind": "identity",
+   "question": "Whether the Sage of Swevenham is the wizard of the mountains who vanished from Swevenham's lore (BTWO-C16).",
+   "refs": [
+    {
+     "p": "BTHREE-C3-P035",
+     "q": "he is now called the Sage of Swevenham"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C4",
+   "id": "unr-7d01b7a143",
+   "kind": "identity",
+   "question": "The Lord of Utterbol's nephew is unnamed.",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P003",
+     "q": "the nephew of the lord"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C5",
+   "id": "unr-5e70fa0b07",
+   "kind": "identity",
+   "question": "Whether the Sage is the vanished wizard of Swevenham lore.",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P020",
+     "q": "when a many years ago I dwelt nigh to Swevenham"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C6",
+   "id": "unr-6f11c89039",
+   "kind": "missing_measure",
+   "question": "The book's full content is deferred: the narration says it will appear later in the tale.",
+   "refs": [
+    {
+     "p": "BTHREE-C6-P003",
+     "q": "What he read shall be seen hereafter in the process of this tale"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C7",
+   "id": "unr-039986b324",
+   "kind": "ambiguity",
+   "question": "Otter's sympathy: does he guess the wizardry?",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "they are welcome to their wizardry, and I am glad of it"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C8",
+   "id": "unr-fd00b14d6e",
+   "kind": "location",
+   "question": "The cavern to be reached before winter is mentioned but not located.",
+   "refs": [
+    {
+     "p": "BTHREE-C8-P013",
+     "q": "that cavern, whereof I have taught you"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C9",
+   "id": "unr-b32ed117a9",
+   "kind": "missing_measure",
+   "question": "Distance from the Candle of the Giants to Utterbol is only \"not so far\".",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "Now it is naught so far from Utterbol"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C14",
+   "id": "unr-dfdddd7ee9",
+   "kind": "identity",
+   "question": "The \"fairest woman of the world\" who returned from the Well is probably the Lady of Abundance; not named here.",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "the fairest woman of the world, when she came back to us from the Well"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C17",
+   "id": "unr-ff7c4dcd91",
+   "kind": "ambiguity",
+   "question": "Why the dead died: thirst, the Dry Tree's poison, or failure without the beads. Not stated here.",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P019",
+     "q": "would not the Sage or his books have told us of the most deadly?"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C18",
+   "id": "unr-984b68dcb9",
+   "kind": "ambiguity",
+   "question": "Whether the Dry Tree is made by hands or grown.",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P003",
+     "q": "they doubted whether it were not made by men's hands rather than grown up out of the earth"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C18",
+   "id": "unr-b35d7b63df",
+   "kind": "contradiction",
+   "question": "The Dry Tree here is a deathtrap, while the Swevenham tale said touching its bole would lead to the Well (BTWO-C16).",
+   "refs": [
+    {
+     "p": "BTHREE-C18-P008",
+     "q": "doubtless it is heavy with venom"
+    }
+   ]
+  },
+  {
+   "chapter": "BTHREE-C20",
+   "id": "unr-55cc6d9575",
+   "kind": "contradiction",
+   "question": "The sun sets \"beyond them\" over the sea at the ness's tip after an eastward journey; the ness's orientation is unclear.",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P007",
+     "q": "the sun was setting beyond them"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C2",
+   "id": "unr-3a211977d2",
+   "kind": "identity",
+   "question": "Is the new Bull lord Bull Shockhead? Ralph suspects so (confirmed in BFOUR-C3).",
+   "refs": [
+    {
+     "p": "BFOUR-C2-P011",
+     "q": "Ralph pondered this tale, and was not so sure but that this new lord was not Bull Shockhead"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C7",
+   "id": "unr-3937da1531",
+   "kind": "identity",
+   "question": "The nephew's brother is unnamed.",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "a man well nigh as old as his uncle, though he hath not made men tremble so sore"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C8",
+   "id": "unr-ace1a167d2",
+   "kind": "location",
+   "question": "Where the Queen of Goldburg went after landing in the great wood.",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "nor have any of Goldburg seen her since, or the Queen"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C8",
+   "id": "unr-e3447e1e0c",
+   "kind": "location",
+   "question": "Goldburg's river is said to flow \"seaward\": where is that sea?",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "a twenty leagues seaward"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C9",
+   "id": "unr-cf58f038b1",
+   "kind": "identity",
+   "question": "Whether the \"King\" of Cheaping Knowe is the same tyrant met on the outward journey (BTWO-C23).",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P002",
+     "q": "the King there; who was a close-fist and a cruel lord"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C16",
+   "id": "unr-f0ef419560",
+   "kind": "ambiguity",
+   "question": "Ralph says \"my sword lay in his body yesterday\" of the brother, though the dying man said Richard struck.",
+   "refs": [
+    {
+     "p": "BFOUR-C16-P023",
+     "q": "for my sword lay in his body yesterday"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C17",
+   "id": "unr-e07e2ea05a",
+   "kind": "location",
+   "question": "The land of the Wheat-wearers is a long road from the Burg; direction not stated.",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P022",
+     "q": "Now the road to the Wheat-wearing country was long"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C19",
+   "id": "unr-3cc23e2713",
+   "kind": "identity",
+   "question": "The Banded Barons of the West are not otherwise identified.",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P017",
+     "q": "the Banded Barons"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C21",
+   "id": "unr-d7a353adf4",
+   "kind": "identity",
+   "question": "The Westland Barons (C21) and the Banded Barons from the West (C19) are probably the same league; the text does not say so.",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Westland Barons"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C21",
+   "id": "unr-caabe8722b",
+   "kind": "location",
+   "question": "The Red Mount is only \"west-away\"; distance not given.",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Red Mount west-away"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C22",
+   "id": "unr-c108f324ac",
+   "kind": "location",
+   "question": "Foxworth Castle, the Longford and the Nineways Garth have no stated positions beyond being Burger strongholds hereabouts.",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "either at Foxworth Castle, or the Longford, or the Nineways Garth"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C22",
+   "id": "unr-af5759c2d4",
+   "kind": "identity",
+   "question": "Giles is probably the old shepherd met on the Greenway (BONE), but the earlier passage gives no name.",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P008",
+     "q": "he had seen him but that once when he rode the Greenway"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C23",
+   "id": "unr-6c8b21c3da",
+   "kind": "location",
+   "question": "The Red Bridge is named only here; its position on Upmeads Water relative to other bridges is not given.",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "by the Red Bridge"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C23",
+   "id": "unr-969e908d6c",
+   "kind": "contradiction",
+   "question": "The Garton spearmen number twenty-three here but twenty-two at the Folkmote tally (BFOUR-C24).",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P002",
+     "q": "numbered twenty and three all told"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C24",
+   "id": "unr-ad1811a10f",
+   "kind": "contradiction",
+   "question": "The tally gives 22 men of Garton against 23 the previous morning (BFOUR-C23); one may have been lost or detailed elsewhere, but the text does not say.",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P016",
+     "q": "of the men of Garton were twenty and two"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C26",
+   "id": "unr-a0041cbd34",
+   "kind": "contradiction",
+   "question": "The Dame says nearly two years without news; Ralph's journey from the last summer day through Wulstead seems shorter.",
+   "refs": [
+    {
+     "p": "BFOUR-C26-P010",
+     "q": "two years well nigh"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C28",
+   "id": "unr-7e7e463a48",
+   "kind": "identity",
+   "question": "Ralph believes the Wise Woman of Sarras taught the Lady of Abundance, but the text gives no confirmation; the Lady's witch-mistress was described differently (big, black-haired).",
+   "refs": [
+    {
+     "p": "BFOUR-C28-P015",
+     "q": "he deemed it certain that the Wise Woman of Sarras would be none other than she who had taught lore to the Lady of Abundance"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C28",
+   "id": "unr-117c83fc84",
+   "kind": "location",
+   "question": "Sarras the Holy is only \"in the eastern parts of the earth\"; its relation to Whitwall, Goldburg and the Well's road is not given.",
+   "refs": [
+    {
+     "p": "BFOUR-C28-P002",
+     "q": "came into the eastern parts of the earth"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C29",
+   "id": "unr-fc138777db",
+   "kind": "ambiguity",
+   "question": "Ralph's guess that the Burgers had a spy in Wulstead is unconfirmed.",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P013",
+     "q": "having had belike some spy in Wulstead"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "id": "unr-96e2164cb4",
+   "kind": "document_error",
+   "question": "The epilogue calls Ralph's old thrall of war and Lord of Utterbol \"Bull Nosy\", but Bull Nosy was murdered by Gandolf; the lord is Bull Shockhead (BFOUR-C3).",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "his old thrall of war, Bull Nosy"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "id": "unr-bc8463e630",
+   "kind": "location",
+   "question": "The three good towns beyond the Wood Debateable are unnamed and unplaced.",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "three good towns beyond the wood"
+    }
+   ]
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "id": "unr-1b5d89a747",
+   "kind": "ambiguity",
+   "question": "The epilogue says Ralph and Ursula met \"amidst of the Eastland wood\"; elsewhere the meeting is in the Wood Perilous or its region.",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P008",
+     "q": "when they met in the dark night amidst of the Eastland wood"
+    }
+   ]
+  }
+ ]
+}

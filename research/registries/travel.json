@@ -1,0 +1,3557 @@
+{
+ "format": "morris-travel/1",
+ "records": [
+  {
+   "chapter": "BONE-C1",
+   "direction_text": "north",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Four-want-way",
+   "from_id": "fea-four-want-way",
+   "id": "trv-2e5d736885",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "Hugh",
+    "Lancelot Longtongue"
+   ],
+   "travellers_ids": [
+    "per-hugh",
+    "per-lancelot-longtongue"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C1",
+   "direction_text": "west",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Four-want-way",
+   "from_id": "fea-four-want-way",
+   "id": "trv-4e5dece24e",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Gregory westward with Clement"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "Gregory",
+    "Clement the Black"
+   ],
+   "travellers_ids": [
+    "per-gregory",
+    "per-clement-the-black"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C1",
+   "direction_text": "east",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Four-want-way",
+   "from_id": "fea-four-want-way",
+   "id": "trv-c0d0f5afa1",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Blaise fareth eastward and Richard with him"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "Blaise",
+    "Richard the Red"
+   ],
+   "travellers_ids": [
+    "per-blaise",
+    "per-richard-the-red"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C3",
+   "direction_text": "south",
+   "duration_text": "",
+   "end_time_text": "early morning after first mass",
+   "from": "High House of Upmeads",
+   "from_id": "bld-high-house-of-upmeads",
+   "id": "trv-1dc9459bd8",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C3-P002",
+     "q": "went his ways splashing across the ford, before the sun had arisen"
+    },
+    {
+     "p": "BONE-C3-P005",
+     "q": "the first mass over"
+    }
+   ],
+   "start_time_text": "dawn before sunrise",
+   "terrain_text": "",
+   "to": "Wulstead",
+   "to_id": "plc-wulstead",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "The Ford"
+   ],
+   "via_ids": [
+    "fea-the-ford"
+   ]
+  },
+  {
+   "chapter": "BONE-C4",
+   "direction_text": "south",
+   "duration_text": "",
+   "end_time_text": "two hours past noon",
+   "from": "Wulstead",
+   "from_id": "plc-wulstead",
+   "id": "trv-b41bc3d848",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C4-P008",
+     "q": "so trotted south along fair and softly"
+    },
+    {
+     "p": "BONE-C4-P011",
+     "q": "it was past noon two hours"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "plain, then steep chalk downs",
+   "to": "(unnamed) place of the shepherds' meeting",
+   "to_id": "imp-place-of-the-shepherds-meeting",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "Netherton",
+    "Bear Hill",
+    "Bear Castle",
+    "the Greenway",
+    "(unnamed) hill of seven grave-mounds"
+   ],
+   "via_ids": [
+    "plc-netherton",
+    "fea-bear-hill",
+    "bld-bear-castle",
+    "fea-the-greenway",
+    "fea-hill-of-seven-grave-mounds"
+   ]
+  },
+  {
+   "chapter": "BONE-C4",
+   "direction_text": "south",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Netherton",
+   "from_id": "plc-netherton",
+   "id": "trv-49f565f5e1",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "we have seen one riding south along the Greenway"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "Captain of the Dry Tree"
+   ],
+   "travellers_ids": [
+    "per-captain-of-the-dry-tree"
+   ],
+   "via": [
+    "the Greenway"
+   ],
+   "via_ids": [
+    "fea-the-greenway"
+   ]
+  },
+  {
+   "chapter": "BONE-C5",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "toward sunset",
+   "from": "(unnamed) place of the shepherds' meeting",
+   "from_id": "imp-place-of-the-shepherds-meeting",
+   "id": "trv-eeaec4a7df",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C5-P003",
+     "q": "it was the more part of an hour ere he came to the gate"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "steep winding road down into the plain",
+   "to": "Higham-on-the-Way",
+   "to_id": "plc-higham-on-the-way",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "the Greenway",
+    "the Downs"
+   ],
+   "via_ids": [
+    "fea-the-greenway",
+    "fea-the-downs"
+   ]
+  },
+  {
+   "chapter": "BONE-C7",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "noon",
+   "from": "Higham-on-the-Way",
+   "from_id": "plc-higham-on-the-way",
+   "id": "trv-471f188c50",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C7-P003",
+     "q": "he rode through very excellent meadows lying along the water"
+    },
+    {
+     "p": "BONE-C7-P007",
+     "q": "So he rode till it was noon"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "meadows, river crossings, vine-hills",
+   "to": "Bourton Abbas",
+   "to_id": "plc-bourton-abbas",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "(unnamed) faubourg of Higham",
+    "(unnamed) vine country south of Higham"
+   ],
+   "via_ids": [
+    "imp-faubourg-of-higham",
+    "imp-vine-country-south-of-higham"
+   ]
+  },
+  {
+   "chapter": "BONE-C8",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Bourton Abbas",
+   "from_id": "plc-bourton-abbas",
+   "id": "trv-ca094cd672",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C8-P002",
+     "q": "So on he rode, and soon passed that waste"
+    },
+    {
+     "p": "BONE-C8-P004",
+     "q": "The afternoon wore and still he rode the oak wood"
+    }
+   ],
+   "start_time_text": "afternoon",
+   "terrain_text": "waste, beech wood, oak wood",
+   "to": "(unnamed) crossroads in the Wood Perilous",
+   "to_id": "fea-crossroads-in-the-wood-perilous",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "(unnamed) dry waste beyond Bourton Abbas",
+    "Wood Perilous"
+   ],
+   "via_ids": [
+    "fea-dry-waste-beyond-bourton-abbas",
+    "fea-wood-perilous"
+   ]
+  },
+  {
+   "chapter": "BONE-C8",
+   "direction_text": "somewhat south-east",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) crossroads in the Wood Perilous",
+   "from_id": "fea-crossroads-in-the-wood-perilous",
+   "id": "trv-3c5841674c",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C8-P027",
+     "q": "the whole company went off at a smart trot somewhat south-east, slantwise of the cross-roads"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "men of the Burg of the Four Friths"
+   ],
+   "travellers_ids": [
+    "grp-men-of-the-burg-of-the-four-friths"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C9",
+   "direction_text": "from the north-west",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": null,
+   "id": "trv-b048f6abcb",
+   "mode": "horse, captive on foot",
+   "refs": [
+    {
+     "p": "BONE-C9-P005",
+     "q": "athwart the glade of the wood from the northwest, or thereabout, came new folk"
+    }
+   ],
+   "start_time_text": "sunset",
+   "terrain_text": "",
+   "to": "(unnamed) crossroads in the Wood Perilous",
+   "to_id": "fea-crossroads-in-the-wood-perilous",
+   "travellers": [
+    "(unnamed) slain spearman",
+    "(unnamed) slain axeman",
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "travellers_ids": [
+    "per-slain-spearman",
+    "per-slain-axeman",
+    "per-lady-delivered-at-the-crossroads"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C9",
+   "direction_text": "south-east",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) crossroads in the Wood Perilous",
+   "from_id": "fea-crossroads-in-the-wood-perilous",
+   "id": "trv-23015e38a5",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C9-P022",
+     "q": "went her ways riding speedily toward the south-east"
+    }
+   ],
+   "start_time_text": "dusk",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "travellers_ids": [
+    "per-lady-delivered-at-the-crossroads"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C10",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "first glimmer of dawn",
+   "from": "Bourton Abbas",
+   "from_id": "plc-bourton-abbas",
+   "id": "trv-72e5141839",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C10-P003",
+     "q": "Here have I followed on thy footsteps"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) crossroads in the Wood Perilous",
+   "to_id": "fea-crossroads-in-the-wood-perilous",
+   "travellers": [
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C10",
+   "direction_text": "east",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) crossroads in the Wood Perilous",
+   "from_id": "fea-crossroads-in-the-wood-perilous",
+   "id": "trv-6c9d536360",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C10-P019",
+     "q": "rode away east toward Hampton"
+    }
+   ],
+   "start_time_text": "early summer morning",
+   "terrain_text": "",
+   "to": "Hampton under Scaur",
+   "to_id": "plc-hampton-under-scaur",
+   "travellers": [
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C11",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) crossroads in the Wood Perilous",
+   "from_id": "fea-crossroads-in-the-wood-perilous",
+   "id": "trv-f2ed5fad49",
+   "mode": "horse, double-mounted",
+   "refs": [
+    {
+     "p": "BONE-C11-P022",
+     "q": "the carle waited no bidding to leap up behind him"
+    },
+    {
+     "p": "BONE-C11-P032",
+     "q": "there were fields of tillage about the highway"
+    }
+   ],
+   "start_time_text": "early morning",
+   "terrain_text": "wood, then tillage, then meadows",
+   "to": "Burg of the Four Friths",
+   "to_id": "plc-burg-of-the-four-friths",
+   "travellers": [
+    "Ralph",
+    "Roger of the Rope-walk"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk"
+   ],
+   "via": [
+    "(unnamed) alder brook near the crossroads",
+    "(unnamed) tillage near the Burg",
+    "(unnamed) small thorp before the Burg"
+   ],
+   "via_ids": [
+    "fea-alder-brook-near-the-crossroads",
+    "imp-tillage-near-the-burg",
+    "imp-small-thorp-before-the-burg"
+   ]
+  },
+  {
+   "chapter": "BONE-C13",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": null,
+   "id": "trv-de1f849682",
+   "mode": "foot and horse, with wains",
+   "refs": [
+    {
+     "p": "BONE-C13-P005",
+     "q": "the gates were thrown wide open"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Burg of the Four Friths",
+   "to_id": "plc-burg-of-the-four-friths",
+   "travellers": [
+    "(unnamed) host of the Burg"
+   ],
+   "travellers_ids": [
+    "imp-host-of-the-burg"
+   ],
+   "via": [
+    "(unnamed) South Gate of the Burg"
+   ],
+   "via_ids": [
+    "bld-south-gate-of-the-burg"
+   ]
+  },
+  {
+   "chapter": "BONE-C15",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "dawn",
+   "from": "Flower de Luce",
+   "from_id": "bld-flower-de-luce",
+   "id": "trv-7eef670e3a",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BONE-C15-P004",
+     "q": "two hours and a half after midnight"
+    }
+   ],
+   "start_time_text": "two and a half hours after midnight",
+   "terrain_text": "",
+   "to": "(unnamed) wood-lawn south of the Burg",
+   "to_id": "imp-wood-lawn-south-of-the-burg",
+   "travellers": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "Captain of the Dry Tree",
+    "(unnamed) slender youth"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk",
+    "per-captain-of-the-dry-tree",
+    "per-slender-youth"
+   ],
+   "via": [
+    "(unnamed) postern between the East and South Gates",
+    "(unnamed) grange outside the Burg"
+   ],
+   "via_ids": [
+    "bld-postern-between-the-east-and-south-gates",
+    "bld-grange-outside-the-burg"
+   ]
+  },
+  {
+   "chapter": "BONE-C16",
+   "direction_text": "",
+   "duration_text": "four hours or more",
+   "end_time_text": "",
+   "from": "(unnamed) wood-lawn south of the Burg",
+   "from_id": "imp-wood-lawn-south-of-the-burg",
+   "id": "trv-5c6f761e7e",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BONE-C16-P008",
+     "q": "the wood thereabouts of beech and clear of underwood"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "beech wood clear of underwood",
+   "to": "(unnamed) stony waste of low hills",
+   "to_id": "imp-stony-waste-of-low-hills",
+   "travellers": [
+    "Ralph",
+    "Roger of the Rope-walk"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C17",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "dawn next day",
+   "from": "(unnamed) stony waste of low hills",
+   "from_id": "imp-stony-waste-of-low-hills",
+   "id": "trv-8be1f08a07",
+   "mode": "horse, swimming the river",
+   "refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "it was now four hours after noon"
+    },
+    {
+     "p": "BONE-C17-P012",
+     "q": "as the twilight of the dawn was passing into early day"
+    }
+   ],
+   "start_time_text": "afternoon (river at four hours after noon)",
+   "terrain_text": "stony land, valley, downland, wood, plain",
+   "to": "House of Abundance",
+   "to_id": "bld-house-of-abundance",
+   "travellers": [
+    "Ralph",
+    "Roger of the Rope-walk"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk"
+   ],
+   "via": [
+    "(unnamed) wide river of the empty valley",
+    "(unnamed) wasted downland",
+    "(unnamed) evil-named wood before the House of Abundance"
+   ],
+   "via_ids": [
+    "fea-wide-river-of-the-empty-valley",
+    "fea-wasted-downland",
+    "fea-evil-named-wood-before-the-house-of-abundance"
+   ]
+  },
+  {
+   "chapter": "BONE-C20",
+   "direction_text": "south and east",
+   "duration_text": "",
+   "end_time_text": "noon",
+   "from": "House of Abundance",
+   "from_id": "bld-house-of-abundance",
+   "id": "trv-d8223a06a2",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BONE-C20-P012",
+     "q": "going south and east of the House: whereas the last day he had gone west and north"
+    }
+   ],
+   "start_time_text": "morning",
+   "terrain_text": "",
+   "to": "(unnamed) wood south-east of the House of Abundance",
+   "to_id": "imp-wood-south-east-of-the-house-of-abundance",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "(unnamed) ford with stepping stones of Abundance"
+   ],
+   "via_ids": [
+    "fea-ford-with-stepping-stones-of-abundance"
+   ]
+  },
+  {
+   "chapter": "BONE-C22",
+   "direction_text": "due south",
+   "duration_text": "",
+   "end_time_text": "when the sun was getting low",
+   "from": "House of Abundance",
+   "from_id": "bld-house-of-abundance",
+   "id": "trv-d4d4618255",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BONE-C22-P002",
+     "q": "at last when the sun was getting low, he saw light gleaming through a great wood of pines"
+    }
+   ],
+   "start_time_text": "morning",
+   "terrain_text": "thickets, pine wood",
+   "to": "(unnamed) long lake south of Abundance",
+   "to_id": "fea-long-lake-south-of-abundance",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BONE-C24",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) hermitage at the end of the lake",
+   "from_id": "bld-hermitage-at-the-end-of-the-lake",
+   "id": "trv-d74cee3c71",
+   "mode": "boat",
+   "refs": [
+    {
+     "p": "BONE-C24-P007",
+     "q": "a little boat making down the water toward the end anigh them"
+    }
+   ],
+   "start_time_text": "after sunset",
+   "terrain_text": "",
+   "to": "(unnamed) three oaks by the lake",
+   "to_id": "fea-three-oaks-by-the-lake",
+   "travellers": [
+    "(unnamed) Blackfriar hermit of the lake"
+   ],
+   "travellers_ids": [
+    "per-blackfriar-hermit-of-the-lake"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C1",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "three hours after sunrise",
+   "from": "(unnamed) three oaks by the lake",
+   "from_id": "fea-three-oaks-by-the-lake",
+   "id": "trv-3a9fe5efc9",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BTWO-C1-P010",
+     "q": "So they sped across a waste not much beset with trees"
+    }
+   ],
+   "start_time_text": "before dawn",
+   "terrain_text": "pine wood, waste, thick wood",
+   "to": "(unnamed) clearing of grey stones",
+   "to_id": "fea-clearing-of-grey-stones",
+   "travellers": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-lady-of-abundance",
+    "per-ralph"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C1",
+   "direction_text": "north",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": null,
+   "id": "trv-4b3e13c5f3",
+   "mode": "",
+   "refs": [
+    {
+     "p": "BTWO-C1-P025",
+     "q": "our riders had gone to the north against them of the Burg"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Burg of the Four Friths",
+   "to_id": "plc-burg-of-the-four-friths",
+   "travellers": [
+    "Fellowship of the Dry Tree"
+   ],
+   "travellers_ids": [
+    "grp-fellowship-of-the-dry-tree"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C2",
+   "direction_text": "toward Hampton under Scaur, detour north",
+   "duration_text": "",
+   "end_time_text": "two hours after noon",
+   "from": "(unnamed) clearing of grey stones",
+   "from_id": "fea-clearing-of-grey-stones",
+   "id": "trv-44b2d8e65b",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BTWO-C2-P011",
+     "q": "it is now past two hours after noon"
+    }
+   ],
+   "start_time_text": "about noon",
+   "terrain_text": "",
+   "to": "(unnamed) strawberry brook",
+   "to_id": "fea-strawberry-brook",
+   "travellers": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-lady-of-abundance",
+    "per-ralph"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C6",
+   "direction_text": "westward",
+   "duration_text": "autumn and winter to spring and beyond",
+   "end_time_text": "",
+   "from": "Dale of Lore",
+   "from_id": "fea-dale-of-lore",
+   "id": "trv-cff1fcc727",
+   "mode": "horse and foot, then riding cattle",
+   "refs": [
+    {
+     "p": "BTWO-C6-P004",
+     "q": "then we went our ways westward, according to the rede of the carline"
+    },
+    {
+     "p": "BTWO-C6-P008",
+     "q": "It was springtime when we came to that folk"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "deserts of wood and heath, stony waste, mountains",
+   "to": "(unnamed) kingdom of the king's son",
+   "to_id": "pol-kingdom-of-the-kings-son",
+   "travellers": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "travellers_ids": [
+    "per-lady-of-abundance",
+    "per-kings-son-of-the-ladys-youth"
+   ],
+   "via": [
+    "(unnamed) dreadful stony waste",
+    "(unnamed) mountains beyond the wilderness",
+    "(unnamed) heathen simple folk beyond the mountains"
+   ],
+   "via_ids": [
+    "fea-dreadful-stony-waste",
+    "fea-mountains-beyond-the-wilderness",
+    "grp-heathen-simple-folk-beyond-the-mountains"
+   ]
+  },
+  {
+   "chapter": "BTWO-C7",
+   "direction_text": "back along the westward road, reversed",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) master City of the Tower",
+   "from_id": "plc-master-city-of-the-tower",
+   "id": "trv-a2d6acc1a6",
+   "mode": "unknown",
+   "refs": [
+    {
+     "p": "BTWO-C7-P039",
+     "q": "Back again went my feet over the ways they had trodden before, though the Teacher shortened the road much for us by her wisdom"
+    }
+   ],
+   "start_time_text": "early April",
+   "terrain_text": "",
+   "to": "House of the Sorceress",
+   "to_id": "bld-house-of-the-sorceress",
+   "travellers": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "travellers_ids": [
+    "per-lady-of-abundance",
+    "per-teacher-of-lore"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C8",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "House of the Sorceress",
+   "from_id": "bld-house-of-the-sorceress",
+   "id": "trv-dc8d7e566a",
+   "mode": "unknown",
+   "refs": [
+    {
+     "p": "BTWO-C8-P004",
+     "q": "we found the Well, and drank of its waters after abundant toil and peril"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Well at the World's End",
+   "to_id": "fea-well-at-the-worlds-end",
+   "travellers": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "travellers_ids": [
+    "per-lady-of-abundance",
+    "per-teacher-of-lore"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C8",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "House of the Sorceress",
+   "from_id": "bld-house-of-the-sorceress",
+   "id": "trv-968d0232c9",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C8-P023",
+     "q": "Geoffrey and his sons brought me to the Land of Abundance"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Plain of Abundance",
+   "to_id": "plc-plain-of-abundance",
+   "travellers": [
+    "Lady of Abundance",
+    "Geoffrey",
+    "(unnamed) sons of Geoffrey"
+   ],
+   "travellers_ids": [
+    "per-lady-of-abundance",
+    "per-geoffrey",
+    "per-sons-of-geoffrey"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C9",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "dawn",
+   "from": "Castle of the Scaur",
+   "from_id": "bld-castle-of-the-scaur",
+   "id": "trv-05eb4b6da0",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BTWO-C9-P011",
+     "q": "when it was more daylight than dawn"
+    }
+   ],
+   "start_time_text": "night",
+   "terrain_text": "",
+   "to": "Wood Perilous",
+   "to_id": "fea-wood-perilous",
+   "travellers": [
+    "Ursula",
+    "Lady of Abundance"
+   ],
+   "travellers_ids": [
+    "per-ursula",
+    "per-lady-of-abundance"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C10",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "before sunset",
+   "from": "(unnamed) strawberry brook",
+   "from_id": "fea-strawberry-brook",
+   "id": "trv-b81a96df37",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BTWO-C10-P006",
+     "q": "yonder is our house for this even"
+    }
+   ],
+   "start_time_text": "late afternoon",
+   "terrain_text": "pine wood, sandstone valleys",
+   "to": "(unnamed) desert cave-house",
+   "to_id": "bld-desert-cave-house",
+   "travellers": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-lady-of-abundance",
+    "per-ralph"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C11",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "afternoon",
+   "from": "(unnamed) desert cave-house",
+   "from_id": "bld-desert-cave-house",
+   "id": "trv-7a2b7902f3",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BTWO-C11-P002",
+     "q": "when it was now midmorning"
+    },
+    {
+     "p": "BTWO-C11-P008",
+     "q": "glittered in the afternoon sun"
+    }
+   ],
+   "start_time_text": "midmorning",
+   "terrain_text": "valley, downs, road",
+   "to": "(unnamed) highway ford of the Swelling Flood",
+   "to_id": "fea-highway-ford-of-the-swelling-flood",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "(unnamed) desert stream",
+    "(unnamed) sheep downs by the Swelling Flood"
+   ],
+   "via_ids": [
+    "imp-desert-stream",
+    "fea-sheep-downs-by-the-swelling-flood"
+   ]
+  },
+  {
+   "chapter": "BTWO-C12",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "evening",
+   "from": "(unnamed) highway ford of the Swelling Flood",
+   "from_id": "fea-highway-ford-of-the-swelling-flood",
+   "id": "trv-cbbd6b9b3d",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C12-P014",
+     "q": "came to Whitwall before the shutting of the gates"
+    }
+   ],
+   "start_time_text": "afternoon",
+   "terrain_text": "",
+   "to": "Whitwall",
+   "to_id": "plc-whitwall",
+   "travellers": [
+    "Ralph",
+    "Blaise",
+    "Richard the Red",
+    "(unnamed) merchant company to Whitwall"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-blaise",
+    "per-richard-the-red",
+    "grp-merchant-company-to-whitwall"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C12",
+   "direction_text": "east (set out)",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Four-want-way",
+   "from_id": "fea-four-want-way",
+   "id": "trv-11d2f42250",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "when he had left Upmeads he had ridden with Richard up and down and round about"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Whitwall",
+   "to_id": "plc-whitwall",
+   "travellers": [
+    "Blaise",
+    "Richard the Red"
+   ],
+   "travellers_ids": [
+    "per-blaise",
+    "per-richard-the-red"
+   ],
+   "via": [
+    "(unnamed) captured rich town"
+   ],
+   "via_ids": [
+    "imp-captured-rich-town"
+   ]
+  },
+  {
+   "chapter": "BTWO-C14",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Wulstead",
+   "from_id": "plc-wulstead",
+   "id": "trv-ce5efbdd7e",
+   "mode": "merchant company",
+   "refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "The nighest way I came"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Whitwall",
+   "to_id": "plc-whitwall",
+   "travellers": [
+    "Clement Chapman"
+   ],
+   "travellers_ids": [
+    "per-clement-chapman"
+   ],
+   "via": [
+    "Wood Perilous"
+   ],
+   "via_ids": [
+    "fea-wood-perilous"
+   ]
+  },
+  {
+   "chapter": "BTWO-C18",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Petergate",
+   "from_id": "fea-petergate",
+   "id": "trv-afe900eeb4",
+   "mode": "horse with sumpter horses",
+   "refs": [
+    {
+     "p": "BTWO-C18-P009",
+     "q": "they rode out a-gates"
+    }
+   ],
+   "start_time_text": "noon",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "Ralph",
+    "Clement Chapman",
+    "Clement's eastward company"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-clement-chapman",
+    "grp-clements-eastward-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C20",
+   "direction_text": "",
+   "duration_text": "five days",
+   "end_time_text": "",
+   "from": "Whitwall",
+   "from_id": "plc-whitwall",
+   "id": "trv-db739c98b6",
+   "mode": "horse with sumpters, tents",
+   "refs": [
+    {
+     "p": "BTWO-C20-P006",
+     "q": "daylong they were going up and up, and it grew cold as the sun got low; though it was yet summer"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "plain, pass, heaths, stony ways, ridge",
+   "to": "Mid-Mountain House",
+   "to_id": "bld-mid-mountain-house",
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "grp-clements-eastward-company"
+   ],
+   "via": [
+    "(unnamed) mountain pass entry",
+    "(unnamed) grassy stream valley in the mountains"
+   ],
+   "via_ids": [
+    "fea-mountain-pass-entry",
+    "imp-grassy-stream-valley-in-the-mountains"
+   ]
+  },
+  {
+   "chapter": "BTWO-C21",
+   "direction_text": "",
+   "duration_text": "a day and a half",
+   "end_time_text": "",
+   "from": "Mid-Mountain House",
+   "from_id": "bld-mid-mountain-house",
+   "id": "trv-35e1f51e7f",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C21-P002",
+     "q": "the way was evil otherwise, but it was down hill"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "descending mountain road, valleys, clay cutting",
+   "to": "(unnamed) eastern foothills",
+   "to_id": "imp-eastern-foothills",
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "grp-clements-eastward-company"
+   ],
+   "via": [
+    "(unnamed) round knoll camp",
+    "(unnamed) thieves' pass below the ridge"
+   ],
+   "via_ids": [
+    "imp-round-knoll-camp",
+    "fea-thieves-pass-below-the-ridge"
+   ]
+  },
+  {
+   "chapter": "BTWO-C22",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Mid-Mountain House",
+   "from_id": "bld-mid-mountain-house",
+   "id": "trv-a8975aed78",
+   "mode": "foot and captive",
+   "refs": [
+    {
+     "p": "BTWO-C22-P008",
+     "q": "whom he took down to the market at Cheaping Knowe"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Cheaping Knowe",
+   "to_id": "plc-cheaping-knowe",
+   "travellers": [
+    "Bull Nosy",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-bull-nosy",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C23",
+   "direction_text": "",
+   "duration_text": "about a day and a half with an elm-grove camp",
+   "end_time_text": "a little before sunset",
+   "from": "(unnamed) eastern foothills",
+   "from_id": "imp-eastern-foothills",
+   "id": "trv-73f95e3990",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C23-P002",
+     "q": "they pitched their camp down in the plain fields amidst tall elmtrees"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Cheaping Knowe",
+   "to_id": "plc-cheaping-knowe",
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "grp-clements-eastward-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C24",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Cheaping Knowe",
+   "from_id": "plc-cheaping-knowe",
+   "id": "trv-ba9e97a09e",
+   "mode": "she on horseback, he on foot",
+   "refs": [
+    {
+     "p": "BTWO-C24-P007",
+     "q": "she riding on a horse and he going afoot beside her; for the mountain-men be no horsemen"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Whiteness",
+   "to_id": "plc-whiteness",
+   "travellers": [
+    "Bull Nosy",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-bull-nosy",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C25",
+   "direction_text": "",
+   "duration_text": "three days",
+   "end_time_text": "sunset",
+   "from": "Cheaping Knowe",
+   "from_id": "plc-cheaping-knowe",
+   "id": "trv-ec4f1ff186",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C25-P002",
+     "q": "rode out a-gates of a mid-morning with banners displayed"
+    }
+   ],
+   "start_time_text": "mid-morning",
+   "terrain_text": "fertile tillage and pasture, then confused hills",
+   "to": "Whiteness",
+   "to_id": "plc-whiteness",
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "grp-clements-eastward-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C25",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Whiteness",
+   "from_id": "plc-whiteness",
+   "id": "trv-b74dd5532b",
+   "mode": "she riding a little horse, he on foot",
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the wild man led her away toward the mountain pass that goeth to Goldburg"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) Goldburg pass",
+   "to_id": "imp-goldburg-pass",
+   "travellers": [
+    "Bull Nosy",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-bull-nosy",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C26",
+   "direction_text": "",
+   "duration_text": "seven days",
+   "end_time_text": "",
+   "from": "Whiteness",
+   "from_id": "plc-whiteness",
+   "id": "trv-e407967af8",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C26-P002",
+     "q": "they entered the gates of the mountains a goodly company of four score and ten"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "stony maze",
+   "to": "(unnamed) place of Bull Nosy's death",
+   "to_id": "imp-place-of-bull-nosys-death",
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company",
+    "Bull Shockhead"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "grp-clements-eastward-company",
+    "per-bull-shockhead"
+   ],
+   "via": [
+    "(unnamed) Goldburg mountains"
+   ],
+   "via_ids": [
+    "fea-goldburg-mountains"
+   ]
+  },
+  {
+   "chapter": "BTWO-C27",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "a little after noon",
+   "from": "(unnamed) place of Bull Nosy's death",
+   "from_id": "imp-place-of-bull-nosys-death",
+   "id": "trv-973a1fc570",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C27-P003",
+     "q": "A little after noon they came out of a pass"
+    }
+   ],
+   "start_time_text": "morning",
+   "terrain_text": "descending, improving wilderness",
+   "to": "(unnamed) stream pass above the Goldburg plain",
+   "to_id": "fea-stream-pass-above-the-goldburg-plain",
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "grp-clements-eastward-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C28",
+   "direction_text": "",
+   "duration_text": "about five days",
+   "end_time_text": "",
+   "from": "(unnamed) stream pass above the Goldburg plain",
+   "from_id": "fea-stream-pass-above-the-goldburg-plain",
+   "id": "trv-acb52ee95d",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C28-P002",
+     "q": "they rode four days through lands well-tilled"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Goldburg",
+   "to_id": "plc-goldburg",
+   "travellers": [
+    "Ralph",
+    "Clement's eastward company"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "grp-clements-eastward-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C31",
+   "direction_text": "east",
+   "duration_text": "",
+   "end_time_text": "dusk",
+   "from": "Goldburg",
+   "from_id": "plc-goldburg",
+   "id": "trv-f37d683114",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C31-P005",
+     "q": "He came on his way-leader about a bowshot from the gate"
+    }
+   ],
+   "start_time_text": "two hours before noon",
+   "terrain_text": "",
+   "to": "(unnamed) unmarked hostelry among hovels",
+   "to_id": "bld-unmarked-hostelry-among-hovels",
+   "travellers": [
+    "Ralph",
+    "Morfinn the Minstrel"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-morfinn-the-minstrel"
+   ],
+   "via": [
+    "(unnamed) uncouth stone chapel at the byway"
+   ],
+   "via_ids": [
+    "bld-uncouth-stone-chapel-at-the-byway"
+   ]
+  },
+  {
+   "chapter": "BTWO-C32",
+   "direction_text": "",
+   "duration_text": "two days",
+   "end_time_text": "",
+   "from": "(unnamed) unmarked hostelry among hovels",
+   "from_id": "bld-unmarked-hostelry-among-hovels",
+   "id": "trv-3dc2bd55e3",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C32-P003",
+     "q": "the land began to get less fertile and less"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "heath, bog, scraggy woods, pine wood",
+   "to": "(unnamed) Utterbol pavilion camp",
+   "to_id": "imp-utterbol-pavilion-camp",
+   "travellers": [
+    "Ralph",
+    "Morfinn the Minstrel"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-morfinn-the-minstrel"
+   ],
+   "via": [
+    "(unnamed) heath and bog east of Goldburg"
+   ],
+   "via_ids": [
+    "fea-heath-and-bog-east-of-goldburg"
+   ]
+  },
+  {
+   "chapter": "BTWO-C33",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) Utterbol pavilion camp",
+   "from_id": "imp-utterbol-pavilion-camp",
+   "id": "trv-4339694bc7",
+   "mode": "horse, Lord in a litter, wains for tents",
+   "refs": [
+    {
+     "p": "BTWO-C33-P002",
+     "q": "went their ways the selfsame road that Ralph had been minded for yesterday; to wit the road to Utterness"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Utterness",
+   "to_id": "plc-utterness",
+   "travellers": [
+    "Ralph",
+    "Gandolf",
+    "David the Sage"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-gandolf",
+    "per-david-the-sage"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C34",
+   "direction_text": "",
+   "duration_text": "about nine to ten days",
+   "end_time_text": "",
+   "from": "(unnamed) Utterbol moorland",
+   "from_id": "fea-utterbol-moorland",
+   "id": "trv-168d103c58",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C34-P039",
+     "q": "On the ninth day of his captivity the rain ceased"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "pinewoods, rising land, downs",
+   "to": "Dale of the Tower",
+   "to_id": "plc-dale-of-the-tower",
+   "travellers": [
+    "Ralph",
+    "Gandolf",
+    "David the Sage",
+    "Otter"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-gandolf",
+    "per-david-the-sage",
+    "per-otter"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C35",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "two hours before noon",
+   "from": "(unnamed) morning camp in the downs",
+   "from_id": "imp-morning-camp-in-the-downs",
+   "id": "trv-7aec092f2d",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C35-P009",
+     "q": "Thus they rode the down country"
+    }
+   ],
+   "start_time_text": "morning",
+   "terrain_text": "",
+   "to": "Dale of the Tower",
+   "to_id": "plc-dale-of-the-tower",
+   "travellers": [
+    "Ralph",
+    "Gandolf",
+    "Otter"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-gandolf",
+    "per-otter"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C39",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Dale of the Tower",
+   "from_id": "plc-dale-of-the-tower",
+   "id": "trv-df9b3c5577",
+   "mode": "horse, wains, herds",
+   "refs": [
+    {
+     "p": "BTWO-C39-P026",
+     "q": "the whole rout moved slowly from out of Vale Turris"
+    }
+   ],
+   "start_time_text": "morning",
+   "terrain_text": "",
+   "to": "Utterness",
+   "to_id": "plc-utterness",
+   "travellers": [
+    "Ralph",
+    "Gandolf",
+    "Otter",
+    "David the Sage"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-gandolf",
+    "per-otter",
+    "per-david-the-sage"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTWO-C40",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Dale of the Tower",
+   "from_id": "plc-dale-of-the-tower",
+   "id": "trv-4bc8771e97",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C40-P002",
+     "q": "They went as the way led, down hill"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) first camp toward Utterness",
+   "to_id": "imp-first-camp-toward-utterness",
+   "travellers": [
+    "Ralph",
+    "David the Sage",
+    "Gandolf",
+    "Joyce",
+    "Otter"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-david-the-sage",
+    "per-gandolf",
+    "per-joyce",
+    "per-otter"
+   ],
+   "via": [
+    "(unnamed) Utterness highway"
+   ],
+   "via_ids": [
+    "fea-utterness-highway"
+   ]
+  },
+  {
+   "chapter": "BTWO-C41",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "sunset",
+   "from": "(unnamed) first camp toward Utterness",
+   "from_id": "imp-first-camp-toward-utterness",
+   "id": "trv-a201b85028",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTWO-C41-P006",
+     "q": "About two hours before noon they got to horse again"
+    }
+   ],
+   "start_time_text": "two hours before noon",
+   "terrain_text": "forest edge, ridges",
+   "to": "(unnamed) second camp toward Utterness",
+   "to_id": "imp-second-camp-toward-utterness",
+   "travellers": [
+    "Ralph",
+    "Gandolf",
+    "David the Sage"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-gandolf",
+    "per-david-the-sage"
+   ],
+   "via": [
+    "(unnamed) Utterness highway"
+   ],
+   "via_ids": [
+    "fea-utterness-highway"
+   ]
+  },
+  {
+   "chapter": "BTHREE-C1",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "sunrise",
+   "from": "(unnamed) second camp toward Utterness",
+   "from_id": "imp-second-camp-toward-utterness",
+   "id": "trv-87882c80a1",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C1-P002",
+     "q": "it was two hours after midnight"
+    }
+   ],
+   "start_time_text": "two hours after midnight",
+   "terrain_text": "wood with clearings",
+   "to": "(unnamed) oak glade in the wood",
+   "to_id": "imp-oak-glade-in-the-wood",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C2",
+   "direction_text": "east by the sun",
+   "duration_text": "about three days",
+   "end_time_text": "",
+   "from": "(unnamed) oak glade in the wood",
+   "from_id": "imp-oak-glade-in-the-wood",
+   "id": "trv-4bc104a699",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C2-P003",
+     "q": "rode east as far as he could judge it"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "wood, hills and dales, coarse-grass hills, uphill",
+   "to": "(unnamed) great pine wood under the mountains",
+   "to_id": "fea-great-pine-wood-under-the-mountains",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [
+    "(unnamed) woodland stream from the mountains",
+    "(unnamed) hill-and-dale country under the mountains"
+   ],
+   "via_ids": [
+    "fea-woodland-stream-from-the-mountains",
+    "fea-hill-and-dale-country-under-the-mountains"
+   ]
+  },
+  {
+   "chapter": "BTHREE-C3",
+   "direction_text": "",
+   "duration_text": "five days without meeting anyone",
+   "end_time_text": "",
+   "from": "Utterbol",
+   "from_id": "plc-utterbol",
+   "id": "trv-cf7ef26a79",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C3-P007",
+     "q": "it is five days since I have spoken to a child of Adam"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) great pine wood under the mountains",
+   "to_id": "fea-great-pine-wood-under-the-mountains",
+   "travellers": [
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C4",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) great pine wood under the mountains",
+   "from_id": "fea-great-pine-wood-under-the-mountains",
+   "id": "trv-465fc93465",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C4-P006",
+     "q": "they mounted and went their ways through a close pine-wood"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "close, still pine wood",
+   "to": "(unnamed) stream of the Sage's high ground",
+   "to_id": "fea-stream-of-the-sages-high-ground",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C5",
+   "direction_text": "",
+   "duration_text": "two days and a morning",
+   "end_time_text": "",
+   "from": "(unnamed) great pine wood under the mountains",
+   "from_id": "fea-great-pine-wood-under-the-mountains",
+   "id": "trv-7350c21697",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C5-P004",
+     "q": "rode up the stream, and began to go up hill"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "pine wood, rough upland, cliff gorges, beech wood",
+   "to": "(unnamed) house of the Sage of Swevenham",
+   "to_id": "bld-house-of-the-sage-of-swevenham",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [
+    "(unnamed) stream of the Sage's high ground",
+    "(unnamed) shaggy upland"
+   ],
+   "via_ids": [
+    "fea-stream-of-the-sages-high-ground",
+    "imp-shaggy-upland"
+   ]
+  },
+  {
+   "chapter": "BTHREE-C7",
+   "direction_text": "",
+   "duration_text": "one day",
+   "end_time_text": "",
+   "from": "(unnamed) house of the Sage of Swevenham",
+   "from_id": "bld-house-of-the-sage-of-swevenham",
+   "id": "trv-b0a2ca36e8",
+   "mode": "horse, Ralph afoot",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P008",
+     "q": "ever the Sage led them by winding ways that he knew"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "wood, broken ground, rugged hills",
+   "to": "(unnamed) chestnut valley",
+   "to_id": "fea-chestnut-valley",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C7",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": null,
+   "id": "trv-94c0aa4600",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P017",
+     "q": "in half a minute they were amidst of a rout of men a-horseback, more than a score"
+    }
+   ],
+   "start_time_text": "night",
+   "terrain_text": "",
+   "to": "(unnamed) chestnut valley",
+   "to_id": "fea-chestnut-valley",
+   "travellers": [
+    "Riders of Utterbol",
+    "Otter",
+    "(unnamed) nephew of the Lord of Utterbol"
+   ],
+   "travellers_ids": [
+    "grp-riders-of-utterbol",
+    "per-otter",
+    "per-nephew-of-the-lord-of-utterbol"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C8",
+   "direction_text": "east",
+   "duration_text": "about two days",
+   "end_time_text": "",
+   "from": "(unnamed) chestnut valley",
+   "from_id": "fea-chestnut-valley",
+   "id": "trv-85ef4e32fc",
+   "mode": "horse and foot",
+   "refs": [
+    {
+     "p": "BTHREE-C8-P002",
+     "q": "then they rode the mountain neck east from that valley"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "stony mountain neck, ridge, slant-way down",
+   "to": "(unnamed) green belt below the ridge",
+   "to_id": "imp-green-belt-below-the-ridge",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "via": [
+    "(unnamed) eastern ridge above the rock-sea"
+   ],
+   "via_ids": [
+    "imp-eastern-ridge-above-the-rock-sea"
+   ]
+  },
+  {
+   "chapter": "BTHREE-C9",
+   "direction_text": "",
+   "duration_text": "about four days",
+   "end_time_text": "",
+   "from": "(unnamed) green belt below the ridge",
+   "from_id": "imp-green-belt-below-the-ridge",
+   "id": "trv-eade65b379",
+   "mode": "horses led over screes, Sage afoot",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P004",
+     "q": "for their diligence they had but come a few short miles as the crow flies"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "lava isles, scree, clinker maze",
+   "to": "(unnamed) grassy plain before the Gate",
+   "to_id": "fea-grassy-plain-before-the-gate",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "via": [
+    "Sea of Molten Rocks"
+   ],
+   "via_ids": [
+    "fea-sea-of-molten-rocks"
+   ]
+  },
+  {
+   "chapter": "BTHREE-C10",
+   "direction_text": "",
+   "duration_text": "two days and a half",
+   "end_time_text": "",
+   "from": "(unnamed) grassy plain before the Gate",
+   "from_id": "fea-grassy-plain-before-the-gate",
+   "id": "trv-08f29919a0",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P004",
+     "q": "naught save a tumble of rocks that had fallen from the cliffs, piled up strangely, and making a maze through which the Sage led them surely"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "plain, fallen-rock maze",
+   "to": "Rock of the Fighting Man",
+   "to_id": "fea-rock-of-the-fighting-man",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C10",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "dark",
+   "from": "Rock of the Fighting Man",
+   "from_id": "fea-rock-of-the-fighting-man",
+   "id": "trv-ee71660ce5",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P006",
+     "q": "the twain mounted their horses again and set forth silently on the road"
+    }
+   ],
+   "start_time_text": "afternoon",
+   "terrain_text": "",
+   "to": "(unnamed) pass of the Fighting Man",
+   "to_id": "fea-pass-of-the-fighting-man",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C11",
+   "direction_text": "",
+   "duration_text": "thirty days",
+   "end_time_text": "",
+   "from": "Rock of the Fighting Man",
+   "from_id": "fea-rock-of-the-fighting-man",
+   "id": "trv-326e73ae04",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C11-P010",
+     "q": "Many days they rode that pass of the mountains"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "narrow pass, small valleys, high trench valley",
+   "to": "Vale of Sweet Chestnuts",
+   "to_id": "plc-vale-of-sweet-chestnuts",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [
+    "(unnamed) pass of the Fighting Man"
+   ],
+   "via_ids": [
+    "fea-pass-of-the-fighting-man"
+   ]
+  },
+  {
+   "chapter": "BTHREE-C14",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Innocent Folk",
+   "from_id": "grp-innocent-folk",
+   "id": "trv-5939f467ce",
+   "mode": "riding oxen with pack oxen",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "three for riding, and two sumpter beasts, laden"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) winter cavern",
+   "to_id": "bld-winter-cavern",
+   "travellers": [
+    "(unnamed) messengers of the Innocent Folk"
+   ],
+   "travellers_ids": [
+    "grp-messengers-of-the-innocent-folk"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C15",
+   "direction_text": "",
+   "duration_text": "nine days",
+   "end_time_text": "",
+   "from": "Vale of Sweet Chestnuts",
+   "from_id": "plc-vale-of-sweet-chestnuts",
+   "id": "trv-e35dbb2557",
+   "mode": "horse and riding oxen",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "for oxen are but slow-going nags"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "mountain ways, valleys, hills",
+   "to": "(unnamed) town of the Innocent Folk",
+   "to_id": "plc-town-of-the-innocent-folk",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) messengers of the Innocent Folk"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "grp-messengers-of-the-innocent-folk"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C16",
+   "direction_text": "",
+   "duration_text": "about six to eight weeks",
+   "end_time_text": "",
+   "from": "(unnamed) town of the Innocent Folk",
+   "from_id": "plc-town-of-the-innocent-folk",
+   "id": "trv-c9f941ba3b",
+   "mode": "horse and oxen with five pack oxen",
+   "refs": [
+    {
+     "p": "BTHREE-C16-P002",
+     "q": "they had with them five sumpter oxen instead of two"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "desert, marsh, forest",
+   "to": "House of the Sorceress",
+   "to_id": "bld-house-of-the-sorceress",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) elder of the Innocent Folk"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-elder-of-the-innocent-folk"
+   ],
+   "via": [
+    "(unnamed) waste beyond the Innocent Folk",
+    "(unnamed) woodland of the Sorceress"
+   ],
+   "via_ids": [
+    "fea-waste-beyond-the-innocent-folk",
+    "fea-woodland-of-the-sorceress"
+   ]
+  },
+  {
+   "chapter": "BTHREE-C17",
+   "direction_text": "",
+   "duration_text": "three days in the wood, then three or more days in the desert",
+   "end_time_text": "",
+   "from": "House of the Sorceress",
+   "from_id": "bld-house-of-the-sorceress",
+   "id": "trv-d7e4a40ddb",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C17-P009",
+     "q": "They lived well while they were in the wood"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "wood, then salt ridges",
+   "to": "Thirsty Desert",
+   "to_id": "fea-thirsty-desert",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C19",
+   "direction_text": "",
+   "duration_text": "about four days",
+   "end_time_text": "",
+   "from": "(unnamed) valley of the Dry Tree",
+   "from_id": "fea-valley-of-the-dry-tree",
+   "id": "trv-e3d5c2d398",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P002",
+     "q": "the next again the waste was but a swelling plain"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "salt ridges fading to a swelling plain, then grass",
+   "to": "(unnamed) black-sand river",
+   "to_id": "fea-black-sand-river",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BTHREE-C20",
+   "direction_text": "",
+   "duration_text": "about three days",
+   "end_time_text": "",
+   "from": "(unnamed) black-sand river",
+   "from_id": "fea-black-sand-river",
+   "id": "trv-180d8cce25",
+   "mode": "horse and on foot",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P003",
+     "q": "in five hours' time they were at the mountain-top"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "small wood, grass hills, waymarked pass, mountain climb, green slopes",
+   "to": "(unnamed) ness of the World's End",
+   "to_id": "fea-ness-of-the-worlds-end",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [
+    "(unnamed) grass hills before the sea"
+   ],
+   "via_ids": [
+    "fea-grass-hills-before-the-sea"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C1",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "late autumn",
+   "from": "Well at the World's End",
+   "from_id": "fea-well-at-the-worlds-end",
+   "id": "trv-1f96f8fadb",
+   "mode": "horse with Innocent Folk escorts and pack oxen",
+   "refs": [
+    {
+     "p": "BFOUR-C1-P002",
+     "q": "journeyed happily with naught evil befalling them till they came back to the House of the Sorceress"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) pass of the Fighting Man",
+   "to_id": "fea-pass-of-the-fighting-man",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [
+    "Thirsty Desert",
+    "House of the Sorceress",
+    "(unnamed) town of the Innocent Folk",
+    "Vale of Sweet Chestnuts"
+   ],
+   "via_ids": [
+    "fea-thirsty-desert",
+    "bld-house-of-the-sorceress",
+    "plc-town-of-the-innocent-folk",
+    "plc-vale-of-sweet-chestnuts"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C2",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) Sage's bower by the blackthorn copse",
+   "from_id": "bld-sages-bower-by-the-blackthorn-copse",
+   "id": "trv-873dd10fec",
+   "mode": "horse and foot with milch goats",
+   "refs": [
+    {
+     "p": "BFOUR-C2-P008",
+     "q": "the Sage drove together three or four milch goats that he pastured there, and went their ways over the plain"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Sea of Molten Rocks",
+   "to_id": "fea-sea-of-molten-rocks",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C3",
+   "direction_text": "",
+   "duration_text": "four days",
+   "end_time_text": "",
+   "from": "(unnamed) house of the Sage of Swevenham",
+   "from_id": "bld-house-of-the-sage-of-swevenham",
+   "id": "trv-89ab0fd619",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C3-P004",
+     "q": "when May was at hand they set out on their road"
+    }
+   ],
+   "start_time_text": "near May",
+   "terrain_text": "wood",
+   "to": "Dale of the Tower",
+   "to_id": "plc-dale-of-the-tower",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C5",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Goldburg",
+   "from_id": "plc-goldburg",
+   "id": "trv-ec07a74484",
+   "mode": "small horse, lion led on a chain",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P010",
+     "q": "riding a little horse that I had, and leading my lion by a chain"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Utterbol",
+   "to_id": "plc-utterbol",
+   "travellers": [
+    "Bull Shockhead",
+    "(unnamed) Bull's lion"
+   ],
+   "travellers_ids": [
+    "per-bull-shockhead",
+    "cre-bulls-lion"
+   ],
+   "via": [
+    "Utterness"
+   ],
+   "via_ids": [
+    "plc-utterness"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C6",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Dale of the Tower",
+   "from_id": "plc-dale-of-the-tower",
+   "id": "trv-73de87c7d5",
+   "mode": "horse with an escort of spears",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P009",
+     "q": "they all went forth and gat a-horseback and rode away from Vale Turris"
+    }
+   ],
+   "start_time_text": "morning",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Redhead"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-redhead"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C7",
+   "direction_text": "",
+   "duration_text": "many days",
+   "end_time_text": "",
+   "from": "Dale of the Tower",
+   "from_id": "plc-dale-of-the-tower",
+   "id": "trv-73ec96f4ab",
+   "mode": "horse with sumpter horses, tent",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P002",
+     "q": "They slept in no house that night nor for many nights after; for they were now fairly on the waste"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "waste, thickets, woods",
+   "to": "(unnamed) field of the betrayal",
+   "to_id": "fea-field-of-the-betrayal",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Redhead"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-redhead"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C8",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) field of the betrayal",
+   "from_id": "fea-field-of-the-betrayal",
+   "id": "trv-2769a80957",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P002",
+     "q": "they all came safely to the gate of Goldburg"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Goldburg",
+   "to_id": "plc-goldburg",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Redhead"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-redhead"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C8",
+   "direction_text": "",
+   "duration_text": "one night",
+   "end_time_text": "",
+   "from": "Goldburg",
+   "from_id": "plc-goldburg",
+   "id": "trv-2059daa6e8",
+   "mode": "fishing boat",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "there was a wind in the March night, and the stream is swift betwixt the quays of our city"
+    }
+   ],
+   "start_time_text": "night in March",
+   "terrain_text": "",
+   "to": "(unnamed) great wood down the Goldburg river",
+   "to_id": "fea-great-wood-down-the-goldburg-river",
+   "travellers": [
+    "Queen of Goldburg"
+   ],
+   "travellers_ids": [
+    "per-queen-of-goldburg"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C9",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Goldburg",
+   "from_id": "plc-goldburg",
+   "id": "trv-fcf989c442",
+   "mode": "horse with twelve hired men-at-arms",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P004",
+     "q": "The day after he and his company departed from Goldburg toward the mountains, which they passed unfought and unwaylaid"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Cheaping Knowe",
+   "to_id": "plc-cheaping-knowe",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "via": [
+    "(unnamed) Goldburg mountains",
+    "Whiteness"
+   ],
+   "via_ids": [
+    "fea-goldburg-mountains",
+    "plc-whiteness"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C10",
+   "direction_text": "",
+   "duration_text": "three days",
+   "end_time_text": "",
+   "from": "Cheaping Knowe",
+   "from_id": "plc-cheaping-knowe",
+   "id": "trv-e33f92807f",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P003",
+     "q": "turned suddenly into a deep and narrow lane, and forth on, as it led betwixt hazelled banks and coppices of small wood"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) dark wood of the pass",
+   "to_id": "fea-dark-wood-of-the-pass",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-michael-a-dale"
+   ],
+   "via": [
+    "(unnamed) hazel lane by-road"
+   ],
+   "via_ids": [
+    "imp-hazel-lane-by-road"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C11",
+   "direction_text": "",
+   "duration_text": "two days",
+   "end_time_text": "",
+   "from": "(unnamed) dark wood of the pass",
+   "from_id": "fea-dark-wood-of-the-pass",
+   "id": "trv-8a478b6e22",
+   "mode": "horse and on foot",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "thereafter they went for two days more"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) town of the Folk of the Fells",
+   "to_id": "plc-town-of-the-folk-of-the-fells",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale",
+    "Folk of the Fells"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-michael-a-dale",
+    "grp-folk-of-the-fells"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C11",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) town of the Folk of the Fells",
+   "from_id": "plc-town-of-the-folk-of-the-fells",
+   "id": "trv-575c21a9fb",
+   "mode": "horse with a Fells escort",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P004",
+     "q": "they all came down safe into the plain"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "(unnamed) plain west of the mountains",
+   "to_id": "imp-plain-west-of-the-mountains",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-michael-a-dale"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C12",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) plain west of the mountains",
+   "from_id": "imp-plain-west-of-the-mountains",
+   "id": "trv-9a57879818",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P008",
+     "q": "here and now is the highway dry and long, and the plain meads and acres on either hand"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "dry highway between meadows and acres",
+   "to": "Whitwall",
+   "to_id": "plc-whitwall",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-michael-a-dale"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C13",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Whitwall",
+   "from_id": "plc-whitwall",
+   "id": "trv-5039d8f078",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C13-P047",
+     "q": "anon were they on the moonlit road outside of Whitwall"
+    }
+   ],
+   "start_time_text": "night, by moonlight",
+   "terrain_text": "",
+   "to": null,
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red"
+   ],
+   "via": [
+    "West-gate Bar"
+   ],
+   "via_ids": [
+    "bld-west-gate-bar"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C13",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "(unnamed) thorp at the Swevenham parting",
+   "from_id": "plc-thorp-at-the-swevenham-parting",
+   "id": "trv-279d77e8fa",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C13-P011",
+     "q": "rode his ways to Swevenham, going hastily"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Swevenham",
+   "to_id": "plc-swevenham",
+   "travellers": [
+    "Michael-a-dale"
+   ],
+   "travellers_ids": [
+    "per-michael-a-dale"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C14",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "moonset",
+   "from": "Whitwall",
+   "from_id": "plc-whitwall",
+   "id": "trv-2ffd2e9062",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C14-P008",
+     "q": "they rode on, and turned off from the road that led down to the ford of the Swelling Flood"
+    }
+   ],
+   "start_time_text": "night",
+   "terrain_text": "",
+   "to": "(unnamed) empty shepherd's cot",
+   "to_id": "bld-empty-shepherds-cot",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red"
+   ],
+   "via": [
+    "(unnamed) wildwood shortcut to the Burg"
+   ],
+   "via_ids": [
+    "imp-wildwood-shortcut-to-the-burg"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C15",
+   "direction_text": "",
+   "duration_text": "one day",
+   "end_time_text": "",
+   "from": "(unnamed) empty shepherd's cot",
+   "from_id": "bld-empty-shepherds-cot",
+   "id": "trv-555bb6e879",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C15-P002",
+     "q": "the country at first, though it was scanty of tillage, was not unfurnished of sheep"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "sheep downs with clefts, valley",
+   "to": "(unnamed) desert cave-house",
+   "to_id": "bld-desert-cave-house",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C16",
+   "direction_text": "",
+   "duration_text": "about two days",
+   "end_time_text": "",
+   "from": "(unnamed) desert cave-house",
+   "from_id": "bld-desert-cave-house",
+   "id": "trv-9fa9bc1ce4",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C16-P007",
+     "q": "lay that night by a stream that ran west"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Plain of Abundance",
+   "to_id": "plc-plain-of-abundance",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red"
+   ],
+   "via": [
+    "Water of the Oak"
+   ],
+   "via_ids": [
+    "fea-water-of-the-oak"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C17",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "night",
+   "from": "(unnamed) Roger's hermitage",
+   "from_id": "bld-rogers-hermitage",
+   "id": "trv-e04e75860f",
+   "mode": "horse, Roger on foot leading",
+   "refs": [
+    {
+     "p": "BFOUR-C17-P043",
+     "q": "they lay down that night on the farther side of the Swelling Flood"
+    }
+   ],
+   "start_time_text": "near noon",
+   "terrain_text": "",
+   "to": "(unnamed) far side of the Swelling Flood",
+   "to_id": "imp-far-side-of-the-swelling-flood",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red",
+    "Roger of the Rope-walk"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red",
+    "per-roger-of-the-rope-walk"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C18",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "sunset",
+   "from": "(unnamed) far side of the Swelling Flood",
+   "from_id": "imp-far-side-of-the-swelling-flood",
+   "id": "trv-831d46be22",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C18-P002",
+     "q": "till they came out of the thicket into the fields about the Burg of the Four Friths"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Burg of the Four Friths",
+   "to_id": "plc-burg-of-the-four-friths",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red",
+    "Roger of the Rope-walk"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red",
+    "per-roger-of-the-rope-walk"
+   ],
+   "via": [
+    "(unnamed) South Gate of the Burg"
+   ],
+   "via_ids": [
+    "bld-south-gate-of-the-burg"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C19",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "afternoon",
+   "from": "Burg of the Four Friths",
+   "from_id": "plc-burg-of-the-four-friths",
+   "id": "trv-00ffe54d65",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P009",
+     "q": "Herewith they ride a little trot through the Freedom of the Burg"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Castle of the Scaur",
+   "to_id": "bld-castle-of-the-scaur",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Roger of the Rope-walk",
+    "Stephen a-Hurst",
+    "Fellowship of the Dry Tree"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-roger-of-the-rope-walk",
+    "per-stephen-a-hurst",
+    "grp-fellowship-of-the-dry-tree"
+   ],
+   "via": [
+    "(unnamed) North Gate of the Burg",
+    "Frank of the Burg",
+    "Grey Goose Thicket"
+   ],
+   "via_ids": [
+    "bld-north-gate-of-the-burg",
+    "plc-frank-of-the-burg",
+    "fea-grey-goose-thicket"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C19",
+   "direction_text": "by the shortest by-ways",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Castle of the Scaur",
+   "from_id": "bld-castle-of-the-scaur",
+   "id": "trv-8b32501182",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C19-P062",
+     "q": "there is a nigher road by the by-ways to Higham"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Higham-on-the-Way",
+   "to_id": "plc-higham-on-the-way",
+   "travellers": [
+    "(unnamed) Ralph's company"
+   ],
+   "travellers_ids": [
+    "imp-ralphs-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C20",
+   "direction_text": "skirting the walls toward the down country, by moonlight",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Higham-on-the-Way",
+   "from_id": "plc-higham-on-the-way",
+   "id": "trv-0edf934c49",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C20-P014",
+     "q": "presently were skirting the walls of Higham out of bow-shot, and making for the Down country by the clear of the moon"
+    }
+   ],
+   "start_time_text": "evening",
+   "terrain_text": "",
+   "to": "the Downs",
+   "to_id": "fea-the-downs",
+   "travellers": [
+    "(unnamed) Ralph's company",
+    "Hugh"
+   ],
+   "travellers_ids": [
+    "imp-ralphs-company",
+    "per-hugh"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C21",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "night",
+   "from": "Higham-on-the-Way",
+   "from_id": "plc-higham-on-the-way",
+   "id": "trv-6462728e9e",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P017",
+     "q": "So Ralph bade make stay there and rest the night over"
+    }
+   ],
+   "start_time_text": "evening",
+   "terrain_text": "",
+   "to": "Garton",
+   "to_id": "plc-garton",
+   "travellers": [
+    "(unnamed) Ralph's company",
+    "Hugh"
+   ],
+   "travellers_ids": [
+    "imp-ralphs-company",
+    "per-hugh"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C22",
+   "direction_text": "down from the downs to the thorps",
+   "duration_text": "morning to after midnight",
+   "end_time_text": "",
+   "from": "Saint Ann's Chapel",
+   "from_id": "bld-saint-anns-chapel",
+   "id": "trv-3e0e29363c",
+   "mode": "foot",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "To the said woman I sought to-day in the morning"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Garton",
+   "to_id": "plc-garton",
+   "travellers": [
+    "Giles"
+   ],
+   "travellers_ids": [
+    "per-giles"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C23",
+   "direction_text": "across country, not by the Greenway",
+   "duration_text": "",
+   "end_time_text": "two hours before noon",
+   "from": "Garton",
+   "from_id": "plc-garton",
+   "id": "trv-02956db7f2",
+   "mode": "horse, footmen later mounted",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P003",
+     "q": "went across country and not by the Greenway, for thuswise the road was shorter"
+    }
+   ],
+   "start_time_text": "sunrise",
+   "terrain_text": "up and down hills and dales",
+   "to": "Bear Castle",
+   "to_id": "bld-bear-castle",
+   "travellers": [
+    "(unnamed) Ralph's company",
+    "Giles",
+    "(unnamed) Garton volunteers"
+   ],
+   "travellers_ids": [
+    "imp-ralphs-company",
+    "per-giles",
+    "grp-garton-volunteers"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C23",
+   "direction_text": "fetched a compass",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Burg of the Four Friths",
+   "from_id": "plc-burg-of-the-four-friths",
+   "id": "trv-99f8a7635c",
+   "mode": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "fetched a compass and crossed the water that runneth through Upmeads by the Red Bridge"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Wood Debateable",
+   "to_id": "fea-wood-debateable",
+   "travellers": [
+    "(unnamed) expelled Burgers"
+   ],
+   "travellers_ids": [
+    "grp-expelled-burgers"
+   ],
+   "via": [
+    "Red Bridge",
+    "the Uplands"
+   ],
+   "via_ids": [
+    "bld-red-bridge",
+    "plc-the-uplands"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C25",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "hard on sunset",
+   "from": "Bear Castle",
+   "from_id": "bld-bear-castle",
+   "id": "trv-b35b4e8b04",
+   "mode": "foot and horse",
+   "refs": [
+    {
+     "p": "BFOUR-C25-P002",
+     "q": "till they came anigh the gates of Wulstead hard on sunset"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "plain meadows before the town",
+   "to": "Wulstead",
+   "to_id": "plc-wulstead",
+   "travellers": [
+    "(unnamed) Ralph's company"
+   ],
+   "travellers_ids": [
+    "imp-ralphs-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C28",
+   "direction_text": "east",
+   "duration_text": "exceeding long",
+   "end_time_text": "",
+   "from": null,
+   "id": "trv-56bb0ea57a",
+   "mode": "chapman caravan",
+   "refs": [
+    {
+     "p": "BFOUR-C28-P002",
+     "q": "So it befell us on a time to make a journey together, a journey exceeding long"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Sarras the Holy",
+   "to_id": "plc-sarras-the-holy",
+   "travellers": [
+    "Dame Katherine",
+    "Clement Chapman",
+    "(unnamed) chapmen"
+   ],
+   "travellers_ids": [
+    "per-dame-katherine",
+    "per-clement-chapman",
+    "imp-chapmen"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C29",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "a little after sunrise",
+   "from": "Wulstead",
+   "from_id": "plc-wulstead",
+   "id": "trv-0097b672f1",
+   "mode": "foot, Dry Tree horsed",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P005",
+     "q": "It is all down hill to Upmeads"
+    }
+   ],
+   "start_time_text": "before light",
+   "terrain_text": "downhill over fields",
+   "to": "(unnamed) little hill above Upmeads",
+   "to_id": "fea-little-hill-above-upmeads",
+   "travellers": [
+    "(unnamed) Ralph's company"
+   ],
+   "travellers_ids": [
+    "imp-ralphs-company"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C29",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Upmeads",
+   "from_id": "pol-upmeads",
+   "id": "trv-52a7f0f72f",
+   "mode": "foot, stripped and driven by Dry Tree riders",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P036",
+     "q": "let a score of thy riders drive them back the way they came into the Debateable Wood"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Wood Debateable",
+   "to_id": "fea-wood-debateable",
+   "travellers": [
+    "(unnamed) expelled Burgers"
+   ],
+   "travellers_ids": [
+    "grp-expelled-burgers"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C30",
+   "direction_text": "",
+   "duration_text": "short",
+   "end_time_text": "",
+   "from": "(unnamed) Bridge of the High House",
+   "from_id": "bld-bridge-of-the-high-house",
+   "id": "trv-91a46f59b7",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P002",
+     "q": "Short was the road back again to Wulstead"
+    }
+   ],
+   "start_time_text": "an hour before noon",
+   "terrain_text": "",
+   "to": "Wulstead",
+   "to_id": "plc-wulstead",
+   "travellers": [
+    "Ralph"
+   ],
+   "travellers_ids": [
+    "per-ralph"
+   ],
+   "via": [],
+   "via_ids": []
+  },
+  {
+   "chapter": "BFOUR-C30",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "two hours before sunset",
+   "from": "Wulstead",
+   "from_id": "plc-wulstead",
+   "id": "trv-123580ec9c",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P011",
+     "q": "Ralph led them round by the ford"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "High House of Upmeads",
+   "to_id": "bld-high-house-of-upmeads",
+   "travellers": [
+    "Ralph",
+    "King Peter",
+    "(unnamed) Queen of Upmeads"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-king-peter",
+    "per-queen-of-upmeads"
+   ],
+   "via": [
+    "(unnamed) ford of Upmeads Water near the High House"
+   ],
+   "via_ids": [
+    "fea-ford-of-upmeads-water-near-the-high-house"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C31",
+   "direction_text": "",
+   "duration_text": "",
+   "end_time_text": "sunset",
+   "from": "(unnamed) house of Richard the Red",
+   "from_id": "bld-house-of-richard-the-red",
+   "id": "trv-9846b0891d",
+   "mode": "horse",
+   "refs": [
+    {
+     "p": "BFOUR-C31-P009",
+     "q": "Came they then to the bridge-end"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "High House of Upmeads",
+   "to_id": "bld-high-house-of-upmeads",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [
+    "(unnamed) Bridge of the High House",
+    "orchard",
+    "base-court"
+   ],
+   "via_ids": [
+    "bld-bridge-of-the-high-house",
+    "imp-orchard",
+    "imp-base-court"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "direction_text": "thrice in later years",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Upmeads",
+   "from_id": "pol-upmeads",
+   "id": "trv-4f6bc8619c",
+   "mode": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "thrice in the years that followed"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Utterbol",
+   "to_id": "plc-utterbol",
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Clement Chapman"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-clement-chapman"
+   ],
+   "via": [
+    "wastes and mountains"
+   ],
+   "via_ids": [
+    "imp-wastes-and-mountains"
+   ]
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "direction_text": "once every year",
+   "duration_text": "",
+   "end_time_text": "",
+   "from": "Upmeads",
+   "from_id": "pol-upmeads",
+   "id": "trv-2a375a0f51",
+   "mode": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P004",
+     "q": "Once in every year he and Ursula his wife visited the Land of Abundance"
+    }
+   ],
+   "start_time_text": "",
+   "terrain_text": "",
+   "to": "Plain of Abundance",
+   "to_id": "plc-plain-of-abundance",
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "travellers_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "via": [],
+   "via_ids": []
+  }
+ ]
+}

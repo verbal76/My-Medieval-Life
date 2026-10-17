@@ -1,0 +1,5104 @@
+{
+ "format": "morris-events/1",
+ "records": [
+  {
+   "chapter": "BONE-C1",
+   "consequences": "",
+   "id": "evt-f045aba6c9",
+   "label": "The drawing of the straws",
+   "layer": "main",
+   "participants": [
+    "Blaise",
+    "Hugh",
+    "Gregory",
+    "Ralph",
+    "King Peter"
+   ],
+   "participants_ids": [
+    "per-blaise",
+    "per-hugh",
+    "per-gregory",
+    "per-ralph",
+    "per-king-peter"
+   ],
+   "places": [
+    "High House of Upmeads"
+   ],
+   "places_ids": [
+    "bld-high-house-of-upmeads"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C1-P012",
+     "q": "King of Upmeads"
+    },
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ],
+   "summary": "The brothers draw lots: longest goes north, next east, third west, shortest stays as King of Upmeads; Ralph draws the shortest.",
+   "time_text": "a hot June afternoon"
+  },
+  {
+   "chapter": "BONE-C1",
+   "consequences": "",
+   "id": "evt-b4c1790ebc",
+   "label": "Deaths in the Wood Debateable",
+   "layer": "backstory",
+   "participants": [
+    "King Peter"
+   ],
+   "participants_ids": [
+    "per-king-peter"
+   ],
+   "places": [
+    "Wood Debateable"
+   ],
+   "places_ids": [
+    "fea-wood-debateable"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C1-P010",
+     "q": "the Wood Debateable"
+    }
+   ],
+   "summary": "King Peter's father and eldest son were slain in battle in the forest.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C1",
+   "consequences": "",
+   "id": "evt-3b509057f8",
+   "label": "The brothers' departure",
+   "layer": "main",
+   "participants": [
+    "Blaise",
+    "Hugh",
+    "Gregory",
+    "Nicholas Longshanks"
+   ],
+   "participants_ids": [
+    "per-blaise",
+    "per-hugh",
+    "per-gregory",
+    "per-nicholas-longshanks"
+   ],
+   "places": [
+    "Four-want-way"
+   ],
+   "places_ids": [
+    "fea-four-want-way"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C1-P027",
+     "q": "Nicholas"
+    }
+   ],
+   "summary": "The three elder brothers ride off from the Four-want-way; Nicholas leads Ralph's war-horse home.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C2",
+   "consequences": "",
+   "id": "evt-4df7113eeb",
+   "label": "King Peter lost in the Wood Debateable",
+   "layer": "backstory",
+   "participants": [
+    "King Peter",
+    "outlaws of the Wood Debateable"
+   ],
+   "participants_ids": [
+    "per-king-peter",
+    "grp-outlaws-of-the-wood-debateable"
+   ],
+   "places": [
+    "Wood Debateable"
+   ],
+   "places_ids": [
+    "fea-wood-debateable"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "belated there all alone"
+    }
+   ],
+   "summary": "The king, belated alone in the forest, was treated kindly by outlaws.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C3",
+   "consequences": "",
+   "id": "evt-4b05f94801",
+   "label": "Ralph's secret departure",
+   "layer": "main",
+   "participants": [
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-ralph"
+   ],
+   "places": [
+    "The Ford",
+    "Upmeads"
+   ],
+   "places_ids": [
+    "fea-the-ford",
+    "pol-upmeads"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C3-P002",
+     "q": "went his ways splashing across the ford, before the sun had arisen"
+    }
+   ],
+   "summary": "Ralph arms in the willow copse by the Ford and rides south before sunrise.",
+   "time_text": "dawn"
+  },
+  {
+   "chapter": "BONE-C3",
+   "consequences": "",
+   "id": "evt-ef277031cd",
+   "label": "The gift of the necklace",
+   "layer": "main",
+   "participants": [
+    "Dame Katherine",
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "participants_ids": [
+    "per-dame-katherine",
+    "per-ralph",
+    "per-clement-chapman"
+   ],
+   "places": [
+    "Wulstead"
+   ],
+   "places_ids": [
+    "plc-wulstead"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C3-P018",
+     "q": "so that it shall be to thee as if thou hadst drunk of the WELL AT THE WORLD'S END"
+    }
+   ],
+   "summary": "Dame Katherine gives Ralph the necklace and tells of the Well at the World's End.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C3",
+   "consequences": "",
+   "id": "evt-3b4095ee45",
+   "label": "The Dry Tree has been seen",
+   "layer": "rumour",
+   "participants": [
+    "Clement Chapman"
+   ],
+   "participants_ids": [
+    "per-clement-chapman"
+   ],
+   "places": [
+    "Dry Tree"
+   ],
+   "places_ids": [
+    "fea-dry-tree"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C3-P034",
+     "q": "I have spoken to one who hath heard of him who hath seen it"
+    }
+   ],
+   "summary": "Clement has spoken to one who heard of a man who saw the Dry Tree but did not drink of the Well.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C4",
+   "consequences": "",
+   "id": "evt-5954f70741",
+   "label": "First meeting with the man of the leafless tree",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Captain of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-captain-of-the-dry-tree"
+   ],
+   "places": [
+    "Netherton"
+   ],
+   "places_ids": [
+    "plc-netherton"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C4-P003",
+     "q": "The first time!"
+    }
+   ],
+   "summary": "At Netherton churchyard the green rider shoves past Ralph and cries \"The first time!\"",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C4",
+   "consequences": "",
+   "id": "evt-509c377c09",
+   "label": "Ralph's oath to the shepherds",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Greasy Wat",
+    "(unnamed) old spearman shepherd"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-greasy-wat",
+    "per-old-spearman-shepherd"
+   ],
+   "places": [
+    "the Greenway"
+   ],
+   "places_ids": [
+    "fea-the-greenway"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "Thou hast sworn an oath, and it is a good oath"
+    }
+   ],
+   "summary": "Ralph drinks with the shepherds and swears to be a good lord to them; they give him the beacon and watchword.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C4",
+   "consequences": "",
+   "id": "evt-70c98f5181",
+   "label": "Past sightings of the green rider",
+   "layer": "legend",
+   "participants": [
+    "Captain of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-captain-of-the-dry-tree"
+   ],
+   "places": [
+    "the Downs"
+   ],
+   "places_ids": [
+    "fea-the-downs"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "In my lifetime such a man hath, to my knowledge, been seen thrice before"
+    }
+   ],
+   "summary": "The rider has been seen thrice before in the old shepherd's lifetime, each before evil days.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C5",
+   "consequences": "",
+   "id": "evt-243f41b023",
+   "label": "Second meeting with the man of the leafless tree",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Captain of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-captain-of-the-dry-tree"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "places_ids": [
+    "plc-higham-on-the-way"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C5-P039",
+     "q": "The second time!"
+    }
+   ],
+   "summary": "In the kneeling crowd a hidden-faced man-at-arms whispers \"The second time!\"",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C5",
+   "consequences": "",
+   "id": "evt-a34350e2f3",
+   "label": "St. John's Eve at Higham",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Abbot of St. Mary's of Higham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-abbot-of-st-marys-of-higham"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "places_ids": [
+    "plc-higham-on-the-way"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C5-P003",
+     "q": "this was St. John's Eve"
+    }
+   ],
+   "summary": "Plays, bale-fire, procession of the Abbot.",
+   "time_text": "St. John's Eve"
+  },
+  {
+   "chapter": "BONE-C5",
+   "consequences": "",
+   "id": "evt-a115692a42",
+   "label": "Ralph's dream",
+   "layer": "main",
+   "participants": [
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-ralph"
+   ],
+   "places": [
+    "St. Mary's of Higham"
+   ],
+   "places_ids": [
+    "bld-st-marys-of-higham"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C5-P047",
+     "q": "the water itself was gone, and he was casting his angle on to a dry road"
+    }
+   ],
+   "summary": "Ralph dreams of fishing in Upmeads Water until the water is gone and he casts on a dry road.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BONE-C6",
+   "consequences": "",
+   "id": "evt-7c3388c4eb",
+   "label": "The monk's offer of the chaplet",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) monk of Higham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-monk-of-higham"
+   ],
+   "places": [
+    "St. Mary's of Higham"
+   ],
+   "places_ids": [
+    "bld-st-marys-of-higham"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C6-P009",
+     "q": "he was determined not to chaffer away his gossip's gift for any shaveling's token"
+    }
+   ],
+   "summary": "The monk tries to have Ralph leave Dame Katherine's necklace with him in exchange for a blessed chaplet; Ralph refuses.",
+   "time_text": "morning after St. John's Eve"
+  },
+  {
+   "chapter": "BONE-C7",
+   "consequences": "",
+   "id": "evt-b531410d97",
+   "label": "The maiden of Bourton Abbas",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Hugh of Bourton Abbas"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-hugh-of-bourton-abbas"
+   ],
+   "places": [
+    "Bourton Abbas"
+   ],
+   "places_ids": [
+    "plc-bourton-abbas"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C7-P031",
+     "q": "kissed her many times"
+    }
+   ],
+   "summary": "Ralph meets the grieving maiden, who warns him of the Wood and kisses him farewell.",
+   "time_text": "noon to afternoon"
+  },
+  {
+   "chapter": "BONE-C7",
+   "consequences": "",
+   "id": "evt-7fea3dbe9b",
+   "label": "Loss of the maiden's lover",
+   "layer": "backstory",
+   "participants": [
+    "(unnamed) Ursula's former lover"
+   ],
+   "participants_ids": [
+    "per-ursulas-former-lover"
+   ],
+   "places": [
+    "Wood Perilous"
+   ],
+   "places_ids": [
+    "fea-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C7-P012",
+     "q": "his horse has come back, and the reins and the saddle all bloody"
+    }
+   ],
+   "summary": "Her lover rode alone into the Wood Perilous five days ago; his horse returned bloody.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C8",
+   "consequences": "",
+   "id": "evt-252a01f186",
+   "label": "Capture at the crossroads",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Sir Aymer",
+    "Oliver",
+    "men of the leafless tree"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-sir-aymer",
+    "per-oliver",
+    "grp-men-of-the-leafless-tree"
+   ],
+   "places": [
+    "(unnamed) crossroads in the Wood Perilous"
+   ],
+   "places_ids": [
+    "fea-crossroads-in-the-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C8-P026",
+     "q": "Oliver!  Oliver! lead on the way thou wottest!"
+    }
+   ],
+   "summary": "Ralph is seized by the Burg's company, questioned, recognised by Oliver, and left behind when a runner arrives.",
+   "time_text": "late afternoon"
+  },
+  {
+   "chapter": "BONE-C9",
+   "consequences": "",
+   "id": "evt-3c922a6648",
+   "label": "Rescue of the lady at the crossroads",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-lady-delivered-at-the-crossroads"
+   ],
+   "places": [
+    "(unnamed) crossroads in the Wood Perilous"
+   ],
+   "places_ids": [
+    "fea-crossroads-in-the-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C9-P015",
+     "q": "Smite him, smite!  O lovely creature of God!"
+    }
+   ],
+   "summary": "Ralph kills two men leading a captive lady; she warns him off the Burg, kisses him and rides south-east.",
+   "time_text": "sunset, about five hours after noon onward"
+  },
+  {
+   "chapter": "BONE-C10",
+   "consequences": "",
+   "id": "evt-52335b9565",
+   "label": "The maiden's departure for the Well",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) crossroads in the Wood Perilous"
+   ],
+   "places_ids": [
+    "fea-crossroads-in-the-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C10-P019",
+     "q": "rode away east toward Hampton"
+    }
+   ],
+   "summary": "The maiden of Bourton refuses Ralph's company and rides east to seek the Well.",
+   "time_text": "dawn"
+  },
+  {
+   "chapter": "BONE-C11",
+   "consequences": "",
+   "id": "evt-f32ed4d255",
+   "label": "Chase by the Dry Tree riders",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "Fellowship of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk",
+    "grp-fellowship-of-the-dry-tree"
+   ],
+   "places": [
+    "Wood Perilous"
+   ],
+   "places_ids": [
+    "fea-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C11-P027",
+     "q": "Ha, thieves!  I am Roger of the Rope-walk"
+    }
+   ],
+   "summary": "Four Dry Tree horsemen chase Ralph and Roger; arrows miss; they reach the highway and the pursuers turn back.",
+   "time_text": "morning"
+  },
+  {
+   "chapter": "BONE-C11",
+   "consequences": "",
+   "id": "evt-e5ba32fe0b",
+   "label": "Founding of the Burg",
+   "layer": "legend",
+   "participants": [
+    "Fair Lady of the Burg",
+    "Forest Lord"
+   ],
+   "participants_ids": [
+    "per-fair-lady-of-the-burg",
+    "per-forest-lord"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "places_ids": [
+    "plc-burg-of-the-four-friths"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C11-P034",
+     "q": "the Fair Lady who erewhile began the building of the Burg"
+    }
+   ],
+   "summary": "The Fair Lady began the Burg when wedded to the Forest Lord.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C12",
+   "consequences": "",
+   "id": "evt-402e681811",
+   "label": "Entry into the Burg",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "(unnamed) captain of the North Gate"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk",
+    "per-captain-of-the-north-gate"
+   ],
+   "places": [
+    "(unnamed) North Gate of the Burg"
+   ],
+   "places_ids": [
+    "bld-north-gate-of-the-burg"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C12-P004",
+     "q": "Ralph Motherson"
+    }
+   ],
+   "summary": "Ralph enters by the North Gate as \"Ralph Motherson\"; Roger is appointed his man.",
+   "time_text": "early morning"
+  },
+  {
+   "chapter": "BONE-C12",
+   "consequences": "",
+   "id": "evt-e04e1035ce",
+   "label": "Failed escape of the Queen",
+   "layer": "main",
+   "participants": [
+    "Queen of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-queen-of-the-dry-tree"
+   ],
+   "places": [
+    "Wood Perilous"
+   ],
+   "places_ids": [
+    "fea-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C12-P027",
+     "q": "it is to be feared that she hath slipped through our fingers once more"
+    }
+   ],
+   "summary": "The Burg hoped to take the Dry Tree's witch but she has slipped away.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C13",
+   "consequences": "",
+   "id": "evt-cd76a61c87",
+   "label": "Return of the Burg's host",
+   "layer": "main",
+   "participants": [
+    "(unnamed) host of the Burg"
+   ],
+   "participants_ids": [
+    "imp-host-of-the-burg"
+   ],
+   "places": [
+    "(unnamed) South Gate of the Burg",
+    "Great Place of the Burg"
+   ],
+   "places_ids": [
+    "bld-south-gate-of-the-burg",
+    "bld-great-place-of-the-burg"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C13-P018",
+     "q": "to see the host mustered and the spoil blessed"
+    }
+   ],
+   "summary": "The host returns through the South Gate with spoil and women captives; it is mustered and the spoil blessed in the Great Place.",
+   "time_text": "afternoon"
+  },
+  {
+   "chapter": "BONE-C14",
+   "consequences": "",
+   "id": "evt-6b1f2c432c",
+   "label": "Third sighting of the man of the leafless tree",
+   "layer": "main",
+   "participants": [
+    "Captain of the Dry Tree",
+    "(unnamed) small cloaked man at the Flower de Luce"
+   ],
+   "participants_ids": [
+    "per-captain-of-the-dry-tree",
+    "per-small-cloaked-man-at-the-flower-de-luce"
+   ],
+   "places": [
+    "Flower de Luce"
+   ],
+   "places_ids": [
+    "bld-flower-de-luce"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C14-P003",
+     "q": "he deemed that he was the very man whom he had seen last in the Great Place at Higham"
+    }
+   ],
+   "summary": "The big man in a sallet and white gaberdine leaves the Flower de Luce with a small cloaked companion.",
+   "time_text": "dusk"
+  },
+  {
+   "chapter": "BONE-C14",
+   "consequences": "",
+   "id": "evt-1eddb4a02e",
+   "label": "Wheat-wearer conquest and Yule uprising",
+   "layer": "backstory",
+   "participants": [
+    "Wheat-wearers"
+   ],
+   "participants_ids": [
+    "grp-wheat-wearers"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "places_ids": [
+    "plc-burg-of-the-four-friths"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C14-P017",
+     "q": "rose up against them as occasion served, in the winter season and the Yule feast"
+    }
+   ],
+   "summary": "Wheat-wearers took the Burg and ruled three generations; the grandsons rose at Yule and slew them.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C14",
+   "consequences": "",
+   "id": "evt-5f3b02217e",
+   "label": "Roger's oath of service",
+   "layer": "main",
+   "participants": [
+    "Roger of the Rope-walk",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-roger-of-the-rope-walk",
+    "per-ralph"
+   ],
+   "places": [
+    "Flower de Luce"
+   ],
+   "places_ids": [
+    "bld-flower-de-luce"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C14-P035",
+     "q": "if thou goest I will go with thee"
+    }
+   ],
+   "summary": "Roger swears to follow Ralph wherever he goes.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C15",
+   "consequences": "",
+   "id": "evt-6f8c9b4ede",
+   "label": "Escape from the Burg",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "Captain of the Dry Tree",
+    "(unnamed) slender youth"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk",
+    "per-captain-of-the-dry-tree",
+    "per-slender-youth"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "places_ids": [
+    "plc-burg-of-the-four-friths"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C15-P009",
+     "q": "The third time!"
+    }
+   ],
+   "summary": "Roger and Dry Tree men take Ralph out by a postern before dawn; Falcon is lost; the big man cries \"The third time!\"",
+   "time_text": "before dawn"
+  },
+  {
+   "chapter": "BONE-C15",
+   "consequences": "",
+   "id": "evt-559e632cfd",
+   "label": "Rescue of the Dry Tree prisoners",
+   "layer": "main",
+   "participants": [
+    "Fellowship of the Dry Tree"
+   ],
+   "participants_ids": [
+    "grp-fellowship-of-the-dry-tree"
+   ],
+   "places": [
+    "Wood Perilous"
+   ],
+   "places_ids": [
+    "fea-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C15-P020",
+     "q": "here be all we four well met again"
+    }
+   ],
+   "summary": "The four captured woodmen are freed and rejoin their company in the wood.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C16",
+   "consequences": "",
+   "id": "evt-25fbe99206",
+   "label": "Ralph accepts Roger's guidance",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk"
+   ],
+   "places": [
+    "(unnamed) stony waste of low hills"
+   ],
+   "places_ids": [
+    "imp-stony-waste-of-low-hills"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C16-P015",
+     "q": "I will ride with thee first to that fair house"
+    }
+   ],
+   "summary": "Ralph agrees to follow Roger to his master's house in hope of seeing the lady.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C17",
+   "consequences": "",
+   "id": "evt-028ce70c7a",
+   "label": "Arrival at the House of Abundance",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "(unnamed) carline of the House of Abundance"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-roger-of-the-rope-walk",
+    "per-carline-of-the-house-of-abundance"
+   ],
+   "places": [
+    "House of Abundance"
+   ],
+   "places_ids": [
+    "bld-house-of-abundance"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C17-P013",
+     "q": "Now we are come home"
+    }
+   ],
+   "summary": "After a night ride Ralph and Roger reach the white castle at dawn and are served by an old woman.",
+   "time_text": "dawn"
+  },
+  {
+   "chapter": "BONE-C18",
+   "consequences": "",
+   "id": "evt-613b5289e2",
+   "label": "Waiting at the Castle of Abundance",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) carline of the House of Abundance"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-carline-of-the-house-of-abundance"
+   ],
+   "places": [
+    "House of Abundance",
+    "Plain of Abundance"
+   ],
+   "places_ids": [
+    "bld-house-of-abundance",
+    "plc-plain-of-abundance"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C18-P046",
+     "q": "there he slew a hart with one shaft"
+    }
+   ],
+   "summary": "Ralph waits the two days Roger asked, explores the castle and land, and hunts a hart.",
+   "time_text": "June, hay harvest"
+  },
+  {
+   "chapter": "BONE-C18",
+   "consequences": "",
+   "id": "evt-83c950ea84",
+   "label": "The Lady's coming to Abundance",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance"
+   ],
+   "places": [
+    "Plain of Abundance"
+   ],
+   "places_ids": [
+    "plc-plain-of-abundance"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C18-P025",
+     "q": "but that was before the coming of the Lady of Abundance"
+    }
+   ],
+   "summary": "Peace came to the land with the Lady of Abundance, before the old man's birth.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C19",
+   "consequences": "",
+   "id": "evt-0c2d9a539f",
+   "label": "Tale of the woman of the book",
+   "layer": "legend",
+   "participants": [
+    "(unnamed) woman of the book",
+    "(unnamed) king's son of the book",
+    "(unnamed) sorceress of the book",
+    "(unnamed) knight of the book"
+   ],
+   "participants_ids": [
+    "per-woman-of-the-book",
+    "per-kings-son-of-the-book",
+    "per-sorceress-of-the-book",
+    "per-knight-of-the-book"
+   ],
+   "places": [
+    "wildwood"
+   ],
+   "places_ids": [
+    "imp-wildwood"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C19-P002",
+     "q": "whereof befel long and grievous war which she abode not to the end"
+    }
+   ],
+   "summary": "Wildwood maiden wed by a king's son, war over her, thraldom to a sorceress, rescue by a Well-seeker, escape from robbers, drinking of the Well.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BONE-C20",
+   "consequences": "",
+   "id": "evt-5499cf1caa",
+   "label": "Meeting the Vicar",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) Vicar of the Little Plain"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-vicar-of-the-little-plain"
+   ],
+   "places": [
+    "Plain of Abundance"
+   ],
+   "places_ids": [
+    "plc-plain-of-abundance"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C20-P020",
+     "q": "therewith suddenly he fell a-weeping"
+    }
+   ],
+   "summary": "Ralph meets the Vicar in the wood and walks back with him; the Vicar praises the Lady and weeps.",
+   "time_text": "noon to sunset"
+  },
+  {
+   "chapter": "BONE-C21",
+   "consequences": "",
+   "id": "evt-aab397e229",
+   "label": "Ralph's three days of waiting",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) carline of the House of Abundance"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-carline-of-the-house-of-abundance"
+   ],
+   "places": [
+    "House of Abundance"
+   ],
+   "places_ids": [
+    "bld-house-of-abundance"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C21-P011",
+     "q": "thrice have I been away long from the castle and all has gone well"
+    }
+   ],
+   "summary": "Ralph wavers between searching the wood and waiting at the castle.",
+   "time_text": "three days"
+  },
+  {
+   "chapter": "BONE-C22",
+   "consequences": "",
+   "id": "evt-e3c3c50a0b",
+   "label": "Fight by the lake",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Knight of the Sun",
+    "Walter the Black",
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-knight-of-the-sun",
+    "per-walter-the-black",
+    "per-lady-delivered-at-the-crossroads"
+   ],
+   "places": [
+    "(unnamed) three oaks by the lake"
+   ],
+   "places_ids": [
+    "fea-three-oaks-by-the-lake"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C22-P022",
+     "q": "I will give thee my body for his life"
+    }
+   ],
+   "summary": "The Knight of the Sun strikes down Walter the Black, then beats Ralph; the lady saves Ralph and bargains herself for his life.",
+   "time_text": "sunset"
+  },
+  {
+   "chapter": "BONE-C23",
+   "consequences": "",
+   "id": "evt-323469e306",
+   "label": "Walter found alive",
+   "layer": "main",
+   "participants": [
+    "Knight of the Sun",
+    "Walter the Black",
+    "(unnamed) lady delivered at the crossroads",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-knight-of-the-sun",
+    "per-walter-the-black",
+    "per-lady-delivered-at-the-crossroads",
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) three oaks by the lake"
+   ],
+   "places_ids": [
+    "fea-three-oaks-by-the-lake"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C23-P011",
+     "q": "this my friend Walter the Black is alive still"
+    }
+   ],
+   "summary": "The Knight of the Sun weeps over Walter and finds him alive; the lady dresses his wound.",
+   "time_text": "evening"
+  },
+  {
+   "chapter": "BONE-C24",
+   "consequences": "",
+   "id": "evt-8ac817dfee",
+   "label": "The friar's coming",
+   "layer": "main",
+   "participants": [
+    "(unnamed) Blackfriar hermit of the lake",
+    "Lady of Abundance",
+    "Knight of the Sun",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-blackfriar-hermit-of-the-lake",
+    "per-lady-of-abundance",
+    "per-knight-of-the-sun",
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) three oaks by the lake"
+   ],
+   "places_ids": [
+    "fea-three-oaks-by-the-lake"
+   ],
+   "refs": [
+    {
+     "p": "BONE-C24-P008",
+     "q": "lo, it was a holy man, a hermit in the habit of the Blackfriars"
+    }
+   ],
+   "summary": "A hermit rows down the lake at sunset, sent (he says) by speaking thornbushes, and takes charge of Walter.",
+   "time_text": "sunset"
+  },
+  {
+   "chapter": "BTWO-C1",
+   "consequences": "",
+   "id": "evt-1548ea6b4a",
+   "label": "The Lady takes Ralph from the lake",
+   "layer": "main",
+   "participants": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) clearing of grey stones"
+   ],
+   "places_ids": [
+    "fea-clearing-of-grey-stones"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C1-P011",
+     "q": "now I have brought thee away from death"
+    }
+   ],
+   "summary": "Before dawn the Lady leads Ralph away from the Knight of the Sun; in a stone-ring clearing she reveals her marriage and they become lovers.",
+   "time_text": "dawn to midday, June"
+  },
+  {
+   "chapter": "BTWO-C1",
+   "consequences": "",
+   "id": "evt-05510425ff",
+   "label": "The Lady's expulsion from Sunway",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "Knight of the Sun",
+    "Walter the Black"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-knight-of-the-sun",
+    "per-walter-the-black"
+   ],
+   "places": [
+    "Sunway"
+   ],
+   "places_ids": [
+    "plc-sunway"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C1-P027",
+     "q": "driven forth wrung with anguish, barefoot and bleeding"
+    }
+   ],
+   "summary": "On Walter's tale the Knight of the Sun cursed and drove out his bride before they were bedded.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C2",
+   "consequences": "",
+   "id": "evt-f719718e4e",
+   "label": "Rest by the brook",
+   "layer": "main",
+   "participants": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) strawberry brook"
+   ],
+   "places_ids": [
+    "fea-strawberry-brook"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C2-P013",
+     "q": "fell to speaking to him, as a tale is told in the ingle nook"
+    }
+   ],
+   "summary": "The lovers rest and eat at a brook before the Lady tells her story.",
+   "time_text": "past two hours after noon"
+  },
+  {
+   "chapter": "BTWO-C3",
+   "consequences": "",
+   "id": "evt-3b62316b96",
+   "label": "The self-weaving loom",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-witch-mistress-of-the-lady"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "places_ids": [
+    "bld-witchs-forest-house"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C3-P004",
+     "q": "At last one day of late summer when I, now of some fifteen summers"
+    }
+   ],
+   "summary": "At fifteen, in a storm, the girl sees a loom weaving alone and the woman singing naked from a book.",
+   "time_text": "late summer, the Lady about fifteen"
+  },
+  {
+   "chapter": "BTWO-C3",
+   "consequences": "",
+   "id": "evt-ef404bc079",
+   "label": "Sacrifice of the white goat",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-witch-mistress-of-the-lady"
+   ],
+   "places": [
+    "(unnamed) yew ring and stone table"
+   ],
+   "places_ids": [
+    "fea-yew-ring-and-stone-table"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C3-P010",
+     "q": "cut the beast's throat"
+    }
+   ],
+   "summary": "The witch sacrifices the girl's goat on the yew-ring altar.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C3",
+   "consequences": "",
+   "id": "evt-2ce5a7a4be",
+   "label": "The dead seeker in the snow",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) dead seeker in the snow"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-dead-seeker-in-the-snow"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "places_ids": [
+    "bld-witchs-forest-house"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C3-P015",
+     "q": "dug a pit, and buried the poor damsel there with all her gear"
+    }
+   ],
+   "summary": "The girl finds a dead woman seeker; the witch takes her necklace; the girl buries her.",
+   "time_text": "winter"
+  },
+  {
+   "chapter": "BTWO-C3",
+   "consequences": "",
+   "id": "evt-17183a0a42",
+   "label": "Four seekers visit the witch",
+   "layer": "backstory",
+   "participants": [
+    "(unnamed) four armed seekers",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "participants_ids": [
+    "grp-four-armed-seekers",
+    "per-witch-mistress-of-the-lady"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "places_ids": [
+    "bld-witchs-forest-house"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C3-P016",
+     "q": "there came from the wood four men, a-horseback and weaponed"
+    }
+   ],
+   "summary": "Four armed riders come seeking a guide to the Well; the witch meets them in poor homespun.",
+   "time_text": "summer"
+  },
+  {
+   "chapter": "BTWO-C4",
+   "consequences": "",
+   "id": "evt-9aac3d3fd0",
+   "label": "Meeting the wise carline",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) wise carline of the Dale of Lore"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-wise-carline-of-the-dale-of-lore"
+   ],
+   "places": [
+    "Dale of Lore"
+   ],
+   "places_ids": [
+    "fea-dale-of-lore"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C4-P011",
+     "q": "fell to teaching me wisdom"
+    }
+   ],
+   "summary": "In May the girl meets the wise old woman in the Dale of Lore and is taught there daily.",
+   "time_text": "May into June"
+  },
+  {
+   "chapter": "BTWO-C4",
+   "consequences": "",
+   "id": "evt-fd187440e4",
+   "label": "The king's son on Midsummer Day",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-kings-son-of-the-ladys-youth"
+   ],
+   "places": [
+    "(unnamed) waste plain above the Dale of Lore"
+   ],
+   "places_ids": [
+    "imp-waste-plain-above-the-dale-of-lore"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C4-P021",
+     "q": "I am as one whom the Avenger of Blood followeth"
+    }
+   ],
+   "summary": "A Well-seeking king's son meets the girl, loves her, gives her his necklace and rides on.",
+   "time_text": "Midsummer Day"
+  },
+  {
+   "chapter": "BTWO-C4",
+   "consequences": "",
+   "id": "evt-49e3489d19",
+   "label": "Death of the witch",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) witch-mistress of the Lady"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-witch-mistress-of-the-lady"
+   ],
+   "places": [
+    "(unnamed) witch's forest house"
+   ],
+   "places_ids": [
+    "bld-witchs-forest-house"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C4-P028",
+     "q": "she fell across my feet"
+    }
+   ],
+   "summary": "The witch attacks the girl, who kills her with the carline's knife.",
+   "time_text": "Midsummer evening"
+  },
+  {
+   "chapter": "BTWO-C5",
+   "consequences": "",
+   "id": "evt-5c59e4343e",
+   "label": "Return of the king's son",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-kings-son-of-the-ladys-youth"
+   ],
+   "places": [
+    "Dale of Lore"
+   ],
+   "places_ids": [
+    "fea-dale-of-lore"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C5-P004",
+     "q": "O my beloved, I have found thee, but I am faint with hunger"
+    }
+   ],
+   "summary": "Starving and defeated, the king's son returns to the Dale of Lore; the girl agrees to go with him.",
+   "time_text": "late July"
+  },
+  {
+   "chapter": "BTWO-C6",
+   "consequences": "",
+   "id": "evt-acd9eae1de",
+   "label": "Journey west out of the wilderness",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-kings-son-of-the-ladys-youth"
+   ],
+   "places": [
+    "(unnamed) dreadful stony waste",
+    "(unnamed) heathen simple folk beyond the mountains"
+   ],
+   "places_ids": [
+    "fea-dreadful-stony-waste",
+    "grp-heathen-simple-folk-beyond-the-mountains"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C6-P007",
+     "q": "After we had passed long deserts of wood and heath, and gone through lands exceeding evil and perilous"
+    }
+   ],
+   "summary": "The Lady and the king's son cross the wilderness, stony waste and mountains to the heathen folk.",
+   "time_text": "autumn to spring"
+  },
+  {
+   "chapter": "BTWO-C6",
+   "consequences": "",
+   "id": "evt-2101962cc0",
+   "label": "Welcome by the king",
+   "layer": "backstory",
+   "participants": [
+    "(unnamed) king, father of the king's son",
+    "(unnamed) king, father of the king's son",
+    "(unnamed) king's son of the Lady's youth",
+    "Lady of Abundance"
+   ],
+   "participants_ids": [
+    "per-king-father-of-the-kings-son",
+    "per-king-father-of-the-kings-son",
+    "per-kings-son-of-the-ladys-youth",
+    "per-lady-of-abundance"
+   ],
+   "places": [
+    "(unnamed) kingdom of the king's son"
+   ],
+   "places_ids": [
+    "pol-kingdom-of-the-kings-son"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C6-P021",
+     "q": "'Yea,' said my lord, and therewith lifted my hand to his lips and kissed it"
+    }
+   ],
+   "summary": "The king meets his son outside the chief city; the son says he found the Well and kisses the Lady's hand.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C7",
+   "consequences": "",
+   "id": "evt-d3f6a12d5a",
+   "label": "Trial and rescue of the Lady",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth",
+    "(unnamed) king, father of the king's son",
+    "(unnamed) king, father of the king's son"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-kings-son-of-the-ladys-youth",
+    "per-king-father-of-the-kings-son",
+    "per-king-father-of-the-kings-son"
+   ],
+   "places": [
+    "(unnamed) Great Square of the Tower city"
+   ],
+   "places_ids": [
+    "bld-great-square-of-the-tower-city"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C7-P008",
+     "q": "Life for our Lord's Lady!"
+    }
+   ],
+   "summary": "Condemned for sorcery, the Lady is rescued at the stake by the prince's friends; the Bishop stops the fighting; truce and exile.",
+   "time_text": "midsummer, after two months' imprisonment"
+  },
+  {
+   "chapter": "BTWO-C7",
+   "consequences": "",
+   "id": "evt-6c4db4583a",
+   "label": "War of the Tower",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "Fellowship of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "grp-fellowship-of-the-dry-tree"
+   ],
+   "places": [
+    "Kingdom of the Tower",
+    "Wood Perilous"
+   ],
+   "places_ids": [
+    "pol-kingdom-of-the-tower",
+    "fea-wood-perilous"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C7-P017",
+     "q": "abode a long while, some two years, in the wilderness, living like outlaws and wolves' heads"
+    }
+   ],
+   "summary": "Years of war between the king and his son; the Lady loses two sons; two years as outlaws with the Dry Tree.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C7",
+   "consequences": "",
+   "id": "evt-aae06f3a5c",
+   "label": "Dry Tree battle at Bear Castle",
+   "layer": "backstory",
+   "participants": [
+    "Fellowship of the Dry Tree",
+    "(unnamed) Captain of Higham"
+   ],
+   "participants_ids": [
+    "grp-fellowship-of-the-dry-tree",
+    "per-captain-of-higham"
+   ],
+   "places": [
+    "Bear Castle"
+   ],
+   "places_ids": [
+    "bld-bear-castle"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C7-P018",
+     "q": "fought a battle there with the Captain of Higham"
+    }
+   ],
+   "summary": "The Dry Tree rode over the Downs to Bear Castle and fought the Captain of Higham.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C7",
+   "consequences": "",
+   "id": "evt-86e8f2346a",
+   "label": "Triumph and reign",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "(unnamed) king's son of the Lady's youth"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-kings-son-of-the-ladys-youth"
+   ],
+   "places": [
+    "(unnamed) master City of the Tower"
+   ],
+   "places_ids": [
+    "plc-master-city-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C7-P025",
+     "q": "I sat a crowned Queen upon the throne"
+    }
+   ],
+   "summary": "After the old king's death the Lady and her lord enter the master city and she is enthroned where she was to be burned.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C7",
+   "consequences": "",
+   "id": "evt-9fece78339",
+   "label": "Return of the Teacher of Lore",
+   "layer": "backstory",
+   "participants": [
+    "Teacher of Lore",
+    "Lady of Abundance"
+   ],
+   "participants_ids": [
+    "per-teacher-of-lore",
+    "per-lady-of-abundance"
+   ],
+   "places": [
+    "Kingdom of the Tower"
+   ],
+   "places_ids": [
+    "pol-kingdom-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C7-P031",
+     "q": "'tis a score of years since we two sat in the Dale"
+    }
+   ],
+   "summary": "About twenty years after the Dale, the Teacher comes young again and invites the Lady to seek the Well.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C7",
+   "consequences": "",
+   "id": "evt-c3d039dd4d",
+   "label": "Flight from the Tower",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-teacher-of-lore"
+   ],
+   "places": [
+    "Kingdom of the Tower"
+   ],
+   "places_ids": [
+    "pol-kingdom-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C7-P036",
+     "q": "So I vanished away from my throne and my kingdom"
+    }
+   ],
+   "summary": "After her lord's death the Lady leaves her throne disguised, in April, with the Teacher.",
+   "time_text": "April"
+  },
+  {
+   "chapter": "BTWO-C8",
+   "consequences": "",
+   "id": "evt-87dc41b29c",
+   "label": "The Lady drinks of the Well",
+   "layer": "backstory",
+   "participants": [
+    "Lady of Abundance",
+    "Teacher of Lore"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-teacher-of-lore"
+   ],
+   "places": [
+    "Well at the World's End"
+   ],
+   "places_ids": [
+    "fea-well-at-the-worlds-end"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C8-P004",
+     "q": "Shortly to say it, we found the Well, and drank of its waters"
+    }
+   ],
+   "summary": "The Lady and the Teacher find the Well and drink.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C8",
+   "consequences": "",
+   "id": "evt-e10c49653d",
+   "label": "The Teacher departs",
+   "layer": "backstory",
+   "participants": [
+    "Teacher of Lore"
+   ],
+   "participants_ids": [
+    "per-teacher-of-lore"
+   ],
+   "places": [
+    "House of the Sorceress"
+   ],
+   "places_ids": [
+    "bld-house-of-the-sorceress"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C8-P005",
+     "q": "At last, and that was but some five years ago"
+    }
+   ],
+   "summary": "About five years ago the Teacher leaves for the most ancient parts of the world.",
+   "time_text": "about five years ago"
+  },
+  {
+   "chapter": "BTWO-C8",
+   "consequences": "",
+   "id": "evt-deba7d9c43",
+   "label": "Geoffrey finds the Lady",
+   "layer": "backstory",
+   "participants": [
+    "Geoffrey",
+    "Lady of Abundance"
+   ],
+   "participants_ids": [
+    "per-geoffrey",
+    "per-lady-of-abundance"
+   ],
+   "places": [
+    "House of the Sorceress"
+   ],
+   "places_ids": [
+    "bld-house-of-the-sorceress"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C8-P011",
+     "q": "Geoffrey, what became of the white hind after the banners had left the wildwood"
+    }
+   ],
+   "summary": "Geoffrey and his sons reach the House of the Sorceress; she proves herself by old memories.",
+   "time_text": "a month after the Teacher left"
+  },
+  {
+   "chapter": "BTWO-C9",
+   "consequences": "",
+   "id": "evt-0de7bc142e",
+   "label": "The maiden of Bourton freed",
+   "layer": "main",
+   "participants": [
+    "Lady of Abundance",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-ursula"
+   ],
+   "places": [
+    "Castle of the Scaur"
+   ],
+   "places_ids": [
+    "bld-castle-of-the-scaur"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C9-P012",
+     "q": "went with her into the wildwood, and taught her wisdom of the way"
+    }
+   ],
+   "summary": "The Lady frees the maiden from the Dry Tree's prison and sends her toward the Well with the dead seeker's chaplet.",
+   "time_text": "night after Ralph left the Burg"
+  },
+  {
+   "chapter": "BTWO-C10",
+   "consequences": "",
+   "id": "evt-f598450b98",
+   "label": "Death of the Lady of Abundance",
+   "layer": "main",
+   "participants": [
+    "Lady of Abundance",
+    "Knight of the Sun",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-lady-of-abundance",
+    "per-knight-of-the-sun",
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) desert cave-house"
+   ],
+   "places_ids": [
+    "bld-desert-cave-house"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C10-P020",
+     "q": "The witch is dead, the whore is dead!"
+    }
+   ],
+   "summary": "The Knight of the Sun finds the Lady at the cave and kills her; Ralph shoots him dead.",
+   "time_text": "sunset"
+  },
+  {
+   "chapter": "BTWO-C10",
+   "consequences": "",
+   "id": "evt-10d4429dbb",
+   "label": "Burials in the desert",
+   "layer": "main",
+   "participants": [
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) desert cave-house"
+   ],
+   "places_ids": [
+    "bld-desert-cave-house"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C10-P026",
+     "q": "He took up the body of the Lady"
+    }
+   ],
+   "summary": "Ralph entombs the Lady in the cave under stones and raises a cairn over the Knight.",
+   "time_text": "next morning"
+  },
+  {
+   "chapter": "BTWO-C11",
+   "consequences": "",
+   "id": "evt-37b934740c",
+   "label": "Ralph leaves the wilderness",
+   "layer": "main",
+   "participants": [
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) sheep downs by the Swelling Flood"
+   ],
+   "places_ids": [
+    "fea-sheep-downs-by-the-swelling-flood"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "in short it was another world from the desert"
+    }
+   ],
+   "summary": "Grieving, Ralph walks out of the desert to the peopled Swelling Flood valley.",
+   "time_text": "midmorning to afternoon"
+  },
+  {
+   "chapter": "BTWO-C12",
+   "consequences": "",
+   "id": "evt-5e663023a6",
+   "label": "Ralph meets Blaise",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Blaise",
+    "Richard the Red"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-blaise",
+    "per-richard-the-red"
+   ],
+   "places": [
+    "(unnamed) highway ford of the Swelling Flood"
+   ],
+   "places_ids": [
+    "fea-highway-ford-of-the-swelling-flood"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C12-P004",
+     "q": "O happy day! when two of the Upmeads kindred meet thus in an alien land!"
+    }
+   ],
+   "summary": "At the hill above the ford Ralph meets Blaise and Richard and rides with them to Whitwall.",
+   "time_text": "afternoon"
+  },
+  {
+   "chapter": "BTWO-C13",
+   "consequences": "",
+   "id": "evt-aa25407ff4",
+   "label": "The Swevenham seekers depart",
+   "layer": "backstory",
+   "participants": [
+    "(unnamed) three Swevenham seekers"
+   ],
+   "participants_ids": [
+    "grp-three-swevenham-seekers"
+   ],
+   "places": [
+    "Swevenham"
+   ],
+   "places_ids": [
+    "plc-swevenham"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "I mind me the setting forth of these three"
+    }
+   ],
+   "summary": "Fifty years ago three Swevenham youths set out for the Well with music and flowers.",
+   "time_text": "fifty years ago"
+  },
+  {
+   "chapter": "BTWO-C14",
+   "consequences": "",
+   "id": "evt-76e287ddf1",
+   "label": "Ralph meets Clement in Whitwall",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "Richard the Red"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman",
+    "per-richard-the-red"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "places_ids": [
+    "plc-whitwall"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C14-P003",
+     "q": "it is the kiss of the gossip which she bade me give thee"
+    }
+   ],
+   "summary": "Clement brings Dame Katherine's kiss and news of Upmeads, and offers Ralph his company east.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C15",
+   "consequences": "",
+   "id": "evt-2f70a18545",
+   "label": "The dream at Whitwall",
+   "layer": "main",
+   "participants": [
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-ralph"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "places_ids": [
+    "plc-whitwall"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I hight Dorothea"
+    }
+   ],
+   "summary": "Ralph dreams of the Lady's farewell and of the maiden naming herself Dorothea.",
+   "time_text": "night before Saturday market"
+  },
+  {
+   "chapter": "BTWO-C16",
+   "consequences": "",
+   "id": "evt-47248f8705",
+   "label": "Chaplet-wearing women on the east highway",
+   "layer": "rumour",
+   "participants": [],
+   "participants_ids": [],
+   "places": [
+    "(unnamed) highway east of Whitwall"
+   ],
+   "places_ids": [
+    "imp-highway-east-of-whitwall"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C16-P016",
+     "q": "he came on one riding the highway, just about where the other woman had been seen"
+    }
+   ],
+   "summary": "Twice a lone woman with a gem chaplet, armed, is met on the highway thirty miles east of Whitwall, bound for the Well.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C16",
+   "consequences": "",
+   "id": "evt-6d00f8597f",
+   "label": "Twenty years ago: the great sickness",
+   "layer": "backstory",
+   "participants": [],
+   "participants_ids": [],
+   "places": [
+    "Swevenham"
+   ],
+   "places_ids": [
+    "plc-swevenham"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C16-P014",
+     "q": "five of our young men, calling to mind all the tales concerning the Well at the World's End, went their ways to seek it"
+    }
+   ],
+   "summary": "Five Swevenham youths swear to bring back Well-water and never return.",
+   "time_text": "twenty years ago"
+  },
+  {
+   "chapter": "BTWO-C17",
+   "consequences": "",
+   "id": "evt-f6192217ee",
+   "label": "Richard's farewell counsel",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Richard the Red"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-richard-the-red"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "places_ids": [
+    "plc-whitwall"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C17-P003",
+     "q": "I will now tell thee the tale of my grief"
+    }
+   ],
+   "summary": "Richard hears Ralph's tale and counsels him before the company leaves.",
+   "time_text": "morning of departure"
+  },
+  {
+   "chapter": "BTWO-C18",
+   "consequences": "",
+   "id": "evt-d3127351e5",
+   "label": "Departure from Whitwall",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "places_ids": [
+    "plc-whitwall"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C18-P008",
+     "q": "This is also a farewell to the House where I was born and bred"
+    }
+   ],
+   "summary": "Ralph leaves Whitwall with Clement's armed merchant company.",
+   "time_text": "noon"
+  },
+  {
+   "chapter": "BTWO-C20",
+   "consequences": "",
+   "id": "evt-c5ac53880b",
+   "label": "News of the captive maiden",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) warden of the Mid-Mountain House",
+    "(unnamed) warden's wife"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-warden-of-the-mid-mountain-house",
+    "per-wardens-wife"
+   ],
+   "places": [
+    "Mid-Mountain House"
+   ],
+   "places_ids": [
+    "bld-mid-mountain-house"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C20-P021",
+     "q": "he was bound to seek her, and deliver her from thralldom"
+    }
+   ],
+   "summary": "At the Mid-Mountain House Ralph learns a woman like the maiden of Bourton was taken captive and sent to market.",
+   "time_text": "evening, fifth day"
+  },
+  {
+   "chapter": "BTWO-C21",
+   "consequences": "",
+   "id": "evt-75899b344d",
+   "label": "Battle in the mountains",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "(unnamed) captain of Clement's men-at-arms",
+    "Bull Shockhead",
+    "Strong-thieves of the mountains"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman",
+    "per-captain-of-clements-men-at-arms",
+    "per-bull-shockhead",
+    "grp-strong-thieves-of-the-mountains"
+   ],
+   "places": [
+    "(unnamed) thieves' pass below the ridge"
+   ],
+   "places_ids": [
+    "fea-thieves-pass-below-the-ridge"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C21-P015",
+     "q": "Ralph ran in under the stroke and caught him by the throat and drew him out of the press"
+    }
+   ],
+   "summary": "The merchant company breaks through the strong-thieves' ambush; Ralph captures Bull Shockhead.",
+   "time_text": "morning"
+  },
+  {
+   "chapter": "BTWO-C22",
+   "consequences": "",
+   "id": "evt-1def9dc109",
+   "label": "Ralph learns of the captor",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Bull Shockhead"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-bull-shockhead"
+   ],
+   "places": [
+    "(unnamed) eastern foothills"
+   ],
+   "places_ids": [
+    "imp-eastern-foothills"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C22-P012",
+     "q": "But, lord, I will do my best to find her for thee"
+    }
+   ],
+   "summary": "Bull tells Ralph his kinsman Bull Nosy took the maiden to Cheaping Knowe.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C23",
+   "consequences": "",
+   "id": "evt-b5b78eadfa",
+   "label": "Arrival at Cheaping Knowe",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman"
+   ],
+   "places": [
+    "Cheaping Knowe"
+   ],
+   "places_ids": [
+    "plc-cheaping-knowe"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C23-P007",
+     "q": "so came to the hostel of the Merchants, called the Fleece"
+    }
+   ],
+   "summary": "The merchant company enters Cheaping Knowe with banners and lodges at the Fleece.",
+   "time_text": "a little before sunset"
+  },
+  {
+   "chapter": "BTWO-C24",
+   "consequences": "",
+   "id": "evt-fac111c429",
+   "label": "Visit to the thrall-merchant",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "(unnamed) thrall-merchant of Cheaping Knowe"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman",
+    "per-thrall-merchant-of-cheaping-knowe"
+   ],
+   "places": [
+    "Cheaping Knowe"
+   ],
+   "places_ids": [
+    "plc-cheaping-knowe"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C24-P007",
+     "q": "Sir, I believe surely that I have seen this damsel"
+    }
+   ],
+   "summary": "Ralph learns the damsel was refused sale and probably taken toward Whiteness and the Lord of Utterbol.",
+   "time_text": "fourth day at Cheaping Knowe"
+  },
+  {
+   "chapter": "BTWO-C25",
+   "consequences": "",
+   "id": "evt-167f9b19a5",
+   "label": "News at Whiteness",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Deacon of the Chapmen"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "off-deacon-of-the-chapmen"
+   ],
+   "places": [
+    "Whiteness"
+   ],
+   "places_ids": [
+    "plc-whiteness"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C25-P008",
+     "q": "the damsel and he alone, and she with her hands unbound and riding a little horse"
+    }
+   ],
+   "summary": "The Deacon says the wild man left Whiteness with the damsel toward the Goldburg pass.",
+   "time_text": "two days after arrival"
+  },
+  {
+   "chapter": "BTWO-C26",
+   "consequences": "",
+   "id": "evt-bd658dc6a0",
+   "label": "Discovery of Bull Nosy's body",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Bull Shockhead",
+    "Clement Chapman"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-bull-shockhead",
+    "per-clement-chapman"
+   ],
+   "places": [
+    "(unnamed) place of Bull Nosy's death"
+   ],
+   "places_ids": [
+    "imp-place-of-bull-nosys-death"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C26-P005",
+     "q": "It is a man of my kindred, even he that was leading away thy she-friend"
+    }
+   ],
+   "summary": "The company finds the damsel's captor dead in the mountains; Ralph searches for her in vain.",
+   "time_text": "sunset, seventh day"
+  },
+  {
+   "chapter": "BTWO-C26",
+   "consequences": "",
+   "id": "evt-8e8aa892c5",
+   "label": "Vision of Dorothea",
+   "layer": "main",
+   "participants": [
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-ralph"
+   ],
+   "places": [
+    "(unnamed) place of Bull Nosy's death"
+   ],
+   "places_ids": [
+    "imp-place-of-bull-nosys-death"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C26-P020",
+     "q": "a great chamber builded of marble and done about with gold and bright colours"
+    }
+   ],
+   "summary": "Ralph sees her in a vision, alive and lamenting in a marble and gold chamber.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BTWO-C27",
+   "consequences": "",
+   "id": "evt-df72bd6eff",
+   "label": "Founding of Goldburg",
+   "layer": "backstory",
+   "participants": [
+    "(unnamed) founder of Goldburg"
+   ],
+   "participants_ids": [
+    "per-founder-of-goldburg"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "places_ids": [
+    "plc-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C27-P004",
+     "q": "that lord was slain in a tumult"
+    }
+   ],
+   "summary": "A lord built Goldburg as his home for the long life he hoped the Well would give; he was slain in a tumult.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C28",
+   "consequences": "",
+   "id": "evt-356bacbc92",
+   "label": "Arrival at Goldburg",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "places_ids": [
+    "plc-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C28-P003",
+     "q": "One by one they passed through the wicket of the gate"
+    }
+   ],
+   "summary": "The merchant company enters Goldburg through the bridge-gate.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C29",
+   "consequences": "",
+   "id": "evt-c79b0a3a2c",
+   "label": "Audience with the Queen of Goldburg",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Queen of Goldburg"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-queen-of-goldburg"
+   ],
+   "places": [
+    "(unnamed) High House of the Queen of Goldburg"
+   ],
+   "places_ids": [
+    "bld-high-house-of-the-queen-of-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C29-P027",
+     "q": "O that I might be thy friend in such-wise!"
+    }
+   ],
+   "summary": "Ralph tells the Queen his story; she promises help and later gives him a letter and confesses her love.",
+   "time_text": "fifth and eighth days in Goldburg"
+  },
+  {
+   "chapter": "BTWO-C30",
+   "consequences": "",
+   "id": "evt-ba461ab324",
+   "label": "Morfinn offers to guide Ralph",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "Morfinn the Minstrel"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman",
+    "per-morfinn-the-minstrel"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "places_ids": [
+    "plc-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C30-P006",
+     "q": "I can be a shower of the way and a leader to any worthy knight"
+    }
+   ],
+   "summary": "Morfinn shows Utterbol's let-pass and offers to lead Ralph through Utterness to a sage.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C31",
+   "consequences": "",
+   "id": "evt-94bb4c43d1",
+   "label": "Ralph frees Bull",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Bull Shockhead"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-bull-shockhead"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "places_ids": [
+    "plc-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C31-P004",
+     "q": "this is the token whereby it shall be known amongst our folk that I have made thee my brother"
+    }
+   ],
+   "summary": "Ralph frees Bull Shockhead, who makes him his brother.",
+   "time_text": "morning"
+  },
+  {
+   "chapter": "BTWO-C31",
+   "consequences": "",
+   "id": "evt-b049729ade",
+   "label": "Morfinn's news of the captive",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Morfinn the Minstrel"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-morfinn-the-minstrel"
+   ],
+   "places": [
+    "(unnamed) lands east of Goldburg"
+   ],
+   "places_ids": [
+    "imp-lands-east-of-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C31-P009",
+     "q": "As I left Utterbol a month ago, I saw a damsel brought in captive there"
+    }
+   ],
+   "summary": "Morfinn describes the damsel brought captive into Utterbol a month ago.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTWO-C32",
+   "consequences": "",
+   "id": "evt-f847715201",
+   "label": "Ralph taken by the Lord of Utterbol",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Morfinn the Minstrel",
+    "Gandolf",
+    "David the Sage"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-morfinn-the-minstrel",
+    "per-gandolf",
+    "per-david-the-sage"
+   ],
+   "places": [
+    "(unnamed) Utterbol pavilion camp"
+   ],
+   "places_ids": [
+    "imp-utterbol-pavilion-camp"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C32-P031",
+     "q": "he is a goodly and well-fashioned a young man as was ever sold"
+    }
+   ],
+   "summary": "Morfinn delivers Ralph to the Lord of Utterbol's camp; Ralph is appraised and held.",
+   "time_text": "evening, third day"
+  },
+  {
+   "chapter": "BTWO-C33",
+   "consequences": "",
+   "id": "evt-533fe10228",
+   "label": "March toward Utterness",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "David the Sage",
+    "(unnamed) captain of the Utterbol men-at-arms"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-david-the-sage",
+    "per-captain-of-the-utterbol-men-at-arms"
+   ],
+   "places": [
+    "(unnamed) Utterbol moorland"
+   ],
+   "places_ids": [
+    "fea-utterbol-moorland"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C33-P024",
+     "q": "why dost thou suffer me to lead thee along whither thou wouldest not?"
+    }
+   ],
+   "summary": "Ralph rides captive in the Lord's train and learns of Utterbol's policy and Goldburg's legends.",
+   "time_text": "next day"
+  },
+  {
+   "chapter": "BTWO-C34",
+   "consequences": "",
+   "id": "evt-4080c1adcb",
+   "label": "Ralph sings for the Lord of Utterbol",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Gandolf",
+    "David the Sage"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-gandolf",
+    "per-david-the-sage"
+   ],
+   "places": [
+    "(unnamed) Utterbol pavilion camp"
+   ],
+   "places_ids": [
+    "imp-utterbol-pavilion-camp"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C34-P016",
+     "q": "knew this for the first hour of his thralldom"
+    }
+   ],
+   "summary": "Ordered to sing on pain of beating, Ralph sings two songs; the Lord plans to test him at arms.",
+   "time_text": "evening"
+  },
+  {
+   "chapter": "BTWO-C35",
+   "consequences": "",
+   "id": "evt-e9395a6d7d",
+   "label": "The Lord meets his Lady at the Dale of the Tower",
+   "layer": "main",
+   "participants": [
+    "Gandolf",
+    "(unnamed) Lady of Utterbol",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-gandolf",
+    "per-lady-of-utterbol",
+    "per-ralph"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "places_ids": [
+    "plc-dale-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C35-P019",
+     "q": "I have cheapened a likely thrall of Morfinn the Unmanned, and he is a gift to thee"
+    }
+   ],
+   "summary": "The Lady of Utterbol comes to meet the Lord; he offers her Ralph as a gift; she is struck by him.",
+   "time_text": "noon"
+  },
+  {
+   "chapter": "BTWO-C36",
+   "consequences": "",
+   "id": "evt-0f34ce6be9",
+   "label": "The Lady's confession to Agatha",
+   "layer": "main",
+   "participants": [
+    "(unnamed) Lady of Utterbol",
+    "Agatha"
+   ],
+   "participants_ids": [
+    "per-lady-of-utterbol",
+    "per-agatha"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "places_ids": [
+    "plc-dale-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C36-P014",
+     "q": "I may help thee somewhat therein"
+    }
+   ],
+   "summary": "The Lady of Utterbol confesses love for Ralph; Agatha agrees to plot for her.",
+   "time_text": "after dinner"
+  },
+  {
+   "chapter": "BTWO-C37",
+   "consequences": "",
+   "id": "evt-43742ea799",
+   "label": "The joust at the Dale of the Tower",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Otter",
+    "Redhead",
+    "Black Anselm",
+    "Gandolf",
+    "Joyce"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-otter",
+    "per-redhead",
+    "per-black-anselm",
+    "per-gandolf",
+    "per-joyce"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "places_ids": [
+    "plc-dale-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C37-P013",
+     "q": "We have no might against this youngling, man to man"
+    }
+   ],
+   "summary": "Ralph defeats Utterbol's best in sharp-spear jousts and wins a boon.",
+   "time_text": "afternoon"
+  },
+  {
+   "chapter": "BTWO-C38",
+   "consequences": "",
+   "id": "evt-375369f03c",
+   "label": "Redhead's warning",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Redhead"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-redhead"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "places_ids": [
+    "plc-dale-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C38-P004",
+     "q": "Go thou not to Utterbol whatever may betide"
+    }
+   ],
+   "summary": "Redhead warns Ralph against Utterbol and plans his escape.",
+   "time_text": "next day"
+  },
+  {
+   "chapter": "BTWO-C39",
+   "consequences": "",
+   "id": "evt-2602032993",
+   "label": "Ralph declared free",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Gandolf",
+    "Otter"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-gandolf",
+    "per-otter"
+   ],
+   "places": [
+    "(unnamed) Tower of the Dale"
+   ],
+   "places_ids": [
+    "bld-tower-of-the-dale"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C39-P014",
+     "q": "I can see the string which is tied to thy leg, though thou feelest it not"
+    }
+   ],
+   "summary": "The Lord sourly frees Ralph with his arms; Otter warns the freedom is illusory.",
+   "time_text": "morning of departure"
+  },
+  {
+   "chapter": "BTWO-C40",
+   "consequences": "",
+   "id": "evt-772223f361",
+   "label": "The false Queen revealed",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "David the Sage",
+    "Gandolf",
+    "Joyce"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-david-the-sage",
+    "per-gandolf",
+    "per-joyce"
+   ],
+   "places": [
+    "(unnamed) Utterness highway"
+   ],
+   "places_ids": [
+    "fea-utterness-highway"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C40-P004",
+     "q": "What then! this woman is not the Queen?"
+    }
+   ],
+   "summary": "Ralph sees the woman riding with the Lord and realises she is not the Queen.",
+   "time_text": "evening"
+  },
+  {
+   "chapter": "BTWO-C41",
+   "consequences": "",
+   "id": "evt-c127c50688",
+   "label": "Redhead keeps tryst",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Redhead"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-redhead"
+   ],
+   "places": [
+    "(unnamed) second camp toward Utterness"
+   ],
+   "places_ids": [
+    "imp-second-camp-toward-utterness"
+   ],
+   "refs": [
+    {
+     "p": "BTWO-C41-P013",
+     "q": "I shall be behind it abiding thee"
+    }
+   ],
+   "summary": "Redhead arranges Ralph's night escape at the dead oak with a fresh horse.",
+   "time_text": "evening of the second day"
+  },
+  {
+   "chapter": "BTHREE-C1",
+   "consequences": "",
+   "id": "evt-128a438c0a",
+   "label": "Agatha's ruse",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Agatha"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-agatha"
+   ],
+   "places": [
+    "(unnamed) oak glade in the wood"
+   ],
+   "places_ids": [
+    "imp-oak-glade-in-the-wood"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C1-P018",
+     "q": "it is I who have drawn thee hither from the camp"
+    }
+   ],
+   "summary": "Agatha lures Ralph with a staged rescue, then confesses and lets him go.",
+   "time_text": "sunrise"
+  },
+  {
+   "chapter": "BTHREE-C1",
+   "consequences": "",
+   "id": "evt-2ba168f9c4",
+   "label": "Ralph's escape from the Utterbol camp",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Redhead"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-redhead"
+   ],
+   "places": [
+    "(unnamed) doddered oak at the forest camp"
+   ],
+   "places_ids": [
+    "fea-doddered-oak-at-the-forest-camp"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C1-P002",
+     "q": "Redhead kneeled to him one moment of time and then arose and went off into the night"
+    }
+   ],
+   "summary": "Ralph flees the camp at night on Redhead's horse.",
+   "time_text": "two hours after midnight"
+  },
+  {
+   "chapter": "BTHREE-C2",
+   "consequences": "",
+   "id": "evt-fa3441c392",
+   "label": "Ralph rides alone toward the mountains",
+   "layer": "main",
+   "participants": [
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-ralph"
+   ],
+   "places": [],
+   "places_ids": [],
+   "refs": [
+    {
+     "p": "BTHREE-C2-P006",
+     "q": "though the sight was terrible, yet it gladdened him, since he knew that he was on the right way"
+    }
+   ],
+   "summary": "Free, Ralph rides east through wood and hills toward the mountain wall.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C3",
+   "consequences": "",
+   "id": "evt-5e9932006e",
+   "label": "Ralph and Ursula meet in the pine wood",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) great pine wood under the mountains"
+   ],
+   "places_ids": [
+    "fea-great-pine-wood-under-the-mountains"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C3-P010",
+     "q": "O, but I have kissed thy face before!  O, my friend, my friend!"
+    }
+   ],
+   "summary": "In the dark wood Ralph meets Ursula, who has escaped Utterbol, and they agree to seek the Well together.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BTHREE-C4",
+   "consequences": "",
+   "id": "evt-cbeb07eb30",
+   "label": "Death of Bull Nosy",
+   "layer": "backstory",
+   "participants": [
+    "Bull Nosy",
+    "Ursula",
+    "Gandolf"
+   ],
+   "participants_ids": [
+    "per-bull-nosy",
+    "per-ursula",
+    "per-gandolf"
+   ],
+   "places": [
+    "(unnamed) Goldburg mountains"
+   ],
+   "places_ids": [
+    "fea-goldburg-mountains"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C4-P019",
+     "q": "lifted up his hand twice, and let it fall twice"
+    }
+   ],
+   "summary": "The Lord of Utterbol meets Bull Nosy and Ursula in the Goldburg mountains; Bull refuses to sell her and is killed.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C4",
+   "consequences": "",
+   "id": "evt-e243a7818e",
+   "label": "Ursula resists the Lord",
+   "layer": "backstory",
+   "participants": [
+    "Ursula",
+    "Gandolf"
+   ],
+   "participants_ids": [
+    "per-ursula",
+    "per-gandolf"
+   ],
+   "places": [],
+   "places_ids": [],
+   "refs": [
+    {
+     "p": "BTHREE-C4-P021",
+     "q": "bade him beware lest I should slay him or myself"
+    }
+   ],
+   "summary": "On the road to Utterbol the Lord threatens Ursula; she threatens to kill him or herself; he backs down.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C5",
+   "consequences": "",
+   "id": "evt-6d6dfffd63",
+   "label": "Meeting the Sage of Swevenham",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "places": [
+    "(unnamed) camp by the half-ring bank"
+   ],
+   "places_ids": [
+    "imp-camp-by-the-half-ring-bank"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C5-P009",
+     "q": "I am glad that ye are come at last; for I looked for you no later than this"
+    }
+   ],
+   "summary": "The Sage finds them at dawn and takes them to his house to teach them.",
+   "time_text": "dawn"
+  },
+  {
+   "chapter": "BTHREE-C6",
+   "consequences": "",
+   "id": "evt-ad18f74228",
+   "label": "Lessons at the ancient altar",
+   "layer": "main",
+   "participants": [
+    "Sage of Swevenham",
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-sage-of-swevenham",
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) stone table of the Sage"
+   ],
+   "places_ids": [
+    "fea-stone-table-of-the-sage"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C6-P006",
+     "q": "till they were waxen wise in the matters of the Well at the World's End"
+    }
+   ],
+   "summary": "Over two days the Sage reads and drills Ralph and Ursula in the way to the Well.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C7",
+   "consequences": "",
+   "id": "evt-82ac5e4619",
+   "label": "The Sage's illusion",
+   "layer": "main",
+   "participants": [
+    "Sage of Swevenham",
+    "Ralph",
+    "Ursula",
+    "Otter",
+    "(unnamed) nephew of the Lord of Utterbol"
+   ],
+   "participants_ids": [
+    "per-sage-of-swevenham",
+    "per-ralph",
+    "per-ursula",
+    "per-otter",
+    "per-nephew-of-the-lord-of-utterbol"
+   ],
+   "places": [
+    "(unnamed) chestnut valley"
+   ],
+   "places_ids": [
+    "fea-chestnut-valley"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "O Otter, this is an evil place of an evil deed!"
+    }
+   ],
+   "summary": "The Sage hides the travellers from the Utterbol riders by an illusion of bones and stones.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BTHREE-C8",
+   "consequences": "",
+   "id": "evt-93cd668aca",
+   "label": "The Sage's charge at the ridge",
+   "layer": "main",
+   "participants": [
+    "Sage of Swevenham",
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-sage-of-swevenham",
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) eastern ridge above the rock-sea"
+   ],
+   "places_ids": [
+    "imp-eastern-ridge-above-the-rock-sea"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C8-P006",
+     "q": "they brought down Heaven to the Earth for a little while"
+    }
+   ],
+   "summary": "Facing the mountains, the Sage charges the lovers on how to live, and they state their aims.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C9",
+   "consequences": "",
+   "id": "evt-4b62411325",
+   "label": "Crossing the Sea of Molten Rocks",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "places": [
+    "Sea of Molten Rocks"
+   ],
+   "places_ids": [
+    "fea-sea-of-molten-rocks"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C9-P009",
+     "q": "the Sage led through it all unfumbling"
+    }
+   ],
+   "summary": "Over about four days the Sage leads them by the token route through the lava, past earth-fires.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C9",
+   "consequences": "",
+   "id": "evt-6d8d0a0a1c",
+   "label": "The Candle of the Giants kindles",
+   "layer": "prophecy",
+   "participants": [
+    "Gandolf"
+   ],
+   "participants_ids": [
+    "per-gandolf"
+   ],
+   "places": [
+    "Candle of the Giants"
+   ],
+   "places_ids": [
+    "fea-candle-of-the-giants"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "it will be for a token to them there"
+    }
+   ],
+   "summary": "The fire on the Candle of the Giants is held to bode ill for the Lord of Utterbol.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C10",
+   "consequences": "",
+   "id": "evt-66fc3b2c65",
+   "label": "Parting from the Sage at the Gate",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "places": [
+    "Rock of the Fighting Man"
+   ],
+   "places_ids": [
+    "fea-rock-of-the-fighting-man"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C10-P006",
+     "q": "he drew himself away from them, and turned about with no word more, and went his ways"
+    }
+   ],
+   "summary": "The Sage brings them to the Fighting Man and leaves; they enter the pass.",
+   "time_text": "noon"
+  },
+  {
+   "chapter": "BTHREE-C11",
+   "consequences": "",
+   "id": "evt-5fd9f1a24e",
+   "label": "Arrival in the Vale of Sweet Chestnuts",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "places_ids": [
+    "plc-vale-of-sweet-chestnuts"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C11-P013",
+     "q": "they knew that they had come to their winter house"
+    }
+   ],
+   "summary": "After thirty days in the mountains they reach the wintering vale and its marked cavern.",
+   "time_text": "autumn"
+  },
+  {
+   "chapter": "BTHREE-C12",
+   "consequences": "",
+   "id": "evt-502bf7ddc7",
+   "label": "Winter in the mountains",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "places_ids": [
+    "plc-vale-of-sweet-chestnuts"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C12-P005",
+     "q": "So wore autumn into winter, and the frost came, and the snow"
+    }
+   ],
+   "summary": "Ralph and Ursula winter in the Vale of Sweet Chestnuts as friends.",
+   "time_text": "autumn to spring"
+  },
+  {
+   "chapter": "BTHREE-C13",
+   "consequences": "",
+   "id": "evt-3627238e12",
+   "label": "Ursula and the bear",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "places_ids": [
+    "plc-vale-of-sweet-chestnuts"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C13-P004",
+     "q": "he cast himself upon her without a word, and kissed her greedily"
+    }
+   ],
+   "summary": "Ralph kills a bear chasing Ursula; they declare their love and pledge to wed.",
+   "time_text": "spring morning"
+  },
+  {
+   "chapter": "BTHREE-C14",
+   "consequences": "",
+   "id": "evt-d33e5cc458",
+   "label": "Wedding of Ralph and Ursula",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) messengers of the Innocent Folk"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "grp-messengers-of-the-innocent-folk"
+   ],
+   "places": [
+    "Vale of Sweet Chestnuts"
+   ],
+   "places_ids": [
+    "plc-vale-of-sweet-chestnuts"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "then those twain kissed the newcomers and departed to their bridal bower hand in hand"
+    }
+   ],
+   "summary": "Witnessed by the Innocent Folk's messengers, Ralph and Ursula wed by moonlight.",
+   "time_text": "spring evening"
+  },
+  {
+   "chapter": "BTHREE-C15",
+   "consequences": "",
+   "id": "evt-ea0e8e2aea",
+   "label": "Welcome by the Innocent Folk",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Innocent Folk"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "grp-innocent-folk"
+   ],
+   "places": [
+    "(unnamed) Mote-house of the Innocent Folk"
+   ],
+   "places_ids": [
+    "bld-mote-house-of-the-innocent-folk"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "Welcome and thrice welcome to the Seekers after length of days"
+    }
+   ],
+   "summary": "The Innocent Folk receive Ralph and Ursula in their Mote-house as \"Seekers after length of days\".",
+   "time_text": "evening, ninth day"
+  },
+  {
+   "chapter": "BTHREE-C16",
+   "consequences": "",
+   "id": "evt-56b9ddb43b",
+   "label": "Arrival at the House of the Sorceress",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "(unnamed) elder of the Innocent Folk"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-elder-of-the-innocent-folk"
+   ],
+   "places": [
+    "House of the Sorceress"
+   ],
+   "places_ids": [
+    "bld-house-of-the-sorceress"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C16-P007",
+     "q": "wept long for the friend whose feet had worn that path so often"
+    }
+   ],
+   "summary": "Ralph and Ursula reach the kept House where the Lady was a thrall; Ralph weeps.",
+   "time_text": "full June"
+  },
+  {
+   "chapter": "BTHREE-C16",
+   "consequences": "",
+   "id": "evt-640e788144",
+   "label": "Reading at the Sorceress's altar",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) yew ring and stone table"
+   ],
+   "places_ids": [
+    "fea-yew-ring-and-stone-table"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C16-P018",
+     "q": "day after day betimes in the morning they bore the said book to the altar and read therein"
+    }
+   ],
+   "summary": "For eight days they read the House's lore-book at the ancient altar.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C17",
+   "consequences": "",
+   "id": "evt-2dda3f1a40",
+   "label": "Crossing the Thirsty Desert",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "Thirsty Desert"
+   ],
+   "places_ids": [
+    "fea-thirsty-desert"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C17-P015",
+     "q": "Ralph and Ursula buried these two with the heaping of stones"
+    }
+   ],
+   "summary": "The lovers cross the salt ridges among the dried dead, burying some.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C18",
+   "consequences": "",
+   "id": "evt-8a4c5090e8",
+   "label": "At the Dry Tree",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) valley of the Dry Tree"
+   ],
+   "places_ids": [
+    "fea-valley-of-the-dry-tree"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C18-P004",
+     "q": "then from both their lips at once came the cry THE DRY TREE"
+    }
+   ],
+   "summary": "The lovers find the Dry Tree; Ursula prevents Ralph drinking the poisoned pool and lures him away.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C19",
+   "consequences": "",
+   "id": "evt-06a1abcc1c",
+   "label": "Out of the Thirsty Desert",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) black-sand river"
+   ],
+   "places_ids": [
+    "fea-black-sand-river"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "they drank their fill and watered their horses abundantly"
+    }
+   ],
+   "summary": "Nearly out of water, they reach a safe river and recover.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BTHREE-C20",
+   "consequences": "",
+   "id": "evt-0c52f8eaa7",
+   "label": "Arrival at the World's End",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) ness of the World's End"
+   ],
+   "places_ids": [
+    "fea-ness-of-the-worlds-end"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C20-P007",
+     "q": "it was no long time ere they twain slept fast at the uttermost end of the world"
+    }
+   ],
+   "summary": "Ralph and Ursula reach the end of the ness above the Ocean Sea.",
+   "time_text": "evening"
+  },
+  {
+   "chapter": "BTHREE-C21",
+   "consequences": "",
+   "id": "evt-ed29353bd2",
+   "label": "Drinking of the Well",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "Well at the World's End"
+   ],
+   "places_ids": [
+    "fea-well-at-the-worlds-end"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C21-P015",
+     "q": "To the Earth, and the World of Manfolk!"
+    }
+   ],
+   "summary": "Ralph and Ursula drink of the Well at the World's End and fall asleep.",
+   "time_text": "morning, low tide"
+  },
+  {
+   "chapter": "BTHREE-C22",
+   "consequences": "",
+   "id": "evt-c6051ab34b",
+   "label": "After the draught",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) ness of the World's End"
+   ],
+   "places_ids": [
+    "fea-ness-of-the-worlds-end"
+   ],
+   "refs": [
+    {
+     "p": "BTHREE-C22-P015",
+     "q": "it seemed to them that they had come into the very Garden of God"
+    }
+   ],
+   "summary": "They find their scars healed, bathe in a salt pool, and spend the evening in the tame meadows at the world's end.",
+   "time_text": "late afternoon to night"
+  },
+  {
+   "chapter": "BFOUR-C1",
+   "consequences": "",
+   "id": "evt-bfe9d11beb",
+   "label": "Return through the Great Mountains",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Innocent Folk"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "grp-innocent-folk"
+   ],
+   "places": [
+    "Great Mountains"
+   ],
+   "places_ids": [
+    "fea-great-mountains"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C1-P006",
+     "q": "their journey through the dreary pass was as light as it might be to any men"
+    }
+   ],
+   "summary": "The lovers return west with the Innocent Folk's help and cross the mountains.",
+   "time_text": "autumn"
+  },
+  {
+   "chapter": "BFOUR-C2",
+   "consequences": "",
+   "id": "evt-34d300245f",
+   "label": "Reunion with the Sage",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "places": [
+    "(unnamed) Sage's bower by the blackthorn copse"
+   ],
+   "places_ids": [
+    "bld-sages-bower-by-the-blackthorn-copse"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C2-P003",
+     "q": "he deemed that it could be none other than the Sage of Swevenham"
+    }
+   ],
+   "summary": "The Sage, waiting since spring, meets the returning lovers at the Gate.",
+   "time_text": "late autumn evening"
+  },
+  {
+   "chapter": "BFOUR-C2",
+   "consequences": "",
+   "id": "evt-77035db51e",
+   "label": "Fall of Gandolf",
+   "layer": "main",
+   "participants": [
+    "Gandolf",
+    "Bull Shockhead"
+   ],
+   "participants_ids": [
+    "per-gandolf",
+    "per-bull-shockhead"
+   ],
+   "places": [
+    "Utterbol"
+   ],
+   "places_ids": [
+    "plc-utterbol"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C2-P010",
+     "q": "I am verily Lord of Utterbol, and that by conquest"
+    }
+   ],
+   "summary": "The Lord of Utterbol (Gandolf) is slain and a new lord with the Bull arms takes Utterbol.",
+   "time_text": "before March"
+  },
+  {
+   "chapter": "BFOUR-C3",
+   "consequences": "",
+   "id": "evt-111f5750e9",
+   "label": "Winter with the Sage",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "places": [
+    "(unnamed) house of the Sage of Swevenham"
+   ],
+   "places_ids": [
+    "bld-house-of-the-sage-of-swevenham"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C3-P003",
+     "q": "So they dwelt there happily enough"
+    }
+   ],
+   "summary": "Ralph and Ursula winter at the hermitage and learn more from the Sage.",
+   "time_text": "winter"
+  },
+  {
+   "chapter": "BFOUR-C3",
+   "consequences": "",
+   "id": "evt-66b376e890",
+   "label": "Meeting Bull, Lord of Utterbol",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Bull Shockhead"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-bull-shockhead"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "places_ids": [
+    "plc-dale-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C3-P007",
+     "q": "though the feathers be fine 'tis the same bird"
+    }
+   ],
+   "summary": "At Vale Turris Ralph finds his former thrall Bull Shockhead now Lord of Utterbol.",
+   "time_text": "May"
+  },
+  {
+   "chapter": "BFOUR-C4",
+   "consequences": "",
+   "id": "evt-ecba238291",
+   "label": "Feast in the Red Pavilion",
+   "layer": "main",
+   "participants": [
+    "Bull Shockhead",
+    "Otter",
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "participants_ids": [
+    "per-bull-shockhead",
+    "per-otter",
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham"
+   ],
+   "places": [
+    "Red Pavilion"
+   ],
+   "places_ids": [
+    "bld-red-pavilion"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C4-P009",
+     "q": "Therewith he drank of the cup, and all men shouted"
+    }
+   ],
+   "summary": "At a feast Bull, Otter and Ralph swear oaths on the golden bull cup.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BFOUR-C5",
+   "consequences": "",
+   "id": "evt-a81acce309",
+   "label": "The lion in Goldburg market",
+   "layer": "backstory",
+   "participants": [
+    "Bull Shockhead",
+    "(unnamed) Bull's lion"
+   ],
+   "participants_ids": [
+    "per-bull-shockhead",
+    "cre-bulls-lion"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "places_ids": [
+    "plc-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C5-P006",
+     "q": "Eat in peace and safety, am I not here?"
+    }
+   ],
+   "summary": "Bull tames an escaped lion in Goldburg market and buys it.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C5",
+   "consequences": "",
+   "id": "evt-88f0c1ee05",
+   "label": "Slaying of Gandolf",
+   "layer": "backstory",
+   "participants": [
+    "Bull Shockhead",
+    "Gandolf",
+    "Otter"
+   ],
+   "participants_ids": [
+    "per-bull-shockhead",
+    "per-gandolf",
+    "per-otter"
+   ],
+   "places": [
+    "House of Utterbol"
+   ],
+   "places_ids": [
+    "bld-house-of-utterbol"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C5-P023",
+     "q": "thus endeth the worst man in the world"
+    }
+   ],
+   "summary": "Bull kills Gandolf in his chamber and is made Lord of Utterbol by Otter and the men-at-arms.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C6",
+   "consequences": "",
+   "id": "evt-64b30d40e2",
+   "label": "Drowning of the nephew",
+   "layer": "backstory",
+   "participants": [
+    "Redhead",
+    "(unnamed) nephew of the Lord of Utterbol"
+   ],
+   "participants_ids": [
+    "per-redhead",
+    "per-nephew-of-the-lord-of-utterbol"
+   ],
+   "places": [
+    "Ram's Bane"
+   ],
+   "places_ids": [
+    "fea-rams-bane"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C6-P018",
+     "q": "two days before the slaying of his uncle, I met him in a wood"
+    }
+   ],
+   "summary": "Redhead drowns the Lord's nephew in the Ram's Bane two days before the Lord's death.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C6",
+   "consequences": "",
+   "id": "evt-53b3629df8",
+   "label": "Departure from Vale Turris",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Bull Shockhead",
+    "Otter",
+    "Redhead"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-bull-shockhead",
+    "per-otter",
+    "per-redhead"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "places_ids": [
+    "plc-dale-of-the-tower"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C6-P009",
+     "q": "Bull and Otter kissed the wayfarers, and bade them farewell"
+    }
+   ],
+   "summary": "Bull and Otter escort the travellers till noon, then part.",
+   "time_text": "morning to noon"
+  },
+  {
+   "chapter": "BFOUR-C7",
+   "consequences": "",
+   "id": "evt-fc0ffa473d",
+   "label": "Battle with the Black Riders",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Redhead",
+    "Black Riders"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-redhead",
+    "grp-black-riders"
+   ],
+   "places": [
+    "(unnamed) waste between Vale Turris and Goldburg"
+   ],
+   "places_ids": [
+    "imp-waste-between-vale-turris-and-goldburg"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C7-P010",
+     "q": "in five minutes' time the Black Riders were fleeing all over the field"
+    }
+   ],
+   "summary": "On the fifth day the Utterbol escort routs the Black Riders; Ursula is struck but unhurt.",
+   "time_text": "fifth day, morning"
+  },
+  {
+   "chapter": "BFOUR-C8",
+   "consequences": "",
+   "id": "evt-71ed4ea18b",
+   "label": "The vanished Queen of Goldburg",
+   "layer": "main",
+   "participants": [
+    "Queen of Goldburg",
+    "(unnamed) old fisherman of Goldburg"
+   ],
+   "participants_ids": [
+    "per-queen-of-goldburg",
+    "per-old-fisherman-of-goldburg"
+   ],
+   "places": [
+    "(unnamed) great wood down the Goldburg river"
+   ],
+   "places_ids": [
+    "fea-great-wood-down-the-goldburg-river"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "she leapt out and let the thicket cover her"
+    }
+   ],
+   "summary": "A little over a year ago the Queen fled Goldburg by night down the river and vanished into a great wood.",
+   "time_text": "March, a year before"
+  },
+  {
+   "chapter": "BFOUR-C9",
+   "consequences": "",
+   "id": "evt-87c6e4d28e",
+   "label": "Ralph before the King of Cheaping Knowe",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) King of Cheaping Knowe"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-king-of-cheaping-knowe"
+   ],
+   "places": [
+    "Cheaping Knowe"
+   ],
+   "places_ids": [
+    "plc-cheaping-knowe"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C9-P014",
+     "q": "I crave of thee to give me life and limb and freedom for the poor folk whom I saw led down the hall"
+    }
+   ],
+   "summary": "Ralph awes the King by declaring he drank of the Well and wins freedom for condemned prisoners.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C10",
+   "consequences": "",
+   "id": "evt-c2cf070e0a",
+   "label": "Death of the King of Cheaping Knowe",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "(unnamed) King of Cheaping Knowe",
+    "Folk of the Fells"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-king-of-cheaping-knowe",
+    "grp-folk-of-the-fells"
+   ],
+   "places": [
+    "(unnamed) dark wood of the pass"
+   ],
+   "places_ids": [
+    "fea-dark-wood-of-the-pass"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C10-P013",
+     "q": "in a few minutes there were no men of the foe together save those that were fleeing down the road to Cheaping Knowe"
+    }
+   ],
+   "summary": "Ambushing Ralph, the King of Cheaping Knowe is shot by the Folk of the Fells, who rout his men.",
+   "time_text": "third day, afternoon"
+  },
+  {
+   "chapter": "BFOUR-C11",
+   "consequences": "",
+   "id": "evt-3d638b2d3b",
+   "label": "Three days with the Folk of the Fells",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Folk of the Fells"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "grp-folk-of-the-fells"
+   ],
+   "places": [
+    "(unnamed) town of the Folk of the Fells"
+   ],
+   "places_ids": [
+    "plc-town-of-the-folk-of-the-fells"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C11-P003",
+     "q": "the wild men wondered at his prowess"
+    }
+   ],
+   "summary": "The Folk of the Fells feast and hunt with Ralph and escort him to the plain.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C12",
+   "consequences": "",
+   "id": "evt-f600c03f3d",
+   "label": "Approach to Whitwall",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "(unnamed) plain west of the mountains"
+   ],
+   "places_ids": [
+    "imp-plain-west-of-the-mountains"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C12-P004",
+     "q": "By my sword I swear it"
+    }
+   ],
+   "summary": "Nearing Whitwall, Ursula fears scorn and Ralph swears to stand by her against his kin.",
+   "time_text": "afternoon, late spring"
+  },
+  {
+   "chapter": "BFOUR-C13",
+   "consequences": "",
+   "id": "evt-f58588e5b3",
+   "label": "Return to Whitwall",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "places_ids": [
+    "plc-whitwall"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C13-P043",
+     "q": "he thrust the board from him, and arose and went to his harness"
+    }
+   ],
+   "summary": "Ralph meets Richard again, learns Walter the Black is dead, and leaves for Upmeads by night.",
+   "time_text": "late May"
+  },
+  {
+   "chapter": "BFOUR-C14",
+   "consequences": "",
+   "id": "evt-7eaec1cb33",
+   "label": "Ride from Whitwall",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red"
+   ],
+   "places": [],
+   "places_ids": [],
+   "refs": [
+    {
+     "p": "BFOUR-C14-P008",
+     "q": "It is well that we are here"
+    }
+   ],
+   "summary": "The four ride from Whitwall by the wildwood shortcut to avoid pursuit.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BFOUR-C15",
+   "consequences": "",
+   "id": "evt-a580538830",
+   "label": "Death of the Captain of the Dry Tree",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Richard the Red",
+    "Sage of Swevenham",
+    "Captain of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-richard-the-red",
+    "per-sage-of-swevenham",
+    "per-captain-of-the-dry-tree"
+   ],
+   "places": [
+    "(unnamed) desert cave-house"
+   ],
+   "places_ids": [
+    "bld-desert-cave-house"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C15-P028",
+     "q": "Thus hath thy wish been accomplished"
+    }
+   ],
+   "summary": "The wild man attacks Ursula at the cave, is cut down, and dying is revealed as the Dry Tree's captain; he is buried beside the Lady.",
+   "time_text": "before sunset"
+  },
+  {
+   "chapter": "BFOUR-C16",
+   "consequences": "",
+   "id": "evt-c306b23c08",
+   "label": "Ralph becomes lord of Abundance",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "yeomen of Abundance"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "grp-yeomen-of-abundance"
+   ],
+   "places": [
+    "Plain of Abundance"
+   ],
+   "places_ids": [
+    "plc-plain-of-abundance"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C16-P014",
+     "q": "Lament, ye people! for the Lady of Abundance is dead"
+    }
+   ],
+   "summary": "Ralph tells the folk of Abundance the Lady is dead and accepts their lordship.",
+   "time_text": "afternoon to sunset"
+  },
+  {
+   "chapter": "BFOUR-C17",
+   "consequences": "",
+   "id": "evt-c73278682f",
+   "label": "Fall of the Burg of the Four Friths",
+   "layer": "backstory",
+   "participants": [
+    "Fellowship of the Dry Tree",
+    "Wheat-wearers",
+    "Burg of the Four Friths"
+   ],
+   "participants_ids": [
+    "grp-fellowship-of-the-dry-tree",
+    "grp-wheat-wearers",
+    "plc-burg-of-the-four-friths"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "places_ids": [
+    "plc-burg-of-the-four-friths"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C17-P029",
+     "q": "there befell that marvel which sometimes befalleth even to very valiant men"
+    }
+   ],
+   "summary": "The Dry Tree and the Wheat-wearers rout the Burg's hosts, take the Burg, and expel its people.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C18",
+   "consequences": "",
+   "id": "evt-c9edf4c19d",
+   "label": "Return to the Burg",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Richard the Red",
+    "Roger of the Rope-walk",
+    "Stephen a-Hurst"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-richard-the-red",
+    "per-roger-of-the-rope-walk",
+    "per-stephen-a-hurst"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "places_ids": [
+    "plc-burg-of-the-four-friths"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C18-P010",
+     "q": "So they entered the Flower de Luce, and had good welcome there"
+    }
+   ],
+   "summary": "Ralph's party enters the transformed Burg and lodges at the Flower de Luce.",
+   "time_text": "evening, early summer"
+  },
+  {
+   "chapter": "BFOUR-C19",
+   "consequences": "",
+   "id": "evt-e931606b38",
+   "label": "Mote at the Scaur",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Roger of the Rope-walk",
+    "Stephen a-Hurst",
+    "Fellowship of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-roger-of-the-rope-walk",
+    "per-stephen-a-hurst",
+    "grp-fellowship-of-the-dry-tree"
+   ],
+   "places": [
+    "Castle of the Scaur"
+   ],
+   "places_ids": [
+    "bld-castle-of-the-scaur"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C19-P035",
+     "q": "I swear that whensoever the Captain of the Dry Tree calleth on me"
+    }
+   ],
+   "summary": "In the Castle of the Scaur Ralph and the Dry Tree swear mutual oaths; the Scaur is offered to him.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C19",
+   "consequences": "",
+   "id": "evt-e82b65a232",
+   "label": "Death of the old Queen of the Dry Tree",
+   "layer": "backstory",
+   "participants": [
+    "Roger of the Rope-walk",
+    "(unnamed) old Queen of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-roger-of-the-rope-walk",
+    "per-old-queen-of-the-dry-tree"
+   ],
+   "places": [
+    "Castle of the Scaur"
+   ],
+   "places_ids": [
+    "bld-castle-of-the-scaur"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C19-P031",
+     "q": "we fell on the she-bear, as thou callest her, and her company of men and women"
+    }
+   ],
+   "summary": "After news of the Lady's death the Dry Tree fell on the old Queen; Roger slew her in the hall.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C20",
+   "consequences": "",
+   "id": "evt-af6b18ff65",
+   "label": "Turned away from Higham",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Hugh",
+    "(unnamed) knight of Higham at the barrier"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-hugh",
+    "per-knight-of-higham-at-the-barrier"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "places_ids": [
+    "plc-higham-on-the-way"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C20-P006",
+     "q": "Get thee behind us, Hugh, if thou wilt come with us, lad"
+    }
+   ],
+   "summary": "Higham refuses Ralph's Dry Tree band; Hugh escapes to join Ralph.",
+   "time_text": "sunset"
+  },
+  {
+   "chapter": "BFOUR-C21",
+   "consequences": "",
+   "id": "evt-0a75e1c8a5",
+   "label": "Battle of the Wry Bridge",
+   "layer": "backstory",
+   "participants": [
+    "Abbot of St. Mary's of Higham",
+    "Westland Barons"
+   ],
+   "participants_ids": [
+    "per-abbot-of-st-marys-of-higham",
+    "grp-westland-barons"
+   ],
+   "places": [
+    "(unnamed) field of the Wry Bridge"
+   ],
+   "places_ids": [
+    "plc-field-of-the-wry-bridge"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "there was Holy Church overthrown"
+    }
+   ],
+   "summary": "The Abbot of Higham's host is overthrown by the Westland Barons and the Abbot is taken to the Red Mount.",
+   "time_text": "about a year and a half before"
+  },
+  {
+   "chapter": "BFOUR-C21",
+   "consequences": "",
+   "id": "evt-69641469fe",
+   "label": "Ravaging of Higham-land",
+   "layer": "backstory",
+   "participants": [
+    "Westland Barons"
+   ],
+   "participants_ids": [
+    "grp-westland-barons"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "places_ids": [
+    "plc-higham-on-the-way"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Westlanders broke their teeth over it"
+    }
+   ],
+   "summary": "The Westlanders fail to take Higham but take or burn most of the Abbot's castles.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C21",
+   "consequences": "",
+   "id": "evt-7b138c090c",
+   "label": "Night at Garton",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Hugh",
+    "Stephen a-Hurst",
+    "(unnamed) Garton volunteers"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-hugh",
+    "per-stephen-a-hurst",
+    "grp-garton-volunteers"
+   ],
+   "places": [
+    "Garton"
+   ],
+   "places_ids": [
+    "plc-garton"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C21-P020",
+     "q": "meanwhile we will live and die together"
+    }
+   ],
+   "summary": "The thorp welcomes Ralph's company and young carles volunteer.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BFOUR-C22",
+   "consequences": "",
+   "id": "evt-363f329d92",
+   "label": "Martha's spaedom",
+   "layer": "prophecy",
+   "participants": [
+    "Martha",
+    "Giles",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-martha",
+    "per-giles",
+    "per-ralph"
+   ],
+   "places": [
+    "Saint Ann's Chapel"
+   ],
+   "places_ids": [
+    "bld-saint-anns-chapel"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C22-P013",
+     "q": "the Burg-devils will have come from the Wood Debateable to find graves by the fair river"
+    }
+   ],
+   "summary": "Martha foresees Ralph at Mileham, Milton or Garton, the mote at Bear Castle, friends at Wulstead, and the Burgers dying by the river of Upmeads.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C22",
+   "consequences": "",
+   "id": "evt-a967823deb",
+   "label": "Helper from afar",
+   "layer": "legend",
+   "participants": [
+    "shepherds of the Downs"
+   ],
+   "participants_ids": [
+    "grp-shepherds-of-the-downs"
+   ],
+   "places": [],
+   "places_ids": [],
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "a stripling and a great man; a runaway, and the conqueror of many"
+    }
+   ],
+   "summary": "The shepherds' tale of a helper from afar whose home is near.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C22",
+   "consequences": "",
+   "id": "evt-16e92eaef0",
+   "label": "Giles brings the message",
+   "layer": "main",
+   "participants": [
+    "Giles",
+    "Ralph",
+    "Ursula",
+    "Roger of the Rope-walk"
+   ],
+   "participants_ids": [
+    "per-giles",
+    "per-ralph",
+    "per-ursula",
+    "per-roger-of-the-rope-walk"
+   ],
+   "places": [
+    "Garton"
+   ],
+   "places_ids": [
+    "plc-garton"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C22-P016",
+     "q": "I shall gather my men, and ride the shortest way, which thou shalt show me, to Bear Castle"
+    }
+   ],
+   "summary": "Giles finds Ralph at Garton after midnight; Ralph plans Bear Castle, Wulstead, Upmeads.",
+   "time_text": "after midnight"
+  },
+  {
+   "chapter": "BFOUR-C23",
+   "consequences": "",
+   "id": "evt-e42a571a22",
+   "label": "Skirmish below the green ridge",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Giles",
+    "Stephen a-Hurst",
+    "(unnamed) expelled Burgers"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-giles",
+    "per-stephen-a-hurst",
+    "grp-expelled-burgers"
+   ],
+   "places": [
+    "(unnamed) dale below a low green ridge"
+   ],
+   "places_ids": [
+    "imp-dale-below-a-low-green-ridge"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C23-P005",
+     "q": "there was scarce time for a word ere the full half of them had passed by the sword of the Dry Tree"
+    }
+   ],
+   "summary": "Ralph surprises a Burger band, learns of the march on Upmeads, and takes twenty prisoners.",
+   "time_text": "morning"
+  },
+  {
+   "chapter": "BFOUR-C23",
+   "consequences": "",
+   "id": "evt-e99528671a",
+   "label": "Muster at Bear Castle",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Giles",
+    "shepherds of the Downs"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-giles",
+    "grp-shepherds-of-the-downs"
+   ],
+   "places": [
+    "Bear Castle"
+   ],
+   "places_ids": [
+    "bld-bear-castle"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C23-P014",
+     "q": "there were but some two hundreds, who looked but few indeed in the great square place"
+    }
+   ],
+   "summary": "Shepherds stream to Bear Castle; the four fires are lit.",
+   "time_text": "two hours before noon"
+  },
+  {
+   "chapter": "BFOUR-C24",
+   "consequences": "",
+   "id": "evt-9aacddcb32",
+   "label": "Folkmote of the Shepherds",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Tall Thomas",
+    "Stephen a-Hurst",
+    "Giles",
+    "shepherds of the Downs",
+    "Fellowship of the Dry Tree"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-tall-thomas",
+    "per-stephen-a-hurst",
+    "per-giles",
+    "grp-shepherds-of-the-downs",
+    "grp-fellowship-of-the-dry-tree"
+   ],
+   "places": [
+    "Bear Castle"
+   ],
+   "places_ids": [
+    "bld-bear-castle"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C24-P009",
+     "q": "all the Folk cried, \"Hail our brother!\""
+    }
+   ],
+   "summary": "Ralph is made Captain and brother of the Shepherds; the host musters at 554.",
+   "time_text": "late morning"
+  },
+  {
+   "chapter": "BFOUR-C25",
+   "consequences": "",
+   "id": "evt-a8672788f5",
+   "label": "Arrival at Wulstead",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Clement Chapman",
+    "Sage of Swevenham",
+    "Roger of the Rope-walk",
+    "Stephen a-Hurst"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-clement-chapman",
+    "per-sage-of-swevenham",
+    "per-roger-of-the-rope-walk",
+    "per-stephen-a-hurst"
+   ],
+   "places": [
+    "Wulstead"
+   ],
+   "places_ids": [
+    "plc-wulstead"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C25-P013",
+     "q": "they all streamed into the street"
+    }
+   ],
+   "summary": "Clement welcomes Ralph and Ursula; the host enters Wulstead behind Ursula bearing the guisarme.",
+   "time_text": "sunset"
+  },
+  {
+   "chapter": "BFOUR-C26",
+   "consequences": "",
+   "id": "evt-390ec9c904",
+   "label": "Ralph meets his parents",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "King Peter",
+    "(unnamed) Queen of Upmeads"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-king-peter",
+    "per-queen-of-upmeads"
+   ],
+   "places": [
+    "House of Black Canons of Wulstead"
+   ],
+   "places_ids": [
+    "bld-house-of-black-canons-of-wulstead"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C26-P015",
+     "q": "here is a daughter and a darling that I have brought back to thee, for this is my wedded wife"
+    }
+   ],
+   "summary": "Ralph and Ursula meet King Peter and the Dame in the canons' church at Wulstead.",
+   "time_text": "evening after sunset"
+  },
+  {
+   "chapter": "BFOUR-C27",
+   "consequences": "",
+   "id": "evt-ad9b49f48f",
+   "label": "Night council at Wulstead",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "Dame Katherine",
+    "Roger of the Rope-walk",
+    "Sage of Swevenham"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman",
+    "per-dame-katherine",
+    "per-roger-of-the-rope-walk",
+    "per-sage-of-swevenham"
+   ],
+   "places": [
+    "Wulstead"
+   ],
+   "places_ids": [
+    "plc-wulstead"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C27-P008",
+     "q": "O my lord, my lord, thou art come again to us!"
+    }
+   ],
+   "summary": "Ralph hears that the Burgers are in Upmeads, orders the muster, and is reunited with Katherine.",
+   "time_text": "night"
+  },
+  {
+   "chapter": "BFOUR-C28",
+   "consequences": "",
+   "id": "evt-67feb560af",
+   "label": "Katherine and the Wise Woman of Sarras",
+   "layer": "backstory",
+   "participants": [
+    "Dame Katherine",
+    "(unnamed) Wise Woman of Sarras",
+    "Valerius"
+   ],
+   "participants_ids": [
+    "per-dame-katherine",
+    "per-wise-woman-of-sarras",
+    "per-valerius"
+   ],
+   "places": [
+    "Sarras the Holy"
+   ],
+   "places_ids": [
+    "plc-sarras-the-holy"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C28-P012",
+     "q": "Thou shalt take this pair of beads, and do with them as I bid thee"
+    }
+   ],
+   "summary": "In Sarras the Holy the Wise Woman teaches Katherine and gives her the beads destined for Ralph.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C28",
+   "consequences": "",
+   "id": "evt-fe834a66f8",
+   "label": "Muster at Wulstead",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-clement-chapman"
+   ],
+   "places": [
+    "Wulstead"
+   ],
+   "places_ids": [
+    "plc-wulstead"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C28-P018",
+     "q": "blowing men to the gathering"
+    }
+   ],
+   "summary": "At dawn the four trumpets call the host to the market-place.",
+   "time_text": "dawn"
+  },
+  {
+   "chapter": "BFOUR-C29",
+   "consequences": "",
+   "id": "evt-7169d3941e",
+   "label": "Battle of Upmeads",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Stephen a-Hurst",
+    "Giles",
+    "Clement Chapman",
+    "Nicholas Longshanks",
+    "Hugh",
+    "(unnamed) expelled Burgers"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-sage-of-swevenham",
+    "per-stephen-a-hurst",
+    "per-giles",
+    "per-clement-chapman",
+    "per-nicholas-longshanks",
+    "per-hugh",
+    "grp-expelled-burgers"
+   ],
+   "places": [
+    "(unnamed) little hill above Upmeads"
+   ],
+   "places_ids": [
+    "fea-little-hill-above-upmeads"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C29-P032",
+     "q": "great and grim was the murder"
+    }
+   ],
+   "summary": "Ralph's host breaks the Burgers on the hill above Upmeads; Nicholas holds the Bridge.",
+   "time_text": "morning, done an hour before noon"
+  },
+  {
+   "chapter": "BFOUR-C30",
+   "consequences": "",
+   "id": "evt-6427a5ee55",
+   "label": "Return of King Peter to Upmeads",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "King Peter",
+    "(unnamed) Queen of Upmeads",
+    "Nicholas Longshanks"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-king-peter",
+    "per-queen-of-upmeads",
+    "per-nicholas-longshanks"
+   ],
+   "places": [
+    "High House of Upmeads"
+   ],
+   "places_ids": [
+    "bld-high-house-of-upmeads"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C30-P012",
+     "q": "So Ralph led his father and his mother to the gate of the garth of High House"
+    }
+   ],
+   "summary": "Ralph brings his parents home to the High House.",
+   "time_text": "afternoon"
+  },
+  {
+   "chapter": "BFOUR-C31",
+   "consequences": "",
+   "id": "evt-39fc55f4c8",
+   "label": "Crowning feast at the High House",
+   "layer": "main",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "King Peter",
+    "(unnamed) Queen of Upmeads"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula",
+    "per-king-peter",
+    "per-queen-of-upmeads"
+   ],
+   "places": [
+    "(unnamed) hall of the High House"
+   ],
+   "places_ids": [
+    "bld-hall-of-the-high-house"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C31-P011",
+     "q": "they cried hail to the King of Upmeads"
+    }
+   ],
+   "summary": "Ralph is set on the throne and proclaimed King of Upmeads, Ursula Queen.",
+   "time_text": "sunset into night"
+  },
+  {
+   "chapter": "BFOUR-C31",
+   "consequences": "",
+   "id": "evt-07314f5e9a",
+   "label": "Peter's foretelling",
+   "layer": "prophecy",
+   "participants": [
+    "King Peter",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-king-peter",
+    "per-ralph"
+   ],
+   "places": [],
+   "places_ids": [],
+   "refs": [
+    {
+     "p": "BFOUR-C31-P013",
+     "q": "he shall be lord and servant of other lands than Upmeads"
+    }
+   ],
+   "summary": "Peter foresees Ralph drawing towns, kindreds and lords into peace and might.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "consequences": "",
+   "id": "evt-ac8b986081",
+   "label": "Ralph's reign",
+   "layer": "epilogue",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "Upmeads"
+   ],
+   "places_ids": [
+    "pol-upmeads"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "he ruled over his lands in right and might"
+    }
+   ],
+   "summary": "Ralph rules Upmeads, holds the Scaur, leads the Burg, the Dry Tree and the Shepherds, and pacifies Higham and both woods.",
+   "time_text": ""
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "consequences": "",
+   "id": "evt-bb65594201",
+   "label": "Bull's visit",
+   "layer": "epilogue",
+   "participants": [
+    "Bull Shockhead",
+    "Otter",
+    "Redhead",
+    "Ralph"
+   ],
+   "participants_ids": [
+    "per-bull-shockhead",
+    "per-otter",
+    "per-redhead",
+    "per-ralph"
+   ],
+   "places": [
+    "Upmeads"
+   ],
+   "places_ids": [
+    "pol-upmeads"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "did him right manly service in battle"
+    }
+   ],
+   "summary": "About two years later the Lord Bull of Utterbol, with Otter and Redhead, rides to battle with Ralph and stays two months.",
+   "time_text": "about two years after the homecoming"
+  },
+  {
+   "chapter": "BFOUR-C32",
+   "consequences": "",
+   "id": "evt-ee39ddcc82",
+   "label": "Death of Ralph and Ursula",
+   "layer": "epilogue",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "participants_ids": [
+    "per-ralph",
+    "per-ursula"
+   ],
+   "places": [
+    "St. Laurence of Upmeads"
+   ],
+   "places_ids": [
+    "bld-st-laurence-of-upmeads"
+   ],
+   "refs": [
+    {
+     "p": "BFOUR-C32-P008",
+     "q": "On one day they two died and were laid together in one tomb in the choir of St. Laurence of Upmeads"
+    }
+   ],
+   "summary": "They die on one day and are laid in one tomb in St. Laurence's choir.",
+   "time_text": ""
+  }
+ ]
+}
