@@ -76,7 +76,7 @@ def quantise(height, levels, sea=0.42):
 
 
 def repair(level, tiles):
-    """Lower corners until every 2x2 cell maps to an existing wang tile."""
+    """Raise corners until every 2x2 cell maps to an existing wang tile."""
     h, w = len(level), len(level[0])
     for _ in range(200):
         changed = False
@@ -86,18 +86,12 @@ def repair(level, tiles):
                 key = tuple(CHAIN[level[cy][cx]] for cy, cx in cs)
                 if key in tiles:
                     continue
-                vals = [level[cy][cx] for cy, cx in cs]
-                lo, hi = min(vals), max(vals)
-                if hi - lo > 1:
-                    # too steep: pull the highest corners down one step
-                    for cy, cx in cs:
-                        if level[cy][cx] == hi:
-                            level[cy][cx] -= 1
-                else:
-                    # diagonal-only pattern (no tile for it): raise the low corners
-                    for cy, cx in cs:
-                        if level[cy][cx] == lo:
-                            level[cy][cx] += 1
+                # too steep, or a diagonal pattern with no tile: raise the low
+                # corners. Levels only go up, so this always terminates.
+                lo = min(level[cy][cx] for cy, cx in cs)
+                for cy, cx in cs:
+                    if level[cy][cx] == lo:
+                        level[cy][cx] += 1
                 changed = True
         if not changed:
             return level

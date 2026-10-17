@@ -10,10 +10,20 @@ PUNY_WORLD_v1.zip ships `punyworld-overworld-tiles.tsx` with a corner wangset
 A noise heightmap picks the ground level at each tile corner; dirt patches are
 sprinkled on grass, and a separate forest noise places trees on the overlay
 layer (only over grass). Corners are repaired until every cell has a real
-wang tile, so the result is also a valid Tiled map (.tmj, two layers).
+wang tile.
+
+puny_world_features.py then adds rivers (streams, wide reaches, tributaries),
+settlement sites, roads linking them, and bridges. Output per map:
+
+    punyworld_s<seed>.png            preview
+    punyworld_s<seed>.tmj            Tiled map: Ground, Trees, Bridges layers
+    punyworld_s<seed>.features.json  sites, river and road courses, bridges
+
+The same seed and arguments always give the same map.
 
 Usage:
-    python3 tools/puny_world_terrain.py --size 64 40 --seed 3 -n 2
+    python3 tools/puny_world_terrain.py --size 64 40 --seed 3 -n 4
+    python3 tools/puny_world_terrain.py --rivers 0 --sites 0   # terrain only
 """
 import argparse
 import json
@@ -26,6 +36,7 @@ from PIL import Image
 
 from assetzip import AssetZip
 from puny_terrain import value_noise
+from puny_world_features import DIRS, ROCK_RIVER, Features
 
 ZIP = "PUNY_WORLD_v1.zip"
 TSX = "PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx"
@@ -45,7 +56,17 @@ def load(z):
     for wt in ws.findall("wangtile"):
         w = [int(v) for v in wt.get("wangid").split(",")]
         tiles.setdefault((w[7], w[1], w[3], w[5]), []).append(int(wt.get("tileid")))
-    return img, cols, ids, tiles
+    # edge wangset: path colour -> {(N, E, S, W) connected flags: [tile ids]}
+    pw = next(w for w in root.iter("wangset") if w.get("name") == "pathways")
+    pids = {c.get("name"): i for i, c in enumerate(pw.findall("wangcolor"), start=1)}
+    paths = {"dirt": {}, "water": {}}
+    for wt in pw.findall("wangtile"):
+        w = [int(v) for v in wt.get("wangid").split(",")]
+        edges = (w[0], w[2], w[4], w[6])
+        for name, colour in (("dirt", pids["dirt-paths"]), ("water", pids["water-paths"])):
+            if set(edges) <= {0, colour}:
+                paths[name].setdefault(tuple(e == colour for e in edges), []).append(int(wt.get("tileid")))
+    return img, cols, ids, tiles, paths
 
 
 def cell_keys(grid, x, y):
@@ -112,57 +133,106 @@ def generate(w, h, rng, ids, tiles):
     over = [[ids["trees"] if ground[y][x] == ids["grass"] and forest[y][x] > 0.55 and height[y][x] > cut[-1] + 0.08
              else ids["air"] for x in range(w + 1)] for y in range(h + 1)]
     drop_invalid(over, ok, ids["trees"], ids["air"])
-    return ground, over
+    return ground, over, height
+
+
+def path_tile(paths, kind, dirs, rng):
+    return rng.choice(paths[kind][tuple(d in dirs for d in DIRS)])
+
+
+def build_map(w, h, seed, rivers=1, tributaries=1, sites=4, exits=1, assets=None):
+    """Generate one map. Returns (layers, features) where layers maps layer name
+    to a row-major list of tile ids (-1 = empty)."""
+    sheet, cols, ids, tiles, paths = assets or load(AssetZip(ZIP))
+    rng = random.Random(seed)
+    ground, over, height = generate(w, h, rng, ids, tiles)
+    feat = Features(w, h, ground, height, ids, rng)
+    if rivers:
+        feat.make_rivers(rivers, tributaries)
+    if sites:
+        feat.make_sites(sites, exits)
+        feat.make_roads()
+    feat.clear_ground_and_trees(over)
+
+    river, grass = ids["river"], ids["grass"]
+    layers = {"Ground": [], "Trees": [], "Bridges": []}
+    for y in range(h):
+        for x in range(w):
+            c = (x, y)
+            if c in feat.connectors:
+                tid = feat.connectors[c]
+            elif feat.touches_body(c):
+                key = tuple(river if k in feat.body else grass
+                            for k in [(x, y), (x + 1, y), (x + 1, y + 1), (x, y + 1)])
+                tid = rng.choice(tiles[key])
+                if key == (river,) * 4 and rng.random() < 0.06:
+                    tid = ROCK_RIVER
+            elif c in feat.stream:
+                tid = path_tile(paths, "water", feat.stream[c], rng)
+            elif c in feat.road:
+                tid = path_tile(paths, "dirt", feat.road[c], rng)
+            else:
+                tid = rng.choice(tiles[cell_keys(ground, x, y)])
+            layers["Ground"].append(tid)
+            key = cell_keys(over, x, y)
+            layers["Trees"].append(-1 if key == (ids["air"],) * 4 else rng.choice(tiles[key]))
+            layers["Bridges"].append(feat.bridges.get(c, -1))
+    return layers, feat
+
+
+def render(layers, w, h, sheet, cols):
+    img = Image.new("RGBA", (w * T, h * T))
+    for data in layers.values():
+        for i, tid in enumerate(data):
+            if tid >= 0:
+                sx, sy = (tid % cols) * T, (tid // cols) * T
+                img.alpha_composite(sheet.crop((sx, sy, sx + T, sy + T)), ((i % w) * T, (i // w) * T))
+    return img
+
+
+def to_tmj(layers, w, h):
+    return {
+        "type": "map", "orientation": "orthogonal", "renderorder": "right-down",
+        "width": w, "height": h, "tilewidth": T, "tileheight": T, "infinite": False,
+        "nextlayerid": len(layers) + 1, "nextobjectid": 1,
+        "layers": [{"id": i + 1, "name": name, "type": "tilelayer", "x": 0, "y": 0,
+                    "width": w, "height": h, "opacity": 1, "visible": True,
+                    "data": [t + 1 for t in data]}
+                   for i, (name, data) in enumerate(layers.items())],
+        "tilesets": [{"firstgid": 1, "source": "punyworld-overworld-tiles.tsx"}],
+    }
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--size", type=int, nargs=2, default=[48, 32], metavar=("W", "H"))
-    ap.add_argument("--seed", type=int, default=None)
+    ap.add_argument("--seed", type=int, default=0, help="first seed; map k uses seed+k")
     ap.add_argument("-n", type=int, default=1)
+    ap.add_argument("--rivers", type=int, default=1)
+    ap.add_argument("--tributaries", type=int, default=1)
+    ap.add_argument("--sites", type=int, default=4, help="settlements to link by road (0 = no roads)")
+    ap.add_argument("--exits", type=int, default=1, help="roads leaving the map edge")
     ap.add_argument("-o", "--out", default="out/punyworld")
     ap.add_argument("--scale", type=int, default=2)
     args = ap.parse_args()
 
-    z = AssetZip(ZIP)
-    sheet, cols, ids, tiles = load(z)
-    air_full = (ids["air"],) * 4
-    rng = random.Random(args.seed)
+    assets = load(AssetZip(ZIP))
+    sheet, cols = assets[0], assets[1]
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     w, h = args.size
-
-    for n in range(args.n):
-        ground, over = generate(w, h, rng, ids, tiles)
-        img = Image.new("RGBA", (w * T, h * T))
-        layers = []
-        for grid in (ground, over):
-            data = []
-            for y in range(h):
-                for x in range(w):
-                    key = cell_keys(grid, x, y)
-                    if key == air_full:
-                        data.append(0)
-                        continue
-                    tid = rng.choice(tiles[key])
-                    data.append(tid + 1)
-                    sx, sy = (tid % cols) * T, (tid // cols) * T
-                    img.alpha_composite(sheet.crop((sx, sy, sx + T, sy + T)), (x * T, y * T))
-            layers.append(data)
-        name = f"punyworld_{n:02d}"
+    for k in range(args.n):
+        seed = args.seed + k
+        layers, feat = build_map(w, h, seed, args.rivers, args.tributaries, args.sites,
+                                 args.exits, assets)
+        name = f"punyworld_s{seed}"
+        img = render(layers, w, h, sheet, cols)
         img.resize((img.width * args.scale, img.height * args.scale), Image.NEAREST) \
             .save(out / f"{name}.png")
-        tmj = {
-            "type": "map", "orientation": "orthogonal", "renderorder": "right-down",
-            "width": w, "height": h, "tilewidth": T, "tileheight": T, "infinite": False,
-            "nextlayerid": 3, "nextobjectid": 1,
-            "layers": [{"id": i + 1, "name": nm, "type": "tilelayer", "x": 0, "y": 0,
-                        "width": w, "height": h, "opacity": 1, "visible": True, "data": d}
-                       for i, (nm, d) in enumerate(zip(("Ground", "Trees"), layers))],
-            "tilesets": [{"firstgid": 1, "source": "punyworld-overworld-tiles.tsx"}],
-        }
-        (out / f"{name}.tmj").write_text(json.dumps(tmj))
-        print("wrote", out / f"{name}.png")
+        (out / f"{name}.tmj").write_text(json.dumps(to_tmj(layers, w, h)))
+        (out / f"{name}.features.json").write_text(json.dumps({"seed": seed, **feat.summary()}))
+        print("wrote", out / f"{name}.png", f"rivers={len(feat.rivers)} roads={len(feat.roads)} "
+              f"bridges={len(feat.bridges)} sites={len(feat.sites)}")
 
 
 if __name__ == "__main__":

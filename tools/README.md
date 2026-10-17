@@ -33,12 +33,34 @@ Biomes: `temperate`, `winter`, `desert`, `marsh`. Writes a PNG plus a JSON corne
 python3 tools/miniworld_terrain.py --biome temperate --size 64 40 --seed 3
 ```
 
-## puny_world_terrain.py
+## puny_world_terrain.py (+ puny_world_features.py)
 
-Overworld maps from the **free** Puny World tileset, using the Tiled terrain data in its own `.tsx`
-(sea depths, sand, grass, dirt patches, and a trees overlay). Writes a PNG and a two-layer Tiled `.tmj`
-(put it next to `punyworld-overworld-tiles.tsx` to open it in Tiled).
+Overworld maps from the **free** Puny World tileset, using the Tiled terrain data in its own `.tsx`:
+sea depths, sand, grass, dirt patches, a trees overlay, and
+
+- **rivers**: a main river from an inland spring to a map edge, plus a tributary joining it with a
+  T-junction. Streams use the tileset's water-path tiles; some stretches widen into the "river"
+  terrain and join the stream through Shade's connector tiles (275/301/303/329).
+- **roads**: dirt paths linking settlement sites (plus one road off the map edge) along a minimum
+  spanning tree; later roads reuse earlier ones, so junctions form naturally.
+- **bridges**: only where a stream runs straight across the road (848 or 876 on a `Bridges` layer),
+  never next to a spring. As in Shade's sample map, road tiles stop at the bridge.
+
+Writes `punyworld_s<seed>.png`, a three-layer Tiled `.tmj` (Ground, Trees, Bridges; put it next to
+`punyworld-overworld-tiles.tsx` to open it) and `punyworld_s<seed>.features.json` (sites, river and
+road courses, bridges). The same seed always gives the same map.
 
 ```sh
-python3 tools/puny_world_terrain.py --size 64 40 --seed 3 -n 2
+python3 tools/puny_world_terrain.py --size 64 44 --seed 1 -n 4
+python3 tools/puny_world_terrain.py --rivers 0 --sites 0     # terrain only
+```
+
+Limitations: the river terrain has no transitions to sand or sea, so rivers run through grassland and
+off the map edge (as in Shade's samples) rather than into the sea. Wide reaches need straight entry and
+exit, so they mostly appear where a river leaves the map.
+
+## Tests
+
+```sh
+python3 -m unittest discover -s tests -v
 ```

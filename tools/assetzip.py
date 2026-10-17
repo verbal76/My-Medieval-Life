@@ -15,8 +15,14 @@ class AssetZip:
         self.root = root.strip("/")
 
     def _path(self, rel):
-        p = posixpath.normpath(posixpath.join(self.root, rel)) if self.root else rel
-        return p
+        return posixpath.normpath(posixpath.join(self.root, rel) if self.root else rel)
+
+    def exists(self, rel):
+        try:
+            self.zip.getinfo(self._path(rel))
+            return True
+        except KeyError:
+            return False
 
     def read(self, rel):
         return self.zip.read(self._path(rel))

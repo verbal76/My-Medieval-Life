@@ -51,11 +51,9 @@ def render(z, tmj_path):
         # some sample maps point at "../x.tsx" when x.tsx sits next to the map
         fallback = posixpath.join(base, posixpath.basename(t["source"]))
         for candidate in (path, fallback):
-            try:
+            if z.exists(candidate):
                 tilesets.append(Tileset(z, candidate, t["firstgid"]))
                 break
-            except KeyError:
-                continue
         else:
             print(f"warning: {tmj_path}: tileset {t['source']} not in archive")
     tilesets.sort(key=lambda t: t.firstgid)
