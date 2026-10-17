@@ -1,0 +1,176 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) pound of the Well",
+   "aliases": [],
+   "type": "building",
+   "subtype": "stone basin",
+   "unnamed": true,
+   "summary": "The Well's stone enclosure, draining seaward by three arches; as if cut from a mountain's foot.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C22-P012",
+     "q": "the waters of the Well flowed seaward from the black-walled pound by three arched openings in its outer face"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "other",
+   "b": "Nicholas Longshanks",
+   "detail": "rode with him against raiders at sixteen",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P006",
+     "q": "Nicholas Longshanks, who is a wise man of war, gathered force and went against them, and I must needs ride beside him"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "After drinking, old scars vanish: Ralph's sword scar and Ursula's hart wound.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P008",
+     "q": "There is no mark of the sword's pilgrimage on thy shoulder"
+    },
+    {
+     "p": "BTHREE-C22-P011",
+     "q": "In sooth here is no mark nor blemish"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Upmeads",
+   "statement": "When Ralph was sixteen, raiders rode into Upmeads and were driven off by Nicholas Longshanks.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P006",
+     "q": "when I was but a lad of sixteen winters there rode men a-lifting into Upmeads"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Ursula",
+   "statement": "Five years ago a hart's tine gored her in the forest and a woodman thought her dead.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P010",
+     "q": "here on my side yesterday was the token of the hart's tyne that gored me when I was a young maiden five years ago"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) ness of the World's End",
+   "statement": "Deer, thrushes and hares there are tame and come to the hand.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P015",
+     "q": "the deer of that place, both little and great, had no fear of man, but the hart and hind came to Ursula's hand"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ralph",
+   "statement": "Ralph dreams that the High House of Upmeads greets them, which he takes as a call to deeds.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P013",
+     "q": "the ancient House spake to me with the voice of a man, greeting both thee and me"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "After the draught",
+   "chapter": "BTHREE-C22",
+   "layer": "main",
+   "time_text": "late afternoon to night",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) ness of the World's End"
+   ],
+   "summary": "They find their scars healed, bathe in a salt pool, and spend the evening in the tame meadows at the world's end.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C22-P015",
+     "q": "it seemed to them that they had come into the very Garden of God"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Canon proof of renewal: old scars vanish. Keep as narrative marker; any stat-based system is GAME EXPANSION.",
+   "system": "magic",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C22-P008",
+     "q": "There is no mark of the sword's pilgrimage on thy shoulder"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C22",
+ "chapters": [
+  "BTHREE-C22"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C22",
+   "paragraphs_total": 14,
+   "all_paragraphs_read": true,
+   "summary": "They wake toward evening as the tide returns. Ursula asks about scars as a sign of renewal. Ralph had a sword-scar on the shoulder from a raid on Upmeads at sixteen, when he rode with Nicholas Longshanks against lifters; in a tidal salt pool Ursula finds it gone, and her own scar from a hart's tine five years ago is gone too. They notice the Well drains seaward through three arched openings in the pound's outer wall, which is masterfully built. Ralph dreams of the High House of Upmeads greeting them and is eager for the road; Ursula says his foes already fear him. They walk the green meadows, where deer, thrushes and hares are tame, like the Garden of God, and sleep by the green knoll to the sound of the Well.",
+   "geography_notes": "A salt pool lies in a rocky bight to the right of the Well's stream on the sands. The Well's pound drains through three arched openings in its seaward face. Green slopes lie between the sea and the rough mountain.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

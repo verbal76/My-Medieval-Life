@@ -1,0 +1,226 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) black-sand river",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": true,
+   "summary": "Fair little river winding mostly east, crystal clear over black sands, with willow-herb on its banks; waymarked as safe.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "a fair little river before them winding about exceedingly, but flowing eastward on the whole"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) black rock reefs",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "rock reefs",
+   "unnamed": true,
+   "summary": "Black rock reefs on both sides of the way, like the Great Mountains' rock, rising toward the east.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C19-P004",
+     "q": "ran a reef of rocks, so that their way seemed to be as between two walls"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "(unnamed) black-sand river",
+   "rel": "east_of",
+   "b": "Thirsty Desert",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "about four days past the Dry Tree",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "So when they had ridden but three miles, they saw a fair little river before them"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) black-sand river",
+   "rel": "flows_into",
+   "b": "Ocean Sea",
+   "direction": "flows eastward on the whole, toward the sea",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "flexible",
+   "classification": "CANON-INFERRED",
+   "confidence": "low",
+   "note": "river course",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "flowing eastward on the whole"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) black rock reefs",
+   "rel": "other",
+   "b": "Thirsty Desert",
+   "direction": "run eastward, higher as they go, near on the right, far on the left",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P004",
+     "q": "as the reefs ran eastward they seemed to grow higher"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "(unnamed) valley of the Dry Tree",
+   "to": "(unnamed) black-sand river",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "about four days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "salt ridges fading to a swelling plain, then grass",
+   "chapter": "BTHREE-C19",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P002",
+     "q": "the next again the waste was but a swelling plain"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "Thirsty Desert",
+   "statement": "The salt crust ends and dwarf willow and willow-herb appear near water.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P003",
+     "q": "rough grass mingled with willow-herb, whereby Ralph judged that they drew nigh to water"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) black-sand river",
+   "statement": "The way-sign on a rock by the water shows it is safe to drink.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "whereon was graven the sign of the way, so they knew that there was no evil in the water"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) black-sand river",
+   "statement": "A far-off roar like many waters is heard (the sea).",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "Ralph said he could hear a great roar like the sound of many waters, but very far off"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Out of the Thirsty Desert",
+   "chapter": "BTHREE-C19",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) black-sand river"
+   ],
+   "summary": "Nearly out of water, they reach a safe river and recover.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "they drank their fill and watered their horses abundantly"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Safe-water waymarks contrasted with the poisoned pool.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C19-P005",
+     "q": "Close to the water was a black rock, as big as a man, whereon was graven the sign of the way"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C19",
+ "chapters": [
+  "BTHREE-C19"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C19",
+   "paragraphs_total": 4,
+   "all_paragraphs_read": true,
+   "summary": "Past the valley of the Dry Tree the dead dwindle; the salt crust ends that day, the ridges lower over two days to a swelling plain with dwarf willow and harsh herbage. Fodder is gone and water nearly so. By night they camp by bushes and willow-herb; beasts roar. Next morning Ralph sees woodland on rising ground about two miles ahead and dark mountain tops beyond, with black rock reefs running east on either side (near on the right, far on the left), like those by the Fighting Man and rising as they go east. Three miles on, a winding, crystal-clear little river with black sands flows mostly east; a black rock by it bears the way-sign, so the water is safe. They drink, ford it knee-deep, bathe and rest. Ralph hears a far-off roar like many waters.",
+   "geography_notes": "East of the Dry Tree valley: salt crust ends the same day; ridges lower for two days into a swelling plain with dwarf willow; then bushes, rough grass and willow-herb. Black rock reefs run east on both sides, growing higher eastward, enclosing the way. About two miles on, woodland on rising ground; beyond it, tops of dark mountains. A small river winds east, with clear water, black sands, pink willow-herb, a waymarked black rock and a knee-deep ford; good grass beyond.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

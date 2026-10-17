@@ -2117,44 +2117,100 @@
    "title": "They Come Out of the Thirsty Desert",
    "body_paragraphs": 4,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 0,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C19.txt",
+    "records": "research/extraction/chapters/BTHREE-C19.json"
+   }
   },
   {
    "chapter": "BTHREE-C20",
    "title": "They Come to the Ocean Sea",
    "body_paragraphs": 6,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 0,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 2,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "The sun sets over the sea beyond the ness, so the ness may point west or the sea wraps around it. How does this fit their eastward journey?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C20.txt",
+    "records": "research/extraction/chapters/BTHREE-C20.json"
+   }
   },
   {
    "chapter": "BTHREE-C21",
    "title": "Now They Drink of the Well at the World's End",
    "body_paragraphs": 19,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 0,
+    "spatial": 2,
+    "travel": 0,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C21.txt",
+    "records": "research/extraction/chapters/BTHREE-C21.json"
+   }
   },
   {
    "chapter": "BTHREE-C22",
    "title": "Now They Have Drunk and Are Glad",
    "body_paragraphs": 14,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 1,
+    "spatial": 0,
+    "travel": 0,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTHREE-C22.txt",
+    "records": "research/extraction/chapters/BTHREE-C22.json"
+   }
   },
   {
    "chapter": "BFOUR-C1",

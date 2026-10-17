@@ -1,0 +1,251 @@
+{
+ "entities": [
+  {
+   "name": "Well at the World's End",
+   "aliases": [
+    "the Well",
+    "the Water of the Well"
+   ],
+   "type": "feature",
+   "subtype": "sacred spring",
+   "unnamed": false,
+   "summary": "Sweet spring gushing from the cliff into a man-built stone pound at the sea's edge; marked with the Sword and Bough and an inscription.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C21-P002",
+     "q": "right up against the cliff, was builded by man's hand of huge stones a garth or pound, the wall whereof was some seven feet high, and the pound within the wall of forty feet space endlong and overthwart"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) cup of the Well",
+   "aliases": [],
+   "type": "item",
+   "subtype": "gold cup",
+   "unnamed": true,
+   "summary": "Goldsmith's cup with the sword and bough, the rim posy \"The strong of heart shall drink from me\", kept behind a stone door on bronze hinges.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C21-P011",
+     "q": "within was a cup of goldsmith's work, with the sword and the bough done thereon"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) inscription of the Well",
+   "aliases": [],
+   "type": "text",
+   "subtype": "inscription",
+   "unnamed": true,
+   "summary": "Words carved above the issue of the waters warning that only those strong enough in desire to bear length of days should drink.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C21-P005",
+     "q": "DRINK OF ME, IF YE DEEM THAT YE BE STRONG ENOUGH IN DESIRE TO BEAR LENGTH OF DAYS"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) ambry of the cup",
+   "aliases": [],
+   "type": "building",
+   "subtype": "stone cupboard",
+   "unnamed": true,
+   "summary": "Square stone door with a weathered latten knob, hung on brazen hinges, in the cliff wall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C21-P011",
+     "q": "it was a door made of a squared stone hung on brazen hinges"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Well at the World's End",
+   "rel": "at_foot_of",
+   "b": "(unnamed) ness of the World's End",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "cliff foot above black tidal sands",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "below the toft and stair",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P002",
+     "q": "just below the place where they stood, right up against the cliff"
+    }
+   ]
+  },
+  {
+   "a": "Well at the World's End",
+   "rel": "flows_into",
+   "b": "Ocean Sea",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "a wide stream across the black sand",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P002",
+     "q": "made a wide stream through the black sand of the foreshore"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The inscription says drink only if strong enough in desire to bear length of days, otherwise tell the world of the marvel.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P005",
+     "q": "OR ELSE DRINK NOT; BUT TELL YOUR FRIENDS AND THE KINDREDS OF THE EARTH HOW YE HAVE SEEN A GREAT MARVEL"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The water is sweet, not salt; drinking brings a sweet weariness and sleep.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P013",
+     "q": "he felt that the water was sweet without any saltness of the sea"
+    },
+    {
+     "p": "BTHREE-C21-P016",
+     "q": "a sweet weariness began to steal over them"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Well at the World's End",
+   "statement": "Seekers drink from the cup in the hallowed raiment from the House of the Sorceress, then return it to its cupboard.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P016",
+     "q": "he put the cup into the ambrye, and shut it up again"
+    }
+   ]
+  },
+  {
+   "category": "architecture",
+   "subject": "Well at the World's End",
+   "statement": "The pound is of huge ashlar; water overflows its lip in a thin veil.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P002",
+     "q": "it ran over the lip on all sides, making a thin veil over the huge ashlar-stones of the garth"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Ocean Sea",
+   "statement": "Large tides: half a mile of sand bared at ebb.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P002",
+     "q": "the sea, which last night had washed the face of the cliff, had now ebbed far out, and left bare betwixt the billows and the cliff some half mile of black sand"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Drinking of the Well",
+   "chapter": "BTHREE-C21",
+   "layer": "main",
+   "time_text": "morning, low tide",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "Well at the World's End"
+   ],
+   "summary": "Ralph and Ursula drink of the Well at the World's End and fall asleep.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C21-P015",
+     "q": "To the Earth, and the World of Manfolk!"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "The Well as a canon moral threshold: drinking is a choice that requires strength of desire. Game systems must not make the Well a casual consumable.",
+   "system": "magic",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C21-P005",
+     "q": "IF YE DEEM THAT YE BE STRONG ENOUGH IN DESIRE TO BEAR LENGTH OF DAYS"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C21",
+ "chapters": [
+  "BTHREE-C21"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C21",
+   "paragraphs_total": 19,
+   "all_paragraphs_read": true,
+   "summary": "At morning low tide, half a mile of black sand with black rocks lies bare below the cliff. Built against the cliff foot is a pound of huge stones, seven feet high and forty feet square, filled by a spring from the cliff, overflowing and running seaward in a wide stream: the Well at the World's End. In the hallowed raiment they go down the stair to a ledge by the gushing water, where the Sword and Bough are carved with the inscription: \"Ye who have come a long way to look upon me, drink of me, if ye deem that ye be strong enough in desire to bear length of days: or else drink not; but tell your friends and the kindreds of the earth how ye have seen a great marvel.\" Behind a stone door with a latten knob is a gold cup bearing the token and the posy \"The strong of heart shall drink from me.\" Ralph fills it; Ursula drinks \"to thy life, beloved\", and Ralph drinks \"to the Earth, and the World of Manfolk\". The water is sweet, not salt. A sweet weariness takes them and they sleep.",
+   "geography_notes": "Below the cliff at low tide: about half a mile of black sand with black rocks. Against the cliff: a man-built stone pound, seven feet high and forty feet square, filled by a spring gushing from a hollow in the cliff, overflowing on all sides and draining seaward unseen, making a wide stream across the sand. A rock-hewn stair leads to a level ledge (bench-table) beside the gush. Light westerly airs.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

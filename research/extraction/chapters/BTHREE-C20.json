@@ -1,0 +1,271 @@
+{
+ "entities": [
+  {
+   "name": "Ocean Sea",
+   "aliases": [
+    "the Sea",
+    "ocean-sea"
+   ],
+   "type": "feature",
+   "subtype": "ocean",
+   "unnamed": false,
+   "summary": "The ocean that girdles the earth, reached at the end of a great ness.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C20-P003",
+     "q": "they must needs come to the verge of the Ocean-Sea, which girdles the earth about"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) ness of the World's End",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "promontory",
+   "unnamed": true,
+   "summary": "Great ness with sea on three sides, ending in a cliff under a hundred feet high; nothing beyond.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C20-P003",
+     "q": "they were nigh-hand at the ending of a great ness, and there was naught beyond it"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) grass hills before the sea",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "hills",
+   "unnamed": true,
+   "summary": "Great grass-grown hills, wooded at their feet, not hard to pass.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C20-P002",
+     "q": "being rather great hills than mountains, grass-grown, and at their feet somewhat wooded"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) toft and token-stone at the World's End",
+   "aliases": [],
+   "type": "building",
+   "subtype": "marker",
+   "unnamed": true,
+   "summary": "Low green mound on the point of the ness with a square stone carved with the token on each face.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C20-P005",
+     "q": "on the very point of the ness was a low green toft with a square stone set atop of it, whereon as they drew nigh they saw the token graven, yea on each face thereof"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) stair in the cliff",
+   "aliases": [],
+   "type": "building",
+   "subtype": "rock stair",
+   "unnamed": true,
+   "summary": "Stair cut in the cliff face, its first step marked with the token.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C20-P007",
+     "q": "they could behold a kind of stair cut in the side of the cliff, and on the first step whereof was the token done"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "(unnamed) grass hills before the sea",
+   "rel": "east_of",
+   "b": "(unnamed) black-sand river",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "a day and a half through a small wood",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "beyond the wood",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P002",
+     "q": "before sunset they were come to its outskirts, and the mountains lay before them"
+    }
+   ]
+  },
+  {
+   "a": "Ocean Sea",
+   "rel": "beyond",
+   "b": "(unnamed) grass hills before the sea",
+   "direction": "",
+   "distance_text": "three or four miles from the crest",
+   "travel_time_text": "five hours' climb from the dell",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "sea ahead and on either hand",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P003",
+     "q": "some three or four miles away, the blue landless sea and on either hand of them was the sea also"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) toft and token-stone at the World's End",
+   "rel": "within",
+   "b": "(unnamed) ness of the World's End",
+   "direction": "on the very point",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P005",
+     "q": "on the very point of the ness"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "(unnamed) black-sand river",
+   "to": "(unnamed) ness of the World's End",
+   "via": [
+    "(unnamed) grass hills before the sea"
+   ],
+   "mode": "horse and on foot",
+   "direction_text": "",
+   "duration_text": "about three days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "small wood, grass hills, waymarked pass, mountain climb, green slopes",
+   "chapter": "BTHREE-C20",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P003",
+     "q": "in five hours' time they were at the mountain-top"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Ocean Sea",
+   "statement": "The Sage and his books taught that seekers must reach the verge of the earth-girdling Ocean-Sea.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P003",
+     "q": "for they had learned by the Sage and his books that they must needs come to the verge of the Ocean-Sea"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) ness of the World's End",
+   "statement": "The world ends without a wall or strange land: grass, trees and streams simply give way to the sea.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P005",
+     "q": "without any great rock-wall or girdle of marvellous and strange land, there was an end of earth"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Arrival at the World's End",
+   "chapter": "BTHREE-C20",
+   "layer": "main",
+   "time_text": "evening",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) ness of the World's End"
+   ],
+   "summary": "Ralph and Ursula reach the end of the ness above the Ocean Sea.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P007",
+     "q": "it was no long time ere they twain slept fast at the uttermost end of the world"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "The sun sets \"beyond them\" over the sea at the ness's tip after an eastward journey; the ness's orientation is unclear.",
+   "refs": [
+    {
+     "p": "BTHREE-C20-P007",
+     "q": "the sun was setting beyond them"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "The world's edge as an ocean-bounded promontory: the eastern map limit for generation (canon, fixed).",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C20-P005",
+     "q": "there was an end of earth, with its grass and trees and streams, and a beginning of the ocean"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C20",
+ "chapters": [
+  "BTHREE-C20"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C20",
+   "paragraphs_total": 6,
+   "all_paragraphs_read": true,
+   "summary": "They rest in the wood, which is small; by sunset next day they are through it and before mountains that are rather great grass-grown hills, wooded at their feet. Entering by a waymarked pass, they camp in a dell on the biggest fell and hear the roar of the Ocean Sea, which girdles the earth. Next day, after five hours' climb, they see green slopes with trees, then three or four miles off the blue landless sea ahead and on both sides: they are near the end of a great ness. Below, the land simply ends at a cliff under a hundred feet high. On the point is a low green mound with a square stone carved with the token on every face, and a waymarked stair cut down the cliff toward the sea. They search a mile each way, find nothing else, and sleep behind the mound at the world's end.",
+   "geography_notes": "The wood beyond the black-sand river is about a day across. Then grass-grown great hills (not like the Great Mountains), wooded at their feet, with a waymarked pass to a dell on the biggest fell. Five hours' climb reaches the crest; beyond, green slopes with trees, then the sea three or four miles off, on three sides: the tip of a great ness. A cliff under a hundred feet; a green mound with a carved square stone on the point; a stair cut into the cliff. The sun sets \"beyond them\" over the sea.",
+   "open_questions": [
+    "The sun sets over the sea beyond the ness, so the ness may point west or the sea wraps around it. How does this fit their eastward journey?"
+   ]
+  }
+ ]
+}

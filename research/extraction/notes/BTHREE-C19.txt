@@ -1,0 +1,21 @@
+@ BTHREE-C19
+summary: Past the valley of the Dry Tree the dead dwindle; the salt crust ends that day, the ridges lower over two days to a swelling plain with dwarf willow and harsh herbage. Fodder is gone and water nearly so. By night they camp by bushes and willow-herb; beasts roar. Next morning Ralph sees woodland on rising ground about two miles ahead and dark mountain tops beyond, with black rock reefs running east on either side (near on the right, far on the left), like those by the Fighting Man and rising as they go east. Three miles on, a winding, crystal-clear little river with black sands flows mostly east; a black rock by it bears the way-sign, so the water is safe. They drink, ford it knee-deep, bathe and rest. Ralph hears a far-off roar like many waters.
+geo: East of the Dry Tree valley: salt crust ends the same day; ridges lower for two days into a swelling plain with dwarf willow; then bushes, rough grass and willow-herb. Black rock reefs run east on both sides, growing higher eastward, enclosing the way. About two miles on, woodland on rising ground; beyond it, tops of dark mountains. A small river winds east, with clear water, black sands, pink willow-herb, a waymarked black rock and a knee-deep ford; good grass beyond.
+open: none
+
+E feature | (unnamed) black-sand river | - | river | Fair little river winding mostly east, crystal clear over black sands, with willow-herb on its banks; waymarked as safe. | P005 `a fair little river before them winding about exceedingly, but flowing eastward on the whole`
+E feature | (unnamed) black rock reefs | - | rock reefs | Black rock reefs on both sides of the way, like the Great Mountains' rock, rising toward the east. | P004 `ran a reef of rocks, so that their way seemed to be as between two walls`
+
+S (unnamed) black-sand river | east_of | Thirsty Desert | time=about four days past the Dry Tree; cert=constrained | CANON/high | - | P005 `So when they had ridden but three miles, they saw a fair little river before them`
+S (unnamed) black-sand river | flows_into | Ocean Sea | dir=flows eastward on the whole, toward the sea; cert=flexible | INF/low | river course | P005 `flowing eastward on the whole`
+S (unnamed) black rock reefs | other | Thirsty Desert | dir=run eastward, higher as they go, near on the right, far on the left; cert=fixed | CANON/high | - | P004 `as the reefs ran eastward they seemed to grow higher`
+
+T Ralph, Ursula | (unnamed) valley of the Dry Tree | (unnamed) black-sand river | mode=horse; dur=about four days; terrain=salt ridges fading to a swelling plain, then grass | P002 `the next again the waste was but a swelling plain`
+
+F ecology | Thirsty Desert | The salt crust ends and dwarf willow and willow-herb appear near water. | CANON/high | P003 `rough grass mingled with willow-herb, whereby Ralph judged that they drew nigh to water`
+F magic | (unnamed) black-sand river | The way-sign on a rock by the water shows it is safe to drink. | CANON/high | P005 `whereon was graven the sign of the way, so they knew that there was no evil in the water`
+F ecology | (unnamed) black-sand river | A far-off roar like many waters is heard (the sea). | CANON/high | P005 `Ralph said he could hear a great roar like the sound of many waters, but very far off`
+
+V main | Out of the Thirsty Desert | Nearly out of water, they reach a safe river and recover. | who=Ralph, Ursula; where=(unnamed) black-sand river | P005 `they drank their fill and watered their horses abundantly`
+
+O world | Safe-water waymarks contrasted with the poisoned pool. | P005 `Close to the water was a black rock, as big as a man, whereon was graven the sign of the way`

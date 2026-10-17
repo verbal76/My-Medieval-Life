@@ -1,0 +1,18 @@
+@ BTHREE-C22
+summary: They wake toward evening as the tide returns. Ursula asks about scars as a sign of renewal. Ralph had a sword-scar on the shoulder from a raid on Upmeads at sixteen, when he rode with Nicholas Longshanks against lifters; in a tidal salt pool Ursula finds it gone, and her own scar from a hart's tine five years ago is gone too. They notice the Well drains seaward through three arched openings in the pound's outer wall, which is masterfully built. Ralph dreams of the High House of Upmeads greeting them and is eager for the road; Ursula says his foes already fear him. They walk the green meadows, where deer, thrushes and hares are tame, like the Garden of God, and sleep by the green knoll to the sound of the Well.
+geo: A salt pool lies in a rocky bight to the right of the Well's stream on the sands. The Well's pound drains through three arched openings in its seaward face. Green slopes lie between the sea and the rough mountain.
+open: none
+
+E building | (unnamed) pound of the Well | - | stone basin | The Well's stone enclosure, draining seaward by three arches; as if cut from a mountain's foot. | P012 `the waters of the Well flowed seaward from the black-walled pound by three arched openings in its outer face`
+
+R Ralph | other | Nicholas Longshanks | rode with him against raiders at sixteen | backstory | CANON/high | P006 `Nicholas Longshanks, who is a wise man of war, gathered force and went against them, and I must needs ride beside him`
+
+F magic | Well at the World's End | After drinking, old scars vanish: Ralph's sword scar and Ursula's hart wound. | CANON/high | P008 `There is no mark of the sword's pilgrimage on thy shoulder`; P011 `In sooth here is no mark nor blemish`
+F history | Upmeads | When Ralph was sixteen, raiders rode into Upmeads and were driven off by Nicholas Longshanks. | CANON/high; ctx=dialogue:Ralph | P006 `when I was but a lad of sixteen winters there rode men a-lifting into Upmeads`
+F history | Ursula | Five years ago a hart's tine gored her in the forest and a woodman thought her dead. | CANON/high; ctx=dialogue:Ursula | P010 `here on my side yesterday was the token of the hart's tyne that gored me when I was a young maiden five years ago`
+F ecology | (unnamed) ness of the World's End | Deer, thrushes and hares there are tame and come to the hand. | CANON/high | P015 `the deer of that place, both little and great, had no fear of man, but the hart and hind came to Ursula's hand`
+F magic | Ralph | Ralph dreams that the High House of Upmeads greets them, which he takes as a call to deeds. | CANON/high | P013 `the ancient House spake to me with the voice of a man, greeting both thee and me`
+
+V main | After the draught | They find their scars healed, bathe in a salt pool, and spend the evening in the tame meadows at the world's end. | time=late afternoon to night; who=Ralph, Ursula; where=(unnamed) ness of the World's End | P015 `it seemed to them that they had come into the very Garden of God`
+
+O magic | Canon proof of renewal: old scars vanish. Keep as narrative marker; any stat-based system is GAME EXPANSION. | P008 `There is no mark of the sword's pilgrimage on thy shoulder`
