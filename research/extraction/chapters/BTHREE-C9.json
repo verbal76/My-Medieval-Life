@@ -1,0 +1,374 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) way-token of the rock-sea",
+   "aliases": [
+    "sword and bough"
+   ],
+   "type": "item",
+   "subtype": "waymark",
+   "unnamed": true,
+   "summary": "Carved sign of a sword crossed by a three-leaved bough marking the safe way through the rock-sea, going and returning.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C9-P003",
+     "q": "a sign cut, whereof they had learned in the book aforesaid, to wit, a sword crossed by a three-leaved bough"
+    }
+   ]
+  },
+  {
+   "name": "Candle of the Giants",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "volcanic ness",
+   "unnamed": false,
+   "summary": "Ness of the mountain wall that sends up a pillar of fire; not far from Utterbol.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "that ness is called the Candle of the Giants"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) red hall of Utterbol",
+   "aliases": [],
+   "type": "building",
+   "subtype": "hall",
+   "unnamed": true,
+   "summary": "The throne hall of the Lord of Utterbol.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "the lord who sitteth on the throne in the red hall of Utterbol"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) grassy plain before the Gate",
+   "aliases": [
+    "unwarded meadows"
+   ],
+   "type": "feature",
+   "subtype": "plain",
+   "unnamed": true,
+   "summary": "Wide grassy plain with low rises and copses between the rock-sea and the mountain ness; unowned herds; bears, lynxes, lions.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C9-P016",
+     "q": "a wide grassy plain, here and there swelling into low wide risings not to be called hills, and besprinkled with copses of bushes"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Candle of the Giants",
+   "rel": "north_of",
+   "b": "Sea of Molten Rocks",
+   "direction": "north, far off",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "on a ness of the mountain wall",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P010",
+     "q": "Thence they looked north and beheld afar off a very pillar of fire rising up from a ness of the mountain wall"
+    }
+   ]
+  },
+  {
+   "a": "Candle of the Giants",
+   "rel": "near",
+   "b": "Utterbol",
+   "direction": "",
+   "distance_text": "not so far",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Sage of Swevenham",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "Now it is naught so far from Utterbol"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) grassy plain before the Gate",
+   "rel": "east_of",
+   "b": "Sea of Molten Rocks",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "lava ends near sunset of the fourth day",
+   "travel_mode": "",
+   "terrain_text": "wide grassy plain",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P016",
+     "q": "it ended at a turn of their winding road, and naught lay betwixt them and that mighty ness of the mountains, save a wide grassy plain"
+    }
+   ]
+  },
+  {
+   "a": "Sea of Molten Rocks",
+   "rel": "between",
+   "b": "(unnamed) western hills of the rock-sea",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Sage of Swevenham",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the molten river ran between the mountains and the western hills",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P016",
+     "q": "we have passed over the mighty river that once ran molten betwixt these mountains and the hills yonder to the west"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "from": "(unnamed) green belt below the ridge",
+   "to": "(unnamed) grassy plain before the Gate",
+   "via": [
+    "Sea of Molten Rocks"
+   ],
+   "mode": "horses led over screes, Sage afoot",
+   "direction_text": "",
+   "duration_text": "about four days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "lava isles, scree, clinker maze",
+   "chapter": "BTHREE-C9",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P004",
+     "q": "for their diligence they had but come a few short miles as the crow flies"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "(unnamed) way-token of the rock-sea",
+   "statement": "Travellers should go through the rock-sea only where the token is seen, going or returning.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P003",
+     "q": "they should press on through the rock-sea nowhere, either going or returning, save where they should see this token"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Sea of Molten Rocks",
+   "statement": "Hares, conies, heath-fowl and red foxes live in its isles; whin, ling and bushes grow in its chinks.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P005",
+     "q": "hares and conies to wit, a many, and heathfowl, and here and there a red fox"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Candle of the Giants",
+   "statement": "Its kindling is held to bode ill to the lord of Utterbol.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "men deem that the kindling thereof forebodeth ill to the lord who sitteth on the throne in the red hall of Utterbol"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) grassy plain before the Gate",
+   "statement": "Harts, wild bulls and goats graze; bears, lynxes and lions prowl.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P019",
+     "q": "there is many a prowling beast about, as bear and lynx and lion"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Sage of Swevenham",
+   "statement": "He has not dared use the Well's gift for fear of abusing it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P019",
+     "q": "I am one who hath not dared to use it lest I should abuse it"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Sea of Molten Rocks",
+   "statement": "Earth-fires light the night sky with distant thunder.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P010",
+     "q": "withal there was the noise as of thunder in the air, but afar off"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Crossing the Sea of Molten Rocks",
+   "chapter": "BTHREE-C9",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "places": [
+    "Sea of Molten Rocks"
+   ],
+   "summary": "Over about four days the Sage leads them by the token route through the lava, past earth-fires.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P009",
+     "q": "the Sage led through it all unfumbling"
+    }
+   ]
+  },
+  {
+   "label": "The Candle of the Giants kindles",
+   "chapter": "BTHREE-C9",
+   "layer": "prophecy",
+   "time_text": "",
+   "participants": [
+    "Lord of Utterbol"
+   ],
+   "places": [
+    "Candle of the Giants"
+   ],
+   "summary": "The fire on the Candle of the Giants is held to bode ill for the Lord of Utterbol.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "it will be for a token to them there"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "missing_measure",
+   "question": "Distance from the Candle of the Giants to Utterbol is only \"not so far\".",
+   "refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "Now it is naught so far from Utterbol"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Waymarked safe paths through hazardous terrain (carved tokens) as navigation mechanics.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C9-P003",
+     "q": "a sword crossed by a three-leaved bough"
+    }
+   ]
+  },
+  {
+   "idea": "Volcanic omens that foretell a ruler's fall.",
+   "system": "events",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C9-P011",
+     "q": "forebodeth ill to the lord"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C9",
+ "chapters": [
+  "BTHREE-C9"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C9",
+   "paragraphs_total": 19,
+   "all_paragraphs_read": true,
+   "summary": "The Sage leads them into the rock-sea up a black scree into a grassy isle, and shows the carved token (a sword crossed by a three-leaved bough) that marks the only safe way, going and returning. They wind a few crow-flight miles a day past screes, streams and great fallen blocks, with hares, conies, heath-fowl and red foxes. On the first night the sky glows with an earth-fire. On the third day the lava becomes clinkered and jagged. From a high rock they see far to the north a pillar of fire on a ness, the Candle of the Giants, not far from Utterbol, whose kindling is said to bode ill to the lord in the red hall of Utterbol. On the fourth day near sunset the lava ends: a wide grassy plain with low rises and copses, grazed by unowned herds and haunted by bears, lynxes and lions, stretches to the great ness. They rest a day. The Sage offers to take them home; they refuse. He says he has not dared use the Well's gift for fear of abusing it.",
+   "geography_notes": "Entry into the rock-sea: a bight closed by a scree of black stones; beyond, a grassy isle narrowing east with glossy rock walls; then a winding way between lava walls with screes, little streams, and great fallen blocks. Then a maze of clinker lava. From a high rock, the Candle of the Giants is seen far north on a ness of the mountain wall. The rock-sea takes about four days to cross by the token route. East of it: a wide grassy plain with low rises, bushes and small trees, before the mountain ness. The lava once flowed between the mountains and the western hills.",
+   "open_questions": [
+    "How far is the Candle of the Giants from Utterbol?"
+   ]
+  }
+ ]
+}

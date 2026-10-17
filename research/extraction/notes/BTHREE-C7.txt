@@ -1,0 +1,26 @@
+@ BTHREE-C7
+summary: Leaving the Sage's house (Ralph walking so the Sage can ride), Ralph and Ursula have a lovers' misunderstanding and reconcile. The Sage leads them through rugged high hills and deep valleys full of wild beasts (lions heard), along streams and twice over mountain necks, to a grassy valley with sweet chestnuts at dusk. He has them build a big fire against lions and says he will deal with the Utterbol riders. At night he makes signs, covers the lovers with his cloak and stands between the horses. Twenty-odd riders under the Lord's nephew and Otter arrive, but see only two grey stones, a skeleton leaning on the tree and old horse bones; the frightened nephew flees. Otter, lingering, says he is glad, would rather ride with Ralph than serve "the Devil and his Nephew", and follows.
+geo: Beyond the Sage's high ground: level wood, then thinning trees and broken ground, then very rugged high hills and deep valleys full of wild beasts, crossed by winding routes along streams and twice over mountain necks. At dusk, a small grassy valley with a bush-edged stream and big sweet chestnuts.
+open: none
+
+E feature | (unnamed) chestnut valley | - | valley | Little grassy valley with a bush-edged stream and scattered big sweet-chestnut trees; lions about. | P009 `a little valley, through which ran a stream bushed about its edges, and which for the rest was grassy and pleasant, with big sweet-chestnut trees scattered about it`
+
+R Sage of Swevenham | other | Ralph | guide and protector | BTHREE-C7 | CANON/high | P011 `leave me to deal with the men of Utterbol`
+R (unnamed) nephew of the Lord of Utterbol | leader_of | Riders of Utterbol | leads the pursuit | BTHREE-C7 | CANON/high | P019 `There goes my Lord's nephew`
+R Otter | other | Ralph | sympathises; would rather ride with him than serve the Lord | BTHREE-C7 | CANON/high | P019 `better were it to ride with my mate than serve the Devil and his Nephew`
+
+S (unnamed) chestnut valley | route_next | (unnamed) house of the Sage of Swevenham | time=one long day; terrain=rugged high hills and deep valleys, two mountain necks; cert=constrained | CANON/high | - | P008 `by passes over the mountain-necks when they needs must, which was twice in the day`
+
+T Ralph, Ursula, Sage of Swevenham | (unnamed) house of the Sage of Swevenham | (unnamed) chestnut valley | mode=horse, Ralph afoot; dur=one day; terrain=wood, broken ground, rugged hills | P008 `ever the Sage led them by winding ways that he knew`
+T Riders of Utterbol, Otter, (unnamed) nephew of the Lord of Utterbol | (unknown) | (unnamed) chestnut valley | mode=horse; start=night | P017 `in half a minute they were amidst of a rout of men a-horseback, more than a score`
+
+F magic | Sage of Swevenham | He makes signs and the pursuers see only stones and old bones where the camp was. | CANON/high | P017 `there is naught save two great grey stones lying on the grass, and a man's bare bones leaning up against the tree`
+F magic | Sage of Swevenham | He says he knows the beasts of the wood and they him, and there is peace between them. | CANON/high; ctx=dialogue:Sage of Swevenham | P012 `I know the beasts of the wood and they me, and there is peace betwixt us`
+F magic | Sage of Swevenham | He says his draught of the Well made him stronger than Ralph. | CANON/high; ctx=dialogue:Sage of Swevenham | P003 `whereas I am stronger than thou, so hath my draught of the Well dealt with me`
+F ecology | (unnamed) chestnut valley | Lions roam; they are unlikely to attack armed men but may attack horses; a big fire keeps them off. | CANON/high; ctx=dialogue:Sage of Swevenham | P010 `which, though belike they will not fall upon weaponed men, may well make an onslaught on your horses`
+
+V main | The Sage's illusion | The Sage hides the travellers from the Utterbol riders by an illusion of bones and stones. | time=night; who=Sage of Swevenham, Ralph, Ursula, Otter, (unnamed) nephew of the Lord of Utterbol; where=(unnamed) chestnut valley | P019 `O Otter, this is an evil place of an evil deed!`
+
+U ambiguity | Otter's sympathy: does he guess the wizardry? | P019 `they are welcome to their wizardry, and I am glad of it`
+
+O magic | Canon "glamour" (illusion) by the Sage. Any player-usable illusion system would be GAME EXPANSION. | P013 `making strange signs with his right hand; so that he deemed that he would ward them by wizardry`

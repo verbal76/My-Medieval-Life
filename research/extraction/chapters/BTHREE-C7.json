@@ -1,0 +1,269 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) chestnut valley",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "valley",
+   "unnamed": true,
+   "summary": "Little grassy valley with a bush-edged stream and scattered big sweet-chestnut trees; lions about.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C7-P009",
+     "q": "a little valley, through which ran a stream bushed about its edges, and which for the rest was grassy and pleasant, with big sweet-chestnut trees scattered about it"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Sage of Swevenham",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "guide and protector",
+   "when": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P011",
+     "q": "leave me to deal with the men of Utterbol"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) nephew of the Lord of Utterbol",
+   "rel": "leader_of",
+   "b": "Riders of Utterbol",
+   "detail": "leads the pursuit",
+   "when": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "There goes my Lord's nephew"
+    }
+   ]
+  },
+  {
+   "a": "Otter",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "sympathises; would rather ride with him than serve the Lord",
+   "when": "BTHREE-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "better were it to ride with my mate than serve the Devil and his Nephew"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) chestnut valley",
+   "rel": "route_next",
+   "b": "(unnamed) house of the Sage of Swevenham",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "one long day",
+   "travel_mode": "",
+   "terrain_text": "rugged high hills and deep valleys, two mountain necks",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P008",
+     "q": "by passes over the mountain-necks when they needs must, which was twice in the day"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "from": "(unnamed) house of the Sage of Swevenham",
+   "to": "(unnamed) chestnut valley",
+   "via": [],
+   "mode": "horse, Ralph afoot",
+   "direction_text": "",
+   "duration_text": "one day",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "wood, broken ground, rugged hills",
+   "chapter": "BTHREE-C7",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P008",
+     "q": "ever the Sage led them by winding ways that he knew"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Riders of Utterbol",
+    "Otter",
+    "(unnamed) nephew of the Lord of Utterbol"
+   ],
+   "from": "(unknown)",
+   "to": "(unnamed) chestnut valley",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "night",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTHREE-C7",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P017",
+     "q": "in half a minute they were amidst of a rout of men a-horseback, more than a score"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Sage of Swevenham",
+   "statement": "He makes signs and the pursuers see only stones and old bones where the camp was.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P017",
+     "q": "there is naught save two great grey stones lying on the grass, and a man's bare bones leaning up against the tree"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Sage of Swevenham",
+   "statement": "He says he knows the beasts of the wood and they him, and there is peace between them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P012",
+     "q": "I know the beasts of the wood and they me, and there is peace betwixt us"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Sage of Swevenham",
+   "statement": "He says his draught of the Well made him stronger than Ralph.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P003",
+     "q": "whereas I am stronger than thou, so hath my draught of the Well dealt with me"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) chestnut valley",
+   "statement": "Lions roam; they are unlikely to attack armed men but may attack horses; a big fire keeps them off.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P010",
+     "q": "which, though belike they will not fall upon weaponed men, may well make an onslaught on your horses"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The Sage's illusion",
+   "chapter": "BTHREE-C7",
+   "layer": "main",
+   "time_text": "night",
+   "participants": [
+    "Sage of Swevenham",
+    "Ralph",
+    "Ursula",
+    "Otter",
+    "(unnamed) nephew of the Lord of Utterbol"
+   ],
+   "places": [
+    "(unnamed) chestnut valley"
+   ],
+   "summary": "The Sage hides the travellers from the Utterbol riders by an illusion of bones and stones.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "O Otter, this is an evil place of an evil deed!"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Otter's sympathy: does he guess the wizardry?",
+   "refs": [
+    {
+     "p": "BTHREE-C7-P019",
+     "q": "they are welcome to their wizardry, and I am glad of it"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Canon \"glamour\" (illusion) by the Sage. Any player-usable illusion system would be GAME EXPANSION.",
+   "system": "magic",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C7-P013",
+     "q": "making strange signs with his right hand; so that he deemed that he would ward them by wizardry"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C7",
+ "chapters": [
+  "BTHREE-C7"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C7",
+   "paragraphs_total": 19,
+   "all_paragraphs_read": true,
+   "summary": "Leaving the Sage's house (Ralph walking so the Sage can ride), Ralph and Ursula have a lovers' misunderstanding and reconcile. The Sage leads them through rugged high hills and deep valleys full of wild beasts (lions heard), along streams and twice over mountain necks, to a grassy valley with sweet chestnuts at dusk. He has them build a big fire against lions and says he will deal with the Utterbol riders. At night he makes signs, covers the lovers with his cloak and stands between the horses. Twenty-odd riders under the Lord's nephew and Otter arrive, but see only two grey stones, a skeleton leaning on the tree and old horse bones; the frightened nephew flees. Otter, lingering, says he is glad, would rather ride with Ralph than serve \"the Devil and his Nephew\", and follows.",
+   "geography_notes": "Beyond the Sage's high ground: level wood, then thinning trees and broken ground, then very rugged high hills and deep valleys full of wild beasts, crossed by winding routes along streams and twice over mountain necks. At dusk, a small grassy valley with a bush-edged stream and big sweet chestnuts.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

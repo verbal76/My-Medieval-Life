@@ -1,0 +1,236 @@
+{
+ "entities": [
+  {
+   "name": "Rock of the Fighting Man",
+   "aliases": [
+    "Gate of the Mountains"
+   ],
+   "type": "feature",
+   "subtype": "carved cliff",
+   "unnamed": false,
+   "summary": "Smooth, shining black cliff face carved with a warrior about sixty feet high in ancient mail and helm, sword in right hand, stern of face.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C10-P004",
+     "q": "on this smooth space was carven in the living rock the image of a warrior in mail and helm of ancient fashion, and holding a sword in his right hand"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) pass of the Fighting Man",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "mountain pass",
+   "unnamed": true,
+   "summary": "Very narrow pass through the mountains, twilit, a strip of stars overhead.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C10-P007",
+     "q": "the rocks of the pass closed about them, leaving but a way so narrow that they could see a glimmer of the stars above them"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Rock of the Fighting Man",
+   "rel": "within",
+   "b": "(unnamed) fire-scorched ness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "bight between the ness and the main wall",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P005",
+     "q": "there they stood in an awful bight of the mountain, made by that ness, and the main wall from which it thrust out"
+    }
+   ]
+  },
+  {
+   "a": "Rock of the Fighting Man",
+   "rel": "distance_from",
+   "b": "Sea of Molten Rocks",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "noon of the third day after leaving the rock-sea (one rest day)",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P003",
+     "q": "it was not till noon of the third day from the rock-sea that they came to the very feet of that fire-scorched ness"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) pass of the Fighting Man",
+   "rel": "leads_to",
+   "b": "Rock of the Fighting Man",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the road begins at the carving",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P007",
+     "q": "In a little while the rocks of the pass closed about them"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "from": "(unnamed) grassy plain before the Gate",
+   "to": "Rock of the Fighting Man",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "two days and a half",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "plain, fallen-rock maze",
+   "chapter": "BTHREE-C10",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P004",
+     "q": "naught save a tumble of rocks that had fallen from the cliffs, piled up strangely, and making a maze through which the Sage led them surely"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "Rock of the Fighting Man",
+   "to": "(unnamed) pass of the Fighting Man",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "afternoon",
+   "end_time_text": "dark",
+   "terrain_text": "",
+   "chapter": "BTHREE-C10",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P006",
+     "q": "the twain mounted their horses again and set forth silently on the road"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Rock of the Fighting Man",
+   "statement": "The carving is about sixty feet tall in very hard rock, clean and clear.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P004",
+     "q": "From head to heel he seemed some sixty feet high, and the rock was so hard, that he was all clean and clear to see"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "(unnamed) pass of the Fighting Man",
+   "statement": "Light in the pass is little better than twilight at best.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P005",
+     "q": "such daylight as the mountain pass will give you, which at the best is little better than twilight"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Parting from the Sage at the Gate",
+   "chapter": "BTHREE-C10",
+   "layer": "main",
+   "time_text": "noon",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "places": [
+    "Rock of the Fighting Man"
+   ],
+   "summary": "The Sage brings them to the Fighting Man and leaves; they enter the pass.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C10-P006",
+     "q": "he drew himself away from them, and turned about with no word more, and went his ways"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Gigantic ancient carvings as world-gate landmarks (fixed placement relative to the lava field and mountain ness).",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C10-P004",
+     "q": "the image of a warrior in mail and helm of ancient fashion"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTHREE-C10",
+ "chapters": [
+  "BTHREE-C10"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C10",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "After a rest day of revision, they cross the plain; at noon on the third day from the rock-sea they reach the foot of the fire-scorched ness. There are no foothills, only a maze of fallen rocks. Rounding the ness, they see on a smooth black cliff a carved warrior about sixty feet tall in ancient mail and helm, holding a sword, with a stern face: the Rock of the Fighting Man. The Sage leaves them there without farewell. They ride into a very narrow pass, twilight by day, like an endless prison, and shelter in a rock cleft. Ralph sinks into dread until Ursula draws him out by asking about Upmeads.",
+   "geography_notes": "The plain before the mountains ends with no foothills, only a tumbled maze of fallen rock. The ness rises sheer and overhanging. In a bight between the ness and the main wall, a smooth black cliff bears the carved Fighting Man. The pass beyond is a narrow cleft showing only a strip of sky.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

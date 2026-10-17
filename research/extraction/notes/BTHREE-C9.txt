@@ -1,0 +1,31 @@
+@ BTHREE-C9
+summary: The Sage leads them into the rock-sea up a black scree into a grassy isle, and shows the carved token (a sword crossed by a three-leaved bough) that marks the only safe way, going and returning. They wind a few crow-flight miles a day past screes, streams and great fallen blocks, with hares, conies, heath-fowl and red foxes. On the first night the sky glows with an earth-fire. On the third day the lava becomes clinkered and jagged. From a high rock they see far to the north a pillar of fire on a ness, the Candle of the Giants, not far from Utterbol, whose kindling is said to bode ill to the lord in the red hall of Utterbol. On the fourth day near sunset the lava ends: a wide grassy plain with low rises and copses, grazed by unowned herds and haunted by bears, lynxes and lions, stretches to the great ness. They rest a day. The Sage offers to take them home; they refuse. He says he has not dared use the Well's gift for fear of abusing it.
+geo: Entry into the rock-sea: a bight closed by a scree of black stones; beyond, a grassy isle narrowing east with glossy rock walls; then a winding way between lava walls with screes, little streams, and great fallen blocks. Then a maze of clinker lava. From a high rock, the Candle of the Giants is seen far north on a ness of the mountain wall. The rock-sea takes about four days to cross by the token route. East of it: a wide grassy plain with low rises, bushes and small trees, before the mountain ness. The lava once flowed between the mountains and the western hills.
+open: How far is the Candle of the Giants from Utterbol?
+
+E item | (unnamed) way-token of the rock-sea | sword and bough | waymark | Carved sign of a sword crossed by a three-leaved bough marking the safe way through the rock-sea, going and returning. | P003 `a sign cut, whereof they had learned in the book aforesaid, to wit, a sword crossed by a three-leaved bough`
+E feature | Candle of the Giants | - | volcanic ness | Ness of the mountain wall that sends up a pillar of fire; not far from Utterbol. | P011 `that ness is called the Candle of the Giants`
+E building | (unnamed) red hall of Utterbol | - | hall | The throne hall of the Lord of Utterbol. | P011 `the lord who sitteth on the throne in the red hall of Utterbol`
+E feature | (unnamed) grassy plain before the Gate | unwarded meadows | plain | Wide grassy plain with low rises and copses between the rock-sea and the mountain ness; unowned herds; bears, lynxes, lions. | P016 `a wide grassy plain, here and there swelling into low wide risings not to be called hills, and besprinkled with copses of bushes`
+
+S Candle of the Giants | north_of | Sea of Molten Rocks | dir=north, far off; cert=fixed | CANON/high | on a ness of the mountain wall | P010 `Thence they looked north and beheld afar off a very pillar of fire rising up from a ness of the mountain wall`
+S Candle of the Giants | near | Utterbol | dist=not so far; ctx=dialogue:Sage of Swevenham; cert=constrained | CANON/high | - | P011 `Now it is naught so far from Utterbol`
+S (unnamed) grassy plain before the Gate | east_of | Sea of Molten Rocks | time=lava ends near sunset of the fourth day; terrain=wide grassy plain; cert=fixed | CANON/high | - | P016 `it ended at a turn of their winding road, and naught lay betwixt them and that mighty ness of the mountains, save a wide grassy plain`
+S Sea of Molten Rocks | between | (unnamed) western hills of the rock-sea | ctx=dialogue:Sage of Swevenham; cert=fixed | CANON/high | the molten river ran between the mountains and the western hills | P016 `we have passed over the mighty river that once ran molten betwixt these mountains and the hills yonder to the west`
+
+T Ralph, Ursula, Sage of Swevenham | (unnamed) green belt below the ridge | (unnamed) grassy plain before the Gate | via=Sea of Molten Rocks; mode=horses led over screes, Sage afoot; dur=about four days; terrain=lava isles, scree, clinker maze | P004 `for their diligence they had but come a few short miles as the crow flies`
+
+F magic | (unnamed) way-token of the rock-sea | Travellers should go through the rock-sea only where the token is seen, going or returning. | CANON/high; ctx=written | P003 `they should press on through the rock-sea nowhere, either going or returning, save where they should see this token`
+F ecology | Sea of Molten Rocks | Hares, conies, heath-fowl and red foxes live in its isles; whin, ling and bushes grow in its chinks. | CANON/high | P005 `hares and conies to wit, a many, and heathfowl, and here and there a red fox`
+F magic | Candle of the Giants | Its kindling is held to bode ill to the lord of Utterbol. | CANON/high; ctx=dialogue:Sage of Swevenham | P011 `men deem that the kindling thereof forebodeth ill to the lord who sitteth on the throne in the red hall of Utterbol`
+F ecology | (unnamed) grassy plain before the Gate | Harts, wild bulls and goats graze; bears, lynxes and lions prowl. | CANON/high; ctx=dialogue:Sage of Swevenham | P019 `there is many a prowling beast about, as bear and lynx and lion`
+F magic | Sage of Swevenham | He has not dared use the Well's gift for fear of abusing it. | CANON/high; ctx=dialogue:Sage of Swevenham | P019 `I am one who hath not dared to use it lest I should abuse it`
+F climate | Sea of Molten Rocks | Earth-fires light the night sky with distant thunder. | CANON/high | P010 `withal there was the noise as of thunder in the air, but afar off`
+
+V main | Crossing the Sea of Molten Rocks | Over about four days the Sage leads them by the token route through the lava, past earth-fires. | dur=about four days; who=Ralph, Ursula, Sage of Swevenham; where=Sea of Molten Rocks | P009 `the Sage led through it all unfumbling`
+V prophecy | The Candle of the Giants kindles | The fire on the Candle of the Giants is held to bode ill for the Lord of Utterbol. | who=Lord of Utterbol; where=Candle of the Giants | P011 `it will be for a token to them there`
+
+U missing_measure | Distance from the Candle of the Giants to Utterbol is only "not so far". | P011 `Now it is naught so far from Utterbol`
+
+O world | Waymarked safe paths through hazardous terrain (carved tokens) as navigation mechanics. | P003 `a sword crossed by a three-leaved bough`
+O events | Volcanic omens that foretell a ruler's fall. | P011 `forebodeth ill to the lord`
