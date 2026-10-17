@@ -1,0 +1,235 @@
+{
+ "entities": [
+  {
+   "name": "Earl Walter the Black",
+   "aliases": [
+    "Walter the Black"
+   ],
+   "type": "person",
+   "subtype": "earl",
+   "unnamed": false,
+   "summary": "Fair young earl, false and tyrannous, with a quarrel against Whitwall; was hurt in a fray and cannot yet ride to battle.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "there is an Earl hight Walter the Black, a fair young man outwardly, but false at heart and a tyrant"
+    }
+   ]
+  },
+  {
+   "name": "Cheaping Knowe",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": false,
+   "summary": "Town close to the far side of the mountains seen from Whitwall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "Cheaping Knowe, which lieth close to the further side of these mountains"
+    }
+   ]
+  },
+  {
+   "name": "Petergate",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "street",
+   "unnamed": false,
+   "summary": "Street in Whitwall by the church where Clement's company gathers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C17-P013",
+     "q": "Clement's fellowship will meet in Petergate hard by the church"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Earl Walter the Black",
+   "rel": "enemy_of",
+   "b": "Whitwall",
+   "detail": "expected to send a herald to defy the Port",
+   "when": "BTWO-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "it was looked for that he should send his herald here to defy the Port"
+    }
+   ]
+  },
+  {
+   "a": "Earl Walter the Black",
+   "rel": "other",
+   "b": "Walter the Black",
+   "detail": "probably the same man, wounded by the Knight of the Sun",
+   "when": "BTWO-C17",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "he was hurt in a fray as we hear, and may not back a horse in battle yet"
+    }
+   ]
+  },
+  {
+   "a": "Richard the Red",
+   "rel": "serves",
+   "b": "Blaise",
+   "detail": "bound to serve Blaise",
+   "when": "BTWO-C17",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "it is Blaise whom I am bound to serve in all ways"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Cheaping Knowe",
+   "rel": "beyond",
+   "b": "(unnamed) mountains beyond Swevenham",
+   "direction": "close on the further side",
+   "distance_text": "",
+   "travel_time_text": "round trip about half a month and more",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Richard the Red",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "will be back again in somewhat more than a half-moon's wearing"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "politics",
+   "subject": "Whitwall",
+   "statement": "Whitwall expects war with Earl Walter once he heals; it will expect knightly service of Ralph.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "when he is whole again, we may look for him at our gates"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "Richard guesses the Lady was not wholly human but had some blood of the fays.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C17-P006",
+     "q": "there was some blending in her of the blood of the fays"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Having heard Ralph's tale, Richard now believes the Well is real and that Ralph will find it.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C17-P013",
+     "q": "I deem both that the Well verily is, and that thou thyself shalt find it"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Richard's farewell counsel",
+   "chapter": "BTWO-C17",
+   "layer": "main",
+   "time_text": "morning of departure",
+   "participants": [
+    "Ralph",
+    "Richard the Red"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "summary": "Richard hears Ralph's tale and counsels him before the company leaves.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C17-P003",
+     "q": "I will now tell thee the tale of my grief"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Earl Walter the Black and the wounded Walter the Black of the lake are probably the same; not stated.",
+   "refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "he was hurt in a fray as we hear"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A city-state threatened by a neighbouring earl, raising a civic host, as a regional conflict the player can join.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C17-P002",
+     "q": "when he is whole again, we may look for him at our gates"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C17",
+ "chapters": [
+  "BTWO-C17"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C17",
+   "paragraphs_total": 13,
+   "all_paragraphs_read": true,
+   "summary": "Clement's company will leave at noon. Richard must stay with Blaise because Whitwall expects war with Earl Walter the Black, a fair, false young tyrant now recovering from a wound. Richard has told Blaise that Ralph goes only as far as Cheaping Knowe, just beyond the mountains, and will be back in about half a month. Ralph tells Richard his whole story. Richard guesses the Lady had fay blood, foresaw her love would fade, and meant Ralph to find the damsel, whom Richard thinks loves him. Richard now believes the Well is real and that Ralph will find it. He has a good horse and gear ready; the company meets in Petergate by the church.",
+   "geography_notes": "Cheaping Knowe lies close to the far side of the mountains seen from Whitwall, about half a month's round trip. Petergate is a street by the church.",
+   "open_questions": [
+    "Is Earl Walter the Black the same Walter the Black wounded by the Knight of the Sun? (very likely; \"hurt in a fray\")"
+   ]
+  }
+ ]
+}

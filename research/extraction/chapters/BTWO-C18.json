@@ -1,0 +1,180 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) arras of the Story of Hercules",
+   "aliases": [],
+   "type": "item",
+   "subtype": "tapestry",
+   "unnamed": true,
+   "summary": "Hangings in Blaise's great chamber.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C18-P003",
+     "q": "hung with rich arras of the Story of Hercules"
+    }
+   ]
+  },
+  {
+   "name": "Clement's eastward company",
+   "aliases": [
+    "the fellowship of Clement Chapman"
+   ],
+   "type": "group",
+   "subtype": "caravan",
+   "unnamed": false,
+   "summary": "Five chapmen, their lads, and a score of men-at-arms, ordered by Clement.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C18-P005",
+     "q": "There he found the chapmen, five of them in all, and their lads, and a score of men-at-arms"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Clement Chapman",
+   "rel": "leader_of",
+   "b": "Clement's eastward company",
+   "detail": "orders the march",
+   "when": "BTWO-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C18-P009",
+     "q": "And master Clement it was that ordered them, riding up and down along the array"
+    }
+   ]
+  },
+  {
+   "a": "Blaise",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "gives him a purse of gold and an anlace",
+   "when": "BTWO-C18",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C18-P004",
+     "q": "he gave Ralph a purse of gold, and an anlace very fair of fashion"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Clement Chapman",
+    "Clement's eastward company"
+   ],
+   "from": "Petergate",
+   "to": "(unknown)",
+   "via": [],
+   "mode": "horse with sumpter horses",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "noon",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C18",
+   "refs": [
+    {
+     "p": "BTWO-C18-P009",
+     "q": "they rode out a-gates"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "household",
+   "subject": "Blaise",
+   "statement": "Blaise's cupboard of plate has five shelves, \"meet for a king's son\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C18-P003",
+     "q": "the cupboard was of five shelves as was but meet for a king's son"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Clement Chapman",
+   "statement": "Clement rides armed in a coat of proof and sallet; the road has rough places and robbers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C18-P006",
+     "q": "the way is long, and our goods worth the lifting"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Departure from Whitwall",
+   "chapter": "BTWO-C18",
+   "layer": "main",
+   "time_text": "noon",
+   "participants": [
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "summary": "Ralph leaves Whitwall with Clement's armed merchant company.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C18-P008",
+     "q": "This is also a farewell to the House where I was born and bred"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Status display by tiers of plate shelves as a wealth signal in town houses.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BTWO-C18-P003",
+     "q": "the cupboard was of five shelves"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C18",
+ "chapters": [
+  "BTWO-C18"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C18",
+   "paragraphs_total": 9,
+   "all_paragraphs_read": true,
+   "summary": "Blaise shows Ralph his new house (Hercules arras, a five-shelf cupboard of silver and gold), gives him a purse of gold and a fine anlace, and reminds him of Whitwall's coming muster. Ralph joins Clement's company in Petergate: five chapmen with their lads and a score of men-at-arms, Clement himself armed. Ralph says farewell to Richard and they ride out.",
+   "geography_notes": "none beyond Whitwall's Petergate and gates.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,503 @@
+{
+ "entities": [
+  {
+   "name": "Goldburg",
+   "aliases": [],
+   "type": "place",
+   "subtype": "city",
+   "unnamed": false,
+   "summary": "Last town on Clement's road, said to be near the Dry Tree.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "no great way from the last of the towns whereto Clement will wend; for Clement told me the name thereof, to wit, Goldburg"
+    }
+   ]
+  },
+  {
+   "name": "Wat Miller",
+   "aliases": [],
+   "type": "person",
+   "subtype": "seeker",
+   "unnamed": false,
+   "summary": "One of the three Swevenham seekers of fifty years ago.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "Wat Miller and Simon Bowyer set off to seek the Well at the World's End"
+    }
+   ]
+  },
+  {
+   "name": "Simon Bowyer",
+   "aliases": [],
+   "type": "person",
+   "subtype": "seeker",
+   "unnamed": false,
+   "summary": "One of the three Swevenham seekers; loved Alice.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "Simon Bowyer"
+    }
+   ]
+  },
+  {
+   "name": "Alice of Queenhough",
+   "aliases": [],
+   "type": "person",
+   "subtype": "seeker",
+   "unnamed": false,
+   "summary": "The young woman among the three seekers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "Alice of Queenhough, whom Simon loved as well as might be"
+    }
+   ]
+  },
+  {
+   "name": "Queenhough",
+   "aliases": [],
+   "type": "place",
+   "subtype": "place",
+   "unnamed": false,
+   "summary": "Alice's home.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "Alice of Queenhough"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) wizard of the mountains",
+   "aliases": [],
+   "type": "person",
+   "subtype": "wizard",
+   "unnamed": true,
+   "summary": "Old man of the mountains whom folk consulted for hidden lore; later vanished, said to have gone seeking the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "that old man, the wizard, to whom folk from Swevenham and other places about were used to seek for his lore in hidden matters"
+    }
+   ]
+  },
+  {
+   "name": "Arnold Wright",
+   "aliases": [],
+   "type": "person",
+   "subtype": "soldier",
+   "unnamed": false,
+   "summary": "Came home from the wars, learned Alice had gone, and followed with a spear.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "comes home Arnold Wright from the wars, and asks after Alice"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) carline of Swevenham",
+   "aliases": [],
+   "type": "person",
+   "subtype": "old woman",
+   "unnamed": true,
+   "summary": "Richard's old sweetheart, who tells the tale of the seekers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P006",
+     "q": "there was a carline sitting in the ingle, and she knew me and I her"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) yellow-haired lad of Swevenham",
+   "aliases": [],
+   "type": "person",
+   "subtype": "youth",
+   "unnamed": true,
+   "summary": "Saw a slender woman rider with a chaplet and anlace five days ago.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P015",
+     "q": "that long lad with the yellow hair"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) book of Alexander",
+   "aliases": [],
+   "type": "text",
+   "subtype": "book",
+   "unnamed": true,
+   "summary": "Book of the deeds of Alexander that Ralph reads; mentions the Dry Tree.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P003",
+     "q": "It telleth of the deeds of Alexander"
+    }
+   ]
+  },
+  {
+   "name": "Alexander",
+   "aliases": [
+    "Alexander the Champion"
+   ],
+   "type": "person",
+   "subtype": "legendary hero",
+   "unnamed": false,
+   "summary": "Said to have seen the Dry Tree in his wayfarings.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "the Tree itself, which Alexander the Champion saw in his wayfarings"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Simon Bowyer",
+   "rel": "lover_of",
+   "b": "Alice of Queenhough",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "whom Simon loved as well as might be"
+    }
+   ]
+  },
+  {
+   "a": "Wat Miller",
+   "rel": "lover_of",
+   "b": "Alice of Queenhough",
+   "detail": "loved her too",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C16-P007",
+     "q": "and Wat somewhat more than well"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Dry Tree",
+   "rel": "near",
+   "b": "Goldburg",
+   "direction": "",
+   "distance_text": "no great way",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:old man of Swevenham",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "no great way from the last of the towns whereto Clement will wend"
+    }
+   ]
+  },
+  {
+   "a": "Dry Tree",
+   "rel": "other",
+   "b": "Wall of the World",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:older man of Swevenham",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "low",
+   "note": "one teller puts the Tree on the further side, against the hither side",
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "that the Tree was on the further side of the Wall of the World"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) highway east of Whitwall",
+   "rel": "east_of",
+   "b": "Whitwall",
+   "direction": "east",
+   "distance_text": "thirty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "stubble fields either side",
+   "context": "dialogue:carline of Swevenham",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "where the women seekers were seen",
+   "refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "on the highway thirty miles east of Whitwall"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) wizard of the mountains",
+   "rel": "within",
+   "b": "(unnamed) mountains beyond Swevenham",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:carline of Swevenham",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "folk who went to his abode amongst the mountains found him not"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Dry Tree",
+   "statement": "Whoever lays hand on the Dry Tree's bole is likely to drink of the Well (one old man's claim).",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:older man of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "he who could lay his hand on the bole thereof was like enough to drink of the Well at the World's End"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Rumour says a woman brought word of the Dry Tree to the Hampton champions and fixed the name on them.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "a woman had brought the tidings thereof to those valiant men, and had fixed the name upon them"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Swevenham",
+   "statement": "Twenty years ago a great sickness struck Swevenham and Whitwall; five young men left to seek the Well's water and never returned.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:carline of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P014",
+     "q": "Twenty years agone a great sickness lay heavy upon us and the folk of Whitwall"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Swevenham",
+   "statement": "Two knights riding east from Whitwall asked the road to the Well.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:carline of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "two knights riding east from Whitwall"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "A woman with a gem chaplet on the east highway said she went \"from ruin and wrack to the Well\" and drew a sword on would-be robbers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:carline of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "From ruin and wrack to the Well at the World's End"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Five days ago a slender woman rider with a chaplet and an anlace said she went \"from unrest to the Well\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:yellow-haired lad",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P017",
+     "q": "From unrest to the Well at the World's End."
+    }
+   ]
+  },
+  {
+   "category": "text",
+   "subject": "(unnamed) book of Alexander",
+   "statement": "The book tells of the Dry Tree and kings sitting in their chairs in nearby mountains.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P003",
+     "q": "the book tells concerning the Dry Tree, and of kings sitting in their chairs in the mountains nearby"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Chaplet-wearing women on the east highway",
+   "chapter": "BTWO-C16",
+   "layer": "rumour",
+   "time_text": "",
+   "participants": [],
+   "places": [
+    "(unnamed) highway east of Whitwall"
+   ],
+   "summary": "Twice a lone woman with a gem chaplet, armed, is met on the highway thirty miles east of Whitwall, bound for the Well.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P016",
+     "q": "he came on one riding the highway, just about where the other woman had been seen"
+    }
+   ]
+  },
+  {
+   "label": "Twenty years ago: the great sickness",
+   "chapter": "BTWO-C16",
+   "layer": "backstory",
+   "time_text": "twenty years ago",
+   "participants": [],
+   "places": [
+    "Swevenham"
+   ],
+   "summary": "Five Swevenham youths swear to bring back Well-water and never return.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C16-P014",
+     "q": "five of our young men, calling to mind all the tales concerning the Well at the World's End, went their ways to seek it"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who were the two women seekers on the highway? Ralph believes the recent one was the maiden of Bourton.",
+   "refs": [
+    {
+     "p": "BTWO-C16-P021",
+     "q": "he doubted not that the said woman was the damsel of Bourton Abbas"
+    }
+   ]
+  },
+  {
+   "kind": "contradiction",
+   "question": "Swevenham tellers disagree whether the Dry Tree is on the hither or further side of the Wall of the World.",
+   "refs": [
+    {
+     "p": "BTWO-C16-P005",
+     "q": "Then another and an older man"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Who was the knight who asked about the Lady with the beads?",
+   "refs": [
+    {
+     "p": "BTWO-C16-P012",
+     "q": "he asked many questions, but most of the Lady with the pair of beads"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A village \"seeker roll\" of those who left for the Well over generations, as discoverable lore.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTWO-C16-P011",
+     "q": "I will tell thee all about it"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C16",
+ "chapters": [
+  "BTWO-C16"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C16",
+   "paragraphs_total": 20,
+   "all_paragraphs_read": true,
+   "summary": "Richard reports what he heard at Swevenham. Old men disagree whether the Dry Tree (which Alexander saw) stands on the hither or further side of the mountains called the Wall of the World, near Goldburg, the last town on Clement's road. A woman is said to have given the Hampton champions their name. A carline names the three seekers of fifty years ago (Wat Miller, Simon Bowyer and Alice of Queenhough) and later seekers: the mountain wizard, Arnold Wright, two knights riding east, a woman with a gem chaplet and a sword on the highway thirty miles east of Whitwall, a knight who asked of the Lady with the beads, and five young men who left during a great sickness twenty years ago. A yellow-haired lad saw a small slender woman rider with a chaplet and an anlace in the same place five days ago, going \"from unrest to the Well\". Ralph believes she is the maiden of Bourton (Dorothea). He is reading a book of Alexander which mentions the Dry Tree and kings sitting in chairs in nearby mountains.",
+   "geography_notes": "Swevenham has a stone bridge. The wizard lived in the mountains a way off from Swevenham. A highway runs east from Whitwall; thirty miles east of the town it passes between stubble-fields. Goldburg is the last of the towns on Clement's road, no great way from the Dry Tree, on the hither side of the Wall of the World (one teller says the Tree is on the further side).",
+   "open_questions": [
+    "Is the Dry Tree on the hither or further side of the Wall of the World?",
+    "Who were the two night-riding women with chaplets?"
+   ]
+  }
+ ]
+}

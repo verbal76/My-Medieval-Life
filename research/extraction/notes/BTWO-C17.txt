@@ -1,0 +1,24 @@
+@ BTWO-C17
+summary: Clement's company will leave at noon. Richard must stay with Blaise because Whitwall expects war with Earl Walter the Black, a fair, false young tyrant now recovering from a wound. Richard has told Blaise that Ralph goes only as far as Cheaping Knowe, just beyond the mountains, and will be back in about half a month. Ralph tells Richard his whole story. Richard guesses the Lady had fay blood, foresaw her love would fade, and meant Ralph to find the damsel, whom Richard thinks loves him. Richard now believes the Well is real and that Ralph will find it. He has a good horse and gear ready; the company meets in Petergate by the church.
+geo: Cheaping Knowe lies close to the far side of the mountains seen from Whitwall, about half a month's round trip. Petergate is a street by the church.
+open: Is Earl Walter the Black the same Walter the Black wounded by the Knight of the Sun? (very likely; "hurt in a fray")
+
+E person | Earl Walter the Black | Walter the Black | earl | Fair young earl, false and tyrannous, with a quarrel against Whitwall; was hurt in a fray and cannot yet ride to battle. | P002 `there is an Earl hight Walter the Black, a fair young man outwardly, but false at heart and a tyrant`
+E place | Cheaping Knowe | - | town | Town close to the far side of the mountains seen from Whitwall. | P002 `Cheaping Knowe, which lieth close to the further side of these mountains`
+E feature | Petergate | - | street | Street in Whitwall by the church where Clement's company gathers. | P013 `Clement's fellowship will meet in Petergate hard by the church`
+
+R Earl Walter the Black | enemy_of | Whitwall | expected to send a herald to defy the Port | BTWO-C17 | CANON/high | P002 `it was looked for that he should send his herald here to defy the Port`
+R Earl Walter the Black | other | Walter the Black | probably the same man, wounded by the Knight of the Sun | BTWO-C17 | INF/high | P002 `he was hurt in a fray as we hear, and may not back a horse in battle yet`
+R Richard the Red | serves | Blaise | bound to serve Blaise | BTWO-C17 | CANON/high | P002 `it is Blaise whom I am bound to serve in all ways`
+
+S Cheaping Knowe | beyond | (unnamed) mountains beyond Swevenham | dir=close on the further side; time=round trip about half a month and more; ctx=dialogue:Richard the Red; cert=constrained | CANON/high | - | P002 `will be back again in somewhat more than a half-moon's wearing`
+
+F politics | Whitwall | Whitwall expects war with Earl Walter once he heals; it will expect knightly service of Ralph. | CANON/high; ctx=dialogue:Richard the Red | P002 `when he is whole again, we may look for him at our gates`
+F magic | Lady of Abundance | Richard guesses the Lady was not wholly human but had some blood of the fays. | CANON/medium; ctx=dialogue:Richard the Red | P006 `there was some blending in her of the blood of the fays`
+F magic | Well at the World's End | Having heard Ralph's tale, Richard now believes the Well is real and that Ralph will find it. | CANON/medium; ctx=dialogue:Richard the Red | P013 `I deem both that the Well verily is, and that thou thyself shalt find it`
+
+V main | Richard's farewell counsel | Richard hears Ralph's tale and counsels him before the company leaves. | time=morning of departure; who=Ralph, Richard the Red; where=Whitwall | P003 `I will now tell thee the tale of my grief`
+
+U identity | Earl Walter the Black and the wounded Walter the Black of the lake are probably the same; not stated. | P002 `he was hurt in a fray as we hear`
+
+O politics | A city-state threatened by a neighbouring earl, raising a civic host, as a regional conflict the player can join. | P002 `when he is whole again, we may look for him at our gates`

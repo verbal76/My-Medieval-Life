@@ -1,0 +1,19 @@
+@ BTWO-C18
+summary: Blaise shows Ralph his new house (Hercules arras, a five-shelf cupboard of silver and gold), gives him a purse of gold and a fine anlace, and reminds him of Whitwall's coming muster. Ralph joins Clement's company in Petergate: five chapmen with their lads and a score of men-at-arms, Clement himself armed. Ralph says farewell to Richard and they ride out.
+geo: none beyond Whitwall's Petergate and gates.
+open: none
+
+E item | (unnamed) arras of the Story of Hercules | - | tapestry | Hangings in Blaise's great chamber. | P003 `hung with rich arras of the Story of Hercules`
+E group | Clement's eastward company | the fellowship of Clement Chapman | caravan | Five chapmen, their lads, and a score of men-at-arms, ordered by Clement. | P005 `There he found the chapmen, five of them in all, and their lads, and a score of men-at-arms`
+
+R Clement Chapman | leader_of | Clement's eastward company | orders the march | BTWO-C18 | CANON/high | P009 `And master Clement it was that ordered them, riding up and down along the array`
+R Blaise | other | Ralph | gives him a purse of gold and an anlace | BTWO-C18 | CANON/high | P004 `he gave Ralph a purse of gold, and an anlace very fair of fashion`
+
+T Ralph, Clement Chapman, Clement's eastward company | Petergate | (unknown) | mode=horse with sumpter horses; start=noon | P009 `they rode out a-gates`
+
+F household | Blaise | Blaise's cupboard of plate has five shelves, "meet for a king's son". | CANON/high | P003 `the cupboard was of five shelves as was but meet for a king's son`
+F military | Clement Chapman | Clement rides armed in a coat of proof and sallet; the road has rough places and robbers. | CANON/high; ctx=dialogue:Clement Chapman | P006 `the way is long, and our goods worth the lifting`
+
+V main | Departure from Whitwall | Ralph leaves Whitwall with Clement's armed merchant company. | time=noon; who=Ralph, Clement Chapman; where=Whitwall | P008 `This is also a farewell to the House where I was born and bred`
+
+O economy | Status display by tiers of plate shelves as a wealth signal in town houses. | P003 `the cupboard was of five shelves`

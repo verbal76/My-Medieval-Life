@@ -1009,33 +1009,76 @@
    "title": "Of the Tales of Swevenham",
    "body_paragraphs": 20,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 11,
+    "relations": 2,
+    "spatial": 4,
+    "travel": 0,
+    "facts": 7,
+    "events": 2,
+    "unresolved": 3,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the Dry Tree on the hither or further side of the Wall of the World?",
+    "Who were the two night-riding women with chaplets?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C16.txt",
+    "records": "research/extraction/chapters/BTWO-C16.json"
+   }
   },
   {
    "chapter": "BTWO-C17",
    "title": "Richard Bringeth Tidings of Departing",
    "body_paragraphs": 13,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 3,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is Earl Walter the Black the same Walter the Black wounded by the Knight of the Sun? (very likely; \"hurt in a fray\")"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C17.txt",
+    "records": "research/extraction/chapters/BTWO-C17.json"
+   }
   },
   {
    "chapter": "BTWO-C18",
    "title": "Ralph Departeth From Whitwall With the Fellowship of Clement Chapman",
    "body_paragraphs": 9,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 2,
+    "spatial": 0,
+    "travel": 1,
+    "facts": 2,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C18.txt",
+    "records": "research/extraction/chapters/BTWO-C18.json"
+   }
   },
   {
    "chapter": "BTWO-C19",
