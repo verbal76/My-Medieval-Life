@@ -13,6 +13,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `16x16 miniworld - octoshrimpy  -  indoor update.zip` | CC BY 4.0 | 9 | 505.7 KB | 16x16 miniworld + by octoshrimpy (remix/extension of Shade's Miniworld), the 'legacy - indoor update' download (older version): characters, buildings, nature, walls, indoor things, terrain + terrain decor sheets. |
 | `Character-Customizer.zip` | verify | 3 | 1.6 MB | Manual character customiser: GIMP .xcf and Photoshop layer files plus ReadMe. Not scriptable as-is. |
 | `ClimbUp_restore_backup.zip` | n/a | 3 | 2.9 MB | NOT an art pack: backup of a separate 'Climb up' game-designer project (project.json + splash image). |
+| `CozyFarm_full_version.zip` | paid | 410 | 2.5 MB | Cozy Farm (full version) by shubibubi, 16x16 grid, the same scale as the Puny packs. Uploaded as full_version.zip and stored under this name, bytes unchanged. Animals with walk/sleep sheets (cows in 3 colours, pigs, sheep, goats, chickens, turkey, bunnies, plus babies; frame sizes in info.txt), 37 crops with growth stages (also wet and winter variants), seeds, scarecrows, farm tools, artisan machines (butter churn, cheese press, spindle, cloth and mayo makers), seasonal trees, flowers and gates, farm tiles, buildings (barn, coop, market, greenhouse, NPC houses, plus a hospital, museum and slime hut that fit the setting less), slime and bat enemies, UI and item icons. No licence file in the archive; bought by the owner. |
 | `MiniWorldSprites.zip` | free | 208 | 2.1 MB | 16x16 Miniworld: buildings in 5 team colours, units, monsters, animals, nature, ground, UI. Shade's guide: free to use, no credit needed, do not resell. |
 | `PUNY-WORLD-PAID_v1.zip` | paid | 32 | 15.3 MB | Puny World medieval tileset: 3520x2112 tile sheet, atlas, 9 sample Tiled maps, sample 32x32 characters, GIF previews. |
 | `PUNY_CHARACTERS_v2.1.zip` | paid | 515 | 59.5 MB | Puny Characters Editor Edition: pre-made 8-direction spritesheets, GIMP layer file, Tiled ortho/iso/hex demo maps (ortho tileset has a terrain wangset). |
@@ -37,12 +38,12 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 12394 |
+| `.png` | 12457 |
+| `.gif` | 353 |
 | `.tmj` | 23 |
 | `.tsx` | 13 |
 | `.csv` | 11 |
-| `.gif` | 9 |
-| `.txt` | 3 |
+| `.txt` | 6 |
 | `.docx` | 2 |
 | `.xcf` | 2 |
 | `.json` | 2 |
@@ -107,6 +108,46 @@ Each folder lists its file count and the most common image sizes.
 | `.` | 1 |  | `backup-manifest.json` |
 | `projects/5eae29a8-ba20-4623-9b63-4e0198474fd7` | 1 |  | `project.json` |
 | `projects/5eae29a8-ba20-4623-9b63-4e0198474fd7/assets/branding` | 1 | 1536x1024 | `studio_splash_e3d9bb56.png` |
+
+### CozyFarm_full_version.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `full version` | 4 | 2368x1136 | `global.png`, `info.txt`, `item list.txt`, `read me.txt` |
+| `full version/Buildings` | 1 | 1503x1072 | `buildings.png` |
+| `full version/Buildings/gifs/NPC1` | 8 | 80x80 (4), 16x32 (4) | `NPC1.gif`, `NPC1_door.gif`, `NPC1_door_fall.gif`, `NPC1_door_summer.gif`, ... |
+| `full version/Buildings/gifs/NPC2` | 8 | 80x80 (4), 16x32 (4) | `NPC2.gif`, `NPC2_door.gif`, `NPC2_door_fall.gif`, `NPC2_door_summer.gif`, ... |
+| `full version/Buildings/gifs/NPC3` | 8 | 80x80 (4), 16x32 (4) | `NPC3.gif`, `NPC3_door.gif`, `NPC3_door_fall.gif`, `NPC3_door_summer.gif`, ... |
+| `full version/Buildings/gifs/NPC4` | 8 | 96x80 (4), 16x32 (4) | `NPC4.gif`, `NPC4_door.gif`, `NPC4_door_fall.gif`, `NPC4_door_summer.gif`, ... |
+| `full version/Buildings/gifs/NPC5` | 8 | 96x80 (4), 16x32 (4) | `NPC5.gif`, `NPC5_door.gif`, `NPC5_door_fall.gif`, `NPC5_door_summer.gif`, ... |
+| `full version/Buildings/gifs/NPC6` | 8 | 96x64 (4), 16x32 (4) | `NPC6.gif`, `NPC6_door.gif`, `NPC6_door_fall.gif`, `NPC6_door_summer.gif`, ... |
+| `full version/Buildings/gifs/NPC7` | 8 | 96x64 (4), 16x32 (4) | `NPC7.gif`, `NPC7_door.gif`, `NPC7_door_fall.gif`, `NPC7_door_summer.gif`, ... |
+| `full version/Buildings/gifs/barn` | 16 | 80x80 (8), 16x16 (4), 16x32 (4) | `barn.gif`, `barn_animal.gif`, `barn_animal_fall.gif`, `barn_animal_summer.gif`, ... |
+| `full version/Buildings/gifs/coop` | 16 | 64x64 (8), 16x16 (4), 16x32 (4) | `coop.gif`, `coop_animal door.gif`, `coop_animal.gif`, `coop_animal_fall.gif`, ... |
+| `full version/Buildings/gifs/greenhouse` | 8 | 112x80 (4), 16x32 (4) | `greenhouse.gif`, `greenhouse_door.gif`, `greenhouse_door_fall.gif`, `greenhouse_door_summer.gif`, ... |
+| `full version/Buildings/gifs/hospital` | 16 | 144x112 (8), 32x32 (8) | `hospital.gif`, `hospital_door.gif`, `hospital_door_fall.gif`, `hospital_door_summer.gif`, ... |
+| `full version/Buildings/gifs/market` | 13 | 96x80 (8), 64x16 (4), 160x64 (1) | `market.gif`, `market_fall.gif`, `market_sign.gif`, `market_sign_fall.gif`, ... |
+| `full version/Buildings/gifs/museum` | 8 | 128x112 (4), 32x32 (4) | `museum.gif`, `museum_door.gif`, `museum_door_fall.gif`, `museum_door_summer.gif`, ... |
+| `full version/Buildings/gifs/player house` | 16 | 16x32 (4), 64x80 (4), 80x80 (4), ... | `door_player.gif`, `door_player_fall.gif`, `door_player_sumemr.gif`, `door_player_winter.gif`, ... |
+| `full version/Buildings/gifs/slimehut` | 8 | 80x80 (4), 16x32 (4) | `slimehut.gif`, `slimehut_door.gif`, `slimehut_door_fall.gif`, `slimehut_door_summer.gif`, ... |
+| `full version/animals` | 25 | 64x80 (10), 68x85 (4), 96x120 (3), ... | `bunny_animations.png`, `bunny_baby animation.png`, `bunny_baby_grey animation.png`, `bunny_grey animation.png`, ... |
+| `full version/enemies` | 3 | 160x170 (1), 720x256 (1), 144x16 (1) | `ghost_all.png`, `slime_all.png`, `slime_items.png` |
+| `full version/enemies/bat` | 4 | 64x96 (3), 192x96 (1) | `bat_all.png`, `bat_black.png`, `bat_purple.png`, `bat_red.png` |
+| `full version/enemies/bat/bat black gifs` | 5 | 16x16 | `bat_black_die.gif`, `bat_black_walk_down.gif`, `bat_black_walk_left.gif`, `bat_black_walk_right.gif`, ... |
+| `full version/enemies/bat/bat purple gifs` | 5 | 16x16 | `bat_purple_die.gif`, `bat_purple_walk_down.gif`, `bat_purple_walk_left.gif`, `bat_purple_walk_right.gif`, ... |
+| `full version/enemies/bat/bat red gifs` | 5 | 16x16 | `bat_red_die.gif`, `bat_red_walk_down.gif`, `bat_red_walk_left.gif`, `bat_red_walk_rigth.gif`, ... |
+| `full version/enemies/slime black` | 17 | 16x16 (16), 80x256 (1) | `slime_black.png`, `slime_black_attack_down.gif`, `slime_black_attack_left.gif`, `slime_black_attack_right.gif`, ... |
+| `full version/enemies/slime blue` | 17 | 16x16 (16), 80x256 (1) | `slime_blue.png`, `slime_blue_attack_down.gif`, `slime_blue_attack_left.gif`, `slime_blue_attack_right.gif`, ... |
+| `full version/enemies/slime green` | 17 | 16x16 (16), 80x256 (1) | `slime_green.png`, `slime_green_attack_down.gif`, `slime_green_attack_left.gif`, `slime_green_attack_right.gif`, ... |
+| `full version/enemies/slime orange` | 17 | 16x16 (16), 80x256 (1) | `slime_orange.png`, `slime_orange_attack_down.gif`, `slime_orange_attack_left.gif`, `slime_orange_attack_right.gif`, ... |
+| `full version/enemies/slime pink` | 17 | 16x16 (16), 80x256 (1) | `slime_pink.png`, `slime_pink_attack_down.gif`, `slime_pink_attack_left.gif`, `slime_pink_attack_right.gif`, ... |
+| `full version/enemies/slime purple` | 17 | 16x16 (15), 80x256 (1), 16x17 (1) | `slime_purple.png`, `slime_purple_attack_down.gif`, `slime_purple_attack_left.gif`, `slime_purple_attack_right.gif`, ... |
+| `full version/enemies/slime rainbow` | 17 | 16x16 (16), 80x256 (1) | `slime_rainbow.png`, `slime_rainbow_attack_down.gif`, `slime_rainbow_attack_left.gif`, `slime_rainbow_attack_right.gif`, ... |
+| `full version/enemies/slime red` | 17 | 16x16 (16), 80x256 (1) | `slime_red.png`, `slime_red_attack_down.gif`, `slime_red_attack_left.gif`, `slime_red_attack_right.gif`, ... |
+| `full version/enemies/slime yellow` | 17 | 16x16 (16), 80x256 (1) | `slime_yellow.png`, `slime_yellow_attack_down.gif`, `slime_yellow_attack_left.gif`, `slime_yellow_attack_right.gif`, ... |
+| `full version/farming` | 17 | 16x32 (7), 96x592 (4), 80x32 (1), ... | `butterchurn.gif`, `clothmaker.gif`, `crafting ready.png`, `crops.png`, ... |
+| `full version/tiles` | 24 | 16x16 (13), 32x32 (7), 16x48 (2), ... | `flower_fall_orange.gif`, `flower_fall_red.gif`, `flower_spring_blue.gif`, `flower_spring_white.gif`, ... |
+| `full version/ui` | 7 | 384x144 (2), 256x224 (1), 848x1360 (1), ... | `button maker.png`, `inventory.png`, `inventory_chopped.png`, `items.png`, ... |
 
 ### MiniWorldSprites.zip
 
