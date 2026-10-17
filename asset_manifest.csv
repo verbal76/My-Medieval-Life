@@ -1,8 +1,13 @@
 archive,path,bytes,sha256,width,height,frames,mode
 16x16 Assorted RPG Icons (partial)/,armours.png,28619,637575b7499b6256d3d471b809643e04456916af5942cae580d64e6fe9552507,144,304,1,RGBA
+16x16 Assorted RPG Icons (partial)/,books.png,6355,afa280ed05c1e2392d5872e1734c82d60562b3787b9b9e3d2df56eb0f6e7046c,224,192,1,RGBA
+16x16 Assorted RPG Icons (partial)/,chests.png,5736,5da2708d7a7b20c7db9b18329d918bc8c8d4513b96e79ff0115f6117cdd93b5b,128,96,1,RGBA
+16x16 Assorted RPG Icons (partial)/,consumables.png,33301,f8773804021e04cf8c646b89d4847f04615deabf2ed8ea2e81dd2d55bdc7c0df,704,272,1,RGBA
 16x16 Assorted RPG Icons (partial)/,items-1.png,2830,ba2f85a54eb20e15e5124dfa509d7b420eff6e673597b2cd88efe0abcb17f048,112,16,1,RGBA
 16x16 Assorted RPG Icons (partial)/,items-2.png,2483,4c65b86f57ca96c502388c72296d34546abde21e7cb75e44ac3245c44d6a0b14,112,16,1,RGBA
+16x16 Assorted RPG Icons (partial)/,potions.png,28152,d3fc2937aec92152f071597c194c9fb8ad8303d6739805770490a3b1c747b937,336,240,1,RGBA
 16x16 Assorted RPG Icons (partial)/,tools-gems-ingots.png,4752,746d66a50e6f6f09ca172620231676c12e13e6fcd06438d44cebdbaf2aecae3d,96,64,1,RGBA
+16x16 Assorted RPG Icons (partial)/,weapons.png,4379,f24386d020f4fa8e711c11294138396d3e0992b3c9f38cb6f2a60432189cb4d9,128,144,1,RGBA
 (repo root),Miniworld-Guide.docx,98156,b641b33348d44e9c2daadb6f898e0c738f77ce049176351dfc36128ad04f7afe,,,,
 (repo root),punyworld-dungeon-tileset.png,25855,0bec8a1262360c8828e450760551754d7cb734ae51b952df9e7100a656b656a8,416,320,1,RGBA
 16x16 Armour RPG Icons.zip,16x16 Armour RPG Icons/all-assets-preview.png,556319,00652823143a0f42df3141b6f79a2c65bc078ad4a14c93e327af42cb9edb1bbd,1440,768,1,RGBA
