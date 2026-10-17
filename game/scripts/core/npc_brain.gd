@@ -175,8 +175,8 @@ func _plan_eat(n: NPC) -> bool:
 				n.plan = [go(w.building_door(n.home)), work(15, "eat_home", {}, "idle")]
 				return true
 	var payer := n
-	if n.coins < 2 and n.role != "adult" and n.household >= 0:
-		payer = _richest_in_household(n)     # the family's tab at the tavern
+	if n.coins < 2 and n.household >= 0:
+		payer = _richest_in_household(n)     # the family's tab at the tavern, for anyone without coin
 	if payer != null and payer.coins >= 2:
 		var v := _vendor_with_food(n)
 		if v:
@@ -251,16 +251,25 @@ func _miner(n: NPC) -> bool:
 	for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
 		carried += n.inv.count(o)
 	if carried >= int(GameData.b("carry_ore")):
-		return _plan_sell_all(n)
-	var d := w.nearest_deposit(n.cell(), ores)
+		return _plan_sell_all(n)       # sells whatever has a buyer first
+	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null)
+	var d: Dictionary = w.nearest_deposit(n.cell(), ores) if not ores.is_empty() else {}
 	if d.is_empty():
-		d = w.nearest_deposit(n.cell(), ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"])
+		# the wanted seams are worked out: mine only what someone will still buy
+		var sellable := []
+		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+			if _buyer_for(n, o) != null:
+				sellable.append(o)
+		if not sellable.is_empty():
+			d = w.nearest_deposit(n.cell(), sellable)
 	if d.is_empty():
 		if carried > 0:
 			return _plan_sell_all(n)
-		once("mine_out_%d" % n.id, "%s %s finds no ore left to mine." % [n.name, n.family])
-		n.job = ""
-		return false
+		if w.nearest_deposit(n.cell(), ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]).is_empty():
+			once("mine_out_%d" % n.id, "%s %s finds no ore left to mine." % [n.name, n.family])
+			n.job = ""
+			return false
+		return _idle_at_work(n, "waiting for ore buyers")
 	var at := Vector2i(d.x, d.y)
 	n.doing = "mining %s" % GameData.item_name(d.ore).to_lower()
 	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("mine_minutes")), "mine", {"x": d.x, "y": d.y}, "work", at)]
@@ -446,9 +455,14 @@ func _prey_for(n: NPC):
 
 # ---------------------------------------------------------------- trading helpers ------------
 func _plan_sell_all(n: NPC) -> bool:
+	var unsold := ""
 	for id in n.inv.ids():
 		if not KEEPS.get(n.job, []).has(id) and not FOOD.has(id) and OUTLETS.has(id):
-			return _plan_sell(n, id)
+			if _buyer_for(n, id) != null:
+				return _plan_sell(n, id)
+			unsold = id
+	if unsold != "":
+		return _plan_sell(n, unsold)       # reports that nobody buys it
 	return false
 
 

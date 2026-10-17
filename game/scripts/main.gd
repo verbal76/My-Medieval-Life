@@ -1,0 +1,690 @@
+extends Node2D
+## Game scene: owns the World (simulation), draws it, runs the player's controls and actions.
+## Everything the player does goes through the same World rules as the NPCs.
+
+const T := 16
+const SAVE_PATH := "user://save1.json"
+
+var map: VillageMap
+var world: World
+var view: MapView
+var actors: Node2D
+var above: Node2D
+var camera: Camera2D
+var ui: GameUI
+var sprites := {}              # npc id -> ActorSprite
+var player_sprite: ActorSprite
+var loot_nodes: Array = []
+var projectiles: Array = []    # {node, pos, dir, left}
+var target := {}               # current interaction target
+var action := {}               # {label, left, total, done: Callable}
+var paused := true             # the title screen starts paused
+var running := false
+var move_to: Vector2 = Vector2.INF   # tap-to-move destination (tiles)
+var touch_points := {}
+var pinch_start := 0.0
+var zoom_start := 3.0
+var autosave_hour := -1
+var shot_path := ""
+var shot_frames := 0
+var shot_warp := Vector2.INF
+var shot_advance := 0.0
+var shot_zoom := 0.0
+var shot_panel := ""
+
+
+func _ready() -> void:
+	_setup_input()
+	GameData.ensure()
+	ui = GameUI.new()
+	add_child(ui)
+	ui.build(self)
+	var args := OS.get_cmdline_user_args()
+	for i in args.size():
+		if i + 1 >= args.size():
+			continue
+		match args[i]:
+			"--screenshot":
+				shot_path = args[i + 1]
+			"--warp":
+				var xy: PackedStringArray = args[i + 1].split(",")
+				shot_warp = Vector2(float(xy[0]), float(xy[1]))
+			"--advance":
+				shot_advance = float(args[i + 1])
+			"--zoom":
+				shot_zoom = float(args[i + 1])
+			"--panel":
+				shot_panel = args[i + 1]
+	if shot_path != "":
+		new_game()
+		ui.hide_all()
+		# fast-forward the simulation (game minutes) for screenshots of the living village
+		var steps := int(shot_advance / float(GameData.b("game_minutes_per_second")) / 0.5)
+		for k in steps:
+			world.update(0.5)
+		if shot_warp != Vector2.INF:
+			world.player.pos = shot_warp
+		if shot_zoom > 0.0:
+			camera.zoom = Vector2(shot_zoom, shot_zoom)
+		camera.position_smoothing_enabled = false
+		match shot_panel:
+			"skills":
+				ui.show_skills()
+			"inventory":
+				ui.show_inventory("")
+			"title":
+				ui.show_title(false)
+			"talk":
+				ui.show_talk(world.npcs[2])
+			"trade":
+				for n: NPC in world.npcs:
+					if n.job == "smith":
+						ui.show_trade(n)
+						break
+			"craft":
+				ui.show_craft(world.stations_of("anvil")[0])
+		return
+	ui.show_title(FileAccess.file_exists(SAVE_PATH))
+
+
+func _setup_input() -> void:
+	var keys := {
+		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT], "move_up": [KEY_W, KEY_UP],
+		"move_down": [KEY_S, KEY_DOWN], "interact": [KEY_E, KEY_ENTER], "attack": [KEY_SPACE, KEY_J],
+		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "pause": [KEY_ESCAPE, KEY_P],
+		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
+	}
+	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
+		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER}
+	for a in keys:
+		if not InputMap.has_action(a):
+			InputMap.add_action(a)
+		for k in keys[a]:
+			var e := InputEventKey.new()
+			e.physical_keycode = k
+			InputMap.action_add_event(a, e)
+		if pads.has(a):
+			var j := InputEventJoypadButton.new()
+			j.button_index = pads[a]
+			InputMap.action_add_event(a, j)
+	for pair in [["move_left", JOY_AXIS_LEFT_X, -1.0], ["move_right", JOY_AXIS_LEFT_X, 1.0],
+			["move_up", JOY_AXIS_LEFT_Y, -1.0], ["move_down", JOY_AXIS_LEFT_Y, 1.0]]:
+		var m := InputEventJoypadMotion.new()
+		m.axis = pair[1]
+		m.axis_value = pair[2]
+		InputMap.action_add_event(pair[0], m)
+
+
+# ---------------------------------------------------------------- starting -------------------
+func new_game() -> void:
+	_clear_world()
+	map = VillageMap.load_default()
+	world = World.new()
+	world.setup(map, 1)
+	_build_scene()
+	_start()
+
+
+func continue_game() -> void:
+	var text := FileAccess.get_file_as_string(SAVE_PATH)
+	var d = JSON.parse_string(text)
+	if not d is Dictionary or int(d.get("save_version", 0)) != 1:
+		ui.message("The save file could not be read; it was kept unchanged. Starting a new game.")
+		new_game()
+		return
+	_clear_world()
+	map = VillageMap.load_default()
+	world = World.new()
+	world.load_dict(map, d)
+	_build_scene()
+	_apply_world_changes()
+	_start()
+
+
+func _start() -> void:
+	paused = false
+	running = true
+	autosave_hour = int(world.minutes / 60.0)
+	ui.hide_all()
+	ui.message("%s %s, %s. Explore the village; talk to people (E), work, trade, build." % [world.player.name, world.player.family, world.clock_text()])
+
+
+func _clear_world() -> void:
+	if world:
+		world.dispose()
+	for c in get_children():
+		if c != ui:
+			c.queue_free()
+	sprites.clear()
+	loot_nodes.clear()
+	projectiles.clear()
+
+
+func _build_scene() -> void:
+	view = MapView.new()
+	add_child(view)
+	actors = Node2D.new()
+	actors.y_sort_enabled = true
+	add_child(actors)
+	above = Node2D.new()
+	above.z_index = 10
+	add_child(above)
+	view.build(map, above)
+	for n: NPC in world.npcs:
+		var s := ActorSprite.new()
+		s.setup(n.sprite)
+		actors.add_child(s)
+		sprites[n.id] = s
+	player_sprite = ActorSprite.new()
+	player_sprite.setup(world.player.sprite)
+	actors.add_child(player_sprite)
+	camera = Camera2D.new()
+	camera.zoom = Vector2(3, 3)
+	camera.position_smoothing_enabled = true
+	camera.position_smoothing_speed = 10.0
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = map.w * T
+	camera.limit_bottom = map.h * T
+	add_child(camera)
+	camera.make_current()
+	camera.position = world.player.pos * T
+	world.tile_changed.connect(_on_tile_changed)
+	world.event.connect(func(t): ui.log_line(t))
+	world.building_added.connect(_on_building_added)
+
+
+func _apply_world_changes() -> void:
+	for t in world.trees:
+		if t.state == "stump":
+			_on_tile_changed(Vector2i(t.x, t.y), "below", map.data.tiles.stump)
+			_on_tile_changed(Vector2i(t.x, t.y - 1), "above", -1)
+		elif t.state == "sapling":
+			_on_tile_changed(Vector2i(t.x, t.y), "below", map.data.tiles.sapling)
+			_on_tile_changed(Vector2i(t.x, t.y - 1), "above", -1)
+	for d in world.deposits:
+		if int(d.amount) <= 0:
+			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
+	for f in world.fields:
+		world._field_tiles(f)
+	for p in world.plots:
+		if not p.site.is_empty() and not p.site.done:
+			_on_tile_changed(Vector2i(int(p.x) + 4, int(p.y) + 8), "below", map.data.tiles.frame)
+	for id in world.buildings:
+		if world.buildings[id].type == "player_house":
+			_on_building_added(world.buildings[id])
+
+
+func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
+	var layer_name: String = {"below": "below0", "above": "above0", "field": "path1", "path": "path0"}.get(kind, "below0")
+	var layer := view.layer(layer_name)
+	if layer:
+		view.set_tile(layer, cell, value)
+
+
+func _on_building_added(b: Dictionary) -> void:
+	var stamp: Dictionary = map.data.stamps.house
+	for lname in stamp.layers:
+		var layer := view.layer(lname)
+		if layer == null:
+			continue
+		var cells: Array = stamp.layers[lname]
+		for j in int(stamp.h):
+			for i in int(stamp.w):
+				var v := int(cells[j * int(stamp.w) + i])
+				if v >= 0:
+					view.set_tile(layer, Vector2i(int(b.x) + i, int(b.y) + j), v)
+
+
+# ---------------------------------------------------------------- frame ----------------------
+func _process(delta: float) -> void:
+	if world == null:
+		return
+	if shot_path != "":
+		_screenshot_step(delta)
+	if not paused and world.player.alive:
+		world.update(delta)
+		_player_step(delta)
+		_projectiles_step(delta)
+		var h := int(world.minutes / 60.0)
+		if h != autosave_hour:
+			autosave_hour = h
+			save_game(false)
+	if running and not world.player.alive and not ui.is_open("death"):
+		ui.show_death()
+	_sync_sprites()
+	ui.update_hud()
+
+
+func _sync_sprites() -> void:
+	var cam := camera.get_screen_center_position() / T
+	for n: NPC in world.npcs:
+		var s: ActorSprite = sprites[n.id]
+		var near := n.pos.distance_to(cam) < 30.0
+		s.visible = (n.alive or s.anim == "death") and not n.hidden and near
+		if not s.visible:
+			continue
+		s.position = n.pos * T
+		if not n.alive:
+			if s.anim != "death":
+				s.play("death", true)
+			continue
+		s.face(n.facing)
+		s.play(n.anim)
+	var p := world.player
+	player_sprite.position = p.pos * T
+	if not p.alive:
+		if player_sprite.anim != "death":
+			player_sprite.play("death", true)
+	camera.position = p.pos * T
+	_sync_loot()
+
+
+func _sync_loot() -> void:
+	while loot_nodes.size() < world.loot.size():
+		var tr := TextureRect.new()
+		tr.texture = load("res://assets/icons/coins.png")
+		var holder := Node2D.new()
+		holder.add_child(tr)
+		tr.position = Vector2(-8, -12)
+		actors.add_child(holder)
+		loot_nodes.append(holder)
+	while loot_nodes.size() > world.loot.size():
+		loot_nodes.pop_back().queue_free()
+	for i in world.loot.size():
+		loot_nodes[i].position = world.loot[i].pos * T
+
+
+# ---------------------------------------------------------------- player ---------------------
+func _player_step(delta: float) -> void:
+	var p := world.player
+	if not action.is_empty():
+		action.left -= delta
+		player_sprite.play("work")
+		if action.left <= 0.0:
+			var done: Callable = action.done
+			action = {}
+			done.call()
+		return
+	if ui.modal():
+		player_sprite.play("idle")
+		return
+	var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	if v.length() > 0.1:
+		move_to = Vector2.INF
+	elif move_to != Vector2.INF:
+		var d := move_to - p.pos
+		if d.length() < 0.15:
+			move_to = Vector2.INF
+		else:
+			v = d.normalized()
+	if v.length() > 0.1:
+		var speed := float(GameData.b("player_tiles_per_second"))
+		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
+		_try_move(Vector2(step.x, 0))
+		_try_move(Vector2(0, step.y))
+		player_sprite.face(v)
+		player_sprite.play("walk")
+	elif player_sprite.anim == "walk":
+		player_sprite.play("idle")
+	_find_target()
+	if Input.is_action_just_pressed("interact"):
+		interact()
+	if Input.is_action_just_pressed("attack"):
+		attack()
+	if Input.is_action_just_pressed("fireball"):
+		fireball()
+	if Input.is_action_just_pressed("inventory"):
+		ui.toggle_inventory()
+	if Input.is_action_just_pressed("skills"):
+		ui.toggle_skills()
+
+
+func _try_move(step: Vector2) -> void:
+	var p := world.player
+	var np := p.pos + step
+	for c in [Vector2(-0.3, -0.15), Vector2(0.3, -0.15), Vector2(-0.3, 0.2), Vector2(0.3, 0.2)]:
+		var q: Vector2 = np + c
+		if map.is_solid(Vector2i(floori(q.x), floori(q.y))):
+			return
+	p.pos = np
+
+
+func facing_vec() -> Vector2:
+	var a := float(player_sprite.dir) * TAU / 8.0
+	return Vector2(sin(a), cos(a))
+
+
+func _find_target() -> void:
+	var p := world.player
+	var probe := p.pos + facing_vec() * 0.9
+	var best := {}
+	var bd := 1.5
+	for n: NPC in world.near(p.pos, 2.5):
+		var d := n.pos.distance_to(probe)
+		if d < bd:
+			bd = d
+			best = {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}
+	for i in world.loot.size():
+		var d: float = world.loot[i].pos.distance_to(probe)
+		if d < bd:
+			bd = d
+			best = {"kind": "loot", "i": i, "label": "Search %s's belongings" % world.loot[i].from}
+	var c := Vector2i(floori(probe.x), floori(probe.y))
+	if best.is_empty():
+		for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+			var cell: Vector2i = c + dc
+			var dep := world.deposit_at(cell)
+			if not dep.is_empty() and int(dep.amount) > 0:
+				best = {"kind": "deposit", "dep": dep, "label": "Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]}
+				break
+			var tr := world.tree_at(cell)
+			if not tr.is_empty() and tr.state == "grown":
+				best = {"kind": "tree", "tree": tr, "label": "Fell this tree"}
+				break
+	if best.is_empty():
+		for id in world.stations:
+			var st: Dictionary = world.stations[id]
+			var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
+			if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+				best = {"kind": "station", "id": id, "label": "Use the %s" % st.type}
+		for pl in world.plots:
+			var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
+			if r.has_point(p.pos):
+				var lab := "Building plot (%d coins)" % int(pl.price) if pl.owner == "" else ("Your building site" if not pl.site.get("done", false) else "Your house")
+				best = {"kind": "plot", "plot": pl, "label": lab}
+		if p.home != "" and world.buildings.has(p.home):
+			var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
+			if door.distance_to(p.pos) < 1.3:
+				best = {"kind": "home", "label": "Your house: rest, store things"}
+	target = best
+	ui.prompt(target.get("label", ""))
+
+
+func _who(n: NPC) -> String:
+	if n.role == "bandit":
+		return n.name
+	return "%s %s" % [n.name, n.family]
+
+
+func interact() -> void:
+	if target.is_empty():
+		return
+	var p := world.player
+	match target.kind:
+		"npc":
+			ui.show_talk(target.npc)
+		"loot":
+			var l: Dictionary = world.loot[target.i]
+			for id in l.inv.ids():
+				var n: int = l.inv.count(id)
+				if p.inv.add(id, n):
+					l.inv.remove(id, n)
+			p.coins += int(l.coins)
+			ui.message("You take %d coins and %d items." % [int(l.coins), 0])
+			l.coins = 0
+			if l.inv.total() == 0:
+				world.loot.remove_at(target.i)
+		"deposit":
+			var dep: Dictionary = target.dep
+			if not p.inv.has("pickaxe"):
+				ui.message("You need a pickaxe. The smith sells them.")
+				return
+			if dep.ore == "gold_ore" and p.level("mining") < 3:
+				ui.message("Gold needs Mining level 3.")
+				return
+			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
+			start_action("Mining", secs, func():
+				var ore := world.mine_unit(dep)
+				if ore == "":
+					ui.message("The seam is worked out.")
+					return
+				var n := 1
+				if p.level("mining") >= 2 and world.rng.randf() < 0.25:
+					var extra := world.mine_unit(dep)
+					if extra != "":
+						n += 1
+				if not p.inv.add(ore, n):
+					ui.message("Your pack is full.")
+				p.inv.wear("pickaxe", 1 if p.level("mining") < 4 or world.rng.randf() < 0.5 else 0)
+				_xp("mining", 8 * n))
+		"tree":
+			if not p.inv.has("axe"):
+				ui.message("You need an axe. The smith sells them.")
+				return
+			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5
+			if p.level("woodcutting") >= 3:
+				secs *= 0.7
+			var tr: Dictionary = target.tree
+			start_action("Felling", secs, func():
+				var logs := world.fell(tr, 1 if p.level("woodcutting") >= 2 else 0)
+				if logs > 0:
+					if not p.inv.add("log", logs):
+						ui.message("Your pack is full.")
+					p.inv.wear("axe", 3)
+					_xp("woodcutting", 12))
+		"station":
+			ui.show_craft(target.id)
+		"plot":
+			ui.show_build(target.plot)
+		"home":
+			ui.show_home()
+
+
+func start_action(label: String, secs: float, done: Callable) -> void:
+	action = {"label": label, "left": secs, "total": secs, "done": done}
+	move_to = Vector2.INF
+
+
+func _xp(skill: String, n: int) -> void:
+	var up := world.player.gain(skill, n)
+	if up > 0:
+		var s: Dictionary = GameData.skills[skill]
+		var unlock: String = s.unlocks.get(str(up), "")
+		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""])
+
+
+## Craft a recipe at a station (called from the craft panel). Same recipe data as the NPCs.
+func craft(recipe: String) -> void:
+	var r: Dictionary = GameData.recipes[recipe]
+	var p := world.player
+	if p.level(r.skill) < int(r.level):
+		ui.message("Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)])
+		return
+	if not p.inv.has_all(r.in):
+		ui.message("You do not have the materials.")
+		return
+	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5
+	ui.hide_all()
+	start_action("Crafting", secs, func():
+		if not p.inv.remove_all(r.in):
+			return
+		for id in r.out:
+			p.inv.add(id, int(r.out[id]))
+		_xp(r.skill, int(r.xp))
+		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))))
+
+
+# ---------------------------------------------------------------- combat ---------------------
+func attack() -> void:
+	var p := world.player
+	if p.attack_cd > 0.0 or not action.is_empty():
+		return
+	p.attack_cd = 0.6
+	player_sprite.play("sword", true)
+	var probe := p.pos + facing_vec() * 0.8
+	for n: NPC in world.near(probe, 1.1):
+		_hit(n, p.damage())
+		_xp("combat", 4)
+		break
+
+
+func _hit(n: NPC, dmg: float) -> void:
+	n.hp -= maxf(0.5, dmg - n.armor * 0.5)
+	if n.role != "bandit":
+		_crime(n)
+	elif n.target == -1:
+		n.target = -2
+	if n.hp <= 0.0:
+		world.kill(n, "slain by %s %s" % [world.player.name, world.player.family])
+
+
+## Attacking a villager is a crime: guards who see it and adults who are hit fight back.
+func _crime(victim: NPC) -> void:
+	victim.remember("attacked by %s" % world.player.name)
+	if victim.role == "adult":
+		victim.target = -2
+	for g: NPC in world.near(victim.pos, 15.0):
+		if g.job == "guard":
+			g.target = -2
+	world.note("%s %s attacked %s %s." % [world.player.name, world.player.family, victim.name, victim.family])
+
+
+func fireball() -> void:
+	var p := world.player
+	if not p.spells.get("fireball", false):
+		ui.message("You do not know any spells. The Sage in the hut north of the tavern teaches them.")
+		return
+	var cd := float(GameData.b("fireball_cooldown"))
+	if p.level("magic") >= 2:
+		cd = 4.0
+	if p.fireball_cd > 0.0 or p.stamina < float(GameData.b("fireball_stamina")):
+		return
+	p.fireball_cd = cd
+	p.stamina -= float(GameData.b("fireball_stamina"))
+	player_sprite.play("throw", true)
+	var node := Sprite2D.new()
+	node.texture = load("res://assets/icons/fireball.png")
+	node.z_index = 5
+	actors.add_child(node)
+	projectiles.append({"node": node, "pos": p.pos + facing_vec() * 0.6, "dir": facing_vec(), "left": 8.0})
+	_xp("magic", 6)
+
+
+func _projectiles_step(delta: float) -> void:
+	for pr in projectiles.duplicate():
+		var step: Vector2 = pr.dir * 9.0 * delta
+		pr.pos += step
+		pr.left -= step.length()
+		pr.node.position = pr.pos * T
+		pr.node.rotation += delta * 12.0
+		var hit := false
+		for n: NPC in world.near(pr.pos, 0.6):
+			var dmg := 14.0 * (1.5 if world.player.level("magic") >= 3 else 1.0)
+			_hit(n, dmg)
+			hit = true
+			break
+		if hit or pr.left <= 0.0 or map.is_solid(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
+			pr.node.queue_free()
+			projectiles.erase(pr)
+
+
+# ---------------------------------------------------------------- touch ----------------------
+func _unhandled_input(e: InputEvent) -> void:
+	if world == null:
+		return
+	if e is InputEventScreenTouch:
+		if e.pressed:
+			touch_points[e.index] = e.position
+			if touch_points.size() == 2:
+				pinch_start = touch_points.values()[0].distance_to(touch_points.values()[1])
+				zoom_start = camera.zoom.x
+		else:
+			touch_points.erase(e.index)
+			if touch_points.is_empty() and not ui.modal():
+				_tap(e.position)
+	elif e is InputEventScreenDrag:
+		touch_points[e.index] = e.position
+		if touch_points.size() == 2 and pinch_start > 0.0:
+			var d: float = touch_points.values()[0].distance_to(touch_points.values()[1])
+			_set_zoom(zoom_start * d / pinch_start)
+	elif e is InputEventMouseButton and e.pressed:
+		if e.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_set_zoom(camera.zoom.x * 1.1)
+		elif e.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_set_zoom(camera.zoom.x / 1.1)
+		elif e.button_index == MOUSE_BUTTON_LEFT and not ui.modal():
+			_tap(e.position)
+	if e.is_action_pressed("zoom_in"):
+		_set_zoom(camera.zoom.x * 1.2)
+	if e.is_action_pressed("zoom_out"):
+		_set_zoom(camera.zoom.x / 1.2)
+	if e.is_action_pressed("pause"):
+		if ui.modal():
+			ui.hide_all()
+		elif running:
+			ui.show_pause()
+
+
+func _set_zoom(z: float) -> void:
+	z = clampf(z, 1.5, 6.0)
+	camera.zoom = Vector2(z, z)
+
+
+## Tap or click: on something next to the player, act on it; elsewhere, walk there.
+func _tap(screen_pos: Vector2) -> void:
+	if world == null or paused:
+		return
+	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	if wpos.distance_to(world.player.pos) < 1.8:
+		player_sprite.face(wpos - world.player.pos)
+		_find_target()
+		if not target.is_empty():
+			interact()
+			return
+	move_to = wpos
+
+
+# ---------------------------------------------------------------- saving ---------------------
+func save_game(show := true) -> void:
+	if world == null or not world.player.alive:
+		return
+	var tmp := SAVE_PATH + ".tmp"
+	var f := FileAccess.open(tmp, FileAccess.WRITE)
+	if f == null:
+		ui.message("Could not save: %s" % error_string(FileAccess.get_open_error()))
+		return
+	f.store_string(JSON.stringify(world.to_dict()))
+	f.close()
+	DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(SAVE_PATH))
+	if show:
+		ui.message("Saved.")
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		if running:
+			save_game(false)
+
+
+func continue_as_heir() -> void:
+	world.continue_as_heir()
+	player_sprite.setup(world.player.sprite)
+	player_sprite.play("idle")
+	ui.hide_all()
+	save_game(false)
+
+
+## Sleep at home until morning: the world keeps running (same rules), just quickly.
+func rest() -> void:
+	var p := world.player
+	var h := world.hour()
+	var until := 6.0 if h < 6.0 else 30.0
+	var mins := (until - h) * 60.0 if h >= 18.0 or h < 6.0 else 120.0
+	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
+	for i in steps:
+		world.update(0.5)
+	p.hp = p.max_hp
+	p.stamina = 100.0
+	ui.message("You rest. It is now %s." % world.clock_text())
+	save_game(false)
+
+
+# ---------------------------------------------------------------- screenshots ----------------
+func _screenshot_step(_delta: float) -> void:
+	shot_frames += 1
+	if shot_frames == 30:
+		var img := get_viewport().get_texture().get_image()
+		img.save_png(shot_path)
+		print("screenshot saved to ", shot_path)
+		get_tree().quit()

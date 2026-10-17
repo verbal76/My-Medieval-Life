@@ -82,7 +82,7 @@ func test_simulation(days: int) -> void:
 	for d in w.deposits:
 		ore0 += int(d.amount)
 	var deaths := []
-	w.npc_died.connect(func(n): deaths.append(n.name))
+	w.npc_died.connect(func(n): deaths.append("%s (%s, %s)" % [n.name, n.role if n.job == "" else n.job, n.memory.back() if not n.memory.is_empty() else "?"]))
 	var steps := int(days * 1440.0 / float(GameData.b("game_minutes_per_second")) / 0.5)
 	var t0 := Time.get_ticks_msec()
 	var snap := {}
