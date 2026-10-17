@@ -20,6 +20,8 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY_DUNGEON_v1.zip` | verify | 15 | 139.6 KB | Puny Dungeon tileset (416x320), 5 sample Tiled maps with preview images, sample characters. |
 | `PUNY_MYTH-CREATURES-RPGMAKER_v1.zip` | CC0 | 74 | 531.6 KB | Puny Myth Creatures (Philippine folklore), RPG Maker format: 30 overworld 4-direction walk sheets (72x96, 3x4 frames of 24px), 25 unanimated enemy battle sprites, 10 hero side-view battlers (576x384, 9x6 frames of 64px), and 9 RPG Maker character sheets (288x192). Shade's thesis pack; CC0, credit optional. |
 | `PUNY_SKILLS_v1.zip` | paid | 1719 | 1.8 MB | Puny skill icons, skill FX animation spritesheets, indicators. |
+| `Puny-Characters.zip` | CC0 | 24 | 547.4 KB | Free Puny Characters: 19 pre-made 8-direction sheets (768x256 = 24 frames x 8 directions, 32px cells; idle, walk, sword, bow, stave, throw, hurt, death) for soldiers, archers, mages, workers, orcs and a slime, plus Character-Base and 4 environment tiles. Older/smaller layout than the 29-frame Editor Edition. |
+| `PunyMonsters.zip` | verify | 9 | 133.4 KB | Puny Monsters: 9 animals/monsters (panther, dog, 2 boars, 2 spiders, wolf, rat, cat), each 384x256 = 12 frames x 8 directions, 32px cells. No licence shown with the upload. |
 | `miniworld +__rainbow-refresh.zip` | verify | 10 | 642.9 KB | Recoloured 'rainbow refresh' Miniworld remix sheets, same layout as the octoshrimpy update plus chests. |
 | `16x16 Assorted RPG Icons (partial)/` (folder) | free | 9 | 113.9 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
@@ -33,7 +35,7 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 12353 |
+| `.png` | 12386 |
 | `.tmj` | 18 |
 | `.tsx` | 12 |
 | `.csv` | 11 |
@@ -350,6 +352,19 @@ Each folder lists its file count and the most common image sizes.
 | `PUNY_SKILLS_v1/Icons/Transparent Background/Wind` | 44 | 16x16 | `Wind-Icon-000.png`, `Wind-Icon-001.png`, `Wind-Icon-002.png`, `Wind-Icon-003.png`, ... |
 | `PUNY_SKILLS_v1/Indicators/Symbol Indicator` | 28 | 16x16 | `Asleep-Indicator.png`, `Bleeding-Indicator.png`, `Buffed-Indicator.png`, `Burned-Indicator.png`, ... |
 | `PUNY_SKILLS_v1/Indicators/Text Indicator` | 29 | 16x16 | `Assasin-Text-Indicator.png`, `Blood-Text-Indicator.png`, `Buff-Text-Indicator.png`, `Charm-Text-Indicator.png`, ... |
+
+### Puny-Characters.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `Puny-Characters` | 20 | 768x256 (19), 480x32 (1) | `Archer-Green.png`, `Archer-Purple.png`, `Character-Base.png`, `Human-Soldier-Cyan.png`, ... |
+| `Puny-Characters/Environment` | 4 | 16x16 | `Dirt.png`, `Grass1.png`, `Grass2.png`, `Tree.png` |
+
+### PunyMonsters.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `PunyMonsters` | 9 | 384x256 | `Black-Panther-32x32.png`, `Blonde-Dog-32x32.png`, `Brown-Boar-32x32.png`, `Brown-Spider-32x32.png`, ... |
 
 ### miniworld +__rainbow-refresh.zip
 

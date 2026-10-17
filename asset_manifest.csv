@@ -12403,6 +12403,39 @@ PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Thief-Text-Indicator
 PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Time-Text-Indicator.png,225,213945870afc9ad7219eabc6192dc567356c689ac24221c7d65244c6f0ee3c94,16,16,1,RGBA
 PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Water-Text-Indicator.png,211,9a730b0feb10e548d767cadcf99596348e8832d13220d99947a0cc4a2a6e1505,16,16,1,RGBA
 PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Wind-Text-Indicator.png,220,01e3ca793ab79e9d79ee4baba2477f6dc737a50cf38483443414fa5354042d6b,16,16,1,RGBA
+Puny-Characters.zip,Puny-Characters/Archer-Green.png,26723,2fe5178f77e431b7e3b6f3934459047ac86f29f2e23f44425eb60e4aac3a89e1,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Archer-Purple.png,27415,788d53de100aceb025621ae4fc95a61a6cd08168205185871a6442ab7b131d26,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Character-Base.png,19255,a542332ff1ed66ce28e7eea489f2e1e304d90671aa531fc9ccf0b00b9f2857ff,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Environment/Dirt.png,651,3e8dbfd2dfdcf8afd0c44bfb1ccca483e40a39868ed228ddb7ecce0125626eed,16,16,1,RGBA
+Puny-Characters.zip,Puny-Characters/Environment/Grass1.png,581,603695fbdca78abfc27c1ca87a9d22f5dc59b5b948540e2ecac69a5df321c7b6,16,16,1,RGBA
+Puny-Characters.zip,Puny-Characters/Environment/Grass2.png,581,7df15de64237b1a7e881c782cab5f2ea452075d22e880b5bc6d517ceaee8cbc8,16,16,1,RGBA
+Puny-Characters.zip,Puny-Characters/Environment/Tree.png,812,c86fde88ab3cbd47a2b97ddd4ac54b5d3b2e7c597e392c3db407731839f800c1,16,16,1,RGBA
+Puny-Characters.zip,Puny-Characters/Human-Soldier-Cyan.png,36854,df8e3667acf52406a6f5ee99b13efde36b21fddd0e1eb073af8550e53b624576,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Human-Soldier-Red.png,36587,4f2c79ee2d1f7e87adfb4699080b341b3477a26f6e936dcfd6413b7f8b58f32d,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Human-Worker-Cyan.png,32022,d0496bf14c07577f039a6388e39f777ecf6dcadfa92dc893c2684cba4ed6610f,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Human-Worker-Red.png,32570,2b139ac47903beba7f050e4dd08a491540b0fe1667016ab302c1a27441352edf,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Mage-Cyan.png,23811,bd43df96cef751f76252723bfa5a6095d68e982cba59260aec7f4fbfedf7ec3f,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Mage-Red.png,24230,8e0c055d87b303215205ac217617350708affd2ee6e033b696e7cb4c4ef4c590,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Orc-Grunt.png,34011,85113f47feeeecab67c057c42ddafefb8171572413ea4276dd2b3ac2d7f0dc2c,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Orc-Peon-Cyan.png,32862,160cdba5ea6642b06ec96a4e9210f2f874b4850c092a3915bd7b44b046e0a812,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Orc-Peon-Red.png,32825,04038696fc50599758abe9c23fc625238572842c9c8e828f45b25c66e677f29a,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Orc-Soldier-Cyan.png,36468,d7fde238807a112c313fb61c00c44eadbbc601be52fdefa29c6327c4710925bf,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Orc-Soldier-Red.png,36259,6612e51fa22bd2acd2b3994477eff96670c72943fec52ae1f2faf9f5e4438816,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Slime.png,1895,456578c6da103c18ac3ffd6bba475b8154a4d82910e0ad34ca699304883f87b0,480,32,1,RGBA
+Puny-Characters.zip,Puny-Characters/Soldier-Blue.png,25043,ddcb515baaf2b5b7a4c569ba23d7490c3e5221bb5e97d760ce67ce9c261a543d,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Soldier-Red.png,24825,b9a89aef6607463d9444b701c8b687e70b2499f9c44257da0d48d68e48f6faf4,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Soldier-Yellow.png,25193,348ab99b4f54d1a22013d24191a0e1622324db7f78926b5bd465a17516187204,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Warrior-Blue.png,24494,acc8db08577086f1520d74d0806a614833a1f7356ba8a560437fd4c59538cdbc,768,256,1,RGBA
+Puny-Characters.zip,Puny-Characters/Warrior-Red.png,24614,c60c80dcad811b3ef0e0e8e1fa5f0d62e011b3e604f2bb2a78261f2dcae6c712,768,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Black-Panther-32x32.png,10453,9cb8871d66a098abc789c7d01712da7b44b6b365763dbfcaa6a1f19fbc075921,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Blonde-Dog-32x32.png,11700,4a94c23d91e29efe8b07eb6f48f00f1fd893f5c0d0a6bf12e01b5de707212046,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Brown-Boar-32x32.png,12016,a96dcc8ab3bc0a23d5dfc9fa38282e2cdd9b6d4db5ee8303bb60c2be7274b2f0,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Brown-Spider-32x32.png,18739,f9d2fbe0d343d57d1c3a7abcf4e710ab63f24cc7c623ee596ef786989a91db96,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Dirty-Gray-Boar-32x32.png,15833,7819b77933a17f7e7d13a2d3ade26b101c88c43c191703682ef7550ba8dcd421,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Gray-Wolf-32x32.png,11378,b47d5a99c37b93838e597b655d4a7da3cd752938dfb87dccfc1b20c09a8ff45b,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Navy-Blue-Rat-32x32.png,9861,98e9154614d8980e521b2604730badc1aba79c6f2f029315d918d0bf0f3cf2e4,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Orange-Cat-32x32.png,27763,a604e68a24f33242d6fc0ba546028f46fac31b1e9fa048876f4cffcbf119d7b4,384,256,1,RGBA
+PunyMonsters.zip,PunyMonsters/Purple-Spider-32x32.png,18873,91246a5396d190795ff89efa02f116919ac43128dc12319f5967da6b8683efe7,384,256,1,RGBA
 miniworld +__rainbow-refresh.zip,alives_orcs.png,12379,650b12e087d31201072dad4b381a43e1585283b1589388a3ec5d9fe03c66c5a1,512,512,1,P
 miniworld +__rainbow-refresh.zip,alives_other.png,207219,7a24fed12aab99e27bdbc00ec1e54e5b19a2f8ffba42d395a93542cfc7666ac4,1024,1024,1,RGBA
 miniworld +__rainbow-refresh.zip,buildings.png,222310,8abfa3bf2c942d271d1a7e96193587296d9d0cae15d3bc05c46a6b12295d7ca2,1024,1376,1,RGBA
