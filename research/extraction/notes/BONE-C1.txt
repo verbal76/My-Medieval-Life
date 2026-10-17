@@ -1,0 +1,70 @@
+@ BONE-C1
+summary: In the small kingdom of Upmeads, King Peter's four sons ask leave to seek adventure. They draw straws: Hugh goes north, Gregory west, Blaise east, and Ralph, drawing the shortest, must stay home. Each is given a squire, horses and a bag of money, and the three elder brothers ride away.
+geo: The High House of Upmeads stands in an ingle of Upmeads Water, four furlongs from the Four-want-way. Land rises north toward hill-country and unseen mountains. A low ridge runs south of the river (which flows west to east), and beyond it higher hills mark the southern end of the kingdom. The northern marches end in a great debateable forest (the Wood Debateable), beyond which a bishop-baron rules. Neighbouring lands named in the coinage: the Wolds and the Overhill-Countries.
+open: How far north the king's land runs beyond the Want-way before the Wood Debateable || Whether the Wolds and Overhill-Countries are the southern neighbours or elsewhere || Where St. John's by the Bridge stands relative to the High House
+
+E polity | Upmeads | Kingdom of Upmeads | petty kingdom | Small kingdom of hills, meadows and yeomen's halls with no great city, castle or abbey; ruled by a kinglet. | P003 `the little hills of Upmeads`; P009 `there was presently an end of the Kingdom of Upmeads`
+E person | King Peter | Peter | king | King of Upmeads, a kinglet with four sons; lacks freedom to tax his folk. | P002 `King Peter`
+E person | Blaise | - | prince | Eldest son of King Peter, about thirty; rides east with Richard the Red. | P021 `Blaise fareth eastward and Richard with him`
+E person | Hugh | - | prince | Second son of King Peter; rides north with Lancelot Longtongue. | P021 `Hugh goeth north with Lancelot`
+E person | Gregory | - | prince | Third son of King Peter; rides west with Clement the Black. | P021 `Gregory westward with Clement`
+E person | Ralph | Ralph of Upmeads | prince | Youngest son of King Peter; draws the shortest straw and is to stay home. | P002 `Ralph`
+E person | Richard the Red | Richard | squire | Squire assigned to Blaise. | P021 `Blaise fareth eastward and Richard with him`
+E person | Lancelot Longtongue | Lancelot | squire | Squire assigned to Hugh; knows the logic of the law rather than the schools. | P021 `Hugh goeth north with Lancelot`
+E person | Clement the Black | Clement | squire | Squire assigned to Gregory; a careful man handy in the smithy. | P021 `Gregory westward with Clement`
+E person | Nicholas Longshanks | Nicholas | squire | Squire for Ralph; lettered and far-travelled; leads Ralph's war-horse home. | P027 `Nicholas`
+E person | (unnamed) Prior of St. John's by the Bridge | - | prior | Gave the king a carpet. | P005 `the Prior of St. John's by the Bridge`
+E building | St. John's by the Bridge | - | priory | A religious house at a bridge in or near Upmeads. | P005 `the Prior of St. John's by the Bridge`
+E building | High House of Upmeads | the House | royal hall | King Peter's hall, in an ingle of Upmeads Water among meadows. | P005 `the High House of Upmeads`
+E feature | Upmeads Water | - | river | River of Upmeads, winding from west to east past the High House. | P009 `an ingle of the river called Upmeads Water`
+E feature | Four-want-way | Want-way | crossroads | Crossroads four furlongs from the High House where the brothers part. | P007 `Four-want-way`; P009 `this Want-way aforesaid was but four furlongs from the House`
+E feature | Wood Debateable | - | forest | Great forest at the northern marches, debated between Upmeads and a bishop-baron; game and wolves; King Peter's father and eldest son died there. | P009 `ended in a great forest well furnished of trees; and this wood was debateable`; P010 `the Wood Debateable`
+E person | (unnamed) bishop-baron beyond the Wood Debateable | - | bishop and baron | Lord beyond the forest: a bishop and baron of Holy Church, close-fisted and a manslayer. | P009 `a bishop, and a baron of Holy Church`
+E place | The Wolds | - | region | Neighbouring land whose silver is reckoned with that of Upmeads. | P026 `lawful silver of Upmeads and the Wolds and the Overhill-Countries`
+E place | Overhill-Countries | - | region | Neighbouring lands whose silver is reckoned with that of Upmeads. | P026 `lawful silver of Upmeads and the Wolds and the Overhill-Countries`
+E group | vavassors of Upmeads | - | landholders | The stubborn and sturdy freeholding men of Upmeads. | P004 `stubborn and sturdy vavassors`
+E building | (unnamed) house of good canons in Upmeads | - | house of canons | A house of canons in Upmeads. | P004 `a house of good canons`
+E currency | lawful silver of Upmeads | - | silver coin | Coin standard shared by Upmeads, the Wolds and the Overhill-Countries. | P026 `lawful silver of Upmeads`
+E custom | drawing of straws | - | lot-casting | Straws decide which brother goes which way and who stays. | P012 `King of Upmeads`
+
+R King Peter | parent_of | Blaise | eldest son | BONE-C1 | CANON/high | P002 `King Peter`
+R King Peter | parent_of | Ralph | youngest of four sons | BONE-C1 | CANON/high | P002 `King Peter`
+R King Peter | ruler_of | Upmeads | kinglet | BONE-C1 | CANON/high | P002 `King Peter`
+R Richard the Red | serves | Blaise | squire | BONE-C1 | CANON/high | P021 `Blaise fareth eastward and Richard with him`
+R Lancelot Longtongue | serves | Hugh | squire | BONE-C1 | CANON/high | P021 `Hugh goeth north with Lancelot`
+R Clement the Black | serves | Gregory | squire | BONE-C1 | CANON/high | P021 `Gregory westward with Clement`
+R Upmeads | other | (unnamed) bishop-baron beyond the Wood Debateable | disputed border forest; hostile neighbour | BONE-C1 | CANON/high | P009 `this wood was debateable`
+
+S Four-want-way | distance_from | High House of Upmeads | dist=four furlongs; cert=fixed | CANON/high | - | P009 `this Want-way aforesaid was but four furlongs from the House`
+S High House of Upmeads | within | Upmeads Water | terrain=meadows at the end of the upland tillage; cert=fixed | CANON/high | in an ingle (bend) of the river | P009 `lay in an ingle of the river called Upmeads Water amongst very fair meadows at the end of the upland tillage`
+S Upmeads Water | other | Upmeads | dir=flows west to east; cert=fixed | CANON/high | river course | P009 `as it wound along from west to east`
+S (unnamed) hill-country north of Upmeads | north_of | High House of Upmeads | dir=north; terrain=land sloping up to hill-country and unseen mountains; cert=fixed | CANON/high | - | P009 `the land sloped gently up toward the hill-country and the unseen mountains on the north`
+S (unnamed) low ridge south of Upmeads Water | south_of | High House of Upmeads | dir=south; terrain=low ridge along the water; cert=fixed | CANON/high | - | P009 `to the south was a low ridge which ran along the water`
+S (unnamed) southern higher hills | south_of | Upmeads | dir=south, beyond the ridge; terrain=higher hills running east and west; cert=fixed | CANON/high | southern border of the kingdom; neighbours peaceable | P009 `stretched mainly east and west also, there was presently an end of the Kingdom of Upmeads`
+S Wood Debateable | north_of | Upmeads | dir=north, at the northern marches; terrain=great forest; cert=fixed | CANON/high | border forest | P009 `ended in a great forest well furnished of trees`
+S (unnamed) lands of the bishop-baron | beyond | Wood Debateable | dir=north; cert=constrained | CANON/high | beyond the forest from Upmeads | P009 `a bishop, and a baron of Holy Church`
+
+T Hugh, Lancelot Longtongue | Four-want-way | (unknown) | dir=north; mode=horse | P021 `Hugh goeth north with Lancelot`
+T Gregory, Clement the Black | Four-want-way | (unknown) | dir=west; mode=horse | P021 `Gregory westward with Clement`
+T Blaise, Richard the Red | Four-want-way | (unknown) | dir=east; mode=horse | P021 `Blaise fareth eastward and Richard with him`
+
+F society | Upmeads | Upmeads has no great merchant city, mighty castle or noble abbey; its people live in yeomen's halls, franklins' courts and knights' manor-houses. | CANON/high | P004 `no great merchant city; no mighty castle, or noble abbey of monks`
+F politics | King Peter | The king has no freedom to tax and tail his folk. | CANON/high | P009 `no freedom to tax and tail his folk`
+F ecology | Wood Debateable | The forest holds hart, buck, roe, swine, bears and wolves. | CANON/high | P009 `hart, and buck, and roe, and swine, and bears and wolves`
+F politics | (unnamed) bishop-baron beyond the Wood Debateable | He rules through vicars: knights and men-at-arms holding manors of him or waged by him. | CANON/high | P009 `a close-fist and a manslayer`
+F transport | Upmeads | Each brother is given a destrier, a hackney and a squire. | CANON/high | P011 `four destriers, and four hackneys, and four squires`
+F price | Upmeads | Each bag holds white and red coin, uncoined gold, a few rings and brooches, valued in lawful silver. | CANON/high | P026 `coined money, both white and red, and some deal of gold uncoined`
+F climate | Upmeads | The scene is a fair, hot June afternoon. | CANON/high; when=BONE-C1 | P005 `a fair and hot afternoon of June`
+F learning | Nicholas Longshanks | Nicholas is lettered and far-travelled. | CANON/high | P017 `a man lettered and far-travelled`
+F craft | Clement the Black | Clement can work with the hammer in the smithy. | CANON/high | P016 `with the hammer in the smithy`
+
+V main | The drawing of the straws | The brothers draw lots: longest goes north, next east, third west, shortest stays as King of Upmeads; Ralph draws the shortest. | time=a hot June afternoon; who=Blaise, Hugh, Gregory, Ralph, King Peter; where=High House of Upmeads | P012 `King of Upmeads`; P021 `Hugh goeth north with Lancelot`
+V backstory | Deaths in the Wood Debateable | King Peter's father and eldest son were slain in battle in the forest. | who=King Peter; where=Wood Debateable | P010 `the Wood Debateable`
+V main | The brothers' departure | The three elder brothers ride off from the Four-want-way; Nicholas leads Ralph's war-horse home. | who=Blaise, Hugh, Gregory, Nicholas Longshanks; where=Four-want-way | P027 `Nicholas`
+
+U location | Where is St. John's by the Bridge, and which bridge (over Upmeads Water?) | P005 `the Prior of St. John's by the Bridge`
+U missing_measure | How far north the king's land runs beyond the Want-way before the Wood Debateable is not stated. | P009 `over a good stretch of land`
+U location | Whether the Wolds and Overhill-Countries are the southern neighbours or other directions. | P026 `the Wolds and the Overhill-Countries`
+
+O politics | A disputed border forest between a weak kinglet and a church baron as a starting tension. | P009 `this wood was debateable`
+O economy | Shared silver standard of neighbouring lands as a regional currency zone. | P026 `lawful silver of Upmeads and the Wolds and the Overhill-Countries`

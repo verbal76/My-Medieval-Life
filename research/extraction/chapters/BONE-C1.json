@@ -1,0 +1,1015 @@
+{
+ "entities": [
+  {
+   "name": "Upmeads",
+   "aliases": [
+    "Kingdom of Upmeads"
+   ],
+   "type": "polity",
+   "subtype": "petty kingdom",
+   "unnamed": false,
+   "summary": "Small kingdom of hills, meadows and yeomen's halls with no great city, castle or abbey; ruled by a kinglet.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P003",
+     "q": "the little hills of Upmeads"
+    },
+    {
+     "p": "BONE-C1-P009",
+     "q": "there was presently an end of the Kingdom of Upmeads"
+    }
+   ]
+  },
+  {
+   "name": "King Peter",
+   "aliases": [
+    "Peter"
+   ],
+   "type": "person",
+   "subtype": "king",
+   "unnamed": false,
+   "summary": "King of Upmeads, a kinglet with four sons; lacks freedom to tax his folk.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "King Peter"
+    }
+   ]
+  },
+  {
+   "name": "Blaise",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": false,
+   "summary": "Eldest son of King Peter, about thirty; rides east with Richard the Red.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Blaise fareth eastward and Richard with him"
+    }
+   ]
+  },
+  {
+   "name": "Hugh",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": false,
+   "summary": "Second son of King Peter; rides north with Lancelot Longtongue.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ]
+  },
+  {
+   "name": "Gregory",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": false,
+   "summary": "Third son of King Peter; rides west with Clement the Black.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Gregory westward with Clement"
+    }
+   ]
+  },
+  {
+   "name": "Ralph",
+   "aliases": [
+    "Ralph of Upmeads"
+   ],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": false,
+   "summary": "Youngest son of King Peter; draws the shortest straw and is to stay home.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "Ralph"
+    }
+   ]
+  },
+  {
+   "name": "Richard the Red",
+   "aliases": [
+    "Richard"
+   ],
+   "type": "person",
+   "subtype": "squire",
+   "unnamed": false,
+   "summary": "Squire assigned to Blaise.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Blaise fareth eastward and Richard with him"
+    }
+   ]
+  },
+  {
+   "name": "Lancelot Longtongue",
+   "aliases": [
+    "Lancelot"
+   ],
+   "type": "person",
+   "subtype": "squire",
+   "unnamed": false,
+   "summary": "Squire assigned to Hugh; knows the logic of the law rather than the schools.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ]
+  },
+  {
+   "name": "Clement the Black",
+   "aliases": [
+    "Clement"
+   ],
+   "type": "person",
+   "subtype": "squire",
+   "unnamed": false,
+   "summary": "Squire assigned to Gregory; a careful man handy in the smithy.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Gregory westward with Clement"
+    }
+   ]
+  },
+  {
+   "name": "Nicholas Longshanks",
+   "aliases": [
+    "Nicholas"
+   ],
+   "type": "person",
+   "subtype": "squire",
+   "unnamed": false,
+   "summary": "Squire for Ralph; lettered and far-travelled; leads Ralph's war-horse home.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P027",
+     "q": "Nicholas"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Prior of St. John's by the Bridge",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prior",
+   "unnamed": true,
+   "summary": "Gave the king a carpet.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P005",
+     "q": "the Prior of St. John's by the Bridge"
+    }
+   ]
+  },
+  {
+   "name": "St. John's by the Bridge",
+   "aliases": [],
+   "type": "building",
+   "subtype": "priory",
+   "unnamed": false,
+   "summary": "A religious house at a bridge in or near Upmeads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P005",
+     "q": "the Prior of St. John's by the Bridge"
+    }
+   ]
+  },
+  {
+   "name": "High House of Upmeads",
+   "aliases": [
+    "the House"
+   ],
+   "type": "building",
+   "subtype": "royal hall",
+   "unnamed": false,
+   "summary": "King Peter's hall, in an ingle of Upmeads Water among meadows.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P005",
+     "q": "the High House of Upmeads"
+    }
+   ]
+  },
+  {
+   "name": "Upmeads Water",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": false,
+   "summary": "River of Upmeads, winding from west to east past the High House.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "an ingle of the river called Upmeads Water"
+    }
+   ]
+  },
+  {
+   "name": "Four-want-way",
+   "aliases": [
+    "Want-way"
+   ],
+   "type": "feature",
+   "subtype": "crossroads",
+   "unnamed": false,
+   "summary": "Crossroads four furlongs from the High House where the brothers part.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P007",
+     "q": "Four-want-way"
+    },
+    {
+     "p": "BONE-C1-P009",
+     "q": "this Want-way aforesaid was but four furlongs from the House"
+    }
+   ]
+  },
+  {
+   "name": "Wood Debateable",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": false,
+   "summary": "Great forest at the northern marches, debated between Upmeads and a bishop-baron; game and wolves; King Peter's father and eldest son died there.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "ended in a great forest well furnished of trees; and this wood was debateable"
+    },
+    {
+     "p": "BONE-C1-P010",
+     "q": "the Wood Debateable"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) bishop-baron beyond the Wood Debateable",
+   "aliases": [],
+   "type": "person",
+   "subtype": "bishop and baron",
+   "unnamed": true,
+   "summary": "Lord beyond the forest: a bishop and baron of Holy Church, close-fisted and a manslayer.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "a bishop, and a baron of Holy Church"
+    }
+   ]
+  },
+  {
+   "name": "The Wolds",
+   "aliases": [],
+   "type": "place",
+   "subtype": "region",
+   "unnamed": false,
+   "summary": "Neighbouring land whose silver is reckoned with that of Upmeads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "lawful silver of Upmeads and the Wolds and the Overhill-Countries"
+    }
+   ]
+  },
+  {
+   "name": "Overhill-Countries",
+   "aliases": [],
+   "type": "place",
+   "subtype": "region",
+   "unnamed": false,
+   "summary": "Neighbouring lands whose silver is reckoned with that of Upmeads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "lawful silver of Upmeads and the Wolds and the Overhill-Countries"
+    }
+   ]
+  },
+  {
+   "name": "vavassors of Upmeads",
+   "aliases": [],
+   "type": "group",
+   "subtype": "landholders",
+   "unnamed": false,
+   "summary": "The stubborn and sturdy freeholding men of Upmeads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P004",
+     "q": "stubborn and sturdy vavassors"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) house of good canons in Upmeads",
+   "aliases": [],
+   "type": "building",
+   "subtype": "house of canons",
+   "unnamed": true,
+   "summary": "A house of canons in Upmeads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P004",
+     "q": "a house of good canons"
+    }
+   ]
+  },
+  {
+   "name": "lawful silver of Upmeads",
+   "aliases": [],
+   "type": "currency",
+   "subtype": "silver coin",
+   "unnamed": false,
+   "summary": "Coin standard shared by Upmeads, the Wolds and the Overhill-Countries.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "lawful silver of Upmeads"
+    }
+   ]
+  },
+  {
+   "name": "drawing of straws",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "lot-casting",
+   "unnamed": false,
+   "summary": "Straws decide which brother goes which way and who stays.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C1-P012",
+     "q": "King of Upmeads"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "King Peter",
+   "rel": "parent_of",
+   "b": "Blaise",
+   "detail": "eldest son",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "King Peter"
+    }
+   ]
+  },
+  {
+   "a": "King Peter",
+   "rel": "parent_of",
+   "b": "Ralph",
+   "detail": "youngest of four sons",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "King Peter"
+    }
+   ]
+  },
+  {
+   "a": "King Peter",
+   "rel": "ruler_of",
+   "b": "Upmeads",
+   "detail": "kinglet",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C1-P002",
+     "q": "King Peter"
+    }
+   ]
+  },
+  {
+   "a": "Richard the Red",
+   "rel": "serves",
+   "b": "Blaise",
+   "detail": "squire",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Blaise fareth eastward and Richard with him"
+    }
+   ]
+  },
+  {
+   "a": "Lancelot Longtongue",
+   "rel": "serves",
+   "b": "Hugh",
+   "detail": "squire",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ]
+  },
+  {
+   "a": "Clement the Black",
+   "rel": "serves",
+   "b": "Gregory",
+   "detail": "squire",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Gregory westward with Clement"
+    }
+   ]
+  },
+  {
+   "a": "Upmeads",
+   "rel": "other",
+   "b": "(unnamed) bishop-baron beyond the Wood Debateable",
+   "detail": "disputed border forest; hostile neighbour",
+   "when": "BONE-C1",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "this wood was debateable"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Four-want-way",
+   "rel": "distance_from",
+   "b": "High House of Upmeads",
+   "direction": "",
+   "distance_text": "four furlongs",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "this Want-way aforesaid was but four furlongs from the House"
+    }
+   ]
+  },
+  {
+   "a": "High House of Upmeads",
+   "rel": "within",
+   "b": "Upmeads Water",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "meadows at the end of the upland tillage",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "in an ingle (bend) of the river",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "lay in an ingle of the river called Upmeads Water amongst very fair meadows at the end of the upland tillage"
+    }
+   ]
+  },
+  {
+   "a": "Upmeads Water",
+   "rel": "other",
+   "b": "Upmeads",
+   "direction": "flows west to east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "river course",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "as it wound along from west to east"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) hill-country north of Upmeads",
+   "rel": "north_of",
+   "b": "High House of Upmeads",
+   "direction": "north",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "land sloping up to hill-country and unseen mountains",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "the land sloped gently up toward the hill-country and the unseen mountains on the north"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) low ridge south of Upmeads Water",
+   "rel": "south_of",
+   "b": "High House of Upmeads",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "low ridge along the water",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "to the south was a low ridge which ran along the water"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) southern higher hills",
+   "rel": "south_of",
+   "b": "Upmeads",
+   "direction": "south, beyond the ridge",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "higher hills running east and west",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "southern border of the kingdom; neighbours peaceable",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "stretched mainly east and west also, there was presently an end of the Kingdom of Upmeads"
+    }
+   ]
+  },
+  {
+   "a": "Wood Debateable",
+   "rel": "north_of",
+   "b": "Upmeads",
+   "direction": "north, at the northern marches",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "great forest",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "border forest",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "ended in a great forest well furnished of trees"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) lands of the bishop-baron",
+   "rel": "beyond",
+   "b": "Wood Debateable",
+   "direction": "north",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "beyond the forest from Upmeads",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "a bishop, and a baron of Holy Church"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Hugh",
+    "Lancelot Longtongue"
+   ],
+   "from": "Four-want-way",
+   "to": "(unknown)",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "north",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C1",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Gregory",
+    "Clement the Black"
+   ],
+   "from": "Four-want-way",
+   "to": "(unknown)",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "west",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C1",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Gregory westward with Clement"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Blaise",
+    "Richard the Red"
+   ],
+   "from": "Four-want-way",
+   "to": "(unknown)",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "east",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C1",
+   "refs": [
+    {
+     "p": "BONE-C1-P021",
+     "q": "Blaise fareth eastward and Richard with him"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Upmeads",
+   "statement": "Upmeads has no great merchant city, mighty castle or noble abbey; its people live in yeomen's halls, franklins' courts and knights' manor-houses.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P004",
+     "q": "no great merchant city; no mighty castle, or noble abbey of monks"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "King Peter",
+   "statement": "The king has no freedom to tax and tail his folk.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "no freedom to tax and tail his folk"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Wood Debateable",
+   "statement": "The forest holds hart, buck, roe, swine, bears and wolves.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "hart, and buck, and roe, and swine, and bears and wolves"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "(unnamed) bishop-baron beyond the Wood Debateable",
+   "statement": "He rules through vicars: knights and men-at-arms holding manors of him or waged by him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "a close-fist and a manslayer"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "Upmeads",
+   "statement": "Each brother is given a destrier, a hackney and a squire.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P011",
+     "q": "four destriers, and four hackneys, and four squires"
+    }
+   ]
+  },
+  {
+   "category": "price",
+   "subject": "Upmeads",
+   "statement": "Each bag holds white and red coin, uncoined gold, a few rings and brooches, valued in lawful silver.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "coined money, both white and red, and some deal of gold uncoined"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Upmeads",
+   "statement": "The scene is a fair, hot June afternoon.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "BONE-C1",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P005",
+     "q": "a fair and hot afternoon of June"
+    }
+   ]
+  },
+  {
+   "category": "learning",
+   "subject": "Nicholas Longshanks",
+   "statement": "Nicholas is lettered and far-travelled.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P017",
+     "q": "a man lettered and far-travelled"
+    }
+   ]
+  },
+  {
+   "category": "craft",
+   "subject": "Clement the Black",
+   "statement": "Clement can work with the hammer in the smithy.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P016",
+     "q": "with the hammer in the smithy"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The drawing of the straws",
+   "chapter": "BONE-C1",
+   "layer": "main",
+   "time_text": "a hot June afternoon",
+   "participants": [
+    "Blaise",
+    "Hugh",
+    "Gregory",
+    "Ralph",
+    "King Peter"
+   ],
+   "places": [
+    "High House of Upmeads"
+   ],
+   "summary": "The brothers draw lots: longest goes north, next east, third west, shortest stays as King of Upmeads; Ralph draws the shortest.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P012",
+     "q": "King of Upmeads"
+    },
+    {
+     "p": "BONE-C1-P021",
+     "q": "Hugh goeth north with Lancelot"
+    }
+   ]
+  },
+  {
+   "label": "Deaths in the Wood Debateable",
+   "chapter": "BONE-C1",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "King Peter"
+   ],
+   "places": [
+    "Wood Debateable"
+   ],
+   "summary": "King Peter's father and eldest son were slain in battle in the forest.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P010",
+     "q": "the Wood Debateable"
+    }
+   ]
+  },
+  {
+   "label": "The brothers' departure",
+   "chapter": "BONE-C1",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Blaise",
+    "Hugh",
+    "Gregory",
+    "Nicholas Longshanks"
+   ],
+   "places": [
+    "Four-want-way"
+   ],
+   "summary": "The three elder brothers ride off from the Four-want-way; Nicholas leads Ralph's war-horse home.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C1-P027",
+     "q": "Nicholas"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where is St. John's by the Bridge, and which bridge (over Upmeads Water?)",
+   "refs": [
+    {
+     "p": "BONE-C1-P005",
+     "q": "the Prior of St. John's by the Bridge"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "How far north the king's land runs beyond the Want-way before the Wood Debateable is not stated.",
+   "refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "over a good stretch of land"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Whether the Wolds and Overhill-Countries are the southern neighbours or other directions.",
+   "refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "the Wolds and the Overhill-Countries"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A disputed border forest between a weak kinglet and a church baron as a starting tension.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BONE-C1-P009",
+     "q": "this wood was debateable"
+    }
+   ]
+  },
+  {
+   "idea": "Shared silver standard of neighbouring lands as a regional currency zone.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BONE-C1-P026",
+     "q": "lawful silver of Upmeads and the Wolds and the Overhill-Countries"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C1",
+ "chapters": [
+  "BONE-C1"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C1",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "In the small kingdom of Upmeads, King Peter's four sons ask leave to seek adventure. They draw straws: Hugh goes north, Gregory west, Blaise east, and Ralph, drawing the shortest, must stay home. Each is given a squire, horses and a bag of money, and the three elder brothers ride away.",
+   "geography_notes": "The High House of Upmeads stands in an ingle of Upmeads Water, four furlongs from the Four-want-way. Land rises north toward hill-country and unseen mountains. A low ridge runs south of the river (which flows west to east), and beyond it higher hills mark the southern end of the kingdom. The northern marches end in a great debateable forest (the Wood Debateable), beyond which a bishop-baron rules. Neighbouring lands named in the coinage: the Wolds and the Overhill-Countries.",
+   "open_questions": [
+    "How far north the king's land runs beyond the Want-way before the Wood Debateable",
+    "Whether the Wolds and Overhill-Countries are the southern neighbours or elsewhere",
+    "Where St. John's by the Bridge stands relative to the High House"
+   ]
+  }
+ ]
+}

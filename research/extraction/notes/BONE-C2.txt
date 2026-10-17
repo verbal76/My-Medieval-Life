@@ -1,0 +1,20 @@
+@ BONE-C2
+summary: King Peter tells Ralph of being lost alone in the Wood Debateable among outlaws who treated him kindly. Ralph's mother is described, and household details of the High House are given. Ralph hides his discontent and goes to bed singing.
+geo: none beyond confirming the Wood Debateable harbours outlaws.
+open: Whether the outlaws of the Wood Debateable are an organised band
+
+E group | outlaws of the Wood Debateable | wolfheads | outlaws | Outlaws and wolfheads in the forest who treated the lost King Peter kindly. | P002 `outlaws and wolfheads`
+E person | (unnamed) Queen of Upmeads | Ralph's mother | queen | Ralph's mother, a noble dame a little over fifty. | P003 `a noble dame`
+
+R (unnamed) Queen of Upmeads | parent_of | Ralph | mother | BONE-C2 | CANON/high | P003 `a noble dame`
+R (unnamed) Queen of Upmeads | spouse_of | King Peter | queen | BONE-C2 | INF/high | P003 `a noble dame`
+
+F society | outlaws of the Wood Debateable | King Peter says outlaws prey on the rich while the lawful prey on the poor. | CANON/high; ctx=dialogue:King Peter | P002 `prey on the rich, and the lawful prey on the poor`
+F household | High House of Upmeads | Turnspit dogs work in the chimney ingle. | CANON/high | P003 `turnspit dogs in the chimney ingle`
+F household | High House of Upmeads | Swallows nest in earthen bottles set in the eaves of the out-bowers. | CANON/high | P003 `earthen bottles`
+
+V backstory | King Peter lost in the Wood Debateable | The king, belated alone in the forest, was treated kindly by outlaws. | who=King Peter, outlaws of the Wood Debateable; where=Wood Debateable | P002 `belated there all alone`
+
+U identity | Whether the outlaws are an organised band and who leads them. | P002 `outlaws and wolfheads`
+
+O society | Outlaw bands in border woods who may aid travellers, with a moral code distinct from lawful lords. | P002 `prey on the rich, and the lawful prey on the poor`

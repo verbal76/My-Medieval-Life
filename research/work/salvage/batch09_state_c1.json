@@ -1,0 +1,1503 @@
+{
+ "entities": [
+  {
+   "name": "Ralph",
+   "aliases": [],
+   "type": "person",
+   "subtype": "youngest son of King Peter of Upmeads; questing knight",
+   "unnamed": false,
+   "summary": "Quester for the Well at the World's End; wintered with Ursula in the rock-house in the Valley of Sweet-chestnuts; slays a great bear and weds Ursula there.",
+   "attributes": {
+    "home": "Upmeads",
+    "status_in_batch": "weds Ursula (BTHREE-C14); drinks of the Well (BTHREE-C21)"
+   },
+   "refs": [
+    {
+     "p": "BTHREE-C13-P003",
+     "q": "who thrust the beast into the side with his long-headed spear"
+    },
+    {
+     "p": "BTHREE-C14-P008",
+     "q": "This maiden, who is my fellow-farer in the Quest, I desire to wed this same night"
+    }
+   ]
+  },
+  {
+   "name": "Ursula",
+   "aliases": [],
+   "type": "person",
+   "subtype": "maiden of Upmeads; Ralph's fellow-farer, later wife",
+   "unnamed": false,
+   "summary": "Ralph's companion on the Quest; carries sword and a little axe; weds Ralph before the messengers of the Innocent Folk.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P003",
+     "q": "Ralph saw that she had a little axe in her hand"
+    },
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "bade him and the young men bear witness that they were wedded"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) rock-house in the Valley of Sweet-chestnuts",
+   "aliases": [
+    "the cave",
+    "house-rock",
+    "rock-chamber",
+    "their winter abode"
+   ],
+   "type": "building",
+   "subtype": "cave dwelling with a toft before it",
+   "unnamed": true,
+   "summary": "The cave/rock-house where Ralph and Ursula wintered; a little quicken-tree grows by the door; a grassy toft before it where they cook; the Innocent Folk's messengers come to this cave every spring.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "Ralph sat alone on the toft by the rock-house"
+    },
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "which grew hard by the door"
+    },
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "who come every spring to this cave to see if there be any whom they may speed"
+    }
+   ]
+  },
+  {
+   "name": "Valley of Sweet-chestnuts",
+   "aliases": [],
+   "type": "place",
+   "subtype": "mountain valley with meadow, chestnut grove and river",
+   "unnamed": false,
+   "summary": "Valley where Ralph and Ursula wintered; meadows, a chestnut grove between the rock-house and the river, bears frequent the meadows in spring.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "when they were gone eight days from the Valley of Sweet-chestnuts"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) river of the Valley of Sweet-chestnuts",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": true,
+   "summary": "River below the meadow of the rock-house where Ursula bathes; green grass runs down to the water's edge beyond the chestnut grove.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "Ursula had gone down the meadow to disport her and to bathe in the river"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) chestnut grove",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "grove",
+   "unnamed": true,
+   "summary": "Grove of chestnuts between the rock-house and the river; the bridal bower was built in it; the bear's skin and carcase hung on a tree there.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "Now there was a grove of chestnuts betwixt him and the river"
+    },
+    {
+     "p": "BTHREE-C14-P010",
+     "q": "they all went down the meadow together into the chestnut grove"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) sandy bight under the mountains",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "sandy bight",
+   "unnamed": true,
+   "summary": "Place under the mountains where Ralph and Ursula saw a family of bears the day before the bear attack.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "they had come across a family of the beasts in the sandy bight under the mountains"
+    }
+   ]
+  },
+  {
+   "name": "bear (of the wastes)",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "bear",
+   "unnamed": false,
+   "summary": "Bears haunt the meadows in spring; fierce and proud in the wastes; the he-bear slain by Ralph was as big as a bullock and fought rearing like a boxer.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "with the waxing spring the bears were often in the meadows again"
+    },
+    {
+     "p": "BTHREE-C13-P003",
+     "q": "held in chase by a huge bear as big as a bullock"
+    },
+    {
+     "p": "BTHREE-C13-P003",
+     "q": "having risen to his hind legs, fenced with his great paws like a boxer"
+    }
+   ]
+  },
+  {
+   "name": "quicken-tree",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "rowan tree",
+   "unnamed": false,
+   "summary": "A little quicken-tree grows hard by the door of the rock-house; Ursula's sword hung on its bough.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "hanging to a bough of a little quicken-tree, which grew hard by the door"
+    }
+   ]
+  },
+  {
+   "name": "Ralph's spear",
+   "aliases": [],
+   "type": "item",
+   "subtype": "spear made from dagger blade and ashen shaft",
+   "unnamed": false,
+   "summary": "Ralph fits a dagger blade to a long ashen shaft to make a strong spear against bears.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "Ralph was fitting the blade of a dagger to a long ashen shaft, to make him a strong spear"
+    }
+   ]
+  },
+  {
+   "name": "Ursula's helm and hauberk",
+   "aliases": [],
+   "type": "item",
+   "subtype": "armour",
+   "unnamed": false,
+   "summary": "Armour kept in the cave which Ralph puts on Ursula while he skins the bear.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P020",
+     "q": "to don thine helm and hauberk to boot"
+    },
+    {
+     "p": "BTHREE-C13-P022",
+     "q": "brought forth the armour and did it on her"
+    }
+   ]
+  },
+  {
+   "name": "Bourton Abbas",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town with an ale-house",
+   "unnamed": false,
+   "summary": "Recalled as where Ursula seemed to weep for her betrothed at the ale-house.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P015",
+     "q": "at the ale-house at Bourton Abbas"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) ale-house at Bourton Abbas",
+   "aliases": [],
+   "type": "building",
+   "subtype": "ale-house",
+   "unnamed": true,
+   "summary": "Ale-house at Bourton Abbas where Ralph first saw Ursula (recalled).",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P015",
+     "q": "for whom thou wepst or seemedst to weep at the ale-house at Bourton Abbas"
+    }
+   ]
+  },
+  {
+   "name": "Upmeads",
+   "aliases": [],
+   "type": "place",
+   "subtype": "Ralph's home country",
+   "unnamed": false,
+   "summary": "Ralph proposes to go back with Ursula to Upmeads straightway; Ursula says the homeward road's perils would overcome them without the Well's water.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P017",
+     "q": "I am minded to go back with thee to Upmeads straightway"
+    }
+   ]
+  },
+  {
+   "name": "Well at the World's End",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "magical well",
+   "unnamed": false,
+   "summary": "Goal of the Quest; drinking from it is held needful to survive the perils of the homeward road.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P018",
+     "q": "if we have not drunk of the Well at the World's End"
+    }
+   ]
+  },
+  {
+   "name": "Innocent Folk",
+   "aliases": [
+    "the Folk",
+    "that kind folk"
+   ],
+   "type": "group",
+   "subtype": "people beyond the mountains",
+   "unnamed": false,
+   "summary": "A gentle, reverent folk who send messengers every spring to the cave to speed seekers of the Well; brown-skinned, clad in white wool; dwell in an unfenced town with a Temple/Mote-house/Guest-house; keep a behest to the fairest woman of the world.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "those messengers of the Innocent Folk, who come every spring to this cave"
+    },
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "somewhat brown of skin, but well fashioned, and of smiling cheerful countenance"
+    },
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "On the evening of that day they came into the town of that folk"
+    }
+   ]
+  },
+  {
+   "name": "Messengers of the Innocent Folk",
+   "aliases": [],
+   "type": "group",
+   "subtype": "way-leaders",
+   "unnamed": false,
+   "summary": "Two young men and an elder with five oxen (three for riding, two sumpter), clad in white wool, no armour, each with a green-stone axe; the young men carry bows; they lead seekers as far as the House of the Sorceress.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "he found there two young men and an elder, and they had with them five oxen"
+    },
+    {
+     "p": "BTHREE-C14-P006",
+     "q": "to be your way-leaders as far as the House of the Sorceress"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) elder of the Innocent Folk (messenger)",
+   "aliases": [],
+   "type": "person",
+   "subtype": "elder, way-leader",
+   "unnamed": true,
+   "summary": "Elder with a long white beard, bright eye, firm smooth hand; once in his youth led a mounted knight to the Well; witnesses Ralph and Ursula's wedding.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "The elder had a long white beard, but his eye was bright"
+    },
+    {
+     "p": "BTHREE-C15-P002",
+     "q": "once in his young days he had led a man to the Well who was riding a horse"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) two young men of the Innocent Folk",
+   "aliases": [],
+   "type": "person",
+   "subtype": "way-leaders, archers",
+   "unnamed": true,
+   "summary": "The elder's 'sons' (as he calls them); carry strong bows and quivers; build the bridal bower; marvel at horses.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P010",
+     "q": "Up, my sons, and show your deftness to these dear friends!"
+    }
+   ]
+  },
+  {
+   "name": "green-stone axe",
+   "aliases": [],
+   "type": "item",
+   "subtype": "stone-bladed axe",
+   "unnamed": false,
+   "summary": "Each messenger bears an axe with a green stone blade curiously tied to the heft.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "each had an axe with a green stone blade, curiously tied to the heft"
+    }
+   ]
+  },
+  {
+   "name": "ox (riding and sumpter)",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "oxen as mounts and pack beasts",
+   "unnamed": false,
+   "summary": "The Innocent Folk ride oxen and use them as pack beasts; slow-going; hobbled at rest.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "five oxen, three for riding, and two sumpter beasts, laden"
+    },
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "for oxen are but slow-going nags"
+    }
+   ]
+  },
+  {
+   "name": "pair of beads (token of the Well)",
+   "aliases": [],
+   "type": "item",
+   "subtype": "token / necklace",
+   "unnamed": false,
+   "summary": "The pair of beads borne by each seeker is a token of the Quest whose fashion the Innocent Folk know.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P005",
+     "q": "the pair of beads which we bear, either of us, and the fashion whereof ye know"
+    }
+   ]
+  },
+  {
+   "name": "House of the Sorceress",
+   "aliases": [],
+   "type": "building",
+   "subtype": "dwelling of the Sorceress",
+   "unnamed": false,
+   "summary": "Destination to which the messengers lead seekers, where they get other help.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P006",
+     "q": "to be your way-leaders as far as the House of the Sorceress, where ye shall have other help"
+    }
+   ]
+  },
+  {
+   "name": "fairest woman of the world (Lady of Abundance)",
+   "aliases": [],
+   "type": "person",
+   "subtype": "past seeker of the Well",
+   "unnamed": false,
+   "summary": "The Innocent Folk come yearly by behest made to 'the fairest woman of the world' when she came back from the Well; CANON-INFERRED identity with the Lady of Abundance from earlier books.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "according to the behest that we made to the fairest woman of the world"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) bridal bower",
+   "aliases": [],
+   "type": "building",
+   "subtype": "wattled bower",
+   "unnamed": true,
+   "summary": "Wattled bower of willow boughs and stakes built in the chestnut grove, roofed with skins, hung with garlands, floor strewn with flowers, as the Innocent Folk build for their own wedding nights.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "they had made a very goodly wattled bower, and roofed it with the skins that were in the cave"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) shepherds of the Innocent Folk",
+   "aliases": [],
+   "type": "person",
+   "subtype": "shepherds",
+   "unnamed": true,
+   "summary": "Four folk (two carles, two queans) shepherding uncouth-looking sheep on a green hill-side; ruder of raiment than the way-leaders.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "four folk shepherding them, two carles to wit, and two queans"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) wide valley of the Innocent Folk",
+   "aliases": [],
+   "type": "place",
+   "subtype": "settled valley",
+   "unnamed": true,
+   "summary": "Wide, well-grassed and watered valley, wooded here and there, with scattered cots, garths of young corn and vineyards on the hillsides.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "came into a wide valley, well-grassed and watered, and wooded here and there"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) town of the Innocent Folk",
+   "aliases": [],
+   "type": "place",
+   "subtype": "unfenced town",
+   "unnamed": true,
+   "summary": "Simple town wholly unfenced for war, with low small houses; no filth, famine or poverty.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "which was but simple, wholly unfenced for war, and the houses but low, and not great"
+    }
+   ]
+  },
+  {
+   "name": "Temple / Mote-house / Guest-house of the Innocent Folk",
+   "aliases": [
+    "Mote-house"
+   ],
+   "type": "building",
+   "subtype": "temple, moot-house and guest-house in one",
+   "unnamed": false,
+   "summary": "A great and fair house in the town that serves as temple, mote-house and guest-house; has a hall with a dais and chambers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "up to the door of the Temple, or Mote-house, or Guest-house, for it was all these"
+    }
+   ]
+  },
+  {
+   "name": "Elders of the Innocent Folk",
+   "aliases": [],
+   "type": "group",
+   "subtype": "council of elders",
+   "unnamed": false,
+   "summary": "Elders stand before the Mote-house to receive seekers; the eldest greets them.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "Before the door thereof were standing the elders of the Folk"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) eldest elder of the Innocent Folk",
+   "aliases": [],
+   "type": "person",
+   "subtype": "eldest elder",
+   "unnamed": true,
+   "summary": "Greets the seekers 'after length of days and happy times'.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "Welcome and thrice welcome to the Seekers after length of days and happy times"
+    }
+   ]
+  },
+  {
+   "name": "white woollen cloth / frieze",
+   "aliases": [],
+   "type": "commodity",
+   "subtype": "cloth",
+   "unnamed": false,
+   "summary": "The Innocent Folk dress in white woollen cloth or frieze; fine white wool raiment embroidered with bright bird feathers given to the couple.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "clad goodly after their fashion in white woollen cloth or frieze"
+    },
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "broidered in strange but beauteous fashion with the feathers of bright-hued birds"
+    }
+   ]
+  },
+  {
+   "name": "Wedding custom of witnesses",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "marriage",
+   "unnamed": false,
+   "summary": "Ursula says that since heathen times a wedding was known to all the folk who witnessed the day and hour; she wants witnesses; Ralph and Ursula wed by declaring before the elder and young men.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "when a man should wed a maid all the folk knew of it, and were witnesses of the day and the hour thereof"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "spouse_of",
+   "b": "Ursula",
+   "detail": "Wedded before the messengers of the Innocent Folk as witnesses",
+   "when": "BTHREE-C14 onward",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "bade him and the young men bear witness that they were wedded"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "betrothed_to",
+   "b": "Ursula",
+   "detail": "Troth-plight lovers before the wedding",
+   "when": "BTHREE-C13",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P013",
+     "q": "such kissing and caressing as is meet betwixt troth-plight lovers"
+    }
+   ]
+  },
+  {
+   "a": "Innocent Folk",
+   "rel": "other",
+   "b": "fairest woman of the world (Lady of Abundance)",
+   "detail": "Made a behest to her to come yearly to the cave to seek Well-seekers",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "according to the behest that we made to the fairest woman of the world"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) elder of the Innocent Folk (messenger)",
+   "rel": "parent_of",
+   "b": "(unnamed) two young men of the Innocent Folk",
+   "detail": "He calls them 'my sons'; may be a form of address rather than kinship",
+   "when": "BTHREE-C14",
+   "classification": "CANON-INFERRED",
+   "confidence": "low",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P010",
+     "q": "Up, my sons, and show your deftness to these dear friends!"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) chestnut grove",
+   "rel": "between",
+   "b": "(unnamed) rock-house in the Valley of Sweet-chestnuts",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "meadow; grove; green grass to the river",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "The grove lies between the rock-house and the river; beyond the grove only grass to the water's edge.",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "Now there was a grove of chestnuts betwixt him and the river, but on the other side of them naught but the green grass down to the water's edge"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) rock-house in the Valley of Sweet-chestnuts",
+   "rel": "near",
+   "b": "(unnamed) river of the Valley of Sweet-chestnuts",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "meadow sloping down to the river",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "'down the meadow' implies the river is lower than the rock-house.",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "Ursula had gone down the meadow to disport her and to bathe in the river"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) sandy bight under the mountains",
+   "rel": "at_foot_of",
+   "b": "mountains (around the Valley of Sweet-chestnuts)",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "sandy",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "in the sandy bight under the mountains"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) slain bear's carcase (site of the fight)",
+   "rel": "distance_from",
+   "b": "(unnamed) rock-house in the Valley of Sweet-chestnuts",
+   "direction": "",
+   "distance_text": "some two furlongs",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "The fight took place just beyond the chestnut grove toward the river.",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P022",
+     "q": "which lay some two furlongs from their dwelling"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) chestnut grove",
+   "rel": "visible_from",
+   "b": "(unnamed) rock-house in the Valley of Sweet-chestnuts",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "From the edge of the grove the face of the house-rock is clearly seen.",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "when he had come forth from the chestnut-grove, and could see the face of their house-rock clearly"
+    }
+   ]
+  },
+  {
+   "a": "Valley of Sweet-chestnuts",
+   "rel": "route_next",
+   "b": "(unnamed) mountains' edge (out of the mountains)",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "three days",
+   "travel_mode": "horse and ox",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "in three days' time they were come out of the mountains"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) green hill-side with sheep",
+   "rel": "distance_from",
+   "b": "Valley of Sweet-chestnuts",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "eight days",
+   "travel_mode": "horse and ox, leisurely",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "But when they were gone eight days from the Valley of Sweet-chestnuts, they came across a flock of uncouth-looking sheep"
+    }
+   ]
+  },
+  {
+   "a": "mountains (around the Valley of Sweet-chestnuts)",
+   "rel": "visible_from",
+   "b": "road six days from the valley",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "six days out",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "After six days the mountains look like a cloud behind them.",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "in three more the said mountains were to behold but a cloud behind them"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) green hill-side with sheep",
+   "rel": "route_next",
+   "b": "(unnamed) wide valley of the Innocent Folk",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "next day",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "Thence they passed on, and the next day came into a wide valley"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) wide valley of the Innocent Folk",
+   "rel": "contains",
+   "b": "(unnamed) town of the Innocent Folk",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "note": "They entered the wide valley and reached the town the evening of the same day; town presumably in or just beyond the valley.",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "On the evening of that day they came into the town of that folk"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) town of the Innocent Folk",
+   "rel": "contains",
+   "b": "Temple / Mote-house / Guest-house of the Innocent Folk",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "Thus rode Ralph and Ursula up to the door of the Temple, or Mote-house, or Guest-house"
+    }
+   ]
+  },
+  {
+   "a": "land beyond the mountains (toward the Innocent Folk)",
+   "rel": "other",
+   "b": "mountains (around the Valley of Sweet-chestnuts)",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "fair valleys and little hills, empty of men",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Terrain of the uninhabited land between the mountains and the Innocent Folk.",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "the land was grown goodly, with fair valleys and little hills, though still they saw no men"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Messengers of the Innocent Folk"
+   ],
+   "from": "Valley of Sweet-chestnuts",
+   "to": "(unnamed) town of the Innocent Folk",
+   "via": [
+    "(unnamed) green hill-side with sheep",
+    "(unnamed) wide valley of the Innocent Folk"
+   ],
+   "mode": "horse (Ralph, Ursula) and riding oxen",
+   "direction_text": "",
+   "duration_text": "nine days (three out of the mountains, three more, eight days to the sheep, next day valley and town)",
+   "start_time_text": "morning",
+   "end_time_text": "evening",
+   "terrain_text": "mountain ways, then fair valleys and little hills, then settled valley",
+   "chapter": "BTHREE-C15",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "But when they were gone eight days from the Valley of Sweet-chestnuts"
+    },
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "On the evening of that day they came into the town of that folk"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "bears",
+   "statement": "In spring bears return to the meadows; a family of bears (carle, quean and cubs) seen; bears fierce and proud in the wastes and intolerant of other creatures, but they avoided two armed men in sunlight.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "although they were fierce and proud in those wastes, and could not away with creatures that were not of their kind"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Ralph",
+   "statement": "Ralph slays the bear with a spear thrust to the side, cuts off a fore-paw, and drives his sword over the shoulder to the heart.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P003",
+     "q": "drave the sword in over the shoulder so happily that it reached his heart"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "Ralph and Ursula",
+   "statement": "They cook meat (venison) at a fire on the toft before the cave; Ursula 'dights victual'; Ralph skins and breaks up the bear and hangs skin and carcase on a tree.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P003",
+     "q": "there was already venison roasting at the fire on the toft"
+    },
+    {
+     "p": "BTHREE-C13-P022",
+     "q": "Then he hung the skin and the carcase on a tree of the grove"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Valley of Sweet-chestnuts",
+   "statement": "Spring in the valley: birdsong, scent of blossoms on the west wind.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P007",
+     "q": "the scent of many blossoms went past on the wings of the west wind"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "marriage",
+   "statement": "Ursula recalls that since heathen days weddings were witnessed by the whole folk; the couple wait for the Innocent Folk to be witnesses besides God.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "while our people were yet heathen, when a man should wed a maid all the folk knew of it"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Ursula holds that the perils of the homeward road will overcome them unless they have drunk of the Well.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P018",
+     "q": "the perils of the homeward road shall overcome us, despite of love"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Innocent Folk",
+   "statement": "The messengers come every spring to the cave; it is many a year since they last found seekers there; the elder once led a horse-riding knight to the Well in his youth.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:the elder",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "it is many and many a year ago since we found any seekers after the Well dwelling here"
+    },
+    {
+     "p": "BTHREE-C15-P002",
+     "q": "led a man to the Well who was riding a horse and was clad in knightly array"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "Innocent Folk",
+   "statement": "The Innocent Folk had never seen horses (the young men), riding oxen and using oxen as pack beasts; the sheep-folk also marvelled at horses and weapons.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P002",
+     "q": "Their horses and all their gear were a great wonder to the young men, for they had seen no such beasts before"
+    },
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "they marvelled exceedingly at their horses and weapons"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Innocent Folk",
+   "statement": "Messengers bear no armour; green-stone bladed axes; young men carry strong bows and quivers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "bore no armour, but each had an axe with a green stone blade"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "Innocent Folk",
+   "statement": "The messengers bring raiment, meal and wine on sumpter-beasts; wine in well-hooped kegs, carved wooden cups; the elder bakes cakes from meal at the fire.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "there was wine there in well-hooped kegs, and wooden cups fairly carven"
+    },
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "had taken meal thence, and was making cakes at the fire"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Innocent Folk",
+   "statement": "For their own weddings the Innocent Folk build a bower in which the couple spend the wedding night.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:the elder",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "such a bower as we build for our own folk on the night of the wedding"
+    }
+   ]
+  },
+  {
+   "category": "architecture",
+   "subject": "bridal bower",
+   "statement": "Built of cut willow boughs, driven stakes and woven twigs (wattle), roofed with skins, garlanded, floor strewn with flowers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P010",
+     "q": "cut willow boughs, and such-like wood, and drave stakes and wove the twigs together"
+    }
+   ]
+  },
+  {
+   "category": "clothing",
+   "subject": "Innocent Folk",
+   "statement": "Wedding raiment of fine white wool embroidered with feathers of bright-hued birds.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "raiment of fine white wool for those twain, broidered in strange but beauteous fashion"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "marriage",
+   "statement": "The wedding is made by the couple standing before the elder at moonlit night after a feast and bidding the witnesses bear witness; no priest.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "they stood before the elder, and bade him and the young men bear witness that they were wedded"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Ralph",
+   "statement": "Ralph asks whether wedding and carnal knowledge would hurt the Quest; the elder says they hear not that it shall be worse.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:the elder",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "we hear not that it shall be the worse for you in any wise that ye shall become one flesh"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "Innocent Folk",
+   "statement": "Their land has sheep and neat in plenty, garths of young corn, and vineyards on hillsides; cots scattered in the valley; sheep described as uncouth-looking.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "they passed by garths wherein the young corn was waxing, and vineyards on the hillsides"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Innocent Folk",
+   "statement": "The folk are kind but over-reverent, greeting with more worship than fellowship; no filth, famine, poverty or misery; town unfenced for war.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "These men greeted them kindly, and yet with more worship than fellowship"
+    },
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "Yet was there naught of filth or famine, nor any poverty or misery"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Innocent Folk",
+   "statement": "Runners go ahead to announce arrivals; townsfolk line the way with bowed heads; seekers are bathed, clad in fine fragrant white gowns, crowned with flowers and set on a dais like kings or gods; feast with songs by youths and maidens.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "for runners had gone before them"
+    },
+    {
+     "p": "BTHREE-C15-P006",
+     "q": "they set them down on a dais as though they had been kings, or rather gods"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Innocent Folk",
+   "statement": "A single great house serves as Temple, Mote-house and Guest-house.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P005",
+     "q": "the Temple, or Mote-house, or Guest-house, for it was all these"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Innocent Folk",
+   "statement": "Their songs are simple and harmless, about the fairness of the earth and the happy loves of creatures.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P007",
+     "q": "concerning the fairness of the earth and the happy loves of the creatures that dwell therein"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph slays the bear",
+   "chapter": "BTHREE-C13",
+   "layer": "main",
+   "time_text": "a fair sunny morning of spring",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "Valley of Sweet-chestnuts"
+   ],
+   "summary": "A huge he-bear chases the naked Ursula after her bathe; she strikes with an axe; Ralph spears and kills it.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P003",
+     "q": "held in chase by a huge bear as big as a bullock"
+    }
+   ]
+  },
+  {
+   "label": "Ralph and Ursula plight love",
+   "chapter": "BTHREE-C13",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [],
+   "summary": "Ralph asks Ursula to wed; she wishes to wait for the Innocent Folk's messengers as witnesses.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C13-P012",
+     "q": "I would abide their coming if it be not over long delayed"
+    }
+   ]
+  },
+  {
+   "label": "Arrival of the messengers of the Innocent Folk",
+   "chapter": "BTHREE-C14",
+   "layer": "main",
+   "time_text": "same day as the bear",
+   "participants": [],
+   "places": [
+    "Valley of Sweet-chestnuts"
+   ],
+   "summary": "Two young men and an elder with oxen arrive at the cave and offer to lead them to the House of the Sorceress.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P002",
+     "q": "there were folk before the door of the dwelling"
+    }
+   ]
+  },
+  {
+   "label": "Wedding of Ralph and Ursula",
+   "chapter": "BTHREE-C14",
+   "layer": "main",
+   "time_text": "evening into moonlit night",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Messengers of the Innocent Folk"
+   ],
+   "places": [],
+   "summary": "A bower is built, a feast held at sunset, and under the moon Ralph and Ursula declare themselves wedded before the witnesses.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P012",
+     "q": "they sat down on the grassy toft a little before sunset, and feasted till the night was come"
+    }
+   ]
+  },
+  {
+   "label": "Journey to and welcome at the town of the Innocent Folk",
+   "chapter": "BTHREE-C15",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) town of the Innocent Folk"
+   ],
+   "summary": "Nine days' travel; the couple are welcomed with reverence, bathed, robed, crowned, feasted and sung to.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P006",
+     "q": "Then they crowned them with flowers, and led them back into the hall"
+    }
+   ]
+  },
+  {
+   "label": "Elder's former guiding of a knight to the Well",
+   "chapter": "BTHREE-C15",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [],
+   "places": [],
+   "summary": "In his youth the elder led a mounted knightly man to the Well.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P002",
+     "q": "once in his young days he had led a man to the Well"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who was the knight on horseback the elder led to the Well in his youth?",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P002",
+     "q": "led a man to the Well who was riding a horse and was clad in knightly array"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Is 'the fairest woman of the world' the Lady of Abundance? (strongly implied but unnamed here)",
+   "refs": [
+    {
+     "p": "BTHREE-C14-P009",
+     "q": "the fairest woman of the world, when she came back to us from the Well"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "No direction given for the route from the Valley of Sweet-chestnuts to the Innocent Folk; only durations.",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P003",
+     "q": "So they went by ways which were nowise dreadful, though they were void of men-folk"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Name of the Innocent Folk's town is never given.",
+   "refs": [
+    {
+     "p": "BTHREE-C15-P004",
+     "q": "they came into the town of that folk"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Spring bear encounters near the winter cave: bears return to meadows in spring and avoid armed groups in daylight (morale/threat AI).",
+   "system": "ecology",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "the beasts had seen them but afar off, and whereas the men were two and the sun shone back from their weapons, they had forborne them"
+    }
+   ]
+  },
+  {
+   "idea": "Craft a spear by hafting a dagger blade on an ash shaft (simple crafting recipe).",
+   "system": "crafting",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C13-P002",
+     "q": "fitting the blade of a dagger to a long ashen shaft"
+    }
+   ]
+  },
+  {
+   "idea": "Wedding ritual: build a wattled bower with willow, skins and flowers; witnesses required.",
+   "system": "custom",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C14-P011",
+     "q": "they had made a very goodly wattled bower"
+    }
+   ]
+  },
+  {
+   "idea": "Ox-riding peoples who have never seen horses: horses as a status/wonder item in trade regions.",
+   "system": "transport",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C15-P002",
+     "q": "for they had seen no such beasts before"
+    }
+   ]
+  },
+  {
+   "idea": "Bead tokens as quest passes recognised by guide NPCs.",
+   "system": "quest",
+   "basis_refs": [
+    {
+     "p": "BTHREE-C14-P005",
+     "q": "see ye the token thereof, the pair of beads which we bear"
+    }
+   ]
+  }
+ ],
+ "ledger": [
+  {
+   "chapter": "BTHREE-C13",
+   "paragraphs_total": 21,
+   "all_paragraphs_read": true,
+   "summary": "In spring in the Valley of Sweet-chestnuts Ralph kills a huge bear that chased Ursula after she bathed in the river. They declare their love; Ursula wishes to wait for the yearly messengers of the Innocent Folk as wedding witnesses. Ralph skins the bear.",
+   "geography_notes": "Rock-house with toft and quicken-tree; chestnut grove between it and the river; meadow sloping to river; sandy bight under the mountains; bear carcase two furlongs from the dwelling.",
+   "open_questions": [
+    "Exact layout of the valley relative to the mountains."
+   ]
+  },
+  {
+   "chapter": "BTHREE-C14",
+   "paragraphs_total": 11,
+   "all_paragraphs_read": true,
+   "summary": "Messengers of the Innocent Folk (an elder and two young men with oxen) arrive and offer to guide them to the House of the Sorceress. They build a wattled bower in the chestnut grove and witness Ralph and Ursula's wedding that night.",
+   "geography_notes": "Bower in chestnut grove; messengers come yearly to the cave.",
+   "open_questions": []
+  },
+  {
+   "chapter": "BTHREE-C15",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "Travelling with the messengers, the couple leave the mountains in three days, see them as a cloud after six, meet shepherds on day eight and on day nine enter a settled valley and the unfenced town of the Innocent Folk, where they are feasted in the Temple/Mote-house/Guest-house.",
+   "geography_notes": "Route: Valley of Sweet-chestnuts -> out of mountains (3 days) -> mountains a cloud behind (6 days) -> sheep on green hillside (8 days) -> wide valley and town (9th day). No compass direction given.",
+   "open_questions": [
+    "Direction from the mountains to the Innocent Folk."
+   ]
+  }
+ ]
+}

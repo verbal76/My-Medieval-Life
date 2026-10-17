@@ -1,0 +1,185 @@
+{
+ "entities": [
+  {
+   "name": "outlaws of the Wood Debateable",
+   "aliases": [
+    "wolfheads"
+   ],
+   "type": "group",
+   "subtype": "outlaws",
+   "unnamed": false,
+   "summary": "Outlaws and wolfheads in the forest who treated the lost King Peter kindly.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "outlaws and wolfheads"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Queen of Upmeads",
+   "aliases": [
+    "Ralph's mother"
+   ],
+   "type": "person",
+   "subtype": "queen",
+   "unnamed": true,
+   "summary": "Ralph's mother, a noble dame a little over fifty.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C2-P003",
+     "q": "a noble dame"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Queen of Upmeads",
+   "rel": "parent_of",
+   "b": "Ralph",
+   "detail": "mother",
+   "when": "BONE-C2",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C2-P003",
+     "q": "a noble dame"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Queen of Upmeads",
+   "rel": "spouse_of",
+   "b": "King Peter",
+   "detail": "queen",
+   "when": "BONE-C2",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C2-P003",
+     "q": "a noble dame"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "outlaws of the Wood Debateable",
+   "statement": "King Peter says outlaws prey on the rich while the lawful prey on the poor.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:King Peter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "prey on the rich, and the lawful prey on the poor"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "High House of Upmeads",
+   "statement": "Turnspit dogs work in the chimney ingle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C2-P003",
+     "q": "turnspit dogs in the chimney ingle"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "High House of Upmeads",
+   "statement": "Swallows nest in earthen bottles set in the eaves of the out-bowers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C2-P003",
+     "q": "earthen bottles"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "King Peter lost in the Wood Debateable",
+   "chapter": "BONE-C2",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "King Peter",
+    "outlaws of the Wood Debateable"
+   ],
+   "places": [
+    "Wood Debateable"
+   ],
+   "summary": "The king, belated alone in the forest, was treated kindly by outlaws.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "belated there all alone"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether the outlaws are an organised band and who leads them.",
+   "refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "outlaws and wolfheads"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Outlaw bands in border woods who may aid travellers, with a moral code distinct from lawful lords.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BONE-C2-P002",
+     "q": "prey on the rich, and the lawful prey on the poor"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C2",
+ "chapters": [
+  "BONE-C2"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C2",
+   "paragraphs_total": 2,
+   "all_paragraphs_read": true,
+   "summary": "King Peter tells Ralph of being lost alone in the Wood Debateable among outlaws who treated him kindly. Ralph's mother is described, and household details of the High House are given. Ralph hides his discontent and goes to bed singing.",
+   "geography_notes": "none beyond confirming the Wood Debateable harbours outlaws.",
+   "open_questions": [
+    "Whether the outlaws of the Wood Debateable are an organised band"
+   ]
+  }
+ ]
+}
