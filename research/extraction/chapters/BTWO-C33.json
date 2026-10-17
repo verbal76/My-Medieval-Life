@@ -1,0 +1,360 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) captain of the Utterbol men-at-arms",
+   "aliases": [],
+   "type": "person",
+   "subtype": "captain",
+   "unnamed": true,
+   "summary": "Middle-aged, short, long-armed, beardless, spare and wiry, with hair the colour of sandstone dust.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C33-P018",
+     "q": "a man somewhat low of stature, but long-armed like the Lord, a man of middle age, beardless and spare of body"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Utterbol moorland",
+   "aliases": [
+    "land debateable"
+   ],
+   "type": "feature",
+   "subtype": "moorland",
+   "unnamed": true,
+   "summary": "Rough untilled moorland with plover, whimbrel, conies and hares, kept poor by the Lord as a buffer.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C33-P018",
+     "q": "little better than rough moorland, little fed, and not at all tilled"
+    }
+   ]
+  },
+  {
+   "name": "war-arrow",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "summons",
+   "unnamed": false,
+   "summary": "Sent round the deserts to raise about a thousand carles.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C33-P026",
+     "q": "he has but to send the war-arrow round about these deserts"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Lord of Utterbol",
+   "rel": "ruler_of",
+   "b": "(unnamed) Utterbol moorland",
+   "detail": "tribute from its few dwellers; nominal land",
+   "when": "BTWO-C33",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C33-P021",
+     "q": "None shall dwell in it save as he willeth, and they shall pay him tribute"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "enemy_of",
+   "b": "Goldburg",
+   "detail": "keeps the land between them barren",
+   "when": "BTWO-C33",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C33-P019",
+     "q": "deemest thou that he should suffer a rich land betwixt him and Goldburg"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "other",
+   "b": "Morfinn the Minstrel",
+   "detail": "unmanned him \"for some good reason\"",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C33-P022",
+     "q": "But my Lord unmanned him for some good reason"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) Utterbol moorland",
+   "rel": "between",
+   "b": "Goldburg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:captain of the Utterbol men-at-arms",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "buffer between Goldburg and Utterbol",
+   "refs": [
+    {
+     "p": "BTWO-C33-P019",
+     "q": "deemest thou that he should suffer a rich land betwixt him and Goldburg, that it might sustain an host big enough to deal with him?"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Lord of Utterbol",
+    "David the Sage"
+   ],
+   "from": "(unnamed) Utterbol pavilion camp",
+   "to": "Utterness",
+   "via": [],
+   "mode": "horse, Lord in a litter, wains for tents",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C33",
+   "refs": [
+    {
+     "p": "BTWO-C33-P002",
+     "q": "went their ways the selfsame road that Ralph had been minded for yesterday; to wit the road to Utterness"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "politics",
+   "subject": "Lord of Utterbol",
+   "statement": "He deliberately keeps the land toward Goldburg barren so it cannot feed a host against him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:captain of the Utterbol men-at-arms",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P019",
+     "q": "whereas it beareth naught else, that cometh of my lord's will"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Lord of Utterbol",
+   "statement": "By the war-arrow he can raise about a thousand rough men from the deserts.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:captain of the Utterbol men-at-arms",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P026",
+     "q": "say ten hundred of them"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Goldburg",
+   "statement": "Goldburgers are poor fighters outside their walls but strong within.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:captain of the Utterbol men-at-arms",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P026",
+     "q": "the Goldburg folk are not very handy at a fray without their walls"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Goldburg",
+   "statement": "Folk believe that when Goldburg falls the world will change, and that under each tower lie a youth and maiden who drank of the Water and can die only by point and edge.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P029",
+     "q": "under each tower of Goldburg lieth a youth and a maiden that have drunk of the water, and might not die save by point and edge"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) founder of Goldburg",
+   "statement": "David says he crossed the mountains and drank of the Well, helped by a woman who had learned many things, as one all women loved.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:David the Sage",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P007",
+     "q": "never had he drunk the draught had he not been helped by one who had learned many things, a woman to wit"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Wall of the World",
+   "statement": "David says beyond the mountains are sights that can kill a strong man by fear alone.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:David the Sage",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P005",
+     "q": "over there are things to be seen which might slay a strong man for pure fear"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Lord of Utterbol",
+   "statement": "His train: forerunners, the Lord in a litter, forty horsemen, magnates, armed servants, a rear score of men-at-arms.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P003",
+     "q": "the Lord went first after his fore-runners in a litter done about with precious cloths; and two score horsemen came next"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) Utterbol moorland",
+   "statement": "It bears plover, whimbrel, conies and hares, and few men.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:captain of the Utterbol men-at-arms",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P019",
+     "q": "it beareth plover and whimbrel and conies and hares"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "March toward Utterness",
+   "chapter": "BTWO-C33",
+   "layer": "main",
+   "time_text": "next day",
+   "participants": [
+    "Ralph",
+    "David the Sage",
+    "(unnamed) captain of the Utterbol men-at-arms"
+   ],
+   "places": [
+    "(unnamed) Utterbol moorland"
+   ],
+   "summary": "Ralph rides captive in the Lord's train and learns of Utterbol's policy and Goldburg's legends.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C33-P024",
+     "q": "why dost thou suffer me to lead thee along whither thou wouldest not?"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether the learned woman who helped Goldburg's founder is the Lady of Abundance or the Teacher of Lore.",
+   "refs": [
+    {
+     "p": "BTWO-C33-P007",
+     "q": "helped by one who had learned many things, a woman to wit"
+    }
+   ]
+  },
+  {
+   "kind": "contradiction",
+   "question": "Clement (BTWO-C27) reported the founder's drinking as disputed; David says he certainly crossed the mountains and drank, then calls it \"but a tale\".",
+   "refs": [
+    {
+     "p": "BTWO-C33-P007",
+     "q": "Moreover, when all is said, 'tis but a tale"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Deliberate scorched-buffer zones kept barren by a strategic tyrant, as a world-gen policy for border lands.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BTWO-C33-P019",
+     "q": "deemest thou that he should suffer a rich land betwixt him and Goldburg"
+    }
+   ]
+  },
+  {
+   "idea": "City foundation myths of hidden immortals under towers, as discoverable legends.",
+   "system": "lore",
+   "basis_refs": [
+    {
+     "p": "BTWO-C33-P029",
+     "q": "under each tower of Goldburg lieth a youth and a maiden that have drunk of the water"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C33",
+ "chapters": [
+  "BTWO-C33"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C33",
+   "paragraphs_total": 29,
+   "all_paragraphs_read": true,
+   "summary": "The Lord's train (Lord in a litter, forty horsemen, magnates, armed servants, a rear score) takes the Utterness road with Ralph unarmed among them. David says things beyond the mountains can kill a man by fear; that the founder of Goldburg drank of the Well with help from a learned woman, being one all women loved; and that he himself does not believe a man could reach the Well in a lifetime. At noon the sandy-haired captain explains that the Lord keeps the moorland between Utterbol and Goldburg poor so it cannot feed a hostile host; its few folk pay him tribute and some are his hounds, Morfinn the richest of them, whom the Lord unmanned. The Lord can raise a thousand men by sending the war-arrow; Goldburgers fight poorly outside their walls. Folk say that when Goldburg falls the world will change, and that under each Goldburg tower lies a youth and maiden who drank the Water and can die only by point and edge.",
+   "geography_notes": "The road to Utterness crosses rough, untilled, little-grazed moorland. The distant Wall of the World seems no nearer.",
+   "open_questions": [
+    "Is the woman who helped Goldburg's founder the Lady of Abundance? (David's tale echoes the Lady)"
+   ]
+  }
+ ]
+}

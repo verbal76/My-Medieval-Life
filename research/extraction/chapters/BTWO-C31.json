@@ -1,0 +1,384 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Bull's brotherhood token",
+   "aliases": [],
+   "type": "item",
+   "subtype": "token",
+   "unnamed": true,
+   "summary": "Small beast-skin purse embroidered with bull's horns, holding a many-plied knotted grass bent; proof of brotherhood with Bull's kindred.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C31-P004",
+     "q": "a little purse of some small beast's skin that was broidered in front with a pair of bull's horns"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) gangrel wanderers east of Goldburg",
+   "aliases": [],
+   "type": "group",
+   "subtype": "wanderers",
+   "unnamed": true,
+   "summary": "Gypsy-like armed wanderers in twos and threes with children, well clad in their fashion; some know Morfinn.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C31-P021",
+     "q": "These were of aspect like to the gipsies of our time and nation, and were armed all of them"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) uncouth stone chapel at the byway",
+   "aliases": [],
+   "type": "building",
+   "subtype": "chapel",
+   "unnamed": true,
+   "summary": "Stone chapel of uncouth fashion, heathen or Christian unknown, where a byway meets the high road.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C31-P023",
+     "q": "on the ingle stood a chapel of stone (whether of the heathen or Christian men Ralph wotted not, for it was uncouth of fashion)"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) felon knight at the chapel",
+   "aliases": [],
+   "type": "person",
+   "subtype": "robber knight",
+   "unnamed": true,
+   "summary": "Knight who lures travellers to joust, then robs or imprisons them; defers to Utterbol's pass.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C31-P024",
+     "q": "he is a mere felon, and shalt set his men-at-arms on thee, and then will rob thee and slay thee after"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) unmarked hostelry among hovels",
+   "aliases": [],
+   "type": "building",
+   "subtype": "inn",
+   "unnamed": true,
+   "summary": "Better house among hovels with no sign, kept by an old woman.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C31-P027",
+     "q": "a sort of hovels lay together about a house somewhat better builded, which Ralph took for a hostelry, though it had no sign nor bush"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Bull Shockhead",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "sworn brother; freed with gold",
+   "when": "BTWO-C31",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C31-P003",
+     "q": "henceforth thou shalt be as a brother to me"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "captive_of",
+   "b": "Lord of Utterbol",
+   "detail": "brought into Utterbol a month ago, taken from the wild men",
+   "when": "BTWO-C31",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BTWO-C31-P009",
+     "q": "she had not been bought, but taken out of the hands of the wild men from the further mountains"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) uncouth stone chapel at the byway",
+   "rel": "route_next",
+   "b": "Goldburg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "most of a day's ride east, two hours before sunset",
+   "travel_mode": "",
+   "terrain_text": "fair rich flat land, a big river crossed twice by bridges",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C31-P022",
+     "q": "They crossed a big river twice by bridges, and small streams often, mostly by fords"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) unmarked hostelry among hovels",
+   "rel": "route_next",
+   "b": "(unnamed) uncouth stone chapel at the byway",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "reached at dusk",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C31-P027",
+     "q": "Forth then they rode till dusk"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Morfinn the Minstrel"
+   ],
+   "from": "Goldburg",
+   "to": "(unnamed) unmarked hostelry among hovels",
+   "via": [
+    "(unnamed) uncouth stone chapel at the byway"
+   ],
+   "mode": "horse",
+   "direction_text": "east",
+   "duration_text": "",
+   "start_time_text": "two hours before noon",
+   "end_time_text": "dusk",
+   "terrain_text": "",
+   "chapter": "BTWO-C31",
+   "refs": [
+    {
+     "p": "BTWO-C31-P005",
+     "q": "He came on his way-leader about a bowshot from the gate"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "custom",
+   "subject": "(unnamed) kindred of the Bull",
+   "statement": "If Ralph cries \"I am the brother of Bull Shockhead\", Bull's kindred will help him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P004",
+     "q": "if thou cry out, I am the brother of Bull Shockhead, all those of my kindred who are near will be thy friends and thy helpers"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "(unnamed) lands east of Goldburg",
+   "statement": "It is early autumn: sheaves on the fields, grapes ripening.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "BTWO-C31",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P020",
+     "q": "It was a fresh and bright morning of early autumn, the sheaves were on the acres, and the grapes were blackening to the vintage"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) lands east of Goldburg",
+   "statement": "Husbandmen are ragged, sullen and hungry.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P020",
+     "q": "they were scantily and foully clad, and sullen-faced, if not hunger-pinched"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Lord of Utterbol",
+   "statement": "Utterbol's let-pass turns aside a robber knight.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P026",
+     "q": "glad that his let-pass was shown to be good for something"
+    }
+   ]
+  },
+  {
+   "category": "occupation",
+   "subject": "Morfinn the Minstrel",
+   "statement": "His fiddle is his livelihood; he carries knives, no weapon.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Morfinn the Minstrel",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P005",
+     "q": "touching his fiddle"
+    }
+   ]
+  },
+  {
+   "category": "language",
+   "subject": "(unnamed) unmarked hostelry among hovels",
+   "statement": "The old woman speaks a language Ralph does not know.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P027",
+     "q": "the minstrel spake a word or two in a tongue that Ralph knew not"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph frees Bull",
+   "chapter": "BTWO-C31",
+   "layer": "main",
+   "time_text": "morning",
+   "participants": [
+    "Ralph",
+    "Bull Shockhead"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "summary": "Ralph frees Bull Shockhead, who makes him his brother.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P004",
+     "q": "this is the token whereby it shall be known amongst our folk that I have made thee my brother"
+    }
+   ]
+  },
+  {
+   "label": "Morfinn's news of the captive",
+   "chapter": "BTWO-C31",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Morfinn the Minstrel"
+   ],
+   "places": [
+    "(unnamed) lands east of Goldburg"
+   ],
+   "summary": "Morfinn describes the damsel brought captive into Utterbol a month ago.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C31-P009",
+     "q": "As I left Utterbol a month ago, I saw a damsel brought in captive there"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Morfinn's mocking smile suggests deceit.",
+   "refs": [
+    {
+     "p": "BTWO-C31-P008",
+     "q": "there was mocking in the smile"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Who took the damsel from Bull Nosy? Morfinn says Utterbol's men took her from the wild men.",
+   "refs": [
+    {
+     "p": "BTWO-C31-P009",
+     "q": "taken out of the hands of the wild men from the further mountains"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Brotherhood tokens that turn hostile clans into allies when invoked.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BTWO-C31-P004",
+     "q": "I am the brother of Bull Shockhead"
+    }
+   ]
+  },
+  {
+   "idea": "Robber knights who lure travellers with courtesy challenges.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C31-P024",
+     "q": "This knight shalt bid thee to a courteous joust"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C31",
+ "chapters": [
+  "BTWO-C31"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C31",
+   "paragraphs_total": 27,
+   "all_paragraphs_read": true,
+   "summary": "Ralph frees Bull Shockhead with gold; Bull makes him a blood-brother, giving a beast-skin purse embroidered with bull's horns holding a knotted grass token, and says he may meet Ralph again in the furthest East. Clement foresees Ralph's return. Morfinn, unarmed with a fiddle and a case of knives, calls himself \"Morfinn the Unmanned\". He says that a month ago he saw a captive damsel brought into Utterbol, taken from the wild men, and describes her and her torn green gown exactly; the Lord rode beside her. It is early autumn, harvest and vintage. They pass sullen, hungry husbandmen and armed gypsy-like wanderers, leave Goldburg's narrow lands, and cross a big river twice by bridges. At a byway's stone chapel a felon knight with men-at-arms invites them to joust; the let-pass makes him let them go, while Morfinn shakes with fear. At dusk they lodge at an unmarked house among hovels where an old woman speaks a language unknown to Ralph.",
+   "geography_notes": "East from Goldburg's gate; Goldburg's lands are narrow on this side. The land is fair, rich and almost flat; a big river is crossed twice by bridges and small streams by fords. About two hours before sunset, a crossroads with a byway and an uncouth stone chapel on a rise, near a felon knight's house. At dusk, a cluster of hovels around a better house used as a hostelry.",
+   "open_questions": [
+    "What language does the old woman speak?",
+    "Who is the knight at the chapel?"
+   ]
+  }
+ ]
+}

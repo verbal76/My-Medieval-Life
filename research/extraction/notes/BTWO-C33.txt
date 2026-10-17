@@ -1,0 +1,33 @@
+@ BTWO-C33
+summary: The Lord's train (Lord in a litter, forty horsemen, magnates, armed servants, a rear score) takes the Utterness road with Ralph unarmed among them. David says things beyond the mountains can kill a man by fear; that the founder of Goldburg drank of the Well with help from a learned woman, being one all women loved; and that he himself does not believe a man could reach the Well in a lifetime. At noon the sandy-haired captain explains that the Lord keeps the moorland between Utterbol and Goldburg poor so it cannot feed a hostile host; its few folk pay him tribute and some are his hounds, Morfinn the richest of them, whom the Lord unmanned. The Lord can raise a thousand men by sending the war-arrow; Goldburgers fight poorly outside their walls. Folk say that when Goldburg falls the world will change, and that under each Goldburg tower lies a youth and maiden who drank the Water and can die only by point and edge.
+geo: The road to Utterness crosses rough, untilled, little-grazed moorland. The distant Wall of the World seems no nearer.
+open: Is the woman who helped Goldburg's founder the Lady of Abundance? (David's tale echoes the Lady)
+
+E person | (unnamed) captain of the Utterbol men-at-arms | - | captain | Middle-aged, short, long-armed, beardless, spare and wiry, with hair the colour of sandstone dust. | P018 `a man somewhat low of stature, but long-armed like the Lord, a man of middle age, beardless and spare of body`
+E feature | (unnamed) Utterbol moorland | land debateable | moorland | Rough untilled moorland with plover, whimbrel, conies and hares, kept poor by the Lord as a buffer. | P018 `little better than rough moorland, little fed, and not at all tilled`
+E custom | war-arrow | - | summons | Sent round the deserts to raise about a thousand carles. | P026 `he has but to send the war-arrow round about these deserts`
+
+R Lord of Utterbol | ruler_of | (unnamed) Utterbol moorland | tribute from its few dwellers; nominal land | BTWO-C33 | CANON/high | P021 `None shall dwell in it save as he willeth, and they shall pay him tribute`
+R Lord of Utterbol | enemy_of | Goldburg | keeps the land between them barren | BTWO-C33 | CANON/high | P019 `deemest thou that he should suffer a rich land betwixt him and Goldburg`
+R Lord of Utterbol | other | Morfinn the Minstrel | unmanned him "for some good reason" | backstory | CANON/high | P022 `But my Lord unmanned him for some good reason`
+
+S (unnamed) Utterbol moorland | between | Goldburg | ctx=dialogue:captain of the Utterbol men-at-arms; cert=constrained | CANON/high | buffer between Goldburg and Utterbol | P019 `deemest thou that he should suffer a rich land betwixt him and Goldburg, that it might sustain an host big enough to deal with him?`
+
+T Ralph, Lord of Utterbol, David the Sage | (unnamed) Utterbol pavilion camp | Utterness | mode=horse, Lord in a litter, wains for tents | P002 `went their ways the selfsame road that Ralph had been minded for yesterday; to wit the road to Utterness`
+
+F politics | Lord of Utterbol | He deliberately keeps the land toward Goldburg barren so it cannot feed a host against him. | CANON/high; ctx=dialogue:captain of the Utterbol men-at-arms | P019 `whereas it beareth naught else, that cometh of my lord's will`
+F military | Lord of Utterbol | By the war-arrow he can raise about a thousand rough men from the deserts. | CANON/high; ctx=dialogue:captain of the Utterbol men-at-arms | P026 `say ten hundred of them`
+F military | Goldburg | Goldburgers are poor fighters outside their walls but strong within. | CANON/high; ctx=dialogue:captain of the Utterbol men-at-arms | P026 `the Goldburg folk are not very handy at a fray without their walls`
+F magic | Goldburg | Folk believe that when Goldburg falls the world will change, and that under each tower lie a youth and maiden who drank of the Water and can die only by point and edge. | CANON/high; ctx=rumour | P029 `under each tower of Goldburg lieth a youth and a maiden that have drunk of the water, and might not die save by point and edge`
+F magic | (unnamed) founder of Goldburg | David says he crossed the mountains and drank of the Well, helped by a woman who had learned many things, as one all women loved. | CANON/medium; ctx=dialogue:David the Sage | P007 `never had he drunk the draught had he not been helped by one who had learned many things, a woman to wit`
+F magic | Wall of the World | David says beyond the mountains are sights that can kill a strong man by fear alone. | CANON/medium; ctx=dialogue:David the Sage | P005 `over there are things to be seen which might slay a strong man for pure fear`
+F military | Lord of Utterbol | His train: forerunners, the Lord in a litter, forty horsemen, magnates, armed servants, a rear score of men-at-arms. | CANON/high | P003 `the Lord went first after his fore-runners in a litter done about with precious cloths; and two score horsemen came next`
+F ecology | (unnamed) Utterbol moorland | It bears plover, whimbrel, conies and hares, and few men. | CANON/high; ctx=dialogue:captain of the Utterbol men-at-arms | P019 `it beareth plover and whimbrel and conies and hares`
+
+V main | March toward Utterness | Ralph rides captive in the Lord's train and learns of Utterbol's policy and Goldburg's legends. | time=next day; who=Ralph, David the Sage, (unnamed) captain of the Utterbol men-at-arms; where=(unnamed) Utterbol moorland | P024 `why dost thou suffer me to lead thee along whither thou wouldest not?`
+
+U identity | Whether the learned woman who helped Goldburg's founder is the Lady of Abundance or the Teacher of Lore. | P007 `helped by one who had learned many things, a woman to wit`
+U contradiction | Clement (BTWO-C27) reported the founder's drinking as disputed; David says he certainly crossed the mountains and drank, then calls it "but a tale". | P007 `Moreover, when all is said, 'tis but a tale`
+
+O politics | Deliberate scorched-buffer zones kept barren by a strategic tyrant, as a world-gen policy for border lands. | P019 `deemest thou that he should suffer a rich land betwixt him and Goldburg`
+O lore | City foundation myths of hidden immortals under towers, as discoverable legends. | P029 `under each tower of Goldburg lieth a youth and a maiden that have drunk of the water`

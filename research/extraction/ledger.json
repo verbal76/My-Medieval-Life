@@ -1388,33 +1388,77 @@
    "title": "The Beginning of the Road To Utterbol",
    "body_paragraphs": 27,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 2,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 6,
+    "events": 2,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "What language does the old woman speak?",
+    "Who is the knight at the chapel?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C31.txt",
+    "records": "research/extraction/chapters/BTWO-C31.json"
+   }
   },
   {
    "chapter": "BTWO-C32",
    "title": "Ralph Happens on Evil Days",
    "body_paragraphs": 36,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 3,
+    "spatial": 4,
+    "travel": 1,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "What does the Lord want Ralph for? (Ralph fears sacrifice)",
+    "Where does the hermit sage live?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C32.txt",
+    "records": "research/extraction/chapters/BTWO-C32.json"
+   }
   },
   {
    "chapter": "BTWO-C33",
    "title": "Ralph is Brought on the Road Towards Utterbol",
    "body_paragraphs": 29,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 3,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 8,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Is the woman who helped Goldburg's founder the Lady of Abundance? (David's tale echoes the Lady)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C33.txt",
+    "records": "research/extraction/chapters/BTWO-C33.json"
+   }
   },
   {
    "chapter": "BTWO-C34",

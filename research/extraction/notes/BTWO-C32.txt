@@ -1,0 +1,36 @@
+@ BTWO-C32
+summary: The land worsens to patches of tillage, dark heath, bog and scraggy woods. Twelve uncouth, savage armed men bow to the Utterbol seal and withdraw. Morfinn says Utterness and Utterbol folk are sure the Well exists and are the nearest people to it, that some have found it, and that a hermit sage in the woods near Utterbol can set seekers surely on the road. They lodge with a fearful woodman. Next day, on heath with islands of green pasture, Ralph sees a motionless cloud: Morfinn says it is the top of the Wall of the World, far from Utterness, and the Well lies beyond it. After a pine wood they find a pavilion bearing a black bear on a castle wall on gold. Ralph calls Morfinn a traitor and flees, but is caught and brought before the Lord of Utterbol: short, broad, dark-haired, sallow, with small bloodshot eyes and a harsh squeaking voice. With David the Sage, his scarlet-clad, spectacled chief counsellor, he appraises Ralph like a horse, pays Morfinn, and orders him to bring meek, unmarked women within three months. Ralph does not show the Queen's letter.
+geo: Day 2 east of Goldburg: less fertile, scattered tillage, dark heath, bog, scraggy woods; woodmen's or hunters' houses by evening. Day 3: some miles on, heath with green pasture islands and cattle, nearly level. The Wall of the World is visible on the horizon as an unchanging cloud, not near Utterness. Then a long thick pine wood, and beyond it a well-grassed plain where the Lord camped by the road.
+open: What does the Lord want Ralph for? (Ralph fears sacrifice) || Where does the hermit sage live?
+
+E person | David the Sage | David | counsellor | Elderly chief counsellor of the Lord of Utterbol, clad in scarlet, wears spectacles; a high-ranking thrall in effect. | P030 `a man somewhat stricken in years, clad in scarlet`; P036 `being the chief counsellor of the Lord of Utterbol`
+E person | Lord of Utterbol | Gandolf | tyrant | Short, broad-shouldered, long straight dark-brown hair, scanty beard, smooth sallow face, small bloodshot brown eyes, harsh squeaking voice; sits on an ivory chair in a blue silk gown with the bear and castle-wall. | P026 `he was short of stature, but broad across the shoulders, his hair long, strait, and dark brown of hue`; P028 `his voice was harsh and squeaking`
+E item | Arms of Utterbol | Bear upon the Castle Wall | heraldry | A black bear on a castle wall on a field of gold. | P022 `a black bear on a castle-wall on a field of gold`
+E feature | (unnamed) heath and bog east of Goldburg | - | heath | Dark heath and bog with scraggy woods and patches of tillage. | P003 `the rest was but dark heathland and bog, with scraggy woods scattered about the country-side`
+E person | (unnamed) hermit sage near Utterbol | the sage | hermit | Hermit in the woods near Utterbol, said to set Well-seekers surely on the road. | P010 `there dwelleth a sage in the woods not right far from Utterbol, a hermit living by himself`
+
+R Morfinn the Minstrel | serves | Lord of Utterbol | delivers captives for gold | BTWO-C32 | CANON/high | P032 `the catch is good, lucky man:  David will give thee gold for it`
+R Ralph | captive_of | Lord of Utterbol | taken at the pavilion | BTWO-C32 | CANON/high | P024 `he made no show of defence, but suffered them to lead him away`
+R David the Sage | serves | Lord of Utterbol | chief counsellor | BTWO-C32 | CANON/high | P036 `being the chief counsellor of the Lord of Utterbol`
+
+S Wall of the World | visible_from | (unnamed) heath and bog east of Goldburg | terrain=clear air, seen as a motionless cloud; cert=fixed | CANON/high | top of the mountain ridge | P015 `this is no cloud, but the topmost head of the mountain ridge which men call the Wall of the World`
+S Wall of the World | distance_from | Utterness | dist=not so nigh; ctx=dialogue:Morfinn the Minstrel; cert=constrained | CANON/high | huge but far | P015 `not so nigh; for as huge as it seemeth thence`
+S Well at the World's End | beyond | Wall of the World | ctx=dialogue:Morfinn the Minstrel; cert=constrained | CANON/high | - | P016 `lieth beyond it?`
+S (unnamed) Utterbol pavilion camp | route_next | (unnamed) heath and bog east of Goldburg | terrain=a long thick pine wood, then a grassy plain by the road; cert=fixed | CANON/high | - | P019 `they had been riding through a thick pine-wood for a long while, and coming out of it they beheld before them a plain country fairly well grassed`
+
+T Ralph, Morfinn the Minstrel | (unnamed) unmarked hostelry among hovels | (unnamed) Utterbol pavilion camp | via=(unnamed) heath and bog east of Goldburg; mode=horse; dur=two days; terrain=heath, bog, scraggy woods, pine wood | P003 `the land began to get less fertile and less`
+
+F law | Lord of Utterbol | Waylaying men bow to his seal as to a saint's relic. | CANON/high | P006 `they made obeisance to it, as though it were the relic of a saint`
+F magic | Well at the World's End | Morfinn says Utterness and Utterbol folk are sure the Well exists and are the nearest people to it; some have found it. | CANON/medium; ctx=dialogue:Morfinn the Minstrel | P009 `we of Utterness and Utterbol are sure thereof; and of all nations and peoples whereof we know, we deem that we are the nighest thereto`
+F price | Lord of Utterbol | The Lord pays Morfinn gold for Ralph and orders comely, meek, unmarked women within three months. | CANON/high; ctx=dialogue:Lord of Utterbol | P032 `there are women needed for my house; and they must be goodly and meek, and not grievously marked with stripes, or branded`
+F society | Lord of Utterbol | All his men except his best warriors are little better than higher thralls; his warriors know his dread protects them. | CANON/high | P036 `though this man had not been bought for money, he was little better than a thrall of the higher sort`
+F society | Morfinn the Minstrel | The Lord calls him a "half-man". | CANON/high; ctx=dialogue:Lord of Utterbol | P032 `we need no half-men to boot`
+F food | (unnamed) heath and bog east of Goldburg | The woodman has only wild fowl to offer. | CANON/high | P013 `scant indeed of victual or drink, save wild-fowl from the heath`
+
+V main | Ralph taken by the Lord of Utterbol | Morfinn delivers Ralph to the Lord of Utterbol's camp; Ralph is appraised and held. | time=evening, third day; who=Ralph, Morfinn the Minstrel, Lord of Utterbol, David the Sage; where=(unnamed) Utterbol pavilion camp | P031 `he is a goodly and well-fashioned a young man as was ever sold`
+
+U ambiguity | Why the Lord wants Ralph: Ralph fears he is being led to sacrifice. | P037 `I scarce deem that I am being led to the slaughter`
+U location | Where the hermit sage near Utterbol lives. | P010 `in the woods not right far from Utterbol`
+
+O politics | A tyrant's network of informer-procurers (like Morfinn) who sell travellers. | P032 `David will give thee gold for it`
+O world | The Wall of the World visible from great distances as a fixed horizon landmark (useful for world-gen orientation). | P014 `I never saw the like of this cloud`

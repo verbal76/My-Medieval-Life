@@ -1,0 +1,34 @@
+@ BTWO-C31
+summary: Ralph frees Bull Shockhead with gold; Bull makes him a blood-brother, giving a beast-skin purse embroidered with bull's horns holding a knotted grass token, and says he may meet Ralph again in the furthest East. Clement foresees Ralph's return. Morfinn, unarmed with a fiddle and a case of knives, calls himself "Morfinn the Unmanned". He says that a month ago he saw a captive damsel brought into Utterbol, taken from the wild men, and describes her and her torn green gown exactly; the Lord rode beside her. It is early autumn, harvest and vintage. They pass sullen, hungry husbandmen and armed gypsy-like wanderers, leave Goldburg's narrow lands, and cross a big river twice by bridges. At a byway's stone chapel a felon knight with men-at-arms invites them to joust; the let-pass makes him let them go, while Morfinn shakes with fear. At dusk they lodge at an unmarked house among hovels where an old woman speaks a language unknown to Ralph.
+geo: East from Goldburg's gate; Goldburg's lands are narrow on this side. The land is fair, rich and almost flat; a big river is crossed twice by bridges and small streams by fords. About two hours before sunset, a crossroads with a byway and an uncouth stone chapel on a rise, near a felon knight's house. At dusk, a cluster of hovels around a better house used as a hostelry.
+open: What language does the old woman speak? || Who is the knight at the chapel?
+
+E item | (unnamed) Bull's brotherhood token | - | token | Small beast-skin purse embroidered with bull's horns, holding a many-plied knotted grass bent; proof of brotherhood with Bull's kindred. | P004 `a little purse of some small beast's skin that was broidered in front with a pair of bull's horns`
+E group | (unnamed) gangrel wanderers east of Goldburg | - | wanderers | Gypsy-like armed wanderers in twos and threes with children, well clad in their fashion; some know Morfinn. | P021 `These were of aspect like to the gipsies of our time and nation, and were armed all of them`
+E building | (unnamed) uncouth stone chapel at the byway | - | chapel | Stone chapel of uncouth fashion, heathen or Christian unknown, where a byway meets the high road. | P023 `on the ingle stood a chapel of stone (whether of the heathen or Christian men Ralph wotted not, for it was uncouth of fashion)`
+E person | (unnamed) felon knight at the chapel | - | robber knight | Knight who lures travellers to joust, then robs or imprisons them; defers to Utterbol's pass. | P024 `he is a mere felon, and shalt set his men-at-arms on thee, and then will rob thee and slay thee after`
+E building | (unnamed) unmarked hostelry among hovels | - | inn | Better house among hovels with no sign, kept by an old woman. | P027 `a sort of hovels lay together about a house somewhat better builded, which Ralph took for a hostelry, though it had no sign nor bush`
+
+R Bull Shockhead | other | Ralph | sworn brother; freed with gold | BTWO-C31 | CANON/high | P003 `henceforth thou shalt be as a brother to me`
+R (unnamed) Maiden of Bourton Abbas | captive_of | Lord of Utterbol | brought into Utterbol a month ago, taken from the wild men | BTWO-C31 | CANON/medium | P009 `she had not been bought, but taken out of the hands of the wild men from the further mountains`
+
+S (unnamed) uncouth stone chapel at the byway | route_next | Goldburg | time=most of a day's ride east, two hours before sunset; terrain=fair rich flat land, a big river crossed twice by bridges; cert=fixed | CANON/high | - | P022 `They crossed a big river twice by bridges, and small streams often, mostly by fords`
+S (unnamed) unmarked hostelry among hovels | route_next | (unnamed) uncouth stone chapel at the byway | time=reached at dusk; cert=fixed | CANON/high | - | P027 `Forth then they rode till dusk`
+
+T Ralph, Morfinn the Minstrel | Goldburg | (unnamed) unmarked hostelry among hovels | via=(unnamed) uncouth stone chapel at the byway; mode=horse; dir=east; start=two hours before noon; end=dusk | P005 `He came on his way-leader about a bowshot from the gate`
+
+F custom | (unnamed) kindred of the Bull | If Ralph cries "I am the brother of Bull Shockhead", Bull's kindred will help him. | CANON/high; ctx=dialogue:Bull Shockhead | P004 `if thou cry out, I am the brother of Bull Shockhead, all those of my kindred who are near will be thy friends and thy helpers`
+F climate | (unnamed) lands east of Goldburg | It is early autumn: sheaves on the fields, grapes ripening. | CANON/high; when=BTWO-C31 | P020 `It was a fresh and bright morning of early autumn, the sheaves were on the acres, and the grapes were blackening to the vintage`
+F society | (unnamed) lands east of Goldburg | Husbandmen are ragged, sullen and hungry. | CANON/high | P020 `they were scantily and foully clad, and sullen-faced, if not hunger-pinched`
+F law | Lord of Utterbol | Utterbol's let-pass turns aside a robber knight. | CANON/high | P026 `glad that his let-pass was shown to be good for something`
+F occupation | Morfinn the Minstrel | His fiddle is his livelihood; he carries knives, no weapon. | CANON/high; ctx=dialogue:Morfinn the Minstrel | P005 `touching his fiddle`
+F language | (unnamed) unmarked hostelry among hovels | The old woman speaks a language Ralph does not know. | CANON/high | P027 `the minstrel spake a word or two in a tongue that Ralph knew not`
+
+V main | Ralph frees Bull | Ralph frees Bull Shockhead, who makes him his brother. | time=morning; who=Ralph, Bull Shockhead; where=Goldburg | P004 `this is the token whereby it shall be known amongst our folk that I have made thee my brother`
+V main | Morfinn's news of the captive | Morfinn describes the damsel brought captive into Utterbol a month ago. | who=Ralph, Morfinn the Minstrel; where=(unnamed) lands east of Goldburg | P009 `As I left Utterbol a month ago, I saw a damsel brought in captive there`
+
+U ambiguity | Morfinn's mocking smile suggests deceit. | P008 `there was mocking in the smile`
+U identity | Who took the damsel from Bull Nosy? Morfinn says Utterbol's men took her from the wild men. | P009 `taken out of the hands of the wild men from the further mountains`
+
+O society | Brotherhood tokens that turn hostile clans into allies when invoked. | P004 `I am the brother of Bull Shockhead`
+O world | Robber knights who lure travellers with courtesy challenges. | P024 `This knight shalt bid thee to a courteous joust`
