@@ -1,7 +1,9 @@
 archive,path,bytes,sha256,width,height,frames,mode
-(repo root),ASSET_MANIFEST.md,45202,37f3c5dad60aa5ef0fa3f9b1743e2ef4775461c01c86dce31d92ec43a0e3ebed,,,,
+16x16 Assorted RPG Icons (partial)/,armours.png,28619,637575b7499b6256d3d471b809643e04456916af5942cae580d64e6fe9552507,144,304,1,RGBA
+16x16 Assorted RPG Icons (partial)/,items-1.png,2830,ba2f85a54eb20e15e5124dfa509d7b420eff6e673597b2cd88efe0abcb17f048,112,16,1,RGBA
+16x16 Assorted RPG Icons (partial)/,items-2.png,2483,4c65b86f57ca96c502388c72296d34546abde21e7cb75e44ac3245c44d6a0b14,112,16,1,RGBA
+16x16 Assorted RPG Icons (partial)/,tools-gems-ingots.png,4752,746d66a50e6f6f09ca172620231676c12e13e6fcd06438d44cebdbaf2aecae3d,96,64,1,RGBA
 (repo root),Miniworld-Guide.docx,98156,b641b33348d44e9c2daadb6f898e0c738f77ce049176351dfc36128ad04f7afe,,,,
-(repo root),asset_manifest.csv,2007732,fcba304650cb19d4d27d4b72e70bfcb1f865a28ab4333e3944b442873a580ebe,,,,
 (repo root),punyworld-dungeon-tileset.png,25855,0bec8a1262360c8828e450760551754d7cb734ae51b952df9e7100a656b656a8,416,320,1,RGBA
 16x16 Armour RPG Icons.zip,16x16 Armour RPG Icons/all-assets-preview.png,556319,00652823143a0f42df3141b6f79a2c65bc078ad4a14c93e327af42cb9edb1bbd,1440,768,1,RGBA
 16x16 Armour RPG Icons.zip,16x16 Armour RPG Icons/boots.png,42166,9e970dc9055d7399bc4d01bd1e093d568b0037efd7d33cf80a02898a447b7abc,480,256,1,RGBA

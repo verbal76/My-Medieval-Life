@@ -55,16 +55,35 @@ def human(n):
     return f"{n:.1f} TB"
 
 
+LOOSE_NOTES = {
+    "Miniworld-Guide.docx": "Shade's guide to Miniworld buildings and animation timings.",
+    "punyworld-dungeon-tileset.png": "Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip).",
+}
+# Asset folders committed unzipped: name -> (licence, description)
+FOLDER_NOTES = {
+    "16x16 Assorted RPG Icons (partial)": ("free", "Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): misc items, tools/gems/ingots, armours."),
+}
+NOT_ASSETS = {"ASSET_MANIFEST.md", "asset_manifest.csv", ".gitignore", "tools", "out", ".git"}
+
+
 def main():
     rows = []
     loose = []
+    folders = []
     for p in sorted(REPO.iterdir()):
-        if p.is_file() and not p.name.startswith(".") and p.suffix != ".zip":
-            data = p.read_bytes()
-            size, frames, mode = image_info(data) if p.suffix == ".png" else (None, None, None)
+        if p.name in NOT_ASSETS or p.suffix == ".zip" or p.name.startswith("."):
+            continue
+        files = [p] if p.is_file() else sorted(f for f in p.rglob("*") if f.is_file())
+        if p.is_file():
             loose.append(p.name)
-            rows.append({"archive": "(repo root)", "path": p.name, "bytes": len(data),
-                         "sha256": hashlib.sha256(data).hexdigest(),
+        else:
+            folders.append(p.name)
+        for f in files:
+            data = f.read_bytes()
+            size, frames, mode = image_info(data) if f.suffix in (".png", ".gif") else (None, None, None)
+            rows.append({"archive": "(repo root)" if p.is_file() else p.name + "/",
+                         "path": f.relative_to(REPO if p.is_file() else p).as_posix(),
+                         "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest(),
                          "width": size[0] if size else "", "height": size[1] if size else "",
                          "frames": frames or "", "mode": mode or ""})
     zips = sorted(REPO.glob("*.zip"))
@@ -105,10 +124,13 @@ def main():
         lic, desc = NOTES.get(zp.name, ("verify", ""))
         rs = by_arch[zp.name]
         md.append(f"| `{zp.name}` | {lic} | {len(rs)} | {human(sum(r['bytes'] for r in rs))} | {desc} |")
+    for name in folders:
+        lic, desc = FOLDER_NOTES.get(name, ("verify", ""))
+        rs = by_arch[name + "/"]
+        md.append(f"| `{name}/` (folder) | {lic} | {len(rs)} | {human(sum(r['bytes'] for r in rs))} | {desc} |")
     for name in loose:
         md.append(f"| `{name}` (loose file) | | 1 | {human((REPO / name).stat().st_size)} | "
-                  + ("Shade's guide to Miniworld buildings and animation timings." if name.endswith(".docx")
-                     else "Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip).") + " |")
+                  f"{LOOSE_NOTES.get(name, '')} |")
     md += ["", "Licence key: **paid** = bought in the itch.io bundle; its licence allows use in games",
            "but forbids redistributing the original files. **free** = Shade's own terms say free to use.",
            "**CC0** = public domain per Shade's itch.io page. **verify** = no licence file in the archive; check the itch.io page.", ""]
@@ -120,14 +142,14 @@ def main():
 
     md += ["## Contents by folder", "",
            "Each folder lists its file count and the most common image sizes.", ""]
-    for zp in zips:
-        md += [f"### {zp.name}", ""]
-        folders = defaultdict(list)
-        for r in by_arch[zp.name]:
-            folders[str(PurePosixPath(r["path"]).parent)].append(r)
+    for source in [zp.name for zp in zips] + [f + "/" for f in folders]:
+        md += [f"### {source}", ""]
+        subdirs = defaultdict(list)
+        for r in by_arch[source]:
+            subdirs[str(PurePosixPath(r["path"]).parent)].append(r)
         md += ["| Folder | Files | Image sizes | Examples |", "|---|---:|---|---|"]
-        for folder in sorted(folders):
-            rs = folders[folder]
+        for folder in sorted(subdirs):
+            rs = subdirs[folder]
             dims = Counter(f"{r['width']}x{r['height']}" for r in rs if r["width"])
             dim_s = ", ".join(f"{d} ({c})" if len(dims) > 1 else d for d, c in dims.most_common(3))
             if len(dims) > 3:

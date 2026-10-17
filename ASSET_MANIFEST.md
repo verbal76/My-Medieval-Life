@@ -21,9 +21,8 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY_MYTH-CREATURES-RPGMAKER_v1.zip` | CC0 | 74 | 531.6 KB | Puny Myth Creatures (Philippine folklore), RPG Maker format: 30 overworld 4-direction walk sheets (72x96, 3x4 frames of 24px), 25 unanimated enemy battle sprites, 10 hero side-view battlers (576x384, 9x6 frames of 64px), and 9 RPG Maker character sheets (288x192). Shade's thesis pack; CC0, credit optional. |
 | `PUNY_SKILLS_v1.zip` | paid | 1719 | 1.8 MB | Puny skill icons, skill FX animation spritesheets, indicators. |
 | `miniworld +__rainbow-refresh.zip` | verify | 10 | 642.9 KB | Recoloured 'rainbow refresh' Miniworld remix sheets, same layout as the octoshrimpy update plus chests. |
-| `ASSET_MANIFEST.md` (loose file) | | 1 | 44.1 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip). |
+| `16x16 Assorted RPG Icons (partial)/` (folder) | free | 4 | 37.8 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): misc items, tools/gems/ingots, armours. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
-| `asset_manifest.csv` (loose file) | | 1 | 1.9 MB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip). |
 | `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip). |
 
 Licence key: **paid** = bought in the itch.io bundle; its licence allows use in games
@@ -34,16 +33,15 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 12344 |
+| `.png` | 12348 |
 | `.tmj` | 18 |
-| `.csv` | 12 |
 | `.tsx` | 12 |
+| `.csv` | 11 |
 | `.gif` | 9 |
 | `.txt` | 3 |
 | `.docx` | 2 |
 | `.xcf` | 2 |
 | `.json` | 2 |
-| `.md` | 1 |
 | `.psd` | 1 |
 | `.tds` | 1 |
 
@@ -358,6 +356,12 @@ Each folder lists its file count and the most common image sizes.
 | Folder | Files | Image sizes | Examples |
 |---|---:|---|---|
 | `.` | 10 | 512x512 (5), 1024x1024 (1), 1024x1376 (1), ... | `alives_orcs.png`, `alives_other.png`, `buildings.png`, `chests.png`, ... |
+
+### 16x16 Assorted RPG Icons (partial)/
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `.` | 4 | 112x16 (2), 144x304 (1), 96x64 (1) | `armours.png`, `items-1.png`, `items-2.png`, `tools-gems-ingots.png` |
 
 ## Identical content
 
