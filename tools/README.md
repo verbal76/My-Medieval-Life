@@ -32,3 +32,13 @@ Biomes: `temperate`, `winter`, `desert`, `marsh`. Writes a PNG plus a JSON corne
 ```sh
 python3 tools/miniworld_terrain.py --biome temperate --size 64 40 --seed 3
 ```
+
+## puny_world_terrain.py
+
+Overworld maps from the **free** Puny World tileset, using the Tiled terrain data in its own `.tsx`
+(sea depths, sand, grass, dirt patches, and a trees overlay). Writes a PNG and a two-layer Tiled `.tmj`
+(put it next to `punyworld-overworld-tiles.tsx` to open it in Tiled).
+
+```sh
+python3 tools/puny_world_terrain.py --size 64 40 --seed 3 -n 2
+```
