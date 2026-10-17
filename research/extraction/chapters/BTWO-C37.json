@@ -1,0 +1,266 @@
+{
+ "entities": [
+  {
+   "name": "Redhead",
+   "aliases": [],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": false,
+   "summary": "Rough, big Utterbol man unhorsed by Ralph; pardoned at Ralph's request.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C37-P019",
+     "q": "Redhead he hight, Lord"
+    }
+   ]
+  },
+  {
+   "name": "Black Anselm",
+   "aliases": [],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": false,
+   "summary": "Big, skilled Utterbol man wounded through the shoulder by Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C37-P009",
+     "q": "Well, Black Anselm, this is better done"
+    }
+   ]
+  },
+  {
+   "name": "Ursula",
+   "aliases": [
+    "the new thrall",
+    "the new-come thrall"
+   ],
+   "type": "person",
+   "subtype": "thrall",
+   "unnamed": false,
+   "summary": "The Lord's new favourite thrall at Utterbol, who always wears a pair of beads about her neck.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C37-P025",
+     "q": "this new thrall, this Ursula"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) crabbed sergeant of Utterbol",
+   "aliases": [
+    "the surly sergeant"
+   ],
+   "type": "person",
+   "subtype": "sergeant",
+   "unnamed": true,
+   "summary": "Old crabbed sergeant who briefs Ralph and asks him to plead for Redhead.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C37-P005",
+     "q": "the sergeant, who was old and crabbed"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "other",
+   "b": "Redhead",
+   "detail": "won his pardon from the Lord",
+   "when": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C37-P018",
+     "q": "If thou be still angry with the carle whom I first unhorsed, I pray thee pardon him his ill-luck"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "lover_of",
+   "b": "Ursula",
+   "detail": "the Lady says he will return to his new thrall",
+   "when": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C37-P025",
+     "q": "my lord will see his new thrall again"
+    }
+   ]
+  },
+  {
+   "a": "Lord of Utterbol",
+   "rel": "lover_of",
+   "b": "Joyce",
+   "detail": "takes her into the Tower",
+   "when": "BTWO-C37",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C37-P024",
+     "q": "now he hath taken her by the hand and led her into the Tower"
+    }
+   ]
+  },
+  {
+   "a": "Ursula",
+   "rel": "other",
+   "b": "(unnamed) Maiden of Bourton Abbas",
+   "detail": "probably the same woman (beads, new thrall at Utterbol)",
+   "when": "BTWO-C37",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BTWO-C37-P025",
+     "q": "as to why she weareth ever that pair of beads about her neck"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [],
+ "facts": [
+  {
+   "category": "custom",
+   "subject": "Utterbol",
+   "statement": "Jousts are run with sharp, unrebated spears.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C37-P004",
+     "q": "I see that the spear-head is not rebated, so that we are to play at sharps"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Lord of Utterbol",
+   "statement": "A man who shames him at arms may be set up head down as a living archery target.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:crabbed sergeant",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C37-P014",
+     "q": "my Lord would have him set up, and head down and buttocks aloft, as a target for our bowmen"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Utterbol",
+   "statement": "Utterbol's men do not know western tilting; Ralph defeats six and outmatches Otter.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C37-P012",
+     "q": "Six of the stoutest men of Utterbol did Ralph overthrow or hurt in this wise"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Lord of Utterbol",
+   "statement": "The Lord swears an oath \"on the edge of the sword\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Utterbol",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C37-P026",
+     "q": "he swore on the edge of the sword that thou mightest say what thou wouldst"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The joust at the Dale of the Tower",
+   "chapter": "BTWO-C37",
+   "layer": "main",
+   "time_text": "afternoon",
+   "participants": [
+    "Ralph",
+    "Otter",
+    "Redhead",
+    "Black Anselm",
+    "Lord of Utterbol",
+    "Joyce"
+   ],
+   "places": [
+    "Dale of the Tower"
+   ],
+   "summary": "Ralph defeats Utterbol's best in sharp-spear jousts and wins a boon.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C37-P013",
+     "q": "We have no might against this youngling, man to man"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Ursula wears beads like Ralph's: probably the damsel of Bourton, named Dorothea in Ralph's dream (BTWO-C15).",
+   "refs": [
+    {
+     "p": "BTWO-C37-P025",
+     "q": "this new thrall, this Ursula"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Tournaments as faction tests where outsiders can earn standing or boons.",
+   "system": "military",
+   "basis_refs": [
+    {
+     "p": "BTWO-C37-P017",
+     "q": "if thou wilt now ask a boon of me, if it be not over great, I will grant it thee"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C37",
+ "chapters": [
+  "BTWO-C37"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C37",
+   "paragraphs_total": 27,
+   "all_paragraphs_read": true,
+   "summary": "At the hastily staked lists, with sharp (unblunted) spears, Ralph unhorses a timid man, Redhead, by hauling him from the saddle; wounds Black Anselm through the shoulder; overthrows or hurts six of Utterbol's best; and in three courses with Otter nearly unhorses him. The Lord concedes no one can match him and grants a boon: Ralph asks pardon for Redhead, whom the Lord meant to set up as an archery target, and Otter softens the sentence. Joyce sits beside the Lord as the supposed Queen, and Ralph believes she is the Lady. In her pavilion the jealous Lady reveals that the Lord's beloved new thrall at Utterbol is named Ursula and always wears a pair of beads. The Lord swore on the sword's edge to protect Agatha.",
+   "geography_notes": "The lists stand in the Dale of the Tower by a turf ridge customary for games. The company stays two more days in \"Tower Dale\".",
+   "open_questions": [
+    "Is Ursula the damsel of Bourton (the dream named her Dorothea)?"
+   ]
+  }
+ ]
+}

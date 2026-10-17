@@ -1541,33 +1541,76 @@
    "title": "How Ralph Justed With the Aliens",
    "body_paragraphs": 27,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 4,
+    "spatial": 0,
+    "travel": 0,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is Ursula the damsel of Bourton (the dream named her Dorothea)?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C37.txt",
+    "records": "research/extraction/chapters/BTWO-C37.json"
+   }
   },
   {
    "chapter": "BTWO-C38",
    "title": "A Friend Gives Ralph Warning",
    "body_paragraphs": 27,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 1,
+    "spatial": 2,
+    "travel": 0,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who is the woman in the Lady's confidence who told Redhead? (likely Agatha)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C38.txt",
+    "records": "research/extraction/chapters/BTWO-C38.json"
+   }
   },
   {
    "chapter": "BTWO-C39",
    "title": "The Lord of Utterbol Makes Ralph a Free Man",
    "body_paragraphs": 25,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 2,
+    "spatial": 5,
+    "travel": 1,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Where is the Fighting Man rock?",
+    "Is Otter sincere about the quest?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BTWO-C39.txt",
+    "records": "research/extraction/chapters/BTWO-C39.json"
+   }
   },
   {
    "chapter": "BTWO-C40",

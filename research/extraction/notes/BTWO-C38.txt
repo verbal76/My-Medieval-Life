@@ -1,0 +1,24 @@
+@ BTWO-C38
+summary: Walking east up the narrowing dale, Ralph meets Redhead fishing. Redhead warns him never to go to Utterbol: the Lord means him as a toy for his wife and will later geld him, and if Ralph meets the damsel there the Lord, who loves her, will kill her within three days. On the second night after leaving the Dale they will camp near the one good escape pass, through the forest up into the mountains; Redhead will be chief warder of that side. A sage in the wildwood between Utterbol and the Great Mountains has lore of the mountains and the Well, and might change Ralph's very skin to disguise him. Ralph plans to flee, find the sage, and return in disguise to free the damsel.
+geo: The Dale of the Tower narrows to the east along the stream. On the second day's march from the Dale toward Utterbol, the camp lies near the only good escape route: a pass through the forest up into the mountains. The sage dwells in the wildwood between Utterbol and the Great Mountains.
+open: Who is the woman in the Lady's confidence who told Redhead? (likely Agatha)
+
+E person | (unnamed) sage of the wildwood | the Sage | sage | Dwells in the wildwood between Utterbol and the Great Mountains; has lore of the mountains and the Well; could change a man's gear and skin. | P018 `a certain sage who dwelleth in the wildwood betwixt that place and the Great Mountains`
+E feature | Great Mountains | - | mountains | The great mountain range east of Utterbol. | P018 `betwixt that place and the Great Mountains`
+E feature | (unnamed) escape pass to the mountains | - | pass | The one good pass by which to leave the company between the Dale and Utterbol, through the forest up into the mountains. | P011 `there is but one pass whereby ye may well get away from this company betwixt this and Utterbol`
+
+R Redhead | friend_of | Ralph | warns and offers to help him escape | BTWO-C38 | CANON/high | P009 `I love thee for thy kindness to me, and thy manliness`
+
+S (unnamed) sage of the wildwood | between | Utterbol | ctx=dialogue:Redhead; cert=constrained | CANON/high | between Utterbol and the Great Mountains | P018 `in the wildwood betwixt that place and the Great Mountains`
+S (unnamed) escape pass to the mountains | distance_from | Dale of the Tower | time=camp on the second day's march toward Utterbol; ctx=dialogue:Redhead; cert=constrained | CANON/high | - | P011 `we shall encamp hard by it on the second day of our faring hence`
+
+F society | Lord of Utterbol | Redhead says the Lord bought Ralph as a toy for his wife and would later geld him. | CANON/medium; ctx=dialogue:Redhead | P006 `He hath bought thee to give to his wife for a toy and a minion`
+F society | Lord of Utterbol | Redhead says the Lord is lustful, cruel and false and would torture the damsel to death if he saw love between her and Ralph. | CANON/medium; ctx=dialogue:Redhead | P022 `he is so lustful and cruel, and so false withal, that his will shall be to torment the damsel to death`
+F magic | (unnamed) sage of the wildwood | Redhead says the sage could change Ralph's skin as well as his clothing. | CANON/medium; ctx=dialogue:Redhead | P026 `he might then change not thy gear only, but thy skin also; for he hath exceeding great lore`
+F society | Utterbol | Redhead calls Utterbol Hell and its men devils. | CANON/high; ctx=dialogue:Redhead | P003 `it is hard to do good deeds in Hell, especially for one of its devils`
+
+V main | Redhead's warning | Redhead warns Ralph against Utterbol and plans his escape. | time=next day; who=Ralph, Redhead; where=Dale of the Tower | P004 `Go thou not to Utterbol whatever may betide`
+
+U identity | The woman in the Lady's confidence who spread the tale to Redhead (likely Agatha's planted tidings). | P009 `It was told me yester-eve by a woman who is in the very privity of the Lady of Utterbol`
+
+O quests | Escape-and-disguise plans: leave the captors, seek a sage's transformation, return to rescue. | P025 `How would it be if I came hither in other guise than mine own`

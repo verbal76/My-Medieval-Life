@@ -1,0 +1,25 @@
+@ BTWO-C37
+summary: At the hastily staked lists, with sharp (unblunted) spears, Ralph unhorses a timid man, Redhead, by hauling him from the saddle; wounds Black Anselm through the shoulder; overthrows or hurts six of Utterbol's best; and in three courses with Otter nearly unhorses him. The Lord concedes no one can match him and grants a boon: Ralph asks pardon for Redhead, whom the Lord meant to set up as an archery target, and Otter softens the sentence. Joyce sits beside the Lord as the supposed Queen, and Ralph believes she is the Lady. In her pavilion the jealous Lady reveals that the Lord's beloved new thrall at Utterbol is named Ursula and always wears a pair of beads. The Lord swore on the sword's edge to protect Agatha.
+geo: The lists stand in the Dale of the Tower by a turf ridge customary for games. The company stays two more days in "Tower Dale".
+open: Is Ursula the damsel of Bourton (the dream named her Dorothea)?
+
+E person | Redhead | - | man-at-arms | Rough, big Utterbol man unhorsed by Ralph; pardoned at Ralph's request. | P019 `Redhead he hight, Lord`
+E person | Black Anselm | - | man-at-arms | Big, skilled Utterbol man wounded through the shoulder by Ralph. | P009 `Well, Black Anselm, this is better done`
+E person | Ursula | the new thrall, the new-come thrall | thrall | The Lord's new favourite thrall at Utterbol, who always wears a pair of beads about her neck. | P025 `this new thrall, this Ursula`
+E person | (unnamed) crabbed sergeant of Utterbol | the surly sergeant | sergeant | Old crabbed sergeant who briefs Ralph and asks him to plead for Redhead. | P005 `the sergeant, who was old and crabbed`
+
+R Ralph | other | Redhead | won his pardon from the Lord | BTWO-C37 | CANON/high | P018 `If thou be still angry with the carle whom I first unhorsed, I pray thee pardon him his ill-luck`
+R Lord of Utterbol | lover_of | Ursula | the Lady says he will return to his new thrall | BTWO-C37 | CANON/high | P025 `my lord will see his new thrall again`
+R Lord of Utterbol | lover_of | Joyce | takes her into the Tower | BTWO-C37 | CANON/high | P024 `now he hath taken her by the hand and led her into the Tower`
+R Ursula | other | (unnamed) Maiden of Bourton Abbas | probably the same woman (beads, new thrall at Utterbol) | BTWO-C37 | INF/medium | P025 `as to why she weareth ever that pair of beads about her neck`
+
+F custom | Utterbol | Jousts are run with sharp, unrebated spears. | CANON/high | P004 `I see that the spear-head is not rebated, so that we are to play at sharps`
+F law | Lord of Utterbol | A man who shames him at arms may be set up head down as a living archery target. | CANON/high; ctx=dialogue:crabbed sergeant | P014 `my Lord would have him set up, and head down and buttocks aloft, as a target for our bowmen`
+F military | Utterbol | Utterbol's men do not know western tilting; Ralph defeats six and outmatches Otter. | CANON/high | P012 `Six of the stoutest men of Utterbol did Ralph overthrow or hurt in this wise`
+F custom | Lord of Utterbol | The Lord swears an oath "on the edge of the sword". | CANON/high; ctx=dialogue:Lady of Utterbol | P026 `he swore on the edge of the sword that thou mightest say what thou wouldst`
+
+V main | The joust at the Dale of the Tower | Ralph defeats Utterbol's best in sharp-spear jousts and wins a boon. | time=afternoon; who=Ralph, Otter, Redhead, Black Anselm, Lord of Utterbol, Joyce; where=Dale of the Tower | P013 `We have no might against this youngling, man to man`
+
+U identity | Ursula wears beads like Ralph's: probably the damsel of Bourton, named Dorothea in Ralph's dream (BTWO-C15). | P025 `this new thrall, this Ursula`
+
+O military | Tournaments as faction tests where outsiders can earn standing or boons. | P017 `if thou wilt now ask a boon of me, if it be not over great, I will grant it thee`

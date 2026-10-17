@@ -1,0 +1,370 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) great forest of Utterness",
+   "aliases": [
+    "sea of woodland"
+   ],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": true,
+   "summary": "Vast forest along the road to Utterness and beyond, up to the Great Mountains, with wolves, bears and lions.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C39-P020",
+     "q": "the town is, as it were, an island in the sea of woodland which covers all, right up to the feet of the Great Mountains"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Fighting Man rock",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "carved rock",
+   "unnamed": true,
+   "summary": "Black rock by the pass through the Great Mountains, carved with a Fighting Man or monstrous giant of long ago.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C39-P023",
+     "q": "on the black rock thereby is carven the image of a Fighting Man, or monstrous giant, of the days long gone by"
+    }
+   ]
+  },
+  {
+   "name": "Vale Turris",
+   "aliases": [
+    "Tower Dale",
+    "Dale of the Tower"
+   ],
+   "type": "place",
+   "subtype": "dale",
+   "unnamed": false,
+   "summary": "Another name for the Dale of the Tower.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C39-P026",
+     "q": "the whole rout moved slowly from out of Vale Turris"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "freed_by",
+   "b": "Lord of Utterbol",
+   "detail": "declared free, nominally",
+   "when": "BTWO-C39",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C39-P012",
+     "q": "Have I not told thee that thou art free?"
+    }
+   ]
+  },
+  {
+   "a": "Otter",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "proposes they might rule Utterbol together or seek the Well together",
+   "when": "BTWO-C39",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BTWO-C39-P017",
+     "q": "but thou and I together may rule in Utterbol and make better days there"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Utterbol",
+   "rel": "other",
+   "b": "Goldburg",
+   "direction": "",
+   "distance_text": "lordship reaches a hundred miles north and south",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Otter",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "extent of the Lord's reach",
+   "refs": [
+    {
+     "p": "BTWO-C39-P017",
+     "q": "betwixt Utterbol and Goldburg, and Utterbol and the mountains, and Utterbol and an hundred miles north, and an hundred miles south"
+    }
+   ]
+  },
+  {
+   "a": "Utterness",
+   "rel": "within",
+   "b": "(unnamed) great forest of Utterness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "an island in a sea of woodland",
+   "context": "dialogue:Otter",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C39-P020",
+     "q": "the town is, as it were, an island in the sea of woodland"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) great forest of Utterness",
+   "rel": "adjacent_to",
+   "b": "Great Mountains",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "forest to the mountain feet, climbing them where the wall is broken",
+   "context": "dialogue:Otter",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C39-P020",
+     "q": "right up to the feet of the Great Mountains, and does what it may to climb them"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Fighting Man rock",
+   "rel": "adjacent_to",
+   "b": "Great Mountains",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "rumour",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "by the road and pass through the Great Mountains",
+   "refs": [
+    {
+     "p": "BTWO-C39-P023",
+     "q": "where is the road and the pass through the Great Mountains"
+    }
+   ]
+  },
+  {
+   "a": "Well at the World's End",
+   "rel": "beyond",
+   "b": "(unnamed) great forest of Utterness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Otter",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C39-P021",
+     "q": "That way lieth the way to the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Lord of Utterbol",
+    "Otter",
+    "David the Sage"
+   ],
+   "from": "Dale of the Tower",
+   "to": "Utterness",
+   "via": [],
+   "mode": "horse, wains, herds",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "morning",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C39",
+   "refs": [
+    {
+     "p": "BTWO-C39-P026",
+     "q": "the whole rout moved slowly from out of Vale Turris"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "(unnamed) great forest of Utterness",
+   "statement": "Wolves, bears, and lions come down from the mountains into the forest; hunting is plentiful.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C39-P020",
+     "q": "with wolves and bears, yea, and lions to boot, which come down from the mountains"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Lord of Utterbol",
+   "statement": "A freed man cannot escape: the Lord can whistle him back anywhere in his range.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C39-P017",
+     "q": "there is no place where thou canst live, no place save the howling wilderness, and scarcely there either, where he may not lay hand on thee if he do but whistle"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "The known token of the road is the Fighting Man carved on a black rock by the mountain pass.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Otter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C39-P023",
+     "q": "concerning one token, where is the road and the pass through the Great Mountains"
+    }
+   ]
+  },
+  {
+   "category": "economy",
+   "subject": "Dale of the Tower",
+   "statement": "The Lord's men gathered meal, fleeces, cattle, sheep and goats from the fruitful country for Utterbol.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C39-P026",
+     "q": "many wains were joined to them, laden with meal, and fleeces, and other household stuff"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph declared free",
+   "chapter": "BTWO-C39",
+   "layer": "main",
+   "time_text": "morning of departure",
+   "participants": [
+    "Ralph",
+    "Lord of Utterbol",
+    "Otter"
+   ],
+   "places": [
+    "(unnamed) Tower of the Dale"
+   ],
+   "summary": "The Lord sourly frees Ralph with his arms; Otter warns the freedom is illusory.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C39-P014",
+     "q": "I can see the string which is tied to thy leg, though thou feelest it not"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where the Fighting Man rock and the mountain pass are.",
+   "refs": [
+    {
+     "p": "BTWO-C39-P023",
+     "q": "the road and the pass through the Great Mountains"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Otter's motives (ally, or the Lord's instrument).",
+   "refs": [
+    {
+     "p": "BTWO-C39-P016",
+     "q": "he will make thee my mate, to use with me, or against me as occasion may serve"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Landmark \"gate\" carvings (giant figures on black rock) that mark legendary passes.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C39-P023",
+     "q": "the image of a Fighting Man, or monstrous giant"
+    }
+   ]
+  },
+  {
+   "idea": "Lions descending from mountains into forest as a high-danger fauna band near the world's edge.",
+   "system": "ecology",
+   "basis_refs": [
+    {
+     "p": "BTWO-C39-P020",
+     "q": "yea, and lions to boot"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C39",
+ "chapters": [
+  "BTWO-C39"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C39",
+   "paragraphs_total": 25,
+   "all_paragraphs_read": true,
+   "summary": "The Lady despairs until Agatha says the Lord has agreed to her plot and her rumours are working. On departure morning the Lord, holding Joyce's hand, offers Ralph service at Utterbol; Ralph asks for the choice and the Lord sourly declares him free, with arms and horse, to ride with them or go. Otter warns that the freedom is a leash: from Goldburg to the mountains, and a hundred miles north and south of Utterbol, the Lord can seize him anywhere. Otter describes the great forest the road skirts to Utterness and beyond (Utterness is an island in a sea of woodland reaching to the Great Mountains), with wolves, bears and lions. The way to the Well runs that way; its pass through the Great Mountains is marked by a black rock carved with a Fighting Man or giant of old. A sage in the wood under the mountains can tell the way. Ralph secretly holds to Redhead's escape plan. The column leaves Vale Turris with wains and herds.",
+   "geography_notes": "The Lord's reach covers between Utterbol and Goldburg, between Utterbol and the mountains, and a hundred miles north and south of Utterbol. A great forest lies along the road to Utterness and beyond; Utterness is like an island in woodland that covers everything up to the feet of the Great Mountains and climbs them where the wall is broken; the road only skirts its edge. The pass through the Great Mountains is marked by a black rock carved with a Fighting Man. Vale Turris is the Latin name for the Dale of the Tower.",
+   "open_questions": [
+    "Where is the Fighting Man rock?",
+    "Is Otter sincere about the quest?"
+   ]
+  }
+ ]
+}
