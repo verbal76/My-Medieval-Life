@@ -12403,6 +12403,13 @@ PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Thief-Text-Indicator
 PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Time-Text-Indicator.png,225,213945870afc9ad7219eabc6192dc567356c689ac24221c7d65244c6f0ee3c94,16,16,1,RGBA
 PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Water-Text-Indicator.png,211,9a730b0feb10e548d767cadcf99596348e8832d13220d99947a0cc4a2a6e1505,16,16,1,RGBA
 PUNY_SKILLS_v1.zip,PUNY_SKILLS_v1/Indicators/Text Indicator/Wind-Text-Indicator.png,220,01e3ca793ab79e9d79ee4baba2477f6dc737a50cf38483443414fa5354042d6b,16,16,1,RGBA
+PUNY_WORLD_v1.zip,PUNY_WORLD_v1/PUNY_WORLD_v1/punyworld-overworld-tileset.png,100779,d52cfc84e46cfd1ee30c2165576d7d86d253b72109c808382409a8af378c7fbb,432,1040,1,RGBA
+PUNY_WORLD_v1.zip,PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx,28699,622970c90ead497cec7ec4797629aab5224bbf93dd98cff24e99b99cbb3bdf44,,,,
+PUNY_WORLD_v1.zip,PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/samplemap1.tmj,30892,ce7846163fd447febe14bf172e693adc3e79e84bece3ff364024eee4e531a25c,,,,
+PUNY_WORLD_v1.zip,PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/samplemap2.tmj,11890,9b25b803e9731b37f17c49bbfbf3503619adb9289c0f75bea64d11378a1016b3,,,,
+PUNY_WORLD_v1.zip,PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/samplemap3.tmj,13375,e744feabf8079ba7749c6ed2a82421a09f4a2d7b7cc31134f7bdcf656529fe66,,,,
+PUNY_WORLD_v1.zip,PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/samplemap4.tmj,12652,c872e25e00a57f255c61b590ab4ebab57648cfe97598da7acc2b1450f736ab68,,,,
+PUNY_WORLD_v1.zip,PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/samplemap5.tmj,12886,548d54bfde86951eedc09f8003fe8e8e2ebc95cc628654dfa94723eb15bb5fde,,,,
 Puny-Characters.zip,Puny-Characters/Archer-Green.png,26723,2fe5178f77e431b7e3b6f3934459047ac86f29f2e23f44425eb60e4aac3a89e1,768,256,1,RGBA
 Puny-Characters.zip,Puny-Characters/Archer-Purple.png,27415,788d53de100aceb025621ae4fc95a61a6cd08168205185871a6442ab7b131d26,768,256,1,RGBA
 Puny-Characters.zip,Puny-Characters/Character-Base.png,19255,a542332ff1ed66ce28e7eea489f2e1e304d90671aa531fc9ccf0b00b9f2857ff,768,256,1,RGBA

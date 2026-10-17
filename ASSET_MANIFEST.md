@@ -20,6 +20,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY_DUNGEON_v1.zip` | CC0 | 15 | 139.6 KB | Puny Dungeon tileset (416x320): 2-edge wang walls laid out for procedural maps, floor variations, animated water and torches, traps (boulder, spikes, blades, flamethrowers, pits, bear traps), interactables (pressure plates, crates, portals, keys). 5 sample Tiled maps with preview images, sample characters. Note: the .tsx defines animations but no wangset, so the wall layout must be mapped by hand before auto-tiling. |
 | `PUNY_MYTH-CREATURES-RPGMAKER_v1.zip` | CC0 | 74 | 531.6 KB | Puny Myth Creatures (Philippine folklore), RPG Maker format: 30 overworld 4-direction walk sheets (72x96, 3x4 frames of 24px), 25 unanimated enemy battle sprites, 10 hero side-view battlers (576x384, 9x6 frames of 64px), and 9 RPG Maker character sheets (288x192). Shade's thesis pack; CC0, credit optional. |
 | `PUNY_SKILLS_v1.zip` | paid | 1719 | 1.8 MB | Puny skill icons, skill FX animation spritesheets, indicators. |
+| `PUNY_WORLD_v1.zip` | verify | 7 | 206.2 KB | FREE Puny World overworld tileset (432x1040, 1755 tiles) with 5 sample Tiled maps. Its .tsx has a full Tiled terrain setup: corner wangset 'overworld' (grass, dirt, sand, cliff, river, 3 sea depths; trees/trees2/cliff-transparent as an overlay over 'air') and edge wangset 'pathways' (dirt, sand, water paths). Basis for tools/puny_world_terrain.py. Linked as 'Free 16x16 Puny World Tileset' from Shade's pages; licence page not yet seen. |
 | `Puny-Characters.zip` | CC0 | 24 | 547.4 KB | Free Puny Characters: 19 8-direction sheets (768x256 = 24 frames x 8 directions, 32px cells; idle, walk, sword, bow, stave, throw, hurt, death): Character-Base plus soldiers, warriors, archers, mages, workers and orcs in team colours; a 480x32 single-row Slime sheet; 4 environment tiles (16x16). Older/smaller layout than the 29-frame Editor Edition. |
 | `PunyMonsters.zip` | CC0 | 9 | 133.4 KB | Puny Monsters: 9 animals/monsters (panther, dog, 2 boars, 2 spiders, wolf, rat, cat), each 384x256 = 12 frames x 8 directions, 32px cells. Second download on the free Puny Characters itch.io page, under its CC0 licence. |
 | `miniworld +__rainbow-refresh.zip` | CC BY 4.0 | 10 | 642.9 KB | 16x16 miniworld + by octoshrimpy, rainbow refresh (02/15/2023, newer): recoloured sheets plus chests. terrain.png has 20 terrain modules (water depths, sand, grasses, forest, snow, ice, dirts, cave floors) in one shared autotile layout; no Tiled/wang data included. |
@@ -35,9 +36,9 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 12386 |
-| `.tmj` | 18 |
-| `.tsx` | 12 |
+| `.png` | 12387 |
+| `.tmj` | 23 |
+| `.tsx` | 13 |
 | `.csv` | 11 |
 | `.gif` | 9 |
 | `.txt` | 3 |
@@ -352,6 +353,13 @@ Each folder lists its file count and the most common image sizes.
 | `PUNY_SKILLS_v1/Icons/Transparent Background/Wind` | 44 | 16x16 | `Wind-Icon-000.png`, `Wind-Icon-001.png`, `Wind-Icon-002.png`, `Wind-Icon-003.png`, ... |
 | `PUNY_SKILLS_v1/Indicators/Symbol Indicator` | 28 | 16x16 | `Asleep-Indicator.png`, `Bleeding-Indicator.png`, `Buffed-Indicator.png`, `Burned-Indicator.png`, ... |
 | `PUNY_SKILLS_v1/Indicators/Text Indicator` | 29 | 16x16 | `Assasin-Text-Indicator.png`, `Blood-Text-Indicator.png`, `Buff-Text-Indicator.png`, `Charm-Text-Indicator.png`, ... |
+
+### PUNY_WORLD_v1.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `PUNY_WORLD_v1/PUNY_WORLD_v1` | 1 | 432x1040 | `punyworld-overworld-tileset.png` |
+| `PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled` | 6 |  | `punyworld-overworld-tiles.tsx`, `samplemap1.tmj`, `samplemap2.tmj`, `samplemap3.tmj`, ... |
 
 ### Puny-Characters.zip
 

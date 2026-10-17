@@ -23,3 +23,12 @@ Notes:
 - TDSM frame durations are ticks; the GIFs assume 60 ticks per second.
 - The terrain set chains Dark Grass - Light Grass - Sand - Shallow Water - Deep Water. The detailed PUNY WORLD tileset has no terrain data, so it can't be auto-tiled yet.
 - The PUNY_DUNGEON sample maps reference `../puny-dungeon-tiles.tsx`; the renderer falls back to the copy beside the map.
+
+## miniworld_terrain.py
+
+Layered terrain from the 17 miniworld+ terrain modules (octoshrimpy, **CC BY 4.0: credit required**).
+Biomes: `temperate`, `winter`, `desert`, `marsh`. Writes a PNG plus a JSON corner-level grid.
+
+```sh
+python3 tools/miniworld_terrain.py --biome temperate --size 64 40 --seed 3
+```
