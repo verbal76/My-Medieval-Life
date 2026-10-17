@@ -1,0 +1,1146 @@
+{
+ "entities": [
+  {
+   "name": "The Ford",
+   "aliases": [
+    "Ford of Upmeads Water"
+   ],
+   "type": "feature",
+   "subtype": "ford",
+   "unnamed": false,
+   "summary": "Ford in the ingle of the river by the High House, with a willow copse.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P002",
+     "q": "to the side of the Ford in that ingle of the river"
+    }
+   ]
+  },
+  {
+   "name": "Falcon",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "horse",
+   "unnamed": false,
+   "summary": "Ralph's dapple-grey destrier.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P002",
+     "q": "it was a dapple-grey horse called Falcon"
+    }
+   ]
+  },
+  {
+   "name": "Wulstead",
+   "aliases": [],
+   "type": "place",
+   "subtype": "cheaping-town",
+   "unnamed": false,
+   "summary": "Market town south of Upmeads with a market-place, fountain and buttercross; has a mayor and tipstaves.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P004",
+     "q": "a good cheaping-town hight Wulstead"
+    },
+    {
+     "p": "BONE-C3-P005",
+     "q": "maids gathered about the fountain amidst the market-place"
+    }
+   ]
+  },
+  {
+   "name": "Clement Chapman",
+   "aliases": [
+    "the chapman",
+    "the goodman"
+   ],
+   "type": "person",
+   "subtype": "merchant",
+   "unnamed": false,
+   "summary": "Merchant of Wulstead, about forty, ruddy and black-bearded; trades between houses and deals much with King Peter; has travelled down to the Wood Perilous and beyond.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P005",
+     "q": "he was called Clement Chapman"
+    }
+   ]
+  },
+  {
+   "name": "Dame Katherine",
+   "aliases": [
+    "the dame"
+   ],
+   "type": "person",
+   "subtype": "merchant's wife",
+   "unnamed": false,
+   "summary": "Clement's wife, about forty, of good Upmeads kindred; Ralph's godmother; childless; calls herself somewhat foreseeing.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P008",
+     "q": "her name was Dame Katherine"
+    },
+    {
+     "p": "BONE-C3-P030",
+     "q": "I am called somewhat foreseeing"
+    }
+   ]
+  },
+  {
+   "name": "Andrew",
+   "aliases": [],
+   "type": "person",
+   "subtype": "nephew",
+   "unnamed": false,
+   "summary": "Clement's idle nephew.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P021",
+     "q": "Andrew, my nephew"
+    }
+   ]
+  },
+  {
+   "name": "Dame Katherine's necklace",
+   "aliases": [
+    "the beads",
+    "the chaplet",
+    "the gaud"
+   ],
+   "type": "item",
+   "subtype": "amulet",
+   "unnamed": false,
+   "summary": "Blue and green stones with gold knobs and a little gold box with something hidden inside; unblessed; she says it will save him in peril.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P018",
+     "q": "a little necklace of blue and green stones with gold knobs betwixt"
+    },
+    {
+     "p": "BONE-C3-P025",
+     "q": "a pair of Saracen beads"
+    }
+   ]
+  },
+  {
+   "name": "Well at the World's End",
+   "aliases": [
+    "the Well"
+   ],
+   "type": "feature",
+   "subtype": "magical well",
+   "unnamed": false,
+   "summary": "A well said to save from weariness, wounds and sickness, win love, perhaps give everlasting life, and give an irresistible tongue; said to lie beyond the Dry Tree.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P020",
+     "q": "it saveth from weariness and wounding and sickness"
+    },
+    {
+     "p": "BONE-C3-P021",
+     "q": "Men say that it is beyond the Dry Tree"
+    }
+   ]
+  },
+  {
+   "name": "Dry Tree",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "landmark",
+   "unnamed": false,
+   "summary": "Far-off landmark beyond which the Well is said to lie.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P021",
+     "q": "Men say that it is beyond the Dry Tree; and that is afar, God wot!"
+    }
+   ]
+  },
+  {
+   "name": "Higham-on-the-Way",
+   "aliases": [
+    "Higham"
+   ],
+   "type": "place",
+   "subtype": "walled town",
+   "unnamed": false,
+   "summary": "Big walled town with a castle and a rich abbey; peaceful because the abbot hires many men; a great market.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P031",
+     "q": "it is called Higham-on-the-Way, and is a big town plenteous of victuals, with strong walls and a castle"
+    }
+   ]
+  },
+  {
+   "name": "St. Mary's of Higham",
+   "aliases": [
+    "Abbey of St. Mary's"
+   ],
+   "type": "building",
+   "subtype": "abbey",
+   "unnamed": false,
+   "summary": "Very rich abbey of monks at Higham, whose abbot wages men-at-arms.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P042",
+     "q": "the Abbot of St. Mary's of Higham"
+    }
+   ]
+  },
+  {
+   "name": "Abbot of St. Mary's of Higham",
+   "aliases": [
+    "the lord abbot",
+    "father abbot"
+   ],
+   "type": "person",
+   "subtype": "abbot",
+   "unnamed": false,
+   "summary": "Lord of Higham who wages many men to guard his rights.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P031",
+     "q": "the father abbot wages a many men to guard him and his"
+    }
+   ]
+  },
+  {
+   "name": "Wood Perilous",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": false,
+   "summary": "Wood beyond Higham, with lands beyond it.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P034",
+     "q": "down to the Wood Perilous, and beyond it, and the lands beyond the Wood"
+    }
+   ]
+  },
+  {
+   "name": "Bear Hill",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "hill",
+   "unnamed": false,
+   "summary": "Hill at the top of the big downs south of Wulstead.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "when ye are at the top of Bear Hill"
+    }
+   ]
+  },
+  {
+   "name": "the Downs",
+   "aliases": [
+    "big downs",
+    "down-country"
+   ],
+   "type": "feature",
+   "subtype": "chalk downland",
+   "unnamed": false,
+   "summary": "Treeless, roadless, waterless downs south of Wulstead with shepherds' huts and hermits' chapels; good wool.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "nought but downs on downs with never a road to call a road"
+    }
+   ]
+  },
+  {
+   "name": "Coldlake",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": false,
+   "summary": "Little river winding about the meadows of Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P038",
+     "q": "a little river hight Coldlake windeth about the meadows there"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) bridge over Upmeads Water on the high road",
+   "aliases": [],
+   "type": "building",
+   "subtype": "bridge",
+   "unnamed": true,
+   "summary": "A fair bridge, newly built between King Peter and a house of Canons on the north side.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P004",
+     "q": "crossed the Water by a fair bridge late builded between King Peter and a house of Canons on the north side"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) house of Canons north of Upmeads Water",
+   "aliases": [],
+   "type": "building",
+   "subtype": "house of canons",
+   "unnamed": true,
+   "summary": "Canons on the north side of the Water who share the new bridge with King Peter.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P004",
+     "q": "a house of Canons on the north side"
+    }
+   ]
+  },
+  {
+   "name": "wool of the downs",
+   "aliases": [
+    "fleeces"
+   ],
+   "type": "commodity",
+   "subtype": "wool",
+   "unnamed": false,
+   "summary": "Fine wool from the downs that Clement trades.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P038",
+     "q": "the wool of the downs is good, good, good!"
+    }
+   ]
+  },
+  {
+   "name": "Babylon",
+   "aliases": [],
+   "type": "place",
+   "subtype": "distant city",
+   "unnamed": false,
+   "summary": "Named in Clement's phrase about markets.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P031",
+     "q": "No better market is there betwixt this and Babylon"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) mayor of Wulstead",
+   "aliases": [],
+   "type": "person",
+   "subtype": "mayor",
+   "unnamed": true,
+   "summary": "Wulstead's mayor, before whom one could swear the peace.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C3-P016",
+     "q": "if I brought thee before our mayor"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Dame Katherine",
+   "rel": "spouse_of",
+   "b": "Clement Chapman",
+   "detail": "-",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C3-P058",
+     "q": "my husband"
+    }
+   ]
+  },
+  {
+   "a": "Dame Katherine",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "godmother (held him at the font)",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C3-P008",
+     "q": "who had held Ralph at the font"
+    }
+   ]
+  },
+  {
+   "a": "Clement Chapman",
+   "rel": "trades_with",
+   "b": "King Peter",
+   "detail": "King Peter deals with him often",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C3-P005",
+     "q": "King Peter dealt with him much and often"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "owns",
+   "b": "Falcon",
+   "detail": "destrier",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C3-P003",
+     "q": "Falcon his horse"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "owns",
+   "b": "Dame Katherine's necklace",
+   "detail": "gift",
+   "when": "BONE-C3 onward",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C3-P028",
+     "q": "did the beads on his neck"
+    }
+   ]
+  },
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "rel": "ruler_of",
+   "b": "Higham-on-the-Way",
+   "detail": "lord of the town, keeps peace with hired men",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C3-P031",
+     "q": "the father abbot wages a many men to guard him and his"
+    }
+   ]
+  },
+  {
+   "a": "Andrew",
+   "rel": "kin_of",
+   "b": "Clement Chapman",
+   "detail": "nephew",
+   "when": "BONE-C3",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C3-P021",
+     "q": "Andrew, my nephew"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "The Ford",
+   "rel": "within",
+   "b": "Upmeads Water",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "willow copse",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "in the ingle by the High House",
+   "refs": [
+    {
+     "p": "BONE-C3-P002",
+     "q": "to the side of the Ford in that ingle of the river"
+    }
+   ]
+  },
+  {
+   "a": "Wulstead",
+   "rel": "south_of",
+   "b": "Upmeads",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Ralph rides south out of Upmeads to the high road and Wulstead",
+   "refs": [
+    {
+     "p": "BONE-C3-P003",
+     "q": "Then he rode on a little trot south away"
+    },
+    {
+     "p": "BONE-C3-P004",
+     "q": "the other way into a good cheaping-town hight Wulstead"
+    }
+   ]
+  },
+  {
+   "a": "Upmeads Water",
+   "rel": "distance_from",
+   "b": "(unnamed) fields south of Upmeads",
+   "direction": "north",
+   "distance_text": "a half-score miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "measured from the fields Ralph passes after sunrise",
+   "refs": [
+    {
+     "p": "BONE-C3-P003",
+     "q": "it ran through the meadows a half-score miles to the north-ward"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) bridge over Upmeads Water on the high road",
+   "rel": "crossing_of",
+   "b": "Upmeads Water",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the high road crosses the Water into Upmeads",
+   "refs": [
+    {
+     "p": "BONE-C3-P004",
+     "q": "crossed the Water by a fair bridge"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) house of Canons north of Upmeads Water",
+   "rel": "north_of",
+   "b": "Upmeads Water",
+   "direction": "north side",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "at the bridge",
+   "refs": [
+    {
+     "p": "BONE-C3-P004",
+     "q": "a house of Canons on the north side"
+    }
+   ]
+  },
+  {
+   "a": "Higham-on-the-Way",
+   "rel": "distance_from",
+   "b": "Wulstead",
+   "direction": "",
+   "distance_text": "a matter of forty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "A matter of forty miles"
+    }
+   ]
+  },
+  {
+   "a": "the Downs",
+   "rel": "south_of",
+   "b": "Wulstead",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "big downs, waterless, roadless",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "if ye ride south from hence, ye shall presently bring your nose up against the big downs"
+    }
+   ]
+  },
+  {
+   "a": "Higham-on-the-Way",
+   "rel": "beyond",
+   "b": "the Downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "fertile plain",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C3-P038",
+     "q": "Higham is beyond all that, and out into the fertile plain"
+    }
+   ]
+  },
+  {
+   "a": "Coldlake",
+   "rel": "adjacent_to",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "meadows",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C3-P038",
+     "q": "a little river hight Coldlake windeth about the meadows there"
+    }
+   ]
+  },
+  {
+   "a": "Wood Perilous",
+   "rel": "beyond",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Clement knows the land beyond Higham down to the Wood Perilous",
+   "refs": [
+    {
+     "p": "BONE-C3-P034",
+     "q": "down to the Wood Perilous, and beyond it"
+    }
+   ]
+  },
+  {
+   "a": "Well at the World's End",
+   "rel": "beyond",
+   "b": "Dry Tree",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "rumour",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "hearsay",
+   "refs": [
+    {
+     "p": "BONE-C3-P021",
+     "q": "Men say that it is beyond the Dry Tree"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) hill-country south of Wulstead",
+   "rel": "south_of",
+   "b": "Wulstead",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C3-P011",
+     "q": "going hence south ye must presently ride the hill-country"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "High House of Upmeads",
+   "to": "Wulstead",
+   "via": [
+    "The Ford"
+   ],
+   "mode": "horse",
+   "direction_text": "south",
+   "duration_text": "",
+   "start_time_text": "dawn before sunrise",
+   "end_time_text": "early morning after first mass",
+   "terrain_text": "",
+   "chapter": "BONE-C3",
+   "refs": [
+    {
+     "p": "BONE-C3-P002",
+     "q": "went his ways splashing across the ford, before the sun had arisen"
+    },
+    {
+     "p": "BONE-C3-P005",
+     "q": "the first mass over"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Its water is said to save from weariness, wounding and sickness, win love, and maybe give life everlasting.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Dame Katherine",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P020",
+     "q": "it saveth from weariness and wounding and sickness; and it winneth love from all, and maybe life everlasting"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Clement has heard that one who drinks has a tongue none may withstand in trade or persuasion.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P021",
+     "q": "hath the tongue that none may withstand, whether in buying or selling"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Dame Katherine's necklace",
+   "statement": "The beads are unblessed; Dame Katherine forbids having a priest bless them; Ralph asks whether there is wizardry in them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P018",
+     "q": "albeit neither pope nor priest had blessed them"
+    },
+    {
+     "p": "BONE-C3-P024",
+     "q": "is there no wizardry within it?"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Wulstead",
+   "statement": "Wulstead has a mayor and tipstaves; one may swear the peace against a man to hold him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P021",
+     "q": "the mayor and the tipstaves"
+    }
+   ]
+  },
+  {
+   "category": "price",
+   "subject": "Ralph",
+   "statement": "Ralph carries three golden crowns and some silver pennies; Dame Katherine gives him a bag of money.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P044",
+     "q": "there are three golden crowns in my pouch, and a little flock of silver pennies"
+    }
+   ]
+  },
+  {
+   "category": "currency",
+   "subject": "Upmeads",
+   "statement": "Coin is spoken of as white (silver) and red (gold).",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P044",
+     "q": "I have both white and red"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "Clement Chapman",
+   "statement": "His house has carved wainscot, silver and latten vessels, glazed windows, a bed hung with oversea web, and ware-bowers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P008",
+     "q": "the windows were glazed"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Higham-on-the-Way",
+   "statement": "Chapmen flock to Higham; Clement calls it the best market between Wulstead and Babylon.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P031",
+     "q": "there is great recourse of chapmen thither"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Abbot of St. Mary's of Higham",
+   "statement": "Clement advises Ralph to serve the abbot as a man of war.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P031",
+     "q": "take service with the lord abbot, and be one of his men of war"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "the Downs",
+   "statement": "Holy men live in little houses with chapels in hollows of the chalk where water pools.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "the little house of a holy man with a little chapel thereby in some swelly of the chalk"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "the Downs",
+   "statement": "Apart from such pools the downs are waterless.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "for otherwise the place is waterless"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "wool of the downs",
+   "statement": "Clement holds plenty of this year's down fleeces; Upmeads cannot raise such wool.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P038",
+     "q": "I have foison of this year's fleeces with me"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Upmeads",
+   "statement": "Ralph says Upmeads suits a star-gazer, simpler, priest or field carle, not a hot-blooded king's son.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P029",
+     "q": "Upmeads is good for a star-gazer, maybe, or a simpler, or a priest"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "(unnamed) fields south of Upmeads",
+   "statement": "Carles go to the hay-field with scythes; maidens milk kine in the June morning.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P003",
+     "q": "a band of carles going with their scythes to the hay-field"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "Dame Katherine",
+   "statement": "She gives Ralph a flask and food for the waterless country.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P054",
+     "q": "a flask of drink for the waterless country"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph's secret departure",
+   "chapter": "BONE-C3",
+   "layer": "main",
+   "time_text": "dawn",
+   "participants": [
+    "Ralph"
+   ],
+   "places": [
+    "The Ford",
+    "Upmeads"
+   ],
+   "summary": "Ralph arms in the willow copse by the Ford and rides south before sunrise.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P002",
+     "q": "went his ways splashing across the ford, before the sun had arisen"
+    }
+   ]
+  },
+  {
+   "label": "The gift of the necklace",
+   "chapter": "BONE-C3",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Dame Katherine",
+    "Ralph",
+    "Clement Chapman"
+   ],
+   "places": [
+    "Wulstead"
+   ],
+   "summary": "Dame Katherine gives Ralph the necklace and tells of the Well at the World's End.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P018",
+     "q": "so that it shall be to thee as if thou hadst drunk of the WELL AT THE WORLD'S END"
+    }
+   ]
+  },
+  {
+   "label": "The Dry Tree has been seen",
+   "chapter": "BONE-C3",
+   "layer": "rumour",
+   "time_text": "",
+   "participants": [
+    "Clement Chapman"
+   ],
+   "places": [
+    "Dry Tree"
+   ],
+   "summary": "Clement has spoken to one who heard of a man who saw the Dry Tree but did not drink of the Well.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C3-P034",
+     "q": "I have spoken to one who hath heard of him who hath seen it"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Is the newly built bridge over Upmeads Water the bridge of St. John's by the Bridge (BONE-C1)?",
+   "refs": [
+    {
+     "p": "BONE-C3-P004",
+     "q": "a fair bridge late builded between King Peter and a house of Canons on the north side"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "The ten-mile distance to Upmeads Water is measured from the fields Ralph rides through, not a fixed place.",
+   "refs": [
+    {
+     "p": "BONE-C3-P003",
+     "q": "a half-score miles to the north-ward"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "What is hidden in the gold box of the necklace is not said here.",
+   "refs": [
+    {
+     "p": "BONE-C3-P018",
+     "q": "a little box of gold with something hidden therein"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Wool of the downs as a regional trade good bought by travelling chapmen.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BONE-C3-P038",
+     "q": "the wool of the downs is good, good, good!"
+    }
+   ]
+  },
+  {
+   "idea": "Wayside hermit chapels at water pools as rest points on waterless downland.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BONE-C3-P037",
+     "q": "the little house of a holy man with a little chapel thereby"
+    }
+   ]
+  },
+  {
+   "idea": "An unblessed amulet whose powers are unknown, with tension between faith and folk magic.",
+   "system": "items",
+   "basis_refs": [
+    {
+     "p": "BONE-C3-P027",
+     "q": "Who wotteth what shall betide to thee or me if he do so?"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C3",
+ "chapters": [
+  "BONE-C3"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C3",
+   "paragraphs_total": 59,
+   "all_paragraphs_read": true,
+   "summary": "At dawn Ralph secretly arms himself, crosses the Ford on his horse Falcon and rides south out of Upmeads to the cheaping-town of Wulstead. There his godmother Dame Katherine and her husband Clement Chapman feed him; she gives him a necklace with a gold box and money, and both speak of the Well at the World's End, said to lie beyond the Dry Tree. Clement describes the road south over the downs to Higham-on-the-Way, forty miles off.",
+   "geography_notes": "The Ford lies in the ingle of Upmeads Water by the High House. Riding south, Ralph leaves Upmeads by sunrise, among lands friendly to King Peter; Upmeads Water is then ten miles north. A high road runs north into Upmeads over a new bridge (King Peter and a house of Canons on the north side) and south to Wulstead. South of Wulstead: hill-country, the big downs, Bear Hill, waterless downs with shepherds' huts and hermit chapels; then the fertile plain with the little river Coldlake and Higham-on-the-Way, forty miles from Wulstead. Further: the Wood Perilous, lands beyond it, and afar the Dry Tree.",
+   "open_questions": [
+    "Is the new bridge the same as St. John's by the Bridge (BONE-C1)?",
+    "Is the ten-mile figure measured from Ralph's position at sunrise or from Wulstead?"
+   ]
+  }
+ ]
+}

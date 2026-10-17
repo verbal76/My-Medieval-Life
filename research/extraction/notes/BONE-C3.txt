@@ -1,0 +1,77 @@
+@ BONE-C3
+summary: At dawn Ralph secretly arms himself, crosses the Ford on his horse Falcon and rides south out of Upmeads to the cheaping-town of Wulstead. There his godmother Dame Katherine and her husband Clement Chapman feed him; she gives him a necklace with a gold box and money, and both speak of the Well at the World's End, said to lie beyond the Dry Tree. Clement describes the road south over the downs to Higham-on-the-Way, forty miles off.
+geo: The Ford lies in the ingle of Upmeads Water by the High House. Riding south, Ralph leaves Upmeads by sunrise, among lands friendly to King Peter; Upmeads Water is then ten miles north. A high road runs north into Upmeads over a new bridge (King Peter and a house of Canons on the north side) and south to Wulstead. South of Wulstead: hill-country, the big downs, Bear Hill, waterless downs with shepherds' huts and hermit chapels; then the fertile plain with the little river Coldlake and Higham-on-the-Way, forty miles from Wulstead. Further: the Wood Perilous, lands beyond it, and afar the Dry Tree.
+open: Is the new bridge the same as St. John's by the Bridge (BONE-C1)? || Is the ten-mile figure measured from Ralph's position at sunrise or from Wulstead?
+
+E feature | The Ford | Ford of Upmeads Water | ford | Ford in the ingle of the river by the High House, with a willow copse. | P002 `to the side of the Ford in that ingle of the river`
+E creature | Falcon | - | horse | Ralph's dapple-grey destrier. | P002 `it was a dapple-grey horse called Falcon`
+E place | Wulstead | - | cheaping-town | Market town south of Upmeads with a market-place, fountain and buttercross; has a mayor and tipstaves. | P004 `a good cheaping-town hight Wulstead`; P005 `maids gathered about the fountain amidst the market-place`
+E person | Clement Chapman | the chapman, the goodman | merchant | Merchant of Wulstead, about forty, ruddy and black-bearded; trades between houses and deals much with King Peter; has travelled down to the Wood Perilous and beyond. | P005 `he was called Clement Chapman`
+E person | Dame Katherine | the dame | merchant's wife | Clement's wife, about forty, of good Upmeads kindred; Ralph's godmother; childless; calls herself somewhat foreseeing. | P008 `her name was Dame Katherine`; P030 `I am called somewhat foreseeing`
+E person | Andrew | - | nephew | Clement's idle nephew. | P021 `Andrew, my nephew`
+E item | Dame Katherine's necklace | the beads, the chaplet, the gaud | amulet | Blue and green stones with gold knobs and a little gold box with something hidden inside; unblessed; she says it will save him in peril. | P018 `a little necklace of blue and green stones with gold knobs betwixt`; P025 `a pair of Saracen beads`
+E feature | Well at the World's End | the Well | magical well | A well said to save from weariness, wounds and sickness, win love, perhaps give everlasting life, and give an irresistible tongue; said to lie beyond the Dry Tree. | P020 `it saveth from weariness and wounding and sickness`; P021 `Men say that it is beyond the Dry Tree`
+E feature | Dry Tree | - | landmark | Far-off landmark beyond which the Well is said to lie. | P021 `Men say that it is beyond the Dry Tree; and that is afar, God wot!`
+E place | Higham-on-the-Way | Higham | walled town | Big walled town with a castle and a rich abbey; peaceful because the abbot hires many men; a great market. | P031 `it is called Higham-on-the-Way, and is a big town plenteous of victuals, with strong walls and a castle`
+E building | St. Mary's of Higham | Abbey of St. Mary's | abbey | Very rich abbey of monks at Higham, whose abbot wages men-at-arms. | P042 `the Abbot of St. Mary's of Higham`
+E person | Abbot of St. Mary's of Higham | the lord abbot, father abbot | abbot | Lord of Higham who wages many men to guard his rights. | P031 `the father abbot wages a many men to guard him and his`
+E feature | Wood Perilous | - | forest | Wood beyond Higham, with lands beyond it. | P034 `down to the Wood Perilous, and beyond it, and the lands beyond the Wood`
+E feature | Bear Hill | - | hill | Hill at the top of the big downs south of Wulstead. | P037 `when ye are at the top of Bear Hill`
+E feature | the Downs | big downs, down-country | chalk downland | Treeless, roadless, waterless downs south of Wulstead with shepherds' huts and hermits' chapels; good wool. | P037 `nought but downs on downs with never a road to call a road`
+E feature | Coldlake | - | river | Little river winding about the meadows of Higham. | P038 `a little river hight Coldlake windeth about the meadows there`
+E building | (unnamed) bridge over Upmeads Water on the high road | - | bridge | A fair bridge, newly built between King Peter and a house of Canons on the north side. | P004 `crossed the Water by a fair bridge late builded between King Peter and a house of Canons on the north side`
+E building | (unnamed) house of Canons north of Upmeads Water | - | house of canons | Canons on the north side of the Water who share the new bridge with King Peter. | P004 `a house of Canons on the north side`
+E commodity | wool of the downs | fleeces | wool | Fine wool from the downs that Clement trades. | P038 `the wool of the downs is good, good, good!`
+E place | Babylon | - | distant city | Named in Clement's phrase about markets. | P031 `No better market is there betwixt this and Babylon`
+E person | (unnamed) mayor of Wulstead | - | mayor | Wulstead's mayor, before whom one could swear the peace. | P016 `if I brought thee before our mayor`
+
+R Dame Katherine | spouse_of | Clement Chapman | - | BONE-C3 | CANON/high | P058 `my husband`
+R Dame Katherine | other | Ralph | godmother (held him at the font) | BONE-C3 | CANON/high | P008 `who had held Ralph at the font`
+R Clement Chapman | trades_with | King Peter | King Peter deals with him often | BONE-C3 | CANON/high | P005 `King Peter dealt with him much and often`
+R Ralph | owns | Falcon | destrier | BONE-C3 | CANON/high | P003 `Falcon his horse`
+R Ralph | owns | Dame Katherine's necklace | gift | BONE-C3 onward | CANON/high | P028 `did the beads on his neck`
+R Abbot of St. Mary's of Higham | ruler_of | Higham-on-the-Way | lord of the town, keeps peace with hired men | BONE-C3 | CANON/high | P031 `the father abbot wages a many men to guard him and his`
+R Andrew | kin_of | Clement Chapman | nephew | BONE-C3 | CANON/high | P021 `Andrew, my nephew`
+
+S The Ford | within | Upmeads Water | terrain=willow copse; cert=fixed | CANON/high | in the ingle by the High House | P002 `to the side of the Ford in that ingle of the river`
+S Wulstead | south_of | Upmeads | dir=south; cert=fixed | CANON/high | Ralph rides south out of Upmeads to the high road and Wulstead | P003 `Then he rode on a little trot south away`; P004 `the other way into a good cheaping-town hight Wulstead`
+S Upmeads Water | distance_from | (unnamed) fields south of Upmeads | dir=north; dist=a half-score miles; cert=constrained | CANON/high | measured from the fields Ralph passes after sunrise | P003 `it ran through the meadows a half-score miles to the north-ward`
+S (unnamed) bridge over Upmeads Water on the high road | crossing_of | Upmeads Water | cert=fixed | CANON/high | the high road crosses the Water into Upmeads | P004 `crossed the Water by a fair bridge`
+S (unnamed) house of Canons north of Upmeads Water | north_of | Upmeads Water | dir=north side; cert=fixed | CANON/high | at the bridge | P004 `a house of Canons on the north side`
+S Higham-on-the-Way | distance_from | Wulstead | dist=a matter of forty miles; ctx=dialogue:Clement Chapman; cert=fixed | CANON/high | - | P037 `A matter of forty miles`
+S the Downs | south_of | Wulstead | dir=south; ctx=dialogue:Clement Chapman; terrain=big downs, waterless, roadless; cert=fixed | CANON/high | - | P037 `if ye ride south from hence, ye shall presently bring your nose up against the big downs`
+S Higham-on-the-Way | beyond | the Downs | terrain=fertile plain; ctx=dialogue:Clement Chapman; cert=fixed | CANON/high | - | P038 `Higham is beyond all that, and out into the fertile plain`
+S Coldlake | adjacent_to | Higham-on-the-Way | terrain=meadows; ctx=dialogue:Clement Chapman; cert=fixed | CANON/high | - | P038 `a little river hight Coldlake windeth about the meadows there`
+S Wood Perilous | beyond | Higham-on-the-Way | ctx=dialogue:Clement Chapman; cert=constrained | CANON/high | Clement knows the land beyond Higham down to the Wood Perilous | P034 `down to the Wood Perilous, and beyond it`
+S Well at the World's End | beyond | Dry Tree | ctx=rumour; cert=flexible | CANON/high | hearsay | P021 `Men say that it is beyond the Dry Tree`
+S (unnamed) hill-country south of Wulstead | south_of | Wulstead | dir=south; ctx=dialogue:Clement Chapman; cert=fixed | CANON/high | - | P011 `going hence south ye must presently ride the hill-country`
+
+T Ralph | High House of Upmeads | Wulstead | via=The Ford; mode=horse; dir=south; start=dawn before sunrise; end=early morning after first mass | P002 `went his ways splashing across the ford, before the sun had arisen`; P005 `the first mass over`
+
+F magic | Well at the World's End | Its water is said to save from weariness, wounding and sickness, win love, and maybe give life everlasting. | CANON/high; ctx=dialogue:Dame Katherine | P020 `it saveth from weariness and wounding and sickness; and it winneth love from all, and maybe life everlasting`
+F magic | Well at the World's End | Clement has heard that one who drinks has a tongue none may withstand in trade or persuasion. | CANON/high; ctx=dialogue:Clement Chapman | P021 `hath the tongue that none may withstand, whether in buying or selling`
+F religion | Dame Katherine's necklace | The beads are unblessed; Dame Katherine forbids having a priest bless them; Ralph asks whether there is wizardry in them. | CANON/high | P018 `albeit neither pope nor priest had blessed them`; P024 `is there no wizardry within it?`
+F law | Wulstead | Wulstead has a mayor and tipstaves; one may swear the peace against a man to hold him. | CANON/high; ctx=dialogue:Clement Chapman | P021 `the mayor and the tipstaves`
+F price | Ralph | Ralph carries three golden crowns and some silver pennies; Dame Katherine gives him a bag of money. | CANON/high | P044 `there are three golden crowns in my pouch, and a little flock of silver pennies`
+F currency | Upmeads | Coin is spoken of as white (silver) and red (gold). | CANON/high | P044 `I have both white and red`
+F household | Clement Chapman | His house has carved wainscot, silver and latten vessels, glazed windows, a bed hung with oversea web, and ware-bowers. | CANON/high | P008 `the windows were glazed`
+F trade | Higham-on-the-Way | Chapmen flock to Higham; Clement calls it the best market between Wulstead and Babylon. | CANON/high; ctx=dialogue:Clement Chapman | P031 `there is great recourse of chapmen thither`
+F military | Abbot of St. Mary's of Higham | Clement advises Ralph to serve the abbot as a man of war. | CANON/high; ctx=dialogue:Clement Chapman | P031 `take service with the lord abbot, and be one of his men of war`
+F religion | the Downs | Holy men live in little houses with chapels in hollows of the chalk where water pools. | CANON/high; ctx=dialogue:Clement Chapman | P037 `the little house of a holy man with a little chapel thereby in some swelly of the chalk`
+F ecology | the Downs | Apart from such pools the downs are waterless. | CANON/high; ctx=dialogue:Clement Chapman | P037 `for otherwise the place is waterless`
+F trade | wool of the downs | Clement holds plenty of this year's down fleeces; Upmeads cannot raise such wool. | CANON/high; ctx=dialogue:Clement Chapman | P038 `I have foison of this year's fleeces with me`
+F society | Upmeads | Ralph says Upmeads suits a star-gazer, simpler, priest or field carle, not a hot-blooded king's son. | CANON/high; ctx=dialogue:Ralph | P029 `Upmeads is good for a star-gazer, maybe, or a simpler, or a priest`
+F agriculture | (unnamed) fields south of Upmeads | Carles go to the hay-field with scythes; maidens milk kine in the June morning. | CANON/high | P003 `a band of carles going with their scythes to the hay-field`
+F food | Dame Katherine | She gives Ralph a flask and food for the waterless country. | CANON/high | P054 `a flask of drink for the waterless country`
+
+V main | Ralph's secret departure | Ralph arms in the willow copse by the Ford and rides south before sunrise. | time=dawn; who=Ralph; where=The Ford, Upmeads | P002 `went his ways splashing across the ford, before the sun had arisen`
+V main | The gift of the necklace | Dame Katherine gives Ralph the necklace and tells of the Well at the World's End. | who=Dame Katherine, Ralph, Clement Chapman; where=Wulstead | P018 `so that it shall be to thee as if thou hadst drunk of the WELL AT THE WORLD'S END`
+V rumour | The Dry Tree has been seen | Clement has spoken to one who heard of a man who saw the Dry Tree but did not drink of the Well. | who=Clement Chapman; where=Dry Tree | P034 `I have spoken to one who hath heard of him who hath seen it`
+
+U identity | Is the newly built bridge over Upmeads Water the bridge of St. John's by the Bridge (BONE-C1)? | P004 `a fair bridge late builded between King Peter and a house of Canons on the north side`
+U ambiguity | The ten-mile distance to Upmeads Water is measured from the fields Ralph rides through, not a fixed place. | P003 `a half-score miles to the north-ward`
+U identity | What is hidden in the gold box of the necklace is not said here. | P018 `a little box of gold with something hidden therein`
+
+O economy | Wool of the downs as a regional trade good bought by travelling chapmen. | P038 `the wool of the downs is good, good, good!`
+O society | Wayside hermit chapels at water pools as rest points on waterless downland. | P037 `the little house of a holy man with a little chapel thereby`
+O items | An unblessed amulet whose powers are unknown, with tension between faith and folk magic. | P027 `Who wotteth what shall betide to thee or me if he do so?`

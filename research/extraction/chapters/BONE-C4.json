@@ -1,0 +1,804 @@
+{
+ "entities": [
+  {
+   "name": "Netherton",
+   "aliases": [],
+   "type": "place",
+   "subtype": "thorp",
+   "unnamed": false,
+   "summary": "Hamlet beside a stream at the foot of the downs, with a fair church and a little house of Canons.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "which was called Netherton"
+    },
+    {
+     "p": "BONE-C4-P002",
+     "q": "a little thorp beside a stream, and thereby a fair church and a little house of Canons"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) church at Netherton",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": true,
+   "summary": "Church with an altar of St. Nicholas.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P004",
+     "q": "wherein he found his good lord and friend St. Nicholas"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) man of the leafless tree",
+   "aliases": [
+    "the green rider"
+   ],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": true,
+   "summary": "Big armed man in a green coat with a gold leafless tree, a steel sallet hiding his face, a small steel axe at his neck and a great sword; seemingly knows Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P002",
+     "q": "He wore a green coat over his armour, and thereon was wrought in gold an image of a tree leafless"
+    },
+    {
+     "p": "BONE-C4-P003",
+     "q": "The first time!"
+    }
+   ]
+  },
+  {
+   "name": "Bear Hill",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "chalk hill",
+   "unnamed": false,
+   "summary": "Named for ancient chalk-cut figures of a leafy tree with a bear ramping on either side, on a westward bent; visible from near Wulstead but not from Netherton.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "that hill was called after them Bear Hill"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Bear Hill chalk figures",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "hill figure",
+   "unnamed": true,
+   "summary": "A tree with leaves and two bears ramping against it, cut in the turf; very ancient.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "A tree with leaves was done on that hill-side, and on either hand of it a beast like a bear ramping up against the tree"
+    }
+   ]
+  },
+  {
+   "name": "Bear Castle",
+   "aliases": [],
+   "type": "building",
+   "subtype": "ancient earthwork",
+   "unnamed": false,
+   "summary": "Earthwork of the ancient folk at the top of Bear Hill, walls broken in places, with a fosse and turf bridge.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "an earth-work of the ancient folk, which also was called Bear Castle"
+    }
+   ]
+  },
+  {
+   "name": "the Greenway",
+   "aliases": [
+    "the green road"
+   ],
+   "type": "feature",
+   "subtype": "ancient road",
+   "unnamed": false,
+   "summary": "Green road made by an ancient people, running south over the downs.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P008",
+     "q": "the green road made many ages before by an ancient people"
+    },
+    {
+     "p": "BONE-C4-P023",
+     "q": "riding south along the Greenway"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) hill of seven grave-mounds",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "barrow group",
+   "unnamed": true,
+   "summary": "Low hill with seven grave-mounds of the ancient folk in a row.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P009",
+     "q": "a low hill whereon were seven grave-mounds of the ancient folk in a row"
+    }
+   ]
+  },
+  {
+   "name": "shepherds of the Downs",
+   "aliases": [],
+   "type": "group",
+   "subtype": "shepherds",
+   "unnamed": false,
+   "summary": "Armed shepherds with no lord; lonely, rarely in church; offer to rise for Ralph if summoned.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "we be poor men with no master to fleece us, and no lord to help us"
+    },
+    {
+     "p": "BONE-C4-P025",
+     "q": "the shepherds of the Downs"
+    }
+   ]
+  },
+  {
+   "name": "Greasy Wat",
+   "aliases": [
+    "Wat"
+   ],
+   "type": "person",
+   "subtype": "shepherd",
+   "unnamed": false,
+   "summary": "Jesting shepherd with an anlace and a silver-rimmed ram's horn cup called Thirly.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P016",
+     "q": "Greasy Wat"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) old spearman shepherd",
+   "aliases": [],
+   "type": "person",
+   "subtype": "shepherd",
+   "unnamed": true,
+   "summary": "Old shepherd with a long spear who tells of the green rider and gives the watchword.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P018",
+     "q": "the spearman, who was an old man"
+    }
+   ]
+  },
+  {
+   "name": "Thirly",
+   "aliases": [],
+   "type": "item",
+   "subtype": "drinking horn",
+   "unnamed": false,
+   "summary": "A ram's horn rimmed with silver.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P013",
+     "q": "a ram's horn rimmed with silver"
+    },
+    {
+     "p": "BONE-C4-P013",
+     "q": "Now, Thirly, rejoice!"
+    }
+   ]
+  },
+  {
+   "name": "Bear-father",
+   "aliases": [],
+   "type": "supernatural",
+   "subtype": "invoked figure",
+   "unnamed": false,
+   "summary": "Named in the shepherds' watchword.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "SMITE ASIDE THE AXE, O BEAR-FATHER"
+    }
+   ]
+  },
+  {
+   "name": "St. Nicholas",
+   "aliases": [],
+   "type": "person",
+   "subtype": "saint",
+   "unnamed": false,
+   "summary": "Ralph's patron saint.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P002",
+     "q": "St. Nicholas, who was his good lord and patron"
+    }
+   ]
+  },
+  {
+   "name": "the ancient folk",
+   "aliases": [
+    "ancient people"
+   ],
+   "type": "group",
+   "subtype": "ancient people",
+   "unnamed": false,
+   "summary": "Unnamed ancient people who cut the hill figures, built Bear Castle and the Greenway and raised grave-mounds.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "these signs were very ancient"
+    },
+    {
+     "p": "BONE-C4-P009",
+     "q": "seven grave-mounds of the ancient folk"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "shepherds of the Downs",
+   "rel": "allied_with",
+   "b": "Ralph",
+   "detail": "offer to rally to Ralph's beacon",
+   "when": "BONE-C4 onward",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "then shalt thou see what shall betide thee for thy good-hap"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Netherton",
+   "rel": "at_foot_of",
+   "b": "the Downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "end of the plain country",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "just before the slopes rise",
+   "refs": [
+    {
+     "p": "BONE-C4-P002",
+     "q": "Just before the slopes began to rise was a little thorp beside a stream"
+    }
+   ]
+  },
+  {
+   "a": "Bear Hill",
+   "rel": "other",
+   "b": "Netherton",
+   "direction": "the bent faces west into the hollow of the hill",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "figures not visible from Netherton",
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "the bent looked westward down into the hollow of the hill abovesaid"
+    }
+   ]
+  },
+  {
+   "a": "Bear Hill",
+   "rel": "visible_from",
+   "b": "Wulstead",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "figures clear to see from nearer Wulstead",
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "from nigher to Wulstead they were clear to see"
+    }
+   ]
+  },
+  {
+   "a": "Bear Castle",
+   "rel": "within",
+   "b": "Bear Hill",
+   "direction": "at the top",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "At the top of it was an earth-work of the ancient folk"
+    }
+   ]
+  },
+  {
+   "a": "Wood Debateable",
+   "rel": "visible_from",
+   "b": "Bear Castle",
+   "direction": "looking back north",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Ralph believes he can make out the wood and hills behind it; Upmeads Water hidden",
+   "refs": [
+    {
+     "p": "BONE-C4-P006",
+     "q": "he deemed that he could make out the Debateable Wood and the hills behind it well enough"
+    }
+   ]
+  },
+  {
+   "a": "the Greenway",
+   "rel": "south_of",
+   "b": "Bear Castle",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "treeless rolling downs",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "road leaves the earthwork over a turf bridge across the fosse",
+   "refs": [
+    {
+     "p": "BONE-C4-P008",
+     "q": "so trotted south along fair and softly"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) hill of seven grave-mounds",
+   "rel": "on_route",
+   "b": "the Greenway",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C4-P009",
+     "q": "as he topped a low hill whereon were seven grave-mounds"
+    }
+   ]
+  },
+  {
+   "a": "Higham-on-the-Way",
+   "rel": "distance_from",
+   "b": "(unnamed) place of the shepherds' meeting",
+   "direction": "",
+   "distance_text": "little less than twenty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:shepherd",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "about two miles beyond the seven-mound hill",
+   "refs": [
+    {
+     "p": "BONE-C4-P010",
+     "q": "some two miles further on"
+    },
+    {
+     "p": "BONE-C4-P011",
+     "q": "Little less than twenty, lord"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "Wulstead",
+   "to": "(unnamed) place of the shepherds' meeting",
+   "via": [
+    "Netherton",
+    "Bear Hill",
+    "Bear Castle",
+    "the Greenway",
+    "(unnamed) hill of seven grave-mounds"
+   ],
+   "mode": "horse",
+   "direction_text": "south",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "two hours past noon",
+   "terrain_text": "plain, then steep chalk downs",
+   "chapter": "BONE-C4",
+   "refs": [
+    {
+     "p": "BONE-C4-P008",
+     "q": "so trotted south along fair and softly"
+    },
+    {
+     "p": "BONE-C4-P011",
+     "q": "it was past noon two hours"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "(unnamed) man of the leafless tree"
+   ],
+   "from": "Netherton",
+   "to": "(unknown)",
+   "via": [
+    "the Greenway"
+   ],
+   "mode": "horse",
+   "direction_text": "south",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C4",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "we have seen one riding south along the Greenway"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "the ancient folk",
+   "statement": "Hill figures, Bear Castle, the Greenway and the grave-mounds are all ancient works.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "these signs were very ancient"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "shepherds of the Downs",
+   "statement": "The shepherds carry a pole-axe, a long spear, and an iron-bound flail with an anlace.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P010",
+     "q": "one a pole-axe, another a long spear, and the third a flail jointed and bound with iron"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "shepherds of the Downs",
+   "statement": "They have no lord or master, are unlettered, and seldom enter a church.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old shepherd",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "we seldom come within the doors of a church"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "shepherds of the Downs",
+   "statement": "Summoning signal: a great fire on each corner of the top wall of Bear Castle and the watchword \"Smite aside the axe, O Bear-father\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old shepherd",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "let light a great fire upon each corner of the topmost wall of Bear Castle"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) man of the leafless tree",
+   "statement": "The shepherds say such a rider has been seen thrice before in the old man's life, each time followed by evil days and death; he cried \"Point and edge! The red water amidst of the hills!\"",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old shepherd",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "after each sight of him followed evil days and the death of men"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Ralph",
+   "statement": "Ralph vows a mass at St. Mary's Church and good lordship for the shepherds if he becomes lord there.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P025",
+     "q": "tomorrow will I let sing a mass in St. Mary's Church on your behoof"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "the Downs",
+   "statement": "Hot day with a south-west wind on the downs.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "BONE-C4",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P007",
+     "q": "the south-west wind went past his ears"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Upmeads",
+   "statement": "The day is the Eve of St. John, thought by the shepherds to worsen the omen.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:old shepherd",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "this is the Eve of St. John"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Dame Katherine",
+   "statement": "Her wine is good island wine.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P020",
+     "q": "Dame Katherine's good island wine"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "First meeting with the man of the leafless tree",
+   "chapter": "BONE-C4",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "(unnamed) man of the leafless tree"
+   ],
+   "places": [
+    "Netherton"
+   ],
+   "summary": "At Netherton churchyard the green rider shoves past Ralph and cries \"The first time!\"",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P003",
+     "q": "The first time!"
+    }
+   ]
+  },
+  {
+   "label": "Ralph's oath to the shepherds",
+   "chapter": "BONE-C4",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Greasy Wat",
+    "(unnamed) old spearman shepherd"
+   ],
+   "places": [
+    "the Greenway"
+   ],
+   "summary": "Ralph drinks with the shepherds and swears to be a good lord to them; they give him the beacon and watchword.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "Thou hast sworn an oath, and it is a good oath"
+    }
+   ]
+  },
+  {
+   "label": "Past sightings of the green rider",
+   "chapter": "BONE-C4",
+   "layer": "legend",
+   "time_text": "",
+   "participants": [
+    "(unnamed) man of the leafless tree"
+   ],
+   "places": [
+    "the Downs"
+   ],
+   "summary": "The rider has been seen thrice before in the old shepherd's lifetime, each before evil days.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "In my lifetime such a man hath, to my knowledge, been seen thrice before"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who is the man of the leafless tree and why does he count his meetings with Ralph?",
+   "refs": [
+    {
+     "p": "BONE-C4-P003",
+     "q": "The first time!"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Meaning of the cry \"the red water amidst of the hills\".",
+   "refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "THE RED WATER AMIDST OF THE HILLS!"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Whether the leafless tree badge relates to the Dry Tree.",
+   "refs": [
+    {
+     "p": "BONE-C4-P002",
+     "q": "an image of a tree leafless"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A beacon-and-watchword pact with lordless shepherds that the player can earn and later call on.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BONE-C4-P026",
+     "q": "let light a great fire upon each corner of the topmost wall of Bear Castle"
+    }
+   ]
+  },
+  {
+   "idea": "Ancient earthworks, hill figures, green roads and barrows as procedural landmark types on downland.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BONE-C4-P005",
+     "q": "an earth-work of the ancient folk"
+    },
+    {
+     "p": "BONE-C4-P009",
+     "q": "seven grave-mounds of the ancient folk"
+    }
+   ]
+  },
+  {
+   "idea": "An omen-rider whose sightings precede regional troubles.",
+   "system": "events",
+   "basis_refs": [
+    {
+     "p": "BONE-C4-P023",
+     "q": "after each sight of him followed evil days and the death of men"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C4",
+ "chapters": [
+  "BONE-C4"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C4",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "At the edge of the plain Ralph stops at Netherton church to pray to St. Nicholas and is shoved aside by an armed man wearing the leafless tree, who cries \"The first time!\" Ralph climbs Bear Hill past ancient chalk carvings to the earthwork of Bear Castle, looks back north, then rides south along the ancient Greenway. Shepherds of the Downs share his wine, tell of the green rider whose appearances bring evil days, and give him a beacon signal and watchword to summon them in need.",
+   "geography_notes": "The plain ends at the downs; at the foot is the thorp of Netherton beside a stream, with a church and a house of Canons. A white road climbs Bear Hill, whose westward-facing bent bears a chalk tree and two bears, visible from near Wulstead. Bear Castle, an ancient earthwork, crowns the hill; from it Ralph sees the country behind and makes out the Debateable Wood and hills behind it. South the downs roll like waves, treeless, crossed by the ancient green road (the Greenway). A low hill with seven grave-mounds; a meeting about twenty miles short of Higham.",
+   "open_questions": [
+    "Who is the man of the leafless tree, and what does \"the Red Water amidst of the hills\" refer to?",
+    "Where along the Greenway is the seven-mound hill relative to Bear Castle?"
+   ]
+  }
+ ]
+}

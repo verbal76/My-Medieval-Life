@@ -1,0 +1,56 @@
+@ BONE-C4
+summary: At the edge of the plain Ralph stops at Netherton church to pray to St. Nicholas and is shoved aside by an armed man wearing the leafless tree, who cries "The first time!" Ralph climbs Bear Hill past ancient chalk carvings to the earthwork of Bear Castle, looks back north, then rides south along the ancient Greenway. Shepherds of the Downs share his wine, tell of the green rider whose appearances bring evil days, and give him a beacon signal and watchword to summon them in need.
+geo: The plain ends at the downs; at the foot is the thorp of Netherton beside a stream, with a church and a house of Canons. A white road climbs Bear Hill, whose westward-facing bent bears a chalk tree and two bears, visible from near Wulstead. Bear Castle, an ancient earthwork, crowns the hill; from it Ralph sees the country behind and makes out the Debateable Wood and hills behind it. South the downs roll like waves, treeless, crossed by the ancient green road (the Greenway). A low hill with seven grave-mounds; a meeting about twenty miles short of Higham.
+open: Who is the man of the leafless tree, and what does "the Red Water amidst of the hills" refer to? || Where along the Greenway is the seven-mound hill relative to Bear Castle?
+
+E place | Netherton | - | thorp | Hamlet beside a stream at the foot of the downs, with a fair church and a little house of Canons. | P005 `which was called Netherton`; P002 `a little thorp beside a stream, and thereby a fair church and a little house of Canons`
+E building | (unnamed) church at Netherton | - | church | Church with an altar of St. Nicholas. | P004 `wherein he found his good lord and friend St. Nicholas`
+E person | (unnamed) man of the leafless tree | the green rider | man-at-arms | Big armed man in a green coat with a gold leafless tree, a steel sallet hiding his face, a small steel axe at his neck and a great sword; seemingly knows Ralph. | P002 `He wore a green coat over his armour, and thereon was wrought in gold an image of a tree leafless`; P003 `The first time!`
+E feature | Bear Hill | - | chalk hill | Named for ancient chalk-cut figures of a leafy tree with a bear ramping on either side, on a westward bent; visible from near Wulstead but not from Netherton. | P005 `that hill was called after them Bear Hill`
+E feature | (unnamed) Bear Hill chalk figures | - | hill figure | A tree with leaves and two bears ramping against it, cut in the turf; very ancient. | P005 `A tree with leaves was done on that hill-side, and on either hand of it a beast like a bear ramping up against the tree`
+E building | Bear Castle | - | ancient earthwork | Earthwork of the ancient folk at the top of Bear Hill, walls broken in places, with a fosse and turf bridge. | P005 `an earth-work of the ancient folk, which also was called Bear Castle`
+E feature | the Greenway | the green road | ancient road | Green road made by an ancient people, running south over the downs. | P008 `the green road made many ages before by an ancient people`; P023 `riding south along the Greenway`
+E feature | (unnamed) hill of seven grave-mounds | - | barrow group | Low hill with seven grave-mounds of the ancient folk in a row. | P009 `a low hill whereon were seven grave-mounds of the ancient folk in a row`
+E group | shepherds of the Downs | - | shepherds | Armed shepherds with no lord; lonely, rarely in church; offer to rise for Ralph if summoned. | P023 `we be poor men with no master to fleece us, and no lord to help us`; P025 `the shepherds of the Downs`
+E person | Greasy Wat | Wat | shepherd | Jesting shepherd with an anlace and a silver-rimmed ram's horn cup called Thirly. | P016 `Greasy Wat`
+E person | (unnamed) old spearman shepherd | - | shepherd | Old shepherd with a long spear who tells of the green rider and gives the watchword. | P018 `the spearman, who was an old man`
+E item | Thirly | - | drinking horn | A ram's horn rimmed with silver. | P013 `a ram's horn rimmed with silver`; P013 `Now, Thirly, rejoice!`
+E supernatural | Bear-father | - | invoked figure | Named in the shepherds' watchword. | P026 `SMITE ASIDE THE AXE, O BEAR-FATHER`
+E person | St. Nicholas | - | saint | Ralph's patron saint. | P002 `St. Nicholas, who was his good lord and patron`
+E group | the ancient folk | ancient people | ancient people | Unnamed ancient people who cut the hill figures, built Bear Castle and the Greenway and raised grave-mounds. | P005 `these signs were very ancient`; P009 `seven grave-mounds of the ancient folk`
+
+R shepherds of the Downs | allied_with | Ralph | offer to rally to Ralph's beacon | BONE-C4 onward | CANON/high | P026 `then shalt thou see what shall betide thee for thy good-hap`
+
+S Netherton | at_foot_of | the Downs | terrain=end of the plain country; cert=fixed | CANON/high | just before the slopes rise | P002 `Just before the slopes began to rise was a little thorp beside a stream`
+S Bear Hill | other | Netherton | dir=the bent faces west into the hollow of the hill; cert=fixed | CANON/high | figures not visible from Netherton | P005 `the bent looked westward down into the hollow of the hill abovesaid`
+S Bear Hill | visible_from | Wulstead | ctx=narration; cert=fixed | CANON/high | figures clear to see from nearer Wulstead | P005 `from nigher to Wulstead they were clear to see`
+S Bear Castle | within | Bear Hill | dir=at the top; cert=fixed | CANON/high | - | P005 `At the top of it was an earth-work of the ancient folk`
+S Wood Debateable | visible_from | Bear Castle | dir=looking back north; cert=constrained | CANON/high | Ralph believes he can make out the wood and hills behind it; Upmeads Water hidden | P006 `he deemed that he could make out the Debateable Wood and the hills behind it well enough`
+S the Greenway | south_of | Bear Castle | dir=south; terrain=treeless rolling downs; cert=fixed | CANON/high | road leaves the earthwork over a turf bridge across the fosse | P008 `so trotted south along fair and softly`
+S (unnamed) hill of seven grave-mounds | on_route | the Greenway | cert=constrained | CANON/high | - | P009 `as he topped a low hill whereon were seven grave-mounds`
+S Higham-on-the-Way | distance_from | (unnamed) place of the shepherds' meeting | dist=little less than twenty miles; ctx=dialogue:shepherd; cert=constrained | CANON/high | about two miles beyond the seven-mound hill | P010 `some two miles further on`; P011 `Little less than twenty, lord`
+
+T Ralph | Wulstead | (unnamed) place of the shepherds' meeting | via=Netherton, Bear Hill, Bear Castle, the Greenway, (unnamed) hill of seven grave-mounds; mode=horse; dir=south; end=two hours past noon; terrain=plain, then steep chalk downs | P008 `so trotted south along fair and softly`; P011 `it was past noon two hours`
+T (unnamed) man of the leafless tree | Netherton | (unknown) | via=the Greenway; mode=horse; dir=south | P023 `we have seen one riding south along the Greenway`
+
+F history | the ancient folk | Hill figures, Bear Castle, the Greenway and the grave-mounds are all ancient works. | CANON/high | P005 `these signs were very ancient`
+F weapons | shepherds of the Downs | The shepherds carry a pole-axe, a long spear, and an iron-bound flail with an anlace. | CANON/high | P010 `one a pole-axe, another a long spear, and the third a flail jointed and bound with iron`
+F society | shepherds of the Downs | They have no lord or master, are unlettered, and seldom enter a church. | CANON/high; ctx=dialogue:old shepherd | P023 `we seldom come within the doors of a church`
+F custom | shepherds of the Downs | Summoning signal: a great fire on each corner of the top wall of Bear Castle and the watchword "Smite aside the axe, O Bear-father". | CANON/high; ctx=dialogue:old shepherd | P026 `let light a great fire upon each corner of the topmost wall of Bear Castle`
+F magic | (unnamed) man of the leafless tree | The shepherds say such a rider has been seen thrice before in the old man's life, each time followed by evil days and death; he cried "Point and edge! The red water amidst of the hills!" | CANON/high; ctx=dialogue:old shepherd | P023 `after each sight of him followed evil days and the death of men`
+F religion | Ralph | Ralph vows a mass at St. Mary's Church and good lordship for the shepherds if he becomes lord there. | CANON/high; ctx=dialogue:Ralph | P025 `tomorrow will I let sing a mass in St. Mary's Church on your behoof`
+F climate | the Downs | Hot day with a south-west wind on the downs. | CANON/high; when=BONE-C4 | P007 `the south-west wind went past his ears`
+F custom | Upmeads | The day is the Eve of St. John, thought by the shepherds to worsen the omen. | CANON/high; ctx=dialogue:old shepherd | P023 `this is the Eve of St. John`
+F trade | Dame Katherine | Her wine is good island wine. | CANON/high | P020 `Dame Katherine's good island wine`
+
+V main | First meeting with the man of the leafless tree | At Netherton churchyard the green rider shoves past Ralph and cries "The first time!" | who=Ralph, (unnamed) man of the leafless tree; where=Netherton | P003 `The first time!`
+V main | Ralph's oath to the shepherds | Ralph drinks with the shepherds and swears to be a good lord to them; they give him the beacon and watchword. | who=Ralph, Greasy Wat, (unnamed) old spearman shepherd; where=the Greenway | P026 `Thou hast sworn an oath, and it is a good oath`
+V legend | Past sightings of the green rider | The rider has been seen thrice before in the old shepherd's lifetime, each before evil days. | who=(unnamed) man of the leafless tree; where=the Downs | P023 `In my lifetime such a man hath, to my knowledge, been seen thrice before`
+
+U identity | Who is the man of the leafless tree and why does he count his meetings with Ralph? | P003 `The first time!`
+U ambiguity | Meaning of the cry "the red water amidst of the hills". | P023 `THE RED WATER AMIDST OF THE HILLS!`
+U identity | Whether the leafless tree badge relates to the Dry Tree. | P002 `an image of a tree leafless`
+
+O politics | A beacon-and-watchword pact with lordless shepherds that the player can earn and later call on. | P026 `let light a great fire upon each corner of the topmost wall of Bear Castle`
+O world | Ancient earthworks, hill figures, green roads and barrows as procedural landmark types on downland. | P005 `an earth-work of the ancient folk`; P009 `seven grave-mounds of the ancient folk`
+O events | An omen-rider whose sightings precede regional troubles. | P023 `after each sight of him followed evil days and the death of men`

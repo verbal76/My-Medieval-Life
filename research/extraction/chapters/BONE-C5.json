@@ -1,0 +1,667 @@
+{
+ "entities": [
+  {
+   "name": "Higham-on-the-Way",
+   "aliases": [
+    "Higham"
+   ],
+   "type": "place",
+   "subtype": "walled town",
+   "unnamed": false,
+   "summary": "Town below the downs with a white castle on a knoll, three church towers, the great Abbey church, a large paved market-square and a gate; a burg.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P002",
+     "q": "saw Higham lying below him overlooked by a white castle on a knoll"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) white castle of Higham",
+   "aliases": [],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": true,
+   "summary": "White castle on a knoll overlooking Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P002",
+     "q": "overlooked by a white castle on a knoll"
+    }
+   ]
+  },
+  {
+   "name": "St. Mary's of Higham",
+   "aliases": [
+    "St. Mary's House",
+    "the Abbey",
+    "the minster"
+   ],
+   "type": "building",
+   "subtype": "abbey",
+   "unnamed": false,
+   "summary": "Abbey with a great new-built church, guest-hall hung with arras of the Pilgrimage of the Soul of Man, gate, prior's garden and minster tower.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P009",
+     "q": "the Great Church which made those houses seem but low"
+    },
+    {
+     "p": "BONE-C5-P011",
+     "q": "the Pilgrimage of the Soul of Man"
+    }
+   ]
+  },
+  {
+   "name": "Abbot of St. Mary's of Higham",
+   "aliases": [
+    "the lord Abbot"
+   ],
+   "type": "person",
+   "subtype": "abbot",
+   "unnamed": false,
+   "summary": "Tall, spare, clean-shaven, under fifty; exceeding mighty, rich and open-handed; continued building the church.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P040",
+     "q": "he saw that he was a tall spare man, clean-shaven, and thin-faced"
+    },
+    {
+     "p": "BONE-C5-P039",
+     "q": "for he was an exceeding mighty lord"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) monk of Higham",
+   "aliases": [
+    "the brother"
+   ],
+   "type": "person",
+   "subtype": "monk",
+   "unnamed": true,
+   "summary": "Monk who guides Ralph and urges him into the Abbot's service.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P004",
+     "q": "a religious who was beside him"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) man of the leafless tree",
+   "aliases": [
+    "the man in the sallet"
+   ],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": true,
+   "summary": "Here in a white linen frock over his hauberk, face hidden; whispers \"The second time!\"",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P039",
+     "q": "The second time!"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) subprior of St. Mary's",
+   "aliases": [],
+   "type": "person",
+   "subtype": "subprior",
+   "unnamed": true,
+   "summary": "Sits on the dais of the guest-hall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P011",
+     "q": "within two of the subprior's"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) prior of St. Mary's",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prior",
+   "unnamed": true,
+   "summary": "Prior said to love young men-at-arms; has a garden.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P008",
+     "q": "see our prior, who loveth young and brisk men-at-arms"
+    }
+   ]
+  },
+  {
+   "name": "men-at-arms of the Abbot",
+   "aliases": [],
+   "type": "group",
+   "subtype": "soldiery",
+   "unnamed": false,
+   "summary": "Abbot's men-at-arms who keep order and stage the St. George play.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "This play is set forth by the men-at-arms of our lord Abbot"
+    }
+   ]
+  },
+  {
+   "name": "clothiers and webbers of Higham",
+   "aliases": [],
+   "type": "group",
+   "subtype": "crafts",
+   "unnamed": false,
+   "summary": "Many and skilled cloth-workers who stage the St. Agnes pageant.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "ordered by the clothiers and the webbers, which be both many and deft in this good town"
+    }
+   ]
+  },
+  {
+   "name": "scribes and limners of Higham",
+   "aliases": [],
+   "type": "group",
+   "subtype": "crafts",
+   "unnamed": false,
+   "summary": "Stage the play of the wild men of the Golden Age.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "that is done by the scribes and the limners"
+    }
+   ]
+  },
+  {
+   "name": "Midsummer bale-fire",
+   "aliases": [
+    "bale"
+   ],
+   "type": "custom",
+   "subtype": "festival",
+   "unnamed": false,
+   "summary": "St. John's Eve bonfire with plays, a burning wheel, goat-skinned dancers leaping the fire and being drenched.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P011",
+     "q": "the wood was for the Midsummer bale-fire"
+    },
+    {
+     "p": "BONE-C5-P041",
+     "q": "they had with them a wheel done about with straw and hemp payed with pitch and brimstone"
+    }
+   ]
+  },
+  {
+   "name": "Captain of Captains",
+   "aliases": [],
+   "type": "office",
+   "subtype": "military office",
+   "unnamed": false,
+   "summary": "Office in the Abbot's service the monk calls meet for kings.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P028",
+     "q": "become his Captain of Captains, which is an office meet for kings"
+    }
+   ]
+  },
+  {
+   "name": "St. George",
+   "aliases": [],
+   "type": "person",
+   "subtype": "saint",
+   "unnamed": false,
+   "summary": "Subject of the play; patron of the Abbot's men-at-arms.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P021",
+     "q": "a play of the fight of St. George with the worm"
+    }
+   ]
+  },
+  {
+   "name": "St. Julian",
+   "aliases": [],
+   "type": "person",
+   "subtype": "saint",
+   "unnamed": false,
+   "summary": "Lord and friend of wayfarers, painted in Ralph's chamber.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C5-P045",
+     "q": "St. Julian the lord and friend of wayfarers"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "rel": "lord_of",
+   "b": "men-at-arms of the Abbot",
+   "detail": "-",
+   "when": "BONE-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "the men-at-arms of our lord Abbot"
+    }
+   ]
+  },
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "rel": "lord_of",
+   "b": "(unnamed) vassals and villeins of the Abbot",
+   "detail": "bale-fires lit by his vassals east and west",
+   "when": "BONE-C5",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "all these bales are piled up and lighted by vassals and villeins of my lord Abbot"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Higham-on-the-Way",
+   "rel": "at_foot_of",
+   "b": "the Downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "end of the downs, slopes to plain",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Higham seen lying below from the downs' end",
+   "refs": [
+    {
+     "p": "BONE-C5-P002",
+     "q": "till he came to the end of the Downs and saw Higham lying below him"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) river of Higham",
+   "rel": "surrounds",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "fair green meadows",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "probably Coldlake (BONE-C3)",
+   "refs": [
+    {
+     "p": "BONE-C5-P002",
+     "q": "with a river lapping it about and winding on through its fair green meadows even as Clement had told"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) white castle of Higham",
+   "rel": "overlooks",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "knoll",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C5-P002",
+     "q": "overlooked by a white castle on a knoll"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) vassals and villeins of the Abbot",
+   "rel": "west_of",
+   "b": "Higham-on-the-Way",
+   "direction": "west and east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "headlands of the down-country and thorps by the river",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Abbot's lands extend both west and east",
+   "refs": [
+    {
+     "p": "BONE-C5-P025",
+     "q": "how bale speaks to bale all along the headlands of the down-country"
+    },
+    {
+     "p": "BONE-C5-P026",
+     "q": "Ralph saw fire after fire break out to the westward"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "(unnamed) place of the shepherds' meeting",
+   "to": "Higham-on-the-Way",
+   "via": [
+    "the Greenway",
+    "the Downs"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "toward sunset",
+   "terrain_text": "steep winding road down into the plain",
+   "chapter": "BONE-C5",
+   "refs": [
+    {
+     "p": "BONE-C5-P003",
+     "q": "it was the more part of an hour ere he came to the gate"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Abbot of St. Mary's of Higham",
+   "statement": "Each bale in time of war means at least ten men, archers and men-at-arms, ready to serve.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "each one of these bales would mean at least a half-score of stout men, archers and men-at-arms"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Higham-on-the-Way",
+   "statement": "The monk says the surrounding tyrants hate Holy Church but Higham lives in peace because of the Abbot's strength.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "therefore we live in peace in these lands"
+    }
+   ]
+  },
+  {
+   "category": "economy",
+   "subject": "St. Mary's of Higham",
+   "statement": "The lands of St. Mary's are wealthy and flourishing; talk of war in other lands.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P012",
+     "q": "the wealth of the lands of St. Mary's at Higham"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Higham-on-the-Way",
+   "statement": "Midsummer plays: St. George and the worm (men-at-arms), wild men of the Golden Age (scribes and limners), St. Agnes (clothiers and webbers).",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "a pageant of St. Agnes ordered by the clothiers and the webbers"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Midsummer bale-fire",
+   "statement": "Twelve goat-skinned youths roll a burning wheel round the fire twelve times; twelve maidens join; couples leap the fire; all are drenched with water.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P041",
+     "q": "trundled it blazing round about the bale twelve times"
+    }
+   ]
+  },
+  {
+   "category": "architecture",
+   "subject": "St. Mary's of Higham",
+   "statement": "The great church is mostly new-built, with gilded vanes and angels on the battlements, and a gallery over the west door.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P009",
+     "q": "most of it was new-built"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Higham-on-the-Way",
+   "statement": "Townsfolk include burgesses and vavassors.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P036",
+     "q": "kneel amongst all these burgesses and vavassors"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "Higham-on-the-Way",
+   "statement": "It is midsummer after haysel.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:monk",
+   "when": "BONE-C5",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P008",
+     "q": "It is holiday time, and midsummer after haysel"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Second meeting with the man of the leafless tree",
+   "chapter": "BONE-C5",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "(unnamed) man of the leafless tree"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "summary": "In the kneeling crowd a hidden-faced man-at-arms whispers \"The second time!\"",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P039",
+     "q": "The second time!"
+    }
+   ]
+  },
+  {
+   "label": "St. John's Eve at Higham",
+   "chapter": "BONE-C5",
+   "layer": "main",
+   "time_text": "St. John's Eve",
+   "participants": [
+    "Ralph",
+    "Abbot of St. Mary's of Higham"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "summary": "Plays, bale-fire, procession of the Abbot.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P003",
+     "q": "this was St. John's Eve"
+    }
+   ]
+  },
+  {
+   "label": "Ralph's dream",
+   "chapter": "BONE-C5",
+   "layer": "main",
+   "time_text": "night",
+   "participants": [
+    "Ralph"
+   ],
+   "places": [
+    "St. Mary's of Higham"
+   ],
+   "summary": "Ralph dreams of fishing in Upmeads Water until the water is gone and he casts on a dry road.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C5-P047",
+     "q": "the water itself was gone, and he was casting his angle on to a dry road"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Is the river lapping Higham the Coldlake named by Clement?",
+   "refs": [
+    {
+     "p": "BONE-C5-P002",
+     "q": "even as Clement had told"
+    }
+   ]
+  },
+  {
+   "kind": "missing_measure",
+   "question": "How far west and east the Abbot's lands extend is not stated.",
+   "refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "if we stood over the high altar and looked east, ye would see more of such fires"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A church lordship that recruits adventurers and promises promotion as a faction to join or refuse.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BONE-C5-P028",
+     "q": "become his Captain of Captains"
+    }
+   ]
+  },
+  {
+   "idea": "Seasonal town festivals with guild-staged plays as world events.",
+   "system": "events",
+   "basis_refs": [
+    {
+     "p": "BONE-C5-P022",
+     "q": "that is done by the scribes and the limners"
+    }
+   ]
+  },
+  {
+   "idea": "Beacon networks linking vassal thorps as a muster mechanic.",
+   "system": "military",
+   "basis_refs": [
+    {
+     "p": "BONE-C5-P026",
+     "q": "each one of these bales would mean at least a half-score of stout men"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C5",
+ "chapters": [
+  "BONE-C5"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C5",
+   "paragraphs_total": 46,
+   "all_paragraphs_read": true,
+   "summary": "Ralph comes down from the downs at sunset to Higham-on-the-Way on St. John's Eve. A monk leads him to St. Mary's Abbey guest-hall, shows him the Midsummer plays (St. George and the worm), the bale-fire and the hilltop bales of the Abbot's vassals, and urges him to serve the Abbot. The man in the sallet whispers \"The second time!\" in the crowd. Ralph sleeps in the abbey and dreams of a dried-up Upmeads Water.",
+   "geography_notes": "Higham lies below the end of the downs, overlooked by a white castle on a knoll, lapped by a river through green meadows. Three parish churches and the great Abbey church; a large paved market-square with the minster on one side; a gate. From the minster gallery bale-fires show to the west along the down headlands and in thorps by the river, and more to the east: the Abbot's vassals hold land on both sides.",
+   "open_questions": [
+    "Is the Higham river the Coldlake named by Clement? (narration says \"even as Clement had told\")"
+   ]
+  }
+ ]
+}

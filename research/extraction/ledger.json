@@ -58,33 +58,77 @@
    "title": "Ralph Cometh to the Cheaping-Town",
    "body_paragraphs": 59,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 21,
+    "relations": 7,
+    "spatial": 12,
+    "travel": 1,
+    "facts": 15,
+    "events": 3,
+    "unresolved": 3,
+    "opportunities": 3
+   },
+   "open_questions": [
+    "Is the new bridge the same as St. John's by the Bridge (BONE-C1)?",
+    "Is the ten-mile figure measured from Ralph's position at sunrise or from Wulstead?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C3.txt",
+    "records": "research/extraction/chapters/BONE-C3.json"
+   }
   },
   {
    "chapter": "BONE-C4",
    "title": "Ralph Rideth the Downs",
    "body_paragraphs": 26,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 15,
+    "relations": 1,
+    "spatial": 8,
+    "travel": 2,
+    "facts": 9,
+    "events": 3,
+    "unresolved": 3,
+    "opportunities": 3
+   },
+   "open_questions": [
+    "Who is the man of the leafless tree, and what does \"the Red Water amidst of the hills\" refer to?",
+    "Where along the Greenway is the seven-mound hill relative to Bear Castle?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C4.txt",
+    "records": "research/extraction/chapters/BONE-C4.json"
+   }
   },
   {
    "chapter": "BONE-C5",
    "title": "Ralph Cometh to Higham-on-the-Way",
    "body_paragraphs": 46,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 15,
+    "relations": 2,
+    "spatial": 4,
+    "travel": 1,
+    "facts": 8,
+    "events": 3,
+    "unresolved": 2,
+    "opportunities": 3
+   },
+   "open_questions": [
+    "Is the Higham river the Coldlake named by Clement? (narration says \"even as Clement had told\")"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C5.txt",
+    "records": "research/extraction/chapters/BONE-C5.json"
+   }
   },
   {
    "chapter": "BONE-C6",

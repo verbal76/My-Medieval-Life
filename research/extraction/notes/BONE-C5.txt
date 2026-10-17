@@ -1,0 +1,50 @@
+@ BONE-C5
+summary: Ralph comes down from the downs at sunset to Higham-on-the-Way on St. John's Eve. A monk leads him to St. Mary's Abbey guest-hall, shows him the Midsummer plays (St. George and the worm), the bale-fire and the hilltop bales of the Abbot's vassals, and urges him to serve the Abbot. The man in the sallet whispers "The second time!" in the crowd. Ralph sleeps in the abbey and dreams of a dried-up Upmeads Water.
+geo: Higham lies below the end of the downs, overlooked by a white castle on a knoll, lapped by a river through green meadows. Three parish churches and the great Abbey church; a large paved market-square with the minster on one side; a gate. From the minster gallery bale-fires show to the west along the down headlands and in thorps by the river, and more to the east: the Abbot's vassals hold land on both sides.
+open: Is the Higham river the Coldlake named by Clement? (narration says "even as Clement had told")
+
+E place | Higham-on-the-Way | Higham | walled town | Town below the downs with a white castle on a knoll, three church towers, the great Abbey church, a large paved market-square and a gate; a burg. | P002 `saw Higham lying below him overlooked by a white castle on a knoll`
+E building | (unnamed) white castle of Higham | - | castle | White castle on a knoll overlooking Higham. | P002 `overlooked by a white castle on a knoll`
+E building | St. Mary's of Higham | St. Mary's House, the Abbey, the minster | abbey | Abbey with a great new-built church, guest-hall hung with arras of the Pilgrimage of the Soul of Man, gate, prior's garden and minster tower. | P009 `the Great Church which made those houses seem but low`; P011 `the Pilgrimage of the Soul of Man`
+E person | Abbot of St. Mary's of Higham | the lord Abbot | abbot | Tall, spare, clean-shaven, under fifty; exceeding mighty, rich and open-handed; continued building the church. | P040 `he saw that he was a tall spare man, clean-shaven, and thin-faced`; P039 `for he was an exceeding mighty lord`
+E person | (unnamed) monk of Higham | the brother | monk | Monk who guides Ralph and urges him into the Abbot's service. | P004 `a religious who was beside him`
+E person | (unnamed) man of the leafless tree | the man in the sallet | man-at-arms | Here in a white linen frock over his hauberk, face hidden; whispers "The second time!" | P039 `The second time!`
+E person | (unnamed) subprior of St. Mary's | - | subprior | Sits on the dais of the guest-hall. | P011 `within two of the subprior's`
+E person | (unnamed) prior of St. Mary's | - | prior | Prior said to love young men-at-arms; has a garden. | P008 `see our prior, who loveth young and brisk men-at-arms`
+E group | men-at-arms of the Abbot | - | soldiery | Abbot's men-at-arms who keep order and stage the St. George play. | P022 `This play is set forth by the men-at-arms of our lord Abbot`
+E group | clothiers and webbers of Higham | - | crafts | Many and skilled cloth-workers who stage the St. Agnes pageant. | P022 `ordered by the clothiers and the webbers, which be both many and deft in this good town`
+E group | scribes and limners of Higham | - | crafts | Stage the play of the wild men of the Golden Age. | P022 `that is done by the scribes and the limners`
+E custom | Midsummer bale-fire | bale | festival | St. John's Eve bonfire with plays, a burning wheel, goat-skinned dancers leaping the fire and being drenched. | P011 `the wood was for the Midsummer bale-fire`; P041 `they had with them a wheel done about with straw and hemp payed with pitch and brimstone`
+E office | Captain of Captains | - | military office | Office in the Abbot's service the monk calls meet for kings. | P028 `become his Captain of Captains, which is an office meet for kings`
+E person | St. George | - | saint | Subject of the play; patron of the Abbot's men-at-arms. | P021 `a play of the fight of St. George with the worm`
+E person | St. Julian | - | saint | Lord and friend of wayfarers, painted in Ralph's chamber. | P045 `St. Julian the lord and friend of wayfarers`
+
+R Abbot of St. Mary's of Higham | lord_of | men-at-arms of the Abbot | - | BONE-C5 | CANON/high | P022 `the men-at-arms of our lord Abbot`
+R Abbot of St. Mary's of Higham | lord_of | (unnamed) vassals and villeins of the Abbot | bale-fires lit by his vassals east and west | BONE-C5 | CANON/high | P026 `all these bales are piled up and lighted by vassals and villeins of my lord Abbot`
+
+S Higham-on-the-Way | at_foot_of | the Downs | terrain=end of the downs, slopes to plain; cert=fixed | CANON/high | Higham seen lying below from the downs' end | P002 `till he came to the end of the Downs and saw Higham lying below him`
+S (unnamed) river of Higham | surrounds | Higham-on-the-Way | terrain=fair green meadows; cert=fixed | CANON/high | probably Coldlake (BONE-C3) | P002 `with a river lapping it about and winding on through its fair green meadows even as Clement had told`
+S (unnamed) white castle of Higham | overlooks | Higham-on-the-Way | terrain=knoll; cert=fixed | CANON/high | - | P002 `overlooked by a white castle on a knoll`
+S (unnamed) vassals and villeins of the Abbot | west_of | Higham-on-the-Way | dir=west and east; terrain=headlands of the down-country and thorps by the river; cert=constrained | CANON/high | Abbot's lands extend both west and east | P025 `how bale speaks to bale all along the headlands of the down-country`; P026 `Ralph saw fire after fire break out to the westward`
+
+T Ralph | (unnamed) place of the shepherds' meeting | Higham-on-the-Way | via=the Greenway, the Downs; mode=horse; end=toward sunset; terrain=steep winding road down into the plain | P003 `it was the more part of an hour ere he came to the gate`
+
+F military | Abbot of St. Mary's of Higham | Each bale in time of war means at least ten men, archers and men-at-arms, ready to serve. | CANON/high; ctx=dialogue:monk | P026 `each one of these bales would mean at least a half-score of stout men, archers and men-at-arms`
+F politics | Higham-on-the-Way | The monk says the surrounding tyrants hate Holy Church but Higham lives in peace because of the Abbot's strength. | CANON/high; ctx=dialogue:monk | P026 `therefore we live in peace in these lands`
+F economy | St. Mary's of Higham | The lands of St. Mary's are wealthy and flourishing; talk of war in other lands. | CANON/high; ctx=rumour | P012 `the wealth of the lands of St. Mary's at Higham`
+F custom | Higham-on-the-Way | Midsummer plays: St. George and the worm (men-at-arms), wild men of the Golden Age (scribes and limners), St. Agnes (clothiers and webbers). | CANON/high; ctx=dialogue:monk | P022 `a pageant of St. Agnes ordered by the clothiers and the webbers`
+F custom | Midsummer bale-fire | Twelve goat-skinned youths roll a burning wheel round the fire twelve times; twelve maidens join; couples leap the fire; all are drenched with water. | CANON/high | P041 `trundled it blazing round about the bale twelve times`
+F architecture | St. Mary's of Higham | The great church is mostly new-built, with gilded vanes and angels on the battlements, and a gallery over the west door. | CANON/high | P009 `most of it was new-built`
+F society | Higham-on-the-Way | Townsfolk include burgesses and vavassors. | CANON/high; ctx=dialogue:monk | P036 `kneel amongst all these burgesses and vavassors`
+F climate | Higham-on-the-Way | It is midsummer after haysel. | CANON/high; ctx=dialogue:monk; when=BONE-C5 | P008 `It is holiday time, and midsummer after haysel`
+
+V main | Second meeting with the man of the leafless tree | In the kneeling crowd a hidden-faced man-at-arms whispers "The second time!" | who=Ralph, (unnamed) man of the leafless tree; where=Higham-on-the-Way | P039 `The second time!`
+V main | St. John's Eve at Higham | Plays, bale-fire, procession of the Abbot. | time=St. John's Eve; who=Ralph, Abbot of St. Mary's of Higham; where=Higham-on-the-Way | P003 `this was St. John's Eve`
+V main | Ralph's dream | Ralph dreams of fishing in Upmeads Water until the water is gone and he casts on a dry road. | time=night; who=Ralph; where=St. Mary's of Higham | P047 `the water itself was gone, and he was casting his angle on to a dry road`
+
+U identity | Is the river lapping Higham the Coldlake named by Clement? | P002 `even as Clement had told`
+U missing_measure | How far west and east the Abbot's lands extend is not stated. | P026 `if we stood over the high altar and looked east, ye would see more of such fires`
+
+O politics | A church lordship that recruits adventurers and promises promotion as a faction to join or refuse. | P028 `become his Captain of Captains`
+O events | Seasonal town festivals with guild-staged plays as world events. | P022 `that is done by the scribes and the limners`
+O military | Beacon networks linking vassal thorps as a muster mechanic. | P026 `each one of these bales would mean at least a half-score of stout men`
