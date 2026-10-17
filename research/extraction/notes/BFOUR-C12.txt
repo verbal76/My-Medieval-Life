@@ -1,0 +1,17 @@
+@ BFOUR-C12
+summary: Ralph, Ursula, the Sage and Michael-a-dale ride across the plain, meeting few and mild folk, and one afternoon see Whitwall's towers far off. Ursula grows shy: near Ralph's home she fears high-born kin will scorn a yeoman's daughter, and says Ralph is now fit for the Kaiser's throne. Ralph recounts their deeds and swears by his sword that if his kin do not honour her he will leave his land and found a new kindred with her. He foretells that her beauty will cause strife that his Well-touched blade will settle. It is late spring.
+geo: The plain west of the mountains to Whitwall: a dry highway between meadows and plough-land, Whitwall's towers and pinnacles seen far off in the afternoon.
+open: none
+
+S Whitwall | visible_from | (unnamed) plain west of the mountains | terrain=dry highway between meadows and acres; cert=fixed | CANON/high | towers seen from afar in the afternoon | P002 `they saw before them afar off the towers and pinnacles of Whitwall`
+
+T Ralph, Ursula, Sage of Swevenham, Michael-a-dale | (unnamed) plain west of the mountains | Whitwall | mode=horse; terrain=dry highway between meadows and acres | P008 `here and now is the highway dry and long, and the plain meads and acres on either hand`
+
+F society | Ursula | Ursula fears that among the barons and lineages of the west she will be scorned as a yeoman's daughter. | CANON/high; ctx=dialogue:Ursula | P002 `now when I am coming amongst the baronages and the lineages, what shall I do to hold up my head`
+F custom | Ralph | Ralph swears on his sword that if his kin do not honour Ursula he will leave his land and found a new kindred with her. | CANON/high; ctx=dialogue:Ralph | P004 `then will I be a man without kindred, and I will turn my back on the land I love`
+F magic | Ralph | Ursula says he is now fit for the Kaiser's throne. | CANON/high; ctx=dialogue:Ursula | P002 `now thou art meet to sit in the Kaiser's throne and rule the world from the Holy City`
+F climate | (unnamed) plain west of the mountains | Late spring, dusty dry highway. | CANON/high; when=BFOUR-C12 | P008 `the little cloud of dust about us two in the late spring weather`
+
+V main | Approach to Whitwall | Nearing Whitwall, Ursula fears scorn and Ralph swears to stand by her against his kin. | time=afternoon, late spring; who=Ralph, Ursula; where=(unnamed) plain west of the mountains | P004 `By my sword I swear it`
+
+O society | Rank and lineage tension (yeoman versus royal) as a social system the player navigates. | P002 `I bade thee remember that thou wert a King's son and I a yeoman's daughter`

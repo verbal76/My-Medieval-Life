@@ -1,0 +1,381 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) King of Cheaping Knowe",
+   "aliases": [
+    "the King",
+    "the tyrant of Cheaping Knowe"
+   ],
+   "type": "person",
+   "subtype": "tyrant king",
+   "unnamed": true,
+   "summary": "Tall, long-legged, black-bearded, fierce-eyed warrior; greedy, cruel and guileful; rules with the chiefs of the Porte and self-made captains.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C9-P011",
+     "q": "The King was a tall man, a proper man of war; long-legged, black bearded, and fierce-eyed"
+    }
+   ]
+  },
+  {
+   "name": "Michael-a-dale",
+   "aliases": [
+    "Michael"
+   ],
+   "type": "person",
+   "subtype": "councillor",
+   "unnamed": false,
+   "summary": "Man of the Porte and the King's Council at Cheaping Knowe, from Swevenham, of the kin of Michael of the Hatch; warns and guides Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C9-P017",
+     "q": "My name is Michael-a-dale"
+    }
+   ]
+  },
+  {
+   "name": "Hatch of Swevenham",
+   "aliases": [
+    "the Hatch"
+   ],
+   "type": "place",
+   "subtype": "homestead",
+   "unnamed": false,
+   "summary": "Swevenham homestead of Michael of the Hatch, Michael-a-dale's kindred.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C9-P020",
+     "q": "unless the kindred of Michael of the Hatch of Swevenham have turned thieves in the third generation"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) standing stone of Bull Nosy",
+   "aliases": [],
+   "type": "building",
+   "subtype": "memorial stone",
+   "unnamed": true,
+   "summary": "Great standing stone on Bull Nosy's howe carved with a bull and a sword.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C9-P005",
+     "q": "with a great standing stone on the top thereof, whereon was graven the image of a bull, with a sword thereunder"
+    }
+   ]
+  },
+  {
+   "name": "Friend of the Well",
+   "aliases": [],
+   "type": "office",
+   "subtype": "epithet",
+   "unnamed": false,
+   "summary": "What Ralph is called after drinking of the Well.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C9-P016",
+     "q": "cowed by the majesty of thee, a Friend of the Well"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) King of Cheaping Knowe",
+   "rel": "other",
+   "b": "(unnamed) tyrant of Cheaping Knowe",
+   "detail": "probably the same ruler, now styled King",
+   "when": "BFOUR-C9",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P002",
+     "q": "the King there; who was a close-fist and a cruel lord"
+    }
+   ]
+  },
+  {
+   "a": "Michael-a-dale",
+   "rel": "kin_of",
+   "b": "(unnamed) Michael of the Hatch",
+   "detail": "of the same kindred",
+   "when": "BFOUR-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P020",
+     "q": "the kindred of Michael of the Hatch of Swevenham"
+    }
+   ]
+  },
+  {
+   "a": "Michael-a-dale",
+   "rel": "serves",
+   "b": "(unnamed) King of Cheaping Knowe",
+   "detail": "councillor held against his will",
+   "when": "BFOUR-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P016",
+     "q": "I am of the King's Council"
+    }
+   ]
+  },
+  {
+   "a": "Bull Shockhead",
+   "rel": "other",
+   "b": "Bull Nosy",
+   "detail": "raised the standing stone over his brother's howe",
+   "when": "BFOUR-C9",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P005",
+     "q": "whereby the wayfarers wotted that this had been done in his memory by his brother, the new Lord of Utterbol"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Cheaping Knowe",
+   "rel": "distance_from",
+   "b": "Whiteness",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "reached on the third day after one night at Whiteness",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P006",
+     "q": "they came before the gate thereof safe and sound on the third day"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) planned ambush site",
+   "rel": "distance_from",
+   "b": "Cheaping Knowe",
+   "direction": "toward the mountains",
+   "distance_text": "some three leagues",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Michael-a-dale",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P016",
+     "q": "some three leagues from the town, on your way to the mountains"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham"
+   ],
+   "from": "Goldburg",
+   "to": "Cheaping Knowe",
+   "via": [
+    "(unnamed) Goldburg mountains",
+    "Whiteness"
+   ],
+   "mode": "horse with twelve hired men-at-arms",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C9",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P004",
+     "q": "The day after he and his company departed from Goldburg toward the mountains, which they passed unfought and unwaylaid"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Goldburg",
+   "statement": "Goldburg and the chapmen lately routed the mountain wild men.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P004",
+     "q": "a little before there had been a great overthrow of the wild men of those mountains at the hands of the men of Goldburg and the Chapmen"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "(unnamed) King of Cheaping Knowe",
+   "statement": "Cruel justice: handless men in fetters, folk hung before booths, whippings, the pillar.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P007",
+     "q": "handless men, fettered, dragging themselves about, and folk hung up before chapmen's booths, and whipping-cheer, and the pillar"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ralph",
+   "statement": "When Ralph declares he has drunk of the Well, the hall falls back and bows.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P013",
+     "q": "the warriors and lords and merchants fell back from Ralph and stood in an ordered rank on either side of him and bent their heads before him"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "(unnamed) King of Cheaping Knowe",
+   "statement": "His captains are self-made, not barons of lineage.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P008",
+     "q": "who were, so to say, his barons, though they were not barons of lineage, but masterful men who were wise to do his bidding"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph brings silver vessels and fine cloth as a gift to buy the King's goodwill.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P003",
+     "q": "bought a goodly gift of silver vessel and fine cloth for the King of Cheaping Knowe"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "(unnamed) King of Cheaping Knowe",
+   "statement": "He keeps many spies.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Michael-a-dale",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P019",
+     "q": "this tyrant wages many a spy"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph before the King of Cheaping Knowe",
+   "chapter": "BFOUR-C9",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "(unnamed) King of Cheaping Knowe"
+   ],
+   "places": [
+    "Cheaping Knowe"
+   ],
+   "summary": "Ralph awes the King by declaring he drank of the Well and wins freedom for condemned prisoners.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P014",
+     "q": "I crave of thee to give me life and limb and freedom for the poor folk whom I saw led down the hall"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether the \"King\" of Cheaping Knowe is the same tyrant met on the outward journey (BTWO-C23).",
+   "refs": [
+    {
+     "p": "BFOUR-C9-P002",
+     "q": "the King there; who was a close-fist and a cruel lord"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Social standing gained by the Well (\"Friend of the Well\") as a reputation effect in canon. Any stat effect would be GAME EXPANSION.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C9-P013",
+     "q": "bent their heads before him"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C9",
+ "chapters": [
+  "BFOUR-C9"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C9",
+   "paragraphs_total": 21,
+   "all_paragraphs_read": true,
+   "summary": "Redhead hires twelve men-at-arms for Ralph to Cheaping Knowe and advises a gift for its close-fisted, cruel King; Redhead then leaves. They cross the Goldburg mountains unhindered, the wild men having lately been crushed by Goldburg and the chapmen. They pass Bull Nosy's high howe, now topped by a standing stone carved with a bull and a sword. After a night at Whiteness they reach Cheaping Knowe on the third day. Through streets of maimed, hanged and whipped folk Ralph brings his gift to the King, a tall, fierce, black-bearded warrior among the chiefs of the Porte. Ralph says he has drunk of the Well; the hall falls back in awe and the King grows wheedling. Ralph asks only the freedom of the prisoners being led away, which is granted. That night Michael-a-dale of Swevenham, of the King's Council, comes in disguise to warn of an ambush three leagues out and offers to guide them by a by-road if taken home. The Sage vouches for him as kin of Michael of the Hatch of Swevenham. Michael says the King knows of Ursula.",
+   "geography_notes": "Goldburg to the mountains to Whiteness (one night) to Cheaping Knowe (third day). The ambush is planned three leagues from Cheaping Knowe toward the mountains; a by-road makes a detour of about twelve miles.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+@ BFOUR-C9
+summary: Redhead hires twelve men-at-arms for Ralph to Cheaping Knowe and advises a gift for its close-fisted, cruel King; Redhead then leaves. They cross the Goldburg mountains unhindered, the wild men having lately been crushed by Goldburg and the chapmen. They pass Bull Nosy's high howe, now topped by a standing stone carved with a bull and a sword. After a night at Whiteness they reach Cheaping Knowe on the third day. Through streets of maimed, hanged and whipped folk Ralph brings his gift to the King, a tall, fierce, black-bearded warrior among the chiefs of the Porte. Ralph says he has drunk of the Well; the hall falls back in awe and the King grows wheedling. Ralph asks only the freedom of the prisoners being led away, which is granted. That night Michael-a-dale of Swevenham, of the King's Council, comes in disguise to warn of an ambush three leagues out and offers to guide them by a by-road if taken home. The Sage vouches for him as kin of Michael of the Hatch of Swevenham. Michael says the King knows of Ursula.
+geo: Goldburg to the mountains to Whiteness (one night) to Cheaping Knowe (third day). The ambush is planned three leagues from Cheaping Knowe toward the mountains; a by-road makes a detour of about twelve miles.
+open: none
+
+E person | (unnamed) King of Cheaping Knowe | the King, the tyrant of Cheaping Knowe | tyrant king | Tall, long-legged, black-bearded, fierce-eyed warrior; greedy, cruel and guileful; rules with the chiefs of the Porte and self-made captains. | P011 `The King was a tall man, a proper man of war; long-legged, black bearded, and fierce-eyed`
+E person | Michael-a-dale | Michael | councillor | Man of the Porte and the King's Council at Cheaping Knowe, from Swevenham, of the kin of Michael of the Hatch; warns and guides Ralph. | P017 `My name is Michael-a-dale`
+E place | Hatch of Swevenham | the Hatch | homestead | Swevenham homestead of Michael of the Hatch, Michael-a-dale's kindred. | P020 `unless the kindred of Michael of the Hatch of Swevenham have turned thieves in the third generation`
+E building | (unnamed) standing stone of Bull Nosy | - | memorial stone | Great standing stone on Bull Nosy's howe carved with a bull and a sword. | P005 `with a great standing stone on the top thereof, whereon was graven the image of a bull, with a sword thereunder`
+E office | Friend of the Well | - | epithet | What Ralph is called after drinking of the Well. | P016 `cowed by the majesty of thee, a Friend of the Well`
+
+R (unnamed) King of Cheaping Knowe | other | (unnamed) tyrant of Cheaping Knowe | probably the same ruler, now styled King | BFOUR-C9 | INF/medium | P002 `the King there; who was a close-fist and a cruel lord`
+R Michael-a-dale | kin_of | (unnamed) Michael of the Hatch | of the same kindred | BFOUR-C9 | CANON/high | P020 `the kindred of Michael of the Hatch of Swevenham`
+R Michael-a-dale | serves | (unnamed) King of Cheaping Knowe | councillor held against his will | BFOUR-C9 | CANON/high | P016 `I am of the King's Council`
+R Bull Shockhead | other | Bull Nosy | raised the standing stone over his brother's howe | BFOUR-C9 | INF/high | P005 `whereby the wayfarers wotted that this had been done in his memory by his brother, the new Lord of Utterbol`
+
+S Cheaping Knowe | distance_from | Whiteness | time=reached on the third day after one night at Whiteness; cert=fixed | CANON/high | - | P006 `they came before the gate thereof safe and sound on the third day`
+S (unnamed) planned ambush site | distance_from | Cheaping Knowe | dist=some three leagues; dir=toward the mountains; ctx=dialogue:Michael-a-dale; cert=constrained | CANON/high | - | P016 `some three leagues from the town, on your way to the mountains`
+
+T Ralph, Ursula, Sage of Swevenham | Goldburg | Cheaping Knowe | via=(unnamed) Goldburg mountains, Whiteness; mode=horse with twelve hired men-at-arms | P004 `The day after he and his company departed from Goldburg toward the mountains, which they passed unfought and unwaylaid`
+
+F military | Goldburg | Goldburg and the chapmen lately routed the mountain wild men. | CANON/high | P004 `a little before there had been a great overthrow of the wild men of those mountains at the hands of the men of Goldburg and the Chapmen`
+F law | (unnamed) King of Cheaping Knowe | Cruel justice: handless men in fetters, folk hung before booths, whippings, the pillar. | CANON/high | P007 `handless men, fettered, dragging themselves about, and folk hung up before chapmen's booths, and whipping-cheer, and the pillar`
+F magic | Ralph | When Ralph declares he has drunk of the Well, the hall falls back and bows. | CANON/high | P013 `the warriors and lords and merchants fell back from Ralph and stood in an ordered rank on either side of him and bent their heads before him`
+F politics | (unnamed) King of Cheaping Knowe | His captains are self-made, not barons of lineage. | CANON/high | P008 `who were, so to say, his barons, though they were not barons of lineage, but masterful men who were wise to do his bidding`
+F custom | Ralph | Ralph brings silver vessels and fine cloth as a gift to buy the King's goodwill. | CANON/high | P003 `bought a goodly gift of silver vessel and fine cloth for the King of Cheaping Knowe`
+F politics | (unnamed) King of Cheaping Knowe | He keeps many spies. | CANON/high; ctx=dialogue:Michael-a-dale | P019 `this tyrant wages many a spy`
+
+V main | Ralph before the King of Cheaping Knowe | Ralph awes the King by declaring he drank of the Well and wins freedom for condemned prisoners. | who=Ralph, (unnamed) King of Cheaping Knowe; where=Cheaping Knowe | P014 `I crave of thee to give me life and limb and freedom for the poor folk whom I saw led down the hall`
+
+U identity | Whether the "King" of Cheaping Knowe is the same tyrant met on the outward journey (BTWO-C23). | P002 `the King there; who was a close-fist and a cruel lord`
+
+O politics | Social standing gained by the Well ("Friend of the Well") as a reputation effect in canon. Any stat effect would be GAME EXPANSION. | P013 `bent their heads before him`

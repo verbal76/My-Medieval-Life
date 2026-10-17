@@ -1,0 +1,281 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) town of the Folk of the Fells",
+   "aliases": [],
+   "type": "place",
+   "subtype": "mountain town",
+   "unnamed": true,
+   "summary": "Plain town in a fair hidden mountain valley, with a great barn-like hall where most people gather.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "therein was the dwelling or town of this Folk of the Fells.  It was indeed no stronghold, save that it was not easy to find"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) great hall of the Folk of the Fells",
+   "aliases": [],
+   "type": "building",
+   "subtype": "hall",
+   "unnamed": true,
+   "summary": "The chief house, like the great barn of an abbey.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "the chiefest of them like to the great barn of an abbey in our land"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Folk of the Fells",
+   "rel": "lives_in",
+   "b": "(unnamed) town of the Folk of the Fells",
+   "detail": "-",
+   "when": "BFOUR-C11",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "the dwelling or town of this Folk of the Fells"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) town of the Folk of the Fells",
+   "rel": "distance_from",
+   "b": "(unnamed) dark wood of the pass",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "two days more",
+   "travel_mode": "",
+   "terrain_text": "valley amid the mountains",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "they went for two days more till they came into a valley amidst of the mountains which was fair and lovely"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) town of the Folk of the Fells",
+   "rel": "other",
+   "b": "Mid-Mountain House",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "another route from it to the plain avoids the Mid-Mountain House",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P004",
+     "q": "for they went now by other ways, which missed the said House"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale",
+    "Folk of the Fells"
+   ],
+   "from": "(unnamed) dark wood of the pass",
+   "to": "(unnamed) town of the Folk of the Fells",
+   "via": [],
+   "mode": "horse and on foot",
+   "direction_text": "",
+   "duration_text": "two days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C11",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "thereafter they went for two days more"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale"
+   ],
+   "from": "(unnamed) town of the Folk of the Fells",
+   "to": "(unnamed) plain west of the mountains",
+   "via": [],
+   "mode": "horse with a Fells escort",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C11",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P004",
+     "q": "they all came down safe into the plain"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Folk of the Fells",
+   "statement": "Strong, not tall, black-haired, blue- or grey-eyed, cheerful and talkative; women comely and kind but refusing strangers' caresses.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "strong men, but not high of stature, black-haired, with blue or grey eyes, cheerful of countenance, and of many words"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Folk of the Fells",
+   "statement": "They keep no thralls: adult captives are sold, killed or ransomed; captured children are sometimes adopted.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "when they took men and women, as oft they did, they always sold them for what they would bring to the plain-dwellers; or else slew them, or held them to ransom, but never brought them home to their stead"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Folk of the Fells",
+   "statement": "Their gods are their forefathers; adopted children are made kin with prayers and worship.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "made them very children of their Folk with many uncouth prayers and worship of their Gods, who were indeed, as they deemed, but forefathers of the Folk"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Folk of the Fells",
+   "statement": "They hunt hart, boar and wild bulls in the mountains.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P003",
+     "q": "they showed the wayfarers their manner of hunting, both of the hart and the boar, and of wild bulls also"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) town of the Folk of the Fells",
+   "statement": "Its defence is concealment and defensible approaches.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "the way thither was well defensible were foemen to try it"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Three days with the Folk of the Fells",
+   "chapter": "BFOUR-C11",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Folk of the Fells"
+   ],
+   "places": [
+    "(unnamed) town of the Folk of the Fells"
+   ],
+   "summary": "The Folk of the Fells feast and hunt with Ralph and escort him to the plain.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C11-P003",
+     "q": "the wild men wondered at his prowess"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "A clan culture with ancestor-gods, no slavery at home, adoption of captured children, and fierce loyalty.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C11-P002",
+     "q": "but never brought them home to their stead"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C11",
+ "chapters": [
+  "BFOUR-C11"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C11",
+   "paragraphs_total": 4,
+   "all_paragraphs_read": true,
+   "summary": "Two days on they reach the Folk of the Fells' town in a hidden, defensible mountain valley: plain houses, the chief one like a great abbey barn where most people gather. The people are strong but not tall, black-haired, blue- or grey-eyed, cheerful and talkative; the women are comely and kind but allow no caresses from strangers. They keep no thralls: captives are sold, killed or ransomed, but captured children may be adopted with prayers to their gods, who are their forefathers. They feast the travellers three days and hunt hart, boar and wild bulls; Ralph excels and is thought a god. On the fourth day the chief escorts them by other ways, avoiding the Mid-Mountain House, down to the plain, where the Goldburg men take their wages and return with the wild men, who weep at parting.",
+   "geography_notes": "Two days' travel from the pass wood to a fair valley in the mountains holding the Folk of the Fells' town: hard to find and easily defended. From there, other ways (avoiding the Mid-Mountain House) lead down to the plain.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

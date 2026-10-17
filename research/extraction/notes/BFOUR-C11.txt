@@ -1,0 +1,25 @@
+@ BFOUR-C11
+summary: Two days on they reach the Folk of the Fells' town in a hidden, defensible mountain valley: plain houses, the chief one like a great abbey barn where most people gather. The people are strong but not tall, black-haired, blue- or grey-eyed, cheerful and talkative; the women are comely and kind but allow no caresses from strangers. They keep no thralls: captives are sold, killed or ransomed, but captured children may be adopted with prayers to their gods, who are their forefathers. They feast the travellers three days and hunt hart, boar and wild bulls; Ralph excels and is thought a god. On the fourth day the chief escorts them by other ways, avoiding the Mid-Mountain House, down to the plain, where the Goldburg men take their wages and return with the wild men, who weep at parting.
+geo: Two days' travel from the pass wood to a fair valley in the mountains holding the Folk of the Fells' town: hard to find and easily defended. From there, other ways (avoiding the Mid-Mountain House) lead down to the plain.
+open: none
+
+E place | (unnamed) town of the Folk of the Fells | - | mountain town | Plain town in a fair hidden mountain valley, with a great barn-like hall where most people gather. | P002 `therein was the dwelling or town of this Folk of the Fells.  It was indeed no stronghold, save that it was not easy to find`
+E building | (unnamed) great hall of the Folk of the Fells | - | hall | The chief house, like the great barn of an abbey. | P002 `the chiefest of them like to the great barn of an abbey in our land`
+
+R Folk of the Fells | lives_in | (unnamed) town of the Folk of the Fells | - | BFOUR-C11 | CANON/high | P002 `the dwelling or town of this Folk of the Fells`
+
+S (unnamed) town of the Folk of the Fells | distance_from | (unnamed) dark wood of the pass | time=two days more; terrain=valley amid the mountains; cert=fixed | CANON/high | - | P002 `they went for two days more till they came into a valley amidst of the mountains which was fair and lovely`
+S (unnamed) town of the Folk of the Fells | other | Mid-Mountain House | ctx=narration; cert=constrained | CANON/high | another route from it to the plain avoids the Mid-Mountain House | P004 `for they went now by other ways, which missed the said House`
+
+T Ralph, Ursula, Sage of Swevenham, Michael-a-dale, Folk of the Fells | (unnamed) dark wood of the pass | (unnamed) town of the Folk of the Fells | mode=horse and on foot; dur=two days | P002 `thereafter they went for two days more`
+T Ralph, Ursula, Sage of Swevenham, Michael-a-dale | (unnamed) town of the Folk of the Fells | (unnamed) plain west of the mountains | mode=horse with a Fells escort | P004 `they all came down safe into the plain`
+
+F society | Folk of the Fells | Strong, not tall, black-haired, blue- or grey-eyed, cheerful and talkative; women comely and kind but refusing strangers' caresses. | CANON/high | P002 `strong men, but not high of stature, black-haired, with blue or grey eyes, cheerful of countenance, and of many words`
+F society | Folk of the Fells | They keep no thralls: adult captives are sold, killed or ransomed; captured children are sometimes adopted. | CANON/high | P002 `when they took men and women, as oft they did, they always sold them for what they would bring to the plain-dwellers; or else slew them, or held them to ransom, but never brought them home to their stead`
+F religion | Folk of the Fells | Their gods are their forefathers; adopted children are made kin with prayers and worship. | CANON/high | P002 `made them very children of their Folk with many uncouth prayers and worship of their Gods, who were indeed, as they deemed, but forefathers of the Folk`
+F ecology | Folk of the Fells | They hunt hart, boar and wild bulls in the mountains. | CANON/high | P003 `they showed the wayfarers their manner of hunting, both of the hart and the boar, and of wild bulls also`
+F military | (unnamed) town of the Folk of the Fells | Its defence is concealment and defensible approaches. | CANON/high | P002 `the way thither was well defensible were foemen to try it`
+
+V main | Three days with the Folk of the Fells | The Folk of the Fells feast and hunt with Ralph and escort him to the plain. | dur=three days; who=Ralph, Ursula, Folk of the Fells; where=(unnamed) town of the Folk of the Fells | P003 `the wild men wondered at his prowess`
+
+O society | A clan culture with ancestor-gods, no slavery at home, adoption of captured children, and fierce loyalty. | P002 `but never brought them home to their stead`

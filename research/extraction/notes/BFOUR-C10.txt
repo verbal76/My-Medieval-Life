@@ -1,0 +1,29 @@
+@ BFOUR-C10
+summary: They leave Cheaping Knowe, Michael disguised in a wide sallet, and two miles out turn into a deep lane between hazel banks and coppices along the hills, rejoining the highway (the only road into the passes) late in the afternoon. They camp in an oak wood and ride hard the next day. On the third day, above the tilled upland, a dark wood swallows the road; the King of Cheaping Knowe himself waits in the pass mouth with many men, demanding Michael and "the woman". Ralph defies him; as the King threatens to flay Michael and take Ursula, an arrow pierces his throat. Ralph charges crying "Home, home to Upmeads!", his men shout "Ho, for the Friend of the Well!", and arrows and spears from the wood rout the King's men. The bowmen bellow like cattle: the kindred of the Bull. Their chief, wearing a bull's-head helm and gold arm-ring, accepts Bull Shockhead's grass-knot token and leads them toward their dwelling. About sixty dead are left for wolves and kites. They camp at a fell's side and feast.
+geo: From Cheaping Knowe: two miles along the highway, then a deep lane between hazel banks skirting the hills, rejoining the highway (the only road into the passes) late in the afternoon. On the third day, above the tilled upland, rough steep ground and a dark wood swallowing the road at the jaws of a pass. Beyond the wood, a rough fell.
+open: none
+
+E person | (unnamed) Duke of the Bulls | Lord or Duke of the Bulls, the Bull captain | chieftain | Chief of the Bull kindred; dressed like Bull Shockhead but with a bull's-head helm of iron and leather and a great gold arm-ring. | P017 `he had a great bull's head for a helm (which afterwards Ralph found out was of iron and leather) and a great gold ring on his arm`
+E group | Folk of the Fells | kindred of the Bull, the Bulls | mountain people | The mountain people of the Bull kindred, roused against the King of Cheaping Knowe by his cruelty. | P021 `the fool with the crown that lieth there dead had of late days so stirred up the Folks of the Fells through his grimness and cruelty`
+E feature | (unnamed) dark wood of the pass | - | wood | Dark wood swallowing the highway at the jaws of a pass above the tilled upland. | P004 `there lay before them a dark wood swallowing up the road`
+
+R (unnamed) King of Cheaping Knowe | killed_by | Folk of the Fells | arrow through the throat | BFOUR-C10 | CANON/high | P012 `the King threw up his arms, and fell forward on his horse's neck with a great arrow through his throat`
+R (unnamed) Duke of the Bulls | leader_of | Folk of the Fells | - | BFOUR-C10 | CANON/high | P018 `Ralph hailed the new-comer as Lord or Duke of the Bulls`
+R Folk of the Fells | allied_with | Ralph | through Bull Shockhead's token | BFOUR-C10 | CANON/high | P020 `Verily our brother's hand hath met thine when he gave thee this`
+R Bull Shockhead | member_of | Folk of the Fells | their kinsman | BFOUR-C10 | CANON/high | P019 `that Friend of the Well and of our kinsman concerning whom he sent us a message`
+
+S (unnamed) dark wood of the pass | distance_from | Cheaping Knowe | time=third day after noon; terrain=above the tilled upland, rough steep ways; cert=fixed | CANON/high | - | P004 `on the third day, somewhat after noon, when they were come up above the tilled upland and the land was rough and the ways steep`
+S (unnamed) Cheaping Knowe highway | leads_to | (unnamed) mountain pass entry | cert=fixed | CANON/high | the only road into the passes | P003 `the Highway again, which was the only road leading into the passes of the mountains`
+
+T Ralph, Ursula, Sage of Swevenham, Michael-a-dale | Cheaping Knowe | (unnamed) dark wood of the pass | via=(unnamed) hazel lane by-road; mode=horse; dur=three days | P003 `turned suddenly into a deep and narrow lane, and forth on, as it led betwixt hazelled banks and coppices of small wood`
+
+F military | Folk of the Fells | They ambush from woods with arrows and casting-spears, and bellow like cattle as a clan signal. | CANON/high | P015 `Straightway brake out a huge bellowing on either side of the road, as though the wood were all full of great neat`
+F custom | Folk of the Fells | They leave enemy dead for wolves, lynxes, ravens and kites. | CANON/high; ctx=dialogue:Duke of the Bulls | P022 `there be wolves and lynxes enough in the wood, and the ravens of the uplands, and the kites shall soon scent the carrion`
+F transport | Folk of the Fells | They go on foot, swiftly, "as wolves trot". | CANON/high | P022 `The Duke and all his men were afoot, but they went easily and swiftly, as wolves trot`
+F society | Folk of the Fells | They are boundless friends and implacable foes. | CANON/high | P023 `whereas if a man were their friend he could scarce be enough their friend, and if he were their foe, they could never be fierce enough with him`
+F politics | Folk of the Fells | They had resolved to stop all traffic through the mountains while the cruel King lived. | CANON/high; ctx=dialogue:Duke of the Bulls | P021 `we have been minded to stop everything bigger than a cur-dog that might seek to pass by us`
+F custom | Ralph | Ralph's war-cry: "Home, home to Upmeads!" | CANON/high | P013 `Home, home to Upmeads!`
+
+V main | Death of the King of Cheaping Knowe | Ambushing Ralph, the King of Cheaping Knowe is shot by the Folk of the Fells, who rout his men. | time=third day, afternoon; who=Ralph, (unnamed) King of Cheaping Knowe, Folk of the Fells; where=(unnamed) dark wood of the pass | P013 `in a few minutes there were no men of the foe together save those that were fleeing down the road to Cheaping Knowe`
+
+O politics | Earlier alliances (Bull's token) paying off as faction intervention. | P020 `Verily our brother's hand hath met thine when he gave thee this`

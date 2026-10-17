@@ -1,0 +1,340 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Duke of the Bulls",
+   "aliases": [
+    "Lord or Duke of the Bulls",
+    "the Bull captain"
+   ],
+   "type": "person",
+   "subtype": "chieftain",
+   "unnamed": true,
+   "summary": "Chief of the Bull kindred; dressed like Bull Shockhead but with a bull's-head helm of iron and leather and a great gold arm-ring.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C10-P017",
+     "q": "he had a great bull's head for a helm (which afterwards Ralph found out was of iron and leather) and a great gold ring on his arm"
+    }
+   ]
+  },
+  {
+   "name": "Folk of the Fells",
+   "aliases": [
+    "kindred of the Bull",
+    "the Bulls"
+   ],
+   "type": "group",
+   "subtype": "mountain people",
+   "unnamed": false,
+   "summary": "The mountain people of the Bull kindred, roused against the King of Cheaping Knowe by his cruelty.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C10-P021",
+     "q": "the fool with the crown that lieth there dead had of late days so stirred up the Folks of the Fells through his grimness and cruelty"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) dark wood of the pass",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "wood",
+   "unnamed": true,
+   "summary": "Dark wood swallowing the highway at the jaws of a pass above the tilled upland.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C10-P004",
+     "q": "there lay before them a dark wood swallowing up the road"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) King of Cheaping Knowe",
+   "rel": "killed_by",
+   "b": "Folk of the Fells",
+   "detail": "arrow through the throat",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P012",
+     "q": "the King threw up his arms, and fell forward on his horse's neck with a great arrow through his throat"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Duke of the Bulls",
+   "rel": "leader_of",
+   "b": "Folk of the Fells",
+   "detail": "-",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P018",
+     "q": "Ralph hailed the new-comer as Lord or Duke of the Bulls"
+    }
+   ]
+  },
+  {
+   "a": "Folk of the Fells",
+   "rel": "allied_with",
+   "b": "Ralph",
+   "detail": "through Bull Shockhead's token",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P020",
+     "q": "Verily our brother's hand hath met thine when he gave thee this"
+    }
+   ]
+  },
+  {
+   "a": "Bull Shockhead",
+   "rel": "member_of",
+   "b": "Folk of the Fells",
+   "detail": "their kinsman",
+   "when": "BFOUR-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P019",
+     "q": "that Friend of the Well and of our kinsman concerning whom he sent us a message"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) dark wood of the pass",
+   "rel": "distance_from",
+   "b": "Cheaping Knowe",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "third day after noon",
+   "travel_mode": "",
+   "terrain_text": "above the tilled upland, rough steep ways",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P004",
+     "q": "on the third day, somewhat after noon, when they were come up above the tilled upland and the land was rough and the ways steep"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Cheaping Knowe highway",
+   "rel": "leads_to",
+   "b": "(unnamed) mountain pass entry",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the only road into the passes",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P003",
+     "q": "the Highway again, which was the only road leading into the passes of the mountains"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale"
+   ],
+   "from": "Cheaping Knowe",
+   "to": "(unnamed) dark wood of the pass",
+   "via": [
+    "(unnamed) hazel lane by-road"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "three days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C10",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P003",
+     "q": "turned suddenly into a deep and narrow lane, and forth on, as it led betwixt hazelled banks and coppices of small wood"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Folk of the Fells",
+   "statement": "They ambush from woods with arrows and casting-spears, and bellow like cattle as a clan signal.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P015",
+     "q": "Straightway brake out a huge bellowing on either side of the road, as though the wood were all full of great neat"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Folk of the Fells",
+   "statement": "They leave enemy dead for wolves, lynxes, ravens and kites.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Duke of the Bulls",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P022",
+     "q": "there be wolves and lynxes enough in the wood, and the ravens of the uplands, and the kites shall soon scent the carrion"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "Folk of the Fells",
+   "statement": "They go on foot, swiftly, \"as wolves trot\".",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P022",
+     "q": "The Duke and all his men were afoot, but they went easily and swiftly, as wolves trot"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Folk of the Fells",
+   "statement": "They are boundless friends and implacable foes.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P023",
+     "q": "whereas if a man were their friend he could scarce be enough their friend, and if he were their foe, they could never be fierce enough with him"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Folk of the Fells",
+   "statement": "They had resolved to stop all traffic through the mountains while the cruel King lived.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Duke of the Bulls",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P021",
+     "q": "we have been minded to stop everything bigger than a cur-dog that might seek to pass by us"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph's war-cry: \"Home, home to Upmeads!\"",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P013",
+     "q": "Home, home to Upmeads!"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Death of the King of Cheaping Knowe",
+   "chapter": "BFOUR-C10",
+   "layer": "main",
+   "time_text": "third day, afternoon",
+   "participants": [
+    "Ralph",
+    "(unnamed) King of Cheaping Knowe",
+    "Folk of the Fells"
+   ],
+   "places": [
+    "(unnamed) dark wood of the pass"
+   ],
+   "summary": "Ambushing Ralph, the King of Cheaping Knowe is shot by the Folk of the Fells, who rout his men.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C10-P013",
+     "q": "in a few minutes there were no men of the foe together save those that were fleeing down the road to Cheaping Knowe"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Earlier alliances (Bull's token) paying off as faction intervention.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C10-P020",
+     "q": "Verily our brother's hand hath met thine when he gave thee this"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C10",
+ "chapters": [
+  "BFOUR-C10"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C10",
+   "paragraphs_total": 22,
+   "all_paragraphs_read": true,
+   "summary": "They leave Cheaping Knowe, Michael disguised in a wide sallet, and two miles out turn into a deep lane between hazel banks and coppices along the hills, rejoining the highway (the only road into the passes) late in the afternoon. They camp in an oak wood and ride hard the next day. On the third day, above the tilled upland, a dark wood swallows the road; the King of Cheaping Knowe himself waits in the pass mouth with many men, demanding Michael and \"the woman\". Ralph defies him; as the King threatens to flay Michael and take Ursula, an arrow pierces his throat. Ralph charges crying \"Home, home to Upmeads!\", his men shout \"Ho, for the Friend of the Well!\", and arrows and spears from the wood rout the King's men. The bowmen bellow like cattle: the kindred of the Bull. Their chief, wearing a bull's-head helm and gold arm-ring, accepts Bull Shockhead's grass-knot token and leads them toward their dwelling. About sixty dead are left for wolves and kites. They camp at a fell's side and feast.",
+   "geography_notes": "From Cheaping Knowe: two miles along the highway, then a deep lane between hazel banks skirting the hills, rejoining the highway (the only road into the passes) late in the afternoon. On the third day, above the tilled upland, rough steep ground and a dark wood swallowing the road at the jaws of a pass. Beyond the wood, a rough fell.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

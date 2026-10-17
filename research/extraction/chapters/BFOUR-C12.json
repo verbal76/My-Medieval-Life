@@ -1,0 +1,171 @@
+{
+ "entities": [],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "Whitwall",
+   "rel": "visible_from",
+   "b": "(unnamed) plain west of the mountains",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "dry highway between meadows and acres",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "towers seen from afar in the afternoon",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P002",
+     "q": "they saw before them afar off the towers and pinnacles of Whitwall"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Michael-a-dale"
+   ],
+   "from": "(unnamed) plain west of the mountains",
+   "to": "Whitwall",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "dry highway between meadows and acres",
+   "chapter": "BFOUR-C12",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P008",
+     "q": "here and now is the highway dry and long, and the plain meads and acres on either hand"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Ursula",
+   "statement": "Ursula fears that among the barons and lineages of the west she will be scorned as a yeoman's daughter.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P002",
+     "q": "now when I am coming amongst the baronages and the lineages, what shall I do to hold up my head"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph swears on his sword that if his kin do not honour Ursula he will leave his land and found a new kindred with her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P004",
+     "q": "then will I be a man without kindred, and I will turn my back on the land I love"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ralph",
+   "statement": "Ursula says he is now fit for the Kaiser's throne.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P002",
+     "q": "now thou art meet to sit in the Kaiser's throne and rule the world from the Holy City"
+    }
+   ]
+  },
+  {
+   "category": "climate",
+   "subject": "(unnamed) plain west of the mountains",
+   "statement": "Late spring, dusty dry highway.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "BFOUR-C12",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P008",
+     "q": "the little cloud of dust about us two in the late spring weather"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Approach to Whitwall",
+   "chapter": "BFOUR-C12",
+   "layer": "main",
+   "time_text": "afternoon, late spring",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "(unnamed) plain west of the mountains"
+   ],
+   "summary": "Nearing Whitwall, Ursula fears scorn and Ralph swears to stand by her against his kin.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C12-P004",
+     "q": "By my sword I swear it"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Rank and lineage tension (yeoman versus royal) as a social system the player navigates.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C12-P002",
+     "q": "I bade thee remember that thou wert a King's son and I a yeoman's daughter"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C12",
+ "chapters": [
+  "BFOUR-C12"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C12",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "Ralph, Ursula, the Sage and Michael-a-dale ride across the plain, meeting few and mild folk, and one afternoon see Whitwall's towers far off. Ursula grows shy: near Ralph's home she fears high-born kin will scorn a yeoman's daughter, and says Ralph is now fit for the Kaiser's throne. Ralph recounts their deeds and swears by his sword that if his kin do not honour her he will leave his land and found a new kindred with her. He foretells that her beauty will cause strife that his Well-touched blade will settle. It is late spring.",
+   "geography_notes": "The plain west of the mountains to Whitwall: a dry highway between meadows and plough-land, Whitwall's towers and pinnacles seen far off in the afternoon.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}
