@@ -1,0 +1,42 @@
+@ BFOUR-C32
+summary: Epilogue. Ralph tells his whole tale to the Prior of St. Austin's at Wulstead while a learned monk writes it down, and this is supposed to be the source of the book. Ralph rules justly and delivers other lands and towns; his name alone halts hosts. He holds the Castle of the Scaur all his life and clears the Wood Perilous of thieves. The new folk of the Burg make him their lord and captain, and the Dry Tree obeys him while any last. He serves the Abbot of Higham as captain, drives out the oppressors and restores peace to the Frank of Higham. He is always captain and brother of the Shepherds. He clears the Wood Debateable, roots out the last Burgers and frees three good towns beyond the wood. He and Ursula visit the Land of Abundance yearly and revere the Lady's memory. About two years after the homecoming the Lord Bull of Utterbol comes with Otter and Redhead and rides to battle with Ralph. Thrice later Ralph, Ursula and Clement journey to Utterbol. Katherine visits often and lives long. Ralph and Ursula never seem to age; Ursula bears eight children and sees four generations. They die on one day and lie in one tomb in the choir of St. Laurence of Upmeads.
+geo: Three good towns lie beyond the Wood Debateable. The Frank of Higham is the territory of Higham. Utterbol is reached through the wastes and the mountains. St. Laurence of Upmeads has a choir with the tomb.
+open: Who are the three good towns beyond the Wood Debateable?
+
+E person | (unnamed) scribe-monk of St. Austin's | - | monk | Learned brother who wrote down Ralph's tale for the Prior; the supposed source of the book. | P002 `which brother was a learned and wise man and very speedy and deft with his pen`
+E place | (unnamed) three good towns beyond the Wood Debateable | - | towns | Three towns beyond the Wood Debateable delivered from oppression by Ralph. | P003 `delivered three good towns beyond the wood from the cruelty of the oppressor`
+E place | Frank of Higham | - | territory | The free lands of Higham to which Ralph restored peace. | P003 `gave back peace to the Frank of Higham`
+
+R Ralph | ruler_of | Castle of the Scaur | held until death | epilogue | CANON/high | P003 `Till his deathday he held the Castle of the Scaur`
+R Ralph | leader_of | Burg of the Four Friths | lord and captain chosen by the new folk | epilogue | CANON/high | P003 `The new folk of the Burg of the Four Friths made him their lord and captain`
+R Ralph | serves | Abbot of St. Mary's of Higham | captain; drove out the tyrants | epilogue | CANON/high | P003 `He rode to Higham and offered himself as captain to the abbot thereof`
+R Bull Shockhead | allied_with | Ralph | rides with him to battle about two years after the homecoming | epilogue | CANON/high | P005 `came to him the Lord Bull of Utterbol with a chosen band`
+R Ursula | spouse_of | Ralph | eight children; buried together | epilogue | CANON/high | P008 `Eight goodly children she bore him`
+
+S (unnamed) three good towns beyond the Wood Debateable | beyond | Wood Debateable | ctx=narrator; cert=constrained | CANON/high | side not stated | P003 `three good towns beyond the wood`
+S Utterbol | distance_from | Upmeads | via=through the wastes and the mountains; ctx=narrator; cert=constrained | CANON/high | - | P005 `journeyed through the wastes and the mountains to Utterbol`
+S Frank of Higham | around | Higham-on-the-Way | ctx=narrator; cert=constrained | INF/medium | the lands of Higham | P003 `the Frank of Higham`
+
+T Ralph, Ursula, Clement Chapman | Upmeads | Utterbol | via=wastes and mountains; dir=thrice in later years | P005 `thrice in the years that followed`
+T Ralph, Ursula | Upmeads | Plain of Abundance | dir=once every year | P004 `Once in every year he and Ursula his wife visited the Land of Abundance`
+
+F history | Ralph | The tale was written by a monk of St. Austin's at Wulstead as Ralph told it to the Prior. | CANON/medium; ctx=narrator | P002 `it has been deemed not unlike that from this monk's writing has come the more part of the tale above told`
+F politics | Ralph | Ralph rules justly, delivers other lands and towns, and his name alone stops hosts. | CANON/high; when=epilogue | P003 `oft forsooth the very sound of his name and rumour of his coming stayed the march of hosts`
+F history | Wood Perilous | Ralph clears the Wood Perilous of strong-thieves so that its glades are as safe as a town street. | CANON/high; when=epilogue | P003 `cleansed the Wood Perilous of all strong-thieves and reivers`
+F history | Wood Debateable | Ralph clears the Wood Debateable and roots out the last Burg-devils. | CANON/high; when=epilogue | P003 `rooted out the last of the Burg-devils`
+F politics | shepherds of the Downs | Ralph remains their captain and brother and helps them in scarcity. | CANON/high; when=epilogue | P003 `Ever was he true captain and brother to the Shepherd-folk`
+F custom | Plain of Abundance | Ralph and Ursula visit yearly; Ralph enters the castle as a holy place to honour the Lady. | CANON/high; when=epilogue | P004 `he went into the castle there as into a holy place`
+F magic | Ralph | Ralph and Ursula never appear to age and die exceedingly old, as in the blossom of their age. | CANON/high; when=epilogue | P007 `he was to all men's eyes in the very blossom of his age`
+F politics | Utterbol | The Lord of Utterbol becomes a mighty man and warder of the peace of the Uttermost lands. | CANON/high; when=epilogue | P005 `now become a very mighty man and the warder of the peace of the Uttermost lands`
+
+V epilogue | Ralph's reign | Ralph rules Upmeads, holds the Scaur, leads the Burg, the Dry Tree and the Shepherds, and pacifies Higham and both woods. | who=Ralph, Ursula; where=Upmeads | P003 `he ruled over his lands in right and might`
+V epilogue | Bull's visit | About two years later the Lord Bull of Utterbol, with Otter and Redhead, rides to battle with Ralph and stays two months. | time=about two years after the homecoming; who=Bull Shockhead, Otter, Redhead, Ralph; where=Upmeads | P005 `did him right manly service in battle`
+V epilogue | Death of Ralph and Ursula | They die on one day and are laid in one tomb in St. Laurence's choir. | who=Ralph, Ursula; where=St. Laurence of Upmeads | P008 `On one day they two died and were laid together in one tomb in the choir of St. Laurence of Upmeads`
+
+U document_error | The epilogue calls Ralph's old thrall of war and Lord of Utterbol "Bull Nosy", but Bull Nosy was murdered by Gandolf; the lord is Bull Shockhead (BFOUR-C3). | P005 `his old thrall of war, Bull Nosy`
+U location | The three good towns beyond the Wood Debateable are unnamed and unplaced. | P003 `three good towns beyond the wood`
+U ambiguity | The epilogue says Ralph and Ursula met "amidst of the Eastland wood"; elsewhere the meeting is in the Wood Perilous or its region. | P008 `when they met in the dark night amidst of the Eastland wood`
+
+O timeline | A post-canon era: Ralph reigns as a living legend with an ordered realm. Game time can be set inside it, with the player not the chosen one. | P003 `no lord was ever more beloved`
+O world | Clearing bandit woods as regional quest arcs that change danger levels. | P003 `so that no high-street of a good town was safer than its glades and its byways`
+O world | Three unnamed towns beyond the Wood Debateable as GAME EXPANSION settlement slots (Flexible placement). | P003 `three good towns beyond the wood`

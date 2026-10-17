@@ -1,0 +1,517 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) scribe-monk of St. Austin's",
+   "aliases": [],
+   "type": "person",
+   "subtype": "monk",
+   "unnamed": true,
+   "summary": "Learned brother who wrote down Ralph's tale for the Prior; the supposed source of the book.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C32-P002",
+     "q": "which brother was a learned and wise man and very speedy and deft with his pen"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) three good towns beyond the Wood Debateable",
+   "aliases": [],
+   "type": "place",
+   "subtype": "towns",
+   "unnamed": true,
+   "summary": "Three towns beyond the Wood Debateable delivered from oppression by Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "delivered three good towns beyond the wood from the cruelty of the oppressor"
+    }
+   ]
+  },
+  {
+   "name": "Frank of Higham",
+   "aliases": [],
+   "type": "place",
+   "subtype": "territory",
+   "unnamed": false,
+   "summary": "The free lands of Higham to which Ralph restored peace.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "gave back peace to the Frank of Higham"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "ruler_of",
+   "b": "Castle of the Scaur",
+   "detail": "held until death",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "Till his deathday he held the Castle of the Scaur"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "leader_of",
+   "b": "Burg of the Four Friths",
+   "detail": "lord and captain chosen by the new folk",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "The new folk of the Burg of the Four Friths made him their lord and captain"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "serves",
+   "b": "Abbot of St. Mary's of Higham",
+   "detail": "captain; drove out the tyrants",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "He rode to Higham and offered himself as captain to the abbot thereof"
+    }
+   ]
+  },
+  {
+   "a": "Bull Shockhead",
+   "rel": "allied_with",
+   "b": "Ralph",
+   "detail": "rides with him to battle about two years after the homecoming",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "came to him the Lord Bull of Utterbol with a chosen band"
+    }
+   ]
+  },
+  {
+   "a": "Ursula",
+   "rel": "spouse_of",
+   "b": "Ralph",
+   "detail": "eight children; buried together",
+   "when": "epilogue",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P008",
+     "q": "Eight goodly children she bore him"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) three good towns beyond the Wood Debateable",
+   "rel": "beyond",
+   "b": "Wood Debateable",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narrator",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "side not stated",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "three good towns beyond the wood"
+    }
+   ]
+  },
+  {
+   "a": "Utterbol",
+   "rel": "distance_from",
+   "b": "Upmeads",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narrator",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "journeyed through the wastes and the mountains to Utterbol"
+    }
+   ]
+  },
+  {
+   "a": "Frank of Higham",
+   "rel": "around",
+   "b": "Higham-on-the-Way",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narrator",
+   "certainty": "constrained",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "note": "the lands of Higham",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "the Frank of Higham"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Clement Chapman"
+   ],
+   "from": "Upmeads",
+   "to": "Utterbol",
+   "via": [
+    "wastes and mountains"
+   ],
+   "mode": "",
+   "direction_text": "thrice in later years",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C32",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "thrice in the years that followed"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula"
+   ],
+   "from": "Upmeads",
+   "to": "Plain of Abundance",
+   "via": [],
+   "mode": "",
+   "direction_text": "once every year",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C32",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P004",
+     "q": "Once in every year he and Ursula his wife visited the Land of Abundance"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Ralph",
+   "statement": "The tale was written by a monk of St. Austin's at Wulstead as Ralph told it to the Prior.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "narrator",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P002",
+     "q": "it has been deemed not unlike that from this monk's writing has come the more part of the tale above told"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Ralph",
+   "statement": "Ralph rules justly, delivers other lands and towns, and his name alone stops hosts.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "epilogue",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "oft forsooth the very sound of his name and rumour of his coming stayed the march of hosts"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Wood Perilous",
+   "statement": "Ralph clears the Wood Perilous of strong-thieves so that its glades are as safe as a town street.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "epilogue",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "cleansed the Wood Perilous of all strong-thieves and reivers"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Wood Debateable",
+   "statement": "Ralph clears the Wood Debateable and roots out the last Burg-devils.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "epilogue",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "rooted out the last of the Burg-devils"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "shepherds of the Downs",
+   "statement": "Ralph remains their captain and brother and helps them in scarcity.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "epilogue",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "Ever was he true captain and brother to the Shepherd-folk"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Plain of Abundance",
+   "statement": "Ralph and Ursula visit yearly; Ralph enters the castle as a holy place to honour the Lady.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "epilogue",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P004",
+     "q": "he went into the castle there as into a holy place"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ralph",
+   "statement": "Ralph and Ursula never appear to age and die exceedingly old, as in the blossom of their age.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "epilogue",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P007",
+     "q": "he was to all men's eyes in the very blossom of his age"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Utterbol",
+   "statement": "The Lord of Utterbol becomes a mighty man and warder of the peace of the Uttermost lands.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "epilogue",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "now become a very mighty man and the warder of the peace of the Uttermost lands"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph's reign",
+   "chapter": "BFOUR-C32",
+   "layer": "epilogue",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "Upmeads"
+   ],
+   "summary": "Ralph rules Upmeads, holds the Scaur, leads the Burg, the Dry Tree and the Shepherds, and pacifies Higham and both woods.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "he ruled over his lands in right and might"
+    }
+   ]
+  },
+  {
+   "label": "Bull's visit",
+   "chapter": "BFOUR-C32",
+   "layer": "epilogue",
+   "time_text": "about two years after the homecoming",
+   "participants": [
+    "Bull Shockhead",
+    "Otter",
+    "Redhead",
+    "Ralph"
+   ],
+   "places": [
+    "Upmeads"
+   ],
+   "summary": "About two years later the Lord Bull of Utterbol, with Otter and Redhead, rides to battle with Ralph and stays two months.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "did him right manly service in battle"
+    }
+   ]
+  },
+  {
+   "label": "Death of Ralph and Ursula",
+   "chapter": "BFOUR-C32",
+   "layer": "epilogue",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Ursula"
+   ],
+   "places": [
+    "St. Laurence of Upmeads"
+   ],
+   "summary": "They die on one day and are laid in one tomb in St. Laurence's choir.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P008",
+     "q": "On one day they two died and were laid together in one tomb in the choir of St. Laurence of Upmeads"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "document_error",
+   "question": "The epilogue calls Ralph's old thrall of war and Lord of Utterbol \"Bull Nosy\", but Bull Nosy was murdered by Gandolf; the lord is Bull Shockhead (BFOUR-C3).",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P005",
+     "q": "his old thrall of war, Bull Nosy"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "The three good towns beyond the Wood Debateable are unnamed and unplaced.",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "three good towns beyond the wood"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "The epilogue says Ralph and Ursula met \"amidst of the Eastland wood\"; elsewhere the meeting is in the Wood Perilous or its region.",
+   "refs": [
+    {
+     "p": "BFOUR-C32-P008",
+     "q": "when they met in the dark night amidst of the Eastland wood"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A post-canon era: Ralph reigns as a living legend with an ordered realm. Game time can be set inside it, with the player not the chosen one.",
+   "system": "timeline",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "no lord was ever more beloved"
+    }
+   ]
+  },
+  {
+   "idea": "Clearing bandit woods as regional quest arcs that change danger levels.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "so that no high-street of a good town was safer than its glades and its byways"
+    }
+   ]
+  },
+  {
+   "idea": "Three unnamed towns beyond the Wood Debateable as GAME EXPANSION settlement slots (Flexible placement).",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C32-P003",
+     "q": "three good towns beyond the wood"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C32",
+ "chapters": [
+  "BFOUR-C32"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C32",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "Epilogue. Ralph tells his whole tale to the Prior of St. Austin's at Wulstead while a learned monk writes it down, and this is supposed to be the source of the book. Ralph rules justly and delivers other lands and towns; his name alone halts hosts. He holds the Castle of the Scaur all his life and clears the Wood Perilous of thieves. The new folk of the Burg make him their lord and captain, and the Dry Tree obeys him while any last. He serves the Abbot of Higham as captain, drives out the oppressors and restores peace to the Frank of Higham. He is always captain and brother of the Shepherds. He clears the Wood Debateable, roots out the last Burgers and frees three good towns beyond the wood. He and Ursula visit the Land of Abundance yearly and revere the Lady's memory. About two years after the homecoming the Lord Bull of Utterbol comes with Otter and Redhead and rides to battle with Ralph. Thrice later Ralph, Ursula and Clement journey to Utterbol. Katherine visits often and lives long. Ralph and Ursula never seem to age; Ursula bears eight children and sees four generations. They die on one day and lie in one tomb in the choir of St. Laurence of Upmeads.",
+   "geography_notes": "Three good towns lie beyond the Wood Debateable. The Frank of Higham is the territory of Higham. Utterbol is reached through the wastes and the mountains. St. Laurence of Upmeads has a choir with the tomb.",
+   "open_questions": [
+    "Who are the three good towns beyond the Wood Debateable?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,25 @@
+@ BFOUR-C30
+summary: Ralph rides back to Wulstead. Katherine, tearful with bittersweet love, promises to come to Upmeads and foresees more perils and deeds for him. At the Priory gate Ralph promises the townsfolk peace. King Peter and the Dame are ready to leave; the old Prior, Peter's ancient friend, blesses Ralph and asks to hear his tale; Ralph offers him the High House to stay in. Peter remarks that his day is done. They reach the plain field of Upmeads two hours before sunset, going round by the ford to avoid the corpses, which the Upmeads carles are already burying in trenches. At the garth gate Ralph sends his parents in to the high-seat and rides half a mile to Richard's house to fetch Ursula. Nicholas welcomes the old couple; Upmeads folk lodge much of the host in their homes.
+geo: Wulstead to Upmeads is a short road, ridden from early afternoon to two hours before sunset. There is a ford at Upmeads, an alternative to the bridge. Richard's house is half a mile from the High House garth gate.
+open: none
+
+E feature | (unnamed) ford of Upmeads Water near the High House | the ford | ford | Ford by which Ralph leads his parents round to avoid the battlefield. | P011 `Ralph led them round by the ford, so that they might not come across the corpses of the robbers`
+E person | (unnamed) Prior of the Austin Canons of Wulstead | the Prior | prior | Old, worthy prelate and an ancient friend of King Peter. | P007 `The Prior also, who was old, and a worthy prelate, and an ancient friend of King Peter`
+
+R (unnamed) Prior of the Austin Canons of Wulstead | other | King Peter | ancient friend | BFOUR-C30 | CANON/high | P007 `an ancient friend of King Peter`
+R Ralph | other | Wulstead | promises to keep its peace | BFOUR-C30 | CANON/high | P003 `I will see to it in time to come that ye live in peace and quiet here`
+
+S (unnamed) house of Richard the Red | distance_from | High House of Upmeads | dist=half a mile; cert=fixed | CANON/high | - | P015 `Richard's house, which was but a half-mile thence`
+S Wulstead | distance_from | Upmeads | time=from early afternoon to two hours before sunset with old riders pressing fast; mode=horse; cert=constrained | CANON/high | Short was the road | P010 `they came into the plain field of Upmeads two hours before sunset`
+
+T Ralph | (unnamed) Bridge of the High House | Wulstead | mode=horse; start=an hour before noon; dur=short | P002 `Short was the road back again to Wulstead`
+T Ralph, King Peter, (unnamed) Queen of Upmeads | Wulstead | High House of Upmeads | via=(unnamed) ford of Upmeads Water near the High House; mode=horse; end=two hours before sunset | P011 `Ralph led them round by the ford`
+
+F magic | Dame Katherine | Katherine says she looked for no other tidings and foresees that the days will find deeds and perils for Ralph. | CANON/medium; ctx=dialogue:Dame Katherine | P002 `the days will presently find deeds for thee, and thou wilt be riding into peril, and coming safe from out of it`
+F custom | Upmeads | The Upmeads carles dig trenches to bury the slain robbers. | CANON/high | P011 `already were the Upmeads carles at work digging trenches wherein to bury them`
+F politics | King Peter | King Peter remarks that his day is done as Ralph grows masterful. | CANON/high; ctx=dialogue:King Peter | P009 `my day is done, my dear`
+F society | Upmeads | The Upmeads folk take most of the host into their houses, which the host has saved from fire and sword. | CANON/high | P017 `the Upmeads carles and queans had taken the more part of the host to their houses`
+
+V main | Return of King Peter to Upmeads | Ralph brings his parents home to the High House. | time=afternoon; who=Ralph, King Peter, (unnamed) Queen of Upmeads, Nicholas Longshanks; where=High House of Upmeads | P012 `So Ralph led his father and his mother to the gate of the garth of High House`
+
+O world | Post-battle world state: burial trenches and battlefield remnants as persistent map features. | P011 `digging trenches wherein to bury them`

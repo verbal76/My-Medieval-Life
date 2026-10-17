@@ -2919,44 +2919,100 @@
    "title": "They Go Down to Battle in Upmeads",
    "body_paragraphs": 38,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 3,
+    "spatial": 5,
+    "travel": 2,
+    "facts": 9,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 3
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C29.txt",
+    "records": "research/extraction/chapters/BFOUR-C29.json"
+   }
   },
   {
    "chapter": "BFOUR-C30",
    "title": "Ralph Brings His Father and Mother to Upmeads",
    "body_paragraphs": 16,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 2,
+    "spatial": 2,
+    "travel": 2,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C30.txt",
+    "records": "research/extraction/chapters/BFOUR-C30.json"
+   }
   },
   {
    "chapter": "BFOUR-C31",
    "title": "Ralph Brings Ursula Home to the High House",
    "body_paragraphs": 18,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 3,
+    "spatial": 2,
+    "travel": 1,
+    "facts": 4,
+    "events": 2,
+    "unresolved": 0,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C31.txt",
+    "records": "research/extraction/chapters/BFOUR-C31.json"
+   }
   },
   {
    "chapter": "BFOUR-C32",
    "title": "Yet a Few Words Concerning Ralph of Upmeads",
    "body_paragraphs": 7,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 5,
+    "spatial": 3,
+    "travel": 2,
+    "facts": 8,
+    "events": 3,
+    "unresolved": 3,
+    "opportunities": 3
+   },
+   "open_questions": [
+    "Who are the three good towns beyond the Wood Debateable?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C32.txt",
+    "records": "research/extraction/chapters/BFOUR-C32.json"
+   }
   }
  ]
 }

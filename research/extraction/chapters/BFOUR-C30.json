@@ -1,0 +1,282 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) ford of Upmeads Water near the High House",
+   "aliases": [
+    "the ford"
+   ],
+   "type": "feature",
+   "subtype": "ford",
+   "unnamed": true,
+   "summary": "Ford by which Ralph leads his parents round to avoid the battlefield.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C30-P011",
+     "q": "Ralph led them round by the ford, so that they might not come across the corpses of the robbers"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Prior of the Austin Canons of Wulstead",
+   "aliases": [
+    "the Prior"
+   ],
+   "type": "person",
+   "subtype": "prior",
+   "unnamed": true,
+   "summary": "Old, worthy prelate and an ancient friend of King Peter.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C30-P007",
+     "q": "The Prior also, who was old, and a worthy prelate, and an ancient friend of King Peter"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Prior of the Austin Canons of Wulstead",
+   "rel": "other",
+   "b": "King Peter",
+   "detail": "ancient friend",
+   "when": "BFOUR-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P007",
+     "q": "an ancient friend of King Peter"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "other",
+   "b": "Wulstead",
+   "detail": "promises to keep its peace",
+   "when": "BFOUR-C30",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P003",
+     "q": "I will see to it in time to come that ye live in peace and quiet here"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) house of Richard the Red",
+   "rel": "distance_from",
+   "b": "High House of Upmeads",
+   "direction": "",
+   "distance_text": "half a mile",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P015",
+     "q": "Richard's house, which was but a half-mile thence"
+    }
+   ]
+  },
+  {
+   "a": "Wulstead",
+   "rel": "distance_from",
+   "b": "Upmeads",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "from early afternoon to two hours before sunset with old riders pressing fast",
+   "travel_mode": "horse",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Short was the road",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P010",
+     "q": "they came into the plain field of Upmeads two hours before sunset"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "(unnamed) Bridge of the High House",
+   "to": "Wulstead",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "short",
+   "start_time_text": "an hour before noon",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C30",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P002",
+     "q": "Short was the road back again to Wulstead"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Ralph",
+    "King Peter",
+    "(unnamed) Queen of Upmeads"
+   ],
+   "from": "Wulstead",
+   "to": "High House of Upmeads",
+   "via": [
+    "(unnamed) ford of Upmeads Water near the High House"
+   ],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "two hours before sunset",
+   "terrain_text": "",
+   "chapter": "BFOUR-C30",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P011",
+     "q": "Ralph led them round by the ford"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Dame Katherine",
+   "statement": "Katherine says she looked for no other tidings and foresees that the days will find deeds and perils for Ralph.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Dame Katherine",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P002",
+     "q": "the days will presently find deeds for thee, and thou wilt be riding into peril, and coming safe from out of it"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Upmeads",
+   "statement": "The Upmeads carles dig trenches to bury the slain robbers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P011",
+     "q": "already were the Upmeads carles at work digging trenches wherein to bury them"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "King Peter",
+   "statement": "King Peter remarks that his day is done as Ralph grows masterful.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:King Peter",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P009",
+     "q": "my day is done, my dear"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Upmeads",
+   "statement": "The Upmeads folk take most of the host into their houses, which the host has saved from fire and sword.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P017",
+     "q": "the Upmeads carles and queans had taken the more part of the host to their houses"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Return of King Peter to Upmeads",
+   "chapter": "BFOUR-C30",
+   "layer": "main",
+   "time_text": "afternoon",
+   "participants": [
+    "Ralph",
+    "King Peter",
+    "(unnamed) Queen of Upmeads",
+    "Nicholas Longshanks"
+   ],
+   "places": [
+    "High House of Upmeads"
+   ],
+   "summary": "Ralph brings his parents home to the High House.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C30-P012",
+     "q": "So Ralph led his father and his mother to the gate of the garth of High House"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Post-battle world state: burial trenches and battlefield remnants as persistent map features.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C30-P011",
+     "q": "digging trenches wherein to bury them"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C30",
+ "chapters": [
+  "BFOUR-C30"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C30",
+   "paragraphs_total": 16,
+   "all_paragraphs_read": true,
+   "summary": "Ralph rides back to Wulstead. Katherine, tearful with bittersweet love, promises to come to Upmeads and foresees more perils and deeds for him. At the Priory gate Ralph promises the townsfolk peace. King Peter and the Dame are ready to leave; the old Prior, Peter's ancient friend, blesses Ralph and asks to hear his tale; Ralph offers him the High House to stay in. Peter remarks that his day is done. They reach the plain field of Upmeads two hours before sunset, going round by the ford to avoid the corpses, which the Upmeads carles are already burying in trenches. At the garth gate Ralph sends his parents in to the high-seat and rides half a mile to Richard's house to fetch Ursula. Nicholas welcomes the old couple; Upmeads folk lodge much of the host in their homes.",
+   "geography_notes": "Wulstead to Upmeads is a short road, ridden from early afternoon to two hours before sunset. There is a ford at Upmeads, an alternative to the bridge. Richard's house is half a mile from the High House garth gate.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

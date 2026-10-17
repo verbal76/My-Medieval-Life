@@ -1,0 +1,519 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Bridge of the High House",
+   "aliases": [
+    "the Bridge"
+   ],
+   "type": "building",
+   "subtype": "bridge",
+   "unnamed": true,
+   "summary": "Wide, well-built stone bridge over Upmeads Water at its nearest point to the High House.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C29-P026",
+     "q": "at this nighest point was there a wide bridge well builded of stone"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) little hill above Upmeads",
+   "aliases": [
+    "the hill"
+   ],
+   "type": "feature",
+   "subtype": "hill",
+   "unnamed": true,
+   "summary": "Low hill on the Wulstead side whose brow looks down into the Upmeads meadows; battle ground.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C29-P007",
+     "q": "the brow of the little hill whence they would look down into the fair meads"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) ancient thorn of the Upmeads meadow",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "landmark tree",
+   "unnamed": true,
+   "summary": "Ancient thorn on a mound in the meadow where Ralph sits after battle.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C29-P033",
+     "q": "he was sitting on a mound amidst of the meadow under an ancient thorn"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Burger herald in white steel",
+   "aliases": [],
+   "type": "person",
+   "subtype": "herald",
+   "unnamed": true,
+   "summary": "Grim, sallow Burger in white steel who challenges Ralph's host.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C29-P020",
+     "q": "the foremost of them was clad in white steel from head to foot, so that he looked like a steel image"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) house of Richard the Red",
+   "aliases": [
+    "Richard's house"
+   ],
+   "type": "building",
+   "subtype": "house",
+   "unnamed": true,
+   "summary": "Richard's house near the water on the Wulstead side, about half a mile from the High House.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C29-P039",
+     "q": "she abode his coming back at Richard's house anigh the water"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "at_war_with",
+   "b": "(unnamed) expelled Burgers",
+   "detail": "Battle of Upmeads",
+   "when": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P030",
+     "q": "Home now!  Home to Upmeads!"
+    }
+   ]
+  },
+  {
+   "a": "Hugh",
+   "rel": "member_of",
+   "b": "Fellowship of the Dry Tree",
+   "detail": "rides with the Champions in battle",
+   "when": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P002",
+     "q": "had fallen into the company of the Champions"
+    }
+   ]
+  },
+  {
+   "a": "Wulstead",
+   "rel": "allied_with",
+   "b": "Ralph",
+   "detail": "men of Wulstead march with him",
+   "when": "BFOUR-C29",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P002",
+     "q": "what with the men of the town"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Upmeads Water",
+   "rel": "between",
+   "b": "(unnamed) little hill above Upmeads",
+   "direction": "through the meadows between the hill and the High House",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "runs between the hill and the High House",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P026",
+     "q": "Upmeads-water ran through the meadows betwixt the hill and the High House"
+    }
+   ]
+  },
+  {
+   "a": "Upmeads Water",
+   "rel": "near",
+   "b": "High House of Upmeads",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "one reach bends wellnigh a quarter circle about the House, then runs east down the meadows",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P026",
+     "q": "made wellnigh a quarter of a circle about it before it turned to run down the meadows to the eastward"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Bridge of the High House",
+   "rel": "crosses",
+   "b": "Upmeads Water",
+   "direction": "at the nearest point to the High House",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P026",
+     "q": "at this nighest point was there a wide bridge well builded of stone"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) little hill above Upmeads",
+   "rel": "distance_from",
+   "b": "Wulstead",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "from before dawn to a little after sunrise on foot",
+   "travel_mode": "",
+   "terrain_text": "all downhill over fields",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P007",
+     "q": "it was but a little after sunrise when they were wending toward the brow of the little hill"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) house of Richard the Red",
+   "rel": "near",
+   "b": "Upmeads Water",
+   "direction": "this side the water",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "about half a mile from the High House (BFOUR-C30)",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P038",
+     "q": "a pleasant abode this side the water"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph's host"
+   ],
+   "from": "Wulstead",
+   "to": "(unnamed) little hill above Upmeads",
+   "via": [],
+   "mode": "foot, Dry Tree horsed",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "before light",
+   "end_time_text": "a little after sunrise",
+   "terrain_text": "downhill over fields",
+   "chapter": "BFOUR-C29",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P005",
+     "q": "It is all down hill to Upmeads"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "(unnamed) expelled Burgers (prisoners)"
+   ],
+   "from": "Upmeads",
+   "to": "Wood Debateable",
+   "via": [],
+   "mode": "foot, stripped and driven by Dry Tree riders",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C29",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P036",
+     "q": "let a score of thy riders drive them back the way they came into the Debateable Wood"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "Ralph's host at Wulstead is 1,083 men: his company, Wulstead's men, and Upmeads refugees, mostly old men and lads.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P002",
+     "q": "they were a thousand and four score and three"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "Ralph fights afoot without armour save a sallet, bearing the guisarme, so as to be seen from afar.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P003",
+     "q": "for the sun to shine on, so that I may be seen from far"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "Ralph's council chooses to await the attack on the hillside, keeping the slope against the enemy; the Dry Tree stay horsed to pursue.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P015",
+     "q": "Thou biddest us wisdom of war; let them have the hill against them"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) expelled Burgers",
+   "statement": "The Burgers come in two battles: riders against the Dry Tree, and a great foot battle with horse in its rear against the Shepherds.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P027",
+     "q": "they came in two battles straight across the meadow"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Ralph",
+   "statement": "When Ralph stands on the mound and cries \"Home to Upmeads\", every foe who looks on him throws down his weapons and flees in terror.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P031",
+     "q": "Then befell a marvel"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "Losses: no Shepherd or footman slain, about five hurt; the Dry Tree lose three slain and about fifteen hurt, Hugh among them but not badly.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Nicholas Longshanks",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P039",
+     "q": "of thy Shepherds and the other footmen is not one slain, and but some five hurt"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "About two hundred Burger prisoners are stripped and driven into the Wood Debateable; Ralph vows to clear the wood of strong-thieves.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P036",
+     "q": "or long I shall clear the said wood of all strong-thieves"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "High House of Upmeads",
+   "statement": "The High House flies the banner of the fruited tree from its topmost tower.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P008",
+     "q": "the banner of the fruited tree hanging forth from the topmost tower thereof"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Ralph",
+   "statement": "Ralph says the ghosts of robbers by night are better than thralls, scourged women and ruined children by day.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P033",
+     "q": "Better the ghosts of robbers in our fields by night, than the over-burdened hapless thrall by day"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Battle of Upmeads",
+   "chapter": "BFOUR-C29",
+   "layer": "main",
+   "time_text": "morning, done an hour before noon",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Stephen a-Hurst",
+    "Giles",
+    "Clement Chapman",
+    "Nicholas Longshanks",
+    "Hugh",
+    "(unnamed) expelled Burgers"
+   ],
+   "places": [
+    "(unnamed) little hill above Upmeads"
+   ],
+   "summary": "Ralph's host breaks the Burgers on the hill above Upmeads; Nicholas holds the Bridge.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P032",
+     "q": "great and grim was the murder"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Ralph's guess that the Burgers had a spy in Wulstead is unconfirmed.",
+   "refs": [
+    {
+     "p": "BFOUR-C29-P013",
+     "q": "having had belike some spy in Wulstead"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Morale-break by presence: reputation and visibility affecting enemy morale (Ralph's rout is supernatural in Morris; in-game morale is GAME EXPANSION).",
+   "system": "systems",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C29-P031",
+     "q": "all they who beheld him cast down their weapons and fled wildly down the hill"
+    }
+   ]
+  },
+  {
+   "idea": "Upmeads home valley: river loop around the High House, stone bridge, meadows, hill to Wulstead (CANON, constrained layout).",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C29-P026",
+     "q": "one reach of it went nigh to the House, and made wellnigh a quarter of a circle about it"
+    }
+   ]
+  },
+  {
+   "idea": "Prisoner handling choices (strip and release, ransom, kill) with consequences.",
+   "system": "systems",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C29-P036",
+     "q": "strip them of all armour and weapons"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C29",
+ "chapters": [
+  "BFOUR-C29"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C29",
+   "paragraphs_total": 38,
+   "all_paragraphs_read": true,
+   "summary": "Before dawn the host musters in Wulstead's market-place: 1,083 men, made up of Ralph's company, Wulstead's men and the Upmeads refugees (mostly old men and lads). Ursula rides armed with a hauberk and sallet, guarded by the armed Sage. Hugh joins the Champions. Ralph goes afoot with the gold-lettered guisarme and takes off all armour but his sallet. They march downhill to the brow of the little hill above Upmeads soon after sunrise. The meadows are black with Burgers; the High House stands unburned under the fruited-tree banner. Ralph's council chooses to await the attack on the hillside, and the Dry Tree stay horsed to pursue. A white-steeled Burger herald demands the Upmeads \"thralls\"; Ralph refuses. The High House men hold the stone Bridge. The Burgers attack in two battles. The Dry Tree charge the riders and are swallowed. Ralph strides onto a little mound, raises the guisarme and cries \"Home now! Home to Upmeads!\"; the Burgers who see him throw down their weapons and flee in terror. The Shepherds cut them down. Ralph and Clement relieve the Champions; the Burger horse flee to the Bridge into arrows and Nicholas's men. About two hundred prisoners are stripped and driven back into the Wood Debateable. Ralph's side loses three Dry Tree champions killed and about twenty hurt, Hugh slightly; no Shepherd is slain. Ursula is shaken; Ralph weeps after battle. Ursula waits at Richard's house by the water.",
+   "geography_notes": "Wulstead to Upmeads is all downhill, over familiar fields, to the brow of a low little hill above the Upmeads meadows. Upmeads Water runs through the meadows between the hill and the High House. One reach comes near the House and bends nearly a quarter-circle about it before running east down the meadows. At the nearest point is a wide, well-built stone Bridge. The meadows have deep river pools, a mound under an ancient thorn, and a little mound on the hillside. Richard's house is on this side of the water.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

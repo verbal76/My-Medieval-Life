@@ -1,0 +1,30 @@
+@ BFOUR-C31
+summary: At Richard's house Ursula, dressed in Goldburg web, gives Ralph a garland she made. They ride a white palfrey and his horse across the meadow, over the bridge and through the orchard into the empty base-court, to the great hall doors. The hall is thirty fathoms long and full of Shepherds, Champions, Wulstead men and Upmeads folk. At the dais King Peter sets Ralph in the throne with Ursula beside him, and the folk hail the King of Upmeads. After supper the great cup called the River of Upmeads is brought to Peter. He proclaims Ralph King and Ursula Queen, and foresees Ralph bringing peace to other lands and towns. Within three days mass will be sung in St. Laurence and Ralph will swear the king's oaths, then the vassals will swear to him. Peter kneels and swears service at once. The old couple lead them to the solar, the kingly chamber, and bless them for offspring.
+geo: From Richard's house the way runs across the meadow to the bridge-end, over the bridge, through the orchard to the base-court and the great hall doors; the hall's great door faces the bridge. The hall is thirty fathoms long, with a shot-window at the far end lit by the low sun, and a dais with thrones. The solar is the kingly chamber.
+open: none
+
+E item | River of Upmeads | the River | cup | Great cup of the High House, brought last to the king for proclamations. | P013 `the great cup called the River of Upmeads was brought in`
+E building | (unnamed) hall of the High House | the hall | hall | Long hall, thirty fathoms long, with a dais, thrones and a shot-window at the end; its great door faces the bridge. | P011 `it was thirty fathom of length`
+E building | (unnamed) solar of the High House | the kingly chamber, master-chamber | chamber | Kingly bedchamber of the High House with hangings and a glorious bed. | P016 `the chamber of the solar, the kingly chamber`
+E custom | (unnamed) king's oath of Upmeads | - | coronation oath | The king swears on the gospels in St. Laurence to guard his people, help the needy and oppress no man; then the vassals swear fealty. | P013 `to guard his people, and help the needy, and oppress no man`
+E item | (unnamed) banner of Upmeads | banner of the fruited tree, banner of the Fruitful Tree | banner | Banner of Upmeads held behind the throne by an armed knight. | P011 `a knight all armed in bright armour holding the banner of Upmeads`
+
+R Ralph | ruler_of | Upmeads | proclaimed King by Peter | BFOUR-C31 | CANON/high | P013 `this man is the King of Upmeads, and this woman is his Lady and Queen`
+R Ursula | ruler_of | Upmeads | Queen | BFOUR-C31 | CANON/high | P013 `this woman is his Lady and Queen`
+R King Peter | serves | Ralph | kneels and swears service | BFOUR-C31 | CANON/high | P015 `took Ralph's hand in his and swore service to him such as was due`
+
+S (unnamed) hall of the High House | within | High House of Upmeads | dir=great doors face the way from the bridge, through orchard and base-court; cert=fixed | CANON/high | - | P008 `because that way lies the great door of the hall`
+S High House of Upmeads | near | (unnamed) Bridge of the High House | terrain=bridge, then orchard, then base-court; cert=fixed | CANON/high | - | P009 `Then they rode over the bridge and through the orchard`
+
+T Ralph, Ursula | (unnamed) house of Richard the Red | High House of Upmeads | via=(unnamed) Bridge of the High House, orchard, base-court; mode=horse; end=sunset | P009 `Came they then to the bridge-end`
+
+F custom | High House of Upmeads | The great cup, the River of Upmeads, is brought last to the king for his proclamation. | CANON/high | P013 `the cupbearers, being so bidden before, brought it last of all to King Peter`
+F politics | Upmeads | A king of Upmeads swears oaths in St. Laurence's choir before mass; the vassals then swear by ancient custom. | CANON/high; ctx=dialogue:King Peter | P014 `then shall the vassals swear to him according to ancient custom`
+F politics | Upmeads | King Peter abdicates for Ralph as the meetest of the kindred, not for love alone. | CANON/high; ctx=dialogue:King Peter | P013 `of all the kindred he is meetest to sit therein so long as he liveth`
+F economy | Ursula | Ursula wears gear of the web (cloth) of Goldburg. | CANON/high | P002 `clad in the daintiest of her woman's gear of the web of Goldburg`
+
+V main | Crowning feast at the High House | Ralph is set on the throne and proclaimed King of Upmeads, Ursula Queen. | time=sunset into night; who=Ralph, Ursula, King Peter, (unnamed) Queen of Upmeads; where=(unnamed) hall of the High House | P011 `they cried hail to the King of Upmeads`
+V prophecy | Peter's foretelling | Peter foresees Ralph drawing towns, kindreds and lords into peace and might. | who=King Peter, Ralph | P013 `he shall be lord and servant of other lands than Upmeads`
+
+O politics | Succession by merit within the kindred; abdication rites. | P013 `of all the kindred he is meetest to sit therein`
+O world | The High House as the player's home seat is NOT canon for the player: Ralph is king. Use it as a key NPC seat; the player is not the chosen one. | P013 `this man is the King of Upmeads`
