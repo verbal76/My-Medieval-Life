@@ -1,0 +1,386 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) postern between the East and South Gates",
+   "aliases": [],
+   "type": "building",
+   "subtype": "postern",
+   "unnamed": true,
+   "summary": "Postern in the Burg wall by a square tower, where the ditch is narrow.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C15-P005",
+     "q": "a postern in the wall betwixt the East Gate and the South"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) grange outside the Burg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "grange",
+   "unnamed": true,
+   "summary": "Grange with a barn, sheep-cote and seven defenders, in hedged meadows outside the wall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C15-P007",
+     "q": "he saw the other roofs of the grange and heard the bleating of sheep"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) white-armoured company of the Dry Tree",
+   "aliases": [],
+   "type": "group",
+   "subtype": "war band",
+   "unnamed": true,
+   "summary": "More than a score men in white armour and white gaberdines, with no banner, and spare horses.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C15-P018",
+     "q": "more than a score of men well armed, but without any banner or token, and all in white armour with white Gaberdines thereover"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) slender youth",
+   "aliases": [],
+   "type": "person",
+   "subtype": "unknown",
+   "unnamed": true,
+   "summary": "Small slender companion of the big man; cloaked, slouch-hatted; held apart; all do him reverence.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C15-P019",
+     "q": "all seemed to do him reverence"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) red roan war-horse",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "horse",
+   "unnamed": true,
+   "summary": "Strong red roan horse given to Ralph by the Dry Tree company.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C15-P024",
+     "q": "here is a good horse that we will give thee"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) man of the leafless tree",
+   "rel": "member_of",
+   "b": "Fellowship of the Dry Tree",
+   "detail": "Ralph is sure the company are Dry Tree men",
+   "when": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C15-P026",
+     "q": "he scarce needed to be told that these were men of the Dry Tree"
+    }
+   ]
+  },
+  {
+   "a": "Roger of the Rope-walk",
+   "rel": "member_of",
+   "b": "Fellowship of the Dry Tree",
+   "detail": "Ralph judges Roger is theirs; watchword \"rope-twiner\"",
+   "when": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C15-P006",
+     "q": "Nay, rope-twiner"
+    },
+    {
+     "p": "BONE-C15-P027",
+     "q": "though to me he seemeth to be yours"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) man of the leafless tree",
+   "rel": "leader_of",
+   "b": "(unnamed) white-armoured company of the Dry Tree",
+   "detail": "-",
+   "when": "BONE-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BONE-C15-P021",
+     "q": "Then stood forth the big man and said"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) postern between the East and South Gates",
+   "rel": "between",
+   "b": "(unnamed) East Gate of the Burg",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "between East and South Gates",
+   "refs": [
+    {
+     "p": "BONE-C15-P005",
+     "q": "a postern in the wall betwixt the East Gate and the South"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) grange outside the Burg",
+   "rel": "adjacent_to",
+   "b": "Burg of the Four Friths",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "hedged meadows below a wooded slope",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "beyond a little wood outside the wall",
+   "refs": [
+    {
+     "p": "BONE-C15-P006",
+     "q": "a space of meadows with high hedges about them, and a dim line that he took for the roof of a barn or grange"
+    }
+   ]
+  },
+  {
+   "a": "Wood Perilous",
+   "rel": "south_of",
+   "b": "Burg of the Four Friths",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "Ralph's judgement",
+   "refs": [
+    {
+     "p": "BONE-C15-P013",
+     "q": "that side of the Wood Perilous that lay south of the Burg of the Four Friths"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "(unnamed) man of the leafless tree",
+    "(unnamed) slender youth"
+   ],
+   "from": "Flower de Luce",
+   "to": "(unnamed) wood-lawn south of the Burg",
+   "via": [
+    "(unnamed) postern between the East and South Gates",
+    "(unnamed) grange outside the Burg"
+   ],
+   "mode": "foot",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "two and a half hours after midnight",
+   "end_time_text": "dawn",
+   "terrain_text": "",
+   "chapter": "BONE-C15",
+   "refs": [
+    {
+     "p": "BONE-C15-P004",
+     "q": "two hours and a half after midnight"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Burg of the Four Friths",
+   "statement": "Warders on the walls challenge and call the hours; the belfry chimes.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C15-P004",
+     "q": "he heard the challenge of the warders on the walls and their crying of the hour"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) man of the leafless tree",
+   "statement": "He shoots two arrows in quick succession, each felling a man.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C15-P009",
+     "q": "a man was before each of the shafts, and had fallen to earth"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Watchword exchange: \"Is the rope twined?\" answered \"Nay, rope-twiner.\"",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C15-P006",
+     "q": "Is the rope twined?"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Burg of the Four Friths",
+   "statement": "A few trees grow in this one place around the Burg's circuit.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C15-P006",
+     "q": "for here, if nowhere about the circuit of the Burg, were a few trees growing"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Escape from the Burg",
+   "chapter": "BONE-C15",
+   "layer": "main",
+   "time_text": "before dawn",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "(unnamed) man of the leafless tree",
+    "(unnamed) slender youth"
+   ],
+   "places": [
+    "Burg of the Four Friths"
+   ],
+   "summary": "Roger and Dry Tree men take Ralph out by a postern before dawn; Falcon is lost; the big man cries \"The third time!\"",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C15-P009",
+     "q": "The third time!"
+    }
+   ]
+  },
+  {
+   "label": "Rescue of the Dry Tree prisoners",
+   "chapter": "BONE-C15",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Fellowship of the Dry Tree"
+   ],
+   "places": [
+    "Wood Perilous"
+   ],
+   "summary": "The four captured woodmen are freed and rejoin their company in the wood.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C15-P020",
+     "q": "here be all we four well met again"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who is the slender youth to whom all show reverence?",
+   "refs": [
+    {
+     "p": "BONE-C15-P019",
+     "q": "no man embraced that slender youth"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "\"All we four\" supports the four prisoners of BONE-C12 against the five of BONE-C8.",
+   "refs": [
+    {
+     "p": "BONE-C15-P020",
+     "q": "here be all we four well met again"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A recurring mysterious figure who counts each meeting with the player.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BONE-C15-P028",
+     "q": "that will make the fourth time"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C15",
+ "chapters": [
+  "BONE-C15"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C15",
+   "paragraphs_total": 27,
+   "all_paragraphs_read": true,
+   "summary": "Before dawn Roger wakes Ralph and leads him out of the Burg through a postern between the East and South Gates, where friends have killed the guards; they cross the ditch on a plank, Falcon left behind. The party (the big man, a slender youth and others) are spotted at a grange; the big man shoots two pursuers and cries \"The third time!\" In the wood south of the Burg they meet more than a score men in white armour and white gaberdines; the rescued prisoners rejoin them. The slender youth is deferred to by all. Ralph chooses to leave with Roger alone and is given a horse; the big man says that will make \"the fourth time\".",
+   "geography_notes": "A postern lies in the wall between the East Gate and the South Gate, by a square tower, where the ditch is deep but narrow. Outside: plain fields with a few trees (only here around the Burg), a little wood, hedged meadows, a grange with a barn and sheep-cote, and a wooded slope above it. Beyond lies the thicket that Ralph takes to be part of the Wood Perilous south of the Burg.",
+   "open_questions": [
+    "Who is the slender youth all men reverence?",
+    "Is the big man's \"time\" count meaningful (first, second, third, fourth)?"
+   ]
+  }
+ ]
+}

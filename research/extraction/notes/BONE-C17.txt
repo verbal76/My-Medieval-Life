@@ -1,0 +1,37 @@
+@ BONE-C17
+summary: Ralph and Roger ride through stony land to a ridge overlooking a wide, empty, grassy valley with a wide river. They swim it rather than use the usual ford downstream, see armed riders spurring toward the water, and gallop over empty downland that Roger says was laid waste by war, ill hap and sorcery. Through an evil-named wood by moonlight they reach at dawn a plain with meadows, tillage and a little river, and a white castle on a green mound, the house from which folk have sought the Well. A gaunt old woman alone serves them and puts Ralph to bed as master.
+geo: Sequence: stony land without rivers but with pools and brooks; a fairly high ridge; a wide well-grassed valley, nearly treeless and uninhabited, with a wide deep slow river (usual ford a mile and a half downstream, the common crossing into the wildwood); a steep hill; empty grassy downland; a wood of evil name ridden all night; an open plain of meadows and fields with a little river and a white castle on a green mound, reached by a ford.
+open: What war and sorcery wasted the empty downland? || Who are the riders seen spurring to the river?
+
+E feature | (unnamed) wide river of the empty valley | - | river | Wide river, deep but not swift, down a grassy treeless valley; usual ford a mile and a half downstream. | P002 `a wide river ran down the midst of it`; P003 `which was deep, but not swift`
+E feature | (unnamed) ford of the wide river | - | ford | Common crossing into the wildwood, a mile and a half downstream; where foes are likely. | P002 `there is a ford some mile and a half down stream`
+E feature | (unnamed) wasted downland | - | downland | Grassy downland without house, herd or shepherd, wasted by war and sorcery. | P005 `seen neither house nor herd, neither sheep-cote nor shepherd`
+E feature | (unnamed) evil-named wood before the House of Abundance | - | forest | A wood few ride willingly; safe for that reason. | P006 `this wood, like the thickets about the Burg of the Four Friths, hath an evil name`
+E building | House of Abundance | the castle | castle | White, strong, very fair and old castle on a green mound among meadows, with a horn at the gate; folk have sought the Well from there. | P012 `on a green mound, was a white castle, strong, and well built, though not of the biggest`; P008 `For thence have folk sought ere now to the WELL AT THE WORLD'S END`
+E person | (unnamed) carline of the House of Abundance | the old woman | servant | Tall, gaunt, grey old woman who alone keeps gate, stable and table; seems to want to speak to Ralph. | P013 `a tall old woman, gaunt and grey, who greeted them courteously`
+E building | St. Laurence of Upmeads | - | church | Church in Upmeads with the painted tomb of Ralph's grandfather in the choir. | P018 `the painted tomb in the choir of St. Laurence of Upmeads`
+E person | (unnamed) father of King Peter | Ralph's father's father | king | Buried in a painted tomb at St. Laurence of Upmeads. | P018 `the image of his father's father on the painted tomb`
+
+R (unnamed) father of King Peter | parent_of | King Peter | - | backstory | INF/high | P018 `the image of his father's father`
+
+S (unnamed) wide river of the empty valley | route_next | (unnamed) stony waste of low hills | terrain=over a fairly high ridge into a wide grassy valley; cert=constrained | CANON/high | - | P002 `on the further side whereof was a wide valley well-grassed and with few trees`
+S (unnamed) ford of the wide river | downstream_of | (unnamed) crossing point of Ralph and Roger | dist=some mile and a half; ctx=dialogue:Roger of the Rope-walk; cert=fixed | CANON/high | - | P002 `there is a ford some mile and a half down stream`
+S (unnamed) wasted downland | route_next | (unnamed) wide river of the empty valley | terrain=steep hill then grassy downland; cert=constrained | CANON/high | - | P005 `They rode up hill and down dale of a grassy downland`
+S (unnamed) evil-named wood before the House of Abundance | route_next | (unnamed) wasted downland | cert=constrained | CANON/high | - | P005 `at last they saw a wood before them again`
+S House of Abundance | beyond | (unnamed) evil-named wood before the House of Abundance | terrain=open plain of meadows and tilled fields with a little river; cert=fixed | CANON/high | amid the wood; on a green mound | P008 `amidst of this wood is the house where we shall have guesting to-night`; P012 `they came out of the close wood suddenly into an open plain`
+
+T Ralph, Roger of the Rope-walk | (unnamed) stony waste of low hills | House of Abundance | via=(unnamed) wide river of the empty valley, (unnamed) wasted downland, (unnamed) evil-named wood before the House of Abundance; mode=horse, swimming the river; start=afternoon (river at four hours after noon); end=dawn next day; terrain=stony land, valley, downland, wood, plain | P002 `it was now four hours after noon`; P012 `as the twilight of the dawn was passing into early day`
+
+F history | (unnamed) wasted downland | Roger says the land is empty because of war and wasting, ill hap, fate and great sorcery. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P006 `Ill hap and sorrow and the Hand of Fate and great Sorcery`
+F magic | Well at the World's End | Roger has heard that those all women love are likeliest to find the Well. | CANON/medium; ctx=dialogue:Roger of the Rope-walk | P009 `Yet have I heard that they be the likeliest with whom all women are in love`
+F ecology | (unnamed) stony waste of low hills | The stony land has no river, only pools in the bottoms with little brooks. | CANON/high | P002 `wherein was no river, but for water many pools in the bottoms`
+F household | House of Abundance | No guards or porter; the old woman alone answers the gate horn, stables horses and serves the table. | CANON/high | P013 `There was no serving-man to wait on them nor a carle of any kind did they see`
+F society | House of Abundance | Ralph is lodged as master and Roger as man. | CANON/high; ctx=dialogue:carline | P017 `lodging for the master and lodging for the man are two different things`
+
+V main | Arrival at the House of Abundance | After a night ride Ralph and Roger reach the white castle at dawn and are served by an old woman. | time=dawn; who=Ralph, Roger of the Rope-walk, (unnamed) carline of the House of Abundance; where=House of Abundance | P013 `Now we are come home`
+
+U ambiguity | What war and sorcery emptied the downland. | P006 `A story of war and wasting`
+U identity | Who the armed riders spurring toward the river were. | P003 `I see the riding of folk down below there, and meseems they be spurring toward the water`
+
+O world | Depopulated lands (wasted by old war or sorcery) as generator zones with ruins and no settlements. | P005 `seen neither house nor herd, neither sheep-cote nor shepherd`
+O world | Known fords as chokepoints where travellers are likely questioned. | P002 `for that same reason it is the way whereby men mostly cross the water into the wildwood`

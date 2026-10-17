@@ -1,0 +1,195 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Roger's grey horse",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "horse",
+   "unnamed": true,
+   "summary": "Roger's good grey horse.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C16-P002",
+     "q": "he himself had a good grey horse"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Roger's master",
+   "aliases": [],
+   "type": "person",
+   "subtype": "lord",
+   "unnamed": true,
+   "summary": "Master of a noble house where Ralph will be safe and at ease.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C16-P010",
+     "q": "a noble house of a master of mine"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Roger of the Rope-walk",
+   "rel": "serves",
+   "b": "(unnamed) Roger's master",
+   "detail": "-",
+   "when": "BONE-C16",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C16-P010",
+     "q": "a noble house of a master of mine"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) stony waste of low hills",
+   "rel": "route_next",
+   "b": "Wood Perilous",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "four hours or more of riding from the parting place",
+   "travel_mode": "",
+   "terrain_text": "little low stony hills with thorn bushes",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C16-P009",
+     "q": "Four hours or more gone, the wood thinned and the beeches failed, and they came to a country, still waste, of little low hills"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Roger of the Rope-walk"
+   ],
+   "from": "(unnamed) wood-lawn south of the Burg",
+   "to": "(unnamed) stony waste of low hills",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "four hours or more",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "beech wood clear of underwood",
+   "chapter": "BONE-C16",
+   "refs": [
+    {
+     "p": "BONE-C16-P008",
+     "q": "the wood thereabouts of beech and clear of underwood"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "(unnamed) stony waste of low hills",
+   "statement": "Stony low hills with scraggy thorns and berry trees sown by birds; little grazing.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C16-P009",
+     "q": "beset with scraggy thorn-bushes, and here and there some other berry-tree sown by the birds"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Roger says there are women among the Dry Tree folk and that he has friends and foes among them.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C16-P011",
+     "q": "amongst those men I have friends and amongst them foes"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph accepts Roger's guidance",
+   "chapter": "BONE-C16",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk"
+   ],
+   "places": [
+    "(unnamed) stony waste of low hills"
+   ],
+   "summary": "Ralph agrees to follow Roger to his master's house in hope of seeing the lady.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C16-P015",
+     "q": "I will ride with thee first to that fair house"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Roger's master is not named.",
+   "refs": [
+    {
+     "p": "BONE-C16-P010",
+     "q": "a noble house of a master of mine"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A guide with mixed loyalties whose promises the player must judge.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BONE-C16-P005",
+     "q": "what I have told thee of myself and my griefs is not all mere lying"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C16",
+ "chapters": [
+  "BONE-C16"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C16",
+   "paragraphs_total": 14,
+   "all_paragraphs_read": true,
+   "summary": "Ralph rides with Roger on a red roan war-horse; Roger rides a grey. Ralph accuses Roger of lies; Roger admits some but says another, unnamed, wishes Ralph well because of his two sword-strokes, and Ralph hopes it means the lady. They ride over four hours through beech wood to a stony waste of low hills, rest, and Roger promises a noble house of his master, far away, to be reached before morning.",
+   "geography_notes": "From the wood south of the Burg: beech wood clear of undergrowth for four hours or more, then a waste of little low stony hills with scraggy thorns and bird-sown berry trees and poor grazing.",
+   "open_questions": [
+    "Who is Roger's master who owns the house?"
+   ]
+  }
+ ]
+}

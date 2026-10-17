@@ -1,0 +1,22 @@
+@ BONE-C16
+summary: Ralph rides with Roger on a red roan war-horse; Roger rides a grey. Ralph accuses Roger of lies; Roger admits some but says another, unnamed, wishes Ralph well because of his two sword-strokes, and Ralph hopes it means the lady. They ride over four hours through beech wood to a stony waste of low hills, rest, and Roger promises a noble house of his master, far away, to be reached before morning.
+geo: From the wood south of the Burg: beech wood clear of undergrowth for four hours or more, then a waste of little low stony hills with scraggy thorns and bird-sown berry trees and poor grazing.
+open: Who is Roger's master who owns the house?
+
+E creature | (unnamed) Roger's grey horse | - | horse | Roger's good grey horse. | P002 `he himself had a good grey horse`
+E person | (unnamed) Roger's master | - | lord | Master of a noble house where Ralph will be safe and at ease. | P010 `a noble house of a master of mine`
+
+R Roger of the Rope-walk | serves | (unnamed) Roger's master | - | BONE-C16 | CANON/high | P010 `a noble house of a master of mine`
+
+S (unnamed) stony waste of low hills | route_next | Wood Perilous | time=four hours or more of riding from the parting place; terrain=little low stony hills with thorn bushes; cert=constrained | CANON/high | - | P009 `Four hours or more gone, the wood thinned and the beeches failed, and they came to a country, still waste, of little low hills`
+
+T Ralph, Roger of the Rope-walk | (unnamed) wood-lawn south of the Burg | (unnamed) stony waste of low hills | mode=horse; dur=four hours or more; terrain=beech wood clear of underwood | P008 `the wood thereabouts of beech and clear of underwood`
+
+F ecology | (unnamed) stony waste of low hills | Stony low hills with scraggy thorns and berry trees sown by birds; little grazing. | CANON/high | P009 `beset with scraggy thorn-bushes, and here and there some other berry-tree sown by the birds`
+F society | Fellowship of the Dry Tree | Roger says there are women among the Dry Tree folk and that he has friends and foes among them. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P011 `amongst those men I have friends and amongst them foes`
+
+V main | Ralph accepts Roger's guidance | Ralph agrees to follow Roger to his master's house in hope of seeing the lady. | who=Ralph, Roger of the Rope-walk; where=(unnamed) stony waste of low hills | P015 `I will ride with thee first to that fair house`
+
+U identity | Roger's master is not named. | P010 `a noble house of a master of mine`
+
+O quests | A guide with mixed loyalties whose promises the player must judge. | P005 `what I have told thee of myself and my griefs is not all mere lying`

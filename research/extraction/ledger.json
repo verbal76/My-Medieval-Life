@@ -366,33 +366,77 @@
    "title": "How Ralph Departed From the Burg of the Four Friths",
    "body_paragraphs": 27,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 3,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 4,
+    "events": 2,
+    "unresolved": 2,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who is the slender youth all men reverence?",
+    "Is the big man's \"time\" count meaningful (first, second, third, fourth)?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C15.txt",
+    "records": "research/extraction/chapters/BONE-C15.json"
+   }
   },
   {
    "chapter": "BONE-C16",
    "title": "Ralph Rideth the Wood Perilous Again",
    "body_paragraphs": 14,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 1,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 2,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who is Roger's master who owns the house?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C16.txt",
+    "records": "research/extraction/chapters/BONE-C16.json"
+   }
   },
   {
    "chapter": "BONE-C17",
    "title": "Ralph Cometh to the House of Abundance",
    "body_paragraphs": 17,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 8,
+    "relations": 1,
+    "spatial": 5,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "What war and sorcery wasted the empty downland?",
+    "Who are the riders seen spurring to the river?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C17.txt",
+    "records": "research/extraction/chapters/BONE-C17.json"
+   }
   },
   {
    "chapter": "BONE-C18",

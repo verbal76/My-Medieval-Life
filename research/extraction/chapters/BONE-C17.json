@@ -1,0 +1,465 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) wide river of the empty valley",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": true,
+   "summary": "Wide river, deep but not swift, down a grassy treeless valley; usual ford a mile and a half downstream.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "a wide river ran down the midst of it"
+    },
+    {
+     "p": "BONE-C17-P003",
+     "q": "which was deep, but not swift"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) ford of the wide river",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "ford",
+   "unnamed": true,
+   "summary": "Common crossing into the wildwood, a mile and a half downstream; where foes are likely.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "there is a ford some mile and a half down stream"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) wasted downland",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "downland",
+   "unnamed": true,
+   "summary": "Grassy downland without house, herd or shepherd, wasted by war and sorcery.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P005",
+     "q": "seen neither house nor herd, neither sheep-cote nor shepherd"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) evil-named wood before the House of Abundance",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": true,
+   "summary": "A wood few ride willingly; safe for that reason.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P006",
+     "q": "this wood, like the thickets about the Burg of the Four Friths, hath an evil name"
+    }
+   ]
+  },
+  {
+   "name": "House of Abundance",
+   "aliases": [
+    "the castle"
+   ],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": false,
+   "summary": "White, strong, very fair and old castle on a green mound among meadows, with a horn at the gate; folk have sought the Well from there.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P012",
+     "q": "on a green mound, was a white castle, strong, and well built, though not of the biggest"
+    },
+    {
+     "p": "BONE-C17-P008",
+     "q": "For thence have folk sought ere now to the WELL AT THE WORLD'S END"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) carline of the House of Abundance",
+   "aliases": [
+    "the old woman"
+   ],
+   "type": "person",
+   "subtype": "servant",
+   "unnamed": true,
+   "summary": "Tall, gaunt, grey old woman who alone keeps gate, stable and table; seems to want to speak to Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P013",
+     "q": "a tall old woman, gaunt and grey, who greeted them courteously"
+    }
+   ]
+  },
+  {
+   "name": "St. Laurence of Upmeads",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": false,
+   "summary": "Church in Upmeads with the painted tomb of Ralph's grandfather in the choir.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P018",
+     "q": "the painted tomb in the choir of St. Laurence of Upmeads"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) father of King Peter",
+   "aliases": [
+    "Ralph's father's father"
+   ],
+   "type": "person",
+   "subtype": "king",
+   "unnamed": true,
+   "summary": "Buried in a painted tomb at St. Laurence of Upmeads.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C17-P018",
+     "q": "the image of his father's father on the painted tomb"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) father of King Peter",
+   "rel": "parent_of",
+   "b": "King Peter",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C17-P018",
+     "q": "the image of his father's father"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) wide river of the empty valley",
+   "rel": "route_next",
+   "b": "(unnamed) stony waste of low hills",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "over a fairly high ridge into a wide grassy valley",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "on the further side whereof was a wide valley well-grassed and with few trees"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) ford of the wide river",
+   "rel": "downstream_of",
+   "b": "(unnamed) crossing point of Ralph and Roger",
+   "direction": "",
+   "distance_text": "some mile and a half",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Roger of the Rope-walk",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "there is a ford some mile and a half down stream"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) wasted downland",
+   "rel": "route_next",
+   "b": "(unnamed) wide river of the empty valley",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "steep hill then grassy downland",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C17-P005",
+     "q": "They rode up hill and down dale of a grassy downland"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) evil-named wood before the House of Abundance",
+   "rel": "route_next",
+   "b": "(unnamed) wasted downland",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C17-P005",
+     "q": "at last they saw a wood before them again"
+    }
+   ]
+  },
+  {
+   "a": "House of Abundance",
+   "rel": "beyond",
+   "b": "(unnamed) evil-named wood before the House of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "open plain of meadows and tilled fields with a little river",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "amid the wood; on a green mound",
+   "refs": [
+    {
+     "p": "BONE-C17-P008",
+     "q": "amidst of this wood is the house where we shall have guesting to-night"
+    },
+    {
+     "p": "BONE-C17-P012",
+     "q": "they came out of the close wood suddenly into an open plain"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Roger of the Rope-walk"
+   ],
+   "from": "(unnamed) stony waste of low hills",
+   "to": "House of Abundance",
+   "via": [
+    "(unnamed) wide river of the empty valley",
+    "(unnamed) wasted downland",
+    "(unnamed) evil-named wood before the House of Abundance"
+   ],
+   "mode": "horse, swimming the river",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "afternoon (river at four hours after noon)",
+   "end_time_text": "dawn next day",
+   "terrain_text": "stony land, valley, downland, wood, plain",
+   "chapter": "BONE-C17",
+   "refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "it was now four hours after noon"
+    },
+    {
+     "p": "BONE-C17-P012",
+     "q": "as the twilight of the dawn was passing into early day"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "(unnamed) wasted downland",
+   "statement": "Roger says the land is empty because of war and wasting, ill hap, fate and great sorcery.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C17-P006",
+     "q": "Ill hap and sorrow and the Hand of Fate and great Sorcery"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Roger has heard that those all women love are likeliest to find the Well.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:Roger of the Rope-walk",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C17-P009",
+     "q": "Yet have I heard that they be the likeliest with whom all women are in love"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) stony waste of low hills",
+   "statement": "The stony land has no river, only pools in the bottoms with little brooks.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "wherein was no river, but for water many pools in the bottoms"
+    }
+   ]
+  },
+  {
+   "category": "household",
+   "subject": "House of Abundance",
+   "statement": "No guards or porter; the old woman alone answers the gate horn, stables horses and serves the table.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C17-P013",
+     "q": "There was no serving-man to wait on them nor a carle of any kind did they see"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "House of Abundance",
+   "statement": "Ralph is lodged as master and Roger as man.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:carline",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C17-P017",
+     "q": "lodging for the master and lodging for the man are two different things"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Arrival at the House of Abundance",
+   "chapter": "BONE-C17",
+   "layer": "main",
+   "time_text": "dawn",
+   "participants": [
+    "Ralph",
+    "Roger of the Rope-walk",
+    "(unnamed) carline of the House of Abundance"
+   ],
+   "places": [
+    "House of Abundance"
+   ],
+   "summary": "After a night ride Ralph and Roger reach the white castle at dawn and are served by an old woman.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C17-P013",
+     "q": "Now we are come home"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "What war and sorcery emptied the downland.",
+   "refs": [
+    {
+     "p": "BONE-C17-P006",
+     "q": "A story of war and wasting"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Who the armed riders spurring toward the river were.",
+   "refs": [
+    {
+     "p": "BONE-C17-P003",
+     "q": "I see the riding of folk down below there, and meseems they be spurring toward the water"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Depopulated lands (wasted by old war or sorcery) as generator zones with ruins and no settlements.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BONE-C17-P005",
+     "q": "seen neither house nor herd, neither sheep-cote nor shepherd"
+    }
+   ]
+  },
+  {
+   "idea": "Known fords as chokepoints where travellers are likely questioned.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BONE-C17-P002",
+     "q": "for that same reason it is the way whereby men mostly cross the water into the wildwood"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C17",
+ "chapters": [
+  "BONE-C17"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C17",
+   "paragraphs_total": 17,
+   "all_paragraphs_read": true,
+   "summary": "Ralph and Roger ride through stony land to a ridge overlooking a wide, empty, grassy valley with a wide river. They swim it rather than use the usual ford downstream, see armed riders spurring toward the water, and gallop over empty downland that Roger says was laid waste by war, ill hap and sorcery. Through an evil-named wood by moonlight they reach at dawn a plain with meadows, tillage and a little river, and a white castle on a green mound, the house from which folk have sought the Well. A gaunt old woman alone serves them and puts Ralph to bed as master.",
+   "geography_notes": "Sequence: stony land without rivers but with pools and brooks; a fairly high ridge; a wide well-grassed valley, nearly treeless and uninhabited, with a wide deep slow river (usual ford a mile and a half downstream, the common crossing into the wildwood); a steep hill; empty grassy downland; a wood of evil name ridden all night; an open plain of meadows and fields with a little river and a white castle on a green mound, reached by a ford.",
+   "open_questions": [
+    "What war and sorcery wasted the empty downland?",
+    "Who are the riders seen spurring to the river?"
+   ]
+  }
+ ]
+}

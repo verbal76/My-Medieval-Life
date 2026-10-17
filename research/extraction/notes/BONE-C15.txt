@@ -1,0 +1,33 @@
+@ BONE-C15
+summary: Before dawn Roger wakes Ralph and leads him out of the Burg through a postern between the East and South Gates, where friends have killed the guards; they cross the ditch on a plank, Falcon left behind. The party (the big man, a slender youth and others) are spotted at a grange; the big man shoots two pursuers and cries "The third time!" In the wood south of the Burg they meet more than a score men in white armour and white gaberdines; the rescued prisoners rejoin them. The slender youth is deferred to by all. Ralph chooses to leave with Roger alone and is given a horse; the big man says that will make "the fourth time".
+geo: A postern lies in the wall between the East Gate and the South Gate, by a square tower, where the ditch is deep but narrow. Outside: plain fields with a few trees (only here around the Burg), a little wood, hedged meadows, a grange with a barn and sheep-cote, and a wooded slope above it. Beyond lies the thicket that Ralph takes to be part of the Wood Perilous south of the Burg.
+open: Who is the slender youth all men reverence? || Is the big man's "time" count meaningful (first, second, third, fourth)?
+
+E building | (unnamed) postern between the East and South Gates | - | postern | Postern in the Burg wall by a square tower, where the ditch is narrow. | P005 `a postern in the wall betwixt the East Gate and the South`
+E building | (unnamed) grange outside the Burg | - | grange | Grange with a barn, sheep-cote and seven defenders, in hedged meadows outside the wall. | P007 `he saw the other roofs of the grange and heard the bleating of sheep`
+E group | (unnamed) white-armoured company of the Dry Tree | - | war band | More than a score men in white armour and white gaberdines, with no banner, and spare horses. | P018 `more than a score of men well armed, but without any banner or token, and all in white armour with white Gaberdines thereover`
+E person | (unnamed) slender youth | - | unknown | Small slender companion of the big man; cloaked, slouch-hatted; held apart; all do him reverence. | P019 `all seemed to do him reverence`
+E creature | (unnamed) red roan war-horse | - | horse | Strong red roan horse given to Ralph by the Dry Tree company. | P024 `here is a good horse that we will give thee`
+
+R (unnamed) man of the leafless tree | member_of | Fellowship of the Dry Tree | Ralph is sure the company are Dry Tree men | BONE-C15 | INF/high | P026 `he scarce needed to be told that these were men of the Dry Tree`
+R Roger of the Rope-walk | member_of | Fellowship of the Dry Tree | Ralph judges Roger is theirs; watchword "rope-twiner" | BONE-C15 | INF/high | P006 `Nay, rope-twiner`; P027 `though to me he seemeth to be yours`
+R (unnamed) man of the leafless tree | leader_of | (unnamed) white-armoured company of the Dry Tree | - | BONE-C15 | INF/medium | P021 `Then stood forth the big man and said`
+
+S (unnamed) postern between the East and South Gates | between | (unnamed) East Gate of the Burg | cert=fixed | CANON/high | between East and South Gates | P005 `a postern in the wall betwixt the East Gate and the South`
+S (unnamed) grange outside the Burg | adjacent_to | Burg of the Four Friths | terrain=hedged meadows below a wooded slope; cert=constrained | CANON/high | beyond a little wood outside the wall | P006 `a space of meadows with high hedges about them, and a dim line that he took for the roof of a barn or grange`
+S Wood Perilous | south_of | Burg of the Four Friths | dir=south; cert=constrained | CANON/medium | Ralph's judgement | P013 `that side of the Wood Perilous that lay south of the Burg of the Four Friths`
+
+T Ralph, Roger of the Rope-walk, (unnamed) man of the leafless tree, (unnamed) slender youth | Flower de Luce | (unnamed) wood-lawn south of the Burg | via=(unnamed) postern between the East and South Gates, (unnamed) grange outside the Burg; mode=foot; start=two and a half hours after midnight; end=dawn | P004 `two hours and a half after midnight`
+
+F military | Burg of the Four Friths | Warders on the walls challenge and call the hours; the belfry chimes. | CANON/high | P004 `he heard the challenge of the warders on the walls and their crying of the hour`
+F military | (unnamed) man of the leafless tree | He shoots two arrows in quick succession, each felling a man. | CANON/high | P009 `a man was before each of the shafts, and had fallen to earth`
+F custom | Fellowship of the Dry Tree | Watchword exchange: "Is the rope twined?" answered "Nay, rope-twiner." | CANON/high | P006 `Is the rope twined?`
+F ecology | Burg of the Four Friths | A few trees grow in this one place around the Burg's circuit. | CANON/high | P006 `for here, if nowhere about the circuit of the Burg, were a few trees growing`
+
+V main | Escape from the Burg | Roger and Dry Tree men take Ralph out by a postern before dawn; Falcon is lost; the big man cries "The third time!" | time=before dawn; who=Ralph, Roger of the Rope-walk, (unnamed) man of the leafless tree, (unnamed) slender youth; where=Burg of the Four Friths | P009 `The third time!`
+V main | Rescue of the Dry Tree prisoners | The four captured woodmen are freed and rejoin their company in the wood. | who=Fellowship of the Dry Tree; where=Wood Perilous | P020 `here be all we four well met again`
+
+U identity | Who is the slender youth to whom all show reverence? | P019 `no man embraced that slender youth`
+U ambiguity | "All we four" supports the four prisoners of BONE-C12 against the five of BONE-C8. | P020 `here be all we four well met again`
+
+O quests | A recurring mysterious figure who counts each meeting with the player. | P028 `that will make the fourth time`
