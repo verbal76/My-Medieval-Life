@@ -1,0 +1,633 @@
+{
+ "entities": [
+  {
+   "name": "Giles",
+   "aliases": [
+    "the carle"
+   ],
+   "type": "person",
+   "subtype": "shepherd",
+   "unnamed": false,
+   "summary": "Old but tough shepherd of the Downs, Martha's old friend, who brings her message and guides Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P013",
+     "q": "But hearken, Giles, hearken a while"
+    }
+   ]
+  },
+  {
+   "name": "Martha",
+   "aliases": [
+    "(unnamed) spaewife near Saint Ann's Chapel"
+   ],
+   "type": "person",
+   "subtype": "spaewife",
+   "unnamed": false,
+   "summary": "Wise woman of Giles's age, living alone near Saint Ann's Chapel, whose foretellings come true.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "There is a woman who dwells alone with none to help her, anigh to Saint Ann's Chapel"
+    }
+   ]
+  },
+  {
+   "name": "Saint Ann's Chapel",
+   "aliases": [],
+   "type": "building",
+   "subtype": "chapel",
+   "unnamed": false,
+   "summary": "Chapel in the Downs near which Martha lives.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "anigh to Saint Ann's Chapel"
+    }
+   ]
+  },
+  {
+   "name": "Mileham",
+   "aliases": [],
+   "type": "place",
+   "subtype": "thorp",
+   "unnamed": false,
+   "summary": "Thorp at the foot of the downs toward Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "it may be at Mileham"
+    }
+   ]
+  },
+  {
+   "name": "Milton",
+   "aliases": [],
+   "type": "place",
+   "subtype": "thorp",
+   "unnamed": false,
+   "summary": "Thorp at the foot of the downs toward Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "it may be at Milton"
+    }
+   ]
+  },
+  {
+   "name": "Foxworth Castle",
+   "aliases": [],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": false,
+   "summary": "Castle held by Burgers in this land.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "either at Foxworth Castle, or the Longford, or the Nineways Garth"
+    }
+   ]
+  },
+  {
+   "name": "the Longford",
+   "aliases": [],
+   "type": "place",
+   "subtype": "stronghold or ford",
+   "unnamed": false,
+   "summary": "Place held by Burgers in this land.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "either at Foxworth Castle, or the Longford, or the Nineways Garth"
+    }
+   ]
+  },
+  {
+   "name": "Nineways Garth",
+   "aliases": [],
+   "type": "building",
+   "subtype": "stronghold",
+   "unnamed": false,
+   "summary": "Place held by Burgers in this land.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "either at Foxworth Castle, or the Longford, or the Nineways Garth"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) rhyme of the Dry Tree and the Well-spring",
+   "aliases": [],
+   "type": "text",
+   "subtype": "prophecy rhyme",
+   "unnamed": true,
+   "summary": "Shepherd rhyme: the Dry Tree shall be green, the Well-spring arise, the two be one, and the Well-spring come from the waste to the home.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P006",
+     "q": "The Dry Tree shall be seen On the green earth"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) kiss of the Downs",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "greeting",
+   "unnamed": true,
+   "summary": "Old shepherd's kiss of a lady, as the custom of the Downs.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C22-P020",
+     "q": "such is our custom of the Downs"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Giles",
+   "rel": "member_of",
+   "b": "shepherds of the Downs",
+   "detail": "shepherd",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "I am of the folk of the shepherds of the Downs"
+    }
+   ]
+  },
+  {
+   "a": "Giles",
+   "rel": "other",
+   "b": "(unnamed) old spearman shepherd",
+   "detail": "probably the same man (met on the Greenway, Thirly)",
+   "when": "BFOUR-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P008",
+     "q": "he had seen him but that once when he rode the Greenway across the downs to Higham"
+    }
+   ]
+  },
+  {
+   "a": "Martha",
+   "rel": "other",
+   "b": "Giles",
+   "detail": "old friend and sweetheart",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "time was we have had many a fair play in the ingles of the downs in the July weather"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "enemy_of",
+   "b": "shepherds of the Downs",
+   "detail": "lifted sheep, slew men, took women",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "they have lifted our sheep, and slain some of us who withstood them"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "owns",
+   "b": "Foxworth Castle",
+   "detail": "Burger stronghold",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "turn not aside to fall on the Burgers in this land, either at Foxworth Castle"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "owns",
+   "b": "Nineways Garth",
+   "detail": "Burger stronghold",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "or the Nineways Garth"
+    }
+   ]
+  },
+  {
+   "a": "Martha",
+   "rel": "other",
+   "b": "Bear-father",
+   "detail": "names Ralph well-beloved of Bear-father",
+   "when": "BFOUR-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "the well-beloved of Bear-father"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Martha",
+   "rel": "near",
+   "b": "Saint Ann's Chapel",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "anigh to Saint Ann's Chapel"
+    }
+   ]
+  },
+  {
+   "a": "Saint Ann's Chapel",
+   "rel": "within",
+   "b": "the Downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "downland, ingles of the downs",
+   "context": "inferred from Giles's account",
+   "certainty": "constrained",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "in the ingles of the downs"
+    }
+   ]
+  },
+  {
+   "a": "Mileham",
+   "rel": "at_foot_of",
+   "b": "the Downs",
+   "direction": "toward Higham",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Martha",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "among the thorps at the feet of the downs",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "go adown to the thorps at the feet of the downs toward Higham"
+    }
+   ]
+  },
+  {
+   "a": "Milton",
+   "rel": "at_foot_of",
+   "b": "the Downs",
+   "direction": "toward Higham",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Martha",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "go adown to the thorps at the feet of the downs toward Higham"
+    }
+   ]
+  },
+  {
+   "a": "Foxworth Castle",
+   "rel": "near",
+   "b": "the Downs",
+   "direction": "in this land, near the thorps at the feet of the downs",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Martha",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "the strong-places of the Burg-devils that are hereabouts",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P017",
+     "q": "the strong-places of the Burg-devils that are hereabouts"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "between",
+   "b": "Wood Debateable",
+   "direction": "marching from the Wood Debateable toward Upmeads",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Giles",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "prophecy",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P015",
+     "q": "drawing thitherward, as I deem from the Wood Debateable"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Giles"
+   ],
+   "from": "Saint Ann's Chapel",
+   "to": "Garton",
+   "via": [],
+   "mode": "foot",
+   "direction_text": "down from the downs to the thorps",
+   "duration_text": "morning to after midnight",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C22",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "To the said woman I sought to-day in the morning"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Martha",
+   "statement": "Martha's foretellings have always come true; she foresees Ralph's road, the mote at Bear Castle and the host at Wulstead.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Giles",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "ever it fell out according to her spaedom"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "shepherds of the Downs",
+   "statement": "An old tale says a helper from afar whose home is near, a stripling and a great man, a runaway and conqueror, will come in their need.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Giles",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "there shall come to our helping one from afar, whose home is anigh"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "shepherds of the Downs",
+   "statement": "The shepherds are few, live in cheap houses, move from hillside to hillside, and every grown man can handle weapons.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Giles",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "whereas our houses be uncostly and that we move about easily from one hill-side to another"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "shepherds of the Downs",
+   "statement": "Tokens on earth and in the heavens have stirred the scattered shepherds to meet in arms.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Giles",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "there have been tokens on earth and in the heavens"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "shepherds of the Downs",
+   "statement": "Four fires at Bear Castle are the shepherds' call for help, as one of them told Ralph.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ralph",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P016",
+     "q": "there I shall give the token of the four fires which erewhile a good man of the Shepherds bade me if I were in need"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Martha's spaedom",
+   "chapter": "BFOUR-C22",
+   "layer": "prophecy",
+   "time_text": "",
+   "participants": [
+    "Martha",
+    "Giles",
+    "Ralph"
+   ],
+   "places": [
+    "Saint Ann's Chapel"
+   ],
+   "summary": "Martha foresees Ralph at Mileham, Milton or Garton, the mote at Bear Castle, friends at Wulstead, and the Burgers dying by the river of Upmeads.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P013",
+     "q": "the Burg-devils will have come from the Wood Debateable to find graves by the fair river"
+    }
+   ]
+  },
+  {
+   "label": "Helper from afar",
+   "chapter": "BFOUR-C22",
+   "layer": "legend",
+   "time_text": "",
+   "participants": [
+    "shepherds of the Downs"
+   ],
+   "places": [],
+   "summary": "The shepherds' tale of a helper from afar whose home is near.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "a stripling and a great man; a runaway, and the conqueror of many"
+    }
+   ]
+  },
+  {
+   "label": "Giles brings the message",
+   "chapter": "BFOUR-C22",
+   "layer": "main",
+   "time_text": "after midnight",
+   "participants": [
+    "Giles",
+    "Ralph",
+    "Ursula",
+    "Roger of the Rope-walk"
+   ],
+   "places": [
+    "Garton"
+   ],
+   "summary": "Giles finds Ralph at Garton after midnight; Ralph plans Bear Castle, Wulstead, Upmeads.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P016",
+     "q": "I shall gather my men, and ride the shortest way, which thou shalt show me, to Bear Castle"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Foxworth Castle, the Longford and the Nineways Garth have no stated positions beyond being Burger strongholds hereabouts.",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P011",
+     "q": "either at Foxworth Castle, or the Longford, or the Nineways Garth"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Giles is probably the old shepherd met on the Greenway (BONE), but the earlier passage gives no name.",
+   "refs": [
+    {
+     "p": "BFOUR-C22-P008",
+     "q": "he had seen him but that once when he rode the Greenway"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Local seers whose prophecies steer quests without making the player a chosen one.",
+   "system": "npc",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C22-P009",
+     "q": "ever it fell out according to her spaedom"
+    }
+   ]
+  },
+  {
+   "idea": "Semi-nomadic armed shepherd clans as a recruitable faction with a beacon signal.",
+   "system": "factions",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C22-P005",
+     "q": "we move about easily from one hill-side to another"
+    }
+   ]
+  },
+  {
+   "idea": "Occupied strongholds (Foxworth Castle, the Longford, Nineways Garth) as GAME EXPANSION liberation sites; placement Flexible.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C22-P017",
+     "q": "the strong-places of the Burg-devils that are hereabouts"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C22",
+ "chapters": [
+  "BFOUR-C22"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C22",
+   "paragraphs_total": 20,
+   "all_paragraphs_read": true,
+   "summary": "After midnight Giles comes to Ralph: an old shepherd of the Downs whom Ralph met on the Greenway (the Thirly drinking). The shepherds have been harried by the Burg-devils, their sheep lifted, some men slain and women taken. Tokens and an old tale of a helper from afar have roused them to arms; Giles repeats a rhyme of the Dry Tree and the Well-spring. The spaewife Martha, who lives alone near Saint Ann's Chapel, sent him to find a young green-coated captain at Mileham, Milton or Garton. Her message: do not turn aside to the Burgers at Foxworth Castle, the Longford or the Nineways Garth; other Burgers are marching from the Wood Debateable on Upmeads. She foresees a mote at Bear Castle and friends at Wulstead. Ralph resolves to ride to Bear Castle, light the four fires, hold the mote, go on to Wulstead and Clement Chapman, then home to Upmeads. Giles kisses Ursula, as is the custom of the Downs.",
+   "geography_notes": "Saint Ann's Chapel is in the Downs. Mileham, Milton and Garton are thorps at the feet of the downs toward Higham. The Burgers hold strongholds hereabouts: Foxworth Castle, the Longford and the Nineways Garth. Another band is marching from the Wood Debateable toward Upmeads. The route is Bear Castle, then Wulstead, then over the hills into Upmeads.",
+   "open_questions": [
+    "Where exactly are Foxworth Castle, the Longford and the Nineways Garth?"
+   ]
+  }
+ ]
+}

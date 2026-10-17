@@ -1,0 +1,567 @@
+{
+ "entities": [
+  {
+   "name": "Hugh",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prince",
+   "unnamed": false,
+   "summary": "Ralph's brother; now a pressed man of Higham who joins Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C21-P008",
+     "q": "they gave me the choice of the gallows-tree or service for the Church"
+    }
+   ]
+  },
+  {
+   "name": "Westland Barons",
+   "aliases": [
+    "the Westlanders"
+   ],
+   "type": "group",
+   "subtype": "baronial league",
+   "unnamed": false,
+   "summary": "Hungry, doughty barons of the West who defeated and captured the Abbot of Higham.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Abbot had debate with the Westland Barons, who both were and are ill men to deal with, being both hungry and doughty"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) field of the Wry Bridge",
+   "aliases": [
+    "the Wry Bridge"
+   ],
+   "type": "place",
+   "subtype": "battlefield",
+   "unnamed": true,
+   "summary": "Battlefield about twenty miles west of Higham where the Abbot's host was overthrown.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "they met some twenty miles to the west in the field of the Wry Bridge"
+    }
+   ]
+  },
+  {
+   "name": "Red Mount",
+   "aliases": [],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": false,
+   "summary": "The Westland Barons' strongest castle, where the Abbot of Higham is held.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "he sits to this day in their strongest castle, the Red Mount west-away"
+    }
+   ]
+  },
+  {
+   "name": "Garton",
+   "aliases": [
+    "(unnamed) thorp under the Down country"
+   ],
+   "type": "place",
+   "subtype": "thorp",
+   "unnamed": false,
+   "summary": "Little unwalled thorp under the first hill of the Downs on the road from Higham, with a cross in its street.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C21-P017",
+     "q": "they are hard on a little thorp under the hanging of the hill that was the beginning of the Down country on that road"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Garton volunteers",
+   "aliases": [
+    "footmen from Garton"
+   ],
+   "type": "group",
+   "subtype": "militia",
+   "unnamed": true,
+   "summary": "Young carles of the thorp, with spears, staves and bucklers, who follow Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C21-P019",
+     "q": "we be a few who thought when we heard that the Burg-devils were at hand that we might as well die in the field giving stroke for stroke"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Gregory",
+   "rel": "member_of",
+   "b": "St. Mary's of Higham",
+   "detail": "novice monk",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "he is turned monk, brother; that is, he is already a novice"
+    }
+   ]
+  },
+  {
+   "a": "Lancelot Longtongue",
+   "rel": "serves",
+   "b": "St. Mary's of Higham",
+   "detail": "sergeant of the Abbot's men",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "he is a sergeant of theirs"
+    }
+   ]
+  },
+  {
+   "a": "Westland Barons",
+   "rel": "at_war_with",
+   "b": "St. Mary's of Higham",
+   "detail": "defeated and hold the Abbot",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "there was Holy Church overthrown"
+    }
+   ]
+  },
+  {
+   "a": "Abbot of St. Mary's of Higham",
+   "rel": "captive_of",
+   "b": "Westland Barons",
+   "detail": "held at the Red Mount",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "as none would slay him, might they help it, they had to lead him away"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "at_war_with",
+   "b": "Westland Barons",
+   "detail": "have taken some of their strongholds",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P005",
+     "q": "they have taken from them some of their strong-holds"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) Garton volunteers",
+   "rel": "allied_with",
+   "b": "Ralph",
+   "detail": "volunteer to follow him",
+   "when": "BFOUR-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P019",
+     "q": "we have little will to abide behind, but were fain to follow thee"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) field of the Wry Bridge",
+   "rel": "west_of",
+   "b": "Higham-on-the-Way",
+   "direction": "west",
+   "distance_text": "some twenty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Hugh",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "some twenty miles to the west in the field of the Wry Bridge"
+    }
+   ]
+  },
+  {
+   "a": "Red Mount",
+   "rel": "west_of",
+   "b": "Higham-on-the-Way",
+   "direction": "west-away",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Hugh",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "distance not given",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Red Mount west-away"
+    }
+   ]
+  },
+  {
+   "a": "Garton",
+   "rel": "at_foot_of",
+   "b": "the Downs",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "under the first hill of the Down country, on the road from Higham",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "name from BFOUR-C22 and C23",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P017",
+     "q": "under the hanging of the hill that was the beginning of the Down country on that road"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph and company",
+    "Hugh"
+   ],
+   "from": "Higham-on-the-Way",
+   "to": "Garton",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "evening",
+   "end_time_text": "night",
+   "terrain_text": "",
+   "chapter": "BFOUR-C21",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P017",
+     "q": "So Ralph bade make stay there and rest the night over"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "St. Mary's of Higham",
+   "statement": "Before the war the Abbot was mighty: Higham was well manned, many manors had castles and strong-houses, and yeomen answered the gathering horn.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Hugh",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "many of his manors had castles and strong-houses on them"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "St. Mary's of Higham",
+   "statement": "About a year and a half ago the Abbot led his host against the Westland Barons in armour and was overthrown and taken.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Hugh",
+   "when": "about a year and a half before",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "some year and a half ago, the Abbot had debate with the Westland Barons"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Higham-on-the-Way",
+   "statement": "The Westlanders besieged Higham and failed, but took most of the Abbot's castles and strong-houses, burned some, garrisoned others, and drove off chattels and people.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Hugh",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the lands of Higham are half ruined"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Higham-on-the-Way",
+   "statement": "The monks will not let their men ride abroad, so the garrison is cooped up and has grown sour and churlish.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Hugh",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "they are grown sour and churlish"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Higham's monks say the Dry Tree has a covenant with the devil to win unless outnumbered more than five to one, and that devils walk among them as men and women.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P004",
+     "q": "those Champions have made covenant with the devil to come to their above whensoever they be not more than one to five"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "St. Mary's of Higham",
+   "statement": "Higham's sergeants press captured wood-thieves into service, offering them the gallows or the Church.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Hugh",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P008",
+     "q": "whom the warriors of the town had sent out cautiously to see if they might catch a few men for their ranks"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Garton",
+   "statement": "The thorp is a poor unwalled people; its elders meet newcomers cap in hand by a fire at the street cross.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P021",
+     "q": "we be a poor unwalled people"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Garton",
+   "statement": "The riders lodge in a big barn on the western outskirt, the side from which attack is expected.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P021",
+     "q": "lodging the more part of them in a big barn on the western outskirt of the thorp"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph pays good silver for victual and forbids hurting folk or setting fire to roofs.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P017",
+     "q": "to heed well that he hurt no man, or let fire get into any house or roof"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Battle of the Wry Bridge",
+   "chapter": "BFOUR-C21",
+   "layer": "backstory",
+   "time_text": "about a year and a half before",
+   "participants": [
+    "Abbot of St. Mary's of Higham",
+    "Westland Barons"
+   ],
+   "places": [
+    "(unnamed) field of the Wry Bridge"
+   ],
+   "summary": "The Abbot of Higham's host is overthrown by the Westland Barons and the Abbot is taken to the Red Mount.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "there was Holy Church overthrown"
+    }
+   ]
+  },
+  {
+   "label": "Ravaging of Higham-land",
+   "chapter": "BFOUR-C21",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Westland Barons"
+   ],
+   "places": [
+    "Higham-on-the-Way"
+   ],
+   "summary": "The Westlanders fail to take Higham but take or burn most of the Abbot's castles.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Westlanders broke their teeth over it"
+    }
+   ]
+  },
+  {
+   "label": "Night at Garton",
+   "chapter": "BFOUR-C21",
+   "layer": "main",
+   "time_text": "night",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Hugh",
+    "Stephen a-Hurst",
+    "(unnamed) Garton volunteers"
+   ],
+   "places": [
+    "Garton"
+   ],
+   "summary": "The thorp welcomes Ralph's company and young carles volunteer.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P020",
+     "q": "meanwhile we will live and die together"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The Westland Barons (C21) and the Banded Barons from the West (C19) are probably the same league; the text does not say so.",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Westland Barons"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "The Red Mount is only \"west-away\"; distance not given.",
+   "refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the Red Mount west-away"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Ruined monastic county (fortified town, lost castles, captured lord) as a war-torn region.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "the lands of Higham are half ruined"
+    }
+   ]
+  },
+  {
+   "idea": "Captured lord held for ransom in an enemy castle as a political hook.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C21-P002",
+     "q": "he sits to this day in their strongest castle"
+    }
+   ]
+  },
+  {
+   "idea": "Villages volunteering militia when a trusted lord arrives, scaled by reputation.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C21-P019",
+     "q": "we have little will to abide behind, but were fain to follow thee"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C21",
+ "chapters": [
+  "BFOUR-C21"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C21",
+   "paragraphs_total": 23,
+   "all_paragraphs_read": true,
+   "summary": "Hugh tells Ralph that Gregory is a novice monk at Higham and that Lancelot Long-tongue is a sergeant there. About a year and a half earlier the Abbot of Higham quarrelled with the Westland Barons and led his host against them. He was overthrown at the field of the Wry Bridge, some twenty miles west, and is held in their strongest castle, the Red Mount. The Westlanders failed to take Higham but took or burned most of the Abbot's castles, so Higham's lands are half ruined and its men are cooped up and churlish. The monks believe the Dry Tree is devil-aided, and they fear the expelled Burgers, who have taken strongholds from the Westland Barons. Hugh recounts his misfortunes: prison, a siege, an affair, living with outlaws at the wildwood's edge, then capture and pressed service with Higham. Ralph says Ursula is his wife and a Friend of the Well. At a little unwalled thorp under the first hill of the Down country, the elders welcome them; about a score of young carles volunteer. The riders lodge in a big barn on the western outskirt, facing the likely attack.",
+   "geography_notes": "The field of the Wry Bridge is about twenty miles west of Higham; the Red Mount lies further west. The thorp (later named as Garton) is under the hanging of the hill where the Down country begins on the road from Higham; it is unwalled; the attack side is the west.",
+   "open_questions": [
+    "Where exactly are the Westland Barons' lands and the Red Mount?",
+    "Are the Westland Barons the same as the Banded Barons of the West?"
+   ]
+  }
+ ]
+}

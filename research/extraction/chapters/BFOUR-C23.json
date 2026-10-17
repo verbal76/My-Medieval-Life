@@ -1,0 +1,476 @@
+{
+ "entities": [
+  {
+   "name": "Red Bridge",
+   "aliases": [],
+   "type": "building",
+   "subtype": "bridge",
+   "unnamed": false,
+   "summary": "Bridge over the water that runs through Upmeads, by which some Burgers crossed into the Wood Debateable.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "crossed the water that runneth through Upmeads by the Red Bridge"
+    }
+   ]
+  },
+  {
+   "name": "the Uplands",
+   "aliases": [],
+   "type": "place",
+   "subtype": "region",
+   "unnamed": false,
+   "summary": "Upland country between the Red Bridge and the Wood Debateable.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "so gat us into the Wood Debateable through the Uplands"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) young Burger captive",
+   "aliases": [],
+   "type": "person",
+   "subtype": "prisoner",
+   "unnamed": true,
+   "summary": "Young Burger who tells their plan under oath and is stabbed by a fellow.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "one of the youngest of the men hung down his head a little"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) war-brand of the Shepherds",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "muster signal",
+   "unnamed": true,
+   "summary": "Token sent round to call the shepherds to arms.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C23-P010",
+     "q": "Martha hath sent round the war-brand"
+    }
+   ]
+  },
+  {
+   "name": "Smite aside axe, O Bear-father",
+   "aliases": [],
+   "type": "text",
+   "subtype": "chant",
+   "unnamed": false,
+   "summary": "Shepherd chant naming the ancient Father of their race.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C23-P013",
+     "q": "SMITE ASIDE AXE, O BEAR-FATHER"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "allied_with",
+   "b": "outlaws of the Wood Debateable",
+   "detail": "bargain to take Upmeads together",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "There we struck a bargain with the main band of strong-thieves of the wood"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) expelled Burgers",
+   "rel": "enemy_of",
+   "b": "Upmeads",
+   "detail": "march to seize it as a new home",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "we and they together would get us a new home in Upmeads, which is a fat and pleasant land"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) young Burger captive",
+   "rel": "killed_by",
+   "b": "(unnamed) expelled Burgers",
+   "detail": "stabbed by a fellow captive, whom Stephen then cut down",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P009",
+     "q": "Stephen, who had his sword naked in his hand, straightway hewed down the slayer"
+    }
+   ]
+  },
+  {
+   "a": "shepherds of the Downs",
+   "rel": "allied_with",
+   "b": "Ralph",
+   "detail": "muster to Bear Castle at his token",
+   "when": "BFOUR-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P012",
+     "q": "There then is thine answer, lord"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Red Bridge",
+   "rel": "crosses",
+   "b": "Upmeads Water",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:young Burger captive",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "crossed the water that runneth through Upmeads by the Red Bridge"
+    }
+   ]
+  },
+  {
+   "a": "the Uplands",
+   "rel": "between",
+   "b": "Red Bridge",
+   "direction": "between the Red Bridge and the Wood Debateable",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:young Burger captive",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "gat us into the Wood Debateable through the Uplands"
+    }
+   ]
+  },
+  {
+   "a": "Bear Castle",
+   "rel": "distance_from",
+   "b": "Garton",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "from sunrise to two hours before noon on horse, with delays",
+   "travel_mode": "horse",
+   "terrain_text": "hills and dales across country",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "across country shorter than the Greenway",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P010",
+     "q": "came within sight of its rampart two hours before noon"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph and company",
+    "Giles",
+    "(unnamed) Garton volunteers"
+   ],
+   "from": "Garton",
+   "to": "Bear Castle",
+   "via": [],
+   "mode": "horse, footmen later mounted",
+   "direction_text": "across country, not by the Greenway",
+   "duration_text": "",
+   "start_time_text": "sunrise",
+   "end_time_text": "two hours before noon",
+   "terrain_text": "up and down hills and dales",
+   "chapter": "BFOUR-C23",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P003",
+     "q": "went across country and not by the Greenway, for thuswise the road was shorter"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "(unnamed) expelled Burgers"
+   ],
+   "from": "Burg of the Four Friths",
+   "to": "Wood Debateable",
+   "via": [
+    "Red Bridge",
+    "the Uplands"
+   ],
+   "mode": "",
+   "direction_text": "fetched a compass",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C23",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "fetched a compass and crossed the water that runneth through Upmeads by the Red Bridge"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "Ralph's band surprises forty-six Burgers; half are slain at once and the rest yield.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P005",
+     "q": "two score and six (as they counted them afterward)"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) expelled Burgers",
+   "statement": "Two thousand Burgers are marching on Upmeads, with somewhat more than a thousand expected from Higham-land.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:young Burger captive",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P008",
+     "q": "Two thousand, lord"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "(unnamed) expelled Burgers",
+   "statement": "The Burgers in the southern strongholds do not know of the march on Upmeads.",
+   "classification": "CANON",
+   "confidence": "medium",
+   "context": "dialogue:young Burger captive",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P008",
+     "q": "do thy folk in these strongholds know of your purpose of falling upon Upmeads?"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "outlaws of the Wood Debateable",
+   "statement": "The Woodmen say the Upmeads carles are few but strong and dauntless.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:young Burger captive",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "the Upmeads carles, though they be not many, are strong and dauntless"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph swears quarter by the sword blade and holds to it after a captive's murder.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P009",
+     "q": "But I have given life to these others, and so it must be held to"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "shepherds of the Downs",
+   "statement": "At the mote, smoke and fire rise from each of the four corners of Bear Castle.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P013",
+     "q": "rose up into the air a column of smoke intermingled with fire from each of the four corners"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Garton",
+   "statement": "Twenty-three Garton spearmen join Ralph.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P002",
+     "q": "numbered twenty and three all told"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Skirmish below the green ridge",
+   "chapter": "BFOUR-C23",
+   "layer": "main",
+   "time_text": "morning",
+   "participants": [
+    "Ralph",
+    "Giles",
+    "Stephen a-Hurst",
+    "(unnamed) expelled Burgers"
+   ],
+   "places": [
+    "(unnamed) dale below a low green ridge"
+   ],
+   "summary": "Ralph surprises a Burger band, learns of the march on Upmeads, and takes twenty prisoners.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P005",
+     "q": "there was scarce time for a word ere the full half of them had passed by the sword of the Dry Tree"
+    }
+   ]
+  },
+  {
+   "label": "Muster at Bear Castle",
+   "chapter": "BFOUR-C23",
+   "layer": "main",
+   "time_text": "two hours before noon",
+   "participants": [
+    "Ralph",
+    "Giles",
+    "shepherds of the Downs"
+   ],
+   "places": [
+    "Bear Castle"
+   ],
+   "summary": "Shepherds stream to Bear Castle; the four fires are lit.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P014",
+     "q": "there were but some two hundreds, who looked but few indeed in the great square place"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "The Red Bridge is named only here; its position on Upmeads Water relative to other bridges is not given.",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P007",
+     "q": "by the Red Bridge"
+    }
+   ]
+  },
+  {
+   "kind": "contradiction",
+   "question": "The Garton spearmen number twenty-three here but twenty-two at the Folkmote tally (BFOUR-C24).",
+   "refs": [
+    {
+     "p": "BFOUR-C23-P002",
+     "q": "numbered twenty and three all told"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Interrogation and quarter with oath-binding, and reputation effects for keeping or breaking it.",
+   "system": "systems",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C23-P009",
+     "q": "I have given life to these others, and so it must be held to"
+    }
+   ]
+  },
+  {
+   "idea": "Hilltop earthwork of the Ancient Folk as a muster point lit by beacons.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C23-P013",
+     "q": "that stronghold of the Ancient Folk"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C23",
+ "chapters": [
+  "BFOUR-C23"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C23",
+   "paragraphs_total": 13,
+   "all_paragraphs_read": true,
+   "summary": "At sunrise they ride across country (not by the Greenway) with Giles and twenty-three Garton spearmen. After about two leagues, over a low green ridge, they surprise forty-six Burgers at a cooking fire. Half are killed; the rest surrender. A young captive, promised his life by the sword, says that some Burgers crossed Upmeads Water by the Red Bridge into the Wood Debateable through the Uplands. They made a pact with the wood's strong-thieves to take Upmeads, and this band was sent to bring the southern Burgers. The southern Burgers in the strongholds do not know of the plan. Two thousand are on the road to Upmeads, with more than a thousand expected from Higham-land. Another captive stabs him dead; Stephen cuts the slayer down; Ralph holds to the quarter given. The Garton footmen take the dead men's horses and guard twenty prisoners. They reach Bear Castle two hours before noon among streams of shepherds; Martha has sent round the war-brand. The chant \"Smite aside axe, O Bear-father\" rises, and smoke and fire go up from the four corners. About two hundred are inside; Giles brings Ralph's men to the north-east corner.",
+   "geography_notes": "Garton to Bear Castle is reached by mid-morning across country, a shorter road than the Greenway. The ambush dale is about two leagues out, below a low green ridge. The Red Bridge crosses Upmeads Water; the Burgers went from it into the Wood Debateable through the Uplands. Bear Castle has a rampart, a turf bridge and a great square garth.",
+   "open_questions": [
+    "Where is the Red Bridge on Upmeads Water relative to the high-road bridge?"
+   ]
+  }
+ ]
+}

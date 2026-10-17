@@ -1,0 +1,347 @@
+{
+ "entities": [
+  {
+   "name": "Tall Thomas",
+   "aliases": [
+    "the Elder"
+   ],
+   "type": "person",
+   "subtype": "elder",
+   "unnamed": false,
+   "summary": "Old hoary man with a very long beard who hallows the Folkmote and gives Ralph the guisarme.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C24-P014",
+     "q": "Nay, Tall Thomas, thou hast said and done all that need was"
+    }
+   ]
+  },
+  {
+   "name": "Folkmote of the Shepherds",
+   "aliases": [
+    "the mote"
+   ],
+   "type": "custom",
+   "subtype": "assembly",
+   "unnamed": false,
+   "summary": "Hallowed assembly of the shepherd folk at Bear Castle.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C24-P002",
+     "q": "he proclaimed the hallowing of the Mote in such form of words as was due amongst that folk"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) ancient guisarme of the Shepherds",
+   "aliases": [
+    "ancient staff of war"
+   ],
+   "type": "item",
+   "subtype": "weapon",
+   "unnamed": true,
+   "summary": "Ancient guisarme inlaid with gold letters of old time, given to the Captain.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C24-P009",
+     "q": "took from him the ancient guisarme, which was inlaid with gold letters of old time"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) burly shepherd at the mote",
+   "aliases": [],
+   "type": "person",
+   "subtype": "shepherd",
+   "unnamed": true,
+   "summary": "Big burly man who moves to end the mote and march.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C24-P014",
+     "q": "None answered till a big and burly man rose up"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Ralph",
+   "rel": "leader_of",
+   "b": "shepherds of the Downs",
+   "detail": "Captain and sworn brother",
+   "when": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P009",
+     "q": "he swore in a loud voice to be a true brother of the Shepherd-folk"
+    }
+   ]
+  },
+  {
+   "a": "Tall Thomas",
+   "rel": "leader_of",
+   "b": "shepherds of the Downs",
+   "detail": "Elder of the mote",
+   "when": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P002",
+     "q": "straightway he proclaimed the hallowing of the Mote"
+    }
+   ]
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "rel": "allied_with",
+   "b": "shepherds of the Downs",
+   "detail": "fight as friends, unpaid by them",
+   "when": "BFOUR-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P013",
+     "q": "we will be paid by our foes and not by our friends"
+    }
+   ]
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "rel": "enemy_of",
+   "b": "shepherds of the Downs",
+   "detail": "past raids on their flocks",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P013",
+     "q": "True it is that we have whiles driven prey in your country"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Folkmote of the Shepherds",
+   "rel": "within",
+   "b": "Bear Castle",
+   "direction": "in the north-east ingle, on the earth wall slopes",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P002",
+     "q": "the folk of the Shepherds took their places on the slopes of the earth walls"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "custom",
+   "subject": "shepherds of the Downs",
+   "statement": "The mote is hallowed by an Elder with set words; assent is shown by humming and clashing weapons.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P002",
+     "q": "There arose a hum of assent from the Shepherds as he spoke and men clashed their weapons together"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "shepherds of the Downs",
+   "statement": "The shepherds choose a war Captain and ask whether he serves as an alien hireling or as a brother.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P006",
+     "q": "wilt thou be our Captain as an alien and a hireling, or as a brother?"
+    }
+   ]
+  },
+  {
+   "category": "economy",
+   "subject": "shepherds of the Downs",
+   "statement": "The shepherds offer to pay allies for war, though unhoused or ill-housed.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Tall Thomas",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P012",
+     "q": "yet have we wherewithal to wage you"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "Ralph's host: 150 Dry Tree champions (besides Stephen and Roger), 22 of Garton, 377 shepherds (about 80 bowmen, the rest with glaives, spears and staff-weapons), 554 in all.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P017",
+     "q": "they were told over and made five hundred and fifty and four"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "shepherds of the Downs",
+   "statement": "The shepherds have little defensive armour but are stark and doughty.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P016",
+     "q": "There was not much armour of defence amongst them"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Ralph",
+   "statement": "Ralph appoints leaders of tens and hundreds.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P016",
+     "q": "appointed them leaders of tens and hundreds with the help of Giles"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "shepherds of the Downs",
+   "statement": "After the mote, women bring food and drink and serve the strangers first.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P015",
+     "q": "certain women brought victual and drink to them, and served the strangers first"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Folkmote of the Shepherds",
+   "chapter": "BFOUR-C24",
+   "layer": "main",
+   "time_text": "late morning",
+   "participants": [
+    "Ralph",
+    "Tall Thomas",
+    "Stephen a-Hurst",
+    "Giles",
+    "shepherds of the Downs",
+    "Fellowship of the Dry Tree"
+   ],
+   "places": [
+    "Bear Castle"
+   ],
+   "summary": "Ralph is made Captain and brother of the Shepherds; the host musters at 554.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P009",
+     "q": "all the Folk cried, \"Hail our brother!\""
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "The tally gives 22 men of Garton against 23 the previous morning (BFOUR-C23); one may have been lost or detailed elsewhere, but the text does not say.",
+   "refs": [
+    {
+     "p": "BFOUR-C24-P016",
+     "q": "of the men of Garton were twenty and two"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Faction adoption ritual: join as hireling or as sworn brother, with different obligations.",
+   "system": "systems",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C24-P006",
+     "q": "as an alien and a hireling, or as a brother"
+    }
+   ]
+  },
+  {
+   "idea": "Army muster with unit counts by faction (a mustering screen).",
+   "system": "systems",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C24-P016",
+     "q": "appointed them leaders of tens and hundreds"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C24",
+ "chapters": [
+  "BFOUR-C24"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C24",
+   "paragraphs_total": 16,
+   "all_paragraphs_read": true,
+   "summary": "The Folkmote of the Shepherds gathers in the north-east ingle of Bear Castle. Tall Thomas, an old hoary Elder with a sallet and a guisarme, hallows the mote. Ralph is asked to be their Captain \"as a brother\", not a hireling; he swears by their fathers and his and takes the ancient gold-lettered guisarme, and the Folk hail him brother. Stephen says the Dry Tree will fight as friends, paid by foes, not by the shepherds whose flocks they once raided. A burly man moves to break up the mote and march. Women bring food. The host is told over: 150 Dry Tree champions (not counting Stephen and Roger), 22 men of Garton and 377 shepherds (about 80 with bows), 554 in all. Giles is armed as a man-at-arms. Ralph goes afoot; Ursula walks beside him. Richard rides ahead with ten champions as scouts.",
+   "geography_notes": "Bear Castle has earth walls with slopes and a fire on the top, a hallowed place inside, and a dyke outside the rampart with a wide view of lovely blue country.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

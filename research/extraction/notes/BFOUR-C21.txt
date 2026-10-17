@@ -1,0 +1,45 @@
+@ BFOUR-C21
+summary: Hugh tells Ralph that Gregory is a novice monk at Higham and that Lancelot Long-tongue is a sergeant there. About a year and a half earlier the Abbot of Higham quarrelled with the Westland Barons and led his host against them. He was overthrown at the field of the Wry Bridge, some twenty miles west, and is held in their strongest castle, the Red Mount. The Westlanders failed to take Higham but took or burned most of the Abbot's castles, so Higham's lands are half ruined and its men are cooped up and churlish. The monks believe the Dry Tree is devil-aided, and they fear the expelled Burgers, who have taken strongholds from the Westland Barons. Hugh recounts his misfortunes: prison, a siege, an affair, living with outlaws at the wildwood's edge, then capture and pressed service with Higham. Ralph says Ursula is his wife and a Friend of the Well. At a little unwalled thorp under the first hill of the Down country, the elders welcome them; about a score of young carles volunteer. The riders lodge in a big barn on the western outskirt, facing the likely attack.
+geo: The field of the Wry Bridge is about twenty miles west of Higham; the Red Mount lies further west. The thorp (later named as Garton) is under the hanging of the hill where the Down country begins on the road from Higham; it is unwalled; the attack side is the west.
+open: Where exactly are the Westland Barons' lands and the Red Mount? || Are the Westland Barons the same as the Banded Barons of the West?
+
+E person | Hugh | - | prince | Ralph's brother; now a pressed man of Higham who joins Ralph. | P008 `they gave me the choice of the gallows-tree or service for the Church`
+E group | Westland Barons | the Westlanders | baronial league | Hungry, doughty barons of the West who defeated and captured the Abbot of Higham. | P002 `the Abbot had debate with the Westland Barons, who both were and are ill men to deal with, being both hungry and doughty`
+E place | (unnamed) field of the Wry Bridge | the Wry Bridge | battlefield | Battlefield about twenty miles west of Higham where the Abbot's host was overthrown. | P002 `they met some twenty miles to the west in the field of the Wry Bridge`
+E building | Red Mount | - | castle | The Westland Barons' strongest castle, where the Abbot of Higham is held. | P002 `he sits to this day in their strongest castle, the Red Mount west-away`
+E place | Garton | (unnamed) thorp under the Down country | thorp | Little unwalled thorp under the first hill of the Downs on the road from Higham, with a cross in its street. | P017 `they are hard on a little thorp under the hanging of the hill that was the beginning of the Down country on that road`
+E group | (unnamed) Garton volunteers | footmen from Garton | militia | Young carles of the thorp, with spears, staves and bucklers, who follow Ralph. | P019 `we be a few who thought when we heard that the Burg-devils were at hand that we might as well die in the field giving stroke for stroke`
+
+R Gregory | member_of | St. Mary's of Higham | novice monk | BFOUR-C21 | CANON/high | P002 `he is turned monk, brother; that is, he is already a novice`
+R Lancelot Longtongue | serves | St. Mary's of Higham | sergeant of the Abbot's men | BFOUR-C21 | CANON/high | P002 `he is a sergeant of theirs`
+R Westland Barons | at_war_with | St. Mary's of Higham | defeated and hold the Abbot | backstory | CANON/high | P002 `there was Holy Church overthrown`
+R Abbot of St. Mary's of Higham | captive_of | Westland Barons | held at the Red Mount | backstory | CANON/high | P002 `as none would slay him, might they help it, they had to lead him away`
+R (unnamed) expelled Burgers | at_war_with | Westland Barons | have taken some of their strongholds | BFOUR-C21 | CANON/high | P005 `they have taken from them some of their strong-holds`
+R (unnamed) Garton volunteers | allied_with | Ralph | volunteer to follow him | BFOUR-C21 | CANON/high | P019 `we have little will to abide behind, but were fain to follow thee`
+
+S (unnamed) field of the Wry Bridge | west_of | Higham-on-the-Way | dir=west; dist=some twenty miles; ctx=dialogue:Hugh; cert=constrained | CANON/high | - | P002 `some twenty miles to the west in the field of the Wry Bridge`
+S Red Mount | west_of | Higham-on-the-Way | dir=west-away; ctx=dialogue:Hugh; cert=constrained | CANON/high | distance not given | P002 `the Red Mount west-away`
+S Garton | at_foot_of | the Downs | terrain=under the first hill of the Down country, on the road from Higham; cert=constrained | CANON/high | name from BFOUR-C22 and C23 | P017 `under the hanging of the hill that was the beginning of the Down country on that road`
+
+T Ralph and company, Hugh | Higham-on-the-Way | Garton | mode=horse; start=evening; end=night | P017 `So Ralph bade make stay there and rest the night over`
+
+F history | St. Mary's of Higham | Before the war the Abbot was mighty: Higham was well manned, many manors had castles and strong-houses, and yeomen answered the gathering horn. | CANON/high; ctx=dialogue:Hugh | P002 `many of his manors had castles and strong-houses on them`
+F history | St. Mary's of Higham | About a year and a half ago the Abbot led his host against the Westland Barons in armour and was overthrown and taken. | CANON/high; ctx=dialogue:Hugh; when=about a year and a half before | P002 `some year and a half ago, the Abbot had debate with the Westland Barons`
+F military | Higham-on-the-Way | The Westlanders besieged Higham and failed, but took most of the Abbot's castles and strong-houses, burned some, garrisoned others, and drove off chattels and people. | CANON/high; ctx=dialogue:Hugh | P002 `the lands of Higham are half ruined`
+F politics | Higham-on-the-Way | The monks will not let their men ride abroad, so the garrison is cooped up and has grown sour and churlish. | CANON/high; ctx=dialogue:Hugh | P002 `they are grown sour and churlish`
+F society | Fellowship of the Dry Tree | Higham's monks say the Dry Tree has a covenant with the devil to win unless outnumbered more than five to one, and that devils walk among them as men and women. | CANON/medium; ctx=rumour | P004 `those Champions have made covenant with the devil to come to their above whensoever they be not more than one to five`
+F military | St. Mary's of Higham | Higham's sergeants press captured wood-thieves into service, offering them the gallows or the Church. | CANON/high; ctx=dialogue:Hugh | P008 `whom the warriors of the town had sent out cautiously to see if they might catch a few men for their ranks`
+F society | Garton | The thorp is a poor unwalled people; its elders meet newcomers cap in hand by a fire at the street cross. | CANON/high | P021 `we be a poor unwalled people`
+F military | Garton | The riders lodge in a big barn on the western outskirt, the side from which attack is expected. | CANON/high | P021 `lodging the more part of them in a big barn on the western outskirt of the thorp`
+F custom | Ralph | Ralph pays good silver for victual and forbids hurting folk or setting fire to roofs. | CANON/high | P017 `to heed well that he hurt no man, or let fire get into any house or roof`
+
+V backstory | Battle of the Wry Bridge | The Abbot of Higham's host is overthrown by the Westland Barons and the Abbot is taken to the Red Mount. | time=about a year and a half before; who=Abbot of St. Mary's of Higham, Westland Barons; where=(unnamed) field of the Wry Bridge | P002 `there was Holy Church overthrown`
+V backstory | Ravaging of Higham-land | The Westlanders fail to take Higham but take or burn most of the Abbot's castles. | who=Westland Barons; where=Higham-on-the-Way | P002 `the Westlanders broke their teeth over it`
+V main | Night at Garton | The thorp welcomes Ralph's company and young carles volunteer. | time=night; who=Ralph, Ursula, Hugh, Stephen a-Hurst, (unnamed) Garton volunteers; where=Garton | P020 `meanwhile we will live and die together`
+
+U identity | The Westland Barons (C21) and the Banded Barons from the West (C19) are probably the same league; the text does not say so. | P002 `the Westland Barons`
+U location | The Red Mount is only "west-away"; distance not given. | P002 `the Red Mount west-away`
+
+O world | Ruined monastic county (fortified town, lost castles, captured lord) as a war-torn region. | P002 `the lands of Higham are half ruined`
+O politics | Captured lord held for ransom in an enemy castle as a political hook. | P002 `he sits to this day in their strongest castle`
+O society | Villages volunteering militia when a trusted lord arrives, scaled by reputation. | P019 `we have little will to abide behind, but were fain to follow thee`

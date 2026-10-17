@@ -2717,44 +2717,101 @@
    "title": "Talk Between Those Two Brethren",
    "body_paragraphs": 23,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 6,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 9,
+    "events": 3,
+    "unresolved": 2,
+    "opportunities": 3
+   },
+   "open_questions": [
+    "Where exactly are the Westland Barons' lands and the Red Mount?",
+    "Are the Westland Barons the same as the Banded Barons of the West?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C21.txt",
+    "records": "research/extraction/chapters/BFOUR-C21.json"
+   }
   },
   {
    "chapter": "BFOUR-C22",
    "title": "An Old Acquaintance Comes From the Down Country to See Ralph",
    "body_paragraphs": 20,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 10,
+    "relations": 7,
+    "spatial": 6,
+    "travel": 1,
+    "facts": 5,
+    "events": 3,
+    "unresolved": 2,
+    "opportunities": 3
+   },
+   "open_questions": [
+    "Where exactly are Foxworth Castle, the Longford and the Nineways Garth?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C22.txt",
+    "records": "research/extraction/chapters/BFOUR-C22.json"
+   }
   },
   {
    "chapter": "BFOUR-C23",
    "title": "They Ride to Bear Castle",
    "body_paragraphs": 13,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 4,
+    "spatial": 3,
+    "travel": 2,
+    "facts": 7,
+    "events": 2,
+    "unresolved": 2,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Where is the Red Bridge on Upmeads Water relative to the high-road bridge?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C23.txt",
+    "records": "research/extraction/chapters/BFOUR-C23.json"
+   }
   },
   {
    "chapter": "BFOUR-C24",
    "title": "The Folkmote of the Shepherds",
    "body_paragraphs": 16,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 4,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 7,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C24.txt",
+    "records": "research/extraction/chapters/BFOUR-C24.json"
+   }
   },
   {
    "chapter": "BFOUR-C25",

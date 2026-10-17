@@ -1,0 +1,39 @@
+@ BFOUR-C23
+summary: At sunrise they ride across country (not by the Greenway) with Giles and twenty-three Garton spearmen. After about two leagues, over a low green ridge, they surprise forty-six Burgers at a cooking fire. Half are killed; the rest surrender. A young captive, promised his life by the sword, says that some Burgers crossed Upmeads Water by the Red Bridge into the Wood Debateable through the Uplands. They made a pact with the wood's strong-thieves to take Upmeads, and this band was sent to bring the southern Burgers. The southern Burgers in the strongholds do not know of the plan. Two thousand are on the road to Upmeads, with more than a thousand expected from Higham-land. Another captive stabs him dead; Stephen cuts the slayer down; Ralph holds to the quarter given. The Garton footmen take the dead men's horses and guard twenty prisoners. They reach Bear Castle two hours before noon among streams of shepherds; Martha has sent round the war-brand. The chant "Smite aside axe, O Bear-father" rises, and smoke and fire go up from the four corners. About two hundred are inside; Giles brings Ralph's men to the north-east corner.
+geo: Garton to Bear Castle is reached by mid-morning across country, a shorter road than the Greenway. The ambush dale is about two leagues out, below a low green ridge. The Red Bridge crosses Upmeads Water; the Burgers went from it into the Wood Debateable through the Uplands. Bear Castle has a rampart, a turf bridge and a great square garth.
+open: Where is the Red Bridge on Upmeads Water relative to the high-road bridge?
+
+E building | Red Bridge | - | bridge | Bridge over the water that runs through Upmeads, by which some Burgers crossed into the Wood Debateable. | P007 `crossed the water that runneth through Upmeads by the Red Bridge`
+E place | the Uplands | - | region | Upland country between the Red Bridge and the Wood Debateable. | P007 `so gat us into the Wood Debateable through the Uplands`
+E person | (unnamed) young Burger captive | - | prisoner | Young Burger who tells their plan under oath and is stabbed by a fellow. | P007 `one of the youngest of the men hung down his head a little`
+E custom | (unnamed) war-brand of the Shepherds | - | muster signal | Token sent round to call the shepherds to arms. | P010 `Martha hath sent round the war-brand`
+E text | Smite aside axe, O Bear-father | - | chant | Shepherd chant naming the ancient Father of their race. | P013 `SMITE ASIDE AXE, O BEAR-FATHER`
+
+R (unnamed) expelled Burgers | allied_with | outlaws of the Wood Debateable | bargain to take Upmeads together | BFOUR-C23 | CANON/high | P007 `There we struck a bargain with the main band of strong-thieves of the wood`
+R (unnamed) expelled Burgers | enemy_of | Upmeads | march to seize it as a new home | BFOUR-C23 | CANON/high | P007 `we and they together would get us a new home in Upmeads, which is a fat and pleasant land`
+R (unnamed) young Burger captive | killed_by | (unnamed) expelled Burgers | stabbed by a fellow captive, whom Stephen then cut down | BFOUR-C23 | CANON/high | P009 `Stephen, who had his sword naked in his hand, straightway hewed down the slayer`
+R shepherds of the Downs | allied_with | Ralph | muster to Bear Castle at his token | BFOUR-C23 | CANON/high | P012 `There then is thine answer, lord`
+
+S Red Bridge | crosses | Upmeads Water | ctx=dialogue:young Burger captive; cert=fixed | CANON/high | - | P007 `crossed the water that runneth through Upmeads by the Red Bridge`
+S the Uplands | between | Red Bridge | dir=between the Red Bridge and the Wood Debateable; ctx=dialogue:young Burger captive; cert=constrained | CANON/high | - | P007 `gat us into the Wood Debateable through the Uplands`
+S Bear Castle | distance_from | Garton | time=from sunrise to two hours before noon on horse, with delays; mode=horse; terrain=hills and dales across country; cert=constrained | CANON/high | across country shorter than the Greenway | P010 `came within sight of its rampart two hours before noon`
+
+T Ralph and company, Giles, (unnamed) Garton volunteers | Garton | Bear Castle | mode=horse, footmen later mounted; start=sunrise; end=two hours before noon; terrain=up and down hills and dales; dir=across country, not by the Greenway | P003 `went across country and not by the Greenway, for thuswise the road was shorter`
+T (unnamed) expelled Burgers | Burg of the Four Friths | Wood Debateable | via=Red Bridge, the Uplands; dir=fetched a compass | P007 `fetched a compass and crossed the water that runneth through Upmeads by the Red Bridge`
+
+F military | Ralph | Ralph's band surprises forty-six Burgers; half are slain at once and the rest yield. | CANON/high | P005 `two score and six (as they counted them afterward)`
+F military | (unnamed) expelled Burgers | Two thousand Burgers are marching on Upmeads, with somewhat more than a thousand expected from Higham-land. | CANON/medium; ctx=dialogue:young Burger captive | P008 `Two thousand, lord`
+F military | (unnamed) expelled Burgers | The Burgers in the southern strongholds do not know of the march on Upmeads. | CANON/medium; ctx=dialogue:young Burger captive | P008 `do thy folk in these strongholds know of your purpose of falling upon Upmeads?`
+F military | outlaws of the Wood Debateable | The Woodmen say the Upmeads carles are few but strong and dauntless. | CANON/high; ctx=dialogue:young Burger captive | P007 `the Upmeads carles, though they be not many, are strong and dauntless`
+F custom | Ralph | Ralph swears quarter by the sword blade and holds to it after a captive's murder. | CANON/high | P009 `But I have given life to these others, and so it must be held to`
+F custom | shepherds of the Downs | At the mote, smoke and fire rise from each of the four corners of Bear Castle. | CANON/high | P013 `rose up into the air a column of smoke intermingled with fire from each of the four corners`
+F military | Garton | Twenty-three Garton spearmen join Ralph. | CANON/high | P002 `numbered twenty and three all told`
+
+V main | Skirmish below the green ridge | Ralph surprises a Burger band, learns of the march on Upmeads, and takes twenty prisoners. | time=morning; who=Ralph, Giles, Stephen a-Hurst, (unnamed) expelled Burgers; where=(unnamed) dale below a low green ridge | P005 `there was scarce time for a word ere the full half of them had passed by the sword of the Dry Tree`
+V main | Muster at Bear Castle | Shepherds stream to Bear Castle; the four fires are lit. | time=two hours before noon; who=Ralph, Giles, shepherds of the Downs; where=Bear Castle | P014 `there were but some two hundreds, who looked but few indeed in the great square place`
+
+U location | The Red Bridge is named only here; its position on Upmeads Water relative to other bridges is not given. | P007 `by the Red Bridge`
+U contradiction | The Garton spearmen number twenty-three here but twenty-two at the Folkmote tally (BFOUR-C24). | P002 `numbered twenty and three all told`
+
+O systems | Interrogation and quarter with oath-binding, and reputation effects for keeping or breaking it. | P009 `I have given life to these others, and so it must be held to`
+O world | Hilltop earthwork of the Ancient Folk as a muster point lit by beacons. | P013 `that stronghold of the Ancient Folk`

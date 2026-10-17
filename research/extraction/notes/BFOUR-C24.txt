@@ -1,0 +1,31 @@
+@ BFOUR-C24
+summary: The Folkmote of the Shepherds gathers in the north-east ingle of Bear Castle. Tall Thomas, an old hoary Elder with a sallet and a guisarme, hallows the mote. Ralph is asked to be their Captain "as a brother", not a hireling; he swears by their fathers and his and takes the ancient gold-lettered guisarme, and the Folk hail him brother. Stephen says the Dry Tree will fight as friends, paid by foes, not by the shepherds whose flocks they once raided. A burly man moves to break up the mote and march. Women bring food. The host is told over: 150 Dry Tree champions (not counting Stephen and Roger), 22 men of Garton and 377 shepherds (about 80 with bows), 554 in all. Giles is armed as a man-at-arms. Ralph goes afoot; Ursula walks beside him. Richard rides ahead with ten champions as scouts.
+geo: Bear Castle has earth walls with slopes and a fire on the top, a hallowed place inside, and a dyke outside the rampart with a wide view of lovely blue country.
+open: none
+
+E person | Tall Thomas | the Elder | elder | Old hoary man with a very long beard who hallows the Folkmote and gives Ralph the guisarme. | P014 `Nay, Tall Thomas, thou hast said and done all that need was`
+E custom | Folkmote of the Shepherds | the mote | assembly | Hallowed assembly of the shepherd folk at Bear Castle. | P002 `he proclaimed the hallowing of the Mote in such form of words as was due amongst that folk`
+E item | (unnamed) ancient guisarme of the Shepherds | ancient staff of war | weapon | Ancient guisarme inlaid with gold letters of old time, given to the Captain. | P009 `took from him the ancient guisarme, which was inlaid with gold letters of old time`
+E person | (unnamed) burly shepherd at the mote | - | shepherd | Big burly man who moves to end the mote and march. | P014 `None answered till a big and burly man rose up`
+
+R Ralph | leader_of | shepherds of the Downs | Captain and sworn brother | BFOUR-C24 | CANON/high | P009 `he swore in a loud voice to be a true brother of the Shepherd-folk`
+R Tall Thomas | leader_of | shepherds of the Downs | Elder of the mote | BFOUR-C24 | CANON/medium | P002 `straightway he proclaimed the hallowing of the Mote`
+R Fellowship of the Dry Tree | allied_with | shepherds of the Downs | fight as friends, unpaid by them | BFOUR-C24 | CANON/high | P013 `we will be paid by our foes and not by our friends`
+R Fellowship of the Dry Tree | enemy_of | shepherds of the Downs | past raids on their flocks | backstory | CANON/high | P013 `True it is that we have whiles driven prey in your country`
+
+S Folkmote of the Shepherds | within | Bear Castle | dir=in the north-east ingle, on the earth wall slopes; cert=fixed | CANON/high | - | P002 `the folk of the Shepherds took their places on the slopes of the earth walls`
+
+F custom | shepherds of the Downs | The mote is hallowed by an Elder with set words; assent is shown by humming and clashing weapons. | CANON/high | P002 `There arose a hum of assent from the Shepherds as he spoke and men clashed their weapons together`
+F politics | shepherds of the Downs | The shepherds choose a war Captain and ask whether he serves as an alien hireling or as a brother. | CANON/high | P006 `wilt thou be our Captain as an alien and a hireling, or as a brother?`
+F economy | shepherds of the Downs | The shepherds offer to pay allies for war, though unhoused or ill-housed. | CANON/high; ctx=dialogue:Tall Thomas | P012 `yet have we wherewithal to wage you`
+F military | Ralph | Ralph's host: 150 Dry Tree champions (besides Stephen and Roger), 22 of Garton, 377 shepherds (about 80 bowmen, the rest with glaives, spears and staff-weapons), 554 in all. | CANON/high | P017 `they were told over and made five hundred and fifty and four`
+F military | shepherds of the Downs | The shepherds have little defensive armour but are stark and doughty. | CANON/high | P016 `There was not much armour of defence amongst them`
+F military | Ralph | Ralph appoints leaders of tens and hundreds. | CANON/high | P016 `appointed them leaders of tens and hundreds with the help of Giles`
+F custom | shepherds of the Downs | After the mote, women bring food and drink and serve the strangers first. | CANON/high | P015 `certain women brought victual and drink to them, and served the strangers first`
+
+V main | Folkmote of the Shepherds | Ralph is made Captain and brother of the Shepherds; the host musters at 554. | time=late morning; who=Ralph, Tall Thomas, Stephen a-Hurst, Giles, shepherds of the Downs, Fellowship of the Dry Tree; where=Bear Castle | P009 `all the Folk cried, "Hail our brother!"`
+
+U contradiction | The tally gives 22 men of Garton against 23 the previous morning (BFOUR-C23); one may have been lost or detailed elsewhere, but the text does not say. | P016 `of the men of Garton were twenty and two`
+
+O systems | Faction adoption ritual: join as hireling or as sworn brother, with different obligations. | P006 `as an alien and a hireling, or as a brother`
+O systems | Army muster with unit counts by faction (a mustering screen). | P016 `appointed them leaders of tens and hundreds`

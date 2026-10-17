@@ -1,0 +1,49 @@
+@ BFOUR-C22
+summary: After midnight Giles comes to Ralph: an old shepherd of the Downs whom Ralph met on the Greenway (the Thirly drinking). The shepherds have been harried by the Burg-devils, their sheep lifted, some men slain and women taken. Tokens and an old tale of a helper from afar have roused them to arms; Giles repeats a rhyme of the Dry Tree and the Well-spring. The spaewife Martha, who lives alone near Saint Ann's Chapel, sent him to find a young green-coated captain at Mileham, Milton or Garton. Her message: do not turn aside to the Burgers at Foxworth Castle, the Longford or the Nineways Garth; other Burgers are marching from the Wood Debateable on Upmeads. She foresees a mote at Bear Castle and friends at Wulstead. Ralph resolves to ride to Bear Castle, light the four fires, hold the mote, go on to Wulstead and Clement Chapman, then home to Upmeads. Giles kisses Ursula, as is the custom of the Downs.
+geo: Saint Ann's Chapel is in the Downs. Mileham, Milton and Garton are thorps at the feet of the downs toward Higham. The Burgers hold strongholds hereabouts: Foxworth Castle, the Longford and the Nineways Garth. Another band is marching from the Wood Debateable toward Upmeads. The route is Bear Castle, then Wulstead, then over the hills into Upmeads.
+open: Where exactly are Foxworth Castle, the Longford and the Nineways Garth?
+
+E person | Giles | the carle | shepherd | Old but tough shepherd of the Downs, Martha's old friend, who brings her message and guides Ralph. | P013 `But hearken, Giles, hearken a while`
+E person | Martha | (unnamed) spaewife near Saint Ann's Chapel | spaewife | Wise woman of Giles's age, living alone near Saint Ann's Chapel, whose foretellings come true. | P009 `There is a woman who dwells alone with none to help her, anigh to Saint Ann's Chapel`
+E building | Saint Ann's Chapel | - | chapel | Chapel in the Downs near which Martha lives. | P009 `anigh to Saint Ann's Chapel`
+E place | Mileham | - | thorp | Thorp at the foot of the downs toward Higham. | P011 `it may be at Mileham`
+E place | Milton | - | thorp | Thorp at the foot of the downs toward Higham. | P011 `it may be at Milton`
+E building | Foxworth Castle | - | castle | Castle held by Burgers in this land. | P011 `either at Foxworth Castle, or the Longford, or the Nineways Garth`
+E place | the Longford | - | stronghold or ford | Place held by Burgers in this land. | P011 `either at Foxworth Castle, or the Longford, or the Nineways Garth`
+E building | Nineways Garth | - | stronghold | Place held by Burgers in this land. | P011 `either at Foxworth Castle, or the Longford, or the Nineways Garth`
+E text | (unnamed) rhyme of the Dry Tree and the Well-spring | - | prophecy rhyme | Shepherd rhyme: the Dry Tree shall be green, the Well-spring arise, the two be one, and the Well-spring come from the waste to the home. | P006 `The Dry Tree shall be seen On the green earth`
+E custom | (unnamed) kiss of the Downs | - | greeting | Old shepherd's kiss of a lady, as the custom of the Downs. | P020 `such is our custom of the Downs`
+
+R Giles | member_of | shepherds of the Downs | shepherd | BFOUR-C22 | CANON/high | P005 `I am of the folk of the shepherds of the Downs`
+R Giles | other | (unnamed) old spearman shepherd | probably the same man (met on the Greenway, Thirly) | BFOUR-C22 | INF/medium | P008 `he had seen him but that once when he rode the Greenway across the downs to Higham`
+R Martha | other | Giles | old friend and sweetheart | backstory | CANON/high | P009 `time was we have had many a fair play in the ingles of the downs in the July weather`
+R (unnamed) expelled Burgers | enemy_of | shepherds of the Downs | lifted sheep, slew men, took women | BFOUR-C22 | CANON/high | P005 `they have lifted our sheep, and slain some of us who withstood them`
+R (unnamed) expelled Burgers | owns | Foxworth Castle | Burger stronghold | BFOUR-C22 | CANON/medium | P011 `turn not aside to fall on the Burgers in this land, either at Foxworth Castle`
+R (unnamed) expelled Burgers | owns | Nineways Garth | Burger stronghold | BFOUR-C22 | CANON/medium | P011 `or the Nineways Garth`
+R Martha | other | Bear-father | names Ralph well-beloved of Bear-father | BFOUR-C22 | CANON/high | P011 `the well-beloved of Bear-father`
+
+S Martha | near | Saint Ann's Chapel | cert=fixed | CANON/high | - | P009 `anigh to Saint Ann's Chapel`
+S Saint Ann's Chapel | within | the Downs | terrain=downland, ingles of the downs; ctx=inferred from Giles's account; cert=constrained | INF/medium | - | P009 `in the ingles of the downs`
+S Mileham | at_foot_of | the Downs | dir=toward Higham; ctx=dialogue:Martha; cert=constrained | CANON/high | among the thorps at the feet of the downs | P011 `go adown to the thorps at the feet of the downs toward Higham`
+S Milton | at_foot_of | the Downs | dir=toward Higham; ctx=dialogue:Martha; cert=constrained | CANON/high | - | P011 `go adown to the thorps at the feet of the downs toward Higham`
+S Foxworth Castle | near | the Downs | dir=in this land, near the thorps at the feet of the downs; ctx=dialogue:Martha; cert=flexible | CANON/medium | the strong-places of the Burg-devils that are hereabouts | P017 `the strong-places of the Burg-devils that are hereabouts`
+S (unnamed) expelled Burgers | between | Wood Debateable | dir=marching from the Wood Debateable toward Upmeads; ctx=dialogue:Giles; cert=constrained | CANON/medium | prophecy | P015 `drawing thitherward, as I deem from the Wood Debateable`
+
+T Giles | Saint Ann's Chapel | Garton | mode=foot; dur=morning to after midnight; dir=down from the downs to the thorps | P009 `To the said woman I sought to-day in the morning`
+
+F magic | Martha | Martha's foretellings have always come true; she foresees Ralph's road, the mote at Bear Castle and the host at Wulstead. | CANON/high; ctx=dialogue:Giles | P009 `ever it fell out according to her spaedom`
+F history | shepherds of the Downs | An old tale says a helper from afar whose home is near, a stripling and a great man, a runaway and conqueror, will come in their need. | CANON/high; ctx=dialogue:Giles | P005 `there shall come to our helping one from afar, whose home is anigh`
+F society | shepherds of the Downs | The shepherds are few, live in cheap houses, move from hillside to hillside, and every grown man can handle weapons. | CANON/high; ctx=dialogue:Giles | P005 `whereas our houses be uncostly and that we move about easily from one hill-side to another`
+F military | shepherds of the Downs | Tokens on earth and in the heavens have stirred the scattered shepherds to meet in arms. | CANON/high; ctx=dialogue:Giles | P005 `there have been tokens on earth and in the heavens`
+F custom | shepherds of the Downs | Four fires at Bear Castle are the shepherds' call for help, as one of them told Ralph. | CANON/high; ctx=dialogue:Ralph | P016 `there I shall give the token of the four fires which erewhile a good man of the Shepherds bade me if I were in need`
+
+V prophecy | Martha's spaedom | Martha foresees Ralph at Mileham, Milton or Garton, the mote at Bear Castle, friends at Wulstead, and the Burgers dying by the river of Upmeads. | who=Martha, Giles, Ralph; where=Saint Ann's Chapel | P013 `the Burg-devils will have come from the Wood Debateable to find graves by the fair river`
+V legend | Helper from afar | The shepherds' tale of a helper from afar whose home is near. | who=shepherds of the Downs | P005 `a stripling and a great man; a runaway, and the conqueror of many`
+V main | Giles brings the message | Giles finds Ralph at Garton after midnight; Ralph plans Bear Castle, Wulstead, Upmeads. | time=after midnight; who=Giles, Ralph, Ursula, Roger of the Rope-walk; where=Garton | P016 `I shall gather my men, and ride the shortest way, which thou shalt show me, to Bear Castle`
+
+U location | Foxworth Castle, the Longford and the Nineways Garth have no stated positions beyond being Burger strongholds hereabouts. | P011 `either at Foxworth Castle, or the Longford, or the Nineways Garth`
+U identity | Giles is probably the old shepherd met on the Greenway (BONE), but the earlier passage gives no name. | P008 `he had seen him but that once when he rode the Greenway`
+
+O npc | Local seers whose prophecies steer quests without making the player a chosen one. | P009 `ever it fell out according to her spaedom`
+O factions | Semi-nomadic armed shepherd clans as a recruitable faction with a beacon signal. | P005 `we move about easily from one hill-side to another`
+O world | Occupied strongholds (Foxworth Castle, the Longford, Nineways Garth) as GAME EXPANSION liberation sites; placement Flexible. | P017 `the strong-places of the Burg-devils that are hereabouts`
