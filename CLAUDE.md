@@ -17,7 +17,7 @@ Status (keep current):
 | Asset inventory, dedupe, licences | Done: `ASSET_MANIFEST.md`, `asset_manifest.csv` |
 | Asset tooling (Python) | Done: terrain, rivers/roads, animation and building data, renderers |
 | Morris world research | Done: all 119 chapters extracted and quote-verified; registries, deliverables A–J in `docs/world/` |
-| Design document | Draft, awaiting owner answers; the owner's world directive is recorded in `docs/DECISIONS.md` |
+| Design document | Draft, awaiting owner answers; the owner's world directive and living-world economy intent (`docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`) are recorded in `docs/DECISIONS.md` |
 | Engine | **Not chosen.** Recommendation in `docs/ARCHITECTURE.md`, awaiting owner approval |
 | Primary platform | **Not chosen.** Awaiting owner |
 | Gameplay code | None. Do not start until the engine, platform and core mechanics are approved |

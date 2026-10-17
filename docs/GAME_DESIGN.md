@@ -38,6 +38,11 @@ Each change is recorded in `docs/DECISIONS.md`.
    J-M1 to J-M4).
 10. **Multiplayer:** player-hosted worlds for about 3–4 players; no always-on server (answers U9).
 11. **Visual direction:** 2D/2.5D isometric with 8-direction animated sprites (supersedes P2).
+12. **Living economy:** an interdependent production economy in which goods and money really move.
+    NPCs are persistent people with occupations, inventories and finances, and robbing or killing
+    them has lasting consequences. Players may follow productive or criminal paths. The design
+    reference is `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` (its §2 "established intent"), and its
+    fit with the repository is reviewed in `docs/LIVING_WORLD_ALIGNMENT.md`.
 
 ## Proposed (agent recommendations, not approved)
 
@@ -88,6 +93,8 @@ Each change is recorded in `docs/DECISIONS.md`.
 | U17 | Audio | No audio assets in the repo | Music and sound sources |
 | U18 | Monetisation and distribution | Climb up precedent: personal sideload | Free, paid, store, sideload |
 | U19 | Accessibility and settings | Climb up precedent had a full settings list | Requirements for this game |
+| U20 | Living-economy decisions | `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` §2 proposals and §17 questions | Aging and generations, currency conservation, simulation frequency, price model, law, recipe learning, scale, and the first slice (iron miner→smith as written, or the canon-grounded wool variant: `docs/LIVING_WORLD_ALIGNMENT.md` §4) |
+| U21 | Content rating and crime depiction | The living-world document allows theft, robbery and murder "where appropriate to the game's rating"; the novel features thralldom (J-S1) | Target rating; how violence, crime and thralldom are shown |
 
 ## Not assumed
 

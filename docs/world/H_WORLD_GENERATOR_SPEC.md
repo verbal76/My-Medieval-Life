@@ -207,6 +207,10 @@ laid out.
 
 ## 7. Simulation level of detail (relevant to NPCs and multiplayer)
 
+The owner's living-world document (`docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` §11) names the tiers
+**Detailed**, **Abstract** and **Dormant**. Those names are used from now on: Active = Detailed, and
+Near and Far are two schedules inside Abstract.
+
 | Ring | Where | Simulation |
 |---|---|---|
 | Active | chunks within view of any player | full: NPC routines, physics, combat |

@@ -81,7 +81,11 @@ approves them.
 ## M3 and later 🔒
 
 Defined only after Gate A, from the owner's answers on the core loop (U4) and the systems the owner
-approves (U6–U19).
+approves (U6–U21).
+
+Candidate M3, needing owner approval of its mechanics: the economy vertical slice in
+`docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` §14 (its Phases A + B), preceded by a world-state save
+design. See `docs/LIVING_WORLD_ALIGNMENT.md` §6.
 
 ## Known limitations carried forward
 

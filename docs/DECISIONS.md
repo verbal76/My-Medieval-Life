@@ -6,6 +6,8 @@ marked *Proposed* until the owner approves it.
 
 | Date | Decision | By | Notes |
 |---|---|---|---|
+| 2026-10-17 | Living world: an interdependent production economy with real movement of goods and money; persistent NPCs with occupations, inventories and finances; persistent consequences of robbery and death; productive and criminal paths | Owner | `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` §2 "established intent". Its other proposals stay open (U20). Review: `docs/LIVING_WORLD_ALIGNMENT.md` |
+| 2026-10-17 | Adopt the simulation tier names Detailed / Abstract / Dormant | Agent | Aligns H §7 with the living-world document §11 |
 | 2026-10-17 | The game's world is built on William Morris's *The Well at the World's End*; the novel's story is the world's history, not the player's quest | Owner | Master design directive §1, §15 |
 | 2026-10-17 | The player is an ordinary inhabitant of an original village in an original county, **not the chosen one** | Owner | Master design directive §2 |
 | 2026-10-17 | Magic is a learnable discipline (knowledge, proficiency, capacity), not a bloodline power; its scientific framing is GAME EXPANSION, never attributed to Morris | Owner | Directive §8; energy source and progression not yet decided (`docs/world/J_OPEN_DECISIONS.md` J-M1 to M4) |
