@@ -1,0 +1,334 @@
+{
+ "entities": [
+  {
+   "name": "Whitwall",
+   "aliases": [],
+   "type": "place",
+   "subtype": "walled market town",
+   "unnamed": false,
+   "summary": "Fair, great town with high new walls and many men-at-arms; a great market with merchants from many lands.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C12-P009",
+     "q": "to Whitwall, where was much recourse of merchants from many lands, and a noble market"
+    },
+    {
+     "p": "BTWO-C12-P014",
+     "q": "a fair and great town, well defensible, with high and new walls"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) hostel of the chapmen in Whitwall",
+   "aliases": [],
+   "type": "building",
+   "subtype": "inn",
+   "unnamed": true,
+   "summary": "Merchants' hostel where Blaise and Ralph lodge.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C12-P015",
+     "q": "Ralph rode with his brother to the hostel of the chapmen"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) merchant company to Whitwall",
+   "aliases": [],
+   "type": "group",
+   "subtype": "caravan",
+   "unnamed": true,
+   "summary": "About forty: ten men-at-arms, about six merchants and their lads, with pack horses and mules.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C12-P003",
+     "q": "some half-dozen seemed by their attire to be merchants, and the rest their lads"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Blaise",
+   "rel": "trades_in",
+   "b": "(unnamed) war booty",
+   "detail": "bought cheap from Companions, sold in other towns",
+   "when": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "the Companions, who were eager to depart, had sold him thieves' penny-worths"
+    }
+   ]
+  },
+  {
+   "a": "Richard the Red",
+   "rel": "serves",
+   "b": "Blaise",
+   "detail": "-",
+   "when": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C12-P003",
+     "q": "Blaise, his eldest brother, and Richard the Red with him"
+    }
+   ]
+  },
+  {
+   "a": "Blaise",
+   "rel": "sibling_of",
+   "b": "Ralph",
+   "detail": "-",
+   "when": "BTWO-C12",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C12-P004",
+     "q": "when two of the Upmeads kindred meet thus in an alien land"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Whitwall",
+   "rel": "distance_from",
+   "b": "(unnamed) highway ford of the Swelling Flood",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "reached the same evening from the hill above the ford, before the gates shut",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C12-P014",
+     "q": "So they rode on till it was even, and came to Whitwall before the shutting of the gates"
+    }
+   ]
+  },
+  {
+   "a": "Whitwall",
+   "rel": "other",
+   "b": "Swelling Flood",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "Whitwall lies on Ralph's side of the river; crossing would be going back",
+   "refs": [
+    {
+     "p": "BTWO-C12-P003",
+     "q": "since if he crossed the water he would be on the backward way"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Blaise",
+    "Richard the Red",
+    "(unnamed) merchant company to Whitwall"
+   ],
+   "from": "(unnamed) highway ford of the Swelling Flood",
+   "to": "Whitwall",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "afternoon",
+   "end_time_text": "evening",
+   "terrain_text": "",
+   "chapter": "BTWO-C12",
+   "refs": [
+    {
+     "p": "BTWO-C12-P014",
+     "q": "came to Whitwall before the shutting of the gates"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Blaise",
+    "Richard the Red"
+   ],
+   "from": "Four-want-way",
+   "to": "Whitwall",
+   "via": [
+    "(unnamed) captured rich town"
+   ],
+   "mode": "horse",
+   "direction_text": "east (set out)",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C12",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "when he had left Upmeads he had ridden with Richard up and down and round about"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "trade",
+   "subject": "Blaise",
+   "statement": "Companions who had taken a rich town sold the booty cheaply to the first buyers; Blaise resold it at profit from town to town.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Blaise",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "the Companions who had conquered it were looking for chapmen to cheapen their booty"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "(unnamed) merchant company to Whitwall",
+   "statement": "Merchants arm themselves and hire men-at-arms to cross the wildwoods.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Blaise",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "he and other chapmen had armed them, and waged men-at-arms to defend them, and so tried the adventure of the wildwoods"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Blaise",
+   "statement": "Blaise says trading is \"scarce kingly or knightly\", but few know Upmeads to blame him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Blaise",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C12-P009",
+     "q": "I have had good hap in these days, though scarce kingly or knightly, for I have been buying and selling"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Whitwall",
+   "statement": "Whitwall's high new walls are well manned.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C12-P014",
+     "q": "men-at-arms good store to garnish them"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph meets Blaise",
+   "chapter": "BTWO-C12",
+   "layer": "main",
+   "time_text": "afternoon",
+   "participants": [
+    "Ralph",
+    "Blaise",
+    "Richard the Red"
+   ],
+   "places": [
+    "(unnamed) highway ford of the Swelling Flood"
+   ],
+   "summary": "At the hill above the ford Ralph meets Blaise and Richard and rides with them to Whitwall.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C12-P004",
+     "q": "O happy day! when two of the Upmeads kindred meet thus in an alien land!"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The rich town taken by Companions is unnamed.",
+   "refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "till he came to a rich town which had just been taken in war"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Whitwall's direction from the ford is not stated.",
+   "refs": [
+    {
+     "p": "BTWO-C12-P014",
+     "q": "came to Whitwall"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "War-booty arbitrage: buying loot from departing mercenaries and selling elsewhere, as a trade mechanic.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BTWO-C12-P011",
+     "q": "had sold him thieves' penny-worths"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C12",
+ "chapters": [
+  "BTWO-C12"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C12",
+   "paragraphs_total": 14,
+   "all_paragraphs_read": true,
+   "summary": "A company of about forty (some ten men-at-arms, about six merchants and servants with pack animals) crosses the ford and passes Ralph; among them are his brother Blaise and Richard the Red. Blaise has become a prosperous merchant, having bought loot cheaply from Companions who had taken a town and traded from town to town. He is bound for Whitwall, a great market. Ralph tells his adventures but not of the Lady. They reach Whitwall by evening: a great, well-defended town with high new walls, and lodge at the chapmen's hostel.",
+   "geography_notes": "Whitwall lies within an afternoon and evening's ride of the Swelling Flood ford, on the same side as Ralph (crossing back would be the \"backward way\"). The merchants came through the wildwoods to reach it.",
+   "open_questions": [
+    "Which town did the Companions take and sell to Blaise?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,293 @@
+{
+ "entities": [
+  {
+   "name": "Companions",
+   "aliases": [],
+   "type": "group",
+   "subtype": "mercenaries",
+   "unnamed": false,
+   "summary": "Armed men bearing long swords over their shoulders; free-company soldiers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C11-P004",
+     "q": "two Companions armed and bearing long swords over their shoulders"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) highway ford of the Swelling Flood",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "ford",
+   "unnamed": true,
+   "summary": "Very wide, shallow ford where a highway crosses the Swelling Flood, with a thorp on the far bank.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "he saw clearly that this was the ford of a highway"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) thorp beyond the Swelling Flood ford",
+   "aliases": [],
+   "type": "place",
+   "subtype": "thorp",
+   "unnamed": true,
+   "summary": "Little thorp on the far side of the ford.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "on the other side of the river was a little thorp"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) sheep downs by the Swelling Flood",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "downland",
+   "unnamed": true,
+   "summary": "Lower, longer hills with short grass, fit for sheep; a few shepherds.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C11-P004",
+     "q": "a down country fit for the feeding of sheep"
+    }
+   ]
+  }
+ ],
+ "relations": [],
+ "spatial": [
+  {
+   "a": "(unnamed) sheep downs by the Swelling Flood",
+   "rel": "route_next",
+   "b": "(unnamed) sandstone desert",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "woods end in low long grassy hills",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C11-P004",
+     "q": "the wood and the trees ended, and the hills were lower and longer"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) desert stream",
+   "rel": "other",
+   "b": "(unnamed) sheep downs by the Swelling Flood",
+   "direction": "the stream turns and winds much to the northward",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "stream course",
+   "refs": [
+    {
+     "p": "BTWO-C11-P004",
+     "q": "it seemed to him to turn and wind round over much to the northward"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) highway ford of the Swelling Flood",
+   "rel": "crossing_of",
+   "b": "Swelling Flood",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "very wide and shallow",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "a highway's ford",
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "where the road met it, it was very wide, and shallow withal"
+    }
+   ]
+  },
+  {
+   "a": "Swelling Flood",
+   "rel": "other",
+   "b": "(unnamed) wide river of the empty valley",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "same river and valley crossed with Roger",
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "he saw the big river close below running through the wide valley which he had crossed with Roger on that other day"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "(unnamed) desert cave-house",
+   "to": "(unnamed) highway ford of the Swelling Flood",
+   "via": [
+    "(unnamed) desert stream",
+    "(unnamed) sheep downs by the Swelling Flood"
+   ],
+   "mode": "foot",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "midmorning",
+   "end_time_text": "afternoon",
+   "terrain_text": "valley, downs, road",
+   "chapter": "BTWO-C11",
+   "refs": [
+    {
+     "p": "BTWO-C11-P002",
+     "q": "when it was now midmorning"
+    },
+    {
+     "p": "BTWO-C11-P008",
+     "q": "glittered in the afternoon sun"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "trade",
+   "subject": "(unnamed) road across the downs",
+   "statement": "Travellers include armed merchants with armed servants and country women carrying produce by ass.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C11-P006",
+     "q": "merchants clad goodly, with three carles, their servants"
+    }
+   ]
+  },
+  {
+   "category": "agriculture",
+   "subject": "(unnamed) sheep downs by the Swelling Flood",
+   "statement": "The valley is peopled: carts, sheds, sheep and cattle in the meadows.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "there were carts and sheds scattered about the hither side, and sheep and neat feeding in the meadows"
+    }
+   ]
+  },
+  {
+   "category": "transport",
+   "subject": "(unnamed) road across the downs",
+   "statement": "A lord's messenger rides with jack, sallet, long spear and saddle budgets.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C11-P007",
+     "q": "like some lord's man going a message"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph leaves the wilderness",
+   "chapter": "BTWO-C11",
+   "layer": "main",
+   "time_text": "midmorning to afternoon",
+   "participants": [
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) sheep downs by the Swelling Flood"
+   ],
+   "summary": "Grieving, Ralph walks out of the desert to the peopled Swelling Flood valley.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "in short it was another world from the desert"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether this highway ford is the ford a mile and a half downstream that Roger avoided (BONE-C17).",
+   "refs": [
+    {
+     "p": "BTWO-C11-P008",
+     "q": "this was the ford of a highway"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Roadside traffic types (mercenary pairs, pedlars, merchant trains, couriers) as encounter tables on highways.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BTWO-C11-P004",
+     "q": "two Companions armed and bearing long swords over their shoulders"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C11",
+ "chapters": [
+  "BTWO-C11"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C11",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "In mid-morning Ralph leaves, resolving to go on with the quest for the Well since nothing else seems possible. He follows the stream toward the Swelling Flood until the woods end in sheep downs, then takes a road across the downs. He meets armed Companions, two country women with an ass, merchants with servants, and a messenger. From a high hill he sees the Swelling Flood in its wide valley, with a broad shallow ford of a highway, a thorp on the far side, carts, sheds and cattle: a peopled land.",
+   "geography_notes": "From the cave the stream leads toward the Swelling Flood; woods end; lower, longer hills of short grass (sheep downs, some shepherds). The stream bends north; a road crosses the downs; a long, high hill; below it the Swelling Flood in the wide valley, with the ford of a highway (wide and shallow), a little thorp on the far side, and settlement on both banks.",
+   "open_questions": [
+    "Is this ford the same as the ford a mile and a half downstream in BONE-C17?"
+   ]
+  }
+ ]
+}

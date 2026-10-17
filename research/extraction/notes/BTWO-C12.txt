@@ -1,0 +1,30 @@
+@ BTWO-C12
+summary: A company of about forty (some ten men-at-arms, about six merchants and servants with pack animals) crosses the ford and passes Ralph; among them are his brother Blaise and Richard the Red. Blaise has become a prosperous merchant, having bought loot cheaply from Companions who had taken a town and traded from town to town. He is bound for Whitwall, a great market. Ralph tells his adventures but not of the Lady. They reach Whitwall by evening: a great, well-defended town with high new walls, and lodge at the chapmen's hostel.
+geo: Whitwall lies within an afternoon and evening's ride of the Swelling Flood ford, on the same side as Ralph (crossing back would be the "backward way"). The merchants came through the wildwoods to reach it.
+open: Which town did the Companions take and sell to Blaise?
+
+E place | Whitwall | - | walled market town | Fair, great town with high new walls and many men-at-arms; a great market with merchants from many lands. | P009 `to Whitwall, where was much recourse of merchants from many lands, and a noble market`; P014 `a fair and great town, well defensible, with high and new walls`
+E building | (unnamed) hostel of the chapmen in Whitwall | - | inn | Merchants' hostel where Blaise and Ralph lodge. | P015 `Ralph rode with his brother to the hostel of the chapmen`
+E group | (unnamed) merchant company to Whitwall | - | caravan | About forty: ten men-at-arms, about six merchants and their lads, with pack horses and mules. | P003 `some half-dozen seemed by their attire to be merchants, and the rest their lads`
+
+R Blaise | trades_in | (unnamed) war booty | bought cheap from Companions, sold in other towns | BTWO-C12 | CANON/high | P011 `the Companions, who were eager to depart, had sold him thieves' penny-worths`
+R Richard the Red | serves | Blaise | - | BTWO-C12 | CANON/high | P003 `Blaise, his eldest brother, and Richard the Red with him`
+R Blaise | sibling_of | Ralph | - | BTWO-C12 | CANON/high | P004 `when two of the Upmeads kindred meet thus in an alien land`
+
+S Whitwall | distance_from | (unnamed) highway ford of the Swelling Flood | time=reached the same evening from the hill above the ford, before the gates shut; cert=constrained | CANON/high | - | P014 `So they rode on till it was even, and came to Whitwall before the shutting of the gates`
+S Whitwall | other | Swelling Flood | ctx=narration; cert=constrained | CANON/medium | Whitwall lies on Ralph's side of the river; crossing would be going back | P003 `since if he crossed the water he would be on the backward way`
+
+T Ralph, Blaise, Richard the Red, (unnamed) merchant company to Whitwall | (unnamed) highway ford of the Swelling Flood | Whitwall | mode=horse; start=afternoon; end=evening | P014 `came to Whitwall before the shutting of the gates`
+T Blaise, Richard the Red | Four-want-way | Whitwall | via=(unnamed) captured rich town; mode=horse; dir=east (set out) | P011 `when he had left Upmeads he had ridden with Richard up and down and round about`
+
+F trade | Blaise | Companions who had taken a rich town sold the booty cheaply to the first buyers; Blaise resold it at profit from town to town. | CANON/high; ctx=dialogue:Blaise | P011 `the Companions who had conquered it were looking for chapmen to cheapen their booty`
+F trade | (unnamed) merchant company to Whitwall | Merchants arm themselves and hire men-at-arms to cross the wildwoods. | CANON/high; ctx=dialogue:Blaise | P011 `he and other chapmen had armed them, and waged men-at-arms to defend them, and so tried the adventure of the wildwoods`
+F society | Blaise | Blaise says trading is "scarce kingly or knightly", but few know Upmeads to blame him. | CANON/high; ctx=dialogue:Blaise | P009 `I have had good hap in these days, though scarce kingly or knightly, for I have been buying and selling`
+F military | Whitwall | Whitwall's high new walls are well manned. | CANON/high | P014 `men-at-arms good store to garnish them`
+
+V main | Ralph meets Blaise | At the hill above the ford Ralph meets Blaise and Richard and rides with them to Whitwall. | time=afternoon; who=Ralph, Blaise, Richard the Red; where=(unnamed) highway ford of the Swelling Flood | P004 `O happy day! when two of the Upmeads kindred meet thus in an alien land!`
+
+U identity | The rich town taken by Companions is unnamed. | P011 `till he came to a rich town which had just been taken in war`
+U location | Whitwall's direction from the ford is not stated. | P014 `came to Whitwall`
+
+O economy | War-booty arbitrage: buying loot from departing mercenaries and selling elsewhere, as a trade mechanic. | P011 `had sold him thieves' penny-worths`

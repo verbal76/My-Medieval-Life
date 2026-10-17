@@ -1,0 +1,461 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) sandstone desert",
+   "aliases": [
+    "the lonesomest of deserts"
+   ],
+   "type": "feature",
+   "subtype": "desert",
+   "unnamed": true,
+   "summary": "Steep grassy valleys with trees and sandstone cliffs, plentiful deer, no dwellings; once a fair peopled land; part of the Land of the Tower.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "a country of steep little valleys, grassy, besprinkled with trees and bushes, with hills of sandstone going up from them"
+    }
+   ]
+  },
+  {
+   "name": "Swelling Flood",
+   "aliases": [
+    "the big river"
+   ],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": false,
+   "summary": "Name of the wide river (crossed by Ralph and Roger in BONE-C17).",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C10-P003",
+     "q": "that big river aforesaid, which is called the Swelling Flood"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) desert cave-house",
+   "aliases": [
+    "Chamber of Love",
+    "Hall of the Summer-tide"
+   ],
+   "type": "building",
+   "subtype": "cave",
+   "unnamed": true,
+   "summary": "High, wide, clean cave with a white sand floor in a sheer cliff, above a greensward table.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C10-P006",
+     "q": "Ralph saw in the face of the high cliff the mouth of a cave"
+    },
+    {
+     "p": "BTWO-C10-P008",
+     "q": "this House of the wilderness and this Hall of the Summer-tide, and the Chamber of Love that here is"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) tofts in the sandstone desert",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "ruins",
+   "unnamed": true,
+   "summary": "Mounds that may be sunken house-walls.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "those mounds we see, as yonder, and yonder again, are tofts of house-walls long ago sunken into the earth of the valley"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) grave of the Lady",
+   "aliases": [],
+   "type": "building",
+   "subtype": "grave",
+   "unnamed": true,
+   "summary": "Stones heaped over the Lady inside the cave.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C10-P026",
+     "q": "heaped them upon her till she was utterly hidden by them"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) cairn of the Knight of the Sun",
+   "aliases": [],
+   "type": "building",
+   "subtype": "cairn",
+   "unnamed": true,
+   "summary": "Cairn raised over the Knight on the greensward table.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C10-P026",
+     "q": "I will raise a cairn above him here on this fair little plain"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Lady of Abundance",
+   "rel": "killed_by",
+   "b": "Knight of the Sun",
+   "detail": "sword wound in the breast",
+   "when": "BTWO-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C10-P022",
+     "q": "The blood was flowing fast from a great wound in her breast"
+    }
+   ]
+  },
+  {
+   "a": "Knight of the Sun",
+   "rel": "killed_by",
+   "b": "Ralph",
+   "detail": "arrow through the eye",
+   "when": "BTWO-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C10-P021",
+     "q": "the shaft, sped by that fell archer, smote the huge man through the eye into the brain"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) sandstone desert",
+   "rel": "within",
+   "b": "Kingdom of the Tower",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "already desert in her reign",
+   "refs": [
+    {
+     "p": "BTWO-C10-P003",
+     "q": "of which indeed this desert is verily a part, but was desert still in the days when I was Queen of the Land"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) desert stream",
+   "rel": "flows_into",
+   "b": "Swelling Flood",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C10-P003",
+     "q": "the little stream that runs yonder beneath those cliffs, is making its way towards that big river aforesaid"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) desert cave-house",
+   "rel": "adjacent_to",
+   "b": "(unnamed) desert stream",
+   "direction": "",
+   "distance_text": "cliff some fifty paces beyond the stream",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "greensward table ten feet above the stream",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C10-P006",
+     "q": "a sheer cliff rose up some fifty paces beyond it"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) sandstone desert",
+   "rel": "route_next",
+   "b": "(unnamed) clearing of grey stones",
+   "direction": "sun westering behind them",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "thick woods, then the desert valleys",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "travelling roughly east in late afternoon",
+   "refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "the sun was westering behind them, and casting long shadows"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) sandstone desert",
+   "rel": "other",
+   "b": "(unnamed) wasted downland",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Lady of Abundance",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "the tales of the wasted land about the wide river are tied to this desert",
+   "refs": [
+    {
+     "p": "BTWO-C10-P003",
+     "q": "tell me, has it anything to do with that land about the wide river"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Lady of Abundance",
+    "Ralph"
+   ],
+   "from": "(unnamed) strawberry brook",
+   "to": "(unnamed) desert cave-house",
+   "via": [],
+   "mode": "foot",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "late afternoon",
+   "end_time_text": "before sunset",
+   "terrain_text": "pine wood, sandstone valleys",
+   "chapter": "BTWO-C10",
+   "refs": [
+    {
+     "p": "BTWO-C10-P006",
+     "q": "yonder is our house for this even"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "(unnamed) sandstone desert",
+   "statement": "The Lady thinks it was once one of the fairest lands, with castles, cots and homesteads; the tales of its wasting blend with the War of the Tower.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "it was once one of the fairest of lands, with castles and cots and homesteads all about"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) sandstone desert",
+   "statement": "Deer of all sizes are plentiful and fear people little; few hunters or wayfarers pass.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "they saw plenteous deer both great and small, and the wild things seemed to fear them but little"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Lady of Abundance",
+   "statement": "She says she shoots well and keeps a bow, arrows, kettle, meal and wine stored in the cave.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Lady of Abundance",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P011",
+     "q": "shoot well, all woodcraft comes handy to me"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Lady of Abundance",
+   "statement": "For the meeting she wore meadowsweet and eglantine and turned her ring-bezels outward.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P023",
+     "q": "had turned the bezels of her finger-rings outward, for joy of that meeting"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Ralph",
+   "statement": "Ralph buries the Lady in the cave and raises a separate cairn over her slayer, against wolves and kites.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P026",
+     "q": "let his bones be covered up from the wolf and the kite"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) sandstone desert",
+   "statement": "Ralph shoots a roe for food in the valley thicket.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P015",
+     "q": "he smote a roe with a shaft and slew her"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Death of the Lady of Abundance",
+   "chapter": "BTWO-C10",
+   "layer": "main",
+   "time_text": "sunset",
+   "participants": [
+    "Lady of Abundance",
+    "Knight of the Sun",
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) desert cave-house"
+   ],
+   "summary": "The Knight of the Sun finds the Lady at the cave and kills her; Ralph shoots him dead.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P020",
+     "q": "The witch is dead, the whore is dead!"
+    }
+   ]
+  },
+  {
+   "label": "Burials in the desert",
+   "chapter": "BTWO-C10",
+   "layer": "main",
+   "time_text": "next morning",
+   "participants": [
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) desert cave-house"
+   ],
+   "summary": "Ralph entombs the Lady in the cave under stones and raises a cairn over the Knight.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C10-P026",
+     "q": "He took up the body of the Lady"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Direction of travel: the sun \"westering behind them\" implies they were heading east.",
+   "refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "the sun was westering behind them"
+    }
+   ]
+  },
+  {
+   "kind": "contradiction",
+   "question": "The Lady and her foretelling did not foresee her death, though she claimed some foresight.",
+   "refs": [
+    {
+     "p": "BTWO-C10-P007",
+     "q": "I said that when I brought thee hither I would stay thereon and talk with thee"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Abandoned lands with sunken house mounds, cliffs and caves as a generator biome with memorial sites (graves, cairns).",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C10-P002",
+     "q": "are tofts of house-walls long ago sunken into the earth of the valley"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C10",
+ "chapters": [
+  "BTWO-C10"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C10",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "Leaving the woods, they cross a lonely, beautiful desert of steep grassy valleys and sandstone cliffs, with mounds that may be sunken house-walls; the Lady says it was once peopled, is part of the Land of the Tower, and was already desert in her reign, and that its stream flows to the big river called the Swelling Flood. At a cave above a stream with stepping stones she has stored food. She blesses the \"Chamber of Love\". While Ralph hunts and bathes, the Knight of the Sun arrives on Silverfax and kills her. Ralph shoots him through the eye. Ralph buries the Lady under boughs and stones in the cave, raises a cairn over the knight outside, frees Silverfax, and thinks of Upmeads and the Well.",
+   "geography_notes": "Beyond the thick woods (west, with the sun behind them toward evening? they travel with the sun westering behind them, so eastward): steep grassy valleys with trees and sandstone hills broken into cliffs; mounds that may be tofts of old houses. A little stream under the cliffs runs toward the Swelling Flood. At the desert house the stream runs in pools and riffles; fifty paces beyond, a sheer cliff with a cave; between them a greensward table with three thorns, ten feet above the stream, with a scree at one end. Stepping stones cross the stream.",
+   "open_questions": [
+    "Which way were they travelling? (sun \"westering behind them\" implies east)",
+    "Is the desert the eastern part of the old Land of the Tower?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+@ BTWO-C11
+summary: In mid-morning Ralph leaves, resolving to go on with the quest for the Well since nothing else seems possible. He follows the stream toward the Swelling Flood until the woods end in sheep downs, then takes a road across the downs. He meets armed Companions, two country women with an ass, merchants with servants, and a messenger. From a high hill he sees the Swelling Flood in its wide valley, with a broad shallow ford of a highway, a thorp on the far side, carts, sheds and cattle: a peopled land.
+geo: From the cave the stream leads toward the Swelling Flood; woods end; lower, longer hills of short grass (sheep downs, some shepherds). The stream bends north; a road crosses the downs; a long, high hill; below it the Swelling Flood in the wide valley, with the ford of a highway (wide and shallow), a little thorp on the far side, and settlement on both banks.
+open: Is this ford the same as the ford a mile and a half downstream in BONE-C17?
+
+E group | Companions | - | mercenaries | Armed men bearing long swords over their shoulders; free-company soldiers. | P004 `two Companions armed and bearing long swords over their shoulders`
+E feature | (unnamed) highway ford of the Swelling Flood | - | ford | Very wide, shallow ford where a highway crosses the Swelling Flood, with a thorp on the far bank. | P008 `he saw clearly that this was the ford of a highway`
+E place | (unnamed) thorp beyond the Swelling Flood ford | - | thorp | Little thorp on the far side of the ford. | P008 `on the other side of the river was a little thorp`
+E feature | (unnamed) sheep downs by the Swelling Flood | - | downland | Lower, longer hills with short grass, fit for sheep; a few shepherds. | P004 `a down country fit for the feeding of sheep`
+
+S (unnamed) sheep downs by the Swelling Flood | route_next | (unnamed) sandstone desert | terrain=woods end in low long grassy hills; cert=fixed | CANON/high | - | P004 `the wood and the trees ended, and the hills were lower and longer`
+S (unnamed) desert stream | other | (unnamed) sheep downs by the Swelling Flood | dir=the stream turns and winds much to the northward; cert=constrained | CANON/high | stream course | P004 `it seemed to him to turn and wind round over much to the northward`
+S (unnamed) highway ford of the Swelling Flood | crossing_of | Swelling Flood | terrain=very wide and shallow; cert=fixed | CANON/high | a highway's ford | P008 `where the road met it, it was very wide, and shallow withal`
+S Swelling Flood | other | (unnamed) wide river of the empty valley | ctx=narration; cert=fixed | CANON/high | same river and valley crossed with Roger | P008 `he saw the big river close below running through the wide valley which he had crossed with Roger on that other day`
+
+T Ralph | (unnamed) desert cave-house | (unnamed) highway ford of the Swelling Flood | via=(unnamed) desert stream, (unnamed) sheep downs by the Swelling Flood; mode=foot; start=midmorning; end=afternoon; terrain=valley, downs, road | P002 `when it was now midmorning`; P008 `glittered in the afternoon sun`
+
+F trade | (unnamed) road across the downs | Travellers include armed merchants with armed servants and country women carrying produce by ass. | CANON/high | P006 `merchants clad goodly, with three carles, their servants`
+F agriculture | (unnamed) sheep downs by the Swelling Flood | The valley is peopled: carts, sheds, sheep and cattle in the meadows. | CANON/high | P008 `there were carts and sheds scattered about the hither side, and sheep and neat feeding in the meadows`
+F transport | (unnamed) road across the downs | A lord's messenger rides with jack, sallet, long spear and saddle budgets. | CANON/high | P007 `like some lord's man going a message`
+
+V main | Ralph leaves the wilderness | Grieving, Ralph walks out of the desert to the peopled Swelling Flood valley. | time=midmorning to afternoon; who=Ralph; where=(unnamed) sheep downs by the Swelling Flood | P008 `in short it was another world from the desert`
+
+U identity | Whether this highway ford is the ford a mile and a half downstream that Roger avoided (BONE-C17). | P008 `this was the ford of a highway`
+
+O economy | Roadside traffic types (mercenary pairs, pedlars, merchant trains, couriers) as encounter tables on highways. | P004 `two Companions armed and bearing long swords over their shoulders`

@@ -1,0 +1,37 @@
+@ BTWO-C10
+summary: Leaving the woods, they cross a lonely, beautiful desert of steep grassy valleys and sandstone cliffs, with mounds that may be sunken house-walls; the Lady says it was once peopled, is part of the Land of the Tower, and was already desert in her reign, and that its stream flows to the big river called the Swelling Flood. At a cave above a stream with stepping stones she has stored food. She blesses the "Chamber of Love". While Ralph hunts and bathes, the Knight of the Sun arrives on Silverfax and kills her. Ralph shoots him through the eye. Ralph buries the Lady under boughs and stones in the cave, raises a cairn over the knight outside, frees Silverfax, and thinks of Upmeads and the Well.
+geo: Beyond the thick woods (west, with the sun behind them toward evening? they travel with the sun westering behind them, so eastward): steep grassy valleys with trees and sandstone hills broken into cliffs; mounds that may be tofts of old houses. A little stream under the cliffs runs toward the Swelling Flood. At the desert house the stream runs in pools and riffles; fifty paces beyond, a sheer cliff with a cave; between them a greensward table with three thorns, ten feet above the stream, with a scree at one end. Stepping stones cross the stream.
+open: Which way were they travelling? (sun "westering behind them" implies east) || Is the desert the eastern part of the old Land of the Tower?
+
+E feature | (unnamed) sandstone desert | the lonesomest of deserts | desert | Steep grassy valleys with trees and sandstone cliffs, plentiful deer, no dwellings; once a fair peopled land; part of the Land of the Tower. | P002 `a country of steep little valleys, grassy, besprinkled with trees and bushes, with hills of sandstone going up from them`
+E feature | Swelling Flood | the big river | river | Name of the wide river (crossed by Ralph and Roger in BONE-C17). | P003 `that big river aforesaid, which is called the Swelling Flood`
+E building | (unnamed) desert cave-house | Chamber of Love, Hall of the Summer-tide | cave | High, wide, clean cave with a white sand floor in a sheer cliff, above a greensward table. | P006 `Ralph saw in the face of the high cliff the mouth of a cave`; P008 `this House of the wilderness and this Hall of the Summer-tide, and the Chamber of Love that here is`
+E feature | (unnamed) tofts in the sandstone desert | - | ruins | Mounds that may be sunken house-walls. | P002 `those mounds we see, as yonder, and yonder again, are tofts of house-walls long ago sunken into the earth of the valley`
+E building | (unnamed) grave of the Lady | - | grave | Stones heaped over the Lady inside the cave. | P026 `heaped them upon her till she was utterly hidden by them`
+E building | (unnamed) cairn of the Knight of the Sun | - | cairn | Cairn raised over the Knight on the greensward table. | P026 `I will raise a cairn above him here on this fair little plain`
+
+R Lady of Abundance | killed_by | Knight of the Sun | sword wound in the breast | BTWO-C10 | CANON/high | P022 `The blood was flowing fast from a great wound in her breast`
+R Knight of the Sun | killed_by | Ralph | arrow through the eye | BTWO-C10 | CANON/high | P021 `the shaft, sped by that fell archer, smote the huge man through the eye into the brain`
+
+S (unnamed) sandstone desert | within | Kingdom of the Tower | ctx=dialogue:Lady of Abundance; cert=fixed | CANON/high | already desert in her reign | P003 `of which indeed this desert is verily a part, but was desert still in the days when I was Queen of the Land`
+S (unnamed) desert stream | flows_into | Swelling Flood | ctx=dialogue:Lady of Abundance; cert=fixed | CANON/high | - | P003 `the little stream that runs yonder beneath those cliffs, is making its way towards that big river aforesaid`
+S (unnamed) desert cave-house | adjacent_to | (unnamed) desert stream | dist=cliff some fifty paces beyond the stream; terrain=greensward table ten feet above the stream; cert=fixed | CANON/high | - | P006 `a sheer cliff rose up some fifty paces beyond it`
+S (unnamed) sandstone desert | route_next | (unnamed) clearing of grey stones | dir=sun westering behind them; terrain=thick woods, then the desert valleys; cert=constrained | CANON/medium | travelling roughly east in late afternoon | P002 `the sun was westering behind them, and casting long shadows`
+S (unnamed) sandstone desert | other | (unnamed) wasted downland | ctx=dialogue:Lady of Abundance; cert=constrained | CANON/medium | the tales of the wasted land about the wide river are tied to this desert | P003 `tell me, has it anything to do with that land about the wide river`
+
+T Lady of Abundance, Ralph | (unnamed) strawberry brook | (unnamed) desert cave-house | mode=foot; start=late afternoon; end=before sunset; terrain=pine wood, sandstone valleys | P006 `yonder is our house for this even`
+
+F history | (unnamed) sandstone desert | The Lady thinks it was once one of the fairest lands, with castles, cots and homesteads; the tales of its wasting blend with the War of the Tower. | CANON/high; ctx=dialogue:Lady of Abundance | P002 `it was once one of the fairest of lands, with castles and cots and homesteads all about`
+F ecology | (unnamed) sandstone desert | Deer of all sizes are plentiful and fear people little; few hunters or wayfarers pass. | CANON/high | P002 `they saw plenteous deer both great and small, and the wild things seemed to fear them but little`
+F weapons | Lady of Abundance | She says she shoots well and keeps a bow, arrows, kettle, meal and wine stored in the cave. | CANON/high; ctx=dialogue:Lady of Abundance | P011 `shoot well, all woodcraft comes handy to me`
+F custom | Lady of Abundance | For the meeting she wore meadowsweet and eglantine and turned her ring-bezels outward. | CANON/high | P023 `had turned the bezels of her finger-rings outward, for joy of that meeting`
+F custom | Ralph | Ralph buries the Lady in the cave and raises a separate cairn over her slayer, against wolves and kites. | CANON/high | P026 `let his bones be covered up from the wolf and the kite`
+F ecology | (unnamed) sandstone desert | Ralph shoots a roe for food in the valley thicket. | CANON/high | P015 `he smote a roe with a shaft and slew her`
+
+V main | Death of the Lady of Abundance | The Knight of the Sun finds the Lady at the cave and kills her; Ralph shoots him dead. | time=sunset; who=Lady of Abundance, Knight of the Sun, Ralph; where=(unnamed) desert cave-house | P020 `The witch is dead, the whore is dead!`
+V main | Burials in the desert | Ralph entombs the Lady in the cave under stones and raises a cairn over the Knight. | time=next morning; who=Ralph; where=(unnamed) desert cave-house | P026 `He took up the body of the Lady`
+
+U ambiguity | Direction of travel: the sun "westering behind them" implies they were heading east. | P002 `the sun was westering behind them`
+U contradiction | The Lady and her foretelling did not foresee her death, though she claimed some foresight. | P007 `I said that when I brought thee hither I would stay thereon and talk with thee`
+
+O world | Abandoned lands with sunken house mounds, cliffs and caves as a generator biome with memorial sites (graves, cairns). | P002 `are tofts of house-walls long ago sunken into the earth of the valley`
