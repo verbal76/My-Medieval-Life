@@ -1,0 +1,24 @@
+@ BONE-C23
+summary: The lady kisses the stirring Ralph and tells him she was the cloaked youth at the Flower de Luce and in the escape, entering the Burg with her captain of war to free four friends. The Knight of the Sun disarms Ralph as his prisoner and sends him for the horses. Walter the Black proves alive; the lady dresses his wound and says only her hand and learning can save him. With no food, they must wait; Ralph finds bread, meat and wine in Walter's saddle-bags; the lady makes Walter a bracken bed.
+geo: The knights' horses are a hundred yards into the wood in line from the oak tree.
+open: Is the "captain of war" the man of the leafless tree?
+
+E creature | (unnamed) black horse of Walter the Black | - | horse | Walter's black horse with saddle-bags of food. | P010 `a black horse that was of the Black Knight`
+E creature | (unnamed) bay horse of the Knight of the Sun | - | horse | Strong heavy bay. | P010 `a bay of the Knight of the Sun`
+E person | (unnamed) lady's captain of war | - | captain | The lady's war-captain who entered the Burg with her. | P004 `I had come into the Burg with my captain of war`
+
+R (unnamed) lady delivered at the crossroads | other | (unnamed) slender youth | the lady was the cloaked youth | BONE-C23 | CANON/high | P004 `I was that lad in the cloak that ye saw in the Flower de Luce`
+R (unnamed) lady's captain of war | serves | (unnamed) lady delivered at the crossroads | - | BONE-C23 | CANON/high | P004 `with my captain of war`
+
+S (unnamed) horses in the wood | distance_from | (unnamed) three oaks by the lake | dist=a hundred yards in a straight line; cert=fixed | CANON/high | - | P009 `a hundred yards within the thick wood in a straight line from the oak-tree`
+
+F medicine | (unnamed) lady delivered at the crossroads | She dresses Walter's side wound; the Knight calls her a good leech; she says only her hand and learning can save him. | CANON/high; ctx=dialogue:lady | P016 `it must be this hand, and the learning which it hath learned which must deal with him for a while`
+F medicine | Walter the Black | The Knight says Walter cannot ride within ten days. | CANON/high; ctx=dialogue:Knight of the Sun | P013 `ye may not heal this man so that he may sit in his saddle within these ten days`
+F food | Walter the Black | His saddle-bags hold bread, flesh and a flask of wine. | CANON/high | P019 `took from them bread and flesh, and a flask of good wine`
+F law | Knight of the Sun | A prisoner may be kept, ransomed or freed at the captor's will. | CANON/high; ctx=dialogue:Knight of the Sun | P007 `thou art my prisoner, to be kept or ransomed, or set free as I will`
+
+V main | Walter found alive | The Knight of the Sun weeps over Walter and finds him alive; the lady dresses his wound. | time=evening; who=Knight of the Sun, Walter the Black, (unnamed) lady delivered at the crossroads, Ralph; where=(unnamed) three oaks by the lake | P011 `this my friend Walter the Black is alive still`
+
+U identity | Is the lady's "captain of war" the man of the leafless tree? | P004 `I had come into the Burg with my captain of war`
+
+O medicine | Healing as a learned skill some characters have (canon shows the Lady's leechcraft; any game system is expansion). | P016 `the learning which it hath learned`

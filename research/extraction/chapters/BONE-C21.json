@@ -1,0 +1,176 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) brother of the carline of the House of Abundance",
+   "aliases": [],
+   "type": "person",
+   "subtype": "friar",
+   "unnamed": true,
+   "summary": "The carline's brother in the flesh, one of the brethren of the Thorn.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "my brother in the flesh, who is one of the brethren of the Thorn over yonder"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) brother of the carline of the House of Abundance",
+   "rel": "member_of",
+   "b": "fathers of the Thorn",
+   "detail": "-",
+   "when": "BONE-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "one of the brethren of the Thorn"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) carline of the House of Abundance",
+   "rel": "sibling_of",
+   "b": "(unnamed) brother of the carline of the House of Abundance",
+   "detail": "-",
+   "when": "BONE-C21",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "my brother in the flesh"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "fathers of the Thorn",
+   "rel": "distance_from",
+   "b": "House of Abundance",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "the carline goes and returns within the day",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:carline",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "leaves in the morning, back a little after dark",
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "the brethren of the Thorn over yonder"
+    },
+    {
+     "p": "BONE-C21-P016",
+     "q": "At last, a little after dark, back comes the carline again"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "Lady of Abundance",
+   "statement": "Men speak well of her and worship her; women fear or hate her.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C21-P003",
+     "q": "whereas all the men-folk spoke well of her and worshipped her, the women-folk feared her or hated her"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) book of the Well",
+   "statement": "The book gives no origin for the woman, no date, no place of the lonely house, and no road to the Well.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "written",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C21-P002",
+     "q": "he might not learn from the book where in the world was that lone place, or aught of the road to the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph's three days of waiting",
+   "chapter": "BONE-C21",
+   "layer": "main",
+   "time_text": "three days",
+   "participants": [
+    "Ralph",
+    "(unnamed) carline of the House of Abundance"
+   ],
+   "places": [
+    "House of Abundance"
+   ],
+   "summary": "Ralph wavers between searching the wood and waiting at the castle.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C21-P011",
+     "q": "thrice have I been away long from the castle and all has gone well"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where the fathers of the Thorn dwell (about a day's return trip from the castle).",
+   "refs": [
+    {
+     "p": "BONE-C21-P012",
+     "q": "over yonder"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Waiting for an NPC who may never arrive, with the player choosing to seek instead.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BONE-C21-P018",
+     "q": "thou wilt certainly go into the wood to-morrow and see what may befall"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C21",
+ "chapters": [
+  "BONE-C21"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C21",
+   "paragraphs_total": 18,
+   "all_paragraphs_read": true,
+   "summary": "Ralph rereads the book: it does not say where the woman came from, why she returned to the wood and endured thraldom, where the lonely place is, or the road to the Well. He hopes she will love him and lead him to the Well. He notes that men praise her while women fear or hate her. Over three days he ventures into the wood (further south), panics and runs back, waits restlessly; the carline visits her brother among the brethren of the Thorn and then urges him to try the wood again.",
+   "geography_notes": "Ralph enters the wood further south than before. The brethren of the Thorn are \"over yonder\", within a day's return trip of the castle.",
+   "open_questions": [
+    "Is the Thorn house within a day's walk of the castle?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+@ BONE-C21
+summary: Ralph rereads the book: it does not say where the woman came from, why she returned to the wood and endured thraldom, where the lonely place is, or the road to the Well. He hopes she will love him and lead him to the Well. He notes that men praise her while women fear or hate her. Over three days he ventures into the wood (further south), panics and runs back, waits restlessly; the carline visits her brother among the brethren of the Thorn and then urges him to try the wood again.
+geo: Ralph enters the wood further south than before. The brethren of the Thorn are "over yonder", within a day's return trip of the castle.
+open: Is the Thorn house within a day's walk of the castle?
+
+E person | (unnamed) brother of the carline of the House of Abundance | - | friar | The carline's brother in the flesh, one of the brethren of the Thorn. | P012 `my brother in the flesh, who is one of the brethren of the Thorn over yonder`
+
+R (unnamed) brother of the carline of the House of Abundance | member_of | fathers of the Thorn | - | BONE-C21 | CANON/high | P012 `one of the brethren of the Thorn`
+R (unnamed) carline of the House of Abundance | sibling_of | (unnamed) brother of the carline of the House of Abundance | - | BONE-C21 | CANON/high | P012 `my brother in the flesh`
+
+S fathers of the Thorn | distance_from | House of Abundance | time=the carline goes and returns within the day; ctx=dialogue:carline; cert=constrained | CANON/medium | leaves in the morning, back a little after dark | P012 `the brethren of the Thorn over yonder`; P016 `At last, a little after dark, back comes the carline again`
+
+F society | Lady of Abundance | Men speak well of her and worship her; women fear or hate her. | CANON/high | P003 `whereas all the men-folk spoke well of her and worshipped her, the women-folk feared her or hated her`
+F magic | (unnamed) book of the Well | The book gives no origin for the woman, no date, no place of the lonely house, and no road to the Well. | CANON/high; ctx=written | P002 `he might not learn from the book where in the world was that lone place, or aught of the road to the Well at the World's End`
+
+V main | Ralph's three days of waiting | Ralph wavers between searching the wood and waiting at the castle. | time=three days; who=Ralph, (unnamed) carline of the House of Abundance; where=House of Abundance | P011 `thrice have I been away long from the castle and all has gone well`
+
+U location | Where the fathers of the Thorn dwell (about a day's return trip from the castle). | P012 `over yonder`
+
+O quests | Waiting for an NPC who may never arrive, with the player choosing to seek instead. | P018 `thou wilt certainly go into the wood to-morrow and see what may befall`

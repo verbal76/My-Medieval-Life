@@ -1,0 +1,236 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) black horse of Walter the Black",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "horse",
+   "unnamed": true,
+   "summary": "Walter's black horse with saddle-bags of food.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C23-P010",
+     "q": "a black horse that was of the Black Knight"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) bay horse of the Knight of the Sun",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "horse",
+   "unnamed": true,
+   "summary": "Strong heavy bay.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C23-P010",
+     "q": "a bay of the Knight of the Sun"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) lady's captain of war",
+   "aliases": [],
+   "type": "person",
+   "subtype": "captain",
+   "unnamed": true,
+   "summary": "The lady's war-captain who entered the Burg with her.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C23-P004",
+     "q": "I had come into the Burg with my captain of war"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "rel": "other",
+   "b": "(unnamed) slender youth",
+   "detail": "the lady was the cloaked youth",
+   "when": "BONE-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C23-P004",
+     "q": "I was that lad in the cloak that ye saw in the Flower de Luce"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) lady's captain of war",
+   "rel": "serves",
+   "b": "(unnamed) lady delivered at the crossroads",
+   "detail": "-",
+   "when": "BONE-C23",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C23-P004",
+     "q": "with my captain of war"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) horses in the wood",
+   "rel": "distance_from",
+   "b": "(unnamed) three oaks by the lake",
+   "direction": "",
+   "distance_text": "a hundred yards in a straight line",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C23-P009",
+     "q": "a hundred yards within the thick wood in a straight line from the oak-tree"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "medicine",
+   "subject": "(unnamed) lady delivered at the crossroads",
+   "statement": "She dresses Walter's side wound; the Knight calls her a good leech; she says only her hand and learning can save him.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:lady",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C23-P016",
+     "q": "it must be this hand, and the learning which it hath learned which must deal with him for a while"
+    }
+   ]
+  },
+  {
+   "category": "medicine",
+   "subject": "Walter the Black",
+   "statement": "The Knight says Walter cannot ride within ten days.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Knight of the Sun",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C23-P013",
+     "q": "ye may not heal this man so that he may sit in his saddle within these ten days"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "Walter the Black",
+   "statement": "His saddle-bags hold bread, flesh and a flask of wine.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C23-P019",
+     "q": "took from them bread and flesh, and a flask of good wine"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Knight of the Sun",
+   "statement": "A prisoner may be kept, ransomed or freed at the captor's will.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Knight of the Sun",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C23-P007",
+     "q": "thou art my prisoner, to be kept or ransomed, or set free as I will"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Walter found alive",
+   "chapter": "BONE-C23",
+   "layer": "main",
+   "time_text": "evening",
+   "participants": [
+    "Knight of the Sun",
+    "Walter the Black",
+    "(unnamed) lady delivered at the crossroads",
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) three oaks by the lake"
+   ],
+   "summary": "The Knight of the Sun weeps over Walter and finds him alive; the lady dresses his wound.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C23-P011",
+     "q": "this my friend Walter the Black is alive still"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Is the lady's \"captain of war\" the man of the leafless tree?",
+   "refs": [
+    {
+     "p": "BONE-C23-P004",
+     "q": "I had come into the Burg with my captain of war"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Healing as a learned skill some characters have (canon shows the Lady's leechcraft; any game system is expansion).",
+   "system": "medicine",
+   "basis_refs": [
+    {
+     "p": "BONE-C23-P016",
+     "q": "the learning which it hath learned"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C23",
+ "chapters": [
+  "BONE-C23"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C23",
+   "paragraphs_total": 19,
+   "all_paragraphs_read": true,
+   "summary": "The lady kisses the stirring Ralph and tells him she was the cloaked youth at the Flower de Luce and in the escape, entering the Burg with her captain of war to free four friends. The Knight of the Sun disarms Ralph as his prisoner and sends him for the horses. Walter the Black proves alive; the lady dresses his wound and says only her hand and learning can save him. With no food, they must wait; Ralph finds bread, meat and wine in Walter's saddle-bags; the lady makes Walter a bracken bed.",
+   "geography_notes": "The knights' horses are a hundred yards into the wood in line from the oak tree.",
+   "open_questions": [
+    "Is the \"captain of war\" the man of the leafless tree?"
+   ]
+  }
+ ]
+}

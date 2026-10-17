@@ -1,0 +1,462 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) long lake south of Abundance",
+   "aliases": [
+    "the long water"
+   ],
+   "type": "feature",
+   "subtype": "lake",
+   "unnamed": true,
+   "summary": "Long smooth narrow lake between green banks, with a pine wood edging it.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P002",
+     "q": "a long smooth water, a little lake between green banks on either side"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) three oaks by the lake",
+   "aliases": [
+    "the ancient oak"
+   ],
+   "type": "feature",
+   "subtype": "landmark trees",
+   "unnamed": true,
+   "summary": "Three great tall oaks on a sward before the pine wood at the lake's east end.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P002",
+     "q": "three great-boled tall oak-trees on a smooth piece of green sward"
+    }
+   ]
+  },
+  {
+   "name": "Knight of the Sun",
+   "aliases": [
+    "Baron of Sunway",
+    "the Sun-Knight"
+   ],
+   "type": "person",
+   "subtype": "baron",
+   "unnamed": false,
+   "summary": "Very big knight with a blue surcoat bearing a great golden sun; lord of Sunway; loves and claims the lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P003",
+     "q": "a very big man with a blue surcoat whereon was beaten a great golden sun"
+    }
+   ]
+  },
+  {
+   "name": "Walter the Black",
+   "aliases": [
+    "the Black Knight",
+    "Walter"
+   ],
+   "type": "person",
+   "subtype": "knight",
+   "unnamed": false,
+   "summary": "Knight in black, sworn friend of the Knight of the Sun, struck down over the lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P003",
+     "q": "the other, whose back was towards Ralph, was clad in black over his armour"
+    },
+    {
+     "p": "BONE-C22-P022",
+     "q": "like as was Walter"
+    }
+   ]
+  },
+  {
+   "name": "Silverfax",
+   "aliases": [],
+   "type": "creature",
+   "subtype": "horse",
+   "unnamed": false,
+   "summary": "The lady's swift white horse.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P020",
+     "q": "I have Silverfax between my knees"
+    }
+   ]
+  },
+  {
+   "name": "Sunway",
+   "aliases": [
+    "Sunhome"
+   ],
+   "type": "place",
+   "subtype": "lordship",
+   "unnamed": false,
+   "summary": "Home of the Knight of the Sun, where he once shamed the lady.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P022",
+     "q": "I would not go back with thee to Sunhome, where erst thou shamedst me"
+    }
+   ]
+  },
+  {
+   "name": "Gliding River",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "river",
+   "unnamed": false,
+   "summary": "River beyond which the lady expects to find Roger and his men, on the ways to the Dry Tree.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P020",
+     "q": "beyond the Gliding River I shall come on Roger of the Ropewalk and his men"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) lady's collar",
+   "aliases": [],
+   "type": "item",
+   "subtype": "collar",
+   "unnamed": true,
+   "summary": "A collar like Dame Katherine's gift.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C22-P004",
+     "q": "on her neck was a collar that seemed to him like to that which Dame Katherine had given him"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Knight of the Sun",
+   "rel": "other",
+   "b": "Walter the Black",
+   "detail": "sworn friend and brother-in-arms; fought him from jealousy",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C22-P006",
+     "q": "slain my very earthly friend of friends for thy sake"
+    }
+   ]
+  },
+  {
+   "a": "Knight of the Sun",
+   "rel": "lover_of",
+   "b": "(unnamed) lady delivered at the crossroads",
+   "detail": "claims her; she goes with him only under the bargain",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C22-P022",
+     "q": "then will I go home with thee and will ride with thee in all the love and duty that I owe thee"
+    }
+   ]
+  },
+  {
+   "a": "Ralph",
+   "rel": "captive_of",
+   "b": "Knight of the Sun",
+   "detail": "taken as prisoner under the bargain",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C22-P026",
+     "q": "he shall come with me, will he, nill he, unarmed, and as a prisoner"
+    }
+   ]
+  },
+  {
+   "a": "Knight of the Sun",
+   "rel": "kin_of",
+   "b": "(unnamed) brother of the Knight of the Sun",
+   "detail": "brother",
+   "when": "BONE-C22",
+   "classification": "CANON",
+   "confidence": "medium",
+   "refs": [
+    {
+     "p": "BONE-C22-P014",
+     "q": "or my brother's man"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "rel": "leader_of",
+   "b": "Fellowship of the Dry Tree",
+   "detail": "the Knight calls her \"my Queen\"; she freed four of \"our people\"",
+   "when": "BONE-C22",
+   "classification": "CANON-INFERRED",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C22-P018",
+     "q": "Thou art merciful, my Queen"
+    },
+    {
+     "p": "BONE-C22-P017",
+     "q": "in delivering four of our people"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) long lake south of Abundance",
+   "rel": "south_of",
+   "b": "House of Abundance",
+   "direction": "due south",
+   "distance_text": "",
+   "travel_time_text": "a day's walk with two rests",
+   "travel_mode": "",
+   "terrain_text": "thickets, then a great pine wood",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C22-P002",
+     "q": "came into the wood that lay due south from the Castle"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) three oaks by the lake",
+   "rel": "east_of",
+   "b": "(unnamed) long lake south of Abundance",
+   "direction": "at the east end and head of the water",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C22-P002",
+     "q": "going along the green strand to the east and the head of that water"
+    }
+   ]
+  },
+  {
+   "a": "Gliding River",
+   "rel": "on_route",
+   "b": "Fellowship of the Dry Tree",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:lady",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "between the lake and Roger's men on the ways to the Dry Tree",
+   "refs": [
+    {
+     "p": "BONE-C22-P020",
+     "q": "the ways behind me to the Dry Tree be all safe and open"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph"
+   ],
+   "from": "House of Abundance",
+   "to": "(unnamed) long lake south of Abundance",
+   "via": [],
+   "mode": "foot",
+   "direction_text": "due south",
+   "duration_text": "",
+   "start_time_text": "morning",
+   "end_time_text": "when the sun was getting low",
+   "terrain_text": "thickets, pine wood",
+   "chapter": "BONE-C22",
+   "refs": [
+    {
+     "p": "BONE-C22-P002",
+     "q": "at last when the sun was getting low, he saw light gleaming through a great wood of pines"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "(unnamed) lady delivered at the crossroads",
+   "statement": "She says she was taken by the Burg five days ago and later re-entered the Burg to free four of her people.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:lady",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C22-P017",
+     "q": "five days ago I was taken by them of the Burg"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) lady delivered at the crossroads",
+   "statement": "The Knight of the Sun calls her a sorceress and wonders if Ralph is a devil she raised.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Knight of the Sun",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C22-P012",
+     "q": "Hast thou raised up a devil against me, thou sorceress"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Knight of the Sun",
+   "statement": "He fells Ralph with the sword-pommel and draws an anlace.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C22-P015",
+     "q": "drew out an anlace, short, thick and sharp"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "(unnamed) lady delivered at the crossroads",
+   "statement": "She is strong-armed enough to hold the Knight's dagger hand.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C22-P015",
+     "q": "thou art strong-armed as well as white-armed"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Fight by the lake",
+   "chapter": "BONE-C22",
+   "layer": "main",
+   "time_text": "sunset",
+   "participants": [
+    "Ralph",
+    "Knight of the Sun",
+    "Walter the Black",
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "places": [
+    "(unnamed) three oaks by the lake"
+   ],
+   "summary": "The Knight of the Sun strikes down Walter the Black, then beats Ralph; the lady saves Ralph and bargains herself for his life.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C22-P022",
+     "q": "I will give thee my body for his life"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "\"Sunhome\" (lady) and \"Sunway\" (elsewhere) seem to name the same home of the Knight of the Sun.",
+   "refs": [
+    {
+     "p": "BONE-C22-P022",
+     "q": "I would not go back with thee to Sunhome"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Where the Gliding River lies relative to the lake and the Dry Tree.",
+   "refs": [
+    {
+     "p": "BONE-C22-P020",
+     "q": "beyond the Gliding River"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Who is the Knight of the Sun's brother?",
+   "refs": [
+    {
+     "p": "BONE-C22-P014",
+     "q": "or my brother's man"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "A jealous lord and his rivals contesting a powerful woman, where the player can be drawn in as captive or ally.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BONE-C22-P026",
+     "q": "the bargain is struck betwixt us"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C22",
+ "chapters": [
+  "BONE-C22"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C22",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "Going due south from the castle all day, Ralph reaches a pine wood edging a long narrow lake. By three great oaks a huge knight with a golden sun on blue strikes down a knight in black while the lady from the crossroads, now in green and a black cote-hardy with a collar like Dame Katherine's, watches. The Knight of the Sun says he has slain his friend for her; she refuses to go with him. Ralph attacks, is beaten down, and the lady stops the knight's dagger, saying she owes Ralph a life. From her horse Silverfax she bargains: she will go home with the knight to Sunway (she says \"Sunhome\") if Ralph lives and comes with them. The knight agrees, taking Ralph as his prisoner.",
+   "geography_notes": "Due south of the Castle of Abundance a day's walk: thickets change, then a great pine wood. Beyond, a green strand and a long smooth lake between green banks; at the east end the bank slopes to the pines, with three great oaks on a sward. The lady says the ways behind her to the Dry Tree are open and that beyond the Gliding River she would meet Roger of the Ropewalk and his men.",
+   "open_questions": [
+    "Is \"Sunhome\" the same as \"Sunway\"?",
+    "Where is the Gliding River?",
+    "Who is the Knight of the Sun's brother?"
+   ]
+  }
+ ]
+}

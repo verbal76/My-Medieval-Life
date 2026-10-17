@@ -1,0 +1,27 @@
+@ BONE-C24
+summary: The Knight of the Sun wishes for a hermit to tend Walter; the lady makes a ring of her fingers and murmurs, and at sunset a Blackfriar hermit rows down the lake, saying the thornbushes spoke and sent him. He names her the Lady of Abundance and says all healing goes from her hands. His hermitage is at the end of the water, and he will later bring Walter to Sunway. The Knight gives Ralph back his arms and begs him to leave; Ralph refuses. They sleep in the open: the lady by the friar and Walter, the Knight between her and the wood, Ralph by the horses.
+geo: The friar's hermitage is in the thicket at the end of the lake, near enough to fetch bread and goats' milk; he comes by boat down the water.
+open: Did the lady's gesture summon the friar?
+
+E person | (unnamed) Blackfriar hermit of the lake | the Friar | hermit | Dominican hermit who keeps goats, is somewhat of a leech, and says thornbushes spoke to him. | P008 `a hermit in the habit of the Blackfriars`
+E building | (unnamed) hermitage at the end of the lake | the cell | hermitage | Hermit's cell in the thicket at the end of the water. | P012 `my hermitage is no great way hence, in the thicket at the end of this water`
+
+R (unnamed) lady delivered at the crossroads | other | Lady of Abundance | the friar names her the Lady of Abundance | BONE-C24 | CANON/high | P020 `well it is for him that the Lady of Abundance was here for his helping`
+R Knight of the Sun | ruler_of | Sunway | baron of Sunway | BONE-C24 | CANON/high | P024 `Baron of Sunway`
+
+S (unnamed) hermitage at the end of the lake | adjacent_to | (unnamed) long lake south of Abundance | dir=at the end of the water; cert=fixed | CANON/high | reached by boat | P012 `in the thicket at the end of this water`
+
+T (unnamed) Blackfriar hermit of the lake | (unnamed) hermitage at the end of the lake | (unnamed) three oaks by the lake | mode=boat; start=after sunset | P007 `a little boat making down the water toward the end anigh them`
+
+F magic | (unnamed) lady delivered at the crossroads | She forms a ring with her fingers and murmurs; soon after, the wished-for holy man arrives. | CANON/high | P004 `took hold of the two fingers of her left hand with her right forefinger, and let the thumb meet it, so that it made a circle about them`
+F magic | (unnamed) Blackfriar hermit of the lake | The friar says thornbushes spoke to him like men and sent him to help someone in need. | CANON/high; ctx=dialogue:Friar | P021 `I heard the thornbushes speaking to me like men`
+F medicine | Lady of Abundance | The friar says all healing goes from her hands, like the holy men of old. | CANON/high; ctx=dialogue:Friar | P020 `from her hands goeth all healing, as it was with the holy men of old time`
+F magic | Lady of Abundance | The Knight says men say she sways man and beast in the wildwood. | CANON/high; ctx=dialogue:Knight of the Sun | P025 `thou swayest man and beast in the wildwood`
+F magic | Walter the Black | The lady says Walter may live as long as either of the two men. | CANON/high; ctx=dialogue:lady | P004 `maybe as long as either of you twain`
+F food | (unnamed) Blackfriar hermit of the lake | He keeps goats and has bread at his cell. | CANON/high; ctx=dialogue:Friar | P012 `bread and other meat, and milk of my goats`
+
+V main | The friar's coming | A hermit rows down the lake at sunset, sent (he says) by speaking thornbushes, and takes charge of Walter. | time=sunset; who=(unnamed) Blackfriar hermit of the lake, Lady of Abundance, Knight of the Sun, Ralph; where=(unnamed) three oaks by the lake | P008 `lo, it was a holy man, a hermit in the habit of the Blackfriars`
+
+U ambiguity | Whether the lady's finger-ring gesture summoned the friar; the text shows only the sequence. | P004 `she spake something therewith in a low voice`
+
+O magic | Canon shows ambiguous enchantments (gestures, speaking plants). Any learnable magic system is GAME EXPANSION, not Morris. | P004 `so that it made a circle about them`; P021 `I heard the thornbushes speaking to me like men`

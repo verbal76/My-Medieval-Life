@@ -1,0 +1,38 @@
+@ BONE-C22
+summary: Going due south from the castle all day, Ralph reaches a pine wood edging a long narrow lake. By three great oaks a huge knight with a golden sun on blue strikes down a knight in black while the lady from the crossroads, now in green and a black cote-hardy with a collar like Dame Katherine's, watches. The Knight of the Sun says he has slain his friend for her; she refuses to go with him. Ralph attacks, is beaten down, and the lady stops the knight's dagger, saying she owes Ralph a life. From her horse Silverfax she bargains: she will go home with the knight to Sunway (she says "Sunhome") if Ralph lives and comes with them. The knight agrees, taking Ralph as his prisoner.
+geo: Due south of the Castle of Abundance a day's walk: thickets change, then a great pine wood. Beyond, a green strand and a long smooth lake between green banks; at the east end the bank slopes to the pines, with three great oaks on a sward. The lady says the ways behind her to the Dry Tree are open and that beyond the Gliding River she would meet Roger of the Ropewalk and his men.
+open: Is "Sunhome" the same as "Sunway"? || Where is the Gliding River? || Who is the Knight of the Sun's brother?
+
+E feature | (unnamed) long lake south of Abundance | the long water | lake | Long smooth narrow lake between green banks, with a pine wood edging it. | P002 `a long smooth water, a little lake between green banks on either side`
+E feature | (unnamed) three oaks by the lake | the ancient oak | landmark trees | Three great tall oaks on a sward before the pine wood at the lake's east end. | P002 `three great-boled tall oak-trees on a smooth piece of green sward`
+E person | Knight of the Sun | Baron of Sunway, the Sun-Knight | baron | Very big knight with a blue surcoat bearing a great golden sun; lord of Sunway; loves and claims the lady. | P003 `a very big man with a blue surcoat whereon was beaten a great golden sun`
+E person | Walter the Black | the Black Knight, Walter | knight | Knight in black, sworn friend of the Knight of the Sun, struck down over the lady. | P003 `the other, whose back was towards Ralph, was clad in black over his armour`; P022 `like as was Walter`
+E creature | Silverfax | - | horse | The lady's swift white horse. | P020 `I have Silverfax between my knees`
+E place | Sunway | Sunhome | lordship | Home of the Knight of the Sun, where he once shamed the lady. | P022 `I would not go back with thee to Sunhome, where erst thou shamedst me`
+E feature | Gliding River | - | river | River beyond which the lady expects to find Roger and his men, on the ways to the Dry Tree. | P020 `beyond the Gliding River I shall come on Roger of the Ropewalk and his men`
+E item | (unnamed) lady's collar | - | collar | A collar like Dame Katherine's gift. | P004 `on her neck was a collar that seemed to him like to that which Dame Katherine had given him`
+
+R Knight of the Sun | other | Walter the Black | sworn friend and brother-in-arms; fought him from jealousy | BONE-C22 | CANON/high | P006 `slain my very earthly friend of friends for thy sake`
+R Knight of the Sun | lover_of | (unnamed) lady delivered at the crossroads | claims her; she goes with him only under the bargain | BONE-C22 | CANON/high | P022 `then will I go home with thee and will ride with thee in all the love and duty that I owe thee`
+R Ralph | captive_of | Knight of the Sun | taken as prisoner under the bargain | BONE-C22 | CANON/high | P026 `he shall come with me, will he, nill he, unarmed, and as a prisoner`
+R Knight of the Sun | kin_of | (unnamed) brother of the Knight of the Sun | brother | BONE-C22 | CANON/medium | P014 `or my brother's man`
+R (unnamed) lady delivered at the crossroads | leader_of | Fellowship of the Dry Tree | the Knight calls her "my Queen"; she freed four of "our people" | BONE-C22 | INF/high | P018 `Thou art merciful, my Queen`; P017 `in delivering four of our people`
+
+S (unnamed) long lake south of Abundance | south_of | House of Abundance | dir=due south; time=a day's walk with two rests; terrain=thickets, then a great pine wood; cert=fixed | CANON/high | - | P002 `came into the wood that lay due south from the Castle`
+S (unnamed) three oaks by the lake | east_of | (unnamed) long lake south of Abundance | dir=at the east end and head of the water; cert=fixed | CANON/high | - | P002 `going along the green strand to the east and the head of that water`
+S Gliding River | on_route | Fellowship of the Dry Tree | ctx=dialogue:lady; cert=flexible | CANON/high | between the lake and Roger's men on the ways to the Dry Tree | P020 `the ways behind me to the Dry Tree be all safe and open`
+
+T Ralph | House of Abundance | (unnamed) long lake south of Abundance | mode=foot; dir=due south; start=morning; end=when the sun was getting low; terrain=thickets, pine wood | P002 `at last when the sun was getting low, he saw light gleaming through a great wood of pines`
+
+F history | (unnamed) lady delivered at the crossroads | She says she was taken by the Burg five days ago and later re-entered the Burg to free four of her people. | CANON/high; ctx=dialogue:lady | P017 `five days ago I was taken by them of the Burg`
+F magic | (unnamed) lady delivered at the crossroads | The Knight of the Sun calls her a sorceress and wonders if Ralph is a devil she raised. | CANON/high; ctx=dialogue:Knight of the Sun | P012 `Hast thou raised up a devil against me, thou sorceress`
+F weapons | Knight of the Sun | He fells Ralph with the sword-pommel and draws an anlace. | CANON/high | P015 `drew out an anlace, short, thick and sharp`
+F society | (unnamed) lady delivered at the crossroads | She is strong-armed enough to hold the Knight's dagger hand. | CANON/high | P015 `thou art strong-armed as well as white-armed`
+
+V main | Fight by the lake | The Knight of the Sun strikes down Walter the Black, then beats Ralph; the lady saves Ralph and bargains herself for his life. | time=sunset; who=Ralph, Knight of the Sun, Walter the Black, (unnamed) lady delivered at the crossroads; where=(unnamed) three oaks by the lake | P022 `I will give thee my body for his life`
+
+U identity | "Sunhome" (lady) and "Sunway" (elsewhere) seem to name the same home of the Knight of the Sun. | P022 `I would not go back with thee to Sunhome`
+U location | Where the Gliding River lies relative to the lake and the Dry Tree. | P020 `beyond the Gliding River`
+U identity | Who is the Knight of the Sun's brother? | P014 `or my brother's man`
+
+O quests | A jealous lord and his rivals contesting a powerful woman, where the player can be drawn in as captive or ally. | P026 `the bargain is struck betwixt us`

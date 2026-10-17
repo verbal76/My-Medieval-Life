@@ -1,0 +1,283 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Blackfriar hermit of the lake",
+   "aliases": [
+    "the Friar"
+   ],
+   "type": "person",
+   "subtype": "hermit",
+   "unnamed": true,
+   "summary": "Dominican hermit who keeps goats, is somewhat of a leech, and says thornbushes spoke to him.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C24-P008",
+     "q": "a hermit in the habit of the Blackfriars"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) hermitage at the end of the lake",
+   "aliases": [
+    "the cell"
+   ],
+   "type": "building",
+   "subtype": "hermitage",
+   "unnamed": true,
+   "summary": "Hermit's cell in the thicket at the end of the water.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C24-P012",
+     "q": "my hermitage is no great way hence, in the thicket at the end of this water"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "rel": "other",
+   "b": "Lady of Abundance",
+   "detail": "the friar names her the Lady of Abundance",
+   "when": "BONE-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C24-P020",
+     "q": "well it is for him that the Lady of Abundance was here for his helping"
+    }
+   ]
+  },
+  {
+   "a": "Knight of the Sun",
+   "rel": "ruler_of",
+   "b": "Sunway",
+   "detail": "baron of Sunway",
+   "when": "BONE-C24",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C24-P024",
+     "q": "Baron of Sunway"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) hermitage at the end of the lake",
+   "rel": "adjacent_to",
+   "b": "(unnamed) long lake south of Abundance",
+   "direction": "at the end of the water",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "reached by boat",
+   "refs": [
+    {
+     "p": "BONE-C24-P012",
+     "q": "in the thicket at the end of this water"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "(unnamed) Blackfriar hermit of the lake"
+   ],
+   "from": "(unnamed) hermitage at the end of the lake",
+   "to": "(unnamed) three oaks by the lake",
+   "via": [],
+   "mode": "boat",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "after sunset",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C24",
+   "refs": [
+    {
+     "p": "BONE-C24-P007",
+     "q": "a little boat making down the water toward the end anigh them"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "(unnamed) lady delivered at the crossroads",
+   "statement": "She forms a ring with her fingers and murmurs; soon after, the wished-for holy man arrives.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C24-P004",
+     "q": "took hold of the two fingers of her left hand with her right forefinger, and let the thumb meet it, so that it made a circle about them"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) Blackfriar hermit of the lake",
+   "statement": "The friar says thornbushes spoke to him like men and sent him to help someone in need.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Friar",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C24-P021",
+     "q": "I heard the thornbushes speaking to me like men"
+    }
+   ]
+  },
+  {
+   "category": "medicine",
+   "subject": "Lady of Abundance",
+   "statement": "The friar says all healing goes from her hands, like the holy men of old.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Friar",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C24-P020",
+     "q": "from her hands goeth all healing, as it was with the holy men of old time"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "The Knight says men say she sways man and beast in the wildwood.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Knight of the Sun",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C24-P025",
+     "q": "thou swayest man and beast in the wildwood"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Walter the Black",
+   "statement": "The lady says Walter may live as long as either of the two men.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:lady",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C24-P004",
+     "q": "maybe as long as either of you twain"
+    }
+   ]
+  },
+  {
+   "category": "food",
+   "subject": "(unnamed) Blackfriar hermit of the lake",
+   "statement": "He keeps goats and has bread at his cell.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Friar",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C24-P012",
+     "q": "bread and other meat, and milk of my goats"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The friar's coming",
+   "chapter": "BONE-C24",
+   "layer": "main",
+   "time_text": "sunset",
+   "participants": [
+    "(unnamed) Blackfriar hermit of the lake",
+    "Lady of Abundance",
+    "Knight of the Sun",
+    "Ralph"
+   ],
+   "places": [
+    "(unnamed) three oaks by the lake"
+   ],
+   "summary": "A hermit rows down the lake at sunset, sent (he says) by speaking thornbushes, and takes charge of Walter.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C24-P008",
+     "q": "lo, it was a holy man, a hermit in the habit of the Blackfriars"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "ambiguity",
+   "question": "Whether the lady's finger-ring gesture summoned the friar; the text shows only the sequence.",
+   "refs": [
+    {
+     "p": "BONE-C24-P004",
+     "q": "she spake something therewith in a low voice"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Canon shows ambiguous enchantments (gestures, speaking plants). Any learnable magic system is GAME EXPANSION, not Morris.",
+   "system": "magic",
+   "basis_refs": [
+    {
+     "p": "BONE-C24-P004",
+     "q": "so that it made a circle about them"
+    },
+    {
+     "p": "BONE-C24-P021",
+     "q": "I heard the thornbushes speaking to me like men"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C24",
+ "chapters": [
+  "BONE-C24"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C24",
+   "paragraphs_total": 26,
+   "all_paragraphs_read": true,
+   "summary": "The Knight of the Sun wishes for a hermit to tend Walter; the lady makes a ring of her fingers and murmurs, and at sunset a Blackfriar hermit rows down the lake, saying the thornbushes spoke and sent him. He names her the Lady of Abundance and says all healing goes from her hands. His hermitage is at the end of the water, and he will later bring Walter to Sunway. The Knight gives Ralph back his arms and begs him to leave; Ralph refuses. They sleep in the open: the lady by the friar and Walter, the Knight between her and the wood, Ralph by the horses.",
+   "geography_notes": "The friar's hermitage is in the thicket at the end of the lake, near enough to fetch bread and goats' milk; he comes by boat down the water.",
+   "open_questions": [
+    "Did the lady's gesture summon the friar?"
+   ]
+  }
+ ]
+}

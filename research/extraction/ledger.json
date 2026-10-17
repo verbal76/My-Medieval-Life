@@ -521,44 +521,102 @@
    "title": "Ralph Weareth Away Three Days Uneasily",
    "body_paragraphs": 18,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 2,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 2,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the Thorn house within a day's walk of the castle?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C21.txt",
+    "records": "research/extraction/chapters/BONE-C21.json"
+   }
   },
   {
    "chapter": "BONE-C22",
    "title": "An Adventure in the Wood",
    "body_paragraphs": 26,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 8,
+    "relations": 5,
+    "spatial": 3,
+    "travel": 1,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 3,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is \"Sunhome\" the same as \"Sunway\"?",
+    "Where is the Gliding River?",
+    "Who is the Knight of the Sun's brother?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C22.txt",
+    "records": "research/extraction/chapters/BONE-C22.json"
+   }
   },
   {
    "chapter": "BONE-C23",
    "title": "The Leechcraft of the Lady",
    "body_paragraphs": 19,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 3,
+    "relations": 2,
+    "spatial": 1,
+    "travel": 0,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the \"captain of war\" the man of the leafless tree?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C23.txt",
+    "records": "research/extraction/chapters/BONE-C23.json"
+   }
   },
   {
    "chapter": "BONE-C24",
    "title": "Supper and Slumber in the Woodland Hall",
    "body_paragraphs": 26,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 2,
+    "relations": 2,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 6,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Did the lady's gesture summon the friar?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C24.txt",
+    "records": "research/extraction/chapters/BONE-C24.json"
+   }
   },
   {
    "chapter": "BTWO-C1",
