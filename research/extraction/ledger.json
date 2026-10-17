@@ -2317,44 +2317,100 @@
    "title": "Bull Telleth of His Winning of the Lordship of Utterbol",
    "body_paragraphs": 29,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 5,
+    "relations": 4,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 6,
+    "events": 2,
+    "unresolved": 0,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C5.txt",
+    "records": "research/extraction/chapters/BFOUR-C5.json"
+   }
   },
   {
    "chapter": "BFOUR-C6",
    "title": "They Ride From Vale Turris.  Redhead Tells of Agatha",
    "body_paragraphs": 18,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 3,
+    "spatial": 1,
+    "travel": 1,
+    "facts": 4,
+    "events": 2,
+    "unresolved": 0,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "none"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C6.txt",
+    "records": "research/extraction/chapters/BFOUR-C6.json"
+   }
   },
   {
    "chapter": "BFOUR-C7",
    "title": "Of Their Riding the Waste, and of a Battle Thereon",
    "body_paragraphs": 21,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 4,
+    "relations": 2,
+    "spatial": 0,
+    "travel": 1,
+    "facts": 5,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who is the nephew's brother (leader of the Black Riders)?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C7.txt",
+    "records": "research/extraction/chapters/BFOUR-C7.json"
+   }
   },
   {
    "chapter": "BFOUR-C8",
    "title": "Of Goldburg Again, and the Queen Thereof",
    "body_paragraphs": 9,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 3,
+    "spatial": 2,
+    "travel": 2,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 2,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Where did the Queen of Goldburg go? (she landed in a great wood twenty leagues seaward)"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BFOUR-C8.txt",
+    "records": "research/extraction/chapters/BFOUR-C8.json"
+   }
   },
   {
    "chapter": "BFOUR-C9",

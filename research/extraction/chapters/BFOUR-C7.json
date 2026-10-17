@@ -1,0 +1,272 @@
+{
+ "entities": [
+  {
+   "name": "Black Riders",
+   "aliases": [
+    "men of the nephew's brother"
+   ],
+   "type": "group",
+   "subtype": "raiders",
+   "unnamed": false,
+   "summary": "Spearmen on black horses in black armour, with bowmen, led by the elder brother of the drowned nephew.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "well mounted on black horses and clad in black armour"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) brother of the Utterbol nephew",
+   "aliases": [],
+   "type": "person",
+   "subtype": "reiver lord",
+   "unnamed": true,
+   "summary": "Brother of the drowned nephew, nearly as old as Gandolf; a good warrior, wise leader and skilled raider.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "the men of the brother of thy hot wooer, Lady Ursula, whom I cooled in the Ram's Bane, but a man well nigh as old as his uncle"
+    }
+   ]
+  },
+  {
+   "name": "Michael-a-green",
+   "aliases": [],
+   "type": "person",
+   "subtype": "bannerman",
+   "unnamed": false,
+   "summary": "Utterbol man who unfurls the Bull pennon.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "thou, Michael-a-green shake out the Bull"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) field of the betrayal",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "field",
+   "unnamed": true,
+   "summary": "Plain by a wood where Ralph was taken by the Lord of Utterbol, with a rowan tree.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C7-P019",
+     "q": "Lo, beloved, this quicken-tree; hereby it was that the tent was pitched wherein I lay the night when I was taken"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) brother of the Utterbol nephew",
+   "rel": "leader_of",
+   "b": "Black Riders",
+   "detail": "-",
+   "when": "BFOUR-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "these are the men of the brother of thy hot wooer"
+    }
+   ]
+  },
+  {
+   "a": "Black Riders",
+   "rel": "enemy_of",
+   "b": "Bull Shockhead",
+   "detail": "fight the Utterbol escort",
+   "when": "BFOUR-C7",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P008",
+     "q": "the Black men-at-arms came on at a trot"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Redhead"
+   ],
+   "from": "Vale Turris",
+   "to": "(unnamed) field of the betrayal",
+   "via": [],
+   "mode": "horse with sumpter horses, tent",
+   "direction_text": "",
+   "duration_text": "many days",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "waste, thickets, woods",
+   "chapter": "BFOUR-C7",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P002",
+     "q": "They slept in no house that night nor for many nights after; for they were now fairly on the waste"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "military",
+   "subject": "Black Riders",
+   "statement": "Black armour and black horses; bowmen from a thicket; a screeching yell as they charge.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P008",
+     "q": "with a great screeching yell cast their spears into the rest"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Bull Shockhead",
+   "statement": "Utterbol's men take no prisoners from raiders; sixteen enemies slain, four of theirs.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P011",
+     "q": "The Utterbol Riders had slain sixteen of their foemen; for they took none to mercy"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Bull Shockhead",
+   "statement": "Fowlers and peat-cutters in the waste bow to Utterbol's token.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P002",
+     "q": "naught save a fowler of the waste, or a peat-cutter, who stood to look on the men-at-arms going by, and made obeisance to the token of Utterbol"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "Ursula",
+   "statement": "Ursula wears a hauberk and steel coif in battle; a javelin fails to pierce it.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Ursula",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P010",
+     "q": "steel kept out steel: I have no scratch or point or edge on me"
+    }
+   ]
+  },
+  {
+   "category": "military",
+   "subject": "Redhead",
+   "statement": "Redhead says the true test of a man is fighting fresh foes one after another until longing for night or death.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Redhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P014",
+     "q": "That which trieth a man, is to fight and overcome, and straight have to fight with fresh foemen"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Battle with the Black Riders",
+   "chapter": "BFOUR-C7",
+   "layer": "main",
+   "time_text": "fifth day, morning",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Redhead",
+    "Black Riders"
+   ],
+   "places": [
+    "(unnamed) waste between Vale Turris and Goldburg"
+   ],
+   "summary": "On the fifth day the Utterbol escort routs the Black Riders; Ursula is struck but unhurt.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P010",
+     "q": "in five minutes' time the Black Riders were fleeing all over the field"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The nephew's brother is unnamed.",
+   "refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "a man well nigh as old as his uncle, though he hath not made men tremble so sore"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Rival heirs of a deposed tyrant as ongoing border raiders, a source of escort encounters.",
+   "system": "military",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C7-P007",
+     "q": "'tis not unlike that we shall have to speak to his men again, either out-going or home-coming"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C7",
+ "chapters": [
+  "BFOUR-C7"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C7",
+   "paragraphs_total": 21,
+   "all_paragraphs_read": true,
+   "summary": "They cross the waste with a light tent for Ursula, meeting only fowlers and peat-cutters who bow to Utterbol's token. On the fifth day spears appear by a thicket: the Black Riders, on black horses in black armour, the men of the slain nephew's brother, a reiver nearly as old as his uncle but a better man. Redhead has the Bull pennon shaken out by Michael-a-green and the horn blown. The bands clash; Ralph spears a tall man and fights with the Upmeads blade; the Black Riders flee, with sixteen slain to Utterbol's four. A javelin strikes Ursula, but her hauberk holds. Later they reach the field where Ralph was betrayed and camp by the same rowan tree.",
+   "geography_notes": "The road west from Vale Turris crosses waste: no houses, fowlers and peat-cutters. A thicket on the fifth day. Later, the plain by a wood where the Lord of Utterbol once camped and Ralph was taken, with a rowan (quicken) tree marking the tent site.",
+   "open_questions": [
+    "Who is the nephew's brother (leader of the Black Riders)?"
+   ]
+  }
+ ]
+}

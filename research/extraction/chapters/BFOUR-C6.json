@@ -1,0 +1,257 @@
+{
+ "entities": [
+  {
+   "name": "Ram's Bane",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "woodland pool",
+   "unnamed": false,
+   "summary": "Deep woodland pool in a wood near Utterbol where Redhead drowned the Lord's nephew.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C6-P018",
+     "q": "a deep woodland pool hight the Ram's Bane, which is in that same wood"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Redhead",
+   "rel": "lover_of",
+   "b": "Agatha",
+   "detail": "courting her",
+   "when": "BFOUR-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P013",
+     "q": "none may say that she is not fair and sweet enough for a better man than me"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) nephew of the Lord of Utterbol",
+   "rel": "killed_by",
+   "b": "Redhead",
+   "detail": "bound and drowned in the Ram's Bane",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P018",
+     "q": "I tied him neck and heels and cast him, with a stone round his neck, into a deep woodland pool"
+    }
+   ]
+  },
+  {
+   "a": "Bull Shockhead",
+   "rel": "other",
+   "b": "Ralph",
+   "detail": "sworn to visit Upmeads within ten years",
+   "when": "BFOUR-C6",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P007",
+     "q": "I should be of mind to swear by him to come and see you at Upmeads ere ten years have worn"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Ram's Bane",
+   "rel": "near",
+   "b": "Utterbol",
+   "direction": "",
+   "distance_text": "a little way",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Redhead",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "in a wood",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P018",
+     "q": "I met him in a wood a little way from Utterbol"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Redhead"
+   ],
+   "from": "Vale Turris",
+   "to": "(unknown)",
+   "via": [],
+   "mode": "horse with an escort of spears",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "morning",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C6",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P009",
+     "q": "they all went forth and gat a-horseback and rode away from Vale Turris"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Agatha",
+   "statement": "Agatha protected herself by spreading that she was a sorceress whose spell would outlive her and curse her killer.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Redhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P017",
+     "q": "she had got it spread abroad that she was cunning in sorcery, and that her spell would not end when her life ended"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Bull Shockhead",
+   "statement": "Redhead says Bull often speaks of his kin and long descent.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Redhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P011",
+     "q": "he hath his kin and long descent full often in his mouth, while I am but a gangrel body"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Sage of Swevenham",
+   "statement": "The Sage foretells Bull's oath will bring gain to him and Ralph's friends.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Sage of Swevenham",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P008",
+     "q": "This oath thou shalt keep to the gain and not the loss both of thee and of thy friends of Upmeads"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Redhead",
+   "statement": "Redhead is valiant, brisk, grateful, trusty and merry despite rough manners.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P019",
+     "q": "he was a valiant man, and brisk, and one who forgat no benefit, and was trusty as steel"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Drowning of the nephew",
+   "chapter": "BFOUR-C6",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Redhead",
+    "(unnamed) nephew of the Lord of Utterbol"
+   ],
+   "places": [
+    "Ram's Bane"
+   ],
+   "summary": "Redhead drowns the Lord's nephew in the Ram's Bane two days before the Lord's death.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P018",
+     "q": "two days before the slaying of his uncle, I met him in a wood"
+    }
+   ]
+  },
+  {
+   "label": "Departure from Vale Turris",
+   "chapter": "BFOUR-C6",
+   "layer": "main",
+   "time_text": "morning to noon",
+   "participants": [
+    "Ralph",
+    "Ursula",
+    "Bull Shockhead",
+    "Otter",
+    "Redhead"
+   ],
+   "places": [
+    "Vale Turris"
+   ],
+   "summary": "Bull and Otter escort the travellers till noon, then part.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C6-P009",
+     "q": "Bull and Otter kissed the wayfarers, and bade them farewell"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Survival by reputation (feigned curses), as a social-defence mechanic for vulnerable NPCs.",
+   "system": "society",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C6-P017",
+     "q": "so that, to make a long story short, he feared her, and feared her more dead than living"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C6",
+ "chapters": [
+  "BFOUR-C6"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C6",
+   "paragraphs_total": 18,
+   "all_paragraphs_read": true,
+   "summary": "Their escort captain is Redhead, who apologises for unknowingly helping Agatha's ruse; Bull jokes that Redhead's wooing of Agatha depends on Ralph's safety. Bull says Ralph has changed his nature and swears on Ursula's hand to visit Upmeads within ten years; the Sage says the oath will bring gain. Bull and Otter ride with them till noon and part. Redhead says Bull boasts of long descent and is perhaps of better kin than any in the east. He defends Agatha as true and valiant: fear, pain and mutual help brought them together. Agatha escaped the worst by spreading a tale that her ghost would curse her killer, which the Lord believed; the Lord's nephew blamed her spells. Redhead secretly drowned the nephew, bound neck and heels with a stone, in a woodland pool called the Ram's Bane two days before the Lord's death. The Lord tortured Agatha but feared to kill her, and later begged her forgiveness.",
+   "geography_notes": "The Ram's Bane is a deep woodland pool in a wood a little way from Utterbol.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,33 @@
+@ BFOUR-C8
+summary: They pass safely through Morfinn's country to Goldburg, now at firm peace with the new Lord of Utterbol. Ralph hopes the Queen will not send for him. Redhead says the Clerk of the Porte will bring a licence to hire men as far as Cheaping Knowe, and that a King now rules. The host tells Ralph that a little over a year ago in early spring the Queen vanished. Folk say she was of the fairy, or killed herself for love. A fisherman took a cloaked woman with jewelled rings, a gold arm-ring and jewelled gold shoes down the river by night; at sunrise, twenty leagues seaward in a great wood, she leapt ashore into the thicket. Her cousin King Rainald now reigns, wise and mighty and no tyrant. Ralph grieves but thinks it better not to seek her.
+geo: The road from the field of betrayal runs through Morfinn's country to Goldburg's gate. Goldburg's river runs swift between the city quays and seaward; about twenty leagues downstream, through the night, lies a great wood.
+open: Where did the Queen of Goldburg go? (she landed in a great wood twenty leagues seaward)
+
+E office | Clerk of the Porte | - | civic clerk | Goldburg official who issues licences to hire men-at-arms. | P003 `I have already seen the Clerk of the Porte, and he will be here in an hour with the license for thee to wage men to go with thee to Cheaping Knowe`
+E person | King Rainald | Rainald | king | The Queen's cousin, now King of Goldburg; wise, mighty, not a tyrant. | P009 `the King Rainald her cousin reigns in her stead, a wise man, and a mighty, and no tyrant or skinner of the people`
+E person | (unnamed) host of the Goldburg hostel | - | innkeeper | Tells Ralph of the Queen's vanishing. | P006 `So the host sat down by Ralph and said`
+E person | (unnamed) old fisherman of Goldburg | - | fisherman | Ferried a cloaked, jewelled woman down the river by night. | P007 `a certain old fisherman of our water`
+E feature | (unnamed) great wood down the Goldburg river | - | forest | Great wood about twenty leagues seaward on the river, where the woman landed. | P009 `at sunrise were sailing through the great wood which lieth hence a twenty leagues seaward`
+E custom | licence to wage men | - | law | Goldburg requires a licence from the Clerk of the Porte to hire men-at-arms. | P003 `the license for thee to wage men`
+
+R King Rainald | ruler_of | Goldburg | succeeds his cousin the Queen | BFOUR-C8 | CANON/high | P009 `the King Rainald her cousin reigns in her stead`
+R King Rainald | kin_of | Queen of Goldburg | cousin | BFOUR-C8 | CANON/high | P009 `the King Rainald her cousin`
+R Goldburg | allied_with | Bull Shockhead | firm peace | BFOUR-C8 | CANON/high | P002 `the new Lord of Utterbol had made firm and fast peace with Goldburg`
+
+S (unnamed) great wood down the Goldburg river | downstream_of | Goldburg | dist=about twenty leagues; dir=seaward; time=one night's sail; cert=fixed | CANON/high | - | P009 `at sunrise were sailing through the great wood which lieth hence a twenty leagues seaward`
+S (unnamed) river of Goldburg | flows_into | (unnamed) sea beyond Goldburg | dir=seaward; cert=constrained | CANON/medium | the river runs toward the sea | P009 `a twenty leagues seaward`
+
+T Ralph, Ursula, Sage of Swevenham, Redhead | (unnamed) field of the betrayal | Goldburg | mode=horse | P002 `they all came safely to the gate of Goldburg`
+T Queen of Goldburg | Goldburg | (unnamed) great wood down the Goldburg river | mode=fishing boat; dur=one night; start=night in March | P009 `there was a wind in the March night, and the stream is swift betwixt the quays of our city`
+
+F law | Goldburg | Hiring men-at-arms requires the Clerk of the Porte's licence; the King need not be seen except by traders or soldiers. | CANON/high; ctx=dialogue:Redhead | P003 `But to the King hast thou no need to go, save he send for thee, whereas thou art not come hither to chaffer`
+F politics | Goldburg | The King's wife is called Lady, not Queen. | CANON/high; ctx=dialogue:Redhead | P004 `There is the King's wedded wife, but her they call not Queen, but Lady`
+F magic | Queen of Goldburg | Some think the Queen was of the fairy and needed no steed; her women think she killed herself for love. | CANON/high; ctx=rumour | P006 `many deemed that though her lineage was known by seeming, yet she was of the fairy`
+F history | Queen of Goldburg | She vanished in early spring a little over a year before. | CANON/high; ctx=dialogue:host | P006 `in the early spring, somewhat more than a year ago that is, one morning when folk arose, the Queen's place was empty`
+
+V main | The vanished Queen of Goldburg | A little over a year ago the Queen fled Goldburg by night down the river and vanished into a great wood. | time=March, a year before; who=Queen of Goldburg, (unnamed) old fisherman of Goldburg; where=(unnamed) great wood down the Goldburg river | P009 `she leapt out and let the thicket cover her`
+
+U location | Where the Queen of Goldburg went after landing in the great wood. | P009 `nor have any of Goldburg seen her since, or the Queen`
+U location | Goldburg's river is said to flow "seaward": where is that sea? | P009 `a twenty leagues seaward`
+
+O events | NPCs who disappear and may reappear elsewhere, with trail evidence. | P008 `a golden shoe all begemmed came out from under gown-hem`

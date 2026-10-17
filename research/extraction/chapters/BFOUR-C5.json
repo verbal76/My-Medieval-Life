@@ -1,0 +1,380 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Bull's lion",
+   "aliases": [
+    "yellow mane",
+    "the yellow king"
+   ],
+   "type": "creature",
+   "subtype": "lion",
+   "unnamed": true,
+   "summary": "Huge yellow lion that escaped in Goldburg market, tamed and bought by Bull, and later sung to sleep.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C5-P004",
+     "q": "lay crouched a huge yellow lion, on the carcase of a goat"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) market-house of Goldburg",
+   "aliases": [],
+   "type": "building",
+   "subtype": "market-house",
+   "unnamed": true,
+   "summary": "Market-house with a cloister and a great green pillar.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C5-P004",
+     "q": "under one of the pillars of the cloister beneath the market-house (the great green pillar, if thou mindest it)"
+    }
+   ]
+  },
+  {
+   "name": "House of Utterbol",
+   "aliases": [
+    "Utterbol"
+   ],
+   "type": "building",
+   "subtype": "lord's house",
+   "unnamed": false,
+   "summary": "Exceedingly fair and stately house with gardens, orchards, acres and meadows; a paradise where folk lived as in hell.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C5-P012",
+     "q": "the House of Utterbol is exceeding fair and stately"
+    }
+   ]
+  },
+  {
+   "name": "Bull of Utterbol",
+   "aliases": [
+    "Lord of the Waste and the Wildwood",
+    "and the Mountain-side"
+   ],
+   "type": "office",
+   "subtype": "title",
+   "unnamed": false,
+   "summary": "Title given to Bull when raised on a shield.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C5-P027",
+     "q": "hailed me by the name of the Bull of Utterbol, Lord of the Waste and the Wildwood, and the Mountain-side"
+    }
+   ]
+  },
+  {
+   "name": "officers of the Porte of Goldburg",
+   "aliases": [],
+   "type": "group",
+   "subtype": "civic officers",
+   "unnamed": false,
+   "summary": "Goldburg officials who ordered Bull out of the town and paid him.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C5-P010",
+     "q": "the officers of the Porte came and bade me avoid the town of Goldburg, but gave me more money withal"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Bull Shockhead",
+   "rel": "owns",
+   "b": "(unnamed) Bull's lion",
+   "detail": "bought and tamed",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P009",
+     "q": "I turned to my new-bought thrall and bade him come with me"
+    }
+   ]
+  },
+  {
+   "a": "Gandolf",
+   "rel": "killed_by",
+   "b": "Bull Shockhead",
+   "detail": "skull cloven with a short-sword in his chamber",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P021",
+     "q": "hove up my short-sword, and clave his skull, in front and with mine own hand"
+    }
+   ]
+  },
+  {
+   "a": "Agatha",
+   "rel": "freed_by",
+   "b": "Bull Shockhead",
+   "detail": "freed with gifts and lands",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P027",
+     "q": "I gave her rich gifts and good lands, and freedom, to boot her for her many stripes"
+    }
+   ]
+  },
+  {
+   "a": "Otter",
+   "rel": "other",
+   "b": "Bull Shockhead",
+   "detail": "gave him the choice of lordship or death; became his man",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P024",
+     "q": "either that thou be Lord of Utterbol, or that we slay thee here and now"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Utterness",
+   "rel": "on_route",
+   "b": "Utterbol",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Bull Shockhead",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "on the road from Goldburg to Utterbol",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P012",
+     "q": "Thus came I to Utterness, and found it poor and wretched"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Bull Shockhead",
+    "(unnamed) Bull's lion"
+   ],
+   "from": "Goldburg",
+   "to": "Utterbol",
+   "via": [
+    "Utterness"
+   ],
+   "mode": "small horse, lion led on a chain",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C5",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P010",
+     "q": "riding a little horse that I had, and leading my lion by a chain"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Bull Shockhead",
+   "statement": "Bull has a gift that wild things love and obey him: mice, birds, squirrels, hares, fierce hounds, and a lion.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P005",
+     "q": "I have a gift that wild things love and will do my bidding"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Utterbol",
+   "statement": "Utterness is poor and wretched; the House of Utterbol is a paradise where folk lived as in hell.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P012",
+     "q": "Yea, a very paradise; yet the dwellers therein as if it were hell"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Gandolf",
+   "statement": "All feared and hated him; habit, fear and doubt protected him; he was thought a devil.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P019",
+     "q": "they dreaded him moreover as a devil rather than a man"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Utterbol",
+   "statement": "A new lord is raised on a shield, crowned with a helm, and given a great sword by the men-at-arms.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P027",
+     "q": "the men-at-arms raised me on a shield, set a crowned helm on my head, and thrust a great sword into my hand"
+    }
+   ]
+  },
+  {
+   "category": "occupation",
+   "subject": "Bull Shockhead",
+   "statement": "Bull earned his living as a fiddler and singer at merry-makings in Goldburg.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P002",
+     "q": "thou knowest I can some skill with the fiddle and song, so I betook myself to that craft"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Gandolf",
+   "statement": "Gandolf blamed the Lady for Ursula's flight but feared to harm her, so he tortured Agatha.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Bull Shockhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P017",
+     "q": "he made thy friend Agatha pay for her under pretence of wringing a true tale out of her"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The lion in Goldburg market",
+   "chapter": "BFOUR-C5",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Bull Shockhead",
+    "(unnamed) Bull's lion"
+   ],
+   "places": [
+    "Goldburg"
+   ],
+   "summary": "Bull tames an escaped lion in Goldburg market and buys it.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P006",
+     "q": "Eat in peace and safety, am I not here?"
+    }
+   ]
+  },
+  {
+   "label": "Slaying of Gandolf",
+   "chapter": "BFOUR-C5",
+   "layer": "backstory",
+   "time_text": "",
+   "participants": [
+    "Bull Shockhead",
+    "Gandolf",
+    "Otter"
+   ],
+   "places": [
+    "House of Utterbol"
+   ],
+   "summary": "Bull kills Gandolf in his chamber and is made Lord of Utterbol by Otter and the men-at-arms.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C5-P023",
+     "q": "thus endeth the worst man in the world"
+    }
+   ]
+  }
+ ],
+ "unresolved": [],
+ "opportunities": [
+  {
+   "idea": "Canon: some folk (the Lady, Bull, the Sage) have a natural rapport with beasts. Any game \"beast-bond\" mechanic is GAME EXPANSION.",
+   "system": "magic",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C5-P005",
+     "q": "I have a gift that wild things love and will do my bidding"
+    }
+   ]
+  },
+  {
+   "idea": "Usurpation by a single blow when a hated ruler's guards consent, as a dynamic-politics rule.",
+   "system": "politics",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C5-P024",
+     "q": "either that thou be Lord of Utterbol, or that we slay thee here and now"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C5",
+ "chapters": [
+  "BFOUR-C5"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C5",
+   "paragraphs_total": 29,
+   "all_paragraphs_read": true,
+   "summary": "Bull tells how he won Utterbol. After Ralph left he refused Clement's offer, lived as a fiddler in Goldburg, and tamed an escaped yellow lion in the market (under the great green pillar of the cloister beneath the market-house) by his gift with wild things; he bought it and was paid off by the Porte to leave. With the lion he travelled unmolested to Utterbol, feared as a god-sent marvel. Utterness was poor and wretched; the House of Utterbol is a paradise with hellish life. He performed for the Lady; Agatha warned him. He learned the Lord blamed the Lady for Ursula's flight and tortured Agatha, and that the Lord had killed Bull Nosy. When the Lord returned and called him up, Bull, sword in hand, clove his skull. Otter offered him lordship or death; he was raised on a shield as \"the Bull of Utterbol, Lord of the Waste and the Wildwood, and the Mountain-side\", married the widow in three days, and freed and endowed Agatha. Otter says he has already raised Utterbol \"from Hell to Earth\".",
+   "geography_notes": "Goldburg's market-house has a cloister with a great green pillar. The road from Goldburg to Utterbol runs through Utterness, which is poor. The House of Utterbol has fair gardens, orchards, acres and meadows.",
+   "open_questions": [
+    "none"
+   ]
+  }
+ ]
+}

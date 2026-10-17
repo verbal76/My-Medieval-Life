@@ -1,0 +1,32 @@
+@ BFOUR-C5
+summary: Bull tells how he won Utterbol. After Ralph left he refused Clement's offer, lived as a fiddler in Goldburg, and tamed an escaped yellow lion in the market (under the great green pillar of the cloister beneath the market-house) by his gift with wild things; he bought it and was paid off by the Porte to leave. With the lion he travelled unmolested to Utterbol, feared as a god-sent marvel. Utterness was poor and wretched; the House of Utterbol is a paradise with hellish life. He performed for the Lady; Agatha warned him. He learned the Lord blamed the Lady for Ursula's flight and tortured Agatha, and that the Lord had killed Bull Nosy. When the Lord returned and called him up, Bull, sword in hand, clove his skull. Otter offered him lordship or death; he was raised on a shield as "the Bull of Utterbol, Lord of the Waste and the Wildwood, and the Mountain-side", married the widow in three days, and freed and endowed Agatha. Otter says he has already raised Utterbol "from Hell to Earth".
+geo: Goldburg's market-house has a cloister with a great green pillar. The road from Goldburg to Utterbol runs through Utterness, which is poor. The House of Utterbol has fair gardens, orchards, acres and meadows.
+open: none
+
+E creature | (unnamed) Bull's lion | yellow mane, the yellow king | lion | Huge yellow lion that escaped in Goldburg market, tamed and bought by Bull, and later sung to sleep. | P004 `lay crouched a huge yellow lion, on the carcase of a goat`
+E building | (unnamed) market-house of Goldburg | - | market-house | Market-house with a cloister and a great green pillar. | P004 `under one of the pillars of the cloister beneath the market-house (the great green pillar, if thou mindest it)`
+E building | House of Utterbol | Utterbol | lord's house | Exceedingly fair and stately house with gardens, orchards, acres and meadows; a paradise where folk lived as in hell. | P012 `the House of Utterbol is exceeding fair and stately`
+E office | Bull of Utterbol | Lord of the Waste and the Wildwood, and the Mountain-side | title | Title given to Bull when raised on a shield. | P027 `hailed me by the name of the Bull of Utterbol, Lord of the Waste and the Wildwood, and the Mountain-side`
+E group | officers of the Porte of Goldburg | - | civic officers | Goldburg officials who ordered Bull out of the town and paid him. | P010 `the officers of the Porte came and bade me avoid the town of Goldburg, but gave me more money withal`
+
+R Bull Shockhead | owns | (unnamed) Bull's lion | bought and tamed | backstory | CANON/high | P009 `I turned to my new-bought thrall and bade him come with me`
+R Gandolf | killed_by | Bull Shockhead | skull cloven with a short-sword in his chamber | backstory | CANON/high | P021 `hove up my short-sword, and clave his skull, in front and with mine own hand`
+R Agatha | freed_by | Bull Shockhead | freed with gifts and lands | backstory | CANON/high | P027 `I gave her rich gifts and good lands, and freedom, to boot her for her many stripes`
+R Otter | other | Bull Shockhead | gave him the choice of lordship or death; became his man | backstory | CANON/high | P024 `either that thou be Lord of Utterbol, or that we slay thee here and now`
+
+S Utterness | on_route | Utterbol | ctx=dialogue:Bull Shockhead; cert=constrained | CANON/high | on the road from Goldburg to Utterbol | P012 `Thus came I to Utterness, and found it poor and wretched`
+
+T Bull Shockhead, (unnamed) Bull's lion | Goldburg | Utterbol | via=Utterness; mode=small horse, lion led on a chain | P010 `riding a little horse that I had, and leading my lion by a chain`
+
+F magic | Bull Shockhead | Bull has a gift that wild things love and obey him: mice, birds, squirrels, hares, fierce hounds, and a lion. | CANON/high; ctx=dialogue:Bull Shockhead | P005 `I have a gift that wild things love and will do my bidding`
+F society | Utterbol | Utterness is poor and wretched; the House of Utterbol is a paradise where folk lived as in hell. | CANON/high; ctx=dialogue:Bull Shockhead | P012 `Yea, a very paradise; yet the dwellers therein as if it were hell`
+F politics | Gandolf | All feared and hated him; habit, fear and doubt protected him; he was thought a devil. | CANON/high; ctx=dialogue:Bull Shockhead | P019 `they dreaded him moreover as a devil rather than a man`
+F custom | Utterbol | A new lord is raised on a shield, crowned with a helm, and given a great sword by the men-at-arms. | CANON/high; ctx=dialogue:Bull Shockhead | P027 `the men-at-arms raised me on a shield, set a crowned helm on my head, and thrust a great sword into my hand`
+F occupation | Bull Shockhead | Bull earned his living as a fiddler and singer at merry-makings in Goldburg. | CANON/high; ctx=dialogue:Bull Shockhead | P002 `thou knowest I can some skill with the fiddle and song, so I betook myself to that craft`
+F law | Gandolf | Gandolf blamed the Lady for Ursula's flight but feared to harm her, so he tortured Agatha. | CANON/high; ctx=dialogue:Bull Shockhead | P017 `he made thy friend Agatha pay for her under pretence of wringing a true tale out of her`
+
+V backstory | The lion in Goldburg market | Bull tames an escaped lion in Goldburg market and buys it. | who=Bull Shockhead, (unnamed) Bull's lion; where=Goldburg | P006 `Eat in peace and safety, am I not here?`
+V backstory | Slaying of Gandolf | Bull kills Gandolf in his chamber and is made Lord of Utterbol by Otter and the men-at-arms. | who=Bull Shockhead, Gandolf, Otter; where=House of Utterbol | P023 `thus endeth the worst man in the world`
+
+O magic | Canon: some folk (the Lady, Bull, the Sage) have a natural rapport with beasts. Any game "beast-bond" mechanic is GAME EXPANSION. | P005 `I have a gift that wild things love and will do my bidding`
+O politics | Usurpation by a single blow when a hated ruler's guards consent, as a dynamic-politics rule. | P024 `either that thou be Lord of Utterbol, or that we slay thee here and now`

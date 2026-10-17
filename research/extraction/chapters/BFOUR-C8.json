@@ -1,0 +1,373 @@
+{
+ "entities": [
+  {
+   "name": "Clerk of the Porte",
+   "aliases": [],
+   "type": "office",
+   "subtype": "civic clerk",
+   "unnamed": false,
+   "summary": "Goldburg official who issues licences to hire men-at-arms.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C8-P003",
+     "q": "I have already seen the Clerk of the Porte, and he will be here in an hour with the license for thee to wage men to go with thee to Cheaping Knowe"
+    }
+   ]
+  },
+  {
+   "name": "King Rainald",
+   "aliases": [
+    "Rainald"
+   ],
+   "type": "person",
+   "subtype": "king",
+   "unnamed": false,
+   "summary": "The Queen's cousin, now King of Goldburg; wise, mighty, not a tyrant.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "the King Rainald her cousin reigns in her stead, a wise man, and a mighty, and no tyrant or skinner of the people"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) host of the Goldburg hostel",
+   "aliases": [],
+   "type": "person",
+   "subtype": "innkeeper",
+   "unnamed": true,
+   "summary": "Tells Ralph of the Queen's vanishing.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C8-P006",
+     "q": "So the host sat down by Ralph and said"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) old fisherman of Goldburg",
+   "aliases": [],
+   "type": "person",
+   "subtype": "fisherman",
+   "unnamed": true,
+   "summary": "Ferried a cloaked, jewelled woman down the river by night.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C8-P007",
+     "q": "a certain old fisherman of our water"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) great wood down the Goldburg river",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "forest",
+   "unnamed": true,
+   "summary": "Great wood about twenty leagues seaward on the river, where the woman landed.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "at sunrise were sailing through the great wood which lieth hence a twenty leagues seaward"
+    }
+   ]
+  },
+  {
+   "name": "licence to wage men",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "law",
+   "unnamed": false,
+   "summary": "Goldburg requires a licence from the Clerk of the Porte to hire men-at-arms.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BFOUR-C8-P003",
+     "q": "the license for thee to wage men"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "King Rainald",
+   "rel": "ruler_of",
+   "b": "Goldburg",
+   "detail": "succeeds his cousin the Queen",
+   "when": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "the King Rainald her cousin reigns in her stead"
+    }
+   ]
+  },
+  {
+   "a": "King Rainald",
+   "rel": "kin_of",
+   "b": "Queen of Goldburg",
+   "detail": "cousin",
+   "when": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "the King Rainald her cousin"
+    }
+   ]
+  },
+  {
+   "a": "Goldburg",
+   "rel": "allied_with",
+   "b": "Bull Shockhead",
+   "detail": "firm peace",
+   "when": "BFOUR-C8",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P002",
+     "q": "the new Lord of Utterbol had made firm and fast peace with Goldburg"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) great wood down the Goldburg river",
+   "rel": "downstream_of",
+   "b": "Goldburg",
+   "direction": "seaward",
+   "distance_text": "about twenty leagues",
+   "travel_time_text": "one night's sail",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "at sunrise were sailing through the great wood which lieth hence a twenty leagues seaward"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) river of Goldburg",
+   "rel": "flows_into",
+   "b": "(unnamed) sea beyond Goldburg",
+   "direction": "seaward",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "the river runs toward the sea",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "a twenty leagues seaward"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Ralph",
+    "Ursula",
+    "Sage of Swevenham",
+    "Redhead"
+   ],
+   "from": "(unnamed) field of the betrayal",
+   "to": "Goldburg",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C8",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P002",
+     "q": "they all came safely to the gate of Goldburg"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "Queen of Goldburg"
+   ],
+   "from": "Goldburg",
+   "to": "(unnamed) great wood down the Goldburg river",
+   "via": [],
+   "mode": "fishing boat",
+   "direction_text": "",
+   "duration_text": "one night",
+   "start_time_text": "night in March",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BFOUR-C8",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "there was a wind in the March night, and the stream is swift betwixt the quays of our city"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "law",
+   "subject": "Goldburg",
+   "statement": "Hiring men-at-arms requires the Clerk of the Porte's licence; the King need not be seen except by traders or soldiers.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Redhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P003",
+     "q": "But to the King hast thou no need to go, save he send for thee, whereas thou art not come hither to chaffer"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Goldburg",
+   "statement": "The King's wife is called Lady, not Queen.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Redhead",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P004",
+     "q": "There is the King's wedded wife, but her they call not Queen, but Lady"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Queen of Goldburg",
+   "statement": "Some think the Queen was of the fairy and needed no steed; her women think she killed herself for love.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "rumour",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P006",
+     "q": "many deemed that though her lineage was known by seeming, yet she was of the fairy"
+    }
+   ]
+  },
+  {
+   "category": "history",
+   "subject": "Queen of Goldburg",
+   "statement": "She vanished in early spring a little over a year before.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:host",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P006",
+     "q": "in the early spring, somewhat more than a year ago that is, one morning when folk arose, the Queen's place was empty"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The vanished Queen of Goldburg",
+   "chapter": "BFOUR-C8",
+   "layer": "main",
+   "time_text": "March, a year before",
+   "participants": [
+    "Queen of Goldburg",
+    "(unnamed) old fisherman of Goldburg"
+   ],
+   "places": [
+    "(unnamed) great wood down the Goldburg river"
+   ],
+   "summary": "A little over a year ago the Queen fled Goldburg by night down the river and vanished into a great wood.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "she leapt out and let the thicket cover her"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "Where the Queen of Goldburg went after landing in the great wood.",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "nor have any of Goldburg seen her since, or the Queen"
+    }
+   ]
+  },
+  {
+   "kind": "location",
+   "question": "Goldburg's river is said to flow \"seaward\": where is that sea?",
+   "refs": [
+    {
+     "p": "BFOUR-C8-P009",
+     "q": "a twenty leagues seaward"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "NPCs who disappear and may reappear elsewhere, with trail evidence.",
+   "system": "events",
+   "basis_refs": [
+    {
+     "p": "BFOUR-C8-P008",
+     "q": "a golden shoe all begemmed came out from under gown-hem"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BFOUR-C8",
+ "chapters": [
+  "BFOUR-C8"
+ ],
+ "ledger": [
+  {
+   "chapter": "BFOUR-C8",
+   "paragraphs_total": 9,
+   "all_paragraphs_read": true,
+   "summary": "They pass safely through Morfinn's country to Goldburg, now at firm peace with the new Lord of Utterbol. Ralph hopes the Queen will not send for him. Redhead says the Clerk of the Porte will bring a licence to hire men as far as Cheaping Knowe, and that a King now rules. The host tells Ralph that a little over a year ago in early spring the Queen vanished. Folk say she was of the fairy, or killed herself for love. A fisherman took a cloaked woman with jewelled rings, a gold arm-ring and jewelled gold shoes down the river by night; at sunrise, twenty leagues seaward in a great wood, she leapt ashore into the thicket. Her cousin King Rainald now reigns, wise and mighty and no tyrant. Ralph grieves but thinks it better not to seek her.",
+   "geography_notes": "The road from the field of betrayal runs through Morfinn's country to Goldburg's gate. Goldburg's river runs swift between the city quays and seaward; about twenty leagues downstream, through the night, lies a great wood.",
+   "open_questions": [
+    "Where did the Queen of Goldburg go? (she landed in a great wood twenty leagues seaward)"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+@ BFOUR-C7
+summary: They cross the waste with a light tent for Ursula, meeting only fowlers and peat-cutters who bow to Utterbol's token. On the fifth day spears appear by a thicket: the Black Riders, on black horses in black armour, the men of the slain nephew's brother, a reiver nearly as old as his uncle but a better man. Redhead has the Bull pennon shaken out by Michael-a-green and the horn blown. The bands clash; Ralph spears a tall man and fights with the Upmeads blade; the Black Riders flee, with sixteen slain to Utterbol's four. A javelin strikes Ursula, but her hauberk holds. Later they reach the field where Ralph was betrayed and camp by the same rowan tree.
+geo: The road west from Vale Turris crosses waste: no houses, fowlers and peat-cutters. A thicket on the fifth day. Later, the plain by a wood where the Lord of Utterbol once camped and Ralph was taken, with a rowan (quicken) tree marking the tent site.
+open: Who is the nephew's brother (leader of the Black Riders)?
+
+E group | Black Riders | men of the nephew's brother | raiders | Spearmen on black horses in black armour, with bowmen, led by the elder brother of the drowned nephew. | P007 `well mounted on black horses and clad in black armour`
+E person | (unnamed) brother of the Utterbol nephew | - | reiver lord | Brother of the drowned nephew, nearly as old as Gandolf; a good warrior, wise leader and skilled raider. | P007 `the men of the brother of thy hot wooer, Lady Ursula, whom I cooled in the Ram's Bane, but a man well nigh as old as his uncle`
+E person | Michael-a-green | - | bannerman | Utterbol man who unfurls the Bull pennon. | P007 `thou, Michael-a-green shake out the Bull`
+E feature | (unnamed) field of the betrayal | - | field | Plain by a wood where Ralph was taken by the Lord of Utterbol, with a rowan tree. | P019 `Lo, beloved, this quicken-tree; hereby it was that the tent was pitched wherein I lay the night when I was taken`
+
+R (unnamed) brother of the Utterbol nephew | leader_of | Black Riders | - | BFOUR-C7 | CANON/high | P007 `these are the men of the brother of thy hot wooer`
+R Black Riders | enemy_of | Bull Shockhead | fight the Utterbol escort | BFOUR-C7 | CANON/high | P008 `the Black men-at-arms came on at a trot`
+
+T Ralph, Ursula, Sage of Swevenham, Redhead | Vale Turris | (unnamed) field of the betrayal | mode=horse with sumpter horses, tent; dur=many days; terrain=waste, thickets, woods | P002 `They slept in no house that night nor for many nights after; for they were now fairly on the waste`
+
+F military | Black Riders | Black armour and black horses; bowmen from a thicket; a screeching yell as they charge. | CANON/high | P008 `with a great screeching yell cast their spears into the rest`
+F military | Bull Shockhead | Utterbol's men take no prisoners from raiders; sixteen enemies slain, four of theirs. | CANON/high | P011 `The Utterbol Riders had slain sixteen of their foemen; for they took none to mercy`
+F law | Bull Shockhead | Fowlers and peat-cutters in the waste bow to Utterbol's token. | CANON/high | P002 `naught save a fowler of the waste, or a peat-cutter, who stood to look on the men-at-arms going by, and made obeisance to the token of Utterbol`
+F weapons | Ursula | Ursula wears a hauberk and steel coif in battle; a javelin fails to pierce it. | CANON/high; ctx=dialogue:Ursula | P010 `steel kept out steel: I have no scratch or point or edge on me`
+F military | Redhead | Redhead says the true test of a man is fighting fresh foes one after another until longing for night or death. | CANON/high; ctx=dialogue:Redhead | P014 `That which trieth a man, is to fight and overcome, and straight have to fight with fresh foemen`
+
+V main | Battle with the Black Riders | On the fifth day the Utterbol escort routs the Black Riders; Ursula is struck but unhurt. | time=fifth day, morning; who=Ralph, Ursula, Redhead, Black Riders; where=(unnamed) waste between Vale Turris and Goldburg | P010 `in five minutes' time the Black Riders were fleeing all over the field`
+
+U identity | The nephew's brother is unnamed. | P007 `a man well nigh as old as his uncle, though he hath not made men tremble so sore`
+
+O military | Rival heirs of a deposed tyrant as ongoing border raiders, a source of escort encounters. | P007 `'tis not unlike that we shall have to speak to his men again, either out-going or home-coming`
