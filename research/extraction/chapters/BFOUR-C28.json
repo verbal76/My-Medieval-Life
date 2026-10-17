@@ -116,11 +116,11 @@
   {
    "a": "(unnamed) Wise Woman of Sarras",
    "rel": "other",
-   "b": "Lady of Abundance",
-   "detail": "possibly her teacher (Ralph's belief)",
+   "b": "Teacher of Lore",
+   "detail": "probably the same woman (Ralph's belief; matching looks)",
    "when": "backstory",
    "classification": "CANON-INFERRED",
-   "confidence": "low",
+   "confidence": "high",
    "refs": [
     {
      "p": "BFOUR-C28-P015",
@@ -344,7 +344,7 @@
  "unresolved": [
   {
    "kind": "identity",
-   "question": "Ralph believes the Wise Woman of Sarras taught the Lady of Abundance, but the text gives no confirmation; the Lady's witch-mistress was described differently (big, black-haired).",
+   "question": "Ralph believes the Wise Woman of Sarras is the Lady of Abundance's Teacher of Lore. Not stated, but her looks (about forty, dark red hair, small brown eyes) match the Teacher as described after drinking of the Well (BTWO-C7-P029).",
    "refs": [
     {
      "p": "BFOUR-C28-P015",
@@ -397,7 +397,7 @@
    "summary": "Katherine tells how, as a young wife travelling with Clement and chapmen on a very long journey, she came east to Sarras the Holy, an ancient city full of marvels. She longed to meet a Wise Woman there and promised a merchant, Valerius, an improper payment for an introduction. The Wise Woman, who lived alone in a nook of the ruined palace of Sarras's ancientest kings, looked about forty, slender, with dark red hair and small brown eyes. She knew Katherine's bargain and would undo it; she taught her wisdom and made her swear to give the pair of beads to a man she loved well, not of her own blood, in his greatest need. The beads lead a man to the Well but no woman; others like them exist. As foretold, Valerius was suddenly called away and never seen again. Ralph believes the Wise Woman is the one who taught the Lady of Abundance. Katherine had thought of giving the beads to Clement, but he scoffed at the Well. At dawn four trumpets sound the muster.",
    "geography_notes": "Sarras the Holy is a very ancient city in the eastern parts of the earth, reached by an exceedingly long chapman's journey. The Wise Woman lived in a nook of the ruined palace of the ancientest kings of Sarras. Wulstead has four quarters, each with a muster trumpet, and a market-place.",
    "open_questions": [
-    "Is the Wise Woman of Sarras the Lady of Abundance's teacher (Ralph's belief)?",
+    "Is the Wise Woman of Sarras the Lady of Abundance's Teacher of Lore (Ralph's belief, matching looks)?",
     "Where does Sarras lie relative to the Well's road?"
    ]
   }

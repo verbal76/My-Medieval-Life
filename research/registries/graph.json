@@ -1082,11 +1082,6 @@
    "type": "person"
   },
   {
-   "id": "per-wise-carline-of-the-dale-of-lore",
-   "name": "(unnamed) wise carline of the Dale of Lore",
-   "type": "person"
-  },
-  {
    "id": "per-wise-woman-of-sarras",
    "name": "(unnamed) Wise Woman of Sarras",
    "type": "person"
@@ -1927,8 +1922,8 @@
    "confidence": "high"
   },
   {
-   "id": "rel-919ffdf54f",
-   "source": "per-wise-carline-of-the-dale-of-lore",
+   "id": "rel-2c9c3f43e9",
+   "source": "per-teacher-of-lore",
    "target": "per-lady-of-abundance",
    "rel": "teaches",
    "when": "backstory",
@@ -3727,13 +3722,13 @@
    "confidence": "high"
   },
   {
-   "id": "rel-246e38b2b6",
+   "id": "rel-bb6a44eeec",
    "source": "per-wise-woman-of-sarras",
-   "target": "per-lady-of-abundance",
+   "target": "per-teacher-of-lore",
    "rel": "other",
    "when": "backstory",
    "classification": "CANON-INFERRED",
-   "confidence": "low"
+   "confidence": "high"
   },
   {
    "id": "rel-70f104f577",

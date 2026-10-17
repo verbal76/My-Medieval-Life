@@ -204,7 +204,7 @@ Non-spatial relations between people, groups and polities. `when` gives the chap
 - (unnamed) Prior of the Thorn → House of Abundance: says no heir of the Lady remains to claim it *CANON/high, BFOUR-C16*: `BFOUR-C16-P031`
 - (unnamed) Ursula's former lover → (unnamed) Ursula's former lover: same person *INF/high, BTHREE-C11*: `BTHREE-C11-P005`
 - (unnamed) Wise Woman of Sarras → Dame Katherine: taught her wisdom and laid the beads charge on her *CANON/high, backstory*: `BFOUR-C28-P006`
-- (unnamed) Wise Woman of Sarras → Lady of Abundance: possibly her teacher (Ralph's belief) *INF/low, backstory*: `BFOUR-C28-P015`
+- (unnamed) Wise Woman of Sarras → Teacher of Lore: probably the same woman (Ralph's belief; matching looks) *INF/high, backstory*: `BFOUR-C28-P015`
 - (unnamed) witch-mistress of the Lady → Lady of Abundance: not her mother though called so *CANON/high, backstory*: `BTWO-C3-P002`
 - Blaise → Ralph: gives him a purse of gold and an anlace *CANON/high, BTWO-C18*: `BTWO-C18-P004`
 - Bull Nosy → Gandolf: likely to give or sell the damsel to him *CANON/medium, BTWO-C24*: `BTWO-C24-P008`
@@ -360,11 +360,11 @@ Non-spatial relations between people, groups and polities. `when` gives the chap
 
 ## teaches (6)
 
-- (unnamed) wise carline of the Dale of Lore → Lady of Abundance: world-wisdom and letters *CANON/high, backstory*: `BTWO-C4-P011`
 - Sage of Swevenham → Ralph: the way to the Well *CANON/high, BTHREE-C6*: `BTHREE-C6-P003`
 - Sage of Swevenham → Ursula: the way to the Well *CANON/high, BTHREE-C6*: `BTHREE-C6-P003`
 - Sage of Swevenham → Ralph: charge on the right use of the Well's gift *CANON/high, BTHREE-C8*: `BTHREE-C8-P006`
 - Sir Karr Wood-neb → Ralph: taught songs *CANON/high, backstory*: `BTWO-C34-P028`
+- Teacher of Lore → Lady of Abundance: world-wisdom and letters *CANON/high, backstory*: `BTWO-C4-P011`
 - Teacher of Lore → Lady of Abundance: hidden lore, including what is called sorcery *CANON/high, backstory*: `BTWO-C7-P042`
 
 ## trades in (1)

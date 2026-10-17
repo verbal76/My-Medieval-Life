@@ -6,6 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools" / "lore"))
 
+import build_constraints as bc  # noqa: E402
 import build_registries as br  # noqa: E402
 
 
@@ -55,6 +56,21 @@ class RegistryTest(unittest.TestCase):
             self.assertEqual(o["classification"], "GAME EXPANSION")
         for f in self.reg["facts"]:
             self.assertIn(f["classification"], {"CANON", "CANON-INFERRED"})
+
+
+class ConstraintTest(unittest.TestCase):
+    def test_constraints_are_current_and_deterministic(self):
+        a, b = bc.build(), bc.build()
+        self.assertEqual(a, b)
+        saved = json.loads((bc.REG / "worldgen_constraints.json").read_text())
+        self.assertEqual(saved, json.loads(json.dumps(a)))
+
+    def test_measures_parse_the_text_not_times_of_day(self):
+        m = bc.measures("some twenty miles")
+        self.assertEqual((m[0]["value"], m[0]["unit"], m[0]["miles"], m[0]["approximate"]), (20, "mile", 20.0, True))
+        self.assertEqual(bc.measures("four furlongs")[0]["miles"], 0.5)
+        self.assertIsNone(bc.measures("about twenty leagues")[0]["miles"])
+        self.assertEqual(bc.measures("from early afternoon to two hours before sunset"), [])
 
 
 if __name__ == "__main__":

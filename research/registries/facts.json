@@ -3234,7 +3234,7 @@
    "classification": "CANON",
    "confidence": "high",
    "context": "dialogue:Lady of Abundance",
-   "id": "fct-ff53f0ff58",
+   "id": "fct-9f5e390876",
    "note": "",
    "refs": [
     {
@@ -3243,8 +3243,8 @@
     }
    ],
    "statement": "She teaches the girl letters \"like a little lad in the chorister's school\".",
-   "subject": "(unnamed) wise carline of the Dale of Lore",
-   "subject_id": "per-wise-carline-of-the-dale-of-lore",
+   "subject": "Teacher of Lore",
+   "subject_id": "per-teacher-of-lore",
    "when": ""
   },
   {

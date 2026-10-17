@@ -1374,16 +1374,16 @@
   {
    "chapter": "BTWO-C4",
    "consequences": "",
-   "id": "evt-9aac3d3fd0",
+   "id": "evt-dbf4289e4e",
    "label": "Meeting the wise carline",
    "layer": "backstory",
    "participants": [
     "Lady of Abundance",
-    "(unnamed) wise carline of the Dale of Lore"
+    "Teacher of Lore"
    ],
    "participants_ids": [
     "per-lady-of-abundance",
-    "per-wise-carline-of-the-dale-of-lore"
+    "per-teacher-of-lore"
    ],
    "places": [
     "Dale of Lore"

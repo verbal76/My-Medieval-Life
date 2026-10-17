@@ -1477,15 +1477,15 @@
    "when": "backstory"
   },
   {
-   "a": "(unnamed) wise carline of the Dale of Lore",
-   "a_id": "per-wise-carline-of-the-dale-of-lore",
+   "a": "Teacher of Lore",
+   "a_id": "per-teacher-of-lore",
    "b": "Lady of Abundance",
    "b_id": "per-lady-of-abundance",
    "chapter": "BTWO-C4",
    "classification": "CANON",
    "confidence": "high",
    "detail": "world-wisdom and letters",
-   "id": "rel-919ffdf54f",
+   "id": "rel-2c9c3f43e9",
    "refs": [
     {
      "p": "BTWO-C4-P011",
@@ -5279,13 +5279,13 @@
   {
    "a": "(unnamed) Wise Woman of Sarras",
    "a_id": "per-wise-woman-of-sarras",
-   "b": "Lady of Abundance",
-   "b_id": "per-lady-of-abundance",
+   "b": "Teacher of Lore",
+   "b_id": "per-teacher-of-lore",
    "chapter": "BFOUR-C28",
    "classification": "CANON-INFERRED",
-   "confidence": "low",
-   "detail": "possibly her teacher (Ralph's belief)",
-   "id": "rel-246e38b2b6",
+   "confidence": "high",
+   "detail": "probably the same woman (Ralph's belief; matching looks)",
+   "id": "rel-bb6a44eeec",
    "refs": [
     {
      "p": "BFOUR-C28-P015",

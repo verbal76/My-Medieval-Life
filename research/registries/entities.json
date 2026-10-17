@@ -16216,8 +16216,7 @@
     "BFOUR-C15",
     "BFOUR-C16",
     "BFOUR-C17",
-    "BFOUR-C19",
-    "BFOUR-C28"
+    "BFOUR-C19"
    ],
    "refs": [
     {
@@ -16232,13 +16231,7 @@
    "implicit": false,
    "first_chapter": "BONE-C18",
    "classification": "CANON",
-   "possible_same_as": [
-    {
-     "id": "per-wise-woman-of-sarras",
-     "name": "(unnamed) Wise Woman of Sarras",
-     "basis": "Ralph believes she taught the Lady; unconfirmed (BFOUR-C28)."
-    }
-   ]
+   "possible_same_as": []
   },
   {
    "id": "per-lady-of-the-wildwood",
@@ -18728,10 +18721,19 @@
    ],
    "unnamed": false,
    "aliases": [
+    "the carline",
+    "the old woman",
+    "(unnamed) wise carline of the Dale of Lore",
     "the wise carline of the Dale of Lore"
    ],
-   "merged_from": [],
+   "merged_from": [
+    "(unnamed) wise carline of the Dale of Lore"
+   ],
    "summaries": [
+    {
+     "chapter": "BTWO-C4",
+     "text": "Grey-haired old woman with shining bright eyes, poorly dressed; teaches the girl of the world and letters, foresees, gives her a knife."
+    },
     {
      "chapter": "BTWO-C7",
      "text": "Returned middle-aged with dark red hair and small brown eyes, having drunk of the Well; wise in hidden lore; disguised the Lady."
@@ -18739,10 +18741,16 @@
    ],
    "attributes": {},
    "chapters": [
+    "BTWO-C4",
     "BTWO-C7",
-    "BTWO-C8"
+    "BTWO-C8",
+    "BFOUR-C28"
    ],
    "refs": [
+    {
+     "p": "BTWO-C4-P004",
+     "q": "an old woman grey haired, uncomely of raiment, but with shining bright eyes in her wrinkled face"
+    },
     {
      "p": "BTWO-C7-P029",
      "q": "of dark red hair, and brown eyes somewhat small"
@@ -18753,9 +18761,15 @@
     }
    ],
    "implicit": false,
-   "first_chapter": "BTWO-C7",
+   "first_chapter": "BTWO-C4",
    "classification": "CANON",
-   "possible_same_as": []
+   "possible_same_as": [
+    {
+     "id": "per-wise-woman-of-sarras",
+     "name": "(unnamed) Wise Woman of Sarras",
+     "basis": "Ralph deems it certain she taught the Lady (BFOUR-C28-P015); her looks (about forty, dark red hair, small brown eyes) match the Teacher after drinking of the Well (BTWO-C7-P029). Not stated."
+    }
+   ]
   },
   {
    "id": "per-thrall-merchant-of-cheaping-knowe",
@@ -19327,42 +19341,6 @@
    "possible_same_as": []
   },
   {
-   "id": "per-wise-carline-of-the-dale-of-lore",
-   "name": "(unnamed) wise carline of the Dale of Lore",
-   "types": [
-    "person"
-   ],
-   "subtypes": [
-    "wise woman"
-   ],
-   "unnamed": true,
-   "aliases": [
-    "the carline",
-    "the old woman"
-   ],
-   "merged_from": [],
-   "summaries": [
-    {
-     "chapter": "BTWO-C4",
-     "text": "Grey-haired old woman with shining bright eyes, poorly dressed; teaches the girl of the world and letters, foresees, gives her a knife."
-    }
-   ],
-   "attributes": {},
-   "chapters": [
-    "BTWO-C4"
-   ],
-   "refs": [
-    {
-     "p": "BTWO-C4-P004",
-     "q": "an old woman grey haired, uncomely of raiment, but with shining bright eyes in her wrinkled face"
-    }
-   ],
-   "implicit": false,
-   "first_chapter": "BTWO-C4",
-   "classification": "CANON",
-   "possible_same_as": []
-  },
-  {
    "id": "per-wise-woman-of-sarras",
    "name": "(unnamed) Wise Woman of Sarras",
    "types": [
@@ -19397,9 +19375,9 @@
    "classification": "CANON",
    "possible_same_as": [
     {
-     "id": "per-lady-of-abundance",
-     "name": "Lady of Abundance",
-     "basis": "Ralph believes she taught the Lady; unconfirmed (BFOUR-C28)."
+     "id": "per-teacher-of-lore",
+     "name": "Teacher of Lore",
+     "basis": "Ralph deems it certain she taught the Lady (BFOUR-C28-P015); her looks (about forty, dark red hair, small brown eyes) match the Teacher after drinking of the Well (BTWO-C7-P029). Not stated."
     }
    ]
   },
