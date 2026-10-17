@@ -1,0 +1,296 @@
+{
+ "entities": [
+  {
+   "name": "Fellowship of the Dry Tree",
+   "aliases": [
+    "the Dry Tree"
+   ],
+   "type": "group",
+   "subtype": "fellowship",
+   "unnamed": false,
+   "summary": "A fellowship said to dwell at Hampton, called robbers and reivers.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C10-P016",
+     "q": "at Hampton dwelleth the Fellowship of the Dry Tree, and that those of the fellowship are robbers and reivers"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "other",
+   "b": "Well at the World's End",
+   "detail": "sets out to seek it",
+   "when": "BONE-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C10-P006",
+     "q": "I am going to seek the WELL AT THE WORLD'S END"
+    }
+   ]
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "rel": "lives_in",
+   "b": "Hampton under Scaur",
+   "detail": "hearsay",
+   "when": "BONE-C10",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C10-P016",
+     "q": "at Hampton dwelleth the Fellowship of the Dry Tree"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Burg of the Four Friths",
+   "rel": "south_of",
+   "b": "(unnamed) crossroads in the Wood Perilous",
+   "direction": "south",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the southern road",
+   "refs": [
+    {
+     "p": "BONE-C10-P013",
+     "q": "this that goeth south will bring me to the Burg of the Four Friths"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) peopled parts west of the Wood Perilous",
+   "rel": "west_of",
+   "b": "(unnamed) crossroads in the Wood Perilous",
+   "direction": "west",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "medium",
+   "note": "her belief",
+   "refs": [
+    {
+     "p": "BONE-C10-P013",
+     "q": "as for the western way I deem that that will lead me back again to the peopled parts whereof I know"
+    }
+   ]
+  },
+  {
+   "a": "Hampton under Scaur",
+   "rel": "east_of",
+   "b": "(unnamed) crossroads in the Wood Perilous",
+   "direction": "east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Ralph",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C10-P014",
+     "q": "it leadeth presently to Hampton under the Scaur"
+    }
+   ]
+  },
+  {
+   "a": "Well at the World's End",
+   "rel": "beyond",
+   "b": "Dry Tree",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "tale",
+   "certainty": "flexible",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the way to the Well is by the Dry Tree",
+   "refs": [
+    {
+     "p": "BONE-C10-P016",
+     "q": "the tale tells that the way to the Well at the World's End is by the Dry Tree"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "(unnamed) Maiden of Bourton Abbas"
+   ],
+   "from": "Bourton Abbas",
+   "to": "(unnamed) crossroads in the Wood Perilous",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "first glimmer of dawn",
+   "terrain_text": "",
+   "chapter": "BONE-C10",
+   "refs": [
+    {
+     "p": "BONE-C10-P003",
+     "q": "Here have I followed on thy footsteps"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "(unnamed) Maiden of Bourton Abbas"
+   ],
+   "from": "(unnamed) crossroads in the Wood Perilous",
+   "to": "Hampton under Scaur",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "east",
+   "duration_text": "",
+   "start_time_text": "early summer morning",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C10",
+   "refs": [
+    {
+     "p": "BONE-C10-P019",
+     "q": "rode away east toward Hampton"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "society",
+   "subject": "(unnamed) Maiden of Bourton Abbas",
+   "statement": "She is a yeoman's daughter and calls the gap in rank between them a bar.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C10-P005",
+     "q": "thou art a lord's son, and I a yeoman's daughter"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "She holds that questers for the Well must be single-hearted, thinking only of the quest and their fellow.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C10-P011",
+     "q": "they that take it up must be single-hearted, and think of nought save the quest and the fellow that is with them"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Burg of the Four Friths",
+   "statement": "She expects the Burg folk would mock anyone asking the way to the Well.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Maiden of Bourton Abbas",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C10-P013",
+     "q": "they would mock at me if I asked them of the way to the Well at the World's End"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The maiden's departure for the Well",
+   "chapter": "BONE-C10",
+   "layer": "main",
+   "time_text": "dawn",
+   "participants": [
+    "Ralph",
+    "(unnamed) Maiden of Bourton Abbas"
+   ],
+   "places": [
+    "(unnamed) crossroads in the Wood Perilous"
+   ],
+   "summary": "The maiden of Bourton refuses Ralph's company and rides east to seek the Well.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C10-P019",
+     "q": "rode away east toward Hampton"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "contradiction",
+   "question": "The lady (BONE-C9) calls Hampton's folk peaceable; the maiden has heard it is home to the robber Fellowship of the Dry Tree.",
+   "refs": [
+    {
+     "p": "BONE-C10-P016",
+     "q": "those of the fellowship are robbers and reivers"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Several independent seekers pursuing the same legendary goal, so the player is not uniquely chosen.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BONE-C10-P006",
+     "q": "I am going to seek the WELL AT THE WORLD'S END, and to find it and live, or to find it not, and die"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C10",
+ "chapters": [
+  "BONE-C10"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C10",
+   "paragraphs_total": 18,
+   "all_paragraphs_read": true,
+   "summary": "At dawn the maiden of Bourton Abbas arrives at the crossroads, having followed Ralph; she is going to seek the Well at the World's End. She refuses his company because she senses he has changed since yesterday. She names the roads, says she has heard the Fellowship of the Dry Tree dwells at Hampton, and that the way to the Well is by the Dry Tree, so she rides east toward Hampton.",
+   "geography_notes": "The crossroads has four ways: the road from Bourton Abbas (the way she came), the south road to the Burg of the Four Friths, the west road back toward the peopled parts, and the east road to Hampton under Scaur.",
+   "open_questions": [
+    "Is the Fellowship of the Dry Tree connected to the Dry Tree of the Well legend beyond the name?"
+   ]
+  }
+ ]
+}

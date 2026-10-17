@@ -1,0 +1,49 @@
+@ BONE-C11
+summary: A dark-haired woodsman with a bow meets Ralph, leads him a furlong to a hidden brook to eat, and tells him the Burg is a good town under a good lord while Hampton under Scaur is oppressed by the Fellowship of the Dry Tree from the Castle of the Scaur. He mentions Apthorp, a debateable thorp west of the Burg. Four Dry Tree horsemen chase them; one shoots a Turk bow from horseback. They escape to the highway, and the man names himself Roger of the Rope-walk. Near the Burg they pass a watch-tower (one of twenty-seven around the Frank of the Burg) and tilled land, and see the Burg's walls across meadows.
+geo: A furlong from the crossroads, a hollow with a clear stream among alders. Apthorp lies somewhat west of the Burg: open, unfenced, debateable between Burg and Dry Tree. The highway runs to the Burg Gate; the wood thins into tillage near the Burg. Twenty-seven watch-towers ring the outskirts of the Frank of the Burg (one on a knoll in a wheatfield, with thatched houses beneath). Then fields, meadows and homesteads, a tiny thorp on rising ground with a view of the walls, and finally only green meadows with sheep, kine and a winding stream up to the walls.
+open: Is Roger's account honest? (Ralph thinks he speaks coldly for a wronged man) || Where is the Castle of the Scaur relative to Hampton?
+
+E person | Roger of the Rope-walk | Roger, the carle | woodsman | Tall, strong, dark-skinned, black-haired, cheerful; bow, little axe and wood-knife; says he fled Hampton after the Dry Tree took his croft. | P002 `dark of skin and black-haired, but of a cheerful countenance`; P027 `I am Roger of the Rope-walk`
+E building | Castle of the Scaur | - | castle | Castle where the Fellowship of the Dry Tree dwell, lording over Hampton. | P015 `them of the Dry Tree, who dwell in the Castle of the Scaur`
+E place | Apthorp | - | thorp | Open, unfenced thorp somewhat west of the Burg; debateable ground held by turns by the Burg and the Dry Tree. | P019 `a thorp that lieth somewhat west of the Burg, which is called Apthorp`
+E feature | (unnamed) alder brook near the crossroads | - | stream | Clear stream between thick alders in a hollow, a furlong from the crossroads. | P010 `a little hollow place wherethrough ran a clear stream betwixt thick-leaved alders`
+E building | (unnamed) watch-towers of the Burg | - | watch-towers | Twenty-seven towers around the outskirts of the Frank of the Burg, manned by men-at-arms, sheltering husbandmen. | P034 `there such-like towers to the number of twenty-seven`
+E place | Frank of the Burg | - | territory | Lands around the Burg ringed by watch-towers. | P034 `all round the outskirts of the Frank of the Burg`
+E person | Fair Lady of the Burg | the Fair Lady | founder | Legendary lady who began building the Burg when first wedded to the Forest Lord; her age in winters gave the number of towers. | P034 `the tale of the winters of the Fair Lady who erewhile began the building of the Burg`
+E person | Forest Lord | - | founder | Legendary lord whose fathers dwelt in thatched timber halls in forest clearings before the Burg. | P034 `when she was first wedded to the Forest Lord`
+E person | (unnamed) Lord of the Burg | - | lord | Roger calls him a good lord, no tyrant. | P015 `the Burg is a good town under a good lord`
+E item | Turk bow | Turkish bow | bow | Bent bow used by Dry Tree horsemen, shooting from horseback. | P025 `hath a bent Turk bow in his hand`
+E person | (unnamed) brother of Roger | - | Hampton townsman | His fair wife was taken by the Dry Tree. | P015 `as they did with my brother, whose wife was too fair for him`
+
+R Fellowship of the Dry Tree | lord_of | Hampton under Scaur | not their true lords; oppress the townsfolk | BONE-C11 | CANON/high | P015 `but that they be under evil lords who are not their true lords`
+R Fellowship of the Dry Tree | lives_in | Castle of the Scaur | - | BONE-C11 | CANON/high | P015 `who dwell in the Castle of the Scaur`
+R Roger of the Rope-walk | enemy_of | Fellowship of the Dry Tree | says they took his croft; seeks revenge | BONE-C11 | CANON/medium | P015 `therefore have these tyrants robbed me of my croft`
+R Fair Lady of the Burg | spouse_of | Forest Lord | legend | backstory | CANON/high | P034 `when she was first wedded to the Forest Lord`
+R Burg of the Four Friths | at_war_with | Fellowship of the Dry Tree | strife between Hampton and the Burg | BONE-C11 | CANON/high | P018 `the strife betwixt Hampton and the Burg`
+
+S (unnamed) alder brook near the crossroads | distance_from | (unnamed) crossroads in the Wood Perilous | dist=a furlong; cert=fixed | CANON/high | - | P010 `they went together a furlong from the want-way into a little hollow place`
+S Apthorp | west_of | Burg of the Four Friths | dir=somewhat west; ctx=dialogue:Roger of the Rope-walk; cert=fixed | CANON/high | unfenced and debateable | P019 `a thorp that lieth somewhat west of the Burg, which is called Apthorp`
+S (unnamed) watch-towers of the Burg | surrounds | Frank of the Burg | ctx=dialogue:Roger of the Rope-walk; cert=fixed | CANON/high | twenty-seven towers on the outskirts | P034 `all round the outskirts of the Frank of the Burg are there such-like towers to the number of twenty-seven`
+S (unnamed) tillage near the Burg | adjacent_to | Wood Perilous | terrain=wood thins into fields of tillage along the highway; cert=fixed | CANON/high | - | P032 `till the wood began to thin, and there were fields of tillage about the highway`
+S (unnamed) small thorp before the Burg | visible_from | Burg of the Four Friths | terrain=rising ground; cert=fixed | CANON/high | walls and towers seen from its far end | P035 `a thorp of the smallest on a rising ground, from the further end of which they could see the walls and towers of the Burg`
+S (unnamed) meadows before the Burg | adjacent_to | Burg of the Four Friths | terrain=green meadows with sheep and kine and a winding stream, no houses or corn; cert=fixed | CANON/high | right up to the walls | P035 `right up to the walls were no more houses or cornfields, nought but reaches of green meadows`
+
+T Ralph, Roger of the Rope-walk | (unnamed) crossroads in the Wood Perilous | Burg of the Four Friths | via=(unnamed) alder brook near the crossroads, (unnamed) tillage near the Burg, (unnamed) small thorp before the Burg; mode=horse, double-mounted; start=early morning; terrain=wood, then tillage, then meadows | P022 `the carle waited no bidding to leap up behind him`; P032 `there were fields of tillage about the highway`
+
+F military | Fellowship of the Dry Tree | They ride well horsed and shoot Turk bows from horseback. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P025 `as ever their wont is to shoot a-horseback`
+F military | Fellowship of the Dry Tree | They avoid the open road and dare not ride near the Burg except by night. | CANON/high; ctx=dialogue:Roger of the Rope-walk | P032 `not even a score of the Dry Tree dare ride so nigh the Burg save by night and cloud`
+F military | Frank of the Burg | Husbandmen live under watch-towers held by men-at-arms; everyone in the fields carries a weapon. | CANON/high | P033 `each and all of these folk, so far as could be seen, had some weapon`
+F history | Burg of the Four Friths | Legend: the Fair Lady began building the Burg on marrying the Forest Lord, whose forebears lived in thatched timber halls in forest clearings; the 27 towers match her age in winters. | CANON/high; ctx=tale | P034 `who before that building had dwelt, he and his fathers, in thatched halls of timber here and there about the clearings of the wild-wood`
+F politics | Hampton under Scaur | Roger says Hampton's folk are harmless as sheep under false lords who tax and torment them and take wives. | CANON/medium; ctx=dialogue:Roger of the Rope-walk | P015 `who lay heavy burdens on them and torment them even to the destroying of their lives`
+F law | Burg of the Four Friths | Roger calls the Burg a town under good and strong law. | CANON/medium; ctx=dialogue:Roger of the Rope-walk | P019 `a town which is under good and strong law`
+F occupation | Roger of the Rope-walk | His name implies rope-making. | INF/low | P027 `I go to twist a rope for the necks of you`
+
+V main | Chase by the Dry Tree riders | Four Dry Tree horsemen chase Ralph and Roger; arrows miss; they reach the highway and the pursuers turn back. | time=morning; who=Ralph, Roger of the Rope-walk, Fellowship of the Dry Tree; where=Wood Perilous | P027 `Ha, thieves!  I am Roger of the Rope-walk`
+V legend | Founding of the Burg | The Fair Lady began the Burg when wedded to the Forest Lord. | who=Fair Lady of the Burg, Forest Lord; where=Burg of the Four Friths | P034 `the Fair Lady who erewhile began the building of the Burg`
+
+U ambiguity | Roger may not be truthful: Ralph notes he speaks coldly for a man with so much wrath. | P017 `found that he spake coldly for a man with so much wrath in his heart`
+U contradiction | Roger says the Burg is good and Hampton oppressed by the Dry Tree; the lady (BONE-C9) says the reverse. | P015 `the Burg is a good town under a good lord`
+U location | Location of the Castle of the Scaur relative to Hampton is not given. | P015 `who dwell in the Castle of the Scaur`
+
+O world | A ring of watch-towers marking a town's franchise, with farms clustered beneath, as a settlement-generation pattern. | P034 `all round the outskirts of the Frank of the Burg are there such-like towers`
+O politics | Debateable villages that change hands between factions. | P019 `whiles held by them of the Burg, whiles by the Dry Tree`

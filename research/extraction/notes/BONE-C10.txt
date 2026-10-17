@@ -1,0 +1,27 @@
+@ BONE-C10
+summary: At dawn the maiden of Bourton Abbas arrives at the crossroads, having followed Ralph; she is going to seek the Well at the World's End. She refuses his company because she senses he has changed since yesterday. She names the roads, says she has heard the Fellowship of the Dry Tree dwells at Hampton, and that the way to the Well is by the Dry Tree, so she rides east toward Hampton.
+geo: The crossroads has four ways: the road from Bourton Abbas (the way she came), the south road to the Burg of the Four Friths, the west road back toward the peopled parts, and the east road to Hampton under Scaur.
+open: Is the Fellowship of the Dry Tree connected to the Dry Tree of the Well legend beyond the name?
+
+E group | Fellowship of the Dry Tree | the Dry Tree | fellowship | A fellowship said to dwell at Hampton, called robbers and reivers. | P016 `at Hampton dwelleth the Fellowship of the Dry Tree, and that those of the fellowship are robbers and reivers`
+
+R (unnamed) Maiden of Bourton Abbas | other | Well at the World's End | sets out to seek it | BONE-C10 | CANON/high | P006 `I am going to seek the WELL AT THE WORLD'S END`
+R Fellowship of the Dry Tree | lives_in | Hampton under Scaur | hearsay | BONE-C10 | CANON/high | P016 `at Hampton dwelleth the Fellowship of the Dry Tree`
+
+S Burg of the Four Friths | south_of | (unnamed) crossroads in the Wood Perilous | dir=south; ctx=dialogue:Maiden of Bourton Abbas; cert=fixed | CANON/high | the southern road | P013 `this that goeth south will bring me to the Burg of the Four Friths`
+S (unnamed) peopled parts west of the Wood Perilous | west_of | (unnamed) crossroads in the Wood Perilous | dir=west; ctx=dialogue:Maiden of Bourton Abbas; cert=constrained | CANON/medium | her belief | P013 `as for the western way I deem that that will lead me back again to the peopled parts whereof I know`
+S Hampton under Scaur | east_of | (unnamed) crossroads in the Wood Perilous | dir=east; ctx=dialogue:Ralph; cert=fixed | CANON/high | - | P014 `it leadeth presently to Hampton under the Scaur`
+S Well at the World's End | beyond | Dry Tree | ctx=tale; cert=flexible | CANON/high | the way to the Well is by the Dry Tree | P016 `the tale tells that the way to the Well at the World's End is by the Dry Tree`
+
+T (unnamed) Maiden of Bourton Abbas | Bourton Abbas | (unnamed) crossroads in the Wood Perilous | mode=horse; end=first glimmer of dawn | P003 `Here have I followed on thy footsteps`
+T (unnamed) Maiden of Bourton Abbas | (unnamed) crossroads in the Wood Perilous | Hampton under Scaur | dir=east; mode=horse; start=early summer morning | P019 `rode away east toward Hampton`
+
+F society | (unnamed) Maiden of Bourton Abbas | She is a yeoman's daughter and calls the gap in rank between them a bar. | CANON/high; ctx=dialogue:Maiden of Bourton Abbas | P005 `thou art a lord's son, and I a yeoman's daughter`
+F magic | Well at the World's End | She holds that questers for the Well must be single-hearted, thinking only of the quest and their fellow. | CANON/high; ctx=dialogue:Maiden of Bourton Abbas | P011 `they that take it up must be single-hearted, and think of nought save the quest and the fellow that is with them`
+F society | Burg of the Four Friths | She expects the Burg folk would mock anyone asking the way to the Well. | CANON/high; ctx=dialogue:Maiden of Bourton Abbas | P013 `they would mock at me if I asked them of the way to the Well at the World's End`
+
+V main | The maiden's departure for the Well | The maiden of Bourton refuses Ralph's company and rides east to seek the Well. | time=dawn; who=Ralph, (unnamed) Maiden of Bourton Abbas; where=(unnamed) crossroads in the Wood Perilous | P019 `rode away east toward Hampton`
+
+U contradiction | The lady (BONE-C9) calls Hampton's folk peaceable; the maiden has heard it is home to the robber Fellowship of the Dry Tree. | P016 `those of the fellowship are robbers and reivers`
+
+O quests | Several independent seekers pursuing the same legendary goal, so the player is not uniquely chosen. | P006 `I am going to seek the WELL AT THE WORLD'S END, and to find it and live, or to find it not, and die`

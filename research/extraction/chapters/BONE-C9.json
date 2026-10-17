@@ -1,0 +1,411 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) lady delivered at the crossroads",
+   "aliases": [
+    "the lady"
+   ],
+   "type": "person",
+   "subtype": "noblewoman",
+   "unnamed": true,
+   "summary": "Very fair, tall and strong, with dark red hair and grey eyes; wears a gold chaplet and gems, but only a short linen coat; calm and stately; led captive toward \"her due doom\".",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C9-P007",
+     "q": "there was a golden chaplet on her head"
+    },
+    {
+     "p": "BONE-C9-P019",
+     "q": "Her hair was dark red, but her eyes grey"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) slain spearman",
+   "aliases": [],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": true,
+   "summary": "Armed like the Burg's company; carried a red-haired man's head; killed by Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C9-P006",
+     "q": "at the spearman's saddle-bow was hung a man's head, red-haired and red-bearded"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) slain axeman",
+   "aliases": [],
+   "type": "person",
+   "subtype": "man-at-arms",
+   "unnamed": true,
+   "summary": "Led the lady by a rope; killed by Ralph.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C9-P007",
+     "q": "he was leading a woman by a rope tied about her neck"
+    }
+   ]
+  },
+  {
+   "name": "Hampton under Scaur",
+   "aliases": [
+    "Hampton under the Scaur",
+    "Hampton"
+   ],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": false,
+   "summary": "Town reached by the eastern road; the lady calls its folk peaceable and friendly.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "then shalt thou come to Hampton under Scaur, where the folk are peaceable and friendly"
+    }
+   ]
+  },
+  {
+   "name": "Frith-stool",
+   "aliases": [],
+   "type": "custom",
+   "subtype": "sanctuary seat",
+   "unnamed": false,
+   "summary": "A sanctuary seat at the Burg from which even a fugitive might be taken, by the lady's account.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "if it were out of the very Frith-stool"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) hazel coppice by the crossroads",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "coppice",
+   "unnamed": true,
+   "summary": "Thin coppice of hazel and sweet chestnut where two great oaks were felled ten years ago; overlooks the four ways.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BONE-C9-P024",
+     "q": "a little thin coppice of hazel and sweet chestnut, just where two great oaks had been felled a half score years ago"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) slain spearman",
+   "rel": "killed_by",
+   "b": "Ralph",
+   "detail": "sword stroke to the neck",
+   "when": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C9-P014",
+     "q": "the man's head was nigh smitten off"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "rel": "freed_by",
+   "b": "Ralph",
+   "detail": "-",
+   "when": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C9-P016",
+     "q": "so he thrust his sword through him, and the man died at once"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) lady delivered at the crossroads",
+   "rel": "enemy_of",
+   "b": "Burg of the Four Friths",
+   "detail": "calls them robbers and murderers",
+   "when": "BONE-C9",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "they of that Burg be robbers and murderers merciless"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "(unnamed) crossroads in the Wood Perilous",
+   "rel": "other",
+   "b": "(unnamed) stream in the dale below the crossroads",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "little stream in the dale",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BONE-C9-P003",
+     "q": "the faint sound of a little stream in the dale below"
+    }
+   ]
+  },
+  {
+   "a": "Hampton under Scaur",
+   "rel": "east_of",
+   "b": "(unnamed) crossroads in the Wood Perilous",
+   "direction": "east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:lady",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the way that goes east",
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "thou wilt take the way that goeth hence east away, and then shalt thou come to Hampton under Scaur"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) hazel coppice by the crossroads",
+   "rel": "visible_from",
+   "b": "(unnamed) crossroads in the Wood Perilous",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "Ralph sees the four ways from it",
+   "refs": [
+    {
+     "p": "BONE-C9-P024",
+     "q": "he could see the four ways clearly enough"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "(unnamed) slain spearman",
+    "(unnamed) slain axeman",
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "from": "(unknown)",
+   "to": "(unnamed) crossroads in the Wood Perilous",
+   "via": [],
+   "mode": "horse, captive on foot",
+   "direction_text": "from the north-west",
+   "duration_text": "",
+   "start_time_text": "sunset",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C9",
+   "refs": [
+    {
+     "p": "BONE-C9-P005",
+     "q": "athwart the glade of the wood from the northwest, or thereabout, came new folk"
+    }
+   ]
+  },
+  {
+   "travellers": [
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "from": "(unnamed) crossroads in the Wood Perilous",
+   "to": "(unknown)",
+   "via": [],
+   "mode": "horse",
+   "direction_text": "south-east",
+   "duration_text": "",
+   "start_time_text": "dusk",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BONE-C9",
+   "refs": [
+    {
+     "p": "BONE-C9-P022",
+     "q": "went her ways riding speedily toward the south-east"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "ecology",
+   "subject": "Wood Perilous",
+   "statement": "Hares, a hart and hinds feed near the crossroads at evening.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C9-P004",
+     "q": "the gambols of three hares"
+    }
+   ]
+  },
+  {
+   "category": "weapons",
+   "subject": "(unnamed) slain spearman",
+   "statement": "The men wore sallet and jack over leather and ring-mail; one bore a little axe about his neck.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C9-P014",
+     "q": "betwixt sallet and jack, and nought held before it, neither leather nor ring-mail"
+    }
+   ]
+  },
+  {
+   "category": "law",
+   "subject": "Burg of the Four Friths",
+   "statement": "The lady says the Burg would scourge and hang Ralph for this deed.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:lady",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "there for thee should be the scourge and the gibbet"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "(unnamed) hazel coppice by the crossroads",
+   "statement": "Felled oaks have regrown as coppice: evidence of woodcutting in the forest.",
+   "classification": "CANON-INFERRED",
+   "confidence": "medium",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BONE-C9-P024",
+     "q": "where two great oaks had been felled a half score years ago"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Rescue of the lady at the crossroads",
+   "chapter": "BONE-C9",
+   "layer": "main",
+   "time_text": "sunset, about five hours after noon onward",
+   "participants": [
+    "Ralph",
+    "(unnamed) lady delivered at the crossroads"
+   ],
+   "places": [
+    "(unnamed) crossroads in the Wood Perilous"
+   ],
+   "summary": "Ralph kills two men leading a captive lady; she warns him off the Burg, kisses him and rides south-east.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BONE-C9-P015",
+     "q": "Smite him, smite!  O lovely creature of God!"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Who is the lady Ralph delivered? She is unnamed here.",
+   "refs": [
+    {
+     "p": "BONE-C9-P019",
+     "q": "he deemed he had never seen woman so fair"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Whose red-haired head the spearman carried.",
+   "refs": [
+    {
+     "p": "BONE-C9-P006",
+     "q": "a man's head, red-haired and red-bearded"
+    }
+   ]
+  },
+  {
+   "kind": "contradiction",
+   "question": "The lady calls the Burg folk robbers and murderers; Sir Aymer's men call the leafless-tree men robbers. Each side calls the other robbers.",
+   "refs": [
+    {
+     "p": "BONE-C9-P018",
+     "q": "they of that Burg be robbers and murderers merciless"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Rescue encounters where the rescued person's account of local factions may be self-serving.",
+   "system": "quests",
+   "basis_refs": [
+    {
+     "p": "BONE-C9-P020",
+     "q": "yet it may be that I should have delivered myself ere long"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BONE-C9",
+ "chapters": [
+  "BONE-C9"
+ ],
+ "ledger": [
+  {
+   "chapter": "BONE-C9",
+   "paragraphs_total": 24,
+   "all_paragraphs_read": true,
+   "summary": "Waiting at the crossroads, Ralph sees two armed men like the Burg's company come from the north-west, one carrying a red-haired man's head and the other leading a scantily clad, richly adorned woman by a rope to \"her due doom\". Ralph kills both; the woman helps him. She warns him that the Burg folk are robbers and murderers who would hang him, advises him to go east to Hampton under Scaur, kisses him and rides away south-east. Ralph sleeps in a hazel and chestnut coppice by the crossroads.",
+   "geography_notes": "The crossroads in the Wood Perilous has a little stream in the dale below. Riders arrive from the north-west. An eastward road leads to Hampton under Scaur. The lady rides off south-east. A coppice of hazel and sweet chestnut stands where two oaks were felled ten years ago, overlooking the four ways.",
+   "open_questions": [
+    "Who is the lady (dark red hair, grey eyes, gold chaplet and rings)?",
+    "Whose head did the spearman carry?"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+@ BONE-C9
+summary: Waiting at the crossroads, Ralph sees two armed men like the Burg's company come from the north-west, one carrying a red-haired man's head and the other leading a scantily clad, richly adorned woman by a rope to "her due doom". Ralph kills both; the woman helps him. She warns him that the Burg folk are robbers and murderers who would hang him, advises him to go east to Hampton under Scaur, kisses him and rides away south-east. Ralph sleeps in a hazel and chestnut coppice by the crossroads.
+geo: The crossroads in the Wood Perilous has a little stream in the dale below. Riders arrive from the north-west. An eastward road leads to Hampton under Scaur. The lady rides off south-east. A coppice of hazel and sweet chestnut stands where two oaks were felled ten years ago, overlooking the four ways.
+open: Who is the lady (dark red hair, grey eyes, gold chaplet and rings)? || Whose head did the spearman carry?
+
+E person | (unnamed) lady delivered at the crossroads | the lady | noblewoman | Very fair, tall and strong, with dark red hair and grey eyes; wears a gold chaplet and gems, but only a short linen coat; calm and stately; led captive toward "her due doom". | P007 `there was a golden chaplet on her head`; P019 `Her hair was dark red, but her eyes grey`
+E person | (unnamed) slain spearman | - | man-at-arms | Armed like the Burg's company; carried a red-haired man's head; killed by Ralph. | P006 `at the spearman's saddle-bow was hung a man's head, red-haired and red-bearded`
+E person | (unnamed) slain axeman | - | man-at-arms | Led the lady by a rope; killed by Ralph. | P007 `he was leading a woman by a rope tied about her neck`
+E place | Hampton under Scaur | Hampton under the Scaur, Hampton | town | Town reached by the eastern road; the lady calls its folk peaceable and friendly. | P018 `then shalt thou come to Hampton under Scaur, where the folk are peaceable and friendly`
+E custom | Frith-stool | - | sanctuary seat | A sanctuary seat at the Burg from which even a fugitive might be taken, by the lady's account. | P018 `if it were out of the very Frith-stool`
+E feature | (unnamed) hazel coppice by the crossroads | - | coppice | Thin coppice of hazel and sweet chestnut where two great oaks were felled ten years ago; overlooks the four ways. | P024 `a little thin coppice of hazel and sweet chestnut, just where two great oaks had been felled a half score years ago`
+
+R (unnamed) slain spearman | killed_by | Ralph | sword stroke to the neck | BONE-C9 | CANON/high | P014 `the man's head was nigh smitten off`
+R (unnamed) lady delivered at the crossroads | freed_by | Ralph | - | BONE-C9 | CANON/high | P016 `so he thrust his sword through him, and the man died at once`
+R (unnamed) lady delivered at the crossroads | enemy_of | Burg of the Four Friths | calls them robbers and murderers | BONE-C9 | CANON/high | P018 `they of that Burg be robbers and murderers merciless`
+
+S (unnamed) crossroads in the Wood Perilous | other | (unnamed) stream in the dale below the crossroads | terrain=little stream in the dale; cert=fixed | CANON/high | - | P003 `the faint sound of a little stream in the dale below`
+S Hampton under Scaur | east_of | (unnamed) crossroads in the Wood Perilous | dir=east; ctx=dialogue:lady; cert=fixed | CANON/high | the way that goes east | P018 `thou wilt take the way that goeth hence east away, and then shalt thou come to Hampton under Scaur`
+S (unnamed) hazel coppice by the crossroads | visible_from | (unnamed) crossroads in the Wood Perilous | cert=fixed | CANON/high | Ralph sees the four ways from it | P024 `he could see the four ways clearly enough`
+
+T (unnamed) slain spearman, (unnamed) slain axeman, (unnamed) lady delivered at the crossroads | (unknown) | (unnamed) crossroads in the Wood Perilous | dir=from the north-west; mode=horse, captive on foot; start=sunset | P005 `athwart the glade of the wood from the northwest, or thereabout, came new folk`
+T (unnamed) lady delivered at the crossroads | (unnamed) crossroads in the Wood Perilous | (unknown) | dir=south-east; mode=horse; start=dusk | P022 `went her ways riding speedily toward the south-east`
+
+F ecology | Wood Perilous | Hares, a hart and hinds feed near the crossroads at evening. | CANON/high | P004 `the gambols of three hares`
+F weapons | (unnamed) slain spearman | The men wore sallet and jack over leather and ring-mail; one bore a little axe about his neck. | CANON/high | P014 `betwixt sallet and jack, and nought held before it, neither leather nor ring-mail`
+F law | Burg of the Four Friths | The lady says the Burg would scourge and hang Ralph for this deed. | CANON/high; ctx=dialogue:lady | P018 `there for thee should be the scourge and the gibbet`
+F ecology | (unnamed) hazel coppice by the crossroads | Felled oaks have regrown as coppice: evidence of woodcutting in the forest. | INF/medium | P024 `where two great oaks had been felled a half score years ago`
+
+V main | Rescue of the lady at the crossroads | Ralph kills two men leading a captive lady; she warns him off the Burg, kisses him and rides south-east. | time=sunset, about five hours after noon onward; who=Ralph, (unnamed) lady delivered at the crossroads; where=(unnamed) crossroads in the Wood Perilous | P015 `Smite him, smite!  O lovely creature of God!`
+
+U identity | Who is the lady Ralph delivered? She is unnamed here. | P019 `he deemed he had never seen woman so fair`
+U identity | Whose red-haired head the spearman carried. | P006 `a man's head, red-haired and red-bearded`
+U contradiction | The lady calls the Burg folk robbers and murderers; Sir Aymer's men call the leafless-tree men robbers. Each side calls the other robbers. | P018 `they of that Burg be robbers and murderers merciless`
+
+O quests | Rescue encounters where the rescued person's account of local factions may be self-serving. | P020 `yet it may be that I should have delivered myself ere long`

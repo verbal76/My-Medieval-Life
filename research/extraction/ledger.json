@@ -212,33 +212,77 @@
    "title": "Another Adventure in the Wood Perilous",
    "body_paragraphs": 24,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 6,
+    "relations": 3,
+    "spatial": 3,
+    "travel": 2,
+    "facts": 4,
+    "events": 1,
+    "unresolved": 3,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Who is the lady (dark red hair, grey eyes, gold chaplet and rings)?",
+    "Whose head did the spearman carry?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C9.txt",
+    "records": "research/extraction/chapters/BONE-C9.json"
+   }
   },
   {
    "chapter": "BONE-C10",
    "title": "A Meeting and a Parting in the Wood Perilous",
    "body_paragraphs": 18,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 1,
+    "relations": 2,
+    "spatial": 4,
+    "travel": 2,
+    "facts": 3,
+    "events": 1,
+    "unresolved": 1,
+    "opportunities": 1
+   },
+   "open_questions": [
+    "Is the Fellowship of the Dry Tree connected to the Dry Tree of the Well legend beyond the name?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C10.txt",
+    "records": "research/extraction/chapters/BONE-C10.json"
+   }
   },
   {
    "chapter": "BONE-C11",
    "title": "Now Must Ralph Ride For It",
    "body_paragraphs": 34,
    "full_text_accessed": true,
-   "contextual_analysis": "pending",
-   "quotes_verified": false,
-   "records": {},
-   "open_questions": [],
-   "files": {}
+   "contextual_analysis": "complete",
+   "quotes_verified": true,
+   "records": {
+    "entities": 11,
+    "relations": 5,
+    "spatial": 6,
+    "travel": 1,
+    "facts": 7,
+    "events": 2,
+    "unresolved": 3,
+    "opportunities": 2
+   },
+   "open_questions": [
+    "Is Roger's account honest? (Ralph thinks he speaks coldly for a wronged man)",
+    "Where is the Castle of the Scaur relative to Hampton?"
+   ],
+   "files": {
+    "notes": "research/extraction/notes/BONE-C11.txt",
+    "records": "research/extraction/chapters/BONE-C11.json"
+   }
   },
   {
    "chapter": "BONE-C12",
