@@ -1,0 +1,163 @@
+{
+ "entities": [
+  {
+   "name": "Dorothea",
+   "aliases": [
+    "the maiden of Bourton (as named in the vision)"
+   ],
+   "type": "person",
+   "subtype": "maiden",
+   "unnamed": false,
+   "summary": "The name the vision of the maiden of Bourton gives.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "whereas thou wouldst know my name, I hight Dorothea"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "(unnamed) Maiden of Bourton Abbas",
+   "rel": "other",
+   "b": "Dorothea",
+   "detail": "the name given in a dream; unconfirmed",
+   "when": "BTWO-C15",
+   "classification": "CANON-INFERRED",
+   "confidence": "low",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I hight Dorothea"
+    }
+   ]
+  }
+ ],
+ "spatial": [],
+ "travel": [],
+ "facts": [
+  {
+   "category": "magic",
+   "subject": "Lady of Abundance",
+   "statement": "The dead Lady appears in a dream, saying it is but her image, and cannot tell the way to the Well.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:vision of the Lady",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C15-P003",
+     "q": "this is but the image of me as thou hast known me"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "(unnamed) Maiden of Bourton Abbas",
+   "statement": "The vision of the maiden says she is a sending of the woman Ralph loved.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:vision of the maiden",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I am a sending of the woman whom thou hast loved"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Whitwall",
+   "statement": "On market day country folk arrive early with herbs, worts and fruit.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C15-P006",
+     "q": "for it was market-day, and the country folk were early afoot"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The dream at Whitwall",
+   "chapter": "BTWO-C15",
+   "layer": "main",
+   "time_text": "night before Saturday market",
+   "participants": [
+    "Ralph"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "summary": "Ralph dreams of the Lady's farewell and of the maiden naming herself Dorothea.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I hight Dorothea"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "Whether \"Dorothea\" is the maiden's true name; it comes only from a dream and is not confirmed by narration here.",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I hight Dorothea"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Whether the vision is a real sending or a dream; the narration does not say.",
+   "refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "Then he knew not if he awoke, or if it were a change in his dream"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Dream-sendings as a canon motif (the Lady used them); any game system built on them is GAME EXPANSION.",
+   "system": "magic",
+   "basis_refs": [
+    {
+     "p": "BTWO-C15-P005",
+     "q": "I am a sending of the woman whom thou hast loved"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C15",
+ "chapters": [
+  "BTWO-C15"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C15",
+   "paragraphs_total": 5,
+   "all_paragraphs_read": true,
+   "summary": "That night Ralph dreams, or sees a vision: the dead Lady comes to bid farewell, saying she cannot guide him because they may not walk the way together. Then the maiden of Bourton appears, saying she is a sending of the woman he loved, that she is alive and far away, that he should not seek the Well alone and the seeker may find her, and that her name is Dorothea. He wakes on Saturday market morning.",
+   "geography_notes": "Dorothea (the maiden of Bourton) is far away from Whitwall's land.",
+   "open_questions": [
+    "Is the vision a true sending?",
+    "Is Dorothea the Ursula of later chapters? (do not assume)"
+   ]
+  }
+ ]
+}

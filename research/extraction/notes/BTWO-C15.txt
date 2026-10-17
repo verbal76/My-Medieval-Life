@@ -1,0 +1,19 @@
+@ BTWO-C15
+summary: That night Ralph dreams, or sees a vision: the dead Lady comes to bid farewell, saying she cannot guide him because they may not walk the way together. Then the maiden of Bourton appears, saying she is a sending of the woman he loved, that she is alive and far away, that he should not seek the Well alone and the seeker may find her, and that her name is Dorothea. He wakes on Saturday market morning.
+geo: Dorothea (the maiden of Bourton) is far away from Whitwall's land.
+open: Is the vision a true sending? || Is Dorothea the Ursula of later chapters? (do not assume)
+
+E person | Dorothea | the maiden of Bourton (as named in the vision) | maiden | The name the vision of the maiden of Bourton gives. | P005 `whereas thou wouldst know my name, I hight Dorothea`
+
+R (unnamed) Maiden of Bourton Abbas | other | Dorothea | the name given in a dream; unconfirmed | BTWO-C15 | INF/low | P005 `I hight Dorothea`
+
+F magic | Lady of Abundance | The dead Lady appears in a dream, saying it is but her image, and cannot tell the way to the Well. | CANON/high; ctx=dialogue:vision of the Lady | P003 `this is but the image of me as thou hast known me`
+F magic | (unnamed) Maiden of Bourton Abbas | The vision of the maiden says she is a sending of the woman Ralph loved. | CANON/high; ctx=dialogue:vision of the maiden | P005 `I am a sending of the woman whom thou hast loved`
+F custom | Whitwall | On market day country folk arrive early with herbs, worts and fruit. | CANON/high | P006 `for it was market-day, and the country folk were early afoot`
+
+V main | The dream at Whitwall | Ralph dreams of the Lady's farewell and of the maiden naming herself Dorothea. | time=night before Saturday market; who=Ralph; where=Whitwall | P005 `I hight Dorothea`
+
+U identity | Whether "Dorothea" is the maiden's true name; it comes only from a dream and is not confirmed by narration here. | P005 `I hight Dorothea`
+U ambiguity | Whether the vision is a real sending or a dream; the narration does not say. | P005 `Then he knew not if he awoke, or if it were a change in his dream`
+
+O magic | Dream-sendings as a canon motif (the Lady used them); any game system built on them is GAME EXPANSION. | P005 `I am a sending of the woman whom thou hast loved`

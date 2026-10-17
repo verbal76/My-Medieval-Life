@@ -1,0 +1,531 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) Guildhall of Whitwall",
+   "aliases": [],
+   "type": "building",
+   "subtype": "guildhall",
+   "unnamed": true,
+   "summary": "Great, fair new Guildhall with an unpainted new oak roof; the men of the Port meet there.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P004",
+     "q": "they went into the Guildhall which was both great and fair"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Great Church of Whitwall",
+   "aliases": [],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": true,
+   "summary": "Great, goodly, fairly new church with an altar of St. Nicholas and fine chapel altars.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P004",
+     "q": "the said church was great to the letter, and very goodly, and somewhat new also"
+    }
+   ]
+  },
+  {
+   "name": "Petergate Bar",
+   "aliases": [],
+   "type": "building",
+   "subtype": "gate",
+   "unnamed": false,
+   "summary": "East gate of Whitwall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P006",
+     "q": "the east gate of the town which hight Petergate Bar"
+    }
+   ]
+  },
+  {
+   "name": "Swevenham",
+   "aliases": [],
+   "type": "place",
+   "subtype": "little town",
+   "unnamed": false,
+   "summary": "Little town on the first hill beyond the river, with a great grey church tower; Richard's birthplace.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P010",
+     "q": "I was born and bred at Swevenham"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) Church of Swevenham",
+   "aliases": [
+    "Church of the Seven Sleepers"
+   ],
+   "type": "building",
+   "subtype": "church",
+   "unnamed": true,
+   "summary": "Great grey-towered church dedicated to the Seven Sleepers of Ephesus.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P010",
+     "q": "yonder tower is of the Church of Swevenham, which is under the invocation of the Seven Sleepers of Ephesus"
+    }
+   ]
+  },
+  {
+   "name": "Sir Cyprian",
+   "aliases": [],
+   "type": "person",
+   "subtype": "priest",
+   "unnamed": false,
+   "summary": "Priest of Swevenham who refused to bless the Well-seekers, holding the quest devilish and heathen.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "our priest, Sir Cyprian, to bless them on their departure, but he naysaid them"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) three Swevenham seekers",
+   "aliases": [],
+   "type": "group",
+   "subtype": "seekers",
+   "unnamed": true,
+   "summary": "Two young men and a young woman who set out from Swevenham for the Well, crowned with flowers, with pipe and tabour.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "three folk of our township, two young men and one young woman, set out thence to seek the said Well"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) old man of the mountains",
+   "aliases": [],
+   "type": "person",
+   "subtype": "sage",
+   "unnamed": true,
+   "summary": "Old kinsman of one seeker, living in the mountains, who taught them Well-lore.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "much lore they had concerning it, which they had learned of an old man, a nigh kinsman of one of them"
+    }
+   ]
+  },
+  {
+   "name": "Castle of the Waste March",
+   "aliases": [],
+   "type": "building",
+   "subtype": "castle",
+   "unnamed": false,
+   "summary": "Baron's castle sixty miles from Swevenham, where Richard served.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "went my ways to the Castle of the Waste March, sixty miles from Swevenham town"
+    }
+   ]
+  },
+  {
+   "name": "Faring-Knights",
+   "aliases": [],
+   "type": "group",
+   "subtype": "brotherhood",
+   "unnamed": false,
+   "summary": "A brotherhood of Whitwall that invites Blaise to join.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P016",
+     "q": "to a brother of the Faring-Knights"
+    }
+   ]
+  },
+  {
+   "name": "men of the Port of Whitwall",
+   "aliases": [],
+   "type": "group",
+   "subtype": "civic council",
+   "unnamed": false,
+   "summary": "Whitwall's merchant governing body, met at the Guildhall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P002",
+     "q": "to visit the men of the Port at the Guildhall"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) mountains beyond Swevenham",
+   "aliases": [
+    "blue mountains"
+   ],
+   "type": "feature",
+   "subtype": "mountains",
+   "unnamed": true,
+   "summary": "Blue mountains with snow on the tops in July, beyond the little hills.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C13-P010",
+     "q": "blue mountains beyond them, and snow yet lying on the tops of them, though the year is in young July"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Richard the Red",
+   "rel": "born_in",
+   "b": "Swevenham",
+   "detail": "-",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C13-P010",
+     "q": "I was born and bred at Swevenham"
+    }
+   ]
+  },
+  {
+   "a": "Richard the Red",
+   "rel": "serves",
+   "b": "(unnamed) Baron of the Waste March",
+   "detail": "served the Baron in his youth",
+   "when": "backstory",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "the Baron took me in and made me his man"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Swevenham",
+   "rel": "distance_from",
+   "b": "Whitwall",
+   "direction": "",
+   "distance_text": "some four miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Ralph",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "across the river, on the first little hill",
+   "refs": [
+    {
+     "p": "BTWO-C13-P014",
+     "q": "it seemeth to be but some four miles hence"
+    }
+   ]
+  },
+  {
+   "a": "Swevenham",
+   "rel": "across_from",
+   "b": "Whitwall",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "first of the little hills beyond the river",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "seen over the meadows from outside Petergate Bar",
+   "refs": [
+    {
+     "p": "BTWO-C13-P010",
+     "q": "seest thou on the first of the little hills beyond the river, a great grey tower rising up"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) mountains beyond Swevenham",
+   "rel": "beyond",
+   "b": "Swevenham",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "little hills, then blue snow-capped mountains",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C13-P010",
+     "q": "little hills beyond the water, and blue mountains beyond them"
+    }
+   ]
+  },
+  {
+   "a": "Castle of the Waste March",
+   "rel": "distance_from",
+   "b": "Swevenham",
+   "direction": "",
+   "distance_text": "sixty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Richard the Red",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "direction not stated",
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "sixty miles from Swevenham town"
+    }
+   ]
+  },
+  {
+   "a": "Petergate Bar",
+   "rel": "east_of",
+   "b": "Whitwall",
+   "direction": "east gate",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "narration",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C13-P006",
+     "q": "the east gate of the town which hight Petergate Bar"
+    }
+   ]
+  }
+ ],
+ "travel": [],
+ "facts": [
+  {
+   "category": "history",
+   "subject": "Whitwall",
+   "statement": "Whitwall's prosperity is recent; its church is new.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P004",
+     "q": "since the blossom-tide of Whitwall was not many years old"
+    }
+   ]
+  },
+  {
+   "category": "ecology",
+   "subject": "Whitwall",
+   "statement": "The country around is a land of many waters.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P006",
+     "q": "for it was a land of many waters"
+    }
+   ]
+  },
+  {
+   "category": "religion",
+   "subject": "Sir Cyprian",
+   "statement": "He held the Well-quest to be inspired by devils and a remnant of heathen custom.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "he held that such a quest came of the inspiration of the devils, and was but a memory of the customs of the ancient gentiles and heathen"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "(unnamed) three Swevenham seekers",
+   "statement": "They set out on foot crowned with flowers, pipe and tabour before them, with a pack ass.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "they went afoot crowned with flowers, and the pipe and tabour playing before them"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Well at the World's End",
+   "statement": "Swevenham tales say the Well cures sorrow, makes life blossom in the old and upholds it in the young.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P009",
+     "q": "a thing to be sought, which should cure sorrow, and make life blossom in the old, and uphold life in the young"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Whitwall",
+   "statement": "Saturday is high market in Whitwall; country folk come in.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P015",
+     "q": "to-morrow is Saturday, and high market in Whitwall"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Blaise",
+   "statement": "Whitwall offers Blaise the freedom of the city.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P016",
+     "q": "they have already bidden him to the freedom of the city"
+    }
+   ]
+  },
+  {
+   "category": "society",
+   "subject": "Richard the Red",
+   "statement": "Richard is sixty-eight; he was eighteen when the seekers left.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "was but of eighteen winters, who am now of three score and eight"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "The Swevenham seekers depart",
+   "chapter": "BTWO-C13",
+   "layer": "backstory",
+   "time_text": "fifty years ago",
+   "participants": [
+    "(unnamed) three Swevenham seekers"
+   ],
+   "places": [
+    "Swevenham"
+   ],
+   "summary": "Fifty years ago three Swevenham youths set out for the Well with music and flowers.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "I mind me the setting forth of these three"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "location",
+   "question": "The direction of the Castle of the Waste March from Swevenham.",
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "sixty miles from Swevenham town"
+    }
+   ]
+  },
+  {
+   "kind": "identity",
+   "question": "Whether the three Swevenham seekers returned.",
+   "refs": [
+    {
+     "p": "BTWO-C13-P013",
+     "q": "I wot not"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Small towns at the foot of mountains that keep Well-lore and send off seekers, as quest hubs.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C13-P012",
+     "q": "much lore they had concerning it"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C13",
+ "chapters": [
+  "BTWO-C13"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C13",
+   "paragraphs_total": 15,
+   "all_paragraphs_read": true,
+   "summary": "Ralph mopes in Whitwall for days. On the sixth day Richard the Red shows him the new Guildhall, the Great Church (Mass at St. Nicholas's altar) and Blaise's booth, then takes him out by Petergate Bar into the many-watered meadows. There Richard tells him of the Well: he was born at Swevenham, a little town across the river about four miles off, where fifty years ago three young folk set out for the Well, taught by an old man of the mountains; the priest Sir Cyprian refused to bless them. Richard later served at the Castle of the Waste March, sixty miles from Swevenham. He will go to Saturday market to find Swevenham folk and bring back tales. Blaise has been offered the freedom of the city and a place among the Faring-Knights.",
+   "geography_notes": "Whitwall's east gate is Petergate Bar; outside are meadows, a land of many waters with streams and little bridges. Looking out: a wide plain with a river, little hills beyond the water, then blue mountains with snow on their tops in July. Swevenham's great grey church tower stands on the first little hill beyond the river, about four miles from Whitwall. The Castle of the Waste March is sixty miles from Swevenham. The old man of the Well-lore lived in the mountains some way off.",
+   "open_questions": [
+    "Did the three Swevenham seekers return?",
+    "In what direction is the Castle of the Waste March?"
+   ]
+  }
+ ]
+}

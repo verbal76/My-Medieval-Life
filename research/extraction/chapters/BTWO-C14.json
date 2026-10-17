@@ -1,0 +1,435 @@
+{
+ "entities": [
+  {
+   "name": "(unnamed) house and booth of Blaise",
+   "aliases": [],
+   "type": "building",
+   "subtype": "merchant house",
+   "unnamed": true,
+   "summary": "Blaise's house in Whitwall market-place, painted bright, with the Upmeads sign of the fruitful tree by the water; full of fine cloth, Babylon silk, spices and smithwork.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C14-P002",
+     "q": "already was there a sign hung out of the fruitful tree by the water-side"
+    }
+   ]
+  },
+  {
+   "name": "The Christopher",
+   "aliases": [],
+   "type": "building",
+   "subtype": "alehouse",
+   "unnamed": false,
+   "summary": "Fair alehouse opposite the Great Church of Whitwall.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "the Christopher, a fair ale-house over against the Great Church"
+    }
+   ]
+  },
+  {
+   "name": "Wall of the World",
+   "aliases": [],
+   "type": "feature",
+   "subtype": "mountain wall",
+   "unnamed": false,
+   "summary": "A far barrier which Clement has seen afar off; the Dry Tree stands on its hither side.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "Is it not by the token of the Dry Tree that standeth in the lands on the hither side of the Wall of the World?"
+    }
+   ]
+  },
+  {
+   "name": "Bailiff of the Dry Tree",
+   "aliases": [],
+   "type": "office",
+   "subtype": "toll officer",
+   "unnamed": false,
+   "summary": "Dry Tree officer who takes scot from merchants passing through the wood.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "I fell in with their Bailiff, and paid him due scot for the passage of the Wood"
+    }
+   ]
+  },
+  {
+   "name": "silk of Babylon",
+   "aliases": [],
+   "type": "commodity",
+   "subtype": "silk",
+   "unnamed": false,
+   "summary": "Silk sold in Blaise's booth.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C14-P002",
+     "q": "silk of Babylon"
+    }
+   ]
+  },
+  {
+   "name": "spices of the hot burning islands",
+   "aliases": [],
+   "type": "commodity",
+   "subtype": "spice",
+   "unnamed": false,
+   "summary": "Spices sold in Blaise's booth.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C14-P002",
+     "q": "spices of the hot burning islands"
+    }
+   ]
+  },
+  {
+   "name": "(unnamed) good town fifty miles south of Whitwall",
+   "aliases": [],
+   "type": "place",
+   "subtype": "town",
+   "unnamed": true,
+   "summary": "Town to which Clement's company goes south.",
+   "attributes": {},
+   "refs": [
+    {
+     "p": "BTWO-C14-P003",
+     "q": "we are going south awhile to a good town some fifty miles hence"
+    }
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "a": "Clement Chapman",
+   "rel": "trades_with",
+   "b": "Blaise",
+   "detail": "sold Blaise cloth",
+   "when": "BTWO-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C14-P004",
+     "q": "I have now done my matters with this cloth-lord, Blaise, and he has my florins in his pouch"
+    }
+   ]
+  },
+  {
+   "a": "Fellowship of the Dry Tree",
+   "rel": "other",
+   "b": "Dry Tree",
+   "detail": "named for the Dry Tree on the hither side of the Wall of the World",
+   "when": "BTWO-C14",
+   "classification": "CANON",
+   "confidence": "high",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "Is it not by the token of the Dry Tree that standeth in the lands on the hither side of the Wall of the World?"
+    }
+   ]
+  }
+ ],
+ "spatial": [
+  {
+   "a": "Dry Tree",
+   "rel": "other",
+   "b": "Wall of the World",
+   "direction": "on the hither side",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "the Dry Tree that standeth in the lands on the hither side of the Wall of the World"
+    }
+   ]
+  },
+  {
+   "a": "(unnamed) good town fifty miles south of Whitwall",
+   "rel": "south_of",
+   "b": "Whitwall",
+   "direction": "south",
+   "distance_text": "some fifty miles",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "fixed",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "-",
+   "refs": [
+    {
+     "p": "BTWO-C14-P003",
+     "q": "we are going south awhile to a good town some fifty miles hence"
+    }
+   ]
+  },
+  {
+   "a": "Wall of the World",
+   "rel": "east_of",
+   "b": "Whitwall",
+   "direction": "east",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "beyond the mountains seen from Whitwall and the mountains beyond those",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "my way lieth beyond the mountains that ye see from hence, and beyond the mountains that lie the other side of those"
+    }
+   ]
+  },
+  {
+   "a": "Whitwall",
+   "rel": "other",
+   "b": "Wood Perilous",
+   "direction": "",
+   "distance_text": "",
+   "travel_time_text": "",
+   "travel_mode": "",
+   "terrain_text": "",
+   "context": "dialogue:Clement Chapman",
+   "certainty": "constrained",
+   "classification": "CANON",
+   "confidence": "high",
+   "note": "the nearest way from Wulstead to Whitwall runs through the Woods Perilous",
+   "refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "through the Woods Perilous"
+    }
+   ]
+  }
+ ],
+ "travel": [
+  {
+   "travellers": [
+    "Clement Chapman"
+   ],
+   "from": "Wulstead",
+   "to": "Whitwall",
+   "via": [
+    "Wood Perilous"
+   ],
+   "mode": "merchant company",
+   "direction_text": "",
+   "duration_text": "",
+   "start_time_text": "",
+   "end_time_text": "",
+   "terrain_text": "",
+   "chapter": "BTWO-C14",
+   "refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "The nighest way I came"
+    }
+   ]
+  }
+ ],
+ "facts": [
+  {
+   "category": "trade",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Merchants pay the Dry Tree's Bailiff a toll to pass the Wood.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "paid him due scot for the passage of the Wood"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Blaise",
+   "statement": "Blaise's booth holds fine cloth sealed by the greatest cities, Babylon silk, island spices, silver and gold work, and fine arms.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C14-P002",
+     "q": "pieces of good and fine cloth plumbed with the seal of the greatest of the cities"
+    }
+   ]
+  },
+  {
+   "category": "politics",
+   "subject": "Fellowship of the Dry Tree",
+   "statement": "Rumour of the loss of their young Queen will make them fierce; their old Queen still lives.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "a rumour that they had lost their young Queen and Lady"
+    }
+   ]
+  },
+  {
+   "category": "magic",
+   "subject": "Dry Tree",
+   "statement": "Seekers of the Well must pass the Dry Tree; some are misled to Hampton and slain or recruited.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Richard the Red",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "whiles have been slain by the champions, whiles have entered their company"
+    }
+   ]
+  },
+  {
+   "category": "trade",
+   "subject": "Clement Chapman",
+   "statement": "Clement's eastern route passes three fair cities, towns, castles and thorps.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "dialogue:Clement Chapman",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "hast seen three very fair cities, besides towns and castles and thorps and strange men, and fair merchandize"
+    }
+   ]
+  },
+  {
+   "category": "custom",
+   "subject": "Blaise",
+   "statement": "Blaise uses the Upmeads arms (fruitful tree by water) as his shop sign.",
+   "classification": "CANON",
+   "confidence": "high",
+   "context": "narration",
+   "when": "",
+   "note": "",
+   "refs": [
+    {
+     "p": "BTWO-C14-P002",
+     "q": "a sign hung out of the fruitful tree by the water-side"
+    }
+   ]
+  }
+ ],
+ "events": [
+  {
+   "label": "Ralph meets Clement in Whitwall",
+   "chapter": "BTWO-C14",
+   "layer": "main",
+   "time_text": "",
+   "participants": [
+    "Ralph",
+    "Clement Chapman",
+    "Richard the Red"
+   ],
+   "places": [
+    "Whitwall"
+   ],
+   "summary": "Clement brings Dame Katherine's kiss and news of Upmeads, and offers Ralph his company east.",
+   "consequences": "",
+   "refs": [
+    {
+     "p": "BTWO-C14-P003",
+     "q": "it is the kiss of the gossip which she bade me give thee"
+    }
+   ]
+  }
+ ],
+ "unresolved": [
+  {
+   "kind": "identity",
+   "question": "The three fair cities on Clement's road east are unnamed here.",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "three very fair cities"
+    }
+   ]
+  },
+  {
+   "kind": "ambiguity",
+   "question": "Clement says the folk with him \"called\" what he saw the Wall of the World; uncertain identification.",
+   "refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "or what the folk with me called so"
+    }
+   ]
+  }
+ ],
+ "opportunities": [
+  {
+   "idea": "Toll-taking outlaw fellowships that tax forest roads, as a faction-economy mechanic.",
+   "system": "economy",
+   "basis_refs": [
+    {
+     "p": "BTWO-C14-P006",
+     "q": "paid him due scot for the passage of the Wood"
+    }
+   ]
+  },
+  {
+   "idea": "A long-distance trade road east over two mountain ranges toward a world-edge barrier, as the main expedition corridor.",
+   "system": "world",
+   "basis_refs": [
+    {
+     "p": "BTWO-C14-P007",
+     "q": "beyond the mountains that lie the other side of those"
+    }
+   ]
+  }
+ ],
+ "batch": "notes_BTWO-C14",
+ "chapters": [
+  "BTWO-C14"
+ ],
+ "ledger": [
+  {
+   "chapter": "BTWO-C14",
+   "paragraphs_total": 7,
+   "all_paragraphs_read": true,
+   "summary": "At Blaise's richly stocked booth, with the Upmeads sign of the fruitful tree by the water, Ralph meets Clement Chapman, who brings Dame Katherine's kiss. Clement goes south fifty miles, then east beyond the mountains in about eight days. In the Christopher alehouse Clement says he paid the Dry Tree's Bailiff toll for passing the Wood Perilous and heard they have lost their young Queen, which will make them bitter, the old Queen still living. The Dry Tree takes its name from the Dry Tree on the hither side of the Wall of the World; seekers misled by the name go to Hampton and are slain or join. Clement has seen the Wall of the World afar; his eastward road passes beyond two mountain ranges and three fair cities. He offers Ralph safe company that far.",
+   "geography_notes": "Clement came from Wulstead to Whitwall the nearest way, through the Woods Perilous. A good town lies fifty miles south of Whitwall. Clement's eastward route goes beyond the mountains seen from Whitwall and beyond further mountains, past three fair cities, toward the Wall of the World. The Dry Tree stands in the lands on the hither side of the Wall of the World.",
+   "open_questions": [
+    "What are the three fair cities?",
+    "Is the Wall of the World a mountain range?"
+   ]
+  }
+ ]
+}
