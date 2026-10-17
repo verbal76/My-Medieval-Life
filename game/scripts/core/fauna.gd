@@ -4,11 +4,12 @@ extends RefCounted
 ##
 ## Rules (owner decision 2026-10-17, numbers in balance.json "animals", recorded in
 ## docs/BUILD_DECISIONS.md):
-##  - a fed adult female gives birth when a fed adult male of her kind shares her pen or woods,
-##    then not again for breed_days; a litter never takes the area over its cap;
+##  - animals get hungry like the villagers: hunger falls every hour, a hungry animal eats
+##    (livestock `feed` wheat from its pen's trough, wild animals by grazing while the wood is not
+##    overcrowded), and at zero hunger it loses health until it dies;
+##  - a well-fed adult female gives birth when a well-fed adult male of her kind shares her pen or
+##    woods, then not again for breed_days; a litter never takes the area over its cap;
 ##  - babies are drawn at half scale until grow_days old, then at full scale;
-##  - livestock is fed from its pen's trough every morning (feed wheat each); an animal that goes
-##    unfed for starve_days dies; wild animals forage and are always fed;
 ##  - every animal becomes meat (and hide, if its kind has one) when it is killed; babies give half.
 
 var w
@@ -117,33 +118,61 @@ func spawn(area: String, species: String, sex: String, mother: Animal) -> Animal
 
 
 # ---------------------------------------------------------------- daily ----------------------
-## Morning: feeding from the troughs, then births.
-func new_day() -> void:
-	var now: float = w.minutes
-	var starved := {}
+## Hunger, like the villagers': it falls every game hour; a hungry animal eats (livestock from
+## its pen's trough, wild animals by grazing); at zero it loses health and dies.
+func tick(gm: float) -> void:
+	var per_hour := float(GameData.b("animal_hunger_per_hour"))
+	var eat_below := float(GameData.b("animal_eat_below"))
 	for a: Animal in animals.duplicate():
 		if not a.alive:
 			continue
-		if a.wild():
-			a.fed = true
-			continue
-		var need := int(a.spec().feed)
-		var pen: Dictionary = pens[a.area]
-		if int(pen.trough) >= need:
-			pen.trough = int(pen.trough) - need
-			a.fed = true
-			a.unfed_days = 0
-		else:
-			a.fed = false
-			a.unfed_days += 1
-			if a.unfed_days >= int(GameData.b("animal_starve_days")):
-				starved[a.spec().name] = int(starved.get(a.spec().name, 0)) + 1
+		a.hunger = maxf(0.0, a.hunger - gm / 60.0 * per_hour)
+		if a.hunger < eat_below:
+			_eat(a)
+		if a.hunger <= 0.0:
+			a.hp -= gm / 60.0 * float(a.spec().hp) * float(GameData.b("animal_starve_hp_per_hour"))
+			if a.hp <= 0.0:
+				w.note("A %s starved %s." % [a.label(), "in the woods" if a.wild() else "in the pens: nobody fed it"])
 				remove(a)
-	for k in starved:
-		w.note("%d %s starved in the pens: nobody fed them." % [starved[k], k.to_lower()])
+
+
+func _eat(a: Animal) -> void:
+	if a.wild():
+		if grazers(a.area) <= graze_capacity(a.area):
+			a.hunger = 100.0
+		return
+	var pen: Dictionary = pens[a.area]
+	var need := int(a.spec().feed)
+	if int(pen.trough) >= need:
+		pen.trough = int(pen.trough) - need
+		a.hunger = 100.0
+		a.hp = minf(float(a.spec().hp), a.hp + float(a.spec().hp) * 0.25)
+
+
+## Wild animals a wood can feed: one per `graze_cells_per_animal` open cells.
+func graze_capacity(area: String) -> int:
+	return cells(area).size() / int(GameData.b("graze_cells_per_animal"))
+
+
+func grazers(area: String) -> int:
+	var c := 0
+	for a: Animal in animals:
+		if a.alive and a.area == area:
+			c += 1
+	return c
+
+
+## Fed enough to breed.
+func well_fed(a: Animal) -> bool:
+	return a.hunger >= float(GameData.b("animal_breed_min_hunger"))
+
+
+## Morning: births.
+func new_day() -> void:
+	var now: float = w.minutes
 	var born := {}
 	for a: Animal in animals.duplicate():
-		if not a.alive or a.sex != "f" or not a.fed or not a.adult(now) or now < a.next_birth:
+		if not a.alive or a.sex != "f" or not well_fed(a) or not a.adult(now) or now < a.next_birth:
 			continue
 		if not _has_mate(a):
 			continue
@@ -163,7 +192,7 @@ func new_day() -> void:
 
 func _has_mate(f: Animal) -> bool:
 	for m: Animal in animals:
-		if m.alive and m.sex == "m" and m.area == f.area and m.species == f.species and m.fed and m.adult(w.minutes):
+		if m.alive and m.sex == "m" and m.area == f.area and m.species == f.species and well_fed(m) and m.adult(w.minutes):
 			return true
 	return false
 
@@ -177,12 +206,21 @@ func feed(pen: Dictionary, from: Inventory, qty: int) -> int:
 	return n
 
 
-## Wheat a pen eats each morning.
+## Wheat a pen eats in a day (an animal eats about twice a day).
 func daily_need(pen: Dictionary) -> int:
 	var n := 0
 	for a: Animal in animals:
 		if a.alive and a.area == pen.id:
-			n += int(a.spec().feed)
+			n += int(a.spec().feed) * 2
+	return n
+
+
+## Animals in a pen that are hungry now.
+func hungry(pen: Dictionary) -> int:
+	var n := 0
+	for a: Animal in animals:
+		if a.alive and a.area == pen.id and a.hunger < float(GameData.b("animal_eat_below")):
+			n += 1
 	return n
 
 
@@ -278,7 +316,10 @@ func surplus(pen: Dictionary, short_of_feed := false) -> Animal:
 ## Wandering (and wild animals shying away from people), only near the player: far away nobody
 ## sees them move, and births, feeding and hunting do not depend on where they stand.
 func update(dt: float) -> void:
+	tick(dt * float(GameData.b("game_minutes_per_second")))
 	for a: Animal in animals:
+		if not a.alive:
+			continue
 		if a.pos.distance_to(w.player.pos) > w.detail_radius:
 			a.moving = false
 			continue
@@ -301,6 +342,9 @@ func _move(a: Animal, dt: float) -> void:
 		if cs.is_empty():
 			return
 		var c: Vector2i = cs[w.rng.randi() % cs.size()]
+		if not a.wild() and a.hunger < float(GameData.b("animal_eat_below")) + 10.0:
+			var pen: Dictionary = pens[a.area]
+			c = Vector2i(int(pen.gate[0]), int(pen.gate[1]) + 1)          # the trough is by the gate
 		if Vector2(c).distance_to(a.pos) > 5.0:
 			c = Vector2i((Vector2(c) - a.pos).limit_length(5.0) + a.pos)
 		a.goal = Vector2(c) + Vector2(0.5, 0.5)

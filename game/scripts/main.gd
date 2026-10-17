@@ -429,7 +429,7 @@ func _find_target() -> void:
 			var pen: Dictionary = world.fauna.pens[id]
 			var fa := Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
 			if fa.distance_to(p.pos) < 1.3:
-				best = {"kind": "pen", "pen": pen, "label": "%s pen: trough %d wheat (they eat %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, int(pen.trough), world.fauna.daily_need(pen)]}
+				best = {"kind": "pen", "pen": pen, "label": "%s pen: %d hungry, trough %d wheat (they eat about %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, world.fauna.hungry(pen), int(pen.trough), world.fauna.daily_need(pen)]}
 		if p.home != "" and world.buildings.has(p.home):
 			var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
 			if door.distance_to(p.pos) < 1.3:

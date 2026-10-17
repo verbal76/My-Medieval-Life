@@ -7,6 +7,7 @@ marked *Proposed* until the owner approves it.
 | Date | Decision | By | Notes |
 |---|---|---|---|
 | 2026-10-17 | Animal breeding: one male and one female of a species reproduce as long as they are fed; babies show at half scale and switch to full scale at a set age | Owner | Owner message with the Cozy Farm pack. The numbers (feed, litter, time between births, growing age) are agent proposals in `game/data/balance.json`, see `docs/BUILD_DECISIONS.md` |
+| 2026-10-17 | Animals get hungry and die if not fed, like the villagers; village keepers and the player feed the pens; wild animals graze in the woods | Owner | Owner answers to the feeding questions |
 | 2026-10-17 | Farm animals are livestock that become meat; wild animals live in the woods and are hunted for meat | Owner | Owner answer: "not just decoration, they become meat" |
 | 2026-10-17 | Living world: an interdependent production economy with real movement of goods and money; persistent NPCs with occupations, inventories and finances; persistent consequences of robbery and death; productive and criminal paths | Owner | `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` §2 "established intent". Its other proposals stay open (U20). Review: `docs/LIVING_WORLD_ALIGNMENT.md` |
 | 2026-10-17 | Adopt the simulation tier names Detailed / Abstract / Dormant | Agent | Aligns H §7 with the living-world document §11 |

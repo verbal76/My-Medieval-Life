@@ -14,8 +14,7 @@ var pos := Vector2.ZERO      # tile coordinates (float)
 var facing := Vector2.DOWN
 var goal := Vector2.INF      # where it is wandering to
 var wait := 0.0              # real seconds before it wanders again
-var fed := true              # ate this morning (or forages: wild)
-var unfed_days := 0
+var hunger := 100.0          # 100 = full, like the villagers
 var next_birth := 0.0        # game minutes: a female can give birth again from then
 var moving := false
 
@@ -46,7 +45,7 @@ func label() -> String:
 
 func to_dict() -> Dictionary:
 	return {"id": id, "species": species, "skin": skin, "sex": sex, "born": born, "area": area, "alive": alive,
-		"hp": hp, "pos": [pos.x, pos.y], "fed": fed, "unfed_days": unfed_days, "next_birth": next_birth}
+		"hp": hp, "pos": [pos.x, pos.y], "hunger": hunger, "next_birth": next_birth}
 
 
 static func from_dict(d: Dictionary) -> Animal:
@@ -60,7 +59,6 @@ static func from_dict(d: Dictionary) -> Animal:
 	a.alive = bool(d.alive)
 	a.hp = float(d.hp)
 	a.pos = Vector2(d.pos[0], d.pos[1])
-	a.fed = bool(d.fed)
-	a.unfed_days = int(d.unfed_days)
+	a.hunger = float(d.get("hunger", 100.0))
 	a.next_birth = float(d.next_birth)
 	return a

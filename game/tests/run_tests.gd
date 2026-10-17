@@ -76,8 +76,9 @@ func test_population() -> void:
 	print("population: ", jobs)
 
 
-## The owner's breeding rule, checked in a pen on its own: a fed pair breeds, an unfed one does
-## not, one sex alone does not, babies grow up after grow_days, and a pen never passes its cap.
+## The owner's animal rules, checked in a pen on its own: a well-fed pair breeds, a hungry one does
+## not, one sex alone does not, babies grow up after grow_days, a pen never passes its cap, and
+## animals get hungry, eat and starve like the villagers.
 func test_animals() -> void:
 	var w := new_world()
 	var f := w.fauna
@@ -106,7 +107,7 @@ func test_animals() -> void:
 	check(f.count(pen.id, "pig") - 2 == piglets, "no second litter before it is due")
 	w.minutes += float(s.grow_days) * day
 	check(baby.adult(w.minutes), "babies grow up after %d days" % int(s.grow_days))
-	# unfed: no births, and starvation after animal_starve_days
+	# hungry: no births; an animal eats from the trough when hungry; with nothing to eat it starves
 	for a: Animal in f.animals.duplicate():
 		if a.area == pen.id:
 			f.remove(a)
@@ -115,12 +116,30 @@ func test_animals() -> void:
 	m.born = w.minutes - 10 * day
 	fe.born = w.minutes - 10 * day
 	fe.next_birth = w.minutes
+	m.hunger = 20.0
+	fe.hunger = 20.0
 	pen.trough = 0
 	f.new_day()
-	check(f.count(pen.id, "pig") == 2, "an unfed pair does not breed")
-	for i in int(GameData.b("animal_starve_days")):
-		f.new_day()
-	check(f.count(pen.id, "pig") == 0, "animals left unfed starve")
+	check(f.count(pen.id, "pig") == 2, "a hungry pair does not breed")
+	pen.trough = 1
+	f.tick(1.0)
+	check(fe.hunger == 100.0 or m.hunger == 100.0, "a hungry pig eats from the trough")
+	check(int(pen.trough) == 0, "eating empties the trough by its feed")
+	var hours := 0
+	while f.count(pen.id, "pig") > 0 and hours < 200:
+		f.tick(60.0)
+		hours += 1
+	check(f.count(pen.id, "pig") == 0, "pigs nobody feeds starve to death (after %d hours)" % hours)
+	check(hours > 24, "starving takes more than a day (%d hours)" % hours)
+	# wild animals graze when hungry
+	var rabbit: Animal = null
+	for a: Animal in f.animals:
+		if a.species == "rabbit":
+			rabbit = a
+			break
+	rabbit.hunger = 30.0
+	f.tick(1.0)
+	check(rabbit.hunger == 100.0, "a hungry rabbit grazes")
 	# one sex alone does not breed
 	for i in 2:
 		var g := f.spawn(pen.id, "pig", "f", null)

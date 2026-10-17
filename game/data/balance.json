@@ -47,9 +47,8 @@
   "tax_rate": 0.15,
   "repairs_budget_share": 0.4,
   "relief_coins_per_member": 2,
-  "animal_starve_days": 4,
   "animals": {
-    "_note": "Owner rule: a fed male and female breed; babies are half scale until grown; animals become meat. The numbers are agent proposals (docs/BUILD_DECISIONS.md). start = [males, females] per pen or per woods; keep = breeding adults that hunters and keepers leave; feed = wheat per day.",
+    "_note": "Owner rules: animals get hungry and die unfed like the villagers; keepers and the player feed livestock, wild animals graze; a well-fed male and female breed; babies are half scale until grown; animals become meat. The numbers are agent proposals (docs/BUILD_DECISIONS.md). start = [males, females] per pen or per wood; keep = breeding adults that hunters and keepers leave; feed = wheat per meal.",
     "cow": {
       "name": "Cows",
       "kind": "livestock",
@@ -199,5 +198,10 @@
       "one": "rabbit"
     }
   },
-  "trader_cash_floor": 15
+  "trader_cash_floor": 15,
+  "animal_hunger_per_hour": 3.0,
+  "animal_eat_below": 55,
+  "animal_starve_hp_per_hour": 0.1,
+  "animal_breed_min_hunger": 40,
+  "graze_cells_per_animal": 15
 }
