@@ -1173,6 +1173,7 @@ func _run() -> void:
 	_hit_feedback_tests()
 	_roof_tests()
 	_pad_cycle_tests()
+	_sign_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1631,3 +1632,21 @@ func _pad_cycle_tests() -> void:
 	check(all.size() > 1 and all.all(func(c): return seen.has(c)), "RT reaches every enabled control of the talk window (%d)" % all.size())
 	check(main.get_viewport().gui_get_focus_owner() == all[(all.find(start) + 1) % all.size()], "and wraps round")
 	ui.hide_all()
+
+
+## A sign with the family's name by a house's door when the player is near (Build 8 request).
+func _sign_tests() -> void:
+	var w: World = main.world
+	var hid := ""
+	for id in w.buildings:
+		if str(w.buildings[id].type) == "house" and w.home_family(str(id)) != "":
+			hid = str(id)
+			break
+	var b: Dictionary = w.buildings[hid]
+	w.player.pos = Vector2(float(b.door[0]) + 0.5, float(b.door[1]) + 2.5)
+	main._sync_sprites()
+	var sg: Label = main.house_signs.get(hid)
+	check(sg != null and sg.visible and sg.text == w.home_family(hid), "by %s's door a sign reads %s" % [hid, sg.text if sg else "nothing"])
+	w.player.pos = Vector2(float(b.door[0]), float(b.door[1])) + Vector2(40, 0)
+	main._sync_sprites()
+	check(not sg.visible, "far away the sign is not shown")

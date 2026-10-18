@@ -1735,6 +1735,17 @@ func where(r: Rect2i, exclude := "", avoid := "") -> String:
 
 
 ## [id, name, rect] of each landmark, in a fixed order.
+## The family living in house `id` (or the player's, for the player's own house), "" for none: the
+## name on the house's sign (Build 8 request).
+func home_family(id: String) -> String:
+	for hh in households:
+		if str(hh.home) == id and not hh.get("ended", false):
+			return str(hh.family)
+	if buildings.has(id) and holder_of(buildings[id]) == PLAYER:
+		return player.family
+	return ""
+
+
 func _landmarks() -> Array:
 	var out := []
 	var ids := buildings.keys()

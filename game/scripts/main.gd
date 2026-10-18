@@ -52,6 +52,7 @@ var save_path := SAVE_PATH             # tests point this elsewhere so they neve
 var save_blocked := ""                 # why saving is off this session ("" = saving allowed): see continue_game
 var save_failing := false
 var trigger_held := {}                 # LT / RT pressed past the threshold (one step per press)
+var house_signs := {}                  # building id -> its family-name sign (Label), made when first near
 var inside_hold := ""                  # the building the player was last inside (see _sync_sprites)              # the last save failed: say so once, not at every autosave
 var shot_path := ""
 var shot_frames := 0
@@ -585,6 +586,10 @@ func _start(fresh := false) -> void:
 func _clear_world() -> void:
 	if world:
 		world.dispose()
+	for sg in house_signs.values():
+		if is_instance_valid(sg):
+			sg.queue_free()
+	house_signs.clear()
 	chase = null
 	talk_to = null
 	reach_to = Vector2.INF
@@ -613,6 +618,42 @@ func _clear_world() -> void:
 	bubbles.clear()
 	loot_nodes.clear()
 	projectiles.clear()
+
+
+const SIGN_RANGE := 14.0               # tiles: house signs show when the player is this near
+
+
+## A small wooden sign by each house's door with the family's name (Build 8 request: "so you know
+## who's who"), shown when the player is near; the name follows whoever lives there now.
+func _sync_signs(at: Vector2) -> void:
+	for id in world.buildings:
+		var b: Dictionary = world.buildings[id]
+		if not str(b.get("type", "")) in ["house", "player_house"]:
+			continue
+		var door := Vector2(float(b.door[0]) + 0.5, float(b.door[1]) + 0.5)
+		var sign: Label = house_signs.get(id)
+		var near := door.distance_to(at) < SIGN_RANGE
+		var fam := world.home_family(str(id)) if near else ""
+		if fam == "":
+			if sign != null:
+				sign.visible = false
+			continue
+		if sign == null:
+			sign = Label.new()
+			sign.add_theme_font_size_override("font_size", 7)
+			sign.add_theme_color_override("font_color", Color(0.98, 0.93, 0.82))
+			var st := StyleBoxFlat.new()
+			st.bg_color = Color(0.43, 0.29, 0.17)
+			st.border_color = Color(0.25, 0.16, 0.09)
+			st.set_border_width_all(1)
+			st.set_content_margin_all(1)
+			sign.add_theme_stylebox_override("normal", st)
+			sign.z_index = 30
+			actors.add_child(sign)
+			house_signs[id] = sign
+		sign.text = fam
+		sign.visible = true
+		sign.position = door * T + Vector2(-sign.get_minimum_size().x / 2.0, 2.0)
 
 
 func _build_scene() -> void:
@@ -815,6 +856,7 @@ func _sync_sprites() -> void:
 		s.play(n.anim if n.anim != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
+	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
 	var inside := world.place_of(p.pos)
 	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
