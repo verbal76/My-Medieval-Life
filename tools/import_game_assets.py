@@ -94,7 +94,7 @@ PROMPTS = {name: f"Keyboard & Mouse/Double/{name}.png" for name in
             "mouse_scroll", "mouse_move"]}
 PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
                 ["xbox_button_a", "xbox_button_b", "xbox_button_x", "xbox_button_y", "xbox_button_view",
-                 "xbox_button_menu", "xbox_stick_l", "xbox_stick_r", "xbox_stick_r_press", "xbox_lb", "xbox_rb", "xbox_dpad_down"]})
+                 "xbox_button_menu", "xbox_stick_l", "xbox_stick_r", "xbox_stick_r_press", "xbox_lb", "xbox_rb", "xbox_dpad_down", "xbox_lt", "xbox_rt"]})
 PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in",
                                                                 "touch_swipe_two_move"]})
 MONSTER_ZIP = "PunyMonsters.zip"

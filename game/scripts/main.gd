@@ -51,6 +51,7 @@ var autosave_hour := -1
 var save_path := SAVE_PATH             # tests point this elsewhere so they never touch a player's save
 var save_blocked := ""                 # why saving is off this session ("" = saving allowed): see continue_game
 var save_failing := false
+var trigger_held := {}                 # LT / RT pressed past the threshold (one step per press)
 var inside_hold := ""                  # the building the player was last inside (see _sync_sprites)              # the last save failed: say so once, not at every autosave
 var shot_path := ""
 var shot_frames := 0
@@ -1954,6 +1955,12 @@ func _cell_at(screen_pos: Vector2) -> Vector2i:
 
 # ---------------------------------------------------------------- touch ----------------------
 func _unhandled_input(e: InputEvent) -> void:
+	if e is InputEventJoypadMotion and (e.axis == JOY_AXIS_TRIGGER_LEFT or e.axis == JOY_AXIS_TRIGGER_RIGHT):
+		var down: bool = e.axis_value > 0.6
+		if down and not trigger_held.get(e.axis, false) and ui.modal():
+			ui.cycle_focus(1 if e.axis == JOY_AXIS_TRIGGER_RIGHT else -1)
+		trigger_held[e.axis] = down
+		return
 	if world == null:
 		return
 	if _placing_input(e):

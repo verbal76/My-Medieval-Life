@@ -1563,11 +1563,25 @@
    "sha256": "6ca8c3411823d389dd94c6fa7015299a93d58c7e67ad1831280b5901792b6755"
   },
   {
+   "file": "assets/prompts/xbox_lt.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_lt.png",
+   "transform": "copied unchanged",
+   "sha256": "021e4d4a82eeb3f4e0af16f00c3889d18fec98c3fc4c9e71f2a56be180f4eb7a"
+  },
+  {
    "file": "assets/prompts/xbox_rb.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Xbox Series/Double/xbox_rb.png",
    "transform": "copied unchanged",
    "sha256": "2f3fa780da01cf7c48c91aaaa9a5d8da075c73a32cab32bb1497fd571ca134f8"
+  },
+  {
+   "file": "assets/prompts/xbox_rt.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_rt.png",
+   "transform": "copied unchanged",
+   "sha256": "ca6114d20903961f8cab4cfa33c8dec29056bc15b2ab45a0f92048b8e6eb23b2"
   },
   {
    "file": "assets/prompts/xbox_stick_l.png",

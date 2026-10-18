@@ -1172,6 +1172,7 @@ func _run() -> void:
 	_collision_tests()
 	_hit_feedback_tests()
 	_roof_tests()
+	_pad_cycle_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1608,3 +1609,25 @@ func _roof_tests() -> void:
 			main._sync_sprites()
 			steady = steady and main.roofs.is_open(tav.id)
 		check(steady, "on that cell the roof stays lifted, no flicker")
+
+
+## LT / RT step through every enabled button of an open window and wrap round (Build 8 report:
+## the pad should reach every active button).
+func _pad_cycle_tests() -> void:
+	var ui = main.ui
+	ui.show_talk(main.world.npcs.filter(func(n): return n.alive and n.role != "bandit")[0])
+	ui._focus_first()
+	var all: Array = ui.panel.find_children("*", "Control", true, false).filter(func(c): return (c is BaseButton or c is LineEdit or c is Slider) \
+		and c.is_visible_in_tree() and c.focus_mode != Control.FOCUS_NONE and not (c is BaseButton and c.disabled))
+	var seen := {}
+	var start: Control = main.get_viewport().gui_get_focus_owner()
+	for i in all.size() + 1:
+		seen[main.get_viewport().gui_get_focus_owner()] = true
+		for v in [1.0, 0.0]:
+			var ev := InputEventJoypadMotion.new()
+			ev.axis = JOY_AXIS_TRIGGER_RIGHT
+			ev.axis_value = v
+			main._unhandled_input(ev)
+	check(all.size() > 1 and all.all(func(c): return seen.has(c)), "RT reaches every enabled control of the talk window (%d)" % all.size())
+	check(main.get_viewport().gui_get_focus_owner() == all[(all.find(start) + 1) % all.size()], "and wraps round")
+	ui.hide_all()

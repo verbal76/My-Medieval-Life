@@ -90,7 +90,7 @@ const CONTROLS := {
 		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned)"],
 		[["xbox_button_view"], "Pack"], [["xbox_rb"], "Skills"], [["xbox_button_menu"], "Menu (the journal is there)"],
 		[["xbox_button_b"], "Close a window"],
-		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"]],
+		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"], [["xbox_lt", "xbox_rt"], "In a window: step through its buttons"]],
 }
 # On a phone the interface keeps at least this far from the screen edges (interface units; the layout
 # is 450 high): rounded corners on common phones cut off less than this.
@@ -508,6 +508,17 @@ func _ui_icon(name: String, size: float) -> TextureRect:
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	return t
+
+
+## LT / RT step the focus back and forth through every enabled control of the open window, in
+## order and wrapping round, whatever its layout (Build 8 report: the pad could not reach a button).
+func cycle_focus(dir: int) -> void:
+	var all := panel.find_children("*", "Control", true, false).filter(func(c): return (c is BaseButton or c is LineEdit or c is Slider) \
+		and c.is_visible_in_tree() and c.focus_mode != Control.FOCUS_NONE and not (c is BaseButton and c.disabled))
+	if all.is_empty():
+		return
+	var i := all.find(get_viewport().gui_get_focus_owner())
+	(all[posmod(i + dir, all.size()) if i >= 0 else 0] as Control).grab_focus()
 
 
 ## Give the first control of the open window keyboard/pad focus, unless something in it has focus.
