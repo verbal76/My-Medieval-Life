@@ -167,6 +167,30 @@
       "value": 1,
       "food": 15
     },
+    "flower": {
+      "name": "Wild flower",
+      "type": "resource",
+      "value": 1
+    },
+    "red_berries": {
+      "name": "Red berries",
+      "type": "food",
+      "value": 1,
+      "food": 6
+    },
+    "blueberries": {
+      "name": "Blueberries",
+      "type": "food",
+      "value": 1,
+      "food": 6
+    },
+    "herbal_tonic": {
+      "name": "Herbal tonic",
+      "type": "food",
+      "value": 4,
+      "food": 4,
+      "heal": 12
+    },
     "rotten_apple": {
       "name": "Rotten apple",
       "type": "food",

@@ -124,6 +124,9 @@ ICONS = {
     "iron_armor": "Armour/Metal-Chestplate-02", "coins": "Metal/Metail-Coins-08",
     "hammer": "Tools/Hammer-02", "fireball": "Tools/Magic-Staff-05",
     "leather_cap": "Armour/Leather-Cap-07", "iron_helmet": "Armour/Metal-Helm-05",
+    # wild plants (B8-015/B8-016): yellow flower, red and blue berries, the flower tonic
+    "flower": "Plants & Alchemy/Flower-09", "red_berries": "Plants & Alchemy/Berry-05",
+    "blueberries": "Plants & Alchemy/Berry-16", "herbal_tonic": "Plants & Alchemy/Herbal-Potion-01",
 }
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)

@@ -590,6 +590,13 @@
    "sha256": "8e03287d0799793db9d4545d18231cbaa55da3162bd61c820f6ad7c5dd306f1b"
   },
   {
+   "file": "assets/icons/blueberries.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Berry-16.png",
+   "transform": "copied unchanged",
+   "sha256": "bbc53cd2ee33cf68f5c99c25b79e88b380c00eef801006a2d3e3df6ec5fd9ebd"
+  },
+  {
    "file": "assets/icons/coal.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Coal-01.png",
@@ -632,6 +639,13 @@
    "sha256": "70a6f50459e46ee61b587842b59bafcd5ad13a8a1ff1504eae0815c7fda8df25"
   },
   {
+   "file": "assets/icons/flower.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Flower-09.png",
+   "transform": "copied unchanged",
+   "sha256": "c8eb7f213d6f0e971d88e223b485d7c9faf9275a65fd7e6a4baa9dd7375c30b3"
+  },
+  {
    "file": "assets/icons/gold_bar.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Metal/Metal-Ingot-08.png",
@@ -651,6 +665,13 @@
    "member": "16x16 Survival RPG Icons/Tools/Hammer-02.png",
    "transform": "copied unchanged",
    "sha256": "5e88cf198939525537962ad9f558bd7eb880331a415764e9b925f26cb2108c9e"
+  },
+  {
+   "file": "assets/icons/herbal_tonic.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Herbal-Potion-01.png",
+   "transform": "copied unchanged",
+   "sha256": "28d0e871d76cb5a9f1ac5a6159c20de734a1d98c7ddbb3c2696d86ac412b1294"
   },
   {
    "file": "assets/icons/hide.png",
@@ -749,6 +770,13 @@
    "member": "16x16 Survival RPG Icons/Metal/Metal-Pot-01.png",
    "transform": "copied unchanged",
    "sha256": "4540e32914ab13fbbd20aba1bc15dc7fda97c9f2a107e43e9e6e8a1123014ead"
+  },
+  {
+   "file": "assets/icons/red_berries.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Berry-05.png",
+   "transform": "copied unchanged",
+   "sha256": "ee355a6bfb58cd4973395c59ba401f528c0d45f11cc6d7b387f5225c9090f0e7"
   },
   {
    "file": "assets/icons/roast_meat.png",
