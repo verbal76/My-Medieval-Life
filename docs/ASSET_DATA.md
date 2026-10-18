@@ -136,3 +136,12 @@ colour, and `unidentified_sprites.png`.
 Look up a building by `name` and pick a variant. Draw `rect` from `file` for the neutral wood version,
 or from `teams[<colour>]` for a faction. All rects are 16px-aligned, so a building occupies
 `rect.w / 16` by `rect.h / 16` map cells.
+
+## Game data formats elsewhere
+
+The game's own data files are in `game/data/` with a `format` field each (`mml-items/1`,
+`mml-recipes/1`, `mml-balance/1`, `mml-village/1` and so on). One of them is a registry rather than
+balance data: `game/data/resources.json` (`mml-resources/1`) defines the harvestable resource nodes
+and the code-defined resource uses and sources. `tools/check_resources.py` validates it and generates
+`docs/systems/RESOURCE_NODE_MANIFEST.md` and `docs/systems/RESOURCE_USAGE_REGISTRY.md` from it; the
+game reads it through `ResourceNodes` (`game/scripts/core/resource_nodes.gd`).

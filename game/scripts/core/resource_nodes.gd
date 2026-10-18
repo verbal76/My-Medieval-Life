@@ -201,3 +201,131 @@ static func theft_note(world: World, d: Dictionary, ref) -> String:
 					return "%s %s's %s: killing it is theft" % [k.name, k.family, a.label()]
 				return "The keeper's %s: killing it is theft" % a.label()
 	return ""
+
+
+# ---------------------------------------------------------------- uses and sources -----------
+## Every use of an item, as {kind, id, qty, text, source}: kind is
+##  - "recipe": a recipe consumes `qty` (id: the recipe; station, makes: its output);
+##  - "buyer": a trade buys it, up to a stock of `qty` (id: NPCBrain.buy_role, from NPCBrain.BUYS);
+##  - "export": the caravan buys it (NPCBrain.caravan);
+##  - "building": a building of kind `id` takes `qty` (Construction.cost_of);
+##  - "quest": a quest asks for `qty` (id: the quest);
+##  - "food": eaten for `qty` food points;
+##  - "equip": worn or wielded in the `id` slot (an item type);
+##  - "tool": the tool a node needs (id: the node);
+##  - the `use` of a resources.json "materials" note (fuel, feed, manor_job, home_cooking, granary, tool).
+## Sorted by kind, then id. Data-derived uses come from the live data; notes from resources.json.
+static func uses_of(item: String) -> Array:
+	GameData.ensure()
+	var out := []
+	for r in _sorted(GameData.recipes):
+		var rec: Dictionary = GameData.recipes[r]
+		if rec.in.has(item):
+			out.append({"kind": "recipe", "id": r, "qty": int(rec.in[item]), "station": str(rec.station), "makes": rec.out.duplicate(),
+				"text": "%s at the %s" % [str(r).replace("_", " "), rec.station], "source": "game/data/recipes.json"})
+	for role in _sorted(NPCBrain.BUYS):
+		if NPCBrain.BUYS[role].has(item):
+			out.append({"kind": "buyer", "id": role, "qty": int(NPCBrain.BUYS[role][item]), "text": "bought by the %s" % str(role).replace("_", " "),
+				"source": "game/scripts/core/npc_brain.gd::wants"})
+	if exported(item):
+		out.append({"kind": "export", "id": "caravan", "qty": 0, "text": "bought by the passing caravan", "source": str(GameData.resources.exports.source)})
+	var costs := {"house": GameData.b("house_cost")}
+	for k in GameData.b("workshop_cost"):
+		costs[k] = GameData.b("workshop_cost")[k]
+	for k in _sorted(costs):
+		if costs[k].has(item):
+			out.append({"kind": "building", "id": k, "qty": int(costs[k][item]), "text": "building %s" % Construction.kind_name(k, true),
+				"source": "game/scripts/core/construction.gd::cost_of"})
+	for q in GameData.quests:
+		if q.get("need", {}).has(item):
+			out.append({"kind": "quest", "id": str(q.id), "qty": int(q.need[item]), "text": str(q.title), "source": "game/data/quests.json"})
+	var it := GameData.item(item)
+	if int(it.get("food", 0)) > 0:
+		out.append({"kind": "food", "id": item, "qty": int(it.food), "text": "eaten (%d food)" % int(it.food), "source": "game/data/items.json"})
+	if str(it.get("type", "")) in ["tool", "weapon", "armor", "head", "ring", "amulet"]:
+		out.append({"kind": "equip", "id": str(it.type), "qty": 1, "text": "worn or used as a %s" % it.type, "source": "game/data/items.json"})
+	if it.has("tool"):
+		for id in ids():
+			if str(def(id).get("tool", "")) == str(it.tool) and bool(def(id).get("tool_required", false)):
+				out.append({"kind": "tool", "id": id, "qty": 1, "text": "the tool for %s" % str(def(id).verb).to_lower(), "source": "game/data/resources.json"})
+	for n in GameData.resources.get("materials", {}).get(item, []):
+		out.append({"kind": str(n.use), "id": item, "qty": 0, "text": str(n.text), "source": str(n.source)})
+	out.sort_custom(ResourceNodes._by_kind_id)
+	return out
+
+
+## Whether the caravan buys this item: from a merchant (any item in a merchant's BUYS) or a smith
+## (resources.json exports.smith_caps, the caps in NPCBrain.caravan).
+static func exported(item: String) -> bool:
+	GameData.ensure()
+	for role in NPCBrain.BUYS:
+		if str(role).begins_with("merchant_") and NPCBrain.BUYS[role].has(item):
+			return true
+	return GameData.resources.exports.smith_caps.has(item)
+
+
+## Every source of an item, as {kind, id, qty, text, source}: kind is "node" (a node's yield per
+## cycle), "recipe" (a recipe makes `qty`; uses: its inputs), "start_kit" (the player's start kit),
+## "start_stock" (a one-time stock the code gives at the start: villagers, pantries, the granary) or
+## "import" (the caravan). Sorted by kind, then id.
+static func sources_of(item: String) -> Array:
+	GameData.ensure()
+	var out := []
+	for id in ids():
+		var p := products(def(id))
+		if p.has(item):
+			out.append({"kind": "node", "id": id, "qty": int(p[item]), "text": str(def(id).name), "source": "game/data/resources.json"})
+	for r in _sorted(GameData.recipes):
+		var rec: Dictionary = GameData.recipes[r]
+		if rec.out.has(item):
+			out.append({"kind": "recipe", "id": r, "qty": int(rec.out[item]), "station": str(rec.station), "uses": rec.in.duplicate(),
+				"text": "%s at the %s" % [str(r).replace("_", " "), rec.station], "source": "game/data/recipes.json"})
+	var kit: Dictionary = GameData.b("player_start_items")
+	if kit.has(item):
+		out.append({"kind": "start_kit", "id": "player_start_items", "qty": int(kit[item]), "text": "the player's start kit", "source": "game/data/balance.json"})
+	var i := 0
+	for n in GameData.resources.get("code_sources", []):
+		if n.items.has(item):
+			out.append({"kind": "start_stock", "id": "start_%d" % i, "qty": 0, "text": str(n.text), "source": str(n.source)})
+		i += 1
+	for n in GameData.resources.get("imports", []):
+		var items: Array = n.get("items", [])
+		if n.has("items_key"):
+			items = (GameData.b(str(n.items_key)) as Dictionary).keys()
+		if items.has(item):
+			out.append({"kind": "import", "id": "caravan", "qty": 0, "text": str(n.text), "source": str(n.source)})
+	out.sort_custom(ResourceNodes._by_kind_id)
+	return out
+
+
+## What an item eventually becomes through recipes, `depth` steps deep:
+## {item, becomes: [{recipe, station, with: the recipe's other inputs, makes: its outputs,
+## then: [the chain of each output, one step less deep]}]}. An item already on the path is not
+## followed again.
+static func chain(item: String, depth := 3, _path := []) -> Dictionary:
+	GameData.ensure()
+	var out := {"item": item, "becomes": []}
+	if depth <= 0 or _path.has(item):
+		return out
+	var path: Array = _path + [item]
+	for r in _sorted(GameData.recipes):
+		var rec: Dictionary = GameData.recipes[r]
+		if not rec.in.has(item):
+			continue
+		var others: Dictionary = rec.in.duplicate()
+		others.erase(item)
+		var then := []
+		for o in _sorted(rec.out):
+			then.append(chain(o, depth - 1, path))
+		out.becomes.append({"recipe": r, "station": str(rec.station), "with": others, "makes": rec.out.duplicate(), "then": then})
+	return out
+
+
+static func _sorted(d: Dictionary) -> Array:
+	var k := d.keys()
+	k.sort()
+	return k
+
+
+static func _by_kind_id(a: Dictionary, b: Dictionary) -> bool:
+	return a.kind < b.kind or (a.kind == b.kind and str(a.id) < str(b.id))
