@@ -238,6 +238,27 @@ func _run() -> void:
 	pack_win.gear_buttons["ring"].pressed.emit()
 	check(pack_win.selected == "gear:ring" and _press("Take off") and p.ring == "" and p.stamina_cap() == stam0, "the ring slot's Take off removes it")
 	check(not _press("Take off"), "an empty slot has nothing to take off")
+	# with the pad (Build 8 report, Xbox controller on Windows): choosing a cell moves focus to its
+	# first action, A then wears it, and up or left goes back to the cell
+	var scheme0: String = ui.scheme
+	ui.set_scheme("gamepad")
+	ui.show_inventory("armour")
+	pack_win = ui.inventory_window()
+	if p.armor != "":
+		main.world.player_unequip("armor")
+		pack_win.refresh()
+	var clothes_cell: Button = pack_win.cells[pack_win.items_shown().find("plain_clothes")]
+	clothes_cell.grab_focus()
+	clothes_cell.pressed.emit()                       # A on the focused cell
+	var pad_focus: Control = main.get_viewport().gui_get_focus_owner()
+	check(pad_focus is Button and (pad_focus as Button).text == "Wear", "after choosing with the pad, focus is on Wear (%s)" % (pad_focus.text if pad_focus is Button else str(pad_focus)))
+	check(pad_focus is Button and pad_focus.get_node(pad_focus.focus_neighbor_top) == clothes_cell and pad_focus.get_node(pad_focus.focus_neighbor_left) == clothes_cell, "up and left from Wear go back to the item")
+	if pad_focus is Button:
+		(pad_focus as Button).pressed.emit()          # A again
+	check(p.armor == "plain_clothes", "A on Wear puts the clothes on")
+	check(main.get_viewport().gui_get_focus_owner() == pack_win.cells[pack_win.items_shown().find("plain_clothes")], "and focus returns to the item")
+	ui.set_scheme(scheme0)
+	ui.hide_all()
 	pack_win.choose("copper_ring")
 	_press("Wear")
 	ui.hide_all()
@@ -1148,6 +1169,7 @@ func _run() -> void:
 	_resources_tests()
 	_gather_tests()
 	_save_safety_tests()
+	_collision_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1485,3 +1507,52 @@ func _save_safety_tests() -> void:
 	main.resume_after_origin()
 	check(_raw(prev) == old and main.world.player.name == "Ada", "the new game's first save leaves it alone")
 	ui.hide_all()
+
+
+## Hold a direction for `secs` of player steps (keys or the stick).
+func _hold(action: String, secs: float) -> void:
+	Input.action_press(action)
+	for i in int(secs / 0.05):
+		main._player_step(0.05)
+	Input.action_release(action)
+
+
+## Nobody gets trapped (Build 8 reports: just inside a door; between trees): the player slides into
+## a doorway they are not lined up with, can always walk out of something solid that appeared under
+## them, and a tree never grows back under someone's feet.
+func _collision_tests() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p := w.player
+	main.ui.hide_all()
+	# the tavern's one-tile exit, the player 0.45 of a tile off line: holding down walks out of it
+	var tav: Dictionary = main.map.data.buildings.filter(func(b): return b.type == "tavern")[0]
+	var exit := Vector2i(int(tav.door[0]), int(tav.door[1]))
+	check(not main.map.is_solid(exit) and main.map.is_solid(exit + Vector2i(-1, 0)) and main.map.is_solid(exit + Vector2i(1, 0)), "the tavern's exit is one tile wide")
+	p.pos = Vector2(exit.x + 0.05, exit.y - 0.5)
+	check(main._blocked_corners(p.pos) == 0, "the player stands just inside, off line with the doorway")
+	_hold("move_down", 2.0)
+	check(p.pos.y > exit.y + 1.0, "holding down slides into the doorway and out (at %s)" % p.pos)
+	_hold("move_up", 2.0)
+	check(p.pos.y < exit.y - 0.3, "and back in")
+	# something solid appears under the player: walking still gets them out
+	var spot := Vector2i(exit.x, exit.y + 4)
+	p.pos = Vector2(spot) + Vector2(0.5, 0.5)
+	main.map.set_solid(spot, true)
+	check(main._blocked_corners(p.pos) == 4, "the cell under the player is now blocked")
+	_hold("move_right", 1.0)
+	check(main._blocked_corners(p.pos) == 0 and p.pos.x > spot.x + 1.2, "the player walks out of it (at %s)" % p.pos)
+	main.map.set_solid(spot, false)
+	# a tree does not grow back under the player; it does once they step away
+	var t: Dictionary = w.trees.filter(func(t): return t.state == "grown")[0]
+	var tc := Vector2i(int(t.x), int(t.y))
+	w.fell(t, 0)
+	t.state = "sapling"
+	t.regrow = 0.0
+	p.pos = Vector2(tc) + Vector2(0.5, 0.5)
+	w._new_day()
+	check(t.state == "sapling" and not main.map.is_solid(tc), "a sapling under the player's feet waits")
+	p.pos = Vector2(tc) + Vector2(4.5, 0.5)
+	t.regrow = 0.0
+	w._new_day()
+	check(t.state == "grown" and main.map.is_solid(tc), "and grows once they step away")

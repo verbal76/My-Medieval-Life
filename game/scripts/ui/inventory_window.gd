@@ -171,9 +171,18 @@ func _choose_cell(i: int) -> void:
 
 
 ## Choose a bag item (its id) or a gear slot ("gear:<slot>") and show its details and actions.
+## With the pad or keys, focus moves on to the first action (Wear, Eat...), so A then A wears it;
+## up or left goes back to the item (Build 8 report: the pad could not reach the buttons).
 func choose(what: String) -> void:
+	var from := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
 	selected = what
 	refresh()
+	if ui.scheme != "touch" and actions != null and actions.get_child_count() > 0 and from is Button:
+		var back: NodePath = from.get_path()
+		for c in actions.get_children():
+			(c as Button).focus_neighbor_top = back
+		(actions.get_child(0) as Button).focus_neighbor_left = back
+		(actions.get_child(0) as Button).grab_focus()
 
 
 ## Redraw the art and rebuild the details after anything changed.
@@ -254,6 +263,9 @@ func _build_details() -> void:
 		lines.append("+%d max stamina while worn." % int(bonus.max_stamina))
 	if it.has("durability"):
 		lines.append("Wear left: %d of %d." % [int(p.inv.durability.get(id, it.durability)), int(it.durability)])
+	var crafts := ResourceNodes.uses_of(id).filter(func(u): return u.kind == "recipe")
+	if not crafts.is_empty():
+		lines.append("Used for: " + "; ".join(crafts.map(func(u): return _use_line(w, id, u))) + ".")
 	detail_box.add_child(_text("\n".join(lines), 16))
 	detail_box.add_child(actions)
 	var iid: String = id
@@ -281,6 +293,26 @@ func _build_details() -> void:
 			w.player_drop(iid, p.inv.count(iid))
 			_after())
 	_fit_details()
+
+
+## "Roast meat (with 1 log) at an oven: The Well House", so a player holding raw meat knows where it
+## cooks (Build 8 question: can I cook this anywhere?).
+func _use_line(w: World, item: String, u: Dictionary) -> String:
+	var r: Dictionary = GameData.recipes[u.id]
+	var other := []
+	for k in r.in:
+		if k != item:
+			other.append("%d %s" % [int(r.in[k]), GameData.item_name(k).to_lower()])
+	var places := []
+	for sid in w.stations_of(str(u.station)):
+		var bid = w.stations[sid].get("building")
+		var b: Dictionary = w.buildings.get(bid, {}) if bid != null else {}
+		var place := str(b.get("name", "")) if not b.is_empty() else ""
+		if place != "" and not places.has(place):
+			places.append(place)
+	var makes := ", ".join(r.out.keys().map(func(o): return GameData.item_name(o)))
+	return "%s%s at a %s%s" % [makes, (" (with %s)" % ", ".join(other)) if not other.is_empty() else "", str(u.station),
+		(": " + ", ".join(places)) if not places.is_empty() else ""]
 
 
 func _text(s: String, size: int) -> Label:

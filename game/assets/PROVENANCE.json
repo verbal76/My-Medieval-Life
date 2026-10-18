@@ -1062,8 +1062,8 @@
    "file": "assets/ui/hunger.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 5; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
-   "sha256": "693007b475639f621626782bdb67cdb261deeb5f33341d89402b82ba84952385"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 10, column 6; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "4f522eaefa27224ff11892213c9cef0ef5788b30069f33737a127b6ae4d866d6"
   },
   {
    "file": "assets/ui/journal.png",

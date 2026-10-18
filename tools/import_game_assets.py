@@ -59,7 +59,7 @@ UI_ICONS = {
     "use": ("icons_set_2.ai", 7, 8), "attack": ("icons_set_2.ai", 6, 8), "fire": ("icons_set_2.ai", 4, 0),
     "pack": ("icons_set_2.ai", 3, 0), "skills": ("icons_set_1.ai", 7, 8), "menu": ("icons_set_1.ai", 1, 8),
     "close": ("icons_set_1.ai", 2, 5), "settings": ("icons_set_1.ai", 5, 2), "save": ("icons_set_1.ai", 0, 5),
-    "back": ("icons_set_1.ai", 2, 1), "health": ("icons_set_2.ai", 0, 3), "hunger": ("icons_set_2.ai", 6, 5),
+    "back": ("icons_set_1.ai", 2, 1), "health": ("icons_set_2.ai", 0, 3), "hunger": ("icons_set_2.ai", 10, 6),
     "stamina": ("icons_set_2.ai", 1, 0), "coins": ("icons_set_2.ai", 6, 0), "home": ("icons_set_1.ai", 2, 0),
     "play": ("icons_set_1.ai", 1, 6), "scroll": ("icons_set_2.ai", 9, 6), "trade": ("icons_set_1.ai", 4, 1),
     "map": ("icons_set_2.ai", 5, 0), "recenter": ("icons_set_1.ai", 1, 2), "gather": ("icons_set_2.ai", 3, 4),

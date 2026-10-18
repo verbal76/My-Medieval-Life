@@ -266,6 +266,8 @@ func _new_day() -> void:
 				t.state = "sapling"
 				t.regrow = d + 2
 				tile_changed.emit(Vector2i(t.x, t.y), "below", map.data.tiles.sapling)
+			elif _someone_on(Vector2i(t.x, t.y)):
+				t.regrow = d + 1           # never grow a tree under someone's feet: try again tomorrow
 			else:
 				t.state = "grown"
 				tile_changed.emit(Vector2i(t.x, t.y), "below", t.trunk)
@@ -853,6 +855,17 @@ func home_cell(n: NPC, kind: String) -> Vector2i:
 	if s.is_empty():
 		return building_door(n.home)
 	return Vector2i(int(s.use[0]), int(s.use[1]))
+
+
+## Someone (the player or a villager) is standing on cell `c`, so it must not become solid.
+func _someone_on(c: Vector2i) -> bool:
+	var r := Rect2(Vector2(c) - Vector2(0.35, 0.25), Vector2(1.7, 1.45))     # the cell, widened by the feet
+	if player.alive and r.has_point(player.pos):
+		return true
+	for n: NPC in npcs:
+		if n.alive and r.has_point(n.pos):
+			return true
+	return false
 
 
 ## Collision of a built building: its stamp's (walls, furniture and stations solid, floor walkable),

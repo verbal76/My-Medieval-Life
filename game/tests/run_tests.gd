@@ -51,6 +51,7 @@ func _init() -> void:
 	test_manor_work()
 	test_resource_registry()
 	test_save_store()
+	test_doorways()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -2957,3 +2958,30 @@ func test_save_store() -> void:
 	check(SaveStore.any_exists(path), "any_exists sees the save")
 	for f in DirAccess.get_files_at(dir):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))
+
+
+## Every building can be walked into and out of (Build 8 report: trapped just inside a door): from
+## each outside door, a walk of straight steps (the player cannot squeeze through a diagonal gap)
+## reaches every inner door, and the outside door reaches the open village (the market well).
+func test_doorways() -> void:
+	var w := new_world()
+	var m: VillageMap = w.map
+	var reach := func(from: Vector2i, limit: int) -> Dictionary:
+		var seen := {from: true}
+		var q := [from]
+		while not q.is_empty() and seen.size() < limit:
+			var c: Vector2i = q.pop_front()
+			for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var n: Vector2i = c + d
+				if not seen.has(n) and not m.is_solid(n):
+					seen[n] = true
+					q.append(n)
+		return seen
+	var town: Dictionary = reach.call(Vector2i(int(m.data.buildings[0].door[0]), int(m.data.buildings[0].door[1])), 100000)
+	for b in m.data.buildings:
+		var out := Vector2i(int(b.door[0]), int(b.door[1]))
+		check(not m.is_solid(out) and town.has(out), "%s (%s): its door is open and joined to the village" % [b.id, b.type])
+		if not b.has("interior"):
+			continue
+		var inner := (b.interior.doors as Array).map(func(c): return Vector2i(int(c[0]), int(c[1])))
+		check(inner.any(func(c): return town.has(c)), "%s (%s): walking in through a doorway reaches inside %s" % [b.id, b.type, inner])

@@ -330,7 +330,9 @@ class Village:
         self.station("oven", (ox + 23, oy + 18), tav["id"], at=(ox + 24, oy + 17))
         self.station("stove", (ox + 22, oy + 18), tav["id"], at=(ox + 22, oy + 17))
         self.station("well", (ox + 15, oy + 25), None, at=(ox + 16, oy + 25))
-        self.building("hut", ox + 8, oy + 1, 3, 3, (ox + 9, oy + 4), name="Sage's hut")
+        # the door is in front of the hut's doorway (generator v4: v1-v3 put it one cell left, so only
+        # a diagonal step reached the doorway and the player could not get in)
+        self.building("hut", ox + 8, oy + 1, 3, 3, (ox + 10, oy + 4), name="Sage's hut")
         self.paste_sample("village-2", 2 * CH, CH)
         ox = 2 * CH
         smithy = self.building("smithy", ox + 7, oy + 10, 16, 14, (ox + 11, oy + 24), name="Smithy and Armory")

@@ -1041,8 +1041,12 @@ func _player_step(delta: float) -> void:
 		var speed := float(GameData.b("player_tiles_per_second"))
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
 		var before := p.pos
-		_try_move(Vector2(step.x, 0))
-		_try_move(Vector2(0, step.y))
+		var moved_x := _try_move(Vector2(step.x, 0))
+		var moved_y := _try_move(Vector2(0, step.y))
+		if not moved_y and absf(v.y) > absf(v.x):
+			_slide_to_gap(Vector2(0, step.y))
+		elif not moved_x and absf(v.x) > absf(v.y):
+			_slide_to_gap(Vector2(step.x, 0))
 		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < step.length() * 0.3 else 0.0
 		player_sprite.face(v)
 		player_sprite.play("walk")
@@ -1133,14 +1137,50 @@ func _reach_step() -> void:
 		interact()
 
 
-func _try_move(step: Vector2) -> void:
+const BODY := [Vector2(-0.3, -0.15), Vector2(0.3, -0.15), Vector2(-0.3, 0.2), Vector2(0.3, 0.2)]   # the player's feet (tiles)
+
+
+## How many corners of the player's feet, standing at `at`, are on a blocked cell.
+func _blocked_corners(at: Vector2) -> int:
+	var n := 0
+	for c in BODY:
+		var q: Vector2 = at + c
+		if map.is_solid(Vector2i(floori(q.x), floori(q.y))):
+			n += 1
+	return n
+
+
+## Move by `step` if the feet fit there. Feet already on something solid (a tree that grew back
+## under them, a building finished around them) may move wherever they overlap no more than now,
+## so the player can always walk out (Build 8 report: trapped between trees).
+func _try_move(step: Vector2) -> bool:
 	var p := world.player
 	var np := p.pos + step
-	for c in [Vector2(-0.3, -0.15), Vector2(0.3, -0.15), Vector2(-0.3, 0.2), Vector2(0.3, 0.2)]:
-		var q: Vector2 = np + c
-		if map.is_solid(Vector2i(floori(q.x), floori(q.y))):
-			return
-	p.pos = np
+	var now := _blocked_corners(p.pos)
+	var after := _blocked_corners(np)
+	if after == 0 or (now > 0 and after <= now):
+		p.pos = np
+		return true
+	return false
+
+
+## Pushing into a wall beside an opening (a doorway, the gap between two trees): when the feet would
+## fit through less than about half a tile to the side, slide toward it, as most games do, instead of
+## needing the stick lined up to a fifth of a tile (Build 8 report: trapped just inside a door).
+func _slide_to_gap(step: Vector2) -> void:
+	var p := world.player
+	var side := Vector2(0, 1) if step.x != 0.0 else Vector2(1, 0)
+	var base: float = p.pos.y if step.x != 0.0 else p.pos.x
+	var best := INF
+	for k in [-1, 0, 1]:
+		var off: float = floorf(base) + 0.5 + k - base
+		if absf(off) > 0.55 or absf(off) < 0.001 or absf(off) >= absf(best):
+			continue
+		var at := p.pos + side * off
+		if _blocked_corners(at) == 0 and _blocked_corners(at + step) == 0:
+			best = off
+	if best != INF:
+		_try_move(side * signf(best) * minf(absf(best), step.length()))
 
 
 func facing_vec() -> Vector2:
