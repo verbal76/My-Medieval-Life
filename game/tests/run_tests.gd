@@ -57,6 +57,7 @@ func _init() -> void:
 	test_field_edges()
 	test_work_has_purpose()
 	test_no_child_pickpocket()
+	test_credits()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -3405,3 +3406,32 @@ func test_no_child_pickpocket() -> void:
 	var c0 := k.coins
 	var r := w.pickpocket(k)
 	check(not r.ok and k.coins == c0 and w.player.crimes.is_empty(), "picking a child's pocket is refused: %s" % r.text)
+
+
+## Every asset pack in the project and every source of imported art is credited (owner rule).
+func test_credits() -> void:
+	var c: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/credits.json"))
+	var credited := {}
+	for p in c.packs:
+		check(str(p.creator) != "" and str(p.packs) != "", "a credit names its creator and packs: %s" % p.packs)
+		for src in p.sources:
+			credited[str(src)] = true
+	for src in c.not_assets:
+		credited[str(src)] = true
+	var prov = JSON.parse_string(FileAccess.get_file_as_string("res://assets/PROVENANCE.json"))
+	var holder = prov.get("files", prov) if prov is Dictionary else prov
+	var entries: Array = holder if holder is Array else (holder as Dictionary).values()
+	var missing := {}
+	for f in entries:
+		var src := str(f.get("source_zip", f.get("zip", f.get("source", ""))))
+		if src != "" and not credited.has(src):
+			missing[src] = true
+	var root := ProjectSettings.globalize_path("res://").path_join("..")
+	for name in DirAccess.get_files_at(root):
+		if name.ends_with(".zip") or name.ends_with(".unitypackage"):
+			if not credited.has(name):
+				missing[name] = true
+	for name in DirAccess.get_directories_at(root):
+		if name in ["16x16 Assorted RPG Icons (partial)", "Flat Game UI Icon Pack"] and not credited.has(name):
+			missing[name] = true
+	check(missing.is_empty(), "every asset pack and imported-art source is credited %s" % [missing.keys()])

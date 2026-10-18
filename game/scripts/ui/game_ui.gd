@@ -797,7 +797,19 @@ func show_title(can_continue: bool) -> void:
 	if not main.settings.phone:
 		_button("Quit", func(): main.get_tree().quit())
 	_button("Controls", func(): show_controls(func(): show_title(main.can_continue())))
+	_button("Credits", show_credits)
 	_controls_list(scheme)
+
+
+## Every asset pack's creator, from game/data/credits.json (owner rule: everyone is credited).
+func show_credits() -> void:
+	var c: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/credits.json"))
+	_open("credits", "Credits", true)
+	_label("My Medieval Life, by Hot Attic Games.", 18)
+	for p in c.packs:
+		_label("%s: %s (%s)" % [p.creator if p.creator != "to be confirmed" else "Creator to be confirmed", p.packs, p.licence], 15)
+	_label(str(c.story), 15)
+	_button("Back", func(): show_title(main.can_continue()))
 
 
 ## Character creation: name, family, male or female, and a look (face and clothes) from

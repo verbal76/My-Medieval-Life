@@ -1,0 +1,32 @@
+{
+ "format": "mml-credits/1",
+ "note": "Every third-party asset pack in the project, credited on the title screen's Credits page whether or not its licence requires it (owner rule, CLAUDE.md section 3). 'sources' are the archive or folder names in the repository root (ASSET_MANIFEST.md) and in game/assets/PROVENANCE.json; run_tests checks that every one is credited. Creators come from each pack's own licence file or the asset manifest; 'to be confirmed' where neither names one.",
+ "packs": [
+  {"creator": "Shade", "packs": "Puny World (paid and free tilesets), Puny Characters, Puny Monsters, Puny Dungeon, Puny Skills, Puny Myth Creatures, 16x16 Miniworld Sprites, 16x16 Assorted RPG Icons", "licence": "Paid, free and CC0",
+   "sources": ["PUNY-WORLD-PAID_v1.zip", "PUNY_WORLD_v1.zip", "PUNY_CHARACTERS_v2.1.zip", "PUNY_CHARACTERS_v2.1_tdsm-2026.zip", "Puny-Characters.zip", "PunyMonsters.zip", "PUNY_DUNGEON_v1.zip", "PUNY_SKILLS_v1.zip", "PUNY_MYTH-CREATURES-RPGMAKER_v1.zip", "MiniWorldSprites.zip", "16x16 Assorted RPG Icons (partial)", "punyworld-dungeon-tileset.png", "Miniworld-Guide.docx"]},
+  {"creator": "octoshrimpy", "packs": "16x16 miniworld + (rainbow refresh and indoor update)", "licence": "CC BY 4.0",
+   "sources": ["miniworld +__rainbow-refresh.zip", "16x16 miniworld - octoshrimpy  -  indoor update.zip"]},
+  {"creator": "Kurt Gabriel Averilla Sotelo", "packs": "16x16 Jewelry RPG Icons, 16x16 Survival RPG Icons", "licence": "Paid",
+   "sources": ["16x16 Jewelry RPG Icons.zip", "16x16 Survival RPG Icons.zip"]},
+  {"creator": "to be confirmed", "packs": "16x16 Armour RPG Icons", "licence": "Paid",
+   "sources": ["16x16 Armour RPG Icons.zip"]},
+  {"creator": "shubibubi", "packs": "Cozy Farm (full version)", "licence": "Paid",
+   "sources": ["CozyFarm_full_version.zip"]},
+  {"creator": "SunGraphica", "packs": "Simple Flat Game Interface Kit, 600 Clean and Minimal Game Icons", "licence": "Paid",
+   "sources": ["Simple_Falt_Game_Interface_Pack.zip", "SunGraphica_Minimal_Icons_FREE.zip"]},
+  {"creator": "to be confirmed", "packs": "Flat Game UI Icon Pack", "licence": "To be confirmed",
+   "sources": ["Flat Game UI Icon Pack"]},
+  {"creator": "Kenney (kenney.nl)", "packs": "Input Prompts, Splat Pack", "licence": "CC0",
+   "sources": ["kenney_input-prompts_1.5.zip", "kenney_splatpack.zip"]},
+  {"creator": "Gustavo Vituri", "packs": "Tiny Ranch", "licence": "Free",
+   "sources": ["TinyRanch_Assets.zip"]},
+  {"creator": "YET ART STUDIO", "packs": "Living Forest: Tree Lifecycle & Chopping System (\"Trees by YET ART STUDIO\"), with CC0 sound sources by Kenney, farfadet46 and EZduzziteh", "licence": "Paid",
+   "sources": ["LivingForest_v1.3.2.unitypackage"]},
+  {"creator": "to be confirmed", "packs": "Character Customizer", "licence": "To be confirmed",
+   "sources": ["Character-Customizer.zip"]},
+  {"creator": "Hot Attic Games", "packs": "My Medieval Life icon (supplied by the owner)", "licence": "Own",
+   "sources": ["My_Medieval_Life_Icon_Pack.zip"]}
+ ],
+ "not_assets": ["ClimbUp_restore_backup.zip"],
+ "story": "World history after William Morris, The Well at the World's End (1896, public domain)."
+}

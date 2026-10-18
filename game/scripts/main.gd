@@ -209,6 +209,8 @@ func _ready() -> void:
 				ui.toast_t = 0.01
 			"opening":
 				_start(true)                     # a new game's first message (where paid work is)
+			"credits":
+				ui.show_credits()
 			"manor_offer":
 				# the reeve's day of work for the manor (the answer to "Any work for me?")
 				var reeve: NPC = world.npc(world.reeve_id)
