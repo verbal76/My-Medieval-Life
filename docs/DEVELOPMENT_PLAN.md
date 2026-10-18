@@ -29,14 +29,16 @@ On branch `claude/charming-albattani-8jjfya` (draft PR #1).
 
 ## P1. Godot prototype (current work) 🔨
 
-On branch `claude/charming-albattani-8jjfya` (draft PR #1). The owner asked for a playable prototype
+On `staging/my-medieval-life`. Build 7 (commit `6799071`) is the active testing release; issues
+found while the owner tests it are kept in `docs/release/BUILD_7_ISSUES.md`, and Build 8 waits for
+the owner's approval. The owner asked for a playable prototype
 before Gate A closed: Godot 4.7 in `game/`, Android APK first, then Windows and Linux, all three
 released together (CLAUDE.md section 5). The detailed rules are in `docs/BUILD_DECISIONS.md`; the
 owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separate lists.
 
 ### Defects (actionable bugs)
 
-- ⬜ None open that are known. Fixed this round (local commits, not yet released): plots over houses
+- ⬜ Build 7 testing reports: tracked in `docs/release/BUILD_7_ISSUES.md`. Fixed before Build 7: plots over houses
   b20-b22, roofs and canopies hiding quest markers, RB (Skills) missing from the gamepad list,
   windows cut off by rounded phone corners, villagers forgetting they had met the player, keepers
   saying "you attacked me" after an animal was killed, old saves missing the sage storyline.
