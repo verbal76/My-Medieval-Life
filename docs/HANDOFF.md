@@ -13,17 +13,18 @@ For whoever resumes the work (an agent in a new session, or the owner). The queu
 
 ## In progress
 
-1. **The resource registry**: the agent is writing `game/data/resources.json`, the `ResourceNodes` API,
-   `tools/check_resources.py` and `docs/systems/*.md`.
-   - **Next:** integrate it into staging and run every suite.
-   - **Then:** Gather mode (queue item 2), then the journal page (item 4), both built on `ResourceNodes`.
-2. **The long runs** (queue item 6): seeds 1 and 2 at 10/30/100/365 days from `f836aca`.
-   - Results go into `docs/release/LONG_RUN_SIMULATION.md`, with any new defects in the issue register.
+1. **The Resources & Gathering journal page** (queue item 4): an agent, in its own worktree.
+   - **Next:** integrate it into staging, run every suite and look at the page on a phone screen.
+2. **The long runs** (queue item 6): seeds 1 and 2 at 10/30/100/365 days, from `f836aca` (worktree `/home/user/mml-sim`).
+   - **Next:** write the results into `docs/release/LONG_RUN_SIMULATION.md` and log any new defects.
+   - Currency grows about tenfold in a year from caravan coins; this needs analysis.
 
 ## Waiting on the owner
 
-- The HUD and Android layout report (queue item 1).
 - The sustainability proposals P1–P3.
-- B7-009 (the starting treasury).
+- B7-009, the starting treasury.
 - A need-based maintenance model.
+- Whether gold seams should exist (no deposit has gold; the recipes can't be made).
+- Whether apples should have a source.
+- Whether hunting belongs in Gather mode (it is implemented and can be removed).
 - The balance review.

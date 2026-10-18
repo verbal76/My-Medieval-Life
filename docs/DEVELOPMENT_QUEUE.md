@@ -19,13 +19,14 @@ Release gate: Build 7 is the testing release. No Build 8, no replacement release
 
 | # | Task | Status | Owner / branch | Depends on | Notes |
 |---|---|---|---|---|---|
-| 1 | Responsive HUD anchoring and Android layout corrections | Blocked: no report yet | — | The owner's screenshots or description | No HUD or layout report has reached this session or the issue register; it starts as soon as one does |
-| 2 | Gather mode: a toggle, auto-approach, continuous gathering | Blocked: dependency | — | 3 (uses its `ResourceNodes` API) | Owner's flow: activate Gather, select a resource, approach and gather until depleted or interrupted, tap Gather to exit |
-| 3 | Resource Node Manifest and Resource Usage Registry from one authoritative definition, with validation | In progress | agent worktree (to be pushed as `wip/`) | — | `game/data/resources.json` → generated `docs/systems/*.md`; validator in the unit tests |
-| 4 | In-game Resources & Gathering journal page from the same definitions | Blocked: dependency | — | 3 | Includes the Gather mode instructions |
+| 1 | Responsive HUD anchoring and Android layout corrections (B7-010) | Device check | staging `633898f` | — | Status box, log and action bar anchored to the corners; camera cutouts avoided per element |
+| 2 | Gather mode, plus taps on resources (B7-011, B7-012) | Device check | staging `fabb58f` | — | Built on `ResourceNodes`; INT-068 |
+| 3 | Resource Node Manifest and Resource Usage Registry from one authoritative definition, with validation | Integrated | staging `95fc554` | — | `game/data/resources.json`, `tools/check_resources.py`, `docs/systems/*.md`; INT-067 |
+| 4 | In-game Resources & Gathering journal page from the same definitions | In progress | agent worktree (`wip/` at its first commit) | 3 | Includes the Gather mode instructions |
 | 5 | Reeve employment: real jobs, NPCs by the same rules | Integrated | lead, staging | — | INT-066; save version 8 |
 | 6 | Long-duration simulations (10/30/100/365 days) | In progress | lead (worktree pinned at `f836aca`) | 5 | Seeds 1 and 2; results go to `docs/release/LONG_RUN_SIMULATION.md` |
 | 7 | Build 7 economy corrections (B7-001 to B7-005, B7-007 stone) | Device check | staging `ae0e01f` | — | See the issue register |
+| 9 | Brown glyph icons for the HUD, gear slots, skills and journal (B7-013) | Device check | staging `49f5cb9` | — | — |
 | 8 | Resource depletion and wildlife sustainability | Blocked: owner's choice among the proposals | — | Owner decision | `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` P1–P3; B7-009 options |
 
 ## Waiting on the owner (decisions, not work)
