@@ -40,8 +40,10 @@ What exists, all on `ccr-cb458cd1-w4dh5c` only (head `245307499a33725cd21f51116d
 
 Blob `e11f8c576652b82780967a02ee4b4acd12e8a3c8` (1536x1024 PNG, 2,838,266 bytes; owner-supplied `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; several repos' CLAUDE.md call it "canonical"). Same bytes in:
 
+- Axolotl: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Climb-Up: `assets/branding/studio_splash.png`, `branding/master/studio_splash_e3d9bb56.png`
 - Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 
 ## Per-repository key art
@@ -143,3 +145,41 @@ App icons, logos, splash screens, branding and large images (512 px or more). Fu
 | `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `ccr-6330e20f-dm7zhm` | [view](https://github.com/verbal76/Game-Designer/blob/788d4ec4d729503843ad82a0728a56f771c5aba7/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
 | `app/src/main/res/drawable-nodpi/hot_attic_logo.webp` | 1280x853 | `ccr-6330e20f-dm7zhm` | [view](https://github.com/verbal76/Game-Designer/blob/788d4ec4d729503843ad82a0728a56f771c5aba7/app/src/main/res/drawable-nodpi/hot_attic_logo.webp) |
 | `app/src/main/res/drawable-nodpi/splash_icon_raster.png` | 1152x1152 | `ccr-6330e20f-dm7zhm` | [view](https://github.com/verbal76/Game-Designer/blob/788d4ec4d729503843ad82a0728a56f771c5aba7/app/src/main/res/drawable-nodpi/splash_icon_raster.png) |
+
+### Backrooms-Survivor
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `docs/android_ui_before_after/p01_title.jpg` | 2566x614 | `dev` | [view](https://github.com/verbal76/Backrooms-Survivor/blob/d71eacbf9507508f29f73b35b53062d699a52623/docs/android_ui_before_after/p01_title.jpg) |
+| `godot/assets/branding/icon_192.png` | 192x192 | `dev` | [view](https://github.com/verbal76/Backrooms-Survivor/blob/d71eacbf9507508f29f73b35b53062d699a52623/godot/assets/branding/icon_192.png) |
+| `godot/assets/branding/icon_512.png` | 512x512 | `dev` | [view](https://github.com/verbal76/Backrooms-Survivor/blob/d71eacbf9507508f29f73b35b53062d699a52623/godot/assets/branding/icon_512.png) |
+| `godot/assets/branding/icon_bg_432.png` | 432x432 | `dev` | [view](https://github.com/verbal76/Backrooms-Survivor/blob/d71eacbf9507508f29f73b35b53062d699a52623/godot/assets/branding/icon_bg_432.png) |
+| `godot/assets/branding/icon_fg_432.png` | 432x432 | `dev` | [view](https://github.com/verbal76/Backrooms-Survivor/blob/d71eacbf9507508f29f73b35b53062d699a52623/godot/assets/branding/icon_fg_432.png) |
+| `godot/assets/branding/studio_logo.png` | 1280x833 | `dev` | [view](https://github.com/verbal76/Backrooms-Survivor/blob/d71eacbf9507508f29f73b35b53062d699a52623/godot/assets/branding/studio_logo.png) |
+
+### Axolotl
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `assets/icon/icon_1024.png` | 1024x1024 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/assets/icon/icon_1024.png) |
+| `assets/icon/icon_192.png` | 192x192 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/assets/icon/icon_192.png) |
+| `assets/icon/icon_adaptive_background_432.png` | 432x432 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/assets/icon/icon_adaptive_background_432.png) |
+| `assets/icon/icon_adaptive_foreground_432.png` | 432x432 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/assets/icon/icon_adaptive_foreground_432.png) |
+| `assets/icon/icon_adaptive_monochrome_432.png` | 432x432 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/assets/icon/icon_adaptive_monochrome_432.png) |
+| `assets/icon/icon_source.png` | 1254x1254 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/assets/icon/icon_source.png) |
+| `assets/icon/splash.png` | 320x320 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/assets/icon/splash.png) |
+| `docs/screenshots/all_clear_restored.jpg` | 640x360 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/docs/screenshots/all_clear_restored.jpg) |
+| `docs/screenshots/title_mote.jpg` | 960x540 | `claude/mote-release-source` | [view](https://github.com/verbal76/Axolotl/blob/480e6a029a039750d9a59a5e08c7f8041917a1f7/docs/screenshots/title_mote.jpg) |
+
+### Ocean-spore
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `assets/branding/hot-attic-logo.png` | 1024x667 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/branding/hot-attic-logo.png) |
+| `assets/branding/splash-blank.png` | 288x288 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/branding/splash-blank.png) |
+| `assets/icons/adaptive-background.png` | 1024x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/icons/adaptive-background.png) |
+| `assets/icons/adaptive-foreground.png` | 1024x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/icons/adaptive-foreground.png) |
+| `assets/icons/adaptive-monochrome.png` | 1024x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/icons/adaptive-monochrome.png) |
+| `assets/icons/icon.png` | 1024x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/icons/icon.png) |

@@ -117,3 +117,111 @@ Releases for My-Medieval-Life, voiceforge, spiroglyphics, personal-assistant- an
 | `model-catalog` | `dbe1d118b6f6ca70ab13118dd97037d4bc370993` | 2026-10-05 |
 | `ota-dev`, `v2` | `5789a5bd8a15e175afa26dbe6abba243925b37c6` | 2026-10-05 |
 | `v1` | `2b53d80a1e8a5f08eaa3a7c77cd09b30b37c55ba` | 2026-10-04 |
+
+## Fix-Tremors
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `game` | `5ae585bf69d063b1a69c91a10fe088467651ffad` | 2026-10-17 |
+
+## Backrooms-Survivor
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `build-14` | `759988f8994dd2ecbce6c0e9b32ec594382872ca` | 2026-10-13 |
+| `dev` | `e33d7d94dda3daa20fae477f1e9762d770e80f16` | 2026-10-12 |
+
+## Axolotl
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `build-138` | `b811ce5d825f82cbba802d8068931f05f1ca481e` | 2026-10-14 |
+| `apk-v0.1.0-b132` | `a3c989d8df83201b5cd7f08dbb11146332973642` | 2026-10-12 |
+| `ota-dev-000111` | `1ed6d9fda3cdcda515358d9548d32573a324f964` | 2026-10-12 |
+| `ota-dev-000110` | `606cf0ffad138a16980af19053d3cea4ba3441b6` | 2026-10-11 |
+| `apk-v0.1.0-b128`, `ota-dev-000109` | `81af996f334b4864107306d5e1074e65a9a40a89` | 2026-10-09 |
+| `ota-dev-000108` | `e244b1b50db842868193ac6a4ff7e5c26be925b2` | 2026-10-08 |
+| `ota-dev-000107` | `cb4f3b07fd0efb09138e40afa3a6925eceb3bb78` | 2026-10-08 |
+| `ota-dev-000106` | `4a241ba113011fb274b566b2c6226a2d7398d1c7` | 2026-10-08 |
+| `ota-dev-000105` | `7a2744e57684acb92528c81ed760053193d08e6d` | 2026-10-07 |
+| `ota-dev-000104` | `23d90f44d8cae10b9f87f847b115d38c314727c4` | 2026-10-07 |
+| `ota-dev-000103` | `5850ca7e7e1646dd6ffb73deb3f9f21aa7bbf4ae` | 2026-10-07 |
+| `ota-dev-000102` | `1f6c9a5969bf8b9eabd045dd12eebc6190e1127a` | 2026-10-06 |
+| `ota-dev-000100` | `e39e2590050493e3437fcb734c922afa30ac839a` | 2026-10-06 |
+| `ota-dev-000101` | `73096e279db7fef0ef767792920f04c086dbfab8` | 2026-10-06 |
+| `ota-dev-000099` | `e4ba778948a525064e5f91ce18ddccaba7a31a1d` | 2026-10-06 |
+| `ota-dev-000098` | `014f8760a8bccd1f86b9d9056d8c43c02f0b34f3` | 2026-10-06 |
+| `ota-dev-000097` | `6dbd7911edecabef5413830519fdb2c607368e9f` | 2026-10-05 |
+| `ota-dev-000096` | `4c6cded5a0e55e5887f7bb21ce62505c633f0007` | 2026-10-05 |
+| `ota-dev-000095` | `6332da848901f7b3003b734d5981ffd726a06162` | 2026-10-04 |
+| `ota-dev-000094` | `197db955a564bd2c722e2d2ece36ff0b4bf2572c` | 2026-10-04 |
+| `ota-dev-000093` | `8e3abfda9683f937a6c43061687b1f0c727bf444` | 2026-10-04 |
+| `ota-dev-000092` | `dff29b1a903c69572596d6de3261b75d29a63dcc` | 2026-10-04 |
+| `ota-dev-000091` | `a1a53c2a524cb62cafcfdadd2cedfe6ddc7376e6` | 2026-10-03 |
+| `ota-dev-000090` | `1c6f4e627f505402eb64a120d4002c651dcfc645` | 2026-10-03 |
+| `ota-dev-000089` | `07e263b47358584736cc045933d30fbc5666b081` | 2026-10-03 |
+| `ota-dev-000088` | `f490e3b209ed821e6986d774a0669ef3ad84ba4a` | 2026-10-03 |
+| `ota-dev-000087` | `abdd11626ab517129a791c1ad17d3478c08385c9` | 2026-10-03 |
+| `ota-dev-000086` | `f52cbb7c648633aaf09cd385edfffdd52f249e36` | 2026-10-03 |
+| `ota-dev-000085` | `d485943b4b3801ca32d70e40a011bfa75e9a4ea3` | 2026-10-03 |
+| `ota-dev-000084` | `7d7dffdfda3be133fd06a1b4b6bb3114d975a0ae` | 2026-10-02 |
+| `ota-dev-000082` | `4f56a581b347362cdcd66e2a01245c9b39ac57a7` | 2026-10-02 |
+| `ota-dev-000080` | `203aa7176af582b6c54a3abfd02a92ab5470bfdb` | 2026-10-02 |
+| `ota-dev-000079` | `1dafed81bbe475289dcc668c7003cf4996f94d64` | 2026-10-02 |
+| `ota-dev-000078` | `b2ed97058db798dd55332a353e0ff18cdfeb1215` | 2026-10-02 |
+| `ota-dev-000074` | `45fc16a1ea111550101ef45186ff69bcc4b53c2e` | 2026-10-01 |
+| `ota-dev-000072` | `f034ff5e6aace5fae9c4012cb381d069e337ea4d` | 2026-10-01 |
+| `ota-dev-000071` | `384da2ec17a8260375a5af485d98490657974004` | 2026-10-01 |
+| `ota-dev-000070` | `a7b9a950b029c111ae28926ed89702a65cdcff05` | 2026-10-01 |
+| `ota-dev-000069` | `77a9ca139e3cc14db279eac3cdd3d766ea980654` | 2026-10-01 |
+| `ota-dev-000065` | `7f49d5393707ac68019813ab4ee74c512ed98924` | 2026-10-01 |
+| `ota-dev-000064` | `b7a84d85cebc4a9bbe6d32af6064c34b70d43f6e` | 2026-10-01 |
+| `ota-dev-000061` | `3b3cd922b97ee5fedcb8805962b4c741533c5a5c` | 2026-10-01 |
+| `ota-dev-000060` | `4c9fc8f44c4c1ee091d21bec0ac464e9ae4aa975` | 2026-10-01 |
+| `ota-dev-000059` | `0442f6bf35679c0b2cf9ed38647f43965992ee4d` | 2026-10-01 |
+| `ota-dev-000058` | `58806d2c799d721e605a332d1fefceb2b9caaafb` | 2026-10-01 |
+| `ota-dev-000056` | `817dd2d602b0de58415a54b7f3b9c90e9ee2caf8` | 2026-10-01 |
+| `ota-dev-000052` | `d41f3a3553ccd4b9cdcddfb0df1b3d60ef0ac4af` | 2026-10-01 |
+| `ota-dev-000050` | `77446927c24ae51fc3d7ad77f3c2e6994cb1802f` | 2026-10-01 |
+| `ota-dev-000044` | `7e9ef0f21efa69fd63619501356ccf90fcef959d` | 2026-10-01 |
+| `ota-dev-000041` | `567e40d3b5bef3ca32330a24b2ba549fb073f478` | 2026-09-30 |
+| `ota-dev-000040` | `3cadf47f937056da1fcf5a5d47f74b3d94747f84` | 2026-09-30 |
+| `ota-dev-000039` | `e8f99faacf9a5bbca6df8218ae166fbea27a6c8e` | 2026-09-30 |
+| `ota-dev-000037` | `7aa6b06bf58dad7d00a84fe551b3bbdb06ffc020` | 2026-09-30 |
+| `ota-dev-000035` | `7fa03d7f3a44b7a1bc9c9350a01a0a9317f3d49b` | 2026-09-30 |
+| `ota-dev-000034` | `05c11a8bbe013a6d96ddfa0276f0da69e56714bf` | 2026-09-30 |
+| `ota-dev-000033` | `fe5bbc64e1e1ed9182af944802a5eadb01b42013` | 2026-09-30 |
+| `ota-dev-000032` | `92cb9882d6f455eb65b6ce2f8f39ec0551d3828e` | 2026-09-30 |
+| `ota-dev-000031` | `c2f31263262cfbe94d14ccbb007a1c1d4b4d521d` | 2026-09-30 |
+| `ota-dev-000030` | `9547061d3675fdbda6406ef13cbc3ca444cfca32` | 2026-09-29 |
+| `ota-dev-000029` | `1ad34ea3c1adfdb5b0dda7623c3b8d131f6d732a` | 2026-09-29 |
+| `ota-dev-000028` | `bf46566af05b4ee60387c9afd5cd7f2f239960d4` | 2026-09-29 |
+| `ota-dev-000025` | `8c92e5b0baae9ab72058b467f4fdea5a4ca47118` | 2026-09-28 |
+| `ota-dev-000024` | `6e6f71e368d92379a331c827eb772155ab470224` | 2026-09-28 |
+| `ota-dev-000023` | `9d4fd24e6418066abce32d95bb3cccba4f0c1543` | 2026-09-28 |
+| `ota-dev-000022` | `fe3e0fdaba68fe275f4ed7b19e63cac5a5b76362` | 2026-09-28 |
+| `ota-dev-000021` | `9ed29db8209882d09133cba4c9b2dc27fee1ba1d` | 2026-09-28 |
+| `ota-dev-000020` | `2206aea80b5da086ef44f54970e62603c4d56876` | 2026-09-28 |
+| `ota-dev-000019` | `4461b844c8b2cd285976bdeb4954c4735f0f24b6` | 2026-09-28 |
+| `ota-dev-000018` | `27d6d44eadbaa99fd730666c37b9bc58f60c33b8` | 2026-09-28 |
+| `ota-dev-000017` | `618dcf32195fd192c2fc5a711e2fc111aaebc692` | 2026-09-28 |
+| `ota-dev-000016` | `346a0bc2d63a6d0dd99de9fb5af3daa7df092af2` | 2026-09-28 |
+| `ota-dev-000015` | `637014dcd639bbd071d0b9be16efc2654eb794e2` | 2026-09-28 |
+| `ota-dev-000014` | `104605727ab2bc48f6b0b6e2d56a0fd44127c5be` | 2026-09-27 |
+| `ota-dev-000013` | `a72ae3b0514ac8bff14a8cc2e507bd3af23831dd` | 2026-09-27 |
+| `ota-dev-000012` | `227d0abab6cadd8cd90536f92fc8dbddf4b29fc3` | 2026-09-27 |
+| `ota-dev-000011` | `4aa86a397a8e9ebfadeea75d050a473ca46ebedb` | 2026-09-27 |
+| `ota-dev-000010` | `854ea84142e4a905e62ad2da6c1e2daf10b24cde` | 2026-09-27 |
+| `ota-dev-000009` | `31ae69d4ea4788739d6836977750183611eb98a5` | 2026-09-27 |
+| `ota-dev-000008` | `d235cb2be4c774e0373311edf680b3ae845a9f88` | 2026-09-27 |
+| `ota-channel-dev` | `f81c6ae28b9522f0bfe462feb0178a38a30235b5` | 2026-09-27 |
+
+## Ocean-spore
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `v41` | `a80093aaecac83166d1e89f9972a7b437f94f1a8` | 2026-10-05 |
+| `v40` | `e2712522338cc1600d52be9bc78d5e9a293eeae3` | 2026-10-04 |
+| `build-18`, `build-19`, `build-20`, `build-21`, `build-22`, `build-23`, `build-24`, `build-25`, `build-26`, `build-27`, `build-28`, `build-30`, `build-31`, `build-32`, `build-33`, `build-34`, `build-35`, `build-37`, `build-38`, `build-39` | `f731b62e713292501c3ee247d05383b6e1368912` | 2026-05-12 |
+| `build-11`, `build-12`, `build-15`, `build-16` | `9f08a80972d60004effaada096e3cce367a5d1d7` | 2026-05-11 |
+| `build-5`, `build-6`, `build-7` | `c0bc07a0ca70ce85e66ac2bdf5d7596305c1d7b7` | 2026-05-10 |

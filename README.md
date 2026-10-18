@@ -28,5 +28,9 @@ All scans on 2026-10-18 (UTC). Per-repo timestamps are in each `repos/*.md` and 
 | [Tartaria-RPG](repos/Tartaria-RPG.md) | Tartaria Realms | public | `main` @ `487de55121cd` | 2026-10-17 | Expo / React Native, TypeScript | active | `golem-line` |
 | [Game-Designer](repos/Game-Designer.md) | Game Designer | public | `main` @ `b28ff434aaa0` | 2026-10-17 | Kotlin / Gradle (Android) | active | unresolved |
 | [808-Beats](repos/808-Beats.md) | (not recorded) | private | not read | | | not scanned (owner rule) | |
+| [Fix-Tremors](repos/Fix-Tremors.md) | Fix-Tremors | not stated (read through the session git proxy; may be private) | `main` @ `5ae585bf69d0` | 2026-10-17 | Windows batch / config patch for an Unreal Engine 4.23 game | active | unresolved |
+| [Backrooms-Survivor](repos/Backrooms-Survivor.md) | Backrooms Survivor | not stated (read through the session git proxy; may be private) | `main` @ `e33d7d94dda3` | 2026-10-15 | Godot 4.3 (godot/); legacy LÖVE2D Lua reference in the root | active | `dev` |
+| [Axolotl](repos/Axolotl.md) | Mote | not stated (read through the session git proxy; may be private) | `main` @ `f3779f7c7f6e` | 2026-10-14 | Godot (project.godot), Android + iPhone | active | unresolved |
+| [Ocean-spore](repos/Ocean-spore.md) | Ocean Spore | not stated (read through the session git proxy; may be private) | `main` @ `4e1c3774237c` | 2026-10-13 | Expo SDK 54 / React Native 0.81, three.js | active | unresolved |
 
-Not yet scanned in this registry version: Fix-Tremors, Backrooms-Survivor, Axolotl, Ocean-spore, Purgatory-Dungeon, Ragdoll-Rally, Endless-Escaspe, Idle-game, My-Personal-Crossow0rd, Zombie-squisher, voiceforge, LLM-Trainer, Cfm-calculator, spiroglyphics, personal-assistant-, Manual-J, web_auditor, HotAtticGames.github.io
+Not yet scanned in this registry version: Purgatory-Dungeon, Ragdoll-Rally, Endless-Escaspe, Idle-game, My-Personal-Crossow0rd, Zombie-squisher, voiceforge, LLM-Trainer, Cfm-calculator, spiroglyphics, personal-assistant-, Manual-J, web_auditor, HotAtticGames.github.io
