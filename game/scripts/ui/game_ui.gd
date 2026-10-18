@@ -480,6 +480,8 @@ func _open(kind: String, title: String, pause := true) -> void:
 	for c in panel_body.get_children():
 		panel_body.remove_child(c)
 		c.queue_free()
+	panel_body.size_flags_vertical = Control.SIZE_FILL
+	panel.offset_top = 8
 	panel.visible = true
 	if pause:
 		main.paused = true
@@ -827,29 +829,82 @@ func show_death() -> void:
 
 
 # ---------------------------------------------------------------- people ---------------------
+## A conversation: the villager's portrait, who they are, and what they say (Dialogue builds it from
+## the simulation), with the choices under it. A question replaces what they say with the answer.
 func show_talk(n: NPC) -> void:
+	var said := Dialogue.opening(main.world, n)
+	Dialogue.meet(main.world, n)
+	_talk_view(n, said)
+
+
+func _talk_view(n: NPC, said: String) -> void:
 	var w: World = main.world
-	_open("talk", "%s %s" % [n.name, n.family] if n.role != "bandit" else n.name)
-	var role := n.job if n.job != "" else n.role
-	_label("%s. Right now: %s." % [role.capitalize(), n.doing])
-	if n.household >= 0:
-		var hh: Dictionary = w.households[n.household]
-		_label("Household: the %s family, %d people, living at %s." % [hh.family, hh.members.size(), w.buildings[hh.home].get("name", "a house")], 15)
-	_label("Hunger %d/100 · coins %d · has earned %d and spent %d." % [int(n.hunger), n.coins, n.earned, n.spent], 15)
-	if not n.memory.is_empty():
-		_label("Remembers: " + "; ".join(n.memory), 15)
+	_open("talk", Dialogue.full_name(n))
+	var tall: float = main.settings.layout_height()
+	panel_body.size_flags_vertical = Control.SIZE_EXPAND_FILL       # the talk fills the window; choices at the foot
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 16)
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel_body.add_child(row)
+	var frame := PanelContainer.new()
+	frame.add_theme_stylebox_override("panel", _style(SLATE, PALE))
+	frame.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(frame)
+	var face := TextureRect.new()
+	face.texture = _look_frame(n.sprite)
+	face.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var side := clampf(roundf(tall * 0.32 / 16.0) * 16.0, 128.0, 224.0)      # whole multiples of the 16 px figure
+	face.custom_minimum_size = Vector2(side, side)
+	frame.add_child(face)
+	var right := VBoxContainer.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.add_theme_constant_override("separation", 10)
+	row.add_child(right)
+	var who := Label.new()
+	who.text = Dialogue.describe(w, n)
+	who.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	who.add_theme_font_size_override("font_size", 20)
+	who.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+	right.add_child(who)
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = PARCHMENT
+	paper.border_color = Color8(120, 84, 48)
+	paper.set_border_width_all(3)
+	paper.set_corner_radius_all(6)
+	paper.set_content_margin_all(14)
+	var speech_box := PanelContainer.new()
+	speech_box.add_theme_stylebox_override("panel", paper)
+	speech_box.custom_minimum_size = Vector2(0, side - 40.0)
+	speech_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right.add_child(speech_box)
+	var speech := Label.new()
+	speech.name = "Speech"
+	speech.text = "“%s”" % said
+	speech.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	speech.add_theme_font_size_override("font_size", 22)
+	speech.add_theme_color_override("font_color", INK)
+	speech.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	speech_box.add_child(speech)
+	# the choices: what the old talk window offered, then questions, then goodbye
+	var choices := GridContainer.new()
+	choices.columns = 3
+	choices.add_theme_constant_override("h_separation", 8)
+	choices.add_theme_constant_override("v_separation", 8)
+	panel_body.add_child(choices)
 	if n.role == "bandit":
-		_label("\"Your purse or your life.\"")
+		_talk_choice(choices, "Goodbye", hide_all)
+		_fit_talk(side, choices)
 		return
 	var sale: Array = w.brain.for_sale(n)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	if not sale.is_empty() or not buys.is_empty():
-		_button("Trade", func(): show_trade(n))
+		_talk_choice(choices, "Trade", func(): show_trade(n))
 	if n.id == w.sage_id:
 		var price := int(GameData.b("fireball_price"))
 		var known: bool = w.player.spells.get("fireball", false)
-		_label("\"Fire answers those who learn its rules. I can teach you to call it.\"")
-		_button("Learn Fireball (%d coins)" % price if not known else "You know Fireball", func():
+		_talk_choice(choices, "Learn Fireball (%d coins)" % price if not known else "You know Fireball", func():
 			if w.player.coins >= price:
 				w.player.coins -= price
 				n.coins += price
@@ -859,8 +914,25 @@ func show_talk(n: NPC) -> void:
 				hide_all()
 			else:
 				message("You need %d coins." % price), not known)
-	if n.id == w.reeve_id:
-		_label("\"Land by the east houses is for sale. Find the plots past the last houses and buy one there; the coins go to the manor.\"")
+	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))
+	_talk_choice(choices, "How are things at home?", func(): _talk_view(n, Dialogue.home(w, n)))
+	_talk_choice(choices, "Any news?", func(): _talk_view(n, Dialogue.news(w, n)))
+	_talk_choice(choices, "Goodbye", hide_all)
+	_fit_talk(side, choices)
+
+
+## The talk sits at the foot of the screen, only as tall as it needs, so the village shows above
+## it (on a phone it needs nearly the whole height).
+func _fit_talk(side: float, choices: GridContainer) -> void:
+	var rows := ceili(choices.get_child_count() / float(choices.columns))
+	var needed := 76.0 + side + 34.0 + rows * 56.0 + 16.0
+	panel.offset_top = maxf(8.0, root.get_rect().size.y - 8.0 - needed)
+
+
+func _talk_choice(parent: Control, text: String, cb: Callable, enabled := true) -> void:
+	var b := _button(text, cb, enabled, parent)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 
 func show_trade(n: NPC) -> void:

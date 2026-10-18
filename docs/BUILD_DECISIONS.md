@@ -155,6 +155,17 @@ Result, 3 seeds over 100 days:
 | The target marker is the iron sword item icon (16 px pixel art) turned to point down, bobbing above the target | Matches the pixel art; the owner's flat UI pack is not imported yet |
 | Blood: 8 of the 36 Kenney splats, shrunk to 16 px with a hard edge, dark red with a darker rim, at a random quarter turn; looks only (not saved, not the world's random numbers). Only violent deaths bleed | The owner's rule, kept out of the deterministic simulation |
 
+## Talking to villagers (owner direction; the details are agent proposals)
+
+| Decision | Why |
+|---|---|
+| The talk window is a conversation: the villager's portrait (their sprite's first frame, enlarged), "Name Family, a cook of the Reed family", and what they say in quotes on parchment, then choices: Trade and Learn Fireball where they were offered before, "What do you do?", "How are things at home?", "Any news?" and Goodbye. A question replaces what they say with the answer | The owner could not understand the old window's raw numbers ("Hunger 83/100 · coins 0 ...") |
+| Everything said comes from the simulation: job (what `npc_brain.gd` has that job do), `doing`, hunger below the eating threshold, the household's members, food days, sustainability streak, relief days and firewood, memories of deaths, thefts and the player, and the latest village-record lines that name their family. No numbers are shown. Children and elders have their own wording | No invented facts; readable on a phone |
+| A busy villager (walking somewhere, working with their hands, or fighting) does not stop: a comic-style bubble (dark ink on parchment, a tail pointing at them) shows a short line over their head for 2.5 s, then fades | The owner: villagers who walk away should still acknowledge the player, "like a comic book" |
+| Strangers say "Who are you?"-style lines. Opening a conversation records the memory "met <player name>" (saved with the villager); after that they greet the player by name and their busy lines are friendlier. A villager who was attacked by the player, or saw them steal, is cold ("Stay away from me.", "I saw you take 3 wheat from Nicholas Holt's field.") | The owner: canned lines "until I get some notoriety"; for now notoriety is only whether they have met you (no reputation numbers) |
+| Wording is chosen by the villager's id and the day, never by a random number generator | Same lines on every machine; the world's RNG stays untouched |
+| An heir is a different person: villagers have not met them | Memories name the player who met them |
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals
@@ -165,3 +176,6 @@ Result, 3 seeds over 100 days:
 - The player cannot own livestock, harvest fields, or hire helpers to deliver building materials.
 - No eggs, milk or wool (the owner asked only for meat).
 - No aging, no births of people, no audio yet (the volume settings are ready for it).
+- Villagers keep only their last 8 memories, so a busy village can push out "met <player>" and they
+  treat the player as a stranger again. A keeper whose animal the player killed remembers it as
+  "attacked by", so they say the player attacked them.

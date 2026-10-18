@@ -47,6 +47,8 @@ var scheme := "kbm"            # the controls in use, from the last input: touch
 var blood_layer: Node2D        # blood where someone was slain, under the actors
 var dying := {}                # npc id -> seconds left of the death flicker
 var fading: Array = []         # [sprite, seconds left]: killed animals flickering out
+var bubble_layer: CanvasLayer  # speech bubbles over villagers' heads, in screen space
+var bubbles := {}              # npc id -> SpeechBubble (at most one each)
 const FLICKER := 1.2           # seconds a body flickers before it disappears
 const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 
@@ -122,6 +124,14 @@ func _ready() -> void:
 				ui.message("You take 3 coins and 1 items.")
 			"talk":
 				ui.show_talk(world.npcs[2])
+			"talk_home":
+				ui.show_talk(world.npcs[2])
+				ui._talk_view(world.npcs[2], Dialogue.home(world, world.npcs[2]))
+			"bubble":
+				for n: NPC in world.near(world.player.pos, 8.0):
+					if n.role != "bandit" and not n.hidden:
+						say(n, Dialogue.brush_off(world, n))
+						break
 			"trade":
 				for n: NPC in world.npcs:
 					if n.job == "smith":
@@ -231,6 +241,7 @@ func _clear_world() -> void:
 			c.queue_free()
 	sprites.clear()
 	animal_sprites.clear()
+	bubbles.clear()
 	loot_nodes.clear()
 	projectiles.clear()
 
@@ -254,6 +265,9 @@ func _build_scene() -> void:
 	target_marker.visible = false
 	above.add_child(target_marker)
 	view.build(map, above)
+	bubble_layer = CanvasLayer.new()
+	bubble_layer.layer = 5               # over the map, under the interface (layer 20)
+	add_child(bubble_layer)
 	for n: NPC in world.npcs:
 		var s := ActorSprite.new()
 		s.setup(n.sprite)
@@ -379,6 +393,42 @@ func _sync_sprites() -> void:
 		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
 	_sync_loot()
+	_sync_bubbles()
+
+
+## Bubbles follow their speaker, fade out, and go when the time is up or the speaker is gone.
+func _sync_bubbles() -> void:
+	var xf := get_canvas_transform()
+	for id in bubbles.keys():
+		var b: SpeechBubble = bubbles[id]
+		var n := world.npc(id)
+		if not b.tick(get_process_delta_time()) or n == null or not n.alive or n.hidden:
+			b.queue_free()
+			bubbles.erase(id)
+			continue
+		b.point_at(xf * (n.pos * T + Vector2(0, -30)))
+
+
+## A villager calls out a line in a bubble over their head.
+func say(n: NPC, text: String) -> void:
+	var b: SpeechBubble = bubbles.get(n.id)
+	if b:
+		b.say(text)
+		return
+	b = SpeechBubble.new()
+	b.setup(n.id, text, 20)
+	bubble_layer.add_child(b)
+	bubbles[n.id] = b
+	b.point_at(get_canvas_transform() * (n.pos * T + Vector2(0, -30)))
+
+
+## The player speaks to a villager: someone busy (walking somewhere, working, fighting) calls out a
+## line and carries on; anyone else stops for a conversation.
+func approach(n: NPC) -> void:
+	if n.role != "bandit" and Dialogue.busy(n):
+		say(n, Dialogue.brush_off(world, n))
+	else:
+		ui.show_talk(n)
 
 
 func _sync_animals() -> void:
@@ -534,7 +584,7 @@ func _talk_step() -> void:
 	player_sprite.face(d)
 	var who := talk_to
 	talk_to = null
-	ui.show_talk(who)
+	approach(who)
 
 
 func _try_move(step: Vector2) -> void:
@@ -634,7 +684,7 @@ func interact() -> void:
 	var p := world.player
 	match target.kind:
 		"npc":
-			ui.show_talk(target.npc)
+			approach(target.npc)
 		"loot":
 			var l: Dictionary = world.loot[target.i]
 			var taken: int = l.inv.total()
