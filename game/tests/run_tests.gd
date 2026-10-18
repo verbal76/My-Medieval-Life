@@ -31,6 +31,7 @@ func _init() -> void:
 	test_tree_canopy()
 	test_trades_and_works()
 	test_quests()
+	test_building_site()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -834,6 +835,39 @@ func _wheat_held(w: World) -> int:
 	for l in w.loot:
 		n += l.inv.count("wheat")
 	return n
+
+
+func test_building_site() -> void:
+	var w := new_world()
+	var p := w.player
+	var pl: Dictionary = w.plots[0]
+	p.coins += 100
+	w.buy_plot(pl)
+	w.start_site(pl)
+	check(w.site_progress(pl) == 0.0, "a new site is 0% done")
+	p.inv.add("plank", 30)
+	p.inv.add("stone", 5)
+	w.deliver(pl, p.inv)
+	check(absf(w.site_progress(pl) - 35.0 / 60.0) < 0.001, "the progress bar counts delivered loads (%.2f)" % w.site_progress(pl))
+	var coins0 := w.total_coins()
+	var back := w.cancel_site(pl, p.inv)
+	check(back == {"plank": 30, "stone": 5} and p.inv.count("plank") == 30 and p.inv.count("stone") == 5, "giving up a site returns every delivered load")
+	check(pl.site.is_empty() and pl.owner == "player" and w.total_coins() == coins0, "the frame comes down; the plot stays the player's; no coin changes")
+	# a full pack: what does not fit is left in a bundle at the site
+	w.start_site(pl)
+	w.deliver(pl, p.inv)
+	p.inv.max_stacks = p.inv.items.size()
+	p.inv.add("wheat", 1)                     # fills nothing new: the pack has no free slot for planks
+	var loot0 := w.loot.size()
+	w.cancel_site(pl, p.inv)
+	var bundle: Dictionary = w.loot.back() if w.loot.size() > loot0 else {}
+	check(not bundle.is_empty() and int(bundle.inv.count("plank")) + p.inv.count("plank") == 30 and int(bundle.inv.count("stone")) + p.inv.count("stone") == 5, "with no room in the pack, the rest waits in a bundle at the site")
+	p.inv.max_stacks = 0
+	# a site from a save made before sites kept their cost still shows its progress and refunds
+	w.start_site(pl)
+	pl.site.erase("cost")
+	pl.site.need = {"plank": 10, "stone": 20, "log": 10}
+	check(absf(w.site_progress(pl) - 20.0 / 60.0) < 0.001 and w.site_delivered(pl) == {"plank": 20}, "older sites assume the house cost")
 
 
 func test_simulation(days: int) -> void:

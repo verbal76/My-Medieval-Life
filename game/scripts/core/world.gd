@@ -729,7 +729,8 @@ func plot(id: String) -> Dictionary:
 
 
 func start_site(p: Dictionary) -> void:
-	p.site = {"need": (GameData.b("house_cost") as Dictionary).duplicate(), "done": false}
+	var cost: Dictionary = (GameData.b("house_cost") as Dictionary).duplicate()
+	p.site = {"cost": cost, "need": cost.duplicate(), "done": false}
 	var frame: int = map.data.tiles.frame
 	tile_changed.emit(Vector2i(int(p.x) + 4, int(p.y) + 8), "below", frame)
 	note("A building site is marked out on %s." % p.id)
@@ -760,6 +761,54 @@ func deliver(p: Dictionary, inv: Inventory) -> bool:
 		note("The %s is finished." % b.name)
 		return true
 	return false
+
+
+## What a site has had delivered so far, item -> count (sites from older saves have no "cost":
+## the house cost is assumed).
+func site_delivered(p: Dictionary) -> Dictionary:
+	var cost: Dictionary = p.site.get("cost", GameData.b("house_cost"))
+	var out := {}
+	for id in cost:
+		var n := int(cost[id]) - int(p.site.need.get(id, 0))
+		if n > 0:
+			out[id] = n
+	return out
+
+
+## How far a site is, 0..1, by loads delivered out of all it needs.
+func site_progress(p: Dictionary) -> float:
+	if p.site.is_empty():
+		return 0.0
+	if p.site.done:
+		return 1.0
+	var cost: Dictionary = p.site.get("cost", GameData.b("house_cost"))
+	var total := 0
+	for id in cost:
+		total += int(cost[id])
+	var given := 0
+	var got := site_delivered(p)
+	for id in got:
+		given += int(got[id])
+	return float(given) / float(maxi(total, 1))
+
+
+## Give up an unfinished site (owner rule: cancelling returns everything). Every delivered load goes
+## back into `inv`; what it has no room for is left in a bundle at the plot's door. The frame comes
+## down and the plot stays the owner's. Returns what was given back.
+func cancel_site(p: Dictionary, inv: Inventory) -> Dictionary:
+	if p.site.is_empty() or p.site.done:
+		return {}
+	var back := site_delivered(p)
+	var left := Inventory.new()
+	for id in back:
+		if not inv.add(id, int(back[id])):
+			left.add(id, int(back[id]))
+	if not left.items.is_empty():
+		loot.append({"pos": Vector2(float(p.door[0]) + 0.5, float(p.door[1]) + 0.5), "inv": left, "coins": 0, "from": "your building site"})
+	p.site = {}
+	tile_changed.emit(Vector2i(int(p.x) + 4, int(p.y) + 8), "below", -1)
+	note("The building site on %s was given up; its materials were taken back." % p.id)
+	return back
 
 
 # ---------------------------------------------------------------- the player's actions -------

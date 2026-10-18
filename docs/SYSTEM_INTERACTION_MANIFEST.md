@@ -253,10 +253,10 @@ Rules:
 
 ### INT-030 · Building a house
 - **Trigger:** The player delivers materials to their plot.
-- **Source:** `game/scripts/core/world.gd::start_site`, `game/scripts/core/world.gd::deliver`
-- **Affects:** Building, Inventory
-- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall.
-- **Tests:** `game/tests/play_test.gd`
+- **Source:** `game/scripts/core/world.gd::start_site`, `game/scripts/core/world.gd::deliver`, `game/scripts/core/world.gd::site_progress`, `game/scripts/core/world.gd::cancel_site`, `game/scripts/main.gd::_sync_sites`
+- **Affects:** Building, Inventory, Loot
+- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load (to the pack, or a bundle at the site if it is full); no coin moves. The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall.
+- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_building_site`
 
 ### INT-031 · Saving and loading
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
@@ -373,7 +373,7 @@ Rules:
 | Health | INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
 | Combat | INT-004, INT-012, INT-013, INT-032 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039 |
-| Loot | INT-015, INT-016, INT-018, INT-028 |
+| Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
 | Fields | INT-007, INT-009, INT-025, INT-029 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040 |
 | Crafting | INT-021, INT-035, INT-036 |

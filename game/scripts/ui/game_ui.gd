@@ -1265,7 +1265,16 @@ func show_build(pl: Dictionary) -> void:
 		_label("Your house stands here.")
 		return
 	var need: Dictionary = pl.site.need
-	_label("Building: House. Still needed:")
+	var done_part := w.site_progress(pl)
+	_label("Building: House, %d%% done. Still needed:" % roundi(done_part * 100.0))
+	var bar := ProgressBar.new()
+	bar.value = done_part * 100.0
+	bar.show_percentage = false
+	bar.custom_minimum_size = Vector2(0, 18)
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color(0.47, 0.72, 0.29)
+	bar.add_theme_stylebox_override("fill", fill)
+	panel_body.add_child(bar)
 	for id in need:
 		_item_row(id, int(need[id]), "(you carry %d)" % p.inv.count(id), "", func(): pass)
 	_button("Deliver what I carry", func():
@@ -1275,6 +1284,11 @@ func show_build(pl: Dictionary) -> void:
 			hide_all()
 		else:
 			show_build(pl))
+	_button("Give up the site (all materials come back)", func():
+		var back := w.cancel_site(pl, p.inv)
+		var words: Array = back.keys().map(func(k): return "%d %s" % [int(back[k]), GameData.item_name(k).to_lower()])
+		message("The frame comes down. You take back %s." % (", ".join(words) if not words.is_empty() else "nothing; none was delivered"))
+		show_build(pl))
 
 
 func show_home() -> void:

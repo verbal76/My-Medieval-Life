@@ -36,6 +36,7 @@ var pinch_mid := Vector2.ZERO          # the midpoint of two touches: moving it 
 var multi_touch := false               # two fingers were down: lifting them is not a tap
 var cam_free := false                  # looking around: the camera stays at cam_at instead of following the player
 var cam_at := Vector2.ZERO             # where the camera looks while cam_free (pixels)
+var site_bars := {}                    # plot id -> the progress bar over its building frame
 var follow_at := Vector2.ZERO          # where the camera looks while following the player (pixels)
 # The player walks freely inside a box this fraction of the view in the middle of the screen; the
 # camera moves only when they push against its edge (owner: a camera dead zone)
@@ -141,6 +142,27 @@ func _ready() -> void:
 				for n: NPC in world.near(world.player.pos, 8.0):
 					chase = n
 					break
+			"site":
+				# a building site part-way: the frame, its progress bar and the build window
+				var pl: Dictionary = world.plots[0]
+				world.player.coins += int(pl.price)
+				world.buy_plot(pl)
+				world.start_site(pl)
+				world.player.inv.add("plank", 30)
+				world.player.inv.add("stone", 8)
+				world.deliver(pl, world.player.inv)
+				world.player.pos = Vector2(float(pl.door[0]) + 0.5, float(pl.door[1]) + 1.5)
+				follow_at = _in_view(world.player.pos * T)
+				ui.show_build(pl)
+			"site_world":
+				var pl: Dictionary = world.plots[0]
+				world.player.coins += int(pl.price)
+				world.buy_plot(pl)
+				world.start_site(pl)
+				world.player.inv.add("plank", 30)
+				world.deliver(pl, world.player.inv)
+				world.player.pos = Vector2(float(pl.door[0]) + 2.5, float(pl.door[1]) + 1.5)
+				follow_at = _in_view(world.player.pos * T)
 			"quest_home":
 				# a quest giver inside their house: the marker hangs over the door
 				for n: NPC in world.npcs:
@@ -269,6 +291,7 @@ func _clear_world() -> void:
 	chase = null
 	talk_to = null
 	diamonds.clear()                # their nodes go with the scene
+	site_bars.clear()
 	move_to = Vector2.INF
 	walk_goal = Vector2i(-1, -1)
 	strike_pending = false
@@ -444,6 +467,7 @@ func _sync_sprites() -> void:
 	_sync_loot()
 	_sync_bubbles()
 	_sync_diamonds()
+	_sync_sites()
 
 
 ## Bubbles follow their speaker, fade out, and go when the time is up or the speaker is gone.
@@ -483,6 +507,30 @@ func _sync_diamonds() -> void:
 		if not shown.has(id):
 			diamonds[id].queue_free()
 			diamonds.erase(id)
+
+
+## A progress bar over each unfinished building frame (owner rule: a frame site with a progress bar).
+func _sync_sites() -> void:
+	for pl in world.plots:
+		var building: bool = not pl.site.is_empty() and not pl.site.get("done", false)
+		var bar: ProgressBar = site_bars.get(pl.id)
+		if bar == null and building:
+			bar = ProgressBar.new()
+			bar.show_percentage = false
+			bar.size = Vector2(28, 5)
+			bar.z_index = MARKER_Z
+			var back := StyleBoxFlat.new()
+			back.bg_color = Color(0.17, 0.11, 0.07, 0.9)
+			var fill := StyleBoxFlat.new()
+			fill.bg_color = Color(0.47, 0.72, 0.29)
+			bar.add_theme_stylebox_override("background", back)
+			bar.add_theme_stylebox_override("fill", fill)
+			above.add_child(bar)
+			site_bars[pl.id] = bar
+		if bar:
+			bar.visible = building
+			bar.value = world.site_progress(pl) * 100.0
+			bar.position = Vector2(int(pl.x) + 4.5, int(pl.y) + 8) * T + Vector2(-14, -14)
 
 
 func _sync_bubbles() -> void:
