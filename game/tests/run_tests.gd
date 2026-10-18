@@ -989,7 +989,7 @@ func test_theft_and_shops() -> void:
 	check(_all_goods(w) == goods0, "still nothing made or lost")
 	# a guard who sees it stops the player: the goods go back and the fine goes to the treasury
 	adult.pos = FAR_PEOPLE
-	guard.pos = p.pos + Vector2(3, 0)
+	guard.pos = p.pos + Vector2(2, 0)          # beside the player, inside the tavern with them
 	p.coins = 40
 	coins0 = w.total_coins()
 	var t0 := w.treasury
@@ -1260,7 +1260,7 @@ func test_save_round_trip() -> void:
 	w5.load_dict(VillageMap.load_default(), v2)
 	check(w5.treasury == treasury_then and w5.npc(w5.reeve_id).coins == int(GameData.b("reeve_purse")), "a version 2 save's reeve coins move into the treasury (%d)" % w5.treasury)
 	check(w5.total_coins() == w.total_coins(), "a version 2 save keeps every coin")
-	check(int(d.save_version) == 3 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 3 with the treasury and granary")
+	check(int(w5.to_dict().save_version) == 4 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 4 with the treasury and granary")
 	# a save from before the plots moved (they lay over houses b20-b22): plot0 owned with a house on
 	# it and the player inside, plot1 unsold, and a tree where the new plot0 is
 	var lay: Dictionary = JSON.parse_string(text)
@@ -1283,7 +1283,7 @@ func test_save_round_trip() -> void:
 	check(Rect2(float(p0.x), float(p0.y), 9.0, 10.0).has_point(w8.player.pos), "the player standing in it moves with it")
 	check(int(w8.plot("plot1").y) == int(m8.data.plots[1].y) and w8.plot("plot1").owner == "", "an unsold plot moves too")
 	check(not w8.trees.any(func(t): return int(t.x) == 91 and int(t.y) == 23), "trees the generator cleared from the new plots are gone from the old save")
-	check(m8.is_solid(Vector2i(95, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
+	check(m8.is_solid(Vector2i(91, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
 	var w9 := World.new()
 	w9.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w8.to_dict())))
 	var w10 := World.new()
