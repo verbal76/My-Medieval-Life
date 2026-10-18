@@ -41,18 +41,29 @@ files and systems, the test evidence and the fixing commit.
 
 | ID | Reported | Kind | Sev. | Platform | Summary | Status | Commit | Device check |
 |---|---|---|---|---|---|---|---|---|
-| B7-001 | 2026-10-18 | Usability | S2 | All | A new player has 5 coins and starves by day 5 without income | Diagnosed | — | Yes (play feel) |
-| B7-002 | 2026-10-18 | Bug | S3 | All | Side quests pay less than their text promises when the giver is short of coins | Diagnosed | — | No |
-| B7-003 | 2026-10-18 | Bug | S3 | All | Rings, amulet and helmets can be crafted but nobody buys them | Diagnosed | — | No |
-| B7-004 | 2026-10-18 | Bug | S3 | All | Wheat cut for harvest work can be kept without paying or being marked stolen | Diagnosed | — | No |
-| B7-005 | 2026-10-18 | Usability | S2 | All | Nothing tells a new player how to earn money; the shop window says "Buy from" though it also sells | Diagnosed | — | Yes |
-| B7-006 | 2026-10-18 | Usability | S3 | All | Hired work pays poorly or is closed: the mine shift pays less than the ore is worth; woodcutting needs an axe the player can't afford | Diagnosed | — | No |
-| B7-007 | 2026-10-18 | Bug | S2 | All | Ore and stone deposits never refill and the caravan brings no stone: the village works them out by about day 10, after which no house can be built | Diagnosed | — | No |
-| B7-008 | 2026-10-18 | Usability | S4 | All | The player can sell a buyer down to 0 coins and kill every wild animal (NPCs leave a floor of 15 coins and 2 animals) | Diagnosed | — | No |
+| B7-001 | 2026-10-18 | Usability | S2 | All | A new player has 5 coins and starves by day 5 without income | Fixed (staging) | `ae0e01f` | Yes (play feel) |
+| B7-002 | 2026-10-18 | Bug | S3 | All | Side quests pay less than their text promises when the giver is short of coins | Fixed (staging) | `ae0e01f` | No |
+| B7-003 | 2026-10-18 | Bug | S3 | All | Rings, amulet and helmets can be crafted but nobody buys them | Fixed (staging) | `ae0e01f` | No |
+| B7-004 | 2026-10-18 | Bug | S3 | All | Wheat cut for harvest work can be kept without paying or being marked stolen | Fixed (staging) | `ae0e01f` | No |
+| B7-005 | 2026-10-18 | Usability | S2 | All | Nothing tells a new player how to earn money; the shop window says "Buy from" though it also sells | Fixed (staging) | `ae0e01f` | Yes (readability on a phone) |
+| B7-006 | 2026-10-18 | Usability | S3 | All | Hired work pays poorly or is closed: the mine shift pays less than the ore is worth; woodcutting needs an axe the player can't afford | Diagnosed; proposal awaits owner | — | No |
+| B7-007 | 2026-10-18 | Bug | S2 | All | Ore and stone deposits never refill and the caravan brings no stone: the village works them out by about day 10, after which no house can be built | Stone imports fixed (staging); depletion itself diagnosed, proposal awaits owner | `ae0e01f` | No |
+| B7-008 | 2026-10-18 | Usability | S4 | All | The player can sell a buyer down to 0 coins and kill every wild animal (NPCs leave a floor of 15 coins and 2 animals) | Diagnosed; proposal awaits owner | — | No |
+| B7-009 | 2026-10-18 | Bug | S2 | All | The manor's treasury starts (270) below its own 10-day reserve (460) and falls to about 100 by day 5: the reeve has no paid work, for the player or villagers, until about day 12 | Diagnosed; proposal awaits owner | — | No |
 
-Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`).
-They were measured with `game/tests/earn_sim.gd`, seed 1. Each fix changes a rule or number, so
-all of them wait for the owner's approval.
+Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`),
+measured with `game/tests/earn_sim.gd`, seed 1. The owner approved the corrections for B7-001 to
+B7-005 and the stone imports of B7-007 on 2026-10-18 (`docs/DECISIONS.md`); B7-006, B7-008, deposit
+depletion (B7-007) and B7-009 wait on the investigation's proposals.
+
+Test evidence for `ae0e01f` (run on this machine):
+- `run_tests.gd`: 632 checks, 0 failures (`test_build7_economy` is new)
+- `start_test.gd`: 221 steps, 0 failures
+- `play_test.gd`: 37 steps, 0 failures
+- `households_sim.gd --seed 2 --days 30 --crowd 3`: 100/100 alive, coins and grain conserved
+- `python3 -m unittest discover -s tests`: OK
+- `check_interactions.py`: 65 interactions, 0 problems
+- Screens looked at (phone layout): the opening message, the journal's Quests page, the reeve's offer and his "can't spare" answer, the tavern counter, and a trade window from conversation.
 
 ### Issue details
 
@@ -61,30 +72,49 @@ all of them wait for the owner's approval.
 - Evidence: `earn_sim.gd --strategy idle`: coins 5 → 3 → 1, dead on day 5 at 19:22.
 - Root cause: `start_coins_player` 5. Food costs about 3 coins a day (`player_hunger_per_hour` 3).
 - Files: `game/data/balance.json`.
-- Fix: proposal (15–20 coins, and/or manor day labour); awaiting the owner.
+- Approved (owner, 2026-10-18): 20 coins, provisional, for new characters only.
+- Fix: `start_coins_player` 20. It applies to new games and heirs (the starting kit); a loaded save keeps its coins.
+- Tests: `start_test` (20 coins at the start); `run_tests::test_build7_economy`.
+- Commit: `ae0e01f`.
 - Device check: whether the start feels fair in real play.
 
 ### B7-002 Quest rewards cut to the giver's purse
 - Evidence: `quests.gd:268` pays `mini(reward, n.coins)`. In the runs the smiths held 1–15 coins
   while "Ore for the forge" promises twenty.
 - Root cause: offers are made without checking that the giver can pay, and nothing is set aside.
-- Fix: proposal (offer only when the giver can pay, and set the reward aside); awaiting the owner.
+- Approved (owner): offer paid quests only when the giver can pay; reserve at acceptance; pay exactly; return on cancel or expiry; safe across save and load.
+- Fix: `Quests.can_fund`, `_reserve`, `_release`, `on_giver_died`, `release_all`, `migrate_reserves`, `reserved_total`. An offer the giver can no longer pay is withdrawn at acceptance with a reason. A dead giver gets the reserve back before inheritance. The player's death returns all reserves. Save version 7: older saves fund accepted quests on load if the giver can pay; otherwise completing pays only once they can. `World.total_coins` counts reserves. The same applies to hired work's wages.
+- Interaction manifest: INT-062 (new); INT-038, INT-046, INT-031 updated.
+- Tests: `test_build7_economy` (reserve, save round trip, giver's death, lapse, player's death, v6 migration, poor giver), `test_quests`, `test_hiring`, `start_test`.
+- Commit: `ae0e01f`.
 
 ### B7-003 Craftable jewellery and helmets have no buyer
 - Evidence: `npc_brain.gd:13-22` `BUYS` lists no ring, amulet, leather cap or iron helmet.
-- Fix: proposal (the goods merchant buys them); awaiting the owner.
+- Approved (owner): merchants buy these within their funds, stock and trading rules.
+- Fix: `BUYS.merchant_goods` adds copper ring 3, gold ring 2, amulet 2, leather cap 3, iron helmet 2 (stock caps; provisional). The caravan carries the surplus away like other made goods.
+- Interaction manifest: INT-019 updated.
+- Tests: `test_build7_economy` (wants, price, sale paid from the purse, cap, no coins means no sale).
+- Commit: `ae0e01f`.
 
 ### B7-004 Harvest-work wheat is never the farmer's
 - Evidence (code reading; not run): `quests.gd:177` and `world.gd:1093` treat wheat cut under a
   harvest job as not theft. If the job lapses, the wheat stays with the player unmarked: about 48
   coins of wheat instead of a 6-coin wage, up to 3 jobs at once.
-- Fix: proposal (mark it stolen if the job lapses); awaiting the owner.
+- Approved (owner): the wheat stays the employer's; abandoning the job is theft.
+- Fix: `Quests.settle_harvest` on a lapse: the cut wheat (`harvested`) the player carries is marked stolen from the farmer, then what is in the home chest. The farmer remembers catching the player, and a theft goes on the record. Completed work is unchanged. Wheat already sold or eaten counts in the theft record, but no mark can follow it.
+- Interaction manifest: INT-064 (new); INT-046 updated.
+- Tests: `test_build7_economy` (18 carried and 6 in the chest marked, the theft recorded, the farmer knows).
+- Commit: `ae0e01f`.
 
 ### B7-005 Earning money is undiscoverable
 - Evidence: the opening line is only "Explore the village: talk to people, work, trade, build."
   (`main.gd:476`). "Any work for me?" has no marker. The shop window is titled "Buy from …"
   (`game_ui.gd:1243`).
-- Fix: proposal (hint text; the title "Trade with …"); awaiting the owner.
+- Approved (owner): unobtrusive guidance, no tutorial; "Trade with …".
+- Fix: a new game's message: "For paid work, ask farmers, miners, woodcutters or the reeve "Any work for me?". Who buys what is in the journal." (8 s). The journal's Quests page always ends with "Earning money" (who buys what). The shop's labels and title read "Trade with …".
+- Tests: `start_test` (the message, the journal note, the shop labels and title). Screens looked at: `opening`, `journal_quests`, `shop`, `trade`.
+- Commit: `ae0e01f`.
+- Device check: readability of the message on a phone.
 
 ### B7-006 Hired work pays less than doing it alone
 - Evidence: the mine shift pays 8 for 6 iron ore, which sell for about 18. The woodcutting job
@@ -95,14 +125,24 @@ all of them wait for the owner's approval.
 - Evidence: `earn_sim.gd --strategy observe` (the village alone): iron, coal, stone and copper all at
   0 by day 10 (seed 1). `caravan_import_stock` brings iron, coal and copper, not stone. A house
   needs 20 stone.
-- Root cause: deposits have a fixed `amount` with no refill.
-- Fix: proposal (stone imports and/or a refill rate); awaiting the owner.
+- Root cause (investigation, 2026-10-18): extraction is not driven by demand. Fixed buyer stock caps plus a caravan that buys everything above half the cap every 2 days make an unlimited export sink. 79% of stone mined by day 10 was exported; none was used in the village. Nobody checks stock before mining. See the long-run report.
+- Approved (owner): stone in the caravan's goods, with a defined outside source and real quantities and prices.
+- Fix (stone imports): once the village's stone deposits are at or under `caravan_import_when_left`, each caravan brings at most 20 stone from a quarry on its road. It is sold to the raw-goods merchants, the stone sellers, at value × 2.0 (cartage; provisional), up to their cap and keeping their cash floor. The coins leave the village. While it brings stone, the caravan buys none of the village's.
+- Interaction manifest: INT-065 (new); INT-035 updated.
+- Tests: `test_build7_economy` (none while the village has its own, at most a cart, within caps and floor, the price recorded, coins leave, no export).
+- Commit: `ae0e01f`.
+- Still open: depletion itself (proposals P1.1–P1.5, awaiting the owner).
 
 ### B7-008 The player has no floor on buyers' coins or wildlife
 - Evidence: the mining run left the smiths at 0–1 coins; the hunting run killed all 12 wild adults
   on day 1 and none came back.
-- Fix: proposal (the same 15-coin floor for the player's sales); awaiting the owner. Wildlife is a
-  design question.
+- Not approved yet (owner): the 15-coin reserve for player sales; wildlife respawn. Investigation proposals P2 (wildlife) and P3 (operating capital) await the owner.
+
+### B7-009 The manor cannot afford paid work for its first twelve days
+- Reported: 2026-10-18, agent, while checking the reeve's work.
+- Evidence: seeds 1 and 2 (scratch measurement, no player). The treasury is 270 at the start against a reserve of 460 (10 days of obligations of 46). It falls to about 100 by day 5, and reaches the reserve only on day 12 (seed 1) or 13 (seed 2). Until then the reeve has no work for the player (he says the manor's chest can't spare a wage), and no NPC day labour is paid either.
+- Root cause: the starting treasury is below the manor's own reserve rule.
+- Fix: none yet; a balance decision. Options: a larger starting treasury; a smaller reserve for day labour (e.g. 3 days); or day labour allowed above the guards' two-day payroll. Awaiting the owner.
 
 (One section per issue, `B7-001` onwards, in this form.)
 
