@@ -479,6 +479,24 @@ func _run() -> void:
 			break
 	w.quests.offers[cook_q.id] = "wood_for_the_hearth"
 	check(w.quests.marker(cook_q) == "wood", "a cook asking for firewood shows the log marker")
+	# a quest giver gone indoors keeps a marker, over their house door
+	var home_q: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and w.buildings.has(n.home) and n != cook_q and n != sage:
+			home_q = n
+			break
+	w.quests.offers[home_q.id] = "food_for_the_family"
+	home_q.hidden = true
+	var door_cell := w.building_door(home_q.home)
+	p.pos = Vector2(door_cell) + Vector2(0.5, 2.5)
+	main.camera.position = p.pos * main.T
+	main.camera.reset_smoothing()
+	main.camera.force_update_scroll()
+	main._sync_diamonds()
+	check(main.diamonds.has(home_q.id) and absf(main.diamonds[home_q.id].position.x - (door_cell.x + 0.5) * main.T) < 1.0, "a quest giver at home shows the marker over the house door")
+	home_q.hidden = false
+	w.quests.offers.erase(home_q.id)
+	p.pos = sage.pos + Vector2(0, 2)
 	ui.show_talk(cook_q)
 	check(_press("Need any help?") and _speech().contains("5 log"), "asking for work hears the request")
 	check(_press("I'll do it") and w.player.quests.any(func(q): return q.id == "wood_for_the_hearth"), "accepting takes the quest")

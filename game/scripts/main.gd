@@ -412,9 +412,13 @@ func _sync_diamonds() -> void:
 	var cam := camera.get_screen_center_position() / T
 	var bob := sin(Time.get_ticks_msec() / 220.0) * 1.5
 	var shown := {}
-	for n: NPC in world.near(cam, 30.0):
-		var kind: String = world.quests.marker(n) if n.alive and not n.hidden else ""
-		if kind == "":
+	var at_door := {}                  # door cell -> markers already placed there
+	for n: NPC in world.npcs:
+		var kind: String = world.quests.marker(n) if n.alive else ""
+		if kind == "" or (n.hidden and not world.buildings.has(n.home)):
+			continue
+		var at := Vector2(world.building_door(n.home)) if n.hidden else n.pos
+		if at.distance_to(cam) > 30.0:
 			continue
 		shown[n.id] = true
 		var d: Sprite2D = diamonds.get(n.id)
@@ -424,7 +428,15 @@ func _sync_diamonds() -> void:
 			above.add_child(d)
 			diamonds[n.id] = d
 		d.texture = load("res://assets/markers/%s.png" % kind)
-		d.position = n.pos * T + Vector2(0, -48 + bob)
+		if n.hidden:
+			# indoors (asleep or resting at home): the marker hangs over the house door instead,
+			# side by side if more than one of the household has a quest
+			var door := world.building_door(n.home)
+			var k: int = at_door.get(door, 0)
+			at_door[door] = k + 1
+			d.position = (Vector2(door) + Vector2(0.5, 0.0)) * T + Vector2(k * 20.0, -26 + bob)
+		else:
+			d.position = n.pos * T + Vector2(0, -48 + bob)
 	for id in diamonds.keys():
 		if not shown.has(id):
 			diamonds[id].queue_free()
