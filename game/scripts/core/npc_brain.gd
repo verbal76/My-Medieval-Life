@@ -42,6 +42,10 @@ const COOKED := ["roast_meat", "pottage", "ale"]
 
 var w: World
 var noted := {}          # one-off notes already written
+## Diagnostics only (tests/economy_sim.gd): when on, every missed meal is logged as
+## [day, hour, job or role, why, coins of the richest in the household]. Never read by the game.
+var track_misses := false
+var miss_log: Array = []
 
 
 func _init(world: World) -> void:
@@ -227,6 +231,8 @@ func _plan_eat(n: NPC) -> bool:
 						go(w.home_cell(n, "table")), work(15, "eat_home", {}, "idle")]
 				return true
 	w.stat("missed_meal_" + ("no_money" if payer == null or payer.coins < 2 else "no_food_for_sale"))
+	if track_misses:
+		miss_log.append([w.day(), snappedf(w.hour(), 0.1), n.job if n.job != "" else n.role, "no_money" if payer == null or payer.coins < 2 else "no_food_for_sale", payer.coins if payer else 0, n.household, n.coins, n.hunger, w.households[n.household].pantry.items.duplicate() if n.household >= 0 else {}, n.doing])
 	once("hungry_%d_%d" % [n.id, w.day()], "%s %s is hungry and cannot get food." % [n.name, n.family])
 	return false
 
@@ -1792,6 +1798,7 @@ func caravan() -> void:
 				budget -= price
 				w.coin_sources += price
 				w.stat("caravan_coins_in", price)
+				w.stat("caravan_in_" + buy_role(o), price)
 				bought += price
 				extra -= 1
 	var sold := _caravan_imports()

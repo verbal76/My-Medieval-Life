@@ -31,6 +31,7 @@ var starving_hours := 0        # villager-hours at zero hunger
 var min_hunger := 100.0        # lowest villager hunger since the last sample
 var player_min_hp := 0.0
 var player_attacked := 0       # hours in which the player's health fell
+var flows := {}                # "buyer_role>seller_role" -> {n, coins, items}: every sale (World.trade_hook)
 
 
 func _init() -> void:
@@ -45,6 +46,8 @@ func _init() -> void:
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
 	w.event.connect(_on_event)
+	w.brain.track_misses = true
+	w.trade_hook = _on_trade
 	w.npc_died.connect(_on_died)
 	player_min_hp = w.player.hp
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources,
@@ -75,7 +78,7 @@ func _init() -> void:
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "every": every, "step": STEP,
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "deaths": death_log,
-			"fingerprint": _fingerprint()}, " ", false))
+			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows}, " ", false))
 		f.close()
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty()
 	w.dispose()
@@ -524,5 +527,39 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("ledger flows: %s" % JSON.stringify(s.ledger.flows))
 	print("LEAKS: currency %d; items %s; deposits %s; animals %s" % [s.currency.leak, JSON.stringify(s.ledger.items),
 		JSON.stringify(s.ledger.deposits), JSON.stringify(s.ledger.animals)])
+	print("trade flows (buyer>seller): %s" % JSON.stringify(flows))
+	print("missed meals: %s" % JSON.stringify(_miss_summary()))
 	print("deaths: %s" % JSON.stringify(death_log))
 	print("fingerprint %s" % _fingerprint())
+
+
+## Missed meals (NPCBrain.miss_log): counts by job, by hour of day, by cause, and the first day.
+func _miss_summary() -> Dictionary:
+	var by_job := {}
+	var by_hour := {}
+	var by_cause := {}
+	var by_day := {}
+	for m in w.brain.miss_log:
+		by_job[m[2]] = int(by_job.get(m[2], 0)) + 1
+		var hr := str(int(m[1]))
+		by_hour[hr] = int(by_hour.get(hr, 0)) + 1
+		by_cause[m[3]] = int(by_cause.get(m[3], 0)) + 1
+		var dk := str(int(m[0]) / 30)
+		by_day[dk] = int(by_day.get(dk, 0)) + 1
+	return {"total": w.brain.miss_log.size(), "by_job": by_job, "by_hour": by_hour, "by_cause": by_cause, "by_30_days": by_day, "first": w.brain.miss_log.slice(0, 12)}
+
+
+func _role_of(o: Object) -> String:
+	if o is NPC:
+		var r: String = w.brain.buy_role(o)
+		return r if r != "" else (o.role as String)
+	return "player"
+
+
+func _on_trade(buyer: Object, seller: Object, id: String, qty: int, total: int) -> void:
+	var k := "%s>%s" % [_role_of(buyer), _role_of(seller)]
+	if not flows.has(k):
+		flows[k] = {"n": 0, "coins": 0, "items": {}}
+	flows[k].n += qty
+	flows[k].coins += total
+	flows[k].items[id] = int(flows[k].items.get(id, 0)) + qty
