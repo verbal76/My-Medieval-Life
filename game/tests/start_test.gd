@@ -651,6 +651,20 @@ func _run() -> void:
 	check(main.world != w, "a fresh world was loaded from the save")
 	check(now == snap, "the save restores the player: %s" % (str(now) + " vs " + str(snap) if now != snap else "name, look, coins, health, equipment, wheat, crimes, time, place"))
 
+	# camera dead zone: small steps inside the middle box leave the view still; walking on pushes it
+	var pz: PlayerState = main.world.player
+	pz.pos = Vector2(main.map.w, main.map.h) / 2.0
+	main.recenter()
+	var still: Vector2 = main._follow(pz.pos * main.T)
+	pz.pos += Vector2(1.5, 1.0)
+	check(main._follow(pz.pos * main.T) == still, "a step inside the dead zone does not move the camera")
+	var box: Vector2 = main.get_viewport().get_visible_rect().size / main.camera.zoom * main.DEAD_ZONE / 2.0
+	pz.pos += Vector2(30.0, 0.0)
+	var pushed: Vector2 = main._follow(pz.pos * main.T)
+	check(pushed.x > still.x and absf(pz.pos.x * main.T - pushed.x - box.x) < 0.01, "walking past its edge pushes the camera along, the player at the box's edge")
+	main.recenter()
+	check(main.follow_at.distance_to(pz.pos * main.T) < 0.01, "Recenter centres the view on the player")
+
 	# 21. a villager who has met the player never forgets it, however much else happens to them
 	var w2: World = main.world
 	var acquaintance: NPC = w2.npcs.filter(func(n): return n.alive and n.role == "adult")[0]

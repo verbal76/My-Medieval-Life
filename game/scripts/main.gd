@@ -36,6 +36,10 @@ var pinch_mid := Vector2.ZERO          # the midpoint of two touches: moving it 
 var multi_touch := false               # two fingers were down: lifting them is not a tap
 var cam_free := false                  # looking around: the camera stays at cam_at instead of following the player
 var cam_at := Vector2.ZERO             # where the camera looks while cam_free (pixels)
+var follow_at := Vector2.ZERO          # where the camera looks while following the player (pixels)
+# The player walks freely inside a box this fraction of the view in the middle of the screen; the
+# camera moves only when they push against its edge (owner: a camera dead zone)
+const DEAD_ZONE := Vector2(0.4, 0.35)
 var mid_drag := false                  # the middle mouse button is held: mouse motion pans
 const PAN_SPEED := 700.0               # screen pixels a second the right stick pans at full tilt
 var autosave_hour := -1
@@ -100,6 +104,7 @@ func _ready() -> void:
 			world.update(0.5)
 		if shot_warp != Vector2.INF:
 			world.player.pos = shot_warp
+			follow_at = _in_view(shot_warp * T)
 		if shot_zoom > 0.0:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
@@ -326,7 +331,8 @@ func _build_scene() -> void:
 	camera.limit_bottom = map.h * T
 	add_child(camera)
 	camera.make_current()
-	camera.position = world.player.pos * T
+	follow_at = _in_view(world.player.pos * T)
+	camera.position = follow_at
 	world.tile_changed.connect(_on_tile_changed)
 	world.bled.connect(_on_bled)
 	dying.clear()
@@ -429,7 +435,7 @@ func _sync_sprites() -> void:
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
-	camera.position = cam_at if cam_free else p.pos * T
+	camera.position = cam_at if cam_free else _follow(p.pos * T)
 	target_marker.visible = chase != null and chase.alive
 	if target_marker.visible:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
@@ -1116,14 +1122,28 @@ func pan_camera(screen_delta: Vector2) -> void:
 	look_at_tile((cam_at + screen_delta / camera.zoom) / T)
 
 
-## Look at a spot on the map (a tile position), without moving the player.
-func look_at_tile(tile: Vector2) -> void:
+## Where the camera looks while following the player at `at` (pixels): it stays put while the
+## player is inside the dead zone and is pushed along by its edge, never past the map's edges.
+func _follow(at: Vector2) -> Vector2:
+	var box := get_viewport().get_visible_rect().size / camera.zoom * DEAD_ZONE / 2.0
+	for k in 2:
+		follow_at[k] = clampf(follow_at[k], at[k] - box[k], at[k] + box[k])
+	follow_at = _in_view(follow_at)
+	return follow_at
+
+
+## A camera position (pixels) moved just enough that the view stays over the map.
+func _in_view(at: Vector2) -> Vector2:
 	var half := get_viewport().get_visible_rect().size / camera.zoom / 2.0
 	var world_px := Vector2(map.w, map.h) * T
-	var at := tile * T
 	for k in 2:
 		at[k] = clampf(at[k], half[k], world_px[k] - half[k]) if world_px[k] > half[k] * 2.0 else world_px[k] / 2.0
-	cam_at = at
+	return at
+
+
+## Look at a spot on the map (a tile position), without moving the player.
+func look_at_tile(tile: Vector2) -> void:
+	cam_at = _in_view(tile * T)
 	if not cam_free:
 		cam_free = true
 		camera.position_smoothing_enabled = false        # the view sticks to the fingers
@@ -1133,6 +1153,8 @@ func look_at_tile(tile: Vector2) -> void:
 ## Follow the player again; the camera glides back.
 func recenter() -> void:
 	cam_free = false
+	if world and camera:
+		follow_at = _in_view(world.player.pos * T)
 	if camera:
 		camera.position_smoothing_enabled = shot_path == ""
 	ui.show_recenter(false)
