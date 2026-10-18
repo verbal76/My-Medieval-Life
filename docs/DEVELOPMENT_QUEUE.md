@@ -27,7 +27,7 @@ Release gate: Build 7 is the testing release. No Build 8, no replacement release
 | 6 | Long-duration simulations (10/30/100/365 days) | Integrated | staging | 5 | Results in `docs/release/LONG_RUN_SIMULATION.md`; defects B7-014 to B7-017 |
 | 7 | Build 7 economy corrections (B7-001 to B7-005, B7-007 stone) | Device check | staging `ae0e01f` | — | See the issue register |
 | 9 | Brown glyph icons for the HUD, gear slots, skills and journal (B7-013) | Device check | staging `49f5cb9` | — | — |
-| 10 | Hot Attic Games read-only registry | In progress | inventory agent, branch `inventory/registry` | — | Discovery only; nothing moved |
+| 10 | Hot Attic Games read-only registry | Done (first scan) | branch `inventory/registry` (`924f7a1`) | — | 22 of 23 repos (808-Beats by name only); no Steam store art found for Upwardly |
 | 8 | Resource depletion and wildlife sustainability | Blocked: owner's choice among the proposals | — | Owner decision | `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` P1–P3; B7-009 options |
 
 ## Waiting on the owner (decisions, not work)
