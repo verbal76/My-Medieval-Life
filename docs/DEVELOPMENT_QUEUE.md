@@ -30,6 +30,7 @@ release and no merge into `main` without the owner's explicit authorization.
 | 9 | Brown glyph icons for the HUD, gear slots, skills and journal (B7-013) | Device check | staging `49f5cb9` | — | — |
 | 10 | Hot Attic Games read-only registry | Blocked: owner's decision on the registry branch and on a private location | — | Owner decision | Publication paused (owner, 2026-10-18): public repositories only on a public branch; the full registry continues locally until a private location exists |
 | 8 | Resource depletion and wildlife sustainability | Blocked: owner's choice among the proposals | — | Owner decision | `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` P1–P3; B7-009 options |
+| 11 | Design gap assessment and phased implementation sequence for the isometric, 8-direction, multiplayer, persistent-character, magic and living-society goals | Proposed — awaiting owner approval | agent proposal | Owner decisions D1–D12 | [`docs/DESIGN_GAP_ASSESSMENT.md`](DESIGN_GAP_ASSESSMENT.md); documentation only, no code started; preparatory refactors R1–R7 and spikes S1–S2 need approval first |
 
 ## Waiting on the owner (decisions, not work)
 
