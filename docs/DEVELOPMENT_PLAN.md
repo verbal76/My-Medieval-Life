@@ -64,10 +64,23 @@ owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separa
   crowded households that split, get an empty house or build one and move in; the player respects
   villagers' station reservations; readable place names; save version 6
 
-### Approved but not built yet (need the owner's scope before starting)
+- ✅ Interiors with a roof fade for every enterable building (owner, 2026-10-18): fully transparent
+  inside, a half fade only when a roof would hide the player, no flicker; sleepers reachable (woken,
+  robbed, attacked) with sleep limiting awareness; families in beds, guards and cooks on pallets
 
-- Walking into buildings: done with the roof fade (owner decision); separate interior maps not used
-- Music and sound: the volume settings exist, but no audio has been supplied
+### Approved but not built yet
+
+- Music and sound: the volume settings exist, but no audio has been supplied (blocked on assets)
+
+### Known limitations (not defects; recorded for the owner)
+
+- Households only become crowded when people move in (no births yet), so splits are rare in play
+- Villagers build houses but never workshops, never lease ground to build, never fell trees for it
+- The tavern child and the sage sleep on pallets for lack of room; a sleeper is the standing sprite
+  turned on its side (the art has no lying frame)
+- The Windows .exe shows Godot's file icon in Explorer (the window and taskbar use the game's icon);
+  embedding it needs rcedit and Wine in the build workflow, a new build-time dependency to approve
+- All numbers marked provisional await the owner's balance review
 
 ### Future ideas (not approved)
 
