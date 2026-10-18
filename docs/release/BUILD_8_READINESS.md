@@ -1,6 +1,6 @@
 # Build 8 readiness report
 
-Prepared 2026-10-18 for the owner's decision. **Build 8 is not authorized.** Nothing has been built for release, uploaded or published; this report only says what a build would contain. Build 7 stays the testing release until the owner says otherwise.
+Prepared 2026-10-18 for the owner's decision. **Decision (owner, 2026-10-18): Build 8 is authorized as a private testing build only**: a draft GitHub Release that only the repository's collaborators can see, not a public release, and no merge into `main`.
 
 ## Source
 
@@ -9,8 +9,8 @@ Prepared 2026-10-18 for the owner's decision. **Build 8 is not authorized.** Not
 | Proposed source | `staging/my-medieval-life` at the commit this report is pushed in (or a later approved one) |
 | Last released build | Build 7, `679907121654c7630b170690752429b55a74b8ac` |
 | Changes since Build 7 | 24 commits, 93 files, +7,766 / −170 lines |
-| Proposed build number | **Build 8**, the next run of `.github/workflows/release.yml`, started by hand. It is a pre-release, because the source is not `main` |
-| Platforms | Linux, Windows and Android from that one commit, published together in GitHub Releases |
+| Build number | **Build 8**, the next run of `.github/workflows/release.yml`, started by hand with `visibility: private` (a draft release) |
+| Platforms | Linux, Windows and Android from that one commit, kept together in one draft GitHub Release |
 
 ## What changed since Build 7
 

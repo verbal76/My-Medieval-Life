@@ -14,8 +14,8 @@ Statuses:
 - **Device check**: integrated; needs the owner's hardware.
 - **Next release**: done; waits for an authorized build.
 
-Release gate: Build 7 is the testing release. No Build 8, no replacement release, no merge into
-`main` without the owner's explicit authorization.
+Release gate: Build 8 is authorized as a private testing build only (a draft release). No public
+release and no merge into `main` without the owner's explicit authorization.
 
 | # | Task | Status | Owner / branch | Depends on | Notes |
 |---|---|---|---|---|---|
@@ -27,7 +27,7 @@ Release gate: Build 7 is the testing release. No Build 8, no replacement release
 | 6 | Long-duration simulations (10/30/100/365 days) | Integrated | staging | 5 | Results in `docs/release/LONG_RUN_SIMULATION.md`; defects B7-014 to B7-017 |
 | 7 | Build 7 economy corrections (B7-001 to B7-005, B7-007 stone) | Device check | staging `ae0e01f` | — | See the issue register |
 | 9 | Brown glyph icons for the HUD, gear slots, skills and journal (B7-013) | Device check | staging `49f5cb9` | — | — |
-| 10 | Hot Attic Games read-only registry | Done (first scan) | branch `inventory/registry` (`924f7a1`) | — | 22 of 23 repos (808-Beats by name only); no Steam store art found for Upwardly |
+| 10 | Hot Attic Games read-only registry | Blocked: owner's decision on the registry branch and on a private location | — | Owner decision | Publication paused (owner, 2026-10-18): public repositories only on a public branch; the full registry continues locally until a private location exists |
 | 8 | Resource depletion and wildlife sustainability | Blocked: owner's choice among the proposals | — | Owner decision | `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` P1–P3; B7-009 options |
 
 ## Waiting on the owner (decisions, not work)

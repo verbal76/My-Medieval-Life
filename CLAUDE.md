@@ -21,7 +21,7 @@ Status (keep current):
 | Engine | Godot 4.7 prototype in `game/`, built at the owner's request; the formal engine entry in `docs/DECISIONS.md` is still *Proposed* |
 | Platforms | Android APK first, then PC (Windows, Linux), as the owner directed; touch, gamepad, and keyboard and mouse |
 | Gameplay code | Playable prototype in `game/` (village simulation, player, economy); rules and open questions in `docs/BUILD_DECISIONS.md` |
-| Builds | Linux, Windows and Android from one revision with one build number, by `.github/workflows/release.yml`, run by hand only after the owner approves a coordinated release (section 5). Build 7 (`6799071`) is the active testing release; its issues are in `docs/release/BUILD_7_ISSUES.md` |
+| Builds | Linux, Windows and Android from one revision with one build number, by `.github/workflows/release.yml`, run by hand only after the owner approves a coordinated release (section 5). Build 7 (`6799071`) is the last public test release; its issues are in `docs/release/BUILD_7_ISSUES.md`. Build 8 is a private testing build (a draft release, visible only to collaborators); the workflow makes drafts unless `visibility: public` is chosen with the owner's approval |
 
 ## 2. Repository layout
 

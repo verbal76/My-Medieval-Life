@@ -4,7 +4,10 @@
 # Owner's release policy (docs/DECISIONS.md, 2026-10-18): a release is a deliberate decision by the
 # owner. This workflow therefore never runs on a push; it runs only when started by hand from the
 # Actions tab ("Run workflow") after the owner approves the coordinated three-platform build.
-# Releases from branches other than main are marked as pre-releases. Pushes never start it, so the
+# Releases from branches other than main are marked as pre-releases. This repository is public, so a
+# published release is public: the default "private" run makes a draft release instead, which only
+# people with write access to the repository can see or download (no tag is created until the owner
+# publishes it). "public" is chosen only when the owner approves public distribution. Pushes never start it, so the
 # staging/my-medieval-life and wip/* branches the agents push to every day build nothing; an
 # approved test build is run by hand on the approved staging commit. The build files are attached
 # to the GitHub Release, which keeps them (never only the cloud machine).
@@ -15,6 +18,12 @@ name: Build and release
 
 on:
   workflow_dispatch:
+    inputs:
+      visibility:
+        description: "private = draft release, visible only to collaborators; public = published release (owner approval for public distribution only)"
+        type: choice
+        options: [private, public]
+        default: private
 
 permissions:
   contents: write
@@ -93,7 +102,8 @@ jobs:
           (cd out/pc/linux && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-linux-x86_64.zip" MyMedievalLife.x86_64)
           ls -la release
           sha256sum release/* > release/SHA256SUMS.txt
-          { echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. Linux, Windows and Android are built from that one commit."
+          { if [ "${{ inputs.visibility }}" != "public" ]; then echo "**Private testing build:** a draft release, visible only to the repository's collaborators. Not for distribution."; echo; fi
+            echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. Linux, Windows and Android are built from that one commit."
             echo
             echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\` (debug-signed; allow installs from unknown sources)"
             echo "- **Windows:** unzip and run \`MyMedievalLife.exe\`"
@@ -108,5 +118,6 @@ jobs:
           target_commitish: ${{ github.sha }}
           name: My Medieval Life Build ${{ github.run_number }}
           prerelease: ${{ github.ref != 'refs/heads/main' }}
+          draft: ${{ inputs.visibility != 'public' }}
           body_path: notes.md
           files: release/*
