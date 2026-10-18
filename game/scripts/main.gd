@@ -894,6 +894,8 @@ func _input(e: InputEvent) -> void:
 		s = "touch"
 	elif e is InputEventJoypadButton or (e is InputEventJoypadMotion and absf(e.axis_value) > 0.5):
 		s = "gamepad"
+	elif e is InputEventKey and get_viewport().gui_get_focus_owner() is LineEdit:
+		pass                          # typing into a text box (a phone's on-screen keyboard sends keys too)
 	elif e is InputEventKey or (e is InputEventMouseButton and e.device != InputEvent.DEVICE_ID_EMULATION) \
 			or (e is InputEventMouseMotion and e.device != InputEvent.DEVICE_ID_EMULATION and e.relative.length() > 3.0):
 		s = "kbm"

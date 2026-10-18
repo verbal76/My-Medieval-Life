@@ -285,7 +285,11 @@ func _ui_icon(name: String, size: float) -> TextureRect:
 	return t
 
 
+## Give the first control of the open window keyboard/pad focus, unless something in it has focus.
 func _focus_first() -> void:
+	var owner := get_viewport().gui_get_focus_owner()
+	if owner != null and panel.is_ancestor_of(owner):
+		return
 	for c in panel_body.find_children("*", "Control", true, false):
 		if (c is Button or c is LineEdit or c is Slider) and c.is_visible_in_tree() and not (c is Button and c.disabled):
 			c.grab_focus()

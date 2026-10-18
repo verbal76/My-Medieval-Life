@@ -68,6 +68,21 @@ func _run() -> void:
 	ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female", "look": tunic.id})
 	var edits: Array = ui.panel_body.find_children("*", "LineEdit", true, false)
 	check(edits.size() == 2, "name and family fields")
+	# typing into the family field stays there (a phone keyboard sends key events)
+	main._input(InputEventScreenTouch.new())
+	edits[1].grab_focus()
+	var typed := InputEventKey.new()
+	typed.keycode = KEY_B
+	typed.unicode = 98
+	typed.pressed = true
+	main._input(typed)
+	check(get_root().gui_get_focus_owner() == edits[1] and main.scheme == "touch", "typing in the family name keeps focus there")
+	var pad_press := InputEventJoypadButton.new()
+	pad_press.button_index = JOY_BUTTON_A
+	pad_press.pressed = true
+	main._input(pad_press)
+	check(get_root().gui_get_focus_owner() == edits[1], "switching controls does not move focus out of the field in use")
+	main._input(InputEventScreenTouch.new())
 	_press("Begin")
 	var w: World = main.world
 	var p := w.player
