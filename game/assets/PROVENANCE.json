@@ -1101,6 +1101,13 @@
    "sha256": "1c0cd66c5e5874dc58178101079711092fad41afa61ba159cd8e76049efe2be0"
   },
   {
+   "file": "assets/prompts/keyboard_b.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_b.png",
+   "transform": "copied unchanged",
+   "sha256": "37ea09a5908b33f83b1c0da8383930f623cae05639e2af01508518c965b3fe09"
+  },
+  {
    "file": "assets/prompts/keyboard_d.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_d.png",

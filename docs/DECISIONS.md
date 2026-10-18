@@ -6,6 +6,8 @@ marked *Proposed* until the owner approves it.
 
 | Date | Decision | By | Notes |
 |---|---|---|---|
+| 2026-10-18 | An heir inherits only the starting kit (5 coins, sword, pickaxe, apple, bread, as a new player starts), keeps the family house and chest, and starts every skill from nothing; the dead character's gear lies where they fell for anyone to take, the heir included | Owner | Owner message and answers |
+| 2026-10-18 | A journal that looks like a book, with the record written on its pages | Owner | Owner message |
 | 2026-10-18 | Every build (APK, Windows, Linux) is published under GitHub Releases; commit and push this work and set up a workflow that builds and releases automatically | Owner | Owner answer to the release question; `.github/workflows/release.yml` |
 | 2026-10-18 | Platforms: an installable Android APK first, then a PC version, with touch, gamepad, and keyboard and mouse | Owner | Final master development directive and the owner's later message |
 | 2026-10-18 | The UI pack may be recoloured to suit the game: a woody brown instead of navy | Owner | Owner message after build 4 |

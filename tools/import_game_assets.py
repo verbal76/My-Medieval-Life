@@ -65,7 +65,7 @@ UI_WOOD = (111, 74, 44)  # the pack's navy recoloured to a wood brown (owner, 20
 PROMPT_ZIP = "kenney_input-prompts_1.5.zip"
 # input prompt icons shown with prompts and on the controls list: name -> member (128 px "Double" set)
 PROMPTS = {name: f"Keyboard & Mouse/Double/{name}.png" for name in
-           ["keyboard_e", "keyboard_f", "keyboard_i", "keyboard_l", "keyboard_space", "keyboard_escape",
+           ["keyboard_b", "keyboard_e", "keyboard_f", "keyboard_i", "keyboard_l", "keyboard_space", "keyboard_escape",
             "keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d", "mouse_left", "mouse_right", "mouse_scroll"]}
 PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
                 ["xbox_button_a", "xbox_button_b", "xbox_button_x", "xbox_button_y", "xbox_button_view",

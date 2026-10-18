@@ -308,6 +308,17 @@ func _run() -> void:
 	check(ui.is_open("talk"), "talked to %s %s" % [v.name, v.family])
 	ui.hide_all()
 
+	# the journal: the village record on book pages, opening at the latest, with page turning
+	for i in 30:
+		w.note("journal test entry %d" % i)
+	ui.show_journal(-1)
+	check(ui.is_open("journal"), "the journal opens")
+	var page_text: String = " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text))
+	check(page_text.contains("journal test entry 29") and page_text.contains("Day 1"), "it opens at the latest pages, under the day's heading")
+	check(_press("Earlier") and not " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text)).contains("journal test entry 29"), "Earlier turns back a page")
+	check(_press("Later"), "Later turns forward again")
+	ui.hide_all()
+
 	# the village log shows only the latest lines, each fading after a few seconds
 	for i in 4:
 		ui.log_line("event %d" % i)

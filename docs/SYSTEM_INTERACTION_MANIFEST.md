@@ -169,9 +169,9 @@ Rules:
 
 ### INT-018 · Player death and the heir
 - **Trigger:** The player's health reaches zero.
-- **Source:** `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::continue_as_heir`, `game/scripts/main.gd::continue_as_heir`
+- **Source:** `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::continue_as_heir`, `game/scripts/core/world.gd::give_start_kit`, `game/scripts/main.gd::continue_as_heir`
 - **Affects:** Health, Character, Player state, Loot, Building
-- **Expected:** What the dead carried stays where they fell. The heir keeps the house and chest and half of each skill's XP. Anyone fighting the dead player stops; the heir inherits no fight. The world is not reset.
+- **Expected:** What the dead carried lies where they fell, for anyone to take, the heir too. The heir keeps the house, chest and plots, starts every skill from nothing and carries only the starting kit, whose coins are counted in `coin_sources`. Anyone fighting the dead player stops; the heir inherits no fight. The world is not reset.
 - **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_player_actions`
 
 ### INT-019 · Trade

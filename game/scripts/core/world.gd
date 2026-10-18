@@ -106,13 +106,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	_assign_keepers()
 	var sp = m.data.spawns.player
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
-	player.coins = int(GameData.b("start_coins_player"))
-	player.max_hp = float(GameData.b("player_max_hp"))
-	player.hp = player.max_hp
-	var kit: Dictionary = GameData.b("player_start_items")
-	for id in kit:
-		player.inv.add(id, int(kit[id]))
-	player.armor = GameData.b("player_start_armor")
+	give_start_kit(player)
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	brain.dawn(false)                  # the first morning's snapshot of everyone's earnings
@@ -379,6 +373,21 @@ func damage_player(amount: float, source: String) -> void:
 ## Permanent death: the next of the family line takes over. The world is not reset.
 ## Decision (recorded in docs/BUILD_DECISIONS.md): the heir keeps the house, the chest and half
 ## of each skill's experience; what the dead carried stays where they fell.
+## The starting kit (balance.json): coins, health and the few things a wanderer carries. A new
+## player starts with it, and so does every heir (owner rule: an heir inherits only this).
+func give_start_kit(p: PlayerState) -> void:
+	p.coins = int(GameData.b("start_coins_player"))
+	p.max_hp = float(GameData.b("player_max_hp"))
+	p.hp = p.max_hp
+	var kit: Dictionary = GameData.b("player_start_items")
+	for id in kit:
+		p.inv.add(id, int(kit[id]))
+	p.armor = GameData.b("player_start_armor")
+
+
+## Permadeath. What the dead carried lies where they fell, for anyone to take, the heir too. The
+## heir keeps the family's house, chest and plots, starts every skill from nothing and carries
+## only the starting kit (owner rule); its coins are new to the village, counted in coin_sources.
 func continue_as_heir() -> void:
 	var p := player
 	var bag := Inventory.new()
@@ -396,9 +405,8 @@ func continue_as_heir() -> void:
 	heir.chest = p.chest
 	heir.plots = p.plots
 	heir.deaths = p.deaths
-	heir.coins = 10
-	for s in p.skills:
-		heir.skills[s] = int(p.skills[s]) / 2
+	give_start_kit(heir)
+	coin_sources += heir.coins
 	heir.spells = {}
 	if heir.home != "" and buildings.has(heir.home):
 		var b: Dictionary = buildings[heir.home]

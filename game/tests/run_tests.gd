@@ -597,9 +597,19 @@ func test_player_actions() -> void:
 			guard = n
 			break
 	guard.target = -2
+	w.player.coins = 300
+	w.player.inv.add("iron_sword", 2)
+	w.player.skills["mining"] = 500
+	w.player.home = "house_test"
+	var before := w.total_coins() - w.coin_sources
 	w.damage_player(9999, "a guard")
 	w.continue_as_heir()
-	check(w.player.alive and guard.target == -1, "guards stop fighting once the player is dead and the heir takes over")
+	var h := w.player
+	check(h.alive and guard.target == -1, "guards stop fighting once the player is dead and the heir takes over")
+	check(h.coins == int(GameData.b("start_coins_player")) and h.inv.total() == kit.values().reduce(func(a, x): return a + int(x), 0) and not h.inv.has("iron_sword"), "the heir carries only the starting kit")
+	check(h.skills.is_empty() and h.home == "house_test", "the heir keeps the house but starts every skill from nothing")
+	check(w.loot[-1].coins == 300 and w.loot[-1].inv.count("iron_sword") == 2, "what the dead carried lies where they fell")
+	check(w.total_coins() - w.coin_sources == before, "the heir's coins are counted as new to the village")
 	w.dispose()
 	w2.dispose()
 	w3.dispose()

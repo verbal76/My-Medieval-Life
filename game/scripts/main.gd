@@ -107,6 +107,8 @@ func _ready() -> void:
 				ui.show_settings(ui.hide_all)
 			"controls":
 				ui.show_controls(ui.hide_all)
+			"journal":
+				ui.show_journal(-1)
 			"marker":
 				attack_mode = true
 				ui.set_attack_mode(true)
@@ -135,7 +137,7 @@ func _setup_input() -> void:
 	var keys := {
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT], "move_up": [KEY_W, KEY_UP],
 		"move_down": [KEY_S, KEY_DOWN], "interact": [KEY_E, KEY_ENTER], "attack": [KEY_SPACE, KEY_J],
-		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "pause": [KEY_ESCAPE, KEY_P],
+		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "journal": [KEY_B], "pause": [KEY_ESCAPE, KEY_P],
 		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
 	}
 	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
@@ -482,6 +484,8 @@ func _player_step(delta: float) -> void:
 		ui.toggle_inventory()
 	if Input.is_action_just_pressed("skills"):
 		ui.toggle_skills()
+	if Input.is_action_just_pressed("journal"):
+		ui.show_journal(-1)
 
 
 ## The direction to walk this frame towards move_to, around walls and trees: the route comes

@@ -32,6 +32,9 @@ var touch_bar: HBoxContainer
 var attack_btn: Button
 var prompt_text := ""
 var scheme := "kbm"
+const JOURNAL_PER_PAGE := 6    # lines on a journal page (a day heading counts as one)
+const PARCHMENT := Color8(236, 222, 186)
+const INK := Color8(58, 38, 22)
 const LOG_LINES := 2           # village events shown at once, newest last
 const LOG_SECONDS := 3.0       # how long each stays before fading
 const PROMPT := "res://assets/prompts/%s.png"
@@ -45,7 +48,8 @@ const CONTROLS := {
 		[["mouse_left"], "Walk to where you click, or use what you click next to you"],
 		[["keyboard_e"], "Use"], [["keyboard_space"], "Swing at what is in front of you"],
 		[["mouse_right"], "Attack whoever you click"], [["keyboard_f"], "Fireball (once learned)"],
-		[["keyboard_i"], "Pack"], [["keyboard_l"], "Skills"], [["keyboard_escape"], "Menu"], [["mouse_scroll"], "Zoom"]],
+		[["keyboard_i"], "Pack"], [["keyboard_l"], "Skills"], [["keyboard_b"], "Journal"], [["keyboard_escape"], "Menu"],
+		[["mouse_scroll"], "Zoom"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
 		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_button_y"], "Fireball (once learned)"],
 		[["xbox_button_view"], "Pack"], [["xbox_button_menu"], "Menu"], [["xbox_button_b"], "Close a window"]],
@@ -649,7 +653,7 @@ func show_pause() -> void:
 	_open("pause", "Paused")
 	_button("Resume", hide_all)
 	_button("Save", func(): main.save_game())
-	_button("Village record (events)", show_events)
+	_button("Journal", func(): show_journal(-1))
 	_button("Settings", func(): show_settings(show_pause))
 	_button("Controls", func(): show_controls(show_pause))
 	_button("Save and quit to title", func():
@@ -719,16 +723,106 @@ func _choice(text: String, values: Array, current: String, set_value: Callable) 
 	_setting_row(text, b)
 
 
-func show_events() -> void:
-	_open("events", "What has happened in the village")
-	for l in main.world.log_lines.slice(-40):
-		_label(l, 15)
+## The journal: the village record written into a book, two parchment pages at a time, under a
+## heading for each day. `spread` is the pair of pages shown; -1 opens at the latest.
+func show_journal(spread: int) -> void:
+	var items := _journal_items()
+	var pages := maxi(1, ceili(float(items.size()) / JOURNAL_PER_PAGE))
+	var spreads := ceili(pages / 2.0)
+	spread = spreads - 1 if spread < 0 else clampi(spread, 0, spreads - 1)
+	_open("journal", "Journal", true)
+	var book := HBoxContainer.new()
+	book.add_theme_constant_override("separation", 0)
+	book.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel_body.add_child(book)
+	for side in 2:
+		var page := spread * 2 + side
+		var sheet := PanelContainer.new()
+		var paper := StyleBoxFlat.new()
+		paper.bg_color = PARCHMENT
+		paper.border_color = Color8(120, 84, 48)
+		paper.set_border_width_all(3)
+		paper.set_corner_radius_all(3)
+		paper.content_margin_left = 22
+		paper.content_margin_right = 22
+		paper.content_margin_top = 16
+		paper.content_margin_bottom = 12
+		sheet.add_theme_stylebox_override("panel", paper)
+		sheet.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		sheet.custom_minimum_size = Vector2(0, 300)
+		var lines := VBoxContainer.new()
+		lines.add_theme_constant_override("separation", 6)
+		sheet.add_child(lines)
+		var on_page := items.slice(page * JOURNAL_PER_PAGE, (page + 1) * JOURNAL_PER_PAGE)
+		if not on_page.is_empty() and not on_page[0].day:
+			# a page that starts mid-day repeats the day's heading, as a diary would
+			for k in range(page * JOURNAL_PER_PAGE - 1, -1, -1):
+				if items[k].day:
+					on_page.push_front({"day": true, "text": "%s, continued" % items[k].text})
+					break
+		for it in on_page:
+			var l := Label.new()
+			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			if it.day:
+				l.text = it.text
+				l.add_theme_font_size_override("font_size", 20)
+				l.add_theme_color_override("font_color", Color8(122, 38, 22))
+			else:
+				l.text = it.text
+				l.add_theme_font_size_override("font_size", 16)
+				l.add_theme_color_override("font_color", INK)
+			lines.add_child(l)
+		var gap := Control.new()
+		gap.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		lines.add_child(gap)
+		var num := Label.new()
+		num.text = "%d" % (page + 1) if page < pages else ""
+		num.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT if side == 1 else HORIZONTAL_ALIGNMENT_LEFT
+		num.add_theme_font_size_override("font_size", 14)
+		num.add_theme_color_override("font_color", Color(INK, 0.6))
+		lines.add_child(num)
+		book.add_child(sheet)
+		if side == 0:
+			var spine := ColorRect.new()
+			spine.color = Color8(92, 58, 34)
+			spine.custom_minimum_size = Vector2(10, 0)
+			book.add_child(spine)
+	var nav := HBoxContainer.new()
+	panel_body.add_child(nav)
+	var earlier := _button("Earlier", func(): show_journal(spread - 1), spread > 0, nav)
+	earlier.custom_minimum_size = Vector2(160, 48)
+	var where := Label.new()
+	where.text = "Pages %d–%d of %d" % [spread * 2 + 1, mini(spread * 2 + 2, pages), pages] if items.size() > 0 else "Nothing written yet"
+	where.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	where.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	nav.add_child(where)
+	var later := _button("Later", func(): show_journal(spread + 1), spread < spreads - 1, nav)
+	later.custom_minimum_size = Vector2(160, 48)
+
+
+## The village record as journal lines: a heading when the day changes, then each entry with its
+## time ("[Day 3  07:24] text" in the log).
+func _journal_items() -> Array:
+	var out := []
+	var day := ""
+	for entry in main.world.log_lines:
+		var line: String = entry
+		var close := line.find("] ")
+		var stamp: String = line.substr(1, close - 1) if line.begins_with("[") and close > 0 else ""
+		var text: String = line.substr(close + 2) if stamp != "" else line
+		var parts := stamp.split("  ")
+		var d: String = parts[0] if parts.size() == 2 else ""
+		if d != day:
+			day = d
+			out.append({"day": true, "text": d})
+		out.append({"day": false, "text": ("%s  %s" % [parts[1], text]) if parts.size() == 2 else text})
+	return out
 
 
 func show_death() -> void:
 	var p: PlayerState = main.world.player
 	_open("death", "%s %s has died" % [p.name, p.family])
-	_label("Death is permanent, but the village and your family go on. What %s carried lies where they fell. Your heir keeps the family house, the chest and half of what was learned." % p.name)
+	_label("Death is permanent, but the village and your family go on. What %s carried lies where they fell, for anyone to take. Your heir keeps the family house and the chest, but starts with only what a wanderer carries and must learn everything anew." % p.name)
 	_button("Continue as the heir", func(): main.continue_as_heir())
 
 

@@ -87,7 +87,8 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 
 | Decision | Why |
 |---|---|
-| Permadeath: the heir keeps the house, the chest and half of each skill's XP; what the dead carried stays where they fell | Bob's spec has permadeath with family continuation but no rule for what passes on |
+| Permadeath: the heir keeps the family's house, chest and plots, starts every skill from nothing and carries only the starting kit (5 coins, rusty sword and pickaxe, bread, rotten apple, plain clothes); what the dead carried lies where they fell, for anyone to take, the heir too. The heir's kit and coins are new to the village (counted in `coin_sources`). Anyone fighting the dead player stops | Owner rule, 2026-10-18 (house, chest and the dropped bag settled by the owner's answers) |
+| The journal (Menu, or B): the village record written into an open book, two parchment pages at a time, six lines a page, a heading for each day (repeated as "continued" at the top of a page that starts mid-day), opening at the latest pages | The owner asked for a journal that looks like a book |
 | Building: buy a plot from the reeve, a wooden frame appears, deliver 30 planks, 20 stone and 10 logs, and the house stands | The owner's rules (frame, materials only, no extra build time) |
 | Attacking a villager, or killing a keeper's animal, is a crime: guards nearby and the victim respond | Bob's spec has crime but no penalty system yet |
 
