@@ -6,6 +6,8 @@
   "walk_tiles_per_second": 2.6,
   "player_tiles_per_second": 4.5,
   "hunger_per_hour": 3.0,
+  "child_food_factor": 0.6,
+  "_child_food_note": "A child gets hungry this much as fast as an adult, so eats this share of an adult's food; every household and village food reckoning weights children the same way (NPCBrain.food_factor). NPCs have no ages yet, so the role decides. Agent proposal, provisional: balance review pending (docs/BUILD_DECISIONS.md).",
   "eat_below": 55,
   "starve_damage_per_hour": 2.0,
   "player_hunger_per_hour": 3.0,

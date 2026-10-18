@@ -454,7 +454,8 @@ func _farmer(n: NPC) -> bool:
 	if n.inv.count("wheat") - reserve(n, "wheat") >= 8 and _buyer_for(n, "wheat") != null:
 		return _plan_sell(n, "wheat")
 	var spot := Vector2i(int(f.x) + w.rng.randi_range(0, int(f.w) - 1), int(f.y) + int(f.h))
-	match f.state:
+	# a field whose farmer hired the player to bring in the harvest is left to them (Quests)
+	match "hired" if f.state == "ripe" and not w.quests.hired_on(f).is_empty() else f.state:
 		"ripe":
 			n.doing = "harvesting wheat"
 			n.plan = [go(spot), work(90, "harvest", {"field": f.id}, "work")]
@@ -945,8 +946,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"harvest":
 			var f := _field(a.field)
-			if f.is_empty() or f.state != "ripe":
-				return false
+			if f.is_empty() or f.state != "ripe" or not w.quests.hired_on(f).is_empty():
+				return false                                       # (left to the player hired to cut it)
 			n.inv.add("wheat", w.take_crop(f, 1 << 30))          # whatever is left on the field
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
 			# who shares this field before anything is sold
@@ -1148,7 +1149,7 @@ func reeve_day() -> void:
 				w.stat("gov_repairs", price)
 	var works := _public_works(obligations)
 	var grain := 0
-	var target := int(w.alive_count() * _day_food() * float(GameData.b("granary_target_days")) / 120.0)
+	var target := int(village_day_food() * float(GameData.b("granary_target_days")) / 120.0)
 	if not w.famine() and w.food_days >= float(GameData.b("relief_fill_days")):
 		for o: NPC in w.npcs:
 			if not o.alive or not (o.job == "farmer" or buy_role(o) == "merchant_food"):
@@ -1213,7 +1214,7 @@ func _relief(obligations: float, reserve: float) -> int:
 		if days >= float(GameData.b("relief_trigger_days")):
 			continue
 		var pantry: Inventory = w.households[h].pantry
-		var need := (float(GameData.b("relief_fill_days")) - days) * members.size() * _day_food()
+		var need := (float(GameData.b("relief_fill_days")) - days) * household_day_food(h)
 		var wheat := mini(ceili(need / 120.0), w.granary.count("wheat"))
 		if wheat > 0:
 			w.transfer(w.granary, pantry, "wheat", wheat)
@@ -1238,7 +1239,7 @@ func _relief(obligations: float, reserve: float) -> int:
 			need -= 120.0 if item == "wheat" else 40.0
 			w.stat("gov_relief_bought", price)
 			w.stat("gov_relief_bought_" + item, 1)
-		if need < (float(GameData.b("relief_fill_days")) - days) * members.size() * _day_food():
+		if need < (float(GameData.b("relief_fill_days")) - days) * household_day_food(h):
 			helped += 1
 			_note_relief(h)
 	return helped
@@ -1278,7 +1279,7 @@ func surplus_wheat(o: NPC) -> int:
 func keep_wheat(o: NPC) -> int:
 	var keep := int(GameData.b("granary_keep_buffer"))
 	if o.job == "farmer":
-		keep += reserve(o, "wheat") + ceili(_members(o.household).size() * _day_food() * float(GameData.b("granary_keep_household_days")) / 120.0)
+		keep += reserve(o, "wheat") + ceili(household_day_food(o.household) * float(GameData.b("granary_keep_household_days")) / 120.0)
 	else:
 		keep += int(BUYS.get(buy_role(o), {}).get("wheat", 0)) / 2
 	return keep
@@ -1286,6 +1287,32 @@ func keep_wheat(o: NPC) -> int:
 
 func _day_food() -> float:
 	return 24.0 * float(GameData.b("hunger_per_hour"))
+
+
+## How much a villager eats compared with an adult. The owner's living-world design counts a
+## household's food per member, adjusted for age-dependent consumption. Villagers have no ages yet,
+## so the role decides: a child gets hungry `child_food_factor` as fast (World._update_npc) and so
+## eats that share of an adult's food. Every food reckoning weights members by this.
+static func food_factor(o: NPC) -> float:
+	return float(GameData.b("child_food_factor")) if o.role == "child" else 1.0
+
+
+## Food points a group of villagers eats in a day, each weighted by food_factor.
+static func people_day_food(people: Array) -> float:
+	var t := 0.0
+	for o: NPC in people:
+		t += food_factor(o)
+	return t * 24.0 * float(GameData.b("hunger_per_hour"))
+
+
+## A household's daily food need (points): its living members, weighted by age.
+func household_day_food(h: int) -> float:
+	return people_day_food(_members(h))
+
+
+## The village's daily food need (points): every living villager (not the bandits), weighted by age.
+func village_day_food() -> float:
+	return people_day_food(w.npcs.filter(func(o: NPC) -> bool: return o.alive and o.role != "bandit"))
 
 
 func daily_obligations() -> float:
@@ -1311,7 +1338,9 @@ func _members(h: int) -> Array:
 
 ## Days of food a household can cover from its pantry (grain counted as cooked at home) and what
 ## its cash can buy (about 60 food points a coin), but only up to the household's share of the
-## food actually for sale: coins buy nothing when the market is empty.
+## food actually for sale: coins buy nothing when the market is empty. Days are counted against the
+## household's own need, members weighted by age (a child eats less), and its share of the market
+## is its share of the village's need.
 func household_food_days(h: int) -> float:
 	var p: Inventory = w.households[h].pantry
 	var pts := p.count("pottage") * 40.0 + p.count("roast_meat") * 60.0 + p.count("ale") * 10.0 + p.count("wheat") * 120.0
@@ -1319,9 +1348,10 @@ func household_food_days(h: int) -> float:
 	var cash := 0
 	for o: NPC in members:
 		cash += o.coins
-	var share := market_food_points * members.size() / maxf(1.0, float(w.alive_count() - w.alive_count("bandit")))
+	var need := household_day_food(h)
+	var share := market_food_points * need / maxf(1.0, village_day_food())
 	pts += minf(cash * 60.0, share)
-	return pts / maxf(1.0, members.size() * _day_food())
+	return pts / maxf(1.0, need)
 
 
 ## Food for sale in the village: cooked food at the tavern and food stalls, and the grain farmers and
@@ -1417,7 +1447,7 @@ func evaluate_household(h: int, daily := false) -> Dictionary:
 		if o.role == "adult":
 			adults += 1
 		income += o.avg_income(5)
-	var need := members.size() * _day_food()
+	var need := household_day_food(h)
 	var cost := need / 120.0 * market_wheat_price + float(GameData.value("log"))
 	var days := household_food_days(h)
 	# what the household could live on: cash, plus the trade stock its members could sell (a smith's
@@ -1637,12 +1667,11 @@ func _day_labour(n: NPC) -> bool:
 func caravan() -> void:
 	var budget := int(GameData.b("caravan_coins"))
 	var bought := 0
-	# merchants do not sell the village's food away when there is less than a few days of it
+	# merchants do not sell the village's food away when there is less than a few days of it (the
+	# village's need weighted by age, as everywhere)
 	var food := 0.0
-	var people := 0
 	for o: NPC in w.npcs:
 		if o.alive and o.role != "bandit":
-			people += 1
 			for f in FOOD:
 				food += o.inv.count(f) * float(GameData.item(f).food)
 	for hh in w.households:
@@ -1650,7 +1679,7 @@ func caravan() -> void:
 			food += hh.pantry.count(f) * float(GameData.item(f).food)
 	for f in FOOD:
 		food += w.table_food(f) * float(GameData.item(f).food)
-	var keep_food := food < people * 24.0 * float(GameData.b("hunger_per_hour")) * float(GameData.b("caravan_food_reserve_days"))
+	var keep_food := food < village_day_food() * float(GameData.b("caravan_food_reserve_days"))
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
