@@ -989,6 +989,13 @@
    "sha256": "8ef16364d461c381809039dbf0972277ba8786fa0a6c57a2cfa83a703abfcb6a"
   },
   {
+   "file": "assets/icon/icon.ico",
+   "source": "My_Medieval_Life_Icon_Pack.zip",
+   "member": "My_Medieval_Life_256x256.png",
+   "transform": "saved as a Windows icon (16-256 px)",
+   "sha256": "9f53de081ce699c918d95771f522a888801d3f8cc2656840364967921412d520"
+  },
+  {
    "file": "assets/icon/icon_background_432.png",
    "source": "",
    "member": "",

@@ -72,17 +72,35 @@ jobs:
           godot --headless --path game --script res://tests/run_tests.gd
           godot --headless --path game --script res://tests/start_test.gd
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the icon check's one dependency (Pillow)
+        run: python3 -m pip install pillow==10.4.0
+
       - name: Export Android, Windows and Linux
         run: |
           mkdir -p out/pc/windows out/pc/linux release
           godot --headless --path game --export-debug "Android" ../out/mymedievallife-dev.apk
           godot --headless --path game --export-release "Windows Desktop" ../out/pc/windows/MyMedievalLife.exe
+          # the .exe must carry the game's icon (Godot 4.7 embeds application/icon itself: no rcedit/Wine)
+          python3 tools/check_exe_icon.py out/pc/windows/MyMedievalLife.exe
           godot --headless --path game --export-release "Linux" ../out/pc/linux/MyMedievalLife.x86_64
           n="${{ github.run_number }}"
           cp out/mymedievallife-dev.apk "release/MyMedievalLife-build${n}-android.apk"
           (cd out/pc/windows && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-windows-x86_64.zip" MyMedievalLife.exe)
           (cd out/pc/linux && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-linux-x86_64.zip" MyMedievalLife.x86_64)
           ls -la release
+          sha256sum release/* > release/SHA256SUMS.txt
+          { echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. Linux, Windows and Android are built from that one commit."
+            echo
+            echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\` (debug-signed; allow installs from unknown sources)"
+            echo "- **Windows:** unzip and run \`MyMedievalLife.exe\`"
+            echo "- **Linux:** unzip and run \`MyMedievalLife.x86_64\`"
+            echo "- \`SHA256SUMS.txt\` lists each file's checksum."
+            echo
+            cat docs/release/TESTING_CHECKLIST.md; } > notes.md
 
       - uses: softprops/action-gh-release@v2
         with:
@@ -90,12 +108,5 @@ jobs:
           target_commitish: ${{ github.sha }}
           name: My Medieval Life Build ${{ github.run_number }}
           prerelease: ${{ github.ref != 'refs/heads/main' }}
-          body: |
-            Built from `${{ github.ref_name }}` at ${{ github.sha }}.
-
-            - **Android:** `MyMedievalLife-build${{ github.run_number }}-android.apk` (debug-signed; allow installs from unknown sources)
-            - **Windows:** unzip and run `MyMedievalLife.exe`
-            - **Linux:** unzip and run `MyMedievalLife.x86_64`
-
-            Controls switch by themselves between touch, gamepad, and keyboard and mouse.
+          body_path: notes.md
           files: release/*

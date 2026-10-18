@@ -68,18 +68,19 @@ owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separa
   inside, a half fade only when a roof would hide the player, no flicker; sleepers reachable (woken,
   robbed, attacked) with sleep limiting awareness; families in beds, guards and cooks on pallets
 
-### Approved but not built yet
+### Approved but not built yet (tracked future development; not complete)
 
-- Music and sound: the volume settings exist, but no audio has been supplied (blocked on assets)
+- ⬜ NPC workshop construction: villagers build houses by the player's rules, but not workshops, and
+  never lease ground or fell trees to build (owner, 2026-10-18: keep tracked)
+- ⬜ Births and family growth: no births, marriage or aging, so households only grow when people move
+  in and crowded households rarely split (owner, 2026-10-18: keep tracked)
+- ⬜ Music and sound: the volume settings exist, but no audio has been supplied (owner, 2026-10-18:
+  keep tracked)
 
 ### Known limitations (not defects; recorded for the owner)
 
-- Households only become crowded when people move in (no births yet), so splits are rare in play
-- Villagers build houses but never workshops, never lease ground to build, never fell trees for it
 - The tavern child and the sage sleep on pallets for lack of room; a sleeper is the standing sprite
   turned on its side (the art has no lying frame)
-- The Windows .exe shows Godot's file icon in Explorer (the window and taskbar use the game's icon);
-  embedding it needs rcedit and Wine in the build workflow, a new build-time dependency to approve
 - All numbers marked provisional await the owner's balance review
 
 ### Future ideas (not approved)

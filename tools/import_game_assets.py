@@ -36,6 +36,7 @@ Usage:
     python3 tools/import_game_assets.py
 """
 import hashlib
+import io
 import json
 import random
 import subprocess
@@ -460,6 +461,12 @@ def main():
         dest = icon_dir / f"icon_{size}.png"
         dest.write_bytes(icon_zip.read(member))
         record(dest, APP_ICON_ZIP, member, "copied unchanged")
+    # the Windows .exe icon (owner: the approved artwork, not Godot's): every size Windows shows, made
+    # from the pack's 256 px picture; embedded by the Windows export (application/icon)
+    dest = icon_dir / "icon.ico"
+    Image.open(io.BytesIO(icon_zip.read("My_Medieval_Life_256x256.png"))).convert("RGBA").save(
+        dest, format="ICO", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+    record(dest, APP_ICON_ZIP, "My_Medieval_Life_256x256.png", "saved as a Windows icon (16-256 px)")
     dest = icon_dir / "icon_background_432.png"
     Image.new("RGBA", (432, 432), (34, 24, 16, 255)).save(dest)
     prov.append({"file": str(dest.relative_to(REPO / "game")), "source": "", "member": "",
