@@ -48,6 +48,24 @@ const OPENING_HINT := "For paid work, ask farmers, miners, woodcutters or the re
 const JOURNAL_PER_PAGE := 6    # lines on a journal page (a day heading counts as one)
 const PARCHMENT := Color8(236, 222, 186)
 const INK := Color8(58, 38, 22)
+# the journal's Resources & Gathering page (show_resources): its words come from resources.json
+# through ResourceNodes, except how Gather mode works (main.gd gather_button, select_resource,
+# _gather_step) and the words for the registry's depletion and use kinds
+const GATHER_STEPS := ["Activate Gather: tap the Gather button.",
+	"Select a resource: tap or click it on the map.",
+	"Your character walks to it and gathers it automatically.",
+	"Gathering goes on until it is used up or something interrupts it: you walk away, you are hurt, your pack is full, or the tool is gone.",
+	"Tap Gather again to leave Gather mode."]
+const GATHER_KEYS := "Keyboard and mouse: press G, then click a resource, or stand in front of one and press Use (E)."
+const GATHER_PAD := "Gamepad: press the D-pad down, then A in front of a resource. B closes this journal."
+const RES_DEPLETION := {"finite": "Runs out: once worked out it does not come back.", "regrows": "Replenishes: it grows back.",
+	"ripens": "Replenishes: it is sown and ripens again.", "breeds": "Replenishes: the animals breed."}
+const RES_USE_KINDS := {"recipe": "Crafting", "building": "Building", "food": "Food", "fuel": "Fuel", "buyer": "Trade",
+	"export": "Trade", "quest": "Quest", "manor_job": "Manor work", "feed": "Feed", "home_cooking": "Cooking",
+	"granary": "Granary", "equip": "Equipment", "tool": "Tool"}
+const RES_HEAD := Color8(122, 38, 22)       # the journal's heading red
+const RES_WARN := Color8(150, 34, 14)
+const RES_CARD := Color8(226, 206, 162)
 const LOG_LINES := 2           # village events shown at once, newest last
 const LOG_SECONDS := 3.0       # how long each stays before fading
 const PROMPT := "res://assets/prompts/%s.png"
@@ -1023,6 +1041,8 @@ func show_journal(spread: int, quests_page := false) -> void:
 	var other := _button("Village record" if quests_page else "Quests", func(): show_journal(-1, not quests_page), true, nav)
 	other.custom_minimum_size = Vector2(200, 48)
 	later.custom_minimum_size = Vector2(160, 48)
+	var res := _button("Resources", func(): show_resources(), true, nav)
+	res.custom_minimum_size = Vector2(200, 48)
 
 
 ## The village record as journal lines: a heading when the day changes, then each entry with its
@@ -1099,6 +1119,339 @@ func _journal_items() -> Array:
 			out.append({"day": true, "text": d})
 		out.append({"day": false, "text": ("%s  %s" % [parts[1], text]) if parts.size() == 2 else text})
 	return out
+
+
+# ---------------------------------------------------------------- journal: resources ---------
+## The journal's Resources & Gathering page (B7-012), built only from game/data/resources.json
+## through ResourceNodes: how Gather mode works, every node the player may gather (where it is, the
+## tool and where to get one, what it gives, whether it comes back, whose it is), then the keepers'
+## animals. `node` opens one node: each product's uses and what it becomes, each of those a button
+## to `item`, that product's own uses and sources, with Back to the node.
+func show_resources(node := "", item := "") -> void:
+	_open("journal", "Journal: resources", true)
+	var nav := HBoxContainer.new()
+	nav.add_theme_constant_override("separation", 8)
+	panel_body.add_child(nav)
+	if node != "":
+		var back := _button("Back", func(): show_resources(node if item != "" else ""), true, nav)
+		back.custom_minimum_size = Vector2(160, 48)
+	var gap := Control.new()
+	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	nav.add_child(gap)
+	for v in [["Village record", false], ["Quests", true]]:
+		var b := _button(str(v[0]), func(): show_journal(-1, bool(v[1])), true, nav)
+		b.custom_minimum_size = Vector2(200, 48)
+	var sheet := PanelContainer.new()
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = PARCHMENT
+	paper.border_color = Color8(120, 84, 48)
+	paper.set_border_width_all(3)
+	paper.set_corner_radius_all(3)
+	paper.set_content_margin_all(18)
+	sheet.add_theme_stylebox_override("panel", paper)
+	sheet.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel_body.add_child(sheet)
+	var lines := VBoxContainer.new()
+	lines.add_theme_constant_override("separation", 8)
+	sheet.add_child(lines)
+	if item != "":
+		_res_item_page(lines, item)
+	elif node != "":
+		_res_node_page(lines, node)
+	else:
+		_res_list(lines)
+
+
+## The ids of the nodes the player may (`mine`) or may not gather, in resources.json's order.
+func _res_ids(mine: bool) -> Array:
+	return ResourceNodes.defs().keys().filter(func(id): return bool(ResourceNodes.def(id).get("player_harvest", false)) == mine)
+
+
+func _res_list(lines: VBoxContainer) -> void:
+	_res_text(lines, "How to gather", 24, RES_HEAD)
+	for i in GATHER_STEPS.size():
+		_res_text(lines, "%d. %s" % [i + 1, GATHER_STEPS[i]])
+	_res_text(lines, GATHER_KEYS, 16)
+	_res_text(lines, GATHER_PAD, 16)
+	_res_text(lines, "What you can gather", 24, RES_HEAD)
+	_res_text(lines, "Choose one to see what it is used for and what it becomes.", 16)
+	for id in _res_ids(true):
+		_res_card(lines, id)
+	var kept := _res_ids(false)
+	if kept.is_empty():
+		return
+	_res_text(lines, "Not yours to gather", 24, RES_HEAD)
+	var notes := []
+	for id in kept:
+		var d := ResourceNodes.def(id)
+		_res_text(lines, "%s: %s." % [str(d.name), _res_plain(str(d.where))])
+		for t in [_res_plain(str(d.owner)), _res_plain(str(d.theft))]:
+			if not notes.has(t):
+				notes.append(t)
+	for t in notes:
+		_res_text(lines, t, 16, RES_WARN)
+
+
+## One node on the list, as a card with its Uses button.
+func _res_card(lines: VBoxContainer, id: String) -> void:
+	var d := ResourceNodes.def(id)
+	var card := PanelContainer.new()
+	card.set_meta("node", id)
+	var box := StyleBoxFlat.new()
+	box.bg_color = RES_CARD
+	box.border_color = Color8(150, 110, 70)
+	box.set_border_width_all(2)
+	box.set_corner_radius_all(3)
+	box.set_content_margin_all(10)
+	card.add_theme_stylebox_override("panel", box)
+	lines.add_child(card)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	card.add_child(row)
+	var icon := _icon(str(d.icon))
+	icon.custom_minimum_size = Vector2(48, 48)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(icon)
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(col)
+	_res_facts(col, d, false)
+	var open := _button("Uses", func(): show_resources(id), true, row)
+	open.custom_minimum_size = Vector2(140, 56)
+	open.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+
+## A node's facts: its name, where, tool and skill (and where to get the tool if the player has
+## none), what it gives, whether it comes back, whose it is. `full`: the node's own page.
+func _res_facts(col: VBoxContainer, d: Dictionary, full: bool) -> void:
+	_res_text(col, str(d.name), 26 if full else 22, RES_HEAD)
+	_res_text(col, "Where: %s." % _res_plain(str(d.where)))
+	_res_text(col, _res_tool(d))
+	var tool := str(d.get("tool", ""))
+	if tool != "":
+		var have := _res_have(tool)
+		if have == "":
+			_res_text(col, _res_plain(str(d.tool_hint)), 18, RES_WARN)
+		elif full:
+			_res_text(col, "You have: %s." % GameData.item_name(have), 16)
+	var gives := HFlowContainer.new()
+	gives.add_theme_constant_override("h_separation", 6)
+	col.add_child(gives)
+	_res_word(gives, "Gives each time:")
+	var p := ResourceNodes.products(d)
+	for id in p:
+		gives.add_child(_icon(id))
+		_res_word(gives, "%s x%d" % [GameData.item_name(id), int(p[id])])
+	_res_text(col, str(RES_DEPLETION.get(str(d.depletion), str(d.depletion).capitalize())))
+	if full:
+		_res_text(col, _res_plain(str(d.regeneration), _res_scope(d)), 16)
+	var theft := _res_plain(str(d.theft))
+	var risky := not theft.begins_with("Never")
+	if risky:
+		_res_text(col, "Owner: %s" % _res_plain(str(d.owner)), 16)
+		_res_text(col, theft, 18, RES_WARN)
+	else:
+		_res_text(col, "Owner: %s %s" % [_res_plain(str(d.owner)), theft], 16)
+
+
+## "Tool: Pickaxe (required)  ·  Skill: Mining", from the node's tool, tool_required, skill and level.
+func _res_tool(d: Dictionary) -> String:
+	var tool := str(d.get("tool", ""))
+	var s := "Tool: none needed" if tool == "" else "Tool: %s (%s)" % [tool.capitalize(), "required" if bool(d.get("tool_required", false)) else "helps"]
+	var skill := str(d.get("skill", ""))
+	if skill != "":
+		s += "  ·  Skill: %s" % str(GameData.skills[skill].name)
+		if int(d.get("level", 0)) > 1:
+			s += " level %d" % int(d.level)
+	return s
+
+
+## The player's item of a tool type (a pickaxe), or of an item type (a weapon); "" if none.
+func _res_have(tool: String) -> String:
+	var p: PlayerState = main.world.player
+	var t := p.tool_of(tool)
+	if t != "":
+		return t
+	for id in p.inv.ids():
+		if str(GameData.item(id).get("type", "")) == tool:
+			return id
+	return ""
+
+
+func _res_node_page(lines: VBoxContainer, node: String) -> void:
+	var d := ResourceNodes.def(node)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 12)
+	lines.add_child(head)
+	var icon := _icon(str(d.icon))
+	icon.custom_minimum_size = Vector2(64, 64)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	head.add_child(icon)
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(col)
+	_res_facts(col, d, true)
+	for id in ResourceNodes.products(d):
+		_res_heading(lines, id)
+		_res_uses(lines, id)
+		_res_text(lines, "What it becomes", 20, RES_HEAD)
+		var c := ResourceNodes.chain(id)
+		if c.becomes.is_empty():
+			_res_text(lines, "Nothing is made from it.", 16)
+		_res_chain(lines, c, 0, node)
+
+
+## A product followed from a node's page: its uses, what it becomes and where it comes from.
+func _res_item_page(lines: VBoxContainer, item: String) -> void:
+	_res_heading(lines, item)
+	_res_uses(lines, item)
+	_res_text(lines, "What it becomes", 20, RES_HEAD)
+	var c := ResourceNodes.chain(item)
+	if c.becomes.is_empty():
+		_res_text(lines, "Nothing is made from it.", 16)
+	_res_chain(lines, c, 0, "")
+	_res_text(lines, "Where it comes from", 20, RES_HEAD)
+	for s in ResourceNodes.sources_of(item):
+		_res_text(lines, "•  " + _res_source_text(s))
+
+
+func _res_heading(lines: VBoxContainer, item: String) -> void:
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 10)
+	lines.add_child(h)
+	var icon := _icon(item)
+	icon.custom_minimum_size = Vector2(48, 48)
+	h.add_child(icon)
+	var l := _res_text(h, GameData.item_name(item), 24, RES_HEAD)
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+
+
+func _res_uses(lines: VBoxContainer, item: String) -> void:
+	_res_text(lines, "Used for", 20, RES_HEAD)
+	var uses := ResourceNodes.uses_of(item)
+	if uses.is_empty():
+		_res_text(lines, "Nothing uses it.", 16)
+	for u in uses:
+		_res_text(lines, "•  " + _res_use_text(u))
+
+
+## One use (ResourceNodes.uses_of) in words: "Crafting: 1 makes Plank x2 at the sawhorse".
+func _res_use_text(u: Dictionary) -> String:
+	var kind := str(u.kind)
+	var what := str(RES_USE_KINDS.get(kind, kind.capitalize()))
+	match kind:
+		"recipe":
+			var makes := []
+			for o in u.makes:
+				makes.append("%s x%d" % [GameData.item_name(o), int(u.makes[o])])
+			return "%s: %d makes %s at the %s" % [what, int(u.qty), ", ".join(makes), str(u.station)]
+		"building":
+			return "%s: %d for %s" % [what, int(u.qty), str(u.text).trim_prefix("building ")]
+		"buyer":
+			# a trade role in words: "merchant_raw" is the raw merchant
+			var parts := str(u.id).split("_")
+			parts.reverse()
+			return "%s: bought by the %s (wants up to %d)" % [what, " ".join(parts), int(u.qty)]
+		"quest":
+			return "%s: %s (%d wanted)" % [what, str(u.text), int(u.qty)]
+	return "%s: %s" % [what, _res_plain(str(u.text))]
+
+
+## One source (ResourceNodes.sources_of) in words.
+func _res_source_text(s: Dictionary) -> String:
+	match str(s.kind):
+		"node":
+			return "Gathered: %s (%d each time)" % [str(s.text), int(s.qty)]
+		"recipe":
+			var uses := []
+			for i in s.uses:
+				uses.append("%d %s" % [int(s.uses[i]), GameData.item_name(i)])
+			return "Made at the %s from %s (makes %d)" % [str(s.station), ", ".join(uses), int(s.qty)]
+	return World.cap(_res_plain(str(s.text)))
+
+
+## What an item becomes (ResourceNodes.chain), a line a step, indented; with `node`, each product
+## is a button to its own page.
+func _res_chain(lines: VBoxContainer, c: Dictionary, depth: int, node: String) -> void:
+	for b in c.becomes:
+		for t in b.then:
+			var out := str(t.item)
+			var row := HBoxContainer.new()
+			row.add_theme_constant_override("separation", 8)
+			lines.add_child(row)
+			var pad := Control.new()
+			pad.custom_minimum_size = Vector2(32 * depth, 0)
+			row.add_child(pad)
+			_res_word(row, "→")
+			row.add_child(_icon(out))
+			var caption := "%s x%d" % [GameData.item_name(out), int(b.makes[out])]
+			if node != "":
+				var go := _button(caption, func(): show_resources(node, out), true, row)
+				go.custom_minimum_size = Vector2(180, 48)
+			else:
+				_res_word(row, caption, RES_HEAD)
+			var others := []
+			for i in b.with:
+				others.append("%d %s" % [int(b.with[i]), GameData.item_name(i)])
+			var how := "at the %s" % str(b.station) + ((", with " + ", ".join(others)) if not others.is_empty() else "")
+			var l := _res_text(row, how, 16)
+			l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+			_res_chain(lines, t, depth + 1, node)
+
+
+func _res_text(parent: Control, text: String, size := 18, color := INK) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", color)
+	parent.add_child(l)
+	return l
+
+
+## A label that does not wrap (in a row of icons and words).
+func _res_word(parent: Control, text: String, color := INK) -> Label:
+	var l := _res_text(parent, text, 18, color)
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	l.size_flags_horizontal = Control.SIZE_FILL
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	return l
+
+
+## A registry text in the player's words: notes for developers in brackets ("(World._new_day)",
+## "(main.gd _hit_animal)") and code names ("World.mine_unit") left out; balance keys
+## ("tree_regrow_days") as their numbers, looked up under `scope` first ("animals.boar.").
+func _res_plain(text: String, scope := "") -> String:
+	var code := RegEx.create_from_string("[A-Za-z]\\w*\\.[A-Za-z_]\\w*|\\w+_\\w+|\\bP\\d")
+	for m in RegEx.create_from_string("\\s*\\(([^()]*)\\)").search_all(text):
+		if code.search(m.get_string(1)) != null:
+			text = text.replace(m.get_string(), "")
+	text = RegEx.create_from_string("\\b[A-Z]\\w*\\.[a-z_]\\w*\\s*").sub(text, "", true)
+	for m in RegEx.create_from_string("\\b[a-z][a-z0-9]*(?:[._][a-z0-9]+)+\\b").search_all(text):
+		var key := m.get_string()
+		var words := key.replace("_", " ").replace(".", " ")
+		var n := words
+		for path in ([scope + key] if scope != "" else []) + [key]:
+			var at = GameData.balance
+			for part in str(path).split("."):
+				at = at.get(part) if at is Dictionary else null
+			if at is float or at is int:
+				n = "%d" % int(at)
+			elif at is Array and not (at as Array).is_empty():
+				n = "–".join((at as Array).map(func(v): return "%d" % int(v)))
+			if n != words:
+				break
+		if n != words and key.ends_with("_days"):
+			n += " days"
+		text = text.replace(key, n)
+	return text.replace("  ", " ").replace(" .", ".").replace(" ,", ",").strip_edges()
+
+
+## The balance scope of a node's numbers: "animals.boar." for boar, "" for others.
+func _res_scope(d: Dictionary) -> String:
+	var species := str(d.get("match", {}).get("species", ""))
+	return "animals.%s." % species if species != "" else ""
 
 
 func show_death() -> void:

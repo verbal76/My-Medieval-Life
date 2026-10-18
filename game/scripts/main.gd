@@ -165,6 +165,20 @@ func _ready() -> void:
 				for slot in PlayerState.GEAR:
 					world.player.set(slot, "")
 				ui.toggle_inventory()
+			"journal_resources", "journal_resources_list":
+				ui.show_resources()
+				if shot_panel == "journal_resources_list":
+					# scrolled down to the list of nodes
+					var scroll: ScrollContainer = ui.panel_body.get_parent()
+					(func(): scroll.scroll_vertical = int(650 * view_scale)).call_deferred()
+			"journal_resource_detail", "journal_resource_chain":
+				ui.show_resources("tree")        # a tree's logs: their uses and what they become
+				if shot_panel == "journal_resource_chain":
+					# scrolled to the end: what a log becomes
+					var scroll: ScrollContainer = ui.panel_body.get_parent()
+					(func(): scroll.scroll_vertical = 100000).call_deferred()
+			"journal_resource_item":
+				ui.show_resources("tree", "plank")
 			"gather":
 				# Gather mode on, an iron seam chosen and being mined (B7-012)
 				gather_button()
