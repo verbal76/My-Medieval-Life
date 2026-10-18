@@ -51,6 +51,7 @@ class Chunk extends RefCounted:
 	var deco := PackedInt32Array()       # flowers, bushes and rocks (objects layer), -1 none
 	var solid := PackedByteArray()       # 1 = blocked
 	var kind := PackedByteArray()        # tree kind per cell, NO_TREE where none
+	var snow := PackedByteArray()        # 1 where the tree stands high (mountain, highland): snow-covered variants
 	var trees := PackedInt32Array()      # x, y, kind of each tree (world cells); includes unreachable mountain trees
 	var road := PackedByteArray()        # AREA x AREA road mask round the chunk (cell (x, y) at (y + PAD) * AREA + x + PAD)
 	var last_use := 0
@@ -59,7 +60,8 @@ var seed := 1
 var village := Rect2i(0, 0, 120, 90)
 var gates: Array = []                    # {out: Vector2i, dir: Vector2i}: where the village's roads leave
 var tiles := {}                          # overworld_tiles.json
-var changes := {}                        # Vector2i -> a felled tree {x, y, trunk, top, bottom, state, regrow, ow}
+var changes := {}                        # Vector2i -> a tree the player changed (felled, growing, planted): {x, y, species, state, regrow, born, ow, planted?}
+var clock := 0.0                         # the game minute (World keeps it): changed trees grow lazily by it
 var cache := {}                          # Vector2i -> Chunk
 var generated := 0                       # chunks generated so far (tests: the cache bound, no work for loaded chunks)
 var _use := 0
@@ -463,6 +465,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 	ch.solid.resize(cells)
 	ch.kind.resize(cells)
 	ch.kind.fill(NO_TREE)
+	ch.snow.resize(cells)
 	ch.path.fill(-1)
 	ch.deco.fill(-1)
 	var grass: Array = tiles.grass
@@ -505,6 +508,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 			elif mine == 1 or mine == 3:
 				var kidx := _tree_kind(tree_kinds, fs[gk], fm[gk], wx, wy, mine == 3)
 				ch.kind[c] = kidx
+				ch.snow[c] = 1 if (mine == 3 or fm[gk] > 600) else 0
 				ch.trees.append(wx)
 				ch.trees.append(wy)
 				ch.trees.append(kidx)
@@ -564,11 +568,12 @@ func is_solid(c: Vector2i) -> bool:
 		return false
 	var ch := get_chunk(chunk_of(c))
 	var i := _cell_of(ch, c)
-	if ch.solid[i] == 0:
-		return false
-	if ch.kind[i] != NO_TREE and changes.has(c):
-		return changes[c].state == "grown"
-	return true
+	if changes.has(c):
+		var t: Dictionary = changes[c]
+		Trees.sync(t, clock)
+		if ch.kind[i] != NO_TREE or ch.solid[i] == 0:
+			return Trees.solid(str(t.state))          # a felled, growing or planted tree: the stage says
+	return ch.solid[i] != 0
 
 
 func is_road(c: Vector2i) -> bool:
@@ -578,32 +583,102 @@ func is_road(c: Vector2i) -> bool:
 	return ch.road[(c.y - ch.cy * CHUNK + PAD) * AREA + c.x - ch.cx * CHUNK + PAD] == 1
 
 
+## The generated tree of a cell (a fresh record, state grown), or {}. Not the player's changes.
+func base_tree(cell: Vector2i) -> Dictionary:
+	if village.has_point(cell):
+		return {}
+	var ch := get_chunk(chunk_of(cell))
+	var i := _cell_of(ch, cell)
+	var k: int = ch.kind[i]
+	if k == NO_TREE:
+		return {}
+	var kd: Dictionary = tiles.trees[k]
+	var species := Trees.species_for(str(kd.group), hash32(seed, cell.x, cell.y, 92), ch.snow[i] == 1)
+	return {"x": cell.x, "y": cell.y, "trunk": int(kd.trunk), "top": int(kd.top), "bottom": int(kd.bottom), "species": species,
+			"state": "grown", "regrow": 0.0, "born": 0.0, "ow": true}
+
+
 ## The tree standing on cell c (or whose canopy covers it) as a dictionary like the village's trees
-## ({x, y, trunk, top, bottom, state, regrow}, plus ow: true), or {}. A felled tree is the one in
-## `changes`, so mutating it (World.fell) is the change.
+## ({x, y, species, state, regrow, born}, plus ow: true), or {}. A tree the player changed is the one
+## in `changes`, brought up to the clock, so mutating it (World.fell) is the change.
 func tree_at(c: Vector2i) -> Dictionary:
 	for cell in [c, c + Vector2i(0, 1)]:
 		if village.has_point(cell):
 			continue
-		var ch := get_chunk(chunk_of(cell))
-		var k: int = ch.kind[_cell_of(ch, cell)]
-		if k == NO_TREE:
-			continue
 		if changes.has(cell):
-			return changes[cell]
-		var kd: Dictionary = tiles.trees[k]
-		return {"x": cell.x, "y": cell.y, "trunk": int(kd.trunk), "top": int(kd.top), "bottom": int(kd.bottom),
-				"state": "grown", "regrow": 0.0, "ow": true}
+			var t: Dictionary = changes[cell]
+			Trees.sync(t, clock)
+			return t
+		var b := base_tree(cell)
+		if not b.is_empty():
+			return b
 	return {}
 
 
-## Remember a tree the player changed (it is saved); a grown one is the base world again.
+## Remember a tree the player changed (it is saved); a generated tree grown back is the base world again.
 func note_tree(t: Dictionary) -> void:
 	var cell := Vector2i(int(t.x), int(t.y))
-	if t.state == "grown":
+	if t.state == "grown" and not t.get("planted", false):
 		changes.erase(cell)
 	else:
 		changes[cell] = t
+
+
+## Plant a sapling at a cell the caller has checked (plant_refusal): a new changed tree.
+func plant(cell: Vector2i, species: String, now: float) -> Dictionary:
+	var t := {"x": cell.x, "y": cell.y, "trunk": -1, "top": -1, "bottom": -1, "species": species, "state": "sapling",
+			"regrow": 0.0, "born": now, "ow": true, "planted": true}
+	changes[cell] = t
+	return t
+
+
+## Every tree of a chunk as the view draws it: the generated ones (as the player left them) and the
+## ones the player planted. Mountain trees nobody can reach are included.
+func chunk_trees(cc: Vector2i) -> Array:
+	var ch := get_chunk(cc)
+	var out := []
+	for q in range(0, ch.trees.size(), 3):
+		var cell := Vector2i(ch.trees[q], ch.trees[q + 1])
+		var t: Dictionary = changes.get(cell, {})
+		if t.is_empty():
+			t = base_tree(cell)
+		else:
+			Trees.sync(t, clock)
+		out.append(t)
+	var cells: Array = changes.keys()
+	cells.sort()
+	for c: Vector2i in cells:
+		if chunk_of(c) == cc and changes[c].get("planted", false):
+			Trees.sync(changes[c], clock)
+			out.append(changes[c])
+	return out
+
+
+## Why a sapling cannot be planted at a cell outside the village, "" if it can: open grass, not the
+## road or a cliff, no rock, flower or bush, no tree or stump there and none beside it.
+func plant_refusal(cell: Vector2i) -> String:
+	if village.has_point(cell):
+		return "not here"
+	var ch := get_chunk(chunk_of(cell))
+	var i := _cell_of(ch, cell)
+	if is_road(cell):
+		return "You cannot plant on the road."
+	if not (ch.ground[i] in (tiles.cliff[0] as Array)) or ch.solid[i] == 1 or ch.deco[i] >= 0:
+		return "The ground here is not open grass."
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			var n := cell + Vector2i(dx, dy)
+			if village.has_point(n):
+				return "That is too near the village."
+			var near: Dictionary = changes.get(n, {})
+			if not near.is_empty():
+				if str(near.state) != "cleared":
+					return "There is a tree here already." if (dx == 0 and dy == 0) else "Too close to another tree."
+			elif not base_tree(n).is_empty():
+				return "There is a tree here already." if (dx == 0 and dy == 0) else "Too close to another tree."
+			if is_road(n):
+				return "Too close to the road."
+	return ""
 
 
 # ---------------------------------------------------------------- save -----------------------
@@ -613,7 +688,10 @@ func to_dict() -> Dictionary:
 	var list := []
 	for c: Vector2i in cells:
 		var t: Dictionary = changes[c]
-		list.append({"x": c.x, "y": c.y, "state": str(t.state), "regrow": float(t.regrow)})
+		var e := {"x": c.x, "y": c.y, "state": str(t.state), "regrow": float(t.regrow), "born": Trees.born_of(t), "species": str(t.species)}
+		if t.get("planted", false):
+			e["planted"] = true
+		list.append(e)
 	return {"seed": seed, "gen": GEN_VERSION, "changes": list}
 
 
@@ -625,9 +703,15 @@ func load_dict(d: Dictionary) -> void:
 		return
 	for e in d.get("changes", []):
 		var cell := Vector2i(int(e.x), int(e.y))
-		var t := tree_at(cell)
-		if t.is_empty():
-			continue
+		var t := {}
+		if bool(e.get("planted", false)):
+			t = {"x": cell.x, "y": cell.y, "trunk": -1, "top": -1, "bottom": -1, "ow": true, "planted": true}
+		else:
+			t = base_tree(cell)
+			if t.is_empty():
+				continue
 		t.state = str(e.state)
 		t.regrow = float(e.regrow)
+		t.born = float(e.get("born", 0.0))
+		t.species = str(e.get("species", t.get("species", "oak_summer")))
 		changes[cell] = t

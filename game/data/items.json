@@ -32,6 +32,18 @@
       "type": "resource",
       "value": 2
     },
+    "oak_sapling": {
+      "name": "Oak sapling",
+      "type": "resource",
+      "value": 1,
+      "plant": "oak"
+    },
+    "pine_sapling": {
+      "name": "Pine sapling",
+      "type": "resource",
+      "value": 1,
+      "plant": "pine"
+    },
     "plank": {
       "name": "Plank",
       "type": "resource",
