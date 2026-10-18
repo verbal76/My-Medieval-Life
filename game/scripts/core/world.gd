@@ -472,6 +472,10 @@ func continue_as_heir() -> void:
 
 
 # ---------------------------------------------------------------- economy --------------------
+## Diagnostics only (tests/economy_sim.gd): called as hook(buyer, seller, id, qty, total) after each sale.
+var trade_hook := Callable()
+
+
 ## Atomic sale: either goods and coins both move or nothing does. Parties are NPC or PlayerState.
 func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int) -> bool:
 	var total := qty * price_each
@@ -487,6 +491,8 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int)
 		buyer.spent += total
 	if seller is NPC:
 		seller.earned += total
+	if trade_hook.is_valid():
+		trade_hook.call(buyer, seller, id, qty, total)
 	return true
 
 
