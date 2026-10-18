@@ -49,6 +49,7 @@ func _init() -> void:
 	test_construction_migration()
 	test_build7_economy()
 	test_manor_work()
+	test_long_run_economy()
 	test_resource_registry()
 	test_simulation(days)
 	test_save_round_trip()
@@ -2802,6 +2803,52 @@ func test_manor_work() -> void:
 	w7.load_dict(VillageMap.load_default(), old)
 	check(not w7.player.quests.any(func(x): return x.id == "work_for_the_manor") and w7.treasury == int(old.treasury) + 6, "v7 save: the old single manor job is dropped, its six coins back in the treasury")
 	w7.dispose()
+	w.dispose()
+
+
+## The long-run economy corrections (owner-authorized evidence-based fixes, 2026-10-18; B7-014 to B7-017,
+## B7-009; docs/release/LONG_RUN_SIMULATION.md). Every number tested is provisional.
+func test_long_run_economy() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	w.player.pos = FAR_GUARDS
+	# B7-015: a guard's household is provisioned whenever the shops are open
+	var night: NPC = null
+	var day: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "guard":
+			if o.workplace == "night" and night == null:
+				night = o
+			elif o.workplace == "day" and day == null:
+				day = o
+	for g: NPC in [night, day]:
+		var pantry: Inventory = w.households[g.household].pantry
+		for f in NPCBrain.FOOD + ["log"]:
+			pantry.remove(f, pantry.count(f))
+		g.coins = 30
+	_at_hour(w, 10.0)
+	night.plan.clear()
+	b._guard(night, 10.0)
+	check(night.doing.begins_with("buying") and not night.plan.is_empty(), "B7-015: a guard off duty with an empty pantry goes shopping while the shops are open (%s)" % night.doing)
+	day.plan.clear()
+	b._guard(day, 10.0)
+	check(day.doing.begins_with("buying") and not day.plan.is_empty(), "B7-015: so does a guard on the rounds (%s)" % day.doing)
+	var bought := false
+	for s in night.plan:
+		if s.k == "do":
+			bought = b.act(night, s.act, s.args)
+	var hp: Inventory = w.households[night.household].pantry
+	check(bought and (hp.count("wheat") > 0 or hp.count("log") > 0), "B7-015: the trip stocks the household pantry")
+	_at_hour(w, 23.0)
+	day.plan.clear()
+	b._guard(day, 23.0)
+	check(not day.doing.begins_with("buying"), "B7-015: with the shops shut a guard goes to bed, not shopping")
+	var stocked: Inventory = w.households[day.household].pantry
+	stocked.add("wheat", 4)
+	stocked.add("log", 2)
+	_at_hour(w, 10.0)
+	b._guard(day, 10.0)
+	check(not day.doing.begins_with("buying"), "B7-015: a guard whose household is stocked stays on the rounds")
 	w.dispose()
 
 
