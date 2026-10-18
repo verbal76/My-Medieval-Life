@@ -135,6 +135,7 @@ func tick(gm: float) -> void:
 			a.hp -= gm / 60.0 * float(a.spec().hp) * float(GameData.b("animal_starve_hp_per_hour"))
 			if a.hp <= 0.0:
 				w.note("A %s starved %s." % [a.label(), "in the woods" if a.wild() else "in the pens: nobody fed it"])
+				w.stat("starved_" + a.species)
 				remove(a)
 
 
@@ -186,6 +187,7 @@ func new_day() -> void:
 			continue
 		for i in n:
 			spawn(a.area, a.species, "m" if w.rng.randf() < 0.5 else "f", a)
+		w.stat("born_" + a.species, n)
 		a.next_birth = now + float(s.breed_days) * 1440.0
 		if not a.wild():
 			born[a.spec().name] = int(born.get(a.spec().name, 0)) + n
@@ -239,6 +241,7 @@ func kill(a: Animal) -> Inventory:
 	w.bled.emit(a.pos)
 	if adult and int(s.hide) > 0:
 		bag.add("hide", int(s.hide))
+		w.stat("made_hide", float(s.hide))
 	remove(a)
 	return bag
 
