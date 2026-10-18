@@ -2986,6 +2986,16 @@ func test_doorways() -> void:
 			continue
 		var inner := (b.interior.doors as Array).map(func(c): return Vector2i(int(c[0]), int(c[1])))
 		check(inner.any(func(c): return town.has(c)), "%s (%s): walking in through a doorway reaches inside %s" % [b.id, b.type, inner])
+		# every bed, table, hearth and chest inside is used from a cell reached on foot (B8-019: furniture traps)
+		var cut := (b.interior.get("spots", []) as Array).filter(func(sp): return not town.has(Vector2i(int(sp.use[0]), int(sp.use[1]))))
+		check(cut.is_empty(), "%s (%s): every spot inside is reachable %s" % [b.id, b.type, cut.map(func(sp): return "%s@%s" % [sp.kind, sp.use])])
+	# every workstation's place of use is reached on foot
+	var cut_st := []
+	for id in w.stations:
+		var u: Vector2i = w.station_use(id)
+		if not town.has(u):
+			cut_st.append("%s %s@%s" % [id, w.stations[id].type, u])
+	check(cut_st.is_empty(), "every workstation can be reached %s" % [cut_st])
 
 
 ## Nobody plays the work animation without real work (Build 8 report: villagers swinging tools at

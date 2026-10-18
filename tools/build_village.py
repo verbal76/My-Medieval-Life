@@ -798,8 +798,31 @@ class Village:
         return {"w": w, "h": h, "door": house["door"], "layers": {k: layers[k] for k in sorted(layers)},
                 "interior": interior, "solid": ["".join(r) for r in solid], "stations": stations}
 
+    def reachable_uses(self, solid):
+        """Generator v5: a station used from a cell nobody can walk to (the tavern stove, the mine cart)
+        is used from the nearest walkable cell beside it that is reached from the village square."""
+        hub = tuple(self.ents["spawns"]["player"])
+        seen, todo = {hub}, [hub]
+        while todo:
+            x, y = todo.pop()
+            for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if 0 <= n[0] < W and 0 <= n[1] < H and n not in seen and not solid[n[1]][n[0]]:
+                    seen.add(n)
+                    todo.append(n)
+        ring = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)]
+        ring += [(dx, dy) for dy in range(-2, 3) for dx in range(-2, 3) if max(abs(dx), abs(dy)) == 2]
+        for st in self.ents["stations"]:
+            if tuple(st["use"]) in seen:
+                continue
+            ax, ay = st["at"]
+            for dx, dy in ring:
+                if (ax + dx, ay + dy) in seen:
+                    st["use"] = [ax + dx, ay + dy]
+                    break
+
     def to_json(self):
         solid = self.solid_grid()
+        self.reachable_uses(solid)
         layers = []
         order = [("ground", i) for i in range(6)] + [("path", 0), ("path", 1)] + \
                 [("below", i) for i in range(6)] + [("above", i) for i in range(6)]
