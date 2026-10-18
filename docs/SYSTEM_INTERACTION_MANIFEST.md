@@ -20,7 +20,7 @@ Rules:
 - **Character** — the player's name, family, sex, look and sprite
 - **Player state** — health, hunger, stamina, skills, generation
 - **Inventory** — items carried, stacks, tool and weapon durability
-- **Equipment** — the weapon, tool and armour slots
+- **Equipment** — the weapon, tool, armour, head, amulet and ring slots
 - **Food** — eating, hunger, food points, spoiled food
 - **Health** — damage, starvation, death
 - **Combat** — attacks between the player, villagers, guards and bandits
@@ -69,11 +69,11 @@ Rules:
 - **Expected:** 100 max health, 5 coins, a rusty sword, a rusty pickaxe, a loaf of bread, a rotten apple and plain clothes (worn), all from `balance.json`. The player's coins count in the coin total.
 - **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
 
-### INT-004 · Equipping sets damage and tool use
-- **Trigger:** Wield, Use, Wear or "take off" in the inventory.
-- **Source:** `game/scripts/core/world.gd::player_equip`, `game/scripts/core/world.gd::player_unequip`, `game/scripts/core/player_state.gd::damage`, `game/scripts/core/player_state.gd::tool_of`
-- **Affects:** Equipment, Combat, Resources
-- **Expected:** Only carried weapons, armour and tools can be equipped. The weapon sets attack damage (unarmed 2). The equipped tool is used first, else the fastest carried one of that kind.
+### INT-004 · Equipping sets damage, armour, tool use and gear bonuses
+- **Trigger:** Wield, Use, Wear or Take off in the pack window (an item or a gear slot chosen); dropping a worn item.
+- **Source:** `game/scripts/core/world.gd::player_equip`, `game/scripts/core/world.gd::player_unequip`, `game/scripts/core/world.gd::player_drop`, `game/scripts/core/player_state.gd::damage`, `game/scripts/core/player_state.gd::tool_of`, `game/scripts/core/player_state.gd::defense`, `game/scripts/core/player_state.gd::bonus`, `game/scripts/core/player_state.gd::fit_caps`, `game/scripts/ui/inventory_window.gd::_build_details`, `game/data/items.json`
+- **Affects:** Equipment, Combat, Resources, Health, Player state, Interface
+- **Expected:** Six gear slots: weapon, tool, armour (body), head, amulet, ring. Only carried items can be equipped, each in the slot its type names. The weapon sets attack damage (unarmed 2). The equipped tool is used first, else the fastest carried one of that kind. Body and head armour add up. Worn items' `bonus` (items.json) raises max health (`hp_cap`) and max stamina (`stamina_cap`); taking one off, or dropping it, brings health and stamina down to the new caps. Head, amulet and ring are saved; an older save loads with them empty.
 - **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
 
 ### INT-005 · Mining a deposit
@@ -366,11 +366,11 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031 |
-| Player state | INT-003, INT-005, INT-006, INT-018, INT-021, INT-031 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031 |
 | Inventory | INT-003, INT-005, INT-006, INT-007, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028 |
-| Health | INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
+| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
 | Combat | INT-004, INT-012, INT-013, INT-032 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
@@ -392,6 +392,6 @@ Rules:
 | Building | INT-018, INT-026, INT-030, INT-031 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021 |
 | Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039 |
-| Interface | INT-001, INT-002, INT-032, INT-033, INT-034, INT-039, INT-040 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040 |
 
 <!-- index:end -->

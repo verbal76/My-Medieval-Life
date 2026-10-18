@@ -113,7 +113,15 @@ func _ready() -> void:
 			"skills":
 				ui.show_skills()
 			"inventory":
-				ui.show_inventory("")
+				# a pack with something in most tabs, and the new gear worn
+				var kit := {"log": 6, "plank": 12, "iron_ore": 3, "coal": 4, "wheat": 9, "pottage": 2, "leather": 2,
+					"leather_cap": 1, "copper_ring": 1, "amulet": 1, "iron_bar": 2, "apple": 3}
+				for id in kit:
+					world.player.inv.add(id, kit[id])
+				for id in ["rusty_sword", "rusty_pickaxe", "leather_cap", "copper_ring", "amulet"]:
+					world.player_equip(id)
+				ui.show_inventory()
+				ui.inventory_window().choose("copper_ring")
 			"title":
 				ui.show_title(false)
 			"creation":
@@ -229,6 +237,13 @@ func _setup_input() -> void:
 		m.axis = pair[1]
 		m.axis_value = pair[2]
 		InputMap.action_add_event(pair[0], m)
+	# in windows the pad's A presses the focused button and B closes (Godot 4.7's ui_accept and
+	# ui_cancel have no pad buttons by default)
+	for pair in [["ui_accept", JOY_BUTTON_A], ["ui_cancel", JOY_BUTTON_B]]:
+		var j := InputEventJoypadButton.new()
+		j.button_index = pair[1]
+		if not InputMap.action_has_event(pair[0], j):
+			InputMap.action_add_event(pair[0], j)
 
 
 # ---------------------------------------------------------------- starting -------------------
@@ -1329,8 +1344,8 @@ func rest() -> void:
 	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
 	for i in steps:
 		world.update(0.5)
-	p.hp = p.max_hp
-	p.stamina = 100.0
+	p.hp = p.hp_cap()
+	p.stamina = p.stamina_cap()
 	ui.message("You rest. It is now %s." % world.clock_text())
 	save_game(false)
 

@@ -27,6 +27,7 @@ var panel: PanelContainer
 var panel_kind := ""
 var panel_body: VBoxContainer
 var title_label: Label
+var top_row: HBoxContainer     # the window's title tab and X (the pack window draws its own)
 var close_btn: Button
 var touch_bar: HBoxContainer
 var attack_btn: Button
@@ -378,6 +379,7 @@ func _build_panel() -> void:
 	panel.add_child(outer)
 	# the title in a slate tab, the pack's X tile to close, as in the pack's windows
 	var top := HBoxContainer.new()
+	top_row = top
 	title_label = Label.new()
 	title_label.add_theme_font_size_override("font_size", 28)
 	var tab := StyleBoxTexture.new()
@@ -410,8 +412,9 @@ func update_hud() -> void:
 	if w == null:
 		return
 	var p := w.player
-	bars.hp.max_value = p.max_hp
+	bars.hp.max_value = p.hp_cap()
 	bars.hp.value = p.hp
+	bars.stamina.max_value = p.stamina_cap()
 	bars.hunger.value = p.hunger
 	bars.stamina.value = p.stamina
 	coins_label.text = " %d" % p.coins
@@ -514,6 +517,7 @@ func is_open(kind: String) -> bool:
 
 func hide_all() -> void:
 	panel.visible = false
+	hud.visible = true
 	panel_kind = ""
 	if main.world and main.running:
 		main.paused = false
@@ -527,7 +531,13 @@ func _open(kind: String, title: String, pause := true) -> void:
 		panel_body.remove_child(c)
 		c.queue_free()
 	panel_body.size_flags_vertical = Control.SIZE_FILL
-	panel.offset_top = 8
+	panel.add_theme_stylebox_override("panel", _style(WINDOW))
+	top_row.visible = true
+	hud.visible = true
+	for side in ["offset_left", "offset_top"]:
+		panel.set(side, 8)
+	for side in ["offset_right", "offset_bottom"]:
+		panel.set(side, -8)
 	panel.visible = true
 	if pause:
 		main.paused = true
@@ -1129,65 +1139,29 @@ func toggle_inventory() -> void:
 	if is_open("inventory"):
 		hide_all()
 	else:
-		show_inventory("")
+		show_inventory()
 
 
-func show_inventory(filter: String) -> void:
-	var w: World = main.world
-	var p := w.player
-	_open("inventory", "Pack (%d of %d kinds) · %d coins" % [p.inv.items.size(), p.inv.max_stacks, p.coins])
-	var search := LineEdit.new()
-	search.placeholder_text = "Search…"
-	search.text = filter
-	search.custom_minimum_size = Vector2(0, 48)
-	search.text_submitted.connect(func(t): show_inventory(t))
-	panel_body.add_child(search)
-	var worn := HBoxContainer.new()
-	panel_body.add_child(worn)
-	for slot in ["weapon", "tool", "armor"]:
-		var sl: String = slot
-		var id: String = p.get(sl)
-		var label: String = {"weapon": "In hand", "tool": "Tool", "armor": "Wearing"}[sl] + ": " + (GameData.item_name(id) if id != "" else "nothing")
-		var b := _button(label + ("  (take off)" if id != "" else ""), func():
-			w.player_unequip(sl)
-			show_inventory(filter), id != "", worn)
-		b.custom_minimum_size = Vector2(200, 48)
-	for id in p.inv.ids():
-		if filter != "" and GameData.item_name(id).to_lower().find(filter.to_lower()) < 0:
-			continue
-		var it: Dictionary = GameData.item(id)
-		var t: String = it.get("type", "")
-		var iid: String = id
-		var h := HBoxContainer.new()
-		h.add_child(_icon(id))
-		var l := Label.new()
-		var worn_now: bool = id == p.weapon or id == p.armor or id == p.tool
-		l.text = "%s x%d%s" % [GameData.item_name(id), p.inv.count(id), "  (in use)" if worn_now else ""]
-		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		h.add_child(l)
-		panel_body.add_child(h)
-		if it.has("food"):
-			var b := _button("Eat", func():
-				var hp0 := p.hp
-				w.player_eat(iid)
-				message("You eat the %s.%s" % [GameData.item_name(iid).to_lower(), "  It makes you sick." if p.hp < hp0 else ""])
-				show_inventory(filter), true, h)
-			b.custom_minimum_size = Vector2(90, 48)
-		elif t in ["weapon", "armor", "tool"] and not worn_now:
-			var b := _button("Use" if t == "tool" else ("Wield" if t == "weapon" else "Wear"), func():
-				w.player_equip(iid)
-				show_inventory(filter), true, h)
-			b.custom_minimum_size = Vector2(90, 48)
-		var d := _button("Drop", func():
-			w.player_drop(iid, 1)
-			message("You put down a %s." % GameData.item_name(iid).to_lower())
-			show_inventory(filter), true, h)
-		d.custom_minimum_size = Vector2(80, 48)
-		if p.inv.count(id) > 1:
-			var da := _button("All", func():
-				w.player_drop(iid, p.inv.count(iid))
-				show_inventory(filter), true, h)
-			da.custom_minimum_size = Vector2(60, 48)
+## The pack window (scripts/ui/inventory_window.gd): Cozy Farm's inventory panel with the tabs, the
+## character and gear slots and the bag grid, over the darkened game. `tab` is the tab to open.
+func show_inventory(tab := "all") -> void:
+	_open("inventory", "Pack")
+	top_row.visible = false
+	hud.visible = false               # the pack window shows the coins itself
+	var dim := StyleBoxFlat.new()
+	dim.bg_color = Color(0.05, 0.03, 0.02, 0.85)
+	panel.add_theme_stylebox_override("panel", dim)
+	for side in ["offset_left", "offset_top", "offset_right", "offset_bottom"]:
+		panel.set(side, 0)
+	panel_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var win := InventoryWindow.new()
+	panel_body.add_child(win)
+	win.setup(self, tab)
+
+
+## The open pack window, or null.
+func inventory_window() -> InventoryWindow:
+	return panel_body.get_node_or_null("InventoryWindow") as InventoryWindow if is_open("inventory") else null
 
 
 # ---------------------------------------------------------------- skills ---------------------

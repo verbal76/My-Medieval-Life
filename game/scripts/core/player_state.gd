@@ -19,6 +19,9 @@ var skills := {}              # skill -> xp
 var weapon := ""              # equipped item id
 var armor := ""
 var tool := ""                # the tool in hand (a pickaxe or an axe)
+var head := ""                # a cap or helmet
+var amulet := ""
+var ring := ""
 var sex := "male"             # chosen at character creation
 var look := "player_m0_basic" # appearance id (game/data/appearances.json)
 var crimes: Array = []        # {day, kind, what, victim, witnesses}: what the village saw the player do
@@ -31,6 +34,11 @@ var chest := Inventory.new()  # storage in the player's house
 var plots: Array = []         # plot ids owned
 var alive := true
 var deaths := 0
+
+## The gear slots, in the order the pack window lists them. An item goes in the slot named by its
+## type (items.json); the item stays in the pack while it is worn.
+const GEAR := ["weapon", "tool", "armor", "head", "amulet", "ring"]
+const BASE_STAMINA := 100.0
 
 
 func _init() -> void:
@@ -86,10 +94,38 @@ func tool_of(kind: String) -> String:
 	return best
 
 
+## Armour from what is worn on the body and the head.
 func defense() -> float:
-	if armor != "" and inv.has(armor):
-		return float(GameData.item(armor).get("armor", 0))
-	return 0.0
+	var d := 0.0
+	for id in [armor, head]:
+		if id != "" and inv.has(id):
+			d += float(GameData.item(id).get("armor", 0))
+	return d
+
+
+## The sum of one bonus ("max_hp", "max_stamina") over the gear worn (items.json "bonus").
+func bonus(stat: String) -> float:
+	var total := 0.0
+	for slot in GEAR:
+		var id: String = get(slot)
+		if id != "" and inv.has(id):
+			total += float(GameData.item(id).get("bonus", {}).get(stat, 0))
+	return total
+
+
+## Most health and stamina the player can have, with what the gear worn adds.
+func hp_cap() -> float:
+	return max_hp + bonus("max_hp")
+
+
+func stamina_cap() -> float:
+	return BASE_STAMINA + bonus("max_stamina")
+
+
+## Health and stamina above the caps (after taking off a ring or an amulet) come down to them.
+func fit_caps() -> void:
+	hp = minf(hp, hp_cap())
+	stamina = minf(stamina, stamina_cap())
 
 
 func to_dict() -> Dictionary:
@@ -98,7 +134,7 @@ func to_dict() -> Dictionary:
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(), "plots": plots.duplicate(),
-		"alive": alive, "deaths": deaths, "tool": tool, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
+		"alive": alive, "deaths": deaths, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true),
 	}
 
@@ -120,6 +156,8 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.plots = d.plots.duplicate()
 	p.alive = bool(d.alive)
 	p.tool = str(d.get("tool", ""))                   # older saves: no tool slot, no look, no record
+	for k in ["head", "amulet", "ring"]:               # older saves: no head, amulet or ring slot
+		p.set(k, str(d.get(k, "")))
 	p.sex = str(d.get("sex", "male"))
 	p.look = str(d.get("look", ""))
 	p.crimes = d.get("crimes", []).duplicate(true)

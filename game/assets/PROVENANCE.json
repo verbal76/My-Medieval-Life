@@ -674,6 +674,13 @@
    "sha256": "41408e7a402dd76d1d501f5d0199ffb0b5f0a5c95959272c6be9c365c71f3944"
   },
   {
+   "file": "assets/icons/iron_helmet.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Armour/Metal-Helm-05.png",
+   "transform": "copied unchanged",
+   "sha256": "51e75e87fbfe675ccdc3a6f036a6ec4c4b6953c90d6edf89f705f92064f06263"
+  },
+  {
    "file": "assets/icons/iron_ore.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Metal/Metal-Ore-02.png",
@@ -700,6 +707,13 @@
    "member": "16x16 Survival RPG Icons/Armour/Leather-Jacket-08.png",
    "transform": "copied unchanged",
    "sha256": "6e9729b31cc0a32df5a90a501aaaab650024ef5d3f665a6690255be5c1a95de6"
+  },
+  {
+   "file": "assets/icons/leather_cap.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Armour/Leather-Cap-07.png",
+   "transform": "copied unchanged",
+   "sha256": "b0187dd20285134ef0ba727ef06645f2beae54cf908c28ef3d43092cd8e43d33"
   },
   {
    "file": "assets/icons/log.png",
@@ -756,6 +770,27 @@
    "member": "16x16 Survival RPG Icons/Plants & Alchemy/Herb-Bundle-01.png",
    "transform": "copied unchanged",
    "sha256": "b6bda1af97a1a5921f6d6cbef8c8b10c577e487a65e867ac7cbf9b311f1f78ab"
+  },
+  {
+   "file": "assets/icons/amulet.png",
+   "source": "16x16 Jewelry RPG Icons.zip",
+   "member": "16x16 Jewelry RPG Icons/Necklaces/Necklace-05.png",
+   "transform": "copied unchanged",
+   "sha256": "1bf104d89ee27811c5008946e063a57e7f573cb80797b5eea94ca33527ef1ddd"
+  },
+  {
+   "file": "assets/icons/copper_ring.png",
+   "source": "16x16 Jewelry RPG Icons.zip",
+   "member": "16x16 Jewelry RPG Icons/Rings/Ring-01.png",
+   "transform": "copied unchanged",
+   "sha256": "92d07a6bb7d872b7d25cd82b3716380fe4aef27c0de622d21c203e741792be64"
+  },
+  {
+   "file": "assets/icons/gold_ring.png",
+   "source": "16x16 Jewelry RPG Icons.zip",
+   "member": "16x16 Jewelry RPG Icons/Rings/Ring-16.png",
+   "transform": "copied unchanged",
+   "sha256": "3c8d9b32670b936946127003e8dc54e4eff218610784fc157fd92295b7bf8c0a"
   },
   {
    "file": "assets/tiles/cozyfarm-tiles.png",
@@ -1155,6 +1190,41 @@
    "member": "",
    "transform": "generated: a green swallow-tailed pennant with a gold rim on a pole (story quests), 1 px outline",
    "sha256": "60f78a2eb792b686228be6ca466418271f130c7eb658274e1c11ce3bed74152e"
+  },
+  {
+   "file": "assets/ui/inventory_panel.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/inventory.png",
+   "transform": "crop (0, 4, 293, 128) (flat tabs, 9 x 3 bag grid) with 8 px of empty headroom on top",
+   "sha256": "c0e7ace96491744d9e5f828befc6b2b8f7feee41486ea7c7da9f862442f00412"
+  },
+  {
+   "file": "assets/ui/inventory_tabs.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/inventory.png",
+   "transform": "the top 16 rows of the 8 copies with one tab raised (rows from y 220, every 144), stacked: row i has tab i raised",
+   "sha256": "73f3e786e78db4db76b1eff68264d008491a7152b8388dd7fc821136d9fd9d50"
+  },
+  {
+   "file": "assets/ui/tab_all.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/inventory_chopped.png",
+   "transform": "crop (160, 192, 176, 208): Cozy Farm's bag icon (the All tab)",
+   "sha256": "f05c4ae6756bb4ba1019a43f978154736a7bb4ba2c40d9a313c3a8e7f241b2fa"
+  },
+  {
+   "file": "assets/ui/tab_skills.png",
+   "source": "16x16 Assorted RPG Icons (partial)",
+   "member": "books.png",
+   "transform": "16 px cell column 8, row 8: a gilt book (the Skills tab)",
+   "sha256": "c1d566d45ee125beed3753c25cfddf9a72eb722c219f744ac2f59df668832ecb"
+  },
+  {
+   "file": "assets/ui/tab_journal.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Paper-03.png",
+   "transform": "a red wax seal added (the quest marker's scroll, without its outline): the Journal tab",
+   "sha256": "435ae26fdf1ed3e02630c9a53edc1e5f96d1cd1fa51965f67da4b1699bf2483f"
   },
   {
    "file": "assets/prompts/keyboard_a.png",

@@ -179,6 +179,36 @@
       "type": "armor",
       "value": 2,
       "armor": 0
+    },
+    "leather_cap": {
+      "name": "Leather cap",
+      "type": "head",
+      "value": 14,
+      "armor": 1
+    },
+    "iron_helmet": {
+      "name": "Iron helmet",
+      "type": "head",
+      "value": 36,
+      "armor": 2
+    },
+    "copper_ring": {
+      "name": "Copper ring",
+      "type": "ring",
+      "value": 14,
+      "bonus": {"max_stamina": 5}
+    },
+    "gold_ring": {
+      "name": "Gold ring",
+      "type": "ring",
+      "value": 60,
+      "bonus": {"max_stamina": 10}
+    },
+    "amulet": {
+      "name": "Copper amulet",
+      "type": "amulet",
+      "value": 20,
+      "bonus": {"max_hp": 5}
     }
   }
 }

@@ -593,6 +593,35 @@ func test_player_actions() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), d)
 	check(w3.player.tool == "" and w3.player.crimes.is_empty() and w3.player.sex != "", "an older save without them loads")
+	# head, amulet and ring: worn like the other gear, saved, and empty in an older save
+	for id in ["iron_helmet", "gold_ring", "amulet"]:
+		p.inv.add(id)
+	var def0 := p.defense()
+	check(w.player_equip("iron_helmet") and p.head == "iron_helmet" and p.defense() == def0 + float(GameData.item("iron_helmet").armor), "a helmet adds its armour to the body armour's")
+	check(w.player_equip("gold_ring") and p.ring == "gold_ring" and p.stamina_cap() == PlayerState.BASE_STAMINA + 10.0, "a gold ring: +10 max stamina")
+	check(w.player_equip("amulet") and p.amulet == "amulet" and p.hp_cap() == p.max_hp + 5.0, "an amulet: +5 max health")
+	p.hp = p.hp_cap()
+	p.stamina = p.stamina_cap()
+	w.player_unequip("amulet")
+	check(p.hp == p.max_hp and p.hp_cap() == p.max_hp, "taking the amulet off brings health down to the plain maximum")
+	w.player_equip("amulet")
+	check(not w.player_equip("wheat") and not w.player_equip("copper_ring"), "neither a material nor jewellery not carried can be worn")
+	var d2: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w4 := World.new()
+	w4.load_dict(VillageMap.load_default(), d2)
+	check(w4.player.head == "iron_helmet" and w4.player.ring == "gold_ring" and w4.player.amulet == "amulet", "head, ring and amulet are saved")
+	for k in ["head", "amulet", "ring"]:
+		d2.player.erase(k)
+	var w5 := World.new()
+	w5.load_dict(VillageMap.load_default(), d2)
+	check(w5.player.head == "" and w5.player.ring == "" and w5.player.amulet == "" and w5.player.weapon == w4.player.weapon, "an older save without them loads with them empty")
+	check(w.player_drop("gold_ring", 1) and p.ring == "" and p.stamina == p.stamina_cap(), "dropping the worn ring empties the slot and the extra stamina")
+	for r in ["leather_cap", "forge_iron_helmet", "forge_copper_ring", "forge_gold_ring", "forge_amulet"]:
+		var rec: Dictionary = GameData.recipes[r]
+		var out: String = rec.out.keys()[0]
+		check(GameData.item(out).get("type", "") in ["head", "ring", "amulet"] and rec.station in ["anvil", "workbench"], "%s makes %s" % [r, out])
+	w4.dispose()
+	w5.dispose()
 	# the heir does not inherit the dead player's fights
 	var guard: NPC = null
 	for n: NPC in w.npcs:
