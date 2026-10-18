@@ -14,6 +14,7 @@ var overworld: Overworld
 var radius := 2                       # chunks beyond the camera's chunk that are kept drawn
 var chunks := {}                      # chunk coordinates -> {root, ground, path, objects, tops}
 var canopy: CanopyFade
+var tree_sink: TreeView               # draws the chunks' trees as sprites (set by Main); the tiles here are ground, roads and decoration
 var tops_set := {}                    # canopy top tile -> true
 var _center := Vector2i(1 << 30, 1 << 30)
 var _pending: Array[Vector2i] = []
@@ -60,6 +61,8 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		if not chunks.has(c):
 			_build(c)
 			n += 1
+	if budget < 0 and tree_sink != null:
+		tree_sink.flush()
 	canopy.update(feet, delta)
 
 
@@ -93,22 +96,16 @@ func _build(cc: Vector2i) -> void:
 				set_tile(path, cell, ch.path[i])
 			if ch.deco[i] >= 0:
 				set_tile(objects, cell, ch.deco[i])
-	for q in range(0, ch.trees.size(), 3):
-		var cell := Vector2i(ch.trees[q], ch.trees[q + 1])
-		var k: Dictionary = overworld.tiles.trees[ch.trees[q + 2]]
-		var felled: Dictionary = overworld.changes.get(cell, {})
-		if felled.is_empty():
-			set_tile(objects, cell, int(k.trunk))
-			set_tile(tops, cell + Vector2i.UP, int(k.top))
-			set_tile(tops, cell, int(k.bottom))
-		else:
-			set_tile(objects, cell, int(k.trunk) if felled.state == "stump" else int(overworld.tiles.sapling))
+	if tree_sink != null:
+		tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
 	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops}
 	above_layers.append(tops)
 
 
 func _free(cc: Vector2i) -> void:
 	canopy.restore_all()                  # faded tiles go back to their layers before the layer goes
+	if tree_sink != null:
+		tree_sink.unload_chunk(cc)
 	var c: Dictionary = chunks[cc]
 	above_layers.erase(c.tops)
 	c.root.queue_free()

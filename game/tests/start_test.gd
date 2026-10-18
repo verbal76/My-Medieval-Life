@@ -403,21 +403,21 @@ func _run() -> void:
 	check(not tree.is_empty(), "a standing tree to walk behind")
 	if not tree.is_empty():
 		var trunk := Vector2i(int(tree.x), int(tree.y))
-		var top := trunk + Vector2i.UP
-		var above0: TileMapLayer = main.view.layer("above0")
-		p.pos = Vector2(top) + Vector2(0.5, 0.6)
-		main.canopy.update(p.pos, 1.0)
-		check(main.canopy.is_faded(top) and main.canopy.is_faded(trunk), "the canopy over the player fades")
-		check(above0.get_cell_source_id(top) == -1, "the faded canopy is drawn from its own layer")
-		p.pos = Vector2(top) + Vector2(0.5, -3.0)
-		main.canopy.update(p.pos, 1.0)
-		check(not main.canopy.is_faded(top) and main.view.tile_value(above0, top) == int(tree.top) and main.view.tile_value(above0, trunk) == int(tree.bottom), "the canopy is whole again once the player leaves")
-		# felled while faded: the canopy is gone and does not come back
-		p.pos = Vector2(top) + Vector2(0.5, 0.6)
-		main.canopy.update(p.pos, 1.0)
+		var tn: TreeView.TreeNode = main.tree_view.node_at(trunk)
+		check(tn != null and tn.texture != null and tn.drawn == "grown", "a mature tree is drawn as a sprite")
+		check(main.view.tile_value(main.view.layer("above0"), trunk + Vector2i.UP) != int(tree.top) or int(tree.top) < 0, "its old tile canopy is gone")
+		p.pos = Vector2(trunk) + Vector2(0.5, -0.8)
+		main.tree_view.update(p.pos, 1.0)
+		check(tn.modulate.a < 0.5, "the canopy over the player fades")
+		p.pos = Vector2(trunk) + Vector2(0.5, 3.5)
+		main.tree_view.update(p.pos, 1.0)
+		check(tn.modulate.a >= 0.99, "the canopy is whole again once the player leaves")
+		# felled while faded: the stump is drawn whole and nothing of the canopy stays
+		p.pos = Vector2(trunk) + Vector2(0.5, -0.8)
+		main.tree_view.update(p.pos, 1.0)
 		w.fell(tree, 0)
-		main.canopy.update(p.pos, 1.0)
-		check(not main.canopy.is_faded(top) and above0.get_cell_source_id(top) == -1 and above0.get_cell_source_id(trunk) == -1, "a tree felled while its canopy is faded leaves no canopy")
+		main.tree_view.update(p.pos, 1.0)
+		check(tn.drawn == "stump" and tn.modulate.a >= 0.99, "a tree felled while its canopy is faded leaves a whole stump")
 	# the trees in Shade's sample districts (their own Tree Top layer) fade the same way
 	var sample_top := Vector2i(-1, -1)
 	var canopy_tops := {}
@@ -1247,7 +1247,8 @@ func _gather_tests() -> void:
 		run_frames(1, 0.05)
 		guard += 1
 	check(str(tree.state) != "grown" and p.inv.count("log") > logs0, "with an axe the tree is felled (%d logs) and gathering stops at the stump" % (p.inv.count("log") - logs0))
-	# moving cancels gathering; Gather stays on
+	# moving cancels gathering; Gather stays on (from a few tiles away: the felling left the player by the tree)
+	p.pos = Vector2(w.map.nearest_walkable(cell + Vector2i(6, 5))) + Vector2(0.5, 0.5)
 	dep.amount = 5
 	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
 	run_frames(4, 0.05)
@@ -1631,19 +1632,19 @@ func _collision_tests() -> void:
 	_hold("move_right", 1.0)
 	check(main._blocked_corners(p.pos) == 0 and p.pos.x > spot.x + 1.2, "the player walks out of it (at %s)" % p.pos)
 	main.map.set_solid(spot, false)
-	# a tree does not grow back under the player; it does once they step away
+	# a young tree does not grow solid under the player; it does once they step away
 	var t: Dictionary = w.trees.filter(func(t): return t.state == "grown")[0]
 	var tc := Vector2i(int(t.x), int(t.y))
 	w.fell(t, 0)
-	t.state = "sapling"
-	t.regrow = 0.0
+	t.state = "young"
+	t.born = w.minutes - Trees.stage_minutes("sapling") - Trees.stage_minutes("young") - 1.0
+	main.map.set_solid(tc, false)
 	p.pos = Vector2(tc) + Vector2(0.5, 0.5)
-	w._new_day()
-	check(t.state == "sapling" and not main.map.is_solid(tc), "a sapling under the player's feet waits")
+	w._grow_trees()
+	check(t.state == "young" and not main.map.is_solid(tc), "a young tree under the player's feet waits")
 	p.pos = Vector2(tc) + Vector2(4.5, 0.5)
-	t.regrow = 0.0
-	w._new_day()
-	check(t.state == "grown" and main.map.is_solid(tc), "and grows once they step away")
+	w._grow_trees()
+	check(t.state == "growing" and main.map.is_solid(tc), "and grows solid once they step away")
 
 
 ## A blow that lands shows (Build 8 report: attacking a cow showed nothing): health drops, the

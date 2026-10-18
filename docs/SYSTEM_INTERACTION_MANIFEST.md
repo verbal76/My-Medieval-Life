@@ -638,7 +638,7 @@ Rules:
 
 ### INT-071 · The overworld surrounds the village: movement, collision, felling and saves
 - **Trigger:** The player walks, taps a goal, or fires a spell outside the village (or across its edge); fells an overworld tree; a day starts; the game saves or loads.
-- **Source:** `game/scripts/core/overworld.gd::is_solid`, `game/scripts/core/overworld.gd::get_chunk`, `game/scripts/core/overworld.gd::tree_at`, `game/scripts/core/village_map.gd::is_solid_world`, `game/scripts/core/village_map.gd::find_path_world`, `game/scripts/core/village_map.gd::exits`, `game/scripts/core/world.gd::tree_at`, `game/scripts/core/world.gd::fell`, `game/scripts/core/world.gd::_regrow_overworld_trees`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/view/overworld_view.gd::follow`, `game/scripts/main.gd::_try_move`, `game/scripts/main.gd::_route_step`, `game/scripts/main.gd::_on_tile_changed`
+- **Source:** `game/scripts/core/overworld.gd::is_solid`, `game/scripts/core/overworld.gd::get_chunk`, `game/scripts/core/overworld.gd::tree_at`, `game/scripts/core/village_map.gd::is_solid_world`, `game/scripts/core/village_map.gd::find_path_world`, `game/scripts/core/village_map.gd::exits`, `game/scripts/core/world.gd::tree_at`, `game/scripts/core/world.gd::fell`, `game/scripts/core/world.gd::sync_tree`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/view/overworld_view.gd::follow`, `game/scripts/main.gd::_try_move`, `game/scripts/main.gd::_route_step`, `game/scripts/main.gd::_on_tile_changed`
 - **Affects:** Overworld, Resources, Save, Interface
 - **Expected:** (owner, 2026-10-18: B8-011; layout and numbers are agent proposals)
   - The village keeps its map and coordinates, (0,0) to (119,89). Outside it the world is the Overworld: a pure function of the world seed (integer hash and value noise), cut into 32-tile chunks made on demand, cached (at most `MAX_CACHED`, least recently used evicted) and identical every time, on every platform.
@@ -646,7 +646,7 @@ Rules:
   - Cliffs (mountains), tree trunks and boulders are solid. Trees and boulders are never within a cell of each other or of a cliff; a road and the cells round it never hold a cliff, tree or boulder; mountains are cut by passes. So every open cell stays connected to the village's exits (tested).
   - The village's four exits (the road cell nearest each map edge and a grass trail to the edge, drawn as dirt path by Main) join the global road network; roads are one network of segments between jittered nodes, so a chunk's roads agree with its neighbours' (no seams).
   - The view draws the chunks within `overworld_chunk_radius` (balance.json) of the camera and frees those beyond one more, a few per frame; nothing is generated for chunks already loaded. The camera has no limits.
-  - An overworld tree fells like a village tree (axe, 4 logs, `tile_changed`). The felled tree is recorded in `Overworld.changes` and saved (`overworld`: seed, generator version, changes; save version 10); the terrain never is. A felled tree regrows at the dawn by the village's rules (stump, sapling, tree unless someone stands there) and is then the generated world again. A save from another generator version keeps the seed and drops the changes.
+  - An overworld tree is a lifecycle tree like a village tree (INT-074): mature ones fell with the axe for 4 logs. A tree the player changes (felled, growing, planted) is recorded in `Overworld.changes` and saved (`overworld`: seed, generator version, changes with species, stage clock and planted flag); the terrain never is. A felled tree regrows through the stages by the game clock and, once mature, is the generated world again. A save from another generator version keeps the seed and drops the changes.
 - **Tests:** `game/tests/overworld_test.gd`, `game/tests/start_test.gd`, `game/tests/run_tests.gd::test_save_round_trip`
 
 ### INT-072 · A guard provisions the household while the shops are open
@@ -669,6 +669,18 @@ Rules:
   - Nothing is made or lost; coins only move between purses.
 - **Tests:** `game/tests/run_tests.gd::test_long_run_economy`
 
+### INT-074 · Every tree is a lifecycle tree: growth by the clock, felling, saplings and planting
+- **Trigger:** Game time passes; the player or a villager fells a tree; the player plants a sapling; the player walks near or away from a tree.
+- **Source:** `game/scripts/core/trees.gd::sync`, `game/scripts/core/world.gd::chop_tree`, `game/scripts/core/world.gd::fell`, `game/scripts/core/world.gd::plant_tree`, `game/scripts/core/world.gd::sync_tree`, `game/scripts/core/overworld.gd::base_tree`, `game/scripts/view/tree_view.gd::update`
+- **Affects:** Resources, Inventory, Save, Overworld, Property, Interface, Employment
+- **Expected:** (agent decision under the owner's tree lifecycle approval of 2026-10-18; every number provisional, balance.json `tree_growth`)
+  - Every tree, in the village, at its edge and across the overworld, is one model: species (oak or pine, summer, autumn or snow) and a stage sapling, young, growing, mature, by game minutes since it began to grow. Growth is lazy: `Trees.sync` brings a tree up to the clock when it is looked at, hourly for the few not full grown, and untouched overworld trees keep no record. The world starts with trees of every stage, in patches of one species, none on a road or exit.
+  - Only a mature tree can be felled: `World.chop_tree` takes `chops` blows (cut marks, chips and leaves show each), the last gives the log yield once (4, plus the Woodcutting bonus) and, for the player, a sapling; a hurt tree heals after `heal_minutes`. Younger trees, saplings and stumps say why they cannot be felled and give nothing. Villagers fell mature village trees only.
+  - A felled tree is a stump (walkable) that sprouts `tree_regrow_days` later and grows through the stages again; ground bought for building clears its trees for good. Saplings and young trees are not solid, a growing or mature tree's trunk cell is; a young tree waits to become solid while someone stands on its cell, and the player can always walk out of a trunk that grew under them.
+  - The player plants a sapling from the pack on free grass in front of them, never on a road, exit, door, field, plot, building, station or beside another tree.
+  - Saved with the world: village trees whole, the overworld's changed trees (felled, growing, planted) with species, stage clock and planted flag; chunks that unload and load again redraw the same trees.
+- **Tests:** `game/tests/run_tests.gd::test_tree_canopy`, `game/tests/overworld_test.gd::_run_scene`, `game/tests/start_test.gd::_gather_tests`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -677,7 +689,7 @@ Rules:
 |---|---|
 | Character | INT-001, INT-018, INT-031 |
 | Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
@@ -685,7 +697,7 @@ Rules:
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068 |
-| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071 |
+| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073 |
 | Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073 |
 | Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073 |
@@ -694,7 +706,7 @@ Rules:
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066 |
 | Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074 |
 | Inheritance | INT-017, INT-062 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068 |
@@ -702,11 +714,11 @@ Rules:
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070 |
 | Workshops | INT-021, INT-030, INT-058 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060 |
-| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067 |
-| Overworld | INT-071 |
+| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074 |
+| Overworld | INT-071, INT-074 |
 
 <!-- index:end -->

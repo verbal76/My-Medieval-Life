@@ -58,6 +58,57 @@ func is_solid_world(c: Vector2i) -> bool:
 	return solid[c.y * w + c.x] == 1
 
 
+## The trees the map draws as tiles that are not in its tree list: a canopy pair (top over bottom, data.tiles.canopy)
+## in the layers, on a solid cell that is no road (the woodland at the map's edge and in the sample
+## stamps; a canopy over open ground or a road is an arch or a hedge, not a tree). Each is
+## {x, y, trunk, top, bottom} like a tree entry, trunk the stump tile in a "below" layer or -1; the game
+## makes them trees of the one lifecycle model like the rest (World.setup). Sorted by cell.
+func decor_trees() -> Array:
+	var logical := {}
+	for t in data.trees:
+		logical[Vector2i(int(t.x), int(t.y))] = true
+	var stumps := {}
+	for t in data.trees:
+		stumps[int(t.trunk)] = true
+	var roads := {}
+	for c in data.road:
+		roads[Vector2i(int(c[0]), int(c[1]))] = true
+	var lays := []
+	for lay in data.layers:
+		var n := str(lay.name)
+		if n.begins_with("below") or n.begins_with("above"):
+			lays.append([n, lay.data])
+	var bottoms := {}
+	for pr in data.tiles.canopy:
+		bottoms[int(pr[1])] = int(pr[0])
+	var found := {}
+	for y in range(1, h):
+		for x in w:
+			var cell := Vector2i(x, y)
+			if logical.has(cell) or not is_solid(cell) or roads.has(cell):
+				continue
+			for l in lays:
+				var b := int(l[1][y * w + x])
+				if not bottoms.has(b):
+					continue
+				var top: int = bottoms[b]
+				var has_top := false
+				for l2 in lays:
+					if int(l2[1][(y - 1) * w + x]) == top:
+						has_top = true
+				if not has_top:
+					continue
+				var trunk := -1
+				for l2 in lays:
+					if str(l2[0]).begins_with("below") and stumps.has(int(l2[1][y * w + x])):
+						trunk = int(l2[1][y * w + x])
+				found[cell] = {"x": x, "y": y, "trunk": trunk, "top": top, "bottom": b}
+				break
+	var cells: Array = found.keys()
+	cells.sort_custom(func(a: Vector2i, b: Vector2i): return a.y < b.y or (a.y == b.y and a.x < b.x))
+	return cells.map(func(c): return found[c])
+
+
 func in_village(c: Vector2i) -> bool:
 	return c.x >= 0 and c.y >= 0 and c.x < w and c.y < h
 

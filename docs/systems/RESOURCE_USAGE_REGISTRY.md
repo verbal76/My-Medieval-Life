@@ -13,7 +13,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 | Count | Value |
 |---|---|
 | Implemented harvestable node types | 15 (11 player-harvestable) |
-| Materials the nodes produce | 11: blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, red_berries, stone, wheat |
+| Materials the nodes produce | 13: blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, red_berries, stone, wheat |
 | Production chains documented (node product to finished item) | 34 (33 workable, 1 blocked by gold ore) |
 | Materials with no current use | 0 |
 | Recipes with a missing raw-material source | 2: forge_gold_ring, smelt_gold |
@@ -132,6 +132,10 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
     - 1 plank + 2 copper_bar → **1 copper_sword** (forge_copper_sword, anvil)
     - 1 plank + 1 iron_bar → **1 hammer** (forge_hammer, anvil)
     - 1 plank + 2 iron_bar → **1 pickaxe** (forge_pickaxe, anvil)
+- **oak_sapling** (1 a cycle)
+  - used as it is: Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature oak by the game clock.
+- **pine_sapling** (1 a cycle)
+  - used as it is: Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature pine by the game clock.
 
 ### `wheat_field` · Wheat field (implemented)
 
@@ -260,7 +264,9 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `leather_cap` Leather cap | head | recipe `leather_cap` ×1 | buyer `merchant_goods` ×3; equip `head`; export `caravan` |
 | `log` Log | resource | node `tree` ×4; start_stock `start_0` | building `bakehouse` ×10; building `carpentry` ×15; building `house` ×10; building `smithy` ×10; buyer `carpenter` ×30; buyer `cook` ×10; buyer `merchant_raw` ×20; export `caravan`; fuel `log`; fuel `log`; manor_job `log`; quest `wood_for_the_hearth` ×5; quest `work_the_woods` ×6; recipe `roast_meat` ×1; recipe `saw_planks` ×1 |
 | `meat` Raw meat | resource | node `chicken_pen` ×1; node `cow_pen` ×6; node `pig_pen` ×4; node `sheep_pen` ×3; node `wild_boar` ×4; node `wild_rabbit` ×1; start_stock `start_0` | buyer `cook` ×15; buyer `merchant_food` ×10; export `caravan`; recipe `roast_meat` ×1 |
+| `oak_sapling` Oak sapling | resource | node `tree` ×1 | plant `oak_sapling` |
 | `pickaxe` Pickaxe | tool | recipe `forge_pickaxe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; tool `coal_seam`; tool `copper_seam`; tool `iron_seam`; tool `stone_seam` |
+| `pine_sapling` Pine sapling | resource | node `tree` ×1 | plant `pine_sapling` |
 | `plain_clothes` Plain clothes | armor | start_kit `player_start_items` ×1 | equip `armor` |
 | `plank` Plank | resource | recipe `saw_planks` ×2; start_stock `start_0` | building `bakehouse` ×20; building `carpentry` ×30; building `house` ×30; building `smithy` ×20; buyer `merchant_raw` ×20; buyer `smith` ×10; export `caravan`; manor_job `plank`; recipe `forge_axe` ×1; recipe `forge_copper_sword` ×1; recipe `forge_hammer` ×1; recipe `forge_pickaxe` ×1 |
 | `pottage` Pottage | food | recipe `cook_pottage` ×6; start_stock `start_0`; start_stock `start_1` | buyer `merchant_food` ×20; buyer `tavernkeeper` ×60; export `caravan`; food `pottage`; quest `food_for_the_family` ×3 |
@@ -283,6 +289,8 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `log` | fuel | Household firewood: every household burns a log from its pantry each night; a household without one is cold (noted, stat burned_log). | `game/scripts/core/world.gd::_new_day` |
 | `log` | fuel | Villagers buy a log for the pantry in the evening from a carpenter or the raw-goods merchant. | `game/scripts/core/npc_brain.gd::_plan_evening` |
 | `log` | manor_job | Bought by the manor for repairs and carried to the works yard (haul), then used up mending (mend). | `game/scripts/core/npc_brain.gd::reeve_day` |
+| `oak_sapling` | plant | Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature oak by the game clock. | `game/scripts/core/world.gd::plant_tree` |
+| `pine_sapling` | plant | Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature pine by the game clock. | `game/scripts/core/world.gd::plant_tree` |
 | `plank` | manor_job | Bought for repairs and public works, carried to the works yard (haul) and used up mending (mend). | `game/scripts/core/npc_brain.gd::_public_works` |
 | `stone` | manor_job | Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend). | `game/scripts/core/manor_work.gd::post_quarry` |
 | `wheat` | feed | Livestock feed: keepers and the player put wheat in a pen's trough; each animal eats its feed a meal. | `game/scripts/core/fauna.gd::feed` |
@@ -302,7 +310,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`ale`, `amulet`, `apple`, `axe`, `blueberries`, `bread`, `copper_ring`, `copper_sword`, `gold_ring`, `hammer`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `pickaxe`, `plain_clothes`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`
+`ale`, `amulet`, `apple`, `axe`, `blueberries`, `bread`, `copper_ring`, `copper_sword`, `gold_ring`, `hammer`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `oak_sapling`, `pickaxe`, `pine_sapling`, `plain_clothes`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`
 
 ### Orphaned items
 

@@ -14,7 +14,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ## Summary
 
 - Implemented node types: 15 (11 the player may harvest, 4 the keeper's livestock).
-- Materials they produce: 11 (blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, red_berries, stone, wheat).
+- Materials they produce: 13 (blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, red_berries, stone, wheat).
 - Finite node types: 4 (coal_seam, copper_seam, iron_seam, stone_seam); with no replacement once worked out: 0 (the caravan imports each).
 - At risk of overharvesting: 6 (coal_seam, copper_seam, iron_seam, stone_seam, wild_boar, wild_rabbit).
 - Not Gather-compatible: 4 (chicken_pen, cow_pen, pig_pen, sheep_pen).
@@ -32,7 +32,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | no | yes | implemented |
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
-| `tree` Tree | wood | natural | axe | woodcutting | 4 log | regrows | yes | yes | yes | implemented |
+| `tree` Tree | wood | natural | axe | woodcutting | 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
 | `wild_boar` Wild boar | game | natural | weapon | combat | 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
 | `wild_rabbit` Rabbit | game | natural | weapon | combat | 1 meat | breeds | yes | yes | yes | implemented |
@@ -240,20 +240,20 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `tree` · Tree
 
 - **Status:** implemented. **Category:** wood, natural. **Found by:** `{"kind": "tree"}`.
-- **Where:** The woods west and east of the village, and trees across the map. **In the world:** 305 trees, 1220 logs while all are grown.
+- **Where:** The woods west and east of the village and the woodland at its edge, and every tree across the map. **In the world:** 305 trees, 1220 logs while all are grown.
 - **Action:** Felling (interact): "Fell this tree". **Range (tiles):** 1. The trunk or the canopy top above it, in the cell 0.9 tiles in front of the player or one of its four neighbours (World.tree_at, main.gd _find_target).
 - **Tool:** axe (required). You need an axe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `axe`: recipe (forge_axe); resold by the merchant_goods.
 - **Skill:** woodcutting, level 1.
 - **Time:** `chop_minutes` (40 game minutes). A villager works chop_minutes game minutes a tree. The player's takes chop_minutes / game_minutes_per_second x 0.5 real seconds, divided by the axe's speed, and 30% less from Woodcutting 3.
 - **Cost:** stamina 0, tool wear 3. No stamina. The axe wears 3 a tree.
-- **Yields a cycle:** 4 log. World.fell gives 4 logs; the player gets 1 more from Woodcutting 2. Villagers always get 4.
-- **Total:** 4 logs from each grown tree in village.json trees.
-- **Depletion:** regrows. A felled tree is a stump; at the dawn tree_regrow_days later it is a sapling, and 2 days after that a grown tree again (World._new_day). A stump or sapling on ground bought for building is grubbed up ('cleared') and never grows again (Property.claim).
+- **Yields a cycle:** 4 log, 1 oak_sapling, 1 pine_sapling. World.chop_tree takes balance.json tree_growth.chops blows; the last one calls World.fell, which gives 4 logs once; the player gets 1 more from Woodcutting 2 and (chance tree_growth.sapling_chance) a sapling item (oak_sapling or pine_sapling) to plant. Villagers always get 4 and no sapling. Only a MATURE tree can be felled: saplings, young and growing trees give nothing and say why.
+- **Total:** 4 logs from each mature tree: the village trees (village.json trees and the map-edge woodland), and any overworld tree, generated or planted.
+- **Depletion:** regrows. A felled tree is a stump; tree_regrow_days later (at dawn) it sprouts a sapling, which grows young, growing and mature by the game clock (balance.json tree_growth, in game days; Trees.sync, computed lazily). The player can also plant saplings (World.plant_tree). Ground bought for building is cleared and never grows again (Property.claim).
 - **Owner:** Nobody: trees belong to no one. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers yes. Woodcutters (NPCBrain._woodcutter, act "chop"): the nearest grown tree within 70 tiles nobody has claimed.
+- **Harvested by:** the player yes; villagers yes. Woodcutters (NPCBrain._woodcutter, act "chop"): the nearest mature tree within 70 tiles nobody has claimed; they fell it in one go and do not replant.
 - **Gather mode:** yes. **Icon:** `log`.
 - **Risk:** Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9).
-- **Code:** `game/scripts/core/world.gd::fell`, `game/scripts/core/world.gd::tree_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_woodcutter`, `game/scripts/core/property.gd::claim`
+- **Code:** `game/scripts/core/world.gd::fell`, `game/scripts/core/world.gd::tree_at`, `game/scripts/core/world.gd::chop_tree`, `game/scripts/core/world.gd::plant_tree`, `game/scripts/core/trees.gd::sync`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_woodcutter`, `game/scripts/core/property.gd::claim`
 
 ### `wheat_field` · Wheat field
 

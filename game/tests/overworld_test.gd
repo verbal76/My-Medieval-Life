@@ -377,45 +377,179 @@ func _run_scene() -> void:
 		main.ow_view.follow(back, back, 0.1, -1)
 	for c in snap:
 		check(main.ow_view.ground_value(c) == snap[c] and (snap[c] == -1 or snap[c] >= 100000), "returning shows the same tiles at %s" % [c])
-	# felled trees: saved, loaded, drawn as stumps, regrown by the village's rules
-	var seed_chunk := Vector2i(-2, -3)
-	var tree := {}
-	var tcell := Vector2i.ZERO
-	for cy in range(-5, 0):
-		for cx in range(-5, 0):
-			var ch := o.get_chunk(Vector2i(cx, cy))
-			for q in range(0, ch.trees.size(), 3):
-				var cell := Vector2i(ch.trees[q], ch.trees[q + 1])
-				if tree.is_empty() and o.is_solid(cell):
-					tree = w.tree_at(cell)
-					tcell = cell
-	check(not tree.is_empty() and tree.get("ow", false) and tree.state == "grown", "a tree outside the village is found by World.tree_at %s" % [tcell])
-	w.player.pos = Vector2(tcell) + Vector2(-0.5, 0.5)
-	main.ow_view.follow(w.player.pos, w.player.pos, 0.1, -1)
-	var logs := w.fell(tree, 0)
-	check(logs == 4 and not o.is_solid(tcell) and o.changes.has(tcell), "felling it gives logs, opens the cell and records the change")
-	var cc := Overworld.chunk_of(tcell)
-	var drawn: Dictionary = main.ow_view.chunks.get(cc, {})
-	check(not drawn.is_empty() and main.ow_view.tile_value(drawn.tops, tcell) == -1 and main.ow_view.tile_value(drawn.tops, tcell + Vector2i.UP) == -1, "its canopy is gone from the view")
-	var d := o.to_dict()
-	check(d.keys().size() == 3 and d.changes.size() == 1 and int(d.seed) == o.seed, "only the seed and the change are saved, never the terrain")
-	check(main.save_game(false), "the game saves")
-	main.continue_game()
-	var w2: World = main.world
-	var o2: Overworld = main.map.overworld
-	check(w2 != w and o2.seed == o.seed and o2.changes.has(tcell) and o2.changes[tcell].state == "stump", "after loading the seed and the felled tree are back")
-	check(not o2.is_solid(tcell) and w2.tree_at(tcell).state == "stump", "the stump is walkable and still a stump")
-	var o3 := _world(o.seed)
-	check(_fingerprint(o3.get_chunk(cc)) == _fingerprint(o2.get_chunk(cc)), "the terrain around it regenerates identically from the seed")
-	# regrowth: a stump, then a sapling, then a tree again
-	w2.player.pos = Vector2(50.5, 50.5)
-	var t2: Dictionary = o2.changes[tcell]
-	var day := float(w2.day() + 20)
-	w2._regrow_overworld_trees(day)
-	check(t2.state == "sapling" and not o2.is_solid(tcell), "two days on it is a sapling")
-	w2._regrow_overworld_trees(day + 3.0)
-	check(not o2.changes.has(tcell) and o2.is_solid(tcell), "then a tree again: the change is gone and the world is as generated")
-	# the village's own trees are as before
-	check(w2.trees.size() == main.map.data.trees.size(), "the village's trees are unchanged")
+		# trees outside the village are lifecycle trees of the one model, drawn as sprites: felled, saved,
+		# loaded, regrown by the clock, planted, grown; kept across unloading and reloading chunks
+		var tree := {}
+		var tcell := Vector2i.ZERO
+		for cy in range(-5, 0):
+			for cx in range(-5, 0):
+				var ch := o.get_chunk(Vector2i(cx, cy))
+				for q in range(0, ch.trees.size(), 3):
+					var cell := Vector2i(ch.trees[q], ch.trees[q + 1])
+					if tree.is_empty() and o.is_solid(cell):
+						var cand := w.tree_at(cell)
+						if cand.state == "grown":
+							tree = cand
+							tcell = cell
+		check(not tree.is_empty() and tree.get("ow", false) and tree.state == "grown", "a mature tree outside the village is found by World.tree_at %s" % [tcell])
+		w.player.pos = Vector2(tcell) + Vector2(-0.5, 0.5)
+		main.ow_view.follow(w.player.pos, w.player.pos, 0.1, -1)
+		var tn: TreeView.TreeNode = main.tree_view.node_at(tcell)
+		check(tn != null and tn.drawn == "grown" and tn.texture != null, "it is drawn as a sprite")
+		check(w.chop_tree(tree, -1, 0).logs == 0 and w.tree_hits(tcell) == 1 and tn.hits == 1 and tn.cuts != null, "a blow leaves a cut mark and no logs")
+		var logs := w.fell(tree, 0)
+		check(logs == 4 and not o.is_solid(tcell) and o.changes.has(tcell), "felling it gives logs, opens the cell and records the change")
+		check(w.fell(tree, 0) == 0, "and not twice")
+		check(tn.drawn == "stump" and tn.cuts == null, "the view shows the stump")
+		var cc := Overworld.chunk_of(tcell)
+		var d := o.to_dict()
+		check(d.keys().size() == 3 and d.changes.size() == 1 and int(d.seed) == o.seed, "only the seed and the change are saved, never the terrain")
+		# the chunk unloads and loads again: the stump is still a stump
+		var far := Vector2(tcell) + Vector2(400.5, 0.5)
+		w.player.pos = far
+		main.camera.position = far * 16.0
+		main.ow_view.follow(far, far, 0.1, -1)
+		check(main.tree_view.node_at(tcell) == null and not main.ow_view.chunks.has(cc), "far away the chunk's trees are not drawn")
+		w.player.pos = Vector2(tcell) + Vector2(-0.5, 0.5)
+		main.camera.position = w.player.pos * 16.0
+		main.ow_view.follow(w.player.pos, w.player.pos, 0.1, -1)
+		check(main.tree_view.node_at(tcell) != null and main.tree_view.node_at(tcell).drawn == "stump", "back again the stump is drawn, not a tree")
+		check(main.save_game(false), "the game saves")
+		main.continue_game()
+		var w2: World = main.world
+		var o2: Overworld = main.map.overworld
+		check(w2 != w and o2.seed == o.seed and o2.changes.has(tcell) and o2.changes[tcell].state == "stump", "after loading the seed and the felled tree are back")
+		check(not o2.is_solid(tcell) and w2.tree_at(tcell).state == "stump", "the stump is walkable and still a stump")
+		var o3 := _world(o.seed)
+		check(_fingerprint(o3.get_chunk(cc)) == _fingerprint(o2.get_chunk(cc)), "the terrain around it regenerates identically from the seed")
+		# regrowth by the clock: a stump, a sapling, young, growing, mature, and the world is as generated
+		var t2: Dictionary = o2.changes[tcell]
+		w2.minutes = float(t2.regrow) * Trees.DAY + 1.0
+		w2.sync_tree(t2)
+		check(t2.state == "sapling" and not o2.is_solid(tcell), "after its days it is a sapling, not solid")
+		w2.minutes = float(t2.born) + Trees.stage_minutes("sapling") + Trees.stage_minutes("young") + 1.0
+		w2.sync_tree(t2)
+		check(t2.state == "growing" and o2.is_solid(tcell), "then a growing tree with a solid trunk")
+		w2.minutes += Trees.stage_minutes("growing")
+		w2.sync_tree(t2)
+		check(t2.state == "grown" and not o2.changes.has(tcell) and o2.is_solid(tcell), "then a mature tree again: the change is gone and the world is as generated")
+		# every overworld tree is a lifecycle tree: several species and stages, in patches, none on a road or exit
+		o3.clock = 7.0 * 60.0
+		var kinds := {}
+		var stages := {}
+		var alike := 0
+		var pairs := 0
+		var on_road := 0
+		var trees_seen := 0
+		for cy in range(-3, 6):
+			for cx in range(-3, 6):
+				var by := {}
+				var list: Array = o3.chunk_trees(Vector2i(cx, cy))
+				for t in list:
+					by[Vector2i(int(t.x), int(t.y))] = t
+				for t in list:
+					trees_seen += 1
+					kinds[t.species] = true
+					stages[t.state] = true
+					var tc := Vector2i(int(t.x), int(t.y))
+					if o2.is_road(tc) or o2.chunk_in_village(Overworld.chunk_of(tc)):
+						on_road += 1
+					for gate in main.map.exits():
+						if tc == gate.out or tc == gate.edge:
+							on_road += 1
+					for dd in [Vector2i(2, 0), Vector2i(0, 2), Vector2i(3, 0), Vector2i(0, 3)]:
+						var other: Dictionary = by.get(tc + dd, {})
+						if not other.is_empty():
+							pairs += 1
+							alike += 1 if other.species == t.species else 0
+		check(trees_seen > 200 and on_road == 0, "%d overworld trees, none on a road or an exit" % trees_seen)
+		check(kinds.size() >= 4 and stages.size() >= 3, "they are of several species and stages: %s %s" % [kinds.keys(), stages.keys()])
+		check(pairs == 0 or (alike < pairs * 9 / 10 and alike > pairs / 8), "in patches, not all alike (%d of %d near pairs alike)" % [alike, pairs])
+		# the whole journey, with the player's own actions: out of the village, fell a mature tree for logs and a
+		# sapling, plant it, let it grow, leave until its chunk unloads, come back, save, load: the tree is a mature tree
+		var p: PlayerState = w2.player
+		p.inv.add("axe")
+		var spot := Vector2i(-1000, -1000)
+		var west2: Vector2i = main.map.exits()[3].out
+		for r in range(3, 40):
+			for dy in range(-r, r + 1):
+				var sc := west2 + Vector2i(-r, dy)
+				var tr := w2.tree_at(sc)
+				if spot.x < -999 and not tr.is_empty() and tr.state == "grown" and Vector2i(int(tr.x), int(tr.y)) == sc and not o2.is_solid(sc + Vector2i(1, 0)):
+					spot = sc
+		check(spot.x > -999, "a mature tree beside the west road to fell")
+		var goal2 := Vector2(spot.x + 1, spot.y) + Vector2(0.5, 0.5)
+		w2.player.pos = Vector2(main.map.exits()[3].edge) + Vector2(0.5, 0.5)
+		main.move_to = goal2
+		guard = 0
+		while main.move_to != Vector2.INF and guard < 4000:
+			main._player_step(0.04)
+			guard += 1
+		check(w2.player.pos.distance_to(goal2) < 2.5, "walked out of the village to the tree (%s, %d steps)" % [w2.player.pos, guard])
+		w2.player.pos = goal2
+		main.player_sprite.face(Vector2(-1, 0))
+		main._find_target()
+		check(main.target.get("kind", "") == "tree", "Use offers the tree: %s" % main.target.get("label", ""))
+		var logs0 := p.inv.count("log")
+		main._use()
+		guard = 0
+		while not main.action.is_empty() and guard < 2000:
+			main._player_step(0.05)
+			guard += 1
+		var trj := w2.tree_at(spot)
+		check(p.inv.count("log") == logs0 + 4 and trj.state == "stump", "felled blow by blow: 4 logs and a stump")
+		var sap := p.inv.count("oak_sapling") + p.inv.count("pine_sapling")
+		check(sap >= 1, "and a sapling in the pack")
+		var sid := "oak_sapling" if p.inv.count("oak_sapling") > 0 else "pine_sapling"
+		# plant it on the free grass in front of the player
+		var plant_at := Vector2i(-1000, -1000)
+		var reasons := {}
+		for r in range(2, 9):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					var c2 := spot + Vector2i(dx, dy)
+					for face in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
+						var stand := Vector2i((Vector2(c2) - face).floor())
+						reasons[w2.plant_refusal(c2)] = true
+						if plant_at.x < -999 and w2.plant_refusal(c2) == "" and not o2.is_solid(stand):
+							w2.player.pos = Vector2(c2) + Vector2(0.5, 0.5) - face
+							main.player_sprite.face(face)
+							plant_at = c2
+		check(plant_at.x > -999, "free grass in front of the player %s %s" % [w2.player.pos, reasons.keys()])
+		main.plant_sapling(sid)
+		guard = 0
+		while not main.action.is_empty() and guard < 2000:
+			main._player_step(0.05)
+			guard += 1
+		var pl := w2.tree_at(plant_at)
+		check(not pl.is_empty() and pl.state == "sapling" and pl.planted and not o2.is_solid(plant_at) and p.inv.count(sid) == sap - 1, "planted: a sapling that is not solid, one sapling fewer")
+		check(main.tree_view.node_at(plant_at) != null and main.tree_view.node_at(plant_at).drawn == "sapling", "drawn as a sapling")
+		check(w2.plant_refusal(plant_at) != "" and w2.plant_refusal(plant_at + Vector2i(1, 0)) != "", "no second sapling on or beside it")
+		w2.minutes += Trees.stage_minutes("sapling") + Trees.stage_minutes("young") + 1.0
+		main.tree_view.update(w2.player.pos, 0.6)
+		check(pl.state == "growing" and o2.is_solid(plant_at) and main.tree_view.node_at(plant_at).drawn == "growing", "the view follows the clock: growing, solid")
+		w2.minutes += Trees.stage_minutes("growing")
+		main.tree_view.update(w2.player.pos, 0.6)
+		check(pl.state == "grown" and main.tree_view.node_at(plant_at).drawn == "grown", "and mature")
+		# leave until the chunk is unloaded, return
+		var gone := Vector2(plant_at) + Vector2(-400.5, 0.5)
+		w2.player.pos = gone
+		main.camera.position = gone * 16.0
+		main.ow_view.follow(gone, gone, 0.1, -1)
+		check(main.tree_view.node_at(plant_at) == null, "its chunk unloaded: the tree is not drawn")
+		w2.player.pos = Vector2(plant_at) + Vector2(0.5, 1.5)
+		main.camera.position = w2.player.pos * 16.0
+		main.ow_view.follow(w2.player.pos, w2.player.pos, 0.1, -1)
+		check(main.tree_view.node_at(plant_at) != null and main.tree_view.node_at(plant_at).drawn == "grown", "back again it is a mature tree")
+		check(main.save_game(false), "saved")
+		main.continue_game()
+		w2 = main.world
+		main.ow_view.follow(w2.player.pos, w2.player.pos, 0.1, -1)
+		var pl2 := w2.tree_at(plant_at)
+		check(not pl2.is_empty() and pl2.state == "grown" and pl2.species == pl.species and w2.map.overworld.is_solid(plant_at), "after loading the planted tree is a mature tree of the same species")
+		check(main.tree_view.node_at(plant_at) != null and main.tree_view.node_at(plant_at).drawn == "grown", "and drawn so")
+		check(w2.tree_at(spot).state == "stump" or w2.tree_at(spot).state == "sapling", "and the felled one is still on its way back")
+		# the village's own trees: the map's trees and its edge woodland, all of the model
+		check(w2.trees.size() >= main.map.data.trees.size(), "the village's trees are all there")
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)

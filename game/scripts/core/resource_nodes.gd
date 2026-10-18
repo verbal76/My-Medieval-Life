@@ -173,13 +173,9 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 			if int(ref.amount) <= 0:
 				return "The seam is worked out."
 		"tree":
-			match str(ref.state):
-				"stump":
-					return "Only a stump is left. It grows back in a few days."
-				"sapling":
-					return "The sapling is not grown yet."
-				"cleared":
-					return "The ground was cleared for building. Nothing grows here now."
+			var why := Trees.refusal(str(ref.state))        # only a mature tree can be felled
+			if why != "":
+				return why
 		"plant":
 			if ref.state == "picked":
 				return "Already picked. It grows back in a few days."
