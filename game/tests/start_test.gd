@@ -420,6 +420,43 @@ func _run() -> void:
 	main.apply_settings()
 	ui.hide_all()
 
+	# quests through the screens: the sage's diamond, a side quest accepted, handed in, and the story
+	var sage: NPC = w.npc(w.sage_id)
+	p.pos = sage.pos + Vector2(0, 2)
+	main.camera.position = p.pos * main.T
+	main.camera.reset_smoothing()
+	main.camera.force_update_scroll()
+	main._sync_diamonds()
+	check(main.diamonds.has(sage.id), "a green diamond floats over the sage (story quest)")
+	var cook_q: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "cook":
+			cook_q = n
+			break
+	w.quests.offers[cook_q.id] = "wood_for_the_hearth"
+	check(w.quests.diamond(cook_q), "a villager with a request shows the diamond")
+	ui.show_talk(cook_q)
+	check(_press("Need any help?") and _speech().contains("5 log"), "asking for work hears the request")
+	check(_press("I'll do it") and w.player.quests.any(func(q): return q.id == "wood_for_the_hearth"), "accepting takes the quest")
+	ui.show_journal(-1, true)
+	var qtext: String = " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text))
+	check(qtext.contains("Wood for the hearth") and qtext.contains("The sage in the north"), "the journal's quest page lists both quests")
+	ui.hide_all()
+	p.inv.add("log", 5)
+	cook_q.coins = 30
+	var purse0 := p.coins
+	ui.show_talk(cook_q)
+	check(_press("Here you are") and p.coins == purse0 + 10 and not p.inv.has("log"), "handing in the logs pays the reward")
+	ui.hide_all()
+	p.coins += 60
+	ui.show_talk(sage)
+	check(_speech().contains("Fifty coins"), "the sage speaks of the story quest")
+	check(_press("Learn Fireball") and p.spells.get("fireball", false) and not w.player.quests.any(func(q): return q.id == "the_sage_in_the_north"), "learning Fireball from the sage completes the story quest")
+	check(_speech().contains("Fire does not forgive"), "the sage gives his parting words")
+	ui.hide_all()
+	main._sync_diamonds()
+	check(not main.diamonds.has(sage.id), "the sage's diamond is gone")
+
 	# 19-20. save, reload, and the state is the same
 	var snap := {"name": p.name, "look": p.look, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),
 		"weapon": p.weapon, "tool": p.tool, "armor": p.armor, "wheat": p.inv.count("wheat"), "crimes": p.crimes.size(),

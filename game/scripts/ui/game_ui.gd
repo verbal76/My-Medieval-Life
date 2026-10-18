@@ -727,12 +727,12 @@ func _choice(text: String, values: Array, current: String, set_value: Callable) 
 
 ## The journal: the village record written into a book, two parchment pages at a time, under a
 ## heading for each day. `spread` is the pair of pages shown; -1 opens at the latest.
-func show_journal(spread: int) -> void:
-	var items := _journal_items()
+func show_journal(spread: int, quests_page := false) -> void:
+	var items := _quest_items() if quests_page else _journal_items()
 	var pages := maxi(1, ceili(float(items.size()) / JOURNAL_PER_PAGE))
 	var spreads := ceili(pages / 2.0)
 	spread = spreads - 1 if spread < 0 else clampi(spread, 0, spreads - 1)
-	_open("journal", "Journal", true)
+	_open("journal", "Journal: quests" if quests_page else "Journal", true)
 	var book := HBoxContainer.new()
 	book.add_theme_constant_override("separation", 0)
 	book.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -791,19 +791,49 @@ func show_journal(spread: int) -> void:
 			book.add_child(spine)
 	var nav := HBoxContainer.new()
 	panel_body.add_child(nav)
-	var earlier := _button("Earlier", func(): show_journal(spread - 1), spread > 0, nav)
+	var earlier := _button("Earlier", func(): show_journal(spread - 1, quests_page), spread > 0, nav)
 	earlier.custom_minimum_size = Vector2(160, 48)
 	var where := Label.new()
 	where.text = "Pages %d–%d of %d" % [spread * 2 + 1, mini(spread * 2 + 2, pages), pages] if items.size() > 0 else "Nothing written yet"
 	where.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	where.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nav.add_child(where)
-	var later := _button("Later", func(): show_journal(spread + 1), spread < spreads - 1, nav)
+	var later := _button("Later", func(): show_journal(spread + 1, quests_page), spread < spreads - 1, nav)
+	var other := _button("Village record" if quests_page else "Quests", func(): show_journal(-1, not quests_page), true, nav)
+	other.custom_minimum_size = Vector2(200, 48)
 	later.custom_minimum_size = Vector2(160, 48)
 
 
 ## The village record as journal lines: a heading when the day changes, then each entry with its
 ## time ("[Day 3  07:24] text" in the log).
+## The player's quests as journal lines: the title as a heading, then who asked, what is wanted
+## and whether it is ready.
+func _quest_items() -> Array:
+	var w: World = main.world
+	var out := []
+	for q in w.player.quests:
+		var t := Quests.template(q.id)
+		var giver: NPC = w.npc(int(q.giver))
+		out.append({"day": true, "text": ("%s (story)" % t.title) if t.get("story", false) else str(t.title)})
+		var who := "%s %s" % [giver.name, giver.family] if giver else "someone"
+		out.append({"day": false, "text": "Asked by %s on day %d." % [who, int(q.day)]})
+		var want: String
+		if t.has("learn"):
+			want = "Learn %s from %s (%d coins)." % [str(t.learn).capitalize(), who, int(GameData.b("fireball_price"))]
+		elif t.has("need"):
+			var need := []
+			for id in t.need:
+				need.append("%d %s (have %d)" % [int(t.need[id]), GameData.item_name(id).to_lower(), w.player.inv.count(id)])
+			want = "Bring " + ", ".join(need) + "."
+		else:
+			var target: NPC = w.npc(int(q.target))
+			want = "Deal with %s." % (target.name if target else "the thief")
+		out.append({"day": false, "text": want + ("  Ready: go back to them." if w.quests.ready(q) else "")})
+	if out.is_empty():
+		out.append({"day": false, "text": "No quests. Look for people with a green diamond over their head."})
+	return out
+
+
 func _journal_items() -> Array:
 	var out := []
 	var day := ""
@@ -832,12 +862,51 @@ func show_death() -> void:
 ## A conversation: the villager's portrait, who they are, and what they say (Dialogue builds it from
 ## the simulation), with the choices under it. A question replaces what they say with the answer.
 func show_talk(n: NPC) -> void:
-	var said := Dialogue.opening(main.world, n)
-	Dialogue.meet(main.world, n)
+	var w: World = main.world
+	var said := Dialogue.opening(w, n)
+	# the giver of an unfinished story quest speaks of it first
+	var q: Dictionary = w.quests.active_from(n)
+	if not q.is_empty() and Quests.template(q.id).get("story", false):
+		said = w.quests.line(q, "offer")
+	Dialogue.meet(w, n)
 	_talk_view(n, said)
 
 
-func _talk_view(n: NPC, said: String) -> void:
+## The quest choices with this villager: their offer, or the request the player took on.
+func _quest_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	var q: Dictionary = w.quests.active_from(n)
+	if not q.is_empty() and not Quests.template(q.id).get("story", false):
+		if w.quests.ready(q):
+			_talk_choice(choices, "Here you are", func():
+				var thanks := w.quests.line(q, "thanks")
+				var paid: int = w.quests.complete(q)
+				message("Quest done: %s%s" % [Quests.template(q.id).title, (" (+%d coins)" % paid) if paid > 0 else ""])
+				_talk_view(n, thanks))
+		else:
+			_talk_choice(choices, "About your request", func(): _talk_view(n, w.quests.line(q, "waiting")))
+		return
+	var offer: Dictionary = w.quests.offer_of(n)
+	if offer.is_empty():
+		return
+	_talk_choice(choices, "Need any help?", func():
+		_talk_view(n, w.quests.line({"id": offer.id, "giver": n.id}, "offer"), true))
+
+
+func _offer_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	_talk_choice(choices, "I'll do it", func():
+		var q: Dictionary = w.quests.accept(n)
+		if q.is_empty():
+			message("You have too many tasks already (%d)." % int(GameData.b("quest_max_active")))
+			_talk_view(n, Dialogue.opening(w, n))
+			return
+		message("New quest: %s. It is written in your journal." % Quests.template(q.id).title)
+		_talk_view(n, "Good. Come back when it's done."))
+	_talk_choice(choices, "Not now", func(): _talk_view(n, Dialogue.opening(w, n)))
+
+
+func _talk_view(n: NPC, said: String, offering := false) -> void:
 	var w: World = main.world
 	_open("talk", Dialogue.full_name(n))
 	var tall: float = main.settings.layout_height()
@@ -897,6 +966,11 @@ func _talk_view(n: NPC, said: String) -> void:
 		_talk_choice(choices, "Goodbye", hide_all)
 		_fit_talk(side, choices)
 		return
+	if offering:
+		_offer_choices(n, choices)
+		_fit_talk(side, choices)
+		return
+	_quest_choices(n, choices)
 	var sale: Array = w.brain.for_sale(n)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	if not sale.is_empty() or not buys.is_empty():
@@ -910,8 +984,14 @@ func _talk_view(n: NPC, said: String) -> void:
 				n.coins += price
 				w.player.spells["fireball"] = true
 				w.player.gain("magic", 100)
+				var story: Dictionary = w.quests.active_from(n)
+				var thanks := w.quests.line(story, "thanks") if not story.is_empty() else ""
+				w.quests.on_learned("fireball")
 				message("You learned Fireball. Press F (or the Fire button) to cast it; it uses stamina.")
-				hide_all()
+				if thanks != "":
+					_talk_view(n, thanks)
+				else:
+					hide_all()
 			else:
 				message("You need %d coins." % price), not known)
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))

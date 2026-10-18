@@ -326,7 +326,7 @@ Rules:
 
 ### INT-038 · Side quests
 - **Trigger:** Dawn (offers are refreshed); the player accepts or completes a quest in conversation; a giver dies.
-- **Source:** `game/scripts/core/quests.gd::refresh`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/quests.gd::start_story`, `game/scripts/core/quests.gd::on_learned`, `game/scripts/core/quests.gd::diamond`, `game/scripts/core/npc_brain.gd::dawn`, `game/scripts/core/world.gd::continue_as_heir`, `game/data/quests.json`
+- **Source:** `game/scripts/ui/game_ui.gd::_quest_choices`, `game/scripts/ui/game_ui.gd::_quest_items`, `game/scripts/main.gd::_sync_diamonds`, `game/scripts/core/quests.gd::refresh`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/quests.gd::start_story`, `game/scripts/core/quests.gd::on_learned`, `game/scripts/core/quests.gd::diamond`, `game/scripts/core/npc_brain.gd::dawn`, `game/scripts/core/world.gd::continue_as_heir`, `game/data/quests.json`
 - **Affects:** Households, Inventory, Coins, Crime, Save
 - **Expected:**
   - Offers come only from villagers whose condition holds (job or role, holding too little of something, a household short of food, a living bandit who robbed them), at most `quest_max_offers`.
@@ -334,7 +334,8 @@ Rules:
   - Completing moves the asked-for goods to the giver and up to the reward in coins from the giver's purse to the player; coins are conserved.
   - A giver's death fails a side quest. Offers and accepted quests are saved.
   - Story quests start with every new player and every heir. Their giver shows the green diamond (as do villagers with an offer) until done. "The sage in the north" is done when the player learns Fireball.
-- **Tests:** `game/tests/run_tests.gd::test_quests`
+  - In conversation: "Need any help?" hears an offer, then "I'll do it" or "Not now"; "Here you are" hands in a ready quest. A quest giver always stops to talk, even when busy (INT-039). The journal has a Quests page.
+- **Tests:** `game/tests/run_tests.gd::test_quests`, `game/tests/start_test.gd`
 
 ### INT-039 · Talking to a villager: conversation or a called-out line
 - **Trigger:** The player uses a villager in front of them, or reaches one they tapped.

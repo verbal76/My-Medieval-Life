@@ -49,6 +49,7 @@ var dying := {}                # npc id -> seconds left of the death flicker
 var fading: Array = []         # [sprite, seconds left]: killed animals flickering out
 var bubble_layer: CanvasLayer  # speech bubbles over villagers' heads, in screen space
 var bubbles := {}              # npc id -> SpeechBubble (at most one each)
+var diamonds := {}             # npc id -> green diamond over a quest giver
 const FLICKER := 1.2           # seconds a body flickers before it disappears
 const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 
@@ -230,6 +231,7 @@ func _clear_world() -> void:
 		world.dispose()
 	chase = null
 	talk_to = null
+	diamonds.clear()                # their nodes go with the scene
 	move_to = Vector2.INF
 	walk_goal = Vector2i(-1, -1)
 	strike_pending = false
@@ -394,9 +396,48 @@ func _sync_sprites() -> void:
 	_sync_animals()
 	_sync_loot()
 	_sync_bubbles()
+	_sync_diamonds()
 
 
 ## Bubbles follow their speaker, fade out, and go when the time is up or the speaker is gone.
+## A green diamond over everyone with a quest for the player (side-quest offers and story quests).
+func _sync_diamonds() -> void:
+	var cam := camera.get_screen_center_position() / T
+	var bob := sin(Time.get_ticks_msec() / 220.0) * 1.5
+	var shown := {}
+	for n: NPC in world.near(cam, 30.0):
+		if not n.alive or n.hidden or not world.quests.diamond(n):
+			continue
+		shown[n.id] = true
+		var d: Node2D = diamonds.get(n.id)
+		if d == null:
+			d = _diamond()
+			above.add_child(d)
+			diamonds[n.id] = d
+		d.position = n.pos * T + Vector2(0, -36 + bob)
+	for id in diamonds.keys():
+		if not shown.has(id):
+			diamonds[id].queue_free()
+			diamonds.erase(id)
+
+
+func _diamond() -> Node2D:
+	var d := Node2D.new()
+	var edge := Polygon2D.new()
+	edge.polygon = PackedVector2Array([Vector2(0, -7), Vector2(5, 0), Vector2(0, 7), Vector2(-5, 0)])
+	edge.color = Color8(18, 60, 24)
+	d.add_child(edge)
+	var gem := Polygon2D.new()
+	gem.polygon = PackedVector2Array([Vector2(0, -5.5), Vector2(3.8, 0), Vector2(0, 5.5), Vector2(-3.8, 0)])
+	gem.color = Color8(72, 214, 96)
+	d.add_child(gem)
+	var shine := Polygon2D.new()
+	shine.polygon = PackedVector2Array([Vector2(0, -4), Vector2(1.6, -1.2), Vector2(0, 0), Vector2(-1.6, -1.2)])
+	shine.color = Color8(190, 255, 200)
+	d.add_child(shine)
+	return d
+
+
 func _sync_bubbles() -> void:
 	var xf := get_canvas_transform()
 	for id in bubbles.keys():
@@ -425,7 +466,9 @@ func say(n: NPC, text: String) -> void:
 ## The player speaks to a villager: someone busy (walking somewhere, working, fighting) calls out a
 ## line and carries on; anyone else stops for a conversation.
 func approach(n: NPC) -> void:
-	if n.role != "bandit" and Dialogue.busy(n):
+	# a quest giver always stops to talk (owner: "unless they're a quest giver")
+	var quest_business := world.quests.diamond(n) or not world.quests.active_from(n).is_empty()
+	if n.role != "bandit" and Dialogue.busy(n) and not quest_business:
 		say(n, Dialogue.brush_off(world, n))
 	else:
 		ui.show_talk(n)
