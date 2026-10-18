@@ -62,7 +62,7 @@ UI_ICONS = {
     "back": ("icons_set_1.ai", 2, 1), "health": ("icons_set_2.ai", 0, 3), "hunger": ("icons_set_2.ai", 6, 5),
     "stamina": ("icons_set_2.ai", 1, 0), "coins": ("icons_set_2.ai", 6, 0), "home": ("icons_set_1.ai", 2, 0),
     "play": ("icons_set_1.ai", 1, 6), "scroll": ("icons_set_2.ai", 9, 6), "trade": ("icons_set_1.ai", 4, 1),
-    "map": ("icons_set_2.ai", 5, 0), "recenter": ("icons_set_1.ai", 1, 2),
+    "map": ("icons_set_2.ai", 5, 0), "recenter": ("icons_set_1.ai", 1, 2), "gather": ("icons_set_2.ai", 3, 4),
 }
 UI_TILE = 128          # icon tiles are saved at this size
 UI_WOOD = (111, 74, 44)  # the pack's navy recoloured to a wood brown (owner, 2026-10-18)

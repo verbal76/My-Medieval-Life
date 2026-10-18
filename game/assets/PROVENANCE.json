@@ -1038,6 +1038,13 @@
    "sha256": "3104770d453da4dfb2c124b543f5757c59894f52bce0e981ea7cd1a5d081f2b0"
   },
   {
+   "file": "assets/ui/gather.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 4; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "bc754f19c7cc59295f915c63b62398a586ff8a59711969a2a20f1d24462ce4fa"
+  },
+  {
    "file": "assets/ui/health.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
