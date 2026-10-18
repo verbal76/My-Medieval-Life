@@ -112,8 +112,11 @@ func refresh(rec: Dictionary) -> void:
 	var cell := Vector2i(int(rec.x), int(rec.y))
 	var n: TreeNode = nodes.get(cell)
 	if n == null:
-		if rec.get("ow", false) and not chunk_cells.has(Overworld.chunk_of(cell)):
-			return                          # outside the loaded chunks: drawn when its chunk is
+		if rec.get("ow", false):
+			var cc := Overworld.chunk_of(cell)
+			if not chunk_cells.has(cc):
+				return                      # outside the loaded chunks: drawn when its chunk is
+			chunk_cells[cc].append(cell)    # a new tree (planted) goes when its chunk does
 		add_tree(rec)
 		return
 	n.rec = rec

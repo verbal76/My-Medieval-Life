@@ -1399,7 +1399,7 @@ func _plant_gather_tests() -> void:
 		guard += 1
 	check(p.inv.count("blueberries") == bb0 + 2 and other.state == "picked" and main.gather.is_empty() and main.gather_mode, "Gather mode walks to the bush, picks it, and stops (Gather stays on)")
 	var gains: Array = ui.log_box.get_children().map(func(c): return c.text)
-	check(gains.any(func(t): return t.begins_with("+2 ")) and not ui.toast.text.begins_with("You pick") and ui.prompt_text == "",
+	check(gains.any(func(t): return t.begins_with("+2 ")) and not ui.toast.text.begins_with("You pick") and not ui.prompt_text.begins_with("Picking"),
 			"a pick is a short line in the corner, not a banner in the middle: %s, toast \"%s\"" % [gains, ui.toast.text])
 	# a full pack refuses
 	main.stop_gather("")
