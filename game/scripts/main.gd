@@ -626,6 +626,7 @@ func _clear_world() -> void:
 	projectiles.clear()
 
 
+const CHILD_SCALE := 0.5               # a child's sprite, of an adult's
 const SIGN_RANGE := 14.0               # tiles: house signs show when the player is this near
 
 
@@ -854,6 +855,9 @@ func _sync_sprites() -> void:
 				if s.anim != "death":
 					s.play("death", true)
 			continue
+		# children are drawn at half an adult's size, full size once grown (owner, 2026-10-18); the
+		# feet are the sprite's origin, so they stay on the ground
+		s.scale = Vector2.ONE * (CHILD_SCALE if n.role == "child" else 1.0)
 		s.visible = near and not _covered(n)
 		if not s.visible:
 			continue

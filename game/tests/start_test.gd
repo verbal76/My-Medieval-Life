@@ -1174,6 +1174,7 @@ func _run() -> void:
 	_roof_tests()
 	_pad_cycle_tests()
 	_sign_tests()
+	_child_size_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1732,3 +1733,22 @@ func _sign_tests() -> void:
 	w.player.pos = Vector2(float(b.door[0]), float(b.door[1])) + Vector2(40, 0)
 	main._sync_sprites()
 	check(not sg.visible, "far away the sign is not shown")
+
+
+## Children are drawn at half size, adults at full size (owner, 2026-10-18).
+func _child_size_tests() -> void:
+	var w: World = main.world
+	var kid: NPC = w.npcs.filter(func(n): return n.alive and n.role == "child")[0]
+	var adult: NPC = w.npcs.filter(func(n): return n.alive and n.role == "adult")[0]
+	w.player.pos = kid.pos + Vector2(1, 0)
+	main.recenter()
+	main._sync_sprites()
+	check(is_equal_approx(main.sprites[kid.id].scale.x, 0.5), "a child is drawn at half size")
+	kid.role = "adult"
+	main._sync_sprites()
+	check(is_equal_approx(main.sprites[kid.id].scale.x, 1.0), "grown up, full size")
+	kid.role = "child"
+	w.player.pos = adult.pos + Vector2(1, 0)
+	main.recenter()
+	main._sync_sprites()
+	check(is_equal_approx(main.sprites[adult.id].scale.x, 1.0), "an adult is full size")
