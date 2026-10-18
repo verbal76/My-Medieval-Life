@@ -143,7 +143,7 @@ def main():
     # prefetch images + key docs + workflows
     want = [o for (p, o) in union if IMG_RE.search(p)]
     docs_wanted = {}
-    dated = [b for b in branches if 'error' not in b]
+    dated = [b for b in branches if 'error' not in b and b['name'] != 'inventory/registry']
     latest = max(dated, key=lambda b: b['committer_date'])['name'] if dated else default
     for bname in ([default, latest] if latest != default else [default]):
         for p, o, t, m in trees.get(bname, []):

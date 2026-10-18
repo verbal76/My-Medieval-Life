@@ -6,7 +6,7 @@ Scanned 2026-10-18T15:40:56Z from a blobless clone (trees and commits; blobs fet
 |---|---|
 | Product | Upwardly (working title "Climb up") |
 | Kind | game |
-| Visibility | public |
+| Visibility | not stated (read through the session git proxy; may be private) |
 | Engine / language | libGDX 1.14.2 (Java/Gradle): Android, Windows, Linux/Steam Deck |
 | GitHub default branch | `main` @ `91597f1f392b087ccfcbdb93274222e7bb5e2e0b` (moving) |
 | Most recent branch | `ccr-cb458cd1-w4dh5c` |

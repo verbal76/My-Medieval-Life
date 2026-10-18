@@ -1,6 +1,6 @@
 # My-Medieval-Life
 
-Scanned 2026-10-18T15:51:02Z from a blobless clone (trees and commits; blobs fetched only for images and key documents). Nothing in the repository was changed.
+Scanned 2026-10-18T15:51:36Z from a blobless clone (trees and commits; blobs fetched only for images and key documents). Nothing in the repository was changed.
 
 | | |
 |---|---|
@@ -9,7 +9,7 @@ Scanned 2026-10-18T15:51:02Z from a blobless clone (trees and commits; blobs fet
 | Visibility | public |
 | Engine / language | Godot 4.7 (game/), Python 3 tooling (tools/) |
 | GitHub default branch | `main` @ `1031a2e3fef25abc6821cc1b795626bd8b5c9ec8` (moving) |
-| Most recent branch | `inventory/registry` |
+| Most recent branch | `staging/my-medieval-life` |
 | Last commit on any branch | 2026-10-18 |
 | Status | active (active = a commit within 14 days of 2026-10-18) |
 | Links | https://github.com/verbal76/My-Medieval-Life |
@@ -74,7 +74,7 @@ Branch heads move; the SHA is the head at scan time.
 | Branch | Head SHA | Last commit | Ahead / behind default | Role | Relation to reference line | Last subject |
 |---|---|---|---|---|---|---|
 | `claude/charming-albattani-8jjfya` | `3d7bbce28953514344de27c1efeda7c2d63f525e` | 2026-10-18 | 83 / 0 | agent session branch | contained in `staging/my-medieval-life` | Add the side-quest engine: offers from real needs, delivered goods, paid by the giver |
-| `inventory/registry` | `cd07f74b04425c6bc8feb40160806436f67ccc34` | 2026-10-18 | 5 / 4 | this registry (orphan) | NOT contained in `staging/my-medieval-life` | Add registry batch 4: My-Personal-Crossow0rd, Zombie-squisher, voiceforge, LLM-Trainer |
+| `inventory/registry` | `a35575b1a389a2326134acd7c9997d354bfa26e2` | 2026-10-18 | 6 / 4 | this registry (orphan) | NOT contained in `staging/my-medieval-life` | Add registry batch 5: Cfm-calculator, spiroglyphics, personal-assistant-, Manual-J, web_au |
 | `main` | `1031a2e3fef25abc6821cc1b795626bd8b5c9ec8` | 2026-10-17 | 0 / 0 | GitHub default | contained in `staging/my-medieval-life` | Add files via upload |
 | `staging/my-medieval-life` | `60ac3e21329be47f43a4427feb5cb05d1416e951` | 2026-10-18 | 141 / 0 | authoritative line (per repo records) |  | Add the Build 8 readiness report (no build authorized) |
 | `wip/agent-a217c774f1de24975` | `2ed67ca8113bfb8ea169df71631f4a920078f281` | 2026-10-18 | 111 / 0 | agent WIP snapshot | NOT contained in `staging/my-medieval-life` | WIP snapshot of agent-a217c774f1de24975's uncommitted work |
@@ -203,7 +203,9 @@ Top level of default `main`: `16x16 Armour RPG Icons.zip` (1), `16x16 Jewelry RP
 
 Path and trigger only; never changed or run.
 
-None on the default or most recent branch.
+| Branch:path | Name | Trigger (`on:`) |
+|---|---|---|
+| `staging/my-medieval-life:.github/workflows/release.yml` | Build and release | workflow_dispatch: |
 
 ## Sensitive files (paths only; contents not read)
 

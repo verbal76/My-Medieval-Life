@@ -97,7 +97,7 @@ A branch is listed when it is not contained in the repository's reference line (
 - **Idle-game**: product name differs by branch ("Boarder" on `main`, "Where's the Bottom?" on the agent lines); the authoritative line is named in `authoritative.json`.
 - **Climb-Up / Upwardly**: the store-art location is unknown (not in any repo); `docs/windows/STEAM_PACKAGING.md` ("Nothing here has been uploaded to Steam") is outdated against HANDOFF.md (Build 70 live on Steam).
 - **My-Medieval-Life**: `wip/agent-a71e3cddb5b8d02d4` and `wip/agent-a892fc619ec33a8eb` have parents outside staging: unresolved whether integrated by content. CLAUDE.md says the formal engine entry in docs/DECISIONS.md is still *Proposed* while the Godot 4.7 prototype is in use. Four asset packs carry the `verify` licence label.
-- **Visibility**: only 8 repos had visibility given; the rest were readable through the session git proxy, which may carry credentials. Manual-J's CLAUDE.md says not to make the repo public; its actual visibility is unchecked.
+- **Visibility**: only 9 repos had visibility given; the rest were readable through the session git proxy, which may carry credentials. Manual-J's CLAUDE.md says not to make the repo public; its actual visibility is unchecked.
 
 ## Consolidation opportunities (proposals only)
 

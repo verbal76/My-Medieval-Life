@@ -72,7 +72,7 @@
    "extra": "mml"
   },
   "Climb-Up": {
-   "visibility": "public",
+   "visibility": "not stated (read through the session git proxy; may be private)",
    "display": "Upwardly (working title \"Climb up\")",
    "kind": "game",
    "engine": "libGDX 1.14.2 (Java/Gradle): Android, Windows, Linux/Steam Deck",
