@@ -66,6 +66,9 @@ var fading: Array = []         # [sprite, seconds left]: killed animals flickeri
 var bubble_layer: CanvasLayer  # speech bubbles over villagers' heads, in screen space
 var bubbles := {}              # npc id -> SpeechBubble (at most one each)
 var diamonds := {}             # npc id -> the quest marker sprite over a quest giver
+var placing := {}              # choosing where to build: {kind, at: the footprint's top-left cell}
+var ghost: PlacementGhost      # the footprint shown while placing
+var place_step := 0.0          # seconds until a held stick or key moves the footprint again
 const FLICKER := 1.2           # seconds a body flickers before it disappears
 const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 
@@ -303,7 +306,7 @@ func _setup_input() -> void:
 		"move_down": [KEY_S, KEY_DOWN], "interact": [KEY_E, KEY_ENTER], "attack": [KEY_SPACE, KEY_J],
 		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "journal": [KEY_B], "pause": [KEY_ESCAPE, KEY_P],
 		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
-		"map": [KEY_M], "recenter": [KEY_C],
+		"map": [KEY_M], "recenter": [KEY_C], "build": [KEY_H],
 	}
 	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
 		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER,
@@ -371,7 +374,7 @@ func resume_after_origin() -> void:
 func continue_game() -> void:
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
 	var d = JSON.parse_string(text)
-	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2, 3, 4, 5]:
+	if not d is Dictionary or int(d.get("save_version", 0)) < 1 or int(d.get("save_version", 0)) > World.SAVE_VERSION:
 		ui.message("The save file could not be read; it was kept unchanged. Starting a new game.")
 		new_game()
 		return
@@ -398,6 +401,7 @@ func _clear_world() -> void:
 	chase = null
 	talk_to = null
 	reach_to = Vector2.INF
+	placing = {}
 	diamonds.clear()                # their nodes go with the scene
 	site_bars.clear()
 	move_to = Vector2.INF
@@ -437,6 +441,10 @@ func _build_scene() -> void:
 	target_marker.visible = false
 	target_marker.z_index = MARKER_Z
 	above.add_child(target_marker)
+	ghost = PlacementGhost.new()
+	ghost.visible = false
+	ghost.z_index = MARKER_Z
+	above.add_child(ghost)
 	view.build(map, above)
 	bubble_layer = CanvasLayer.new()
 	bubble_layer.layer = 5               # over the map, under the interface (layer 20)
@@ -482,7 +490,8 @@ func _build_scene() -> void:
 func _apply_world_changes() -> void:
 	for t in world.trees:
 		if t.state != "grown":
-			_on_tile_changed(Vector2i(t.x, t.y), "below", int(t.trunk) if t.state == "stump" else int(map.data.tiles.sapling))
+			# a stump, a sapling, or nothing where a stump was grubbed up to build (Property.claim)
+			_on_tile_changed(Vector2i(t.x, t.y), "below", int(t.trunk) if t.state == "stump" else (-1 if t.state == "cleared" else int(map.data.tiles.sapling)))
 			_on_tile_changed(Vector2i(t.x, t.y - 1), "above", -1)
 			_on_tile_changed(Vector2i(t.x, t.y), "above", -1)
 	for d in world.deposits:
@@ -492,9 +501,11 @@ func _apply_world_changes() -> void:
 		world._field_tiles(f)
 	for p in world.plots:
 		if not p.site.is_empty() and not p.site.done:
-			_on_tile_changed(Vector2i(int(p.x) + 4, int(p.y) + 8), "below", map.data.tiles.frame)
-	for id in world.buildings:
-		if world.buildings[id].type == "player_house":
+			_on_tile_changed(world._frame_cell(p), "below", map.data.tiles.frame)
+	var ids: Array = world.buildings.keys()
+	ids.sort()
+	for id in ids:
+		if World.is_built(world.buildings[id]):
 			_on_building_added(world.buildings[id])
 
 
@@ -512,7 +523,7 @@ func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
 func _on_building_added(b: Dictionary) -> void:
 	canopy.restore_all()
 	roofs.restore_all()
-	var stamp: Dictionary = map.data.stamps.house
+	var stamp: Dictionary = world.stamp_of(b)          # a house's or a workshop's
 	for lname in stamp.layers:
 		var layer := view.layer(lname)
 		if layer == null:
@@ -531,6 +542,8 @@ func _process(delta: float) -> void:
 		return
 	if shot_path != "":
 		_screenshot_step(delta)
+	if not placing.is_empty():
+		_placing_step(delta)
 	if not paused and world.player.alive:
 		world.update(delta)
 		_player_step(delta)
@@ -688,7 +701,7 @@ func _sync_sites() -> void:
 		if bar:
 			bar.visible = building
 			bar.value = world.site_progress(pl) * 100.0
-			bar.position = Vector2(int(pl.x) + 4.5, int(pl.y) + 8) * T + Vector2(-14, -14)
+			bar.position = (Vector2(world._frame_cell(pl)) + Vector2(0.5, 0)) * T + Vector2(-14, -14)
 
 
 func _sync_bubbles() -> void:
@@ -841,6 +854,8 @@ func _player_step(delta: float) -> void:
 		ui.toggle_skills()
 	if Input.is_action_just_pressed("journal"):
 		ui.show_journal(-1)
+	if Input.is_action_just_pressed("build"):
+		ui.show_build_menu()
 
 
 ## The direction to walk this frame towards move_to, around walls and trees: the route comes
@@ -992,15 +1007,17 @@ func _find_target() -> void:
 			var st: Dictionary = world.stations[id]
 			var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
 			if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
-				best = {"kind": "station", "id": id, "label": "Use the %s" % st.type}
+				var no := world.station_refusal(id)
+				best = {"kind": "station", "id": id, "label": ("Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]}
 		for pl in world.plots:
 			var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
-			if r.has_point(p.pos):
-				var lab := "Building plot for sale (%d coins, or %d a week)" % [world.property.price_of(pl), world.property.rent_of(pl)]
+			if r.has_point(p.pos) and best.is_empty() and world.place_of(p.pos) == "":
+				var lab := "%s, for sale (%d coins, or %d a week)" % [World.cap(world.property.describe(pl)), world.property.price_of(pl), world.property.rent_of(pl)]
 				if world.holds(World.PLAYER, pl):
-					lab = "Your building plot" if pl.site.is_empty() else ("Your building site" if not pl.site.get("done", false) else "Your house")
+					var site: Dictionary = pl.site
+					lab = "Your ground: build here" if site.is_empty() else ("Your building site: %s, %d%% done" % [Construction.kind_name(str(site.get("kind", "house"))), roundi(world.site_progress(pl) * 100.0)] if not site.get("done", false) else World.cap(world.property.describe(pl)))
 				elif not world.property.for_sale(pl):
-					lab = "Building plot (%s's)" % world.ref_name(world.holder_of(pl))
+					lab = World.cap(world.property.describe(pl))
 				best = {"kind": "plot", "plot": pl, "label": lab}
 		for id in world.fauna.pens:
 			var pen: Dictionary = world.fauna.pens[id]
@@ -1014,8 +1031,13 @@ func _find_target() -> void:
 				continue
 			var mine := world.holds(World.PLAYER, b)
 			if mine or world.property.for_sale(b):
-				best = {"kind": "property", "thing": b, "label": ("Your house (%s): make it your home" % b.id) if mine
-						else ("Empty house, the manor's: buy (%d) or lease (%d a week)" % [world.property.price_of(b), world.property.rent_of(b)])}
+				best = {"kind": "property", "thing": b, "label": ("%s, yours: make it your home" % World.cap(world.property.describe(b))) if mine
+						else ("%s, empty, the manor's: buy (%d) or lease (%d a week)" % [World.cap(world.property.describe(b)), world.property.price_of(b), world.property.rent_of(b)])}
+		# a workshop's door: whose it is, and (its holder) who else may use it
+		for id in world.buildings:
+			var b: Dictionary = world.buildings[id]
+			if str(b.type) == "workshop" and (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
+				best = {"kind": "workshop", "thing": b, "label": World.cap(world.property.describe(b)) + (": who may use it" if world.holds(World.PLAYER, b) else "")}
 		if p.home != "" and world.buildings.has(p.home):
 			var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
 			if door.distance_to(p.pos) < 1.3:
@@ -1195,6 +1217,8 @@ func interact() -> void:
 			ui.message("Attack (Space) to hunt it." if target.animal.wild() else "These belong to the keeper. Killing them is theft.")
 		"plot":
 			ui.show_build(target.plot)
+		"workshop":
+			ui.show_workshop(target.thing)
 		"property":
 			ui.show_deal(target.thing)
 		"home":
@@ -1217,9 +1241,21 @@ func _xp(skill: String, n: int) -> void:
 
 
 ## Craft a recipe at a station (called from the craft panel). Same recipe data as the NPCs.
-func craft(recipe: String) -> void:
+## `station`: the station worked at (the craft window's); without one, the one of the recipe's kind the
+## player stands at. A workshop not theirs needs leave, and a villager working at a station the player
+## does not hold is waited for (World.station_refusal); the player's work takes the station meanwhile.
+func craft(recipe: String, station := "") -> void:
 	var r: Dictionary = GameData.recipes[recipe]
 	var p := world.player
+	if station == "":
+		for id in world.stations_of(str(r.station)):
+			if (Vector2(world.station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
+				station = id
+	if station != "":
+		var no := world.station_refusal(station)
+		if no != "":
+			ui.message(no)
+			return
 	if p.level(r.skill) < int(r.level):
 		ui.message("Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)])
 		return
@@ -1227,6 +1263,8 @@ func craft(recipe: String) -> void:
 		ui.message("You do not have the materials.")
 		return
 	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5
+	if station != "":
+		world.reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
 	ui.hide_all()
 	start_action("Crafting", secs, func():
 		if not p.inv.remove_all(r.in):
@@ -1397,9 +1435,146 @@ func _projectiles_step(delta: float) -> void:
 			projectiles.erase(pr)
 
 
+# ---------------------------------------------------------------- placing a building ----------
+## Choose where to build (owner rule: free placement anywhere legal). The footprint follows the mouse,
+## moves a tile at a time with the arrow keys, WASD, the d-pad or the left stick, and goes where a
+## finger taps; green where it may go, red with the reason where it may not (Construction.can_place:
+## the land office's check, the house-first rule, a reachable door). Place (E, Enter, the pad's A, a
+## click on the footprint, or the Place button) opens the deal for the ground; Esc, the pad's B or
+## Cancel stops. The game waits meanwhile.
+func begin_placement(kind: String) -> void:
+	ui.hide_all()
+	var size := world.construction.footprint(kind)
+	var front := world.player.pos + facing_vec() * (size.y / 2.0 + 1.0)
+	placing = {"kind": kind, "at": Vector2i(floori(front.x) - size.x / 2, floori(front.y) - size.y / 2)}
+	paused = true
+	move_to = Vector2.INF
+	ui.show_placing(true)
+	_update_ghost()
+
+
+## Back to choosing after the deal window (Choose another place).
+func resume_placement() -> void:
+	ui.hide_all()
+	paused = true
+	ui.show_placing(true)
+	_update_ghost()
+
+
+func end_placement() -> void:
+	placing = {}
+	ghost.visible = false
+	ui.show_placing(false)
+	recenter()
+	if not ui.modal():
+		paused = false
+
+
+func place_rect() -> Rect2i:
+	return Rect2i(placing.at, world.construction.footprint(placing.kind))
+
+
+## Why the footprint cannot go where it is, "" if it can.
+func place_refusal() -> String:
+	return world.construction.can_place(placing.kind, place_rect(), World.PLAYER)
+
+
+func _update_ghost() -> void:
+	var r := place_rect()
+	var why := place_refusal()
+	ghost.show_at(r, world.construction.door_step(placing.kind, r) - Vector2i(0, 1), why == "")
+	var t: Dictionary = world.construction.ground_terms(r)
+	var name := Construction.kind_name(placing.kind)
+	ui.placing_text(("%s here: the ground %s, %d coins or %d a week." % [World.cap(name), world.where(r), int(t.price), int(t.rent)]) if why == ""
+			else "%s cannot go here: %s." % [World.cap(name), why], why == "")
+	var centre := Vector2(r.position) + Vector2(r.size) / 2.0
+	var view := get_viewport().get_visible_rect().size / camera.zoom / T
+	var cam := (cam_at if cam_free else camera.get_screen_center_position()) / T
+	if absf(centre.x - cam.x) > view.x * 0.5 - r.size.x * 0.5 - 1 or absf(centre.y - cam.y) > view.y * 0.5 - r.size.y * 0.5 - 1:
+		look_at_tile(centre)               # keep the footprint in view
+
+
+## Put the footprint's middle on a cell.
+func move_ghost_to(cell: Vector2i) -> void:
+	var size := world.construction.footprint(placing.kind)
+	var at := cell - size / 2
+	at.x = clampi(at.x, 0, map.w - size.x)
+	at.y = clampi(at.y, 0, map.h - size.y)
+	if at != placing.at:
+		placing.at = at
+		_update_ghost()
+
+
+func move_ghost(d: Vector2i) -> void:
+	var size := world.construction.footprint(placing.kind)
+	move_ghost_to(Vector2i(placing.at) + d + size / 2)
+
+
+## Place: the deal for the ground, when the footprint may go there.
+func confirm_placement() -> void:
+	var why := place_refusal()
+	if why != "":
+		ui.message("You cannot build here: %s." % why)
+		return
+	ui.show_placing(false)
+	ghost.visible = true
+	ui.show_place_deal(placing.kind, place_rect())
+
+
+## A held stick, d-pad or arrow key moves the footprint a tile at a time.
+func _placing_step(delta: float) -> void:
+	if ui.modal():
+		return
+	place_step = maxf(0.0, place_step - delta)
+	var v := Input.get_vector("move_left", "move_right", "move_up", "move_down", 0.4)
+	if v == Vector2.ZERO:
+		place_step = 0.0
+		return
+	if place_step > 0.0:
+		return
+	place_step = 0.14
+	move_ghost(Vector2i(roundi(v.x), roundi(v.y)))
+
+
+## Input while placing; returns true when it was handled.
+func _placing_input(e: InputEvent) -> bool:
+	if placing.is_empty() or ui.modal():
+		return false
+	if e is InputEventMouseMotion and e.device != InputEvent.DEVICE_ID_EMULATION and not mid_drag and touch_points.is_empty():
+		move_ghost_to(_cell_at(e.position))
+		return true
+	if e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_LEFT and e.pressed and e.device != InputEvent.DEVICE_ID_EMULATION:
+		if ui.blocks(e.position):
+			return false
+		var cell := _cell_at(e.position)
+		if place_rect().has_point(cell):
+			confirm_placement()
+		else:
+			move_ghost_to(cell)
+		return true
+	if e is InputEventScreenTouch and not e.pressed and touch_points.size() <= 1 and not multi_touch:
+		if not ui.blocks(e.position):
+			move_ghost_to(_cell_at(e.position))       # a tap moves the footprint; Place confirms
+	if e.is_action_pressed("interact") or (e is InputEventKey and e.is_action_pressed("ui_accept")) or (e is InputEventJoypadButton and e.is_action_pressed("ui_accept")):
+		confirm_placement()
+		return true
+	if e.is_action_pressed("pause") or e.is_action_pressed("ui_cancel"):
+		end_placement()
+		ui.message("Building put off.")
+		return true
+	return false
+
+
+func _cell_at(screen_pos: Vector2) -> Vector2i:
+	var wp := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	return Vector2i(floori(wp.x), floori(wp.y))
+
+
 # ---------------------------------------------------------------- touch ----------------------
 func _unhandled_input(e: InputEvent) -> void:
 	if world == null:
+		return
+	if _placing_input(e):
 		return
 	if e is InputEventScreenTouch:
 		if e.pressed:

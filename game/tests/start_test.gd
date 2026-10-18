@@ -936,7 +936,7 @@ func _run() -> void:
 		pi.kill(pi.npc(int(m)), "fever")
 	pi.player.pos = Vector2(pi.building_door(gone)) + Vector2(0.5, 0.5)
 	main._find_target()
-	check(main.target.get("kind", "") == "property" and str(main.target.get("label", "")).begins_with("Empty house"), "at an empty house's door: %s" % main.target.get("label", ""))
+	check(main.target.get("kind", "") == "property" and str(main.target.get("label", "")).contains("empty, the manor's"), "at an empty house's door: %s" % main.target.get("label", ""))
 	pi.player.coins = 500
 	main.interact()
 	check(ui.is_open("land") and _press("Buy (%d)" % int(GameData.b("house_price"))) and pi.owner_of(pi.buildings[gone]) == World.PLAYER, "the player buys the empty house at its door")
