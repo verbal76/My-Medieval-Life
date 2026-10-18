@@ -48,6 +48,8 @@ OUT = REPO / "game" / "data" / "village.json"
 
 # --- atlas facts (tile ids in punyworld-tiles.png, 220 columns) -------------------------------
 DOORS = {3875, 3799, 3801}                   # doors and archways: walkable
+# generator v5: gatherable plants, paid-atlas tile values (0 * 100000 + id), identified visually
+PLANTS = {2658: "flower", 2657: "flower", 2660: "redberry", 2662: "blueberry"}
 PEOPLE_MIN = 126 * 220                       # rows 126+ hold the tiny people Shade drew into maps
 ORE = {"iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "stone": 1743, "gold_ore": 1965}
 DEPLETED_ROCK = 1964
@@ -702,8 +704,29 @@ class Village:
                 self.put("above", 0, t["x"], t["y"] - 1, -1)
                 self.put("above", 0, t["x"], t["y"], -1)
                 self.ents["trees"].remove(t)
+            for j in range(y, y + 10):                    # and the plants (generator v5)
+                for i in range(x, x + 9):
+                    if self.get("below", 1, i, j) in PLANTS:
+                        self.put("below", 1, i, j, -1)
 
     # ---- collision and roads ----------------------------------------------------------------
+    def plant_cells(self):
+        """Gatherable plants (generator v5): cells whose only object is a flower or a berry bush, with
+        nothing on top and not in a wall, roof, floor or doorway. They are walkable and are exported
+        as entities; Shade drew them as scenery, in clusters that v1-v4 treated as solid."""
+        out = []
+        for y in range(H):
+            for x in range(W):
+                c = (x, y)
+                vals = [v[y * W + x] for (cat, _), v in sorted(self.layers.items()) if cat == "below" and v[y * W + x] >= 0]
+                if len(vals) != 1 or vals[0] not in PLANTS:
+                    continue
+                if (c in self.roof or c in self.walls or c in self.floor or c in self.walkable_override
+                        or any(self.get("above", i, x, y) >= 0 for i in range(6))):
+                    continue
+                out.append((x, y, vals[0]))
+        return out
+
     def solid_grid(self):
         solid = [[False] * W for _ in range(H)]
         for y in range(H):
@@ -713,6 +736,8 @@ class Village:
                 if c in self.walkable_override or c in self.floor:
                     s = False
                 solid[y][x] = s
+        for x, y, _ in self.plant_cells():                # generator v5: plants are walkable
+            solid[y][x] = False
         for p in self.ents["plots"]:                      # plots are clear land
             for y in range(p["y"], p["y"] + p["h"]):
                 for x in range(p["x"], p["x"] + p["w"]):
@@ -877,6 +902,8 @@ class Village:
             "roof_layers": list(ROOF_LAYERS),
             "solid": ["".join("1" if s else "0" for s in row) for row in solid],
             "road": sorted([list(c) for c in self.road]),
+            "plants": [{"id": f"pl{i}", "x": x, "y": y, "kind": PLANTS[t], "tile": t}
+                       for i, (x, y, t) in enumerate(self.plant_cells())],
             **self.ents,
         }
 
