@@ -752,6 +752,54 @@ func _run() -> void:
 	ui.hide_all()
 	main._sync_diamonds()
 	check(not main.diamonds.has(sage.id), "the sage's pennant is gone")
+	# paid work: a farmer at harvest hires the player; the wage comes from the farmer's purse
+	var farmer_h: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "farmer" and not w.quests.field_of(n).is_empty() and w.quests.active_from(n).is_empty() and not w.quests.offers.has(n.id):
+			farmer_h = n
+			break
+	var fld: Dictionary = w.quests.field_of(farmer_h)
+	w.set_field(fld, "ripe")
+	fld.crop = int(GameData.b("field_yield"))
+	farmer_h.coins = 20
+	ui.show_talk(farmer_h)
+	check(_press("Do you have work for me?") and _speech().contains("24 wheat"), "a farmer at harvest offers a day's work: %s" % _speech())
+	check(_press("I'll do it") and w.player.quests.any(func(q): return q.id == "work_the_harvest"), "accepting takes on the work")
+	ui.show_journal(-1, true)
+	var jtext: String = " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text))
+	check(jtext.contains("Work the harvest") and jtext.contains("for 6 coins"), "the journal lists the work and its wage")
+	ui.hide_all()
+	var crimes0 := p.crimes.size()
+	for i in 4:
+		w.player_harvest(fld)
+	check(p.crimes.size() == crimes0 and p.stolen_count("wheat") == 0, "cutting the wheat one was hired to cut is not theft")
+	var wage0 := p.coins
+	var coins_all := w.total_coins()
+	ui.show_talk(farmer_h)
+	check(_press("Here you are") and p.coins == wage0 + 6 and farmer_h.coins == 14 and w.total_coins() == coins_all, "handing in the wheat pays the wage from the farmer's purse")
+	ui.hide_all()
+	# a skill quest: the tanner teaches Crafting for two hides, under the scroll marker
+	var tanner: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "tanner":
+			tanner = n
+			break
+	tanner.inv.remove("hide", tanner.inv.count("hide"))
+	w.quests.offers.erase(tanner.id)
+	w.quests.refresh()
+	w.quests.offers[tanner.id] = "the_tanners_craft"         # (the dawn's offers may be full already)
+	main._sync_diamonds()
+	check(main.diamonds.has(tanner.id) and main.diamonds[tanner.id].texture.resource_path.ends_with("skill.png"), "the tanner with a skill to teach shows the scroll")
+	ui.show_talk(tanner)
+	check(_press("Need any help?") and _speech().contains("2 hide"), "the tanner asks for hides: %s" % _speech())
+	check(_press("I'll do it"), "accepting the tanner's quest")
+	p.inv.add("hide", 2)
+	ui.show_talk(tanner)
+	var note: Label = null
+	check(_press("Here you are"), "handing in the hides")
+	note = ui.panel_body.find_child("Note", true, false)
+	check(p.level("crafting") == 2 and note != null and note.text.contains("Crafting is now level 2") and note.text.contains("leather armour"), "the talk window says what was learned: %s" % (note.text if note else "no note"))
+	ui.hide_all()
 
 	# 19-20. save, reload, and the state is the same
 	var snap := {"name": p.name, "look": p.look, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),

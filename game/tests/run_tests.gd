@@ -33,6 +33,9 @@ func _init() -> void:
 	test_tree_canopy()
 	test_trades_and_works()
 	test_quests()
+	test_child_food()
+	test_hiring()
+	test_skill_quest()
 	test_building_site()
 	test_chest_keeps_marks()
 	test_theft_and_shops()
@@ -415,7 +418,8 @@ func test_government() -> void:
 func test_households_and_work() -> void:
 	var w := new_world()
 	var b: NPCBrain = w.brain
-	check(w.granary.count("wheat") == ceili(100 * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food (%d)" % w.granary.count("wheat"))
+	var kids := w.alive_count("child")
+	check(w.granary.count("wheat") == ceili(((100 - kids) + kids * float(GameData.b("child_food_factor"))) * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food, children weighted (%d)" % w.granary.count("wheat"))
 	check(w.households[5].pantry.count("wheat") == 2 * w.households[5].members.size(), "each household brought 2 wheat a head")
 	# inheritance: food to the pantry, coins and goods to the heir; nothing lost or made
 	var h := -1
@@ -474,7 +478,10 @@ func test_households_and_work() -> void:
 	# the household re-evaluates at once after a death
 	var econ: Dictionary = w.households[h].econ
 	check(int(econ.members) == members.size() - 1, "a death changes the household's reckoning at once (%d members)" % int(econ.members))
-	check(float(econ.need) == (members.size() - 1) * 72.0, "its daily food need follows its members")
+	var weighted := 0.0
+	for o: NPC in b._members(h):
+		weighted += 72.0 * (float(GameData.b("child_food_factor")) if o.role == "child" else 1.0)
+	check(is_equal_approx(float(econ.need), weighted), "its daily food need follows its members, children weighted (%.1f)" % float(econ.need))
 	# a keeper's death hands the pen on
 	var pen: Dictionary = w.fauna.pen_of("cow")
 	var keeper := w.npc(int(pen.owner))
