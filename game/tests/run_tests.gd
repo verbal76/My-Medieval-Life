@@ -40,6 +40,8 @@ func _init() -> void:
 	test_interiors()
 	test_chest_keeps_marks()
 	test_theft_and_shops()
+	test_property()
+	test_property_migration()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -99,7 +101,7 @@ func test_animals() -> void:
 	var w := new_world()
 	var f := w.fauna
 	var pen: Dictionary = f.pen_of("pig")
-	check(not pen.is_empty() and pen.owner != -1, "the pig pen has a keeper")
+	check(not pen.is_empty() and w.pen_keeper(pen) != null and w.owner_of(pen) == World.MANOR, "the pig pen has a keeper (the manor's pen, let to them)")
 	check(f.count("woods_w", "boar") > 0 and f.count("woods_e", "rabbit") > 0, "wild boar and rabbits in the woods")
 	var s: Dictionary = GameData.b("animals")["pig"]
 	var day := 1440.0
@@ -225,16 +227,17 @@ func test_food_rules() -> void:
 		var extra := w.fauna.spawn(pen.id, "pig", "f", null)
 		extra.born = w.minutes - 10 * 1440.0
 	w.food_days = 0.5
-	var keeper := w.npc(int(pen.owner))
+	var keeper := w.pen_keeper(pen)
 	keeper.plan.clear()
 	b._keeper(keeper)
 	check(keeper.plan.size() == 2 and keeper.plan[1].get("act", "") == "slaughter", "in a famine the keeper slaughters beyond the breeding stock")
 	w.food_days = 99.0
 	# an untended field is taken over by a hand at the manor
 	var field: Dictionary = w.fields[1]
-	for o in field.owner:
-		w.npc(int(o)).job = "manor_hand"
-	var hand: NPC = w.npc(int(field.owner[0]))
+	var tenders := w.field_workers(field)
+	for o: NPC in tenders:
+		o.job = "manor_hand"
+	var hand: NPC = tenders[0]
 	b._plan_job(hand)
 	check(hand.job == "farmer", "a manor hand takes over an untended field")
 	# the caravan leaves the food when the village is short of it
@@ -485,9 +488,9 @@ func test_households_and_work() -> void:
 	check(is_equal_approx(float(econ.need), weighted), "its daily food need follows its members, children weighted (%.1f)" % float(econ.need))
 	# a keeper's death hands the pen on
 	var pen: Dictionary = w.fauna.pen_of("cow")
-	var keeper := w.npc(int(pen.owner))
+	var keeper := w.pen_keeper(pen)
 	w.kill(keeper, "a fall")
-	var nk := w.npc(int(pen.owner))
+	var nk := w.pen_keeper(pen)
 	check(nk != null and nk.alive and nk.job == "farmer" and nk != keeper, "the cow pen passes to another farmer (%s)" % (nk.name if nk else "nobody"))
 	# stations hold one worker each
 	var cooks := []
@@ -516,11 +519,11 @@ func test_households_and_work() -> void:
 	for f in w.fields:                 # no field openings, so the manor post is the only one that pays a wage
 		while b._field_workers(f) < int(GameData.b("field_workers_max")):
 			var filler := NPC.new()
-			filler.id = 8000 + f.owner.size() * 10 + w.fields.find(f)
+			filler.id = 8000 + b._field_workers(f) * 10 + w.fields.find(f)
 			filler.job = "farmer"
+			filler.workplace = f.id
 			w.npcs.append(filler)
 			w.by_id[filler.id] = filler
-			f.owner.append(filler.id)
 	b.dawn()
 	var hands := 0
 	for o: NPC in seekers:
@@ -586,9 +589,10 @@ func test_player_actions() -> void:
 	var held0 := _wheat_held(w)
 	var made0 := float(w.stats.get("made_wheat", 0.0))
 	var hand := int(GameData.b("harvest_handful"))
+	var farmer0: NPC = w.field_workers(f)[0]
 	check(w.player_harvest(f) == hand and int(f.crop) == 10 - hand, "a handful from the field")
 	check(_wheat_held(w) - held0 == hand and float(w.stats.get("made_wheat", 0.0)) - made0 == hand, "harvested wheat is accounted for")
-	check(p.crimes.size() == 1 and p.crimes[0].kind == "theft" and int(p.crimes[0].victim) == int(f.owner[0]), "the theft is recorded against the field's farmer")
+	check(p.crimes.size() == 1 and p.crimes[0].kind == "theft" and int(p.crimes[0].victim) == farmer0.id, "the theft is recorded against the field's farmer")
 	check(w.player_harvest(f) == 10 - hand and f.state == "tilled", "the last of the crop, then the field is tilled")
 	check(w.player_harvest(f) == 0, "nothing from a tilled field")
 	# the new fields survive a save, and an older save without them loads with defaults
@@ -1134,7 +1138,7 @@ func test_building_site() -> void:
 	var coins0 := w.total_coins()
 	var back := w.cancel_site(pl, p.inv)
 	check(back == {"plank": 30, "stone": 5} and p.inv.count("plank") == 30 and p.inv.count("stone") == 5, "giving up a site returns every delivered load")
-	check(pl.site.is_empty() and pl.owner == "player" and w.total_coins() == coins0, "the frame comes down; the plot stays the player's; no coin changes")
+	check(pl.site.is_empty() and w.owner_of(pl) == World.PLAYER and w.total_coins() == coins0, "the frame comes down; the plot stays the player's; no coin changes")
 	# a full pack: what does not fit is left in a bundle at the site
 	w.start_site(pl)
 	w.deliver(pl, p.inv)
@@ -1283,7 +1287,7 @@ func test_interiors() -> void:
 			ok = ok and w2.place_of(n.pos) == "b5" and n.cell() == w2.home_cell(n, "bed")
 	check(moved > 0 and ok, "a version 3 save's %d people hidden at home load inside, each at their own bed" % moved)
 	var d2: Dictionary = w2.to_dict()
-	check(int(d2.save_version) == 4 and not JSON.stringify(d2.npcs).contains("\"hidden\""), "saves are version 4 and hold where people are, not \"hidden\"")
+	check(int(d2.save_version) == 5 and not JSON.stringify(d2.npcs).contains("\"hidden\""), "saves are version 5 and hold where people are, not \"hidden\"")
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d2)))
 	check(w3.npc(walker.id).pos == w2.npc(walker.id).pos and w3.place_of(w3.npc(walker.id).pos) == "b5", "a villager inside a house is still there after saving and loading")
@@ -1430,7 +1434,7 @@ func test_theft_and_shops() -> void:
 	var stall_id := ""
 	var merchant: NPC = null
 	for id in w.stalls:
-		var m := w.npc(int(w.stalls[id].owner))
+		var m := w.party(w.tenant_of(w.stalls[id]))
 		if m and w.stalls[id].kind == "food":
 			stall_id = id
 			merchant = m
@@ -1625,6 +1629,302 @@ func _census(w: World) -> Dictionary:
 		"coins": w.total_coins(), "made": made, "doing": doing}
 
 
+## A save as save_version 4 wrote it, before property (fixture builder for the migration tests): a
+## plot's owner "" or "player" and the player's plot list, a field's list of its farmers' ids, a
+## stall's merchant id and a pen's keeper id (-1 for none), buildings without owners, no parcel
+## counter and no settled households. `w` is the world the save `d` came from.
+func _as_v4(w: World, d: Dictionary) -> Dictionary:
+	d.save_version = 4
+	d.format = "mml-save/4"
+	d.erase("next_parcel")
+	var mine := []
+	for p in d.plots:
+		if str(p.owner) == "player":
+			mine.append(p.id)
+		p.owner = "player" if str(p.owner) == "player" else ""
+		for k in ["tenant", "rent", "due_day", "arrears", "missed", "building"]:
+			p.erase(k)
+	d.player.plots = mine
+	for i in d.fields.size():
+		d.fields[i].owner = w.field_workers(w.fields[i]).map(func(n): return n.id)
+		d.fields[i].erase("tenant")
+	for id in d.stalls:
+		d.stalls[id].owner = World.ref_id(str(d.stalls[id].tenant)) if str(d.stalls[id].tenant) != "" else -1
+		d.stalls[id].erase("tenant")
+	if d.has("fauna"):
+		for id in d.fauna.pens:
+			var pen: Dictionary = d.fauna.pens[id]
+			pen.owner = World.ref_id(str(pen.tenant)) if str(pen.tenant) != "" else -1
+			pen.erase("tenant")
+	for id in d.buildings:
+		for k in ["owner", "tenant", "parcel", "rent", "due_day", "arrears", "missed"]:
+			d.buildings[id].erase(k)
+	for hh in d.households:
+		hh.erase("ended")
+	return d
+
+
+## Property and land, phase 1 (owner rules 2026-10-18; docs/BUILD_DECISIONS.md "Property and land"):
+## one owner reference everywhere, buying, leasing, weekly rent and eviction with every coin kept,
+## a house whose family dies out going back to the manor and on to the player, several houses and
+## selling one, the heir, the legality check for new ground, and the audit's defects.
+func test_property() -> void:
+	var w := new_world()
+	var pr := w.property
+	var p := w.player
+	var valid := func(ref: String, tenant: bool) -> bool:
+		if tenant and ref == "":
+			return true
+		return ref in [World.MANOR, World.PLAYER] or ((ref.begins_with("hh:") or ref.begins_with("npc:")) and World.ref_id(ref) >= 0)
+	# one owner reference for every kind of property
+	var things: Array = pr._all_things()
+	var bad := things.filter(func(t): return not (t.owner is String and t.tenant is String and valid.call(t.owner, false) and valid.call(t.tenant, true)))
+	check(things.size() == w.buildings.size() + w.plots.size() + w.stalls.size() + w.stations.size() + w.fauna.pens.size() + w.fields.size() and bad.is_empty(),
+			"every building, plot, stall, station, pen and field has one owner and one tenant reference (%d things, %d bad)" % [things.size(), bad.size()])
+	check(things.all(func(t): return not w.owner_of(t).begins_with("npc:")), "people own land and buildings only as households")
+	var houses_ok := true
+	for hh in w.households:
+		var b: Dictionary = w.buildings[hh.home]
+		var ref := World.hh_ref(int(hh.id))
+		houses_ok = houses_ok and (w.owner_of(b) == ref if b.type in ["house", "hut"] else (w.owner_of(b) == World.MANOR and w.tenant_of(b) == ref))
+	check(houses_ok, "a house is its household's own; the manor house and the tavern are the manor's, let to the households living there")
+	check(w.owner_of(w.buildings["b4"]) == World.MANOR and w.owner_of(w.stations["s4"]) == World.MANOR and w.may_use(World.PLAYER, w.stations["s4"]), "the smithy and its forge are the manor's, open to the player")
+	check(w.stalls.values().all(func(s): return w.party(w.tenant_of(s)) != null and w.party(w.tenant_of(s)).job == "merchant"), "each stall is let to its merchant")
+	check(w.fields.all(func(f): return w.owner_of(f) == World.MANOR and not w.field_workers(f).is_empty()), "the fields are the manor's, worked by its farmers")
+	check(w.plots.all(func(pl): return pr.for_sale(pl)) and pr.price_of(w.plots[0]) == int(GameData.b("plot_price")) and int(w.plots[0].price) == int(GameData.b("plot_price")),
+			"the plots are the manor's, for sale at balance.json's plot_price (audit defect 4)")
+	var crate: Dictionary = {}
+	for c in w.containers:
+		if c.kind == "crate" and w.buildings.has(c.at) and w.buildings[c.at].type == "house":
+			crate = c
+			break
+	check(w.container_owner(crate) == w.party(w.holder_of(w.buildings[crate.at])), "a crate's owner comes from who holds its house")
+	# buying land: the price goes to the treasury, coins are kept
+	var coins := func() -> int: return w.total_coins() - w.coin_sources
+	var c0: int = coins.call()
+	var pl0: Dictionary = w.plots[0]
+	var pl1: Dictionary = w.plots[1]
+	p.coins = 1000
+	c0 = coins.call()
+	var t0 := w.treasury
+	check(pr.buy(pl0, World.PLAYER) == "" and w.owner_of(pl0) == World.PLAYER and w.treasury == t0 + 60 and p.coins == 940 and coins.call() == c0, "the player buys plot0 for 60 coins, paid to the treasury")
+	check(pr.buy(pl0, World.PLAYER) != "" and pr.lease(pl0, World.PLAYER) != "", "it cannot be bought or leased twice")
+	# leasing: a week's rent at once, then weekly; unpaid rent falls into arrears, then the lease ends
+	var rent := pr.rent_of(pl1)
+	check(pr.lease(pl1, World.PLAYER) == "" and w.tenant_of(pl1) == World.PLAYER and w.owner_of(pl1) == World.MANOR and int(pl1.rent) == rent and int(pl1.due_day) == w.day() + 7 and p.coins == 940 - rent,
+			"the player leases plot1 for %d coins a week, the first week paid" % rent)
+	pr.collect_rents()
+	check(p.coins == 940 - rent, "no rent is taken before it is due")
+	w.minutes += 7 * World.DAY
+	pr.collect_rents()
+	check(p.coins == 940 - 2 * rent and int(pl1.due_day) == w.day() + 7 and coins.call() == c0, "a week on, the rent is paid from the purse to the treasury")
+	var purse := p.coins
+	p.coins = 0
+	w.treasury += purse                # (the player spends it; the coins stay counted)
+	w.minutes += 7 * World.DAY
+	pr.collect_rents()
+	check(w.tenant_of(pl1) == World.PLAYER and int(pl1.arrears) == rent and int(pl1.missed) == 1, "a tenant who cannot pay falls into arrears")
+	w.minutes += 7 * World.DAY
+	pr.collect_rents()
+	check(w.tenant_of(pl1) == "" and pr.for_sale(pl1) and not pl1.has("rent") and coins.call() == c0, "after %d unpaid weeks the manor takes the lease back; no coin is lost" % int(GameData.b("rent_evict_missed")))
+	p.coins = purse
+	w.treasury -= purse
+	# arrears are paid with the next week's rent
+	pr.lease(pl1, World.PLAYER)
+	var keep := p.coins
+	p.coins = 0
+	w.minutes += 7 * World.DAY
+	pr.collect_rents()
+	p.coins = keep
+	w.minutes += 7 * World.DAY
+	pr.collect_rents()
+	check(int(pl1.arrears) == 0 and p.coins == keep - 2 * rent and w.tenant_of(pl1) == World.PLAYER, "arrears are paid with the next rent")
+	check(pr.end_lease(pl1, World.PLAYER) == "" and pr.for_sale(pl1) and coins.call() == c0, "the player gives the lease up")
+	# a household dies out: its house and stores go to the manor, which sells it to the player
+	var h := w.household_in("b7")
+	var hh: Dictionary = w.households[h]
+	hh.pantry.add("pottage", 2)
+	var stores: int = hh.pantry.total()
+	var gran0: int = w.granary.total()
+	var goods0 := _all_goods(w)
+	for m in hh.members:
+		w.kill(w.npc(int(m)), "fever")
+	var b7: Dictionary = w.buildings["b7"]
+	check(w.owner_of(b7) == World.MANOR and pr.for_sale(b7) and hh.pantry.total() == 0 and w.granary.total() == gran0 + stores, "a house whose family died out goes back to the manor, its stores (%d) to the granary" % stores)
+	check(_all_goods(w) == goods0 and coins.call() == c0, "nothing is lost or made when a household dies out")
+	check(w.container_owner(w.containers.filter(func(c): return c.at == "b7")[0]) == null if w.containers.any(func(c): return c.at == "b7") else true, "its crates are nobody's now")
+	check(pr.market().has(b7) and pr.market().has(pl1), "the manor offers the empty house and the plot")
+	var hp := int(GameData.b("house_price"))
+	t0 = w.treasury
+	p.home = ""
+	check(pr.buy(b7, World.PLAYER) == "" and w.owner_of(b7) == World.PLAYER and w.treasury == t0 + hp and p.home == "b7", "the player buys the empty house for %d coins; it becomes their home" % hp)
+	check(w.household_in("b7") < 0 and w.container_owner(w.containers.filter(func(c): return c.at == "b7")[0]) == null if w.containers.any(func(c): return c.at == "b7") else true, "nobody else lives there")
+	# a second house: built on plot0; the player chooses the home and sells one
+	w.start_site(pl0)
+	for id in GameData.b("house_cost"):
+		p.inv.add(id, int(GameData.b("house_cost")[id]))
+	w.deliver(pl0, p.inv)
+	var hid := "house_plot0"
+	check(w.owner_of(w.buildings[hid]) == World.PLAYER and str(w.buildings[hid].parcel) == "plot0" and str(pl0.building) == hid and p.home == "b7", "a house built on the player's plot is theirs; the home stays where it was")
+	check(pr.homes_of(World.PLAYER) == ["b7", hid] and pr.held_by(World.PLAYER).size() == 2, "the player holds two houses")
+	check(pr.set_home(hid) == "" and p.home == hid and pr.set_home("b5") != "", "the home is one of them, chosen")
+	var value := pr.sale_value(pl0)
+	t0 = w.treasury
+	var pc := p.coins
+	check(pr.sell(pl0, World.PLAYER) == "" and w.owner_of(pl0) == World.MANOR and w.owner_of(w.buildings[hid]) == World.MANOR and p.coins == pc + value and w.treasury == t0 - value,
+			"selling the home sells the house with its plot to the manor (%d coins)" % value)
+	check(p.home == "b7", "the home moves to the other house")
+	check(pr.for_sale(pl0) and pr.price_of(pl0) == hp, "the manor offers the house on plot0 again, as a house")
+	check(coins.call() == c0, "every coin is kept through the sales")
+	# the heir inherits everything owned and leased
+	pr.lease(pl0, World.PLAYER)
+	p.home = hid
+	w.damage_player(9999, "a fall")
+	w.continue_as_heir()
+	check(w.owner_of(b7) == World.PLAYER and w.tenant_of(pl0) == World.PLAYER and w.player.home == hid and pr.held_by(World.PLAYER).size() == 2, "the heir holds everything the family held, and keeps the home")
+	check(w.player.pos.distance_to(Vector2(w.building_door(hid)) + Vector2(0.5, 0.5)) < 0.1, "the heir starts at the home's door")
+	# selling the last house leaves the family homeless; the chest stays theirs
+	w.player.chest.add("log", 3)
+	pr.end_lease(pl0, World.PLAYER)
+	check(w.player.home == "b7", "giving up the leased home moves the family to the house they own")
+	w.treasury += 500
+	c0 += 500
+	pr.sell(b7, World.PLAYER)
+	check(w.player.home == "" and w.player.chest.count("log") == 3 and pr.held_by(World.PLAYER).is_empty(), "selling the last house leaves the family homeless, the chest kept")
+	# claiming new ground anywhere legal (phase 2 places buildings with it)
+	check(pr.can_claim(Rect2i(int(w.buildings["b5"].x) + 1, int(w.buildings["b5"].y) + 1, 4, 4)).begins_with("a building"), "not on a building")
+	check(pr.can_claim(Rect2i(int(pl0.x) + 2, int(pl0.y) + 2, 4, 4)).begins_with("surveyed land"), "not across a surveyed plot")
+	var rc: Array = w.map.data.road[10]
+	check(pr.can_claim(Rect2i(int(rc[0]) - 1, int(rc[1]) - 1, 3, 3)) != "", "not on the road (%s)" % pr.can_claim(Rect2i(int(rc[0]) - 1, int(rc[1]) - 1, 3, 3)))
+	check(pr.can_claim(Rect2i(-2, 5, 4, 4)) == "outside the village" and pr.can_claim(Rect2i(30, 30, 2, 2)) == "too small", "inside the village and big enough")
+	var f0: Dictionary = w.fields[0]
+	check(pr.can_claim(Rect2i(int(f0.x), int(f0.y), 3, 3)).contains("field"), "not on a field")
+	var clear := Rect2i()
+	for y in range(2, w.map.h - 8, 2):
+		for x in range(2, w.map.w - 8, 2):
+			if clear.size == Vector2i.ZERO and pr.can_claim(Rect2i(x, y, 5, 5)) == "":
+				clear = Rect2i(x, y, 5, 5)
+	check(clear.size != Vector2i.ZERO, "there is clear ground to claim (%s)" % clear)
+	c0 += 100 - w.player.coins
+	w.player.coins = 100
+	var lp := pr.land_price(5, 5)
+	var parcel := pr.claim(clear, World.PLAYER)
+	check(not parcel.is_empty() and parcel.id == "parcel0" and w.owner_of(parcel) == World.PLAYER and w.player.coins == 100 - lp and w.plots.has(parcel), "ground is surveyed and bought on the spot (%d coins for 5x5)" % lp)
+	check(pr.claim(clear.grow(-1), World.PLAYER).is_empty() and pr.why.begins_with("surveyed land") and w.plots.size() == 3, "the same ground cannot be claimed again")
+	c0 -= w.player.coins
+	w.player.coins = 0
+	check(pr.claim(Rect2i(clear.end.x + 2, clear.position.y, 5, 5), World.PLAYER).is_empty() and w.plots.size() == 3 and pr.next_parcel == 1, "nothing is surveyed for a buyer who cannot pay")
+	check(coins.call() == c0, "every coin is kept through leases, rent, eviction, sales and claims")
+	# audit defect 1: a farmer who changes work stops working the field at once
+	var fw: Dictionary = w.fields[2]
+	var leaver: NPC = w.field_workers(fw)[0]
+	w.brain._change_job(leaver, "woodcutter", "test")
+	check(not w.field_workers(fw).has(leaver), "a farmer who leaves is no longer one of the field's farmers")
+	w.set_field(fw, "ripe")
+	fw.crop = 20
+	w.player.crimes.clear()
+	w.player.pos = FAR_GUARDS
+	w.player_harvest(fw)
+	check(w.player.crimes.is_empty() or int(w.player.crimes[-1].victim) != leaver.id, "taking its wheat is no longer theft from the former farmer")
+	# audit defect 2: a stall that falls vacant is let again by the manor
+	var sid := "stall0"
+	var merchant: NPC = w.party(w.tenant_of(w.stalls[sid]))
+	w.kill(merchant, "fever")
+	check(w.tenant_of(w.stalls[sid]) == "", "a dead merchant's stall falls vacant")
+	var idle: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == "woodcutter":
+			idle = o
+			break
+	idle.job = ""
+	idle.coins = 40
+	pr.relet_stalls()
+	check(w.tenant_of(w.stalls[sid]) == World.npc_ref(idle.id) and idle.job == "merchant" and idle.workplace == sid, "the manor lets it to a villager out of work")
+	idle.pos = Vector2(int(w.stalls[sid].use[0]) + 0.5, int(w.stalls[sid].use[1]) + 0.5)
+	check(w.at_post(idle) and w.container_owner({"id": sid, "kind": "stall", "x": 0, "y": 0, "at": sid}) == idle, "the new merchant serves there, and the stall's goods are theirs")
+	# saving keeps it all
+	var d := w.to_dict()
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
+	check(int(d.save_version) == 5 and w2.owner_of(w2.plot("parcel0")) == World.PLAYER and w2.property.next_parcel == 1 and w2.owner_of(w2.buildings["b7"]) == World.MANOR
+			and w2.tenant_of(w2.stalls[sid]) == World.npc_ref(idle.id) and w2.households[h].get("ended", false), "a version 5 save keeps owners, tenants, parcels and ended households")
+	var saved2 := JSON.stringify(w2.to_dict())
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(saved2))
+	check(JSON.stringify(w3.to_dict()) == saved2, "and saves the same again")
+	w3.dispose()
+	w.dispose()
+	w2.dispose()
+
+
+## Saves 1-4 (before property) migrate into the one owner model: the player's plot and the house on
+## it stay exactly where they are and stay theirs, the other plot stays the manor's, fields, stalls
+## and pens get the new references, a household that had died out gives its house to the manor, and
+## every coin is kept.
+func test_property_migration() -> void:
+	var w := new_world()
+	var p := w.player
+	p.coins += 200
+	var pl: Dictionary = w.plots[0]
+	w.buy_plot(pl)
+	w.start_site(pl)
+	for id in GameData.b("house_cost"):
+		p.inv.add(id, int(GameData.b("house_cost")[id]))
+	w.deliver(pl, p.inv)
+	p.home = "house_plot0"
+	for i in 200:
+		w.update(0.5)
+	var text := JSON.stringify(w.to_dict())
+	var dead_home := ""
+	for hh in w.households:              # a household of no farmer, merchant or keeper (their work passes on at death)
+		if dead_home == "" and w.buildings[hh.home].type == "house" and hh.members.all(func(m): return not w.npc(int(m)).job in ["farmer", "merchant"]):
+			dead_home = hh.home
+	for v in [4, 3, 2, 1]:
+		var d: Dictionary = _as_v4(w, JSON.parse_string(text))
+		d.save_version = v
+		d.format = "mml-save/%d" % v
+		# a household that died out before property: nobody settled its house
+		var hd: Dictionary = d.households.filter(func(x): return x.home == dead_home)[0]
+		for nd in d.npcs:
+			if hd.members.has(nd.id) or hd.members.has(float(nd.id)):
+				nd.alive = false
+		if v <= 2:
+			for nd in d.npcs:
+				if int(nd.id) == w.reeve_id:
+					nd.coins = int(nd.coins) + int(d.treasury)
+			for k in ["treasury", "granary", "last_reeve_day", "last_payday"]:
+				d.erase(k)
+		if v == 1:
+			d.erase("fauna")
+			d.deer = 30
+		var coins_then := 0
+		for nd in d.npcs:
+			coins_then += int(nd.coins)
+		coins_then += int(d.player.coins) + int(d.get("treasury", 0))
+		for l in d.loot:
+			coins_then += int(l.coins)
+		var w2 := World.new()
+		w2.load_dict(VillageMap.load_default(), d)
+		var p0 := w2.plot("plot0")
+		var hb: Dictionary = w2.buildings.get("house_plot0", {})
+		check(int(p0.x) == int(pl.x) and int(p0.y) == int(pl.y) and w2.owner_of(p0) == World.PLAYER and str(p0.building) == "house_plot0", "v%d: the player's plot stays where it is, theirs, with its house" % v)
+		check(not hb.is_empty() and int(hb.x) == int(pl.x) and int(hb.y) == int(pl.y) and w2.owner_of(hb) == World.PLAYER and str(hb.parcel) == "plot0" and w2.player.home == "house_plot0", "v%d: the house stays where it is, the player's home" % v)
+		check(w2.property.for_sale(w2.plot("plot1")) and int(w2.plot("plot1").x) == int(w.plots[1].x), "v%d: the other plot stays the manor's, in place" % v)
+		check(w2.fields.all(func(f): return w2.owner_of(f) == World.MANOR and w2.field_workers(f).map(func(n): return n.id) == w.field_workers(w.fields[w2.fields.find(f)]).map(func(n): return n.id)), "v%d: fields are the manor's, with the same farmers" % v)
+		check(w2.stalls.keys().all(func(id): return w2.tenant_of(w2.stalls[id]) == w.tenant_of(w.stalls[id])), "v%d: each stall stays let to its merchant" % v)
+		check(w2.fauna.pens.values().all(func(pen): return w2.pen_keeper(pen) != null), "v%d: each pen has its keeper" % v)
+		check(w2.owner_of(w2.buildings[dead_home]) == World.MANOR and w2.property.for_sale(w2.buildings[dead_home]), "v%d: a house whose family had died out is the manor's, for sale" % v)
+		check(w2.owner_of(w2.buildings["b_manor"]) == World.MANOR and w2.owner_of(w2.buildings["b5"]).begins_with("hh:"), "v%d: the other buildings get their owners" % v)
+		check(w2.total_coins() == coins_then, "v%d: every coin is kept (%d)" % [v, coins_then])
+		var again := JSON.stringify(w2.to_dict())
+		var w3 := World.new()
+		w3.load_dict(VillageMap.load_default(), JSON.parse_string(again))
+		check(int(w2.to_dict().save_version) == 5 and JSON.stringify(w3.to_dict()) == again, "v%d: saved again as version 5, stable" % v)
+		w2.dispose()
+		w3.dispose()
+	w.dispose()
+
+
 func test_save_round_trip() -> void:
 	var w := new_world()
 	for i in 600:
@@ -1642,17 +1942,17 @@ func test_save_round_trip() -> void:
 	check(JSON.stringify(w3.to_dict()) == d2, "load -> save -> load -> save is stable")
 	check(w2.fauna.animals.size() == w.fauna.animals.size(), "same animals after load")
 	# a save from before animals (save_version 1, with the old deer count) still loads
-	var old: Dictionary = JSON.parse_string(text)
+	var old: Dictionary = _as_v4(w, JSON.parse_string(text))
 	old.erase("fauna")
 	old.save_version = 1
 	old.deer = 30
 	var w4 := World.new()
 	w4.load_dict(VillageMap.load_default(), old)
 	check(w4.npcs.size() == w.npcs.size() and w4.fauna.animals.size() > 0, "a version 1 save loads and gets its animals")
-	check(w4.fauna.pen_of("cow").owner != -1, "pens get keepers after loading a version 1 save")
+	check(w4.pen_keeper(w4.fauna.pen_of("cow")) != null, "pens get keepers after loading a version 1 save")
 	check(w4.total_coins() == w.total_coins(), "a version 1 save keeps every coin (%d vs %d)" % [w4.total_coins(), w.total_coins()])
 	# a version 2 save (before the manor treasury): the reeve's coins become the treasury
-	var v2: Dictionary = JSON.parse_string(text)
+	var v2: Dictionary = _as_v4(w, JSON.parse_string(text))
 	v2.erase("treasury")
 	v2.erase("granary")
 	v2.erase("last_reeve_day")
@@ -1666,10 +1966,11 @@ func test_save_round_trip() -> void:
 	w5.load_dict(VillageMap.load_default(), v2)
 	check(w5.treasury == treasury_then and w5.npc(w5.reeve_id).coins == int(GameData.b("reeve_purse")), "a version 2 save's reeve coins move into the treasury (%d)" % w5.treasury)
 	check(w5.total_coins() == w.total_coins(), "a version 2 save keeps every coin")
-	check(int(w5.to_dict().save_version) == 4 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 4 with the treasury and granary")
+	check(int(w5.to_dict().save_version) == 5 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 5 with the treasury and granary")
 	# a save from before the plots moved (they lay over houses b20-b22): plot0 owned with a house on
 	# it and the player inside, plot1 unsold, and a tree where the new plot0 is
-	var lay: Dictionary = JSON.parse_string(text)
+	var lay: Dictionary = _as_v4(w, JSON.parse_string(text))
+	lay.save_version = 3
 	lay.plots[0].x = 94; lay.plots[0].y = 78; lay.plots[0].door = [98, 87]
 	lay.plots[0].owner = "player"; lay.plots[0].site = {"need": {}, "done": true}
 	lay.plots[1].x = 106; lay.plots[1].y = 78; lay.plots[1].door = [110, 87]
@@ -1684,10 +1985,10 @@ func test_save_round_trip() -> void:
 	var p0 := w8.plot("plot0")
 	var mp0: Dictionary = m8.data.plots[0]
 	var h0: Dictionary = w8.buildings["house_plot0"]
-	check(int(p0.x) == int(mp0.x) and int(p0.y) == int(mp0.y) and p0.owner == "player" and p0.site.done, "an old save's plot moves to the map's plot with its owner and site")
+	check(int(p0.x) == int(mp0.x) and int(p0.y) == int(mp0.y) and w8.owner_of(p0) == World.PLAYER and p0.site.done, "an old save's plot moves to the map's plot with its owner and site")
 	check(int(h0.x) == int(mp0.x) and int(h0.y) == int(mp0.y) and int(h0.door[1]) == int(mp0.door[1]) and w8.player.home == "house_plot0", "the house built on it moves with it and stays the player's home")
 	check(Rect2(float(p0.x), float(p0.y), 9.0, 10.0).has_point(w8.player.pos), "the player standing in it moves with it")
-	check(int(w8.plot("plot1").y) == int(m8.data.plots[1].y) and w8.plot("plot1").owner == "", "an unsold plot moves too")
+	check(int(w8.plot("plot1").y) == int(m8.data.plots[1].y) and w8.property.for_sale(w8.plot("plot1")), "an unsold plot moves too (the manor's, for sale)")
 	check(not w8.trees.any(func(t): return int(t.x) == 91 and int(t.y) == 23), "trees the generator cleared from the new plots are gone from the old save")
 	check(m8.is_solid(Vector2i(91, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
 	var w9 := World.new()
@@ -1699,7 +2000,7 @@ func test_save_round_trip() -> void:
 	check(surveys.call(w8) == 2 and surveys.call(w9) == 2 and int(w9.plot("plot0").x) == int(mp0.x), "loading the corrected save again moves nothing and notes nothing")
 	check(JSON.stringify(w10.to_dict()) == saved9, "and the corrected save is stable from then on")
 	# a save from before quests (Build 4) gets the storyline on load, once
-	var pre: Dictionary = JSON.parse_string(text)
+	var pre: Dictionary = _as_v4(w, JSON.parse_string(text))
 	pre.erase("quest_offers")
 	pre.player.erase("quests")
 	var w6 := World.new()

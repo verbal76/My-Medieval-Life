@@ -89,9 +89,9 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 
 | Decision | Why |
 |---|---|
-| Permadeath: the heir keeps the family's house, chest and plots, starts every skill from nothing and carries only the starting kit (5 coins, rusty sword and pickaxe, bread, rotten apple, plain clothes); what the dead carried lies where they fell, for anyone to take, the heir too. The heir's kit and coins are new to the village (counted in `coin_sources`). Anyone fighting the dead player stops | Owner rule, 2026-10-18 (house, chest and the dropped bag settled by the owner's answers) |
+| Permadeath: the heir keeps the family's home, chest and everything the family owns or leases (see "Property and land"), starts every skill from nothing and carries only the starting kit (5 coins, rusty sword and pickaxe, bread, rotten apple, plain clothes); what the dead carried lies where they fell, for anyone to take, the heir too. The heir's kit and coins are new to the village (counted in `coin_sources`). Anyone fighting the dead player stops | Owner rule, 2026-10-18 (house, chest and the dropped bag settled by the owner's answers) |
 | The journal (Menu, or B): the village record written into an open book, two parchment pages at a time, six lines a page, a heading for each day (repeated as "continued" at the top of a page that starts mid-day), opening at the latest pages | The owner asked for a journal that looks like a book |
-| Building: buy a plot from the manor (the price goes to the treasury), a wooden frame appears, deliver 30 planks, 20 stone and 10 logs, and the house stands. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load to the pack (what does not fit is left in a bundle at the site), takes the frame down and keeps the plot | The owner's rules (frame with a progress bar, materials only, no extra build time, cancel returns everything) |
+| Building: buy or lease a plot from the manor (the price or rent goes to the treasury), a wooden frame appears, deliver 30 planks, 20 stone and 10 logs, and the house stands. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load to the pack (what does not fit is left in a bundle at the site), takes the frame down and keeps the plot | The owner's rules (frame with a progress bar, materials only, no extra build time, cancel returns everything) |
 | Attacking a villager, or killing a keeper's animal, is a crime: guards nearby and the victim respond | Bob's spec has crime but no penalty system yet |
 
 ## Animals (owner rule: a fed pair breeds, babies are half scale, animals become meat)
@@ -243,6 +243,39 @@ Interactions INT-048 to INT-050 in `docs/SYSTEM_INTERACTION_MANIFEST.md`.
 | In the player's house the bed rests until morning and the chest opens the family's store; the door still offers both | Agent proposal | Home actions from inside, the old way kept |
 | Saves become version 4 (no "hidden"); older saves' villagers who were hidden at home load inside at their own bed | Agent proposal | Save compatibility (CLAUDE.md section 7) |
 
+## Property and land, phase 1 (owner decisions, 2026-10-18; the details are agent proposals)
+
+The owner's answers to `docs/HOUSING_LAND_AUDIT.md` (`docs/DECISIONS.md`, "Property and
+construction"). Code: the owner API in `game/scripts/core/world.gd` ("ownership"), the land office in
+`game/scripts/core/property.gd`; interactions INT-051 to INT-056 (and INT-007, 017, 018, 021, 026,
+027, 029, 030, 031, 042 updated). Phase 2 (placement interface, hired helpers, households splitting
+and building, workshops) builds on it and is not done.
+**Provisional (owner, 2026-10-18):** every price, rent, sale value and the eviction rule below are
+agent proposals until the balance review.
+
+| Decision | Who | Why |
+|---|---|---|
+| The manor, households and the player own land and buildings; the player counts as their own household; unsold land and empty houses are the manor's | Owner | Owner answer |
+| Rent is weekly; only the manor lets land and buildings | Owner | Owner answer |
+| A house whose family dies out goes back to the manor, which can sell or let it again; the player may sell their house and own several | Owner | Owner answer |
+| Building is free placement anywhere legal, the ground bought or leased from the manor on the spot. Phase 1 gives the land model for it: `Property.can_claim(rect)` (at least 3x3, inside the village with a one-tile margin, no building, surveyed parcel, field, pen, stall, station, container, mine seam, tree or road, walkable ground) and `Property.claim(rect, owner, lease)`, which surveys a new manor parcel and sells or lets it at once. No placement interface yet | Owner (rule); legality details Agent | The road stays clear so nobody is walled off; a tree must be felled first, as a builder would |
+| One owner reference everywhere, a String: `"manor"`, `"player"`, `"hh:<id>"`, `"npc:<id>"`. Every building, parcel, stall, pen, field and station has `owner` and `tenant` ("" for none), asked and changed only through `World.owner_of / tenant_of / holder_of / holds / set_owner / set_tenant` (resolved to a person with `World.party`). It replaces the six older ways (plot `""`/`"player"`, field id lists, stall and pen ids, container ownership derived from `home`, the player's `plots` list) | Agent proposal (audit recommendation) | The owner asked for no conflicting ownership mechanics. Strings save as they are, read in logs, and name the manor and households, which ids could not |
+| `"npc:<id>"` is only ever a tenant (a stall's merchant, a pen's keeper), never an owner of land or buildings | Agent proposal | The owner listed the manor, households and the player as owners |
+| Starting owners: a house and the sage's hut are their household's; the manor house and the tavern are the manor's, let rent-free to the reeve's household and to the tavern keepers' household (they live there as its officers; the tavern's stations stay the manor's); the smithy, fields, pens, market stalls and all stations the manor's; each stall let rent-free to its merchant, each pen to its keeper; the two plots the manor's, for sale or lease | Agent proposal | The obvious owner of a home is the family in it. The tavern as the manor's alehouse keeps its oven and stove public for the player, as before; owning it outright would change who may cook there |
+| A field is the manor's; its farmers are those whose workplace it is (`World.field_workers`), so the list can never hold a farmer who left (audit defect 1). Taking its wheat is theft from the first of them | Agent proposal | Derived data cannot go stale |
+| A building on a parcel and the parcel change hands together (`building.parcel`, `parcel.building`); a house built on leased ground is the builder's, but passes to the manor with the ground if the lease ends | **Provisional** (agent proposal) | One deal per place; the alternative (the manor pays for the house) is for the balance review |
+| Prices: land `plot_price` 60 for a 9x10 plot (now used; the generator's price is ignored, audit defect 4), other ground by area (ceil(60 x tiles / 90)); a house with its ground `house_price` 150 (about its materials, 100 coins at village prices, plus the plot) | **Provisional** (agent proposal; balance review pending) | The plot price already in balance.json; a house worth its materials and land |
+| Rent: `weekly_rent_share` 0.1 of the price a week (plot 6, house 15), the first week paid when the lease is signed | **Provisional** (agent proposal; balance review pending) | Ten weeks' rent buys it, so leasing suits a short stay |
+| Selling back: the manor pays `sell_back_share` 0.6 of the price (a house 90, a plot 36) from the treasury, refused when the treasury cannot pay, when it is let, or while a site on it is unfinished | **Provisional** (agent proposal; balance review pending) | Below the price, so buying and selling makes no money; the treasury must hold the coins |
+| Rent day: each morning every lease due is collected from the tenant's purse (a household's members, richest first) to the treasury. Unable to pay all, the tenant pays nothing that week and it joins the arrears; arrears are paid with the next rent; after `rent_evict_missed` 2 unpaid weeks the manor takes the lease back (with any building the tenant put on the ground) and lets the arrears go. Giving a lease up pays what arrears the purse can | **Provisional** (agent proposal; balance review pending) | One week's grace, no debt that outlives the lease, no coin made or lost |
+| A household that dies out: everything it owned becomes the manor's, its leases end, and its pantry's stores go to the manor's granary (escheat). The village's food days count all food in the granary | **Provisional** (agent proposal) | Inheritance passes goods within a household only; with nobody left, the lord takes them (medieval escheat) and the house can be sold empty. Relief can then give out its grain |
+| The player's home is one house they hold (`PlayerState.home`; "Make it home" at the land office or the house's door): its door and bed rest, its chest is the family chest. A family's first house becomes its home; giving up the home moves the family to another held house (lowest id), or leaves them homeless: they respawn at the village spawn and the family chest is kept, reached again from their next house | Agent proposal (owner question: what selling the home does) | Nothing the player owns is lost; homelessness is a real consequence without destroying goods |
+| The heir inherits everything held as `"player"`: houses, land, leases (and their rent and arrears), the home and the chest | Owner (heir keeps the family's house and chest); extension to all property Agent | The family, not the character, owns |
+| The land office: "Land and houses" in the reeve's conversation lists what the family holds (Make it home, Sell, End lease) and what the manor offers (Buy, Lease). An empty house's door offers the same deal; a plot's build window offers buy or lease. The reeve mentions an empty house when there is one | Agent proposal | The existing plot purchase was at the plot; the reeve keeps the manor's business |
+| A vacant stall is let again (audit defect 2): when its merchant dies or leaves, the stall is vacant; each morning the manor lets it, rent-free, to the first villager (by id) out of work or a manor hand who holds `stall_min_coins` 20 to stock it | **Provisional** (agent proposal; balance review pending) | Merchants were outside the job market; the manor letting the stall keeps "only the manor lets" |
+| The player still ignores villagers' station reservations (audit defect 3): every station is the manor's and public (`World.may_use`). Left to phase 2's workshops, whose owner or tenant will decide who else may use them | Agent proposal | Making the player wait at the village's only forge would stop player smithing whenever the smiths work |
+| Saves become version 5; versions 1-4 migrate (`World._migrate_property`, `Fauna.load_dict`) with the plots, a house the player built and the player exactly where they were, and a household that had already died out settled as above | Agent proposal | CLAUDE.md section 7 |
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals
@@ -253,6 +286,8 @@ Interactions INT-048 to INT-050 in `docs/SYSTEM_INTERACTION_MANIFEST.md`.
   farming and resource work.
 - The player cannot own livestock or hire helpers to deliver building materials. (Harvesting a
   field works: `World.player_harvest`, INT-007.)
+- Property phase 2 is not built: no interface to place a building on claimed ground, no hired
+  helpers, households neither split nor build, no workshops; NPC households never buy or lease.
 - No eggs, milk or wool (the owner asked only for meat).
 - No aging, no births of people, no audio yet (the volume settings are ready for it).
 - Villagers keep only their last 8 memories (having met someone is never forgotten), so older

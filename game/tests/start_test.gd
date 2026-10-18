@@ -502,7 +502,7 @@ func _run() -> void:
 	check(main._usable_at(Vector2(int(counter.use[0]) + 0.5, int(counter.use[1]) + 0.5)) != Vector2.INF, "a tap on the counter is a use of it")
 	# a stall with its merchant away: its goods can be taken, and the prompt says it is theft
 	var sid: String = w.stalls.keys()[0]
-	var merchant: NPC = w.npc(int(w.stalls[sid].owner))
+	var merchant: NPC = w.party(w.tenant_of(w.stalls[sid]))
 	merchant.pos = Vector2(int(w.stalls[sid].use[0]) + 0.5, int(w.stalls[sid].use[1]) + 6.5)
 	stand_by(Vector2i(int(w.stalls[sid].x), int(w.stalls[sid].y)))
 	check(str(main.target.get("label", "")).ends_with("(%s %s's) — theft" % [merchant.name, merchant.family]) or str(main.target.get("label", "")).begins_with("Empty"), "a stall left alone: \"%s\"" % main.target.get("label", ""))
@@ -845,10 +845,10 @@ func _run() -> void:
 	# 22. killing a villager's livestock: the keeper remembers the animal, not an attack on them
 	var beast: Animal = null
 	for a: Animal in w2.fauna.animals:
-		if a.alive and not a.wild() and int(w2.fauna.pens[a.area].owner) != -1:
+		if a.alive and not a.wild() and w2.pen_keeper(w2.fauna.pens[a.area]) != null:
 			beast = a
 			break
-	var keeper: NPC = w2.npc(int(w2.fauna.pens[beast.area].owner))
+	var keeper: NPC = w2.pen_keeper(w2.fauna.pens[beast.area])
 	var kind := beast.label().to_lower()
 	main._hit_animal(beast, 9999.0)
 	check(not Dialogue.attacked(w2, keeper) and Dialogue.animal_killed(w2, keeper) == kind, "the keeper remembers that the player killed their %s" % kind)
@@ -925,6 +925,29 @@ func _run() -> void:
 	pi.player.pos = Vector2(pi.building_door(hid)) + Vector2(0.5, 0.5)
 	main._find_target()
 	check(main.target.get("kind", "") == "home", "and the door still offers rest and the chest")
+
+	# 24. land and houses: a house whose family died out is the manor's; at its door the player buys
+	# it, it shows at the reeve's land office with the house they built, and they choose their home
+	var gone := ""
+	for hh in pi.households:
+		if gone == "" and pi.buildings[hh.home].type == "house" and hh.members.all(func(m): return not pi.npc(int(m)).job in ["farmer", "merchant"]):
+			gone = hh.home
+	for m in pi.households[pi.household_in(gone)].members:
+		pi.kill(pi.npc(int(m)), "fever")
+	pi.player.pos = Vector2(pi.building_door(gone)) + Vector2(0.5, 0.5)
+	main._find_target()
+	check(main.target.get("kind", "") == "property" and str(main.target.get("label", "")).begins_with("Empty house"), "at an empty house's door: %s" % main.target.get("label", ""))
+	pi.player.coins = 500
+	main.interact()
+	check(ui.is_open("land") and _press("Buy (%d)" % int(GameData.b("house_price"))) and pi.owner_of(pi.buildings[gone]) == World.PLAYER, "the player buys the empty house at its door")
+	check(pi.player.home == hid and pi.property.homes_of(World.PLAYER).size() == 2, "the home stays the house they built; they hold two")
+	ui.hide_all()
+	main._find_target()
+	check(main.target.get("kind", "") == "property" and str(main.target.label).contains("make it your home"), "its door offers to make it the home: %s" % main.target.get("label", ""))
+	var reeve: NPC = pi.npc(pi.reeve_id)
+	ui.show_talk(reeve)
+	check(_press("Land and houses") and ui.is_open("land") and _press("Make it home") and pi.player.home == gone, "at the reeve's land office the player makes it their home")
+	ui.hide_all()
 
 	print("%d steps, %d failures" % [steps.size(), failures])
 	quit(1 if failures else 0)
