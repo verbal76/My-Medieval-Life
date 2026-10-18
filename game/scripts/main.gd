@@ -174,6 +174,12 @@ func _ready() -> void:
 				world.deliver(pl, world.player.inv)
 				world.player.pos = Vector2(float(pl.door[0]) + 2.5, float(pl.door[1]) + 1.5)
 				follow_at = _in_view(world.player.pos * T)
+			"sleeper":
+				for n: NPC in world.npcs:
+					if n.alive and n.role == "adult":
+						n.anim = "sleep"
+						ui.show_sleeper(n)
+						break
 			"quest_home":
 				# a quest giver inside their house (its roof on): the marker hangs over the door
 				for n: NPC in world.npcs:
@@ -550,7 +556,7 @@ func _process(delta: float) -> void:
 ## drawn, not tapped, their marker over the door. Inside the building the player is in, they show.
 func _covered(n: NPC) -> bool:
 	var at := world.place_of(n.pos)
-	return at != "" and at != world.roof_over(world.player.pos) and not (world.interiors[at].roof as Array).is_empty()
+	return at != "" and at != world.place_of(world.player.pos) and not (world.interiors[at].roof as Array).is_empty()
 
 
 ## The blanket of a bed tile: the part of it away from the pillow, drawn over whoever lies in it.
@@ -609,8 +615,15 @@ func _sync_sprites() -> void:
 	var p := world.player
 	player_sprite.position = p.pos * T
 	canopy.update(p.pos, get_process_delta_time())
+	var inside := world.place_of(p.pos)
+	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
+		inside = ""
+	# behind the eaves a roof fades only when it would hide the player: over their feet and head both
 	var under := world.roof_over(p.pos)
-	roofs.update(under, world.interiors[under].roof if under != "" else [], get_process_delta_time())
+	if under != "" and world.roof_over(p.pos + Vector2(0, -1)) != under:
+		under = ""
+	roofs.follow(inside, world.interiors[inside].roof if inside != "" else [], under,
+			world.interiors[under].roof if under != "" else [], get_process_delta_time())
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
@@ -719,6 +732,10 @@ func say(n: NPC, text: String) -> void:
 ## The player speaks to a villager: someone busy (walking somewhere, working, fighting) calls out a
 ## line and carries on; anyone else stops for a conversation.
 func approach(n: NPC) -> void:
+	# a sleeper (owner rule: sleeping is not immunity): wake them, pick their pocket, or leave them
+	if world.asleep(n):
+		ui.show_sleeper(n)
+		return
 	# a quest giver always stops to talk (owner: "unless they're a quest giver")
 	# (and so does a villager with paid work to offer the player: agent proposal)
 	var quest_business := world.quests.diamond(n) or not world.quests.active_from(n).is_empty() or not world.quests.hire_offer(n).is_empty()
@@ -877,7 +894,7 @@ func _route_step(_delta: float) -> Vector2:
 func _talk_step() -> void:
 	if talk_to == null:
 		return
-	if not talk_to.alive or _covered(talk_to) or world.asleep(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0:
+	if not talk_to.alive or _covered(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0:
 		talk_to = null
 		move_to = Vector2.INF
 		return
@@ -929,11 +946,13 @@ func _find_target() -> void:
 	var probe := p.pos + facing_vec() * 0.9
 	var best := {}
 	var bd := 1.5
-	for n: NPC in world.near(p.pos, 2.5):
+	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
 		if d < bd:
 			bd = d
-			if world.at_post(n):
+			if world.asleep(n):
+				best = {"kind": "npc", "npc": n, "label": "%s is asleep" % _who(n)}
+			elif world.at_post(n):
 				best = {"kind": "shop", "npc": n, "label": "Buy from %s (%s)" % [n.name, world.shop_name(n)]}
 			else:
 				best = {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}
@@ -1246,7 +1265,7 @@ func attack(only: Object = null) -> void:
 	p.attack_cd = 0.6
 	player_sprite.play("sword", true)
 	var probe := p.pos + facing_vec() * 0.8
-	for n: NPC in world.near(probe, 1.1):
+	for n: NPC in world.present(probe, 1.1):
 		if only == null or only == n:
 			_hit(n, p.damage())
 			_xp("combat", 4)
@@ -1280,7 +1299,7 @@ func _creature_at(wpos: Vector2) -> Object:
 	var at := wpos + Vector2(0, 0.4)
 	var best: Object = null
 	var bd := 0.9
-	for n: NPC in world.near(at, bd):
+	for n: NPC in world.present(at, bd):
 		if not _covered(n) and n.pos.distance_to(at) < bd:
 			bd = n.pos.distance_to(at)
 			best = n
@@ -1297,7 +1316,7 @@ func _chase_step() -> void:
 	if chase == null:
 		return
 	var p := world.player
-	if not chase.alive or (chase is NPC and (_covered(chase) or world.asleep(chase))) or chase.pos.distance_to(p.pos) > 12.0:
+	if not chase.alive or (chase is NPC and _covered(chase)) or chase.pos.distance_to(p.pos) > 12.0:
 		chase = null
 		strike_pending = false
 		move_to = Vector2.INF
@@ -1333,6 +1352,8 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 
 func _hit(n: NPC, dmg: float) -> void:
 	n.hp -= maxf(0.5, dmg - n.armor * 0.5)
+	# the blow wakes a sleeper and the noise wakes those near, who then see it (owner rule)
+	world.wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
 	if n.role != "bandit":
 		_crime(n)
 	elif n.target == -1:
@@ -1383,7 +1404,7 @@ func _projectiles_step(delta: float) -> void:
 		pr.node.rotation += delta * 12.0
 		var hit := false
 		var dmg := 14.0 * (1.5 if world.player.level("magic") >= 3 else 1.0)
-		for n: NPC in world.near(pr.pos, 0.6):
+		for n: NPC in world.present(pr.pos, 0.6):
 			_hit(n, dmg)
 			hit = true
 			break

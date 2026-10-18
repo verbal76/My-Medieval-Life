@@ -86,6 +86,11 @@ CHEST_TILES = {355}
 MAT = 593                                   # a straw pallet: a sleeping place on the floor (walkable)
 SLEEP_PLACES = 6                            # beds plus pallets in every home
 HOME_TYPES = ("house", "manor", "tavern", "hut")
+# Beds added to the big homes so the family sleeps in beds (owner: villagers with homes sleep in their
+# own beds; straw pallets are for guards and cooks). (body, foot post) tiles of Shade's beds, head left.
+# The tavern has no room for more beds outside its dining hall: its keepers take Shade's two inn beds.
+EXTRA_BEDS = {"manor": 2}
+ADDED_BED_TILES = ((1693, 1694), (1698, 1699))
 HUT_BOX = 3222                              # the box Shade drew in the sage's hut's only inner cell
 # Beds for Shade's small house (local cells; (body, foot post) tiles): four along the west wall, head to
 # the wall, where his straw mat, shelf and jars stood, and one by the east wall. Colours alternate.
@@ -510,6 +515,11 @@ class Village:
                         s.update(head=BED_TILES[t], tile=t)
                     spots.append(s)
         beds = [s for s in spots if s["kind"] == "bed"]
+        if EXTRA_BEDS.get(b["type"]):
+            for spot in self.add_beds(b, doors, floor, free, spots, EXTRA_BEDS[b["type"]], use_of):
+                spots.append(spot)
+                beds.append(spot)
+            free = sorted(c for c in floor if c not in doors)
         if b["type"] in HOME_TYPES:
             taken = {tuple(s["use"]) for s in spots} | {(c["x"], c["y"]) for c in self.ents["containers"]}
             near_door = {(x + dx, y + dy) for x, y in doors for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1))}
@@ -526,6 +536,50 @@ class Village:
         roof = sorted({r for k in sorted({comp[c] for c in area}) for r in members[k]})
         return {"doors": [list(c) for c in doors], "area": [list(c) for c in sorted(area)],
                 "floor": [list(c) for c in sorted(floor)], "roof": [list(c) for c in roof], "spots": spots}
+
+    def add_beds(self, b, doors, floor, free, spots, count, use_of):
+        """Up to `count` beds (two cells, head left) on free floor away from the doors, each only where
+        every other floor cell can still be reached from a door. The bed cells leave the floor (solid)."""
+        taken = {tuple(s["use"]) for s in spots} | {tuple(s["at"]) for s in spots} | \
+                {(c["x"], c["y"]) for c in self.ents["containers"]}
+        near_door = {(x + dx, y + dy) for x, y in doors for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1), (0, -2), (0, 2))}
+        ok = lambda c: c in floor and c not in taken and c not in near_door and not self.below_tiles(*c) \
+            and all(self.get("above", i, *c) < 0 for i in range(6) if f"above{i}" not in ROOF_LAYERS)
+
+        def reach(cells):
+            seen, todo = set(), [d for d in doors if d in cells]
+            seen |= set(todo)
+            while todo:
+                x, y = todo.pop()
+                for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if n in cells and n not in seen:
+                        seen.add(n)
+                        todo.append(n)
+            return seen
+
+        # a bed may not cut anyone off: what the doors reached before, less the bed, they still reach
+        connected = lambda rest: reach(rest) >= reach(floor) - (floor - rest)
+
+        out = []
+        for c in sorted(free, key=lambda c: (c[1], c[0])):
+            if len(out) == count:
+                break
+            pair = (c, (c[0] + 1, c[1]))
+            if not all(ok(p) for p in pair):
+                continue
+            rest = floor - set(pair)
+            use = next((n for n in ((c[0], c[1] + 1), (c[0], c[1] - 1), (c[0] + 2, c[1] + 1), (c[0] - 1, c[1]))
+                        if n in rest and n not in taken), None)
+            if use is None or not connected(rest):
+                continue
+            body, post = ADDED_BED_TILES[len(out) % len(ADDED_BED_TILES)]
+            self.put("below", 1, c[0], c[1], tile_val(0, body))
+            self.put("below", 1, pair[1][0], pair[1][1], tile_val(0, post))
+            floor -= set(pair)
+            self.floor -= set(pair)
+            taken |= set(pair) | {use}
+            out.append({"kind": "bed", "at": list(c), "use": list(use), "head": BED_TILES[body], "tile": body})
+        return out
 
     def place_deposits(self, ox, oy):
         """Ore rocks on bare highland floor of the cave sample: cells with only ground tiles whose

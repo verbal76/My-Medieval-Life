@@ -879,7 +879,7 @@ func _run() -> void:
 	main.camera.reset_smoothing()
 	main.camera.force_update_scroll()
 	main._sync_sprites()
-	main.roofs.update("b5", pi.interiors["b5"].roof, 1.0)
+	main.roofs.update("b5", pi.interiors["b5"].roof, RoofFade.ALPHA, 1.0)
 	check(main.roofs.current == "b5" and main.roofs.alpha <= 0.01 and a3.get_cell_source_id(in5) == -1, "inside house b5 its roof fades out")
 	check(a3.get_cell_source_id(in6) != -1, "the next house's roof stays")
 	main._sync_sprites()
@@ -894,9 +894,75 @@ func _run() -> void:
 	resident.anim = "idle"
 	pi.player.pos = outside_at
 	main._sync_sprites()
-	main.roofs.update("", [], 1.0)
-	main.roofs.update("", [], 1.0)
+	main.roofs.update("", [], 1.0, 1.0)
+	main.roofs.update("", [], 1.0, 1.0)
 	check(main.roofs.current == "" and a3.get_cell_source_id(in5) != -1, "outside again, the roof comes back")
+	# owner rules: behind the eaves a roof fades only part way, and not in passing; no door flicker
+	var area5 := {}
+	for c in pi.interiors["b5"].area:
+		area5[Vector2i(int(c[0]), int(c[1]))] = true
+	var eave := Vector2i(-1, -1)
+	for c in pi.interiors["b5"].roof:
+		if not area5.has(Vector2i(int(c[0]), int(c[1]))):
+			eave = Vector2i(int(c[0]), int(c[1]))
+			break
+	var r5: Array = pi.interiors["b5"].roof
+	main.roofs.follow("", [], "b5", r5, 0.2)
+	check(main.roofs.current == "", "passing behind the eaves does not fade the roof")
+	main.roofs.follow("", [], "b5", r5, 0.3)
+	for k in 4:
+		main.roofs.follow("", [], "b5", r5, 0.1)
+	check(main.roofs.current == "b5" and absf(main.roofs.alpha - RoofFade.EAVES_ALPHA) < 0.01 and not main.roofs.is_open("b5"), "staying behind the eaves fades the roof part way, so the player shows")
+	main.roofs.follow("b5", r5, "b5", r5, 1.0)
+	check(main.roofs.is_open("b5") and main.roofs.alpha <= 0.01, "going inside lifts it fully at once")
+	main.roofs.follow("", [], "", [], 0.1)
+	main.roofs.follow("b5", r5, "b5", r5, 0.1)
+	check(main.roofs.current == "b5" and main.roofs.alpha <= 0.01, "a step out of the door and back does not flicker the roof")
+	main.roofs.follow("", [], "", [], 0.5)
+	for k in 6:
+		main.roofs.follow("", [], "", [], 0.1)
+	check(main.roofs.current == "", "out for good, the roof comes back")
+	check(eave != Vector2i(-1, -1), "b5 has eaves outside its floor")
+	# owner rule: sleepers are not untouchable; sleep limits awareness
+	resident.anim = "sleep"
+	resident.pos = Vector2(pi.home_cell(resident, "bed")) + Vector2(0.5, 0.5)
+	pi.player.pos = resident.pos + Vector2(0.6, 0)
+	check(pi.present(pi.player.pos, 2.0).has(resident) and not pi.near(pi.player.pos, 2.0).has(resident), "a sleeper is there to reach but sees nothing")
+	main.approach(resident)
+	check(ui.is_open("sleeper") and pi.asleep(resident), "using a sleeper offers to wake them or try their pocket")
+	ui.hide_all()
+	var saw_ok := false
+	var saw_fumble := false
+	for k in 40:
+		resident.anim = "sleep"
+		resident.coins = 5
+		var mem_before := resident.memory.size()
+		var pr := pi.pickpocket(resident)
+		if pr.ok and pi.asleep(resident):
+			saw_ok = true
+		elif not pr.ok and not pi.asleep(resident) and resident.memory.size() > mem_before:
+			saw_fumble = true
+		pi.player.crimes.clear()
+		if saw_ok and saw_fumble:
+			break
+	check(saw_ok, "a sleeper's pocket can be picked without waking them")
+	check(saw_fumble, "a fumble wakes them, and they remember it")
+	resident.memory.clear()
+	resident.anim = "sleep"
+	check(pi.wake(resident) and not pi.asleep(resident), "waking someone gets them up")
+	resident.anim = "sleep"
+	var other: NPC = null
+	for n: NPC in pi.npcs:
+		if n.alive and n != resident and n.role == "adult" and n.home == resident.home:
+			other = n
+			break
+	if other:
+		other.anim = "sleep"
+		other.pos = resident.pos + Vector2(1, 0)
+	main._hit(resident, 0.1)
+	check(not pi.asleep(resident) and (other == null or not pi.asleep(other)), "a blow wakes the sleeper and the noise wakes the room")
+	resident.target = -1
+	pi.player.crimes.clear()
 	# a house the player builds: the same inside, roof fade, bed and chest
 	var pl2: Dictionary = pi.plots[1]
 	pi.player.coins += int(pl2.price)

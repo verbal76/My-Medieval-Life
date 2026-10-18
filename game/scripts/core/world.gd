@@ -677,6 +677,33 @@ func alive_count(role := "") -> int:
 	return c
 
 
+## Everyone within `r` tiles of a point and in the same place, asleep or awake: who can be reached,
+## tapped, talked to (waking them) or struck. Awareness (witnesses, guards) uses `near`.
+func present(p: Vector2, r: float) -> Array:
+	var out := []
+	var here := place_of(p)
+	for n: NPC in npcs:
+		if n.alive and n.pos.distance_to(p) <= r and place_of(n.pos) == here:
+			out.append(n)
+	return out
+
+
+## Wake a sleeper (owner rule: sleeping limits awareness, it does not make anyone untouchable). They
+## get up and decide afresh; at night they go back to bed later. Returns true if they were asleep.
+func wake(n: NPC) -> bool:
+	if not asleep(n):
+		return false
+	n.anim = "idle"
+	n.plan.clear()
+	return true
+
+
+## A noise (a fight) wakes the sleepers within `r` tiles in the same place; they can then witness.
+func wake_near(p: Vector2, r: float) -> void:
+	for n: NPC in present(p, r):
+		wake(n)
+
+
 ## People within `r` tiles of a point who are awake and in the same place: inside the same building,
 ## or both outdoors (walls stand between a building's inside and the rest of the world).
 func near(p: Vector2, r: float) -> Array:
@@ -763,6 +790,9 @@ func roof_over(p: Vector2) -> String:
 	return _cell_lookup(roof_idx, p)
 
 
+const LODGERS := ["guard", "cook"]     # sleep on the straw pallets where their household lives
+
+
 func asleep(n: NPC) -> bool:
 	return n.alive and n.anim == "sleep"
 
@@ -779,8 +809,20 @@ func home_spot(n: NPC, kind: String) -> Dictionary:
 		return {}
 	var i := 0
 	if n.household >= 0:
-		i = maxi(0, (households[n.household].members as Array).find(n.id))
+		i = maxi(0, _sleep_order(n.household).find(n.id))
 	return mine[i % mine.size()]
+
+
+## A household's members in the order they take its sleeping places (beds first, then straw pallets):
+## the family before those lodging for their work, guards and cooks (owner rule: villagers with homes
+## sleep in their own beds; pallets are for guards and cooks).
+func _sleep_order(hh: int) -> Array:
+	var family := []
+	var lodgers := []
+	for id in households[hh].members:
+		var m := npc(int(id))
+		(lodgers if m != null and m.job in LODGERS else family).append(int(id))
+	return family + lodgers
 
 
 ## The cell to go to for a home spot (the use cell), or the home's door when it has none.
@@ -1319,10 +1361,13 @@ func shop_name(n: NPC) -> String:
 ## who sees it or is within `guard_call_radius` of their shout stops the player (guard_confront).
 ## Returns {ok, what, text}.
 func pickpocket(n: NPC) -> Dictionary:
-	if not n.alive or asleep(n) or n.role == "bandit":
+	if not n.alive or n.role == "bandit":
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
 	var lv := player.level("stealth")
 	var chance := minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * (lv - 1), float(GameData.b("pickpocket_chance_max")))
+	var sleeping := asleep(n)
+	if sleeping:                        # a sleeper is unaware: easier, but a fumble wakes them
+		chance = minf(chance + float(GameData.b("pickpocket_asleep_bonus")), float(GameData.b("pickpocket_asleep_max")))
 	var who := "%s %s" % [n.name, n.family]
 	last_guard = ""
 	if rng.randf() < chance:
@@ -1348,6 +1393,7 @@ func pickpocket(n: NPC) -> Dictionary:
 		player.crimes.append({"day": day(), "kind": "pickpocket", "what": "%s from %s" % [what, who], "victim": n.id, "witnesses": 0})
 		stat("player_pickpocket")
 		return {"ok": true, "what": what, "text": "You lift %s from %s unseen." % [what, who]}
+	wake(n)                             # a fumble wakes a sleeper: now they know
 	n.remember("caught %s %s picking my pocket" % [player.name, player.family])
 	var seen := witness("pickpocket", "a try at %s's purse" % who, n, {}, null, "try to pick %s's pocket" % who)
 	var text := "%s catches your hand in their pocket!" % n.name
@@ -1719,6 +1765,28 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	index_interiors()
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)
+	_unstick()
+
+
+## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later
+## map) steps to the nearest open cell in the same place, so nobody loads stuck.
+func _unstick() -> void:
+	for n: NPC in npcs:
+		if not n.alive or not map.is_solid(n.cell()):
+			continue
+		var here := place_of(n.pos)
+		var best := Vector2i(-1, -1)
+		for r in range(1, 4):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					var c := n.cell() + Vector2i(dx, dy)
+					if best == Vector2i(-1, -1) and not map.is_solid(c) and place_of(Vector2(c) + Vector2(0.5, 0.5)) == here:
+						best = c
+			if best != Vector2i(-1, -1):
+				break
+		if best != Vector2i(-1, -1):
+			n.pos = Vector2(best) + Vector2(0.5, 0.5)
+			n.plan.clear()
 
 
 ## Saves before property (save_version 1-4) kept ownership six ways: a plot's owner "" or "player"

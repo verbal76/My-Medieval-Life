@@ -1037,8 +1037,9 @@ func fight(n: NPC, dt: float) -> void:
 		tdead = not w.player.alive
 	else:
 		tnpc = w.npc(n.target)
-		# gone, asleep, or into a building the fighter is not in (a door between them)
-		if tnpc == null or not tnpc.alive or w.asleep(tnpc) or (w.place_of(tnpc.pos) != "" and w.place_of(tnpc.pos) != w.place_of(n.pos)):
+		# gone, or into a building the fighter is not in (a door between them); a sleeper is still
+		# a target (owner rule: sleeping is not immunity) and wakes when struck
+		if tnpc == null or not tnpc.alive or (w.place_of(tnpc.pos) != "" and w.place_of(tnpc.pos) != w.place_of(n.pos)):
 			tdead = true
 		else:
 			tpos = tnpc.pos
@@ -1087,6 +1088,7 @@ func fight(n: NPC, dt: float) -> void:
 		w.damage_player(n.damage, n.name)
 	else:
 		tnpc.hp -= maxf(0.5, n.damage - tnpc.armor * 0.5)
+		w.wake_near(tnpc.pos, float(GameData.b("sleep_wake_radius")))    # the blow wakes them, and the noise others
 		if tnpc.target == -1:
 			tnpc.target = n.id
 		if tnpc.hp <= 0.0:

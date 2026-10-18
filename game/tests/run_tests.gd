@@ -39,6 +39,7 @@ func _init() -> void:
 	test_building_site()
 	test_interiors()
 	test_chest_keeps_marks()
+	test_beds()
 	test_theft_and_shops()
 	test_property()
 	test_property_migration()
@@ -1555,6 +1556,41 @@ func test_chest_keeps_marks() -> void:
 	w.transfer(p.chest, p.inv, "pottage", 3)
 	p.take_marks("pottage")
 	check(p.stolen_count("pottage") == 2 and p.chest_stolen.is_empty(), "taken out again, they are still stolen")
+
+
+func test_beds() -> void:
+	# owner rule: villagers with homes sleep in their own beds; guards and cooks may take the pallets
+	var w := new_world()
+	var misplaced := []
+	for hh in w.households:
+		var beds := 0
+		for sp in w.interiors.get(hh.home, {}).get("spots", []):
+			if sp.kind == "bed" and int(sp.get("tile", 0)) % 100000 != 593:
+				beds += 1
+		var family := 0
+		for id in hh.members:
+			var n: NPC = w.npc(int(id))
+			if n != null and not n.job in World.LODGERS:
+				family += 1
+		for id in hh.members:
+			var n: NPC = w.npc(int(id))
+			var spot := w.home_spot(n, "bed")
+			var pallet := not spot.is_empty() and int(spot.get("tile", 0)) % 100000 == 593
+			if pallet and not n.job in World.LODGERS and family <= beds:
+				misplaced.append("%s (%s)" % [n.name, hh.home])
+	check(misplaced.is_empty(), "every family member has a bed where the home has enough %s" % [misplaced])
+	var b_manor := 0
+	for sp in w.interiors["b_manor"].spots:
+		if sp.kind == "bed" and int(sp.get("tile", 0)) % 100000 != 593:
+			b_manor += 1
+	check(b_manor == 4, "the manor has four beds (two added for the reeve's family)")
+	# a save made before those beds, with someone standing where one now is, loads them beside it
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	d.npcs[0].pos = [20.5, 40.5]
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var moved: NPC = w2.npc(int(d.npcs[0].id))
+	check(not w2.map.is_solid(moved.cell()) and moved.pos.distance_to(Vector2(20.5, 40.5)) < 4.0, "someone saved where a bed now stands steps beside it on load")
 
 
 func test_simulation(days: int) -> void:

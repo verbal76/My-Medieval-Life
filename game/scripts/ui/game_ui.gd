@@ -1118,6 +1118,24 @@ func _talk_choice(parent: Control, text: String, cb: Callable, enabled := true) 
 	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 
+## Someone asleep (owner rule: sleeping limits awareness, not interaction): wake them and talk, try
+## their pocket while they sleep (easier; a fumble wakes them), or leave them be. Attacking works as
+## on anyone (attack mode); the blow wakes them.
+func show_sleeper(n: NPC) -> void:
+	var w: World = main.world
+	_open("sleeper", "%s %s, asleep" % [n.name, n.family], main.paused)
+	_label("%s is asleep." % n.name)
+	_button("Wake %s" % n.name, func():
+		w.wake(n)
+		hide_all()
+		message("You wake %s." % n.name)
+		show_talk(n))
+	_button("Pick pocket while asleep — theft", func():
+		hide_all()
+		main.pickpocket(n))
+	_button("Let them sleep", hide_all)
+
+
 func show_trade(n: NPC) -> void:
 	var w: World = main.world
 	var p := w.player
