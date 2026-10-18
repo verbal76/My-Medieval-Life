@@ -9,6 +9,9 @@ var failures := 0
 var steps := []
 
 
+const TEST_SAVE := "user://test_saves/start_test/save1.json"
+
+
 func check(cond: bool, what: String) -> void:
 	steps.append(("ok   " if cond else "FAIL ") + what)
 	print(steps[-1])
@@ -23,6 +26,8 @@ func _init() -> void:
 		print("FAIL the game's main script did not load (a script error above): stopping")
 		quit(1)
 		return
+	main.save_path = TEST_SAVE        # never the player's own save
+	_clear_saves()
 	process_frame.connect(_run, CONNECT_ONE_SHOT)
 
 
@@ -1142,7 +1147,9 @@ func _run() -> void:
 
 	_resources_tests()
 	_gather_tests()
+	_save_safety_tests()
 
+	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
 	quit(1 if failures else 0)
 
@@ -1363,3 +1370,118 @@ func _resources_tests() -> void:
 	pad_b.pressed = true
 	main._unhandled_input(pad_b)
 	check(not ui.modal(), "B on the gamepad closes it")
+
+
+func _clear_saves() -> void:
+	var dir := TEST_SAVE.get_base_dir()
+	DirAccess.make_dir_recursive_absolute(dir)
+	for f in DirAccess.get_files_at(dir):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))
+
+
+func _raw(path: String) -> String:
+	return FileAccess.get_file_as_string(path) if FileAccess.file_exists(path) else "<missing>"
+
+
+func _put(path: String, text: String) -> void:
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string(text)
+	f.close()
+
+
+## The kept copies in the test save folder whose name contains `state` ("unreadable", "newer").
+func _kept(state: String) -> Array:
+	var dir := TEST_SAVE.get_base_dir()
+	return Array(DirAccess.get_files_at(dir)).filter(func(f): return f.contains("." + state + "-")).map(func(f): return dir.path_join(f))
+
+
+## Player data is never lost: a save that cannot be read is moved aside unchanged before anything
+## writes, the backup is used when it can be, failed writes leave the last save alone, and the
+## messages say exactly what happened (owner, 2026-10-18: the audit's save-overwrite finding).
+func _save_safety_tests() -> void:
+	var ui = main.ui
+	SaveStore.fail_at = ""
+	# 1. a damaged save with no backup: kept byte for byte, a new game starts, and its saves go elsewhere
+	_clear_saves()
+	var damaged := "{\"save_version\": 8, \"seed\": 1, \"minutes\": 4"
+	_put(TEST_SAVE, damaged)
+	main.continue_game()
+	var kept := _kept("unreadable")
+	check(kept.size() == 1 and _raw(kept[0]) == damaged, "a damaged save is kept unchanged under a new name (%s)" % [kept])
+	var msg: String = ui.toast.text
+	check(msg.contains("could not be read") and msg.contains("damaged") and not kept.is_empty() and msg.contains(kept[0].get_file()) and msg.contains("A new game was started"), "the message says what happened and where the save was kept: %s" % msg)
+	check(main.save_game(false) and kept.size() == 1 and _raw(kept[0]) == damaged, "saving the new game never touches the kept file")
+	main.autosave_hour = -5
+	main._process(0.01)
+	check(_raw(kept[0]) == damaged, "nor does an autosave")
+	# 2. a save from a newer version: kept, and the message names the versions
+	_clear_saves()
+	var newer := "{\"save_version\": %d, \"format\": \"mml-save/%d\"}" % [World.SAVE_VERSION + 1, World.SAVE_VERSION + 1]
+	_put(TEST_SAVE, newer)
+	main.continue_game()
+	kept = _kept("newer")
+	msg = ui.toast.text
+	check(kept.size() == 1 and _raw(kept[0]) == newer and not FileAccess.file_exists(TEST_SAVE + ".tmp"), "a newer version's save is kept unchanged")
+	check(msg.contains("newer version") and msg.contains("save version %d" % (World.SAVE_VERSION + 1)) and msg.contains(kept[0].get_file()) if not kept.is_empty() else false, "the message names the newer version: %s" % msg)
+	main.save_game(false)
+	check(_raw(kept[0]) == newer if not kept.is_empty() else false, "and the new game's save does not overwrite it")
+	# 3. a damaged save with a good backup: the backup is loaded, the damaged file kept
+	_clear_saves()
+	main.new_game()
+	main.world.player.coins = 111
+	main.save_game(false)
+	main.world.player.coins = 222
+	main.save_game(false)                                # the 111-coin save is now the backup
+	check(FileAccess.file_exists(TEST_SAVE + SaveStore.BAK), "a second save keeps the first as the backup")
+	_put(TEST_SAVE, "\u0000\u0000 garbage")
+	var garbage := _raw(TEST_SAVE)
+	main.continue_game()
+	kept = _kept("unreadable")
+	msg = ui.toast.text
+	check(main.world.player.coins == 111, "the backup is loaded (coins %d)" % main.world.player.coins)
+	check(kept.size() == 1 and _raw(kept[0]) == garbage and msg.contains("backup") and msg.contains("loaded instead"), "the damaged file is kept and the message says the backup was loaded: %s" % msg)
+	# 4. only a backup left (a crash between the two renames): Continue is offered and loads it
+	_clear_saves()
+	main.new_game()
+	main.world.player.coins = 333
+	main.save_game(false)
+	DirAccess.rename_absolute(ProjectSettings.globalize_path(TEST_SAVE), ProjectSettings.globalize_path(TEST_SAVE + SaveStore.BAK))
+	check(main.can_continue(), "with only the backup left, the title still offers Continue")
+	main.continue_game()
+	check(main.world.player.coins == 333 and ui.toast.text.contains("backup"), "and Continue loads it, saying so")
+	# 5. a failed write: the last save stays exactly as it was, and the player is told
+	_clear_saves()
+	main.new_game()
+	main.save_game(false)
+	var good := _raw(TEST_SAVE)
+	main.world.player.coins = 999
+	for step in ["open", "write", "verify", "backup", "replace"]:
+		SaveStore.fail_at = step
+		var saved: bool = main.save_game(true)
+		check(not saved and _raw(TEST_SAVE) == good and not FileAccess.file_exists(TEST_SAVE + ".tmp"), "a save that fails at '%s' leaves the last save unchanged" % step)
+		check(ui.toast.text.contains("Could not save") and ui.toast.text.contains("Your last save is unchanged"), "and says so: %s" % ui.toast.text)
+	SaveStore.fail_at = ""
+	check(main.save_game(false) and _raw(TEST_SAVE) != good, "the next save works again")
+	# 6. a damaged save that cannot even be moved aside: saving stays off, the file untouched
+	_clear_saves()
+	_put(TEST_SAVE, damaged)
+	SaveStore.fail_at = "preserve"
+	main.continue_game()
+	SaveStore.fail_at = ""
+	msg = ui.toast.text
+	check(main.save_blocked != "" and msg.contains("saving is off"), "if it cannot be moved aside, saving is turned off and the player is told: %s" % msg)
+	check(not main.save_game(false) and _raw(TEST_SAVE) == damaged, "and nothing writes over it")
+	main.save_blocked = ""
+	# 7. a new character over an existing game keeps the old game as save1.previous.json
+	_clear_saves()
+	main.new_game()
+	main.world.player.coins = 444
+	main.save_game(false)
+	var old := _raw(TEST_SAVE)
+	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
+	main.new_game({"name": "Ada", "family": "Test", "sex": looks[0].sex, "look": looks[0].id, "sprite": looks[0].sprite})
+	var prev: String = TEST_SAVE.get_basename() + main.PREVIOUS_SUFFIX
+	check(_raw(prev) == old, "starting a new character keeps the previous game, unchanged, as %s" % prev.get_file())
+	main.resume_after_origin()
+	check(_raw(prev) == old and main.world.player.name == "Ada", "the new game's first save leaves it alone")
+	ui.hide_all()

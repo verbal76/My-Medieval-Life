@@ -4,6 +4,7 @@ extends Node2D
 
 const T := 16
 const SAVE_PATH := "user://save1.json"
+const PREVIOUS_SUFFIX := ".previous.json"   # the last game, kept when the player starts a new one
 
 var map: VillageMap
 var world: World
@@ -47,6 +48,9 @@ const DEAD_ZONE := Vector2(0.4, 0.35)
 var mid_drag := false                  # the middle mouse button is held: mouse motion pans
 const PAN_SPEED := 700.0               # screen pixels a second the right stick pans at full tilt
 var autosave_hour := -1
+var save_path := SAVE_PATH             # tests point this elsewhere so they never touch a player's save
+var save_blocked := ""                 # why saving is off this session ("" = saving allowed): see continue_game
+var save_failing := false              # the last save failed: say so once, not at every autosave
 var shot_path := ""
 var shot_frames := 0
 var shot_warp := Vector2.INF
@@ -445,7 +449,12 @@ func _ready() -> void:
 				else:
 					ui.show_deal(world.buildings["b7"])
 		return
-	ui.show_title(FileAccess.file_exists(SAVE_PATH))
+	ui.show_title(can_continue())
+
+
+## There is a save or a backup to continue from.
+func can_continue() -> bool:
+	return SaveStore.any_exists(save_path)
 
 
 func _setup_input() -> void:
@@ -493,6 +502,8 @@ func _setup_input() -> void:
 ## A new world with the character from character creation (name, family, sex, look, sprite); with
 ## no spec (tests, screenshots) the default character.
 func new_game(spec := {}) -> void:
+	if not spec.is_empty():
+		_keep_previous_game()
 	_clear_world()
 	map = VillageMap.load_default()
 	world = World.new()
@@ -519,13 +530,35 @@ func resume_after_origin() -> void:
 	save_game(false)
 
 
+## Continue from the save. A save that cannot be used (damaged, or from a newer version) is never
+## written over: it is moved aside unchanged first, then the backup is loaded if it can be, else a
+## new game starts. If it cannot even be moved aside, saving stays off this session to protect it.
 func continue_game() -> void:
-	var text := FileAccess.get_file_as_string(SAVE_PATH)
-	var d = JSON.parse_string(text)
-	if not d is Dictionary or int(d.get("save_version", 0)) < 1 or int(d.get("save_version", 0)) > World.SAVE_VERSION:
-		ui.message("The save file could not be read; it was kept unchanged. Starting a new game.")
-		new_game()
+	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
+	if r.state == "ok":
+		_load_save(r.data)
 		return
+	var note := ""
+	if r.state != "missing":
+		var kept := SaveStore.preserve(save_path, r.state)
+		if kept == "":
+			save_blocked = "the save that could not be read could not be moved aside, so saving is off this session to protect it"
+			note = "Your save could not be read: %s. It was left unchanged, and saving is off this session to protect it." % r.reason
+		else:
+			note = "Your save could not be read: %s. It was kept unchanged as %s." % [r.reason, kept.get_file()]
+	var bak_path := save_path + SaveStore.BAK
+	var b := SaveStore.inspect(bak_path, World.SAVE_VERSION)
+	if b.state == "ok":
+		_load_save(b.data)
+		ui.message((note + " " if note != "" else "") + "The previous save (its backup) was loaded instead.", 12.0)
+		return
+	if b.state != "missing" and SaveStore.preserve(bak_path, b.state) == "":
+		save_blocked = "the backup save could not be read or moved aside, so saving is off this session to protect it"
+	new_game()
+	ui.message((note if note != "" else "No save could be loaded.") + " A new game was started.", 12.0)
+
+
+func _load_save(d: Dictionary) -> void:
 	_clear_world()
 	map = VillageMap.load_default()
 	world = World.new()
@@ -2027,19 +2060,43 @@ func _tap(screen_pos: Vector2) -> void:
 
 
 # ---------------------------------------------------------------- saving ---------------------
-func save_game(show := true) -> void:
+## Save safely (SaveStore): written aside, verified, then swapped in, the previous save kept as the
+## backup. Returns whether it saved; a failure leaves the last save unchanged and says why.
+func save_game(show := true) -> bool:
 	if world == null or not world.player.alive:
-		return
-	var tmp := SAVE_PATH + ".tmp"
-	var f := FileAccess.open(tmp, FileAccess.WRITE)
-	if f == null:
-		ui.message("Could not save: %s" % error_string(FileAccess.get_open_error()))
-		return
-	f.store_string(JSON.stringify(world.to_dict(), "", true, true))          # full precision: times and positions reload exactly
-	f.close()
-	DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(SAVE_PATH))
+		return false
+	if save_blocked != "":
+		if show:
+			ui.message("Not saved: %s." % save_blocked, 8.0)
+		return false
+	var r := SaveStore.write_text(save_path, JSON.stringify(world.to_dict(), "", true, true))          # full precision: times and positions reload exactly
+	if not r.ok:
+		if show or not save_failing:
+			ui.message("Could not save: %s. Your last save is unchanged." % r.reason, 8.0)
+		save_failing = true
+		return false
+	save_failing = false
 	if show:
 		ui.message("Saved.")
+	return true
+
+
+## Starting a new game over an existing one keeps the old game aside as "save1.previous.json"
+## (replacing the one kept before) instead of letting the new game overwrite it; a save that cannot
+## be read is moved aside unchanged, as when continuing.
+func _keep_previous_game() -> void:
+	var prev := save_path.get_basename() + PREVIOUS_SUFFIX
+	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
+	if r.state != "ok" and r.state != "missing":
+		if SaveStore.preserve(save_path, r.state) == "":
+			save_blocked = "an old save that could not be read could not be moved aside, so saving is off this session to protect it"
+		return
+	var src := save_path if r.state == "ok" else save_path + SaveStore.BAK
+	if SaveStore.inspect(src, World.SAVE_VERSION).state != "ok":
+		return
+	if FileAccess.file_exists(prev):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(prev))
+	DirAccess.rename_absolute(ProjectSettings.globalize_path(src), ProjectSettings.globalize_path(prev))
 
 
 func _notification(what: int) -> void:

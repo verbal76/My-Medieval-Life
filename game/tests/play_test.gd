@@ -48,6 +48,7 @@ func npc_with_job(job: String) -> NPC:
 
 
 func _run() -> void:
+	main.save_path = "user://test_saves/play_test/save1.json"     # never the player's own save
 	main.new_game()
 	var w: World = main.world
 	var p := w.player

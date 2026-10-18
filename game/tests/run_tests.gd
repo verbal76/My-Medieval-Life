@@ -50,6 +50,7 @@ func _init() -> void:
 	test_build7_economy()
 	test_manor_work()
 	test_resource_registry()
+	test_save_store()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -2906,3 +2907,53 @@ func test_resource_registry() -> void:
 	check(ResourceNodes.uses_of("pickaxe").any(func(u): return u.kind == "tool" and u.id == "iron_seam"), "a pickaxe is the tool for the seams")
 	check(ResourceNodes.sources_of("stone").any(func(s): return s.kind == "import") and ResourceNodes.sources_of("iron_ore").any(func(s): return s.kind == "import"), "caravan imports are sources")
 	w.dispose()
+
+
+## SaveStore (owner, 2026-10-18: protect player data): atomic, verified writes with a backup;
+## damaged, newer and missing saves told apart; interrupted and failed writes lose nothing.
+func test_save_store() -> void:
+	var dir := "user://test_saves/run_tests"
+	DirAccess.make_dir_recursive_absolute(dir)
+	for f in DirAccess.get_files_at(dir):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))
+	var path := dir.path_join("save1.json")
+	var raw := func(p: String) -> String: return FileAccess.get_file_as_string(p) if FileAccess.file_exists(p) else "<missing>"
+	var put := func(p: String, text: String) -> void:
+		var f := FileAccess.open(p, FileAccess.WRITE)
+		f.store_string(text)
+		f.close()
+	SaveStore.fail_at = ""
+	check(SaveStore.inspect(path, 8).state == "missing", "no file: missing")
+	var a := '{"save_version": 8, "n": 1}'
+	var b := '{"save_version": 8, "n": 2}'
+	check(SaveStore.write_text(path, a).ok and raw.call(path) == a and not FileAccess.file_exists(path + ".tmp"), "a save is written whole, with no temp file left")
+	check(SaveStore.write_text(path, b).ok and raw.call(path) == b and raw.call(path + ".bak") == a, "the next save keeps the previous one as the backup")
+	check(SaveStore.inspect(path, 8).state == "ok" and int(SaveStore.inspect(path, 8).data.n) == 2, "a good save reads back")
+	# every failing step leaves the save and the backup as they were
+	for step in ["open", "write", "verify", "backup", "replace"]:
+		SaveStore.fail_at = step
+		var r: Dictionary = SaveStore.write_text(path, '{"save_version": 8, "n": 3}')
+		check(not r.ok and r.reason != "" and raw.call(path) == b and raw.call(path + ".bak") == a and not FileAccess.file_exists(path + ".tmp"), "a write failing at '%s' changes nothing (%s)" % [step, r.reason])
+	SaveStore.fail_at = ""
+	# an interrupted earlier write (a stale temp file) is ignored and replaced
+	put.call(path + ".tmp", '{"save_version": 8, "n": 4')
+	check(SaveStore.inspect(path, 8).state == "ok" and int(SaveStore.inspect(path, 8).data.n) == 2, "a half-written temp file does not affect the save")
+	check(SaveStore.write_text(path, a).ok and raw.call(path) == a and not FileAccess.file_exists(path + ".tmp"), "and the next save replaces it")
+	# what cannot be used is told apart, with reasons
+	for bad in ['{"save_version": 8, "n": ', "", "[1, 2]", '{"n": 1}', "not json at all"]:
+		put.call(path, bad)
+		var st: Dictionary = SaveStore.inspect(path, 8)
+		check(st.state == "unreadable" and st.reason != "", "unreadable: %s -> %s" % [bad.left(20), st.reason])
+	put.call(path, '{"save_version": 9}')
+	var nw: Dictionary = SaveStore.inspect(path, 8)
+	check(nw.state == "newer" and nw.version == 9 and nw.reason.contains("newer version"), "a later version's save is 'newer': %s" % nw.reason)
+	# an existing save that is not readable is never replaced by write_text
+	put.call(path, "garbage")
+	check(not SaveStore.write_text(path, a).ok and raw.call(path) == "garbage", "write_text refuses to replace a save it cannot read")
+	# preserve moves it aside, bytes unchanged
+	var kept := SaveStore.preserve(path, "unreadable")
+	check(kept != "" and raw.call(kept) == "garbage" and not FileAccess.file_exists(path) and kept.get_file().begins_with("save1.unreadable-"), "preserve keeps it unchanged as %s" % kept.get_file())
+	check(SaveStore.write_text(path, a).ok and raw.call(kept) == "garbage", "after which saving works and leaves the kept file alone")
+	check(SaveStore.any_exists(path), "any_exists sees the save")
+	for f in DirAccess.get_files_at(dir):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))

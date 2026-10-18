@@ -486,7 +486,7 @@ func set_scheme(s: String) -> void:
 	recenter_btn.offset_bottom = -10.0 - (104.0 if touch_bar.visible else 0.0)
 	prompt(prompt_text)
 	if is_open("title"):
-		show_title(FileAccess.file_exists(main.SAVE_PATH))       # its controls list follows the scheme
+		show_title(main.can_continue())       # its controls list follows the scheme
 	if panel.visible and s != "touch":
 		_focus_first()
 
@@ -782,10 +782,10 @@ func show_title(can_continue: bool) -> void:
 	_label("A living village of a hundred people who work, trade, eat and sleep whether or not you are watching. You are one of them.")
 	_button("Continue", func(): main.continue_game(), can_continue)
 	_button("New game", func(): show_creation({}))
-	_button("Settings", func(): show_settings(func(): show_title(FileAccess.file_exists(main.SAVE_PATH))))
+	_button("Settings", func(): show_settings(func(): show_title(main.can_continue())))
 	if not main.settings.phone:
 		_button("Quit", func(): main.get_tree().quit())
-	_button("Controls", func(): show_controls(func(): show_title(FileAccess.file_exists(main.SAVE_PATH))))
+	_button("Controls", func(): show_controls(func(): show_title(main.can_continue())))
 	_controls_list(scheme)
 
 
@@ -830,7 +830,7 @@ func show_creation(spec: Dictionary) -> void:
 	var gap := Control.new()
 	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sexes.add_child(gap)
-	_button("Back", func(): show_title(FileAccess.file_exists(main.SAVE_PATH)), true, sexes).custom_minimum_size = Vector2(120, 52)
+	_button("Back", func(): show_title(main.can_continue()), true, sexes).custom_minimum_size = Vector2(120, 52)
 	var begin := _button("Begin", func():
 		var spec2: Dictionary = current.call()
 		if spec2.name == "":
