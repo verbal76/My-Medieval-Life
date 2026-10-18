@@ -226,6 +226,23 @@ that the owner has not approved stay provisional until a separate gameplay-balan
 | Marks follow the goods: stored in the home chest they keep their marks there (and an heir inherits them with the chest); eaten, dropped, sold or used up, they lose them | **Provisional** (agent proposal; balance review pending) | The chest must not wash stolen goods clean (the owner: stolen goods are marked) |
 | NPCs still never steal (no desperation crime) | Owner | Not authorised |
 
+## Building interiors and roof fade (owner decisions, 2026-10-18; the details are agent proposals)
+
+Interactions INT-048 to INT-050 in `docs/SYSTEM_INTERACTION_MANIFEST.md`.
+
+| Decision | Who | Why |
+|---|---|---|
+| Interiors use a roof fade, not separate interior scenes: "I want the world to remain continuous, with NPCs and the player using the same building-entry mechanics." | Owner | Owner message |
+| One interior system for every enterable building, functional interiors first, nothing that only works for some buildings | Owner | Owner message |
+| The interiors are Shade's own: his small house and manor have rooms and furniture drawn under their roofs (Puny World sample-village-1), and his tavern and smithy samples (-3, -2) have roofs he drew but left hidden in Tiled, which the generator now shows. No octoshrimpy indoor tiles (another style) are used | Agent proposal | Same art style, nothing invented; the octoshrimpy pack was not needed |
+| The roof fades to nothing (0.25 s) while the player is under it: inside, or behind its eaves (so the player is never hidden by a roof); only that building's roof | Agent proposal | The inside should read clearly; the eaves rule keeps the player visible behind the tavern and smithy |
+| Small houses get five beds (Shade's beds, four along the west wall where his straw mat, shelf and jars stood, one by the east wall); every home has six sleeping places, beds first, then straw pallets on free floor (the manor and the tavern have two beds and four pallets; the sage's hut one pallet, where Shade drew a box in its one inner cell) | Agent proposal | Households have up to five people; the manor's and tavern's extra people (guards, cooks) sleep on pallets |
+| A villager's bed is theirs by household order; asleep they lie in it under its blanket (the standing sprite turned on its side), and are drawn only to someone inside the same building | Agent proposal | People stay in the world instead of vanishing |
+| "Hidden" is gone. Inside a building means standing in its area. Witnesses, guards and talk targets are those awake in the same place (the same building, or outdoors); asleep villagers neither trade, serve, witness nor can be talked to, robbed or attacked, as when they vanished indoors; bandits stalk only people outdoors; a fight ends when its target goes into a building the fighter is not in | Agent proposal | Keeps every old behaviour of "hidden" with the new meaning; walls block sight |
+| Villagers eat at their household's table and take feed from its chest; strolling villagers stay outdoors (no wandering into others' houses) | Agent proposal | The household's spots, used as the owner asked |
+| In the player's house the bed rests until morning and the chest opens the family's store; the door still offers both | Agent proposal | Home actions from inside, the old way kept |
+| Saves become version 4 (no "hidden"); older saves' villagers who were hidden at home load inside at their own bed | Agent proposal | Save compatibility (CLAUDE.md section 7) |
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals

@@ -46,6 +46,7 @@ Rules:
 - **Save** — saving, loading and migrating older saves
 - **Interface** — panels, HUD, touch controls
 - **Containers** — crates, barrels, stalls and the tavern's tables: their owners' stock
+- **Interiors** — the insides of buildings under their roofs: floor, walls, doors, beds and other spots, roof fade
 
 ## Interactions
 
@@ -100,10 +101,10 @@ Rules:
 
 ### INT-008 · Theft is witnessed
 - **Trigger:** The player takes something that belongs to someone: wheat from a farmed field, anything from a container or an unattended stall (INT-043), or a pocket picked or tried (INT-044).
-- **Source:** `game/scripts/core/world.gd::witness`, `game/scripts/core/world.gd::guard_confront`
-- **Affects:** Crime, Ledger, Coins, Treasury, Inventory
-- **Expected:** Villagers within `witness_radius` (not bandits) remember it ("saw <player> take <what>"), the victim notices the loss, the player's crime record gains an entry, and the log says so if anyone saw. The goods are marked as stolen from the victim (INT-045). A guard among those who saw it stops the player (agent proposal): what was taken goes back where it came from (the field's farmer, the container), the player pays `theft_fine` to the treasury, and a player who cannot pay it all pays what they have and is fought, as for an attack (INT-013). Only goods and coins move.
-- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
+- **Source:** `game/scripts/core/world.gd::witness`, `game/scripts/core/world.gd::guard_confront`, `game/scripts/core/world.gd::near`
+- **Affects:** Crime, Ledger, Coins, Treasury, Inventory, Interiors
+- **Expected:** Villagers within `witness_radius` (not bandits) who are awake and in the same place as the player (inside the same building, or both outdoors: INT-048) remember it ("saw <player> take <what>"), the victim notices the loss, the player's crime record gains an entry, and the log says so if anyone saw. The goods are marked as stolen from the victim (INT-045). A guard among those who saw it stops the player (agent proposal): what was taken goes back where it came from (the field's farmer, the container), the player pays `theft_fine` to the treasury, and a player who cannot pay it all pays what they have and is fought, as for an attack (INT-013). Only goods and coins move.
+- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
 
 ### INT-009 · Harvesting a field (farmers)
 - **Trigger:** A farmer's plan reaches a ripe field.
@@ -143,8 +144,8 @@ Rules:
 ### INT-014 · Bandits rob and poach
 - **Trigger:** A bandit reaches an ordinary villager, or game near its camp.
 - **Source:** `game/scripts/core/npc_brain.gd::_bandit`, `game/scripts/core/npc_brain.gd::fight`
-- **Affects:** Bandits, Coins, Inventory, Wildlife
-- **Expected:** Half the victim's coins and one item the victim's job does not keep move to the bandit; nothing is created. Guards fight bandits.
+- **Affects:** Bandits, Coins, Inventory, Wildlife, Interiors
+- **Expected:** Half the victim's coins and one item the victim's job does not keep move to the bandit; nothing is created. Guards fight bandits. Bandits only stalk people outdoors; a fight ends when its target falls asleep or goes inside a building the fighter is not in (INT-050).
 - **Tests:** `game/tests/run_tests.gd::test_simulation`
 
 ### INT-015 · Looting and dropping
@@ -256,15 +257,15 @@ Rules:
 - **Trigger:** The player delivers materials to their plot.
 - **Source:** `game/scripts/core/world.gd::start_site`, `game/scripts/core/world.gd::deliver`, `game/scripts/core/world.gd::site_progress`, `game/scripts/core/world.gd::cancel_site`, `game/scripts/main.gd::_sync_sites`
 - **Affects:** Building, Inventory, Loot
-- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load (to the pack, or a bundle at the site if it is full); no coin moves. The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall.
-- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_building_site`
+- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load (to the pack, or a bundle at the site if it is full); no coin moves. The finished house has the house stamp's interior, collision and roof (INT-048, INT-049): its floor walkable, walls solid, its bed rests and its chest is the family's store, as the door does (INT-050). The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall.
+- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_building_site`, `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
 
 ### INT-031 · Saving and loading
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
 - **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/player_state.gd::to_dict`
 - **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building, Containers
-- **Expected:** Written atomically as save_version 3. Versions 1 and 2 load, with no coin lost. Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
-- **Tests:** `game/tests/run_tests.gd::test_save_round_trip`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
+- **Expected:** Written atomically as save_version 4 (villagers have no "hidden" flag: where they are is their position, inside a building or not). Versions 1-3 load, with no coin lost; their villagers "hidden" at home (standing on the door step) are moved inside, each to their own bed's spot (`World._move_indoors`). Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
+- **Tests:** `game/tests/run_tests.gd::test_save_round_trip`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
 - **Trigger:** Any input. A tap or click on the map; the touch action bar; a gamepad or key press.
@@ -366,7 +367,7 @@ Rules:
 - **Source:** `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_shop_target`, `game/scripts/main.gd::approach`, `game/scripts/main.gd::interact`, `game/scripts/main.gd::_usable_at`, `game/scripts/core/world.gd::at_post`, `game/scripts/core/world.gd::shopkeeper_at`, `game/scripts/ui/game_ui.gd::show_trade`
 - **Affects:** Market, Interface
 - **Expected:**
-  - A tavern keeper within 2.5 tiles of the counter's use cell, or a merchant within 2.5 tiles of their stall, alive, out and not fighting, is at their post. The prompt reads "Buy from <name> (tavern)" or "(food stall)" etc., and using it opens their trade window directly, titled "Buy from ...", with a "Talk to <name>" button.
+  - A tavern keeper within 2.5 tiles of the counter's use cell, or a merchant within 2.5 tiles of their stall, alive, awake and not fighting, is at their post. The prompt reads "Buy from <name> (tavern)" or "(food stall)" etc., and using it opens their trade window directly, titled "Buy from ...", with a "Talk to <name>" button.
   - Approached at their post, a shopkeeper always serves (the shop opens; never a brush-off bubble), unless they have quest business, which opens the conversation as before (INT-039).
   - A tapped counter, stall or container is walked to and used on arrival (touch); keys and the pad use what the player faces.
   - The counter with nobody at it says so; a stall with its merchant away is the merchant's goods (INT-043).
@@ -424,6 +425,34 @@ Rules:
 - **Expected:** A child's hunger falls `child_food_factor` (0.6) as fast as an adult's, so a child eats that share. Every food reckoning weights members the same way: household days and market share, relief, a farmer's household keep, the granary target and start, the village's food days (famine), the caravan's reserve, the household reckoning, and through them the food quest's `household_food_below` and day labour.
 - **Tests:** `game/tests/run_tests.gd::test_child_food`, `game/tests/run_tests.gd::test_households_and_work`, `game/tests/run_tests.gd::test_simulation`
 
+### INT-048 · Interiors: every roofed building has an inside, entered through its doors
+- **Trigger:** The village is generated; a world starts or loads; the player finishes a house.
+- **Source:** `tools/build_village.py`, `game/scripts/core/world.gd::index_interiors`, `game/scripts/core/world.gd::interior_for`, `game/scripts/core/world.gd::place_of`, `game/scripts/core/world.gd::near`, `game/scripts/core/world.gd::_house_collision`, `game/scripts/core/npc_brain.gd::wander_cell`
+- **Affects:** Interiors, Building, Crime, Households, Save
+- **Expected:**
+  - village.json gives each building an `interior` (owner rule: one system for every enterable building): its doors, `area` (the cells under its roof reached from its doors, inside its rectangle, never past a wall), `floor` (the walkable ones), `roof` (the cells its roof tiles cover) and `spots` (beds and straw pallets with the head's side and tile, tables, hearths, chests, each with the floor cell to use it from). Homes (houses, the manor, the tavern, the sage's hut) have six sleeping places: Shade's beds, five in each small house, then pallets.
+  - Floor is walkable and walls and furniture solid; only doors (and open doorways) lead out. The roads, trees, buildings, plots and containers are where generator v2 put them.
+  - A house the player builds gets the house stamp's interior and collision, offset to its plot, now and after loading.
+  - "Where someone is" is their cell: inside a building's area, or outdoors. People see (World.near: witnesses, guards, targets) only within the same place, and not while asleep. Villagers strolling outdoors stay outdoors.
+- **Tests:** `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
+
+### INT-049 · Roof fade: the player sees inside the building they are in
+- **Trigger:** The player walks under a building's roof (in through its door, or behind its eaves) or out from under it.
+- **Source:** `game/scripts/view/roof_fade.gd::update`, `game/scripts/core/world.gd::roof_over`, `game/scripts/main.gd::_sync_sprites`, `game/scripts/main.gd::_covered`, `game/scripts/main.gd::_sync_diamonds`, `game/scripts/main.gd::_sync_bubbles`, `game/scripts/main.gd::_creature_at`, `game/scripts/main.gd::_talk_step`, `game/scripts/main.gd::_chase_step`, `game/scripts/main.gd::_on_building_added`
+- **Affects:** Interiors, Interface
+- **Expected:** Owner decision (roof fade, no separate interior scenes). Only that building's roof tiles (the village's roof layers, `roof_layers`) fade out in 0.25 s and come back the same way when the player leaves; other roofs and tree canopies stay. Someone inside a building whose roof is on is not drawn, not tapped or chased, has no bubble, and their quest marker hangs over that building's door; inside the building the player is in, they are drawn and can be talked to. A sleeper is drawn lying in their bed under its blanket (on a pallet, without one). Nothing scans the map each frame: the building comes from a cell lookup. A roof change (a new house) puts a faded roof back first.
+- **Tests:** `game/tests/start_test.gd`
+
+### INT-050 · Going home: villagers walk in, sleep in their beds, eat at the table
+- **Trigger:** Night (`SLEEP`), a guard off duty, a hungry villager with food at home, a keeper taking feed from the pantry.
+- **Source:** `game/scripts/core/npc_brain.gd::_plan_sleep`, `game/scripts/core/npc_brain.gd::_plan_bed`, `game/scripts/core/npc_brain.gd::_plan_eat`, `game/scripts/core/npc_brain.gd::act`, `game/scripts/core/npc_brain.gd::decide`, `game/scripts/core/world.gd::home_spot`, `game/scripts/core/world.gd::home_cell`, `game/scripts/core/world.gd::asleep`, `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_show_sleeper`
+- **Affects:** Interiors, Households, Crime, Market, Bandits, Interface
+- **Expected:**
+  - The same entry mechanic for villagers and the player (owner rule): they walk in through the door. Each member of a household has their own sleeping place (by member order: beds, then pallets) and lies in it until morning (or two hours, off duty), asleep (`anim` "sleep"); they eat at the household's table and take from its chest.
+  - Asleep villagers do not trade, serve, witness, guard or get robbed by bandits, and cannot be talked to or attacked (as when they used to vanish indoors). Awake villagers inside a building trade as anywhere.
+  - In the player's own house, the bed rests until morning and the chest opens the family's store (rest too); the door still offers both.
+- **Tests:** `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -437,27 +466,28 @@ Rules:
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
 | Combat | INT-004, INT-012, INT-013, INT-032 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040 |
 | Crafting | INT-021, INT-035, INT-036 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050 |
 | Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046 |
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045 |
 | Wages | INT-023, INT-029 |
 | Relief | INT-024, INT-047 |
 | Granary | INT-024, INT-025, INT-031, INT-047 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050 |
 | Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047 |
 | Inheritance | INT-017 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033 |
-| Bandits | INT-012, INT-014 |
-| Building | INT-018, INT-026, INT-030, INT-031 |
+| Bandits | INT-012, INT-014, INT-050 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-048 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-046 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050 |
 | Containers | INT-031, INT-042, INT-043 |
+| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050 |
 
 <!-- index:end -->
