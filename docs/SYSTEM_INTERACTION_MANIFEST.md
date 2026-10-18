@@ -335,7 +335,7 @@ Rules:
   - Accepting moves an offer to the player's quests (at most `quest_max_active`).
   - Completing moves the asked-for goods to the giver and up to the reward in coins from the giver's purse to the player; coins are conserved.
   - A giver's death fails a side quest. Offers and accepted quests are saved.
-  - Story quests start with every new player and every heir. Their giver shows the story marker, a green pennant, until done; a villager with an offer shows what the quest is about (scroll for a skill, wheat for food, iron for ore, crossed swords for combat, a log, an axe). A giver who is inside their own home shows the marker over the house door instead; givers at work (the tavern, the smithy) are seen and marked as usual. "The sage in the north" is done when the player learns Fireball.
+  - Story quests start with every new player and every heir, and on loading a save from before they existed. Their giver shows the story marker, a green pennant, until done; a villager with an offer shows what the quest is about (scroll for a skill, wheat for food, iron for ore, crossed swords for combat, a log, an axe). A giver who is inside their own home shows the marker over the house door instead; givers at work (the tavern, the smithy) are seen and marked as usual. "The sage in the north" is done when the player learns Fireball.
   - In conversation: "Need any help?" hears an offer, then "I'll do it" or "Not now"; "Here you are" hands in a ready quest. A quest giver always stops to talk, even when busy (INT-039). The journal has a Quests page.
 - **Tests:** `game/tests/run_tests.gd::test_quests`, `game/tests/start_test.gd`
 

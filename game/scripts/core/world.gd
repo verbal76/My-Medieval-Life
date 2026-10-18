@@ -936,6 +936,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	brain.dawn(false)
 	quests = Quests.new(self)
 	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them
+	quests.start_story()                             # saves from before the storyline get its quests
 	# re-apply world changes to the collision map
 	for t in trees:
 		if t.state != "grown":
