@@ -1,0 +1,98 @@
+# Builds the game for Android, Windows and Linux and publishes them as a GitHub Release.
+# Every push to main or to an agent branch (claude/...) is a build; the owner asked for all builds
+# to be listed under Releases (docs/DECISIONS.md, 2026-10-18). Builds from branches other than main
+# are marked as pre-releases. Run it by hand from the Actions tab with "Run workflow".
+#
+# The APK is a debug build signed with a debug keystore made on the runner (no secrets needed);
+# a store release would need the owner's release keystore as a repository secret.
+name: Build and release
+
+on:
+  push:
+    branches: [main, "claude/**"]
+    paths: ["game/**", ".github/workflows/release.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Godot and its export templates
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
+          curl -sSfL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dest" && unzip -q -j templates.tpz -d "$dest"
+          rm godot.zip templates.tpz
+
+      - name: Point Godot at the Android SDK, the JDK and a debug keystore
+        run: |
+          keystore="$HOME/debug.keystore"
+          keytool -genkeypair -v -keystore "$keystore" -storepass android -keypass android \
+            -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" \
+            -keyalg RSA -keysize 2048 -validity 10000 -noprompt
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "${ANDROID_SDK_ROOT}"
+          export/android/java_sdk_path = "${JAVA_HOME}"
+          export/android/debug_keystore = "${keystore}"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          EOF
+
+      - name: Import the project and run the tests
+        run: |
+          godot --headless --path game --import
+          godot --headless --path game --script res://tests/run_tests.gd
+          godot --headless --path game --script res://tests/start_test.gd
+
+      - name: Export Android, Windows and Linux
+        run: |
+          mkdir -p out/pc/windows out/pc/linux release
+          godot --headless --path game --export-debug "Android" ../out/mymedievallife-dev.apk
+          godot --headless --path game --export-release "Windows Desktop" ../out/pc/windows/MyMedievalLife.exe
+          godot --headless --path game --export-release "Linux" ../out/pc/linux/MyMedievalLife.x86_64
+          n="${{ github.run_number }}"
+          cp out/mymedievallife-dev.apk "release/MyMedievalLife-build${n}-android.apk"
+          (cd out/pc/windows && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-windows-x86_64.zip" MyMedievalLife.exe)
+          (cd out/pc/linux && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-linux-x86_64.zip" MyMedievalLife.x86_64)
+          ls -la release
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          name: My Medieval Life Build ${{ github.run_number }}
+          prerelease: ${{ github.ref != 'refs/heads/main' }}
+          body: |
+            Built from `${{ github.ref_name }}` at ${{ github.sha }}.
+
+            - **Android:** `MyMedievalLife-build${{ github.run_number }}-android.apk` (debug-signed; allow installs from unknown sources)
+            - **Windows:** unzip and run `MyMedievalLife.exe`
+            - **Linux:** unzip and run `MyMedievalLife.x86_64`
+
+            Controls switch by themselves between touch, gamepad, and keyboard and mouse.
+          files: release/*
