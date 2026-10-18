@@ -27,6 +27,52 @@ On branch `claude/charming-albattani-8jjfya` (draft PR #1).
 - 🔒 Owner decisions in `docs/world/J_OPEN_DECISIONS.md` (era, starting county, scale, magic)
 - ⬜ Optional second pass over uncited paragraphs for material culture (J Part 3)
 
+## P1. Godot prototype (current work) 🔨
+
+On branch `claude/charming-albattani-8jjfya` (draft PR #1). The owner asked for a playable prototype
+before Gate A closed: Godot 4.7 in `game/`, Android APK first, then Windows and Linux, all three
+released together (CLAUDE.md section 5). The detailed rules are in `docs/BUILD_DECISIONS.md`; the
+owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separate lists.
+
+### Defects (actionable bugs)
+
+- ⬜ None open that are known. Fixed this round (local commits, not yet released): plots over houses
+  b20-b22, roofs and canopies hiding quest markers, RB (Skills) missing from the gamepad list,
+  windows cut off by rounded phone corners, villagers forgetting they had met the player, keepers
+  saying "you attacked me" after an animal was killed, old saves missing the sage storyline.
+
+### Approved features: done or in progress
+
+- ✅ Village simulation, economy, manor, animals, inheritance, journal, quests and markers, talking
+  and speech bubbles, trees, camera pan / recenter / map, attack mode, blood, settings, controls
+- ✅ Camera dead zone; buttons sized to their words; marker over a home quest giver's door
+- ✅ Building site progress bar; giving up a site returns everything
+- 🔨 Inventory window from Cozy Farm's art, item-category tabs plus Skills and Journal tabs, six gear
+  slots (weapon, tool, body, head, amulet, ring) (owner, 2026-10-18)
+- 🔨 Shops at counters and stalls; tavern table food (the tavern's; theft if unpaid); stealing from
+  stalls, crates and barrels; pickpocketing; stolen goods marked (owner, 2026-10-18)
+
+### Approved but not built yet (need the owner's scope before starting)
+
+- Building rules still open: helpers who deliver materials, NPCs building by the same rules, renting
+  land, workshops after houses
+- Walking into buildings: the roof lifting to show the interior, or separate interior maps (asked)
+- Children eating by age (living-world design document)
+- The player being hired by villagers (master directive "work, earn money")
+- A side quest that teaches a skill, so the scroll marker appears
+- Music and sound: the volume settings exist, but no audio has been supplied
+
+### Future ideas (not approved)
+
+- A main storyline after the sage; lizard and spider enemies (packs not uploaded yet); livelier
+  village-log wording; marriage, births, aging and migration (living-world phase 5)
+
+### Only testable on real devices
+
+- Two-finger pan and pinch on a phone, Android Back, the safe-area insets on a notched or rounded
+  phone, a real gamepad (right stick, LB/RB), the feel of the camera dead zone, performance on a
+  mid-range phone, the Windows build on Windows
+
 ## Gate A: owner decisions 🔒
 
 Nothing below starts until the owner answers the essential questions in `docs/GAME_DESIGN.md`:
