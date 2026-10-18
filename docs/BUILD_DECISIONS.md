@@ -129,6 +129,17 @@ Result, 3 seeds over 100 days:
 - Public works spend 500–600 coins per seed.
 - The treasury now levels off near its 30-day line instead of climbing without limit.
 
+## Side quests (owner-authorized mechanic; details are agent proposals)
+
+| Decision | Why |
+|---|---|
+| Quests are data (`game/data/quests.json`): who offers one (a job or role and a condition on what they hold, their household's food, or a robbery they remember), the goods asked for or the target, the reward and the giver's lines | Easy to add and tune without code |
+| Five to start, each from a real state of the simulation: a smith short of iron ore, a cook out of firewood, a woodcutter whose axe broke, an elder whose household is short of food, a villager robbed by a bandit who still lives | Quests that grow from what villagers need |
+| Each dawn, offers are re-checked: a need that has passed is withdrawn, new ones are offered (lowest villager id first), at most 4 open offers and 3 accepted quests | Deterministic; not a crowd of quest givers |
+| Delivered goods go to the giver; the reward comes from the giver's purse, all they have if less (a poor giver says so). Nothing is created | The economy stays closed |
+| A quest fails if its giver dies. An heir does not inherit the dead player's quests | Simple and clear |
+| The giver remembers the help ("helped by ...") | Ready for friendlier talk and reputation later |
+
 ## Controls, screen and settings (owner direction; the details are agent proposals)
 
 | Decision | Why |

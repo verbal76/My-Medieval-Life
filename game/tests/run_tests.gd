@@ -29,6 +29,7 @@ func _init() -> void:
 	test_households_and_work()
 	test_player_actions()
 	test_trades_and_works()
+	test_quests()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -677,6 +678,74 @@ func test_trades_and_works() -> void:
 	carp.inv.add("plank", 30)
 	check(w.brain._public_works(ob) == 0, "no public works without a reeve to commission them")
 	w.dispose()
+
+
+## Side quests: offered from real needs, accepted, completed with goods and coins moving between
+## the player and the giver only; a giver's death fails the quest; offers and quests are saved.
+func test_quests() -> void:
+	var w := new_world()
+	var p := w.player
+	var cook: NPC = null
+	for n: NPC in w.npcs:
+		if n.job == "cook":
+			cook = n
+			break
+	cook.inv.remove("log", cook.inv.count("log"))
+	w.quests.offers.clear()
+	w.quests.refresh()
+	check(w.quests.offer_of(cook).get("id", "") == "wood_for_the_hearth", "a cook out of firewood offers a quest")
+	check(w.quests.offers.size() <= int(GameData.b("quest_max_offers")), "no more offers than the cap")
+	check(w.quests.line({"id": "wood_for_the_hearth", "giver": cook.id}, "offer").contains("5 log"), "the offer names the goods")
+	var q: Dictionary = w.quests.accept(cook)
+	check(not q.is_empty() and p.quests.size() == 1 and w.quests.offer_of(cook).is_empty(), "accepting moves the offer to the player's quests")
+	check(not w.quests.ready(q), "not ready without the logs")
+	p.inv.add("log", 5)
+	cook.coins = 40
+	var coins0 := w.total_coins() - w.coin_sources
+	var logs0 := cook.inv.count("log")
+	var paid: int = w.quests.complete(q)
+	check(paid == 10 and p.quests.is_empty() and cook.inv.count("log") == logs0 + 5 and not p.inv.has("log"), "the logs go to the cook and the reward to the player (%d)" % paid)
+	check(w.total_coins() - w.coin_sources == coins0, "a quest reward makes no coins")
+	check(cook.memory.has("helped by %s" % p.name), "the cook remembers the help")
+	# a poor giver pays what they have
+	var smith: NPC = null
+	for n: NPC in w.npcs:
+		if n.job == "smith":
+			smith = n
+			break
+	w.quests.offers[smith.id] = "ore_for_the_forge"
+	var q2: Dictionary = w.quests.accept(smith)
+	p.inv.add("iron_ore", 6)
+	smith.coins = 7
+	check(w.quests.complete(q2) == 7 and smith.coins == 0, "a giver who cannot pay in full pays all they have")
+	# bandit trouble: a villager robbed by a living bandit
+	var bandit: NPC = null
+	for n: NPC in w.npcs:
+		if n.role == "bandit" and n.alive:
+			bandit = n
+			break
+	var victim: NPC = w.npcs[3]
+	victim.remember("robbed by %s" % bandit.name)
+	check(w.quests._wants(victim, Quests.template("bandit_trouble")) and w.quests.robber_of(victim) == bandit, "a villager robbed by a living bandit wants them dealt with")
+	w.quests.offers[victim.id] = "bandit_trouble"
+	var q3: Dictionary = w.quests.accept(victim)
+	check(int(q3.target) == bandit.id and not w.quests.ready(q3), "the quest names the bandit, still alive")
+	check(w.quests.line(q3, "offer").contains(bandit.name), "the giver names the robber")
+	w.kill(bandit, "slain by test")
+	check(w.quests.ready(q3), "ready once the bandit is dead")
+	# saved and loaded
+	var giver2: NPC = w.npcs[5]
+	w.quests.offers[giver2.id] = "a_new_axe"
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(w2.quests.offers.get(giver2.id, "") == "a_new_axe" and w2.player.quests.size() == 1 and int(w2.player.quests[0].giver) == victim.id, "offers and accepted quests are saved")
+	# the giver dies: the quest fails
+	w.kill(victim, "a fever")
+	w.quests.drop_failed()
+	check(w.player.quests.is_empty(), "a quest fails when its giver dies")
+	w.dispose()
+	w2.dispose()
 
 
 func _wheat_held(w: World) -> int:

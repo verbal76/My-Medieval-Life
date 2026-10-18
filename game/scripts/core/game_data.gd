@@ -1,11 +1,12 @@
 class_name GameData
 extends RefCounted
-## Static game data from res://data/*.json (items, recipes, skills, balance). Loaded once.
+## Static game data from res://data/*.json (items, recipes, skills, balance, quests). Loaded once.
 
 static var items := {}
 static var recipes := {}
 static var skills := {}
 static var balance := {}
+static var quests := []                   # side quests (res://data/quests.json)
 static var _loaded := false
 
 
@@ -16,6 +17,7 @@ static func ensure() -> void:
 	recipes = _read("res://data/recipes.json").recipes
 	skills = _read("res://data/skills.json").skills
 	balance = _read("res://data/balance.json")
+	quests = _read("res://data/quests.json").quests
 	_loaded = true
 
 

@@ -43,6 +43,7 @@ var last_reeve_day := -1           # the day the reeve's evening business last r
 var last_payday := -1              # the day wages were last paid
 var player := PlayerState.new()
 var coin_sources := 0              # coins that entered the village (caravan)
+var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var log_lines: Array = []
 var stats := {}                    # running ledger (food made, eaten, exported, meals missed ...) for diagnostics; not saved
 var last_hour := -1
@@ -110,6 +111,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	brain.dawn(false)                  # the first morning's snapshot of everyone's earnings
+	quests = Quests.new(self)
+	quests.refresh()
 	note("Day 1 begins in the village.")
 
 
@@ -853,7 +856,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
 		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
-		"player": player.to_dict(), "coin_sources": coin_sources, "log": log_lines,
+		"player": player.to_dict(), "coin_sources": coin_sources, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id,
 	}
 
@@ -913,6 +916,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
 	brain.dawn(false)
+	quests = Quests.new(self)
+	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them
 	# re-apply world changes to the collision map
 	for t in trees:
 		if t.state != "grown":

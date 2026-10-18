@@ -6,6 +6,7 @@ marked *Proposed* until the owner approves it.
 
 | Date | Decision | By | Notes |
 |---|---|---|---|
+| 2026-10-18 | Side quests are authorized (a new mechanic): a few side quests discovered from villagers; every quest giver shows a little green diamond over their head; side quests now, a main storyline proposed later | Owner | Owner message and answers |
 | 2026-10-18 | Busy villagers acknowledge the player with comic-style speech bubbles ("Can't talk right now", "Who are you?") until they know the player; many villagers should offer basic side quests | Owner | Owner message. Bubbles are being built; side quests need a design proposal for the owner's approval |
 | 2026-10-18 | Trees: only the trunk blocks; the player walks under the foliage, which shows over the character and turns semi-transparent while the player is under it | Owner | Owner messages |
 | 2026-10-18 | An heir inherits only the starting kit (5 coins, sword, pickaxe, apple, bread, as a new player starts), keeps the family house and chest, and starts every skill from nothing; the dead character's gear lies where they fell for anyone to take, the heir included | Owner | Owner message and answers |

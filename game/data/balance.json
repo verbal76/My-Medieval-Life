@@ -44,6 +44,8 @@
   "fireball_cooldown": 6.0,
   "fireball_stamina": 30,
   "repairs_budget_share": 0.4,
+  "quest_max_offers": 4,
+  "quest_max_active": 3,
   "public_works_share": 0.25,
   "public_works_max_loads": 60,
   "public_works_seller_keeps": {"plank": 6, "iron_bar": 4, "stone": 6},

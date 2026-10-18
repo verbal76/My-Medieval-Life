@@ -1615,6 +1615,8 @@ func dawn(record := true) -> void:
 		for h in w.households.size():
 			evaluate_household(h, true)
 		seek_work()
+		w.quests.drop_failed()
+		w.quests.refresh()
 
 
 func _day_labour(n: NPC) -> bool:

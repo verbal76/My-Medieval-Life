@@ -22,6 +22,7 @@ var tool := ""                # the tool in hand (a pickaxe or an axe)
 var sex := "male"             # chosen at character creation
 var look := "player_m0_basic" # appearance id (game/data/appearances.json)
 var crimes: Array = []        # {day, kind, what, victim, witnesses}: what the village saw the player do
+var quests: Array = []          # accepted side quests: {id, giver, day, target} (scripts/core/quests.gd)
 var spells := {}              # "fireball": true
 var fireball_cd := 0.0
 var attack_cd := 0.0
@@ -98,6 +99,7 @@ func to_dict() -> Dictionary:
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(), "plots": plots.duplicate(),
 		"alive": alive, "deaths": deaths, "tool": tool, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
+		"quests": quests.duplicate(true),
 	}
 
 
@@ -121,4 +123,5 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.sex = str(d.get("sex", "male"))
 	p.look = str(d.get("look", ""))
 	p.crimes = d.get("crimes", []).duplicate(true)
+	p.quests = d.get("quests", []).duplicate(true)
 	return p
