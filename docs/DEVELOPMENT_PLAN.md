@@ -47,9 +47,10 @@ owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separa
   and speech bubbles, trees, camera pan / recenter / map, attack mode, blood, settings, controls
 - ✅ Camera dead zone; buttons sized to their words; marker over a home quest giver's door
 - ✅ Building site progress bar; giving up a site returns everything
-- 🔨 Inventory window from Cozy Farm's art, item-category tabs plus Skills and Journal tabs, six gear
-  slots (weapon, tool, body, head, amulet, ring) (owner, 2026-10-18)
-- 🔨 Shops at counters and stalls; tavern table food (the tavern's; theft if unpaid); stealing from
+- ✅ Inventory window from Cozy Farm's art, item-category tabs plus Skills and Journal tabs, six gear
+  slots (weapon, tool, body, head, amulet, ring) (owner, 2026-10-18); the new items and their
+  bonuses are agent proposals awaiting approval
+- ✅ Shops at counters and stalls; tavern table food (the tavern's; theft if unpaid); stealing from
   stalls, crates and barrels; pickpocketing; stolen goods marked (owner, 2026-10-18)
 
 ### Approved but not built yet (need the owner's scope before starting)
