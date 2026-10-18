@@ -590,6 +590,16 @@ func test_player_actions() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), d)
 	check(w3.player.tool == "" and w3.player.crimes.is_empty() and w3.player.sex != "", "an older save without them loads")
+	# the heir does not inherit the dead player's fights
+	var guard: NPC = null
+	for n: NPC in w.npcs:
+		if n.job == "guard":
+			guard = n
+			break
+	guard.target = -2
+	w.damage_player(9999, "a guard")
+	w.continue_as_heir()
+	check(w.player.alive and guard.target == -1, "guards stop fighting once the player is dead and the heir takes over")
 	w.dispose()
 	w2.dispose()
 	w3.dispose()

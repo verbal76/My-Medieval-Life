@@ -253,6 +253,12 @@ func _run() -> void:
 	check(ui.is_open("talk"), "talked to %s %s" % [v.name, v.family])
 	ui.hide_all()
 
+	# the village log shows only the latest lines, each fading after a few seconds
+	for i in 4:
+		ui.log_line("event %d" % i)
+	var shown: Array = ui.log_box.get_children().filter(func(c): return not c.is_queued_for_deletion())
+	check(shown.size() == ui.LOG_LINES and shown[-1].text == "event 3", "only the latest %d village events are shown" % ui.LOG_LINES)
+
 	# the controls follow the input in use
 	var pad := InputEventJoypadButton.new()
 	pad.button_index = JOY_BUTTON_A

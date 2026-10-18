@@ -407,6 +407,11 @@ func continue_as_heir() -> void:
 		var sp = map.data.spawns.player
 		heir.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	player = heir
+	# whoever was fighting the dead player has no quarrel with the heir
+	for n: NPC in npcs:
+		if n.target == -2:
+			n.target = -1
+			n.plan.clear()
 	note("%s %s (generation %d) takes up the family's life." % [heir.name, heir.family, heir.generation])
 
 

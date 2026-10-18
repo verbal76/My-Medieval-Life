@@ -32,6 +32,8 @@ var touch_bar: HBoxContainer
 var attack_btn: Button
 var prompt_text := ""
 var scheme := "kbm"
+const LOG_LINES := 2           # village events shown at once, newest last
+const LOG_SECONDS := 3.0       # how long each stays before fading
 const PROMPT := "res://assets/prompts/%s.png"
 const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "touch_tap"}
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
@@ -430,10 +432,15 @@ func log_line(text: String) -> void:
 	l.add_theme_font_size_override("font_size", 16)
 	_backed(l)
 	log_box.add_child(l)
-	while log_box.get_child_count() > 5:
+	while log_box.get_child_count() > LOG_LINES:
 		var c := log_box.get_child(0)
 		log_box.remove_child(c)
 		c.queue_free()
+	# each line stays a few seconds, then fades away (the full record is under Menu)
+	var tw := l.create_tween()
+	tw.tween_interval(LOG_SECONDS)
+	tw.tween_property(l, "modulate:a", 0.0, 1.0)
+	tw.tween_callback(l.queue_free)
 
 
 # ---------------------------------------------------------------- panel helpers --------------

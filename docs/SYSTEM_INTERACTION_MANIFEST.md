@@ -171,8 +171,8 @@ Rules:
 - **Trigger:** The player's health reaches zero.
 - **Source:** `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::continue_as_heir`, `game/scripts/main.gd::continue_as_heir`
 - **Affects:** Health, Character, Player state, Loot, Building
-- **Expected:** What the dead carried stays where they fell. The heir keeps the house and chest and half of each skill's XP. The world is not reset.
-- **Tests:** `game/tests/play_test.gd`
+- **Expected:** What the dead carried stays where they fell. The heir keeps the house and chest and half of each skill's XP. Anyone fighting the dead player stops; the heir inherits no fight. The world is not reset.
+- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_player_actions`
 
 ### INT-019 · Trade
 - **Trigger:** The player or a villager buys or sells.
