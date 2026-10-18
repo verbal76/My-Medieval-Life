@@ -167,7 +167,7 @@ static func opening(w: World, n: NPC) -> String:
 	if n.id == w.sage_id:
 		lines.append("Fire answers those who learn its rules. I can teach you to call it.")
 	elif n.id == w.reeve_id:
-		lines.append("Land by the east houses is for sale: two clearings at the forest edge, just north of them. Buy one there; the coins go to the manor.")
+		lines.append("The manor sells or leases land wherever it lies clear: pick your spot and build there; the coins go to the manor. The two clearings at the forest edge north of the east houses are surveyed already.")
 		if w.property.market().any(func(r): return w.property.is_home(r) or not w.property.building_on(r).is_empty()):
 			lines.append("And the manor has an empty house to sell or let. Ask me about land and houses.")
 	else:

@@ -118,6 +118,9 @@ func decide(n: NPC) -> void:
 		n.doing = "taking the air"
 		n.plan = [go(wander_cell(spot, 3), 0.6), work(w.rng.randf_range(40, 90), "", {}, "idle")]
 		return
+	# hired to carry building materials (or carrying for their own new house): the day's work
+	if h >= WORK_START and h < WORK_END and w.construction.plan_helper(n):
+		return
 	if h >= WORK_START and h < WORK_END and n.job != "":
 		if h < 12.0 and _day_labour(n):
 			return
@@ -273,6 +276,7 @@ func _plan_job(n: NPC) -> bool:
 func on_death(n: NPC) -> void:
 	_hand_over_pens(n)
 	_give_up_stall(n)
+	w.construction.on_death(n)
 	if n.household >= 0:
 		evaluate_household(n.household)
 
@@ -767,15 +771,20 @@ func _do_recipe(n: NPC, r: String) -> bool:
 
 ## A station of this kind with room for one more worker (a station holds `capacity` workers, 1 unless
 ## the village data says otherwise); "" if all are taken. Lapsed reservations and the dead are cleared.
+## Only stations the villager may use count (a workshop is its holder's, and those given leave:
+## World.npc_may_use), and the player working at one takes a place (World.reserve_for_player).
 func _station_for(n: NPC, kind: String) -> String:
 	for id in w.stations_of(kind):
 		var st: Dictionary = w.stations[id]
+		if not w.npc_may_use(n, st):
+			continue
 		var users: Dictionary = st.users
 		for u in users.keys():
 			var o := w.npc(int(u))
 			if float(users[u]) < w.minutes or o == null or not o.alive:
 				users.erase(u)
-		if users.has(n.id) or users.size() < int(st.get("capacity", 1)):
+		var player_there := 1 if float(st.get("player_until", -1.0)) > w.minutes else 0
+		if users.has(n.id) or users.size() + player_there < int(st.get("capacity", 1)):
 			return id
 	return ""
 
@@ -1024,6 +1033,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if foe:
 				n.target = foe.id
 			return true
+		"helper_take", "helper_buy", "helper_deliver":
+			return w.construction.act(n, what, a)
 	return true
 
 
@@ -1146,7 +1157,7 @@ func reeve_day() -> void:
 		for o: NPC in w.npcs:
 			if not o.alive or not (o.job in ["carpenter", "laborer", "smith"] or buy_role(o) == "merchant_raw"):
 				continue
-			while o.inv.count(id) > 6 and budget > 0 and bought < 40:
+			while o.inv.count(id) > 6 + w.construction.open_need(id) and budget > 0 and bought < 40:
 				var price := w.buy_price(o, id)
 				if price > budget:
 					break
@@ -1198,7 +1209,9 @@ func _public_works(obligations: float) -> int:
 		for o: NPC in w.npcs:
 			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer"] or w.asleep(o):
 				continue
-			while o.inv.count(id) > int(keep.get(id, 6)) and budget > 0 and used < int(GameData.b("public_works_max_loads")):
+			# what open building sites still need stays on sale for their builders (audit: public
+			# works would starve builders)
+			while o.inv.count(id) > int(keep.get(id, 6)) + w.construction.open_need(id) and budget > 0 and used < int(GameData.b("public_works_max_loads")):
 				var price := w.buy_price(o, id)
 				if price > budget:
 					break
@@ -1427,7 +1440,8 @@ func pay_guards() -> void:
 		if last:
 			_change_job(last, "", "the manor can no longer pay its hands")
 	for o: NPC in w.npcs:
-		if o.alive and o.job == "manor_hand":
+		# a hand hired out for the day to carry building materials was paid by the employer
+		if o.alive and o.job == "manor_hand" and w.construction.contract_of(o).is_empty():
 			if w.treasury >= hand_wage:
 				w.treasury -= hand_wage
 				o.coins += hand_wage

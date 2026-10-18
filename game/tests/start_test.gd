@@ -1002,7 +1002,7 @@ func _run() -> void:
 		pi.kill(pi.npc(int(m)), "fever")
 	pi.player.pos = Vector2(pi.building_door(gone)) + Vector2(0.5, 0.5)
 	main._find_target()
-	check(main.target.get("kind", "") == "property" and str(main.target.get("label", "")).begins_with("Empty house"), "at an empty house's door: %s" % main.target.get("label", ""))
+	check(main.target.get("kind", "") == "property" and str(main.target.get("label", "")).contains("empty, the manor's"), "at an empty house's door: %s" % main.target.get("label", ""))
 	pi.player.coins = 500
 	main.interact()
 	check(ui.is_open("land") and _press("Buy (%d)" % int(GameData.b("house_price"))) and pi.owner_of(pi.buildings[gone]) == World.PLAYER, "the player buys the empty house at its door")
@@ -1013,6 +1013,95 @@ func _run() -> void:
 	var reeve: NPC = pi.npc(pi.reeve_id)
 	ui.show_talk(reeve)
 	check(_press("Land and houses") and ui.is_open("land") and _press("Make it home") and pi.player.home == gone, "at the reeve's land office the player makes it their home")
+	ui.hide_all()
+	ui.show_land(reeve)
+	var land_text := " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return (l as Label).text))
+	check(not land_text.contains("plot0") and not land_text.contains("(b") and not land_text.contains("parcel"), "the land office names places without internal ids")
+	ui.hide_all()
+
+	# 25. build anywhere (property phase 2): Menu > Build, choose a workshop, move its footprint
+	# (red where it may not go, green where it may), place it, buy the ground, the frame goes up
+	var cons: Construction = pi.construction
+	ui.show_pause()
+	check(_press("Build") and ui.is_open("build_menu"), "the menu opens the build window")
+	check(_press("Choose a place") and not main.placing.is_empty() and ui.place_bar.visible and main.ghost.visible and main.paused, "choosing a house starts placing it: the footprint shows, the game waits")
+	main.end_placement()
+	var b5r := Rect2i(int(pi.buildings["b5"].x), int(pi.buildings["b5"].y), 9, 10)
+	main.begin_placement("smithy")
+	main.move_ghost_to(b5r.get_center())
+	check(not main.ghost.legal and ui.place_label.text.contains("cannot go here"), "over a house the footprint is red: %s" % ui.place_label.text)
+	main.confirm_placement()
+	check(not ui.modal() and not main.placing.is_empty(), "and it cannot be placed there")
+	var build_spot := Rect2i(Vector2i(62, 15), cons.footprint("smithy"))
+	for t in pi.trees:
+		if t.state == "grown" and (build_spot.has_point(Vector2i(int(t.x), int(t.y))) or Vector2i(int(t.x), int(t.y)) == cons.door_step("smithy", build_spot)):
+			pi.fell(t, 0)
+	main.move_ghost_to(build_spot.position + build_spot.size / 2)
+	check(main.place_rect() == build_spot and main.ghost.legal and ui.place_label.text.contains("coins or"), "on clear ground it is green, with the ground's price: %s" % ui.place_label.text)
+	Input.action_press("move_left")
+	main._placing_step(0.2)
+	Input.action_release("move_left")
+	check(main.place_rect().position == build_spot.position + Vector2i(-1, 0), "the arrow keys (or the stick) move it a tile")
+	main.move_ghost_to(build_spot.position + build_spot.size / 2)
+	pi.player.coins = 300
+	main.confirm_placement()
+	check(ui.is_open("place"), "placing it opens the deal for the ground")
+	var gp: int = cons.ground_terms(build_spot).price
+	check(_press("Buy the ground and mark out") and main.placing.is_empty() and ui.is_open("build"), "buying the ground marks out the site in the same step")
+	var ws: Dictionary = cons.sites_of(World.PLAYER).filter(func(x): return int(x.x) == build_spot.position.x and int(x.y) == build_spot.position.y)[0] if not cons.sites_of(World.PLAYER).is_empty() else {}
+	check(not ws.is_empty() and str(ws.site.kind) == "smithy" and pi.owner_of(ws) == World.PLAYER and pi.player.coins == 300 - gp, "the smithy's site is the player's; %d coins paid for the ground" % gp)
+	ui.hide_all()
+	# hire a helper in conversation: the materials from the family chest
+	var hired: NPC = null
+	for o: NPC in pi.npcs:
+		if o.alive and o.role == "adult" and o.job in ["miner", "woodcutter", "laborer"] and o.household >= 0 and not pi.asleep(o) and o.target == -1:
+			hired = o
+			break
+	hired.job = ""
+	hired.workplace = ""
+	hired.pos = pi.player.pos + Vector2(1.0, 0)
+	hired.plan = [pi.brain.work(600, "", {}, "idle")]
+	for id in ws.site.need:
+		pi.player.chest.add(id, int(ws.site.need[id]))
+	ui.show_talk(hired)
+	check(_press("Hire to carry building materials"), "a villager out of work can be hired to carry building materials")
+	var purse := pi.player.coins
+	check(_press("From my chest") and not cons.contract_of(hired).is_empty() and pi.player.coins == purse - int(GameData.b("helper_wage")), "hired for the day's wage from the chest")
+	ui.hide_all()
+	# the finished smithy: its door offers who may use it
+	var wbag := Inventory.new()
+	for id in ws.site.need:
+		wbag.add(id, int(ws.site.need[id]))
+	pi.deliver(ws, wbag, World.PLAYER)
+	var wid := "workshop_" + str(ws.id)
+	check(pi.buildings.has(wid) and main.roofs != null, "the smithy is finished")
+	pi.player.pos = Vector2(pi.building_door(wid)) + Vector2(0.5, 0.5)
+	main._find_target()
+	check(main.target.get("kind", "") == "workshop", "its door: %s" % main.target.get("label", ""))
+	main.interact()
+	check(ui.is_open("workshop") and _press("Let anyone work here") and (pi.buildings[wid].allow as Array).has("all"), "its owner lets anyone work there")
+	ui.hide_all()
+	# inside, the forge is the player's to use; the village's forge waits while the smith works it
+	var forge := "ws_%s_forge" % wid
+	pi.player.pos = Vector2(pi.station_use(forge)) + Vector2(0.5, 0.5)
+	main.player_sprite.face(Vector2(1, -1))
+	main._find_target()
+	check(main.target.get("kind", "") == "station" and str(main.target.get("id", "")) == forge and str(main.target.label) == "Use the forge", "inside the smithy: %s" % main.target.get("label", ""))
+	main._sync_sprites()
+	check(pi.place_of(pi.player.pos) == wid, "the forge stands inside the smithy")
+	main.roofs.follow(pi.place_of(pi.player.pos), pi.interiors[wid].roof, pi.roof_over(pi.player.pos), pi.interiors[wid].roof, 1.0)
+	main.roofs.follow(pi.place_of(pi.player.pos), pi.interiors[wid].roof, pi.roof_over(pi.player.pos), pi.interiors[wid].roof, 1.0)
+	check(main.roofs.current == wid and main.roofs.alpha <= 0.01, "inside the smithy its roof fades")
+	var the_smith: NPC = null
+	for o: NPC in pi.npcs:
+		if o.alive and o.job == "smith" and the_smith == null:
+			the_smith = o
+	pi.stations["s4"].users[the_smith.id] = pi.minutes + 300.0
+	the_smith.plan = [pi.brain.go(pi.station_use("s4")), pi.brain.work(40, "craft", {"recipe": "smelt_iron", "station": "s4"})]
+	ui.show_craft("s4")
+	var makes: Array = _buttons(ui.panel_body, []).filter(func(b): return b.text == "Make")
+	check(not makes.is_empty() and makes.all(func(b): return b.disabled), "at a station a villager is working, the player waits (Make is off)")
+	the_smith.plan.clear()
 	ui.hide_all()
 
 	print("%d steps, %d failures" % [steps.size(), failures])

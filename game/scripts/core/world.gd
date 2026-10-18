@@ -39,6 +39,7 @@ var fields: Array = []             # {id, x, y, w, h, state, ready, owner, tenan
 var plots: Array = []              # the land registry's parcels: {id, x, y, w, h, door, price, owner, tenant, rent,
                                    # due_day, arrears, missed, site, building} (scripts/core/property.gd)
 var property: Property             # the manor's land office: sales, leases, rent, the land registry
+var construction: Construction     # building kinds, placement, hired helpers, households that split
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
@@ -70,6 +71,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	rng.seed = world_seed
 	brain = NPCBrain.new(self)
 	property = Property.new(self)
+	construction = Construction.new(self)
 	for b in m.data.buildings:
 		buildings[b.id] = b.duplicate(true)
 	for s in m.data.stations:
@@ -255,7 +257,7 @@ func _on_hour(h: int) -> void:
 func _new_day() -> void:
 	var d := day()
 	for t in trees:
-		if t.state != "grown" and d >= t.regrow:
+		if t.state != "grown" and t.state != "cleared" and d >= t.regrow:
 			if t.state == "stump":
 				t.state = "sapling"
 				t.regrow = d + 2
@@ -270,6 +272,7 @@ func _new_day() -> void:
 	brain.dawn()
 	property.collect_rents()
 	property.relet_stalls()
+	construction.daily()               # helpers' days end; crowded households split; founders build
 	var cold := 0
 	for hh in households:
 		if not hh.pantry.remove("log"):
@@ -728,13 +731,14 @@ var place_idx := PackedInt32Array()  # cell -> index of the building whose area 
 var roof_idx := PackedInt32Array()   # cell -> index of the building whose roof covers it, -1 none
 
 
-## The interior a building has: its own from the map, or a built house's from the house stamp.
+## The interior a building has: its own from the map, or a built building's from its stamp (a
+## house's or a workshop's: one interior system for every building).
 func interior_for(b: Dictionary) -> Dictionary:
 	for mb in map.data.buildings:
 		if mb.id == b.id:
 			return mb.get("interior", {})
-	var stamp: Dictionary = map.data.stamps.house
-	if b.type != "player_house" or not stamp.has("interior"):
+	var stamp := stamp_of(b)
+	if not is_built(b) or not stamp.has("interior"):
 		return {}
 	var o := Vector2i(int(b.x), int(b.y))
 	var si: Dictionary = stamp.interior
@@ -808,8 +812,12 @@ func home_spot(n: NPC, kind: String) -> Dictionary:
 	if mine.is_empty():
 		return {}
 	var i := 0
-	if n.household >= 0:
+	if n.household >= 0 and str(households[n.household].home) == n.home:
 		i = maxi(0, _sleep_order(n.household).find(n.id))
+	elif n.household >= 0:
+		# lodging with the family they came from until their own house stands: the next free place
+		var host := household_in(n.home)
+		i = (households[host].members as Array).size() if host >= 0 else 0
 	return mine[i % mine.size()]
 
 
@@ -833,10 +841,10 @@ func home_cell(n: NPC, kind: String) -> Vector2i:
 	return Vector2i(int(s.use[0]), int(s.use[1]))
 
 
-## Collision of a built house: the house stamp's (walls and furniture solid, floor walkable), or the
-## whole footprint for a stamp without one; the doorway is open.
-func _house_collision(b: Dictionary) -> void:
-	var mask: Array = map.data.stamps.house.get("solid", [])
+## Collision of a built building: its stamp's (walls, furniture and stations solid, floor walkable),
+## or the whole footprint for a stamp without one; the doorway is open.
+func _built_collision(b: Dictionary) -> void:
+	var mask: Array = stamp_of(b).get("solid", [])
 	for j in int(b.h) - 1:
 		for i in int(b.w):
 			var s := true if mask.is_empty() else str(mask[j])[i] == "1"
@@ -902,43 +910,103 @@ func plot(id: String) -> Dictionary:
 	return {}
 
 
-## Mark out a house on a parcel; the house will be its holder's (the owner, or the tenant on leased
-## ground), whoever brings the materials (phase 2: hired helpers deliver).
-func start_site(p: Dictionary) -> void:
-	var cost: Dictionary = (GameData.b("house_cost") as Dictionary).duplicate()
-	p.site = {"cost": cost, "need": cost.duplicate(), "done": false, "owner": holder_of(p)}
+## Generic construction (owner rules, 2026-10-18: a frame site with a progress bar, materials only and
+## no extra build time, cancelling returns everything, NPCs build by the same rules; property phase 2).
+## A site is marked out on a parcel (`p.site`: kind, cost, need, done, owner) for a building of any
+## kind (Construction.KINDS: a house, or a workshop once the builder owns a house). It will be its
+## `owner`'s, the parcel's holder by default (the owner, or the tenant on leased ground), whoever
+## brings the materials: the player, a hired helper or a villager founding a household.
+func start_site(p: Dictionary, kind := "house", owner := "") -> void:
+	var cost: Dictionary = construction.cost_of(kind).duplicate()
+	var ground := property.describe(p)
+	p.site = {"kind": kind, "cost": cost, "need": cost.duplicate(), "done": false, "owner": owner if owner != "" else holder_of(p)}
 	var frame: int = map.data.tiles.frame
-	tile_changed.emit(Vector2i(int(p.x) + 4, int(p.y) + 8), "below", frame)
-	note("A building site is marked out on %s." % p.id)
+	tile_changed.emit(_frame_cell(p), "below", frame)
+	note("%s marks out %s on %s." % [ref_name(str(p.site.owner), true), Construction.kind_name(kind, true), ground])
 
 
-## Deliver materials from `inv` to a site; returns true when the house is complete.
-func deliver(p: Dictionary, inv: Inventory) -> bool:
+## The frame stands at the middle of the site, a row above its door step.
+func _frame_cell(p: Dictionary) -> Vector2i:
+	return Vector2i(int(p.x) + int(p.w) / 2, int(p.y) + int(p.h) - 2)
+
+
+## Deliver materials from `inv` to a site; returns true when the building is complete. Anyone may
+## deliver (`by`, a reference, for the record): the building is the site's owner's.
+func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
 	if p.site.is_empty() or p.site.done:
 		return false
 	var need: Dictionary = p.site.need
+	var given := 0
 	for id in need.keys():
 		var n := mini(int(need[id]), inv.count(id))
 		if n > 0:
 			inv.remove(id, n)
+			given += n
 			need[id] = int(need[id]) - n
 			if need[id] <= 0:
 				need.erase(id)
+	if given > 0 and by != "" and by != str(p.site.get("owner", "")):
+		stat("site_loads_by_others", given)
 	if need.is_empty():
-		p.site.done = true
-		var by := str(p.site.get("owner", holder_of(p)))
-		var b := {"id": "house_" + p.id, "type": "player_house", "x": p.x, "y": p.y, "w": p.w, "h": p.h,
-				  "door": p.door, "name": "%s family house" % (player.family if by == PLAYER else ref_name(by, true)),
-				  "owner": by, "tenant": "", "parcel": p.id}
-		buildings[b.id] = b
-		p.building = b.id
-		_house_collision(b)
-		index_interiors()
-		building_added.emit(b)
-		note("The %s is finished." % b.name)
-		property._settle(by)               # a family's first house becomes its home
+		_finish_site(p)
 		return true
 	return false
+
+
+## The last load is in: the building stands, its owner's (the site's owner), with its interior, its
+## collision, its roof and, for a workshop, its stations. Its materials are used up in it (counted in
+## stats "used_building_<item>" for the goods ledger).
+func _finish_site(p: Dictionary) -> void:
+	p.site.done = true
+	var kind := str(p.site.get("kind", "house"))
+	var by := str(p.site.get("owner", holder_of(p)))
+	var fam := player.family if by == PLAYER else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
+	var b := {"id": ("house_" if kind == "house" else "workshop_") + str(p.id), "type": "player_house" if kind == "house" else "workshop",
+			  "kind": kind, "stamp": Construction.stamp_name(kind), "x": p.x, "y": p.y, "w": p.w, "h": p.h,
+			  "door": p.door, "name": "%s family %s" % [fam, Construction.kind_name(kind)],
+			  "owner": by, "tenant": "", "parcel": p.id}
+	if kind != "house":
+		b.allow = []
+	var cost: Dictionary = p.site.get("cost", {})
+	for id in cost:
+		stat("used_building_" + str(id), float(cost[id]))
+	buildings[b.id] = b
+	p.building = b.id
+	tile_changed.emit(_frame_cell(p), "below", -1)
+	_built_collision(b)
+	_workshop_stations(b)
+	index_interiors()
+	building_added.emit(b)
+	note("%s is finished." % cap(property.describe(b)))
+	property._settle(by)               # a family's first house becomes its home
+	construction.on_finished(b)        # a founding household moves in
+
+
+## "the Reed family's house" -> "The Reed family's house".
+static func cap(s: String) -> String:
+	return s if s == "" else s[0].to_upper() + s.substr(1)
+
+
+## Buildings put up in the game (from a stamp) rather than drawn on the map: houses and workshops.
+static func is_built(b: Dictionary) -> bool:
+	return str(b.get("type", "")) in ["player_house", "workshop"]
+
+
+## The stamp a built building is drawn from (village.json "stamps"): the house, or a workshop's.
+func stamp_of(b: Dictionary) -> Dictionary:
+	var stamps: Dictionary = map.data.stamps
+	return stamps.get(str(b.get("stamp", "house")), stamps.house)
+
+
+## A workshop's stations, from its stamp, placed with it (map data, not saved: made again on load).
+## Their ids sort after the map's ("ws_..."), so villagers try the village's own stations first.
+func _workshop_stations(b: Dictionary) -> void:
+	if str(b.get("type", "")) != "workshop":
+		return
+	for s in stamp_of(b).get("stations", []):
+		var id := "ws_%s_%s" % [b.id, s.type]
+		stations[id] = {"id": id, "type": s.type, "building": b.id, "users": {}, "owner": owner_of(b), "tenant": "",
+				"at": [int(b.x) + int(s.at[0]), int(b.y) + int(s.at[1])], "use": [int(b.x) + int(s.use[0]), int(b.y) + int(s.use[1])]}
 
 
 ## What a site has had delivered so far, item -> count (sites from older saves have no "cost":
@@ -982,11 +1050,22 @@ func cancel_site(p: Dictionary, inv: Inventory) -> Dictionary:
 		if not inv.add(id, int(back[id])):
 			left.add(id, int(back[id]))
 	if not left.items.is_empty():
-		loot.append({"pos": Vector2(float(p.door[0]) + 0.5, float(p.door[1]) + 0.5), "inv": left, "coins": 0, "from": "your building site"})
+		loot.append({"pos": Vector2(float(p.door[0]) + 0.5, float(p.door[1]) + 0.5), "inv": left, "coins": 0, "from": "the building site"})
 	p.site = {}
-	tile_changed.emit(Vector2i(int(p.x) + 4, int(p.y) + 8), "below", -1)
-	note("The building site on %s was given up; its materials were taken back." % p.id)
+	tile_changed.emit(_frame_cell(p), "below", -1)
+	note("The building site on %s was given up; its materials were taken back." % property.describe(p))
 	return back
+
+
+## Materials lying on unfinished sites, item -> count (the goods ledger counts them as still held).
+func site_goods() -> Dictionary:
+	var out := {}
+	for p in plots:
+		if not p.site.is_empty() and not p.site.get("done", false):
+			var got := site_delivered(p)
+			for id in got:
+				out[id] = int(out.get(id, 0)) + int(got[id])
+	return out
 
 
 # ---------------------------------------------------------------- the player's actions -------
@@ -1511,6 +1590,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
+const SAVE_VERSION := 6            # 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -1547,6 +1627,10 @@ func holds(ref: String, thing: Dictionary) -> bool:
 
 func set_owner(thing: Dictionary, ref: String) -> void:
 	thing.owner = ref
+	if str(thing.get("type", "")) == "workshop":          # a workshop's stations change hands with it
+		for id in stations:
+			if str(stations[id].get("building", "")) == str(thing.get("id", "")):
+				stations[id].owner = ref
 
 
 ## Let it to `ref` for `rent` coins a week (the first week counts from today), or end the letting
@@ -1594,6 +1678,73 @@ func ref_name(ref: String, subject := false) -> String:
 	return "%s %s" % [o.name, o.family] if o else "nobody"
 
 
+## Where a stretch of ground lies, for names the player reads: "north of the tavern", "beside the
+## Reed family's house", "east of the market". The nearest landmark: the named buildings, the houses
+## (by the family who live or lived there), the well, the market, the mine, the fields and the pens;
+## `exclude` a building not to name it by itself, `avoid` a name not to name it by ("the Stone family's
+## house north of the Stone family's house").
+func where(r: Rect2i, exclude := "", avoid := "") -> String:
+	var best := ""
+	var bd := 1e9
+	var bc := Vector2.ZERO
+	for lm in _landmarks():
+		if str(lm[0]) == exclude or (avoid != "" and str(lm[1]) == avoid):
+			continue
+		var lr: Rect2i = lm[2]
+		var gap := Vector2(maxi(0, maxi(lr.position.x - r.end.x, r.position.x - lr.end.x)), maxi(0, maxi(lr.position.y - r.end.y, r.position.y - lr.end.y))).length()
+		if gap < bd:
+			bd = gap
+			best = lm[1]
+			bc = Vector2(lr.position) + Vector2(lr.size) / 2.0
+	if best == "":
+		return "in the village"
+	if bd <= 1.0:
+		return "beside " + best
+	var d := (Vector2(r.position) + Vector2(r.size) / 2.0) - bc
+	var ns := "north" if d.y < 0 else "south"
+	var ew := "west" if d.x < 0 else "east"
+	var dir := ns if absf(d.y) > 2.0 * absf(d.x) else (ew if absf(d.x) > 2.0 * absf(d.y) else ns + "-" + ew)
+	return "%s of %s" % [dir, best]
+
+
+## [id, name, rect] of each landmark, in a fixed order.
+func _landmarks() -> Array:
+	var out := []
+	var ids := buildings.keys()
+	ids.sort()
+	for id in ids:
+		var b: Dictionary = buildings[id]
+		var name := str(Property.PLACES.get(str(b.get("type", "")), ""))
+		if name == "" and str(b.get("type", "")) in ["house", "player_house"]:
+			var fam := ""
+			var old := false
+			for hh in households:
+				if str(hh.home) == str(id):
+					fam = str(hh.family)
+					old = hh.get("ended", false)
+			if fam == "" and holder_of(b) == PLAYER:
+				fam = player.family
+			name = ("the %s family's %shouse" % [fam, "old " if old else ""]) if fam != "" else ""
+		if name != "":
+			out.append([id, name, Rect2i(int(b.x), int(b.y), int(b.w), int(b.h))])
+	for id in stations:
+		if str(stations[id].type) == "well":
+			out.append([id, "the well", Rect2i(int(stations[id].at[0]), int(stations[id].at[1]), 1, 1)])
+	var groups := [["market", "the market", stalls.values()], ["fields", "the fields", fields], ["pens", "the animal pens", fauna.pens.values() if fauna else []]]
+	for g in groups:
+		var items: Array = g[2]
+		if items.is_empty():
+			continue
+		var gr := Rect2i(int(items[0].x), int(items[0].y), int(items[0].get("w", 1)), int(items[0].get("h", 1)))
+		for e in items:
+			gr = gr.merge(Rect2i(int(e.x), int(e.y), int(e.get("w", 1)), int(e.get("h", 1))))
+		out.append([g[0], g[1], gr])
+	var mine: Dictionary = map.data.get("mine", {})
+	if mine.has("entrance"):
+		out.append(["mine", "the mine", Rect2i(int(mine.entrance[0]), int(mine.entrance[1]), 1, 1)])
+	return out
+
+
 ## The farmers who work a field (alive, by id): those whose workplace it is. Derived, so a farmer who
 ## changes work stops being one at once (audit defect 1).
 func field_workers(f: Dictionary) -> Array:
@@ -1609,10 +1760,72 @@ func pen_keeper(pen: Dictionary) -> NPC:
 	return party(tenant_of(pen))
 
 
-## Who may use a station: its holder, and anyone at a station the manor keeps for the village (all
-## of them for now). Phase 2 workshops let their owner or tenant say who else may.
+## Who may use a station. The village's own stations (the smithy's, the tavern's, the well) are the
+## manor's and open to all. A workshop's are used by the workshop's owner or tenant (owner rule) and
+## by those they give leave to: its `allow` list of references, "all" for anyone (agent proposal).
+## A villager asks as their household (npc_may_use).
 func may_use(ref: String, station: Dictionary) -> bool:
+	var b: Dictionary = buildings.get(str(station.get("building", "")), {})
+	if str(b.get("type", "")) == "workshop":
+		var allow: Array = b.get("allow", [])
+		return holds(ref, b) or allow.has(ref) or allow.has("all")
 	return holder_of(station) == MANOR or holds(ref, station)
+
+
+func npc_may_use(n: NPC, station: Dictionary) -> bool:
+	return may_use(npc_ref(n.id), station) or (n.household >= 0 and may_use(hh_ref(n.household), station))
+
+
+## A workshop's owner (or tenant) lets others use its stations, or stops them: `ref` a reference, or
+## "all" for anyone.
+func permit(b: Dictionary, ref: String, on: bool) -> void:
+	var allow: Array = b.get("allow", [])
+	if on and not allow.has(ref):
+		allow.append(ref)
+	elif not on:
+		allow.erase(ref)
+	b.allow = allow
+
+
+## Villagers working at (or on their way to work at) a station: reservations whose villager is alive
+## and still has the station's work in their plan. Stale ones are cleared.
+func station_workers(id: String) -> Array:
+	var st: Dictionary = stations[id]
+	var out := []
+	var users: Dictionary = st.users
+	for u in users.keys():
+		var o := npc(int(u))
+		var busy := o != null and o.alive and float(users[u]) >= minutes and o.plan.any(func(s): return str(s.get("args", {}).get("station", "")) == id)
+		if busy:
+			out.append(o)
+		else:
+			users.erase(u)
+	out.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
+	return out
+
+
+## Why the player cannot work at a station now, or "" if they can (audit defect 3, property phase 2):
+## a workshop that is not theirs needs its holder's leave; at a station they do not hold, a villager's
+## reservation is respected while they are at it or on their way (the player waits or uses another
+## station; the owner of a workshop never waits in it).
+func station_refusal(id: String) -> String:
+	var st: Dictionary = stations[id]
+	var b: Dictionary = buildings.get(str(st.get("building", "")), {})
+	if not may_use(PLAYER, st):
+		return "This %s is in %s; you need leave to use it." % [st.type, property.describe(b)]
+	if holds(PLAYER, b if not b.is_empty() else st):
+		return ""
+	var busy := station_workers(id)
+	if busy.size() >= int(st.get("capacity", 1)):
+		var o: NPC = busy[0]
+		return "%s %s is working at the %s. Wait a little, or use another." % [o.name, o.family, st.type]
+	return ""
+
+
+## The player works at a station for `mins` game minutes: villagers count it as taken meanwhile.
+func reserve_for_player(id: String, mins: float) -> void:
+	if stations.has(id):
+		stations[id].player_until = minutes + mins
 
 
 ## Owners at the start (agent proposal): a house and the sage's hut are their household's own; the
@@ -1649,6 +1862,7 @@ func _station_owners() -> void:
 func dispose() -> void:
 	brain = null
 	fauna = null
+	construction = null
 
 
 # ---------------------------------------------------------------- save / load ----------------
@@ -1665,7 +1879,8 @@ func to_dict() -> Dictionary:
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
 	return {
-		"save_version": 5, "format": "mml-save/5", "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
+		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
+		"construction": construction.to_dict(),
 		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
@@ -1682,6 +1897,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	brain = NPCBrain.new(self)
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
+	construction = Construction.new(self)
 	minutes = float(d.minutes)
 	last_hour = int(minutes / 60.0)
 	for s in m.data.stations:
@@ -1689,6 +1905,11 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		st.users = {}                  # npc id -> game minute their reservation lapses (capacity: st.get("capacity", 1))
 		stations[st.id] = st
 	buildings = d.buildings
+	_migrate_construction(d)
+	var bids := buildings.keys()
+	bids.sort()
+	for id in bids:
+		_workshop_stations(buildings[id])
 	stalls = d.stalls
 	trees = d.trees
 	# a tree's tiles are map data, not state: take them from the map (saves made before the
@@ -1760,9 +1981,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			map.set_solid(Vector2i(int(t.x), int(t.y)), false)
 	for id in buildings:
 		var b: Dictionary = buildings[id]
-		if b.type == "player_house":
-			_house_collision(b)
+		if is_built(b):
+			_built_collision(b)
 	index_interiors()
+	construction.load_dict(d.get("construction", {}))
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)
 	_unstick()
@@ -1787,6 +2009,22 @@ func _unstick() -> void:
 		if best != Vector2i(-1, -1):
 			n.pos = Vector2(best) + Vector2(0.5, 0.5)
 			n.plan.clear()
+
+
+## Saves before property phase 2 (save_version 1-5): every building site was a house's and kept no
+## kind; a built house was drawn from the house stamp. They get the kind and stamp they had, so
+## nothing changes: the same site, the same house, the same progress.
+func _migrate_construction(d: Dictionary) -> void:
+	if int(d.get("save_version", 1)) >= 6:
+		return
+	for p in d.get("plots", []):
+		if p.get("site", {}) is Dictionary and not (p.site as Dictionary).is_empty() and not p.site.has("kind"):
+			p.site.kind = "house"
+	for id in buildings:
+		var b: Dictionary = buildings[id]
+		if str(b.get("type", "")) == "player_house" and not b.has("stamp"):
+			b.kind = "house"
+			b.stamp = "house"
 
 
 ## Saves before property (save_version 1-4) kept ownership six ways: a plot's owner "" or "player"

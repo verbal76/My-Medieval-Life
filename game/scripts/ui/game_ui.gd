@@ -34,6 +34,8 @@ var attack_btn: Button
 var recenter_btn: Button       # shown while the camera is looking around, away from the player
 var prompt_text := ""
 var scheme := "kbm"
+var place_bar: PanelContainer  # while placing a building: whether it may go here, Place and Cancel
+var place_label: Label
 const JOURNAL_PER_PAGE := 6    # lines on a journal page (a day heading counts as one)
 const PARCHMENT := Color8(236, 222, 186)
 const INK := Color8(58, 38, 22)
@@ -307,6 +309,65 @@ func _build_hud() -> void:
 	recenter_btn.visible = false
 	recenter_btn.pressed.connect(func(): main.recenter())
 	hud.add_child(recenter_btn)
+	_build_place_bar()
+
+
+## The bar shown while placing a building (main.begin_placement), at the foot of the screen: what the
+## footprint covers and whether it may go there, with Place and Cancel for touch (keys and the pad
+## have E / A and Esc / B; the buttons never take focus, so those keys go to the map).
+func _build_place_bar() -> void:
+	place_bar = PanelContainer.new()
+	place_bar.add_theme_stylebox_override("panel", _style(Color(WINDOW, 0.92)))
+	place_bar.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	place_bar.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	place_bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	place_bar.offset_bottom = -12
+	place_bar.visible = false
+	var v := VBoxContainer.new()
+	place_bar.add_child(v)
+	place_label = Label.new()
+	place_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	place_label.custom_minimum_size = Vector2(560, 0)
+	place_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	place_label.add_theme_font_size_override("font_size", 18)
+	v.add_child(place_label)
+	var hint := Label.new()
+	hint.name = "Hint"
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint.add_theme_font_size_override("font_size", 15)
+	hint.add_theme_color_override("font_color", Color(PALE, 0.8))
+	v.add_child(hint)
+	var h := HBoxContainer.new()
+	h.alignment = BoxContainer.ALIGNMENT_CENTER
+	h.add_theme_constant_override("separation", 12)
+	v.add_child(h)
+	for pair in [["Place here", func(): main.confirm_placement()], ["Cancel", func():
+			main.end_placement()
+			message("Building put off.")]]:
+		var b := Button.new()
+		b.text = pair[0]
+		b.custom_minimum_size = Vector2(180, 48)
+		b.focus_mode = Control.FOCUS_NONE
+		b.pressed.connect(pair[1])
+		h.add_child(b)
+	hud.add_child(place_bar)
+
+
+func show_placing(on: bool) -> void:
+	place_bar.visible = on
+	recenter_btn.visible = false if on else main.cam_free
+	if on:
+		toast.visible = false
+	touch_bar.visible = not on and (main.settings.touch_buttons == "always" or (main.settings.touch_buttons == "auto" and scheme == "touch"))
+	prompt("")
+	(place_bar.find_child("Hint", true, false) as Label).text = {"touch": "Tap where it should stand; drag two fingers to look further.",
+		"gamepad": "Left stick or d-pad moves it; A places it; B cancels.",
+		"kbm": "The mouse or the arrow keys move it; click it or press E to place; Esc cancels."}.get(scheme, "")
+
+
+func placing_text(text: String, ok: bool) -> void:
+	place_label.text = text
+	place_label.add_theme_color_override("font_color", Color(0.75, 1.0, 0.7) if ok else Color(1.0, 0.7, 0.6))
 
 
 ## The controls in use changed: touch buttons only for touch (unless set otherwise), and prompts
@@ -314,7 +375,9 @@ func _build_hud() -> void:
 func set_scheme(s: String) -> void:
 	scheme = s
 	var mode: String = main.settings.touch_buttons
-	touch_bar.visible = mode == "always" or (mode == "auto" and s == "touch")
+	touch_bar.visible = (mode == "always" or (mode == "auto" and s == "touch")) and not place_bar.visible
+	if place_bar.visible:
+		show_placing(true)                  # its hint follows the scheme
 	recenter_btn.offset_bottom = -10.0 - (104.0 if touch_bar.visible else 0.0)
 	prompt(prompt_text)
 	if is_open("title"):
@@ -477,6 +540,7 @@ func message(text: String) -> void:
 	toast.text = text
 	toast.visible = true
 	toast_t = 4.0
+	toast.offset_bottom = -160.0 if not place_bar.visible else -(place_bar.size.y + 24.0)    # above the placing bar
 
 
 func log_line(text: String) -> void:
@@ -506,7 +570,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_bar.get_children() if touch_bar.visible else []) + [hud.get_child(0), recenter_btn]:
+	for c in (touch_bar.get_children() if touch_bar.visible else []) + [hud.get_child(0), recenter_btn, place_bar]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false
@@ -718,6 +782,7 @@ func show_pause() -> void:
 	_button("Resume", hide_all)
 	_button("Save", func(): main.save_game())
 	_button("Journal", func(): show_journal(-1))
+	_button("Build", show_build_menu)
 	_button("Settings", func(): show_settings(show_pause))
 	_button("Controls", func(): show_controls(show_pause))
 	_button("Save and quit to title", func():
@@ -996,7 +1061,7 @@ func _offer_choices(n: NPC, choices: GridContainer, hire := "") -> void:
 
 
 ## `note` is a line under the speech, not spoken (what a teacher taught the player).
-func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "") -> void:
+func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "", helping := false) -> void:
 	var w: World = main.world
 	_open("talk", Dialogue.full_name(n))
 	var tall: float = main.settings.layout_height()
@@ -1068,7 +1133,16 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "")
 		_offer_choices(n, choices, hire)
 		_fit_talk(side, choices)
 		return
+	if helping:
+		_helper_choices(n, choices)
+		_fit_talk(side, choices)
+		return
 	_quest_choices(n, choices)
+	# hired help for the family's building site (owner rule: helpers are hired for coin and carry the
+	# owner's goods): anyone out of work or labouring
+	if w.construction.can_hire(n) == "" and not w.construction.sites_of(World.PLAYER).is_empty():
+		_talk_choice(choices, "Hire to carry building materials", func():
+			_talk_view(n, "A day's carrying for %d coins? I'll fetch what's in your chest, or buy what's wanting at the market with your money, and bring it to your site." % int(GameData.b("helper_wage")), false, "", "", true))
 	var sale: Array = w.brain.for_sale(n)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	if not sale.is_empty() or not buys.is_empty():
@@ -1102,6 +1176,32 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "")
 	_talk_choice(choices, "Any news?", func(): _talk_view(n, Dialogue.news(w, n)))
 	_talk_choice(choices, "Goodbye", hide_all)
 	_fit_talk(side, choices)
+
+
+## Hiring a helper for the day: for each of the family's sites, carry from the family chest only, or
+## also buy what is missing with the player's coins (up to what the rest costs now).
+func _helper_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	var c: Construction = w.construction
+	var wage := int(GameData.b("helper_wage"))
+	for p in c.sites_of(World.PLAYER).slice(0, 2):
+		var pp: Dictionary = p
+		var where := "" if c.sites_of(World.PLAYER).size() == 1 else " to " + w.property.describe(p)
+		var hire := func(budget: int) -> void:
+			var why := c.hire(World.PLAYER, n, pp, budget)
+			if why != "":
+				message(why)
+				_talk_view(n, Dialogue.opening(w, n))
+				return
+			message("%s will carry%s for the rest of the working day." % [n.name, where])
+			_talk_view(n, "Right. I'll get to it.")
+		var need: Dictionary = pp.site.need.duplicate()
+		for id in need.keys():
+			need[id] = maxi(0, int(need[id]) - w.player.chest.count(id))
+		var spend := mini(c.estimate(need), maxi(0, w.player.coins - wage))
+		_talk_choice(choices, "From my chest%s (%d coins)" % [where, wage], func(): hire.call(0), w.player.coins >= wage)
+		_talk_choice(choices, "Buy the rest too (%d + %d)" % [wage, spend], func(): hire.call(spend), w.player.coins >= wage and spend > 0)
+	_talk_choice(choices, "Not now", func(): _talk_view(n, Dialogue.opening(w, n)))
 
 
 ## The talk sits at the foot of the screen, only as tall as it needs, so the village shows above
@@ -1189,6 +1289,9 @@ func show_craft(station_id: String) -> void:
 	var st: Dictionary = w.stations[station_id]
 	var p := w.player
 	_open("craft", "The %s" % st.type)
+	var no := w.station_refusal(station_id)
+	if no != "":
+		_label(no, 18, Color(1, 0.7, 0.55))
 	for r in GameData.recipes_at(st.type):
 		var rec: Dictionary = GameData.recipes[r]
 		var ins := ", ".join(rec.in.keys().map(func(k): return "%d %s (%d)" % [int(rec.in[k]), GameData.item_name(k), p.inv.count(k)]))
@@ -1202,7 +1305,7 @@ func show_craft(station_id: String) -> void:
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(l)
 		var rr: String = r
-		_button("Make", func(): main.craft(rr), lv_ok and p.inv.has_all(rec.in), h)
+		_button("Make", func(): main.craft(rr, station_id), lv_ok and p.inv.has_all(rec.in) and no == "", h)
 		panel_body.add_child(h)
 
 
@@ -1287,18 +1390,90 @@ func show_map() -> void:
 
 
 func show_recenter(on: bool) -> void:
-	recenter_btn.visible = on
+	recenter_btn.visible = on and not place_bar.visible
 
 
 # ---------------------------------------------------------------- building / home ------------
+## What to build (Menu > Build, or H): a house, or a workshop once the family owns a house (owner
+## rule: house first, then workshops), each with what it takes; then a place for it (main
+## begin_placement). The family's unfinished sites are listed to open.
+func show_build_menu() -> void:
+	var w: World = main.world
+	var c: Construction = w.construction
+	_open("build_menu", "Build")
+	_label("Choose what to build, then a place for it: anywhere the ground is clear and nobody else's. The manor sells or leases you the ground on the spot. Then a wooden frame goes up; bring the materials (or hire a helper: ask a villager out of work) and it stands when the last load is in.", 16)
+	for kind in Construction.KINDS:
+		var cost := c.cost_of(kind)
+		var no := c.may_build(kind, World.PLAYER)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 17)
+		var st: Array = c.stations_of_kind(kind)
+		l.text = "%s%s: %s" % [World.cap(Construction.kind_name(kind)), (" (" + " and ".join(st) + ")") if not st.is_empty() else "",
+			", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))]
+		if no != "":
+			l.text += ". " + no
+		h.add_child(l)
+		var k: String = kind
+		_button("Choose a place", func(): main.begin_placement(k), no == "", h)
+		panel_body.add_child(h)
+	var sites: Array = c.sites_of(World.PLAYER)
+	if not sites.is_empty():
+		_label("Your building sites:", 20, Color(1, 0.85, 0.5))
+		for p in sites:
+			var h := HBoxContainer.new()
+			var l := Label.new()
+			l.text = "%s: %d%% done" % [World.cap(w.property.describe(p)), roundi(w.site_progress(p) * 100.0)]
+			l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			h.add_child(l)
+			var pp: Dictionary = p
+			_button("Open", func(): show_build(pp), true, h)
+			panel_body.add_child(h)
+
+
+## The ground chosen for a building: buy or lease it from the manor and mark out the site in one go
+## (owner rule), or choose again.
+func show_place_deal(kind: String, rect: Rect2i) -> void:
+	var w: World = main.world
+	var c: Construction = w.construction
+	var t := c.ground_terms(rect)
+	var cost := c.cost_of(kind)
+	_open("place", "Build %s here" % Construction.kind_name(kind, true))
+	_label("The ground %s is the manor's: %d coins, or %d a week (a building on leased ground goes to the manor if the lease ends). You have %d coins." % [
+		w.where(rect), int(t.price), int(t.rent), w.player.coins], 17)
+	_label("Then the frame goes up. The %s needs %s: bring them, or hire a helper." % [
+		Construction.kind_name(kind), ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))], 16)
+	var mark := func(lease: bool) -> void:
+		var p: Dictionary = c.place(kind, rect, World.PLAYER, lease)
+		if p.is_empty():
+			message("You cannot build there: %s." % c.why)
+			return
+		main.end_placement()
+		message("The ground is yours%s and the frame is up. Bring the materials." % (" on lease" if lease else ""))
+		show_build(p)
+	_button("Buy the ground and mark out (%d coins)" % int(t.price), func(): mark.call(false), w.player.coins >= int(t.price))
+	_button("Lease and mark out (%d a week)" % int(t.rent), func(): mark.call(true), w.player.coins >= int(t.rent))
+	_button("Choose another place", func(): main.resume_placement())
+	_button("Cancel", func():
+		hide_all()
+		main.end_placement())
+
+
+## A parcel of ground: buy or lease it from the manor; once it is the family's, mark out what to build
+## (a house, or a workshop after a house); then the site: what it still needs, deliver, give it up.
 func show_build(pl: Dictionary) -> void:
 	var w: World = main.world
+	var c: Construction = w.construction
 	var p := w.player
-	_open("build", "Building plot")
+	_open("build", World.cap(w.property.describe(pl)))
 	var price := w.property.price_of(pl)
 	var rent := w.property.rent_of(pl)
 	if w.property.for_sale(pl):
-		_label("The manor sells this plot for %d coins, or leases it for %d coins a week (the first week paid now). The coins go to the manor. Once it is yours, you can mark out a house: a wooden frame appears, you bring the materials, and when the last load is in, the house stands. A house on leased ground goes to the manor if the lease ends." % [price, rent])
+		_label("The manor sells this ground for %d coins, or leases it for %d coins a week (the first week paid now). The coins go to the manor. Once it is yours, you can mark out a house (or, once you own a house, a workshop): a wooden frame appears, you bring the materials, and when the last load is in, it stands. A building on leased ground goes to the manor if the lease ends." % [price, rent])
 		_button("Buy for %d coins" % price, func():
 			var why: String = w.property.buy(pl, World.PLAYER)
 			if why != "":
@@ -1313,24 +1488,31 @@ func show_build(pl: Dictionary) -> void:
 			show_build(pl), p.coins >= rent)
 		return
 	if not w.holds(World.PLAYER, pl):
-		_label("This plot is %s's." % w.ref_name(w.holder_of(pl)))
+		_label("This is %s's." % w.ref_name(w.holder_of(pl)))
 		return
 	if w.tenant_of(pl) == World.PLAYER:
-		_label("You lease this plot from the manor: %d coins a week, next due on day %d%s." % [int(pl.rent), int(pl.due_day) + 1,
+		_label("You lease this ground from the manor: %d coins a week, next due on day %d%s." % [int(pl.rent), int(pl.due_day) + 1,
 				(", %d owed" % int(pl.arrears)) if int(pl.get("arrears", 0)) > 0 else ""], 16)
 	if pl.site.is_empty():
-		var cost: Dictionary = GameData.b("house_cost")
-		_label("Mark out a house here? It will need: " + ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k)])))
-		_button("Mark out a house", func():
-			w.start_site(pl)
-			show_build(pl))
+		_label("Mark out a building here:")
+		for kind in Construction.KINDS:
+			var cost := c.cost_of(kind)
+			var no := c.may_build(kind, World.PLAYER)
+			if Vector2i(int(pl.w), int(pl.h)) != c.footprint(kind):
+				no = "the ground is the wrong size"
+			var k: String = kind
+			_button("%s: %s" % [World.cap(Construction.kind_name(kind)), ", ".join(cost.keys().map(func(id): return "%d %s" % [int(cost[id]), GameData.item_name(id).to_lower()]))],
+				func():
+					w.start_site(pl, k, World.PLAYER)
+					show_build(pl), no == "")
 		return
+	var kind := str(pl.site.get("kind", "house"))
 	if pl.site.done:
-		_label("Your house stands here. The reeve keeps the manor's land office: buy, lease or sell land and houses there.")
+		_label("%s stands here. The reeve keeps the manor's land office: buy, lease or sell land and houses there." % World.cap(w.property.describe(pl)))
 		return
 	var need: Dictionary = pl.site.need
 	var done_part := w.site_progress(pl)
-	_label("Building: House, %d%% done. Still needed:" % roundi(done_part * 100.0))
+	_label("Building: %s, %d%% done. Still needed:" % [World.cap(Construction.kind_name(kind)), roundi(done_part * 100.0)])
 	var bar := ProgressBar.new()
 	bar.value = done_part * 100.0
 	bar.show_percentage = false
@@ -1340,11 +1522,17 @@ func show_build(pl: Dictionary) -> void:
 	bar.add_theme_stylebox_override("fill", fill)
 	panel_body.add_child(bar)
 	for id in need:
-		_item_row(id, int(need[id]), "(you carry %d)" % p.inv.count(id), "", func(): pass)
+		_item_row(id, int(need[id]), "(you carry %d, %d in your chest)" % [p.inv.count(id), p.chest.count(id)], "", func(): pass)
+	var helpers: Array = c.contracts.filter(func(k): return str(k.site) == str(pl.id))
+	for k in helpers:
+		var hn: NPC = w.npc(int(k.worker))
+		if hn:
+			_label("%s %s is carrying for you today (%d of %d coins spent on materials)." % [hn.name, hn.family, int(k.spent), int(k.budget)], 16, Color(0.75, 1.0, 0.7))
+	if helpers.is_empty():
+		_label("A helper can carry for you: talk to a villager out of work or labouring and hire them for the day (%d coins)." % int(GameData.b("helper_wage")), 15)
 	_button("Deliver what I carry", func():
-		if w.deliver(pl, p.inv):
-			p.home = "house_" + pl.id
-			message("Your house is finished! Use its door to rest and to store things.")
+		if w.deliver(pl, p.inv, World.PLAYER):
+			message("%s is finished!" % World.cap(w.property.describe(pl)))
 			hide_all()
 		else:
 			show_build(pl))
@@ -1353,6 +1541,26 @@ func show_build(pl: Dictionary) -> void:
 		var words: Array = back.keys().map(func(k): return "%d %s" % [int(back[k]), GameData.item_name(k).to_lower()])
 		message("The frame comes down. You take back %s." % (", ".join(words) if not words.is_empty() else "nothing; none was delivered"))
 		show_build(pl))
+
+
+## A workshop at its door: its stations, whose it is, and for its holder who else may use them
+## (owner rule: used by the owner or tenant, others with permission). Leave for "all" lets every
+## villager's craft go on there too.
+func show_workshop(b: Dictionary) -> void:
+	var w: World = main.world
+	_open("workshop", World.cap(w.property.describe(b)))
+	var st: Array = w.construction.stations_of_kind(str(b.get("kind", "")))
+	_label("Inside: %s." % " and ".join(st.map(func(s): return "a " + s)), 17)
+	if not w.holds(World.PLAYER, b):
+		var mine := w.may_use(World.PLAYER, {"building": b.id})
+		_label("It is %s's. %s" % [w.ref_name(w.holder_of(b)), "They let you use it." if mine else "You need their leave to use it."], 17)
+		return
+	var open_all: bool = (b.get("allow", []) as Array).has("all")
+	_label("It is yours. %s" % ("Anyone may work here; the village's craftsmen use it when their own stations are taken." if open_all
+			else "Only your family works here."), 17)
+	_button("Keep it to my family" if open_all else "Let anyone work here", func():
+		w.permit(b, "all", not open_all)
+		show_workshop(b))
 
 
 ## The manor's land office, kept by the reeve (owner rules: the manor sells and lets land and houses,

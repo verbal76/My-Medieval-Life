@@ -48,8 +48,9 @@ NPCs never build, own land or move house. Nothing can be rented. There is no pro
    list is gone; a field's farmers are derived from their workplace (`World.field_workers`).
 2. A stall that falls vacant is never let again (merchants are not in the job market). **Resolved in
    phase 1:** the manor lets it each morning to a villager out of work (`Property.relet_stalls`).
-3. The player can craft at a station an NPC has reserved. **Left for phase 2 (decided):** stations
-   are the manor's and public (`World.may_use`); workshops will give their owner or tenant the say.
+3. The player can craft at a station an NPC has reserved. **Resolved in phase 2:** at a station the
+   player does not hold, a villager's live reservation is respected (`World.station_refusal`), and the
+   player's own work takes the station meanwhile; workshops give their owner or tenant the say.
 4. `plot_price` in `balance.json` is unused. **Resolved in phase 1:** it sets the price of land.
 
 ## Conflicts to avoid
@@ -94,6 +95,29 @@ INT-056):
 - Not done (phase 2): generic construction (`start_site(plot, kind, owner)`, helpers delivering),
   site materials in the goods-conservation test, public works starving builders, NPC households
   splitting, building and moving, workshops and station permissions.
+
+## Phase 2 status (construction, helpers, households, workshops)
+
+Done on the owner's answers (`docs/BUILD_DECISIONS.md` "Property and construction, phase 2", INT-057
+to INT-061, INT-021, 023, 030, 031, 036, 048, 054, 056 updated):
+
+- **Placement:** free placement anywhere legal for the player (touch, gamepad, keyboard and mouse),
+  with a green or red footprint and the reason; buying or leasing the ground and marking out the
+  site in one step. Felled trees' stumps no longer block ground and are grubbed up when it is claimed.
+- **Generic construction:** `start_site(parcel, kind, owner)` and `deliver(parcel, inventory, by)`:
+  anyone may deliver, the site's owner keeps the building; houses and three workshop kinds.
+- **Site materials in the goods-conservation test:** done (`World.site_goods`, helpers' loads,
+  `used_building_<item>`).
+- **Public works starving builders:** resolved: repairs and public works leave what open sites need.
+- **Households indexed by position, containers deriving ownership from `home`:** a new household is
+  appended (its index is its id, never reused); members' `home` changes only when they move in, so
+  containers follow the house's holder as before; a founder lodges until then.
+- **Hired helpers, NPC households splitting and building, workshops and station permissions:** done.
+- **Readable names:** places are named for families and landmarks; no internal ids reach the player.
+- **Saves:** version 6; version 5 migrates (sites become house sites, built houses keep the house
+  stamp); 1-4 migrate through it.
+- Not done: villagers do not build workshops (only the player); NPC households do not lease ground
+  to build (they buy it) and never fell trees to clear it; a workshop looks like a house from outside.
 
 ## Questions for the owner
 
