@@ -325,7 +325,8 @@ func _keys_with(prefix: String, ids: Array) -> Dictionary:
 
 ## Every coin, by who holds it. World.total_coins counts the same holders.
 func _coins() -> Dictionary:
-	var out := {"villagers": 0, "bandits": 0, "dead": 0, "player": w.player.coins, "treasury": w.treasury, "loot": 0}
+	var out := {"villagers": 0, "bandits": 0, "dead": 0, "player": w.player.coins, "treasury": w.treasury, "loot": 0,
+		"quest_reserves": w.quests.reserved_total()}
 	for n: NPC in w.npcs:
 		out["dead" if not n.alive else ("bandits" if n.role == "bandit" else "villagers")] += n.coins
 	for l in w.loot:

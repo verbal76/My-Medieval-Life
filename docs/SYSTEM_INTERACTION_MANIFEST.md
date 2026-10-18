@@ -572,7 +572,7 @@ Rules:
 - **Affects:** Market, Coins, Building, Resources, Ledger
 - **Expected:** (owner, 2026-10-18; B7-007)
   - The caravan carries at most `caravan_stone.load` stone a visit from a quarry on its road, sold at value × `caravan_stone.markup` (cartage; provisional).
-  - The raw-goods merchants, the village's stone sellers, buy it up to their stock cap while keeping the trader cash floor; the rest goes back with the cart. The coins leave the village (`coin_sources`, `imported_stone`, `imported_stone_coins`).
+  - The raw-goods merchants, the village's stone sellers, buy it up to their stock cap while keeping the trader cash floor; the rest goes back with the cart. The coins leave the village (`coin_sources`, `imported_stone`, `caravan_stone_coins`).
   - While it brings stone it buys none of the village's.
 - **Tests:** `game/tests/run_tests.gd::test_build7_economy`
 

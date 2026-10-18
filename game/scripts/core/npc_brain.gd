@@ -1807,7 +1807,8 @@ func _caravan_stone() -> int:
 			o.inv.add("stone")
 			w.coin_sources -= price
 			w.stat("imported_stone")
-			w.stat("imported_stone_coins", price)
+			w.stat("caravan_stone_coins", price)
+			w.stat("caravan_coins_out", price)
 			cart -= 1
 			sold += 1
 	return sold

@@ -2654,7 +2654,7 @@ func test_build7_economy() -> void:
 	var cfg: Dictionary = GameData.b("caravan_stone")
 	var each := maxi(1, roundi(GameData.value("stone") * float(cfg.markup)))
 	check(got > 0 and got <= int(cfg.load) and int(w.stats.get("imported_stone", 0)) == got, "B7-007: the caravan sells at most a cart of stone (%d)" % got)
-	check(int(w.stats.get("imported_stone_coins", 0)) == got * each, "B7-007: at its price (%d each), recorded" % each)
+	check(int(w.stats.get("caravan_stone_coins", 0)) == got * each, "B7-007: at its price (%d each), recorded" % each)
 	check(int(w.stats.get("exported_stone", 0)) == exp0, "B7-007: while it brings stone it carries none of the village's away")
 	for o: NPC in raws:
 		o.inv.remove("stone", o.inv.count("stone"))
