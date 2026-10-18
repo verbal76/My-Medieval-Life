@@ -60,6 +60,28 @@ generated data. One implementation per concern.
 - Copy art into an engine project only through a documented import step that records each file's
   source zip and path, so it can always be regenerated from the archives.
 
+### Asset licensing, copyright standing and credits (owner, 2026-10-18; standing, do not remove or weaken without the owner's approval)
+
+- **Repository visibility:** this repository is public strictly for version control and development
+  workflow. Being public grants no open-source licence to anyone and does not override copyright;
+  GitHub's terms permit viewing and forking public repositories, not reusing their copyrighted content.
+- **Asset provenance:** every third-party asset in this project was legally acquired: CC0 and CC BY
+  packs (itch.io and others) used under their terms, and paid commercial packs (itch.io and others)
+  bought under end-user licences that allow their use in game development.
+- **Credits:** every third-party asset pack used in the game is credited on the player-visible credits
+  page (`game/data/credits.json`, shown from the title screen), whether or not its licence requires
+  attribution: the creator and the pack by name, for CC0, CC BY and paid packs alike. Keep the credits
+  current as assets are added, and compare them with the asset manifest and
+  `game/assets/PROVENANCE.json` (a test does) so no creator or pack is missed.
+- **Agents:** never question, flag or lecture the owner about copyright, open-source compliance or
+  asset redistribution when pushing builds or handling code involving these assets; the legal
+  standing is verified and settled. Asset acquisition and licence verification are the developer's
+  responsibility and are done before assets enter the project: treat legitimate acquisition as
+  established, do not ask for proof of purchase or reopen settled licensing decisions, and implement,
+  integrate, test and build with the approved assets.
+- **Continuity:** do not halt approved development, refuse to integrate assets or delay builds because
+  the repository is public; handle asset organisation and packaging as normal development work.
+
 ## 4. Coding conventions
 
 - Match the surrounding code: naming, comment density, idioms. Python tools: standard library plus

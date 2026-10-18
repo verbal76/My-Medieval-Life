@@ -66,6 +66,7 @@ def human(n):
 
 
 LOOSE_NOTES = {
+    "LivingForest_v1.3.2.unitypackage": "Paid. Living Forest, Tree Lifecycle & Chopping System v1.3.2 by YET ART STUDIO, a Unity package (gzip tar) supplied by the owner on 2026-10-18, bytes unchanged: 1,086 assets (874 PNG: oak and pine trees in summer, autumn and snow at 3 sizes and 3 health stages, stumps, chopped tops, saplings, rot and collapse frames, chips, dust, leaves, birds, log and plank items, night mushrooms and fireflies, Halloween props; 20 WAV sound effects; Unity prefabs, C# and shaders). Pack licence (LICENSE.txt): the purchaser may use, modify and ship the assets packed in their own games; credit appreciated, \"Trees by YET ART STUDIO\". Some sounds are built from CC0 sources (Kenney Impact Sounds; farfadet46; EZduzziteh, per CREDITS.txt). Not yet imported into the game.",
     "Miniworld-Guide.docx": "Shade's guide to Miniworld buildings and animation timings.",
     "punyworld-dungeon-tileset.png": "Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0.",
 }
