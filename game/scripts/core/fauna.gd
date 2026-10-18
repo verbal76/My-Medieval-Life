@@ -14,7 +14,8 @@ extends RefCounted
 
 var w
 var animals: Array = []      # Animal, ordered by id
-var pens := {}               # id -> {kind, x, y, w, h, gate, feed_at, trough, owner}
+var pens := {}               # id -> {kind, x, y, w, h, gate, feed_at, trough, owner, tenant}: the manor's,
+                             # let to its keeper (tenant "npc:<id>"; World "ownership", World.pen_keeper)
 var woods := {}              # id -> {x, y, w, h}
 var next_id := 1
 var claims := {}             # animal id -> npc id hunting it (not saved; hunters re-plan after loading)
@@ -26,7 +27,8 @@ func _init(world) -> void:
 	for p in w.map.data.get("pens", []):
 		var pd: Dictionary = p.duplicate(true)
 		pd.trough = 0
-		pd.owner = -1
+		pd.owner = "manor"
+		pd.tenant = ""
 		pens[pd.id] = pd
 	for wd in w.map.data.get("woods", []):
 		woods[wd.id] = wd.duplicate(true)
@@ -378,7 +380,7 @@ func to_dict() -> Dictionary:
 		as_.append(a.to_dict())
 	var ps := {}
 	for id in pens:
-		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner}
+		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner, "tenant": pens[id].tenant}
 	return {"next_id": next_id, "animals": as_, "pens": ps}
 
 
@@ -389,4 +391,11 @@ func load_dict(d: Dictionary) -> void:
 	for id in d.pens:
 		if pens.has(id):
 			pens[id].trough = int(d.pens[id].trough)
-			pens[id].owner = int(d.pens[id].owner)
+			var sp: Dictionary = d.pens[id]
+			if sp.has("tenant"):
+				pens[id].owner = str(sp.owner)
+				pens[id].tenant = str(sp.tenant)
+			else:
+				# saves before property (1-4): `owner` was the keeper's id, -1 for none
+				var k = w.npc(int(sp.get("owner", -1)))
+				pens[id].tenant = World.npc_ref(k.id) if k != null and k.alive else ""

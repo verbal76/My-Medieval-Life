@@ -30,13 +30,15 @@ var by_id := {}
 var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
 var stations := {}                 # id -> dict
-var stalls := {}                   # id -> dict (kind, owner)
+var stalls := {}                   # id -> dict (kind, owner, tenant: the merchant who keeps it)
 var trees: Array = []              # {x, y, trunk, top, bottom, state, regrow}: trunk is the stump tile
                                    # at (x, y), the only solid cell; the canopy (top at y - 1, bottom at y)
                                    # is drawn over the characters, who can walk behind it
 var deposits: Array = []           # {x, y, ore, amount}
-var fields: Array = []             # {id, x, y, w, h, state, ready, owner}
-var plots: Array = []              # {id, x, y, w, h, door, price, owner, site}
+var fields: Array = []             # {id, x, y, w, h, state, ready, owner, tenant}: worked by the farmers whose workplace it is
+var plots: Array = []              # the land registry's parcels: {id, x, y, w, h, door, price, owner, tenant, rent,
+                                   # due_day, arrears, missed, site, building} (scripts/core/property.gd)
+var property: Property             # the manor's land office: sales, leases, rent, the land registry
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
@@ -67,6 +69,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	seed = world_seed
 	rng.seed = world_seed
 	brain = NPCBrain.new(self)
+	property = Property.new(self)
 	for b in m.data.buildings:
 		buildings[b.id] = b.duplicate(true)
 	for s in m.data.stations:
@@ -76,7 +79,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	for i in m.data.stalls.size():
 		var s: Dictionary = m.data.stalls[i].duplicate(true)
 		s.kind = ["raw", "food", "goods"][i % 3]
-		s.owner = -1
+		s.owner = MANOR                # the manor's market; Population lets each to its merchant
+		s.tenant = ""
 		stalls[s.id] = s
 	for t in m.data.trees:
 		trees.append({"x": int(t.x), "y": int(t.y), "trunk": int(t.trunk), "top": int(t.top), "bottom": int(t.bottom),
@@ -88,12 +92,16 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		fd.state = "ripe"
 		fd.crop = int(GameData.b("field_yield"))
 		fd.ready = 0.0
-		fd.owner = []
+		fd.owner = MANOR               # the manor's open fields, worked by its farmers (field_workers)
+		fd.tenant = ""
 		fields.append(fd)
 	for p in m.data.plots:
 		var pd: Dictionary = p.duplicate(true)
-		pd.owner = ""
+		pd.owner = MANOR               # surveyed land for sale or lease
+		pd.tenant = ""
 		pd.site = {}
+		pd.building = ""
+		pd.price = property.land_price(int(pd.w), int(pd.h))
 		plots.append(pd)
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
@@ -105,6 +113,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	fauna = Fauna.new(self)
 	fauna.populate()
 	_assign_keepers()
+	_init_ownership()
 	var sp = m.data.spawns.player
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	give_start_kit(player)
@@ -141,7 +150,7 @@ func _assign_keepers() -> void:
 	for i in ids.size():
 		var pen: Dictionary = fauna.pens[ids[i]]
 		if i < farmers.size():
-			pen.owner = farmers[i].id
+			set_tenant(pen, npc_ref(farmers[i].id))
 		pen.trough = fauna.daily_need(pen) * 2
 
 
@@ -214,7 +223,8 @@ func _update_food_days() -> void:
 			points += hh.pantry.count(f) * float(GameData.item(f).food)
 	for f in NPCBrain.FOOD:
 		points += table_food(f) * float(GameData.item(f).food)
-	points += granary.count("wheat") * float(GameData.item("wheat").food)
+	for f in NPCBrain.FOOD:
+		points += granary.count(f) * float(GameData.item(f).food)      # wheat, and stores of a house fallen to the manor
 	food_days = points / maxf(1.0, brain.village_day_food())          # children weighted by age
 
 
@@ -258,6 +268,8 @@ func _new_day() -> void:
 				map.set_solid(Vector2i(t.x, t.y), true)
 	fauna.new_day()
 	brain.dawn()
+	property.collect_rents()
+	property.relet_stalls()
 	var cold := 0
 	for hh in households:
 		if not hh.pantry.remove("log"):
@@ -395,8 +407,9 @@ func give_start_kit(p: PlayerState) -> void:
 
 
 ## Permadeath. What the dead carried lies where they fell, for anyone to take, the heir too. The
-## heir keeps the family's house, chest and plots, starts every skill from nothing and carries
-## only the starting kit (owner rule); its coins are new to the village, counted in coin_sources.
+## heir keeps the family's home, chest and everything the family owns or leases (all held as
+## "player", the family: World "ownership"), starts every skill from nothing and carries only the
+## starting kit (owner rule); its coins are new to the village, counted in coin_sources.
 func continue_as_heir() -> void:
 	var p := player
 	var bag := Inventory.new()
@@ -413,7 +426,6 @@ func continue_as_heir() -> void:
 	heir.home = p.home
 	heir.chest = p.chest
 	heir.chest_stolen = p.chest_stolen
-	heir.plots = p.plots
 	heir.deaths = p.deaths
 	give_start_kit(heir)
 	coin_sources += heir.coins
@@ -608,6 +620,8 @@ func kill(n: NPC, cause: String) -> void:
 			if o and o.alive:
 				o.remember("%s died (%s)" % [n.name, cause])
 	brain.on_death(n)
+	if n.household >= 0 and not property._anyone_alive(n.household):
+		property.household_ended(n.household)
 	npc_died.emit(n)
 
 
@@ -846,9 +860,11 @@ func plot(id: String) -> Dictionary:
 	return {}
 
 
+## Mark out a house on a parcel; the house will be its holder's (the owner, or the tenant on leased
+## ground), whoever brings the materials (phase 2: hired helpers deliver).
 func start_site(p: Dictionary) -> void:
 	var cost: Dictionary = (GameData.b("house_cost") as Dictionary).duplicate()
-	p.site = {"cost": cost, "need": cost.duplicate(), "done": false}
+	p.site = {"cost": cost, "need": cost.duplicate(), "done": false, "owner": holder_of(p)}
 	var frame: int = map.data.tiles.frame
 	tile_changed.emit(Vector2i(int(p.x) + 4, int(p.y) + 8), "below", frame)
 	note("A building site is marked out on %s." % p.id)
@@ -868,13 +884,17 @@ func deliver(p: Dictionary, inv: Inventory) -> bool:
 				need.erase(id)
 	if need.is_empty():
 		p.site.done = true
+		var by := str(p.site.get("owner", holder_of(p)))
 		var b := {"id": "house_" + p.id, "type": "player_house", "x": p.x, "y": p.y, "w": p.w, "h": p.h,
-				  "door": p.door, "name": "%s family house" % player.family}
+				  "door": p.door, "name": "%s family house" % (player.family if by == PLAYER else ref_name(by, true)),
+				  "owner": by, "tenant": "", "parcel": p.id}
 		buildings[b.id] = b
+		p.building = b.id
 		_house_collision(b)
 		index_interiors()
 		building_added.emit(b)
 		note("The %s is finished." % b.name)
+		property._settle(by)               # a family's first house becomes its home
 		return true
 	return false
 
@@ -941,8 +961,8 @@ func take_crop(f: Dictionary, most: int) -> int:
 	return n
 
 
-## The player harvests a handful from a field. A field is the farmers' who work it: taking from it
-## without being one of them is theft, and anyone within sight remembers it, except what a farmer
+## The player harvests a handful from a field. A field is the manor's, and its crop the farmers' who
+## work it (field_workers): taking from it without being one of them is theft, and anyone within sight remembers it, except what a farmer
 ## hired the player to cut there (Quests.hired_harvest).
 func player_harvest(f: Dictionary) -> int:
 	var n := take_crop(f, int(GameData.b("harvest_handful")))
@@ -950,15 +970,10 @@ func player_harvest(f: Dictionary) -> int:
 		return 0
 	player.inv.add("wheat", n)
 	var taken := n - quests.hired_harvest(f, n)
-	if not f.owner.is_empty() and taken > 0:
-		var victim: NPC = null
-		for o in f.owner:
-			var fo := npc(int(o))
-			if fo and fo.alive:
-				victim = fo
-				break
-		if victim:
-			player.mark_stolen("wheat", victim.id, taken)
+	var workers := field_workers(f)
+	if not workers.is_empty() and taken > 0:
+		var victim: NPC = workers[0]
+		player.mark_stolen("wheat", victim.id, taken)
 		witness("theft", "%d wheat from %s" % [taken, f.id], victim, {"wheat": taken})
 	return n
 
@@ -1125,26 +1140,23 @@ func container_store(c: Dictionary) -> Inventory:
 	return households[o.household].pantry
 
 
-## Whose goods they are: the one who notices them missing and whose they are if sold back.
+## Whose goods they are: the one who notices them missing and whose they are if sold back. Derived
+## from who holds the stall or building (holder_of): a stall's merchant, the tavern's keepers (the
+## household the manor lets it to), a house's household (its head). The player's and the manor's
+## houses hold nothing in their crates (the player's things are in the family chest).
 func container_owner(c: Dictionary) -> NPC:
 	if stalls.has(c.at):
-		var m := npc(int(stalls[c.at].owner))
-		return m if m and m.alive else null
+		return party(holder_of(stalls[c.at]))
 	if _is_tavern(c.at):
 		if c.kind == "table":
 			var k := npc(int(c.get("keeper", -1)))
 			if k and k.alive:
 				return k
 		return tavern_keeper()
-	var h := household_in(c.at)
-	if h < 0:
+	if not buildings.has(c.at):
 		return null
-	for role in ["adult", "elder", "child"]:
-		for m in households[h].members:
-			var o := npc(int(m))
-			if o and o.alive and o.role == role:
-				return o
-	return null
+	var ref := holder_of(buildings[c.at])
+	return party(ref) if ref.begins_with("hh:") else null
 
 
 ## "the tavern's", "Ellen Mercer's", "the Reed household's" (for prompts and messages).
@@ -1272,7 +1284,7 @@ func table_food(id: String) -> int:
 func shop_post(n: NPC) -> Vector2:
 	if n.job == "tavernkeeper" and stations.has(n.workplace):
 		return Vector2(station_use(n.workplace)) + Vector2(0.5, 0.5)
-	if n.job == "merchant" and stalls.has(n.workplace) and int(stalls[n.workplace].owner) == n.id:
+	if n.job == "merchant" and stalls.has(n.workplace) and tenant_of(stalls[n.workplace]) == npc_ref(n.id):
 		var s: Dictionary = stalls[n.workplace]
 		return Vector2(int(s.use[0]) + 0.5, int(s.use[1]) + 0.5)
 	return Vector2.INF
@@ -1432,17 +1444,159 @@ func player_drop(id: String, qty: int) -> bool:
 	return true
 
 
-## The player buys a building plot; the price goes to the manor's treasury.
+## The player buys a building plot; the price goes to the manor's treasury (Property.buy).
 func buy_plot(p: Dictionary) -> bool:
-	if p.owner != "" or player.coins < int(p.price):
-		return false
-	player.coins -= int(p.price)
-	treasury += int(p.price)
-	p.owner = "player"
-	player.plots.append(p.id)
-	stat("gov_land_sales", float(p.price))
-	note("%s %s bought %s from the manor." % [player.name, player.family, p.id])
-	return true
+	return property.buy(p, PLAYER) == ""
+
+
+# ---------------------------------------------------------------- ownership ------------------
+## One owner reference for everything that can be owned or held (agent proposal on the owner's rules
+## of 2026-10-18; docs/BUILD_DECISIONS.md "Property and land"): a String,
+##   "manor"     the manor: unsold land, empty houses, the manor house, tavern and smithy, the fields,
+##               pens, stalls and stations (its coins are `treasury`);
+##   "player"    the player's family, their own household: it outlives each character, so the heir
+##               holds all the family held;
+##   "hh:<id>"   a villager household (index into `households`);
+##   "npc:<id>"  one villager, only as a tenant of their work (a stall's merchant, a pen's keeper);
+##               people own land and buildings only as households (owner rule).
+## Every property record (buildings, plots, stalls, fauna pens, fields, stations) has `owner` (a
+## reference) and `tenant` (a reference, "" for none: who has the use of it); a let one also `rent`
+## (coins a week), `due_day`, `arrears`, `missed`. These functions are the only way to ask and to
+## change who owns or holds a thing; Property (the land office) deals through them.
+const MANOR := "manor"
+const PLAYER := "player"
+
+
+static func hh_ref(h: int) -> String:
+	return "hh:%d" % h
+
+
+static func npc_ref(id: int) -> String:
+	return "npc:%d" % id
+
+
+## The number in "hh:<id>" or "npc:<id>"; -1 for the manor, the player or nobody.
+static func ref_id(ref: String) -> int:
+	return int(ref.get_slice(":", 1)) if ref.contains(":") else -1
+
+
+func owner_of(thing: Dictionary) -> String:
+	return str(thing.get("owner", MANOR))
+
+
+func tenant_of(thing: Dictionary) -> String:
+	return str(thing.get("tenant", ""))
+
+
+## Who has the use of it: the tenant, or the owner when it is not let.
+func holder_of(thing: Dictionary) -> String:
+	var t := tenant_of(thing)
+	return t if t != "" else owner_of(thing)
+
+
+## Owns it or leases it.
+func holds(ref: String, thing: Dictionary) -> bool:
+	return ref != "" and (owner_of(thing) == ref or tenant_of(thing) == ref)
+
+
+func set_owner(thing: Dictionary, ref: String) -> void:
+	thing.owner = ref
+
+
+## Let it to `ref` for `rent` coins a week (the first week counts from today), or end the letting
+## with ref "".
+func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
+	thing.tenant = ref
+	if ref == "" or rent <= 0:
+		for k in ["rent", "due_day", "arrears", "missed"]:
+			thing.erase(k)
+		return
+	thing.rent = rent
+	thing.due_day = day() + Property.WEEK
+	thing.arrears = 0
+	thing.missed = 0
+
+
+## The villager a reference names, alive: the one for "npc:<id>", the head of a household (its first
+## adult, elder or child by member order) for "hh:<id>"; null for the manor, the player or nobody.
+func party(ref: String) -> NPC:
+	if ref.begins_with("npc:"):
+		var o := npc(ref_id(ref))
+		return o if o and o.alive else null
+	if ref.begins_with("hh:"):
+		var h := ref_id(ref)
+		if h < 0 or h >= households.size():
+			return null
+		for role in ["adult", "elder", "child"]:
+			for m in households[h].members:
+				var o := npc(int(m))
+				if o and o.alive and o.role == role:
+					return o
+	return null
+
+
+## "the manor", "Wat Ashdown", "the Reed household", "Ellen Mercer" (for messages); `subject` for the
+## start of a sentence.
+func ref_name(ref: String, subject := false) -> String:
+	if ref == PLAYER:
+		return "%s %s" % [player.name, player.family]
+	if ref == MANOR:
+		return "The manor" if subject else "the manor"
+	if ref.begins_with("hh:") and ref_id(ref) < households.size():
+		return ("The %s household" if subject else "the %s household") % households[ref_id(ref)].family
+	var o := npc(ref_id(ref))
+	return "%s %s" % [o.name, o.family] if o else "nobody"
+
+
+## The farmers who work a field (alive, by id): those whose workplace it is. Derived, so a farmer who
+## changes work stops being one at once (audit defect 1).
+func field_workers(f: Dictionary) -> Array:
+	var out := []
+	for n: NPC in npcs:
+		if n.alive and n.job == "farmer" and n.workplace == str(f.id):
+			out.append(n)
+	return out
+
+
+## The keeper of a pen (its tenant), alive, or null.
+func pen_keeper(pen: Dictionary) -> NPC:
+	return party(tenant_of(pen))
+
+
+## Who may use a station: its holder, and anyone at a station the manor keeps for the village (all
+## of them for now). Phase 2 workshops let their owner or tenant say who else may.
+func may_use(ref: String, station: Dictionary) -> bool:
+	return holder_of(station) == MANOR or holds(ref, station)
+
+
+## Owners at the start (agent proposal): a house and the sage's hut are their household's own; the
+## manor house and the tavern are the manor's, let rent-free to the reeve's household and the tavern
+## keepers' (they live there as its officers); the smithy, every other building and every station
+## the manor's (a station belongs to its building's owner).
+func _init_ownership() -> void:
+	var ids := buildings.keys()
+	ids.sort()
+	for id in ids:
+		var b: Dictionary = buildings[id]
+		if not b.has("owner"):
+			set_owner(b, MANOR)
+			set_tenant(b, "")
+			for hh in households:
+				if hh.home == id:
+					if str(b.type) in ["house", "hut", "player_house"]:
+						set_owner(b, hh_ref(int(hh.id)))
+					else:
+						set_tenant(b, hh_ref(int(hh.id)))
+					break
+	_station_owners()
+
+
+## Stations come from the map on every load: each is its building's owner's (the manor's outdoors).
+func _station_owners() -> void:
+	for id in stations:
+		var st: Dictionary = stations[id]
+		st.owner = owner_of(buildings[st.building]) if st.has("building") and buildings.has(st.building) else MANOR
+		st.tenant = ""
 
 
 ## Break the world <-> brain reference cycle so a finished world is freed.
@@ -1465,7 +1619,7 @@ func to_dict() -> Dictionary:
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
 	return {
-		"save_version": 4, "format": "mml-save/4", "seed": seed, "minutes": minutes,
+		"save_version": 5, "format": "mml-save/5", "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
 		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
@@ -1480,6 +1634,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	seed = int(d.seed)
 	rng.seed = seed + int(d.minutes)
 	brain = NPCBrain.new(self)
+	property = Property.new(self)
+	property.next_parcel = int(d.get("next_parcel", 0))
 	minutes = float(d.minutes)
 	last_hour = int(minutes / 60.0)
 	for s in m.data.stations:
@@ -1518,6 +1674,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	_migrate_property(d)
 	if d.has("treasury"):
 		treasury = int(d.treasury)
 		granary = Inventory.from_dict(d.granary)
@@ -1538,6 +1695,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		# stocked as in a new game. Nothing the player owned is lost.
 		fauna.populate()
 		_assign_keepers()
+	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
 	# the tables' dishes are saved; a save from before containers gets its tables set from the
@@ -1561,6 +1719,46 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	index_interiors()
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)
+
+
+## Saves before property (save_version 1-4) kept ownership six ways: a plot's owner "" or "player"
+## and the player's plot list, a field's list of farmer ids, a stall's merchant id, a pen's keeper id
+## (Fauna.load_dict), and none for buildings. Each becomes the one owner reference (World
+## "ownership"): plots "" -> the manor's, "player" (or listed in player.plots) -> the player's; a
+## field is the manor's (its farmers are those working it); a stall is the manor's, let to its
+## merchant if they live; buildings get their starting owners, and a house the player built is the
+## player's and stands on its plot. Nothing moves: plots, houses and the player stay where they are.
+## Saves made with property (5) already hold all of it, and nothing here changes them.
+func _migrate_property(d: Dictionary) -> void:
+	var mine: Array = d.player.get("plots", [])
+	for p in plots:
+		if not p.has("tenant"):
+			var was := str(p.get("owner", ""))
+			set_owner(p, PLAYER if was == PLAYER or mine.has(p.id) else MANOR)
+			set_tenant(p, "")
+		if not p.has("building"):
+			p.building = "house_" + str(p.id) if buildings.has("house_" + str(p.id)) else ""
+		p.price = property.land_price(int(p.w), int(p.h))
+	for f in fields:
+		if not f.has("tenant"):
+			f.owner = MANOR                 # was the list of its farmers' ids
+			f.tenant = ""
+	for id in stalls:
+		var s: Dictionary = stalls[id]
+		if not s.has("tenant"):
+			var o := npc(int(s.get("owner", -1)))
+			s.owner = MANOR
+			s.tenant = npc_ref(o.id) if o and o.alive and o.job == "merchant" and o.workplace == id else ""
+	for id in buildings:
+		var b: Dictionary = buildings[id]
+		if b.type == "player_house" and not b.has("owner"):
+			b.owner = PLAYER                # only the player built houses before property
+			b.tenant = ""
+			var pid := str(id).trim_prefix("house_")
+			if not plot(pid).is_empty():
+				b.parcel = pid
+				plot(pid).building = id
+	_init_ownership()                       # the other buildings' owners (only those without one)
 
 
 ## Saves before interiors (save_version 1-3) had villagers "hidden" at home, standing on the door

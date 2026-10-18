@@ -32,7 +32,7 @@ func _init() -> void:
 	# poorly managed villages, to check that neglect has consequences
 	if "--neglect-livestock" in args:
 		for id in w.fauna.pens:
-			w.fauna.pens[id].owner = -1
+			w.set_tenant(w.fauna.pens[id], "")
 			w.fauna.pens[id].trough = 0
 	if "--fields" in args:
 		var keep_fields := int(args[args.find("--fields") + 1])
@@ -40,8 +40,7 @@ func _init() -> void:
 			var f: Dictionary = w.fields.pop_back()
 			for n: NPC in w.npcs:
 				if n.workplace == f.id:
-					n.workplace = w.fields[w.fields.size() - 1].id
-					w.fields[w.fields.size() - 1].owner.append(n.id)
+					n.workplace = w.fields[w.fields.size() - 1].id          # its workers are those working it
 	if "--farmers" in args:
 		var keep := int(args[args.find("--farmers") + 1])
 		for n: NPC in w.npcs:
@@ -50,8 +49,7 @@ func _init() -> void:
 					keep -= 1
 				else:
 					n.job = "manor_hand"
-					for f in w.fields:
-						f.owner.erase(n.id)
+					n.workplace = "manor"
 	var deaths_today := []
 	var starved_today := [0]
 	var killed_today := [0]

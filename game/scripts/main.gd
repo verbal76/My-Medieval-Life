@@ -269,6 +269,30 @@ func _ready() -> void:
 				v.pos = world.player.pos + Vector2(1.0, 0)
 				v.plan = [world.brain.work(600, "", {}, "idle")]
 				ui.show_talk(v)
+			"land", "deal", "land_talk":
+				# the manor's land office: a family that died out left b7 empty; the player owns plot0
+				# with a house on it and leases plot1; (deal) the empty house's own offer at its door;
+				# (land_talk) the reeve's talk with its "Land and houses" choice
+				for m in world.households[world.household_in("b7")].members:
+					world.kill(world.npc(int(m)), "fever")
+				world.player.coins = 400
+				var pl: Dictionary = world.plots[0]
+				world.buy_plot(pl)
+				world.start_site(pl)
+				world.player.inv.add("plank", 30)
+				world.player.inv.add("stone", 20)
+				world.player.inv.add("log", 10)
+				world.deliver(pl, world.player.inv)
+				world.property.lease(world.plots[1], World.PLAYER)
+				var reeve := world.npc(world.reeve_id)
+				reeve.pos = world.player.pos + Vector2(1.0, 0)
+				reeve.plan = [world.brain.work(600, "", {}, "idle")]
+				if shot_panel == "land":
+					ui.show_land(reeve)
+				elif shot_panel == "land_talk":
+					ui.show_talk(reeve)
+				else:
+					ui.show_deal(world.buildings["b7"])
 		return
 	ui.show_title(FileAccess.file_exists(SAVE_PATH))
 
@@ -347,7 +371,7 @@ func resume_after_origin() -> void:
 func continue_game() -> void:
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
 	var d = JSON.parse_string(text)
-	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2, 3, 4]:
+	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2, 3, 4, 5]:
 		ui.message("The save file could not be read; it was kept unchanged. Starting a new game.")
 		new_game()
 		return
@@ -956,11 +980,9 @@ func _find_target() -> void:
 			for f in world.fields:
 				if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
 					var whose := ""
-					for o in f.owner:
-						var fo := world.npc(int(o))
-						if fo and fo.alive:
-							whose = "%s %s's" % [fo.name, fo.family]
-							break
+					for fo: NPC in world.field_workers(f):
+						whose = "%s %s's" % [fo.name, fo.family]
+						break
 					best = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
 					break
 			if not best.is_empty():
@@ -974,13 +996,26 @@ func _find_target() -> void:
 		for pl in world.plots:
 			var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
 			if r.has_point(p.pos):
-				var lab := "Building plot (%d coins)" % int(pl.price) if pl.owner == "" else ("Your building site" if not pl.site.get("done", false) else "Your house")
+				var lab := "Building plot for sale (%d coins, or %d a week)" % [world.property.price_of(pl), world.property.rent_of(pl)]
+				if world.holds(World.PLAYER, pl):
+					lab = "Your building plot" if pl.site.is_empty() else ("Your building site" if not pl.site.get("done", false) else "Your house")
+				elif not world.property.for_sale(pl):
+					lab = "Building plot (%s's)" % world.ref_name(world.holder_of(pl))
 				best = {"kind": "plot", "plot": pl, "label": lab}
 		for id in world.fauna.pens:
 			var pen: Dictionary = world.fauna.pens[id]
 			var fa := Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
 			if fa.distance_to(p.pos) < 1.3:
 				best = {"kind": "pen", "pen": pen, "label": "%s pen: %d hungry, trough %d wheat (they eat about %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, world.fauna.hungry(pen), int(pen.trough), world.fauna.daily_need(pen)]}
+		# a house the family holds but does not live in, or one the manor offers: its door
+		for id in world.buildings:
+			var b: Dictionary = world.buildings[id]
+			if str(id) == p.home or not world.property.is_home(b) or (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= 1.3:
+				continue
+			var mine := world.holds(World.PLAYER, b)
+			if mine or world.property.for_sale(b):
+				best = {"kind": "property", "thing": b, "label": ("Your house (%s): make it your home" % b.id) if mine
+						else ("Empty house, the manor's: buy (%d) or lease (%d a week)" % [world.property.price_of(b), world.property.rent_of(b)])}
 		if p.home != "" and world.buildings.has(p.home):
 			var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
 			if door.distance_to(p.pos) < 1.3:
@@ -1160,6 +1195,8 @@ func interact() -> void:
 			ui.message("Attack (Space) to hunt it." if target.animal.wild() else "These belong to the keeper. Killing them is theft.")
 		"plot":
 			ui.show_build(target.plot)
+		"property":
+			ui.show_deal(target.thing)
 		"home":
 			ui.show_home()
 		"rest":
@@ -1285,7 +1322,7 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 		return
 	var keeper: NPC = null
 	if not a.wild():
-		keeper = world.npc(int(world.fauna.pens[a.area].owner))
+		keeper = world.pen_keeper(world.fauna.pens[a.area])
 	var what := a.label().to_lower()
 	var bag: Inventory = world.fauna.kill(a)
 	world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what})

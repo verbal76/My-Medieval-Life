@@ -1092,6 +1092,8 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "")
 					hide_all()
 			else:
 				message("You need %d coins." % price), not known)
+	if n.id == w.reeve_id:
+		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)
 	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH:
 		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
@@ -1275,17 +1277,29 @@ func show_build(pl: Dictionary) -> void:
 	var w: World = main.world
 	var p := w.player
 	_open("build", "Building plot")
-	if pl.owner == "":
-		_label("This plot is for sale for %d coins. The coins go to the manor. Once it is yours, you can mark out a house: a wooden frame appears, you bring the materials, and when the last load is in, the house stands." % int(pl.price))
-		_button("Buy for %d coins" % int(pl.price), func():
-			if not w.buy_plot(pl):
-				message("You need %d coins." % int(pl.price))
+	var price := w.property.price_of(pl)
+	var rent := w.property.rent_of(pl)
+	if w.property.for_sale(pl):
+		_label("The manor sells this plot for %d coins, or leases it for %d coins a week (the first week paid now). The coins go to the manor. Once it is yours, you can mark out a house: a wooden frame appears, you bring the materials, and when the last load is in, the house stands. A house on leased ground goes to the manor if the lease ends." % [price, rent])
+		_button("Buy for %d coins" % price, func():
+			var why: String = w.property.buy(pl, World.PLAYER)
+			if why != "":
+				message(why)
 				return
-			show_build(pl), p.coins >= int(pl.price))
+			show_build(pl), p.coins >= price)
+		_button("Lease for %d coins a week" % rent, func():
+			var why: String = w.property.lease(pl, World.PLAYER)
+			if why != "":
+				message(why)
+				return
+			show_build(pl), p.coins >= rent)
 		return
-	if pl.owner != "player":
-		_label("This plot belongs to someone else.")
+	if not w.holds(World.PLAYER, pl):
+		_label("This plot is %s's." % w.ref_name(w.holder_of(pl)))
 		return
+	if w.tenant_of(pl) == World.PLAYER:
+		_label("You lease this plot from the manor: %d coins a week, next due on day %d%s." % [int(pl.rent), int(pl.due_day) + 1,
+				(", %d owed" % int(pl.arrears)) if int(pl.get("arrears", 0)) > 0 else ""], 16)
 	if pl.site.is_empty():
 		var cost: Dictionary = GameData.b("house_cost")
 		_label("Mark out a house here? It will need: " + ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k)])))
@@ -1294,7 +1308,7 @@ func show_build(pl: Dictionary) -> void:
 			show_build(pl))
 		return
 	if pl.site.done:
-		_label("Your house stands here.")
+		_label("Your house stands here. The reeve keeps the manor's land office: buy, lease or sell land and houses there.")
 		return
 	var need: Dictionary = pl.site.need
 	var done_part := w.site_progress(pl)
@@ -1321,6 +1335,84 @@ func show_build(pl: Dictionary) -> void:
 		var words: Array = back.keys().map(func(k): return "%d %s" % [int(back[k]), GameData.item_name(k).to_lower()])
 		message("The frame comes down. You take back %s." % (", ".join(words) if not words.is_empty() else "nothing; none was delivered"))
 		show_build(pl))
+
+
+## The manor's land office, kept by the reeve (owner rules: the manor sells and lets land and houses,
+## rent weekly): what the family holds, to make a home of, sell back or give up, and what the manor
+## offers, to buy or lease. Prices are provisional (balance.json "_property_note").
+func show_land(reeve: NPC = null) -> void:
+	var w: World = main.world
+	_open("land", "Land and houses")
+	_label("The manor's land office. You have %d coins; rent is taken from your purse each week. Selling or giving up your home moves you to another house you hold, or leaves you homeless (the family chest waits for your next house)." % w.player.coins, 16)
+	var again := func(): show_land(reeve)
+	_label("Yours:", 20, Color(1, 0.85, 0.5))
+	var mine: Array = w.property.held_by(World.PLAYER)
+	if mine.is_empty():
+		_label("Nothing yet.", 16)
+	for t in mine:
+		_deal_row(t, again)
+	_label("The manor offers:", 20, Color(1, 0.85, 0.5))
+	var offers: Array = w.property.market()
+	if offers.is_empty():
+		_label("Nothing for sale or to let just now.", 16)
+	for t in offers:
+		_deal_row(t, again)
+	if reeve != null:
+		_button("Talk to %s" % reeve.name, func(): show_talk(reeve))
+
+
+## One house or piece of land on its own (at its door).
+func show_deal(thing: Dictionary) -> void:
+	var w: World = main.world
+	_open("land", "House" if w.property.is_home(thing) else "Land")
+	_label("You have %d coins. The reeve at the manor keeps the land office." % w.player.coins, 16)
+	_deal_row(thing, func(): show_deal(thing))
+
+
+## A line of the land office: what it is and its terms, with the deals the player can make.
+func _deal_row(t: Dictionary, again: Callable) -> void:
+	var w: World = main.world
+	var pr: Property = w.property
+	var p := w.player
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
+	var l := Label.new()
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.add_theme_font_size_override("font_size", 17)
+	var text := pr.describe(t)
+	text = text[0].to_upper() + text.substr(1)
+	h.add_child(l)
+	var act := func(result: String, done: String) -> void:
+		message(result if result != "" else done)
+		again.call()
+	if w.holds(World.PLAYER, t):
+		var head: Dictionary = pr.head(t)
+		if w.owner_of(head) == World.PLAYER:
+			text += ": yours"
+		else:
+			text += ": leased, %d coins a week, next due day %d" % [int(head.rent), int(head.due_day) + 1]
+			if int(head.get("arrears", 0)) > 0:
+				text += ", %d owed" % int(head.arrears)
+		for r in pr.unit(t):
+			if pr.is_home(r) and str(r.id) == p.home:
+				text += " (your home)"
+			elif pr.is_home(r):
+				var id := str(r.id)
+				_button("Make it home", func(): act.call(pr.set_home(id), "This is your home now: rest and keep the family chest here."), true, h)
+		if w.owner_of(head) == World.PLAYER:
+			var value := pr.sale_value(t)
+			_button("Sell (%d)" % value, func(): act.call(pr.sell(t, World.PLAYER), "Sold to the manor for %d coins." % value), true, h)
+		else:
+			_button("End lease", func(): act.call(pr.end_lease(t, World.PLAYER), "The lease is ended."), true, h)
+	else:
+		var price := pr.price_of(t)
+		var rent := pr.rent_of(t)
+		text += ": %d coins, or %d a week" % [price, rent]
+		_button("Buy (%d)" % price, func(): act.call(pr.buy(t, World.PLAYER), "Bought from the manor for %d coins." % price), p.coins >= price and pr.for_sale(t), h)
+		_button("Lease (%d a week)" % rent, func(): act.call(pr.lease(t, World.PLAYER), "Leased for %d coins a week; the first week is paid." % rent), p.coins >= rent and pr.for_sale(t), h)
+	l.text = text
+	panel_body.add_child(h)
 
 
 func show_home() -> void:

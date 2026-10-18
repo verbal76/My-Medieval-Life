@@ -31,9 +31,10 @@ var quests: Array = []          # accepted side quests: {id, giver, day, target}
 var spells := {}              # "fireball": true
 var fireball_cd := 0.0
 var attack_cd := 0.0
-var home := ""                # building id of the player's own house ("" = sleeps at the inn)
-var chest := Inventory.new()  # storage in the player's house
-var plots: Array = []         # plot ids owned
+var home := ""                # the house the family lives in, one of those it holds (World.property.homes_of("player")): the
+                              # heir's respawn point, its bed and chest ("" = homeless). What the family owns or
+                              # leases is in the land registry under the owner reference "player" (World "ownership")
+var chest := Inventory.new()  # the family chest, kept in the home (it moves with the family; out of reach while homeless)
 var alive := true
 var deaths := 0
 
@@ -228,7 +229,7 @@ func to_dict() -> Dictionary:
 		"name": name, "family": family, "generation": generation, "sprite": sprite, "heir_sprite": heir_sprite,
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
-		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(), "plots": plots.duplicate(),
+		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
 		"alive": alive, "deaths": deaths, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 	}
@@ -248,7 +249,7 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	for k in d.skills:
 		p.skills[k] = int(d.skills[k])
 	p.spells = d.spells.duplicate()
-	p.plots = d.plots.duplicate()
+	# saves before property (1-4) list owned plots in "plots": World._migrate_property reads them
 	p.alive = bool(d.alive)
 	p.tool = str(d.get("tool", ""))                   # older saves: no tool slot, no look, no record
 	for k in ["head", "amulet", "ring"]:               # older saves: no head, amulet or ring slot
