@@ -1,19 +1,18 @@
 # Builds the game for Android, Windows and Linux from one source revision, with one shared build
-# number, and publishes them together as a GitHub Release.
+# number, and keeps them together as a GitHub Release.
 #
-# Owner's release policy (docs/DECISIONS.md, 2026-10-18): a release is a deliberate decision by the
-# owner. This workflow therefore never runs on a push; it runs only when started by hand from the
-# Actions tab ("Run workflow") after the owner approves the coordinated three-platform build.
-# Releases from branches other than main are marked as pre-releases. This repository is public, so a
-# published release is public: the default "private" run makes a draft release instead, which only
-# people with write access to the repository can see or download (no tag is created until the owner
-# publishes it). "public" is chosen only when the owner approves public distribution. Pushes never start it, so the
-# staging/my-medieval-life and wip/* branches the agents push to every day build nothing; an
-# approved test build is run by hand on the approved staging commit. The build files are attached
-# to the GitHub Release, which keeps them (never only the cloud machine).
+# Owner's release policy (docs/DECISIONS.md, 2026-10-18): a build is a deliberate decision by the
+# owner. This workflow never runs on a push: it is started by hand ("Run workflow") on an approved
+# commit. The default, "private", makes a draft release that only people with write access to the
+# repository can see or download (no tag exists until the owner publishes it). "public" publishes it
+# and needs all three of: the owner's approval for that occasion, the confirmation text below, and
+# an approval in the "public-release" environment (the owner makes their own account its required reviewer in
+# Settings > Environments; see docs/release/AUDIT_REMEDIATION.md).
 #
-# The APK is a debug build signed with a debug keystore made on the runner (no secrets needed);
-# a store release would need the owner's release keystore as a repository secret.
+# Android test builds are signed with the owner's private test key from repository secrets, so each
+# build installs over the last and keeps the player's save (docs/release/ANDROID_SIGNING.md). Without
+# those secrets the build stops, unless "allow_temporary_key" is ticked: then a throwaway key is
+# made, as before, and the notes say the APK cannot update an earlier install.
 name: Build and release
 
 on:
@@ -24,13 +23,21 @@ on:
         type: choice
         options: [private, public]
         default: private
+      confirm_public:
+        description: "Only for visibility=public: type exactly  publish publicly"
+        type: string
+        default: ""
+      allow_temporary_key:
+        description: "Sign the APK with a throwaway key if the test-signing secrets are missing (it will not update earlier installs)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 concurrency:
   group: release-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   GODOT_VERSION: "4.7.2"
@@ -39,7 +46,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # a public release waits here for the owner's approval in the protected environment
+    environment: ${{ inputs.visibility == 'public' && 'public-release' || 'private-testing' }}
     steps:
+      - name: Check the request
+        env:
+          VISIBILITY: ${{ inputs.visibility }}
+          CONFIRM: ${{ inputs.confirm_public }}
+        run: |
+          if [ "$VISIBILITY" = "public" ] && [ "$CONFIRM" != "publish publicly" ]; then
+            echo "::error::A public release needs confirm_public set to 'publish publicly' (and the owner's approval)."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-java@v4
@@ -47,23 +66,55 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Cache Godot and its export templates
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates
+
       - name: Install Godot and its export templates
+        if: steps.godot.outputs.cache-hit != 'true'
         run: |
+          mkdir -p ~/godot-bin
           base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
           curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
-          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
           curl -sSfL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
           dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
           mkdir -p "$dest" && unzip -q -j templates.tpz -d "$dest"
           rm godot.zip templates.tpz
 
-      - name: Point Godot at the Android SDK, the JDK and a debug keystore
+      - name: Put Godot on the path
+        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
+
+      - name: Point Godot at the Android SDK, the JDK and the test-signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_TEST_KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_TEST_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_TEST_KEY_ALIAS }}
+          ALLOW_TEMPORARY: ${{ inputs.allow_temporary_key }}
         run: |
-          keystore="$HOME/debug.keystore"
-          keytool -genkeypair -v -keystore "$keystore" -storepass android -keypass android \
-            -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" \
-            -keyalg RSA -keysize 2048 -validity 10000 -noprompt
+          keystore="$RUNNER_TEMP/android-test.keystore"
+          if [ -n "$KEYSTORE_B64" ] && [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ]; then
+            printf '%s' "$KEYSTORE_B64" | base64 -d > "$keystore"
+            chmod 600 "$keystore"
+            alias="$KEY_ALIAS"; pass="$KEYSTORE_PASSWORD"
+            echo "SIGNING=stable" >> "$GITHUB_ENV"
+          elif [ "$ALLOW_TEMPORARY" = "true" ]; then
+            echo "::warning::No test-signing secrets: signing with a throwaway key. This APK cannot update an earlier install."
+            alias="androiddebugkey"; pass="android"
+            keytool -genkeypair -keystore "$keystore" -storepass "$pass" -keypass "$pass" -alias "$alias" \
+              -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -keysize 2048 -validity 10000 -noprompt
+            echo "SIGNING=temporary" >> "$GITHUB_ENV"
+          else
+            echo "::error::The test-signing secrets are missing (docs/release/ANDROID_SIGNING.md). Add them, or tick allow_temporary_key."
+            exit 1
+          fi
           mkdir -p "$HOME/.config/godot"
+          umask 077
           cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<EOF
           [gd_resource type="EditorSettings" format=3]
 
@@ -71,8 +122,8 @@ jobs:
           export/android/android_sdk_path = "${ANDROID_SDK_ROOT}"
           export/android/java_sdk_path = "${JAVA_HOME}"
           export/android/debug_keystore = "${keystore}"
-          export/android/debug_keystore_user = "androiddebugkey"
-          export/android/debug_keystore_pass = "android"
+          export/android/debug_keystore_user = "${alias}"
+          export/android/debug_keystore_pass = "${pass}"
           EOF
 
       - name: Import the project and run the tests
@@ -87,6 +138,13 @@ jobs:
 
       - name: Install the icon check's one dependency (Pillow)
         run: python3 -m pip install pillow==10.4.0
+
+      - name: Stamp the build number into the versions
+        run: |
+          n="${{ github.run_number }}"
+          # Android needs a rising version code to update an install; Windows shows the file version
+          sed -i -E "s/^version\/code=.*/version\/code=${n}/; s/^version\/name=.*/version\/name=\"0.1.${n}-test\"/; s/^application\/file_version=.*/application\/file_version=\"0.1.${n}.0\"/; s/^application\/product_version=.*/application\/product_version=\"0.1.${n}.0\"/" game/export_presets.cfg
+          grep -E '^(version/code|version/name|application/file_version|application/product_version)=' game/export_presets.cfg
 
       - name: Export Android, Windows and Linux
         run: |
@@ -105,12 +163,20 @@ jobs:
           { if [ "${{ inputs.visibility }}" != "public" ]; then echo "**Private testing build:** a draft release, visible only to the repository's collaborators. Not for distribution."; echo; fi
             echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. Linux, Windows and Android are built from that one commit."
             echo
-            echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\` (debug-signed; allow installs from unknown sources)"
+            if [ "$SIGNING" = "stable" ]; then
+              echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\` (test-signed with the stable test key: installs over earlier stable-key builds and keeps the save; allow installs from unknown sources)"
+            else
+              echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\` (signed with a throwaway key: it cannot update an earlier install; uninstalling deletes the save)"
+            fi
             echo "- **Windows:** unzip and run \`MyMedievalLife.exe\`"
             echo "- **Linux:** unzip and run \`MyMedievalLife.x86_64\`"
             echo "- \`SHA256SUMS.txt\` lists each file's checksum."
             echo
             cat docs/release/TESTING_CHECKLIST.md; } > notes.md
+
+      - name: Remove the signing key from the runner
+        if: always()
+        run: rm -f "$RUNNER_TEMP/android-test.keystore" "$HOME/.config/godot/editor_settings-4.7.tres"
 
       - uses: softprops/action-gh-release@v2
         with:

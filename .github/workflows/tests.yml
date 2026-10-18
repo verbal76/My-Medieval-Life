@@ -1,0 +1,66 @@
+# Runs the automated tests when the development branch changes. It builds no game files and
+# publishes nothing (owner, 2026-10-18: development pushes must never publish).
+#
+# To keep GitHub-hosted minutes low: only pushes to staging/my-medieval-life that change code, data
+# or tests start it; a newer push cancels a run still in progress; Godot (the editor only, no export
+# templates) is cached by version. Add "[skip ci]" to a commit message to skip a run.
+name: Tests
+
+on:
+  push:
+    branches: [staging/my-medieval-life]
+    paths: ["game/**", "tools/**", "tests/**", "data/**", "docs/SYSTEM_INTERACTION_MANIFEST.md", ".github/workflows/tests.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot-bin
+          key: godot-${{ env.GODOT_VERSION }}-linux-editor
+
+      - name: Install Godot (editor only)
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot && rm godot.zip
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install the tools' dependencies (Pillow, numpy)
+        run: python3 -m pip install pillow==10.4.0 numpy==2.1.3
+
+      - name: Python tests and data checks
+        run: |
+          python3 -m unittest discover -s tests
+          python3 tools/check_interactions.py
+          python3 tools/check_resources.py
+
+      - name: Game tests (headless)
+        run: |
+          godot=~/godot-bin/godot
+          $godot --headless --path game --import
+          $godot --headless --path game --script res://tests/run_tests.gd
+          $godot --headless --path game --script res://tests/start_test.gd
+          $godot --headless --path game --script res://tests/play_test.gd

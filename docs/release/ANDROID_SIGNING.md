@@ -1,0 +1,87 @@
+# Android signing
+
+## The problem (audit finding P1-1)
+
+Builds 1–8 were signed with a debug key that `release.yml` generated fresh on every run. Android
+only lets a new APK update an installed app when both are signed with the same key, so each build
+had to be uninstalled first, and uninstalling deletes the app's data, including the save
+(`user://save1.json`, which on Android is in the app's private `files` folder).
+
+## The fix: one private test key, kept as repository secrets
+
+`release.yml` now signs Android test builds with the owner's own **test key**, read from three
+repository secrets. Builds signed with it install over each other and keep the save. The key never
+enters the repository, the logs (GitHub masks secret values) or the release files: the job decodes
+it into the runner's temporary folder with owner-only permissions and deletes it, and the Godot
+settings file that names it, before the release step.
+
+Godot uses one password for both the keystore and the key, so make them the same.
+
+If the secrets are missing, the build stops with an error, unless the run's `allow_temporary_key`
+box is ticked. Then it signs with a throwaway key as before, and the release notes say the APK cannot
+update an earlier install.
+
+Each build also stamps its build number into the versions: Android `version/code` = the run number
+(Android refuses to update to a lower code), `version/name` = `0.1.<n>-test`, Windows file and
+product version `0.1.<n>.0`. `game/export_presets.cfg` itself is not changed in the repository.
+
+Checked locally (2026-10-18): two Android exports with the same custom key carried the same signing
+certificate (`apksigner verify --print-certs`), and the export output never printed the password.
+Not verified: installing one over the other on a phone (no device here).
+
+## Owner action: create the test key (once)
+
+On your own computer, with a JDK installed (`keytool` comes with it). Keep the files off the
+repository.
+
+1. Make the key; choose a strong password and enter it for both prompts:
+   ```sh
+   keytool -genkeypair -v -keystore mml-test.keystore -alias mmltest \
+     -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=Hot Attic Games test signing"
+   ```
+2. Turn it into text:
+   - Linux: `base64 -w0 mml-test.keystore > mml-test.keystore.b64`
+   - macOS: `base64 -i mml-test.keystore -o mml-test.keystore.b64`
+   - Windows PowerShell: `[Convert]::ToBase64String([IO.File]::ReadAllBytes("mml-test.keystore")) | Set-Content mml-test.keystore.b64`
+3. On GitHub: the repository > **Settings** > **Secrets and variables** > **Actions** > **New
+   repository secret**, three times:
+
+   | Name | Value |
+   |---|---|
+   | `ANDROID_TEST_KEYSTORE_B64` | the whole contents of `mml-test.keystore.b64` |
+   | `ANDROID_TEST_KEYSTORE_PASSWORD` | the password |
+   | `ANDROID_TEST_KEY_ALIAS` | `mmltest` |
+
+4. Keep `mml-test.keystore` and its password in your password manager or another safe place. If the
+   key is lost, testers must uninstall once more.
+5. Delete `mml-test.keystore.b64` from the computer once the secret is saved.
+
+Agents cannot create or read these secrets; they only reference them by name.
+
+## Moving testers to the stable key (one unavoidable reinstall)
+
+The installed Builds 1–8 carry throwaway keys, so the first stable-key build still needs one
+uninstall. To keep a save across it (debug builds can be read with `adb`; unverified on a device):
+
+```sh
+# before uninstalling the old build: copy the save off the phone
+adb exec-out run-as com.hotatticgames.mymedievallife.dev cat files/save1.json > save1.json
+adb uninstall com.hotatticgames.mymedievallife.dev
+adb install MyMedievalLife-buildN-android.apk
+# open the game once, close it, then put the save back
+adb push save1.json /data/local/tmp/save1.json
+adb shell run-as com.hotatticgames.mymedievallife.dev cp /data/local/tmp/save1.json files/save1.json
+```
+
+A Build 7 or 8 save loads in later builds: saves of versions 4 to 8 are migrated.
+
+## Production signing (later; not built yet)
+
+The test key is for private test builds only. A store release needs:
+- a separate **upload key**, never the test key, with Google Play App Signing holding the app key;
+- the release package name (`com.hotatticgames.mymedievallife`, without `.dev`), which makes it a
+  different app from the test builds: they install side by side, and saves do not move between them;
+- an AAB export (`gradle_build/use_gradle_build=true`, `export_format` AAB) and the target API level
+  Google Play currently requires;
+- its own secrets (`ANDROID_RELEASE_KEYSTORE_B64`, `ANDROID_RELEASE_KEYSTORE_PASSWORD`,
+  `ANDROID_RELEASE_KEY_ALIAS`) and its own workflow run, approved by the owner.
