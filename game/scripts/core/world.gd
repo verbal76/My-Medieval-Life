@@ -13,6 +13,7 @@ extends RefCounted
 ##    or worn out;
 ##  - a deposit never yields more than its amount; dead people stay dead.
 
+const PLANT_LAYER := "below1"      # the layer Shade drew the flowers and berry bushes in (village.json plants)
 signal tile_changed(cell: Vector2i, kind: String, value: int)   # kind: below | above | path
 signal event(text: String)
 signal npc_died(npc: NPC)
@@ -35,6 +36,9 @@ var trees: Array = []              # {x, y, trunk, top, bottom, state, regrow}: 
                                    # at (x, y), the only solid cell; the canopy (top at y - 1, bottom at y)
                                    # is drawn over the characters, who can walk behind it
 var deposits: Array = []           # {x, y, ore, amount}
+var plants: Array = []             # wild flowers and berry bushes (village generator v5): {id, x, y, kind, tile, state, regrow}.
+                                   # state: ripe | picked (bare, ripe again on day `regrow`) | cleared (grubbed up for building).
+                                   # The cell stays walkable; the tile is the plant's own, in layer below1.
 var fields: Array = []             # {id, x, y, w, h, state, ready, owner, tenant}: worked by the farmers whose workplace it is
 var plots: Array = []              # the land registry's parcels: {id, x, y, w, h, door, price, owner, tenant, rent,
                                    # due_day, arrears, missed, site, building} (scripts/core/property.gd)
@@ -88,6 +92,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	for t in m.data.trees:
 		trees.append({"x": int(t.x), "y": int(t.y), "trunk": int(t.trunk), "top": int(t.top), "bottom": int(t.bottom),
 				"state": "grown", "regrow": 0.0})
+	_make_plants(m)
 	for d in m.data.deposits:
 		deposits.append({"x": int(d.x), "y": int(d.y), "ore": d.ore, "amount": int(d.amount)})
 	for f in m.data.fields:
@@ -274,6 +279,10 @@ func _new_day() -> void:
 				tile_changed.emit(Vector2i(t.x, t.y - 1), "above", t.top)
 				tile_changed.emit(Vector2i(t.x, t.y), "above", t.bottom)
 				map.set_solid(Vector2i(t.x, t.y), true)
+	for pl in plants:
+		if pl.state == "picked" and d >= pl.regrow:
+			pl.state = "ripe"
+			tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, int(pl.tile))
 	fauna.new_day()
 	brain.dawn()
 	manor_work.dawn()                  # undone manor jobs are released
@@ -536,6 +545,36 @@ func tree_at(c: Vector2i) -> Dictionary:
 		if t.x == c.x and (t.y == c.y or t.y - 1 == c.y):
 			return t
 	return {}
+
+
+## The map's wild plants, all ripe (their place and tile are map data; load_dict applies a save's state).
+func _make_plants(m: VillageMap) -> void:
+	plants = []
+	for pl in m.data.get("plants", []):
+		plants.append({"id": str(pl.id), "x": int(pl.x), "y": int(pl.y), "kind": str(pl.kind), "tile": int(pl.tile),
+				"state": "ripe", "regrow": 0.0})
+
+
+## The wild plant at a cell (exactly), {} if none. A grubbed-up one is not found.
+func plant_at(c: Vector2i) -> Dictionary:
+	for pl in plants:
+		if pl.x == c.x and pl.y == c.y and pl.state != "cleared":
+			return pl
+	return {}
+
+
+## Pick a ripe plant: returns what it gave (item id -> count, from its resources.json node), {} if it
+## is not ripe. The plant is bare until plant_regrow_days (provisional) later, at dawn.
+func pick_plant(pl: Dictionary) -> Dictionary:
+	if pl.is_empty() or pl.state != "ripe":
+		return {}
+	var got := ResourceNodes.products(ResourceNodes.def_for("plant", str(pl.kind)))
+	pl.state = "picked"
+	var r: Array = GameData.b("plant_regrow_days")
+	pl.regrow = day() + rng.randi_range(int(r[0]), int(r[1]))
+	tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, -1)
+	stat("plants_picked")
+	return got
 
 
 ## Take one unit from a deposit. Returns the ore id or "" if it is exhausted.
@@ -1569,6 +1608,8 @@ func player_eat(id: String) -> bool:
 	if not it.has("food") or not player.inv.remove(id):
 		return false
 	player.hunger = minf(100.0, player.hunger + float(it.food))
+	if it.has("heal"):
+		player.hp = minf(player.hp_cap(), player.hp + float(it.heal))
 	if it.has("harm"):
 		damage_player(float(it.harm), "spoiled food")
 	stat("eaten_food", float(it.food))
@@ -1627,7 +1668,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
-const SAVE_VERSION := 8            # 8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 9            # 9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -1932,7 +1973,7 @@ func to_dict() -> Dictionary:
 		"manor_work": manor_work.to_dict(),
 		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
-		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
+		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(),
@@ -1972,6 +2013,16 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			t.trunk = int(k.trunk)
 			t.top = int(k.top)
 			t.bottom = int(k.bottom)
+	# a plant's place and tile are map data; its state is the save's (older saves: every plant ripe)
+	_make_plants(m)
+	var saved_plants := {}
+	for pl in d.get("plants", []):
+		saved_plants[str(pl.id)] = pl
+	for pl in plants:
+		var sp: Dictionary = saved_plants.get(str(pl.id), {})
+		if not sp.is_empty():
+			pl.state = str(sp.state)
+			pl.regrow = float(sp.regrow)
 	deposits = d.deposits
 	fields = d.fields
 	plots = d.plots

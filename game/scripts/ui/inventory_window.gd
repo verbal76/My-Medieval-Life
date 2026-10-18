@@ -252,6 +252,8 @@ func _build_details() -> void:
 	var lines: Array[String] = [KINDS.get(t, "Thing") + (", in use" if worn != "" else "") + ". Worth about %d coins." % GameData.value(id)]
 	if it.has("food"):
 		lines.append("Fills %d hunger%s." % [int(it.food), ", but it makes you sick" if it.has("harm") else ""])
+	if it.has("heal"):
+		lines.append("Restores %d health." % int(it.heal))
 	if it.has("damage"):
 		lines.append("Damage %d." % int(it.damage))
 	if int(it.get("armor", 0)) > 0:

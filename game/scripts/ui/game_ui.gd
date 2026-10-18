@@ -73,7 +73,7 @@ const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "to
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
 const CONTROLS := {
 	"touch": [[["touch_tap"], "Tap the ground to walk there; tap someone or something to walk to it and use it"],
-		[["touch_finger_one"], "Gather turns gather mode on; then tap a seam, tree, ripe field or game to gather it until it runs out"],
+		[["touch_finger_one"], "Gather turns gather mode on; then tap a seam, tree, ripe field, flower, berry bush or game to gather it until it runs out"],
 		[["touch_finger_one"], "Attack turns attack mode on; then tap who to attack, and tap them again to strike"],
 		[["touch_zoom_in"], "Pinch to zoom"],
 		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you"],

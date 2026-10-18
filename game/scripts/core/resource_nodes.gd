@@ -60,6 +60,8 @@ static func def_for(kind: String, key := "") -> Dictionary:
 			continue
 		if kind == "animal" and m.species != key:
 			continue
+		if kind == "plant" and m.plant != key:
+			continue
 		return defs()[id]
 	return {}
 
@@ -87,6 +89,8 @@ static func instances(world: World, d: Dictionary) -> Array:
 			return world.trees.duplicate()
 		"field":
 			return world.fields.duplicate()
+		"plant":
+			return world.plants.filter(func(pl): return pl.kind == m.plant and pl.state != "cleared")
 		"animal":
 			return world.fauna.animals.filter(func(a: Animal): return a.alive and a.species == m.species)
 	return []
@@ -106,6 +110,9 @@ static func node_at(world: World, cell: Vector2i, exact := false) -> Dictionary:
 		var t := world.tree_at(c)
 		if not t.is_empty():
 			return _found(def_for("tree"), t)
+		var pl := world.plant_at(c)
+		if not pl.is_empty():
+			return _found(def_for("plant", str(pl.kind)), pl)
 		for f in world.fields:
 			if Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(c):
 				return _found(def_for("field"), f)
@@ -122,7 +129,7 @@ static func _found(d: Dictionary, ref) -> Dictionary:
 ## Where an instance stands: a seam's or a tree trunk's cell, a field's middle cell, an animal's cell.
 static func cell_of(_world: World, d: Dictionary, ref) -> Vector2i:
 	match str(d.get("match", {}).get("kind", "")):
-		"deposit", "tree":
+		"deposit", "tree", "plant":
 			return Vector2i(int(ref.x), int(ref.y))
 		"field":
 			return Vector2i(int(ref.x) + int(ref.w) / 2, int(ref.y) + int(ref.h) / 2)
@@ -142,6 +149,8 @@ static func remaining(world: World, d: Dictionary, ref) -> int:
 			return int(products(d).get("log", 0)) if ref.state == "grown" else 0
 		"field":
 			return maxi(0, int(ref.get("crop", 0))) if ref.state == "ripe" else 0
+		"plant":
+			return int(products(d).values()[0]) if ref.state == "ripe" else 0
 		"animal":
 			var a := ref as Animal
 			if a == null or not a.alive:
@@ -171,6 +180,11 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 					return "The sapling is not grown yet."
 				"cleared":
 					return "The ground was cleared for building. Nothing grows here now."
+		"plant":
+			if ref.state == "picked":
+				return "Already picked. It grows back in a few days."
+			if ref.state != "ripe":
+				return "Nothing grows here now."
 		"field":
 			if ref.state == "tilled":
 				return "The field is not sown yet."

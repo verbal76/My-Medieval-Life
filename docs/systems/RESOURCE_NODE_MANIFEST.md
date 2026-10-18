@@ -13,20 +13,23 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 12 (8 the player may harvest, 4 the keeper's livestock).
-- Materials they produce: 8 (coal, copper_ore, hide, iron_ore, log, meat, stone, wheat).
+- Implemented node types: 15 (11 the player may harvest, 4 the keeper's livestock).
+- Materials they produce: 11 (blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, red_berries, stone, wheat).
 - Finite node types: 4 (coal_seam, copper_seam, iron_seam, stone_seam); with no replacement once worked out: 0 (the caravan imports each).
 - At risk of overharvesting: 6 (coal_seam, copper_seam, iron_seam, stone_seam, wild_boar, wild_rabbit).
 - Not Gather-compatible: 4 (chicken_pen, cow_pen, pig_pen, sheep_pen).
 
 | Node | Category | Origin | Tool | Skill | Yields a cycle | Depletion | Player | NPCs | Gather | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
+| `blue_berry_bush` Blue berry bush | forage | natural | none | none | 2 blueberries | regrows | yes | no | yes | implemented |
 | `chicken_pen` Chickens | livestock | bred | none | none | 1 meat | breeds | no | yes | no | implemented |
 | `coal_seam` Coal seam | mineral | natural | pickaxe | mining | 1 coal | finite | yes | yes | yes | implemented |
 | `copper_seam` Copper seam | mineral | natural | pickaxe | mining | 1 copper_ore | finite | yes | yes | yes | implemented |
 | `cow_pen` Cows | livestock | bred | none | none | 1 hide, 6 meat | breeds | no | yes | no | implemented |
+| `flower_patch` Wild flower | forage | natural | none | none | 1 flower | regrows | yes | no | yes | implemented |
 | `iron_seam` Iron seam | mineral | natural | pickaxe | mining | 1 iron_ore | finite | yes | yes | yes | implemented |
 | `pig_pen` Pigs | livestock | bred | none | none | 1 hide, 4 meat | breeds | no | yes | no | implemented |
+| `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | no | yes | implemented |
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
 | `tree` Tree | wood | natural | axe | woodcutting | 4 log | regrows | yes | yes | yes | implemented |
@@ -35,6 +38,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `wild_rabbit` Rabbit | game | natural | weapon | combat | 1 meat | breeds | yes | yes | yes | implemented |
 
 ## Nodes
+
+### `blue_berry_bush` · Blue berry bush
+
+- **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "blueberry"}`.
+- **Where:** Meadows, verges and clearings across the map (blue berries). **In the world:** 20 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Action:** Picking (interact): "Pick blue berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
+- **Tool:** none. No tool needed. Where to get it: none.
+- **Skill:** none.
+- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers do not pick them.
+- **Cost:** stamina 0, tool wear 0. No stamina, no tool.
+- **Yields a cycle:** 2 blueberries. 2 blueberries a plant, all at once (World.pick_plant).
+- **Total:** 2 blueberries from each ripe plant of this kind in village.json plants (tile 2662).
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers no. Villagers do not forage yet (no NPC action picks plants).
+- **Gather mode:** yes. **Icon:** `blueberries`.
+- **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
+- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
 
 ### `chicken_pen` · Chickens
 
@@ -108,6 +129,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Risk:** Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md).
 - **Code:** `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/fauna.gd::surplus`, `game/scripts/core/fauna.gd::kill`, `game/scripts/main.gd::_hit_animal`
 
+### `flower_patch` · Wild flower
+
+- **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "flower"}`.
+- **Where:** Meadows, verges and clearings across the map (purple and yellow flowers). **In the world:** 163 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Action:** Picking (interact): "Pick wild flower". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
+- **Tool:** none. No tool needed. Where to get it: none.
+- **Skill:** none.
+- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers do not pick them.
+- **Cost:** stamina 0, tool wear 0. No stamina, no tool.
+- **Yields a cycle:** 1 flower. 1 flower a plant, all at once (World.pick_plant).
+- **Total:** 1 flower from each ripe plant of this kind in village.json plants (tile 2658).
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers no. Villagers do not forage yet (no NPC action picks plants).
+- **Gather mode:** yes. **Icon:** `flower`.
+- **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
+- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
+
 ### `iron_seam` · Iron seam
 
 - **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "deposit", "ore": "iron_ore"}`.
@@ -143,6 +182,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Gather mode:** no. **Icon:** `meat`.
 - **Risk:** Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md).
 - **Code:** `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/fauna.gd::surplus`, `game/scripts/core/fauna.gd::kill`
+
+### `red_berry_bush` · Red berry bush
+
+- **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "redberry"}`.
+- **Where:** Meadows, verges and clearings across the map (red berries). **In the world:** 25 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Action:** Picking (interact): "Pick red berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
+- **Tool:** none. No tool needed. Where to get it: none.
+- **Skill:** none.
+- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers do not pick them.
+- **Cost:** stamina 0, tool wear 0. No stamina, no tool.
+- **Yields a cycle:** 2 red_berries. 2 red_berries a plant, all at once (World.pick_plant).
+- **Total:** 2 red_berries from each ripe plant of this kind in village.json plants (tile 2660).
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers no. Villagers do not forage yet (no NPC action picks plants).
+- **Gather mode:** yes. **Icon:** `red_berries`.
+- **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
+- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
 
 ### `sheep_pen` · Sheep
 
@@ -287,12 +344,15 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 
 | Node | Risk |
 |---|---|
+| `blue_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `chicken_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `coal_seam` | Overharvested: worked out by day 8 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `copper_seam` | Overharvested: worked out on day 4 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `cow_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
+| `flower_patch` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `iron_seam` | Overharvested: the iron seams were worked out on day 10 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `pig_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
+| `red_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `stone_seam` | Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `tree` | Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9). |

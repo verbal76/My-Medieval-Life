@@ -20,8 +20,8 @@ S1 blocks play, S2 major, S3 moderate, S4 minor. "Fixed (staging)" means fixed a
 | B8-012 | Usability | S2 | No feedback when hitting someone: needs a hit flicker, a health bar over the head, and a floating damage number | Open (owner request) |
 | B8-013 | Bug | S2 | Attacking a cow said killing an animal is theft, but showed no damage or effect | Open. Investigate whether the hit landed (range, target choice) and add the B8-012 feedback |
 | B8-014 | Usability | S2 | The controller should cycle through all active buttons | Open. B8-001 fixed the Pack; other windows need the same check, with a shoulder-button or D-pad cycle |
-| B8-015 | Enhancement | S3 | Flowers should be pickable for crafting, and walkable when not picked | Open: needs a resource node in `game/data/resources.json`, a use for flowers, and flower tiles made non-blocking |
-| B8-016 | Enhancement | S3 | Berry bushes (blue and red) should be pickable, and walkable | Open: as B8-015; berries could be food |
+| B8-015 | Enhancement | S3 | Flowers should be pickable for crafting, and walkable when not picked | Fixed on staging after Build 8 (INT-070): flowers are walkable, picked for the `flower` item, regrow, and brew into a herbal tonic at the stove |
+| B8-016 | Enhancement | S3 | Berry bushes (blue and red) should be pickable, and walkable | Fixed on staging after Build 8 (INT-070): berry bushes are walkable and picked for food that regrows |
 
 Still open from Build 7: the economy defects B7-014 to B7-017 (an agent is working on them), B7-006,
 B7-008, B7-009.

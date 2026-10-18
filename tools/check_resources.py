@@ -410,10 +410,13 @@ def problems(ctx):
                 out.append("%s: unknown species %r" % (nid, m.get("species")))
             elif (sp["kind"] == "wild") != (n.get("category") == "game") or (sp["kind"] == "livestock") == n.get("player_harvest"):
                 out.append("%s: a %s species must be %s" % (nid, sp["kind"], "game the player may hunt" if sp["kind"] == "wild" else "livestock the player may not take"))
+        elif m.get("kind") == "plant":
+            if m.get("plant") not in {pl["kind"] for pl in ctx["village"].get("plants", [])}:
+                out.append("%s: no plant of kind %r in village.json" % (nid, m.get("plant")))
         elif m.get("kind") not in ("tree", "field"):
             out.append("%s: unknown match kind %r" % (nid, m.get("kind")))
     # every harvestable kind in the map and balance has a node, and no kind has two
-    keys = [(n["match"].get("kind"), n["match"].get("ore") or n["match"].get("species") or "") for n in nodes.values() if "match" in n]
+    keys = [(n["match"].get("kind"), n["match"].get("ore") or n["match"].get("species") or n["match"].get("plant") or "") for n in nodes.values() if "match" in n]
     for k in sorted({k for k in keys if keys.count(k) > 1}):
         out.append("two nodes match %s %s" % k)
     for ore in sorted({d["ore"] for d in ctx["village"]["deposits"]}):
@@ -422,6 +425,9 @@ def problems(ctx):
     for sp, spec in sorted(bal_["animals"].items()):
         if isinstance(spec, dict) and ("animal", sp) not in keys:
             out.append("%s species %r has no node" % (spec["kind"], sp))
+    for pk in sorted({pl["kind"] for pl in ctx["village"].get("plants", [])}):
+        if ("plant", pk) not in keys:
+            out.append("plant kind %r in village.json has no node" % pk)
     if ctx["village"]["trees"] and ("tree", "") not in keys:
         out.append("the map has trees but no tree node")
     if ctx["village"]["fields"] and ("field", "") not in keys:
@@ -561,6 +567,9 @@ def _instances(ctx, n):
     if m["kind"] == "field":
         y = ctx["balance"]["field_yield"]
         return len(v["fields"]), "%d fields of %d wheat: %d a ripening" % (len(v["fields"]), y, y * len(v["fields"]))
+    if m["kind"] == "plant":
+        n_pl = sum(1 for pl in v.get("plants", []) if pl["kind"] == m["plant"])
+        return n_pl, "%d plants on the map, each ripe again plant_regrow_days after it is picked" % n_pl
     sp = ctx["balance"]["animals"][m["species"]]
     start = sum(sp["start"])
     if sp["kind"] == "wild":

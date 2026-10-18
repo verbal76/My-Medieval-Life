@@ -739,6 +739,9 @@ func _apply_world_changes() -> void:
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
 	for f in world.fields:
 		world._field_tiles(f)
+	for pl in world.plants:
+		if pl.state != "ripe":
+			_on_tile_changed(Vector2i(pl.x, pl.y), World.PLANT_LAYER, -1)          # picked, or grubbed up for building
 	for p in world.plots:
 		if not p.site.is_empty() and not p.site.done:
 			_on_tile_changed(world._frame_cell(p), "below", map.data.tiles.frame)
@@ -1301,6 +1304,11 @@ func _find_target() -> void:
 			if not tr.is_empty() and tr.state == "grown":
 				best = {"kind": "tree", "tree": tr, "label": "Fell this tree" if p.tool_of("axe") != "" else "A tree: requires an axe (the smith sells them)"}
 				break
+			var pl := world.plant_at(cell)
+			if not pl.is_empty() and pl.state == "ripe":
+				var pdef := ResourceNodes.def_for("plant", str(pl.kind))
+				best = {"kind": "plant", "plant": pl, "label": "Pick " + ", ".join(ResourceNodes.products(pdef).keys().map(func(k): return GameData.item_name(k).to_lower()))}
+				break
 			for f in world.fields:
 				if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
 					var whose := ""
@@ -1368,7 +1376,7 @@ func _find_target() -> void:
 			best = {"kind": "manor_job", "label": _manor_label(mj)}
 	target = best
 	# a seam, tree, field or animal is offered when the player stops by it, not flashed while walking past
-	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "animal"]
+	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "plant", "animal"]
 	if not gather.is_empty():
 		ui.prompt(gather_status())     # gathering: what is going on, not what Use would do
 	else:
@@ -1459,7 +1467,7 @@ func interact() -> void:
 	if target.is_empty():
 		return
 	# in Gather mode, Use (keys, pad, the touch button) on a resource in front chooses it to gather
-	if gather_mode and target.kind in ["deposit", "tree", "field"]:
+	if gather_mode and target.kind in ["deposit", "tree", "field", "plant"]:
 		var cell: Vector2i = _target_cell(target)
 		var hit := ResourceNodes.node_at(world, cell, true)
 		if not hit.is_empty():
@@ -1476,6 +1484,8 @@ func _target_cell(t: Dictionary) -> Vector2i:
 			return Vector2i(int(t.tree.x), int(t.tree.y))
 		"field":
 			return Vector2i(int(t.field.x), int(t.field.y))
+		"plant":
+			return Vector2i(int(t.plant.x), int(t.plant.y))
 	return Vector2i.ZERO
 
 
@@ -1569,6 +1579,18 @@ func _use() -> void:
 			start_action("Harvesting", 2.5, func():
 				var got := world.player_harvest(f)
 				ui.message("You gather %d wheat." % got if got > 0 else "Nothing left to harvest."))
+		"plant":
+			var pl: Dictionary = target.plant
+			var pdef := ResourceNodes.def_for("plant", str(pl.kind))
+			for id in ResourceNodes.products(pdef):
+				if not p.inv.can_add(id):
+					ui.message("Your pack is full.")
+					return
+			start_action("Picking", 1.2, func():
+				var got := world.pick_plant(pl)
+				for id in got:
+					p.inv.add(id, int(got[id]))
+				ui.message("You pick %s." % ", ".join(got.keys().map(func(k): return "%d %s" % [int(got[k]), GameData.item_name(k).to_lower()])) if not got.is_empty() else "Nothing left to pick."))
 		"pen":
 			var put := world.fauna.feed(target.pen, p.inv, 5)
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
@@ -2174,7 +2196,7 @@ func _tap(screen_pos: Vector2) -> void:
 	if gather_mode:
 		var hit := _resource_tap(wpos)
 		if hit.is_empty():
-			ui.message("Nothing to gather there: tap a seam, a tree, a ripe field or game.")
+			ui.message("Nothing to gather there: tap a seam, a tree, a ripe field, a flower, a berry bush or game.")
 		else:
 			select_resource(hit, true)
 		return
@@ -2325,7 +2347,7 @@ func gather_button() -> void:
 	if not gather_mode:
 		stop_gather("")
 	ui.set_gather_mode(gather_mode)
-	ui.message("Gather: tap a seam, a tree, a ripe field or game; you gather it until it runs out. Tap Gather again to stop."
+	ui.message("Gather: tap a seam, a tree, a ripe field, a flower, a berry bush or game; you gather it until it runs out. Tap Gather again to stop."
 			if gather_mode else "Gather off.")
 
 
@@ -2419,7 +2441,7 @@ func _gather_step() -> void:
 	move_to = Vector2.INF
 	gather.tries = 0
 	var at := Vector2(ResourceNodes.cell_of(world, d, ref)) + Vector2(0.5, 0.5)
-	if str(d.match.kind) == "field":
+	if str(d.match.kind) in ["field", "plant"]:
 		at = p.pos + Vector2(0, -0.1)
 	player_sprite.face(at - p.pos)
 	target = _gather_target(d, ref)
@@ -2436,6 +2458,8 @@ func _gather_stand(d: Dictionary, ref) -> Vector2:
 		var c := Vector2(clampf(p.pos.x, r.position.x + 0.5, r.end.x - 0.5), clampf(p.pos.y, r.position.y + 0.5, r.end.y - 0.5))
 		return Vector2(floori(c.x), floori(c.y)) + Vector2(0.5, 0.5)
 	var cell := ResourceNodes.cell_of(world, d, ref)
+	if str(d.match.kind) == "plant":
+		return Vector2(cell) + Vector2(0.5, 0.5)          # plants are walked on: pick them standing there
 	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)))) + Vector2(0.5, 0.5)
 
 
@@ -2447,6 +2471,8 @@ func _gather_target(d: Dictionary, ref) -> Dictionary:
 			return {"kind": "tree", "tree": ref, "label": ""}
 		"field":
 			return {"kind": "field", "field": ref, "label": ""}
+		"plant":
+			return {"kind": "plant", "plant": ref, "label": ""}
 	return {}
 
 

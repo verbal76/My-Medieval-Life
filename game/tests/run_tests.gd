@@ -50,6 +50,7 @@ func _init() -> void:
 	test_build7_economy()
 	test_manor_work()
 	test_resource_registry()
+	test_wild_plants()
 	test_save_store()
 	test_doorways()
 	test_field_edges()
@@ -2810,6 +2811,105 @@ func test_manor_work() -> void:
 
 
 ## The resource registry (res://data/resources.json through ResourceNodes) agrees with the world.
+## Wild flowers and berry bushes (B8-015, B8-016): walkable, picked for items, bare until they regrow,
+## eaten or brewed, saved, and defined as resource nodes.
+func test_wild_plants() -> void:
+	var w := new_world()
+	var p := w.player
+	var kinds := {}
+	for pl in w.plants:
+		kinds[pl.kind] = int(kinds.get(pl.kind, 0)) + 1
+	check(kinds.has("flower") and kinds.has("redberry") and kinds.has("blueberry"), "the map has flowers, red berry bushes and blue berry bushes: %s" % str(kinds))
+	var below1: Array = w.map.data.layers.filter(func(l): return l.name == "below1")[0].data
+	var walk := true
+	var tiled := true
+	for pl in w.plants:
+		walk = walk and not w.map.is_solid(Vector2i(pl.x, pl.y))
+		tiled = tiled and [2657, 2658, 2660, 2662].has(int(pl.tile)) and int(below1[int(pl.y) * w.map.w + int(pl.x)]) == int(pl.tile)
+	check(walk, "every plant cell is walkable")
+	check(tiled, "every plant is drawn with its own tile in layer below1")
+	var by := {}
+	for k in kinds:
+		for pl in w.plants:
+			if pl.kind == k:
+				by[k] = pl
+				break
+	var d_flower := ResourceNodes.def_for("plant", "flower")
+	check(d_flower.id == "flower_patch" and ResourceNodes.def_for("plant", "redberry").id == "red_berry_bush" and ResourceNodes.def_for("plant", "blueberry").id == "blue_berry_bush", "each plant kind has its resource node")
+	var fl: Dictionary = by.flower
+	var cell := Vector2i(fl.x, fl.y)
+	var hit := ResourceNodes.node_at(w, cell, true)
+	check(not hit.is_empty() and hit.ref == fl and ResourceNodes.can_harvest(w, d_flower, fl) == "" and ResourceNodes.remaining(w, d_flower, fl) == 1, "node_at finds a ripe flower on its own cell; it can be picked")
+	check(ResourceNodes.instances(w, d_flower).size() == kinds.flower, "instances lists every flower")
+	var changes := []
+	w.tile_changed.connect(func(c, k, v): changes.append([c, k, v]))
+	var n0 := p.inv.count("flower")
+	var got := w.pick_plant(fl)
+	check(got == {"flower": 1} and fl.state == "picked", "picking a flower gives a flower and leaves the plant picked")
+	p.inv.add("flower", int(got.flower))
+	check(p.inv.count("flower") == n0 + 1 and changes.size() == 1 and changes[0][1] == "below1" and changes[0][2] == -1, "the plant's tile is removed")
+	check(w.pick_plant(fl).is_empty() and ResourceNodes.can_harvest(w, d_flower, fl).contains("picked") and ResourceNodes.remaining(w, d_flower, fl) == 0, "a picked plant gives nothing and says why")
+	check(w.plant_at(cell) == fl and not w.map.is_solid(cell), "a picked plant's cell is still walkable")
+	# it regrows at dawn, after plant_regrow_days
+	var days: Array = GameData.b("plant_regrow_days")
+	check(int(fl.regrow) - w.day() >= int(days[0]) and int(fl.regrow) - w.day() <= int(days[1]), "regrows %d to %d days later (balance.json)" % [int(days[0]), int(days[1])])
+	fl.regrow = w.day() + 1
+	w._new_day()
+	check(fl.state == "picked", "not before its day")
+	fl.regrow = w.day()
+	changes.clear()
+	w._new_day()
+	check(fl.state == "ripe" and changes.size() == 1 and changes[0][2] == int(fl.tile), "at dawn on its day the plant is ripe and its tile returns")
+	# berries are food: picked, then eaten through the usual path
+	for k in ["redberry", "blueberry"]:
+		var bush: Dictionary = by[k]
+		var item: String = "red_berries" if k == "redberry" else "blueberries"
+		var g := w.pick_plant(bush)
+		check(g == {item: 2}, "a %s bush gives 2 %s" % [k, item])
+		p.inv.add(item, 2)
+		p.hunger = 50.0
+		check(GameData.item(item).type == "food" and w.player_eat(item) and p.hunger > 50.0 and p.hunger < 100.0 and p.inv.count(item) == 1, "%s can be eaten for a little hunger" % item)
+	# the flower recipe: three flowers brew a herbal tonic at the stove, which heals
+	var rec: Dictionary = GameData.recipes["brew_tonic"]
+	check(rec.station == "stove" and rec.in.keys() == ["flower"] and int(rec.in.flower) == 3 and rec.out.keys() == ["herbal_tonic"] and int(rec.out.herbal_tonic) == 1 and GameData.recipes_at("stove").has("brew_tonic"), "brew_tonic: three flowers make a herbal tonic at the stove")
+	p.inv.add("flower", 3)
+	check(p.inv.has_all(rec.in) and p.inv.remove_all(rec.in) and p.inv.add("herbal_tonic", 1), "the recipe's inputs are consumed and its output made")
+	p.hp = 10.0
+	check(w.player_eat("herbal_tonic") and p.hp == 10.0 + float(GameData.item("herbal_tonic").heal), "a herbal tonic restores health")
+	p.hp = p.hp_cap() - 1.0
+	p.inv.add("herbal_tonic", 1)
+	w.player_eat("herbal_tonic")
+	check(p.hp == p.hp_cap(), "health never passes its cap")
+	check(ResourceNodes.uses_of("flower").any(func(u): return u.kind == "recipe" and u.id == "brew_tonic") and not ResourceNodes.sources_of("flower").is_empty(), "the registry knows the flower's use and source")
+	# saved: picked state and regrow day survive; an older save loads all ripe
+	var bush2: Dictionary = by.redberry
+	bush2.state = "picked"
+	bush2.regrow = float(w.day() + 3)
+	var d = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var again: Dictionary = w2.plant_at(Vector2i(bush2.x, bush2.y))
+	check(again.state == "picked" and int(again.regrow) == int(bush2.regrow) and w2.plant_at(cell).state == "ripe", "picked plants are saved with their regrow day")
+	d.erase("plants")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), d)
+	check(w3.plants.all(func(pl): return pl.state == "ripe"), "a save without plants loads with every plant ripe")
+	w2.dispose()
+	w3.dispose()
+	# claiming ground grubs the plants up
+	var fl2: Dictionary = {}
+	for pl in w.plants:
+		if pl.state == "ripe" and w.property.can_claim(Rect2i(pl.x - 1, pl.y - 1, 3, 3)) == "":
+			fl2 = pl
+			break
+	check(not fl2.is_empty(), "there is clear ground with a plant on it to claim")
+	if not fl2.is_empty():
+		p.coins = 100000
+		var parcel := w.property.claim(Rect2i(fl2.x - 1, fl2.y - 1, 3, 3), World.PLAYER)
+		check(not parcel.is_empty() and w.plant_at(Vector2i(fl2.x, fl2.y)).is_empty(), "plants on claimed building ground are grubbed up")
+	w.dispose()
+
+
 func test_resource_registry() -> void:
 	var w := new_world()
 	var p := w.player

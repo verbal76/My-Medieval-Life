@@ -1335,6 +1335,88 @@ func _gather_tests() -> void:
 	check(not JSON.stringify(d).contains("gather") and w2.total_coins() == w.total_coins(), "gathering is not part of a save; the save loads unchanged")
 	w2.dispose()
 	main.stop_gather("")
+	_plant_gather_tests()
+
+
+## Flowers and berry bushes (B8-015, B8-016): walked over, tapped, used and gathered in Gather mode.
+func _plant_gather_tests() -> void:
+	var w: World = main.world
+	var p := w.player
+	var ui = main.ui
+	ui.hide_all()
+	main.stop_gather("")
+	if main.gather_mode:
+		main.gather_button()
+	var bush: Dictionary = {}
+	var flower: Dictionary = {}
+	for pl in w.plants:
+		if pl.state == "ripe" and pl.kind == "redberry" and bush.is_empty():
+			bush = pl
+		if pl.state == "ripe" and pl.kind == "flower" and flower.is_empty():
+			flower = pl
+	var cell := Vector2i(bush.x, bush.y)
+	# walking onto the plant's cell is allowed, and Use there offers to pick it
+	check(not w.map.is_solid(cell), "the player may stand on a berry bush's cell")
+	p.pos = Vector2(cell) + Vector2(0.5, 0.5)
+	main.player_sprite.face(Vector2(0, 1))
+	main._find_target()
+	check(not main.target.is_empty() and main.target.kind == "plant" and main.target.label.to_lower().contains("red berries"), "the interact prompt offers the berries: \"%s\"" % str(main.target.get("label", "")))
+	var b0 := p.inv.count("red_berries")
+	main.interact()
+	run_frames(60, 0.05)
+	check(p.inv.count("red_berries") == b0 + 2 and bush.state == "picked", "Use picks the berries (%d) and the bush is bare" % (p.inv.count("red_berries") - b0))
+	# a tap on a ripe flower (not in Gather mode) walks there and picks it once
+	p.pos = Vector2(flower.x, flower.y) + Vector2(3.5, 0.5)
+	if w.map.is_solid(Vector2i(floori(p.pos.x), floori(p.pos.y))):
+		p.pos = Vector2(flower.x, flower.y) + Vector2(-3.5, 0.5)
+	var f0 := p.inv.count("flower")
+	tap_at(Vector2(flower.x, flower.y) + Vector2(0.5, 0.5))
+	var guard := 0
+	while (not main.gather.is_empty() or p.inv.count("flower") == f0) and guard < 4000:
+		run_frames(1, 0.05)
+		guard += 1
+	check(p.inv.count("flower") == f0 + 1 and flower.state == "picked", "a tap on a flower walks there and picks it (once)")
+	# Gather mode: a tap on a bare bush says so; a ripe bush is walked to and picked
+	main.gather_button()
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	check(main.gather.is_empty() and ui.toast.text.to_lower().contains("picked"), "Gather mode on a bare bush says it is picked: \"%s\"" % ui.toast.text)
+	var other: Dictionary = {}
+	for pl in w.plants:
+		if pl.state == "ripe" and pl.kind == "blueberry" and (other.is_empty() or Vector2(pl.x, pl.y).distance_to(p.pos) < Vector2(other.x, other.y).distance_to(p.pos)):
+			other = pl
+	var c2 := Vector2i(other.x, other.y)
+	var bb0 := p.inv.count("blueberries")
+	tap_at(Vector2(c2) + Vector2(0.5, 0.5))
+	check(not main.gather.is_empty() and str(main.gather.def.match.kind) == "plant" and main.gather.ref == other, "in Gather mode a tap on a berry bush chooses it")
+	main._sync_gather_mark()
+	check(main.gather_mark.visible, "the chosen bush is outlined")
+	guard = 0
+	while not main.gather.is_empty() and guard < 20000:
+		run_frames(1, 0.05)
+		guard += 1
+	check(p.inv.count("blueberries") == bb0 + 2 and other.state == "picked" and main.gather.is_empty() and main.gather_mode, "Gather mode walks to the bush, picks it, and stops (Gather stays on)")
+	# a full pack refuses
+	main.stop_gather("")
+	var third: Dictionary = {}
+	for pl in w.plants:
+		if pl.state == "ripe" and pl.kind == "flower":
+			third = pl
+			break
+	var held := p.inv.count("flower")
+	var n := 0
+	while p.inv.can_add("flower") and n < 500:
+		p.inv.add("flower")
+		n += 1
+	if not p.inv.can_add("flower"):
+		tap_at(Vector2(third.x, third.y) + Vector2(0.5, 0.5))
+		guard = 0
+		while not main.gather.is_empty() and guard < 4000:
+			run_frames(1, 0.05)
+			guard += 1
+		check(third.state == "ripe" and ui.toast.text.contains("pack is full"), "a full pack stops picking: \"%s\"" % ui.toast.text)
+	p.inv.remove("flower", p.inv.count("flower") - held)
+	main.stop_gather("")
+	main.gather_button()
 
 
 func _texts(node: Node) -> String:
