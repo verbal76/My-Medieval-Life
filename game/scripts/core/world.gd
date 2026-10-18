@@ -590,10 +590,20 @@ func nearest_deposit(from: Vector2i, ores: Array) -> Dictionary:
 
 
 func _field_tiles(f: Dictionary) -> void:
-	var v: int = map.data.tiles.field[{"tilled": "tilled", "growing": "growing", "ripe": "ripe"}[f.state]]
+	var base: int = map.data.tiles.field[{"tilled": "tilled", "growing": "growing", "ripe": "ripe"}[f.state]]
+	var cols := int(map.data.atlases[0].columns)
 	for j in int(f.h):
 		for i in int(f.w):
-			tile_changed.emit(Vector2i(int(f.x) + i, int(f.y) + j), "field", v)
+			tile_changed.emit(Vector2i(int(f.x) + i, int(f.y) + j), "field", field_cell_tile(base, int(f.w), int(f.h), i, j, cols))
+
+
+## Tile for cell (i, j) of a w x h field from a 4x4 edge set whose top-left tile is `base`: columns
+## are narrow / left / middle / right, rows top / middle / bottom / narrow, so the crop closes
+## cleanly on every side (tools/build_village.py field_cell_tile is the same rule).
+static func field_cell_tile(base: int, w: int, h: int, i: int, j: int, cols: int) -> int:
+	var col := 0 if w == 1 else (1 if i == 0 else (3 if i == w - 1 else 2))
+	var row := 3 if h == 1 else (0 if j == 0 else (2 if j == h - 1 else 1))
+	return base + row * cols + col
 
 
 func set_field(f: Dictionary, state: String) -> void:

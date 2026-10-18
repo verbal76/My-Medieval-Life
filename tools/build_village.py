@@ -54,7 +54,20 @@ DEPLETED_ROCK = 1964
 STUMP = 459
 TREE_DRAWS = 22                              # tree kinds drawn per tree by generator v1 (keeps the layout)
 SAPLING = 4304
-FIELD_TILES = {"tilled": 3737, "growing": 1971, "ripe": 2851}
+# Field art is a 4x4 edge set per state, named by its top-left tile: columns are narrow / left / middle
+# / right, rows are top / middle / bottom / narrow, so a field of any size closes cleanly on all four
+# sides (generator v5: v1-v4 drew one left-edge tile on every cell, so the right and bottom edges of
+# every field showed half plants). Tilled = brown soil (215,15), growing = olive wheat (207,7),
+# ripe = yellow wheat (207,11) in the paid atlas, which is 220 tiles wide.
+PAID_COLS = 220
+FIELD_TILES = {"tilled": 15 * PAID_COLS + 215, "growing": 7 * PAID_COLS + 207, "ripe": 11 * PAID_COLS + 207}
+
+
+def field_cell_tile(base, w, h, i, j, cols=PAID_COLS):
+    """Tile for cell (i, j) of a w x h field drawn from the 4x4 edge set starting at tile `base`."""
+    col = 0 if w == 1 else 1 if i == 0 else 3 if i == w - 1 else 2
+    row = 3 if h == 1 else 0 if j == 0 else 2 if j == h - 1 else 1
+    return base + row * cols + col
 FRAME = 3499                                 # wooden construction frame (build sites)
 CAMPFIRE = 5958                              # animated in the tileset (5958-5961)
 CRATE, BARREL = 3500, 3502
@@ -659,7 +672,7 @@ class Village:
         self.ents["fields"].append({"id": f"f{len(self.ents['fields'])}", "x": x, "y": y, "w": w, "h": h})
         for j in range(h):
             for i in range(w):
-                self.put("path", 1, x + i, y + j, tile_val(0, FIELD_TILES["ripe"]))
+                self.put("path", 1, x + i, y + j, tile_val(0, field_cell_tile(FIELD_TILES["ripe"], w, h, i, j)))
 
     def pen(self, kind, x, y, w, h):
         """A fenced pen with a gate in the middle of the top side. The fence is solid, the gate is

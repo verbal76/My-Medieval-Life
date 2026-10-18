@@ -52,6 +52,7 @@ func _init() -> void:
 	test_resource_registry()
 	test_save_store()
 	test_doorways()
+	test_field_edges()
 	test_work_has_purpose()
 	test_simulation(days)
 	test_save_round_trip()
@@ -2996,6 +2997,61 @@ func test_doorways() -> void:
 		if not town.has(u):
 			cut_st.append("%s %s@%s" % [id, w.stations[id].type, u])
 	check(cut_st.is_empty(), "every workstation can be reached %s" % [cut_st])
+
+
+## Crops end cleanly inside every field (B8-017: the right and bottom edges showed half plants because
+## one left-edge tile was drawn on every cell). No field art lies outside a field rectangle, each
+## field cell draws from its state's 4x4 edge set, and the edge cells use the edge tiles: for the
+## village's fields and for fields of other sizes, in every state.
+func test_field_edges() -> void:
+	var w := new_world()
+	var m: VillageMap = w.map
+	var cols := int(m.data.atlases[0].columns)
+	var sets := {}                      # tile id -> state it belongs to
+	for state in ["tilled", "growing", "ripe"]:
+		for row in 4:
+			for col in 4:
+				sets[int(m.data.tiles.field[state]) + row * cols + col] = state
+	var rects: Array[Rect2i] = []
+	for f in m.data.fields:
+		rects.append(Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)))
+	var path1: Dictionary = (m.data.layers as Array).filter(func(l): return l.name == "path1")[0]
+	var stray := 0
+	var painted := 0
+	for i in (path1.data as Array).size():
+		var v := int(path1.data[i])
+		if v >= 0 and sets.has(v):
+			var cell := Vector2i(i % int(m.w), i / int(m.w))
+			painted += 1
+			if not rects.any(func(r: Rect2i): return r.has_point(cell)):
+				stray += 1
+	check(stray == 0 and painted == rects.reduce(func(a, r: Rect2i): return a + r.size.x * r.size.y, 0), "generated field art lies exactly on the field rectangles (%d stray of %d)" % [stray, painted])
+	for state in ["tilled", "growing", "ripe"]:
+		var base := int(m.data.tiles.field[state])
+		var cells := {}
+		var on_tile := func(cell: Vector2i, kind: String, value: int):
+			if kind == "field":
+				cells[cell] = value
+		w.tile_changed.connect(on_tile)
+		for f in w.fields:
+			w.set_field(f, state)
+		w.tile_changed.disconnect(on_tile)
+		for f in w.fields:
+			for j in int(f.h):
+				for i in int(f.w):
+					var cell := Vector2i(int(f.x) + i, int(f.y) + j)
+					var got := int(cells.get(cell, -1))
+					var col := (got - base) % cols
+					var row := (got - base) / cols
+					check(sets.get(got, "") == state, "%s %s cell %s draws from the %s set" % [state, f.id, cell, state])
+					check((i == 0) == (col == 1) and (i == int(f.w) - 1) == (col == 3) and (j == 0) == (row == 0) and (j == int(f.h) - 1) == (row == 2), "%s %s cell %s: edge tiles exactly on the edges" % [state, f.id, cell])
+	# any size: one cell, a strip, a block
+	for size in [Vector2i(1, 1), Vector2i(1, 5), Vector2i(7, 1), Vector2i(2, 2), Vector2i(3, 3), Vector2i(11, 6)]:
+		for j in size.y:
+			for i in size.x:
+				var t := World.field_cell_tile(0, size.x, size.y, i, j, cols)
+				check(t % cols == (0 if size.x == 1 else (1 if i == 0 else (3 if i == size.x - 1 else 2))), "%s: column of (%d,%d)" % [size, i, j])
+				check(t / cols == (3 if size.y == 1 else (0 if j == 0 else (2 if j == size.y - 1 else 1))), "%s: row of (%d,%d)" % [size, i, j])
 
 
 ## Nobody plays the work animation without real work (Build 8 report: villagers swinging tools at

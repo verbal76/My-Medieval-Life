@@ -60,6 +60,7 @@ var shot_warp := Vector2.INF
 var shot_advance := 0.0
 var shot_zoom := 0.0
 var shot_panel := ""
+var shot_field_state := ""
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
 var walking := false           # the player moved this frame (resource prompts wait until they stop)
 ## Gather mode (B7-012, owner 2026-10-18): the Gather button; a tap (or Use) on a resource walks to it
@@ -115,6 +116,8 @@ func _ready() -> void:
 				shot_zoom = float(args[i + 1])
 			"--panel":
 				shot_panel = args[i + 1]
+			"--field-state":
+				shot_field_state = args[i + 1]          # tilled | growing | ripe: every field in that state
 			"--safe", "--cutout":
 				# a pretend phone display (window pixels x,y,w,h), to look at the HUD around a camera hole
 				var r: PackedStringArray = args[i + 1].split(",")
@@ -132,6 +135,9 @@ func _ready() -> void:
 		for k in steps:
 			world.player.hunger = 100.0          # the camera's stand-in does not starve while it waits
 			world.update(0.5)
+		if shot_field_state != "":
+			for f in world.fields:
+				world.set_field(f, shot_field_state)
 		if shot_warp != Vector2.INF:
 			world.player.pos = shot_warp
 			follow_at = _in_view(shot_warp * T)
