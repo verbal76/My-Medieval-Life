@@ -78,9 +78,10 @@ func beside(c: Vector2i, from: Vector2i) -> Vector2i:
 
 
 func wander_cell(around: Vector2i, r: int) -> Vector2i:
+	var here := w.place_of(Vector2(around))      # nobody strolls into someone else's house
 	for i in 12:
 		var c := around + Vector2i(w.rng.randi_range(-r, r), w.rng.randi_range(-r, r))
-		if not w.map.is_solid(c):
+		if not w.map.is_solid(c) and w.place_of(Vector2(c)) == here:
 			return c
 	return around
 
@@ -94,7 +95,8 @@ func once(key: String, text: String) -> void:
 # ---------------------------------------------------------------- deciding -------------------
 func decide(n: NPC) -> void:
 	var h := w.hour()
-	n.hidden = false
+	if n.anim == "sleep":
+		n.anim = "idle"                    # up from bed
 	if n.role == "bandit":
 		_bandit(n, h)
 		return
@@ -128,7 +130,16 @@ func _plan_sleep(n: NPC) -> void:
 	n.doing = "going home to sleep"
 	var until := WAKE + 24.0 if w.hour() >= SLEEP else WAKE
 	var mins := (until - w.hour()) * 60.0
-	n.plan = [go(w.building_door(n.home)), doit("enter"), work(maxf(mins, 10.0), "leave", {}, "idle")]
+	_plan_bed(n, maxf(mins, 10.0))
+
+
+## Go home through the door to one's own bed (World.home_spot) and lie in it for `mins` game minutes.
+## A home without a bed or pallet: the door step, standing.
+func _plan_bed(n: NPC, mins: float) -> void:
+	if w.home_spot(n, "bed").is_empty():
+		n.plan = [go(w.building_door(n.home)), doit("enter"), work(mins, "leave", {}, "idle")]
+		return
+	n.plan = [go(w.home_cell(n, "bed")), doit("enter"), work(mins, "leave", {}, "sleep")]
 
 
 func _plan_evening(n: NPC, h: float) -> void:
@@ -184,7 +195,7 @@ func _plan_eat(n: NPC) -> bool:
 				home_food = true
 		if home_food:
 			n.doing = "going home to eat"
-			n.plan = [go(w.building_door(n.home)), work(15, "eat_home", {}, "idle")]
+			n.plan = [go(w.home_cell(n, "table")), work(15, "eat_home", {}, "idle")]
 			return true
 	elif n.inv.has("wheat"):
 		n.doing = "eating"
@@ -201,10 +212,10 @@ func _plan_eat(n: NPC) -> bool:
 			return true
 	if payer != null and payer.coins >= 3:
 		for o: NPC in w.npcs:
-			if o.alive and o != n and not o.hidden and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
+			if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
 				n.doing = "buying grain for porridge"
 				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": 2, "payer": payer.id}),
-						go(w.building_door(n.home)), work(15, "eat_home", {}, "idle")]
+						go(w.home_cell(n, "table")), work(15, "eat_home", {}, "idle")]
 				return true
 	w.stat("missed_meal_" + ("no_money" if payer == null or payer.coins < 2 else "no_food_for_sale"))
 	once("hungry_%d_%d" % [n.id, w.day()], "%s %s is hungry and cannot get food." % [n.name, n.family])
@@ -513,11 +524,11 @@ func _keeper(n: NPC) -> bool:
 		# no grain in hand: the household's store first, then buy feed
 		var pantry: Inventory = w.households[n.household].pantry
 		if pantry.has("wheat"):
-			n.plan = [go(w.building_door(n.home)), doit("take_pantry", {"item": "wheat", "qty": need * 3}), go(at), feed_step]
+			n.plan = [go(w.home_cell(n, "chest")), doit("take_pantry", {"item": "wheat", "qty": need * 3}), go(at), feed_step]
 			return true
 		var qty := need * 3
 		for o: NPC in w.npcs:
-			if o.alive and o != n and not o.hidden and (o.job == "farmer" or buy_role(o) == "merchant_food") \
+			if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") \
 					and o.inv.count("wheat") - reserve(o, "wheat") >= qty and n.coins >= w.sell_price(o, "wheat") * qty:
 				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": qty}), go(at), feed_step]
 				return true
@@ -556,7 +567,7 @@ func _guard(n: NPC, h: float) -> void:
 	if not on_duty:
 		var mins := 120.0
 		n.doing = "off duty"
-		n.plan = [go(w.building_door(n.home)), doit("enter"), work(mins, "leave", {}, "idle")]
+		_plan_bed(n, mins)
 		return
 	var foe := _bandit_near(n.pos, 10.0)
 	if foe:
@@ -586,7 +597,7 @@ func _prey_for(n: NPC):
 	var best = null
 	var bd := 40.0
 	for o: NPC in w.npcs:
-		if not o.alive or o.hidden or o.role == "bandit" or o.job == "guard" or o.coins < 3:
+		if not o.alive or w.place_of(o.pos) != "" or o.role == "bandit" or o.job == "guard" or o.coins < 3:
 			continue
 		if _guard_near(o.pos, 14.0):
 			continue
@@ -692,7 +703,7 @@ func _grain_seller(n: NPC) -> NPC:
 	var best: NPC = null
 	var bd := 1e9
 	for o: NPC in w.npcs:
-		if not o.alive or o == n or o.hidden or not (o.job == "farmer" or buy_role(o) == "merchant_food"):
+		if not o.alive or o == n or w.asleep(o) or not (o.job == "farmer" or buy_role(o) == "merchant_food"):
 			continue
 		if o.inv.count("wheat") - reserve(o, "wheat") < 2:
 			continue
@@ -707,7 +718,7 @@ func _vendor_with_food(n: NPC) -> NPC:
 	var best: NPC = null
 	var bd := 1e9
 	for o: NPC in w.npcs:
-		if not o.alive or o == n or o.hidden:
+		if not o.alive or o == n or w.asleep(o):
 			continue
 		if o.job != "tavernkeeper" and buy_role(o) != "merchant_food":
 			continue
@@ -726,7 +737,7 @@ func _vendor_with_food(n: NPC) -> NPC:
 
 func _seller_of(id: String, buyer: NPC) -> NPC:
 	for o: NPC in w.npcs:
-		if o.alive and o != buyer and not o.hidden and (o.job == "carpenter" or buy_role(o) == "merchant_raw") and o.inv.has(id):
+		if o.alive and o != buyer and not w.asleep(o) and (o.job == "carpenter" or buy_role(o) == "merchant_raw") and o.inv.has(id):
 			return o
 	return null
 
@@ -817,7 +828,7 @@ func _most(n: NPC, ids: Array) -> String:
 
 func _guard_near(p: Vector2, r: float) -> bool:
 	for o: NPC in w.npcs:
-		if o.alive and o.job == "guard" and not o.hidden and o.pos.distance_to(p) <= r:
+		if o.alive and o.job == "guard" and not w.asleep(o) and o.pos.distance_to(p) <= r:
 			return true
 	return false
 
@@ -833,11 +844,10 @@ func _bandit_near(p: Vector2, r: float) -> NPC:
 func act(n: NPC, what: String, a: Dictionary) -> bool:
 	match what:
 		"enter":
-			n.hidden = true
 			n.doing = "asleep at home" if w.hour() >= SLEEP or w.hour() < WAKE else "at home"
 			return true
 		"leave":
-			n.hidden = false
+			n.anim = "idle"
 			return true
 		"eat":
 			for f in (COOKED if a.get("cooked_only", false) else FOOD):
@@ -1029,7 +1039,8 @@ func fight(n: NPC, dt: float) -> void:
 		tdead = not w.player.alive
 	else:
 		tnpc = w.npc(n.target)
-		if tnpc == null or not tnpc.alive or tnpc.hidden:
+		# gone, asleep, or into a building the fighter is not in (a door between them)
+		if tnpc == null or not tnpc.alive or w.asleep(tnpc) or (w.place_of(tnpc.pos) != "" and w.place_of(tnpc.pos) != w.place_of(n.pos)):
 			tdead = true
 		else:
 			tpos = tnpc.pos
@@ -1185,7 +1196,7 @@ func _public_works(obligations: float) -> int:
 	var used := 0
 	for id in ["plank", "iron_bar", "stone"]:
 		for o: NPC in w.npcs:
-			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer"] or o.hidden:
+			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer"] or w.asleep(o):
 				continue
 			while o.inv.count(id) > int(keep.get(id, 6)) and budget > 0 and used < int(GameData.b("public_works_max_loads")):
 				var price := w.buy_price(o, id)
