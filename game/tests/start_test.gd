@@ -1170,6 +1170,7 @@ func _run() -> void:
 	_gather_tests()
 	_save_safety_tests()
 	_collision_tests()
+	_hit_feedback_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1556,3 +1557,24 @@ func _collision_tests() -> void:
 	t.regrow = 0.0
 	w._new_day()
 	check(t.state == "grown" and main.map.is_solid(tc), "and grows once they step away")
+
+
+## A blow that lands shows (Build 8 report: attacking a cow showed nothing): health drops, the
+## target flashes, and a health bar over it shows what is left.
+func _hit_feedback_tests() -> void:
+	var near_a: Animal = main.world.fauna.animals.filter(func(x): return x.alive)[0]
+	main.world.player.pos = near_a.pos + Vector2(1, 0)
+	main.recenter()
+	main._sync_sprites()
+	var drawn: Array = main.world.fauna.animals.filter(func(x): return x.alive and main.animal_sprites.has(x.id))
+	check(not drawn.is_empty(), "an animal is on screen")
+	if drawn.is_empty():
+		return
+	var a: Animal = drawn[0]
+	var hp0 := a.hp
+	main._hit_animal(a, 1.0)
+	var s: Node2D = main.animal_sprites.get(a.id)
+	var bar: Node2D = s.get_node_or_null("HpBar") if s else null
+	check(a.hp == hp0 - 1.0, "the blow takes 1 health (%.1f -> %.1f)" % [hp0, a.hp])
+	check(bar != null and bar.visible and (bar.get_node("Fill") as ColorRect).size.x < 16.0, "a health bar over the animal shows the loss")
+	check(s != null and s.modulate != Color.WHITE, "the animal flashes")

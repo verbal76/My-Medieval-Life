@@ -1676,7 +1676,9 @@ func _chase_step() -> void:
 ## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing
 ## livestock is theft from its keeper, a crime like attacking a villager.
 func _hit_animal(a: Animal, dmg: float) -> void:
+	var before := a.hp
 	a.hp -= dmg
+	_hit_fx(animal_sprites.get(a.id), before, a.hp, dmg)
 	_xp("combat", 2)
 	if a.hp > 0.0:
 		return
@@ -1692,7 +1694,9 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 
 
 func _hit(n: NPC, dmg: float) -> void:
-	n.hp -= maxf(0.5, dmg - n.armor * 0.5)
+	var dealt := maxf(0.5, dmg - n.armor * 0.5)
+	n.hp -= dealt
+	_hit_fx(sprites.get(n.id), n.max_hp, n.hp, dealt)
 	# the blow wakes a sleeper and the noise wakes those near, who then see it (owner rule)
 	world.wake_near(n.pos, float(GameData.b("sleep_wake_radius")))
 	if n.role != "bandit":
@@ -1701,6 +1705,54 @@ func _hit(n: NPC, dmg: float) -> void:
 		n.target = -2
 	if n.hp <= 0.0:
 		world.kill(n, "slain by %s %s" % [world.player.name, world.player.family])
+
+
+## A blow that landed (Build 8 report: no sign of damage): the target flashes red, the damage floats
+## up from its head for a moment, and a health bar over it shows what is left for a few seconds.
+## `top`: full health (a villager's max_hp; an animal's health when first hit).
+func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
+	if sprite == null or not is_instance_valid(sprite):
+		return
+	top = maxf(float(sprite.get_meta("full_hp", top)), top)
+	sprite.set_meta("full_hp", top)
+	sprite.modulate = Color(1.0, 0.35, 0.35)
+	create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.25)
+	var num := Label.new()
+	num.text = str(int(ceilf(dmg)))
+	num.add_theme_font_size_override("font_size", 10)
+	num.add_theme_color_override("font_color", Color(1.0, 0.9, 0.3))
+	num.add_theme_color_override("font_outline_color", Color.BLACK)
+	num.add_theme_constant_override("outline_size", 3)
+	num.position = sprite.position + Vector2(-6, -34)
+	num.z_index = 50
+	actors.add_child(num)
+	var tw := create_tween().set_parallel()
+	tw.tween_property(num, "position:y", num.position.y - 14.0, 0.8)
+	tw.tween_property(num, "modulate:a", 0.0, 0.8)
+	tw.chain().tween_callback(num.queue_free)
+	var bar: Node2D = sprite.get_node_or_null("HpBar")
+	if bar == null:
+		bar = Node2D.new()
+		bar.name = "HpBar"
+		bar.z_index = 40
+		bar.position = Vector2(-8, -24)
+		var back := ColorRect.new()
+		back.name = "Back"
+		back.size = Vector2(16, 2)
+		back.color = Color(0.15, 0.1, 0.08)
+		bar.add_child(back)
+		var fill := ColorRect.new()
+		fill.name = "Fill"
+		fill.size = Vector2(16, 2)
+		fill.color = Color(0.85, 0.15, 0.15)
+		bar.add_child(fill)
+		sprite.add_child(bar)
+	(bar.get_node("Fill") as ColorRect).size.x = 16.0 * clampf(hp / top, 0.0, 1.0)
+	bar.visible = true
+	bar.set_meta("until", Time.get_ticks_msec() + 3000)
+	get_tree().create_timer(3.1).timeout.connect(func():
+		if is_instance_valid(bar) and Time.get_ticks_msec() >= int(bar.get_meta("until", 0)):
+			bar.visible = false)
 
 
 ## Attacking a villager is a crime: guards who see it and adults who are hit fight back.
