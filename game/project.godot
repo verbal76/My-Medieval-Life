@@ -8,6 +8,7 @@ config_version=5
 config/name="My Medieval Life"
 config/description="Working title: The Well. A living medieval village built on Bob's Game Designer spec."
 run/main_scene="res://scenes/main.tscn"
+config/icon="res://assets/icon/icon_512.png"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [display]

@@ -32,14 +32,32 @@ var shot_warp := Vector2.INF
 var shot_advance := 0.0
 var shot_zoom := 0.0
 var shot_panel := ""
+var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
+var attack_mode := false       # toggled by the Attack button: a tap on a person or animal targets it
+var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
+var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
+var target_marker: Sprite2D    # the sword shown over the target
+var settings := GameSettings.new()
+var scheme := "kbm"            # the controls in use, from the last input: touch | gamepad | kbm
+var blood_layer: Node2D        # blood where someone was slain, under the actors
+var dying := {}                # npc id -> seconds left of the death flicker
+var fading: Array = []         # [sprite, seconds left]: killed animals flickering out
+const FLICKER := 1.2           # seconds a body flickers before it disappears
+const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 
 
 func _ready() -> void:
 	_setup_input()
 	GameData.ensure()
+	# the interface is laid out for the screen (larger on a phone) and the camera zoom makes up for it
+	settings.load_file()
+	settings.apply(get_tree())
+	view_scale = settings.layout_height() / 720.0
+	scheme = "touch" if settings.phone else "kbm"
 	ui = GameUI.new()
 	add_child(ui)
 	ui.build(self)
+	ui.set_scheme(scheme)
 	var args := OS.get_cmdline_user_args()
 	for i in args.size():
 		if i + 1 >= args.size():
@@ -67,7 +85,7 @@ func _ready() -> void:
 		if shot_warp != Vector2.INF:
 			world.player.pos = shot_warp
 		if shot_zoom > 0.0:
-			camera.zoom = Vector2(shot_zoom, shot_zoom)
+			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
 			"skills":
@@ -76,6 +94,25 @@ func _ready() -> void:
 				ui.show_inventory("")
 			"title":
 				ui.show_title(false)
+			"creation":
+				ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female"})
+			"origin":
+				ui.show_origin()
+			"settings":
+				ui.show_settings(ui.hide_all)
+			"controls":
+				ui.show_controls(ui.hide_all)
+			"marker":
+				attack_mode = true
+				ui.set_attack_mode(true)
+				ui.set_scheme("touch")
+				for n: NPC in world.near(world.player.pos, 8.0):
+					chase = n
+					break
+			"blood":
+				_on_bled(world.player.pos + Vector2(1.5, 0))
+				ui.prompt("Talk to Mabel Reed")
+				ui.message("You take 3 coins and 1 items.")
 			"talk":
 				ui.show_talk(world.npcs[2])
 			"trade":
@@ -118,19 +155,39 @@ func _setup_input() -> void:
 
 
 # ---------------------------------------------------------------- starting -------------------
-func new_game() -> void:
+## A new world with the character from character creation (name, family, sex, look, sprite); with
+## no spec (tests, screenshots) the default character.
+func new_game(spec := {}) -> void:
 	_clear_world()
 	map = VillageMap.load_default()
 	world = World.new()
 	world.setup(map, 1)
+	var p := world.player
+	if not spec.is_empty():
+		p.name = spec.name
+		p.family = spec.family
+		p.sex = spec.sex
+		p.look = spec.look
+		p.sprite = spec.sprite
+		p.heir_sprite = spec.sprite
 	_build_scene()
+	if spec.is_empty():
+		_start()
+	else:
+		paused = true
+		running = true
+		ui.show_origin()
+
+
+func resume_after_origin() -> void:
 	_start()
+	save_game(false)
 
 
 func continue_game() -> void:
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
 	var d = JSON.parse_string(text)
-	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2]:
+	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2, 3]:
 		ui.message("The save file could not be read; it was kept unchanged. Starting a new game.")
 		new_game()
 		return
@@ -148,12 +205,17 @@ func _start() -> void:
 	running = true
 	autosave_hour = int(world.minutes / 60.0)
 	ui.hide_all()
-	ui.message("%s %s, %s. Explore the village; talk to people (E), work, trade, build." % [world.player.name, world.player.family, world.clock_text()])
+	ui.message("%s %s, %s. Explore the village: talk to people, work, trade, build." % [world.player.name, world.player.family, world.clock_text()])
 
 
 func _clear_world() -> void:
 	if world:
 		world.dispose()
+	chase = null
+	strike_pending = false
+	if attack_mode:
+		attack_mode = false
+		ui.set_attack_mode(false)
 	for c in get_children():
 		if c != ui:
 			c.queue_free()
@@ -166,12 +228,21 @@ func _clear_world() -> void:
 func _build_scene() -> void:
 	view = MapView.new()
 	add_child(view)
+	blood_layer = Node2D.new()
+	add_child(blood_layer)
 	actors = Node2D.new()
 	actors.y_sort_enabled = true
 	add_child(actors)
 	above = Node2D.new()
 	above.z_index = 10
 	add_child(above)
+	target_marker = Sprite2D.new()
+	target_marker.texture = load("res://assets/icons/iron_sword.png")
+	target_marker.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	target_marker.rotation = PI * 1.25           # the icon's blade points up-left: turn it to point down
+	target_marker.scale = Vector2(1.5, 1.5)
+	target_marker.visible = false
+	above.add_child(target_marker)
 	view.build(map, above)
 	for n: NPC in world.npcs:
 		var s := ActorSprite.new()
@@ -182,7 +253,7 @@ func _build_scene() -> void:
 	player_sprite.setup(world.player.sprite)
 	actors.add_child(player_sprite)
 	camera = Camera2D.new()
-	camera.zoom = Vector2(3, 3)
+	camera.zoom = Vector2(3, 3) * view_scale
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = 10.0
 	camera.limit_left = 0
@@ -193,6 +264,12 @@ func _build_scene() -> void:
 	camera.make_current()
 	camera.position = world.player.pos * T
 	world.tile_changed.connect(_on_tile_changed)
+	world.bled.connect(_on_bled)
+	dying.clear()
+	fading.clear()
+	for n: NPC in world.npcs:
+		if not n.alive:
+			dying[n.id] = 0.0          # long dead: no flicker after loading
 	world.event.connect(func(t): ui.log_line(t))
 	world.building_added.connect(_on_building_added)
 
@@ -264,14 +341,20 @@ func _sync_sprites() -> void:
 	for n: NPC in world.npcs:
 		var s: ActorSprite = sprites[n.id]
 		var near := n.pos.distance_to(cam) < 30.0
-		s.visible = (n.alive or s.anim == "death") and not n.hidden and near
+		if not n.alive:
+			# the body falls, flickers and is gone
+			var left: float = dying.get(n.id, FLICKER) - get_process_delta_time()
+			dying[n.id] = left
+			s.visible = left > 0.0 and near and not n.hidden and int(left * 12.0) % 2 == 0
+			if s.visible:
+				s.position = n.pos * T
+				if s.anim != "death":
+					s.play("death", true)
+			continue
+		s.visible = not n.hidden and near
 		if not s.visible:
 			continue
 		s.position = n.pos * T
-		if not n.alive:
-			if s.anim != "death":
-				s.play("death", true)
-			continue
 		s.face(n.facing)
 		s.play(n.anim)
 	var p := world.player
@@ -280,6 +363,10 @@ func _sync_sprites() -> void:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
 	camera.position = p.pos * T
+	target_marker.visible = chase != null and chase.alive
+	if target_marker.visible:
+		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
+		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
 	_sync_loot()
 
@@ -301,8 +388,29 @@ func _sync_animals() -> void:
 			s.show_state(a, world.minutes, get_process_delta_time())
 	for id in animal_sprites.keys():
 		if not seen.has(id):
-			animal_sprites[id].queue_free()
+			fading.append([animal_sprites[id], FLICKER])
 			animal_sprites.erase(id)
+	for f in fading.duplicate():
+		f[1] -= get_process_delta_time()
+		if f[1] <= 0.0:
+			f[0].queue_free()
+			fading.erase(f)
+		else:
+			f[0].visible = int(f[1] * 12.0) % 2 == 0
+
+
+## A pool of blood where someone or something was slain; it fades away over BLOOD_FADE seconds.
+func _on_bled(pos: Vector2) -> void:
+	var s := Sprite2D.new()
+	s.texture = load("res://assets/fx/blood_%d.png" % (randi() % 8))     # looks only: not the world's RNG
+	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	s.position = (pos + Vector2(0, 0.25)) * T
+	s.rotation = float(randi() % 4) * PI / 2.0
+	s.modulate.a = 0.9
+	blood_layer.add_child(s)
+	var tw := s.create_tween()
+	tw.tween_property(s, "modulate:a", 0.0, BLOOD_FADE).set_ease(Tween.EASE_IN)
+	tw.tween_callback(s.queue_free)
 
 
 func _sync_loot() -> void:
@@ -335,6 +443,9 @@ func _player_step(delta: float) -> void:
 		player_sprite.play("idle")
 		return
 	var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	if v.length() > 0.1:
+		chase = null
+	_chase_step()
 	if v.length() > 0.1:
 		move_to = Vector2.INF
 	elif move_to != Vector2.INF:
@@ -414,6 +525,18 @@ func _find_target() -> void:
 			if not tr.is_empty() and tr.state == "grown":
 				best = {"kind": "tree", "tree": tr, "label": "Fell this tree"}
 				break
+			for f in world.fields:
+				if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
+					var whose := ""
+					for o in f.owner:
+						var fo := world.npc(int(o))
+						if fo and fo.alive:
+							whose = "%s %s's" % [fo.name, fo.family]
+							break
+					best = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
+					break
+			if not best.is_empty():
+				break
 	if best.is_empty():
 		for id in world.stations:
 			var st: Dictionary = world.stations[id]
@@ -466,13 +589,14 @@ func interact() -> void:
 				world.loot.remove_at(target.i)
 		"deposit":
 			var dep: Dictionary = target.dep
-			if not p.inv.has("pickaxe"):
+			var pick := p.tool_of("pickaxe")
+			if pick == "":
 				ui.message("You need a pickaxe. The smith sells them.")
 				return
 			if dep.ore == "gold_ore" and p.level("mining") < 3:
 				ui.message("Gold needs Mining level 3.")
 				return
-			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
+			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0))
 			start_action("Mining", secs, func():
 				var ore := world.mine_unit(dep)
 				if ore == "":
@@ -485,13 +609,18 @@ func interact() -> void:
 						n += 1
 				if not p.inv.add(ore, n):
 					ui.message("Your pack is full.")
-				p.inv.wear("pickaxe", 1 if p.level("mining") < 4 or world.rng.randf() < 0.5 else 0)
+				if p.inv.wear(pick, 1 if p.level("mining") < 4 or world.rng.randf() < 0.5 else 0):
+					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
+					if p.tool == pick:
+						p.tool = ""
+				ui.message("Mined %d %s." % [n, GameData.item_name(ore).to_lower()])
 				_xp("mining", 8 * n))
 		"tree":
-			if not p.inv.has("axe"):
+			var axe := p.tool_of("axe")
+			if axe == "":
 				ui.message("You need an axe. The smith sells them.")
 				return
-			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5
+			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
 			if p.level("woodcutting") >= 3:
 				secs *= 0.7
 			var tr: Dictionary = target.tree
@@ -500,10 +629,16 @@ func interact() -> void:
 				if logs > 0:
 					if not p.inv.add("log", logs):
 						ui.message("Your pack is full.")
-					p.inv.wear("axe", 3)
+					p.inv.wear(axe, 3)
+					ui.message("Felled the tree: %d logs." % logs)
 					_xp("woodcutting", 12))
 		"station":
 			ui.show_craft(target.id)
+		"field":
+			var f: Dictionary = target.field
+			start_action("Harvesting", 2.5, func():
+				var got := world.player_harvest(f)
+				ui.message("You gather %d wheat." % got if got > 0 else "Nothing left to harvest."))
 		"pen":
 			var put := world.fauna.feed(target.pen, p.inv, 5)
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
@@ -550,7 +685,8 @@ func craft(recipe: String) -> void:
 
 
 # ---------------------------------------------------------------- combat ---------------------
-func attack() -> void:
+## A swing of the weapon at whatever is in front; with `only`, it can hit nobody else.
+func attack(only: Object = null) -> void:
 	var p := world.player
 	if p.attack_cd > 0.0 or not action.is_empty():
 		return
@@ -558,12 +694,70 @@ func attack() -> void:
 	player_sprite.play("sword", true)
 	var probe := p.pos + facing_vec() * 0.8
 	for n: NPC in world.near(probe, 1.1):
-		_hit(n, p.damage())
-		_xp("combat", 4)
-		return
+		if only == null or only == n:
+			_hit(n, p.damage())
+			_xp("combat", 4)
+			return
 	for a: Animal in world.fauna.near(probe, 1.1):
-		_hit_animal(a, p.damage())
+		if only == null or only == a:
+			_hit_animal(a, p.damage())
+			return
+
+
+## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
+## with none, wait for a tap on who or what to attack. Villagers are only attacked by choice.
+func attack_button() -> void:
+	attack_mode = not attack_mode
+	if not attack_mode:
+		chase = null
+		strike_pending = false
+	ui.set_attack_mode(attack_mode)
+	ui.message("Attack mode: tap who or what to attack. Tap Attack again to stop." if attack_mode else "Attack mode off.")
+
+
+## Mark a person or animal with the sword and strike it: the player walks over if needed. Each
+## further tap (or right-click) on it is another strike; picking someone else moves the sword.
+func strike(who: Object) -> void:
+	chase = who
+	strike_pending = true
+
+
+## The person or animal drawn at a map position (sprites stand above their feet), or null.
+func _creature_at(wpos: Vector2) -> Object:
+	var at := wpos + Vector2(0, 0.4)
+	var best: Object = null
+	var bd := 0.9
+	for n: NPC in world.near(at, bd):
+		if not n.hidden and n.pos.distance_to(at) < bd:
+			bd = n.pos.distance_to(at)
+			best = n
+	for a: Animal in world.fauna.near(at, bd):
+		if a.pos.distance_to(at) < bd:
+			bd = a.pos.distance_to(at)
+			best = a
+	return best
+
+
+## Follow the marked target, and strike when a strike is pending and it is in reach. The mark is
+## dropped when it falls, hides indoors or gets away.
+func _chase_step() -> void:
+	if chase == null:
 		return
+	var p := world.player
+	if not chase.alive or (chase is NPC and chase.hidden) or chase.pos.distance_to(p.pos) > 12.0:
+		chase = null
+		strike_pending = false
+		move_to = Vector2.INF
+		return
+	var d: Vector2 = chase.pos - p.pos
+	if d.length() > 1.0:
+		move_to = chase.pos
+		return
+	move_to = Vector2.INF
+	if strike_pending and p.attack_cd <= 0.0 and action.is_empty():
+		player_sprite.face(d)
+		attack(chase)
+		strike_pending = false
 
 
 ## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing
@@ -673,8 +867,15 @@ func _unhandled_input(e: InputEvent) -> void:
 			_set_zoom(camera.zoom.x * 1.1)
 		elif e.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_set_zoom(camera.zoom.x / 1.1)
-		elif e.button_index == MOUSE_BUTTON_LEFT and not ui.modal():
+		elif e.button_index == MOUSE_BUTTON_LEFT and e.device != InputEvent.DEVICE_ID_EMULATION and not ui.modal():
 			_tap(e.position)
+		elif e.button_index == MOUSE_BUTTON_RIGHT and not ui.modal() and not paused:
+			# right-click: strike whoever is under the pointer, without attack mode
+			var who := _creature_at((get_canvas_transform().affine_inverse() * e.position) / T)
+			if who != null:
+				strike(who)
+	if e is InputEventJoypadButton and e.is_action_pressed("ui_cancel") and ui.modal() and not ui.panel_kind in ["title", "creation", "origin", "death"]:
+		ui.hide_all()
 	if e.is_action_pressed("zoom_in"):
 		_set_zoom(camera.zoom.x * 1.2)
 	if e.is_action_pressed("zoom_out"):
@@ -686,8 +887,34 @@ func _unhandled_input(e: InputEvent) -> void:
 			ui.show_pause()
 
 
+## Which controls are in use, from the latest input: the HUD follows (touch buttons, prompts).
+func _input(e: InputEvent) -> void:
+	var s := scheme
+	if e is InputEventScreenTouch or e is InputEventScreenDrag:
+		s = "touch"
+	elif e is InputEventJoypadButton or (e is InputEventJoypadMotion and absf(e.axis_value) > 0.5):
+		s = "gamepad"
+	elif e is InputEventKey or (e is InputEventMouseButton and e.device != InputEvent.DEVICE_ID_EMULATION) \
+			or (e is InputEventMouseMotion and e.device != InputEvent.DEVICE_ID_EMULATION and e.relative.length() > 3.0):
+		s = "kbm"
+	if s != scheme:
+		scheme = s
+		ui.set_scheme(s)
+
+
+## A changed interface size: relayout, and keep the map the same size on screen.
+func apply_settings() -> void:
+	settings.apply(get_tree())
+	var vs := settings.layout_height() / 720.0
+	if camera:
+		camera.zoom *= vs / view_scale
+	view_scale = vs
+	settings.save_file()
+	ui.set_scheme(scheme)
+
+
 func _set_zoom(z: float) -> void:
-	z = clampf(z, 1.5, 6.0)
+	z = clampf(z, 1.5 * view_scale, 6.0 * view_scale)
 	camera.zoom = Vector2(z, z)
 
 
@@ -695,7 +922,19 @@ func _set_zoom(z: float) -> void:
 func _tap(screen_pos: Vector2) -> void:
 	if world == null or paused:
 		return
+	if ui.blocks(screen_pos):
+		return
 	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	if attack_mode:
+		var who := _creature_at(wpos)
+		if who != null:
+			strike(who)
+			return
+		chase = null                  # open ground: walk there, still in attack mode
+		strike_pending = false
+		move_to = wpos
+		return
+	chase = null
 	if wpos.distance_to(world.player.pos) < 1.8:
 		player_sprite.face(wpos - world.player.pos)
 		_find_target()
@@ -714,7 +953,7 @@ func save_game(show := true) -> void:
 	if f == null:
 		ui.message("Could not save: %s" % error_string(FileAccess.get_open_error()))
 		return
-	f.store_string(JSON.stringify(world.to_dict()))
+	f.store_string(JSON.stringify(world.to_dict(), "", true, true))          # full precision: times and positions reload exactly
 	f.close()
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(SAVE_PATH))
 	if show:

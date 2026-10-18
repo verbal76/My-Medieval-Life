@@ -3,6 +3,12 @@ extends CanvasLayer
 ## HUD and panels, built in code. Large touch targets (at least 48 px) and readable text.
 
 const ICON := "res://assets/icons/%s.png"
+const UI := "res://assets/ui/%s.png"
+# the flat UI pack's dark scheme (Flat Game UI Icon Pack, set 3), recoloured from navy to wood brown
+const WINDOW := Color8(43, 29, 19)
+const SLATE := Color8(111, 74, 44)          # the button tile's colour (tools/import_game_assets.py UI_WOOD)
+const PALE := Color8(236, 214, 170)          # parchment: focus outlines, slider fill
+const BAR_COLOURS := {"hp": Color8(173, 34, 19), "hunger": Color8(122, 176, 58), "stamina": Color8(222, 178, 64)}
 
 var main
 var root: Control
@@ -11,6 +17,8 @@ var bars := {}
 var coins_label: Label
 var clock_label: Label
 var prompt_label: Label
+var prompt_box: PanelContainer
+var prompt_icon: TextureRect
 var log_box: VBoxContainer
 var toast: Label
 var toast_t := 0.0
@@ -19,8 +27,28 @@ var panel: PanelContainer
 var panel_kind := ""
 var panel_body: VBoxContainer
 var title_label: Label
-var font_scale := 1.0
+var close_btn: Button
 var touch_bar: HBoxContainer
+var attack_btn: Button
+var prompt_text := ""
+var scheme := "kbm"
+const PROMPT := "res://assets/prompts/%s.png"
+const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "touch_tap"}
+# the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
+const CONTROLS := {
+	"touch": [[["touch_tap"], "Tap the ground to walk there; tap next to someone or something to use it"],
+		[["touch_finger_one"], "Attack turns attack mode on; then tap who to attack, and tap them again to strike"],
+		[["touch_zoom_in"], "Pinch to zoom"]],
+	"kbm": [[["keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d"], "Move"],
+		[["mouse_left"], "Walk to where you click, or use what you click next to you"],
+		[["keyboard_e"], "Use"], [["keyboard_space"], "Swing at what is in front of you"],
+		[["mouse_right"], "Attack whoever you click"], [["keyboard_f"], "Fireball (once learned)"],
+		[["keyboard_i"], "Pack"], [["keyboard_l"], "Skills"], [["keyboard_escape"], "Menu"], [["mouse_scroll"], "Zoom"]],
+	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
+		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_button_y"], "Fireball (once learned)"],
+		[["xbox_button_view"], "Pack"], [["xbox_button_menu"], "Menu"], [["xbox_button_b"], "Close a window"]],
+}
+const SCHEME_NAMES := {"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
 func build(m) -> void:
@@ -30,21 +58,88 @@ func build(m) -> void:
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
-	var theme := Theme.new()
-	theme.default_font_size = 18
-	root.theme = theme
+	root.theme = _theme()
 	_build_hud()
 	_build_panel()
 
 
-func _style(color: Color, border := Color(0.55, 0.42, 0.25)) -> StyleBoxFlat:
+## A dark box behind text drawn over the map, so it reads on bright ground.
+func _backed(l: Label) -> void:
+	var s := _style(Color(WINDOW, 0.88))
+	s.set_content_margin_all(8)
+	l.add_theme_stylebox_override("normal", s)
+
+
+## Every button, field and slider is drawn with the UI pack's slate button tile; windows in its
+## near-black, square like the pack's.
+func _theme() -> Theme:
+	var t := Theme.new()
+	t.default_font_size = 22
+	var tex: Texture2D = load(UI % "button")
+	var states := {"normal": Color(1, 1, 1), "hover": Color(1.35, 1.35, 1.4), "pressed": Color(0.7, 0.7, 0.75),
+		"disabled": Color(0.55, 0.55, 0.55), "hover_pressed": Color(1.2, 1.2, 1.25)}
+	for k in states:
+		var sb := StyleBoxTexture.new()
+		sb.texture = tex
+		sb.modulate_color = states[k]
+		sb.set_content_margin_all(10)
+		t.set_stylebox(k, "Button", sb)
+	var focus := StyleBoxFlat.new()
+	focus.draw_center = false
+	focus.border_color = PALE
+	focus.set_border_width_all(2)
+	t.set_stylebox("focus", "Button", focus)
+	t.set_color("font_color", "Button", Color.WHITE)
+	t.set_color("font_hover_color", "Button", Color.WHITE)
+	t.set_color("font_pressed_color", "Button", PALE)
+	t.set_color("font_disabled_color", "Button", Color(0.6, 0.6, 0.62))
+	for k in ["normal", "focus", "read_only"]:
+		var le := StyleBoxTexture.new()
+		le.texture = tex
+		le.set_content_margin_all(10)
+		if k == "focus":
+			t.set_stylebox(k, "LineEdit", focus)
+		else:
+			t.set_stylebox(k, "LineEdit", le)
+	var track := StyleBoxTexture.new()
+	track.texture = tex
+	track.content_margin_top = 6
+	track.content_margin_bottom = 6
+	t.set_stylebox("slider", "HSlider", track)
+	var filled := StyleBoxFlat.new()
+	filled.bg_color = PALE
+	filled.content_margin_top = 6
+	filled.content_margin_bottom = 6
+	t.set_stylebox("grabber_area", "HSlider", filled)
+	t.set_stylebox("grabber_area_highlight", "HSlider", filled)
+	t.set_stylebox("panel", "PanelContainer", _style(WINDOW))
+	t.set_color("font_color", "Label", Color8(246, 236, 214))
+	return t
+
+
+func _style(color: Color, border := SLATE) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = color
 	s.border_color = border
 	s.set_border_width_all(2)
-	s.set_corner_radius_all(6)
 	s.set_content_margin_all(10)
 	return s
+
+
+## A button showing one of the UI pack's icon tiles (the tile is the button), with a caption under it.
+func _tile_button(icon: String, caption: String, size: float) -> Button:
+	var b := Button.new()
+	b.icon = load(UI % icon)
+	b.expand_icon = true
+	b.text = caption
+	b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	b.flat = true
+	b.add_theme_font_size_override("font_size", 16)
+	b.add_theme_color_override("font_outline_color", Color.BLACK)
+	b.add_theme_constant_override("outline_size", 5)
+	b.custom_minimum_size = Vector2(size, size + (22.0 if caption != "" else 0.0))
+	return b
 
 
 func _build_hud() -> void:
@@ -53,63 +148,85 @@ func _build_hud() -> void:
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(hud)
 	var box := PanelContainer.new()
-	box.add_theme_stylebox_override("panel", _style(Color(0.08, 0.06, 0.04, 0.78)))
+	box.add_theme_stylebox_override("panel", _style(Color(WINDOW, 0.88)))
 	box.position = Vector2(12, 12)
 	hud.add_child(box)
 	var v := VBoxContainer.new()
 	box.add_child(v)
-	for b in [["hp", "Health", Color(0.8, 0.2, 0.2)], ["hunger", "Hunger", Color(0.85, 0.6, 0.2)], ["stamina", "Stamina", Color(0.25, 0.6, 0.9)]]:
+	for b in [["hp", "health", "Health"], ["hunger", "hunger", "Hunger"], ["stamina", "stamina", "Stamina"]]:
 		var h := HBoxContainer.new()
-		var l := Label.new()
-		l.text = b[1]
-		l.custom_minimum_size = Vector2(80, 0)
-		h.add_child(l)
+		var ic := _ui_icon(b[1], 24)
+		ic.tooltip_text = b[2]
+		h.add_child(ic)
 		var pb := ProgressBar.new()
-		pb.custom_minimum_size = Vector2(170, 20)
+		pb.custom_minimum_size = Vector2(152, 14)
+		pb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		pb.show_percentage = false
+		var track := StyleBoxFlat.new()
+		track.bg_color = SLATE
+		pb.add_theme_stylebox_override("background", track)
 		var fill := StyleBoxFlat.new()
-		fill.bg_color = b[2]
+		fill.bg_color = BAR_COLOURS[b[0]]
 		pb.add_theme_stylebox_override("fill", fill)
 		h.add_child(pb)
 		v.add_child(h)
 		bars[b[0]] = pb
 	var row := HBoxContainer.new()
-	var ci := TextureRect.new()
-	ci.texture = load(ICON % "coins")
-	ci.custom_minimum_size = Vector2(24, 24)
-	ci.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	ci.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	row.add_child(ci)
+	row.add_child(_ui_icon("coins", 24))
 	coins_label = Label.new()
+	coins_label.custom_minimum_size = Vector2(56, 0)
+	coins_label.add_theme_font_size_override("font_size", 18)
 	row.add_child(coins_label)
 	clock_label = Label.new()
-	clock_label.custom_minimum_size = Vector2(150, 0)
+	clock_label.custom_minimum_size = Vector2(104, 0)
+	clock_label.add_theme_font_size_override("font_size", 18)
 	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(clock_label)
 	v.add_child(row)
 
 	log_box = VBoxContainer.new()
-	log_box.position = Vector2(-470, 12)
 	log_box.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	log_box.custom_minimum_size = Vector2(458, 0)
+	log_box.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	log_box.offset_right = -12
+	log_box.offset_top = 12
+	log_box.custom_minimum_size = Vector2(420, 0)
+	log_box.add_theme_constant_override("separation", 4)
 	log_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud.add_child(log_box)
 
+	# what "use" would do here, with the key, pad button or touch icon for it
+	prompt_box = PanelContainer.new()
+	prompt_box.add_theme_stylebox_override("panel", _style(Color(WINDOW, 0.88)))
+	prompt_box.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	prompt_box.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	prompt_box.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	prompt_box.offset_bottom = -96
+	prompt_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	prompt_box.visible = false
+	var ph := HBoxContainer.new()
+	prompt_icon = TextureRect.new()
+	prompt_icon.custom_minimum_size = Vector2(40, 40)
+	prompt_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	prompt_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ph.add_child(prompt_icon)
 	prompt_label = Label.new()
-	prompt_label.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	prompt_label.position = Vector2(-300, -150)
-	prompt_label.custom_minimum_size = Vector2(600, 0)
-	prompt_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	prompt_label.add_theme_color_override("font_outline_color", Color.BLACK)
-	prompt_label.add_theme_constant_override("outline_size", 6)
-	hud.add_child(prompt_label)
+	prompt_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prompt_label.custom_minimum_size = Vector2(480, 0)
+	prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	ph.add_child(prompt_label)
+	prompt_box.add_child(ph)
+	hud.add_child(prompt_box)
 
 	toast = Label.new()
-	toast.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	toast.position = Vector2(-380, 150)
-	toast.custom_minimum_size = Vector2(760, 0)
+	toast.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	toast.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	toast.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	toast.custom_minimum_size = Vector2(620, 0)
+	toast.offset_bottom = -160
 	toast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	toast.visible = false
+	_backed(toast)
 	toast.add_theme_color_override("font_outline_color", Color.BLACK)
 	toast.add_theme_constant_override("outline_size", 6)
 	hud.add_child(toast)
@@ -124,17 +241,55 @@ func _build_hud() -> void:
 
 	touch_bar = HBoxContainer.new()
 	touch_bar.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	touch_bar.position = Vector2(-560, -84)
+	touch_bar.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	touch_bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	touch_bar.offset_right = -10
+	touch_bar.offset_bottom = -10
 	touch_bar.add_theme_constant_override("separation", 8)
 	hud.add_child(touch_bar)
-	for b in [["Use", "interact"], ["Attack", "attack"], ["Fire", "fireball"], ["Pack", "inventory"], ["Skills", "skills"], ["Menu", "pause"]]:
-		var btn := Button.new()
-		btn.text = b[0]
-		btn.custom_minimum_size = Vector2(84, 64)
+	for b in [["Use", "interact", "use"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
+			["Skills", "skills", "skills"], ["Menu", "pause", "menu"]]:
+		var btn := _tile_button(b[2], b[0], 72)
 		btn.focus_mode = Control.FOCUS_NONE
 		var act: String = b[1]
 		btn.pressed.connect(func(): _touch_action(act))
 		touch_bar.add_child(btn)
+		if act == "attack":
+			attack_btn = btn
+
+
+## The controls in use changed: touch buttons only for touch (unless set otherwise), and prompts
+## name the key or pad button. With keys or a pad, panels get keyboard focus.
+func set_scheme(s: String) -> void:
+	scheme = s
+	var mode: String = main.settings.touch_buttons
+	touch_bar.visible = mode == "always" or (mode == "auto" and s == "touch")
+	prompt(prompt_text)
+	if is_open("title"):
+		show_title(FileAccess.file_exists(main.SAVE_PATH))       # its controls list follows the scheme
+	if panel.visible and s != "touch":
+		_focus_first()
+
+
+func set_attack_mode(on: bool) -> void:
+	attack_btn.self_modulate = Color(1.0, 0.45, 0.4) if on else Color.WHITE
+	attack_btn.text = "Attack ON" if on else "Attack"
+
+
+func _ui_icon(name: String, size: float) -> TextureRect:
+	var t := TextureRect.new()
+	t.texture = load(UI % name)
+	t.custom_minimum_size = Vector2(size, size)
+	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	return t
+
+
+func _focus_first() -> void:
+	for c in panel_body.find_children("*", "Control", true, false):
+		if (c is Button or c is LineEdit or c is Slider) and c.is_visible_in_tree() and not (c is Button and c.disabled):
+			c.grab_focus()
+			return
 
 
 func _touch_action(act: String) -> void:
@@ -142,7 +297,7 @@ func _touch_action(act: String) -> void:
 		"interact":
 			main.interact()
 		"attack":
-			main.attack()
+			main.attack_button()
 		"fireball":
 			main.fireball()
 		"inventory":
@@ -155,27 +310,37 @@ func _touch_action(act: String) -> void:
 
 func _build_panel() -> void:
 	panel = PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _style(Color(0.12, 0.09, 0.06, 0.96)))
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.custom_minimum_size = Vector2(760, 520)
-	panel.position = Vector2(-380, -280)
+	panel.add_theme_stylebox_override("panel", _style(WINDOW))
+	panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for side in ["offset_left", "offset_top"]:
+		panel.set(side, 8)
+	for side in ["offset_right", "offset_bottom"]:
+		panel.set(side, -8)
 	panel.visible = false
 	root.add_child(panel)
 	var outer := VBoxContainer.new()
 	panel.add_child(outer)
+	# the title in a slate tab, the pack's X tile to close, as in the pack's windows
 	var top := HBoxContainer.new()
 	title_label = Label.new()
-	title_label.add_theme_font_size_override("font_size", 24)
-	title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	title_label.add_theme_font_size_override("font_size", 28)
+	var tab := StyleBoxTexture.new()
+	tab.texture = load(UI % "button")
+	tab.content_margin_left = 18
+	tab.content_margin_right = 18
+	tab.content_margin_top = 4
+	tab.content_margin_bottom = 4
+	title_label.add_theme_stylebox_override("normal", tab)
+	var gap := Control.new()
+	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(title_label)
-	var close := Button.new()
-	close.text = "Close"
-	close.custom_minimum_size = Vector2(96, 48)
-	close.pressed.connect(hide_all)
-	top.add_child(close)
+	top.add_child(gap)
+	close_btn = _tile_button("close", "", 52)
+	close_btn.pressed.connect(hide_all)
+	top.add_child(close_btn)
 	outer.add_child(top)
 	var scroll := ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(740, 440)
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	outer.add_child(scroll)
 	panel_body = VBoxContainer.new()
@@ -204,14 +369,53 @@ func update_hud() -> void:
 		toast_t -= get_process_delta_time()
 		if toast_t <= 0.0:
 			toast.text = ""
+			toast.visible = false
 
 
 func prompt(text: String) -> void:
-	prompt_label.text = ("[E]  " + text) if text != "" else ""
+	prompt_text = text
+	prompt_label.text = text
+	prompt_icon.texture = load(PROMPT % USE_ICON.get(scheme, "touch_tap"))
+	prompt_box.visible = text != ""
+
+
+## The controls for a scheme as rows of input icons and what they do.
+func _controls_list(s: String) -> void:
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 16)
+	for row in CONTROLS[s]:
+		var icons := HBoxContainer.new()
+		icons.custom_minimum_size = Vector2(150, 0)
+		for name in row[0]:
+			var t := TextureRect.new()
+			t.texture = load(PROMPT % name)
+			t.custom_minimum_size = Vector2(40, 40)
+			t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icons.add_child(t)
+		grid.add_child(icons)
+		var l := Label.new()
+		l.text = row[1]
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 18)
+		grid.add_child(l)
+	panel_body.add_child(grid)
+
+
+func show_controls(back: Callable) -> void:
+	_open("controls", "Controls", main.paused)
+	_label("The game switches by itself to whichever you use.", 16)
+	for s in [scheme] + ["touch", "kbm", "gamepad"].filter(func(x): return x != scheme):
+		_label(SCHEME_NAMES[s] + (" (in use)" if s == scheme else ""), 22, Color(1, 0.85, 0.5))
+		_controls_list(s)
+	_button("Back", back)
 
 
 func message(text: String) -> void:
 	toast.text = text
+	toast.visible = true
 	toast_t = 4.0
 
 
@@ -219,9 +423,8 @@ func log_line(text: String) -> void:
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	l.add_theme_font_size_override("font_size", 14)
-	l.add_theme_color_override("font_outline_color", Color.BLACK)
-	l.add_theme_constant_override("outline_size", 4)
+	l.add_theme_font_size_override("font_size", 16)
+	_backed(l)
 	log_box.add_child(l)
 	while log_box.get_child_count() > 5:
 		var c := log_box.get_child(0)
@@ -232,6 +435,16 @@ func log_line(text: String) -> void:
 # ---------------------------------------------------------------- panel helpers --------------
 func modal() -> bool:
 	return panel.visible
+
+
+## True when a touch at this screen position lands on the interface rather than the map.
+func blocks(pos: Vector2) -> bool:
+	if panel.visible:
+		return true
+	for c in (touch_bar.get_children() if touch_bar.visible else []) + [hud.get_child(0)]:
+		if c.visible and c.get_global_rect().has_point(pos):
+			return true
+	return false
 
 
 func is_open(kind: String) -> bool:
@@ -247,16 +460,19 @@ func hide_all() -> void:
 
 func _open(kind: String, title: String, pause := true) -> void:
 	panel_kind = kind
-	title_label.text = title
+	title_label.text = title.to_upper()
+	close_btn.visible = not kind in ["title", "origin", "death", "creation"]
 	for c in panel_body.get_children():
 		panel_body.remove_child(c)
 		c.queue_free()
 	panel.visible = true
 	if pause:
 		main.paused = true
+	if scheme != "touch":
+		_focus_first.call_deferred()
 
 
-func _label(text: String, size := 18, color := Color(0.95, 0.9, 0.8)) -> Label:
+func _label(text: String, size := 18, color := Color8(246, 236, 214)) -> Label:
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -310,9 +526,112 @@ func show_title(can_continue: bool) -> void:
 	_open("title", "My Medieval Life  (working title: The Well)", false)
 	_label("A living village of a hundred people who work, trade, eat and sleep whether or not you are watching. You are one of them.")
 	_button("Continue", func(): main.continue_game(), can_continue)
-	_button("New game", func(): main.new_game())
-	_button("Quit", func(): main.get_tree().quit())
-	_label("Controls: WASD/arrows or tap to move · E or tap next to something to use it · Space to attack · F for fireball (once learned) · I pack · L skills · Esc menu · mouse wheel or pinch to zoom. Gamepad supported.", 15)
+	_button("New game", func(): show_creation({}))
+	_button("Settings", func(): show_settings(func(): show_title(FileAccess.file_exists(main.SAVE_PATH))))
+	if not main.settings.phone:
+		_button("Quit", func(): main.get_tree().quit())
+	_button("Controls", func(): show_controls(func(): show_title(FileAccess.file_exists(main.SAVE_PATH))))
+	_controls_list(scheme)
+
+
+## Character creation: name, family, male or female, and a look (face and clothes) from
+## game/data/appearances.json, with a preview of the sprite the player will walk around as.
+func show_creation(spec: Dictionary) -> void:
+	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
+	var sx: String = spec.get("sex", "male")
+	var look: String = spec.get("look", "")
+	var mine := looks.filter(func(l): return l.sex == sx and l.outfit == "basic") + looks.filter(func(l): return l.sex == sx and l.outfit != "basic")
+	if look == "" or mine.filter(func(l): return l.id == look).is_empty():
+		look = mine[0].id
+	_open("creation", "Who are you?", false)
+	var names := HBoxContainer.new()
+	panel_body.add_child(names)
+	var name_edit := LineEdit.new()
+	name_edit.placeholder_text = "Your name"
+	name_edit.text = spec.get("name", "")
+	name_edit.max_length = 16
+	name_edit.custom_minimum_size = Vector2(0, 52)
+	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	names.add_child(name_edit)
+	var fam_edit := LineEdit.new()
+	fam_edit.placeholder_text = "Family name"
+	fam_edit.text = spec.get("family", "")
+	fam_edit.max_length = 16
+	fam_edit.custom_minimum_size = Vector2(0, 52)
+	fam_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	names.add_child(fam_edit)
+	var current := func() -> Dictionary:
+		return {"name": name_edit.text.strip_edges(), "family": fam_edit.text.strip_edges(), "sex": sx, "look": look}
+	var sexes := HBoxContainer.new()
+	panel_body.add_child(sexes)
+	for choice in ["male", "female"]:
+		var c: String = choice
+		var b := _button(("> " if c == sx else "") + c.capitalize(), func():
+			var nxt: Dictionary = current.call()
+			nxt.sex = c
+			nxt.look = ""
+			show_creation(nxt), true, sexes)
+		b.custom_minimum_size = Vector2(150, 52)
+	var gap := Control.new()
+	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sexes.add_child(gap)
+	_button("Back", func(): show_title(FileAccess.file_exists(main.SAVE_PATH)), true, sexes).custom_minimum_size = Vector2(120, 52)
+	var begin := _button("Begin", func():
+		var spec2: Dictionary = current.call()
+		if spec2.name == "":
+			message("Give your character a name.")
+			return
+		if spec2.family == "":
+			spec2.family = "Wanderer"
+		spec2.sprite = looks.filter(func(l): return l.id == look)[0].sprite
+		main.new_game(spec2), true, sexes)
+	begin.custom_minimum_size = Vector2(160, 52)
+	var row := HBoxContainer.new()
+	panel_body.add_child(row)
+	var preview := TextureRect.new()
+	preview.custom_minimum_size = Vector2(128, 128)
+	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.texture = _look_frame(looks.filter(func(l): return l.id == look)[0].sprite)
+	row.add_child(preview)
+	var grid := GridContainer.new()
+	grid.columns = 4
+	row.add_child(grid)
+	for l in mine:
+		var lid: String = l.id
+		var b := Button.new()
+		b.icon = _look_frame(l.sprite)
+		b.expand_icon = true
+		b.custom_minimum_size = Vector2(72, 72)
+		b.tooltip_text = "%s clothes" % ("plain" if l.outfit == "basic" else "tunic")
+		b.modulate = Color(1, 1, 1) if lid == look else Color(0.75, 0.75, 0.75)
+		b.pressed.connect(func():
+			var nxt: Dictionary = current.call()
+			nxt.look = lid
+			show_creation(nxt))
+		grid.add_child(b)
+	_label("Top row: plain clothes. Bottom row: a tunic.", 16)
+
+
+func _look_frame(sheet: String) -> AtlasTexture:
+	var at := AtlasTexture.new()
+	at.atlas = load(sheet)
+	at.region = Rect2(8, 8, 16, 16)          # the figure within the first 32 x 32 frame
+	return at
+
+
+## The origin: a short, skippable story. Nothing in it is a quest.
+func show_origin() -> void:
+	var p: PlayerState = main.world.player
+	_open("origin", "%s %s" % [p.name, p.family], true)
+	_label("You worked another family's farm three valleys over until the harvest failed and the farmer could no longer feed you. There were hard words, and you left before dawn.")
+	_label("You carry what you could: a rusty sword that was your father's, a pickaxe nobody wanted, a loaf of bread, an apple going soft, and five coins.")
+	_label("This is the first village you have seen with smoke in its chimneys. A hundred people live here, and every one of them has their own work and their own worries. None of them owes you anything.")
+	_label("Find a way to live.", 20, Color(1, 0.85, 0.5))
+	_button("Begin", func():
+		hide_all()
+		main.resume_after_origin())
 
 
 func show_pause() -> void:
@@ -320,14 +639,73 @@ func show_pause() -> void:
 	_button("Resume", hide_all)
 	_button("Save", func(): main.save_game())
 	_button("Village record (events)", show_events)
-	_button("Text size", func():
-		font_scale = {1.0: 1.3, 1.3: 1.6, 1.6: 1.0}[font_scale]
-		root.theme.default_font_size = int(18 * font_scale)
-		message("Text size %d%%" % int(font_scale * 100)))
+	_button("Settings", func(): show_settings(show_pause))
+	_button("Controls", func(): show_controls(show_pause))
 	_button("Save and quit to title", func():
 		main.save_game(false)
 		main.running = false
 		show_title(true))
+
+
+## Settings: sound, display (windows only on a computer), interface size and touch buttons. Each
+## change is applied and saved at once; `back` reopens the screen it came from.
+func show_settings(back: Callable) -> void:
+	var st: GameSettings = main.settings
+	var was_paused: bool = main.paused
+	_open("settings", "Settings", was_paused)
+	for row in [["Master volume", "master"], ["Music", "music"], ["Sound effects", "sfx"]]:
+		var key: String = row[1]
+		var sl := HSlider.new()
+		sl.min_value = 0
+		sl.max_value = 100
+		sl.step = 5
+		sl.value = float(st.get(key)) * 100.0
+		sl.custom_minimum_size = Vector2(320, 44)
+		sl.value_changed.connect(func(v: float):
+			st.set(key, v / 100.0)
+			main.apply_settings())
+		_setting_row(row[0], sl)
+	if not st.phone:
+		_choice("Display", ["windowed", "fullscreen", "borderless"], st.display, func(v):
+			st.display = v)
+		var sizes: Array = st.sizes_that_fit().map(func(z: Vector2i): return "%dx%d" % [z.x, z.y])
+		var now := "%dx%d" % [DisplayServer.window_get_size().x, DisplayServer.window_get_size().y]
+		_choice("Window size", sizes, now if now in sizes else sizes[-1], func(v):
+			var xy: PackedStringArray = str(v).split("x")
+			st.window_size = Vector2i(int(xy[0]), int(xy[1]))
+			st.display = "windowed")
+		_choice("VSync", ["on", "off"], "on" if st.vsync else "off", func(v): st.vsync = v == "on")
+	_choice("Frame rate cap", ["none", "30", "60", "120"], "none" if st.max_fps == 0 else str(st.max_fps), func(v):
+		st.max_fps = 0 if v == "none" else int(v))
+	_choice("Interface size", ["small", "normal", "large"], st.ui_size, func(v): st.ui_size = v)
+	_choice("On-screen buttons", ["auto", "always", "never"], st.touch_buttons, func(v): st.touch_buttons = v)
+	_label("Controls switch by themselves to touch, gamepad or keyboard and mouse, whichever you use. Sound volumes take effect once the game has sounds.", 14)
+	_button("Back", back)
+
+
+func _setting_row(text: String, control: Control) -> void:
+	var h := HBoxContainer.new()
+	var l := Label.new()
+	l.text = text
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(l)
+	h.add_child(control)
+	panel_body.add_child(h)
+
+
+## A setting with a few values: the button shows the current one and steps to the next.
+func _choice(text: String, values: Array, current: String, set_value: Callable) -> void:
+	var b := Button.new()
+	b.custom_minimum_size = Vector2(220, 48)
+	b.text = current.capitalize() if not current.contains("x") else current
+	var i := [values.find(current)]
+	b.pressed.connect(func():
+		i[0] = (i[0] + 1) % values.size()
+		var v: String = values[i[0]]
+		set_value.call(v)
+		b.text = v.capitalize() if not v.contains("x") else v
+		main.apply_settings())
+	_setting_row(text, b)
 
 
 func show_events() -> void:
@@ -377,7 +755,7 @@ func show_talk(n: NPC) -> void:
 			else:
 				message("You need %d coins." % price), not known)
 	if n.id == w.reeve_id:
-		_label("\"Land by the east houses is for sale. Find the plots past the last houses and buy one there; the coins come to me.\"")
+		_label("\"Land by the east houses is for sale. Find the plots past the last houses and buy one there; the coins go to the manor.\"")
 
 
 func show_trade(n: NPC) -> void:
@@ -449,39 +827,59 @@ func toggle_inventory() -> void:
 func show_inventory(filter: String) -> void:
 	var w: World = main.world
 	var p := w.player
-	_open("inventory", "Pack (%d of %d kinds)" % [p.inv.items.size(), p.inv.max_stacks])
+	_open("inventory", "Pack (%d of %d kinds) · %d coins" % [p.inv.items.size(), p.inv.max_stacks, p.coins])
 	var search := LineEdit.new()
 	search.placeholder_text = "Search…"
 	search.text = filter
 	search.custom_minimum_size = Vector2(0, 48)
 	search.text_submitted.connect(func(t): show_inventory(t))
 	panel_body.add_child(search)
-	_label("Weapon: %s · Armour: %s" % [GameData.item_name(p.weapon) if p.weapon != "" else "none", GameData.item_name(p.armor) if p.armor != "" else "none"], 15)
+	var worn := HBoxContainer.new()
+	panel_body.add_child(worn)
+	for slot in ["weapon", "tool", "armor"]:
+		var sl: String = slot
+		var id: String = p.get(sl)
+		var label: String = {"weapon": "In hand", "tool": "Tool", "armor": "Wearing"}[sl] + ": " + (GameData.item_name(id) if id != "" else "nothing")
+		var b := _button(label + ("  (take off)" if id != "" else ""), func():
+			w.player_unequip(sl)
+			show_inventory(filter), id != "", worn)
+		b.custom_minimum_size = Vector2(200, 48)
 	for id in p.inv.ids():
 		if filter != "" and GameData.item_name(id).to_lower().find(filter.to_lower()) < 0:
 			continue
 		var it: Dictionary = GameData.item(id)
 		var t: String = it.get("type", "")
 		var iid: String = id
-		if t == "food":
-			_item_row(id, p.inv.count(id), "", "Eat", func():
-				p.inv.remove(iid)
-				p.hunger = minf(100.0, p.hunger + float(it.food))
-				show_inventory(filter))
-		elif t == "weapon" or t == "armor":
-			_item_row(id, p.inv.count(id), "", "Equip", func():
-				if t == "weapon":
-					p.weapon = iid
-				else:
-					p.armor = iid
-				show_inventory(filter))
-		elif id == "wheat":
-			_item_row(id, p.inv.count(id), "", "Eat raw", func():
-				p.inv.remove(iid)
-				p.hunger = minf(100.0, p.hunger + 20.0)
-				show_inventory(filter))
-		else:
-			_item_row(id, p.inv.count(id), "", "", func(): pass)
+		var h := HBoxContainer.new()
+		h.add_child(_icon(id))
+		var l := Label.new()
+		var worn_now: bool = id == p.weapon or id == p.armor or id == p.tool
+		l.text = "%s x%d%s" % [GameData.item_name(id), p.inv.count(id), "  (in use)" if worn_now else ""]
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(l)
+		panel_body.add_child(h)
+		if it.has("food"):
+			var b := _button("Eat", func():
+				var hp0 := p.hp
+				w.player_eat(iid)
+				message("You eat the %s.%s" % [GameData.item_name(iid).to_lower(), "  It makes you sick." if p.hp < hp0 else ""])
+				show_inventory(filter), true, h)
+			b.custom_minimum_size = Vector2(90, 48)
+		elif t in ["weapon", "armor", "tool"] and not worn_now:
+			var b := _button("Use" if t == "tool" else ("Wield" if t == "weapon" else "Wear"), func():
+				w.player_equip(iid)
+				show_inventory(filter), true, h)
+			b.custom_minimum_size = Vector2(90, 48)
+		var d := _button("Drop", func():
+			w.player_drop(iid, 1)
+			message("You put down a %s." % GameData.item_name(iid).to_lower())
+			show_inventory(filter), true, h)
+		d.custom_minimum_size = Vector2(80, 48)
+		if p.inv.count(id) > 1:
+			var da := _button("All", func():
+				w.player_drop(iid, p.inv.count(iid))
+				show_inventory(filter), true, h)
+			da.custom_minimum_size = Vector2(60, 48)
 
 
 # ---------------------------------------------------------------- skills ---------------------
@@ -523,17 +921,11 @@ func show_build(pl: Dictionary) -> void:
 	var p := w.player
 	_open("build", "Building plot")
 	if pl.owner == "":
-		_label("This plot is for sale for %d coins. The coins go to the reeve. Once it is yours, you can mark out a house: a wooden frame appears, you bring the materials, and when the last load is in, the house stands." % int(pl.price))
+		_label("This plot is for sale for %d coins. The coins go to the manor. Once it is yours, you can mark out a house: a wooden frame appears, you bring the materials, and when the last load is in, the house stands." % int(pl.price))
 		_button("Buy for %d coins" % int(pl.price), func():
-			var reeve := w.npc(w.reeve_id)
-			if p.coins < int(pl.price) or reeve == null:
+			if not w.buy_plot(pl):
 				message("You need %d coins." % int(pl.price))
 				return
-			p.coins -= int(pl.price)
-			reeve.coins += int(pl.price)
-			pl.owner = "player"
-			p.plots.append(pl.id)
-			w.note("%s %s bought %s from the reeve." % [p.name, p.family, pl.id])
 			show_build(pl), p.coins >= int(pl.price))
 		return
 	if pl.owner != "player":

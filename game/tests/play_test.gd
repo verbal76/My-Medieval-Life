@@ -136,13 +136,10 @@ func _run() -> void:
 
 	# 5. buy a plot, mark out a house, deliver materials
 	var plot: Dictionary = w.plots[0]
-	var reeve := w.npc(w.reeve_id)
-	var reeve_coins := reeve.coins
+	var treasury0 := w.treasury
 	p.pos = Vector2(int(plot.x) + 4, int(plot.y) + 9.5)
-	p.coins -= int(plot.price)
-	reeve.coins += int(plot.price)
-	plot.owner = "player"
-	check(reeve.coins == reeve_coins + int(plot.price), "plot bought; the coins went to the reeve")
+	check(w.buy_plot(plot) and plot.owner == "player", "plot bought")
+	check(w.treasury == treasury0 + int(plot.price), "the plot's price went to the manor's treasury")
 	w.start_site(plot)
 	var carpenter := npc_with_job("carpenter")
 	var planks := 0

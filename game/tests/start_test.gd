@@ -1,0 +1,287 @@
+extends SceneTree
+## The first-play acceptance path, driven through the real game scene and its panels: create a
+## named character with a chosen look, read the origin, check the starting kit, equip, mine,
+## harvest, eat, fight and loot a bandit, talk to a villager, save and reload. Run headless:
+##   godot --headless --path game --script res://tests/start_test.gd
+
+var main
+var failures := 0
+var steps := []
+
+
+func check(cond: bool, what: String) -> void:
+	steps.append(("ok   " if cond else "FAIL ") + what)
+	print(steps[-1])
+	if not cond:
+		failures += 1
+
+
+func _init() -> void:
+	main = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	process_frame.connect(_run, CONNECT_ONE_SHOT)
+
+
+func finish_action() -> void:
+	var guard := 0
+	while not main.action.is_empty() and guard < 2000:
+		main._player_step(0.25)
+		guard += 1
+
+
+func stand_by(cell: Vector2i) -> void:
+	var w: World = main.world
+	var c: Vector2i = w.brain.beside(cell, cell + Vector2i(0, 1))
+	w.player.pos = Vector2(c) + Vector2(0.5, 0.5)
+	main.player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - w.player.pos)
+	main._find_target()
+
+
+func _buttons(node: Node, out: Array) -> Array:
+	for c in node.get_children():
+		if c is Button:
+			out.append(c)
+		_buttons(c, out)
+	return out
+
+
+func _press(text: String) -> bool:
+	for b: Button in _buttons(main.ui.panel_body, []):
+		if b.text.begins_with(text) and not b.disabled:
+			b.pressed.emit()
+			return true
+	return false
+
+
+func _run() -> void:
+	var ui = main.ui
+	# 1-3. character creation: a name, a family, a female look in a tunic
+	check(ui.is_open("title"), "the title screen opens")
+	_press("New game")
+	check(ui.is_open("creation"), "character creation opens")
+	_press("Female")
+	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
+	var tunic: Dictionary = looks.filter(func(l): return l.sex == "female" and l.outfit != "basic")[1]
+	ui.show_creation({"name": "", "family": "", "sex": "female", "look": tunic.id})
+	_press("Begin")
+	check(ui.is_open("creation") and main.world == null, "a character needs a name")
+	ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female", "look": tunic.id})
+	var edits: Array = ui.panel_body.find_children("*", "LineEdit", true, false)
+	check(edits.size() == 2, "name and family fields")
+	_press("Begin")
+	var w: World = main.world
+	var p := w.player
+	check(w != null and p.name == "Ada" and p.family == "Thorne" and p.sex == "female", "created Ada Thorne (female)")
+	check(p.look == tunic.id and p.sprite == tunic.sprite and main.player_sprite != null, "the chosen look is the player's sprite (%s)" % p.sprite.get_file())
+	# 4-5. the origin story, then the village
+	check(ui.is_open("origin") and main.paused, "the origin story is shown and the world waits")
+	_press("Begin")
+	check(not ui.modal() and not main.paused and main.running, "into the village")
+
+	# the starting kit (balance.json)
+	check(p.hp == 100.0 and p.max_hp == 100.0 and p.coins == 5, "100 health and 5 coins")
+	for id in ["rusty_sword", "rusty_pickaxe", "bread", "rotten_apple", "plain_clothes"]:
+		check(p.inv.count(id) == 1, "carries %s" % GameData.item_name(id))
+	check(p.armor == "plain_clothes" and p.weapon == "" and p.tool == "", "wearing plain clothes, nothing in hand")
+
+	# 6. moving: a tap away from the player walks there
+	var start := p.pos
+	var goal := start
+	for dir in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
+		var open := true
+		for k in range(1, 5):
+			if main.map.is_solid(Vector2i(start + dir * k)):
+				open = false
+		if open:
+			goal = start + dir * 3.0
+			break
+	main.move_to = goal
+	for i in 40:
+		main._player_step(0.1)
+	check(p.pos.distance_to(start) > 1.0, "tap-to-walk moves the player (%.1f tiles)" % p.pos.distance_to(start))
+
+	# 7-8. the inventory, and equipping from it
+	ui.show_inventory("")
+	check(ui.is_open("inventory"), "the inventory opens")
+	check(_press("Wield"), "a Wield button for the sword")
+	check(p.weapon == "rusty_sword", "the rusty sword is in hand")
+	ui.show_inventory("")
+	check(_press("Use") and p.tool == "rusty_pickaxe", "the rusty pickaxe is the tool")
+	ui.hide_all()
+
+	# 9-10. mine a deposit with the rusty pickaxe
+	var coins0 := w.total_coins()
+	var src0: int = w.coin_sources
+	var d := w.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	stand_by(Vector2i(d.x, d.y))
+	check(main.target.get("kind", "") == "deposit", "standing at a deposit")
+	var ore: String = d.ore
+	var amount0 := int(d.amount)
+	var dur0 := int(p.inv.durability.get("rusty_pickaxe", GameData.item("rusty_pickaxe").durability))
+	main.interact()
+	finish_action()
+	check(p.inv.count(ore) >= 1 and int(d.amount) < amount0, "mined %d %s" % [p.inv.count(ore), ore])
+	check(int(p.inv.durability.get("rusty_pickaxe", 0)) < dur0, "the pickaxe wears (%d -> %d)" % [dur0, int(p.inv.durability.get("rusty_pickaxe", 0))])
+
+	# 11-12. harvest a ripe field (the farmers': theft, seen by those nearby)
+	var field: Dictionary = {}
+	for f in w.fields:
+		if f.state != "ripe":
+			w.set_field(f, "ripe")
+			f.crop = int(GameData.b("field_yield"))
+		field = f
+		break
+	var cell := Vector2i(int(field.x), int(field.y))
+	p.pos = Vector2(cell) + Vector2(0.5, 1.5)
+	main.player_sprite.face(Vector2(0, -1))
+	main._find_target()
+	var crop0 := int(field.crop)
+	var made0 := float(w.stats.get("made_wheat", 0.0))
+	if main.target.get("kind", "") == "field":
+		main.interact()
+		finish_action()
+	else:
+		w.player_harvest(field)
+	var hand := int(GameData.b("harvest_handful"))
+	check(p.inv.count("wheat") == hand and int(field.crop) == crop0 - hand, "harvested %d wheat; the field has %d left" % [p.inv.count("wheat"), int(field.crop)])
+	check(float(w.stats.get("made_wheat", 0.0)) - made0 == hand, "harvested wheat is counted as made, not created")
+	check(p.crimes.size() == 1 and p.crimes[0].kind == "theft", "taking a farmer's wheat is recorded as theft (%d saw it)" % (p.crimes[0].witnesses if p.crimes.size() else 0))
+
+	# 13. eat: bread feeds, the rotten apple feeds a little and hurts
+	p.hunger = 40.0
+	ui.show_inventory("")
+	var hp0 := p.hp
+	check(w.player_eat("bread") and p.hunger == 90.0 and not p.inv.has("bread"), "ate the bread (hunger 40 -> %d)" % int(p.hunger))
+	check(w.player_eat("rotten_apple") and p.hp < hp0, "the rotten apple hurts (%d -> %d health)" % [int(hp0), int(p.hp)])
+	ui.hide_all()
+
+	# 14-17. fight a bandit with the rusty sword: take damage, win, loot what it carried
+	var bandit: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "bandit":
+			bandit = n
+			break
+	var carried: Array = bandit.inv.ids()
+	p.hp = 100.0
+	var hp_fight := p.hp
+	# touch: Attack turns attack mode on; a tap on the bandit puts the sword on it; the player walks
+	# over and strikes once, and each further tap on it is another strike
+	p.pos = bandit.pos + Vector2(-4.0, 0)
+	main.chase = null
+	main.attack_button()
+	check(main.attack_mode and main.chase == null, "Attack turns attack mode on")
+	var tap_on := func(who) -> void:
+		main._tap(main.get_canvas_transform() * ((who.pos - Vector2(0, 0.4)) * main.T))
+	tap_on.call(bandit)
+	check(main.chase == bandit and main.attack_mode, "tapping the bandit marks it")
+	main._sync_sprites()
+	check(main.target_marker.visible, "the sword marker shows over the bandit")
+	var hp_b := bandit.hp
+	var fight_steps := 0
+	while bandit.hp == hp_b and fight_steps < 200:
+		fight_steps += 1
+		main._player_step(0.1)
+		w.update(0.1)
+	check(bandit.hp < hp_b and p.pos.distance_to(bandit.pos) <= 1.1, "walked to the bandit and struck it once")
+	var hp_one := bandit.hp
+	for i in 15:
+		main._player_step(0.1)
+		w.update(0.1)
+	check(bandit.hp == hp_one or not bandit.alive, "no more strikes without another tap")
+	var taps := 0
+	while bandit.alive and fight_steps < 900 and p.alive:
+		fight_steps += 1
+		if not main.strike_pending:
+			tap_on.call(bandit)
+			taps += 1
+		main._player_step(0.1)
+		w.update(0.1)
+	var swings := fight_steps
+	main._player_step(0.1)
+	check(main.chase == null and main.attack_mode, "the mark is gone with the bandit; attack mode stays on (%d taps)" % taps)
+	# tapping open ground walks there; the Attack button again turns the mode off
+	main._tap(main.get_canvas_transform() * ((p.pos + Vector2(2, 0)) * main.T))
+	check(main.chase == null and main.move_to != Vector2.INF, "in attack mode, a tap on open ground walks there")
+	main.attack_button()
+	check(not main.attack_mode, "Attack again turns attack mode off")
+	main.move_to = Vector2.INF
+	check(p.hp < hp_fight, "the bandit fought back (health %d -> %d)" % [int(hp_fight), int(p.hp)])
+	check(main.blood_layer.get_child_count() >= 1, "the slain bandit leaves blood on the ground")
+	check(not bandit.alive and p.alive, "killed the bandit with the rusty sword (%.1f s)" % (swings * 0.1))
+	var bag := -1
+	for i in w.loot.size():
+		if w.loot[i].from == bandit.name:
+			bag = i
+	check(bag >= 0, "the bandit left what it carried")
+	if bag >= 0:
+		var held: Array = w.loot[bag].inv.ids()
+		check(carried.all(func(id): return held.has(id)), "the bag holds the bandit's own things: %s" % ", ".join(held))
+		var inv0 := p.inv.total()
+		main.target = {"kind": "loot", "i": bag}
+		main.interact()
+		check(p.inv.total() > inv0, "looted the bag")
+	check(w.total_coins() - w.coin_sources == coins0 - src0, "coins conserved through mining, the fight and the looting")
+
+	# 18. talk to a villager
+	var v: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult":
+			v = n
+			break
+	p.pos = v.pos + Vector2(-0.8, 0)
+	main.player_sprite.face(Vector2(1, 0))
+	main._find_target()
+	if main.target.get("kind", "") == "npc":
+		main.interact()
+	else:
+		ui.show_talk(v)
+	check(ui.is_open("talk"), "talked to %s %s" % [v.name, v.family])
+	ui.hide_all()
+
+	# the controls follow the input in use
+	var pad := InputEventJoypadButton.new()
+	pad.button_index = JOY_BUTTON_A
+	pad.pressed = true
+	main._input(pad)
+	check(main.scheme == "gamepad" and not ui.touch_bar.visible and ui.prompt_icon.texture.resource_path.ends_with("xbox_button_a.png"), "a gamepad press switches to gamepad controls (no touch buttons)")
+	var touch := InputEventScreenTouch.new()
+	touch.pressed = true
+	main._input(touch)
+	check(main.scheme == "touch" and ui.touch_bar.visible, "a touch switches back to touch controls")
+	var key := InputEventKey.new()
+	key.physical_keycode = KEY_W
+	key.pressed = true
+	main._input(key)
+	check(main.scheme == "kbm" and not ui.touch_bar.visible, "a key press switches to keyboard and mouse")
+	# settings: changed, saved, read back; the interface size relayouts and keeps the map's size
+	var zoom0: float = main.camera.zoom.x / main.view_scale
+	ui.show_settings(ui.hide_all)
+	check(ui.is_open("settings"), "the settings screen opens")
+	main.settings.ui_size = "large"
+	main.settings.music = 0.3
+	main.apply_settings()
+	check(is_equal_approx(main.camera.zoom.x / main.view_scale, zoom0) and get_root().content_scale_size.y == int(main.settings.layout_height()), "a larger interface keeps the map the same size")
+	var again := GameSettings.new()
+	again.load_file()
+	check(again.ui_size == "large" and is_equal_approx(again.music, 0.3), "settings are saved")
+	check(is_equal_approx(db_to_linear(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Music"))), 0.3), "the music bus follows the setting")
+	main.settings.ui_size = "normal"
+	main.settings.music = 0.8
+	main.apply_settings()
+	ui.hide_all()
+
+	# 19-20. save, reload, and the state is the same
+	var snap := {"name": p.name, "look": p.look, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),
+		"weapon": p.weapon, "tool": p.tool, "armor": p.armor, "wheat": p.inv.count("wheat"), "crimes": p.crimes.size(),
+		"minutes": int(w.minutes), "pos": Vector2i(p.pos)}
+	main.save_game(false)
+	main.continue_game()
+	var q: PlayerState = main.world.player
+	var now := {"name": q.name, "look": q.look, "sprite": q.sprite, "coins": q.coins, "hp": int(q.hp),
+		"weapon": q.weapon, "tool": q.tool, "armor": q.armor, "wheat": q.inv.count("wheat"), "crimes": q.crimes.size(),
+		"minutes": int(main.world.minutes), "pos": Vector2i(q.pos)}
+	check(main.world != w, "a fresh world was loaded from the save")
+	check(now == snap, "the save restores the player: %s" % (str(now) + " vs " + str(snap) if now != snap else "name, look, coins, health, equipment, wheat, crimes, time, place"))
+
+	print("%d steps, %d failures" % [steps.size(), failures])
+	quit(1 if failures else 0)
