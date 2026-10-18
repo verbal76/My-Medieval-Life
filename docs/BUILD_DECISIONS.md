@@ -90,7 +90,7 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 |---|---|
 | Permadeath: the heir keeps the family's house, chest and plots, starts every skill from nothing and carries only the starting kit (5 coins, rusty sword and pickaxe, bread, rotten apple, plain clothes); what the dead carried lies where they fell, for anyone to take, the heir too. The heir's kit and coins are new to the village (counted in `coin_sources`). Anyone fighting the dead player stops | Owner rule, 2026-10-18 (house, chest and the dropped bag settled by the owner's answers) |
 | The journal (Menu, or B): the village record written into an open book, two parchment pages at a time, six lines a page, a heading for each day (repeated as "continued" at the top of a page that starts mid-day), opening at the latest pages | The owner asked for a journal that looks like a book |
-| Building: buy a plot from the reeve, a wooden frame appears, deliver 30 planks, 20 stone and 10 logs, and the house stands. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load to the pack (what does not fit is left in a bundle at the site), takes the frame down and keeps the plot | The owner's rules (frame with a progress bar, materials only, no extra build time, cancel returns everything) |
+| Building: buy a plot from the manor (the price goes to the treasury), a wooden frame appears, deliver 30 planks, 20 stone and 10 logs, and the house stands. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load to the pack (what does not fit is left in a bundle at the site), takes the frame down and keeps the plot | The owner's rules (frame with a progress bar, materials only, no extra build time, cancel returns everything) |
 | Attacking a villager, or killing a keeper's animal, is a crime: guards nearby and the victim respond | Bob's spec has crime but no penalty system yet |
 
 ## Animals (owner rule: a fed pair breeds, babies are half scale, animals become meat)
@@ -220,7 +220,8 @@ that the owner has not approved stay provisional until a separate gameplay-balan
 - Children eat as much as adults (one hunger rate for everyone).
 - Skilled trades cannot be learned (no apprenticeship); villagers move only between general,
   farming and resource work.
-- The player cannot own livestock, harvest fields, or hire helpers to deliver building materials.
+- The player cannot own livestock or hire helpers to deliver building materials. (Harvesting a
+  field works: `World.player_harvest`, INT-007.)
 - No eggs, milk or wool (the owner asked only for meat).
 - No aging, no births of people, no audio yet (the volume settings are ready for it).
 - Villagers keep only their last 8 memories (having met someone is never forgotten), so older
