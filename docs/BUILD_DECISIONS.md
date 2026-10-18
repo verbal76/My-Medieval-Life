@@ -74,7 +74,7 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 
 | Decision | Why |
 |---|---|
-| The manor granary starts with 7 days of the village's food (420 wheat for 100) and each household brings 2 wheat a head, besides its 3 pottage. Finite: nothing is added later except by purchase | A failed first harvest killed 70 of 100. With these stores a 4-day failure is survived; a 12-day failure still kills half the village |
+| The manor granary starts with 7 days of the village's food (420 wheat for 100; 377 since children eat 0.6 of an adult's food) and each household brings 2 wheat a head, besides its 3 pottage. Finite: nothing is added later except by purchase | A failed first harvest killed 70 of 100. With these stores a 4-day failure is survived; a 12-day failure still killed 43 of 100 by day 14 (10 since children eat less; `game/tests/scenarios.gd`, seed 1) |
 | A household's cash counts as food only up to its share of what the market actually has for sale | In a crop failure the granary sat full while people with coins starved: relief never saw them as short |
 | Inheritance: when a villager dies of anything but violence, food goes into the household's pantry and coins and goods to an heir (an adult, else an elder, else a child, lowest id first). A slain villager's purse still lies where they fell; with nobody left in the household, belongings stay there too | Keeps a household's means together; keeps the existing loot and robbery play |
 | A pen whose keeper dies or stops farming passes to another farmer, the same household first | Animals were left with nobody to feed them |
@@ -83,6 +83,7 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 | Every villager keeps 7 days of earnings (sales and wages). Each morning, and at once after a death or job change, each household reckons its members, daily food need and cost (food at the cheapest grain price plus firewood), income, food in hand, and runway (cash and trade stock someone is buying). It is sustainable when income covers cost or it holds 10 days of food or runway | Households see trouble coming instead of reacting only to hunger |
 | Job mobility: the unemployed, and adults of a household unsustainable for 3 mornings who have 5 days of history and earn less than their share of its costs, look at the job board: manor hand (wage, while the treasury can afford 20 more days), farmhand (up to 2 per field), woodcutter (one per 30 standing trees), hunter (one per 6 game animals above the breeding stock), miner (while ore lasts). Pay is what those doing the job actually earned lately; a needed tool must be affordable and is counted over 10 days; the walk from home counts. They move only for 25% (and 2 coins) more than they earn now. A taken opening is gone for the next applicant. Not back to the job just left for 14 days; 7 days to settle after a change | Uses only existing jobs and wages. Skilled trades need training the game does not have |
 | The manor lets its newest hand go when it cannot pay two days of wages | Wages must stay finite |
+| Children eat less (owner-approved; the living-world design counts a household's food per member, adjusted for age-dependent consumption). Villagers have no ages, so the role decides: a child gets hungry `child_food_factor` (0.6) as fast as an adult and so eats 0.6 of an adult's food, in the same whole portions eaten less often. Every food reckoning weights members the same way (`NPCBrain.food_factor`, `household_day_food`, `village_day_food`): a household's days of food and its share of the market, relief, a farmer's household keep, the granary's target and its starting stock (7 days of the weighted need: 377 wheat instead of 420), the village's food days (famine), the caravan's food reserve, the household reckoning, and so the food quest's `household_food_below` and day labour. The 0.6 is an agent proposal, provisional: balance review pending | Children of about 4 to 13 need roughly half to three quarters of an adult's food; 0.6 is a round middle. Elders are left at 1.0 (not asked) |
 
 ## Player
 
@@ -144,6 +145,18 @@ Result, 3 seeds over 100 days:
 | A quest giver inside their own home (asleep or resting) shows their marker over the house door, side by side if several of the household have one; at a workplace such as the tavern they are visible and marked as usual | The owner asked how to find a quest giver who is indoors |
 | Quest markers and the attack-target sword draw over roofs and tree canopies, so a marker over a door or a villager under a tree is never hidden | Found when checking the door marker on screen: roofs covered it |
 | Story quests (`"story": true`) are not offered from needs: every new player, and every heir, starts them; their giver shows the story marker until they are done. The first: "The sage in the north", learn Fireball from the sage in the hut at the north edge of the village, at his usual price (50 coins) | The owner chose the first storyline quest; the price is the existing one |
+| A quest can teach a skill (`"teach": {"skill", "level"}`; owner: "the scroll should be on the quest giver that earns you a skill"). The first, "The tanner's craft" (agent proposal, provisional: balance review pending): a tanner holding under 4 hides asks for 2 hides and, instead of coins, raises the player's Crafting to level 2, which unlocks leather armour. It is offered only to a player below Crafting 2 (`player_below`), shows the scroll, and the talk window says what was learned under the tanner's words. Teaching sets the skill to the start of the level and never lowers it. It comes first among the side quests, so the dawn's 4 offers do not crowd it out | Crafting 2 is a real unlock (leather armour, `recipes.json`); hides come from hunting boar, an existing mechanic |
+
+## Paid work for the player (owner directive: the player can "work, earn money"; details are agent proposals)
+
+| Decision | Why |
+|---|---|
+| Paid work reuses the quest machinery (`"hire": true` templates in `quests.json`), with no new system: asked for, accepted, listed in the journal, handed in, failing if the employer dies | One mechanism for "bring this, get paid" |
+| A working adult whose job a hire template names gets "Any work for me?" in conversation. Work is offered only when it exists and the employer holds the whole wage; otherwise they say they cannot pay or have nothing. It is never a dawn offer and shows no marker. A villager with work to offer stops to talk even when busy, as a quest giver does | Work comes from the simulation's state; a busy farmer at harvest must still be reachable |
+| Jobs (agent proposal, provisional: balance review pending): a farmer whose own field is ripe with at least 24 wheat: cut 24 wheat from that field and bring it, 6 coins, 1 day; a woodcutter holding under 6 logs: bring 6 logs, 6 coins, 2 days; a miner holding under 6 iron ore: bring 6 iron ore, 8 coins, 2 days. 6 coins is the manor's day wage (`day_labour_wage`, `manor_wage_per_day`); the miner's 8 reflects ore's higher price. The tavern keeper and other trades do not hire yet | Existing mechanics (harvest, felling, mining); wages below the goods' price, so the employer gains and nothing is arbitraged |
+| The wage comes from the employer's purse, in full or not at all: an employer who has since spent it says so ("unpaid") and the player keeps the goods until they can pay. Delivered goods go to the employer. No coins are created | Closed economy |
+| A hired harvest hand may cut up to the asked-for wheat from the employer's field without it being theft (`Quests.hired_harvest`); beyond that it is theft as before. While the work is open, the field's farmers leave it (they tend instead of harvesting) | Otherwise the farmer would cut the field before the player could |
+| Work left undone lapses at the dawn after its `days` have passed (`Quests.drop_failed`) | A day's work, not an open-ended quest; the farmer's field is not held forever |
 
 ## Controls, screen and settings (owner direction; the details are agent proposals)
 
@@ -217,7 +230,8 @@ that the owner has not approved stay provisional until a separate gameplay-balan
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals
   are waiting for the owner.
-- Children eat as much as adults (one hunger rate for everyone).
+- Children eat by role, not age: villagers have no ages yet, so every child eats `child_food_factor`
+  of an adult's food and elders eat as adults.
 - Skilled trades cannot be learned (no apprenticeship); villagers move only between general,
   farming and resource work.
 - The player cannot own livestock or hire helpers to deliver building materials. (Harvesting a

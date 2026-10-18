@@ -100,11 +100,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	Population.populate(self)
 	_open_treasury()
 	# the settlers' grain store: a finite stock of last year's harvest, 7 days of the village's food
-	var settlers := 0
-	for n: NPC in npcs:
-		if n.role != "bandit":
-			settlers += 1
-	granary.add("wheat", ceili(settlers * 24.0 * float(GameData.b("hunger_per_hour")) * float(GameData.b("start_granary_days")) / 120.0))
+	# (its need weighted by age: children eat less)
+	granary.add("wheat", ceili(brain.village_day_food() * float(GameData.b("start_granary_days")) / 120.0))
 	fauna = Fauna.new(self)
 	fauna.populate()
 	_assign_keepers()
@@ -207,10 +204,8 @@ var food_days := 99.0
 
 func _update_food_days() -> void:
 	var points := 0.0
-	var people := 0
 	for n: NPC in npcs:
 		if n.alive and n.role != "bandit":
-			people += 1
 			for f in NPCBrain.FOOD:
 				points += n.inv.count(f) * float(GameData.item(f).food)
 	for hh in households:
@@ -219,7 +214,7 @@ func _update_food_days() -> void:
 	for f in NPCBrain.FOOD:
 		points += table_food(f) * float(GameData.item(f).food)
 	points += granary.count("wheat") * float(GameData.item("wheat").food)
-	food_days = points / maxf(1.0, people * 24.0 * float(GameData.b("hunger_per_hour")))
+	food_days = points / maxf(1.0, brain.village_day_food())          # children weighted by age
 
 
 func famine() -> bool:
@@ -272,7 +267,7 @@ func _new_day() -> void:
 
 func _update_npc(n: NPC, dt: float) -> void:
 	var gm: float = dt * float(GameData.b("game_minutes_per_second"))
-	n.hunger = maxf(0.0, n.hunger - gm / 60.0 * float(GameData.b("hunger_per_hour")))
+	n.hunger = maxf(0.0, n.hunger - gm / 60.0 * float(GameData.b("hunger_per_hour")) * NPCBrain.food_factor(n))     # a child more slowly
 	if n.hunger <= 0.0:
 		n.hp -= gm / 60.0 * float(GameData.b("starve_damage_per_hour"))
 		if n.hp <= 0.0:
@@ -832,13 +827,15 @@ func take_crop(f: Dictionary, most: int) -> int:
 
 
 ## The player harvests a handful from a field. A field is the farmers' who work it: taking from it
-## without being one of them is theft, and anyone within sight remembers it.
+## without being one of them is theft, and anyone within sight remembers it, except what a farmer
+## hired the player to cut there (Quests.hired_harvest).
 func player_harvest(f: Dictionary) -> int:
 	var n := take_crop(f, int(GameData.b("harvest_handful")))
 	if n <= 0:
 		return 0
 	player.inv.add("wheat", n)
-	if not f.owner.is_empty():
+	var taken := n - quests.hired_harvest(f, n)
+	if not f.owner.is_empty() and taken > 0:
 		var victim: NPC = null
 		for o in f.owner:
 			var fo := npc(int(o))
@@ -846,8 +843,8 @@ func player_harvest(f: Dictionary) -> int:
 				victim = fo
 				break
 		if victim:
-			player.mark_stolen("wheat", victim.id, n)
-		witness("theft", "%d wheat from %s" % [n, f.id], victim, {"wheat": n})
+			player.mark_stolen("wheat", victim.id, taken)
+		witness("theft", "%d wheat from %s" % [taken, f.id], victim, {"wheat": taken})
 	return n
 
 

@@ -228,6 +228,35 @@ func _ready() -> void:
 							_find_target()
 							interact()          # the dish goes into the pack and the table shows bare
 						break
+			"hire_ask", "hire_offer":
+				# a farmer at harvest: the talk window with "Any work for me?", or (hire_offer) the answer
+				for n: NPC in world.npcs:
+					var f: Dictionary = world.quests.field_of(n) if n.alive and n.job == "farmer" else {}
+					if f.is_empty():
+						continue
+					world.set_field(f, "ripe")
+					f.crop = int(GameData.b("field_yield"))
+					n.coins = maxi(n.coins, 20)
+					n.pos = world.player.pos + Vector2(1.0, 0)
+					n.plan = [world.brain.work(600, "", {}, "idle")]
+					ui.show_talk(n)
+					if shot_panel == "hire_offer":
+						_press(ui.panel_body, "Any work for me?")
+					break
+			"skill_marker", "skill_done":
+				# the tanner's skill quest: the scroll over the giver, or (skill_done) handing in the hides
+				for n: NPC in world.npcs:
+					if n.alive and n.job == "tanner":
+						world.quests.offers[n.id] = "the_tanners_craft"
+						n.hidden = false
+						n.pos = world.player.pos + Vector2(1.5, 0)
+						n.plan = [world.brain.work(600, "", {}, "idle")]
+						if shot_panel == "skill_done":
+							world.quests.accept(n)
+							world.player.inv.add("hide", 2)
+							ui.show_talk(n)
+							_press(ui.panel_body, "Here you are")
+						break
 			"pickpocket":
 				var v: NPC = world.npcs[20]
 				v.pos = world.player.pos + Vector2(1.0, 0)
@@ -612,7 +641,8 @@ func say(n: NPC, text: String) -> void:
 ## line and carries on; anyone else stops for a conversation.
 func approach(n: NPC) -> void:
 	# a quest giver always stops to talk (owner: "unless they're a quest giver")
-	var quest_business := world.quests.diamond(n) or not world.quests.active_from(n).is_empty()
+	# (and so does a villager with paid work to offer the player: agent proposal)
+	var quest_business := world.quests.diamond(n) or not world.quests.active_from(n).is_empty() or not world.quests.hire_offer(n).is_empty()
 	# a shopkeeper at their counter or stall always serves: their shop opens (Talk is in it)
 	if world.at_post(n) and not quest_business:
 		ui.show_trade(n)
@@ -1513,6 +1543,15 @@ func rest() -> void:
 
 
 # ---------------------------------------------------------------- screenshots ----------------
+## Press the button with this caption under `root` (screenshots of a conversation's next step).
+func _press(root: Node, caption: String) -> bool:
+	for c in root.find_children("*", "Button", true, false):
+		if (c as Button).text == caption:
+			(c as Button).pressed.emit()
+			return true
+	return false
+
+
 func _screenshot_step(_delta: float) -> void:
 	shot_frames += 1
 	if shot_frames == 30:
