@@ -225,3 +225,64 @@ Releases for My-Medieval-Life, voiceforge, spiroglyphics, personal-assistant- an
 | `build-18`, `build-19`, `build-20`, `build-21`, `build-22`, `build-23`, `build-24`, `build-25`, `build-26`, `build-27`, `build-28`, `build-30`, `build-31`, `build-32`, `build-33`, `build-34`, `build-35`, `build-37`, `build-38`, `build-39` | `f731b62e713292501c3ee247d05383b6e1368912` | 2026-05-12 |
 | `build-11`, `build-12`, `build-15`, `build-16` | `9f08a80972d60004effaada096e3cce367a5d1d7` | 2026-05-11 |
 | `build-5`, `build-6`, `build-7` | `c0bc07a0ca70ce85e66ac2bdf5d7596305c1d7b7` | 2026-05-10 |
+
+## Purgatory-Dungeon
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `ota-dev-000007` | `a9099a40c0dec8fd65ea5b2ca18c0019e6d62500` | 2026-10-11 |
+| `ota-dev-000006` | `40abff25f8c24c200b68c6a37f21c0b94c1f97c8` | 2026-10-11 |
+| `ota-dev-000005` | `e6fd6ec7df88e1d7ae14e95df2356241ee1e9406` | 2026-10-08 |
+| `ota-dev-000004` | `9712819ec53c57211f0ca1fa42e76570b73d1427` | 2026-10-08 |
+| `ota-dev-000003` | `0f3dc9ad1a939052ff06de27c05c233e0fd09b56` | 2026-10-07 |
+| `v8` | `f2328f108205e65b487e43f5d37f42c175ec2e97` | 2026-10-07 |
+| `ota-dev-000002` | `66b884d7e7649c6c146544600f09a6d6c1d034a3` | 2026-10-06 |
+| `ota-dev-000001` | `6dd77bea6c73b5c677b0e6f7d0144ee7e72cd567` | 2026-10-06 |
+| `v7` | `af11f45d22211cb1d84686bd9540a5045e6d41b2` | 2026-10-06 |
+| `v6` | `a9168e16ceac23b0dbb00d3f34f12ff3be070901` | 2026-10-05 |
+| `v5` | `7b5112bffdbaa9e1fd79d4a7ca0903ae411245d4` | 2026-10-05 |
+| `ota-channel-dev` | `f0eaa471c85d8b76fb68b35a37efba485a054364` | 2026-10-05 |
+| `v4` | `53e92ab588246f33827ad9bdd7e5fe77236ee791` | 2026-10-05 |
+| `v3` | `18d82faa33ee5d75e525ed484e0a48976cd69278` | 2026-10-05 |
+| `v2` | `ef24eb4cf184dbc61f0d11f7d8b81aca2ab1a88c` | 2026-10-03 |
+| `v1` | `073e34b9f2976f2336aedb6311bd2da33282eb17` | 2026-10-03 |
+
+## Ragdoll-Rally
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `v18` | `dcb9c4d7faec092e18f2ca08145923ad334342d0` | 2026-10-11 |
+| `v17` | `2a80b903cd4714bac869bb3346a57e0308104016` | 2026-10-11 |
+| `v16` | `7a97a8fcd418439afcdd119619b74678b0c7e94d` | 2026-10-11 |
+| `v15` | `15c414af269066424fbde47a1b7da221c6f7704c` | 2026-10-11 |
+| `launch-ota-channel-poc-g2`, `launch-ota-poc-g2-3-faeb937` | `faeb937439ced8fe8751deaf25c9f898b0110e6e` | 2026-10-08 |
+| `launch-ota-channel-poc`, `launch-ota-poc-2-28d5c0d` | `28d5c0d75a2aecf81d043524a3fcb0cf0170131f` | 2026-10-08 |
+| `v14` | `60064326748fee796e4bde3f7c5bebe32534713c` | 2026-10-07 |
+| `v13` | `8c1caab4468584bc13a2229207737298799560c2` | 2026-10-05 |
+| `v12` | `5ff3d5de79fa2ad8bda047c931745dc001410f69` | 2026-10-04 |
+| `rr-launch-b15`, `v11` | `cac2e291732485d879f93d2e8e336b71912a4172` | 2026-10-04 |
+| `launch-g2m-b12` | `9fa7d1df3501ab60013ab6fba4746b3178e004c6` | 2026-10-04 |
+| `launch-g2m-b11` | `8bdee8959a4e36e76ee31c788ed26e8a44634083` | 2026-10-03 |
+| `launch-g2x-b9` | `db4534ef32eba4fa33b011e843f5dc791c256385` | 2026-10-03 |
+| `launch-g2x-b8` | `1114f10671f73b99356bacd9e83881e9ae29b595` | 2026-10-03 |
+| `launch-g2-b7` | `5f6a122a01b157fdb84d89ba72deab3eb1095614` | 2026-10-03 |
+| `launch-poc-b6` | `e2c16e4defcfb154c9321a296a62a3d71a277e03` | 2026-10-03 |
+| `launch-ota-channel-test`, `launch-ota-test-1-67d965a`, `launch-poc-b5` | `67d965aac1550b2ff471e3cebbf66416d8ee4ca7` | 2026-10-03 |
+| `launch-poc-b4` | `5ca7b477e846bd5ab45a4173656ae3da165f2c93` | 2026-10-03 |
+| `launch-poc-b2` | `b179d6f1914b4cfc4674dd2a5eee5cfadd4cbd20` | 2026-10-03 |
+| `launch-poc-b1` | `94d5e83f3f7cdd43ac09a6d5c825f6f2d53ac3ab` | 2026-10-03 |
+
+## Endless-Escaspe
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `build-16` | `c30232d13b12662bd6646df639fd529a06e87174` | 2026-10-04 |
+| `build-15` | `95dcc77b8af55fbea7182d2a08fe0b8c8f0ed2c9` | 2026-10-03 |
+| `build-10`, `build-12`, `build-13`, `build-9` | `df65081c2b3b0a490b694f93dabbfec4f4757367` | 2026-05-11 |
+| `build-2`, `build-4`, `build-5`, `build-7` | `934391b570f979b6d99b5d72951bb8b0ded199f8` | 2026-04-26 |
+
+## Idle-game
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `snow-build-106`, `snow-build-107` | `8827159abfad2cbdd283e524608205f268e8ea0c` | 2026-05-08 |

@@ -42,8 +42,12 @@ Blob `e11f8c576652b82780967a02ee4b4acd12e8a3c8` (1536x1024 PNG, 2,838,266 bytes;
 
 - Axolotl: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Climb-Up: `assets/branding/studio_splash.png`, `branding/master/studio_splash_e3d9bb56.png`
+- Endless-Escaspe: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- Idle-game: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- Purgatory-Dungeon: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- Ragdoll-Rally: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`, `launch/branding/Hot_Attic_Games_Master_Logo.png`, `launch/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 
 ## Per-repository key art
@@ -183,3 +187,70 @@ App icons, logos, splash screens, branding and large images (512 px or more). Fu
 | `assets/icons/adaptive-foreground.png` | 1024x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/icons/adaptive-foreground.png) |
 | `assets/icons/adaptive-monochrome.png` | 1024x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/icons/adaptive-monochrome.png) |
 | `assets/icons/icon.png` | 1024x1024 | `ccr-47defc1a-89uvnr` | [view](https://github.com/verbal76/Ocean-spore/blob/a17d8e28732d1d3d41c0d091adf8188ed1e222c8/assets/icons/icon.png) |
+
+### Purgatory-Dungeon
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `Music & background images/VPP_logo_from_source_256.ico` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/Music%20&%20background%20images/VPP_logo_from_source_256.ico) |
+| `Music & background images/logo_vpp.png` | 565x536 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/Music%20&%20background%20images/logo_vpp.png) |
+| `android_icons/adaptive_bg_432.png` | 432x432 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/android_icons/adaptive_bg_432.png) |
+| `android_icons/adaptive_fg_432.png` | 432x432 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/android_icons/adaptive_fg_432.png) |
+| `android_icons/adaptive_mono_432.png` | 432x432 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/android_icons/adaptive_mono_432.png) |
+| `android_icons/main_192.png` | 192x192 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/android_icons/main_192.png) |
+| `app_icon/PurgatoryDungeon.ico` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/app_icon/PurgatoryDungeon.ico) |
+| `app_icon/PurgatoryDungeon.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/app_icon/PurgatoryDungeon.png) |
+| `assets/touch/icon_boot_cooldown.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_boot_cooldown.png) |
+| `assets/touch/icon_boot_default.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_boot_default.png) |
+| `assets/touch/icon_boot_disabled.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_boot_disabled.png) |
+| `assets/touch/icon_boot_pressed.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_boot_pressed.png) |
+| `assets/touch/icon_flask_cooldown.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_flask_cooldown.png) |
+| `assets/touch/icon_flask_default.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_flask_default.png) |
+| `assets/touch/icon_flask_disabled.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_flask_disabled.png) |
+| `assets/touch/icon_flask_pressed.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_flask_pressed.png) |
+| `assets/touch/icon_key_cooldown.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_key_cooldown.png) |
+| `assets/touch/icon_key_default.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_key_default.png) |
+| `assets/touch/icon_key_disabled.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_key_disabled.png) |
+| `assets/touch/icon_key_pressed.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_key_pressed.png) |
+| `assets/touch/icon_repulse_cooldown.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_repulse_cooldown.png) |
+| `assets/touch/icon_repulse_default.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_repulse_default.png) |
+| `assets/touch/icon_repulse_disabled.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_repulse_disabled.png) |
+| `assets/touch/icon_repulse_pressed.png` | 256x256 | `ccr-5f32885a-gvu16v` | [view](https://github.com/verbal76/Purgatory-Dungeon/blob/94408dec77c72caf68bbd6b63d9090661e99beb9/assets/touch/icon_repulse_pressed.png) |
+
+### Ragdoll-Rally
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `branding/RR_Launch_Icon.png` | 1254x1254 | `claude/launch-gameplay-pivot` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/979fcce4c99026864c72412ba78dd1fd583419b9/branding/RR_Launch_Icon.png) |
+| `launch/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/launch-gameplay-pivot` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/979fcce4c99026864c72412ba78dd1fd583419b9/launch/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `launch/branding/RR_Launch_512.png` | 512x512 | `claude/launch-gameplay-pivot` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/979fcce4c99026864c72412ba78dd1fd583419b9/launch/branding/RR_Launch_512.png) |
+| `launch/branding/RR_Launch_adaptive_bg_432.png` | 432x432 | `claude/launch-gameplay-pivot` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/979fcce4c99026864c72412ba78dd1fd583419b9/launch/branding/RR_Launch_adaptive_bg_432.png) |
+| `launch/branding/RR_Launch_adaptive_fg_432.png` | 432x432 | `claude/launch-gameplay-pivot` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/979fcce4c99026864c72412ba78dd1fd583419b9/launch/branding/RR_Launch_adaptive_fg_432.png) |
+| `launch/branding/RR_Launch_main_192.png` | 192x192 | `claude/launch-gameplay-pivot` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/979fcce4c99026864c72412ba78dd1fd583419b9/launch/branding/RR_Launch_main_192.png) |
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `main` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/41f5f5a8667bc3930eedfa2a322855a440dc1e9d/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `branding/RR_Legacy_Icon.png` | 1254x1254 | `claude/launch-mayhem-upgrades` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/822588236d8ecef772748bba1b99010116a7c556/branding/RR_Legacy_Icon.png) |
+| `launch/branding/Hot_Attic_Games_Master_Logo.png` | 1536x1024 | `claude/launch-mayhem-upgrades` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/822588236d8ecef772748bba1b99010116a7c556/launch/branding/Hot_Attic_Games_Master_Logo.png) |
+| `legacy/branding/RR_Legacy_512.png` | 512x512 | `claude/launch-mayhem-upgrades` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/822588236d8ecef772748bba1b99010116a7c556/legacy/branding/RR_Legacy_512.png) |
+| `legacy/branding/RR_Legacy_adaptive_bg_432.png` | 432x432 | `claude/launch-mayhem-upgrades` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/822588236d8ecef772748bba1b99010116a7c556/legacy/branding/RR_Legacy_adaptive_bg_432.png) |
+| `legacy/branding/RR_Legacy_adaptive_fg_432.png` | 432x432 | `claude/launch-mayhem-upgrades` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/822588236d8ecef772748bba1b99010116a7c556/legacy/branding/RR_Legacy_adaptive_fg_432.png) |
+| `legacy/branding/RR_Legacy_main_192.png` | 192x192 | `claude/launch-mayhem-upgrades` | [view](https://github.com/verbal76/Ragdoll-Rally/blob/822588236d8ecef772748bba1b99010116a7c556/legacy/branding/RR_Legacy_main_192.png) |
+
+### Endless-Escaspe
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/api36-native-qualification` | [view](https://github.com/verbal76/Endless-Escaspe/blob/4eb47b98a0d323cf4874b430ed233a1da68d6c46/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `assets/adaptive-icon-background.png` | 1024x1024 | `claude/api36-native-qualification` | [view](https://github.com/verbal76/Endless-Escaspe/blob/4eb47b98a0d323cf4874b430ed233a1da68d6c46/assets/adaptive-icon-background.png) |
+| `assets/adaptive-icon.png` | 1024x1024 | `claude/api36-native-qualification` | [view](https://github.com/verbal76/Endless-Escaspe/blob/4eb47b98a0d323cf4874b430ed233a1da68d6c46/assets/adaptive-icon.png) |
+| `assets/favicon.png` | 48x48 | `claude/api36-native-qualification` | [view](https://github.com/verbal76/Endless-Escaspe/blob/4eb47b98a0d323cf4874b430ed233a1da68d6c46/assets/favicon.png) |
+| `assets/icon.png` | 1254x1254 | `claude/api36-native-qualification` | [view](https://github.com/verbal76/Endless-Escaspe/blob/4eb47b98a0d323cf4874b430ed233a1da68d6c46/assets/icon.png) |
+| `assets/splash-icon.png` | 1024x1024 | `claude/api36-native-qualification` | [view](https://github.com/verbal76/Endless-Escaspe/blob/4eb47b98a0d323cf4874b430ed233a1da68d6c46/assets/splash-icon.png) |
+
+### Idle-game
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `src/assets/splash-bg.png` | 941x1672 | `claude/repo-gameplay-review-loq9rq` | [view](https://github.com/verbal76/Idle-game/blob/41c8cfbbe8d747e6fce072c9e2164d0d2e7ade77/src/assets/splash-bg.png) |
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/hold-candidate-next` | [view](https://github.com/verbal76/Idle-game/blob/471436a724909699a5010c7dfef9e52759de52af/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `src/assets/studio-logo.webp` | 1536x1024 | `claude/hold-candidate-next` | [view](https://github.com/verbal76/Idle-game/blob/471436a724909699a5010c7dfef9e52759de52af/src/assets/studio-logo.webp) |

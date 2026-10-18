@@ -4,17 +4,24 @@ Observations only. Every item is a proposal; nothing was moved, merged, renamed 
 
 ## Duplicated files across repositories (same git blob SHA)
 
-- 93 blobs appear in two or more repositories.
-- 87 are controller/keyboard glyph PNGs (the same prompt icon pack copied under different names into up to 9 repos, e.g. blob `3bf4371d26e8` = Xbox A).
-- The studio logo blob `e11f8c576652` is in 5 repos (see assets.md).
+- 161 blobs appear in two or more repositories.
+- 148 are controller/keyboard glyph PNGs (the same prompt icon pack copied under different names into up to 9 repos, e.g. blob `3bf4371d26e8` = Xbox A).
+- The studio logo blob `e11f8c576652` is in 9 repos (see assets.md).
 
 | Blob | Repositories and paths |
 |---|---|
-| `e11f8c576652` | Axolotl: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Climb-Up: `assets/branding/studio_splash.png` (+1); Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` |
+| `e11f8c576652` | Axolotl: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Climb-Up: `assets/branding/studio_splash.png` (+1); Endless-Escaspe: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Idle-game: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Purgatory-Dungeon: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Ragdoll-Rally: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` (+2); Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` |
+| `809546b9eeeb` | Endless-Escaspe: `assets/characters/texture-d.png`; Idle-game: `src/assets/character-texture.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-d.png` |
+| `0cfbf08886fc` | Climb-Up: `tools/otalab/live_e2e_run.txt` (+2); Purgatory-Dungeon: `VERSION` |
 | `1b33c55baabb` | Climb-Up: `gradle/wrapper/gradle-wrapper.jar`; Game-Designer: `gradle/wrapper/gradle-wrapper.jar` |
 | `23d15a936707` | Climb-Up: `gradlew`; Game-Designer: `gradlew` |
 | `573541ac9702` | Backrooms-Survivor: `godot/min_base_build.txt`; Tartaria-RPG: `.ci-mission-claims-baseline` (+1) |
 | `5eed7ee84528` | Climb-Up: `gradlew.bat`; Game-Designer: `gradlew.bat` |
+| `6cb06fdae2cc` | Endless-Escaspe: `assets/characters/texture-g.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-g.png` |
+| `7a60b85e148f` | Purgatory-Dungeon: `tools/ota/.gitignore`; Ragdoll-Rally: `.gitignore` |
+| `7c74a3c1be7d` | Endless-Escaspe: `assets/characters/texture-j.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-j.png` |
+| `7ed6ff82de6b` | Climb-Up: `tools/otalab/release_flag.txt`; Purgatory-Dungeon: `VERSION` |
+| `b8626c4cff28` | Purgatory-Dungeon: `VERSION`; Tartaria-RPG: `.ci-handoff-causes-baseline` |
 | `c18dd8d83cee` | Backrooms-Survivor: `.gitignore`; Fix-Tremors: `.gitignore` |
 
 ## Possibly abandoned or stale branches
@@ -26,6 +33,9 @@ A branch is listed when it is not contained in the repository's reference line (
 - **Game-Designer** (reference `ccr-6330e20f-dm7zhm`): `main` (2026-10-07, `b28ff434aaa0`)
 - **Axolotl** (reference `claude/mote-release-source`): `claude/mote-autoresume-wip` (2026-10-01, `f6b6b75d9679`), `claude/mote-leaves-wip` (2026-10-01, `5a71d34dbc88`), `claude/mote-menucam-wip` (2026-10-01, `01ea6e33dcfd`), `claude/mote-polish-a-wip` (2026-10-01, `a663fad4e0f2`), `main` (2026-10-04, `f3779f7c7f6e`), `preserve/mote-audit-round` (2026-10-07, `55fe0927eb81`), `preserve/mote-prey-pass` (2026-10-08, `1e5c02a6b5bf`)
 - **Ocean-spore** (reference `ccr-47defc1a-89uvnr`): `claude/fix-ui-add-menus-3q8N7` (2026-05-12, `44202cdb838c`)
+- **Ragdoll-Rally** (reference `claude/launch-gameplay-pivot`): `main` (2026-10-04, `41f5f5a8667b`)
+- **Endless-Escaspe** (reference `claude/api36-native-qualification`): `Github-APK-Transition-Escap` (2026-05-11, `e970c74d6842`), `claude/boss-pickups-scene-rebuild-0YBha` (2026-04-28, `481e30774301`), `claude/fix-apk-screen-issue-etmic` (2026-05-11, `b595f5d0678b`), `claude/hold-ci-hardening` (2026-10-03, `5e8b92fbd15a`), `claude/hold-scenarios` (2026-10-03, `1c962e51118c`), `claude/ledger-docs` (2026-10-03, `d2c9c4e5e14e`), `main` (2026-10-04, `84f6b740b8ac`)
+- **Idle-game** (reference `claude/repo-gameplay-review-loq9rq`): `Github-APK-Transition-snow` (2026-10-03, `bf96e840e574`), `claude/compile-teaching-document-zZQy6` (2026-05-11, `2d64524e17fb`), `claude/fix-ota-updates-rBtFA` (2026-05-08, `7e12a93dd48f`), `claude/hold-api36-migration` (2026-10-03, `db672e2d1aa4`), `claude/hold-save-export` (2026-10-03, `a59ab981e4cf`), `main` (2026-10-06, `968e195d5dac`)
 
 ## Conflicting or unresolved sources of truth
 
