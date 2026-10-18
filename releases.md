@@ -324,3 +324,63 @@ Releases for My-Medieval-Life, voiceforge, spiroglyphics, personal-assistant- an
 |---|---|---|
 | `ota-stable` | `28de300c0a9afc175c118c2ed952b784b7ddddea` | 2026-10-05 |
 | `v1` | `2e146d4a6d5c89d2a9bdaf04c7448dd919b8f086` | 2026-10-05 |
+
+## Cfm-calculator
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `v7` | `641fc9bce0b85cd54aff3810a51a9bc79e37ffa1` | 2026-10-04 |
+| `v6` | `2d02a12ff337a454883707829494403c52859c9e` | 2026-10-04 |
+| `v4.1.0-test.3` | `2d273539c579f0ab8bcc932a154038dce7e135a8` | 2026-10-03 |
+| `v4.0.0-test.1` | `f18cd5a825fe486845988f20003df804c6dc48db` | 2026-10-03 |
+
+## spiroglyphics
+
+| Release | Tag | Source commit | Published | Pre-release |
+|---|---|---|---|---|
+| Spiroglyphics v15 | `v15` | `e1d1c470f830dd9c95367a4e1271f15a9942a3b4` | 2026-10-04 | no |
+| Spiroglyphics v14 | `v0.1.0-build.17` | `97458dc41e1334ca8abd66bd2bb9cc28ddc74cd9` | 2026-10-03 | no |
+| Spiroglyphics v0.1.0-build.15 | `v0.1.0-build.15` | `2611b6331936b69e42fc10daecd68492f75600b0` | 2026-10-03 | no |
+| Spiroglyphics v0.1.0-build.14 | `v0.1.0-build.14` | `84cb4f48f0680b715bdd21b8f0a1c1d836c12276` | 2026-10-03 | no |
+| Spiroglyphics v0.1.0-build.13 | `v0.1.0-build.13` | `3057739807dfe877b68515d6ef00d3258e3c4dd8` | 2026-05-13 | no |
+| Spiroglyphics v0.1.0-build.12 | `v0.1.0-build.12` | `3057739807dfe877b68515d6ef00d3258e3c4dd8` | 2026-05-13 | no |
+| Spiroglyphics v0.1.0-build.11 | `v0.1.0-build.11` | `3057739807dfe877b68515d6ef00d3258e3c4dd8` | 2026-05-13 | no |
+| Spiroglyphics v0.1.0-build.10 | `v0.1.0-build.10` | `3057739807dfe877b68515d6ef00d3258e3c4dd8` | 2026-05-13 | no |
+| Spiroglyphics v0.1.0-build.9 | `v0.1.0-build.9` | `3057739807dfe877b68515d6ef00d3258e3c4dd8` | 2026-05-11 | no |
+| Spiroglyphics v0.1.0-build.8 | `v0.1.0-build.8` | `662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b` | 2026-05-11 | no |
+| Spiroglyphics v0.1.0-build.7 | `v0.1.0-build.7` | `662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b` | 2026-05-11 | no |
+| Spiroglyphics v0.1.0-build.6 | `v0.1.0-build.6` | `662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b` | 2026-05-11 | no |
+| Spiroglyphics v0.1.0-build.5 | `v0.1.0-build.5` | `662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b` | 2026-05-11 | no |
+| Spiroglyphics v0.1.0-build.4 | `v0.1.0-build.4` | `662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b` | 2026-05-11 | no |
+| Spiroglyphics v0.1.0-build.3 | `v0.1.0-build.3` | `662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b` | 2026-05-11 | no |
+| Spiroglyphics v0.1.0-build.2 | `v0.1.0-build.2` | `662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b` | 2026-05-11 | yes |
+
+## personal-assistant-
+
+| Release | Tag | Source commit | Published | Pre-release |
+|---|---|---|---|---|
+| Personal Assistant v4 | `api36-test-2` | `190711a47e17077d660d17f4dc43d480c3469597` | 2026-10-03 | no |
+
+## Manual-J
+
+No tags or releases.
+
+## web_auditor
+
+| Release | Tag | Source commit | Published | Pre-release |
+|---|---|---|---|---|
+| WebAuditor v1.95 - Open Report & Output Folder | `v1.95` | `5ba3b9e4203384783dfd7be7ded5f84c8b9145ab` | 2026-04-29 | no |
+| WebAuditor v1.9 - Platform Optimization Scorecard | `v1.9` | `11f247bf99726e35f41eb97d8b3513bc7ec757ce` | 2026-04-29 | no |
+| WebAuditor v1.8 - GEO & AI Search Optimization | `v1.8` | `57d2bc6afc60a4f6d3abd66cc9880eac175d2452` | 2026-04-29 | no |
+| WebAuditor v1.7 | `v1.7` | `ca9bef1653d2812d1e07404c581f202509f789cd` | 2026-04-29 | no |
+| WebAuditor v1.6 | `v1.6` | `5fc1203f37b4a500b8fb3afdb9e5c215bd3e3ee5` | 2026-04-29 | no |
+| WebAuditor v1.5 | `v1.5` | `0c42966f7363d560728ad7d17bdc2f292760f554` | 2026-04-29 | no |
+| WebAuditor v1.4 | `v1.4` | `81281d2bf8f7200bec240502307ffee523a08490` | 2026-04-29 | no |
+| WebAuditor v1.3 | `v1.3` | `bcfeb03b15fac1e04781f20fee3c47562ea75b17` | 2026-04-28 | no |
+| WebAuditor v1.2 | `v1.2` | `c3ffc2616c666e91079b2de9a2bcc3ce2370dbd4` | 2026-04-28 | no |
+| WebAuditor v1.1 | `v1.1` | `424c4a325bf0c04b2106edd73d8bede8a1a931ee` | 2026-04-28 | no |
+| WebAuditor v1.0 | `v1.0` | `e70bd9113fc1af695848126eeb5605e7ba5746d5` | 2026-04-28 | no |
+
+## HotAtticGames.github.io
+
+No tags or releases.

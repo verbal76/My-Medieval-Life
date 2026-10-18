@@ -9,7 +9,7 @@
    "url": "https://github.com/verbal76/My-Medieval-Life",
    "visibility": "public",
    "scanned": true,
-   "scanned_at": "2026-10-18T15:41:10Z",
+   "scanned_at": "2026-10-18T15:51:02Z",
    "product": "My Medieval Life",
    "kind": "game",
    "engine": "Godot 4.7 (game/), Python 3 tooling (tools/)",
@@ -30,17 +30,17 @@
      "committer_date": "2026-10-18T01:42:32+00:00",
      "role": "agent session branch",
      "relation": "contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
      "branch": "inventory/registry",
-     "sha": "3f05248591f796ce20e0d3b6a8bde4e347d8204b",
+     "sha": "cd07f74b04425c6bc8feb40160806436f67ccc34",
      "ref_kind": "moving branch head",
-     "committer_date": "2026-10-18T15:06:22+00:00",
+     "committer_date": "2026-10-18T15:50:56+00:00",
      "role": "this registry (orphan)",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -50,7 +50,7 @@
      "committer_date": "2026-10-17T00:04:18-04:00",
      "role": "GitHub default",
      "relation": "contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -60,7 +60,7 @@
      "committer_date": "2026-10-18T15:37:42+00:00",
      "role": "authoritative line (per repo records)",
      "relation": "",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -70,7 +70,7 @@
      "committer_date": "2026-10-18T04:14:54+00:00",
      "role": "agent WIP snapshot",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -80,7 +80,7 @@
      "committer_date": "2026-10-18T15:09:18+00:00",
      "role": "agent WIP snapshot",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -90,7 +90,7 @@
      "committer_date": "2026-10-18T13:38:54+00:00",
      "role": "agent WIP snapshot",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -100,7 +100,7 @@
      "committer_date": "2026-10-18T03:44:31+00:00",
      "role": "agent WIP snapshot",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -110,7 +110,7 @@
      "committer_date": "2026-10-18T14:35:20+00:00",
      "role": "agent WIP snapshot",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -120,7 +120,7 @@
      "committer_date": "2026-10-18T03:49:28+00:00",
      "role": "agent WIP snapshot",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -130,7 +130,7 @@
      "committer_date": "2026-10-18T05:02:12+00:00",
      "role": "agent WIP snapshot",
      "relation": "NOT contained in `staging/my-medieval-life`",
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     }
    ],
    "tags": [
@@ -147,7 +147,7 @@
       "published_at": "2026-10-18T01:11:30Z",
       "draft": false
      },
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -162,7 +162,7 @@
       "published_at": "2026-10-18T01:20:31Z",
       "draft": false
      },
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -177,7 +177,7 @@
       "published_at": "2026-10-18T01:22:36Z",
       "draft": false
      },
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -192,7 +192,7 @@
       "published_at": "2026-10-18T01:24:55Z",
       "draft": false
      },
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -207,7 +207,7 @@
       "published_at": "2026-10-18T01:34:37Z",
       "draft": false
      },
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -222,7 +222,7 @@
       "published_at": "2026-10-18T01:43:52Z",
       "draft": false
      },
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -237,7 +237,7 @@
       "published_at": "2026-10-18T05:19:14Z",
       "draft": false
      },
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     }
    ],
    "images": [
@@ -261,7 +261,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -283,7 +283,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -305,7 +305,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -327,7 +327,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -349,7 +349,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -371,7 +371,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -393,7 +393,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -415,7 +415,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -437,7 +437,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -459,7 +459,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -481,7 +481,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -503,7 +503,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -525,7 +525,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -547,7 +547,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -569,7 +569,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -591,7 +591,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -613,7 +613,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -635,7 +635,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -657,7 +657,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -679,7 +679,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -701,7 +701,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -723,7 +723,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -745,7 +745,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -767,7 +767,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -789,7 +789,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -811,7 +811,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -833,7 +833,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -855,7 +855,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -877,7 +877,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -899,7 +899,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -921,7 +921,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -943,7 +943,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -965,7 +965,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -987,7 +987,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1009,7 +1009,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1031,7 +1031,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1053,7 +1053,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1075,7 +1075,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1097,7 +1097,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1119,7 +1119,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1141,7 +1141,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1163,7 +1163,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1185,7 +1185,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1207,7 +1207,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1229,7 +1229,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1251,7 +1251,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1273,7 +1273,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1295,7 +1295,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1317,7 +1317,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1339,7 +1339,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1361,7 +1361,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1383,7 +1383,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1405,7 +1405,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1427,7 +1427,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1449,7 +1449,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1471,7 +1471,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1493,7 +1493,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1515,7 +1515,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1537,7 +1537,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1559,7 +1559,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1581,7 +1581,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1603,7 +1603,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1625,7 +1625,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1647,7 +1647,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1669,7 +1669,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1691,7 +1691,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1713,7 +1713,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1735,7 +1735,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1757,7 +1757,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1779,7 +1779,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1801,7 +1801,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1823,7 +1823,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1845,7 +1845,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1867,7 +1867,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1889,7 +1889,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1911,7 +1911,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1933,7 +1933,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1955,7 +1955,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1977,7 +1977,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -1999,7 +1999,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2021,7 +2021,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2043,7 +2043,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2065,7 +2065,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2087,7 +2087,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2109,7 +2109,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2131,7 +2131,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2153,7 +2153,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2175,7 +2175,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2197,7 +2197,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2219,7 +2219,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2241,7 +2241,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2263,7 +2263,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2285,7 +2285,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2307,7 +2307,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2329,7 +2329,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2351,7 +2351,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2373,7 +2373,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2395,7 +2395,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2417,7 +2417,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2439,7 +2439,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2461,7 +2461,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2483,7 +2483,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2505,7 +2505,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2527,7 +2527,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2549,7 +2549,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2571,7 +2571,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2593,7 +2593,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2615,7 +2615,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2637,7 +2637,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2659,7 +2659,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2681,7 +2681,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2703,7 +2703,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2720,7 +2720,7 @@
       "wip/agent-a71e3cddb5b8d02d4",
       "wip/agent-a892fc619ec33a8eb"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2742,7 +2742,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2764,7 +2764,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2786,7 +2786,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2808,7 +2808,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2830,7 +2830,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2851,7 +2851,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2873,7 +2873,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2895,7 +2895,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2917,7 +2917,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2939,7 +2939,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2961,7 +2961,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -2983,7 +2983,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3005,7 +3005,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3026,7 +3026,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3048,7 +3048,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3070,7 +3070,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3092,7 +3092,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3114,7 +3114,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3135,7 +3135,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3157,7 +3157,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3179,7 +3179,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3201,7 +3201,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3223,7 +3223,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3244,7 +3244,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3266,7 +3266,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3288,7 +3288,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3310,7 +3310,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3332,7 +3332,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3353,7 +3353,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3375,7 +3375,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3397,7 +3397,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3419,7 +3419,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3441,7 +3441,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3463,7 +3463,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3485,7 +3485,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3507,7 +3507,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3529,7 +3529,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3551,7 +3551,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3573,7 +3573,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3595,7 +3595,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3617,7 +3617,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3638,7 +3638,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3659,7 +3659,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3680,7 +3680,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3701,7 +3701,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3722,7 +3722,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3743,7 +3743,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3764,7 +3764,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3786,7 +3786,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3808,7 +3808,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3829,7 +3829,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3851,7 +3851,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3873,7 +3873,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3895,7 +3895,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3917,7 +3917,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3932,7 +3932,7 @@
       "staging/my-medieval-life",
       "wip/agent-a2a2ffd98ae088c5c"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3954,7 +3954,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3976,7 +3976,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -3997,7 +3997,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4019,7 +4019,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4041,7 +4041,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4063,7 +4063,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4085,7 +4085,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4106,7 +4106,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4128,7 +4128,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4150,7 +4150,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4172,7 +4172,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4193,7 +4193,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4215,7 +4215,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4237,7 +4237,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4259,7 +4259,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4281,7 +4281,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4303,7 +4303,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4325,7 +4325,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4347,7 +4347,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4369,7 +4369,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4384,7 +4384,7 @@
       "staging/my-medieval-life",
       "wip/agent-a2a2ffd98ae088c5c"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4405,7 +4405,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4426,7 +4426,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4448,7 +4448,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4469,7 +4469,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4490,7 +4490,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4512,7 +4512,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4534,7 +4534,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4556,7 +4556,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4570,7 +4570,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4591,7 +4591,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4613,7 +4613,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4635,7 +4635,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4657,7 +4657,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4671,7 +4671,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4692,7 +4692,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4713,7 +4713,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4727,7 +4727,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4741,7 +4741,7 @@
      "branches": [
       "wip/agent-a2a2ffd98ae088c5c"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4755,7 +4755,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4776,7 +4776,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4790,7 +4790,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4812,7 +4812,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4833,7 +4833,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4847,7 +4847,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4868,7 +4868,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4889,7 +4889,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4903,7 +4903,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4923,7 +4923,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4937,7 +4937,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4951,7 +4951,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4972,7 +4972,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -4993,7 +4993,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5007,7 +5007,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5029,7 +5029,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5043,7 +5043,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5063,7 +5063,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5085,7 +5085,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5107,7 +5107,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5129,7 +5129,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5143,7 +5143,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5157,7 +5157,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5171,7 +5171,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5185,7 +5185,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5199,7 +5199,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5213,7 +5213,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5227,7 +5227,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5241,7 +5241,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5255,7 +5255,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5276,7 +5276,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5290,7 +5290,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5304,7 +5304,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5318,7 +5318,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5332,7 +5332,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5346,7 +5346,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5360,7 +5360,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5374,7 +5374,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5388,7 +5388,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5409,7 +5409,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5430,7 +5430,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5451,7 +5451,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5472,7 +5472,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5494,7 +5494,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5515,7 +5515,7 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5529,7 +5529,7 @@
      "branches": [
       "staging/my-medieval-life"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     },
     {
      "repo": "My-Medieval-Life",
@@ -5552,29 +5552,20 @@
       "wip/agent-ac3f19ceb6d7088ba",
       "wip/agent-ad98d07112ec5147a"
      ],
-     "scan_date": "2026-10-18T15:41:10Z"
+     "scan_date": "2026-10-18T15:51:02Z"
     }
    ],
    "manifests": [
     "ASSET_MANIFEST.md",
     "asset_manifest.csv",
+    "assets.md",
     "docs/SYSTEM_INTERACTION_MANIFEST.md",
     "docs/systems/RESOURCE_NODE_MANIFEST.md",
     "game/assets/PROVENANCE.json",
     "tools/build_manifest.py"
    ],
    "sensitive_paths_names_only": [],
-   "workflows": [
-    {
-     "repo": "My-Medieval-Life",
-     "branch": "staging/my-medieval-life",
-     "sha": "60ac3e21329be47f43a4427feb5cb05d1416e951",
-     "path": ".github/workflows/release.yml",
-     "name": "Build and release",
-     "on": "workflow_dispatch:",
-     "scan_date": "2026-10-18T15:41:10Z"
-    }
-   ],
+   "workflows": [],
    "steam_candidates": [
     {
      "repo": "My-Medieval-Life",
@@ -55988,6 +55979,2405 @@
      "scan_date": "2026-10-18T15:42:17Z"
     }
    ],
+   "steam_candidates": []
+  },
+  {
+   "repo": "Cfm-calculator",
+   "url": "https://github.com/verbal76/Cfm-calculator",
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "scanned": true,
+   "scanned_at": "2026-10-18T15:42:18Z",
+   "product": "Verbal's CFM Calculator",
+   "kind": "app (HVAC tool)",
+   "engine": "Capacitor 8 / Android API 36, TypeScript + Vite",
+   "status": "active",
+   "last_commit": "2026-10-06",
+   "default_branch": "main",
+   "default_head": "05abc05c53295a361f8a5ffea165584bcd14f872",
+   "authoritative_branch": null,
+   "authoritative_basis": "CLAUDE.md: \"`release/VERSION` is the single source of truth (versionCode == N)\"; branch: unresolved.",
+   "purpose": "\"Verbal's CFM Calculator (gas-heating CFM per ton and refrigerant subcooling checks).\"",
+   "purpose_source": "ccr-ac67996a-npuzs3:README.md",
+   "branches": [
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-06T18:54:38+00:00",
+     "role": "most recent branch (reference line; not stated authoritative), agent session branch",
+     "relation": "",
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "main",
+     "sha": "05abc05c53295a361f8a5ffea165584bcd14f872",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T14:20:04-04:00",
+     "role": "GitHub default",
+     "relation": "contained in `ccr-ac67996a-npuzs3`",
+     "scan_date": "2026-10-18T15:42:18Z"
+    }
+   ],
+   "tags": [
+    {
+     "repo": "Cfm-calculator",
+     "tag": "v4.0.0-test.1",
+     "sha": "f18cd5a825fe486845988f20003df804c6dc48db",
+     "tag_object": "f18cd5a825fe486845988f20003df804c6dc48db",
+     "ref_kind": "tag",
+     "release": "unreadable",
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "tag": "v4.1.0-test.3",
+     "sha": "2d273539c579f0ab8bcc932a154038dce7e135a8",
+     "tag_object": "2d273539c579f0ab8bcc932a154038dce7e135a8",
+     "ref_kind": "tag",
+     "release": "unreadable",
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "tag": "v6",
+     "sha": "2d02a12ff337a454883707829494403c52859c9e",
+     "tag_object": "2d02a12ff337a454883707829494403c52859c9e",
+     "ref_kind": "tag",
+     "release": "unreadable",
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "tag": "v7",
+     "sha": "641fc9bce0b85cd54aff3810a51a9bc79e37ffa1",
+     "tag_object": "641fc9bce0b85cd54aff3810a51a9bc79e37ffa1",
+     "ref_kind": "tag",
+     "release": "unreadable",
+     "scan_date": "2026-10-18T15:42:18Z"
+    }
+   ],
+   "images": [
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png",
+     "blob": "e11f8c576652b82780967a02ee4b4acd12e8a3c8",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 2838266,
+     "branches": [
+      "ccr-ac67996a-npuzs3",
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+     "blob": "c5a58d640db0a2631b7af2c58bac2901a070e2e0",
+     "width": 72,
+     "height": 72,
+     "bytes": 4081,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+     "blob": "d2a59fb24e96dc0e25550cd49d622cc45d92932b",
+     "width": 162,
+     "height": 162,
+     "bytes": 6946,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+     "blob": "c5a58d640db0a2631b7af2c58bac2901a070e2e0",
+     "width": 72,
+     "height": 72,
+     "bytes": 4081,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+     "blob": "5c21dee40a66031e582f8a746b0bbe0ba405f03a",
+     "width": 48,
+     "height": 48,
+     "bytes": 2440,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+     "blob": "affdf1374553118272c43cc4d477c5c99a5ac775",
+     "width": 108,
+     "height": 108,
+     "bytes": 4125,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+     "blob": "5c21dee40a66031e582f8a746b0bbe0ba405f03a",
+     "width": 48,
+     "height": 48,
+     "bytes": 2440,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+     "blob": "f24a187a8b4c1ad83c928e5b5cda17a045ab7de3",
+     "width": 96,
+     "height": 96,
+     "bytes": 5844,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+     "blob": "396c13498bf8fc14d343d76e49409fa83687df06",
+     "width": 216,
+     "height": 216,
+     "bytes": 10332,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+     "blob": "f24a187a8b4c1ad83c928e5b5cda17a045ab7de3",
+     "width": 96,
+     "height": 96,
+     "bytes": 5844,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+     "blob": "1e4393b53d606e9f02f6a9739a3c226124cb248c",
+     "width": 144,
+     "height": 144,
+     "bytes": 10221,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+     "blob": "83ee643b2ac92f824c176a34da0b2adffda75d30",
+     "width": 324,
+     "height": 324,
+     "bytes": 18097,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+     "blob": "1e4393b53d606e9f02f6a9739a3c226124cb248c",
+     "width": 144,
+     "height": 144,
+     "bytes": 10221,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+     "blob": "71629ab4cb0303036a3b1e8361f33bc79fccae31",
+     "width": 192,
+     "height": 192,
+     "bytes": 15176,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+     "blob": "1b23aaf1fc8f720b86a78c6d0db6370f350fda0b",
+     "width": 432,
+     "height": 432,
+     "bytes": 27699,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+     "blob": "71629ab4cb0303036a3b1e8361f33bc79fccae31",
+     "width": 192,
+     "height": 192,
+     "bytes": 15176,
+     "branches": [
+      "ccr-ac67996a-npuzs3"
+     ],
+     "scan_date": "2026-10-18T15:42:18Z"
+    }
+   ],
+   "manifests": [
+    "android/app/src/main/AndroidManifest.xml"
+   ],
+   "sensitive_paths_names_only": [],
+   "workflows": [
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": ".github/workflows/android.yml",
+     "name": "Release build",
+     "on": "push:\n    branches: ['**']\n    paths: ['release/deliver']\n    tags: ['v[0-9]*']",
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": ".github/workflows/ci.yml",
+     "name": "CI (cheap checks)",
+     "on": "pull_request:\n    types: [opened, reopened, synchronize, ready_for_review]\n    paths-ignore: &ignored\n      - '**.md'\n      - 'docs/**'\n      - 'CLAUDE.md'\n      - '.gitignore'\n      - 'release/**'\n      - 'scripts/android_smoke.py'\n      - 'scripts/ui_smoke.py'\n      - '.github/workflows/smoke.yml'\n      - '.github/workflows/promote.yml'\n  push:\n    branches: [main]\n    paths-ignore: *ignored",
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": ".github/workflows/promote.yml",
+     "name": "Promote verified release",
+     "on": "push:\n    branches: ['**']\n    paths: ['release/promote.json']\n  workflow_dispatch:\n    inputs:\n      promote_version:\n        description: 'Public version number to publish, e.g. 5'\n        required: false\n      promote_from_tag:\n        description: 'Existing verified release tag whose exact binary becomes that version'\n        required: false",
+     "scan_date": "2026-10-18T15:42:18Z"
+    },
+    {
+     "repo": "Cfm-calculator",
+     "branch": "ccr-ac67996a-npuzs3",
+     "sha": "b1fe120bdfbf40a7cc318b01c65b32264ecd59fd",
+     "path": ".github/workflows/smoke.yml",
+     "name": "Emulator smoke test (opt-in)",
+     "on": "push:\n    branches: ['**']\n    paths: ['release/smoke']\n  workflow_dispatch:",
+     "scan_date": "2026-10-18T15:42:18Z"
+    }
+   ],
+   "steam_candidates": []
+  },
+  {
+   "repo": "spiroglyphics",
+   "url": "https://github.com/verbal76/spiroglyphics",
+   "visibility": "private",
+   "scanned": true,
+   "scanned_at": "2026-10-18T15:42:23Z",
+   "product": "Spiroglyphics",
+   "kind": "app",
+   "engine": "Expo / React Native, TypeScript",
+   "status": "active",
+   "last_commit": "2026-10-06",
+   "default_branch": "main",
+   "default_head": "aa133ddd453454c55185a6d2e2ebb3f016fee58b",
+   "authoritative_branch": null,
+   "authoritative_basis": "CLAUDE.md: version single source `public-version.json`; branch: unresolved.",
+   "purpose": "\"Android app (React Native / Expo) that turns a photo into a printable coloring page made of one continuous spiral lane.\"",
+   "purpose_source": "claude/spiroglyphics-coloring-app-Stwjt:README.md",
+   "branches": [
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-06T18:52:09+00:00",
+     "role": "most recent branch (reference line; not stated authoritative), agent session branch",
+     "relation": "",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "main",
+     "sha": "aa133ddd453454c55185a6d2e2ebb3f016fee58b",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T14:16:46-04:00",
+     "role": "GitHub default",
+     "relation": "NOT contained in `claude/spiroglyphics-coloring-app-Stwjt`",
+     "scan_date": "2026-10-18T15:42:23Z"
+    }
+   ],
+   "tags": [
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.10",
+     "sha": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "tag_object": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.10",
+      "name": "Spiroglyphics v0.1.0-build.10",
+      "prerelease": false,
+      "published_at": "2026-05-13T00:26:54Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.11",
+     "sha": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "tag_object": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.11",
+      "name": "Spiroglyphics v0.1.0-build.11",
+      "prerelease": false,
+      "published_at": "2026-05-13T03:15:24Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.12",
+     "sha": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "tag_object": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.12",
+      "name": "Spiroglyphics v0.1.0-build.12",
+      "prerelease": false,
+      "published_at": "2026-05-13T13:05:37Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.13",
+     "sha": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "tag_object": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.13",
+      "name": "Spiroglyphics v0.1.0-build.13",
+      "prerelease": false,
+      "published_at": "2026-05-13T13:06:55Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.14",
+     "sha": "84cb4f48f0680b715bdd21b8f0a1c1d836c12276",
+     "tag_object": "84cb4f48f0680b715bdd21b8f0a1c1d836c12276",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.14",
+      "name": "Spiroglyphics v0.1.0-build.14",
+      "prerelease": false,
+      "published_at": "2026-10-03T06:32:09Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.15",
+     "sha": "2611b6331936b69e42fc10daecd68492f75600b0",
+     "tag_object": "2611b6331936b69e42fc10daecd68492f75600b0",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.15",
+      "name": "Spiroglyphics v0.1.0-build.15",
+      "prerelease": false,
+      "published_at": "2026-10-03T10:57:54Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.17",
+     "sha": "97458dc41e1334ca8abd66bd2bb9cc28ddc74cd9",
+     "tag_object": "97458dc41e1334ca8abd66bd2bb9cc28ddc74cd9",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.17",
+      "name": "Spiroglyphics v14",
+      "prerelease": false,
+      "published_at": "2026-10-03T17:27:04Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.2",
+     "sha": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "tag_object": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.2",
+      "name": "Spiroglyphics v0.1.0-build.2",
+      "prerelease": true,
+      "published_at": "2026-05-11T13:32:34Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.3",
+     "sha": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "tag_object": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.3",
+      "name": "Spiroglyphics v0.1.0-build.3",
+      "prerelease": false,
+      "published_at": "2026-05-11T15:12:25Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.4",
+     "sha": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "tag_object": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.4",
+      "name": "Spiroglyphics v0.1.0-build.4",
+      "prerelease": false,
+      "published_at": "2026-05-11T16:00:38Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.5",
+     "sha": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "tag_object": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.5",
+      "name": "Spiroglyphics v0.1.0-build.5",
+      "prerelease": false,
+      "published_at": "2026-05-11T16:02:17Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.6",
+     "sha": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "tag_object": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.6",
+      "name": "Spiroglyphics v0.1.0-build.6",
+      "prerelease": false,
+      "published_at": "2026-05-11T16:05:32Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.7",
+     "sha": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "tag_object": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.7",
+      "name": "Spiroglyphics v0.1.0-build.7",
+      "prerelease": false,
+      "published_at": "2026-05-11T19:20:56Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.8",
+     "sha": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "tag_object": "662dc58066bf2fa6f5cfdbb8cbbc4fb0c16fa91b",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.8",
+      "name": "Spiroglyphics v0.1.0-build.8",
+      "prerelease": false,
+      "published_at": "2026-05-11T20:00:45Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v0.1.0-build.9",
+     "sha": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "tag_object": "3057739807dfe877b68515d6ef00d3258e3c4dd8",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v0.1.0-build.9",
+      "name": "Spiroglyphics v0.1.0-build.9",
+      "prerelease": false,
+      "published_at": "2026-05-11T21:20:31Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "tag": "v15",
+     "sha": "e1d1c470f830dd9c95367a4e1271f15a9942a3b4",
+     "tag_object": "e1d1c470f830dd9c95367a4e1271f15a9942a3b4",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v15",
+      "name": "Spiroglyphics v15",
+      "prerelease": false,
+      "published_at": "2026-10-04T19:47:36Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:23Z"
+    }
+   ],
+   "images": [
+    {
+     "repo": "spiroglyphics",
+     "branch": "main",
+     "sha": "aa133ddd453454c55185a6d2e2ebb3f016fee58b",
+     "path": "Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png",
+     "blob": "e11f8c576652b82780967a02ee4b4acd12e8a3c8",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 2838266,
+     "branches": [
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": "branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png",
+     "blob": "e11f8c576652b82780967a02ee4b4acd12e8a3c8",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 2838266,
+     "branches": [
+      "claude/spiroglyphics-coloring-app-Stwjt"
+     ],
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": "docs/reference/target-output.png",
+     "blob": "4fbd2f38023cce9c0f0cce185b6fb367a7b7ab59",
+     "width": 1080,
+     "height": 2404,
+     "bytes": 1851039,
+     "branches": [
+      "claude/spiroglyphics-coloring-app-Stwjt"
+     ],
+     "scan_date": "2026-10-18T15:42:23Z"
+    }
+   ],
+   "manifests": [],
+   "sensitive_paths_names_only": [],
+   "workflows": [
+    {
+     "repo": "spiroglyphics",
+     "branch": "main",
+     "sha": "aa133ddd453454c55185a6d2e2ebb3f016fee58b",
+     "path": ".github/workflows/prune-artifacts.yml",
+     "name": "Prune Artifacts",
+     "on": "workflow_dispatch:\n  schedule:\n    - cron: '0 6 * * *'\n  workflow_run:\n    workflows: ['Android APK (native)']\n    types: [completed]",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": ".github/workflows/android-native.yml",
+     "name": "Android APK (native)",
+     "on": "workflow_dispatch:\n  push:\n    tags:\n      - 'v*'\n    branches:\n      - '**'\n    paths:\n      - '.github/triggers/build-android.txt'",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": ".github/workflows/android-release.yml",
+     "name": "Android Release (AAB, opt-in)",
+     "on": "workflow_dispatch:\n    inputs:\n      mode:\n        description: 'verify-aab = debug-signed AAB artifact, NOT FOR UPLOAD. release = upload-key signed AAB + APK (needs release environment secrets).'\n        type: choice\n        options:\n          - verify-aab\n          - release\n        default: verify-aab\n      build_apk:\n        description: 'release mode only: also build an upload-key-signed sideload APK'\n        type: boolean\n        default: true\n      abis:\n        description: 'release mode only: ABIs for the sideload APK (comma separated). The AAB always contains all ABIs.'\n        type:",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": ".github/workflows/apk-verify.yml",
+     "name": "Verify released APK",
+     "on": "workflow_dispatch:\n    inputs:\n      emulator:\n        description: 'Also run the (expensive) emulator install/launch/splash job'\n        type: boolean\n        default: false\n  push:\n    paths:\n      - '.github/triggers/verify-apk.json'",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": ".github/workflows/ci.yml",
+     "name": "CI (typecheck + tests)",
+     "on": "push:\n    paths:\n      - 'src/**'\n      - 'App.tsx'\n      - 'index.*'\n      - 'scripts/**'\n      - 'branding/**'\n      - 'package.json'\n      - 'package-lock.json'\n      - 'app.json'\n      - 'public-version.json'\n      - 'tsconfig.json'\n      - 'babel.config.js'\n      - 'vitest.config.*'\n      - '.github/workflows/ci.yml'\n  pull_request:\n    paths:\n      - 'src/**'\n      - 'App.tsx'\n      - 'scripts/**'\n      - 'package.json'\n      - 'package-lock.json'\n      - 'app.json'\n      - '.github/workflows/ci.yml'\n  workflow_dispatch:",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": ".github/workflows/ota-publish.yml",
+     "name": "OTA publish (EAS Update)",
+     "on": "workflow_dispatch:\n    inputs:\n      mode:\n        description: 'publish = ship JS to the channel (guarded). rollback / rollback-to-embedded = see workflow header.'\n        type: choice\n        options:\n          - publish\n          - rollback\n          - rollback-to-embedded\n        default: publish\n      channel:\n        description: 'EAS channel (the installed APK follows the channel in app.json requestHeaders)'\n        type: string\n        default: 'preview'\n      message:\n        description: 'Optional note appended to the update message'\n        type: string\n        default: ''\n      rol",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": ".github/workflows/prune-artifacts.yml",
+     "name": "Prune Artifacts",
+     "on": "workflow_dispatch:\n  workflow_run:\n    workflows: ['Android APK (native)']\n    types: [completed]",
+     "scan_date": "2026-10-18T15:42:23Z"
+    },
+    {
+     "repo": "spiroglyphics",
+     "branch": "claude/spiroglyphics-coloring-app-Stwjt",
+     "sha": "d09b8b8f16a4b0505841c22564bd5c8288b7dd03",
+     "path": ".github/workflows/release-retitle.yml",
+     "name": "Retitle release (public name)",
+     "on": "workflow_dispatch:\n  push:\n    paths:\n      - '.github/triggers/retitle-release.json'",
+     "scan_date": "2026-10-18T15:42:23Z"
+    }
+   ],
+   "steam_candidates": []
+  },
+  {
+   "repo": "personal-assistant-",
+   "url": "https://github.com/verbal76/personal-assistant-",
+   "visibility": "private",
+   "scanned": true,
+   "scanned_at": "2026-10-18T15:42:24Z",
+   "product": "Personal Assistant",
+   "kind": "app",
+   "engine": "Expo / React Native, TypeScript",
+   "status": "active",
+   "last_commit": "2026-10-06",
+   "default_branch": "main",
+   "default_head": "d76315144df76e6502f7e28745355b3269f188c1",
+   "authoritative_branch": null,
+   "authoritative_basis": "unresolved.",
+   "purpose": "\"A polished iOS + Android recording app that auto-transcribes and turns your audio into structured notes\"",
+   "purpose_source": "main:README.md",
+   "branches": [
+    {
+     "repo": "personal-assistant-",
+     "branch": "Github-APK-Transition-PA",
+     "sha": "7df42d8bf12b9d3ecd8e62938f2629db25e1a6b5",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-06T18:51:11+00:00",
+     "role": "unknown",
+     "relation": "NOT contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/add-recording-folders-Q0wSM",
+     "sha": "a2149dab237658ed7f6c129b27d57ed09ccc8492",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-04-30T18:57:50+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`; 158 days older than the newest branch: possibly stale or abandoned (unverified by content)",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/ai-recording-transcription-app-z95Bs",
+     "sha": "ff1ed7b2fbeea5277c6e412191c520f78900b30a",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T19:21:32+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-06T18:51:16+00:00",
+     "role": "most recent branch (reference line; not stated authoritative), agent session branch",
+     "relation": "",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-signing-check",
+     "sha": "2fd84a8319bd092f0a34556fc51dbc3dabffae4c",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T19:21:05+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/audio-file-import-wvG8O",
+     "sha": "255ce445363323ede0cd9b62eda0d651961894ab",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-05-05T19:29:37+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`; 153 days older than the newest branch: possibly stale or abandoned (unverified by content)",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/checkpoint-splash-b16dfe4",
+     "sha": "b16dfe45a8e011da5fe9c6cd76fd00e44c5217bb",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T18:31:12+00:00",
+     "role": "agent session branch",
+     "relation": "contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/debug-record-screen-sGvzp",
+     "sha": "a74a43be226c70332598a0f0619ecfa5b64dd315",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-04-24T15:05:47+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`; 165 days older than the newest branch: possibly stale or abandoned (unverified by content)",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/debug-recording-app-nB4Jk",
+     "sha": "9d900ab50b9d7654b396f88b3a2bf4be3636521e",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T19:21:35+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/debug-search-input-eqnpZ",
+     "sha": "63fcf7c5e44b8c523f69e0e9f32a931c96fddc31",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-04-30T21:04:02+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`; 158 days older than the newest branch: possibly stale or abandoned (unverified by content)",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/fix-white-screen-issue-Hmi6u",
+     "sha": "557d819e8843d16419a553c22b0fc83b929ef928",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-04-24T05:29:45+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`; 165 days older than the newest branch: possibly stale or abandoned (unverified by content)",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/peaceful-hopper-qn7olf",
+     "sha": "1732d324f648d124c6ba475daeabedb921240667",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-03T01:46:52+00:00",
+     "role": "agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/release-pa-v4",
+     "sha": "fb146782076bcf9f2c844402a01f6c5d2d4b5ddd",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T19:20:54+00:00",
+     "role": "release-related, agent session branch",
+     "relation": "NOT contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "main",
+     "sha": "d76315144df76e6502f7e28745355b3269f188c1",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-06T18:51:08+00:00",
+     "role": "GitHub default",
+     "relation": "NOT contained in `claude/api36-native-modernization`",
+     "scan_date": "2026-10-18T15:42:24Z"
+    }
+   ],
+   "tags": [
+    {
+     "repo": "personal-assistant-",
+     "tag": "api36-test-2",
+     "sha": "190711a47e17077d660d17f4dc43d480c3469597",
+     "tag_object": "190711a47e17077d660d17f4dc43d480c3469597",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "api36-test-2",
+      "name": "Personal Assistant v4",
+      "prerelease": false,
+      "published_at": "2026-10-03T17:43:45Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:24Z"
+    }
+   ],
+   "images": [
+    {
+     "repo": "personal-assistant-",
+     "branch": "main",
+     "sha": "d76315144df76e6502f7e28745355b3269f188c1",
+     "path": "Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png",
+     "blob": "e11f8c576652b82780967a02ee4b4acd12e8a3c8",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 2838266,
+     "branches": [
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": "assets/adaptive-icon-monochrome.png",
+     "blob": "04d6e6cf521cfc71bd5f1895ee3e6cd5ff458ffd",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 19351,
+     "branches": [
+      "claude/api36-native-modernization"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": "assets/adaptive-icon.png",
+     "blob": "48363cfb55eab71185e1639dcade9917e95b9097",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 28007,
+     "branches": [
+      "claude/api36-native-modernization"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "Github-APK-Transition-PA",
+     "sha": "7df42d8bf12b9d3ecd8e62938f2629db25e1a6b5",
+     "path": "assets/adaptive-icon.png",
+     "blob": "daf049f4be76a4dc1b54375cc9c176c31b135be3",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 6744,
+     "branches": [
+      "Github-APK-Transition-PA",
+      "claude/api36-signing-check",
+      "claude/checkpoint-splash-b16dfe4",
+      "claude/debug-recording-app-nB4Jk",
+      "claude/release-pa-v4"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/add-recording-folders-Q0wSM",
+     "sha": "a2149dab237658ed7f6c129b27d57ed09ccc8492",
+     "path": "assets/adaptive-icon.png",
+     "blob": "e66bc8a509f7c96ff90a1ee9f236df41beb69ccb",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 11578,
+     "branches": [
+      "claude/add-recording-folders-Q0wSM",
+      "claude/ai-recording-transcription-app-z95Bs",
+      "claude/audio-file-import-wvG8O",
+      "claude/debug-record-screen-sGvzp",
+      "claude/debug-search-input-eqnpZ",
+      "claude/fix-white-screen-issue-Hmi6u",
+      "claude/peaceful-hopper-qn7olf",
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": "assets/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png",
+     "blob": "e11f8c576652b82780967a02ee4b4acd12e8a3c8",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 2838266,
+     "branches": [
+      "claude/api36-native-modernization",
+      "claude/checkpoint-splash-b16dfe4"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "Github-APK-Transition-PA",
+     "sha": "7df42d8bf12b9d3ecd8e62938f2629db25e1a6b5",
+     "path": "assets/favicon.png",
+     "blob": "c66ed861adda8db78f4c286960f2f1ad4379bd39",
+     "width": 48,
+     "height": 48,
+     "bytes": 376,
+     "branches": [
+      "Github-APK-Transition-PA",
+      "claude/add-recording-folders-Q0wSM",
+      "claude/ai-recording-transcription-app-z95Bs",
+      "claude/api36-native-modernization",
+      "claude/api36-signing-check",
+      "claude/audio-file-import-wvG8O",
+      "claude/checkpoint-splash-b16dfe4",
+      "claude/debug-record-screen-sGvzp",
+      "claude/debug-recording-app-nB4Jk",
+      "claude/debug-search-input-eqnpZ",
+      "claude/fix-white-screen-issue-Hmi6u",
+      "claude/peaceful-hopper-qn7olf",
+      "claude/release-pa-v4",
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "Github-APK-Transition-PA",
+     "sha": "7df42d8bf12b9d3ecd8e62938f2629db25e1a6b5",
+     "path": "assets/icon.png",
+     "blob": "62494245ddc0a2cea0abe8a541ae045202b774db",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 7569,
+     "branches": [
+      "Github-APK-Transition-PA",
+      "claude/api36-signing-check",
+      "claude/checkpoint-splash-b16dfe4",
+      "claude/debug-recording-app-nB4Jk",
+      "claude/release-pa-v4"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": "assets/icon.png",
+     "blob": "b290757c172a537421f2cfe3e7dd8fceaf762ed3",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 29472,
+     "branches": [
+      "claude/api36-native-modernization"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/add-recording-folders-Q0wSM",
+     "sha": "a2149dab237658ed7f6c129b27d57ed09ccc8492",
+     "path": "assets/icon.png",
+     "blob": "f4285021f3a5678332df0fb6e0c4833dce979aff",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 10562,
+     "branches": [
+      "claude/add-recording-folders-Q0wSM",
+      "claude/ai-recording-transcription-app-z95Bs",
+      "claude/audio-file-import-wvG8O",
+      "claude/debug-record-screen-sGvzp",
+      "claude/debug-search-input-eqnpZ",
+      "claude/fix-white-screen-issue-Hmi6u",
+      "claude/peaceful-hopper-qn7olf",
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": "assets/splash-blank.png",
+     "blob": "915dd2f48cc0481251fd711367bce484acca69f1",
+     "width": 1024,
+     "height": 1024,
+     "bytes": 4144,
+     "branches": [
+      "claude/api36-native-modernization",
+      "claude/checkpoint-splash-b16dfe4"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "Github-APK-Transition-PA",
+     "sha": "7df42d8bf12b9d3ecd8e62938f2629db25e1a6b5",
+     "path": "assets/splash.png",
+     "blob": "46bec8ea56efa04fd963fc9bb8a1d9b1f5f810e3",
+     "width": 1242,
+     "height": 2436,
+     "bytes": 18037,
+     "branches": [
+      "Github-APK-Transition-PA",
+      "claude/api36-native-modernization",
+      "claude/api36-signing-check",
+      "claude/checkpoint-splash-b16dfe4",
+      "claude/debug-recording-app-nB4Jk",
+      "claude/release-pa-v4"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/add-recording-folders-Q0wSM",
+     "sha": "a2149dab237658ed7f6c129b27d57ed09ccc8492",
+     "path": "assets/splash.png",
+     "blob": "54885ad797a4845310af257162fe674af65e3287",
+     "width": 1284,
+     "height": 2778,
+     "bytes": 19053,
+     "branches": [
+      "claude/add-recording-folders-Q0wSM",
+      "claude/ai-recording-transcription-app-z95Bs",
+      "claude/audio-file-import-wvG8O",
+      "claude/debug-record-screen-sGvzp",
+      "claude/debug-search-input-eqnpZ",
+      "claude/fix-white-screen-issue-Hmi6u",
+      "claude/peaceful-hopper-qn7olf",
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:24Z"
+    }
+   ],
+   "manifests": [],
+   "sensitive_paths_names_only": [
+    ".env.example",
+    "src/stores/secrets.ts"
+   ],
+   "workflows": [
+    {
+     "repo": "personal-assistant-",
+     "branch": "main",
+     "sha": "d76315144df76e6502f7e28745355b3269f188c1",
+     "path": ".github/workflows/ci.yml",
+     "name": "CI",
+     "on": "push:\n    branches:\n      - main\n      - 'claude/**'\n    paths-ignore:\n      - '**.md'\n      - 'docs/**'\n      - '**.png'\n      - '**.jpg'\n      - 'LICENSE'\n      - '.gitignore'",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "main",
+     "sha": "d76315144df76e6502f7e28745355b3269f188c1",
+     "path": ".github/workflows/eas-build.yml",
+     "name": "EAS Build",
+     "on": "workflow_dispatch:\n    inputs:\n      profile:\n        description: 'EAS build profile'\n        required: true\n        default: 'preview'\n        type: choice\n        options:\n          - development\n          - preview\n          - production\n      platform:\n        description: 'Target platform'\n        required: true\n        default: 'android'\n        type: choice\n        options:\n          - android\n          - ios\n          - all",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "main",
+     "sha": "d76315144df76e6502f7e28745355b3269f188c1",
+     "path": ".github/workflows/eas-update.yml",
+     "name": "EAS Update (OTA)",
+     "on": "workflow_dispatch:\n    inputs:\n      branch:\n        description: 'EAS update branch (usually matches your build profile)'\n        required: true\n        default: 'preview'\n        type: choice\n        options:\n          - preview\n          - production\n      message:\n        description: 'Update message shown in expo.dev dashboard'\n        required: false\n        default: 'JS + assets update'",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "main",
+     "sha": "d76315144df76e6502f7e28745355b3269f188c1",
+     "path": ".github/workflows/regenerate-lockfile.yml",
+     "name": "Regenerate package-lock.json",
+     "on": "workflow_dispatch:\n    inputs:\n      branch:\n        description: 'Branch to update'\n        required: true\n        default: 'claude/debug-recording-app-nB4Jk'",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": ".github/workflows/android-api36-apk.yml",
+     "name": "Android API 36 APK (test candidate)",
+     "on": "# Native builds are deliberate (30+ minutes each): run manually. A push never builds.\n  workflow_dispatch:\n    inputs:\n      publish:\n        description: 'Publish as \"Personal Assistant v<release/PUBLIC_VERSION>\" and make it the Latest release'\n        type: boolean\n        default: false",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": ".github/workflows/android-build.yml",
+     "name": "Android APK (GitHub Runner)",
+     "on": "workflow_dispatch:\n    inputs:\n      profile:\n        description: 'Build profile'\n        required: true\n        default: 'preview'\n        type: choice\n        options:\n          - preview\n          - production\n  push:\n    tags:\n      - 'v*'",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": ".github/workflows/ci.yml",
+     "name": "CI",
+     "on": "push:\n    branches:\n      - main\n      - 'claude/**'\n    paths-ignore:\n      - '**.md'\n      - 'docs/**'\n      - 'LICENSE'\n      - '.gitignore'",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": ".github/workflows/eas-build.yml",
+     "name": "EAS Build",
+     "on": "# Tag-based trigger so I can fire a production build by pushing a\n  # `v*` tag instead of asking the user to click Run workflow. The tag\n  # name carries intent — pushing tags is a deliberate, explicit\n  # operator action, which is exactly the gate we want around a paid\n  # build that ships to Play Store.\n  #\n  # IMPORTANT (project rule): I do not push tags without explicit user\n  # approval. See CLAUDE.md → \"Build dispatch policy\".\n  push:\n    tags:\n      - 'v*'\n  workflow_dispatch:\n    inputs:\n      profile:\n        description: 'EAS build profile'\n        required: true\n        default: 'pr",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": ".github/workflows/eas-update.yml",
+     "name": "EAS Update (OTA)",
+     "on": "# Auto-fire on every push to the default branch so JS / asset\n  # changes ship without a manual click. Skip paths that don't\n  # affect what runs on user devices.\n  push:\n    # Product branch only. `main` is a stale pre-product line and must never\n    # publish an OTA to the preview channel.\n    branches:\n      - 'Github-APK-Transition-PA'\n    paths-ignore:\n      - '**.md'\n      - 'docs/**'\n      - 'LICENSE'\n      - '.gitignore'\n      - '.github/workflows/eas-build.yml'\n      - '.github/workflows/regenerate-lockfile.yml'\n      - '.github/workflows/android-api36-apk.yml'\n      - '.github/workfl",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": ".github/workflows/prune-artifacts.yml",
+     "name": "Prune Artifacts",
+     "on": "workflow_dispatch:\n  schedule:\n    - cron: '17 6 * * 1'\n  workflow_run:\n    workflows: ['Android APK (GitHub Runner)', 'Android API 36 APK (test candidate)']\n    types: [completed]",
+     "scan_date": "2026-10-18T15:42:24Z"
+    },
+    {
+     "repo": "personal-assistant-",
+     "branch": "claude/api36-native-modernization",
+     "sha": "f6c2017881fcdfdb0ba342d29addf8467213e754",
+     "path": ".github/workflows/regenerate-lockfile.yml",
+     "name": "Regenerate package-lock.json",
+     "on": "workflow_dispatch:\n    inputs:\n      branch:\n        description: 'Branch to update'\n        required: true\n        default: 'Github-APK-Transition-PA'",
+     "scan_date": "2026-10-18T15:42:24Z"
+    }
+   ],
+   "steam_candidates": []
+  },
+  {
+   "repo": "Manual-J",
+   "url": "https://github.com/verbal76/Manual-J",
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "scanned": true,
+   "scanned_at": "2026-10-18T15:42:19Z",
+   "product": "Manual J",
+   "kind": "app (HVAC tool)",
+   "engine": "Capacitor / TypeScript + Vite",
+   "status": "active",
+   "last_commit": "2026-10-06",
+   "default_branch": "main",
+   "default_head": "2df7d7596637fdb7194fe1da5e9bea93aaa7873d",
+   "authoritative_branch": null,
+   "authoritative_basis": "unresolved. CLAUDE.md says \"do not publish OTAs or make the repo public\"; its visibility was not given to this scan and could not be checked.",
+   "purpose": "\"Field-first residential heating/cooling load **survey and calculation** tool (phone/tablet, offline). **Not ACCA-approved; not an official Manual J result.**\"",
+   "purpose_source": "ccr-5e589233-wbh6h3:README.md",
+   "branches": [
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-06T18:51:06+00:00",
+     "role": "most recent branch (reference line; not stated authoritative), agent session branch",
+     "relation": "",
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "main",
+     "sha": "2df7d7596637fdb7194fe1da5e9bea93aaa7873d",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T14:16:15-04:00",
+     "role": "GitHub default",
+     "relation": "NOT contained in `ccr-5e589233-wbh6h3`",
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-03T16:44:23+00:00",
+     "role": "release-related",
+     "relation": "NOT contained in `ccr-5e589233-wbh6h3`",
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "release/v5",
+     "sha": "6923244abb1a5fb00985088ae5de6fb994ef83e6",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T17:32:41+00:00",
+     "role": "release-related",
+     "relation": "NOT contained in `ccr-5e589233-wbh6h3`",
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "release/v6",
+     "sha": "1ddb4052e529f9ad0b04b63e43af558dd9d8beae",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T22:27:27+00:00",
+     "role": "release-related",
+     "relation": "contained in `ccr-5e589233-wbh6h3`",
+     "scan_date": "2026-10-18T15:42:19Z"
+    }
+   ],
+   "tags": [],
+   "images": [
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png",
+     "blob": "e11f8c576652b82780967a02ee4b4acd12e8a3c8",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 2838266,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "main",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-land-hdpi/splash.png",
+     "blob": "e31573b4fc93e60d171f4046c0220e1463075d9e",
+     "width": 800,
+     "height": 480,
+     "bytes": 7705,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-land-mdpi/splash.png",
+     "blob": "f7a64923ea1a0565d25fa139c176d6bf42184e48",
+     "width": 480,
+     "height": 320,
+     "bytes": 4040,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-land-xhdpi/splash.png",
+     "blob": "807725501bdd92e94e51e7b2b0006f69e0083a0b",
+     "width": 1280,
+     "height": 720,
+     "bytes": 9251,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-land-xxhdpi/splash.png",
+     "blob": "14c6c8fe39fcd51a0414866ad28cbe8ff3acb060",
+     "width": 1600,
+     "height": 960,
+     "bytes": 13984,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-land-xxxhdpi/splash.png",
+     "blob": "244ca2506dbe0fd8f6a05520ac7d1a629ea81438",
+     "width": 1920,
+     "height": 1280,
+     "bytes": 17683,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-port-hdpi/splash.png",
+     "blob": "74faaa583c8221c27a8cb822c3fbe218bafa3299",
+     "width": 480,
+     "height": 800,
+     "bytes": 7934,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-port-mdpi/splash.png",
+     "blob": "e944f4ad4e1ca1c8cf9a87b366acc01c4e5c1616",
+     "width": 320,
+     "height": 480,
+     "bytes": 4096,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-port-xhdpi/splash.png",
+     "blob": "564a82ff954aec267492467c0169a270c4e8fea9",
+     "width": 720,
+     "height": 1280,
+     "bytes": 9875,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-port-xxhdpi/splash.png",
+     "blob": "bfabe6871a17a5e95b78fb30d49b7d2b4d2fe4c0",
+     "width": 960,
+     "height": 1600,
+     "bytes": 13346,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable-port-xxxhdpi/splash.png",
+     "blob": "6929071268eb03ee0f088142b6523566b78550e2",
+     "width": 1280,
+     "height": 1920,
+     "bytes": 17489,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/drawable/splash.png",
+     "blob": "f7a64923ea1a0565d25fa139c176d6bf42184e48",
+     "width": 480,
+     "height": 320,
+     "bytes": 4040,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+     "blob": "bba0daa14d86e1f47069b80914eecbd240b91dc5",
+     "width": 72,
+     "height": 72,
+     "bytes": 2955,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+     "blob": "c023e50595074292c7361183a64de08cf9686c9c",
+     "width": 72,
+     "height": 72,
+     "bytes": 2786,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+     "blob": "2127973b2d318df7085734d236d0ec649a2b0292",
+     "width": 162,
+     "height": 162,
+     "bytes": 3450,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+     "blob": "f395f00f6d2e6eb99b2e3646fd8939b818ac290f",
+     "width": 162,
+     "height": 162,
+     "bytes": 4552,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_monochrome.png",
+     "blob": "a30bce85bfb146200a5deeda8a3dcfaae83d039b",
+     "width": 162,
+     "height": 162,
+     "bytes": 2581,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+     "blob": "87d5788c34746a9461153d9baf01fae512c2b388",
+     "width": 72,
+     "height": 72,
+     "bytes": 4101,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+     "blob": "b441f37d6a2a58cfdda841fbc8148a474a4ece3f",
+     "width": 72,
+     "height": 72,
+     "bytes": 4341,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+     "blob": "3435666b4ff5d1531b8e2aff2b8e71c6927dace4",
+     "width": 48,
+     "height": 48,
+     "bytes": 1889,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+     "blob": "72905b854cb4d39e8717090424302e370239a08e",
+     "width": 48,
+     "height": 48,
+     "bytes": 1869,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+     "blob": "8ed0605c27c764f865674ab0b14c859a1ba29ce6",
+     "width": 108,
+     "height": 108,
+     "bytes": 2110,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+     "blob": "bb6ac458f5790452f0022db203bf907341d2acba",
+     "width": 108,
+     "height": 108,
+     "bytes": 3091,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_monochrome.png",
+     "blob": "b621894263d9ceb5d7d3893426715ac0ffd8c855",
+     "width": 108,
+     "height": 108,
+     "bytes": 1757,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+     "blob": "9502e47a2c575c50c925b987f397bc5244c57b90",
+     "width": 48,
+     "height": 48,
+     "bytes": 2725,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+     "blob": "c9c3c005d4ed27d868ee6827d25464bafb9d6584",
+     "width": 48,
+     "height": 48,
+     "bytes": 2678,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+     "blob": "4d1e077104cd61e6a4c3707e87363b523077245a",
+     "width": 96,
+     "height": 96,
+     "bytes": 3981,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+     "blob": "84b475741ff5331b6db2321de4349e26c3bdb610",
+     "width": 96,
+     "height": 96,
+     "bytes": 4217,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+     "blob": "4709ac76d3e107c5bc89635483c180d043081b47",
+     "width": 216,
+     "height": 216,
+     "bytes": 6045,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+     "blob": "df0f15880bee46332dfc6622583215194f948b0f",
+     "width": 216,
+     "height": 216,
+     "bytes": 5036,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_monochrome.png",
+     "blob": "d2816b044df716955fa752738cb8fd39f543dc62",
+     "width": 216,
+     "height": 216,
+     "bytes": 3350,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+     "blob": "48f705cea1190330fcf83a952cedc25130d9b959",
+     "width": 96,
+     "height": 96,
+     "bytes": 5785,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+     "blob": "853db043d8a21a3f2429bb521e373e8b1d39cacd",
+     "width": 96,
+     "height": 96,
+     "bytes": 6593,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+     "blob": "6cdf97c1196d48e9833487ff6de7c4cfc4e1232d",
+     "width": 144,
+     "height": 144,
+     "bytes": 6644,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+     "blob": "b7da282c1cd5f3721b6a1b661dfc26cdc09b3076",
+     "width": 144,
+     "height": 144,
+     "bytes": 6221,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+     "blob": "084751f647fc3284bbe2a26a1fc8104c8ebdc88d",
+     "width": 324,
+     "height": 324,
+     "bytes": 9040,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+     "blob": "2960cbb6104b915c84760f889deed9bff2b3e17a",
+     "width": 324,
+     "height": 324,
+     "bytes": 9793,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_monochrome.png",
+     "blob": "c785dd4d2f70d4e926db40177a08b7368c4618d1",
+     "width": 324,
+     "height": 324,
+     "bytes": 5286,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+     "blob": "8e3093a86fffb4d02383785a46189822142d5607",
+     "width": 144,
+     "height": 144,
+     "bytes": 10455,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+     "blob": "eb8926efcede856ae07a49af727fa3c8ffc61ff1",
+     "width": 144,
+     "height": 144,
+     "bytes": 8981,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+     "blob": "46de6e255a95abb68a915d7cb45776d890768922",
+     "width": 192,
+     "height": 192,
+     "bytes": 9441,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+     "blob": "cb55c4993210473f4e9ae1e2a7b03365f742589b",
+     "width": 192,
+     "height": 192,
+     "bytes": 8359,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+     "blob": "1cfa954ac6caefd1b1ff65a5de612d8e65d2508b",
+     "width": 432,
+     "height": 432,
+     "bytes": 12450,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+     "blob": "d2ea9abed395c5fb38369a54896c51c8e8bdff72",
+     "width": 432,
+     "height": 432,
+     "bytes": 15529,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_monochrome.png",
+     "blob": "1ec96f7f383be84a27e8f9c37a69ddd1c2d1b5b3",
+     "width": 432,
+     "height": 432,
+     "bytes": 7365,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "qualify/b7",
+     "sha": "f6e7c23571e0b6642925e6b5f6d7d66d02be6af6",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+     "blob": "a40d73e9c68ea638c28c7b13e4bcd1e179a3a102",
+     "width": 192,
+     "height": 192,
+     "bytes": 15916,
+     "branches": [
+      "qualify/b7",
+      "release/v5"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+     "blob": "f3ee7efff39d8f4ad14802cb261256081b765153",
+     "width": 192,
+     "height": 192,
+     "bytes": 12050,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": "src/assets/hag-splash.webp",
+     "blob": "ee58a13a46222ef029c0694d36a835fa03dc338b",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 1687454,
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "release/v6"
+     ],
+     "scan_date": "2026-10-18T15:42:19Z"
+    }
+   ],
+   "manifests": [
+    "android/app/src/main/AndroidManifest.xml",
+    "scripts/make-manifest.ts",
+    "src/engine/provenance.ts",
+    "src/ota/manifest.ts"
+   ],
+   "sensitive_paths_names_only": [
+    "android/app/debug.keystore"
+   ],
+   "workflows": [
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": ".github/workflows/android-release.yml",
+     "name": "Android release (signed AAB)",
+     "on": "workflow_dispatch:",
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": ".github/workflows/android.yml",
+     "name": "Android debug build",
+     "on": "workflow_dispatch:",
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": ".github/workflows/deliver.yml",
+     "name": "Deliver build (GitHub Release)",
+     "on": "push:\n    branches: ['release/v*']",
+     "scan_date": "2026-10-18T15:42:19Z"
+    },
+    {
+     "repo": "Manual-J",
+     "branch": "ccr-5e589233-wbh6h3",
+     "sha": "14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0",
+     "path": ".github/workflows/ota-publish.yml",
+     "name": "OTA publish",
+     "on": "workflow_dispatch:\n    inputs:\n      channel: { description: 'OTA channel (must match the channel baked into installed apps)', default: internal, required: true }\n      name: { description: 'Short human-readable OTA name (what changed)', required: true }\n      min_version_code: { description: 'Lowest installed native versionCode that may take this OTA', default: '1', required: true }\n      dry_run: { description: 'true = build/validate only, do not publish', default: 'true', required: true }",
+     "scan_date": "2026-10-18T15:42:19Z"
+    }
+   ],
+   "steam_candidates": [
+    {
+     "repo": "Manual-J",
+     "path": "android/app/src/main/res/drawable-land-xhdpi/splash.png",
+     "width": 1280,
+     "height": 720,
+     "steam_size": "library logo/screenshot?",
+     "branches": [
+      "ccr-5e589233-wbh6h3",
+      "qualify/b7",
+      "release/v5",
+      "release/v6"
+     ]
+    }
+   ]
+  },
+  {
+   "repo": "web_auditor",
+   "url": "https://github.com/verbal76/web_auditor",
+   "visibility": "private",
+   "scanned": true,
+   "scanned_at": "2026-10-18T15:42:26Z",
+   "product": "Website Auditor",
+   "kind": "tool",
+   "engine": "Python (PyInstaller spec, build.bat)",
+   "status": "active",
+   "last_commit": "2026-10-04",
+   "default_branch": "main",
+   "default_head": "2e9d4a9fd30484cb272d84154e52667aa7313f85",
+   "authoritative_branch": null,
+   "authoritative_basis": "single branch `main`.",
+   "purpose": "\"Crawls any website, screenshots every page at desktop and mobile sizes, and produces a PDF report\"",
+   "purpose_source": "main:README.md",
+   "branches": [
+    {
+     "repo": "web_auditor",
+     "branch": "main",
+     "sha": "2e9d4a9fd30484cb272d84154e52667aa7313f85",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-10-04T14:18:16-04:00",
+     "role": "GitHub default, most recent branch (reference line; not stated authoritative)",
+     "relation": "",
+     "scan_date": "2026-10-18T15:42:26Z"
+    }
+   ],
+   "tags": [
+    {
+     "repo": "web_auditor",
+     "tag": "v1.0",
+     "sha": "e70bd9113fc1af695848126eeb5605e7ba5746d5",
+     "tag_object": "e70bd9113fc1af695848126eeb5605e7ba5746d5",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.0",
+      "name": "WebAuditor v1.0",
+      "prerelease": false,
+      "published_at": "2026-04-28T19:59:45Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.1",
+     "sha": "424c4a325bf0c04b2106edd73d8bede8a1a931ee",
+     "tag_object": "424c4a325bf0c04b2106edd73d8bede8a1a931ee",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.1",
+      "name": "WebAuditor v1.1",
+      "prerelease": false,
+      "published_at": "2026-04-28T21:11:33Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.2",
+     "sha": "c3ffc2616c666e91079b2de9a2bcc3ce2370dbd4",
+     "tag_object": "c3ffc2616c666e91079b2de9a2bcc3ce2370dbd4",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.2",
+      "name": "WebAuditor v1.2",
+      "prerelease": false,
+      "published_at": "2026-04-28T21:27:03Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.3",
+     "sha": "bcfeb03b15fac1e04781f20fee3c47562ea75b17",
+     "tag_object": "bcfeb03b15fac1e04781f20fee3c47562ea75b17",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.3",
+      "name": "WebAuditor v1.3",
+      "prerelease": false,
+      "published_at": "2026-04-28T21:39:36Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.4",
+     "sha": "81281d2bf8f7200bec240502307ffee523a08490",
+     "tag_object": "81281d2bf8f7200bec240502307ffee523a08490",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.4",
+      "name": "WebAuditor v1.4",
+      "prerelease": false,
+      "published_at": "2026-04-29T15:08:46Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.5",
+     "sha": "0c42966f7363d560728ad7d17bdc2f292760f554",
+     "tag_object": "0c42966f7363d560728ad7d17bdc2f292760f554",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.5",
+      "name": "WebAuditor v1.5",
+      "prerelease": false,
+      "published_at": "2026-04-29T15:19:27Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.6",
+     "sha": "5fc1203f37b4a500b8fb3afdb9e5c215bd3e3ee5",
+     "tag_object": "5fc1203f37b4a500b8fb3afdb9e5c215bd3e3ee5",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.6",
+      "name": "WebAuditor v1.6",
+      "prerelease": false,
+      "published_at": "2026-04-29T16:00:48Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.7",
+     "sha": "ca9bef1653d2812d1e07404c581f202509f789cd",
+     "tag_object": "ca9bef1653d2812d1e07404c581f202509f789cd",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.7",
+      "name": "WebAuditor v1.7",
+      "prerelease": false,
+      "published_at": "2026-04-29T16:22:21Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.8",
+     "sha": "57d2bc6afc60a4f6d3abd66cc9880eac175d2452",
+     "tag_object": "57d2bc6afc60a4f6d3abd66cc9880eac175d2452",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.8",
+      "name": "WebAuditor v1.8 - GEO & AI Search Optimization",
+      "prerelease": false,
+      "published_at": "2026-04-29T16:46:29Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.9",
+     "sha": "11f247bf99726e35f41eb97d8b3513bc7ec757ce",
+     "tag_object": "11f247bf99726e35f41eb97d8b3513bc7ec757ce",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.9",
+      "name": "WebAuditor v1.9 - Platform Optimization Scorecard",
+      "prerelease": false,
+      "published_at": "2026-04-29T17:25:14Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    },
+    {
+     "repo": "web_auditor",
+     "tag": "v1.95",
+     "sha": "5ba3b9e4203384783dfd7be7ded5f84c8b9145ab",
+     "tag_object": "5ba3b9e4203384783dfd7be7ded5f84c8b9145ab",
+     "ref_kind": "tag",
+     "release": {
+      "tag": "v1.95",
+      "name": "WebAuditor v1.95 - Open Report & Output Folder",
+      "prerelease": false,
+      "published_at": "2026-04-29T17:52:47Z",
+      "draft": false
+     },
+     "scan_date": "2026-10-18T15:42:26Z"
+    }
+   ],
+   "images": [
+    {
+     "repo": "web_auditor",
+     "branch": "main",
+     "sha": "2e9d4a9fd30484cb272d84154e52667aa7313f85",
+     "path": "Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png",
+     "blob": "e11f8c576652b82780967a02ee4b4acd12e8a3c8",
+     "width": 1536,
+     "height": 1024,
+     "bytes": 2838266,
+     "branches": [
+      "main"
+     ],
+     "scan_date": "2026-10-18T15:42:26Z"
+    }
+   ],
+   "manifests": [],
+   "sensitive_paths_names_only": [],
+   "workflows": [],
+   "steam_candidates": []
+  },
+  {
+   "repo": "HotAtticGames.github.io",
+   "url": "https://github.com/verbal76/HotAtticGames.github.io",
+   "visibility": "public",
+   "scanned": true,
+   "scanned_at": "2026-10-18T15:42:21Z",
+   "product": "Hot Attic Games studio site",
+   "kind": "website",
+   "engine": "GitHub Pages (README only)",
+   "status": "dormant",
+   "last_commit": "2026-04-26",
+   "default_branch": "main",
+   "default_head": "6ac9ef8e8032f9f751b6f7aec5b0d85d0f8638f4",
+   "authoritative_branch": null,
+   "authoritative_basis": "single branch `main`; it holds only README.md, so there is no site content yet.",
+   "purpose": "\"Hot Attic Games home page\"",
+   "purpose_source": "main:README.md",
+   "branches": [
+    {
+     "repo": "HotAtticGames.github.io",
+     "branch": "main",
+     "sha": "6ac9ef8e8032f9f751b6f7aec5b0d85d0f8638f4",
+     "ref_kind": "moving branch head",
+     "committer_date": "2026-04-26T12:15:33-04:00",
+     "role": "GitHub default, most recent branch (reference line; not stated authoritative)",
+     "relation": "",
+     "scan_date": "2026-10-18T15:42:21Z"
+    }
+   ],
+   "tags": [],
+   "images": [],
+   "manifests": [],
+   "sensitive_paths_names_only": [],
+   "workflows": [],
    "steam_candidates": []
   }
  ]

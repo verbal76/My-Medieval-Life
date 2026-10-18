@@ -40,5 +40,9 @@ All scans on 2026-10-18 (UTC). Per-repo timestamps are in each `repos/*.md` and 
 | [Zombie-squisher](repos/Zombie-squisher.md) | Zombie Squisher / Zombie Crusher (name is an open owner decision) | not stated (read through the session git proxy; may be private) | `main` @ `2f8dac01d9e4` | 2026-10-12 | Expo SDK 54 / React Native 0.81, three.js (react-three-fiber) | active | `ccr-27903f19-fy49jb` |
 | [voiceforge](repos/voiceforge.md) | Voice Forge | private | `main` @ `5e0b01d474a3` | 2026-10-11 | Expo / React Native, TypeScript (plus trainer/) | active | unresolved |
 | [LLM-Trainer](repos/LLM-Trainer.md) | LLM Trainer | not stated (read through the session git proxy; may be private) | `main` @ `f05d9bbc6900` | 2026-10-06 | Python factory core + Kotlin/Gradle Android app | active | unresolved |
-
-Not yet scanned in this registry version: Cfm-calculator, spiroglyphics, personal-assistant-, Manual-J, web_auditor, HotAtticGames.github.io
+| [Cfm-calculator](repos/Cfm-calculator.md) | Verbal's CFM Calculator | not stated (read through the session git proxy; may be private) | `main` @ `05abc05c5329` | 2026-10-06 | Capacitor 8 / Android API 36, TypeScript + Vite | active | unresolved |
+| [spiroglyphics](repos/spiroglyphics.md) | Spiroglyphics | private | `main` @ `aa133ddd4534` | 2026-10-06 | Expo / React Native, TypeScript | active | unresolved |
+| [personal-assistant-](repos/personal-assistant-.md) | Personal Assistant | private | `main` @ `d76315144df7` | 2026-10-06 | Expo / React Native, TypeScript | active | unresolved |
+| [Manual-J](repos/Manual-J.md) | Manual J | not stated (read through the session git proxy; may be private) | `main` @ `2df7d7596637` | 2026-10-06 | Capacitor / TypeScript + Vite | active | unresolved |
+| [web_auditor](repos/web_auditor.md) | Website Auditor | private | `main` @ `2e9d4a9fd304` | 2026-10-04 | Python (PyInstaller spec, build.bat) | active | unresolved |
+| [HotAtticGames.github.io](repos/HotAtticGames.github.io.md) | Hot Attic Games studio site | public | `main` @ `6ac9ef8e8032` | 2026-04-26 | GitHub Pages (README only) | dormant | unresolved |

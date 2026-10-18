@@ -41,18 +41,23 @@ What exists, all on `ccr-cb458cd1-w4dh5c` only (head `245307499a33725cd21f51116d
 Blob `e11f8c576652b82780967a02ee4b4acd12e8a3c8` (1536x1024 PNG, 2,838,266 bytes; owner-supplied `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; several repos' CLAUDE.md call it "canonical"). Same bytes in:
 
 - Axolotl: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- Cfm-calculator: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Climb-Up: `assets/branding/studio_splash.png`, `branding/master/studio_splash_e3d9bb56.png`
 - Endless-Escaspe: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Idle-game: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - LLM-Trainer: `branding/hot-attic-games/studio-logo.png`
+- Manual-J: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - My-Personal-Crossow0rd: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`, `app/src/main/res/drawable-nodpi/hot_attic_logo.png`, `branding/Hot_Attic_Games_Master_Logo.png`
 - Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Purgatory-Dungeon: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Ragdoll-Rally: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`, `launch/branding/Hot_Attic_Games_Master_Logo.png`, `launch/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Zombie-squisher: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- personal-assistant-: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`, `assets/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- spiroglyphics: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`, `branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - voiceforge: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- web_auditor: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 
 ## Per-repository key art
 
@@ -313,3 +318,53 @@ App icons, logos, splash screens, branding and large images (512 px or more). Fu
 | Path | Size | Seen on | Link |
 |---|---|---|---|
 | `branding/hot-attic-games/studio-logo.png` | 1536x1024 | `ccr-a278e57a-o761ch` | [view](https://github.com/verbal76/LLM-Trainer/blob/deda455a5f622339281b476cbb2e519ab213d913/branding/hot-attic-games/studio-logo.png) |
+
+### Cfm-calculator
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `ccr-ac67996a-npuzs3` | [view](https://github.com/verbal76/Cfm-calculator/blob/b1fe120bdfbf40a7cc318b01c65b32264ecd59fd/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+
+### spiroglyphics
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/spiroglyphics-coloring-app-Stwjt` | [view](https://github.com/verbal76/spiroglyphics/blob/d09b8b8f16a4b0505841c22564bd5c8288b7dd03/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `main` | [view](https://github.com/verbal76/spiroglyphics/blob/aa133ddd453454c55185a6d2e2ebb3f016fee58b/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+
+### personal-assistant-
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `assets/adaptive-icon-monochrome.png` | 1024x1024 | `claude/api36-native-modernization` | [view](https://github.com/verbal76/personal-assistant-/blob/f6c2017881fcdfdb0ba342d29addf8467213e754/assets/adaptive-icon-monochrome.png) |
+| `assets/adaptive-icon.png` | 1024x1024 | `claude/api36-native-modernization` | [view](https://github.com/verbal76/personal-assistant-/blob/f6c2017881fcdfdb0ba342d29addf8467213e754/assets/adaptive-icon.png) |
+| `assets/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/api36-native-modernization` | [view](https://github.com/verbal76/personal-assistant-/blob/f6c2017881fcdfdb0ba342d29addf8467213e754/assets/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `assets/favicon.png` | 48x48 | `claude/api36-native-modernization` | [view](https://github.com/verbal76/personal-assistant-/blob/f6c2017881fcdfdb0ba342d29addf8467213e754/assets/favicon.png) |
+| `assets/icon.png` | 1024x1024 | `claude/api36-native-modernization` | [view](https://github.com/verbal76/personal-assistant-/blob/f6c2017881fcdfdb0ba342d29addf8467213e754/assets/icon.png) |
+| `assets/splash-blank.png` | 1024x1024 | `claude/api36-native-modernization` | [view](https://github.com/verbal76/personal-assistant-/blob/f6c2017881fcdfdb0ba342d29addf8467213e754/assets/splash-blank.png) |
+| `assets/splash.png` | 1242x2436 | `claude/api36-native-modernization` | [view](https://github.com/verbal76/personal-assistant-/blob/f6c2017881fcdfdb0ba342d29addf8467213e754/assets/splash.png) |
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `main` | [view](https://github.com/verbal76/personal-assistant-/blob/d76315144df76e6502f7e28745355b3269f188c1/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+
+### Manual-J
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `android/app/src/main/res/drawable-land-hdpi/splash.png` | 800x480 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-land-hdpi/splash.png) |
+| `android/app/src/main/res/drawable-land-mdpi/splash.png` | 480x320 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-land-mdpi/splash.png) |
+| `android/app/src/main/res/drawable-land-xhdpi/splash.png` | 1280x720 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-land-xhdpi/splash.png) |
+| `android/app/src/main/res/drawable-land-xxhdpi/splash.png` | 1600x960 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-land-xxhdpi/splash.png) |
+| `android/app/src/main/res/drawable-land-xxxhdpi/splash.png` | 1920x1280 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-land-xxxhdpi/splash.png) |
+| `android/app/src/main/res/drawable-port-hdpi/splash.png` | 480x800 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-port-hdpi/splash.png) |
+| `android/app/src/main/res/drawable-port-mdpi/splash.png` | 320x480 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-port-mdpi/splash.png) |
+| `android/app/src/main/res/drawable-port-xhdpi/splash.png` | 720x1280 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-port-xhdpi/splash.png) |
+| `android/app/src/main/res/drawable-port-xxhdpi/splash.png` | 960x1600 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-port-xxhdpi/splash.png) |
+| `android/app/src/main/res/drawable-port-xxxhdpi/splash.png` | 1280x1920 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable-port-xxxhdpi/splash.png) |
+| `android/app/src/main/res/drawable/splash.png` | 480x320 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/android/app/src/main/res/drawable/splash.png) |
+| `src/assets/hag-splash.webp` | 1536x1024 | `ccr-5e589233-wbh6h3` | [view](https://github.com/verbal76/Manual-J/blob/14aa30deb5163cbe0d15ebcaa7ee7c160c1769d0/src/assets/hag-splash.webp) |
+
+### web_auditor
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `main` | [view](https://github.com/verbal76/web_auditor/blob/2e9d4a9fd30484cb272d84154e52667aa7313f85/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
