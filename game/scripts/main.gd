@@ -9,6 +9,7 @@ const PREVIOUS_SUFFIX := ".previous.json"   # the last game, kept when the playe
 var map: VillageMap
 var world: World
 var view: MapView
+var ow_view: OverworldView     # the world outside the village (chunks round the camera)
 var actors: Node2D
 var above: Node2D
 const MARKER_Z := 20                 # markers draw over roofs and canopies (their layers are z 10 in `above`)
@@ -666,6 +667,8 @@ func _sync_signs(at: Vector2) -> void:
 func _build_scene() -> void:
 	view = MapView.new()
 	add_child(view)
+	ow_view = OverworldView.new()                # under the characters, beside the village's own layers
+	add_child(ow_view)
 	blood_layer = Node2D.new()
 	add_child(blood_layer)
 	actors = Node2D.new()
@@ -687,6 +690,8 @@ func _build_scene() -> void:
 	ghost.z_index = MARKER_Z
 	above.add_child(ghost)
 	view.build(map, above)
+	_draw_village_exits()
+	ow_view.setup(view, map.overworld, int(GameData.b("overworld_chunk_radius")))
 	bubble_layer = CanvasLayer.new()
 	bubble_layer.layer = 5               # over the map, under the interface (layer 20)
 	add_child(bubble_layer)
@@ -708,14 +713,11 @@ func _build_scene() -> void:
 	camera.zoom = Vector2(3, 3) * view_scale
 	camera.position_smoothing_enabled = true
 	camera.position_smoothing_speed = 10.0
-	camera.limit_left = 0
-	camera.limit_top = 0
-	camera.limit_right = map.w * T
-	camera.limit_bottom = map.h * T
-	add_child(camera)
+	add_child(camera)                            # no limits: the world goes on past the village
 	camera.make_current()
 	follow_at = _in_view(world.player.pos * T)
 	camera.position = follow_at
+	ow_view.follow(world.player.pos, world.player.pos, 0.0, 6)      # the nearest chunks at once, the rest over the next frames
 	world.tile_changed.connect(_on_tile_changed)
 	world.bled.connect(_on_bled)
 	dying.clear()
@@ -756,12 +758,46 @@ func _apply_world_changes() -> void:
 func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
 	# a kind is a layer, or a layer by its own name (a tavern table's dish: World.show_tables)
 	var layer_name: String = {"below": "below0", "above": "above0", "field": "path1", "path": "path0"}.get(kind, kind)
+	if not map.in_village(cell):
+		ow_view.apply_change(cell, kind, value)          # a tree felled or regrown outside the village
+		return
 	var layer := view.layer(layer_name)
 	if layer:
 		if layer_name.begins_with("above"):
 			canopy.restore_all()          # a faded canopy's tiles go back first, so the change sticks
 			roofs.restore_all()
 		view.set_tile(layer, cell, value)
+
+
+## Where the village's roads leave it, the dirt path continues over the grass to the map edge, where
+## the overworld's road takes it up (VillageMap.exits). Only drawn: the grass is walkable already.
+## The road cell's own tile is chosen again with the trail as a neighbour, so the two join.
+func _draw_village_exits() -> void:
+	var path := view.layer("path0")
+	var dirt: Array = map.overworld.tiles.dirt_path
+	var road := {}
+	for c in map.data.road:
+		road[Vector2i(int(c[0]), int(c[1]))] = true
+	for e in map.exits():
+		var trail: Array = e.trail
+		for i in trail.size():
+			var c: Vector2i = trail[i]
+			var bits := 0
+			if i == 0:
+				if view.tile_value(path, c) < 0:
+					continue                # the village's art there is not a path tile: leave it
+				for k in 4:
+					if road.has(c + (VillageMap.SIDES[k] as Vector2i)):
+						bits |= 1 << k      # the road's own neighbours (the trail runs on over grass)
+			elif view.tile_value(path, c) >= 0:
+				continue                    # something drawn there already: keep it
+			for k in 4:
+				var step: Vector2i = VillageMap.SIDES[k]
+				if (i > 0 and trail[i - 1] == c + step) or (i < trail.size() - 1 and trail[i + 1] == c + step) \
+						or (i == trail.size() - 1 and e.out == c + step):
+					bits |= 1 << k
+			var opts: Array = dirt[bits if bits != 0 else 10]
+			view.set_tile(path, c, opts[(c.x * 7 + c.y * 13) % opts.size()])
 
 
 func _on_building_added(b: Dictionary) -> void:
@@ -871,6 +907,7 @@ func _sync_sprites() -> void:
 	player_sprite.position = p.pos * T
 	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
+	ow_view.follow(camera.get_screen_center_position() / T, p.pos, get_process_delta_time())
 	var inside := world.place_of(p.pos)
 	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
 		inside = ""
@@ -1144,7 +1181,10 @@ func _route_step(_delta: float) -> Vector2:
 	if goal != walk_goal or walk_stuck > 0.5:
 		walk_goal = goal
 		walk_stuck = 0.0
-		walk_path = map.find_path(Vector2i(floori(p.pos.x), floori(p.pos.y)), goal)
+		var here := Vector2i(floori(p.pos.x), floori(p.pos.y))
+		walk_path = map.find_path_world(here, goal)
+		if walk_path.is_empty() and not (map.in_village(here) and map.in_village(goal)):
+			walk_path = PackedVector2Array([Vector2(here), Vector2(goal)])      # too far or no way found: straight there, sliding along what is in the way
 		walk_i = 1                       # the first point is the cell the player stands in
 		if walk_path.is_empty():
 			move_to = Vector2.INF
@@ -1152,7 +1192,7 @@ func _route_step(_delta: float) -> Vector2:
 			return Vector2.ZERO
 	# the last stretch goes to the exact point; before it, to the centre of each cell on the way
 	var target := move_to if walk_i >= walk_path.size() - 1 else walk_path[walk_i] + Vector2(0.5, 0.5)
-	if map.is_solid(goal) and walk_i >= walk_path.size() - 1:
+	if map.is_solid_world(goal) and walk_i >= walk_path.size() - 1:
 		target = walk_path[walk_path.size() - 1] + Vector2(0.5, 0.5)
 	var d := target - p.pos
 	if d.length() < 0.15:
@@ -1209,7 +1249,7 @@ func _blocked_corners(at: Vector2) -> int:
 	var n := 0
 	for c in BODY:
 		var q: Vector2 = at + c
-		if map.is_solid(Vector2i(floori(q.x), floori(q.y))):
+		if map.is_solid_world(Vector2i(floori(q.x), floori(q.y))):
 			n += 1
 	return n
 
@@ -1889,7 +1929,7 @@ func _projectiles_step(delta: float) -> void:
 				_hit_animal(a, dmg)
 				hit = true
 				break
-		if hit or pr.left <= 0.0 or map.is_solid(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
+		if hit or pr.left <= 0.0 or map.is_solid_world(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
 			pr.node.queue_free()
 			projectiles.erase(pr)
 
@@ -2120,12 +2160,9 @@ func _follow(at: Vector2) -> Vector2:
 	return follow_at
 
 
-## A camera position (pixels) moved just enough that the view stays over the map.
+## A camera position (pixels) the view may take. The world goes on past the village in every
+## direction (the overworld), so there is nothing to keep it over.
 func _in_view(at: Vector2) -> Vector2:
-	var half := get_viewport().get_visible_rect().size / camera.zoom / 2.0
-	var world_px := Vector2(map.w, map.h) * T
-	for k in 2:
-		at[k] = clampf(at[k], half[k], world_px[k] - half[k]) if world_px[k] > half[k] * 2.0 else world_px[k] / 2.0
 	return at
 
 

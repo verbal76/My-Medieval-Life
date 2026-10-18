@@ -74,6 +74,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	map = m
 	seed = world_seed
 	rng.seed = world_seed
+	m.overworld = Overworld.create(world_seed, m)
 	brain = NPCBrain.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
@@ -279,6 +280,7 @@ func _new_day() -> void:
 				tile_changed.emit(Vector2i(t.x, t.y - 1), "above", t.top)
 				tile_changed.emit(Vector2i(t.x, t.y), "above", t.bottom)
 				map.set_solid(Vector2i(t.x, t.y), true)
+	_regrow_overworld_trees(d)
 	for pl in plants:
 		if pl.state == "picked" and d >= pl.regrow:
 			pl.state = "ripe"
@@ -544,6 +546,8 @@ func tree_at(c: Vector2i) -> Dictionary:
 	for t in trees:
 		if t.x == c.x and (t.y == c.y or t.y - 1 == c.y):
 			return t
+	if map.overworld != null:
+		return map.overworld.tree_at(c)         # a tree of the world outside the village ({} inside it)
 	return {}
 
 
@@ -599,7 +603,34 @@ func fell(t: Dictionary, bonus: int) -> int:
 	tile_changed.emit(Vector2i(t.x, t.y - 1), "above", -1)
 	tile_changed.emit(Vector2i(t.x, t.y), "above", -1)
 	map.set_solid(Vector2i(t.x, t.y), false)
+	if t.get("ow", false):
+		map.overworld.note_tree(t)             # a tree outside the village: the change is saved, the rest of the world is not
 	return 4 + bonus
+
+
+## Trees the player felled outside the village regrow by the village's rules (stump, then sapling two
+## days on, then a tree again unless someone stands there); a regrown one is the generated world again.
+func _regrow_overworld_trees(d: float) -> void:
+	if map.overworld == null:
+		return
+	var cells: Array = map.overworld.changes.keys()
+	cells.sort()
+	for c: Vector2i in cells:
+		var t: Dictionary = map.overworld.changes[c]
+		if d < float(t.regrow):
+			continue
+		if t.state == "stump":
+			t.state = "sapling"
+			t.regrow = d + 2
+			tile_changed.emit(c, "below", map.data.tiles.sapling)
+		elif _someone_on(c):
+			t.regrow = d + 1
+		else:
+			t.state = "grown"
+			map.overworld.note_tree(t)
+			tile_changed.emit(c, "below", t.trunk)
+			tile_changed.emit(c + Vector2i.UP, "above", t.top)
+			tile_changed.emit(c, "above", t.bottom)
 
 
 func nearest_tree(from: Vector2i, max_d := 60.0) -> Dictionary:
@@ -1670,7 +1701,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
-const SAVE_VERSION := 9            # 9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 10           # 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -1975,6 +2006,7 @@ func to_dict() -> Dictionary:
 		"manor_work": manor_work.to_dict(),
 		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
+		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "log": log_lines, "quest_offers": quests.to_dict(),
@@ -1986,6 +2018,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	map = m
 	seed = int(d.seed)
 	rng.seed = seed + int(d.minutes)
+	var ow: Dictionary = d.get("overworld", {})
+	m.overworld = Overworld.create(int(ow.get("seed", seed)), m)
+	m.overworld.load_dict(ow)
 	brain = NPCBrain.new(self)
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))

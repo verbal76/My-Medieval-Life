@@ -183,7 +183,8 @@ func map_rect() -> Rect2:
 ## Where the player's marker is drawn, in this control.
 func player_point() -> Vector2:
 	var r := map_rect()
-	return r.position + main.world.player.pos * (r.size.x / float(main.map.w))
+	var at: Vector2 = r.position + main.world.player.pos * (r.size.x / float(main.map.w))
+	return at.clamp(r.position, r.end)            # outside the village the marker stays on the map's edge
 
 
 ## The control fills the window under its title: the panel body scrolls, so its height is set here.

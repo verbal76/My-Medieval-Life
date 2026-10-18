@@ -76,3 +76,5 @@ marked *Proposed* until the owner approves it.
 | 2026-10-17 | Procedural generation must be deterministic per seed | Owner | Asset-preparation assignment |
 | 2026-10-17 | Engine, platform and mechanics need owner approval before implementation | Owner | Master development prompt |
 | 2026-10-17 | Remove duplicate uploads only when byte-identical, never by name | Owner | First repository instruction |
+| 2026-10-18 | The map's hard border is replaced by a seed-generated, chunk-streamed overworld around the village (B8-011): meadows, woodland, forests, rocky hills, mountain ranges with passes, a road network joined to the village's four exits; the village stays at (0,0)-(119,89); collision outside it is the overworld's while villagers stay inside the village; felled overworld trees and the seed are saved, terrain never (save version 10, no migration: the owner made existing saves disposable) | Owner approved the task; layout, scale and numbers are agent proposals | `docs/release/BUILD_8_ISSUES.md` B8-011; INT-071. Generator version 1 (`Overworld.GEN_VERSION`): any later change to its output for a seed is a version bump |
+

@@ -5,6 +5,8 @@
   "population": 100,
   "walk_tiles_per_second": 2.6,
   "player_tiles_per_second": 4.5,
+  "overworld_chunk_radius": 2,
+  "_overworld_note": "Chunks (32 x 32 tiles) of the overworld drawn beyond the camera's chunk; chunks more than one beyond are freed. 2 covers a zoomed-out phone view with room to spare. Agent proposal for B8-011.",
   "hunger_per_hour": 3.0,
   "child_food_factor": 0.6,
   "_child_food_note": "A child gets hungry this much as fast as an adult, so eats this share of an adult's food; every household and village food reckoning weights children the same way (NPCBrain.food_factor). NPCs have no ages yet, so the role decides. Agent proposal, provisional: balance review pending (docs/BUILD_DECISIONS.md).",
