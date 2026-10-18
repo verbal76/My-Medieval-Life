@@ -41,9 +41,68 @@ files and systems, the test evidence and the fixing commit.
 
 | ID | Reported | Kind | Sev. | Platform | Summary | Status | Commit | Device check |
 |---|---|---|---|---|---|---|---|---|
-| — | | | | | No owner reports yet | | | |
+| B7-001 | 2026-10-18 | Usability | S2 | All | A new player has 5 coins and starves by day 5 without income | Diagnosed | — | Yes (play feel) |
+| B7-002 | 2026-10-18 | Bug | S3 | All | Side quests pay less than their text promises when the giver is short of coins | Diagnosed | — | No |
+| B7-003 | 2026-10-18 | Bug | S3 | All | Rings, amulet and helmets can be crafted but nobody buys them | Diagnosed | — | No |
+| B7-004 | 2026-10-18 | Bug | S3 | All | Wheat cut for harvest work can be kept without paying or being marked stolen | Diagnosed | — | No |
+| B7-005 | 2026-10-18 | Usability | S2 | All | Nothing tells a new player how to earn money; the shop window says "Buy from" though it also sells | Diagnosed | — | Yes |
+| B7-006 | 2026-10-18 | Usability | S3 | All | Hired work pays poorly or is closed: the mine shift pays less than the ore is worth; woodcutting needs an axe the player can't afford | Diagnosed | — | No |
+| B7-007 | 2026-10-18 | Bug | S2 | All | Ore and stone deposits never refill and the caravan brings no stone: the village works them out by about day 10, after which no house can be built | Diagnosed | — | No |
+| B7-008 | 2026-10-18 | Usability | S4 | All | The player can sell a buyer down to 0 coins and kill every wild animal (NPCs leave a floor of 15 coins and 2 animals) | Diagnosed | — | No |
+
+Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`).
+They were measured with `game/tests/earn_sim.gd`, seed 1. Each fix changes a rule or number, so
+all of them wait for the owner's approval.
 
 ### Issue details
+
+### B7-001 Not enough money to survive the start
+- Reported: 2026-10-18, agent review of the owner's question; all platforms.
+- Evidence: `earn_sim.gd --strategy idle`: coins 5 → 3 → 1, dead on day 5 at 19:22.
+- Root cause: `start_coins_player` 5. Food costs about 3 coins a day (`player_hunger_per_hour` 3).
+- Files: `game/data/balance.json`.
+- Fix: proposal (15–20 coins, and/or manor day labour); awaiting the owner.
+- Device check: whether the start feels fair in real play.
+
+### B7-002 Quest rewards cut to the giver's purse
+- Evidence: `quests.gd:268` pays `mini(reward, n.coins)`. In the runs the smiths held 1–15 coins
+  while "Ore for the forge" promises twenty.
+- Root cause: offers are made without checking that the giver can pay, and nothing is set aside.
+- Fix: proposal (offer only when the giver can pay, and set the reward aside); awaiting the owner.
+
+### B7-003 Craftable jewellery and helmets have no buyer
+- Evidence: `npc_brain.gd:13-22` `BUYS` lists no ring, amulet, leather cap or iron helmet.
+- Fix: proposal (the goods merchant buys them); awaiting the owner.
+
+### B7-004 Harvest-work wheat is never the farmer's
+- Evidence (code reading; not run): `quests.gd:177` and `world.gd:1093` treat wheat cut under a
+  harvest job as not theft. If the job lapses, the wheat stays with the player unmarked: about 48
+  coins of wheat instead of a 6-coin wage, up to 3 jobs at once.
+- Fix: proposal (mark it stolen if the job lapses); awaiting the owner.
+
+### B7-005 Earning money is undiscoverable
+- Evidence: the opening line is only "Explore the village: talk to people, work, trade, build."
+  (`main.gd:476`). "Any work for me?" has no marker. The shop window is titled "Buy from …"
+  (`game_ui.gd:1243`).
+- Fix: proposal (hint text; the title "Trade with …"); awaiting the owner.
+
+### B7-006 Hired work pays less than doing it alone
+- Evidence: the mine shift pays 8 for 6 iron ore, which sell for about 18. The woodcutting job
+  needs an axe the player doesn't start with.
+- Fix: proposal; awaiting the owner.
+
+### B7-007 Deposits run out and stone has no source
+- Evidence: `earn_sim.gd --strategy observe` (the village alone): iron, coal, stone and copper all at
+  0 by day 10 (seed 1). `caravan_import_stock` brings iron, coal and copper, not stone. A house
+  needs 20 stone.
+- Root cause: deposits have a fixed `amount` with no refill.
+- Fix: proposal (stone imports and/or a refill rate); awaiting the owner.
+
+### B7-008 The player has no floor on buyers' coins or wildlife
+- Evidence: the mining run left the smiths at 0–1 coins; the hunting run killed all 12 wild adults
+  on day 1 and none came back.
+- Fix: proposal (the same 15-coin floor for the player's sales); awaiting the owner. Wildlife is a
+  design question.
 
 (One section per issue, `B7-001` onwards, in this form.)
 
@@ -65,7 +124,7 @@ files and systems, the test evidence and the fixing commit.
 
 | ID | Kind | Summary | Status |
 |---|---|---|---|
-| K-1 | Usability | The player starts with 5 coins; land costs 60 or more. The early-earning review is in progress below. | Under review |
+| K-1 | Usability | The player starts with 5 coins; land costs 60 or more. Reviewed in `EARLY_ECONOMY_REVIEW.md`; findings B7-001 to B7-008 | Reviewed |
 | K-2 | Known limitation | The tavern child and the sage sleep on pallets for lack of beds; sleepers are the standing sprite turned on its side (no lying frame in the art) | Recorded |
 | K-3 | Known limitation | Every number marked provisional (theft, rents, prices, wages, gear bonuses, child food factor, roof-fade timings) awaits the owner's balance review | Awaiting owner |
 
