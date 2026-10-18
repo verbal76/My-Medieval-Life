@@ -33,6 +33,9 @@ func _init() -> void:
 	test_tree_canopy()
 	test_trades_and_works()
 	test_quests()
+	test_child_food()
+	test_hiring()
+	test_skill_quest()
 	test_building_site()
 	test_chest_keeps_marks()
 	test_theft_and_shops()
@@ -415,7 +418,8 @@ func test_government() -> void:
 func test_households_and_work() -> void:
 	var w := new_world()
 	var b: NPCBrain = w.brain
-	check(w.granary.count("wheat") == ceili(100 * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food (%d)" % w.granary.count("wheat"))
+	var kids := w.alive_count("child")
+	check(w.granary.count("wheat") == ceili(((100 - kids) + kids * float(GameData.b("child_food_factor"))) * 72.0 * 7 / 120.0), "the settlers' granary holds 7 days of the village's food, children weighted (%d)" % w.granary.count("wheat"))
 	check(w.households[5].pantry.count("wheat") == 2 * w.households[5].members.size(), "each household brought 2 wheat a head")
 	# inheritance: food to the pantry, coins and goods to the heir; nothing lost or made
 	var h := -1
@@ -474,7 +478,10 @@ func test_households_and_work() -> void:
 	# the household re-evaluates at once after a death
 	var econ: Dictionary = w.households[h].econ
 	check(int(econ.members) == members.size() - 1, "a death changes the household's reckoning at once (%d members)" % int(econ.members))
-	check(float(econ.need) == (members.size() - 1) * 72.0, "its daily food need follows its members")
+	var weighted := 0.0
+	for o: NPC in b._members(h):
+		weighted += 72.0 * (float(GameData.b("child_food_factor")) if o.role == "child" else 1.0)
+	check(is_equal_approx(float(econ.need), weighted), "its daily food need follows its members, children weighted (%.1f)" % float(econ.need))
 	# a keeper's death hands the pen on
 	var pen: Dictionary = w.fauna.pen_of("cow")
 	var keeper := w.npc(int(pen.owner))
@@ -855,6 +862,247 @@ func test_quests() -> void:
 	check(side.call().is_empty(), "a quest fails when its giver dies")
 	w.dispose()
 	w2.dispose()
+
+
+## Children eat by age: a child gets hungry child_food_factor as fast, and every food reckoning
+## (household days, relief, the farmer's keep, the granary, the village's days, the caravan,
+## the household reckoning and the quests' household_food_below) weights members the same way.
+func test_child_food() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	var k := float(GameData.b("child_food_factor"))
+	var child: NPC = w.npcs.filter(func(o): return o.role == "child")[0]
+	var adult: NPC = w.npcs.filter(func(o): return o.role == "adult")[0]
+	var elder: NPC = w.npcs.filter(func(o): return o.role == "elder")[0]
+	check(NPCBrain.food_factor(child) == k and NPCBrain.food_factor(adult) == 1.0 and NPCBrain.food_factor(elder) == 1.0, "a child eats %.2f of an adult's food; adults and elders the same" % k)
+	# hunger falls more slowly for a child
+	for o: NPC in [child, adult]:
+		o.hunger = 100.0
+		o.target = -1
+		o.plan = [b.work(100000, "", {}, "idle")]
+	w._update_npc(child, 10.0)
+	w._update_npc(adult, 10.0)
+	check(is_equal_approx(100.0 - child.hunger, (100.0 - adult.hunger) * k), "a child gets hungry %.2f as fast (%.2f vs %.2f lost)" % [k, 100.0 - child.hunger, 100.0 - adult.hunger])
+	# a household with children: its need, its days of food, its reckoning
+	var h := -1
+	for i in w.households.size():
+		if b._members(i).any(func(o): return o.role == "child"):
+			h = i
+			break
+	var members: Array = b._members(h)
+	var weight := 0.0
+	for o: NPC in members:
+		weight += k if o.role == "child" else 1.0
+	check(weight < members.size() and is_equal_approx(b.household_day_food(h), weight * 72.0), "a household's daily need weights its children (%.1f for %d members)" % [b.household_day_food(h), members.size()])
+	for o: NPC in members:
+		o.coins = 0
+	w.households[h].pantry.items.clear()
+	w.households[h].pantry.add("wheat", 3)
+	check(is_equal_approx(b.household_food_days(h), 360.0 / (weight * 72.0)), "days of food are counted against the weighted need (%.2f)" % b.household_food_days(h))
+	check(is_equal_approx(float(b.evaluate_household(h).need), weight * 72.0), "the household reckoning uses the weighted need")
+	var vill := 0.0
+	for o: NPC in w.npcs:
+		if o.alive and o.role != "bandit":
+			vill += k if o.role == "child" else 1.0
+	check(is_equal_approx(b.village_day_food(), vill * 72.0), "the village's need weights its children (%.0f)" % b.village_day_food())
+	# the quests' household_food_below follows household_food_days: 1.4 days for this household
+	var elder_h := -1
+	for i in w.households.size():
+		if b._members(i).any(func(o): return o.role == "elder") and b._members(i).any(func(o): return o.role == "child"):
+			elder_h = i
+			break
+	if elder_h >= 0:
+		var em: Array = b._members(elder_h)
+		var ew := 0.0
+		for o: NPC in em:
+			o.coins = 0
+			ew += k if o.role == "child" else 1.0
+		var giver: NPC = em.filter(func(o): return o.role == "elder")[0]
+		w.households[elder_h].pantry.items.clear()
+		# pottage for 1.6 adult-weighted days: below 1.5 days if children ate like adults, above it now
+		var pots := ceili(1.6 * ew * 72.0 / 40.0)
+		w.households[elder_h].pantry.add("pottage", pots)
+		var days := b.household_food_days(elder_h)
+		check(days >= 1.5 and (w.quests._wants(giver, Quests.template("food_for_the_family")) == false), "the food quest reads the weighted days (%.2f): this household is not short" % days)
+	# relief fills a household to 3 days of its weighted need
+	w.treasury = 100000
+	w.granary.items.clear()
+	w.granary.add("wheat", 500)
+	w.households[h].pantry.items.clear()
+	for o: NPC in members:
+		for f in NPCBrain.FOOD:
+			o.inv.remove(f, o.inv.count(f))
+	b.market_food_points = 0.0
+	b._relief(10.0, 100.0)
+	var given: int = w.households[h].pantry.count("wheat")
+	check(given == ceili(3.0 * weight * 72.0 / 120.0), "relief grain is 3 days of the weighted need (%d wheat)" % given)
+	# a farmer keeps 3 days of the household's weighted need
+	var farmer: NPC = w.npcs.filter(func(o): return o.job == "farmer")[0]
+	var keep := int(GameData.b("granary_keep_buffer")) + b.reserve(farmer, "wheat") + ceili(b.household_day_food(farmer.household) * float(GameData.b("granary_keep_household_days")) / 120.0)
+	check(b.keep_wheat(farmer) == keep, "a farmer's household keep is weighted (%d)" % keep)
+	# the granary buys up to 7 days of the village's weighted need
+	w.granary.items.clear()
+	w.food_days = 99.0
+	farmer.inv.add("wheat", 2000)
+	farmer.coins = 0
+	w.last_reeve_day = -1
+	b.reeve_day()
+	check(w.granary.count("wheat") == int(b.village_day_food() * float(GameData.b("granary_target_days")) / 120.0) and b.village_day_food() < (w.alive_count() - w.alive_count("bandit")) * 72.0,"the granary's target is 7 days of the weighted need (%d)" % w.granary.count("wheat"))
+	# the village's days of food
+	w._update_food_days()
+	var pts := 0.0
+	for o: NPC in w.npcs:
+		if o.alive and o.role != "bandit":
+			for f in NPCBrain.FOOD:
+				pts += o.inv.count(f) * float(GameData.item(f).food)
+	for hh in w.households:
+		for f in NPCBrain.FOOD:
+			pts += hh.pantry.count(f) * float(GameData.item(f).food)
+	for f in NPCBrain.FOOD:
+		pts += w.table_food(f) * float(GameData.item(f).food)
+	pts += w.granary.count("wheat") * float(GameData.item("wheat").food)
+	check(is_equal_approx(w.food_days, pts / b.village_day_food()), "the village's food days use the weighted need (%.2f)" % w.food_days)
+	# the caravan: food between the weighted and the unweighted 3-day reserve is not held back
+	var seller: NPC = null
+	for o: NPC in w.npcs:
+		for f in NPCBrain.FOOD:
+			o.inv.remove(f, o.inv.count(f))
+		if o.job == "merchant" and b.buy_role(o) == "merchant_food" and seller == null:
+			seller = o
+	for hh in w.households:
+		for f in NPCBrain.FOOD:
+			hh.pantry.remove(f, hh.pantry.count(f))
+	for c in w.containers:
+		if c.kind == "table":
+			c.inv.items.clear()
+	var reserve_days := float(GameData.b("caravan_food_reserve_days"))
+	var people := w.alive_count() - w.alive_count("bandit")
+	var between := (b.village_day_food() * reserve_days + people * 72.0 * reserve_days) / 2.0
+	seller.inv.add("pottage", ceili(between / 40.0))
+	w.stats.erase("exported_pottage")
+	b.caravan()
+	check(int(w.stats.get("exported_pottage", 0)) > 0, "the caravan's food reserve is the weighted need: it buys food above it")
+	for f in NPCBrain.FOOD:
+		seller.inv.remove(f, seller.inv.count(f))
+	seller.inv.add("pottage", floori(b.village_day_food() * reserve_days / 40.0) - 1)
+	w.stats.erase("exported_pottage")
+	b.caravan()
+	check(int(w.stats.get("exported_pottage", 0)) == 0, "and holds the food back below it")
+	w.dispose()
+
+
+## Paid work for the player: a villager with work and the wage offers it when asked; the player
+## does it with the ordinary mechanics; the wage comes from the employer's purse, in full.
+func test_hiring() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	var p := w.player
+	p.pos = FAR_GUARDS
+	var farmer: NPC = null
+	for o: NPC in w.npcs:
+		if o.job == "farmer" and not w.quests.field_of(o).is_empty():
+			farmer = o
+			break
+	var f: Dictionary = w.quests.field_of(farmer)
+	w.set_field(f, "tilled")
+	farmer.coins = 20
+	check(w.quests.hires(farmer) and w.quests.hire_offer(farmer).is_empty(), "a farmer whose field is not ripe has no work")
+	check(w.quests.no_work_line(farmer).begins_with("Not today"), "and says so")
+	w.set_field(f, "ripe")
+	f.crop = 60
+	check(w.quests.hire_offer(farmer).get("id", "") == "work_the_harvest", "a farmer at harvest offers the player work")
+	w.quests.offers.clear()
+	w.quests.refresh()
+	check(not w.quests.offers.values().has("work_the_harvest") and w.quests.marker(farmer) != "skill", "paid work is never a dawn offer or a marker")
+	farmer.coins = 5
+	check(w.quests.hire_offer(farmer).is_empty() and w.quests.no_work_line(farmer).contains("can't pay"), "an employer who cannot pay the wage offers no work")
+	check(w.quests.accept(farmer, "work_the_harvest").is_empty(), "and the work cannot be taken on")
+	farmer.coins = 20
+	var children: Array = w.npcs.filter(func(o): return o.role == "child")
+	check(not w.quests.hires(children[0]) and not w.quests.hires(w.npc(w.sage_id)), "children and the sage hire nobody")
+	var q: Dictionary = w.quests.accept(farmer, "work_the_harvest")
+	check(not q.is_empty() and p.quests.has(q), "the player takes on the harvest")
+	# the farmer leaves the hired field alone
+	farmer.plan.clear()
+	b._farmer(farmer)
+	check(not farmer.plan.any(func(s): return s.get("act", "") == "harvest"), "the farmer leaves a hired field to the hired hand")
+	check(not b.act(farmer, "harvest", {"field": f.id}) and int(f.crop) == 60, "and does not cut it")
+	# cutting it: no theft for the hired amount, theft beyond it
+	var crimes0 := p.crimes.size()
+	for i in 4:
+		w.player_harvest(f)
+	check(p.crimes.size() == crimes0 and p.stolen_count("wheat") == 0 and int(q.harvested) == 24, "cutting the hired 24 wheat is not theft")
+	check(w.quests.hired_on(f).is_empty(), "once cut, the field is the farmer's again")
+	w.player_harvest(f)
+	check(p.crimes.size() == crimes0 + 1, "a handful more is theft")
+	p.inv.remove("wheat", p.inv.count("wheat") - 24)        # (what was stolen, unless a guard took it back)
+	p.trim_stolen()
+	check(w.quests.ready(q), "ready with the wheat")
+	# paid in full or not at all
+	var coins0 := w.total_coins()
+	var wheat0 := farmer.inv.count("wheat")
+	farmer.coins = 3
+	check(w.quests.complete(q) == -2 and p.inv.count("wheat") == 24 and p.quests.has(q), "an employer who cannot pay keeps nothing and pays nothing")
+	farmer.coins = 20
+	var purse := p.coins
+	check(w.quests.complete(q) == 6 and p.coins == purse + 6 and farmer.coins == 14 and farmer.inv.count("wheat") == wheat0 + 24 and not p.quests.has(q), "the wage comes from the farmer's purse; the wheat goes to the farmer")
+	check(w.total_coins() == coins0, "a wage makes no coins")
+	check(int(w.stats.get("hired_wages", 0)) == 6, "the ledger records the wage")
+	# a woodcutter's day: logs delivered; undone work lapses
+	var wc: NPC = w.npcs.filter(func(o): return o.job == "woodcutter")[0]
+	wc.inv.remove("log", wc.inv.count("log"))
+	wc.coins = 20
+	var q2: Dictionary = w.quests.accept(wc, "work_the_woods")
+	check(not q2.is_empty() and w.quests.line(q2, "offer").contains("6 log") and w.quests.line(q2, "offer").contains("six coins"), "a woodcutter short of logs hires the player: %s" % w.quests.line(q2, "offer"))
+	check(w.quests.accept(wc, "work_the_woods").is_empty(), "one job at a time from one employer")
+	q2.day = w.day() - 2
+	w.quests.drop_failed()
+	check(p.quests.has(q2), "the work is open for its days")
+	q2.day = w.day() - 3
+	w.quests.drop_failed()
+	check(not p.quests.has(q2), "work left undone lapses")
+	# a miner's shift, and it is saved
+	var mn: NPC = w.npcs.filter(func(o): return o.job == "miner")[0]
+	mn.inv.remove("iron_ore", mn.inv.count("iron_ore"))
+	mn.coins = 20
+	var q3: Dictionary = w.quests.accept(mn, "work_the_mine")
+	check(not q3.is_empty(), "a miner short of ore hires the player")
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(w2.player.quests.any(func(x): return x.id == "work_the_mine" and int(x.giver) == mn.id), "accepted work is saved")
+	w.dispose()
+	w2.dispose()
+
+
+## A side quest that teaches a skill: the tanner shows the scroll, and two hides raise Crafting to
+## level 2, which unlocks leather armour.
+func test_skill_quest() -> void:
+	var w := new_world()
+	var p := w.player
+	var tanner: NPC = w.npcs.filter(func(o): return o.job == "tanner")[0]
+	tanner.inv.remove("hide", tanner.inv.count("hide"))
+	w.quests.offers.clear()
+	w.quests.refresh()
+	check(w.quests.offer_of(tanner).get("id", "") == "the_tanners_craft", "a tanner short of hides offers to teach")
+	check(w.quests.marker(tanner) == "skill", "the teacher shows the skill scroll")
+	var rec: Dictionary = GameData.recipes["leather_armor"]
+	check(p.level("crafting") < int(rec.level), "leather armour is out of reach before")
+	var q: Dictionary = w.quests.accept(tanner)
+	p.inv.add("hide", 2)
+	var coins0 := w.total_coins()
+	var hides0 := tanner.inv.count("hide")
+	check(w.quests.complete(q) == 0 and tanner.inv.count("hide") == hides0 + 2 and not p.inv.has("hide"), "the hides go to the tanner")
+	check(p.level("crafting") == 2 and p.level("crafting") >= int(rec.level), "the player's Crafting is now level 2: leather armour can be made")
+	check(w.quests.last_learned.contains("Crafting is now level 2") and w.quests.last_learned.contains("leather armour"), "what was learned is said: %s" % w.quests.last_learned)
+	check(w.total_coins() == coins0, "teaching makes no coins")
+	# a player who already knows it is not offered it
+	w.quests.offers.clear()
+	tanner.inv.remove("hide", tanner.inv.count("hide"))
+	w.quests.refresh()
+	check(w.quests.offer_of(tanner).is_empty(), "a player at level 2 is not offered the lesson")
+	check(not p.raise_to("crafting", 2) and p.raise_to("smithing", 3) and p.level("smithing") == 3 and p.xp_into_level("smithing").x == 0, "teaching raises a skill to the start of a level, never down")
+	w.dispose()
 
 
 func _wheat_held(w: World) -> int:
