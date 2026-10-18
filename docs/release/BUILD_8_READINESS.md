@@ -2,6 +2,8 @@
 
 Prepared 2026-10-18 for the owner's decision. **Decision (owner, 2026-10-18): Build 8 is authorized as a private testing build only**: a draft GitHub Release that only the repository's collaborators can see, not a public release, and no merge into `main`.
 
+**Built 2026-10-18:** run 8 of `release.yml` from `staging/my-medieval-life` at `cd35b5446ccc473c0d85d7a839743f07425fd996`, a draft release (no tag yet). Downloaded back and checked: the three files match `SHA256SUMS.txt`; the Windows `.exe` carries the game's icon; the Linux build starts and shows the opening screen (20 coins, the new guidance). Not verified here: the APK on a phone and the `.exe` on Windows.
+
 ## Source
 
 | | |

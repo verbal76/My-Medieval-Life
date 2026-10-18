@@ -14,7 +14,8 @@ Statuses:
 - **Device check**: integrated; needs the owner's hardware.
 - **Next release**: done; waits for an authorized build.
 
-Release gate: Build 8 is authorized as a private testing build only (a draft release). No public
+Release gate: Build 8 (`cd35b54`) is the private testing build (a draft release); device reports go
+into the issue register as before. No public
 release and no merge into `main` without the owner's explicit authorization.
 
 | # | Task | Status | Owner / branch | Depends on | Notes |
