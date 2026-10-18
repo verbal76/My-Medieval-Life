@@ -296,7 +296,12 @@ func _run() -> void:
 	main._player_step(0.1)
 	check(main.chase == null and main.attack_mode, "the mark is gone with the bandit; attack mode stays on (%d taps)" % taps)
 	# tapping open ground walks there; the Attack button again turns the mode off
-	main._tap(main.get_canvas_transform() * ((p.pos + Vector2(2, 0)) * main.T))
+	var open_at := p.pos + Vector2(2, 0)
+	for off in [Vector2(2, 0), Vector2(-2, 0), Vector2(0, 2), Vector2(0, -2), Vector2(3, 3)]:
+		if main._creature_at(p.pos + off) == null:        # open ground: nobody (another bandit) there
+			open_at = p.pos + off
+			break
+	main._tap(main.get_canvas_transform() * (open_at * main.T))
 	check(main.chase == null and main.move_to != Vector2.INF, "in attack mode, a tap on open ground walks there")
 	main.attack_button()
 	check(not main.attack_mode, "Attack again turns attack mode off")
@@ -380,7 +385,7 @@ func _run() -> void:
 	for i in 400:
 		w.update(0.1)
 		for n: NPC in w.npcs:
-			if n.alive and not n.hidden and n.role == "adult" and n.anim == "walk" and n.path.size() - n.path_i > 8:
+			if n.alive and not main._covered(n) and not w.asleep(n) and n.role == "adult" and n.anim == "walk" and n.path.size() - n.path_i > 8:
 				walker = n
 				break
 		if walker:
@@ -411,7 +416,7 @@ func _run() -> void:
 	var busy_one: NPC = null
 	for i in 400:
 		for n: NPC in w.npcs:
-			if n.alive and not n.hidden and n.role == "adult" and Dialogue.busy(n) and n.target == -1 and not Dialogue.met(w, n) and not Dialogue.attacked(w, n) and Dialogue.theft_seen(w, n) == "":
+			if n.alive and not main._covered(n) and not w.asleep(n) and n.role == "adult" and Dialogue.busy(n) and n.target == -1 and not Dialogue.met(w, n) and not Dialogue.attacked(w, n) and Dialogue.theft_seen(w, n) == "":
 				busy_one = n
 				break
 		if busy_one:
@@ -432,7 +437,7 @@ func _run() -> void:
 		check(not main.bubbles.has(busy_one.id), "the bubble goes after a few seconds")
 	var idle_one: NPC = null
 	for n: NPC in w.npcs:
-		if n.alive and not n.hidden and n.role != "bandit" and not Dialogue.busy(n) and not w.at_post(n):
+		if n.alive and not main._covered(n) and not w.asleep(n) and n.role != "bandit" and not Dialogue.busy(n) and not w.at_post(n):
 			idle_one = n            # (a shopkeeper at their post opens the shop instead: tested with the shops)
 			break
 	if idle_one:
@@ -525,7 +530,7 @@ func _run() -> void:
 	# a pickpocket's choice in the conversation with someone beside the player
 	var mark: NPC = null
 	for n: NPC in w.npcs:
-		if n.alive and not n.hidden and n.role == "adult" and n.job != "guard" and not w.at_post(n) and n != v:
+		if n.alive and not main._covered(n) and not w.asleep(n) and n.role == "adult" and n.job != "guard" and not w.at_post(n) and n != v:
 			mark = n
 			break
 	mark.pos = p.pos + Vector2(1.0, 0)
@@ -716,7 +721,8 @@ func _run() -> void:
 			home_q = n
 			break
 	w.quests.offers[home_q.id] = "food_for_the_family"
-	home_q.hidden = true
+	var home_was := home_q.pos
+	home_q.pos = Vector2(w.home_cell(home_q, "bed")) + Vector2(0.5, 0.5)       # inside, under the roof
 	var door_cell := w.building_door(home_q.home)
 	p.pos = Vector2(door_cell) + Vector2(0.5, 2.5)
 	main.camera.position = p.pos * main.T
@@ -728,7 +734,7 @@ func _run() -> void:
 	for l in main.view.above_layers:
 		roof_z = maxi(roof_z, l.z_index)
 	check(main.diamonds[home_q.id].z_index > roof_z and main.target_marker.z_index > roof_z, "quest and target markers draw over roofs and tree canopies")
-	home_q.hidden = false
+	home_q.pos = home_was
 	w.quests.offers.erase(home_q.id)
 	p.pos = sage.pos + Vector2(0, 2)
 	ui.show_talk(cook_q)
@@ -798,6 +804,78 @@ func _run() -> void:
 	main._hit_animal(beast, 9999.0)
 	check(not Dialogue.attacked(w2, keeper) and Dialogue.animal_killed(w2, keeper) == kind, "the keeper remembers that the player killed their %s" % kind)
 	check(Dialogue.opening(w2, keeper).contains(kind), "and says so: \"%s\"" % Dialogue.opening(w2, keeper))
+
+	# 23. inside a building its roof fades, and only its roof; who is inside shows to the player inside
+	# and is under the roof to the player outside (owner decision: roof fade, one entry mechanic)
+	var pi: World = main.world
+	var a3: TileMapLayer = main.view.layer("above3")
+	var in5 := Vector2i(int(pi.interiors["b5"].floor[0][0]), int(pi.interiors["b5"].floor[0][1]))
+	var in6 := Vector2i(int(pi.interiors["b6"].floor[0][0]), int(pi.interiors["b6"].floor[0][1]))
+	check(a3.get_cell_source_id(in5) != -1 and a3.get_cell_source_id(in6) != -1, "the houses' roofs cover their insides")
+	var resident: NPC = null
+	for n: NPC in pi.npcs:
+		if n.alive and n.home == "b5" and n.role == "adult":
+			resident = n
+			break
+	resident.pos = Vector2(pi.home_cell(resident, "chest")) + Vector2(0.5, 0.5)
+	resident.plan = [pi.brain.work(600, "", {}, "idle")]
+	resident.anim = "idle"
+	var outside_at := Vector2(pi.building_door("b5")) + Vector2(0.5, 1.5)
+	pi.player.pos = outside_at
+	main.camera.position = pi.player.pos * main.T
+	main._sync_sprites()
+	check(main._covered(resident) and not main.sprites[resident.id].visible, "from outside, someone inside a house is under its roof")
+	pi.player.pos = Vector2(in5) + Vector2(0.5, 0.5)
+	main.camera.position = pi.player.pos * main.T
+	main.camera.reset_smoothing()
+	main.camera.force_update_scroll()
+	main._sync_sprites()
+	main.roofs.update("b5", pi.interiors["b5"].roof, 1.0)
+	check(main.roofs.current == "b5" and main.roofs.alpha <= 0.01 and a3.get_cell_source_id(in5) == -1, "inside house b5 its roof fades out")
+	check(a3.get_cell_source_id(in6) != -1, "the next house's roof stays")
+	main._sync_sprites()
+	check(not main._covered(resident) and main.sprites[resident.id].visible, "inside, the player sees %s" % resident.name)
+	main._find_target()
+	resident.anim = "sleep"
+	resident.pos = Vector2(pi.home_cell(resident, "bed")) + Vector2(0.5, 0.5)
+	main._sync_sprites()
+	var bed := pi.home_spot(resident, "bed")
+	var rs: ActorSprite = main.sprites[resident.id]
+	check(rs.visible and absf(rs.rotation) > 0.1 and rs.position.distance_to((Vector2(int(bed.at[0]), int(bed.at[1])) + Vector2(0.5, 0.5)) * main.T) < 12.0, "asleep, %s lies in their bed" % resident.name)
+	resident.anim = "idle"
+	pi.player.pos = outside_at
+	main._sync_sprites()
+	main.roofs.update("", [], 1.0)
+	main.roofs.update("", [], 1.0)
+	check(main.roofs.current == "" and a3.get_cell_source_id(in5) != -1, "outside again, the roof comes back")
+	# a house the player builds: the same inside, roof fade, bed and chest
+	var pl2: Dictionary = pi.plots[1]
+	pi.player.coins += int(pl2.price)
+	pi.buy_plot(pl2)
+	pi.start_site(pl2)
+	var cost: Dictionary = GameData.b("house_cost")
+	for id in cost:
+		pi.player.inv.add(id, int(cost[id]))
+	pi.deliver(pl2, pi.player.inv)
+	var hid := "house_" + str(pl2.id)
+	pi.player.home = hid
+	var hin: Dictionary = pi.interiors[hid]
+	var hbed: Dictionary = (hin.spots as Array).filter(func(s): return s.kind == "bed")[0]
+	pi.player.pos = Vector2(int(hbed.use[0]), int(hbed.use[1])) + Vector2(0.5, 0.5)
+	main.player_sprite.face(Vector2(int(hbed.at[0]), int(hbed.at[1])) - Vector2(int(hbed.use[0]), int(hbed.use[1])))
+	main._sync_sprites()
+	main.roofs.update(hid, hin.roof, 1.0)
+	check(main.roofs.current == hid and a3.get_cell_source_id(Vector2i(int(hbed.use[0]), int(hbed.use[1]))) == -1, "inside the house the player built, its roof fades too")
+	main._find_target()
+	check(main.target.get("kind", "") == "rest", "the bed in the player's house rests (%s)" % main.target.get("label", ""))
+	var hchest: Dictionary = (hin.spots as Array).filter(func(s): return s.kind == "chest")[0]
+	pi.player.pos = Vector2(int(hchest.use[0]), int(hchest.use[1])) + Vector2(0.5, 0.5)
+	main.player_sprite.face(Vector2(int(hchest.at[0]), int(hchest.at[1])) - Vector2(int(hchest.use[0]), int(hchest.use[1])))
+	main._find_target()
+	check(main.target.get("kind", "") == "home", "its chest opens the family's store (%s)" % main.target.get("label", ""))
+	pi.player.pos = Vector2(pi.building_door(hid)) + Vector2(0.5, 0.5)
+	main._find_target()
+	check(main.target.get("kind", "") == "home", "and the door still offers rest and the chest")
 
 	print("%d steps, %d failures" % [steps.size(), failures])
 	quit(1 if failures else 0)
