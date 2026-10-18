@@ -49,6 +49,7 @@ func _init() -> void:
 	test_construction_migration()
 	test_build7_economy()
 	test_manor_work()
+	test_resource_registry()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -2801,4 +2802,76 @@ func test_manor_work() -> void:
 	w7.load_dict(VillageMap.load_default(), old)
 	check(not w7.player.quests.any(func(x): return x.id == "work_for_the_manor") and w7.treasury == int(old.treasury) + 6, "v7 save: the old single manor job is dropped, its six coins back in the treasury")
 	w7.dispose()
+	w.dispose()
+
+
+## The resource registry (res://data/resources.json through ResourceNodes) agrees with the world.
+func test_resource_registry() -> void:
+	var w := new_world()
+	var p := w.player
+	var defs := ResourceNodes.defs()
+	check(not defs.is_empty() and ResourceNodes.def("iron_seam").id == "iron_seam" and ResourceNodes.def("nope").is_empty(), "the registry loads its node definitions")
+	for id in defs:
+		var d: Dictionary = defs[id]
+		check(d.has("range") and d.has("tool") and d.has("tool_hint") and d.has("verb") and d.has("action_label"), "%s has range, tool, tool_hint, verb and action_label" % id)
+	# every deposit is a seam node; what is left is its amount
+	var ok := true
+	for dep in w.deposits:
+		var at := ResourceNodes.node_at(w, Vector2i(dep.x, dep.y))
+		ok = ok and not at.is_empty() and at.ref == dep and at.def.match.ore == dep.ore and ResourceNodes.remaining(w, at.def, dep) == int(dep.amount) \
+				and ResourceNodes.instances(w, at.def).has(dep) and ResourceNodes.cell_of(w, at.def, dep) == Vector2i(dep.x, dep.y)
+	check(ok and not w.deposits.is_empty(), "every deposit maps to the seam node of its ore, and remaining is its amount")
+	ok = true
+	for t in w.trees:
+		var c := Vector2i(t.x, t.y)
+		var at := ResourceNodes.node_at(w, c)
+		ok = ok and not at.is_empty() and at.def.id == "tree" and at.ref == w.tree_at(c) and ResourceNodes.remaining(w, at.def, at.ref) == 4
+	check(ok and ResourceNodes.instances(w, ResourceNodes.def("tree")).size() == w.trees.size(), "every tree maps to the tree node, 4 logs each while grown")
+	ok = true
+	for f in w.fields:
+		var at := ResourceNodes.node_at(w, Vector2i(int(f.x) + 1, int(f.y) + 1))
+		ok = ok and not at.is_empty() and at.def.id == "wheat_field" and at.ref == f and ResourceNodes.remaining(w, at.def, f) == int(GameData.b("field_yield"))
+		ok = ok and ResourceNodes.cell_of(w, at.def, f) == Vector2i(int(f.x) + int(f.w) / 2, int(f.y) + int(f.h) / 2)
+	check(ok and not w.fields.is_empty(), "every field maps to the wheat field node; remaining is its crop")
+	var wild := 0
+	var mapped := 0
+	ok = true
+	for a: Animal in w.fauna.animals:
+		var d := ResourceNodes.def_for("animal", a.species)
+		ok = ok and not d.is_empty() and ResourceNodes.instances(w, d).has(a) and bool(d.player_harvest) == a.wild()
+		if a.wild():
+			wild += 1
+		var at := ResourceNodes.node_at(w, a.cell())
+		if not at.is_empty() and is_same(at.ref, a):
+			mapped += 1
+	check(ok and wild > 0, "every animal maps to its species' node; only the wild ones are the player's to hunt")
+	check(mapped > 0, "node_at finds an animal standing on the cell (%d)" % mapped)
+	# can_harvest: the start kit's rusty pickaxe mines; without a pickaxe or an axe, the reason
+	var dep: Dictionary = w.deposits[0]
+	var seam := ResourceNodes.def_for("deposit", str(dep.ore))
+	check(ResourceNodes.can_harvest(w, seam, dep) == "", "with the start kit's pickaxe a seam can be mined")
+	p.inv.remove("rusty_pickaxe")
+	p.tool = ""
+	check(ResourceNodes.can_harvest(w, seam, dep).contains("pickaxe"), "without a pickaxe: you need one, and where to get it")
+	var tree: Dictionary = w.trees[0]
+	var td := ResourceNodes.def("tree")
+	check(ResourceNodes.can_harvest(w, td, tree).contains("axe"), "without an axe: you need one, and where to get it")
+	p.inv.add("axe")
+	check(ResourceNodes.can_harvest(w, td, tree) == "", "with an axe a grown tree can be felled")
+	w.fell(tree, 0)
+	check(ResourceNodes.can_harvest(w, td, tree).contains("stump") and ResourceNodes.remaining(w, td, tree) == 0, "a felled tree: a stump, nothing left")
+	p.inv.add("pickaxe")
+	for i in int(dep.amount):
+		w.mine_unit(dep)
+	check(ResourceNodes.remaining(w, seam, dep) == 0 and ResourceNodes.can_harvest(w, seam, dep) == "The seam is worked out.", "a worked-out seam says so")
+	var f: Dictionary = w.fields[0]
+	var fd := ResourceNodes.def("wheat_field")
+	check(ResourceNodes.can_harvest(w, fd, f) == "", "a ripe field can be harvested (no tool)")
+	check(ResourceNodes.theft_note(w, fd, f).contains("theft") == not w.field_workers(f).is_empty(), "a worked field: taking its crop is theft")
+	w.set_field(f, "tilled")
+	check(ResourceNodes.can_harvest(w, fd, f) != "" and ResourceNodes.remaining(w, fd, f) == 0, "a tilled field: nothing to harvest, and why")
+	var cows: Array = w.fauna.animals.filter(func(a: Animal): return a.species == "cow")
+	check(not cows.is_empty() and ResourceNodes.can_harvest(w, ResourceNodes.def("cow_pen"), cows[0]).contains("keeper"), "the keeper's livestock is not the player's to take")
+	var boar: Dictionary = GameData.b("animals").boar
+	check(ResourceNodes.products(ResourceNodes.def("wild_boar")) == {"meat": int(boar.meat), "hide": int(boar.hide)}, "products resolve balance keys")
 	w.dispose()
