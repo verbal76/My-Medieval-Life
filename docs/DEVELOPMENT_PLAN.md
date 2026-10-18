@@ -85,6 +85,13 @@ owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separa
   turned on its side (the art has no lying frame)
 - All numbers marked provisional await the owner's balance review
 
+### Awaiting the owner's decision
+
+- Economy sustainability proposals (`docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md`): demand-driven
+  mining and the manor's mining rights, a finite regional caravan market, prospecting, a distant
+  quarry (P1); a persistent wildlife population with migration and hunting quotas (P2); one rule for
+  working money and market-based hire wages (P3); the manor's starting treasury (B7-009)
+
 ### Future ideas (not approved)
 
 - A main storyline after the sage; lizard and spider enemies (packs not uploaded yet); livelier
