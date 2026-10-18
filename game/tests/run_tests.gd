@@ -685,54 +685,145 @@ func test_player_actions() -> void:
 func test_tree_canopy() -> void:
 	var w := new_world()
 	var m := w.map
-	var above0: Array = []
-	for lay in m.data.layers:
-		if lay.name == "above0":
-			above0 = lay.data
-	check(lay_is_above(m, "above0"), "tree canopies are in a layer drawn over the characters")
+	check(lay_is_above(m, "above0"), "tile canopies (arches and hedges) are in a layer drawn over the characters")
 	var t := {}
 	for tr in w.trees:
 		var x := int(tr.x)
 		var y := int(tr.y)
-		if y < 30 and m.is_solid(Vector2i(x, y)) and not m.is_solid(Vector2i(x - 1, y - 1)) and not m.is_solid(Vector2i(x + 1, y - 1)):
+		if y < 30 and tr.state == "grown" and m.is_solid(Vector2i(x, y)) and not m.is_solid(Vector2i(x - 1, y - 1)) and not m.is_solid(Vector2i(x + 1, y - 1)):
 			t = tr
 			break
-	check(not t.is_empty(), "a standing tree with open ground beside its canopy")
+	check(not t.is_empty(), "a mature tree with open ground beside it")
 	if t.is_empty():
 		return
 	var trunk := Vector2i(int(t.x), int(t.y))
 	var top := trunk + Vector2i.UP
-	check(m.is_solid(trunk), "a standing tree's trunk is solid")
-	check(not m.is_solid(top), "a standing tree's canopy is walkable")
-	check(int(above0[top.y * m.w + top.x]) == int(t.top) and int(above0[trunk.y * m.w + trunk.x]) == int(t.bottom), "both canopy tiles are drawn above the characters")
+	check(m.is_solid(trunk), "a mature tree's trunk is solid")
+	check(not m.is_solid(top), "a mature tree's canopy is walkable")
 	var path := m.find_path(top + Vector2i.LEFT, top + Vector2i.RIGHT)
 	check(path.size() == 3 and path.has(Vector2(top)), "a path goes straight through a canopy: %s" % [path])
-	var seen := {}
-	w.tile_changed.connect(func(c: Vector2i, kind: String, v: int): seen["%s %d,%d" % [kind, c.x, c.y]] = v)
-	check(w.fell(t, 0) > 0 and t.state == "stump", "the tree is felled")
-	check(not m.is_solid(trunk), "a stump is walkable")
-	check(seen.get("above %d,%d" % [top.x, top.y], 0) == -1 and seen.get("above %d,%d" % [trunk.x, trunk.y], 0) == -1, "felling takes the whole canopy away")
-	check(seen.get("below %d,%d" % [trunk.x, trunk.y], -1) == int(t.trunk), "the tree's stump is left")
-	# regrowth: stump -> sapling -> grown, with the canopy and the solid trunk back
-	t.regrow = w.day()
-	w._new_day()
-	check(t.state == "sapling" and not m.is_solid(trunk), "a stump grows into a walkable sapling")
-	seen.clear()
-	t.regrow = w.day()
-	w._new_day()
-	check(t.state == "grown" and m.is_solid(trunk) and not m.is_solid(top), "a regrown tree's trunk is solid again and its canopy walkable")
-	check(seen.get("above %d,%d" % [top.x, top.y], -1) == int(t.top) and seen.get("above %d,%d" % [trunk.x, trunk.y], -1) == int(t.bottom), "regrowth puts the whole canopy back")
-	# saves: a felled tree stays walkable; an old save's tree tiles come from the map
+	var felled := []
+	w.tree_felled.connect(func(tr: Dictionary, side: int): felled.append(side))
+	var chops := int(Trees.cfg().chops)
+	# blow by blow: the cut marks grow, the last blow fells, no logs before it, and only once
+	var logs := 0
+	for k in chops - 1:
+		var r := w.chop_tree(t, -1, 0)
+		logs += int(r.logs)
+		check(int(r.hits) == k + 1 and t.state == "grown" and m.is_solid(trunk), "blow %d only hurts the tree" % [k + 1])
+	check(logs == 0 and w.tree_hits(trunk) == chops - 1, "no logs before the last blow")
+	var last := w.chop_tree(t, -1, 0)
+	check(int(last.logs) == 4 and t.state == "stump" and felled == [-1], "the last blow fells it: 4 logs, a stump, falling to the side of the blow")
+	check(w.chop_tree(t, -1, 0).logs == 0 and w.fell(t, 0) == 0, "a felled tree gives no logs twice")
+	check(not m.is_solid(trunk) and w.tree_hits(trunk) == 0, "a stump is walkable and unhurt")
+	check(w.sapling_drop(t).size() == 1, "felling gives a sapling")
+	# a hurt tree heals
+	var t_h := {}
+	for tr in w.trees:
+		if tr.state == "grown" and tr != t:
+			t_h = tr
+			break
+	w.chop_tree(t_h, 1, 0)
+	w.minutes += float(Trees.cfg().heal_minutes) + 1.0
+	check(w.tree_hits(Vector2i(int(t_h.x), int(t_h.y))) == 0, "a hurt tree heals after a while")
+	# regrowth: stump -> sapling -> young -> growing -> mature, by the clock only, collision by stage
+	w.minutes = float(t.regrow) * Trees.DAY - 1.0
+	w.sync_tree(t)
+	check(t.state == "stump", "the stump waits until its day")
+	w.minutes = float(t.regrow) * Trees.DAY + 1.0
+	w.sync_tree(t)
+	check(t.state == "sapling" and not m.is_solid(trunk), "a stump sprouts into a walkable sapling")
+	check(w.fell(t, 0) == 0 and w.chop_tree(t, 1, 0).logs == 0, "a sapling cannot be felled")
+	w.minutes = float(t.born) + Trees.stage_minutes("sapling") + 1.0
+	w.sync_tree(t)
+	check(t.state == "young" and not m.is_solid(trunk) and w.fell(t, 0) == 0, "then a young tree: not solid, cannot be felled")
+	w.minutes += Trees.stage_minutes("young")
+	w.sync_tree(t)
+	check(t.state == "growing" and m.is_solid(trunk) and w.fell(t, 0) == 0, "then a growing tree: solid trunk, cannot be felled")
+	w.minutes += Trees.stage_minutes("growing")
+	w.sync_tree(t)
+	check(t.state == "grown" and m.is_solid(trunk) and not m.is_solid(top), "then mature again: solid trunk, walkable canopy")
+	check(w.fell(t, 0) == 4, "and can be felled once more")
+	# growth waits for somebody standing where a trunk would appear
+	var t_y := {"x": trunk.x, "y": trunk.y, "species": "oak_summer", "state": "young", "regrow": 0.0, "born": w.minutes - Trees.stage_minutes("sapling") - Trees.stage_minutes("young") - 5.0}
+	w.player.pos = Vector2(trunk) + Vector2(0.5, 0.5)
+	check(not w.sync_tree(t_y) and t_y.state == "young", "a young tree does not grow solid under the player's feet")
+	w.player.pos = Vector2(trunk) + Vector2(6.5, 0.5)
+	check(w.sync_tree(t_y) and t_y.state == "growing", "and grows once they step away")
+	# saves: a felled tree stays a stump; trees keep their stage; planted trees are kept
+	var cell := _plant_spot(w)
+	check(cell.x >= 0, "free grass to plant on")
+	w.player.inv.add("oak_sapling", 1)
+	var planted := w.plant_tree(cell, "oak_sapling")
+	check(not planted.is_empty() and planted.state == "sapling" and planted.planted and not m.is_solid(cell), "a sapling is planted on free grass and is not solid")
+	check(w.plant_refusal(cell).contains("tree"), "not again on the same cell: %s" % w.plant_refusal(cell))
+	check(w.plant_refusal(cell + Vector2i(1, 0)) != "", "nor beside another tree")
 	w.fell(t, 0)
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
-	for st in d.trees:
-		st.erase("bottom")
-		st.trunk = 2662
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
-	check(not w2.map.is_solid(trunk) and not w2.map.is_solid(top), "after loading, a felled tree's cells are walkable")
 	var t2 := w2.tree_at(trunk)
-	check(t2.state == "stump" and int(t2.trunk) == int(t.trunk) and int(t2.bottom) == int(t.bottom), "a loaded tree's tiles come from the map, also in saves made before two-tile trees")
+	check(t2.state == "stump" and not w2.map.is_solid(trunk), "after loading, a felled tree is still a stump, walkable")
+	var p2 := w2.tree_at(cell)
+	check(not p2.is_empty() and p2.state == "sapling" and p2.get("planted", false) and p2.species == planted.species, "after loading, the planted sapling is still there")
+	w2.minutes = float(planted.born) + Trees.stage_minutes("sapling") + Trees.stage_minutes("young") + Trees.stage_minutes("growing") + 1.0
+	w2.sync_tree(p2)
+	check(p2.state == "grown" and w2.map.is_solid(cell) and w2.fell(p2, 0) == 4, "a planted sapling grows into a tree that can be felled")
+	# woodcutters only fell mature trees
+	var near := w.nearest_tree(Vector2i(int(t_h.x), int(t_h.y)), 500.0)
+	check(near.is_empty() or near.state == "grown", "villagers look for mature trees only")
+	# every species grows through all stages and is felled once, with a picture for each stage
+	for sp in Trees.art().variants:
+		var v: Dictionary = Trees.art().variants[sp]
+		var s := {"x": cell.x + 40, "y": cell.y, "species": sp, "state": "sapling", "regrow": 0.0, "born": w.minutes}
+		var stages := [s.state]
+		for st in ["sapling", "young", "growing"]:
+			w.minutes += Trees.stage_minutes(st) + 0.5
+			Trees.sync(s, w.minutes)
+			stages.append(s.state)
+		check(stages == ["sapling", "young", "growing", "grown"], "%s: sapling to mature %s" % [sp, stages])
+		var pics := true
+		for f in [v.sizes.young.file, v.sizes.growing.file, v.sizes.mature.file, v.stump.file, v.sapling.file, v.top.file, v.cuts.left[2].file, v.cuts.right[0].file]:
+			pics = pics and Trees.texture(str(f)) != null
+		check(pics, "%s has a picture for every stage, the stump, the falling top and the cut marks" % sp)
+	# the village starts with trees of several species and stages, in patches, none on a road or exit
+	var kinds := {}
+	var stages_seen := {}
+	var same := 0
+	var pairs := 0
+	var by_cell := {}
+	for tr in w.trees:
+		by_cell[Vector2i(int(tr.x), int(tr.y))] = tr
+	for tr in w.trees:
+		if tr.get("planted", false) or tr.state == "stump":
+			continue
+		kinds[tr.species] = true
+		stages_seen[str(Trees.stage_at(7.0 * 60.0 - Trees.born_of(tr)))] = true
+		for dd in [Vector2i(1, 0), Vector2i(0, 1), Vector2i(2, 0), Vector2i(0, 2)]:
+			var o: Dictionary = by_cell.get(Vector2i(int(tr.x), int(tr.y)) + dd, {})
+			if not o.is_empty():
+				pairs += 1
+				same += 1 if o.species == tr.species else 0
+	check(kinds.size() >= 3, "the village's trees are of several species: %s" % [kinds.keys()])
+	check(pairs > 50 and same < pairs * 9 / 10 and same > pairs / 5, "species come in patches, not all alike and not all different (%d of %d neighbours alike)" % [same, pairs])
+	check(stages_seen.size() >= 3, "the village starts with trees of several growth stages: %s" % [stages_seen.keys()])
+	var roads := {}
+	for c in m.data.road:
+		roads[Vector2i(int(c[0]), int(c[1]))] = true
+	var on_road := 0
+	for tr in w.trees:
+		if roads.has(Vector2i(int(tr.x), int(tr.y))):
+			on_road += 1
+	check(on_road == 0, "no tree stands on a road")
+
+
+## A cell of free grass the player could plant on, or (-1, -1).
+func _plant_spot(w: World) -> Vector2i:
+	for y in range(30, 60):
+		for x in range(40, 80):
+			if w.plant_refusal(Vector2i(x, y)) == "":
+				return Vector2i(x, y)
+	return Vector2i(-1, -1)
 
 
 func lay_is_above(m: VillageMap, name: String) -> bool:

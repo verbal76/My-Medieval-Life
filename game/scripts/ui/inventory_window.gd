@@ -268,6 +268,8 @@ func _build_details() -> void:
 	var crafts := ResourceNodes.uses_of(id).filter(func(u): return u.kind == "recipe")
 	if not crafts.is_empty():
 		lines.append("Used for: " + "; ".join(crafts.map(func(u): return _use_line(w, id, u))) + ".")
+	if it.has("plant"):
+		lines.append("Plant it on open grass in front of you (not on a road, a door, a field or beside another tree). It grows into a tree in a few days.")
 	detail_box.add_child(_text("\n".join(lines), 16))
 	detail_box.add_child(actions)
 	var iid: String = id
@@ -286,6 +288,8 @@ func _build_details() -> void:
 			_action({"tool": "Use", "weapon": "Wield"}.get(t, "Wear"), func():
 				w.player_equip(iid)
 				_after())
+	if it.has("plant"):
+		_action("Plant", func(): ui.main.plant_sapling(iid))
 	_action("Drop", func():
 		w.player_drop(iid, 1)
 		ui.message("You put down a %s." % GameData.item_name(iid).to_lower())

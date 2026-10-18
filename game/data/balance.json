@@ -23,6 +23,17 @@
   "price_min": 0.6,
   "price_max": 1.8,
   "sell_ratio": 0.6,
+  "tree_growth": {
+    "_note": "PROVISIONAL (agent proposal, owner approval pending): the tree lifecycle (Trees, tools/living_forest.py art). A felled mature tree is a stump for tree_regrow_days, then a sapling that grows sapling -> young -> growing -> mature; the stage lengths are in game days. Only MATURE trees can be felled: it takes `chops` axe blows, the cut marks showing the damage; a hurt tree heals after heal_minutes. Felling a mature tree gives sapling_count sapling(s) with chance sapling_chance (the player only); the player plants one on free grass in front of them. Development only: the command-line flag --tree-growth N (honoured only in debug builds, see docs/TREES.md) makes trees grow N times faster.",
+    "sapling_days": 0.75,
+    "young_days": 0.75,
+    "growing_days": 0.5,
+    "chops": 4,
+    "heal_minutes": 240,
+    "sapling_chance": 1.0,
+    "sapling_count": 1,
+    "plant_seconds": 1.5
+  },
   "tree_regrow_days": [
     3,
     6

@@ -225,7 +225,7 @@ def uses_of(ctx, item):
     return sorted(out)
 
 
-CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary"}
+CONSUMING = {"recipe", "building", "quest", "food", "equip", "tool", "fuel", "feed", "manor_job", "home_cooking", "granary", "plant"}
 
 
 def reachable(ctx, node_ok):
