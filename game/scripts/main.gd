@@ -146,6 +146,8 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"gain":
+				ui.gain("+2 red berries")
 			"skills":
 				ui.show_skills()
 			"inventory":
@@ -1424,7 +1426,7 @@ func _find_target() -> void:
 	# a seam, tree, field or animal is offered when the player stops by it, not flashed while walking past
 	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "plant", "animal"]
 	if not gather.is_empty():
-		ui.prompt(gather_status())     # gathering: what is going on, not what Use would do
+		ui.prompt("")     # gathering: the outline and the progress bar show it; the middle stays clear
 	else:
 		ui.prompt("" if passing else target.get("label", ""))
 
@@ -1624,7 +1626,10 @@ func _use() -> void:
 			var f: Dictionary = target.field
 			start_action("Harvesting", 2.5, func():
 				var got := world.player_harvest(f)
-				ui.message("You gather %d wheat." % got if got > 0 else "Nothing left to harvest."))
+				if got > 0:
+					ui.gain("+%d wheat" % got)
+				else:
+					ui.message("Nothing left to harvest."))
 		"plant":
 			var pl: Dictionary = target.plant
 			var pdef := ResourceNodes.def_for("plant", str(pl.kind))
@@ -1636,7 +1641,10 @@ func _use() -> void:
 				var got := world.pick_plant(pl)
 				for id in got:
 					p.inv.add(id, int(got[id]))
-				ui.message("You pick %s." % ", ".join(got.keys().map(func(k): return "%d %s" % [int(got[k]), GameData.item_name(k).to_lower()])) if not got.is_empty() else "Nothing left to pick."))
+				if got.is_empty():
+					ui.message("Nothing left to pick.")
+				for k in got:
+					ui.gain("+%d %s" % [int(got[k]), GameData.item_name(k).to_lower()]))
 		"pen":
 			var put := world.fauna.feed(target.pen, p.inv, 5)
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
@@ -2239,7 +2247,7 @@ func _tap(screen_pos: Vector2) -> void:
 	if gather_mode:
 		var hit := _resource_tap(wpos)
 		if hit.is_empty():
-			ui.message("Nothing to gather there: tap a seam, a tree, a ripe field, a flower, a berry bush or game.")
+			ui.gain("Nothing to gather there")
 		else:
 			select_resource(hit, true)
 		return
@@ -2517,17 +2525,6 @@ func _gather_target(d: Dictionary, ref) -> Dictionary:
 		"plant":
 			return {"kind": "plant", "plant": ref, "label": ""}
 	return {}
-
-
-## What the HUD says while gathering: walking to it, or the action and what is left.
-func gather_status() -> String:
-	if gather.is_empty():
-		return ""
-	var d: Dictionary = gather.def
-	var left := ResourceNodes.remaining(world, d, gather.ref)
-	if not action.is_empty() or str(d.get("action", "")) == "attack" and chase == gather.ref:
-		return "%s the %s  ·  %d left" % [str(d.get("verb", "Gathering")), str(d.get("name", "")).to_lower(), left]
-	return "Walking to the %s" % str(d.get("name", "")).to_lower()
 
 
 ## The outline round the chosen resource (a field: its edge).

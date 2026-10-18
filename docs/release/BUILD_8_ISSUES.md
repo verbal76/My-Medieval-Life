@@ -25,6 +25,7 @@ S1 blocks play, S2 major, S3 moderate, S4 minor. "Fixed (staging)" means fixed a
 | B8-017 | Bug | S3 | Farm fields show half plants on their right and bottom edges | Fixed (staging) `e888be2`: each field cell takes its edge or middle tile from the art's 4x4 set (checked in screenshots) |
 | B8-018 | Bug | S2 | Villagers swing tools without doing visible work | Fixed (staging) `6277b37`: farmers swung tools while the crop grew; they now watch. A test checks every working villager is doing an act |
 | B8-019 | Bug | S1 | Building collision, interior navigation, roof flicker | Fixed (staging): A, walls overlapping the sprite (`db512c3`); B, the stove and mine cart used from unreachable cells, now reachable, with every station and indoor spot checked (`fa8976b`); C, the roof stays lifted inside a building's outline (`db512c3`) |
+| B8-020 | Usability | S3 | On a phone, gathering fills the middle of the screen with banners ("Picking the red berry bush · 2 left", "You pick…", "Nothing to gather there: …") | Fixed (staging): what is gained is a short line in the top-right corner ("+2 red berries") that fades after 1.5 s; no banner while gathering (the outline and progress bar show it); "already picked, grows back" stays a message (checked in a screenshot) |
 
 Still open from Build 7: the economy defects B7-014 to B7-017 (an agent is working on them), B7-006,
 B7-008, B7-009.

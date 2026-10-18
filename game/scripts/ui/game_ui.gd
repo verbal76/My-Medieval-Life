@@ -68,6 +68,7 @@ const RES_WARN := Color8(150, 34, 14)
 const RES_CARD := Color8(226, 206, 162)
 const LOG_LINES := 2           # village events shown at once, newest last
 const LOG_SECONDS := 3.0       # how long each stays before fading
+const GAIN_SECONDS := 1.5      # a gain line ("+2 red berries") stays this long, then fades
 const PROMPT := "res://assets/prompts/%s.png"
 const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "touch_tap"}
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
@@ -666,7 +667,16 @@ func message(text: String, seconds := 4.0) -> void:
 	toast.offset_bottom = -160.0 if not place_bar.visible else -(place_bar.size.y + 24.0)    # above the placing bar
 
 
-func log_line(text: String) -> void:
+## Something gained or a quick hint ("+2 red berries"): a short line in the top-right corner that
+## fades quickly, keeping the middle of the screen clear for play (owner, 2026-10-18).
+func gain(text: String) -> void:
+	log_line(text, GAIN_SECONDS)
+	var l: Label = log_box.get_child(log_box.get_child_count() - 1)
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	l.size_flags_horizontal = Control.SIZE_SHRINK_END      # just the words, at the right edge
+
+
+func log_line(text: String, seconds := LOG_SECONDS) -> void:
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -679,8 +689,8 @@ func log_line(text: String) -> void:
 		c.queue_free()
 	# each line stays a few seconds, then fades away (the full record is under Menu)
 	var tw := l.create_tween()
-	tw.tween_interval(LOG_SECONDS)
-	tw.tween_property(l, "modulate:a", 0.0, 1.0)
+	tw.tween_interval(seconds)
+	tw.tween_property(l, "modulate:a", 0.0, minf(1.0, seconds * 0.5))
 	tw.tween_callback(l.queue_free)
 
 
