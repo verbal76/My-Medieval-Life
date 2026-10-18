@@ -19,6 +19,10 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
+	if main.get_script() == null or not main.has_method("interact"):
+		print("FAIL the game's main script did not load (a script error above): stopping")
+		quit(1)
+		return
 	process_frame.connect(_run, CONNECT_ONE_SHOT)
 
 
@@ -97,6 +101,32 @@ func _run() -> void:
 	ui.fit_safe_area()
 	check(ui.root.offset_left >= GameUI.CORNER_MARGIN.x and ui.root.offset_top >= GameUI.CORNER_MARGIN.y
 		and ui.root.offset_right <= -GameUI.CORNER_MARGIN.x and ui.root.offset_bottom <= -GameUI.CORNER_MARGIN.y, "on a phone, windows and buttons keep clear of the screen corners")
+	# B7-010: the status box sits a small margin from the top-left corner of the usable screen, the
+	# action bar from the bottom-right; a camera hud_hole moves only what it would overlap
+	await process_frame
+	var hm: float = GameUI.HUD_MARGIN.phone
+	var hud_sb: Rect2 = ui.status_box.get_global_rect()
+	var hud_view: Vector2 = main.get_viewport().get_visible_rect().size
+	check(absf(hud_sb.position.x - hm) < 1.0 and absf(hud_sb.position.y - hm) < 1.0, "the status box is anchored %d units from the top-left corner (%s)" % [hm, hud_sb.position])
+	var hud_tb: Rect2 = ui.touch_bar.get_global_rect()
+	check(absf(hud_view.x - hud_tb.end.x - hm) < 1.0 and absf(hud_view.y - hud_tb.end.y - hm) < 1.0, "the action bar is anchored %d units from the bottom-right corner" % hm)
+	var winp := Vector2(DisplayServer.window_get_size())
+	if winp.x <= 0 or winp.y <= 0 or DisplayServer.get_name() == "headless":
+		winp = hud_view
+	var kk := hud_view / winp
+	var hud_hole := Rect2(0, 20.0 / kk.y, 60.0 / kk.x, 60.0 / kk.y)          # a camera hud_hole near the top-left (window pixels)
+	ui.test_safe = Rect2(hud_hole.end.x, 0, winp.x - hud_hole.end.x, winp.y)
+	ui.test_cutouts = [hud_hole]
+	ui.fit_safe_area()
+	await process_frame
+	hud_sb = ui.status_box.get_global_rect()
+	var hud_hole_ui := Rect2(hud_hole.position * kk, hud_hole.size * kk)
+	check(not hud_sb.intersects(hud_hole_ui) and hud_sb.position.x < hud_hole_ui.end.x + 2.0 * hm + 1.0 and absf(hud_sb.position.y - hm) < 1.0,
+		"with a camera hud_hole there, the status box steps just past it, not a whole band inward (%s, hud_hole %s)" % [hud_sb.position, hud_hole_ui])
+	check(ui.root.offset_left >= hud_hole_ui.end.x, "windows still keep clear of the cutout's band")
+	ui.test_safe = Rect2()
+	ui.test_cutouts = []
+	ui.fit_safe_area()
 	main.settings.phone = false
 	ui.fit_safe_area()
 	# 1-3. character creation: a name, a family, a female look in a tunic

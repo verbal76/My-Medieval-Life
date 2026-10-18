@@ -13,6 +13,10 @@ const BAR_COLOURS := {"hp": Color8(173, 34, 19), "hunger": Color8(122, 176, 58),
 var main
 var root: Control
 var hud: Control
+var hud_root: Control            # the HUD's own full-screen root: system bars kept clear, cutouts avoided per element
+var status_box: PanelContainer   # health, hunger, stamina, coins and the clock, in the top-left corner
+var test_safe := Rect2()         # tests only: a pretend display safe area (window pixels)
+var test_cutouts: Array = []     # tests only: pretend display cutouts (camera holes), Rect2 in window pixels
 var bars := {}
 var coins_label: Label
 var clock_label: Label
@@ -70,6 +74,9 @@ const CONTROLS := {
 # On a phone the interface keeps at least this far from the screen edges (interface units; the layout
 # is 450 high): rounded corners on common phones cut off less than this.
 const CORNER_MARGIN := Vector2(28, 14)
+## The HUD's distance from the screen edges (interface units): small and the same in every corner.
+## Windows keep CORNER_MARGIN; the HUD sits closer, moving only off a camera cutout it would overlap.
+const HUD_MARGIN := {"desktop": 10.0, "phone": 12.0}
 const BUTTON_MIN_WIDTH := 260.0       # window buttons are at least this wide, else as wide as their text
 const PICKPOCKET_REACH := 1.8      # tiles: the talk window offers "Pick <name>'s pocket" this close
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
@@ -78,11 +85,16 @@ const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": 
 func build(m) -> void:
 	main = m
 	layer = 20
+	hud_root = Control.new()
+	hud_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	hud_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(hud_root)                # under the windows' root: windows draw over the HUD
 	root = Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
 	root.theme = _theme()
+	hud_root.theme = root.theme
 	_build_hud()
 	_build_panel()
 	fit_safe_area()
@@ -93,14 +105,7 @@ func build(m) -> void:
 ## cutouts, system bars), and on a phone at least CORNER_MARGIN from the edges, so windows, the
 ## status box and the corner buttons are not cut off by rounded screen corners.
 func fit_safe_area() -> void:
-	var win := Vector2(DisplayServer.window_get_size())
-	var view := get_viewport().get_visible_rect().size
-	var inset := [0.0, 0.0, 0.0, 0.0]               # left, top, right, bottom, in interface units
-	if win.x > 0 and win.y > 0 and DisplayServer.get_name() != "headless":
-		var safe := Rect2(DisplayServer.get_display_safe_area())
-		var k := view / win
-		inset = [maxf(safe.position.x, 0.0) * k.x, maxf(safe.position.y, 0.0) * k.y,
-			maxf(win.x - safe.end.x, 0.0) * k.x, maxf(win.y - safe.end.y, 0.0) * k.y]
+	var inset: Array = _display_insets().safe       # left, top, right, bottom, in interface units
 	if main.settings.phone:
 		inset = [maxf(inset[0], CORNER_MARGIN.x), maxf(inset[1], CORNER_MARGIN.y),
 			maxf(inset[2], CORNER_MARGIN.x), maxf(inset[3], CORNER_MARGIN.y)]
@@ -108,6 +113,81 @@ func fit_safe_area() -> void:
 	root.offset_top = inset[1]
 	root.offset_right = -inset[2]
 	root.offset_bottom = -inset[3]
+	_fit_hud()
+
+
+## The display's safe area and cutouts in interface units ({safe: [left, top, right, bottom] insets,
+## cutouts: [Rect2]}); the tests can pretend a phone with test_safe and test_cutouts.
+func _display_insets() -> Dictionary:
+	var win := Vector2(DisplayServer.window_get_size())
+	var view := get_viewport().get_visible_rect().size
+	if win.x <= 0 or win.y <= 0 or DisplayServer.get_name() == "headless":
+		win = view                     # no real window (headless tests): window pixels are interface units
+	var safe := test_safe
+	var holes: Array = test_cutouts
+	var real := DisplayServer.get_name() != "headless" and win.x > 0 and win.y > 0
+	if test_safe == Rect2() and real:
+		safe = Rect2(DisplayServer.get_display_safe_area())
+	if test_cutouts.is_empty() and real and DisplayServer.has_method("get_display_cutouts"):
+		holes = DisplayServer.get_display_cutouts()
+	if safe == Rect2():
+		safe = Rect2(Vector2.ZERO, win)
+	var k := view / win if win.x > 0 and win.y > 0 else Vector2.ONE
+	var cut := []
+	for h in holes:
+		var r: Rect2 = h
+		cut.append(Rect2(r.position * k, r.size * k))
+	return {"safe": [maxf(safe.position.x, 0.0) * k.x, maxf(safe.position.y, 0.0) * k.y,
+			maxf(win.x - safe.end.x, 0.0) * k.x, maxf(win.y - safe.end.y, 0.0) * k.y], "cutouts": cut}
+
+
+## The HUD (Build 7 B7-010, owner 2026-10-18): anchored to the corners of the usable screen with a small,
+## even margin. System bars are kept clear (the safe area), but a camera cutout narrows the screen only
+## where it is: an element it would overlap moves just past it, instead of the whole HUD moving in by the
+## cutout's band on that side, plus a corner margin, plus a fixed position (what pushed the status box
+## far from the corner on a phone with a camera hole).
+func _fit_hud() -> void:
+	var d := _display_insets()
+	var inset: Array = d.safe.duplicate()
+	var cutouts: Array = d.cutouts
+	var view := get_viewport().get_visible_rect().size
+	# a side whose whole safe-area band is a cutout touching that edge is not kept clear for the HUD
+	for c: Rect2 in cutouts:
+		if c.position.x <= 1.0 and absf(c.end.x - inset[0]) < 2.0:
+			inset[0] = 0.0
+		if c.position.y <= 1.0 and absf(c.end.y - inset[1]) < 2.0:
+			inset[1] = 0.0
+		if c.end.x >= view.x - 1.0 and absf(view.x - c.position.x - inset[2]) < 2.0:
+			inset[2] = 0.0
+		if c.end.y >= view.y - 1.0 and absf(view.y - c.position.y - inset[3]) < 2.0:
+			inset[3] = 0.0
+	hud_root.offset_left = inset[0]
+	hud_root.offset_top = inset[1]
+	hud_root.offset_right = -inset[2]
+	hud_root.offset_bottom = -inset[3]
+	var m: float = HUD_MARGIN["phone" if main.settings.phone else "desktop"]
+	status_box.position = Vector2(m, m)
+	log_box.offset_right = -m
+	log_box.offset_top = m
+	touch_bar.offset_right = -m
+	touch_bar.offset_bottom = -m
+	# then step off any cutout an element would overlap (once laid out)
+	_avoid_cutouts.call_deferred(cutouts, m)
+
+
+func _avoid_cutouts(cutouts: Array, m: float) -> void:
+	var view := get_viewport().get_visible_rect().size
+	for c: Rect2 in cutouts:
+		for e: Control in [status_box, log_box, touch_bar]:
+			var r := e.get_global_rect()
+			if not r.intersects(c):
+				continue
+			var shift := Vector2.ZERO
+			if c.size.x <= c.size.y:              # a hole at a side (landscape): step sideways off it
+				shift.x = (c.end.x - r.position.x + m) if c.get_center().x < view.x / 2.0 else -(r.end.x - c.position.x + m)
+			else:                                  # a notch along the top or bottom: step down or up
+				shift.y = (c.end.y - r.position.y + m) if c.get_center().y < view.y / 2.0 else -(r.end.y - c.position.y + m)
+			e.position += shift
 
 
 ## A dark box behind text drawn over the map, so it reads on bright ground.
@@ -193,10 +273,12 @@ func _build_hud() -> void:
 	hud = Control.new()
 	hud.set_anchors_preset(Control.PRESET_FULL_RECT)
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(hud)
+	hud_root.add_child(hud)
+	# anchored to the top-left corner of the usable screen, a small margin in (fit_safe_area)
 	var box := PanelContainer.new()
 	box.add_theme_stylebox_override("panel", _style(Color(WINDOW, 0.88)))
-	box.position = Vector2(12, 12)
+	box.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	status_box = box
 	hud.add_child(box)
 	var v := VBoxContainer.new()
 	box.add_child(v)
@@ -234,8 +316,6 @@ func _build_hud() -> void:
 	log_box = VBoxContainer.new()
 	log_box.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	log_box.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	log_box.offset_right = -12
-	log_box.offset_top = 12
 	log_box.custom_minimum_size = Vector2(420, 0)
 	log_box.add_theme_constant_override("separation", 4)
 	log_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -290,8 +370,6 @@ func _build_hud() -> void:
 	touch_bar.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	touch_bar.grow_horizontal = Control.GROW_DIRECTION_BEGIN
 	touch_bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	touch_bar.offset_right = -10
-	touch_bar.offset_bottom = -10
 	touch_bar.add_theme_constant_override("separation", 8)
 	hud.add_child(touch_bar)
 	for b in [["Use", "interact", "use"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
@@ -574,7 +652,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_bar.get_children() if touch_bar.visible else []) + [hud.get_child(0), recenter_btn, place_bar]:
+	for c in (touch_bar.get_children() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false

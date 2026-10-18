@@ -50,6 +50,10 @@ files and systems, the test evidence and the fixing commit.
 | B7-007 | 2026-10-18 | Bug | S2 | All | Ore and stone deposits never refill and the caravan brings no stone: the village works them out by about day 10, after which no house can be built | Stone imports fixed (staging); depletion itself diagnosed, proposal awaits owner | `ae0e01f` | No |
 | B7-008 | 2026-10-18 | Usability | S4 | All | The player can sell a buyer down to 0 coins and kill every wild animal (NPCs leave a floor of 15 coins and 2 animals) | Diagnosed; proposal awaits owner | — | No |
 | B7-009 | 2026-10-18 | Bug | S2 | All | The manor's treasury starts (270) below its own 10-day reserve (460) and falls to about 100 by day 5: the reeve has no paid work, for the player or villagers, until about day 12 | Diagnosed; proposal awaits owner | — | No |
+| B7-010 | 2026-10-18 | Bug | S3 | Android (all) | The status panel sits too far from the top-left corner; HUD placed by fixed coordinates inside an inset root | Fixed (staging) | see detail | Yes |
+| B7-011 | 2026-10-18 | Bug | S2 | Android (all, touch) | "Mine"/"Fell" prompts appear while walking past, but tapping a tree or ore does nothing and how to gather is unclear | In progress | — | Yes |
+| B7-012 | 2026-10-18 | Enhancement (approved) | — | All | Gather mode: a toggle; tap a resource; walk to it and gather until it runs out or is stopped | In progress | — | Yes |
+| B7-013 | 2026-10-18 | Enhancement (approved) | — | All | Icons from the flat UI pack's set 2 as brown glyphs on a transparent background for the HUD status panel, equipment slots, skills and journal, and the action bar | Ready | — | Yes (looks) |
 
 Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`),
 measured with `game/tests/earn_sim.gd`, seed 1. The owner approved the corrections for B7-001 to
@@ -137,6 +141,32 @@ Test evidence for `ae0e01f` (run on this machine):
 - Evidence: the mining run left the smiths at 0–1 coins; the hunting run killed all 12 wild adults
   on day 1 and none came back.
 - Not approved yet (owner): the 15-coin reserve for player sales; wildlife respawn. Investigation proposals P2 (wildlife) and P3 (operating capital) await the owner.
+
+### B7-010 The status panel is far from the top-left corner on Android
+- Reported: 2026-10-18, owner, Android phone (Build 7).
+- Reproduction: start or load a game on the phone; the health, hunger, stamina, coins and clock panel sits well in from the corner.
+- Root cause: the panel was placed at a fixed `position = (12, 12)` inside the interface root, which on a phone is inset by the display's whole safe-area band (a camera cutout insets the entire side, not just the hole) and at least `CORNER_MARGIN` (28, 14): the offsets added up. The action bar and the log were anchored, but inside the same inset root.
+- Fix: the HUD has its own full-screen root (`GameUI.hud_root`) that keeps system bars clear but not a cutout's band; the status box is anchored top-left, the log top-right and the action bar bottom-right, each `HUD_MARGIN` (12 on a phone, 10 on a desktop) from the edges, applied on every resize (`fit_safe_area` → `_fit_hud`). A camera cutout (`DisplayServer.get_display_cutouts`) moves only an element it would overlap, just past it (`_avoid_cutouts`). Windows keep their existing safe-area and corner margins.
+- Files: `game/scripts/ui/game_ui.gd`, `game/scripts/main.gd` (`--safe` / `--cutout` screenshot options to simulate a phone display), `game/tests/start_test.gd`.
+- Tests: `start_test` (the status box 12 units from the corner, the action bar 12 from the bottom-right, a simulated camera hole: the box steps past it only). Screens looked at: a 2400x1080 phone with and without a simulated top-left camera hole, 1920x1080 and 1280x800 desktops.
+- Device check: needed (the real phone's safe area and cutouts).
+
+### B7-011 Tapping trees and ore does nothing; gathering is unclear
+- Reported: 2026-10-18, owner, Android phone (Build 7).
+- Root cause (from the code):
+  - A tap only acts on a resource if it lands within 1.8 tiles of the player and the facing probe then finds it. A tap on a tree's canopy (one or two tiles above the trunk, the only cell the game knew as the tree) found nothing and only walked the player under it; a tap on ore, a solid cell, asked for a walk that failed silently.
+  - Nobody starts with an axe (the kit is a rusty sword and a rusty pickaxe), yet the prompt still said "Fell this tree".
+  - Resource prompts were shown for whatever was in front of the player, so they flashed while walking past.
+  - Tools need only be carried, not equipped (`PlayerState.tool_of`); that rule is unchanged.
+- Fix (in progress): the prompts now say when a tool is missing and where to get it ("A tree: requires an axe (the smith sells them)") and wait until the player stops; taps on a resource use the registry's `ResourceNodes.node_at` (a tree's canopy counts), walk to it and use it, or say why not (B7-012 shares this).
+- Device check: needed.
+
+### B7-012 Gather mode
+- Approved by the owner, 2026-10-18: a Gather button; tap a resource; walk to it and gather until it is depleted or stopped; the same rules for time, tools, stamina, depletion, inventory, ownership and theft.
+- Built on the resource registry (`game/data/resources.json`, `ResourceNodes`). Status: in progress.
+
+### B7-013 Brown glyph icons
+- Owner, 2026-10-18: icons from the flat UI pack's set 2, drawn as a brown glyph on a transparent background (not a white glyph on a brown tile), for the HUD status panel, equipment slots, skills and journal, and the action bar. Status: ready, after B7-012.
 
 ### B7-009 The manor cannot afford paid work for its first twelve days
 - Reported: 2026-10-18, agent, while checking the reeve's work.

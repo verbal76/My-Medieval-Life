@@ -54,6 +54,7 @@ var shot_advance := 0.0
 var shot_zoom := 0.0
 var shot_panel := ""
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
+var walking := false           # the player moved this frame (resource prompts wait until they stop)
 var attack_mode := false       # toggled by the Attack button: a tap on a person or animal targets it
 var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
 var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
@@ -101,6 +102,15 @@ func _ready() -> void:
 				shot_zoom = float(args[i + 1])
 			"--panel":
 				shot_panel = args[i + 1]
+			"--safe", "--cutout":
+				# a pretend phone display (window pixels x,y,w,h), to look at the HUD around a camera hole
+				var r: PackedStringArray = args[i + 1].split(",")
+				var rect := Rect2(float(r[0]), float(r[1]), float(r[2]), float(r[3]))
+				if args[i] == "--safe":
+					ui.test_safe = rect
+				else:
+					ui.test_cutouts.append(rect)
+				ui.fit_safe_area()
 	if shot_path != "":
 		new_game()
 		ui.hide_all()
@@ -944,6 +954,7 @@ func _player_step(delta: float) -> void:
 		move_to = Vector2.INF
 	elif move_to != Vector2.INF:
 		v = _route_step(delta)
+	walking = v.length() > 0.1
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second"))
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
@@ -1102,11 +1113,12 @@ func _find_target() -> void:
 			var cell: Vector2i = c + dc
 			var dep := world.deposit_at(cell)
 			if not dep.is_empty() and int(dep.amount) > 0:
-				best = {"kind": "deposit", "dep": dep, "label": "Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]}
+				best = {"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
+						else "%s seam: requires a pickaxe (the smith sells them)" % GameData.item_name(dep.ore)}
 				break
 			var tr := world.tree_at(cell)
 			if not tr.is_empty() and tr.state == "grown":
-				best = {"kind": "tree", "tree": tr, "label": "Fell this tree"}
+				best = {"kind": "tree", "tree": tr, "label": "Fell this tree" if p.tool_of("axe") != "" else "A tree: requires an axe (the smith sells them)"}
 				break
 			for f in world.fields:
 				if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
@@ -1174,7 +1186,9 @@ func _find_target() -> void:
 		if at.distance_to(p.pos) < 1.6:
 			best = {"kind": "manor_job", "label": _manor_label(mj)}
 	target = best
-	ui.prompt(target.get("label", ""))
+	# a seam, tree, field or animal is offered when the player stops by it, not flashed while walking past
+	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "animal"]
+	ui.prompt("" if passing else target.get("label", ""))
 
 
 ## What the next step of a manor job says at its place.
@@ -1300,7 +1314,7 @@ func interact() -> void:
 			var dep: Dictionary = target.dep
 			var pick := p.tool_of("pickaxe")
 			if pick == "":
-				ui.message("You need a pickaxe. The smith sells them.")
+				ui.message("Requires a pickaxe. The smith sells them.")
 				return
 			if dep.ore == "gold_ore" and p.level("mining") < 3:
 				ui.message("Gold needs Mining level 3.")
@@ -1327,7 +1341,7 @@ func interact() -> void:
 		"tree":
 			var axe := p.tool_of("axe")
 			if axe == "":
-				ui.message("You need an axe. The smith sells them.")
+				ui.message("Requires an axe. The smith sells them.")
 				return
 			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
 			if p.level("woodcutting") >= 3:

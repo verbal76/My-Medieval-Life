@@ -18,6 +18,10 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
+	if main.get_script() == null or not main.has_method("interact"):
+		print("FAIL the game's main script did not load (a script error above): stopping")
+		quit(1)
+		return
 	process_frame.connect(_run, CONNECT_ONE_SHOT)
 
 
