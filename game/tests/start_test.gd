@@ -77,6 +77,21 @@ func _blocked_pair(w: World) -> Array:
 
 func _run() -> void:
 	var ui = main.ui
+	# every gamepad button the game binds is on the controls list (RB, Skills, was missing)
+	var pad_prompt := {JOY_BUTTON_A: "xbox_button_a", JOY_BUTTON_B: "xbox_button_b", JOY_BUTTON_X: "xbox_button_x",
+		JOY_BUTTON_Y: "xbox_button_y", JOY_BUTTON_BACK: "xbox_button_view", JOY_BUTTON_START: "xbox_button_menu",
+		JOY_BUTTON_LEFT_SHOULDER: "xbox_lb", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb", JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press"}
+	var listed := {}
+	for row in GameUI.CONTROLS.gamepad:
+		for icon in row[0]:
+			listed[icon] = true
+	var unlisted := []
+	for action in InputMap.get_actions():
+		for ev in InputMap.action_get_events(action):
+			if ev is InputEventJoypadButton and not str(action).begins_with("ui_"):
+				if not listed.has(pad_prompt.get(ev.button_index, "?")):
+					unlisted.append("%s (button %d)" % [action, ev.button_index])
+	check(unlisted.is_empty(), "every gamepad button is on the controls list %s" % [unlisted])
 	# 1-3. character creation: a name, a family, a female look in a tunic
 	check(ui.is_open("title"), "the title screen opens")
 	_press("New game")
@@ -587,6 +602,10 @@ func _run() -> void:
 	main.camera.force_update_scroll()
 	main._sync_diamonds()
 	check(main.diamonds.has(home_q.id) and absf(main.diamonds[home_q.id].position.x - (door_cell.x + 0.5) * main.T) < 1.0, "a quest giver at home shows the marker over the house door")
+	var roof_z := 0
+	for l in main.view.above_layers:
+		roof_z = maxi(roof_z, l.z_index)
+	check(main.diamonds[home_q.id].z_index > roof_z and main.target_marker.z_index > roof_z, "quest and target markers draw over roofs and tree canopies")
 	home_q.hidden = false
 	w.quests.offers.erase(home_q.id)
 	p.pos = sage.pos + Vector2(0, 2)

@@ -56,7 +56,8 @@ const CONTROLS := {
 		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
 		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_button_y"], "Fireball (once learned)"],
-		[["xbox_button_view"], "Pack"], [["xbox_button_menu"], "Menu"], [["xbox_button_b"], "Close a window"],
+		[["xbox_button_view"], "Pack"], [["xbox_rb"], "Skills"], [["xbox_button_menu"], "Menu (the journal is there)"],
+		[["xbox_button_b"], "Close a window"],
 		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"]],
 }
 const SCHEME_NAMES := {"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}

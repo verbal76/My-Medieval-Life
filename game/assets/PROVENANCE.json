@@ -1353,6 +1353,13 @@
    "sha256": "6ca8c3411823d389dd94c6fa7015299a93d58c7e67ad1831280b5901792b6755"
   },
   {
+   "file": "assets/prompts/xbox_rb.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_rb.png",
+   "transform": "copied unchanged",
+   "sha256": "2f3fa780da01cf7c48c91aaaa9a5d8da075c73a32cab32bb1497fd571ca134f8"
+  },
+  {
    "file": "assets/prompts/xbox_stick_l.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Xbox Series/Double/xbox_stick_l.png",

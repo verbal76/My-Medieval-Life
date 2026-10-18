@@ -10,6 +10,7 @@ var world: World
 var view: MapView
 var actors: Node2D
 var above: Node2D
+const MARKER_Z := 20                 # markers draw over roofs and canopies (their layers are z 10 in `above`)
 var canopy: CanopyFade         # fades the tree canopy the player walks behind
 var camera: Camera2D
 var ui: GameUI
@@ -115,7 +116,9 @@ func _ready() -> void:
 				ui.show_origin()
 			"settings":
 				ui.show_settings(ui.hide_all)
-			"controls":
+			"controls", "controls_pad":
+				if shot_panel == "controls_pad":
+					ui.set_scheme("gamepad")
 				ui.show_controls(ui.hide_all)
 			"journal":
 				ui.show_journal(-1)
@@ -133,6 +136,15 @@ func _ready() -> void:
 				for n: NPC in world.near(world.player.pos, 8.0):
 					chase = n
 					break
+			"quest_home":
+				# a quest giver inside their house: the marker hangs over the door
+				for n: NPC in world.npcs:
+					if n.alive and n.hidden and n.role == "adult" and world.buildings.has(n.home) and world.buildings[n.home].type == "house" \
+							and world.building_door(n.home).x > 20 and world.building_door(n.home).x < 100:
+						world.quests.offers[n.id] = "food_for_the_family"
+						n.hidden = true
+						world.player.pos = Vector2(world.building_door(n.home)) + Vector2(2.5, 3.0)
+						break
 			"blood":
 				_on_bled(world.player.pos + Vector2(1.5, 0))
 				ui.prompt("Talk to Mabel Reed")
@@ -287,6 +299,7 @@ func _build_scene() -> void:
 	target_marker.rotation = PI * 1.25           # the icon's blade points up-left: turn it to point down
 	target_marker.scale = Vector2(1.5, 1.5)
 	target_marker.visible = false
+	target_marker.z_index = MARKER_Z
 	above.add_child(target_marker)
 	view.build(map, above)
 	bubble_layer = CanvasLayer.new()
@@ -447,6 +460,7 @@ func _sync_diamonds() -> void:
 		if d == null:
 			d = Sprite2D.new()
 			d.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			d.z_index = MARKER_Z
 			above.add_child(d)
 			diamonds[n.id] = d
 		d.texture = load("res://assets/markers/%s.png" % kind)
@@ -1254,6 +1268,10 @@ func rest() -> void:
 func _screenshot_step(_delta: float) -> void:
 	shot_frames += 1
 	if shot_frames == 30:
+		if OS.get_environment("MML_SHOT_DEBUG") != "":
+			for id in diamonds:
+				var nn: NPC = world.npc(int(id))
+				print("marker ", id, " ", nn.name, " hidden=", nn.hidden, " home=", nn.home, " at ", diamonds[id].position / T, " npc ", nn.pos, " cam ", camera.get_screen_center_position() / T)
 		var img := get_viewport().get_texture().get_image()
 		img.save_png(shot_path)
 		print("screenshot saved to ", shot_path)
