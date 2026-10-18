@@ -471,14 +471,14 @@ func _run() -> void:
 	main.camera.reset_smoothing()
 	main.camera.force_update_scroll()
 	main._sync_diamonds()
-	check(main.diamonds.has(sage.id), "a green diamond floats over the sage (story quest)")
+	check(main.diamonds.has(sage.id) and main.diamonds[sage.id].texture.resource_path.ends_with("story.png"), "the story pennant floats over the sage")
 	var cook_q: NPC = null
 	for n: NPC in w.npcs:
 		if n.alive and n.job == "cook":
 			cook_q = n
 			break
 	w.quests.offers[cook_q.id] = "wood_for_the_hearth"
-	check(w.quests.diamond(cook_q), "a villager with a request shows the diamond")
+	check(w.quests.marker(cook_q) == "wood", "a cook asking for firewood shows the log marker")
 	ui.show_talk(cook_q)
 	check(_press("Need any help?") and _speech().contains("5 log"), "asking for work hears the request")
 	check(_press("I'll do it") and w.player.quests.any(func(q): return q.id == "wood_for_the_hearth"), "accepting takes the quest")
@@ -499,7 +499,7 @@ func _run() -> void:
 	check(_speech().contains("Fire does not forgive"), "the sage gives his parting words")
 	ui.hide_all()
 	main._sync_diamonds()
-	check(not main.diamonds.has(sage.id), "the sage's diamond is gone")
+	check(not main.diamonds.has(sage.id), "the sage's pennant is gone")
 
 	# 19-20. save, reload, and the state is the same
 	var snap := {"name": p.name, "look": p.look, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),

@@ -136,6 +136,80 @@ def _bands(counts, threshold):
     return out
 
 
+# quest markers over a quest giver's head (owner, 2026-10-18): what the quest is about
+MARKERS = {
+    "skill": "Wood/Paper-03",          # a rolled scroll, given a red wax seal below
+    "food": "Plants & Alchemy/Herb-Bundle-01",
+    "mineral": "Metal/Metal-Ore-02",
+    "combat": "Tools/Sword-01",        # crossed with its mirror image below
+    "wood": "Wood/Wood-Log-01",
+    "tool": "Tools/Axe-02",
+}
+
+
+def _outlined(img):
+    """A 16 px icon on an 18 px canvas with a 1 px dark outline, so it reads over grass and roofs."""
+    from PIL import Image
+    out = Image.new("RGBA", (18, 18))
+    dark = Image.new("RGBA", img.size, (24, 16, 10, 255))
+    mask = img.getchannel("A").point(lambda a: 255 if a > 0 else 0)
+    for dx, dy in ((0, 1), (2, 1), (1, 0), (1, 2), (0, 0), (2, 2), (0, 2), (2, 0)):
+        out.paste(dark, (dx, dy), mask)
+    out.alpha_composite(img, (1, 1))
+    return out
+
+
+def _pennant():
+    """The story-quest marker: a green swallow-tailed pennant with a gold rim on a pole with a gold
+    finial, drawn in the 16 px style of the Survival icons."""
+    from PIL import Image
+    img = Image.new("RGBA", (16, 16))
+    px = img.load()
+    pole, finial, green, light, gold = (92, 60, 34, 255), (236, 196, 72, 255), (40, 140, 64, 255), (96, 196, 110, 255), (220, 178, 60, 255)
+    for y in range(3, 16):
+        px[3, y] = pole
+    for x, y in ((3, 1), (2, 2), (3, 2), (4, 2)):
+        px[x, y] = finial
+    rows = {3: range(4, 14), 4: range(4, 14), 5: range(4, 12), 6: range(4, 11), 7: range(4, 12), 8: range(4, 14), 9: range(4, 14)}
+    for y, xs in rows.items():
+        for x in xs:
+            px[x, y] = green
+    for x in range(4, 13):
+        px[x, 4] = light                                   # a fold catching the light
+    for y in (3, 9):
+        for x in range(4, 14):
+            px[x, y] = gold                                # gold rim, top and bottom
+    return img
+
+
+def _import_markers(record, survival):
+    import io
+    from PIL import Image, ImageOps
+    out = OUT / "markers"
+    out.mkdir(parents=True, exist_ok=True)
+    for kind, rel in sorted(MARKERS.items()):
+        member = f"16x16 Survival RPG Icons/{rel}.png"
+        img = Image.open(io.BytesIO(survival.read(member))).convert("RGBA")
+        how = "1 px dark outline on an 18 px canvas"
+        if kind == "combat":
+            crossed = img.copy()
+            crossed.alpha_composite(ImageOps.mirror(img))
+            img = crossed
+            how = "crossed with its mirror image; " + how
+        if kind == "skill":
+            for x, y in ((7, 9), (8, 9), (7, 10), (8, 10), (6, 10), (9, 10), (7, 11), (8, 11)):
+                img.putpixel((x, y), (168, 28, 24, 255))                 # a red wax seal
+            img.putpixel((7, 10), (214, 70, 56, 255))
+            how = "a red wax seal added; " + how
+        dest = out / f"{kind}.png"
+        _outlined(img).save(dest)
+        record(dest, ICON_ZIP, member, how)
+    dest = out / "story.png"
+    _outlined(_pennant()).save(dest)
+    prov_note = "generated: a green swallow-tailed pennant with a gold rim on a pole (story quests), 1 px outline"
+    record(dest, "", "", prov_note)
+
+
 def _import_ui(record):
     """Icon tiles from the flat UI pack (white glyphs on rounded navy squares), cut from the
     9-column grids with the page's grey background made transparent, and set 3's plain slate
@@ -319,6 +393,7 @@ def main():
     prov.append({"file": str(dest.relative_to(REPO / "game")), "source": "", "member": "",
                  "transform": "generated: solid dark brown 432 px background for the Android adaptive icon", "sha256": sha(dest)})
     _import_ui(record)
+    _import_markers(record, iz)
     prompts = OUT / "prompts"
     prompts.mkdir(parents=True, exist_ok=True)
     pz = AssetZip(PROMPT_ZIP)

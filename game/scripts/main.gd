@@ -50,7 +50,7 @@ var dying := {}                # npc id -> seconds left of the death flicker
 var fading: Array = []         # [sprite, seconds left]: killed animals flickering out
 var bubble_layer: CanvasLayer  # speech bubbles over villagers' heads, in screen space
 var bubbles := {}              # npc id -> SpeechBubble (at most one each)
-var diamonds := {}             # npc id -> green diamond over a quest giver
+var diamonds := {}             # npc id -> the quest marker sprite over a quest giver
 const FLICKER := 1.2           # seconds a body flickers before it disappears
 const BLOOD_FADE := 90.0       # seconds blood takes to fade away
 
@@ -406,42 +406,29 @@ func _sync_sprites() -> void:
 
 
 ## Bubbles follow their speaker, fade out, and go when the time is up or the speaker is gone.
-## A green diamond over everyone with a quest for the player (side-quest offers and story quests).
+## A marker over everyone with a quest for the player: a pennant for a story quest, else what the
+## quest is about (scroll, wheat, iron, crossed swords, log, axe). Owner's scheme, 2026-10-18.
 func _sync_diamonds() -> void:
 	var cam := camera.get_screen_center_position() / T
 	var bob := sin(Time.get_ticks_msec() / 220.0) * 1.5
 	var shown := {}
 	for n: NPC in world.near(cam, 30.0):
-		if not n.alive or n.hidden or not world.quests.diamond(n):
+		var kind: String = world.quests.marker(n) if n.alive and not n.hidden else ""
+		if kind == "":
 			continue
 		shown[n.id] = true
-		var d: Node2D = diamonds.get(n.id)
+		var d: Sprite2D = diamonds.get(n.id)
 		if d == null:
-			d = _diamond()
+			d = Sprite2D.new()
+			d.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			above.add_child(d)
 			diamonds[n.id] = d
-		d.position = n.pos * T + Vector2(0, -46 + bob)
+		d.texture = load("res://assets/markers/%s.png" % kind)
+		d.position = n.pos * T + Vector2(0, -48 + bob)
 	for id in diamonds.keys():
 		if not shown.has(id):
 			diamonds[id].queue_free()
 			diamonds.erase(id)
-
-
-func _diamond() -> Node2D:
-	var d := Node2D.new()
-	var edge := Polygon2D.new()
-	edge.polygon = PackedVector2Array([Vector2(0, -7), Vector2(5, 0), Vector2(0, 7), Vector2(-5, 0)])
-	edge.color = Color8(18, 60, 24)
-	d.add_child(edge)
-	var gem := Polygon2D.new()
-	gem.polygon = PackedVector2Array([Vector2(0, -5.5), Vector2(3.8, 0), Vector2(0, 5.5), Vector2(-3.8, 0)])
-	gem.color = Color8(72, 214, 96)
-	d.add_child(gem)
-	var shine := Polygon2D.new()
-	shine.polygon = PackedVector2Array([Vector2(0, -4), Vector2(1.6, -1.2), Vector2(0, 0), Vector2(-1.6, -1.2)])
-	shine.color = Color8(190, 255, 200)
-	d.add_child(shine)
-	return d
 
 
 func _sync_bubbles() -> void:

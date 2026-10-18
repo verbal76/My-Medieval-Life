@@ -1094,6 +1094,55 @@
    "sha256": "5d50e5678aed025b80534c89cf15d6aa1e7b9119eb0ea8653562033db7fb362f"
   },
   {
+   "file": "assets/markers/combat.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Sword-01.png",
+   "transform": "crossed with its mirror image; 1 px dark outline on an 18 px canvas",
+   "sha256": "4597ab7904d0d1dd1b9833f8d08f3493b3a37e6386f43010dc3939994a873876"
+  },
+  {
+   "file": "assets/markers/food.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Herb-Bundle-01.png",
+   "transform": "1 px dark outline on an 18 px canvas",
+   "sha256": "b41c47b9bbb007a0f64aac5f31752b5c3816b135c88ee906306a2e4d3ea5ff95"
+  },
+  {
+   "file": "assets/markers/mineral.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Metal/Metal-Ore-02.png",
+   "transform": "1 px dark outline on an 18 px canvas",
+   "sha256": "e378823cc42e4df0b705ea77db52b6983fb63c1a6d300ca84b899256a6d60ae0"
+  },
+  {
+   "file": "assets/markers/skill.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Paper-03.png",
+   "transform": "a red wax seal added; 1 px dark outline on an 18 px canvas",
+   "sha256": "5d91d8e3a54003738fa1572b6f2f618e8d6e237d665508650321af9e5535109e"
+  },
+  {
+   "file": "assets/markers/tool.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Axe-02.png",
+   "transform": "1 px dark outline on an 18 px canvas",
+   "sha256": "04f777386d70cc6d57e5797ddf86967a54656f7b547a5dbe2da7b7ff8a15e54b"
+  },
+  {
+   "file": "assets/markers/wood.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Wood-Log-01.png",
+   "transform": "1 px dark outline on an 18 px canvas",
+   "sha256": "b492cc7bb5b25ba5b6d8be01615b649f07dcd8c21a8add8c8174219d9326f9ed"
+  },
+  {
+   "file": "assets/markers/story.png",
+   "source": "",
+   "member": "",
+   "transform": "generated: a green swallow-tailed pennant with a gold rim on a pole (story quests), 1 px outline",
+   "sha256": "60f78a2eb792b686228be6ca466418271f130c7eb658274e1c11ce3bed74152e"
+  },
+  {
    "file": "assets/prompts/keyboard_a.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_a.png",

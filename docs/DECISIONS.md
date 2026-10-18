@@ -6,6 +6,7 @@ marked *Proposed* until the owner approves it.
 
 | Date | Decision | By | Notes |
 |---|---|---|---|
+| 2026-10-18 | Quest markers instead of a diamond: a heraldic pennant over story-quest givers; a scroll over givers of quests that teach a skill; wheat for food quests, a piece of iron for mineral quests, two crossed swords for combat quests | Owner | Owner answer. Agent extension: a log for wood and an axe for tool quests |
 | 2026-10-18 | Master build, release and work-preservation policy: Linux, Windows and Android always at the same level from one revision and build number; no push, build, upload or release without explicit approval; fixes accumulate; work preserved with local commits and verified backups; a readiness report and an approval checkpoint before each coordinated release; agents follow the same rules | Owner | Owner's policy; CLAUDE.md section 5, `tools/checkpoint.py`, release workflow manual-only |
 | 2026-10-18 | The first storyline quest: learn Fireball from the sage in the hut to the north | Owner | Owner message |
 | 2026-10-18 | Side quests are authorized (a new mechanic): a few side quests discovered from villagers; every quest giver shows a little green diamond over their head; side quests now, a main storyline proposed later | Owner | Owner message and answers |

@@ -752,7 +752,7 @@ func test_quests() -> void:
 	# the storyline: every new player is sent to the sage in the north
 	var sage: NPC = w.npc(w.sage_id)
 	check(p.quests.any(func(q): return q.id == "the_sage_in_the_north" and int(q.giver) == sage.id), "a new game starts the story quest: the sage in the north")
-	check(w.quests.diamond(sage), "the sage shows the green diamond")
+	check(w.quests.marker(sage) == "story", "the sage shows the story pennant")
 	p.spells["fireball"] = true
 	w.quests.on_learned("fireball")
 	check(not p.quests.any(func(q): return q.id == "the_sage_in_the_north") and not w.quests.diamond(sage), "learning Fireball finishes the story quest")

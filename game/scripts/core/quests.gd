@@ -2,7 +2,7 @@ class_name Quests
 extends RefCounted
 ## Side quests (owner-approved, 2026-10-18). Each dawn, villagers with a real need offer a quest
 ## from game/data/quests.json: goods to bring them, or a bandit who robbed them. A villager with
-## an offer shows a green diamond. The player accepts in conversation and hands the goods over;
+## an offer shows a marker over their head (what the quest is about; story quests a pennant). The player accepts in conversation and hands the goods over;
 ## goods go to the giver and the reward comes from the giver's purse, so nothing is created.
 ## Offers are saved with the world; accepted quests with the player.
 
@@ -72,14 +72,20 @@ func on_learned(spell: String) -> void:
 			complete(q)
 
 
-## Who shows the green diamond: villagers with an offer, and the giver of each unfinished story quest.
-func diamond(n: NPC) -> bool:
-	if offers.has(n.id):
-		return true
+## The marker over a villager's head (owner's scheme): "story" (a pennant) for the giver of an
+## unfinished story quest, else their offer's kind ("skill", "food", "mineral", "combat", "wood",
+## "tool"), or "" for nobody.
+func marker(n: NPC) -> String:
 	for q in w.player.quests:
 		if int(q.giver) == n.id and template(q.id).get("story", false):
-			return true
-	return false
+			return "story"
+	if offers.has(n.id):
+		return str(template(offers[n.id]).get("marker", "skill"))
+	return ""
+
+
+func diamond(n: NPC) -> bool:
+	return marker(n) != ""
 
 
 func _wants(n: NPC, t: Dictionary) -> bool:
