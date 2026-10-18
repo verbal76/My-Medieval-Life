@@ -80,6 +80,16 @@ static func theft_seen(w: World, n: NPC) -> String:
 	return ""
 
 
+## Whether this villager caught the player stealing from them: a hand in their pocket, their own
+## goods offered back to them, or (a guard) a theft they stopped.
+static func caught(w: World, n: NPC) -> bool:
+	var prefix := "caught %s " % _player_name(w)
+	for m in n.memory:
+		if str(m).begins_with(prefix):
+			return true
+	return false
+
+
 ## "3 wheat from f2" as the speaker would say it: "3 wheat from my field" or "... Walter Reed's field".
 static func _plain_what(w: World, n: NPC, what: String) -> String:
 	var at := what.rfind(" from ")
@@ -152,6 +162,8 @@ static func opening(w: World, n: NPC) -> String:
 			"child": ["I saw you take %s! That's stealing!", "You took %s. I saw you!"],
 			"elder": ["I saw you take %s. Shame on you.", "These old eyes saw you take %s. I won't forget it."],
 		}.get(n.role, ["I saw you take %s. I'll be watching you.", "I know what you did: I saw you take %s."])) % stolen
+	if caught(w, n):
+		return _pick(w, n, ["I caught you stealing. Keep your hands to yourself.", "Thief. I know what you are; I caught you at it."])
 	var lines: Array = [_greeting(w, n)]
 	if n.id == w.sage_id:
 		lines.append("Fire answers those who learn its rules. I can teach you to call it.")
@@ -354,7 +366,7 @@ static func brush_off(w: World, n: NPC) -> String:
 		return _pick(w, n, ["Stay away from me.", "Keep your distance!", "Don't come near me!"], 6)
 	if animal_killed(w, n) != "":
 		return _pick(w, n, ["You killed my %s!" % animal_killed(w, n), "Keep away from my animals!"], 6)
-	if theft_seen(w, n) != "":
+	if theft_seen(w, n) != "" or caught(w, n):
 		return _pick(w, n, ["Thief! Keep away.", "I saw what you did.", "Stay away from me, thief."], 6)
 	if n.target != -1:
 		return "Not now!"

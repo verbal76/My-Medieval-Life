@@ -189,6 +189,28 @@ Result, 3 seeds over 100 days:
 | Who makes them (agent proposal): the player, from recipes in `recipes.json`: leather cap at the workbench (2 leather, crafting 1); iron helmet (2 iron bars, 1 leather, smithing 2), copper ring (1 copper bar), gold ring (1 gold bar, smithing 3) and copper amulet (1 copper bar, 1 leather) at the anvil. **NPCs do not make, buy or sell them yet**: the smith's and the merchants' plans name their recipes and goods explicitly, so the village economy and coin conservation are unchanged | Wiring jewellery into the merchants' trade is a larger change, left for the owner to decide |
 | The pad's A presses the focused button and B closes a window: Godot 4.7's `ui_accept` / `ui_cancel` have no pad buttons by default, so `main.gd::_setup_input` adds them | B did not close windows with a pad (found while testing the pack) |
 
+## Shops, containers and theft (owner rules, 2026-10-18; the details are agent proposals)
+
+The owner's report: "I'm running around and cannot interact with any items. I should be able to take
+food from the tables, buy things from the tavernkeeper they are a shop. Steal items to sell later."
+Interactions INT-041 to INT-045 in `docs/SYSTEM_INTERACTION_MANIFEST.md`; numbers in `balance.json`.
+
+| Decision | Who | Why |
+|---|---|---|
+| Tavern keepers and merchants are shops: using the counter, the stall, or the keeper at it opens their trade window ("Buy from Sybil (tavern)"), and a shopkeeper at their post always serves | Owner | "buy things from the tavernkeeper they are a shop" |
+| Food on the tavern's tables is the tavern's stock; taking it unpaid is theft, witnessed and punished like a field's wheat | Owner | Owner's answer |
+| The player may steal from market stalls, from crates and barrels (the tavern's and the houses': their owners' stock) and from villagers' pockets, with a skill-based chance of being noticed | Owner | Owner's answer |
+| Stolen goods are marked: the owner knows them if they are offered back, and a guard may question the seller | Owner | Owner's answer |
+| Ownership model: a house's crates and barrel ARE its household's pantry; tavern crates are the first alive tavern keeper's stock; a stall's crate (and the stall when its merchant is away) is the merchant's stock. Only a tavern table holds goods of its own: one dish or mug a keeper sets out from their stock each hour the tavern is open (07:00-22:00, in turn between the keepers, keeping at least `table_keep` = 4 of a kind), cleared back to them at closing, saved. Older saves get their tables set from the keepers' stock | Agent proposal | The simplest model that keeps the closed economy: nothing is created, every good stays one owner's, and only the tables need saving |
+| Containers come from the crates, barrels, dishes and mugs Shade drew (village.json "containers", read from the placed tiles, no other map change); an emptied table's dish tile is hidden until it is set again | Agent proposal | The art already shows them; a dish drawn on an empty table would mislead |
+| One use takes one piece of what the container holds most of; the prompt names it and says it is theft | Agent proposal | Each take is a separate risk; the prompt says what will happen |
+| A guard who sees a theft (field wheat included), hears a caught pickpocket's victim within 15 tiles, or is called by an owner offered their own goods stops the player: the goods go back where they came from and the player pays a 10-coin fine to the treasury; a player who cannot pay it all pays what they have and the guard attacks (as `_crime`) | Agent proposal | Proportionate: "guards react"; a death sentence for a bowl of pottage would be too harsh, but an unpaid fine needs teeth |
+| Pickpocketing is a "Pick pocket — theft" choice in the conversation (shown within 1.8 tiles: everyone who stops to talk), so it is the same on touch, gamepad and keyboard. Busy villagers who only call out a line cannot be robbed | Agent proposal | Discoverable on every control scheme without a new button |
+| A new skill, Stealth: success 40% at level 1, +12% a level, at most 85%; 1-5 coins, or one carried thing that is not a work tool when they have no coins. Stealth experience: 8 for a picked pocket, 2 for a caught try, 3 for an unseen theft | Agent proposal | The owner asked for a skill-based chance; no existing skill fitted |
+| Stolen goods sell to anyone but their owner at the usual price (the buyer cannot tell); marked pieces are sold first; a guard within sight questions the seller half the time (`guard_question_chance`). The owner's whole household knows their goods | Agent proposal | Small and readable; a lower "fence" price would need a fence, which the village does not have |
+| Marks follow the goods: stored in the home chest they keep their marks there (and an heir inherits them with the chest); eaten, dropped, sold or used up, they lose them | Agent proposal | The chest must not wash stolen goods clean (the owner: stolen goods are marked) |
+| NPCs still never steal (no desperation crime) | Owner | Not authorised |
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals

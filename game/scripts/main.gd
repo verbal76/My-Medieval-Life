@@ -29,6 +29,7 @@ var walk_i := 0
 var walk_goal := Vector2i(-1, -1)      # the cell walk_path leads to
 var walk_stuck := 0.0                  # seconds without progress along the route
 var talk_to: NPC = null                # a tapped villager the player walks up to, to talk
+var reach_to := Vector2.INF            # a tapped shop counter, stall or container the player walks up to, to use
 var touch_points := {}
 var pinch_start := 0.0
 var zoom_start := 3.0
@@ -201,6 +202,37 @@ func _ready() -> void:
 						break
 			"craft":
 				ui.show_craft(world.stations_of("anvil")[0])
+			"shop", "counter":
+				# a tavern keeper at the counter: the shop window, or (counter) the prompt in front of it
+				var k := world.tavern_keeper()
+				k.pos = world.shop_post(k)
+				k.plan = [world.brain.work(600, "", {}, "idle")]
+				if shot_panel == "shop":
+					ui.show_trade(k)
+				else:
+					world.player.pos = k.pos + Vector2(0, 1.2)
+					player_sprite.face(Vector2(0, -1))
+					follow_at = _in_view(world.player.pos * T)
+					ui.toast_t = 0.01                   # the opening message would hide the prompt
+			"table", "table_taken":
+				# beside a tavern table with food on it, facing it: the theft prompt
+				for c in world.containers:
+					if c.kind == "table" and c.inv.total() > 0 and int(c.y) == 43:
+						var cell := Vector2i(int(c.x), int(c.y))
+						var by: Vector2i = world.brain.beside(cell, cell + Vector2i(0, 1))
+						world.player.pos = Vector2(by) + Vector2(0.5, 0.5)
+						player_sprite.face(Vector2(cell) - Vector2(by))
+						follow_at = _in_view(world.player.pos * T)
+						ui.toast_t = 0.01
+						if shot_panel == "table_taken":
+							_find_target()
+							interact()          # the dish goes into the pack and the table shows bare
+						break
+			"pickpocket":
+				var v: NPC = world.npcs[20]
+				v.pos = world.player.pos + Vector2(1.0, 0)
+				v.plan = [world.brain.work(600, "", {}, "idle")]
+				ui.show_talk(v)
 		return
 	ui.show_title(FileAccess.file_exists(SAVE_PATH))
 
@@ -305,6 +337,7 @@ func _clear_world() -> void:
 		world.dispose()
 	chase = null
 	talk_to = null
+	reach_to = Vector2.INF
 	diamonds.clear()                # their nodes go with the scene
 	site_bars.clear()
 	move_to = Vector2.INF
@@ -380,6 +413,7 @@ func _build_scene() -> void:
 			dying[n.id] = 0.0          # long dead: no flicker after loading
 	world.event.connect(func(t): ui.log_line(t))
 	world.building_added.connect(_on_building_added)
+	world.show_tables()                  # the tavern's tables show only the food that is on them
 
 
 func _apply_world_changes() -> void:
@@ -402,10 +436,11 @@ func _apply_world_changes() -> void:
 
 
 func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
-	var layer_name: String = {"below": "below0", "above": "above0", "field": "path1", "path": "path0"}.get(kind, "below0")
+	# a kind is a layer, or a layer by its own name (a tavern table's dish: World.show_tables)
+	var layer_name: String = {"below": "below0", "above": "above0", "field": "path1", "path": "path0"}.get(kind, kind)
 	var layer := view.layer(layer_name)
 	if layer:
-		if kind == "above":
+		if layer_name.begins_with("above"):
 			canopy.restore_all()          # a faded canopy's tiles go back first, so the change sticks
 		view.set_tile(layer, cell, value)
 
@@ -578,6 +613,10 @@ func say(n: NPC, text: String) -> void:
 func approach(n: NPC) -> void:
 	# a quest giver always stops to talk (owner: "unless they're a quest giver")
 	var quest_business := world.quests.diamond(n) or not world.quests.active_from(n).is_empty()
+	# a shopkeeper at their counter or stall always serves: their shop opens (Talk is in it)
+	if world.at_post(n) and not quest_business:
+		ui.show_trade(n)
+		return
 	if n.role != "bandit" and Dialogue.busy(n) and not quest_business:
 		say(n, Dialogue.brush_off(world, n))
 	else:
@@ -659,10 +698,12 @@ func _player_step(delta: float) -> void:
 	if v.length() > 0.1:
 		chase = null
 		talk_to = null
+		reach_to = Vector2.INF
 		if cam_free:
 			recenter()                    # walking with keys or the stick brings the view back
 	_chase_step()
 	_talk_step()
+	_reach_step()
 	if v.length() > 0.1:
 		move_to = Vector2.INF
 	elif move_to != Vector2.INF:
@@ -742,6 +783,23 @@ func _talk_step() -> void:
 	approach(who)
 
 
+## Walk up to a tapped counter, stall or container and use it once beside it.
+func _reach_step() -> void:
+	if reach_to == Vector2.INF:
+		return
+	var d := reach_to - world.player.pos
+	if d.length() > 1.7:
+		if move_to == Vector2.INF:
+			reach_to = Vector2.INF            # the walk ended short of it (no way there)
+		return
+	move_to = Vector2.INF
+	player_sprite.face(d)
+	reach_to = Vector2.INF
+	_find_target()
+	if not target.is_empty():
+		interact()
+
+
 func _try_move(step: Vector2) -> void:
 	var p := world.player
 	var np := p.pos + step
@@ -766,7 +824,26 @@ func _find_target() -> void:
 		var d := n.pos.distance_to(probe)
 		if d < bd:
 			bd = d
-			best = {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}
+			if world.at_post(n):
+				best = {"kind": "shop", "npc": n, "label": "Buy from %s (%s)" % [n.name, world.shop_name(n)]}
+			else:
+				best = {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}
+	for c in world.containers:
+		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
+		if at.distance_to(p.pos) > 2.2:
+			continue
+		var d := at.distance_to(probe)
+		if d < bd:
+			bd = d
+			best = _container_target(c)
+	for post in _shop_posts():
+		for at: Vector2 in post.cells:
+			if at.distance_to(p.pos) > 2.2:
+				continue
+			var d := at.distance_to(probe)
+			if d < bd:
+				bd = d
+				best = _shop_target(post)
 	for i in world.loot.size():
 		var d: float = world.loot[i].pos.distance_to(probe)
 		if d < bd:
@@ -827,6 +904,65 @@ func _find_target() -> void:
 	ui.prompt(target.get("label", ""))
 
 
+## The counters and stalls the player can buy at: {id, stall, cells (tile centres to use)}.
+func _shop_posts() -> Array:
+	var out := []
+	for id in world.stations_of("tavern_counter"):
+		var st: Dictionary = world.stations[id]
+		out.append({"id": id, "stall": false, "cells": [Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5), Vector2(int(st.at[0]) + 0.5, int(st.at[1]) + 0.5)]})
+	var ids := world.stalls.keys()
+	ids.sort()
+	for id in ids:
+		var s: Dictionary = world.stalls[id]
+		out.append({"id": id, "stall": true, "cells": [Vector2(int(s.x) + 0.5, int(s.y) + 0.5)]})
+	return out
+
+
+## A counter or stall: buy from its keeper when they are at it; a stall left alone is its
+## merchant's goods, there for the taking (theft).
+func _shop_target(post: Dictionary) -> Dictionary:
+	var keeper := world.shopkeeper_at(post.id)
+	if keeper:
+		return {"kind": "shop", "npc": keeper, "label": "Buy from %s (%s)" % [keeper.name, world.shop_name(keeper)]}
+	if post.stall:
+		var s: Dictionary = world.stalls[post.id]
+		return _container_target({"id": post.id, "kind": "stall", "x": int(s.x), "y": int(s.y), "at": post.id})
+	return {"kind": "info", "label": "The tavern counter: nobody is serving", "text": "Nobody is serving at the counter now."}
+
+
+## What using a container does, said in its prompt: "Take pottage (the tavern's) — theft".
+func _container_target(c: Dictionary) -> Dictionary:
+	var id := world.container_pick(c)
+	var whose := world.container_whose(c)
+	if id == "":
+		return {"kind": "info", "label": "Empty %s (%s)" % [c.kind, whose], "text": "There is nothing in the %s." % c.kind}
+	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose]}
+
+
+## The centre of the counter, stall or container at a map position, or INF.
+func _usable_at(wpos: Vector2) -> Vector2:
+	var cell := Vector2i(floori(wpos.x), floori(wpos.y))
+	var at := Vector2(cell) + Vector2(0.5, 0.5)
+	for c in world.containers:
+		if int(c.x) == cell.x and int(c.y) == cell.y:
+			return at
+	for post in _shop_posts():
+		for a: Vector2 in post.cells:
+			if a.is_equal_approx(at):
+				return at
+	return Vector2.INF
+
+
+## Pick the pocket of the villager in the conversation (the talk window's choice).
+func pickpocket(n: NPC) -> void:
+	ui.hide_all()
+	var r: Dictionary = world.pickpocket(n)
+	_xp("stealth", 8 if r.ok else 2)
+	if not r.ok:
+		say(n, "Thief! Get your hand out of my purse!")
+	ui.message(r.text)
+
+
 func _who(n: NPC) -> String:
 	if n.role == "bandit":
 		return n.name
@@ -840,6 +976,25 @@ func interact() -> void:
 	match target.kind:
 		"npc":
 			approach(target.npc)
+		"shop":
+			ui.show_trade(target.npc)
+		"info":
+			ui.message(target.text)
+		"container":
+			var c: Dictionary = target.c
+			var place := world.container_place(c)
+			var got := world.player_take(c)
+			if got == "full":
+				ui.message("Your pack is full.")
+			elif got == "":
+				ui.message("There is nothing to take.")
+			else:
+				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0
+				if seen == 0:
+					_xp("stealth", 3)
+				var said := "You take 1 %s from %s. %s" % [GameData.item_name(got).to_lower(), place,
+						"Nobody saw." if seen == 0 else ("%d %s saw you!" % [seen, "person" if seen == 1 else "people"])]
+				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""))
 		"loot":
 			var l: Dictionary = world.loot[target.i]
 			var taken: int = l.inv.total()
@@ -1283,9 +1438,16 @@ func _tap(screen_pos: Vector2) -> void:
 		return
 	chase = null
 	talk_to = null
+	reach_to = Vector2.INF
 	var tapped := _creature_at(wpos)
 	if tapped is NPC and tapped.role != "bandit":
 		talk_to = tapped                  # walk up to them (following if they move) and talk
+		return
+	var use := _usable_at(wpos)
+	if use != Vector2.INF:
+		reach_to = use                    # a counter, stall or container: walk up to it and use it
+		if use.distance_to(world.player.pos) > 1.7:
+			move_to = use
 		return
 	if wpos.distance_to(world.player.pos) < 1.8:
 		player_sprite.face(wpos - world.player.pos)

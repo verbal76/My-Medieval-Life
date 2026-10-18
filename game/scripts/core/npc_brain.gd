@@ -1648,6 +1648,8 @@ func caravan() -> void:
 	for hh in w.households:
 		for f in FOOD:
 			food += hh.pantry.count(f) * float(GameData.item(f).food)
+	for f in FOOD:
+		food += w.table_food(f) * float(GameData.item(f).food)
 	var keep_food := food < people * 24.0 * float(GameData.b("hunger_per_hour")) * float(GameData.b("caravan_food_reserve_days"))
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:

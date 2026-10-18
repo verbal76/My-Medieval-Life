@@ -65,7 +65,8 @@ const CONTROLS := {
 # is 450 high): rounded corners on common phones cut off less than this.
 const CORNER_MARGIN := Vector2(28, 14)
 const BUTTON_MIN_WIDTH := 260.0       # window buttons are at least this wide, else as wide as their text
-const SCHEME_NAMES := {"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
+const PICKPOCKET_REACH := 1.8      # tiles: the talk window offers "Pick <name>'s pocket" this close
+const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
 func build(m) -> void:
@@ -1055,6 +1056,9 @@ func _talk_view(n: NPC, said: String, offering := false) -> void:
 					hide_all()
 			else:
 				message("You need %d coins." % price), not known)
+	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)
+	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH:
+		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))
 	_talk_choice(choices, "How are things at home?", func(): _talk_view(n, Dialogue.home(w, n)))
 	_talk_choice(choices, "Any news?", func(): _talk_view(n, Dialogue.news(w, n)))
@@ -1079,7 +1083,10 @@ func _talk_choice(parent: Control, text: String, cb: Callable, enabled := true) 
 func show_trade(n: NPC) -> void:
 	var w: World = main.world
 	var p := w.player
-	_open("trade", "Trade with %s %s  (you have %d coins)" % [n.name, n.family, p.coins])
+	if w.at_post(n):
+		_open("trade", "Buy from %s %s (%s)  ·  you have %d coins" % [n.name, n.family, w.shop_name(n), p.coins])
+	else:
+		_open("trade", "Trade with %s %s  (you have %d coins)" % [n.name, n.family, p.coins])
 	var sale: Array = w.brain.for_sale(n)
 	_label("They sell:", 20, Color(1, 0.85, 0.5))
 	if sale.is_empty():
@@ -1101,14 +1108,23 @@ func show_trade(n: NPC) -> void:
 			any = true
 			var price := maxi(1, roundi(w.buy_price(n, id) * w.player_price_factor(false)))
 			var nn := n
-			_item_row(id, p.inv.count(id), "%d coins each" % price, "Sell", func():
-				if w.trade(nn, p, id, 1, price):
+			var hot := p.stolen_count(id)
+			_item_row(id, p.inv.count(id), "%d coins each%s" % [price, ("  ·  %d stolen" % hot) if hot > 0 else ""], "Sell", func():
+				var r: Dictionary = w.player_sell(nn, id, price)
+				if r.result == "sold":
 					main._xp("trading", 2)
+					show_trade(nn)
+				elif r.result == "failed":
+					message(r.text)
+					show_trade(nn)
 				else:
-					message("They cannot afford it right now.")
-				show_trade(nn), n.coins >= price)
+					hide_all()
+					message(r.text), n.coins >= price)
 	if not any:
 		_label("Nothing you carry (they want: %s)." % ", ".join(buys.keys().map(func(k): return GameData.item_name(k))) if not buys.is_empty() else "They are not buying.", 15)
+	if n.role != "bandit":
+		var talker := n
+		_button("Talk to %s" % n.name, func(): show_talk(talker))
 
 
 # ---------------------------------------------------------------- crafting -------------------
@@ -1282,11 +1298,13 @@ func show_home() -> void:
 	for id in p.chest.ids():
 		var iid: String = id
 		_item_row(id, p.chest.count(id), "", "Take", func():
-			w.transfer(p.chest, p.inv, iid, p.chest.count(iid))
+			if w.transfer(p.chest, p.inv, iid, p.chest.count(iid)):
+				p.take_marks(iid)
 			show_home())
 	_label("Your pack:", 20, Color(1, 0.85, 0.5))
 	for id in p.inv.ids():
 		var iid: String = id
 		_item_row(id, p.inv.count(id), "", "Store", func():
-			w.transfer(p.inv, p.chest, iid, p.inv.count(iid))
+			if w.transfer(p.inv, p.chest, iid, p.inv.count(iid)):
+				p.store_marks(iid)
 			show_home())

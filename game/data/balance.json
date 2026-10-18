@@ -253,5 +253,15 @@
   },
   "player_start_armor": "plain_clothes",
   "harvest_handful": 6,
-  "witness_radius": 10
+  "witness_radius": 10,
+  "_theft_note": "Theft, shops and containers (owner rules 2026-10-18; the numbers are agent proposals, docs/BUILD_DECISIONS.md). A guard who sees a theft, hears a caught pickpocket's victim within guard_call_radius, or questions a seller of stolen goods returns the goods and fines theft_fine coins to the treasury.",
+  "theft_fine": 10,
+  "guard_call_radius": 15,
+  "guard_question_chance": 0.5,
+  "pickpocket_chance": 0.4,
+  "pickpocket_chance_per_level": 0.12,
+  "pickpocket_chance_max": 0.85,
+  "pickpocket_coins_max": 5,
+  "tavern_hours": [7, 22],
+  "table_keep": 4
 }

@@ -45,6 +45,7 @@ Rules:
 - **Ledger** — `World.stats` counters used by the economy reports
 - **Save** — saving, loading and migrating older saves
 - **Interface** — panels, HUD, touch controls
+- **Containers** — crates, barrels, stalls and the tavern's tables: their owners' stock
 
 ## Interactions
 
@@ -98,11 +99,11 @@ Rules:
 - **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
 
 ### INT-008 · Theft is witnessed
-- **Trigger:** The player takes something that belongs to someone (today: wheat from a farmed field).
-- **Source:** `game/scripts/core/world.gd::witness`
-- **Affects:** Crime, Ledger
-- **Expected:** Villagers within `witness_radius` (not bandits) remember it, the victim notices the loss, the player's crime record gains an entry, and the log says so if anyone saw. There is no penalty yet. Punishment is not designed.
-- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
+- **Trigger:** The player takes something that belongs to someone: wheat from a farmed field, anything from a container or an unattended stall (INT-043), or a pocket picked or tried (INT-044).
+- **Source:** `game/scripts/core/world.gd::witness`, `game/scripts/core/world.gd::guard_confront`
+- **Affects:** Crime, Ledger, Coins, Treasury, Inventory
+- **Expected:** Villagers within `witness_radius` (not bandits) remember it ("saw <player> take <what>"), the victim notices the loss, the player's crime record gains an entry, and the log says so if anyone saw. The goods are marked as stolen from the victim (INT-045). A guard among those who saw it stops the player (agent proposal): what was taken goes back where it came from (the field's farmer, the container), the player pays `theft_fine` to the treasury, and a player who cannot pay it all pays what they have and is fought, as for an attack (INT-013). Only goods and coins move.
+- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
 
 ### INT-009 · Harvesting a field (farmers)
 - **Trigger:** A farmer's plan reaches a ripe field.
@@ -178,7 +179,7 @@ Rules:
 - **Trigger:** The player or a villager buys or sells.
 - **Source:** `game/scripts/core/world.gd::trade`, `game/scripts/core/world.gd::sell_price`, `game/scripts/core/world.gd::buy_price`, `game/scripts/core/npc_brain.gd::_plan_sell`
 - **Affects:** Market, Coins, Inventory, Ledger
-- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock.
+- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock. The player sells through `World.player_sell`, which handles stolen goods first (INT-045).
 - **Tests:** `game/tests/run_tests.gd::test_trade_is_atomic`, `game/tests/play_test.gd`
 
 ### INT-020 · The caravan
@@ -260,9 +261,9 @@ Rules:
 
 ### INT-031 · Saving and loading
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
-- **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/player_state.gd::to_dict`
-- **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building
-- **Expected:** Written atomically as save_version 3. Versions 1 and 2 load, with no coin lost. Fields added later (sex, look, tool, crimes) load with defaults. A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
+- **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/player_state.gd::to_dict`
+- **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building, Containers
+- **Expected:** Written atomically as save_version 3. Versions 1 and 2 load, with no coin lost. Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
 - **Tests:** `game/tests/run_tests.gd::test_save_round_trip`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
@@ -345,7 +346,7 @@ Rules:
 - **Source:** `game/scripts/main.gd::approach`, `game/scripts/main.gd::say`, `game/scripts/main.gd::_sync_bubbles`, `game/scripts/ui/dialogue.gd::busy`, `game/scripts/ui/dialogue.gd::brush_off`, `game/scripts/ui/dialogue.gd::opening`, `game/scripts/ui/dialogue.gd::meet`, `game/scripts/ui/dialogue.gd::animal_killed`, `game/scripts/core/npc.gd::remember`, `game/scripts/main.gd::_crime`, `game/scripts/ui/game_ui.gd::show_talk`, `game/scripts/view/speech_bubble.gd`
 - **Affects:** Interface, Crime, Households, Save
 - **Expected:**
-  - A villager who is busy (the current plan step is a walk, or work with the working animation, or they are fighting) calls out one line in a speech bubble over their head for 2.5 s and carries on; the talk window does not open. At most one bubble per villager. Bandits always get the talk window.
+  - A villager who is busy (the current plan step is a walk, or work with the working animation, or they are fighting) calls out one line in a speech bubble over their head for 2.5 s and carries on; the talk window does not open. At most one bubble per villager. Bandits always get the talk window. A shopkeeper at their counter or stall opens their shop instead (INT-041).
   - Anyone else opens the conversation: portrait, who they are, and what they say, built from their job, `doing`, hunger, the household's reckoning (`hh.econ`), relief days, pantry firewood, their memories and the village record. Nothing in the world changes except one memory, below.
   - Opening the conversation adds the memory "met <player name>" (once; saved with the villager's memories, which hold the last 8, but never drop a "met" memory). Lines then greet the player by name, and busy lines are friendlier than a stranger's.
   - A villager who remembers being attacked by the player, or seeing the player take something (INT-007, INT-013), answers coldly in both the bubble and the conversation. A keeper whose animal the player killed remembers "<player> killed my <animal>" (not an attack on them) and says that.
@@ -359,6 +360,52 @@ Rules:
 - **Expected:** Only a standing tree's trunk cell is solid, for the player's movement and every path; its two canopy tiles are drawn over people and animals, so they walk behind it. The canopy over the player fades to 45% in 0.15 s and back when they leave; villagers do not fade trees. A canopy change (felling, regrowth, a new house) puts any faded canopy back first.
 - **Tests:** `game/tests/run_tests.gd::test_tree_canopy`, `game/tests/start_test.gd`
 
+### INT-041 · Shops: a counter or stall with its keeper serves the player
+- **Trigger:** The player uses (or taps) the tavern counter or a market stall, or a shopkeeper standing at it.
+- **Source:** `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_shop_target`, `game/scripts/main.gd::approach`, `game/scripts/main.gd::interact`, `game/scripts/main.gd::_usable_at`, `game/scripts/core/world.gd::at_post`, `game/scripts/core/world.gd::shopkeeper_at`, `game/scripts/ui/game_ui.gd::show_trade`
+- **Affects:** Market, Interface
+- **Expected:**
+  - A tavern keeper within 2.5 tiles of the counter's use cell, or a merchant within 2.5 tiles of their stall, alive, out and not fighting, is at their post. The prompt reads "Buy from <name> (tavern)" or "(food stall)" etc., and using it opens their trade window directly, titled "Buy from ...", with a "Talk to <name>" button.
+  - Approached at their post, a shopkeeper always serves (the shop opens; never a brush-off bubble), unless they have quest business, which opens the conversation as before (INT-039).
+  - A tapped counter, stall or container is walked to and used on arrival (touch); keys and the pad use what the player faces.
+  - The counter with nobody at it says so; a stall with its merchant away is the merchant's goods (INT-043).
+- **Tests:** `game/tests/start_test.gd`
+
+### INT-042 · Containers hold their owners' stock; the keepers set the tavern's tables
+- **Trigger:** A new world or a load; each game hour (the tavern opens and closes, `tavern_hours`).
+- **Source:** `tools/build_village.py`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/world.gd::container_store`, `game/scripts/core/world.gd::container_owner`, `game/scripts/core/world.gd::serve_tables`, `game/scripts/core/world.gd::show_tables`, `game/scripts/core/world.gd::_update_food_days`, `game/scripts/core/npc_brain.gd::caravan`
+- **Affects:** Containers, Households, Market, Food, Save, Interface
+- **Expected:**
+  - village.json lists the crates and barrels by each house, in and around the tavern and beside each stall, and each dish or mug drawn on a tavern table (no map tile moves).
+  - A house's crate or barrel is its household's pantry; a tavern crate is the first alive tavern keeper's stock; a stall's crate (and the stall itself) is its merchant's stock. They hold nothing of their own.
+  - A tavern table holds one dish of its own: while the tavern is open, each empty table gets one of its kind from a keeper (in turn) who has more than `table_keep` of it, else any cooked food they can spare; at closing every dish goes back to the keeper who set it out. Food on the tables counts in the village's food days and the caravan's food check. A table shows its dish tile only while it holds food.
+  - Goods only move between owners and tables: nothing is made or lost.
+- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
+
+### INT-043 · Taking from a container or an unattended stall is theft
+- **Trigger:** The player uses a crate, barrel, tavern table, or a stall whose merchant is away.
+- **Source:** `game/scripts/main.gd::_container_target`, `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::player_take`, `game/scripts/core/world.gd::container_pick`, `game/scripts/core/world.gd::witness`
+- **Affects:** Containers, Crime, Inventory, Households, Market
+- **Expected:** The prompt says what will happen: "Take pottage (the tavern's) — theft", "Take wheat (the Reed household's) — theft", "Empty crate (...)". One use takes one of what the container holds most of into the pack (not when the pack is full), marked as stolen from its owner (the table's keeper, the tavern keeper, the household's first adult, the merchant), and is witnessed as theft (INT-008). An unseen theft gives a little Stealth experience.
+- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
+
+### INT-044 · Picking a pocket
+- **Trigger:** "Pick pocket — theft" in the conversation with a villager within 1.8 tiles.
+- **Source:** `game/scripts/ui/game_ui.gd::_talk_view`, `game/scripts/main.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::guard_near`, `game/scripts/ui/dialogue.gd::caught`
+- **Affects:** Crime, Coins, Inventory, Player state, Interface
+- **Expected:** Success with chance `pickpocket_chance` + `pickpocket_chance_per_level` per Stealth level above 1 (at most `pickpocket_chance_max`), from the world's random numbers: 1 to `pickpocket_coins_max` coins (never more than they carry), or, with no coins, one thing they carry that is not a work tool, marked as stolen from them; they later find it missing. Caught: they remember "caught <player> picking my pocket" and shout; everyone in sight sees the try; a guard who saw it or is within `guard_call_radius` of them stops the player (fine, INT-008). Those who caught the player answer coldly. Stealth experience either way.
+- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
+
+### INT-045 · Stolen goods are marked; selling them
+- **Trigger:** The player steals (INT-007, INT-043, INT-044), sells in a trade window, eats, drops or otherwise loses goods; saving and loading.
+- **Source:** `game/scripts/core/player_state.gd::mark_stolen`, `game/scripts/core/player_state.gd::trim_stolen`, `game/scripts/core/player_state.gd::unmark`, `game/scripts/core/world.gd::player_sell`, `game/scripts/ui/game_ui.gd::show_trade`
+- **Affects:** Crime, Market, Inventory, Coins, Treasury, Save
+- **Expected:**
+  - Each stolen piece carried is marked with whose it was (PlayerState.stolen, saved); marks never outnumber what is carried, so eaten, dropped, sold or stored goods lose theirs. The trade window shows how many of a kind are stolen.
+  - Offered to its owner or anyone of the owner's household: refused ("That pottage is ours!"), remembered, recorded as a crime, and a guard within `guard_call_radius` of the buyer stops the player and returns it (INT-008).
+  - Sold to anyone else: the usual price (the buyer cannot tell), marked pieces first; a guard within `witness_radius` questions the seller with chance `guard_question_chance`: the piece goes back to its owner and the fine is paid.
+- **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -366,24 +413,24 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-044 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
 | Combat | INT-004, INT-012, INT-013, INT-032 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
 | Fields | INT-007, INT-009, INT-025, INT-029 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040 |
 | Crafting | INT-021, INT-035, INT-036 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037 |
-| Coins | INT-003, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038 |
-| Treasury | INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045 |
 | Wages | INT-023, INT-029 |
 | Relief | INT-024 |
 | Granary | INT-024, INT-025, INT-031 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043 |
 | Employment | INT-017, INT-023, INT-029, INT-037 |
 | Inheritance | INT-017 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033 |
@@ -391,7 +438,8 @@ Rules:
 | Bandits | INT-012, INT-014 |
 | Building | INT-018, INT-026, INT-030, INT-031 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044 |
+| Containers | INT-031, INT-042, INT-043 |
 
 <!-- index:end -->

@@ -113,6 +113,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	give_start_kit(player)
 	for n: NPC in npcs:
 		by_id[n.id] = n
+	_load_containers(m, [])
+	serve_tables()                     # the tavern opens: the keepers set food out on its tables
 	brain.dawn(false)                  # the first morning's snapshot of everyone's earnings
 	quests = Quests.new(self)
 	quests.refresh()
@@ -214,6 +216,8 @@ func _update_food_days() -> void:
 	for hh in households:
 		for f in NPCBrain.FOOD:
 			points += hh.pantry.count(f) * float(GameData.item(f).food)
+	for f in NPCBrain.FOOD:
+		points += table_food(f) * float(GameData.item(f).food)
 	points += granary.count("wheat") * float(GameData.item("wheat").food)
 	food_days = points / maxf(1.0, people * 24.0 * float(GameData.b("hunger_per_hour")))
 
@@ -224,6 +228,7 @@ func famine() -> bool:
 
 func _on_hour(h: int) -> void:
 	_update_food_days()
+	serve_tables()
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
 		if f.state == "growing" and minutes >= f.ready:
 			f.state = "ripe"
@@ -411,6 +416,7 @@ func continue_as_heir() -> void:
 	heir.heir_sprite = p.sprite
 	heir.home = p.home
 	heir.chest = p.chest
+	heir.chest_stolen = p.chest_stolen
 	heir.plots = p.plots
 	heir.deaths = p.deaths
 	give_start_kit(heir)
@@ -839,25 +845,436 @@ func player_harvest(f: Dictionary) -> int:
 			if fo and fo.alive:
 				victim = fo
 				break
-		witness("theft", "%d wheat from %s" % [n, f.id], victim)
+		if victim:
+			player.mark_stolen("wheat", victim.id, n)
+		witness("theft", "%d wheat from %s" % [n, f.id], victim, {"wheat": n})
 	return n
 
 
 ## Record what the village saw the player do: people within sight (not asleep indoors) remember it,
-## and so does the victim. Returns how many saw it.
-func witness(kind: String, what: String, victim: NPC) -> int:
+## and so does the victim. A guard among them stops the player (guard_confront): `taken` (item ->
+## count) goes back into `back`, or to the victim. `deed` is what they saw, "take <what>" by default.
+## Returns how many saw it; what a guard said is in last_guard.
+func witness(kind: String, what: String, victim: NPC, taken := {}, back: Inventory = null, deed := "") -> int:
 	var seen := []
+	var guard: NPC = null
+	last_guard = ""
 	for n: NPC in near(player.pos, float(GameData.b("witness_radius"))):
 		if n.role != "bandit":
 			seen.append(n)
-			n.remember("saw %s %s take %s" % [player.name, player.family, what])
-	if victim and not seen.has(victim):
+			n.remember("saw %s %s %s" % [player.name, player.family, deed if deed != "" else "take " + what])
+			if n.job == "guard" and n.target == -1 and (guard == null or n.pos.distance_to(player.pos) < guard.pos.distance_to(player.pos)):
+				guard = n
+	if victim and not seen.has(victim) and deed == "":
 		victim.remember("found %s missing" % what)
 	player.crimes.append({"day": day(), "kind": kind, "what": what, "victim": victim.id if victim else -1, "witnesses": seen.size()})
 	if seen.size() > 0:
-		note("%s %s was seen taking %s%s." % [player.name, player.family, what, (" (" + victim.name + " " + victim.family + "'s)") if victim else ""])
+		note("%s %s was seen %s%s." % [player.name, player.family, ("taking " + what) if deed == "" else deed.replace("try to", "trying to"),
+				(" (" + victim.name + " " + victim.family + "'s)") if victim and deed == "" else ""])
 	stat("player_" + kind)
+	if guard:
+		last_guard = guard_confront(guard, taken, back, victim)
 	return seen.size()
+
+
+# ---------------------------------------------------------------- theft, shops, containers -----
+## What the last guard to stop the player said ("" if none); main shows it.
+var last_guard := ""
+
+
+## A guard stops the player (theft seen, a pocket picked, stolen goods offered for sale; agent
+## proposal): what was taken goes back where it came from (`back`) or to its owner, and the player
+## pays `theft_fine` to the manor's treasury. One who cannot pay it all pays what they have and the
+## guard comes after them, as for an attack (main.gd::_crime). Coins and goods only move.
+func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> String:
+	var returned := []
+	for id in taken:
+		var k := mini(int(taken[id]), player.inv.count(id))
+		var to: Inventory = back if back != null else (owner.inv if owner and owner.alive else null)
+		if k > 0 and to != null and to.can_add(id):
+			player.inv.remove(id, k)
+			to.add(id, k)
+			player.unmark(id, owner.id if owner else -1, k)
+			returned.append("%d %s" % [k, GameData.item_name(id).to_lower()])
+	for slot in ["weapon", "armor", "tool"]:
+		if player.get(slot) != "" and not player.inv.has(player.get(slot)):
+			player.set(slot, "")
+	var fine := int(GameData.b("theft_fine"))
+	var paid := mini(fine, player.coins)
+	player.coins -= paid
+	treasury += paid
+	stat("gov_fines", paid)
+	g.remember("caught %s %s stealing" % [player.name, player.family])
+	var who := "%s %s" % [g.name, g.family]
+	var text := "The guard %s stops you." % who
+	if not returned.is_empty():
+		text += " The %s goes back to %s." % [", ".join(returned), "its owner" if owner == null else owner.name]
+	text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
+	if paid < fine:
+		g.target = -2
+	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
+	return text
+
+
+## The nearest guard on duty (out and not fighting) within `r` tiles of a point, or null.
+func guard_near(at: Vector2, r: float) -> NPC:
+	var best: NPC = null
+	for n: NPC in near(at, r):
+		if n.job == "guard" and n.target == -1 and (best == null or n.pos.distance_to(at) < best.pos.distance_to(at)):
+			best = n
+	return best
+
+
+## Containers (village.json "containers", made by tools/build_village.py from the crates, barrels and
+## dishes Shade drew). Ownership model (agent proposal; the owner's rule that they hold their owners'
+## stock): a crate or barrel by a house IS its household's pantry; one in or by the tavern holds the
+## tavern keeper's stock (the keeper's own goods); the one beside a stall, and the stall itself when
+## its merchant is away, hold the merchant's stock. Only a tavern table has goods of its own: a dish
+## or mug a keeper set out from their stock while the tavern is open, cleared back to them at closing
+## (saved). So every good in a container is still exactly one owner's: nothing is made or lost.
+var containers: Array = []         # {id, kind: crate|barrel|table, x, y, at: building or stall id, dish; tables: inv, keeper}
+
+
+func _load_containers(m: VillageMap, saved: Array) -> void:
+	containers.clear()
+	var state := {}
+	for s in saved:
+		state[str(s.id)] = s
+	for c in m.data.get("containers", []):
+		var cd: Dictionary = c.duplicate(true)
+		cd.x = int(cd.x)
+		cd.y = int(cd.y)
+		if cd.kind == "table":
+			var s: Dictionary = state.get(cd.id, {})
+			cd.inv = Inventory.from_dict(s.get("inv", {}))
+			cd.keeper = int(s.get("keeper", -1))
+			state.erase(cd.id)
+		containers.append(cd)
+	# a table the map no longer has gives its dish back to the keeper who set it out
+	for id in state:
+		var k := npc(int(state[id].get("keeper", -1)))
+		if k == null or not k.alive:
+			k = tavern_keeper()
+		var inv := Inventory.from_dict(state[id].get("inv", {}))
+		if k:
+			for item in inv.ids():
+				k.inv.add(item, inv.count(item))
+
+
+func _containers_to_dict() -> Array:
+	var out := []
+	for c in containers:
+		if c.kind == "table":
+			out.append({"id": c.id, "inv": c.inv.to_dict(), "keeper": c.keeper})
+	return out
+
+
+func container(id: String) -> Dictionary:
+	for c in containers:
+		if c.id == id:
+			return c
+	return {}
+
+
+## The tavern keeper who keeps the tavern's stock: the first alive one, by id.
+func tavern_keeper() -> NPC:
+	for n: NPC in npcs:
+		if n.alive and n.job == "tavernkeeper":
+			return n
+	return null
+
+
+## The household living in a building (-1 if nobody alive does).
+func household_in(building: String) -> int:
+	for hh in households:
+		if hh.home == building:
+			for m in hh.members:
+				var o := npc(int(m))
+				if o and o.alive:
+					return int(hh.id)
+	return -1
+
+
+func _is_tavern(at: String) -> bool:
+	return buildings.has(at) and buildings[at].type == "tavern"
+
+
+## The goods a container holds (see `containers`), or null when nobody owns it now (an empty house,
+## a stall without a merchant, a tavern without keepers).
+func container_store(c: Dictionary) -> Inventory:
+	if c.kind == "table":
+		return c.inv
+	var o := container_owner(c)
+	if o == null:
+		return null
+	if stalls.has(c.at) or _is_tavern(c.at):
+		return o.inv
+	return households[o.household].pantry
+
+
+## Whose goods they are: the one who notices them missing and whose they are if sold back.
+func container_owner(c: Dictionary) -> NPC:
+	if stalls.has(c.at):
+		var m := npc(int(stalls[c.at].owner))
+		return m if m and m.alive else null
+	if _is_tavern(c.at):
+		if c.kind == "table":
+			var k := npc(int(c.get("keeper", -1)))
+			if k and k.alive:
+				return k
+		return tavern_keeper()
+	var h := household_in(c.at)
+	if h < 0:
+		return null
+	for role in ["adult", "elder", "child"]:
+		for m in households[h].members:
+			var o := npc(int(m))
+			if o and o.alive and o.role == role:
+				return o
+	return null
+
+
+## "the tavern's", "Ellen Mercer's", "the Reed household's" (for prompts and messages).
+func container_whose(c: Dictionary) -> String:
+	if _is_tavern(c.at):
+		return "the tavern's"
+	var o := container_owner(c)
+	if o == null:
+		return "nobody's"
+	if stalls.has(c.at):
+		return "%s %s's" % [o.name, o.family]
+	return "the %s household's" % households[o.household].family
+
+
+## Where it is, for what witnesses remember: "a table in the tavern", "Ellen Mercer's stall".
+func container_place(c: Dictionary) -> String:
+	if _is_tavern(c.at):
+		return "a table in the tavern" if c.kind == "table" else "the tavern's stores"
+	if stalls.has(c.at):
+		return container_whose(c) + " stall"
+	return "%s %s" % [container_whose(c), c.kind]
+
+
+## What can be taken from it, item ids in order (a merchant's or keeper's work tools are not stock).
+func container_goods(c: Dictionary) -> Array:
+	var store := container_store(c)
+	if store == null:
+		return []
+	if c.kind != "table" and (stalls.has(c.at) or _is_tavern(c.at)):
+		return brain.for_sale(container_owner(c))
+	return store.ids()
+
+
+## The item one take takes: the one there is most of (the first by id on a tie).
+func container_pick(c: Dictionary) -> String:
+	var store := container_store(c)
+	var best := ""
+	for id in container_goods(c):
+		if best == "" or store.count(id) > store.count(best):
+			best = id
+	return best
+
+
+## The player takes one item from a container that is not theirs: theft (owner rule), witnessed like
+## a field's wheat, and the item is marked as stolen from its owner. Returns the item taken, "" if
+## there was nothing, or "full" if the pack has no room.
+func player_take(c: Dictionary) -> String:
+	var id := container_pick(c)
+	if id == "":
+		return ""
+	if not player.inv.can_add(id):
+		return "full"
+	var store := container_store(c)
+	var victim := container_owner(c)
+	store.remove(id)
+	player.inv.add(id)
+	if victim:
+		player.mark_stolen(id, victim.id, 1)
+	witness("theft", "%s from %s" % [GameData.item_name(id).to_lower(), container_place(c)], victim, {id: 1}, store)
+	if c.kind == "table":
+		show_tables()
+	return id
+
+
+## Food set out on the tavern's tables: hourly while the tavern is open (tavern_hours), each empty
+## table gets one dish or mug of its kind from a keeper who has more than `table_keep` of it (else
+## any cooked food they have to spare); at closing every table is cleared back to its keeper.
+func serve_tables() -> void:
+	var hours: Array = GameData.b("tavern_hours")
+	var open := hour() >= float(hours[0]) and hour() < float(hours[1])
+	var keep := int(GameData.b("table_keep"))
+	var keepers := []
+	for n: NPC in npcs:
+		if n.alive and n.job == "tavernkeeper":
+			keepers.append(n)
+	var turn := 0                      # the keepers take the tables in turn
+	for c in containers:
+		if c.kind != "table":
+			continue
+		turn += 1
+		if not open:
+			if c.inv.total() > 0:
+				var k := npc(int(c.keeper))
+				if (k == null or not k.alive) and not keepers.is_empty():
+					k = keepers[0]
+				if k:
+					for id in c.inv.ids():
+						transfer(c.inv, k.inv, id, c.inv.count(id))
+			continue
+		if c.inv.total() > 0:
+			continue
+		for i in keepers.size():
+			var k: NPC = keepers[(turn + i) % keepers.size()]
+			var dish: String = c.dish if k.inv.count(c.dish) > keep else ""
+			if dish == "":
+				for f in NPCBrain.COOKED:
+					if k.inv.count(f) > keep:
+						dish = f
+						break
+			if dish != "":
+				transfer(k.inv, c.inv, dish, 1)
+				c.keeper = k.id
+				break
+	show_tables()
+
+
+## Draw each table's dish while it has food on it, and the bare table when it has none (the tile
+## Shade drew there, recorded in village.json, in its layer: tile_changed kind = that layer).
+func show_tables() -> void:
+	for c in containers:
+		if c.kind == "table" and c.has("tile"):
+			tile_changed.emit(Vector2i(c.x, c.y), str(c.layer), int(c.tile) if c.inv.total() > 0 else -1)
+
+
+## Food on the tavern's tables (for the village's food reckoning).
+func table_food(id: String) -> int:
+	var n := 0
+	for c in containers:
+		if c.kind == "table":
+			n += c.inv.count(id)
+	return n
+
+
+## Where a shopkeeper serves: the tavern counter or their stall (tile centre), INF for anyone else.
+func shop_post(n: NPC) -> Vector2:
+	if n.job == "tavernkeeper" and stations.has(n.workplace):
+		return Vector2(station_use(n.workplace)) + Vector2(0.5, 0.5)
+	if n.job == "merchant" and stalls.has(n.workplace) and int(stalls[n.workplace].owner) == n.id:
+		var s: Dictionary = stalls[n.workplace]
+		return Vector2(int(s.use[0]) + 0.5, int(s.use[1]) + 0.5)
+	return Vector2.INF
+
+
+## A shopkeeper standing at their counter or stall: they always serve the player.
+func at_post(n: NPC) -> bool:
+	var at := shop_post(n)
+	return n.alive and not n.hidden and n.target == -1 and at != Vector2.INF and n.pos.distance_to(at) <= 2.5
+
+
+## Who serves at a counter (a tavern_counter station id) or a stall (a stall id) now, or null.
+func shopkeeper_at(post: String) -> NPC:
+	var best: NPC = null
+	for n: NPC in npcs:
+		if n.workplace == post and at_post(n) and (best == null or n.id < best.id):
+			best = n
+	return best
+
+
+## "tavern", "food stall": the shop's name in prompts.
+func shop_name(n: NPC) -> String:
+	if n.job == "tavernkeeper":
+		return "tavern"
+	return {"raw": "ore and timber stall", "food": "food stall", "goods": "tools and arms stall"}.get(stalls[n.workplace].kind, "stall")
+
+
+## The player tries to pick the pocket of the villager beside them (owner rule). The chance grows
+## with Stealth (pickpocket_chance + pickpocket_chance_per_level a level, at most
+## pickpocket_chance_max). Success: a few coins, or one thing they carry (marked as stolen from them),
+## and they find it missing later. Caught: they remember it, anyone in sight sees the try, and a guard
+## who sees it or is within `guard_call_radius` of their shout stops the player (guard_confront).
+## Returns {ok, what, text}.
+func pickpocket(n: NPC) -> Dictionary:
+	if not n.alive or n.hidden or n.role == "bandit":
+		return {"ok": false, "what": "", "text": "There is nobody to rob."}
+	var lv := player.level("stealth")
+	var chance := minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * (lv - 1), float(GameData.b("pickpocket_chance_max")))
+	var who := "%s %s" % [n.name, n.family]
+	last_guard = ""
+	if rng.randf() < chance:
+		var what := ""
+		if n.coins > 0:
+			var k := mini(n.coins, rng.randi_range(1, int(GameData.b("pickpocket_coins_max"))))
+			n.coins -= k
+			player.coins += k
+			what = "%d coin%s" % [k, "" if k == 1 else "s"]
+		else:
+			var ids := []
+			for id in n.inv.ids():
+				if not NPCBrain.KEEPS.get(n.job, []).has(id) and player.inv.can_add(id):
+					ids.append(id)
+			if ids.is_empty():
+				return {"ok": true, "what": "", "text": "%s's pockets are empty." % n.name}
+			var id: String = ids[rng.randi() % ids.size()]
+			n.inv.remove(id)
+			player.inv.add(id)
+			player.mark_stolen(id, n.id, 1)
+			what = "1 " + GameData.item_name(id).to_lower()
+		n.remember("found %s missing" % what)
+		player.crimes.append({"day": day(), "kind": "pickpocket", "what": "%s from %s" % [what, who], "victim": n.id, "witnesses": 0})
+		stat("player_pickpocket")
+		return {"ok": true, "what": what, "text": "You lift %s from %s unseen." % [what, who]}
+	n.remember("caught %s %s picking my pocket" % [player.name, player.family])
+	var seen := witness("pickpocket", "a try at %s's purse" % who, n, {}, null, "try to pick %s's pocket" % who)
+	var text := "%s catches your hand in their pocket!" % n.name
+	if last_guard == "":
+		var g := guard_near(n.pos, float(GameData.b("guard_call_radius")))
+		if g:
+			last_guard = guard_confront(g, {}, null, n)
+	if last_guard != "":
+		text += " " + last_guard
+	elif seen > 1:
+		text += " Others saw it too."
+	return {"ok": false, "what": "", "text": text}
+
+
+## The player sells one `id` to `buyer` at `price` (the trade window). Stolen goods (agent proposal):
+## the owner, or anyone of the owner's household, knows their own: they refuse, remember it, and a guard
+## within `guard_call_radius` of them stops the player. Sold to anyone else they fetch the usual price
+## (the buyer cannot tell), but a guard within sight may question the seller (guard_question_chance):
+## the piece goes back to its owner and the fine is paid. Marked goods are sold first.
+## Returns {result: sold|recognised|questioned|failed, text}.
+func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
+	player.trim_stolen()
+	var marks: Dictionary = player.stolen.get(id, {})
+	var owners := marks.keys()
+	owners.sort_custom(func(a, b): return int(a) < int(b))
+	last_guard = ""
+	for o in owners:
+		var owner := npc(int(o))
+		if owner and (owner == buyer or (owner.household >= 0 and owner.household == buyer.household)):
+			var item := GameData.item_name(id).to_lower()
+			buyer.remember("caught %s %s selling me my own %s" % [player.name, player.family, item])
+			player.crimes.append({"day": day(), "kind": "fencing", "what": "%s back to %s %s" % [item, buyer.name, buyer.family], "victim": owner.id, "witnesses": 1})
+			stat("player_fencing")
+			note("%s %s knew the %s %s %s offered was theirs." % [buyer.name, buyer.family, item, player.name, player.family])
+			var text := "\"That %s is ours! You stole it!\" %s will not buy it." % [item, buyer.name]
+			var g := guard_near(buyer.pos, float(GameData.b("guard_call_radius")))
+			if g:
+				last_guard = guard_confront(g, {id: int(marks[o])}, null, owner)
+				text += " " + last_guard
+			return {"result": "recognised", "text": text}
+	if not owners.is_empty():
+		var g := guard_near(player.pos, float(GameData.b("witness_radius")))
+		if g and rng.randf() < float(GameData.b("guard_question_chance")):
+			var owner := npc(int(owners[0]))
+			g.remember("questioned %s %s about stolen %s" % [player.name, player.family, GameData.item_name(id).to_lower()])
+			last_guard = guard_confront(g, {id: 1}, null, owner)
+			return {"result": "questioned", "text": "The guard %s asks where you got that %s. %s" % [g.name, GameData.item_name(id).to_lower(), last_guard]}
+	if not trade(buyer, player, id, 1, price):
+		return {"result": "failed", "text": "They cannot afford it right now."}
+	if not owners.is_empty():
+		player.unmark(id, int(owners[0]), 1)
+	return {"result": "sold", "text": ""}
 
 
 func player_eat(id: String) -> bool:
@@ -941,7 +1358,7 @@ func to_dict() -> Dictionary:
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
 		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "log": log_lines, "quest_offers": quests.to_dict(),
-		"sage_id": sage_id, "reeve_id": reeve_id,
+		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(),
 	}
 
 
@@ -1010,6 +1427,11 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		_assign_keepers()
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
+	# the tables' dishes are saved; a save from before containers gets its tables set from the
+	# keepers' stock (the crates, barrels and stalls are their owners' stock, so they need nothing)
+	_load_containers(m, d.get("containers", []))
+	if not d.has("containers"):
+		serve_tables()
 	brain.dawn(false)
 	quests = Quests.new(self)
 	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them

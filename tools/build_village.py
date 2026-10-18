@@ -15,7 +15,7 @@ tools/puny_world_terrain.py uses).
 Output (deterministic for a given seed):
   game/data/village.json   tile layers, collision, and every gameplay entity: buildings with doors,
                            homes, workstations, trees, ore deposits, fields, stalls, build plots,
-                           spawn points
+                           containers (crates, barrels, tavern tables), spawn points
   game/assets/tiles/       the two tile atlases, copied from the archives (provenance in
                            game/assets/PROVENANCE.json, written by tools/import_game_assets.py)
 
@@ -56,6 +56,12 @@ FIELD_TILES = {"tilled": 3737, "growing": 1971, "ripe": 2851}
 FRAME = 3499                                 # wooden construction frame (build sites)
 CAMPFIRE = 5958                              # animated in the tileset (5958-5961)
 CRATE, BARREL = 3500, 3502
+# Containers the player can take from (or steal from): the crate and barrel tiles Shade drew by the
+# houses, in the tavern and at the stalls, and the dishes and mugs he drew on the tavern's tables
+CRATE_TILES = {CRATE, 794, 796, 797, 1024, 1025}
+BARREL_TILES = {BARREL, 358}
+DISH_TILES = {798: "pottage", 583: "pottage", 799: "pottage", 800: "pottage", 803: "roast_meat",
+              2121: "ale", 2122: "ale"}
 # Cozy Farm tiles.png (54 columns): the wooden fence ring at columns 4-6, rows 29-31, and a closed gate
 FENCE = {"tl": 29 * 54 + 4, "t": 29 * 54 + 5, "tr": 29 * 54 + 6, "l": 30 * 54 + 4, "r": 30 * 54 + 6,
          "bl": 31 * 54 + 4, "b": 31 * 54 + 5, "br": 31 * 54 + 6}
@@ -79,7 +85,8 @@ class Village:
         self.roof = set()           # cells under a roof (solid)
         self.solid_extra = set()
         self.ents = {"buildings": [], "stations": [], "trees": [], "deposits": [], "fields": [],
-                     "stalls": [], "plots": [], "pens": [], "woods": [], "spawns": {}, "mine": None}
+                     "stalls": [], "plots": [], "pens": [], "woods": [], "spawns": {}, "mine": None,
+                     "containers": []}
         self.free = pwt.load(AssetZip(pwt.ZIP))
         self.paid = AssetZip(PAID)
         self.samples = {}
@@ -312,7 +319,43 @@ class Village:
         self.plots(((3 * CH, 20), (3 * CH + 17, 20)))
         self.ents["spawns"]["player"] = [CH + 14, CH + 23]
         self.roads()
+        self.containers()
         return self
+
+    def containers(self):
+        """Interactable containers, read from the tiles already placed (no random numbers, so the rest
+        of the map is unchanged): crates and barrels by each house (its household's store), in and
+        around the tavern (its keepers' stock) and beside each market stall (the stall's), and each
+        dish or mug drawn on a tavern table (a table the tavern keepers set food on)."""
+        out = self.ents["containers"]
+
+        def scan(at, x0, y0, x1, y1, dishes):
+            for y in range(y0, y1):
+                for x in range(x0, x1):
+                    below = [self.get("below", i, x, y) for i in range(6)]
+                    above = [self.get("above", i, x, y) for i in range(6)]
+                    kind, dish = None, None
+                    if any(v in CRATE_TILES for v in below):
+                        kind = "crate"
+                    elif any(v in BARREL_TILES for v in below):
+                        kind = "barrel"
+                    elif dishes and any(v in DISH_TILES for v in above):
+                        kind = "table"
+                        i = next(i for i, v in enumerate(above) if v in DISH_TILES)
+                        dish = {"dish": DISH_TILES[above[i]], "tile": above[i], "layer": f"above{i}"}
+                    if kind:
+                        c = {"id": f"c{len(out)}", "kind": kind, "x": x, "y": y, "at": at}
+                        if dish:
+                            c.update(dish)      # what is served there, and the tile that shows it
+                        out.append(c)
+
+        for b in self.ents["buildings"]:
+            if b["type"] == "tavern":
+                scan(b["id"], b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"] + 2, True)
+            elif b["type"] == "house":
+                scan(b["id"], b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"], False)
+        for st in self.ents["stalls"]:
+            scan(st["id"], st["x"] + 1, st["y"], st["x"] + 2, st["y"] + 1, False)
 
     def place_deposits(self, ox, oy):
         """Ore rocks on bare highland floor of the cave sample: cells with only ground tiles whose
@@ -540,7 +583,8 @@ def main():
     n = data
     print(f"wrote {OUT.relative_to(REPO)}: {len(n['buildings'])} buildings, {len(n['stations'])} stations, "
           f"{len(n['trees'])} trees, {len(n['deposits'])} deposits, {len(n['fields'])} fields, "
-          f"{len(n['stalls'])} stalls, {len(n['plots'])} plots, {len(n['pens'])} pens, {len(n['road'])} road cells")
+          f"{len(n['stalls'])} stalls, {len(n['plots'])} plots, {len(n['pens'])} pens, {len(n['containers'])} containers, "
+          f"{len(n['road'])} road cells")
     if args.preview:
         render(data, args.solid).save(args.preview)
 

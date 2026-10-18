@@ -5,6 +5,8 @@ extends SceneTree
 
 var failures := 0
 var checks := 0
+const FAR_PEOPLE := Vector2(3.5, 3.5)       # out of sight of the tavern and the market (theft tests)
+const FAR_GUARDS := Vector2(116.5, 86.5)    # and the guards, out of sight and earshot of everyone
 
 
 func check(cond: bool, what: String) -> void:
@@ -32,6 +34,8 @@ func _init() -> void:
 	test_trades_and_works()
 	test_quests()
 	test_building_site()
+	test_chest_keeps_marks()
+	test_theft_and_shops()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -897,6 +901,250 @@ func test_building_site() -> void:
 	pl.site.erase("cost")
 	pl.site.need = {"plank": 10, "stone": 20, "log": 10}
 	check(absf(w.site_progress(pl) - 20.0 / 60.0) < 0.001 and w.site_delivered(pl) == {"plank": 20}, "older sites assume the house cost")
+
+
+## Every item in the village, wherever it is (people, pantries, tables, the granary, the player's
+## pack and chest, bags on the ground): id -> count.
+func _all_goods(w: World) -> Dictionary:
+	var out := {}
+	var add := func(inv: Inventory) -> void:
+		for id in inv.items:
+			out[id] = int(out.get(id, 0)) + int(inv.items[id])
+	for n: NPC in w.npcs:
+		add.call(n.inv)
+	for hh in w.households:
+		add.call(hh.pantry)
+	for c in w.containers:
+		if c.kind == "table":
+			add.call(c.inv)
+	add.call(w.granary)
+	add.call(w.player.inv)
+	add.call(w.player.chest)
+	for l in w.loot:
+		add.call(l.inv)
+	return out
+
+
+## Theft, shops and containers (owner rules, 2026-10-18): the tavern's tables hold food its keepers
+## set out, crates and barrels are their owners' stock, taking from them is theft that witnesses
+## remember and guards punish, stolen goods are marked and known to their owners, pockets can be
+## picked. Goods and coins only move.
+func test_theft_and_shops() -> void:
+	var w := new_world()
+	var p := w.player
+	var kinds := {}
+	for c in w.containers:
+		kinds[c.kind] = int(kinds.get(c.kind, 0)) + 1
+	check(int(kinds.get("table", 0)) > 0 and int(kinds.get("crate", 0)) > 0 and int(kinds.get("barrel", 0)) > 0, "the map has tables, crates and barrels (%s)" % kinds)
+	var tables := w.containers.filter(func(c): return c.kind == "table" and c.inv.total() > 0)
+	check(tables.size() > 0, "the keepers set food out on the tavern's tables when it opens (%d tables)" % tables.size())
+	var goods0 := _all_goods(w)
+	var coins0 := w.total_coins()
+	# closing clears the tables back to the keepers; opening sets them again; nothing made or lost
+	var m0 := w.minutes
+	w.minutes = 22.5 * 60.0
+	w.serve_tables()
+	check(w.containers.all(func(c): return c.kind != "table" or c.inv.total() == 0), "at closing the tables are cleared")
+	check(_all_goods(w) == goods0, "clearing the tables puts the food back in the keepers' stock")
+	w.minutes = m0
+	w.serve_tables()
+	check(_all_goods(w) == goods0 and w.containers.any(func(c): return c.kind == "table" and c.inv.total() > 0), "the tables are set again from the keepers' stock")
+	# everyone far away: nobody sees
+	var away := func() -> void:
+		for n: NPC in w.npcs:
+			n.pos = FAR_GUARDS if n.job == "guard" else FAR_PEOPLE
+			n.plan.clear()
+			n.target = -1
+	away.call()
+	var t: Dictionary = w.containers.filter(func(c): return c.kind == "table" and c.inv.total() > 0)[0]
+	p.pos = Vector2(int(t.x) + 0.5, int(t.y) + 1.5)
+	var keeper: NPC = w.container_owner(t)
+	var dish: String = w.container_pick(t)
+	var crimes0 := p.crimes.size()
+	check(w.player_take(t) == dish and p.inv.has(dish) and t.inv.total() == 0, "the player takes the %s from a table" % dish)
+	check(p.stolen_count(dish) == 1 and p.stolen[dish].has(str(keeper.id)), "the dish is marked as stolen from %s" % keeper.name)
+	check(p.crimes.size() == crimes0 + 1 and p.crimes[-1].kind == "theft" and int(p.crimes[-1].victim) == keeper.id and int(p.crimes[-1].witnesses) == 0, "taking from the tavern's table is theft from its keeper, unseen")
+	check(keeper.memory.any(func(m): return str(m).begins_with("found %s from a table" % GameData.item_name(dish).to_lower())), "the keeper finds the dish missing")
+	check(_all_goods(w) == goods0 and w.total_coins() == coins0, "theft moves goods: nothing made or lost")
+	# a villager who sees it remembers
+	var adult: NPC = null
+	var guard: NPC = null
+	for n: NPC in w.npcs:
+		if adult == null and n.role == "adult" and n.job != "guard" and n.job != "tavernkeeper":
+			adult = n
+		if guard == null and n.job == "guard":
+			guard = n
+	var crate: Dictionary = {}
+	for c in w.containers:
+		if c.kind == "crate" and w.buildings.has(c.at) and w.buildings[c.at].type == "tavern" and w.container_pick(c) != "":
+			crate = c
+			break
+	check(not crate.is_empty() and w.container_store(crate) == w.tavern_keeper().inv, "a tavern crate holds the tavern keeper's stock")
+	p.pos = Vector2(int(crate.x) + 0.5, int(crate.y) + 1.5)
+	adult.pos = p.pos + Vector2(2, 0)
+	var item: String = w.container_pick(crate)
+	var held := w.tavern_keeper().inv.count(item)
+	check(w.player_take(crate) == item and w.tavern_keeper().inv.count(item) == held - 1, "taking from the crate takes from the keeper's stock")
+	check(adult.memory.has("saw %s %s take %s from the tavern's stores" % [p.name, p.family, GameData.item_name(item).to_lower()]) and int(p.crimes[-1].witnesses) == 1, "a villager who saw it remembers it")
+	check(_all_goods(w) == goods0, "still nothing made or lost")
+	# a guard who sees it stops the player: the goods go back and the fine goes to the treasury
+	adult.pos = FAR_PEOPLE
+	guard.pos = p.pos + Vector2(3, 0)
+	p.coins = 40
+	coins0 = w.total_coins()
+	var t0 := w.treasury
+	var inv0 := p.inv.count(item)
+	held = w.tavern_keeper().inv.count(item)
+	w.player_take(crate)
+	var fine := int(GameData.b("theft_fine"))
+	check(p.inv.count(item) == inv0 and w.tavern_keeper().inv.count(item) == held, "the guard gives the %s back to the tavern" % item)
+	check(p.coins == 40 - fine and w.treasury == t0 + fine and w.total_coins() == coins0 and guard.target == -1, "the player pays the %d coin fine to the treasury" % fine)
+	check(w.last_guard.contains(guard.name), "the guard's words are reported: %s" % w.last_guard)
+	p.coins = 3
+	w.player_take(crate)
+	check(p.coins == 0 and guard.target == -2, "a thief who cannot pay the fine is fought")
+	guard.target = -1
+	guard.pos = FAR_GUARDS
+	check(_all_goods(w) == goods0, "nothing made or lost through the guard")
+	# a household's barrel is its pantry
+	var barrel: Dictionary = {}
+	for c in w.containers:
+		if c.kind == "barrel" and w.buildings.has(c.at) and w.buildings[c.at].type == "house" and w.household_in(c.at) >= 0:
+			barrel = c
+			break
+	var hh: Dictionary = w.households[w.household_in(barrel.at)]
+	check(w.container_store(barrel) == hh.pantry, "a house's barrel is its household's pantry")
+	var pick: String = w.container_pick(barrel)
+	var in_pantry: int = hh.pantry.count(pick)
+	var owner: NPC = w.container_owner(barrel)
+	p.pos = Vector2(int(barrel.x) + 0.5, int(barrel.y) + 1.5)
+	check(w.player_take(barrel) == pick and hh.pantry.count(pick) == in_pantry - 1 and owner.household == int(hh.id), "taking from it takes the %s household's %s" % [hh.family, pick])
+	check(w.container_whose(barrel) == "the %s household's" % hh.family, "and it is said to be theirs")
+	# stolen goods offered back to their owner (or their household): refused
+	var stall_id := ""
+	var merchant: NPC = null
+	for id in w.stalls:
+		var m := w.npc(int(w.stalls[id].owner))
+		if m and w.stalls[id].kind == "food":
+			stall_id = id
+			merchant = m
+			break
+	var stall := {"id": stall_id, "kind": "stall", "x": int(w.stalls[stall_id].x), "y": int(w.stalls[stall_id].y), "at": stall_id}
+	p.pos = Vector2(int(stall.x) + 0.5, int(stall.y) + 1.5)
+	var ware: String = w.container_pick(stall)
+	check(w.player_take(stall) == ware and p.stolen[ware].has(str(merchant.id)), "the %s taken from %s's stall is marked as theirs" % [ware, merchant.name])
+	var have := p.inv.count(ware)
+	coins0 = w.total_coins()
+	var r: Dictionary = w.player_sell(merchant, ware, 1)
+	check(r.result == "recognised" and p.inv.count(ware) == have and merchant.memory.any(func(m): return str(m).begins_with("caught %s %s selling me" % [p.name, p.family])), "%s knows their own %s and will not buy it: %s" % [merchant.name, ware, r.text])
+	check(p.crimes[-1].kind == "fencing" and w.total_coins() == coins0, "it is recorded; no coins move")
+	# sold to someone else it fetches the price; the mark goes with it
+	var buyer: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.household != merchant.household and n.coins >= 5 and n.role == "adult" and not n.job in ["guard", "tavernkeeper", "cook"]:
+			buyer = n
+			break
+	var marked := p.stolen_count(ware)
+	r = w.player_sell(buyer, ware, 1)
+	check(r.result == "sold" and p.inv.count(ware) == have - 1 and p.stolen_count(ware) == marked - 1 and w.total_coins() == coins0, "sold to %s, who cannot know it" % buyer.name)
+	# a guard nearby may question the seller: the piece goes back to its owner, with the fine
+	p.inv.add(ware)                                # the test gives one more to mark
+	p.mark_stolen(ware, merchant.id, 1)
+	goods0 = _all_goods(w)
+	guard.pos = p.pos + Vector2(2, 0)
+	var chance = GameData.balance.guard_question_chance
+	GameData.balance.guard_question_chance = 1.0
+	p.coins = 40
+	coins0 = w.total_coins()
+	var whose: Array = p.stolen[ware].keys()
+	whose.sort_custom(func(a, b): return int(a) < int(b))
+	var rightful: NPC = w.npc(int(whose[0]))           # the piece goes back to the first owner marked
+	var mine := rightful.inv.count(ware)
+	r = w.player_sell(buyer, ware, 1)
+	GameData.balance.guard_question_chance = chance
+	check(r.result == "questioned" and rightful.inv.count(ware) == mine + 1 and p.coins == 40 - fine and w.total_coins() == coins0, "a guard questions the seller: the %s goes back to %s (%s)" % [ware, rightful.name, r.text])
+	check(_all_goods(w) == goods0, "nothing made or lost by selling stolen goods")
+	guard.pos = FAR_GUARDS
+	# marks follow the pack: goods eaten or dropped lose theirs
+	var food := ""
+	for id in p.stolen:
+		if GameData.item(id).has("food"):
+			food = id
+	var before := p.stolen_count(food)
+	p.inv.remove(food, p.inv.count(food))
+	check(before > 0 and p.stolen_count(food) == 0 and not p.stolen.has(food), "goods no longer carried lose their marks")
+	# picking a pocket: success takes a few coins; caught, the victim remembers and a guard comes
+	var victim: NPC = buyer
+	victim.coins = 20
+	p.pos = victim.pos + Vector2(1, 0)
+	coins0 = w.total_coins()
+	var pc0 := p.coins
+	var saved_pp: Array = [GameData.b("pickpocket_chance"), GameData.b("pickpocket_chance_per_level"), GameData.b("pickpocket_chance_max")]
+	GameData.balance.pickpocket_chance = 1.0
+	GameData.balance.pickpocket_chance_max = 1.0
+	r = w.pickpocket(victim)
+	check(r.ok and p.coins > pc0 and victim.coins == 20 - (p.coins - pc0) and w.total_coins() == coins0, "a picked pocket gives up %d coins: %s" % [p.coins - pc0, r.text])
+	check(victim.memory.any(func(m): return str(m).begins_with("found ")) and p.crimes[-1].kind == "pickpocket", "the victim finds the coins missing; it is on the record")
+	victim.coins = 0
+	victim.inv.add("leather", 1)
+	goods0 = _all_goods(w)
+	var vinv := victim.inv.total()
+	r = w.pickpocket(victim)
+	check(r.ok and victim.inv.total() == vinv - 1 and p.stolen.keys().any(func(id): return p.stolen[id].has(str(victim.id))) and _all_goods(w) == goods0, "with no coins, one thing they carry is taken, marked as theirs: %s" % r.text)
+	GameData.balance.pickpocket_chance = 0.0
+	GameData.balance.pickpocket_chance_per_level = 0.0
+	guard.pos = victim.pos + Vector2(6, 0)
+	p.coins = 40
+	coins0 = w.total_coins()
+	r = w.pickpocket(victim)
+	GameData.balance.pickpocket_chance = saved_pp[0]
+	GameData.balance.pickpocket_chance_max = saved_pp[2]
+	GameData.balance.pickpocket_chance_per_level = saved_pp[1]
+	check(not r.ok and victim.memory.has("caught %s %s picking my pocket" % [p.name, p.family]), "a failed try is noticed: %s" % r.text)
+	check(p.coins == 40 - fine and w.total_coins() == coins0 and guard.memory.any(func(m): return str(m).begins_with("caught ")), "the guard stops the pickpocket and fines them")
+	check(Dialogue.caught(w, victim) and (Dialogue.opening(w, victim).contains("caught") or Dialogue.opening(w, victim).contains("saw you")), "the victim is cold to the thief: %s" % Dialogue.opening(w, victim))
+	# saved: the tables' dishes and the stolen marks
+	p.inv.add("ale", 2)
+	p.mark_stolen("ale", keeper.id, 2)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var same := true
+	for c in w.containers:
+		if c.kind == "table" and w2.container(c.id).inv.items != c.inv.items:
+			same = false
+	check(same and _all_goods(w2) == _all_goods(w), "the tables' dishes are saved")
+	check(w2.player.stolen == p.stolen and w2.player.stolen_count("ale") == p.stolen_count("ale") and p.stolen_count("ale") >= 2, "the stolen marks are saved (%s)" % w2.player.stolen)
+	# a save from before containers: the food was all in the keepers' hands; the tables are set from it
+	w.minutes = 22.5 * 60.0
+	w.serve_tables()
+	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	old.erase("containers")
+	old.player.erase("stolen")
+	old.minutes = m0
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), old)
+	check(w3.containers.size() == w.containers.size() and w3.containers.any(func(c): return c.kind == "table" and c.inv.total() > 0), "an older save loads with its containers, the tables set from the keepers' stock")
+	check(_all_goods(w3) == _all_goods(w) and w3.player.stolen.is_empty(), "nothing made or lost loading it; nothing marked stolen")
+	w.dispose()
+	w2.dispose()
+	w3.dispose()
+
+
+func test_chest_keeps_marks() -> void:
+	var w := new_world()
+	var p := w.player
+	p.inv.add("pottage", 3)
+	p.mark_stolen("pottage", 7, 2)
+	w.transfer(p.inv, p.chest, "pottage", 3)
+	p.store_marks("pottage")
+	check(p.stolen_count("pottage") == 0 and int(p.chest_stolen.pottage["7"]) == 2, "stolen goods put in the home chest keep their marks there")
+	var d: Dictionary = JSON.parse_string(JSON.stringify(p.to_dict()))
+	var q := PlayerState.from_dict(d)
+	check(int(q.chest_stolen.pottage["7"]) == 2, "the chest's marks are saved")
+	w.transfer(p.chest, p.inv, "pottage", 3)
+	p.take_marks("pottage")
+	check(p.stolen_count("pottage") == 2 and p.chest_stolen.is_empty(), "taken out again, they are still stolen")
 
 
 func test_simulation(days: int) -> void:

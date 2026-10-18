@@ -432,8 +432,8 @@ func _run() -> void:
 		check(not main.bubbles.has(busy_one.id), "the bubble goes after a few seconds")
 	var idle_one: NPC = null
 	for n: NPC in w.npcs:
-		if n.alive and not n.hidden and n.role != "bandit" and not Dialogue.busy(n):
-			idle_one = n
+		if n.alive and not n.hidden and n.role != "bandit" and not Dialogue.busy(n) and not w.at_post(n):
+			idle_one = n            # (a shopkeeper at their post opens the shop instead: tested with the shops)
 			break
 	if idle_one:
 		main.approach(idle_one)
@@ -473,6 +473,67 @@ func _run() -> void:
 	var cold := Dialogue.brush_off(w, v)
 	check(cold.contains("Thief") or cold.contains("saw what you did") or cold.contains("Stay away"), "and, busy, answers coldly: \"%s\"" % cold)
 	ui.hide_all()
+
+	# shops: a tavern tk at the counter serves; using the counter opens the shop
+	var tk := w.tavern_keeper()
+	tk.pos = w.shop_post(tk)
+	tk.plan = [w.brain.work(600, "", {}, "idle")]
+	tk.target = -1
+	var counter: Dictionary = w.stations[w.stations_of("tavern_counter")[0]]
+	p.pos = tk.pos + Vector2(0, 1.0)
+	main.player_sprite.face(Vector2(0, -1))
+	main._find_target()
+	check(main.target.get("kind", "") == "shop" and main.target.label == "Buy from %s (tavern)" % tk.name, "facing the keeper at the counter: \"%s\"" % main.target.get("label", ""))
+	main.interact()
+	check(ui.is_open("trade") and ui.title_label.text.to_lower().begins_with(("Buy from %s" % tk.name).to_lower()), "using it opens %s's shop: %s" % [tk.name, ui.title_label.text])
+	var coins_before := p.coins
+	p.coins += 20
+	check(_press("Buy") and p.coins < coins_before + 20, "bought something from the tavern (%d coins left)" % p.coins)
+	check(_press("Talk to %s" % tk.name) and ui.is_open("talk"), "the shop has a Talk button")
+	ui.hide_all()
+	main.approach(tk)
+	check(ui.is_open("trade") and not main.bubbles.has(tk.id), "approached at the counter, the keeper serves at once (no brush-off)")
+	ui.hide_all()
+	check(main._usable_at(Vector2(int(counter.use[0]) + 0.5, int(counter.use[1]) + 0.5)) != Vector2.INF, "a tap on the counter is a use of it")
+	# a stall with its merchant away: its goods can be taken, and the prompt says it is theft
+	var sid: String = w.stalls.keys()[0]
+	var merchant: NPC = w.npc(int(w.stalls[sid].owner))
+	merchant.pos = Vector2(int(w.stalls[sid].use[0]) + 0.5, int(w.stalls[sid].use[1]) + 6.5)
+	stand_by(Vector2i(int(w.stalls[sid].x), int(w.stalls[sid].y)))
+	check(str(main.target.get("label", "")).ends_with("(%s %s's) — theft" % [merchant.name, merchant.family]) or str(main.target.get("label", "")).begins_with("Empty"), "a stall left alone: \"%s\"" % main.target.get("label", ""))
+	merchant.pos = w.shop_post(merchant)
+	merchant.plan = [w.brain.work(600, "", {}, "idle")]
+	stand_by(Vector2i(int(w.stalls[sid].x), int(w.stalls[sid].y)))
+	check(str(main.target.get("label", "")) == "Buy from %s (%s)" % [merchant.name, w.shop_name(merchant)], "with the merchant there: \"%s\"" % main.target.get("label", ""))
+	# taking food from a tavern table: theft, said in the prompt, the dish goes into the pack
+	var table: Dictionary = {}
+	for c in w.containers:
+		if c.kind == "table" and c.inv.total() > 0:
+			table = c
+			break
+	check(not table.is_empty(), "a tavern table has food on it")
+	stand_by(Vector2i(int(table.x), int(table.y)))
+	var dish: String = w.container_pick(table)
+	check(main.target.get("label", "") == "Take %s (the tavern's) — theft" % GameData.item_name(dish).to_lower(), "the prompt says what happens: \"%s\"" % main.target.get("label", ""))
+	var crimes_before := p.crimes.size()
+	var dishes := p.inv.count(dish)
+	p.coins = 50
+	main.interact()
+	var stopped := w.last_guard != ""
+	check(p.crimes.size() == crimes_before + 1 and p.crimes[-1].kind == "theft" and (p.inv.count(dish) == dishes + 1 or stopped), "took the %s: theft%s" % [dish, " (a guard stopped it)" if stopped else ""])
+	check(table.inv.total() == 0 or stopped, "the table is empty")
+	# a pickpocket's choice in the conversation with someone beside the player
+	var mark: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and not n.hidden and n.role == "adult" and n.job != "guard" and not w.at_post(n) and n != v:
+			mark = n
+			break
+	mark.pos = p.pos + Vector2(1.0, 0)
+	mark.plan = [w.brain.work(600, "", {}, "idle")]
+	ui.show_talk(mark)
+	var crimes_now := p.crimes.size()
+	check(_press("Pick pocket — theft") and not ui.is_open("talk"), "the conversation offers to pick %s's pocket" % mark.name)
+	check(p.crimes.size() == crimes_now + 1 and p.crimes[-1].kind == "pickpocket", "the pickpocket is on the record (%s)" % ("unseen" if p.crimes[-1].witnesses == 0 else "caught"))
 
 	# the journal: the village record on book pages, opening at the latest, with page turning
 	for i in 30:
