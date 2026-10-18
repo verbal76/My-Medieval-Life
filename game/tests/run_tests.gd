@@ -2849,6 +2849,169 @@ func test_long_run_economy() -> void:
 	_at_hour(w, 10.0)
 	b._guard(day, 10.0)
 	check(not day.doing.begins_with("buying"), "B7-015: a guard whose household is stocked stays on the rounds")
+	# B7-016: firewood can be bought from a woodcutter with logs in hand, when no trader has any
+	var buyer: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == "miner":
+			buyer = o
+			break
+	for o: NPC in w.npcs:
+		if o.alive and (o.job == "carpenter" or b.buy_role(o) == "merchant_raw"):
+			o.inv.remove("log", o.inv.count("log"))
+	var cutter: NPC = w.npcs.filter(func(o): return o.alive and o.job == "woodcutter")[0]
+	cutter.inv.add("log", 3)
+	for o: NPC in w.npcs:
+		o.anim = "idle"
+	var seller: NPC = b._seller_of("log", buyer)
+	check(seller == cutter, "B7-016: with no trader holding logs a household buys firewood from a woodcutter")
+	var carp: NPC = w.npcs.filter(func(o): return o.alive and o.job == "carpenter")[0]
+	carp.inv.add("log", 2)
+	check(b._seller_of("log", buyer) == carp, "B7-016: and from a trader first when one has them")
+	check(b._seller_of("axe", buyer) == null, "B7-016: a woodcutter sells no axe")
+	# B7-016: the smith sells its tools on to the goods merchant, who retails them
+	var smith: NPC = w.npcs.filter(func(o): return o.alive and o.job == "smith")[0]
+	var gm: NPC = w.npcs.filter(func(o): return o.alive and b.buy_role(o) == "merchant_goods")[0]
+	for id in ["iron_ore", "coal", "copper_ore"]:
+		smith.inv.remove(id, smith.inv.count(id))
+	smith.inv.remove("axe", smith.inv.count("axe"))
+	smith.inv.add("axe", 3)
+	gm.inv.remove("axe", gm.inv.count("axe"))
+	gm.coins = 120
+	smith.plan.clear()
+	b._smith(smith)
+	check(smith.doing.begins_with("taking axe to") and smith.plan.size() > 0, "B7-016: a smith with spare tools takes them to the goods merchant (%s)" % smith.doing)
+	var coins_all := w.total_coins()
+	var sc := smith.coins
+	var sold: bool = b.act(smith, "sell_to", {"buyer": gm.id, "item": "axe"})
+	check(sold and gm.inv.count("axe") > 0 and smith.coins > sc and smith.coins - sc == 120 - gm.coins and w.total_coins() == coins_all, "B7-016: the merchant pays the smith for them, coins moved and none made")
+	# a woodcutter without an axe buys from the merchant before the smith
+	var wc: NPC = w.npcs.filter(func(o): return o.alive and o.job == "woodcutter")[1]
+	wc.inv.remove("axe", wc.inv.count("axe"))
+	wc.coins = 200
+	smith.inv.add("axe", 1)
+	wc.plan.clear()
+	b._get_tool(wc, "axe")
+	var step: Dictionary = wc.plan.filter(func(s): return s.k == "do")[0]
+	check(int(step.args.vendor) == gm.id and wc.doing == "buying a new axe", "B7-016: a woodcutter without an axe buys it from the goods merchant first")
+	w.dispose()
+	test_caravan_purse()
+
+
+## B7-014: the caravan is a finite regional market. It holds a purse (`caravan_float` at the start, plus
+## `caravan_allowance` a day up to the float, plus what the village pays it for ore and stone) and never
+## pays out a coin it does not hold.
+func test_caravan_purse() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	w.player.pos = FAR_GUARDS
+	var float_coins := int(GameData.b("caravan_float"))
+	# what one visit adds to the purse: the allowance for the days between visits, less as the village's coins near the ceiling
+	var visit := func() -> int:
+		var ceiling := float(GameData.b("caravan_ceiling_per_head")) * float(w.alive_count() - w.alive_count("bandit"))
+		return roundi(float(GameData.b("caravan_allowance")) * int(GameData.b("caravan_every_days")) * clampf(1.0 - float(w.total_coins()) / ceiling, 0.0, 1.0))
+	var smiths: Array = w.npcs.filter(func(o): return o.alive and o.job == "smith")
+	var base := w.total_coins() - w.coin_sources
+	check(w.caravan_purse == float_coins, "B7-014: a new world's caravan holds its float (%d)" % float_coins)
+	# surplus to sell: every smith holds 12 iron bars (cap 8, so 8 for sale at 11 coins each)
+	var stock := func() -> void:
+		for s: NPC in smiths:
+			s.inv.add("iron_bar", 12 - s.inv.count("iron_bar"))
+	stock.call()
+	var coins0 := w.total_coins()
+	b.caravan()
+	var paid := w.total_coins() - coins0
+	check(paid > 0 and paid <= int(GameData.b("caravan_coins")) and w.caravan_purse == float_coins - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins) out of its purse" % paid)
+	check(w.total_coins() - w.coin_sources == base, "B7-014: coins are conserved")
+	# an empty purse buys nothing; the allowance refills it a little each visit
+	w.caravan_purse = 0
+	stock.call()
+	var exp0 := int(w.stats.get("exported_iron_bar", 0))
+	var src0 := w.coin_sources
+	var added: int = visit.call()
+	b.caravan()
+	var each := maxi(1, roundi(GameData.value("iron_bar") * 0.8))
+	var bought := int(w.stats.get("exported_iron_bar", 0)) - exp0
+	check(added > 0 and bought == added / each and w.coin_sources - src0 == bought * each and w.caravan_purse == added - bought * each, "B7-014: with an empty purse it buys only what one visit's allowance (%d) pays for (%d bars)" % [added, bought])
+	# at the ceiling the region adds nothing: the village's coins cannot pass it
+	w.caravan_purse = 0
+	w.treasury += int(GameData.b("caravan_ceiling_per_head")) * 100
+	stock.call()
+	exp0 = int(w.stats.get("exported_iron_bar", 0))
+	b.caravan()
+	check(int(visit.call()) == 0 and w.caravan_purse == 0 and int(w.stats.get("exported_iron_bar", 0)) == exp0, "B7-014: at the ceiling the caravan adds nothing to its purse and buys nothing")
+	w.treasury -= int(GameData.b("caravan_ceiling_per_head")) * 100
+	# the allowance fills the purse no higher than the float
+	w.caravan_purse = float_coins - 1
+	for s: NPC in smiths:
+		s.inv.remove("iron_bar", s.inv.count("iron_bar"))
+	b.caravan()
+	check(w.caravan_purse == float_coins, "B7-014: the purse never fills past the float")
+	# a purse for two bars is shared by two smiths, not given to the first
+	added = visit.call()
+	w.caravan_purse = 2 * each - added
+	stock.call()
+	b.caravan()
+	var sold := smiths.map(func(s): return 12 - s.inv.count("iron_bar"))
+	check(smiths.size() >= 2 and sold.all(func(n): return n <= 1) and sold.reduce(func(a, c): return a + c, 0) == 2, "B7-014: a purse for two bars is shared by two smiths (%s)" % str(sold))
+	# what it sells the village comes back to its purse first
+	for d in w.deposits:
+		d.amount = 0
+	for s: NPC in smiths:
+		s.inv.remove("iron_ore", s.inv.count("iron_ore"))
+		s.coins = 120
+	w.caravan_purse = 0
+	stock.call()
+	var cs0 := w.coin_sources
+	var all1 := w.total_coins() - w.coin_sources
+	var out0 := int(w.stats.get("caravan_coins_out", 0))
+	var in0 := int(w.stats.get("caravan_coins_in", 0))
+	added = visit.call()
+	b.caravan()
+	var spent: int = int(w.stats.get("caravan_coins_out", 0)) - out0
+	var got: int = int(w.stats.get("caravan_coins_in", 0)) - in0
+	check(spent > 0 and got <= spent + added and w.coin_sources - cs0 == got - spent and w.total_coins() - w.coin_sources == all1, "B7-014: imports (%d coins) refill the purse and pay for the smiths' bars first (%d); conserved" % [spent, got])
+	check(w.caravan_purse == spent + added - got, "B7-014: the purse is what it took in and was allowed, less what it paid")
+	# saving: the purse is kept, and an older save's caravan arrives with its float
+	w.caravan_purse = 321
+	var saved: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	check(int(saved.save_version) == World.SAVE_VERSION and World.SAVE_VERSION >= 9 and int(saved.caravan_purse) == 321, "B7-014: the purse is saved (save_version %d)" % World.SAVE_VERSION)
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), saved)
+	check(w2.caravan_purse == 321 and w2.total_coins() == w.total_coins(), "B7-014: and loaded, no coin changed")
+	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	old.save_version = 8
+	old.erase("caravan_purse")
+	var w8 := World.new()
+	w8.load_dict(VillageMap.load_default(), old)
+	check(w8.caravan_purse == float_coins and w8.total_coins() == w.total_coins(), "B7-014: a version 8 save's caravan arrives with its float; every village coin kept")
+	w2.dispose()
+	w8.dispose()
+	w.dispose()
+	test_manor_job_reserve()
+
+
+## B7-009: a new village's treasury (270) is under ten days of obligations (460) but over three days
+## (138) and a wage: paid work exists from day 0, and the 3-day reserve is still kept.
+func test_manor_job_reserve() -> void:
+	var w := new_world()
+	var mw: ManorWork = w.manor_work
+	var days := float(GameData.b("manor_job_reserve_days"))
+	var due: float = w.brain.daily_obligations()
+	check(w.treasury < due * float(GameData.b("treasury_reserve_days")) and w.treasury > due * days, "B7-009: the starting treasury (%d) is under the ten-day reserve and over the job reserve (%d)" % [w.treasury, roundi(due * days)])
+	# the manor buys repairs and grain in its evening business; the board then has work to carry
+	w.brain.reeve_day()
+	var jobs: Array = mw.open_for("player")
+	check(not jobs.is_empty(), "B7-009: on day 0 the board has paid work for the player (%d jobs)" % jobs.size())
+	if not jobs.is_empty():
+		var j: Dictionary = jobs[0]
+		var t0 := w.treasury
+		check(mw.take(j, "player") and w.treasury == t0 - int(j.wage), "B7-009: and takes it: the wage (%d) is set aside from the treasury" % int(j.wage))
+	# the line is the reserve after the wage, exactly
+	var probe := {"wage": 6}
+	w.treasury = int(ceil(due * days)) + 6
+	check(mw.can_fund(probe, "player"), "B7-009: a wage is funded when the treasury keeps three days of obligations after it")
+	w.treasury = int(ceil(due * days)) + 5
+	check(not mw.can_fund(probe, "player"), "B7-009: and not one coin under")
 	w.dispose()
 
 

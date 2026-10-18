@@ -1,0 +1,10753 @@
+{
+ "format": "economy-sim/1",
+ "seed": 3,
+ "days": 365,
+ "every": 30,
+ "step": 0.5,
+ "seconds": 1707.837,
+ "start": {
+  "coins": {
+   "villagers": 2498,
+   "bandits": 51,
+   "dead": 0,
+   "player": 20,
+   "treasury": 270,
+   "loot": 0,
+   "quest_reserves": 0,
+   "manor_wages_reserved": 0,
+   "total": 2839
+  },
+  "goods": {
+   "wheat": 723,
+   "meat": 13,
+   "log": 36,
+   "iron_sword": 8,
+   "leather_armor": 6,
+   "hammer": 2,
+   "iron_bar": 8,
+   "coal": 16,
+   "iron_ore": 16,
+   "plank": 28,
+   "pickaxe": 15,
+   "axe": 10,
+   "leather": 10,
+   "hide": 4,
+   "copper_sword": 8,
+   "pottage": 108,
+   "roast_meat": 8,
+   "ale": 24,
+   "stone": 24,
+   "rusty_sword": 1,
+   "rusty_pickaxe": 1,
+   "bread": 1,
+   "rotten_apple": 1,
+   "plain_clothes": 1
+  },
+  "deposits": [
+   60,
+   50,
+   80,
+   60,
+   30,
+   50,
+   60,
+   80,
+   60,
+   50,
+   80,
+   60,
+   30,
+   50
+  ],
+  "animals": {
+   "chicken": 4,
+   "cow": 3,
+   "pig": 3,
+   "sheep": 3,
+   "boar": 10,
+   "rabbit": 10
+  },
+  "alive": 100,
+  "households": 24
+ },
+ "samples": [
+  {
+   "day": 0,
+   "clock": "Day 1  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 6
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 10,
+     "merchant": 6,
+     "smith": 2,
+     "miner": 8,
+     "woodcutter": 6,
+     "hunter": 4,
+     "laborer": 3,
+     "tanner": 2,
+     "carpenter": 2
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 0,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 1400,
+     "markets": 2400,
+     "households": 6880,
+     "granary": 7540,
+     "troughs": 1280,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 3.02,
+    "game_food_days": 99.0,
+    "day_need_points": 6451,
+    "granary_wheat": 377,
+    "famine": false,
+    "made": {},
+    "eaten_points": 0,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 79.5,
+    "min_hunger_since_last": 100.0,
+    "missed_meal_no_money": 0,
+    "missed_meal_no_food_for_sale": 0,
+    "relief_grain": 0,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 0
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 30,
+     "median": 78,
+     "max": 420,
+     "total": 2498
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 240,
+      "min": 120,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "cook": {
+      "n": 3,
+      "coins": 180,
+      "min": 60,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 240,
+      "min": 120,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "smith": {
+      "n": 2,
+      "coins": 240,
+      "min": 120,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 240,
+      "min": 120,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 240,
+      "min": 120,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 2,
+      "coins": 120,
+      "min": 60,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 120,
+      "min": 60,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     }
+    },
+    "treasury": 270,
+    "merchant_funds": 720,
+    "gov": {}
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 8,
+      "coal": 8,
+      "log": 24,
+      "plank": 16,
+      "iron_bar": 8,
+      "wheat": 70,
+      "meat": 13,
+      "hide": 4,
+      "leather": 6,
+      "pickaxe": 13,
+      "axe": 8,
+      "hammer": 2
+     },
+     "markets": {
+      "iron_ore": 8,
+      "coal": 8,
+      "stone": 24,
+      "log": 12,
+      "plank": 12,
+      "wheat": 12,
+      "leather": 4,
+      "pottage": 36,
+      "roast_meat": 8,
+      "ale": 24,
+      "pickaxe": 2,
+      "axe": 2
+     },
+     "households": {
+      "wheat": 200,
+      "pottage": 72
+     },
+     "granary": {
+      "wheat": 377
+     },
+     "troughs": {
+      "wheat": 64
+     },
+     "sites": {},
+     "player": {},
+     "loot": {},
+     "manor_work": {}
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 16,
+      "roast_meat": 8,
+      "ale": 9
+     },
+     "cook": {
+      "wheat": 30,
+      "meat": 9,
+      "log": 12
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "wheat": 40
+     },
+     "merchant": {
+      "iron_ore": 8,
+      "coal": 8,
+      "stone": 24,
+      "log": 12,
+      "plank": 12,
+      "pottage": 12,
+      "wheat": 12,
+      "ale": 8,
+      "pickaxe": 2,
+      "axe": 2,
+      "leather": 4
+     },
+     "smith": {
+      "hammer": 2,
+      "iron_bar": 8,
+      "coal": 8,
+      "iron_ore": 8,
+      "plank": 4,
+      "pickaxe": 2,
+      "axe": 2,
+      "leather": 2
+     },
+     "miner": {
+      "pickaxe": 8
+     },
+     "woodcutter": {
+      "axe": 6
+     },
+     "hunter": {
+      "meat": 4
+     },
+     "laborer": {
+      "pickaxe": 3
+     },
+     "tanner": {
+      "hide": 4,
+      "leather": 4
+     },
+     "carpenter": {
+      "log": 12,
+      "plank": 12
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 300,
+     "coal": 200,
+     "stone": 240,
+     "copper_ore": 60
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      60
+     ],
+     [
+      "coal",
+      50
+     ],
+     [
+      "stone",
+      80
+     ],
+     [
+      "iron_ore",
+      60
+     ],
+     [
+      "copper_ore",
+      30
+     ],
+     [
+      "coal",
+      50
+     ],
+     [
+      "iron_ore",
+      60
+     ],
+     [
+      "stone",
+      80
+     ],
+     [
+      "iron_ore",
+      60
+     ],
+     [
+      "coal",
+      50
+     ],
+     [
+      "stone",
+      80
+     ],
+     [
+      "iron_ore",
+      60
+     ],
+     [
+      "copper_ore",
+      30
+     ],
+     [
+      "coal",
+      50
+     ]
+    ],
+    "deposits_exhausted": 0,
+    "trees": {
+     "grown": 305
+    },
+    "mined": {},
+    "felled_trees": 0,
+    "felled_logs": 0,
+    "burned_logs": 0,
+    "broke": {}
+   },
+   "wildlife": {
+    "species": {
+     "chicken": {
+      "wild": 0,
+      "penned": 4,
+      "adult": 4,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 3,
+      "adult": 3,
+      "young": 0
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 3,
+      "adult": 3,
+      "young": 0
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 3,
+      "adult": 3,
+      "young": 0
+     },
+     "boar": {
+      "wild": 10,
+      "penned": 0,
+      "adult": 10,
+      "young": 0
+     },
+     "rabbit": {
+      "wild": 10,
+      "penned": 0,
+      "adult": 10,
+      "young": 0
+     }
+    },
+    "hunted": {},
+    "slaughtered": {},
+    "poached": {},
+    "starved": {},
+    "born": {}
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {},
+    "taken": 0,
+    "done": 0,
+    "done_by_kind": {
+     "haul": 0,
+     "quarry": 0,
+     "mend": 0
+    },
+    "wages": 0,
+    "lots": 0,
+    "lot_goods": {},
+    "yard": 0,
+    "mended": 0
+   },
+   "trade": {
+    "caravans": 0,
+    "exported": {},
+    "imported": {},
+    "coins_in": 0,
+    "coins_out": 0,
+    "coin_sources": 0
+   },
+   "currency": {
+    "holders": {
+     "villagers": 2498,
+     "bandits": 51,
+     "dead": 0,
+     "player": 20,
+     "treasury": 270,
+     "loot": 0,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 2839
+    },
+    "total": 2839,
+    "world_total_coins": 2839,
+    "start_total": 2839,
+    "external_in": 0,
+    "external_out": 0,
+    "leak": 0,
+    "coin_sources_delta": 0,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 24
+     },
+     "axe": {
+      "start": 10,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 10
+     },
+     "coal": {
+      "start": 16,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 16
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 4
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 8
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 16
+     },
+     "leather": {
+      "start": 10,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 10
+     },
+     "log": {
+      "start": 36,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 36
+     },
+     "meat": {
+      "start": 13,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 13
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 15
+     },
+     "plank": {
+      "start": 28,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 28
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 108
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 8
+     },
+     "stone": {
+      "start": 24,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 24
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 723
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 0,
+    "no_firewood_nights": 0,
+    "caravans": 0,
+    "tools_broke": 0
+   }
+  },
+  {
+   "day": 30,
+   "clock": "Day 31  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 6
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 2,
+     "miner": 7,
+     "woodcutter": 6,
+     "hunter": 3,
+     "laborer": 3,
+     "carpenter": 2,
+     "tanner": 1,
+     "manor_hand": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 0,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 34300,
+     "markets": 8480,
+     "households": 3920,
+     "granary": 7540,
+     "troughs": 3680,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 8.98,
+    "game_food_days": 8.41,
+    "day_need_points": 6451,
+    "granary_wheat": 377,
+    "famine": false,
+    "made": {
+     "wheat": 4680,
+     "pottage": 4650,
+     "roast_meat": 322,
+     "ale": 16,
+     "meat": 405
+    },
+    "eaten_points": 195580,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 68.7,
+    "min_hunger_since_last": 27.0,
+    "missed_meal_no_money": 0,
+    "missed_meal_no_food_for_sale": 0,
+    "relief_grain": 0,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 3
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 37,
+     "median": 166,
+     "max": 415,
+     "total": 4093
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 86,
+      "min": 11,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "cook": {
+      "n": 3,
+      "coins": 105,
+      "min": 10,
+      "below_price": 0,
+      "below_floor": 2,
+      "zero": 0
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 399,
+      "min": 81,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "smith": {
+      "n": 2,
+      "coins": 272,
+      "min": 126,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 269,
+      "min": 122,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 13,
+      "min": 1,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 345,
+      "min": 160,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 595,
+    "merchant_funds": 681,
+    "gov": {
+     "tax": 2521,
+     "wages": 1768,
+     "repairs": 428
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 8,
+      "copper_ore": 12,
+      "coal": 8,
+      "stone": 28,
+      "log": 126,
+      "plank": 77,
+      "iron_bar": 18,
+      "copper_bar": 7,
+      "wheat": 1661,
+      "meat": 205,
+      "hide": 41,
+      "leather": 16,
+      "pottage": 21,
+      "roast_meat": 2,
+      "ale": 12,
+      "pickaxe": 16,
+      "axe": 11,
+      "hammer": 2
+     },
+     "markets": {
+      "iron_ore": 40,
+      "copper_ore": 14,
+      "coal": 20,
+      "stone": 80,
+      "log": 28,
+      "plank": 26,
+      "wheat": 22,
+      "meat": 20,
+      "hide": 8,
+      "leather": 7,
+      "pottage": 137,
+      "roast_meat": 40,
+      "ale": 16,
+      "pickaxe": 2,
+      "axe": 2
+     },
+     "households": {
+      "log": 15,
+      "wheat": 62,
+      "pottage": 67
+     },
+     "granary": {
+      "wheat": 377
+     },
+     "troughs": {
+      "wheat": 184
+     },
+     "sites": {},
+     "player": {},
+     "loot": {},
+     "manor_work": {
+      "plank": 40
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 89,
+      "roast_meat": 19,
+      "ale": 4
+     },
+     "cook": {
+      "wheat": 166,
+      "ale": 12,
+      "log": 22,
+      "pottage": 21,
+      "meat": 14,
+      "roast_meat": 2
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "meat": 175,
+      "wheat": 1495,
+      "hide": 36,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 40,
+      "coal": 20,
+      "stone": 80,
+      "plank": 26,
+      "copper_ore": 14,
+      "log": 28,
+      "pottage": 40,
+      "ale": 8,
+      "meat": 20,
+      "wheat": 22,
+      "roast_meat": 18,
+      "pickaxe": 2,
+      "axe": 2,
+      "leather": 7,
+      "hide": 8
+     },
+     "smith": {
+      "hammer": 2,
+      "plank": 19,
+      "pickaxe": 5,
+      "axe": 5,
+      "iron_bar": 18,
+      "leather": 3,
+      "copper_bar": 7,
+      "copper_ore": 12,
+      "iron_ore": 8,
+      "coal": 8
+     },
+     "miner": {
+      "pickaxe": 7,
+      "stone": 18
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 44
+     },
+     "hunter": {
+      "meat": 16,
+      "hide": 5
+     },
+     "laborer": {
+      "pickaxe": 3,
+      "stone": 10
+     },
+     "carpenter": {
+      "log": 60,
+      "plank": 58
+     },
+     "tanner": {
+      "leather": 4
+     },
+     "manor_hand": {
+      "pickaxe": 1
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 253,
+     "stump": 34,
+     "sapling": 18
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 351,
+    "felled_logs": 1404,
+    "burned_logs": 720,
+    "broke": {
+     "axe": 6
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 20,
+      "penned": 0,
+      "adult": 12,
+      "young": 8
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 4,
+      "young": 2
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 3,
+      "young": 5
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     }
+    },
+    "hunted": {
+     "boar": 30,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 8,
+     "pig": 24,
+     "sheep": 17,
+     "chicken": 52
+    },
+    "poached": {
+     "boar": 4
+    },
+    "starved": {},
+    "born": {
+     "cow": 11,
+     "pig": 29,
+     "sheep": 20,
+     "chicken": 60,
+     "boar": 44,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "quarry_open": 1,
+     "mend_open": 6,
+     "haul_open": 3
+    },
+    "taken": 170,
+    "done": 167,
+    "done_by_kind": {
+     "haul": 70,
+     "quarry": 0,
+     "mend": 97
+    },
+    "wages": 274,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 40
+    },
+    "yard": 24,
+    "mended": 97
+   },
+   "trade": {
+    "caravans": 15,
+    "exported": {
+     "coal": 76,
+     "log": 73,
+     "plank": 74,
+     "stone": 156,
+     "iron_bar": 38,
+     "copper_sword": 12,
+     "iron_ore": 56,
+     "meat": 16,
+     "pottage": 66,
+     "wheat": 70,
+     "axe": 13,
+     "pickaxe": 15,
+     "copper_bar": 4,
+     "leather": 4,
+     "copper_ore": 13,
+     "roast_meat": 9,
+     "iron_sword": 9,
+     "hide": 2
+    },
+    "imported": {
+     "copper_ore": 69,
+     "coal": 104,
+     "iron_ore": 130
+    },
+    "coins_in": 2959,
+    "coins_out": 1039,
+    "coin_sources": 1920
+   },
+   "currency": {
+    "holders": {
+     "villagers": 4093,
+     "bandits": 51,
+     "dead": 0,
+     "player": 20,
+     "treasury": 595,
+     "loot": 0,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 4759
+    },
+    "total": 4759,
+    "world_total_coins": 4759,
+    "start_total": 2839,
+    "external_in": 2959,
+    "external_out": 1039,
+    "leak": 0,
+    "coin_sources_delta": 1920,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 12,
+      "exported": 0,
+      "end": 28
+     },
+     "axe": {
+      "start": 10,
+      "produced": 22,
+      "imported": 0,
+      "consumed": 6,
+      "exported": 13,
+      "end": 13
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 104,
+      "consumed": 216,
+      "exported": 76,
+      "end": 28
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 45,
+      "imported": 0,
+      "consumed": 34,
+      "exported": 4,
+      "end": 7
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 69,
+      "consumed": 90,
+      "exported": 13,
+      "end": 26
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 83,
+      "imported": 0,
+      "consumed": 36,
+      "exported": 2,
+      "end": 49
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 171,
+      "imported": 0,
+      "consumed": 123,
+      "exported": 38,
+      "end": 18
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 130,
+      "consumed": 342,
+      "exported": 56,
+      "end": 48
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 15,
+      "exported": 4,
+      "end": 23
+     },
+     "log": {
+      "start": 36,
+      "produced": 1404,
+      "imported": 0,
+      "consumed": 1198,
+      "exported": 73,
+      "end": 169
+     },
+     "meat": {
+      "start": 13,
+      "produced": 405,
+      "imported": 0,
+      "consumed": 177,
+      "exported": 16,
+      "end": 225
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 18,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 15,
+      "end": 18
+     },
+     "plank": {
+      "start": 28,
+      "produced": 634,
+      "imported": 0,
+      "consumed": 445,
+      "exported": 74,
+      "end": 143
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 4650,
+      "imported": 0,
+      "consumed": 4467,
+      "exported": 66,
+      "end": 225
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 322,
+      "imported": 0,
+      "consumed": 279,
+      "exported": 9,
+      "end": 42
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 156,
+      "end": 108
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 4680,
+      "imported": 0,
+      "consumed": 3027,
+      "exported": 70,
+      "end": 2306
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 0,
+    "caravans": 15,
+    "tools_broke": 6
+   }
+  },
+  {
+   "day": 60,
+   "clock": "Day 61  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 6
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 2,
+     "miner": 6,
+     "woodcutter": 5,
+     "hunter": 3,
+     "laborer": 3,
+     "carpenter": 2,
+     "manor_hand": 3,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 0,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 64780,
+     "markets": 7480,
+     "households": 3920,
+     "granary": 7520,
+     "troughs": 4060,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 13.6,
+    "game_food_days": 12.98,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 9300,
+     "pottage": 9078,
+     "roast_meat": 646,
+     "ale": 16,
+     "meat": 720
+    },
+    "eaten_points": 392660,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 69.7,
+    "min_hunger_since_last": 24.9,
+    "missed_meal_no_money": 0,
+    "missed_meal_no_food_for_sale": 1,
+    "relief_grain": 8,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 5
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 8,
+     "median": 188,
+     "max": 506,
+     "total": 4411
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 85,
+      "min": 1,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "cook": {
+      "n": 3,
+      "coins": 122,
+      "min": 2,
+      "below_price": 0,
+      "below_floor": 2,
+      "zero": 0
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 319,
+      "min": 2,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "smith": {
+      "n": 2,
+      "coins": 303,
+      "min": 111,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 372,
+      "min": 182,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 5,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 344,
+      "min": 158,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 727,
+    "merchant_funds": 696,
+    "gov": {
+     "tax": 5210,
+     "wages": 3698,
+     "repairs": 1048,
+     "procurement": 7
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 12,
+      "copper_ore": 8,
+      "coal": 8,
+      "stone": 28,
+      "log": 122,
+      "plank": 76,
+      "iron_bar": 12,
+      "copper_bar": 9,
+      "wheat": 3175,
+      "meat": 335,
+      "hide": 99,
+      "leather": 13,
+      "pottage": 23,
+      "roast_meat": 4,
+      "ale": 12,
+      "pickaxe": 15,
+      "axe": 9,
+      "hammer": 2
+     },
+     "markets": {
+      "iron_ore": 35,
+      "copper_ore": 14,
+      "coal": 20,
+      "stone": 80,
+      "log": 27,
+      "plank": 12,
+      "wheat": 26,
+      "meat": 20,
+      "hide": 6,
+      "leather": 5,
+      "pottage": 106,
+      "roast_meat": 44,
+      "ale": 8,
+      "pickaxe": 2,
+      "axe": 2
+     },
+     "households": {
+      "log": 16,
+      "wheat": 72,
+      "pottage": 62
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 203
+     },
+     "sites": {},
+     "player": {},
+     "loot": {},
+     "manor_work": {
+      "plank": 36
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 60,
+      "roast_meat": 19
+     },
+     "cook": {
+      "wheat": 124,
+      "ale": 12,
+      "log": 22,
+      "pottage": 23,
+      "meat": 14,
+      "roast_meat": 4
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "meat": 321,
+      "wheat": 3051,
+      "hide": 93,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 35,
+      "coal": 20,
+      "stone": 80,
+      "plank": 12,
+      "copper_ore": 14,
+      "log": 27,
+      "pottage": 40,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 16,
+      "wheat": 26,
+      "pickaxe": 2,
+      "axe": 2,
+      "leather": 5,
+      "hide": 6
+     },
+     "smith": {
+      "hammer": 2,
+      "plank": 19,
+      "pickaxe": 4,
+      "iron_bar": 12,
+      "copper_bar": 9,
+      "copper_ore": 8,
+      "axe": 5,
+      "iron_ore": 12,
+      "coal": 8
+     },
+     "miner": {
+      "pickaxe": 6,
+      "stone": 16
+     },
+     "woodcutter": {
+      "log": 44,
+      "axe": 4
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "laborer": {
+      "pickaxe": 3,
+      "stone": 10
+     },
+     "carpenter": {
+      "log": 56,
+      "plank": 57
+     },
+     "manor_hand": {
+      "pickaxe": 2,
+      "stone": 2
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 249,
+     "stump": 40,
+     "sapling": 16
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 660,
+    "felled_logs": 2640,
+    "burned_logs": 1440,
+    "broke": {
+     "axe": 15
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 5,
+      "young": 1
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 5,
+      "young": 3
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 31,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 20,
+     "pig": 52,
+     "sheep": 34,
+     "chicken": 112
+    },
+    "poached": {
+     "boar": 8
+    },
+    "starved": {},
+    "born": {
+     "cow": 23,
+     "pig": 57,
+     "sheep": 37,
+     "chicken": 120,
+     "boar": 57,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "quarry_open": 1,
+     "mend_open": 3,
+     "haul_open": 4
+    },
+    "taken": 451,
+    "done": 434,
+    "done_by_kind": {
+     "haul": 181,
+     "quarry": 0,
+     "mend": 253
+    },
+    "wages": 536,
+    "lots": 3,
+    "lot_goods": {
+     "plank": 36
+    },
+    "yard": 12,
+    "mended": 253
+   },
+   "trade": {
+    "caravans": 30,
+    "exported": {
+     "coal": 76,
+     "log": 81,
+     "plank": 80,
+     "stone": 156,
+     "iron_bar": 85,
+     "copper_sword": 41,
+     "iron_ore": 61,
+     "meat": 23,
+     "pottage": 71,
+     "wheat": 78,
+     "axe": 41,
+     "pickaxe": 42,
+     "copper_bar": 11,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 16,
+     "iron_sword": 12,
+     "hide": 4
+    },
+    "imported": {
+     "copper_ore": 195,
+     "coal": 341,
+     "iron_ore": 478
+    },
+    "coins_in": 5890,
+    "coins_out": 3520,
+    "coin_sources": 2370
+   },
+   "currency": {
+    "holders": {
+     "villagers": 4411,
+     "bandits": 51,
+     "dead": 0,
+     "player": 20,
+     "treasury": 727,
+     "loot": 0,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 5209
+    },
+    "total": 5209,
+    "world_total_coins": 5209,
+    "start_total": 2839,
+    "external_in": 5890,
+    "external_out": 3520,
+    "leak": 0,
+    "coin_sources_delta": 2370,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 20,
+      "exported": 0,
+      "end": 20
+     },
+     "axe": {
+      "start": 10,
+      "produced": 57,
+      "imported": 0,
+      "consumed": 15,
+      "exported": 41,
+      "end": 11
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 341,
+      "consumed": 453,
+      "exported": 76,
+      "end": 28
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 110,
+      "imported": 0,
+      "consumed": 90,
+      "exported": 11,
+      "end": 9
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 195,
+      "consumed": 220,
+      "exported": 13,
+      "end": 22
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 145,
+      "imported": 0,
+      "consumed": 40,
+      "exported": 4,
+      "end": 105
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 343,
+      "imported": 0,
+      "consumed": 254,
+      "exported": 85,
+      "end": 12
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 478,
+      "consumed": 686,
+      "exported": 61,
+      "end": 47
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 18,
+      "exported": 6,
+      "end": 18
+     },
+     "log": {
+      "start": 36,
+      "produced": 2640,
+      "imported": 0,
+      "consumed": 2430,
+      "exported": 81,
+      "end": 165
+     },
+     "meat": {
+      "start": 13,
+      "produced": 720,
+      "imported": 0,
+      "consumed": 355,
+      "exported": 23,
+      "end": 355
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 44,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 42,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 1334,
+      "imported": 0,
+      "consumed": 1158,
+      "exported": 80,
+      "end": 124
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 9078,
+      "imported": 0,
+      "consumed": 8924,
+      "exported": 71,
+      "end": 191
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 646,
+      "imported": 0,
+      "consumed": 590,
+      "exported": 16,
+      "end": 48
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 156,
+      "end": 108
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 9300,
+      "imported": 0,
+      "consumed": 6093,
+      "exported": 78,
+      "end": 3852
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 0,
+    "caravans": 30,
+    "tools_broke": 15
+   }
+  },
+  {
+   "day": 90,
+   "clock": "Day 91  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 6
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 2,
+     "miner": 6,
+     "woodcutter": 5,
+     "hunter": 3,
+     "laborer": 3,
+     "carpenter": 2,
+     "manor_hand": 3,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 0,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 93340,
+     "markets": 7740,
+     "households": 3200,
+     "granary": 7440,
+     "troughs": 3080,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 160
+    },
+    "days_of_need": 17.82,
+    "game_food_days": 17.35,
+    "day_need_points": 6451,
+    "granary_wheat": 372,
+    "famine": false,
+    "made": {
+     "wheat": 13740,
+     "pottage": 13506,
+     "roast_meat": 998,
+     "ale": 16,
+     "meat": 1029
+    },
+    "eaten_points": 589780,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 69.2,
+    "min_hunger_since_last": 27.0,
+    "missed_meal_no_money": 5,
+    "missed_meal_no_food_for_sale": 3,
+    "relief_grain": 38,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 5
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 6,
+     "median": 219,
+     "max": 495,
+     "total": 4729
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 117,
+      "min": 1,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "cook": {
+      "n": 3,
+      "coins": 130,
+      "min": 2,
+      "below_price": 0,
+      "below_floor": 2,
+      "zero": 0
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 230,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 2,
+      "coins": 295,
+      "min": 107,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 296,
+      "min": 135,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 3,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 490,
+      "min": 235,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 858,
+    "merchant_funds": 529,
+    "gov": {
+     "tax": 8503,
+     "wages": 5882,
+     "repairs": 1996,
+     "procurement": 37
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 9,
+      "copper_ore": 6,
+      "coal": 3,
+      "stone": 28,
+      "log": 113,
+      "plank": 47,
+      "iron_bar": 12,
+      "copper_bar": 4,
+      "wheat": 4599,
+      "meat": 454,
+      "hide": 160,
+      "leather": 13,
+      "pottage": 25,
+      "roast_meat": 4,
+      "ale": 12,
+      "pickaxe": 16,
+      "axe": 9,
+      "hammer": 2
+     },
+     "markets": {
+      "iron_ore": 24,
+      "copper_ore": 14,
+      "coal": 20,
+      "stone": 80,
+      "log": 14,
+      "plank": 26,
+      "wheat": 36,
+      "meat": 20,
+      "hide": 6,
+      "leather": 5,
+      "pottage": 106,
+      "roast_meat": 45,
+      "ale": 8,
+      "pickaxe": 2,
+      "axe": 2
+     },
+     "households": {
+      "log": 7,
+      "wheat": 60,
+      "pottage": 50
+     },
+     "granary": {
+      "wheat": 372
+     },
+     "troughs": {
+      "wheat": 154
+     },
+     "sites": {},
+     "player": {},
+     "loot": {},
+     "manor_work": {
+      "plank": 40,
+      "wheat": 8
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 60,
+      "roast_meat": 19
+     },
+     "cook": {
+      "wheat": 78,
+      "ale": 12,
+      "log": 23,
+      "pottage": 25,
+      "meat": 15,
+      "roast_meat": 4
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "meat": 439,
+      "wheat": 4521,
+      "hide": 154,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 24,
+      "coal": 20,
+      "stone": 80,
+      "plank": 26,
+      "copper_ore": 14,
+      "log": 14,
+      "pottage": 40,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 17,
+      "wheat": 36,
+      "pickaxe": 2,
+      "axe": 2,
+      "leather": 5,
+      "hide": 6
+     },
+     "smith": {
+      "hammer": 2,
+      "plank": 20,
+      "pickaxe": 5,
+      "copper_bar": 4,
+      "copper_ore": 6,
+      "axe": 4,
+      "iron_bar": 12,
+      "iron_ore": 9,
+      "coal": 3
+     },
+     "miner": {
+      "pickaxe": 6,
+      "stone": 16
+     },
+     "woodcutter": {
+      "axe": 5,
+      "log": 32
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "laborer": {
+      "pickaxe": 3,
+      "stone": 10
+     },
+     "carpenter": {
+      "log": 58,
+      "plank": 27
+     },
+     "manor_hand": {
+      "pickaxe": 2,
+      "stone": 2
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 245,
+     "stump": 42,
+     "sapling": 18
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 1006,
+    "felled_logs": 4024,
+    "burned_logs": 2159,
+    "broke": {
+     "axe": 23
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 4,
+      "young": 2
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 5,
+      "young": 3
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 5,
+      "young": 3
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 31,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 32,
+     "pig": 82,
+     "sheep": 53,
+     "chicken": 172
+    },
+    "poached": {
+     "boar": 8
+    },
+    "starved": {},
+    "born": {
+     "cow": 35,
+     "pig": 87,
+     "sheep": 58,
+     "chicken": 180,
+     "boar": 57,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_open": 7
+    },
+    "taken": 849,
+    "done": 816,
+    "done_by_kind": {
+     "haul": 327,
+     "quarry": 0,
+     "mend": 489
+    },
+    "wages": 800,
+    "lots": 5,
+    "lot_goods": {
+     "wheat": 8,
+     "plank": 40
+    },
+    "yard": 0,
+    "mended": 489
+   },
+   "trade": {
+    "caravans": 45,
+    "exported": {
+     "coal": 76,
+     "log": 86,
+     "plank": 85,
+     "stone": 156,
+     "iron_bar": 125,
+     "copper_sword": 67,
+     "iron_ore": 72,
+     "meat": 37,
+     "pottage": 87,
+     "wheat": 94,
+     "axe": 71,
+     "pickaxe": 69,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 30,
+     "iron_sword": 12,
+     "hide": 4
+    },
+    "imported": {
+     "copper_ore": 291,
+     "coal": 557,
+     "iron_ore": 819
+    },
+    "coins_in": 8639,
+    "coins_out": 5820,
+    "coin_sources": 2819
+   },
+   "currency": {
+    "holders": {
+     "villagers": 4729,
+     "bandits": 51,
+     "dead": 0,
+     "player": 20,
+     "treasury": 858,
+     "loot": 0,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 5658
+    },
+    "total": 5658,
+    "world_total_coins": 5658,
+    "start_total": 2839,
+    "external_in": 8639,
+    "external_out": 5820,
+    "leak": 0,
+    "coin_sources_delta": 2819,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 20,
+      "exported": 0,
+      "end": 20
+     },
+     "axe": {
+      "start": 10,
+      "produced": 95,
+      "imported": 0,
+      "consumed": 23,
+      "exported": 71,
+      "end": 11
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 557,
+      "consumed": 674,
+      "exported": 76,
+      "end": 23
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 159,
+      "imported": 0,
+      "consumed": 142,
+      "exported": 13,
+      "end": 4
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 291,
+      "consumed": 318,
+      "exported": 13,
+      "end": 20
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 206,
+      "imported": 0,
+      "consumed": 40,
+      "exported": 4,
+      "end": 166
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 515,
+      "imported": 0,
+      "consumed": 386,
+      "exported": 125,
+      "end": 12
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 819,
+      "consumed": 1030,
+      "exported": 72,
+      "end": 33
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 18,
+      "exported": 6,
+      "end": 18
+     },
+     "log": {
+      "start": 36,
+      "produced": 4024,
+      "imported": 0,
+      "consumed": 3840,
+      "exported": 86,
+      "end": 134
+     },
+     "meat": {
+      "start": 13,
+      "produced": 1029,
+      "imported": 0,
+      "consumed": 531,
+      "exported": 37,
+      "end": 474
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 72,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 69,
+      "end": 18
+     },
+     "plank": {
+      "start": 28,
+      "produced": 2364,
+      "imported": 0,
+      "consumed": 2194,
+      "exported": 85,
+      "end": 113
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 13506,
+      "imported": 0,
+      "consumed": 13346,
+      "exported": 87,
+      "end": 181
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 998,
+      "imported": 0,
+      "consumed": 927,
+      "exported": 30,
+      "end": 49
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 156,
+      "end": 108
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 13740,
+      "imported": 0,
+      "consumed": 9140,
+      "exported": 94,
+      "end": 5229
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 1,
+    "caravans": 45,
+    "tools_broke": 23
+   }
+  },
+  {
+   "day": 120,
+   "clock": "Day 121  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 4
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 2,
+     "manor_hand": 11,
+     "woodcutter": 6,
+     "hunter": 3,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 2,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 123020,
+     "markets": 7300,
+     "households": 3920,
+     "granary": 7520,
+     "troughs": 4160,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 22.62,
+    "game_food_days": 21.96,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 18420,
+     "pottage": 17970,
+     "roast_meat": 1332,
+     "ale": 16,
+     "meat": 1361
+    },
+    "eaten_points": 786820,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 69.2,
+    "min_hunger_since_last": 18.0,
+    "missed_meal_no_money": 19,
+    "missed_meal_no_food_for_sale": 4,
+    "relief_grain": 53,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 18
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 8,
+     "median": 196,
+     "max": 428,
+     "total": 4704
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 90,
+      "min": 1,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "cook": {
+      "n": 3,
+      "coins": 95,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 159,
+      "min": 15,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "smith": {
+      "n": 2,
+      "coins": 133,
+      "min": 15,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 257,
+      "min": 109,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 468,
+      "min": 190,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1132,
+    "merchant_funds": 417,
+    "gov": {
+     "tax": 12942,
+     "wages": 8908,
+     "repairs": 3120,
+     "procurement": 52
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 26,
+      "copper_ore": 13,
+      "coal": 22,
+      "stone": 41,
+      "log": 132,
+      "plank": 62,
+      "iron_bar": 9,
+      "copper_bar": 5,
+      "wheat": 6132,
+      "meat": 589,
+      "hide": 222,
+      "leather": 13,
+      "pottage": 4,
+      "roast_meat": 3,
+      "ale": 4,
+      "pickaxe": 12,
+      "axe": 10,
+      "hammer": 2
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 79,
+      "log": 32,
+      "plank": 23,
+      "wheat": 40,
+      "meat": 20,
+      "hide": 6,
+      "leather": 2,
+      "pottage": 93,
+      "roast_meat": 45,
+      "ale": 8,
+      "pickaxe": 4,
+      "axe": 1
+     },
+     "households": {
+      "log": 9,
+      "wheat": 64,
+      "pottage": 66
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 208
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "pickaxe": 1
+     },
+     "manor_work": {
+      "plank": 40
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 60,
+      "roast_meat": 18
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 15,
+      "pottage": 4,
+      "roast_meat": 3
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "meat": 574,
+      "wheat": 6072,
+      "hide": 213,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 79,
+      "plank": 23,
+      "copper_ore": 7,
+      "log": 32,
+      "pottage": 27,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 18,
+      "wheat": 40,
+      "pickaxe": 4,
+      "axe": 1,
+      "leather": 2,
+      "hide": 6
+     },
+     "smith": {
+      "hammer": 2,
+      "plank": 18,
+      "pickaxe": 4,
+      "copper_bar": 5,
+      "copper_ore": 6,
+      "axe": 4,
+      "iron_bar": 9,
+      "iron_ore": 16,
+      "coal": 12
+     },
+     "manor_hand": {
+      "pickaxe": 6,
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 40,
+      "plank": 6,
+      "copper_ore": 7
+     },
+     "woodcutter": {
+      "log": 50,
+      "axe": 6,
+      "hide": 3
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "carpenter": {
+      "log": 59,
+      "plank": 38
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 229,
+     "sapling": 27,
+     "stump": 49
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 1397,
+    "felled_logs": 5588,
+    "burned_logs": 2878,
+    "broke": {
+     "axe": 31
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 5,
+      "adult": 3,
+      "young": 2
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 4,
+      "young": 2
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 5,
+      "young": 3
+     }
+    },
+    "hunted": {
+     "boar": 38,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 43,
+     "pig": 112,
+     "sheep": 71,
+     "chicken": 232
+    },
+    "poached": {
+     "boar": 9
+    },
+    "starved": {},
+    "born": {
+     "cow": 45,
+     "pig": 117,
+     "sheep": 74,
+     "chicken": 240,
+     "boar": 65,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_open": 3,
+     "mend_open": 3
+    },
+    "taken": 1359,
+    "done": 1251,
+    "done_by_kind": {
+     "haul": 481,
+     "quarry": 0,
+     "mend": 770
+    },
+    "wages": 898,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 40
+    },
+    "yard": 14,
+    "mended": 770
+   },
+   "trade": {
+    "caravans": 60,
+    "exported": {
+     "coal": 76,
+     "log": 107,
+     "plank": 109,
+     "stone": 156,
+     "iron_bar": 134,
+     "copper_sword": 86,
+     "iron_ore": 76,
+     "meat": 63,
+     "pottage": 114,
+     "wheat": 117,
+     "axe": 99,
+     "pickaxe": 91,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 53,
+     "iron_sword": 15,
+     "hide": 8
+    },
+    "imported": {
+     "copper_ore": 369,
+     "coal": 734,
+     "iron_ore": 1084,
+     "stone": 12
+    },
+    "coins_in": 10939,
+    "coins_out": 7669,
+    "coin_sources": 3270
+   },
+   "currency": {
+    "holders": {
+     "villagers": 4704,
+     "bandits": 144,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1132,
+     "loot": 109,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 6109
+    },
+    "total": 6109,
+    "world_total_coins": 6109,
+    "start_total": 2839,
+    "external_in": 10939,
+    "external_out": 7669,
+    "leak": 0,
+    "coin_sources_delta": 3270,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 131,
+      "imported": 0,
+      "consumed": 31,
+      "exported": 99,
+      "end": 11
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 734,
+      "consumed": 842,
+      "exported": 76,
+      "end": 32
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 198,
+      "imported": 0,
+      "consumed": 180,
+      "exported": 13,
+      "end": 5
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 369,
+      "consumed": 396,
+      "exported": 13,
+      "end": 20
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 0,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 273,
+      "imported": 0,
+      "consumed": 41,
+      "exported": 8,
+      "end": 228
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 644,
+      "imported": 0,
+      "consumed": 509,
+      "exported": 134,
+      "end": 9
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 1084,
+      "consumed": 1288,
+      "exported": 76,
+      "end": 36
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 5588,
+      "imported": 0,
+      "consumed": 5344,
+      "exported": 107,
+      "end": 173
+     },
+     "meat": {
+      "start": 13,
+      "produced": 1361,
+      "imported": 0,
+      "consumed": 702,
+      "exported": 63,
+      "end": 609
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 93,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 91,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 3600,
+      "imported": 0,
+      "consumed": 3394,
+      "exported": 109,
+      "end": 125
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 17970,
+      "imported": 0,
+      "consumed": 17801,
+      "exported": 114,
+      "end": 163
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 1332,
+      "imported": 0,
+      "consumed": 1239,
+      "exported": 53,
+      "end": 48
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 18420,
+      "imported": 0,
+      "consumed": 12206,
+      "exported": 117,
+      "end": 6820
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 2,
+    "caravans": 60,
+    "tools_broke": 31
+   }
+  },
+  {
+   "day": 150,
+   "clock": "Day 151  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 4
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 2,
+     "manor_hand": 11,
+     "woodcutter": 6,
+     "hunter": 3,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 2,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 150100,
+     "markets": 5980,
+     "households": 4040,
+     "granary": 7520,
+     "troughs": 4220,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 26.64,
+    "game_food_days": 25.99,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 22860,
+     "pottage": 22422,
+     "roast_meat": 1672,
+     "ale": 16,
+     "meat": 1667
+    },
+    "eaten_points": 983460,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 65.7,
+    "min_hunger_since_last": 27.7,
+    "missed_meal_no_money": 21,
+    "missed_meal_no_food_for_sale": 4,
+    "relief_grain": 79,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 18
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 5,
+     "median": 207,
+     "max": 437,
+     "total": 4924
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 89,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 88,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 150,
+      "min": 1,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "smith": {
+      "n": 2,
+      "coins": 108,
+      "min": 2,
+      "below_price": 0,
+      "below_floor": 1,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 336,
+      "min": 154,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 402,
+      "min": 180,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1189,
+    "merchant_funds": 487,
+    "gov": {
+     "tax": 17611,
+     "wages": 12294,
+     "repairs": 4320,
+     "procurement": 78
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 20,
+      "copper_ore": 11,
+      "coal": 11,
+      "stone": 41,
+      "log": 125,
+      "plank": 47,
+      "iron_bar": 10,
+      "copper_bar": 4,
+      "wheat": 7486,
+      "meat": 679,
+      "hide": 282,
+      "leather": 13,
+      "pottage": 4,
+      "roast_meat": 3,
+      "ale": 4,
+      "pickaxe": 12,
+      "axe": 10,
+      "hammer": 2
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 79,
+      "log": 12,
+      "plank": 30,
+      "wheat": 16,
+      "meat": 20,
+      "hide": 6,
+      "leather": 2,
+      "pottage": 81,
+      "roast_meat": 39,
+      "ale": 8,
+      "pickaxe": 4,
+      "axe": 1
+     },
+     "households": {
+      "log": 13,
+      "wheat": 70,
+      "pottage": 66
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 211
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "pickaxe": 1
+     },
+     "manor_work": {
+      "plank": 40
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 59,
+      "roast_meat": 18
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 14,
+      "pottage": 4,
+      "roast_meat": 3
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "meat": 665,
+      "hide": 273,
+      "wheat": 7426,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 79,
+      "plank": 30,
+      "copper_ore": 7,
+      "log": 12,
+      "pottage": 16,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 12,
+      "wheat": 16,
+      "pickaxe": 4,
+      "axe": 1,
+      "leather": 2,
+      "hide": 6
+     },
+     "smith": {
+      "plank": 16,
+      "pickaxe": 4,
+      "copper_bar": 4,
+      "iron_bar": 10,
+      "hammer": 2,
+      "copper_ore": 4,
+      "axe": 4,
+      "coal": 1,
+      "iron_ore": 10
+     },
+     "manor_hand": {
+      "pickaxe": 4,
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 40,
+      "plank": 6,
+      "copper_ore": 7
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 42,
+      "hide": 3
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "carpenter": {
+      "log": 60,
+      "plank": 25
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 235,
+     "stump": 47,
+     "sapling": 23
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 1779,
+    "felled_logs": 7116,
+    "burned_logs": 3598,
+    "broke": {
+     "axe": 42,
+     "hammer": 1
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 7,
+      "adult": 4,
+      "young": 3
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 5,
+      "young": 3
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 38,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 55,
+     "pig": 142,
+     "sheep": 89,
+     "chicken": 292
+    },
+    "poached": {
+     "boar": 9
+    },
+    "starved": {},
+    "born": {
+     "cow": 58,
+     "pig": 147,
+     "sheep": 93,
+     "chicken": 300,
+     "boar": 65,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_taken": 1,
+     "haul_open": 3,
+     "mend_open": 3
+    },
+    "taken": 1947,
+    "done": 1726,
+    "done_by_kind": {
+     "haul": 656,
+     "quarry": 0,
+     "mend": 1070
+    },
+    "wages": 924,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 40
+    },
+    "yard": 14,
+    "mended": 1070
+   },
+   "trade": {
+    "caravans": 75,
+    "exported": {
+     "coal": 76,
+     "log": 128,
+     "plank": 137,
+     "stone": 156,
+     "iron_bar": 147,
+     "copper_sword": 101,
+     "iron_ore": 76,
+     "meat": 109,
+     "pottage": 121,
+     "wheat": 162,
+     "axe": 116,
+     "pickaxe": 107,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 95,
+     "iron_sword": 15,
+     "hide": 8
+    },
+    "imported": {
+     "copper_ore": 425,
+     "coal": 855,
+     "iron_ore": 1284,
+     "stone": 12
+    },
+    "coins_in": 12720,
+    "coins_out": 9000,
+    "coin_sources": 3720
+   },
+   "currency": {
+    "holders": {
+     "villagers": 4924,
+     "bandits": 317,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1189,
+     "loot": 109,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 6559
+    },
+    "total": 6559,
+    "world_total_coins": 6559,
+    "start_total": 2839,
+    "external_in": 12720,
+    "external_out": 9000,
+    "leak": 0,
+    "coin_sources_delta": 3720,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 159,
+      "imported": 0,
+      "consumed": 42,
+      "exported": 116,
+      "end": 11
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 855,
+      "consumed": 974,
+      "exported": 76,
+      "end": 21
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 227,
+      "imported": 0,
+      "consumed": 210,
+      "exported": 13,
+      "end": 4
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 425,
+      "consumed": 454,
+      "exported": 13,
+      "end": 18
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 1,
+      "imported": 0,
+      "consumed": 1,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 333,
+      "imported": 0,
+      "consumed": 41,
+      "exported": 8,
+      "end": 288
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 747,
+      "imported": 0,
+      "consumed": 598,
+      "exported": 147,
+      "end": 10
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 1284,
+      "consumed": 1494,
+      "exported": 76,
+      "end": 30
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 7116,
+      "imported": 0,
+      "consumed": 6874,
+      "exported": 128,
+      "end": 150
+     },
+     "meat": {
+      "start": 13,
+      "produced": 1667,
+      "imported": 0,
+      "consumed": 872,
+      "exported": 109,
+      "end": 699
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 109,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 107,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 4880,
+      "imported": 0,
+      "consumed": 4654,
+      "exported": 137,
+      "end": 117
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 22422,
+      "imported": 0,
+      "consumed": 22258,
+      "exported": 121,
+      "end": 151
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 1672,
+      "imported": 0,
+      "consumed": 1543,
+      "exported": 95,
+      "end": 42
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 22860,
+      "imported": 0,
+      "consumed": 15262,
+      "exported": 162,
+      "end": 8159
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 2,
+    "caravans": 75,
+    "tools_broke": 42
+   }
+  },
+  {
+   "day": 180,
+   "clock": "Day 181  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 4
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "manor_hand": 11,
+     "woodcutter": 7,
+     "hunter": 3,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 2,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 179800,
+     "markets": 6280,
+     "households": 3960,
+     "granary": 7520,
+     "troughs": 3980,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 31.24,
+    "game_food_days": 30.63,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 27480,
+     "pottage": 26898,
+     "roast_meat": 2002,
+     "ale": 16,
+     "meat": 2008
+    },
+    "eaten_points": 1180300,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 65.5,
+    "min_hunger_since_last": 8.6,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 4,
+    "relief_grain": 97,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 21
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 30,
+     "median": 210,
+     "max": 500,
+     "total": 5012
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 86,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 70,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 180,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 151,
+      "min": 151,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 4,
+      "min": 2,
+      "below_price": 0,
+      "below_floor": 2,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 299,
+      "min": 137,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 357,
+      "min": 176,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1190,
+    "merchant_funds": 483,
+    "gov": {
+     "tax": 22220,
+     "wages": 15684,
+     "repairs": 5520,
+     "procurement": 96
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 10,
+      "copper_ore": 13,
+      "coal": 12,
+      "stone": 43,
+      "log": 135,
+      "plank": 55,
+      "iron_bar": 10,
+      "copper_bar": 2,
+      "wheat": 8974,
+      "meat": 815,
+      "hide": 343,
+      "leather": 13,
+      "pottage": 4,
+      "roast_meat": 2,
+      "ale": 4,
+      "pickaxe": 13,
+      "axe": 10,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "log": 8,
+      "plank": 16,
+      "wheat": 26,
+      "meat": 20,
+      "hide": 6,
+      "leather": 2,
+      "pottage": 73,
+      "roast_meat": 46,
+      "ale": 8,
+      "pickaxe": 3,
+      "axe": 1,
+      "hammer": 1
+     },
+     "households": {
+      "log": 12,
+      "wheat": 70,
+      "pottage": 64
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 199
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "pickaxe": 1
+     },
+     "manor_work": {
+      "plank": 40
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 59,
+      "roast_meat": 19
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 15,
+      "pottage": 4,
+      "roast_meat": 2
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "meat": 800,
+      "wheat": 8914,
+      "hide": 334,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 16,
+      "copper_ore": 7,
+      "log": 8,
+      "pickaxe": 3,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 8,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 18,
+      "wheat": 26,
+      "axe": 1,
+      "leather": 2
+     },
+     "smith": {
+      "plank": 6,
+      "pickaxe": 2,
+      "copper_bar": 1,
+      "iron_bar": 10,
+      "hammer": 1,
+      "copper_ore": 6,
+      "axe": 2,
+      "coal": 2
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 3,
+      "hide": 3
+     },
+     "woodcutter": {
+      "axe": 8,
+      "log": 52,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "carpenter": {
+      "log": 60,
+      "plank": 43
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 235,
+     "stump": 45,
+     "sapling": 25
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 2164,
+    "felled_logs": 8656,
+    "burned_logs": 4318,
+    "broke": {
+     "axe": 50,
+     "hammer": 1
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 27,
+      "young": 1
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 7,
+      "adult": 5,
+      "young": 2
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 5,
+      "young": 3
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 45,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 67,
+     "pig": 172,
+     "sheep": 108,
+     "chicken": 352
+    },
+    "poached": {
+     "boar": 10
+    },
+    "starved": {},
+    "born": {
+     "cow": 70,
+     "pig": 177,
+     "sheep": 112,
+     "chicken": 360,
+     "boar": 73,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_open": 5,
+     "mend_open": 1
+    },
+    "taken": 2549,
+    "done": 2211,
+    "done_by_kind": {
+     "haul": 841,
+     "quarry": 0,
+     "mend": 1370
+    },
+    "wages": 954,
+    "lots": 3,
+    "lot_goods": {
+     "plank": 40
+    },
+    "yard": 4,
+    "mended": 1370
+   },
+   "trade": {
+    "caravans": 90,
+    "exported": {
+     "coal": 76,
+     "log": 145,
+     "plank": 156,
+     "stone": 156,
+     "iron_bar": 161,
+     "copper_sword": 117,
+     "iron_ore": 76,
+     "meat": 145,
+     "pottage": 121,
+     "wheat": 202,
+     "axe": 131,
+     "pickaxe": 122,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 130,
+     "iron_sword": 15,
+     "hide": 15
+    },
+    "imported": {
+     "copper_ore": 483,
+     "coal": 974,
+     "iron_ore": 1454,
+     "stone": 12
+    },
+    "coins_in": 14381,
+    "coins_out": 10211,
+    "coin_sources": 4170
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5012,
+     "bandits": 678,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1190,
+     "loot": 109,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 7009
+    },
+    "total": 7009,
+    "world_total_coins": 7009,
+    "start_total": 2839,
+    "external_in": 14381,
+    "external_out": 10211,
+    "leak": 0,
+    "coin_sources_delta": 4170,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 182,
+      "imported": 0,
+      "consumed": 50,
+      "exported": 131,
+      "end": 11
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 974,
+      "consumed": 1092,
+      "exported": 76,
+      "end": 22
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 255,
+      "imported": 0,
+      "consumed": 240,
+      "exported": 13,
+      "end": 2
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 483,
+      "consumed": 510,
+      "exported": 13,
+      "end": 20
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 1,
+      "imported": 0,
+      "consumed": 1,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 402,
+      "imported": 0,
+      "consumed": 42,
+      "exported": 15,
+      "end": 349
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 837,
+      "imported": 0,
+      "consumed": 674,
+      "exported": 161,
+      "end": 10
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 1454,
+      "consumed": 1674,
+      "exported": 76,
+      "end": 20
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 8656,
+      "imported": 0,
+      "consumed": 8392,
+      "exported": 145,
+      "end": 155
+     },
+     "meat": {
+      "start": 13,
+      "produced": 2008,
+      "imported": 0,
+      "consumed": 1041,
+      "exported": 145,
+      "end": 835
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 124,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 122,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 6146,
+      "imported": 0,
+      "consumed": 5907,
+      "exported": 156,
+      "end": 111
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 26898,
+      "imported": 0,
+      "consumed": 26744,
+      "exported": 121,
+      "end": 141
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 2002,
+      "imported": 0,
+      "consumed": 1832,
+      "exported": 130,
+      "end": 48
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 27480,
+      "imported": 0,
+      "consumed": 18356,
+      "exported": 202,
+      "end": 9645
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 2,
+    "caravans": 90,
+    "tools_broke": 50
+   }
+  },
+  {
+   "day": 210,
+   "clock": "Day 211  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 2
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "manor_hand": 11,
+     "woodcutter": 7,
+     "hunter": 3,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 4,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 208940,
+     "markets": 5980,
+     "households": 3800,
+     "granary": 7460,
+     "troughs": 3940,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 60
+    },
+    "days_of_need": 35.68,
+    "game_food_days": 35.08,
+    "day_need_points": 6451,
+    "granary_wheat": 373,
+    "famine": false,
+    "made": {
+     "wheat": 32040,
+     "pottage": 31368,
+     "roast_meat": 2344,
+     "ale": 16,
+     "meat": 2327
+    },
+    "eaten_points": 1377260,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 0,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 66.5,
+    "min_hunger_since_last": 27.1,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 4,
+    "relief_grain": 103,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 21
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 6,
+     "median": 212,
+     "max": 415,
+     "total": 5043
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 83,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 87,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 218,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 147,
+      "min": 147,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 4,
+      "min": 2,
+      "below_price": 0,
+      "below_floor": 2,
+      "zero": 0
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 286,
+      "min": 140,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 393,
+      "min": 196,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1185,
+    "merchant_funds": 508,
+    "gov": {
+     "tax": 26781,
+     "wages": 19044,
+     "repairs": 6720,
+     "procurement": 102
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 10,
+      "copper_ore": 11,
+      "coal": 11,
+      "stone": 43,
+      "log": 122,
+      "plank": 54,
+      "iron_bar": 10,
+      "copper_bar": 3,
+      "wheat": 10425,
+      "meat": 896,
+      "hide": 402,
+      "leather": 13,
+      "pottage": 4,
+      "roast_meat": 4,
+      "ale": 4,
+      "pickaxe": 10,
+      "axe": 8,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "log": 17,
+      "plank": 16,
+      "wheat": 30,
+      "meat": 20,
+      "hide": 6,
+      "leather": 2,
+      "pottage": 71,
+      "roast_meat": 41,
+      "ale": 8,
+      "pickaxe": 3,
+      "axe": 1,
+      "hammer": 1
+     },
+     "households": {
+      "log": 11,
+      "wheat": 72,
+      "pottage": 59
+     },
+     "granary": {
+      "wheat": 373
+     },
+     "troughs": {
+      "wheat": 197
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "pickaxe": 4
+     },
+     "manor_work": {
+      "plank": 40,
+      "wheat": 3
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 58,
+      "roast_meat": 19
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 14,
+      "pottage": 4,
+      "roast_meat": 4
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "wheat": 10365,
+      "hide": 393,
+      "meat": 882,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 16,
+      "copper_ore": 7,
+      "log": 17,
+      "pickaxe": 3,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 7,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 13,
+      "wheat": 30,
+      "axe": 1,
+      "leather": 2
+     },
+     "smith": {
+      "plank": 10,
+      "pickaxe": 2,
+      "copper_bar": 2,
+      "iron_bar": 10,
+      "hammer": 1,
+      "copper_ore": 4,
+      "axe": 2,
+      "coal": 1
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 3,
+      "hide": 3
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 41,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "carpenter": {
+      "log": 58,
+      "plank": 38
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 233,
+     "stump": 46,
+     "sapling": 26
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 2551,
+    "felled_logs": 10204,
+    "burned_logs": 5038,
+    "broke": {
+     "axe": 61,
+     "hammer": 1
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 5,
+      "adult": 3,
+      "young": 2
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 7,
+      "adult": 5,
+      "young": 2
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 3,
+      "young": 5
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 45,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 79,
+     "pig": 202,
+     "sheep": 125,
+     "chicken": 412
+    },
+    "poached": {
+     "boar": 14
+    },
+    "starved": {},
+    "born": {
+     "cow": 81,
+     "pig": 207,
+     "sheep": 129,
+     "chicken": 420,
+     "boar": 77,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_open": 6,
+     "mend_open": 2
+    },
+    "taken": 3158,
+    "done": 2694,
+    "done_by_kind": {
+     "haul": 1024,
+     "quarry": 0,
+     "mend": 1670
+    },
+    "wages": 954,
+    "lots": 4,
+    "lot_goods": {
+     "plank": 40,
+     "wheat": 3
+    },
+    "yard": 10,
+    "mended": 1670
+   },
+   "trade": {
+    "caravans": 105,
+    "exported": {
+     "coal": 76,
+     "log": 169,
+     "plank": 180,
+     "stone": 156,
+     "iron_bar": 175,
+     "copper_sword": 132,
+     "iron_ore": 76,
+     "meat": 196,
+     "pottage": 121,
+     "wheat": 253,
+     "axe": 145,
+     "pickaxe": 137,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 177,
+     "iron_sword": 15,
+     "hide": 15
+    },
+    "imported": {
+     "copper_ore": 543,
+     "coal": 1094,
+     "iron_ore": 1634,
+     "stone": 12
+    },
+    "coins_in": 16090,
+    "coins_out": 11471,
+    "coin_sources": 4619
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5043,
+     "bandits": 843,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1185,
+     "loot": 367,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 7458
+    },
+    "total": 7458,
+    "world_total_coins": 7458,
+    "start_total": 2839,
+    "external_in": 16090,
+    "external_out": 11471,
+    "leak": 0,
+    "coin_sources_delta": 4619,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 205,
+      "imported": 0,
+      "consumed": 61,
+      "exported": 145,
+      "end": 9
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 1094,
+      "consumed": 1213,
+      "exported": 76,
+      "end": 21
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 286,
+      "imported": 0,
+      "consumed": 270,
+      "exported": 13,
+      "end": 3
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 543,
+      "consumed": 572,
+      "exported": 13,
+      "end": 18
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 1,
+      "imported": 0,
+      "consumed": 1,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 465,
+      "imported": 0,
+      "consumed": 46,
+      "exported": 15,
+      "end": 408
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 927,
+      "imported": 0,
+      "consumed": 750,
+      "exported": 175,
+      "end": 10
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 1634,
+      "consumed": 1854,
+      "exported": 76,
+      "end": 20
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 10204,
+      "imported": 0,
+      "consumed": 9921,
+      "exported": 169,
+      "end": 150
+     },
+     "meat": {
+      "start": 13,
+      "produced": 2327,
+      "imported": 0,
+      "consumed": 1228,
+      "exported": 196,
+      "end": 916
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 139,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 137,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 7422,
+      "imported": 0,
+      "consumed": 7160,
+      "exported": 180,
+      "end": 110
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 31368,
+      "imported": 0,
+      "consumed": 31221,
+      "exported": 121,
+      "end": 134
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 2344,
+      "imported": 0,
+      "consumed": 2130,
+      "exported": 177,
+      "end": 45
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 32040,
+      "imported": 0,
+      "consumed": 21410,
+      "exported": 253,
+      "end": 11100
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 2,
+    "caravans": 105,
+    "tools_broke": 61
+   }
+  },
+  {
+   "day": 240,
+   "clock": "Day 241  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 2
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "woodcutter": 6,
+     "hunter": 3,
+     "manor_hand": 12,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 4,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 237320,
+     "markets": 6120,
+     "households": 3800,
+     "granary": 7520,
+     "troughs": 4120,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 40.13,
+    "game_food_days": 39.49,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 36600,
+     "pottage": 35850,
+     "roast_meat": 2696,
+     "ale": 16,
+     "meat": 2662
+    },
+    "eaten_points": 1574480,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 1,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 70.0,
+    "min_hunger_since_last": 0.0,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 6,
+    "relief_grain": 131,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 24
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 47,
+     "median": 220,
+     "max": 467,
+     "total": 5275
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 78,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 86,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 228,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 163,
+      "min": 163,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 301,
+      "min": 119,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 363,
+      "min": 180,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1306,
+    "merchant_funds": 530,
+    "gov": {
+     "tax": 31550,
+     "wages": 22464,
+     "repairs": 7920,
+     "procurement": 130
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 12,
+      "copper_ore": 13,
+      "coal": 13,
+      "stone": 43,
+      "log": 123,
+      "plank": 56,
+      "iron_bar": 9,
+      "copper_bar": 2,
+      "wheat": 11844,
+      "meat": 997,
+      "hide": 463,
+      "leather": 15,
+      "pottage": 4,
+      "roast_meat": 4,
+      "ale": 4,
+      "pickaxe": 11,
+      "axe": 9,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "log": 15,
+      "plank": 16,
+      "wheat": 28,
+      "meat": 20,
+      "hide": 6,
+      "pottage": 68,
+      "roast_meat": 46,
+      "ale": 8,
+      "pickaxe": 2,
+      "hammer": 1
+     },
+     "households": {
+      "log": 15,
+      "wheat": 66,
+      "pottage": 62
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 206
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "pickaxe": 4
+     },
+     "manor_work": {
+      "plank": 32
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 56,
+      "roast_meat": 19
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 15,
+      "pottage": 4,
+      "roast_meat": 4
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "wheat": 11784,
+      "meat": 982,
+      "hide": 451,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 16,
+      "copper_ore": 7,
+      "log": 15,
+      "pickaxe": 2,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 6,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 18,
+      "wheat": 28
+     },
+     "smith": {
+      "plank": 10,
+      "pickaxe": 2,
+      "copper_bar": 1,
+      "iron_bar": 9,
+      "copper_ore": 6,
+      "axe": 2,
+      "hammer": 1,
+      "iron_ore": 2,
+      "coal": 3
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 42,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 7,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 4,
+      "axe": 1,
+      "leather": 2,
+      "hide": 6
+     },
+     "carpenter": {
+      "log": 58,
+      "plank": 40
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 235,
+     "stump": 45,
+     "sapling": 25
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 2940,
+    "felled_logs": 11760,
+    "burned_logs": 5753,
+    "broke": {
+     "axe": 70,
+     "hammer": 2
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 4,
+      "young": 2
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 3,
+      "young": 5
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 4,
+      "young": 4
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 53,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 90,
+     "pig": 230,
+     "sheep": 144,
+     "chicken": 472
+    },
+    "poached": {
+     "boar": 16
+    },
+    "starved": {},
+    "born": {
+     "cow": 93,
+     "pig": 235,
+     "sheep": 149,
+     "chicken": 480,
+     "boar": 87,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_taken": 1,
+     "haul_open": 3,
+     "mend_open": 1
+    },
+    "taken": 3763,
+    "done": 3190,
+    "done_by_kind": {
+     "haul": 1218,
+     "quarry": 0,
+     "mend": 1972
+    },
+    "wages": 978,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 32
+    },
+    "yard": 6,
+    "mended": 1972
+   },
+   "trade": {
+    "caravans": 120,
+    "exported": {
+     "coal": 76,
+     "log": 192,
+     "plank": 202,
+     "stone": 156,
+     "iron_bar": 188,
+     "copper_sword": 147,
+     "iron_ore": 76,
+     "meat": 246,
+     "pottage": 121,
+     "wheat": 306,
+     "axe": 159,
+     "pickaxe": 152,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 226,
+     "iron_sword": 15,
+     "hide": 20
+    },
+    "imported": {
+     "copper_ore": 603,
+     "coal": 1214,
+     "iron_ore": 1814,
+     "stone": 12
+    },
+    "coins_in": 17800,
+    "coins_out": 12731,
+    "coin_sources": 5069
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5275,
+     "bandits": 940,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1306,
+     "loot": 367,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 7908
+    },
+    "total": 7908,
+    "world_total_coins": 7908,
+    "start_total": 2839,
+    "external_in": 17800,
+    "external_out": 12731,
+    "leak": 0,
+    "coin_sources_delta": 5069,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 228,
+      "imported": 0,
+      "consumed": 70,
+      "exported": 159,
+      "end": 9
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 1214,
+      "consumed": 1331,
+      "exported": 76,
+      "end": 23
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 315,
+      "imported": 0,
+      "consumed": 300,
+      "exported": 13,
+      "end": 2
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 603,
+      "consumed": 630,
+      "exported": 13,
+      "end": 20
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 2,
+      "imported": 0,
+      "consumed": 2,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 533,
+      "imported": 0,
+      "consumed": 48,
+      "exported": 20,
+      "end": 469
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 1016,
+      "imported": 0,
+      "consumed": 827,
+      "exported": 188,
+      "end": 9
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 1814,
+      "consumed": 2032,
+      "exported": 76,
+      "end": 22
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 11760,
+      "imported": 0,
+      "consumed": 11451,
+      "exported": 192,
+      "end": 153
+     },
+     "meat": {
+      "start": 13,
+      "produced": 2662,
+      "imported": 0,
+      "consumed": 1412,
+      "exported": 246,
+      "end": 1017
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 154,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 152,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 8700,
+      "imported": 0,
+      "consumed": 8422,
+      "exported": 202,
+      "end": 104
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 35850,
+      "imported": 0,
+      "consumed": 35703,
+      "exported": 121,
+      "end": 134
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 2696,
+      "imported": 0,
+      "consumed": 2428,
+      "exported": 226,
+      "end": 50
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 36600,
+      "imported": 0,
+      "consumed": 24497,
+      "exported": 306,
+      "end": 12520
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 7,
+    "caravans": 120,
+    "tools_broke": 70
+   }
+  },
+  {
+   "day": 270,
+   "clock": "Day 271  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 1
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "woodcutter": 6,
+     "hunter": 3,
+     "manor_hand": 12,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 5,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 264580,
+     "markets": 6120,
+     "households": 3760,
+     "granary": 7520,
+     "troughs": 4500,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 44.41,
+    "game_food_days": 43.72,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 41100,
+     "pottage": 40266,
+     "roast_meat": 3088,
+     "ale": 16,
+     "meat": 2973
+    },
+    "eaten_points": 1771960,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 1,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 70.0,
+    "min_hunger_since_last": 27.3,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 6,
+    "relief_grain": 131,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 24
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 65,
+     "median": 214,
+     "max": 520,
+     "total": 5698
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 100,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 101,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 209,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 142,
+      "min": 142,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 326,
+      "min": 158,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 428,
+      "min": 187,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1191,
+    "merchant_funds": 536,
+    "gov": {
+     "tax": 36179,
+     "wages": 26008,
+     "repairs": 9120,
+     "procurement": 130
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 10,
+      "copper_ore": 9,
+      "coal": 10,
+      "stone": 42,
+      "log": 130,
+      "plank": 39,
+      "iron_bar": 8,
+      "copper_bar": 4,
+      "wheat": 13219,
+      "meat": 1058,
+      "hide": 524,
+      "leather": 15,
+      "pottage": 4,
+      "ale": 4,
+      "pickaxe": 8,
+      "axe": 10,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "log": 11,
+      "plank": 30,
+      "wheat": 28,
+      "meat": 20,
+      "hide": 6,
+      "pottage": 68,
+      "roast_meat": 46,
+      "ale": 8,
+      "pickaxe": 2,
+      "hammer": 1
+     },
+     "households": {
+      "log": 12,
+      "wheat": 68,
+      "pottage": 60
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 225
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "stone": 1,
+      "pickaxe": 7
+     },
+     "manor_work": {
+      "plank": 32
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 56,
+      "roast_meat": 19
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 15,
+      "pottage": 4
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "wheat": 13159,
+      "hide": 512,
+      "meat": 1043,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 30,
+      "copper_ore": 7,
+      "log": 11,
+      "pickaxe": 2,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 6,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 18,
+      "wheat": 28
+     },
+     "smith": {
+      "plank": 9,
+      "pickaxe": 2,
+      "copper_bar": 3,
+      "copper_ore": 2,
+      "axe": 3,
+      "hammer": 1,
+      "iron_bar": 8
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 47,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 7,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 4,
+      "axe": 1,
+      "leather": 2,
+      "hide": 4
+     },
+     "carpenter": {
+      "log": 60,
+      "plank": 24
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 232,
+     "stump": 49,
+     "sapling": 24
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 3335,
+    "felled_logs": 13340,
+    "burned_logs": 6473,
+    "broke": {
+     "axe": 80,
+     "hammer": 2
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 5,
+      "young": 1
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 4,
+      "young": 4
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 53,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 103,
+     "pig": 259,
+     "sheep": 163,
+     "chicken": 532
+    },
+    "poached": {
+     "boar": 16
+    },
+    "starved": {},
+    "born": {
+     "cow": 106,
+     "pig": 264,
+     "sheep": 166,
+     "chicken": 540,
+     "boar": 87,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_taken": 1,
+     "haul_open": 3,
+     "mend_open": 1
+    },
+    "taken": 4365,
+    "done": 3670,
+    "done_by_kind": {
+     "haul": 1398,
+     "quarry": 0,
+     "mend": 2272
+    },
+    "wages": 982,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 32
+    },
+    "yard": 6,
+    "mended": 2272
+   },
+   "trade": {
+    "caravans": 135,
+    "exported": {
+     "coal": 76,
+     "log": 217,
+     "plank": 229,
+     "stone": 156,
+     "iron_bar": 202,
+     "copper_sword": 162,
+     "iron_ore": 76,
+     "meat": 300,
+     "pottage": 121,
+     "wheat": 359,
+     "axe": 172,
+     "pickaxe": 167,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 276,
+     "iron_sword": 15,
+     "hide": 20
+    },
+    "imported": {
+     "copper_ore": 663,
+     "coal": 1334,
+     "iron_ore": 1994,
+     "stone": 12
+    },
+    "coins_in": 19510,
+    "coins_out": 13991,
+    "coin_sources": 5519
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5698,
+     "bandits": 434,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1191,
+     "loot": 1015,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 8358
+    },
+    "total": 8358,
+    "world_total_coins": 8358,
+    "start_total": 2839,
+    "external_in": 19510,
+    "external_out": 13991,
+    "leak": 0,
+    "coin_sources_delta": 5519,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 252,
+      "imported": 0,
+      "consumed": 80,
+      "exported": 172,
+      "end": 10
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 1334,
+      "consumed": 1454,
+      "exported": 76,
+      "end": 20
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 347,
+      "imported": 0,
+      "consumed": 330,
+      "exported": 13,
+      "end": 4
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 663,
+      "consumed": 694,
+      "exported": 13,
+      "end": 16
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 2,
+      "imported": 0,
+      "consumed": 2,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 594,
+      "imported": 0,
+      "consumed": 48,
+      "exported": 20,
+      "end": 530
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 1107,
+      "imported": 0,
+      "consumed": 905,
+      "exported": 202,
+      "end": 8
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 1994,
+      "consumed": 2214,
+      "exported": 76,
+      "end": 20
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 13340,
+      "imported": 0,
+      "consumed": 13006,
+      "exported": 217,
+      "end": 153
+     },
+     "meat": {
+      "start": 13,
+      "produced": 2973,
+      "imported": 0,
+      "consumed": 1608,
+      "exported": 300,
+      "end": 1078
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 169,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 167,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 9978,
+      "imported": 0,
+      "consumed": 9676,
+      "exported": 229,
+      "end": 101
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 40266,
+      "imported": 0,
+      "consumed": 40121,
+      "exported": 121,
+      "end": 132
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 3088,
+      "imported": 0,
+      "consumed": 2774,
+      "exported": 276,
+      "end": 46
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 41100,
+      "imported": 0,
+      "consumed": 27548,
+      "exported": 359,
+      "end": 13916
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 7,
+    "caravans": 135,
+    "tools_broke": 80
+   }
+  },
+  {
+   "day": 300,
+   "clock": "Day 301  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 1
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "woodcutter": 6,
+     "hunter": 3,
+     "manor_hand": 12,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 5,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 294240,
+     "markets": 6180,
+     "households": 4280,
+     "granary": 7520,
+     "troughs": 4580,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 49.11,
+    "game_food_days": 48.4,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 45720,
+     "pottage": 44730,
+     "roast_meat": 3456,
+     "ale": 16,
+     "meat": 3282
+    },
+    "eaten_points": 1968960,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 1,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 68.4,
+    "min_hunger_since_last": 23.0,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 6,
+    "relief_grain": 131,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 24
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 50,
+     "median": 226,
+     "max": 542,
+     "total": 5946
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 96,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 84,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 238,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 118,
+      "min": 118,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 317,
+      "min": 142,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 403,
+      "min": 193,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1393,
+    "merchant_funds": 556,
+    "gov": {
+     "tax": 41133,
+     "wages": 29560,
+     "repairs": 10320,
+     "procurement": 130
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 10,
+      "copper_ore": 9,
+      "coal": 10,
+      "stone": 42,
+      "log": 126,
+      "plank": 53,
+      "iron_bar": 8,
+      "copper_bar": 4,
+      "wheat": 14693,
+      "meat": 1131,
+      "hide": 585,
+      "leather": 15,
+      "pottage": 4,
+      "roast_meat": 3,
+      "ale": 4,
+      "pickaxe": 8,
+      "axe": 10,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "plank": 16,
+      "wheat": 28,
+      "meat": 20,
+      "hide": 6,
+      "pottage": 68,
+      "roast_meat": 47,
+      "ale": 8,
+      "pickaxe": 2,
+      "hammer": 1
+     },
+     "households": {
+      "log": 12,
+      "wheat": 68,
+      "pottage": 73
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 229
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "stone": 1,
+      "pickaxe": 7
+     },
+     "manor_work": {
+      "plank": 28
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 56,
+      "roast_meat": 19
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 15,
+      "pottage": 4,
+      "roast_meat": 3
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "wheat": 14633,
+      "hide": 573,
+      "meat": 1116,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 16,
+      "copper_ore": 7,
+      "pickaxe": 2,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 6,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 19,
+      "wheat": 28
+     },
+     "smith": {
+      "plank": 9,
+      "pickaxe": 2,
+      "copper_bar": 3,
+      "copper_ore": 2,
+      "hammer": 1,
+      "iron_bar": 8,
+      "axe": 3
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 46,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 7,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 4,
+      "axe": 1,
+      "leather": 2,
+      "hide": 4
+     },
+     "carpenter": {
+      "log": 57,
+      "plank": 38
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 238,
+     "stump": 47,
+     "sapling": 20
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 3723,
+    "felled_logs": 14892,
+    "burned_logs": 7193,
+    "broke": {
+     "axe": 89,
+     "hammer": 2
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 5,
+      "young": 1
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 4,
+      "young": 4
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 53,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 115,
+     "pig": 289,
+     "sheep": 182,
+     "chicken": 592
+    },
+    "poached": {
+     "boar": 16
+    },
+    "starved": {},
+    "born": {
+     "cow": 118,
+     "pig": 294,
+     "sheep": 185,
+     "chicken": 600,
+     "boar": 87,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_taken": 1,
+     "haul_open": 3
+    },
+    "taken": 4960,
+    "done": 4151,
+    "done_by_kind": {
+     "haul": 1578,
+     "quarry": 0,
+     "mend": 2573
+    },
+    "wages": 994,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 28
+    },
+    "yard": 2,
+    "mended": 2573
+   },
+   "trade": {
+    "caravans": 150,
+    "exported": {
+     "coal": 76,
+     "log": 242,
+     "plank": 253,
+     "stone": 156,
+     "iron_bar": 218,
+     "copper_sword": 177,
+     "iron_ore": 76,
+     "meat": 352,
+     "pottage": 121,
+     "wheat": 409,
+     "axe": 185,
+     "pickaxe": 182,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 324,
+     "iron_sword": 15,
+     "hide": 20
+    },
+    "imported": {
+     "copper_ore": 723,
+     "coal": 1454,
+     "iron_ore": 2174,
+     "stone": 12
+    },
+    "coins_in": 21220,
+    "coins_out": 15251,
+    "coin_sources": 5969
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5946,
+     "bandits": 434,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1393,
+     "loot": 1015,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 8808
+    },
+    "total": 8808,
+    "world_total_coins": 8808,
+    "start_total": 2839,
+    "external_in": 21220,
+    "external_out": 15251,
+    "leak": 0,
+    "coin_sources_delta": 5969,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 274,
+      "imported": 0,
+      "consumed": 89,
+      "exported": 185,
+      "end": 10
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 1454,
+      "consumed": 1574,
+      "exported": 76,
+      "end": 20
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 377,
+      "imported": 0,
+      "consumed": 360,
+      "exported": 13,
+      "end": 4
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 723,
+      "consumed": 754,
+      "exported": 13,
+      "end": 16
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 2,
+      "imported": 0,
+      "consumed": 2,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 655,
+      "imported": 0,
+      "consumed": 48,
+      "exported": 20,
+      "end": 591
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 1197,
+      "imported": 0,
+      "consumed": 979,
+      "exported": 218,
+      "end": 8
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 2174,
+      "consumed": 2394,
+      "exported": 76,
+      "end": 20
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 14892,
+      "imported": 0,
+      "consumed": 14548,
+      "exported": 242,
+      "end": 138
+     },
+     "meat": {
+      "start": 13,
+      "produced": 3282,
+      "imported": 0,
+      "consumed": 1792,
+      "exported": 352,
+      "end": 1151
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 184,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 182,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 11254,
+      "imported": 0,
+      "consumed": 10932,
+      "exported": 253,
+      "end": 97
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 44730,
+      "imported": 0,
+      "consumed": 44572,
+      "exported": 121,
+      "end": 145
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 3456,
+      "imported": 0,
+      "consumed": 3090,
+      "exported": 324,
+      "end": 50
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 45720,
+      "imported": 0,
+      "consumed": 30640,
+      "exported": 409,
+      "end": 15394
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 7,
+    "caravans": 150,
+    "tools_broke": 89
+   }
+  },
+  {
+   "day": 330,
+   "clock": "Day 331  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 1
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "woodcutter": 6,
+     "hunter": 3,
+     "manor_hand": 12,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 5,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 321540,
+     "markets": 6060,
+     "households": 3520,
+     "granary": 7520,
+     "troughs": 3740,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 53.07,
+    "game_food_days": 52.5,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 50160,
+     "pottage": 49152,
+     "roast_meat": 3822,
+     "ale": 16,
+     "meat": 3582
+    },
+    "eaten_points": 2165720,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 1,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 66.1,
+    "min_hunger_since_last": 27.3,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 6,
+    "relief_grain": 131,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 24
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 27,
+     "median": 209,
+     "max": 502,
+     "total": 5884
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 87,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 91,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 267,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 203,
+      "min": 203,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 365,
+      "min": 179,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 382,
+      "min": 190,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 1743,
+    "merchant_funds": 633,
+    "gov": {
+     "tax": 46223,
+     "wages": 33100,
+     "repairs": 11520,
+     "procurement": 130
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 10,
+      "copper_ore": 9,
+      "coal": 10,
+      "stone": 42,
+      "log": 123,
+      "plank": 54,
+      "iron_bar": 6,
+      "copper_bar": 4,
+      "wheat": 16055,
+      "meat": 1194,
+      "hide": 642,
+      "leather": 15,
+      "pottage": 4,
+      "roast_meat": 4,
+      "ale": 4,
+      "pickaxe": 8,
+      "axe": 10,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "log": 16,
+      "plank": 16,
+      "wheat": 30,
+      "meat": 20,
+      "hide": 6,
+      "pottage": 67,
+      "roast_meat": 45,
+      "ale": 8,
+      "pickaxe": 2,
+      "hammer": 1
+     },
+     "households": {
+      "log": 10,
+      "wheat": 86,
+      "pottage": 45
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 187
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "stone": 1,
+      "pickaxe": 7
+     },
+     "manor_work": {
+      "plank": 32
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 55,
+      "roast_meat": 18
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 13,
+      "pottage": 4,
+      "roast_meat": 4
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "wheat": 15995,
+      "hide": 630,
+      "meat": 1181,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 16,
+      "copper_ore": 7,
+      "log": 16,
+      "pickaxe": 2,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 6,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 18,
+      "wheat": 30
+     },
+     "smith": {
+      "plank": 9,
+      "pickaxe": 2,
+      "copper_bar": 3,
+      "copper_ore": 2,
+      "hammer": 1,
+      "iron_bar": 6,
+      "axe": 3
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 47,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 7,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 4,
+      "leather": 2,
+      "hide": 4
+     },
+     "carpenter": {
+      "log": 53,
+      "plank": 39
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 233,
+     "sapling": 24,
+     "stump": 48
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 4118,
+    "felled_logs": 16472,
+    "burned_logs": 7913,
+    "broke": {
+     "axe": 101,
+     "hammer": 2
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 4,
+      "young": 2
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 4,
+      "young": 2
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 4,
+      "young": 4
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 53,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 128,
+     "pig": 319,
+     "sheep": 196,
+     "chicken": 652
+    },
+    "poached": {
+     "boar": 16
+    },
+    "starved": {},
+    "born": {
+     "cow": 131,
+     "pig": 324,
+     "sheep": 199,
+     "chicken": 660,
+     "boar": 87,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_taken": 2,
+     "haul_open": 2,
+     "mend_open": 1
+    },
+    "taken": 5564,
+    "done": 4630,
+    "done_by_kind": {
+     "haul": 1758,
+     "quarry": 0,
+     "mend": 2872
+    },
+    "wages": 994,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 32
+    },
+    "yard": 6,
+    "mended": 2872
+   },
+   "trade": {
+    "caravans": 165,
+    "exported": {
+     "coal": 76,
+     "log": 266,
+     "plank": 280,
+     "stone": 156,
+     "iron_bar": 228,
+     "copper_sword": 192,
+     "iron_ore": 76,
+     "meat": 406,
+     "pottage": 121,
+     "wheat": 465,
+     "axe": 199,
+     "pickaxe": 197,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 379,
+     "iron_sword": 15,
+     "hide": 20
+    },
+    "imported": {
+     "copper_ore": 783,
+     "coal": 1574,
+     "iron_ore": 2354,
+     "stone": 12
+    },
+    "coins_in": 22931,
+    "coins_out": 16511,
+    "coin_sources": 6420
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5884,
+     "bandits": 597,
+     "dead": 0,
+     "player": 20,
+     "treasury": 1743,
+     "loot": 1015,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 9259
+    },
+    "total": 9259,
+    "world_total_coins": 9259,
+    "start_total": 2839,
+    "external_in": 22931,
+    "external_out": 16511,
+    "leak": 0,
+    "coin_sources_delta": 6420,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 300,
+      "imported": 0,
+      "consumed": 101,
+      "exported": 199,
+      "end": 10
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 1574,
+      "consumed": 1694,
+      "exported": 76,
+      "end": 20
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 407,
+      "imported": 0,
+      "consumed": 390,
+      "exported": 13,
+      "end": 4
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 783,
+      "consumed": 814,
+      "exported": 13,
+      "end": 16
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 2,
+      "imported": 0,
+      "consumed": 2,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 712,
+      "imported": 0,
+      "consumed": 48,
+      "exported": 20,
+      "end": 648
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 1287,
+      "imported": 0,
+      "consumed": 1061,
+      "exported": 228,
+      "end": 6
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 2354,
+      "consumed": 2574,
+      "exported": 76,
+      "end": 20
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 16472,
+      "imported": 0,
+      "consumed": 16093,
+      "exported": 266,
+      "end": 149
+     },
+     "meat": {
+      "start": 13,
+      "produced": 3582,
+      "imported": 0,
+      "consumed": 1975,
+      "exported": 406,
+      "end": 1214
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 199,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 197,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 12538,
+      "imported": 0,
+      "consumed": 12184,
+      "exported": 280,
+      "end": 102
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 49152,
+      "imported": 0,
+      "consumed": 49023,
+      "exported": 121,
+      "end": 116
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 3822,
+      "imported": 0,
+      "consumed": 3402,
+      "exported": 379,
+      "end": 49
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 50160,
+      "imported": 0,
+      "consumed": 33684,
+      "exported": 465,
+      "end": 16734
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 7,
+    "caravans": 165,
+    "tools_broke": 101
+   }
+  },
+  {
+   "day": 360,
+   "clock": "Day 361  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 1
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "woodcutter": 6,
+     "hunter": 3,
+     "manor_hand": 12,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 5,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 350760,
+     "markets": 5560,
+     "households": 4360,
+     "granary": 7520,
+     "troughs": 3640,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 57.64,
+    "game_food_days": 57.07,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 54720,
+     "pottage": 53634,
+     "roast_meat": 4180,
+     "ale": 16,
+     "meat": 3888
+    },
+    "eaten_points": 2362720,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 1,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 64.7,
+    "min_hunger_since_last": 27.5,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 6,
+    "relief_grain": 131,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 24
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 34,
+     "median": 221,
+     "max": 563,
+     "total": 5944
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 92,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 90,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 268,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 127,
+      "min": 127,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 381,
+      "min": 167,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 398,
+      "min": 184,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 2132,
+    "merchant_funds": 650,
+    "gov": {
+     "tax": 51352,
+     "wages": 36640,
+     "repairs": 12720,
+     "procurement": 130
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 10,
+      "copper_ore": 9,
+      "coal": 10,
+      "stone": 42,
+      "log": 123,
+      "plank": 53,
+      "iron_bar": 8,
+      "copper_bar": 4,
+      "wheat": 17519,
+      "meat": 1271,
+      "hide": 703,
+      "leather": 15,
+      "pottage": 4,
+      "roast_meat": 3,
+      "ale": 4,
+      "pickaxe": 8,
+      "axe": 10,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "log": 9,
+      "plank": 16,
+      "wheat": 16,
+      "meat": 20,
+      "hide": 6,
+      "pottage": 66,
+      "roast_meat": 42,
+      "ale": 8,
+      "pickaxe": 2,
+      "hammer": 1
+     },
+     "households": {
+      "log": 12,
+      "wheat": 70,
+      "pottage": 74
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 182
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "stone": 1,
+      "pickaxe": 7
+     },
+     "manor_work": {
+      "plank": 40
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 54,
+      "roast_meat": 19
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 15,
+      "pottage": 4,
+      "roast_meat": 3
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "wheat": 17459,
+      "meat": 1256,
+      "hide": 691,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 16,
+      "copper_ore": 7,
+      "log": 9,
+      "pickaxe": 2,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 6,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 14,
+      "wheat": 16
+     },
+     "smith": {
+      "plank": 9,
+      "pickaxe": 2,
+      "copper_bar": 3,
+      "copper_ore": 2,
+      "iron_bar": 8,
+      "axe": 3,
+      "hammer": 1
+     },
+     "woodcutter": {
+      "axe": 6,
+      "log": 41,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 7,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 4,
+      "leather": 2,
+      "hide": 4
+     },
+     "carpenter": {
+      "log": 59,
+      "plank": 38
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 230,
+     "stump": 41,
+     "sapling": 34
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 4508,
+    "felled_logs": 18032,
+    "burned_logs": 8633,
+    "broke": {
+     "axe": 109,
+     "hammer": 3
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 7,
+      "adult": 5,
+      "young": 2
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 8,
+      "adult": 3,
+      "young": 5
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 53,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 139,
+     "pig": 349,
+     "sheep": 216,
+     "chicken": 712
+    },
+    "poached": {
+     "boar": 16
+    },
+    "starved": {},
+    "born": {
+     "cow": 142,
+     "pig": 354,
+     "sheep": 220,
+     "chicken": 720,
+     "boar": 87,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_open": 4,
+     "mend_open": 3
+    },
+    "taken": 6171,
+    "done": 5108,
+    "done_by_kind": {
+     "haul": 1938,
+     "quarry": 0,
+     "mend": 3170
+    },
+    "wages": 994,
+    "lots": 2,
+    "lot_goods": {
+     "plank": 40
+    },
+    "yard": 14,
+    "mended": 3170
+   },
+   "trade": {
+    "caravans": 180,
+    "exported": {
+     "coal": 76,
+     "log": 292,
+     "plank": 307,
+     "stone": 156,
+     "iron_bar": 239,
+     "copper_sword": 207,
+     "iron_ore": 76,
+     "meat": 456,
+     "pottage": 121,
+     "wheat": 514,
+     "axe": 214,
+     "pickaxe": 212,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 427,
+     "iron_sword": 15,
+     "hide": 20
+    },
+    "imported": {
+     "copper_ore": 843,
+     "coal": 1694,
+     "iron_ore": 2534,
+     "stone": 12
+    },
+    "coins_in": 24640,
+    "coins_out": 17771,
+    "coin_sources": 6869
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5944,
+     "bandits": 597,
+     "dead": 0,
+     "player": 20,
+     "treasury": 2132,
+     "loot": 1015,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 9708
+    },
+    "total": 9708,
+    "world_total_coins": 9708,
+    "start_total": 2839,
+    "external_in": 24640,
+    "external_out": 17771,
+    "leak": 0,
+    "coin_sources_delta": 6869,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 323,
+      "imported": 0,
+      "consumed": 109,
+      "exported": 214,
+      "end": 10
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 1694,
+      "consumed": 1814,
+      "exported": 76,
+      "end": 20
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 437,
+      "imported": 0,
+      "consumed": 420,
+      "exported": 13,
+      "end": 4
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 843,
+      "consumed": 874,
+      "exported": 13,
+      "end": 16
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 3,
+      "imported": 0,
+      "consumed": 3,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 773,
+      "imported": 0,
+      "consumed": 48,
+      "exported": 20,
+      "end": 709
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 1377,
+      "imported": 0,
+      "consumed": 1138,
+      "exported": 239,
+      "end": 8
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 2534,
+      "consumed": 2754,
+      "exported": 76,
+      "end": 20
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 18032,
+      "imported": 0,
+      "consumed": 17632,
+      "exported": 292,
+      "end": 144
+     },
+     "meat": {
+      "start": 13,
+      "produced": 3888,
+      "imported": 0,
+      "consumed": 2154,
+      "exported": 456,
+      "end": 1291
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 214,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 212,
+      "end": 17
+     },
+     "plank": {
+      "start": 28,
+      "produced": 13818,
+      "imported": 0,
+      "consumed": 13430,
+      "exported": 307,
+      "end": 109
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 53634,
+      "imported": 0,
+      "consumed": 53477,
+      "exported": 121,
+      "end": 144
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 4180,
+      "imported": 0,
+      "consumed": 3716,
+      "exported": 427,
+      "end": 45
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 54720,
+      "imported": 0,
+      "consumed": 36766,
+      "exported": 514,
+      "end": 18163
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 7,
+    "caravans": 180,
+    "tools_broke": 109
+   }
+  },
+  {
+   "day": 365,
+   "clock": "Day 366  07:00",
+   "people": {
+    "alive": 100,
+    "by_role": {
+     "adult": 56,
+     "child": 26,
+     "elder": 18,
+     "bandit": 1
+    },
+    "by_job": {
+     "tavernkeeper": 2,
+     "cook": 3,
+     "(child)": 26,
+     "reeve": 1,
+     "guard": 6,
+     "(elder)": 18,
+     "sage": 1,
+     "farmer": 12,
+     "merchant": 6,
+     "smith": 1,
+     "woodcutter": 6,
+     "hunter": 3,
+     "manor_hand": 12,
+     "carpenter": 2,
+     "tanner": 1
+    },
+    "deaths": {},
+    "deaths_by_job": {},
+    "bandit_deaths": 5,
+    "births": 0,
+    "households": 24,
+    "households_founded": 0
+   },
+   "food": {
+    "points_by_holder": {
+     "npcs": 356020,
+     "markets": 6040,
+     "households": 3520,
+     "granary": 7520,
+     "troughs": 3500,
+     "sites": 0,
+     "player": 0,
+     "loot": 0,
+     "manor_work": 0
+    },
+    "days_of_need": 58.38,
+    "game_food_days": 57.83,
+    "day_need_points": 6451,
+    "granary_wheat": 376,
+    "famine": false,
+    "made": {
+     "wheat": 55500,
+     "pottage": 54366,
+     "roast_meat": 4240,
+     "ale": 16,
+     "meat": 3945
+    },
+    "eaten_points": 2395840,
+    "starvation_deaths": 0,
+    "first_starvation_day": -1,
+    "starving_villager_hours": 1,
+    "at_zero_hunger_now": 0,
+    "mean_hunger": 67.8,
+    "min_hunger_since_last": 26.7,
+    "missed_meal_no_money": 30,
+    "missed_meal_no_food_for_sale": 6,
+    "relief_grain": 131,
+    "relief_bought_coins": 0
+   },
+   "work": {
+    "adults": 56,
+    "with_job": 56,
+    "with_workplace": 56,
+    "unemployed": 0,
+    "lost": 0,
+    "job_changes": 24
+   },
+   "money": {
+    "household_cash": {
+     "n": 24,
+     "min": 19,
+     "median": 218,
+     "max": 567,
+     "total": 5863
+    },
+    "traders": {
+     "tavernkeeper": {
+      "n": 2,
+      "coins": 95,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "cook": {
+      "n": 3,
+      "coins": 95,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_raw": {
+      "n": 2,
+      "coins": 249,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     },
+     "smith": {
+      "n": 1,
+      "coins": 165,
+      "min": 165,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "merchant_goods": {
+      "n": 2,
+      "coins": 1,
+      "min": 0,
+      "below_price": 2,
+      "below_floor": 2,
+      "zero": 1
+     },
+     "merchant_food": {
+      "n": 2,
+      "coins": 313,
+      "min": 139,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "carpenter": {
+      "n": 2,
+      "coins": 386,
+      "min": 189,
+      "below_price": 0,
+      "below_floor": 0,
+      "zero": 0
+     },
+     "tanner": {
+      "n": 1,
+      "coins": 0,
+      "min": 0,
+      "below_price": 1,
+      "below_floor": 1,
+      "zero": 1
+     }
+    },
+    "treasury": 2194,
+    "merchant_funds": 563,
+    "gov": {
+     "tax": 52204,
+     "wages": 37230,
+     "repairs": 12920,
+     "procurement": 130
+    }
+   },
+   "materials": {
+    "held": {
+     "npcs": {
+      "iron_ore": 10,
+      "copper_ore": 9,
+      "coal": 10,
+      "stone": 42,
+      "log": 120,
+      "plank": 40,
+      "iron_bar": 4,
+      "copper_bar": 2,
+      "wheat": 17782,
+      "meat": 1292,
+      "hide": 714,
+      "leather": 15,
+      "pottage": 4,
+      "roast_meat": 3,
+      "ale": 4,
+      "pickaxe": 9,
+      "axe": 9,
+      "hammer": 1
+     },
+     "markets": {
+      "iron_ore": 10,
+      "copper_ore": 7,
+      "coal": 10,
+      "stone": 77,
+      "log": 8,
+      "plank": 30,
+      "wheat": 28,
+      "meat": 20,
+      "hide": 6,
+      "pottage": 66,
+      "roast_meat": 46,
+      "ale": 8,
+      "pickaxe": 2,
+      "hammer": 1
+     },
+     "households": {
+      "log": 8,
+      "wheat": 70,
+      "pottage": 53
+     },
+     "granary": {
+      "wheat": 376
+     },
+     "troughs": {
+      "wheat": 175
+     },
+     "sites": {},
+     "player": {},
+     "loot": {
+      "stone": 1,
+      "pickaxe": 7
+     },
+     "manor_work": {
+      "plank": 36
+     }
+    },
+    "held_by_job": {
+     "tavernkeeper": {
+      "pottage": 54,
+      "roast_meat": 19
+     },
+     "cook": {
+      "log": 23,
+      "wheat": 60,
+      "ale": 4,
+      "meat": 15,
+      "pottage": 4,
+      "roast_meat": 3
+     },
+     "child": {},
+     "reeve": {},
+     "guard": {},
+     "elder": {},
+     "sage": {},
+     "farmer": {
+      "hide": 702,
+      "meat": 1277,
+      "wheat": 17722,
+      "leather": 9
+     },
+     "merchant": {
+      "iron_ore": 10,
+      "coal": 10,
+      "stone": 77,
+      "plank": 30,
+      "copper_ore": 7,
+      "log": 8,
+      "pickaxe": 2,
+      "hide": 6,
+      "hammer": 1,
+      "pottage": 6,
+      "ale": 8,
+      "meat": 20,
+      "roast_meat": 18,
+      "wheat": 28
+     },
+     "smith": {
+      "plank": 10,
+      "pickaxe": 3,
+      "copper_bar": 1,
+      "copper_ore": 2,
+      "iron_bar": 4,
+      "axe": 3,
+      "hammer": 1
+     },
+     "woodcutter": {
+      "log": 38,
+      "axe": 5,
+      "pickaxe": 2,
+      "copper_bar": 1
+     },
+     "hunter": {
+      "hide": 6
+     },
+     "manor_hand": {
+      "iron_ore": 10,
+      "coal": 7,
+      "stone": 42,
+      "plank": 6,
+      "copper_ore": 7,
+      "pickaxe": 4,
+      "leather": 2,
+      "hide": 2
+     },
+     "carpenter": {
+      "log": 59,
+      "plank": 24
+     },
+     "tanner": {
+      "leather": 4
+     }
+    },
+    "deposit_left": {
+     "iron_ore": 0,
+     "coal": 0,
+     "stone": 0,
+     "copper_ore": 0
+    },
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ]
+    ],
+    "deposits_exhausted": 14,
+    "trees": {
+     "grown": 239,
+     "stump": 47,
+     "sapling": 19
+    },
+    "mined": {
+     "iron_ore": 300,
+     "copper_ore": 60,
+     "coal": 200,
+     "stone": 240
+    },
+    "felled_trees": 4571,
+    "felled_logs": 18284,
+    "burned_logs": 8753,
+    "broke": {
+     "axe": 112,
+     "hammer": 3
+    }
+   },
+   "wildlife": {
+    "species": {
+     "rabbit": {
+      "wild": 4,
+      "penned": 0,
+      "adult": 4,
+      "young": 0
+     },
+     "boar": {
+      "wild": 28,
+      "penned": 0,
+      "adult": 28,
+      "young": 0
+     },
+     "cow": {
+      "wild": 0,
+      "penned": 5,
+      "adult": 3,
+      "young": 2
+     },
+     "sheep": {
+      "wild": 0,
+      "penned": 7,
+      "adult": 5,
+      "young": 2
+     },
+     "pig": {
+      "wild": 0,
+      "penned": 6,
+      "adult": 3,
+      "young": 3
+     },
+     "chicken": {
+      "wild": 0,
+      "penned": 12,
+      "adult": 8,
+      "young": 4
+     }
+    },
+    "hunted": {
+     "boar": 53,
+     "rabbit": 22
+    },
+    "slaughtered": {
+     "cow": 142,
+     "pig": 354,
+     "sheep": 219,
+     "chicken": 722
+    },
+    "poached": {
+     "boar": 16
+    },
+    "starved": {},
+    "born": {
+     "cow": 144,
+     "pig": 357,
+     "sheep": 223,
+     "chicken": 730,
+     "boar": 87,
+     "rabbit": 16
+    }
+   },
+   "building": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "open_sites": 0,
+    "finished_sites": 0,
+    "houses_built": 0,
+    "workshops_built": 0,
+    "households": 24,
+    "households_split": 0,
+    "helpers_now": 0,
+    "helper_wages": 0,
+    "helper_bought": 0
+   },
+   "manor_work": {
+    "jobs_now": {
+     "haul_open": 5
+    },
+    "taken": 6274,
+    "done": 5188,
+    "done_by_kind": {
+     "haul": 1967,
+     "quarry": 0,
+     "mend": 3221
+    },
+    "wages": 994,
+    "lots": 3,
+    "lot_goods": {
+     "plank": 36
+    },
+    "yard": 0,
+    "mended": 3221
+   },
+   "trade": {
+    "caravans": 182,
+    "exported": {
+     "coal": 76,
+     "log": 295,
+     "plank": 310,
+     "stone": 156,
+     "iron_bar": 241,
+     "copper_sword": 209,
+     "iron_ore": 76,
+     "meat": 462,
+     "pottage": 121,
+     "wheat": 520,
+     "axe": 216,
+     "pickaxe": 214,
+     "copper_bar": 13,
+     "leather": 6,
+     "copper_ore": 13,
+     "roast_meat": 433,
+     "iron_sword": 15,
+     "hide": 20
+    },
+    "imported": {
+     "copper_ore": 851,
+     "coal": 1710,
+     "iron_ore": 2558,
+     "stone": 12
+    },
+    "coins_in": 24868,
+    "coins_out": 17939,
+    "coin_sources": 6929
+   },
+   "currency": {
+    "holders": {
+     "villagers": 5863,
+     "bandits": 676,
+     "dead": 0,
+     "player": 20,
+     "treasury": 2194,
+     "loot": 1015,
+     "quest_reserves": 0,
+     "manor_wages_reserved": 0,
+     "total": 9768
+    },
+    "total": 9768,
+    "world_total_coins": 9768,
+    "start_total": 2839,
+    "external_in": 24868,
+    "external_out": 17939,
+    "leak": 0,
+    "coin_sources_delta": 6929,
+    "coin_sources_mismatch": 0,
+    "holders_mismatch": 0
+   },
+   "ledger": {
+    "items": {},
+    "flows": {
+     "ale": {
+      "start": 24,
+      "produced": 16,
+      "imported": 0,
+      "consumed": 28,
+      "exported": 0,
+      "end": 12
+     },
+     "axe": {
+      "start": 10,
+      "produced": 327,
+      "imported": 0,
+      "consumed": 112,
+      "exported": 216,
+      "end": 9
+     },
+     "coal": {
+      "start": 16,
+      "produced": 200,
+      "imported": 1710,
+      "consumed": 1830,
+      "exported": 76,
+      "end": 20
+     },
+     "copper_bar": {
+      "start": 0,
+      "produced": 441,
+      "imported": 0,
+      "consumed": 426,
+      "exported": 13,
+      "end": 2
+     },
+     "copper_ore": {
+      "start": 0,
+      "produced": 60,
+      "imported": 851,
+      "consumed": 882,
+      "exported": 13,
+      "end": 16
+     },
+     "hammer": {
+      "start": 2,
+      "produced": 3,
+      "imported": 0,
+      "consumed": 3,
+      "exported": 0,
+      "end": 2
+     },
+     "hide": {
+      "start": 4,
+      "produced": 784,
+      "imported": 0,
+      "consumed": 48,
+      "exported": 20,
+      "end": 720
+     },
+     "iron_bar": {
+      "start": 8,
+      "produced": 1389,
+      "imported": 0,
+      "consumed": 1152,
+      "exported": 241,
+      "end": 4
+     },
+     "iron_ore": {
+      "start": 16,
+      "produced": 300,
+      "imported": 2558,
+      "consumed": 2778,
+      "exported": 76,
+      "end": 20
+     },
+     "leather": {
+      "start": 10,
+      "produced": 32,
+      "imported": 0,
+      "consumed": 21,
+      "exported": 6,
+      "end": 15
+     },
+     "log": {
+      "start": 36,
+      "produced": 18284,
+      "imported": 0,
+      "consumed": 17889,
+      "exported": 295,
+      "end": 136
+     },
+     "meat": {
+      "start": 13,
+      "produced": 3945,
+      "imported": 0,
+      "consumed": 2184,
+      "exported": 462,
+      "end": 1312
+     },
+     "pickaxe": {
+      "start": 15,
+      "produced": 217,
+      "imported": 0,
+      "consumed": 0,
+      "exported": 214,
+      "end": 18
+     },
+     "plank": {
+      "start": 28,
+      "produced": 14032,
+      "imported": 0,
+      "consumed": 13644,
+      "exported": 310,
+      "end": 106
+     },
+     "pottage": {
+      "start": 108,
+      "produced": 54366,
+      "imported": 0,
+      "consumed": 54230,
+      "exported": 121,
+      "end": 123
+     },
+     "roast_meat": {
+      "start": 8,
+      "produced": 4240,
+      "imported": 0,
+      "consumed": 3766,
+      "exported": 433,
+      "end": 49
+     },
+     "stone": {
+      "start": 24,
+      "produced": 240,
+      "imported": 12,
+      "consumed": 0,
+      "exported": 156,
+      "end": 120
+     },
+     "wheat": {
+      "start": 723,
+      "produced": 55500,
+      "imported": 0,
+      "consumed": 37272,
+      "exported": 520,
+      "end": 18431
+     }
+    },
+    "deposits": [],
+    "animals": {}
+   },
+   "player": {
+    "alive": true,
+    "hp": 100.0,
+    "min_hp": 100.0,
+    "hours_hurt": 0
+   },
+   "events": {
+    "sites_started": 0,
+    "sites_finished": 0,
+    "sites_given_up": 0,
+    "seams_worked_out": 14,
+    "no_firewood_nights": 7,
+    "caravans": 182,
+    "tools_broke": 112
+   }
+  }
+ ],
+ "deaths": [],
+ "fingerprint": "bd22e85230801cf8765e2f2574e9e6f6",
+ "misses": {
+  "total": 36,
+  "by_job": {
+   "guard": 1,
+   "laborer": 3,
+   "merchant": 8,
+   "child": 6,
+   "elder": 14,
+   "cook": 1,
+   "manor_hand": 2,
+   "woodcutter": 1
+  },
+  "by_hour": {
+   "4": 1,
+   "6": 8,
+   "7": 9,
+   "9": 3,
+   "12": 1,
+   "13": 3,
+   "14": 4,
+   "15": 1,
+   "16": 2,
+   "8": 1,
+   "10": 1,
+   "11": 2
+  },
+  "by_cause": {
+   "no_food_for_sale": 6,
+   "no_money": 30
+  },
+  "by_30_days": {
+   "1": 1,
+   "2": 7,
+   "3": 15,
+   "4": 2,
+   "5": 9,
+   "7": 2
+  },
+  "first": [
+   [
+    51,
+    4.7,
+    "guard",
+    "no_food_for_sale",
+    98,
+    1,
+    98,
+    49.4895523073372,
+    {
+     "log": 1
+    },
+    "asleep at home"
+   ],
+   [
+    73,
+    6.1,
+    "laborer",
+    "no_food_for_sale",
+    2,
+    7,
+    2,
+    51.0500000000392,
+    {},
+    "asleep at home"
+   ],
+   [
+    73,
+    6.2,
+    "merchant",
+    "no_food_for_sale",
+    2,
+    7,
+    1,
+    32.6500000000061,
+    {},
+    "asleep at home"
+   ],
+   [
+    73,
+    7.8,
+    "laborer",
+    "no_money",
+    1,
+    7,
+    0,
+    45.9500000000395,
+    {},
+    "buying a meal"
+   ],
+   [
+    73,
+    7.8,
+    "child",
+    "no_money",
+    1,
+    7,
+    0,
+    52.7299999999921,
+    {},
+    "playing"
+   ],
+   [
+    83,
+    6.1,
+    "elder",
+    "no_money",
+    1,
+    7,
+    1,
+    52.4000000000027,
+    {},
+    "asleep at home"
+   ],
+   [
+    83,
+    7.1,
+    "elder",
+    "no_money",
+    1,
+    7,
+    1,
+    49.2500000000029,
+    {},
+    "taking the air"
+   ],
+   [
+    83,
+    7.6,
+    "laborer",
+    "no_money",
+    1,
+    7,
+    1,
+    53.6500000000026,
+    {},
+    "resting"
+   ],
+   [
+    95,
+    7.1,
+    "merchant",
+    "no_money",
+    1,
+    7,
+    1,
+    51.2500000000232,
+    {},
+    "eating on the family's tab"
+   ],
+   [
+    95,
+    7.6,
+    "merchant",
+    "no_money",
+    1,
+    7,
+    1,
+    49.8500000000233,
+    {},
+    "working for the manor"
+   ],
+   [
+    97,
+    7.7,
+    "child",
+    "no_money",
+    1,
+    7,
+    0,
+    52.2699999999755,
+    {
+     "log": 1
+    },
+    "playing"
+   ],
+   [
+    97,
+    7.7,
+    "elder",
+    "no_money",
+    1,
+    7,
+    1,
+    30.8500000000477,
+    {
+     "log": 1
+    },
+    "buying grain for porridge"
+   ]
+  ]
+ },
+ "flows": {
+  "guard>merchant_raw": {
+   "n": 473,
+   "coins": 1034,
+   "items": {
+    "log": 473
+   }
+  },
+  "smith>merchant_raw": {
+   "n": 295,
+   "coins": 616,
+   "items": {
+    "log": 295
+   }
+  },
+  "cook>merchant_raw": {
+   "n": 148,
+   "coins": 310,
+   "items": {
+    "log": 148
+   }
+  },
+  "carpenter>woodcutter": {
+   "n": 9452,
+   "coins": 9452,
+   "items": {
+    "log": 9452
+   }
+  },
+  "tanner>hunter": {
+   "n": 15,
+   "coins": 30,
+   "items": {
+    "hide": 15
+   }
+  },
+  "cook>farmer": {
+   "n": 2375,
+   "coins": 2614,
+   "items": {
+    "wheat": 444,
+    "meat": 1931
+   }
+  },
+  "cook>hunter": {
+   "n": 195,
+   "coins": 241,
+   "items": {
+    "meat": 195
+   }
+  },
+  "merchant_food>farmer": {
+   "n": 7028,
+   "coins": 8292,
+   "items": {
+    "wheat": 6582,
+    "meat": 446
+   }
+  },
+  "tavernkeeper>cook": {
+   "n": 1540,
+   "coins": 1588,
+   "items": {
+    "roast_meat": 1421,
+    "pottage": 111,
+    "ale": 8
+   }
+  },
+  "smith>miner": {
+   "n": 329,
+   "coins": 478,
+   "items": {
+    "coal": 111,
+    "copper_ore": 33,
+    "iron_ore": 185
+   }
+  },
+  "merchant_raw>laborer": {
+   "n": 231,
+   "coins": 236,
+   "items": {
+    "stone": 219,
+    "copper_ore": 1,
+    "iron_ore": 10,
+    "coal": 1
+   }
+  },
+  "smith>carpenter": {
+   "n": 2481,
+   "coins": 2551,
+   "items": {
+    "plank": 2411,
+    "log": 70
+   }
+  },
+  "merchant_raw>woodcutter": {
+   "n": 6664,
+   "coins": 6664,
+   "items": {
+    "log": 6663,
+    "plank": 1
+   }
+  },
+  "merchant_food>hunter": {
+   "n": 36,
+   "coins": 72,
+   "items": {
+    "meat": 36
+   }
+  },
+  "merchant_raw>carpenter": {
+   "n": 5686,
+   "coins": 5837,
+   "items": {
+    "plank": 5535,
+    "log": 151
+   }
+  },
+  "cook>woodcutter": {
+   "n": 2131,
+   "coins": 2131,
+   "items": {
+    "log": 2131
+   }
+  },
+  "hunter>merchant_raw": {
+   "n": 76,
+   "coins": 164,
+   "items": {
+    "log": 76
+   }
+  },
+  "merchant_goods>merchant_raw": {
+   "n": 45,
+   "coins": 93,
+   "items": {
+    "log": 45
+   }
+  },
+  "farmer>merchant_raw": {
+   "n": 1848,
+   "coins": 4081,
+   "items": {
+    "log": 1848
+   }
+  },
+  "sage>merchant_raw": {
+   "n": 250,
+   "coins": 546,
+   "items": {
+    "log": 250
+   }
+  },
+  "merchant_food>merchant_raw": {
+   "n": 285,
+   "coins": 585,
+   "items": {
+    "log": 285
+   }
+  },
+  "woodcutter>merchant_raw": {
+   "n": 927,
+   "coins": 1925,
+   "items": {
+    "log": 927
+   }
+  },
+  "carpenter>merchant_raw": {
+   "n": 480,
+   "coins": 1032,
+   "items": {
+    "log": 480
+   }
+  },
+  "cook>tavernkeeper": {
+   "n": 80,
+   "coins": 240,
+   "items": {
+    "ale": 3,
+    "roast_meat": 77
+   }
+  },
+  "laborer>merchant_raw": {
+   "n": 54,
+   "coins": 114,
+   "items": {
+    "log": 54
+   }
+  },
+  "tanner>merchant_raw": {
+   "n": 16,
+   "coins": 37,
+   "items": {
+    "log": 16
+   }
+  },
+  "miner>merchant_raw": {
+   "n": 116,
+   "coins": 250,
+   "items": {
+    "log": 116
+   }
+  },
+  "laborer>tavernkeeper": {
+   "n": 7,
+   "coins": 20,
+   "items": {
+    "ale": 1,
+    "roast_meat": 5,
+    "pottage": 1
+   }
+  },
+  "merchant_goods>tavernkeeper": {
+   "n": 9,
+   "coins": 25,
+   "items": {
+    "ale": 1,
+    "roast_meat": 6,
+    "pottage": 2
+   }
+  },
+  "merchant_raw>tavernkeeper": {
+   "n": 10,
+   "coins": 29,
+   "items": {
+    "ale": 1,
+    "roast_meat": 8,
+    "pottage": 1
+   }
+  },
+  "woodcutter>tavernkeeper": {
+   "n": 236,
+   "coins": 708,
+   "items": {
+    "ale": 3,
+    "roast_meat": 231,
+    "pottage": 2
+   }
+  },
+  "farmer>tavernkeeper": {
+   "n": 39,
+   "coins": 117,
+   "items": {
+    "ale": 3,
+    "roast_meat": 35,
+    "pottage": 1
+   }
+  },
+  "miner>carpenter": {
+   "n": 19,
+   "coins": 40,
+   "items": {
+    "log": 19
+   }
+  },
+  "merchant_raw>miner": {
+   "n": 209,
+   "coins": 283,
+   "items": {
+    "coal": 87,
+    "iron_ore": 78,
+    "copper_ore": 26,
+    "stone": 18
+   }
+  },
+  "tavernkeeper>merchant_raw": {
+   "n": 125,
+   "coins": 257,
+   "items": {
+    "log": 125
+   }
+  },
+  "merchant_food>cook": {
+   "n": 2441,
+   "coins": 4688,
+   "items": {
+    "pottage": 213,
+    "roast_meat": 2228
+   }
+  },
+  "guard>farmer": {
+   "n": 1154,
+   "coins": 2398,
+   "items": {
+    "wheat": 1154
+   }
+  },
+  "guard>merchant_food": {
+   "n": 1186,
+   "coins": 2402,
+   "items": {
+    "wheat": 1184,
+    "roast_meat": 2
+   }
+  },
+  "smith>laborer": {
+   "n": 28,
+   "coins": 36,
+   "items": {
+    "iron_ore": 27,
+    "coal": 1
+   }
+  },
+  "farmer>farmer": {
+   "n": 895,
+   "coins": 1818,
+   "items": {
+    "wheat": 895
+   }
+  },
+  "merchant_raw>farmer": {
+   "n": 96,
+   "coins": 206,
+   "items": {
+    "wheat": 96
+   }
+  },
+  "woodcutter>farmer": {
+   "n": 1695,
+   "coins": 3546,
+   "items": {
+    "wheat": 1695
+   }
+  },
+  "miner>farmer": {
+   "n": 52,
+   "coins": 108,
+   "items": {
+    "wheat": 52
+   }
+  },
+  "laborer>merchant_food": {
+   "n": 66,
+   "coins": 158,
+   "items": {
+    "wheat": 56,
+    "roast_meat": 4,
+    "pottage": 6
+   }
+  },
+  "laborer>farmer": {
+   "n": 24,
+   "coins": 50,
+   "items": {
+    "wheat": 24
+   }
+  },
+  "merchant_goods>merchant_food": {
+   "n": 74,
+   "coins": 179,
+   "items": {
+    "wheat": 52,
+    "pottage": 12,
+    "roast_meat": 10
+   }
+  },
+  "woodcutter>merchant_food": {
+   "n": 1230,
+   "coins": 3176,
+   "items": {
+    "wheat": 1024,
+    "pottage": 5,
+    "roast_meat": 201
+   }
+  },
+  "smith>merchant_food": {
+   "n": 521,
+   "coins": 1468,
+   "items": {
+    "wheat": 376,
+    "pottage": 1,
+    "roast_meat": 144
+   }
+  },
+  "reeve>merchant_raw": {
+   "n": 131,
+   "coins": 298,
+   "items": {
+    "log": 131
+   }
+  },
+  "elder>merchant_food": {
+   "n": 23,
+   "coins": 71,
+   "items": {
+    "pottage": 11,
+    "roast_meat": 12
+   }
+  },
+  "farmer>merchant_food": {
+   "n": 239,
+   "coins": 631,
+   "items": {
+    "pottage": 5,
+    "wheat": 172,
+    "roast_meat": 62
+   }
+  },
+  "smith>farmer": {
+   "n": 448,
+   "coins": 950,
+   "items": {
+    "wheat": 448
+   }
+  },
+  "tanner>tavernkeeper": {
+   "n": 4,
+   "coins": 15,
+   "items": {
+    "roast_meat": 4
+   }
+  },
+  "miner>merchant_food": {
+   "n": 130,
+   "coins": 304,
+   "items": {
+    "wheat": 120,
+    "pottage": 5,
+    "roast_meat": 5
+   }
+  },
+  "tanner>farmer": {
+   "n": 45,
+   "coins": 118,
+   "items": {
+    "wheat": 32,
+    "hide": 13
+   }
+  },
+  "carpenter>merchant_food": {
+   "n": 529,
+   "coins": 1289,
+   "items": {
+    "wheat": 424,
+    "pottage": 3,
+    "roast_meat": 102
+   }
+  },
+  "merchant_raw>merchant_food": {
+   "n": 192,
+   "coins": 513,
+   "items": {
+    "wheat": 130,
+    "pottage": 9,
+    "roast_meat": 53
+   }
+  },
+  "merchant_goods>tanner": {
+   "n": 7,
+   "coins": 28,
+   "items": {
+    "leather": 7
+   }
+  },
+  "miner>tavernkeeper": {
+   "n": 7,
+   "coins": 21,
+   "items": {
+    "roast_meat": 7
+   }
+  },
+  "sage>tavernkeeper": {
+   "n": 76,
+   "coins": 229,
+   "items": {
+    "roast_meat": 75,
+    "ale": 1
+   }
+  },
+  "carpenter>farmer": {
+   "n": 750,
+   "coins": 1562,
+   "items": {
+    "wheat": 750
+   }
+  },
+  "sage>farmer": {
+   "n": 88,
+   "coins": 176,
+   "items": {
+    "wheat": 88
+   }
+  },
+  "hunter>merchant_food": {
+   "n": 69,
+   "coins": 160,
+   "items": {
+    "wheat": 66,
+    "roast_meat": 1,
+    "pottage": 2
+   }
+  },
+  "smith>tanner": {
+   "n": 16,
+   "coins": 64,
+   "items": {
+    "leather": 16
+   }
+  },
+  "elder>tavernkeeper": {
+   "n": 21,
+   "coins": 61,
+   "items": {
+    "roast_meat": 19,
+    "pottage": 2
+   }
+  },
+  "carpenter>tavernkeeper": {
+   "n": 113,
+   "coins": 338,
+   "items": {
+    "roast_meat": 112,
+    "pottage": 1
+   }
+  },
+  "merchant_goods>farmer": {
+   "n": 20,
+   "coins": 40,
+   "items": {
+    "wheat": 20
+   }
+  },
+  "hunter>farmer": {
+   "n": 49,
+   "coins": 105,
+   "items": {
+    "wheat": 49
+   }
+  },
+  "merchant_raw>merchant_raw": {
+   "n": 81,
+   "coins": 169,
+   "items": {
+    "log": 81
+   }
+  },
+  "merchant_food>merchant_food": {
+   "n": 249,
+   "coins": 558,
+   "items": {
+    "wheat": 238,
+    "roast_meat": 11
+   }
+  },
+  "reeve>merchant_food": {
+   "n": 104,
+   "coins": 246,
+   "items": {
+    "wheat": 102,
+    "roast_meat": 2
+   }
+  },
+  "merchant_goods>carpenter": {
+   "n": 18,
+   "coins": 36,
+   "items": {
+    "log": 18
+   }
+  },
+  "sage>merchant_food": {
+   "n": 98,
+   "coins": 212,
+   "items": {
+    "wheat": 98
+   }
+  },
+  "tanner>merchant_food": {
+   "n": 3,
+   "coins": 6,
+   "items": {
+    "wheat": 2,
+    "pottage": 1
+   }
+  },
+  "farmer>carpenter": {
+   "n": 588,
+   "coins": 1176,
+   "items": {
+    "log": 588
+   }
+  },
+  "cook>carpenter": {
+   "n": 49,
+   "coins": 98,
+   "items": {
+    "log": 49
+   }
+  },
+  "laborer>carpenter": {
+   "n": 9,
+   "coins": 18,
+   "items": {
+    "log": 9
+   }
+  },
+  "woodcutter>carpenter": {
+   "n": 356,
+   "coins": 713,
+   "items": {
+    "log": 356
+   }
+  },
+  "tavernkeeper>carpenter": {
+   "n": 44,
+   "coins": 88,
+   "items": {
+    "log": 44
+   }
+  },
+  "hunter>carpenter": {
+   "n": 8,
+   "coins": 16,
+   "items": {
+    "log": 8
+   }
+  },
+  "merchant_food>carpenter": {
+   "n": 116,
+   "coins": 232,
+   "items": {
+    "log": 116
+   }
+  },
+  "sage>carpenter": {
+   "n": 115,
+   "coins": 230,
+   "items": {
+    "log": 115
+   }
+  },
+  "manor_hand>carpenter": {
+   "n": 499,
+   "coins": 998,
+   "items": {
+    "log": 499
+   }
+  },
+  "tanner>carpenter": {
+   "n": 3,
+   "coins": 6,
+   "items": {
+    "log": 3
+   }
+  },
+  "reeve>tavernkeeper": {
+   "n": 3,
+   "coins": 9,
+   "items": {
+    "roast_meat": 3
+   }
+  },
+  "manor_hand>merchant_food": {
+   "n": 1550,
+   "coins": 3678,
+   "items": {
+    "roast_meat": 110,
+    "wheat": 1438,
+    "pottage": 2
+   }
+  },
+  "reeve>carpenter": {
+   "n": 50,
+   "coins": 100,
+   "items": {
+    "log": 50
+   }
+  },
+  "reeve>farmer": {
+   "n": 80,
+   "coins": 164,
+   "items": {
+    "wheat": 80
+   }
+  },
+  "manor_hand>farmer": {
+   "n": 1014,
+   "coins": 2088,
+   "items": {
+    "wheat": 1014
+   }
+  },
+  "woodcutter>smith": {
+   "n": 108,
+   "coins": 4727,
+   "items": {
+    "axe": 108
+   }
+  },
+  "manor_hand>merchant_raw": {
+   "n": 1022,
+   "coins": 2206,
+   "items": {
+    "log": 1022
+   }
+  },
+  "merchant_goods>hunter": {
+   "n": 32,
+   "coins": 64,
+   "items": {
+    "hide": 32
+   }
+  },
+  "hunter>tavernkeeper": {
+   "n": 6,
+   "coins": 16,
+   "items": {
+    "roast_meat": 4,
+    "pottage": 2
+   }
+  },
+  "manor_hand>tavernkeeper": {
+   "n": 174,
+   "coins": 522,
+   "items": {
+    "roast_meat": 171,
+    "ale": 3
+   }
+  },
+  "carpenter>carpenter": {
+   "n": 74,
+   "coins": 148,
+   "items": {
+    "log": 74
+   }
+  },
+  "guard>carpenter": {
+   "n": 220,
+   "coins": 440,
+   "items": {
+    "log": 220
+   }
+  },
+  "smith>tavernkeeper": {
+   "n": 72,
+   "coins": 216,
+   "items": {
+    "roast_meat": 72
+   }
+  },
+  "cook>merchant_food": {
+   "n": 181,
+   "coins": 402,
+   "items": {
+    "wheat": 178,
+    "pottage": 1,
+    "roast_meat": 2
+   }
+  },
+  "tavernkeeper>merchant_food": {
+   "n": 132,
+   "coins": 304,
+   "items": {
+    "wheat": 122,
+    "roast_meat": 10
+   }
+  },
+  "guard>tavernkeeper": {
+   "n": 2,
+   "coins": 6,
+   "items": {
+    "roast_meat": 2
+   }
+  },
+  "tavernkeeper>farmer": {
+   "n": 100,
+   "coins": 208,
+   "items": {
+    "wheat": 100
+   }
+  },
+  "merchant_goods>woodcutter": {
+   "n": 9,
+   "coins": 142,
+   "items": {
+    "copper_sword": 3,
+    "pickaxe": 1,
+    "hide": 3,
+    "hammer": 1,
+    "iron_sword": 1
+   }
+  },
+  "smith>woodcutter": {
+   "n": 18,
+   "coins": 41,
+   "items": {
+    "leather": 3,
+    "iron_ore": 10,
+    "plank": 5
+   }
+  },
+  "merchant_food>tavernkeeper": {
+   "n": 4,
+   "coins": 12,
+   "items": {
+    "roast_meat": 4
+   }
+  },
+  "tavernkeeper>tavernkeeper": {
+   "n": 2,
+   "coins": 9,
+   "items": {
+    "roast_meat": 2
+   }
+  }
+ }
+}

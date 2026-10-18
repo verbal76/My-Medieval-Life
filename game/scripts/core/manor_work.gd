@@ -16,7 +16,7 @@ extends RefCounted
 ## A household under a day of food is not left waiting: its relief is delivered at once, as before.
 ##
 ## Jobs are paid from the treasury, set aside when a job is taken (the treasury keeps
-## `treasury_reserve_days` of obligations after the wage, as all day labour does) and paid when it is
+## `manor_job_reserve_days` of obligations after the wage) and paid when it is
 ## done; a job left undone is released at the next dawn after `manor_jobs.days`, its wage and goods
 ## back. Manor hands are already paid a day's wage: they take jobs unpaid. One job at a time per worker.
 ## Carried goods ride in the job's own load (never the worker's pack), so they cannot be sold, eaten or
@@ -275,11 +275,15 @@ func is_staff(who: String) -> bool:
 	return n != null and n.job == "manor_hand"
 
 
-## Whether the treasury can set this wage aside (manor hands are already paid: no wage).
+## Whether the treasury can set this wage aside (manor hands are already paid: no wage). A day's job
+## is a small, short promise: it keeps `manor_job_reserve_days` of obligations after the wage, the
+## same line the evening's repairs are bought above (B7-009; the 10 days stay for hiring staff). The
+## treasury starts at 270, under the 460 that ten days need, so with the long reserve no paid work
+## existed until about day 12.
 func can_fund(j: Dictionary, who: String) -> bool:
 	if is_staff(who):
 		return true
-	return w.treasury - int(j.wage) >= w.brain.daily_obligations() * float(GameData.b("treasury_reserve_days"))
+	return w.treasury - int(j.wage) >= w.brain.daily_obligations() * float(GameData.b("manor_job_reserve_days"))
 
 
 ## The jobs open to this worker now, most needed first (relief, the granary, the yard, mending,

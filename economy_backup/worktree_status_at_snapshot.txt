@@ -1,0 +1,8 @@
+ M docs/SYSTEM_INTERACTION_MANIFEST.md
+ M docs/systems/RESOURCE_USAGE_REGISTRY.md
+ M game/data/balance.json
+ M game/data/resources.json
+ M game/scripts/core/manor_work.gd
+ M game/scripts/core/npc_brain.gd
+ M game/scripts/core/world.gd
+ M game/tests/run_tests.gd
