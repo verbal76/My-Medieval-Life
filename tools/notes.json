@@ -1,0 +1,291 @@
+{
+ "order": [
+  "My-Medieval-Life",
+  "Climb-Up",
+  "Tartaria-RPG",
+  "Game-Designer",
+  "808-Beats",
+  "Fix-Tremors",
+  "Backrooms-Survivor",
+  "Axolotl",
+  "Ocean-spore",
+  "Purgatory-Dungeon",
+  "Ragdoll-Rally",
+  "Endless-Escaspe",
+  "Idle-game",
+  "My-Personal-Crossow0rd",
+  "Zombie-squisher",
+  "voiceforge",
+  "LLM-Trainer",
+  "Cfm-calculator",
+  "spiroglyphics",
+  "personal-assistant-",
+  "Manual-J",
+  "web_auditor",
+  "HotAtticGames.github.io"
+ ],
+ "batches": [
+  [
+   "My-Medieval-Life",
+   "Climb-Up",
+   "Tartaria-RPG",
+   "Game-Designer",
+   "808-Beats"
+  ],
+  [
+   "Fix-Tremors",
+   "Backrooms-Survivor",
+   "Axolotl",
+   "Ocean-spore"
+  ],
+  [
+   "Purgatory-Dungeon",
+   "Ragdoll-Rally",
+   "Endless-Escaspe",
+   "Idle-game"
+  ],
+  [
+   "My-Personal-Crossow0rd",
+   "Zombie-squisher",
+   "voiceforge",
+   "LLM-Trainer"
+  ],
+  [
+   "Cfm-calculator",
+   "spiroglyphics",
+   "personal-assistant-",
+   "Manual-J",
+   "web_auditor",
+   "HotAtticGames.github.io"
+  ]
+ ],
+ "repos": {
+  "My-Medieval-Life": {
+   "visibility": "public",
+   "display": "My Medieval Life",
+   "kind": "game",
+   "engine": "Godot 4.7 (game/), Python 3 tooling (tools/)",
+   "purpose": "\"My Medieval Life is a 2D medieval game built from 16x16 pixel-art packs (mostly by Shade).\"",
+   "purpose_src": "staging/my-medieval-life:CLAUDE.md",
+   "authoritative": "Per CLAUDE.md section 5: `staging/my-medieval-life` is the remote branch for ongoing development; `main` is \"the approved integrated source\" and changes only when the owner merges; `wip/<worktree>` hold unfinished agent snapshots. Build 7 (`679907121654c7630b170690752429b55a74b8ac`) is the active testing release (CLAUDE.md, docs/release/BUILD_7_ISSUES.md).",
+   "status": "active",
+   "extra": "mml"
+  },
+  "Climb-Up": {
+   "visibility": "public",
+   "display": "Upwardly (working title \"Climb up\")",
+   "kind": "game",
+   "engine": "libGDX 1.14.2 (Java/Gradle): Android, Windows, Linux/Steam Deck",
+   "purpose": "\"A 2.5D skill-platformer by **Hot Attic Games**: climb a spiral tower that doesn't exist.\" The README states the working title \"Climb up\" was renamed Upwardly; the package id `com.hotatticgames.climbup` keeps the old word.",
+   "purpose_src": "ccr-cb458cd1-w4dh5c:README.md",
+   "authoritative": "docs/BRANCH_LEDGER.md on `ccr-cb458cd1-w4dh5c`: \"The authoritative source line is **`ccr-cb458cd1-w4dh5c`**\"; CLAUDE.md there calls itself the \"AUTHORITATIVE BUILD SPECIFICATION\" (spec version 6). The GitHub default branch `main` holds only 3 uploaded files.",
+   "status": "active",
+   "extra": "climb"
+  },
+  "Tartaria-RPG": {
+   "visibility": "public",
+   "display": "Tartaria Realms",
+   "kind": "game",
+   "engine": "Expo / React Native, TypeScript",
+   "purpose": "\"A procedural narrative RPG set in the Tartaria Prima universe by Kevin Ernst.\"",
+   "purpose_src": "golem-line:README.md",
+   "authoritative": "HANDOFF.md on `golem-line`: \"branch `golem-line` — **THE TRUNK.** Since OTA-1384 one branch builds all four products\"; it also says \"The `HaL2001` branch is archived; **the HAL PRODUCT is not**\". CLAUDE.md says HANDOFF.md \"is the operational source of truth\". The GitHub default branch `main` is a 12-file upload snapshot.",
+   "status": "active"
+  },
+  "Game-Designer": {
+   "visibility": "public",
+   "display": "Game Designer",
+   "kind": "tool (Android app)",
+   "engine": "Kotlin / Gradle (Android)",
+   "purpose": "\"This is an app that takes all of your aggregated input and builds a claude.md file and a Master Claude prompt to start game development with a working build.\"",
+   "purpose_src": "main:README.md",
+   "authoritative": "CLAUDE.md: \"This file is the authoritative product specification for `verbal76/Game-Designer`.\" HANDOFF.md names branch `ccr-6330e20f-dm7zhm` (PR #1, draft) as the working branch; which branch is the product line is not stated outright, so: unresolved.",
+   "status": "dormant",
+   "note": "HANDOFF.md (ccr-6330e20f-dm7zhm) records a PRIVATE DRAFT release `gd-signing-keys` holding signing material. Recorded by name only; not read."
+  },
+  "808-Beats": {
+   "visibility": "private",
+   "skip": "Owner's standing rule: \"Nothing from the 808 Beat Machine app goes in the repo\" (My-Medieval-Life). Listed by name and visibility only; nothing was read or recorded."
+  },
+  "Fix-Tremors": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Fix-Tremors",
+   "kind": "tool (game patch)",
+   "engine": "Windows batch / config patch for an Unreal Engine 4.23 game",
+   "purpose": "\"Crash fix for **T R E M O R S (Rebirth)** by Stefano Cagnani V3 (itch.io), Windows build dated May 23, 2024\"",
+   "purpose_src": "claude/practical-ptolemy-7psxvw:README.md",
+   "authoritative": "unresolved (the fix lives on `claude/practical-ptolemy-7psxvw`, PR #1; `main` has only README.md).",
+   "status": "dormant"
+  },
+  "Backrooms-Survivor": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Backrooms Survivor",
+   "kind": "game",
+   "engine": "Godot 4.3 (godot/); legacy LÖVE2D Lua reference in the root",
+   "purpose": "\"One game, one codebase. The LÖVE2D Lua files in the repo root are the **legacy reference implementation** ... The product is the Godot 4.3 project in `godot/`\"",
+   "purpose_src": "main:CLAUDE.md",
+   "authoritative": "docs/BRANCH_LEDGER.md (claude/fervent-franklin-hrrnb7): \"**Authoritative line: `dev`**\".",
+   "status": "active"
+  },
+  "Axolotl": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Mote",
+   "kind": "game",
+   "engine": "Godot (project.godot), Android + iPhone",
+   "purpose": "\"A mobile 3D third-person platforming proof of concept (Android + iPhone, landscape) set inside one household aquarium.\" Product name Mote; repo keeps the name Axolotl.",
+   "purpose_src": "claude/mote-release-source:README.md",
+   "authoritative": "unresolved (no branch ledger found on the latest branch; `main` has only README.md and the studio logo; `claude/mote-release-source` is the most recent branch).",
+   "status": "active"
+  },
+  "Ocean-spore": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Ocean Spore",
+   "kind": "game",
+   "engine": "Expo SDK 54 / React Native 0.81, three.js",
+   "purpose": "\"This game you start out as a little boat and have to salvage your way up by finding pieces and breaking enemies down for parts to grow and unlock ships.\"",
+   "purpose_src": "main:README.md",
+   "authoritative": "unresolved (CLAUDE.md on `ccr-47defc1a-89uvnr` names a rollback checkpoint v40 = `e2712522338cc1600d52be9bc78d5e9a293eeae3` but no authoritative branch).",
+   "status": "active"
+  },
+  "Purgatory-Dungeon": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Purgatory Dungeon",
+   "kind": "game",
+   "engine": "Godot 4.6, GDScript (Forward Plus, Jolt)",
+   "purpose": "\"First-person procedural dungeon-crawler roguelike (Barbarian or Mage) built in **Godot 4.6**\"",
+   "purpose_src": "ccr-5f32885a-gvu16v:README.md",
+   "authoritative": "docs/BRANCH_LEDGER.md (2026-10-12): \"Authoritative line at the time of the audit: branch `ccr-5f32885a-gvu16v`\"; `main` \"still points at the old v2.5 upload snapshot\".",
+   "status": "active"
+  },
+  "Ragdoll-Rally": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Ragdoll Rally Launch",
+   "kind": "game",
+   "engine": "Godot 4.7.1 (launch/)",
+   "purpose": "CLAUDE.md: \"Game name stays **Ragdoll Rally Launch** in the app and About\"; \"ONE game, ONE Godot project (`launch/`), many targets (Android, Windows, Linux/Steam Deck).\"",
+   "purpose_src": "claude/launch-gameplay-pivot:CLAUDE.md",
+   "authoritative": "docs/BRANCH_LEDGER.md: \"Authoritative development line: `claude/launch-gameplay-pivot` @ `c27db17ab323`\" (the branch has since moved; see branch table).",
+   "status": "active"
+  },
+  "Endless-Escaspe": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Endless Escape",
+   "kind": "game",
+   "engine": "Expo / React Native, TypeScript",
+   "purpose": "\"A stealth escape game for Android phones: slip past guards, dogs, cameras and searchlights across a prison yard.\"",
+   "purpose_src": "claude/api36-native-qualification:README.md",
+   "authoritative": "unresolved (`main` holds 5 files; no ledger read).",
+   "status": "active"
+  },
+  "Idle-game": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Where's the Bottom? (formerly \"Boarder\")",
+   "kind": "game",
+   "engine": "Babylon.js + TypeScript inside an Expo WebView shell; EAS Update OTA",
+   "purpose": "\"A low-poly snowboarding game for Android phones.\" The `main` README still calls it \"Boarder\".",
+   "purpose_src": "claude/hold-candidate-next:README.md",
+   "authoritative": "authoritative.json (claude/hold-candidate-next): \"authoritativeLine\": \"claude/repo-gameplay-review-loq9rq\", baselineSha `41c8cfbbe8d747e6fce072c9e2164d0d2e7ade77` (\"Source of the live OTA #83\").",
+   "status": "active"
+  },
+  "My-Personal-Crossow0rd": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "My Personal Crossword",
+   "kind": "game",
+   "engine": "Kotlin / Gradle Android, plus a desktop (Windows/Linux/Steam Deck) front end",
+   "purpose": "\"My crossword game app\"",
+   "purpose_src": "main:README.md",
+   "authoritative": "AUTHORITATIVE_BRANCH file and docs/BRANCH_LEDGER.md: \"**Authoritative line:** `claude/native-stack-modernization`\"; `main` is a \"Stale April baseline plus two owner asset uploads\".",
+   "status": "active"
+  },
+  "Zombie-squisher": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Zombie Squisher / Zombie Crusher (name is an open owner decision)",
+   "kind": "game",
+   "engine": "Expo SDK 54 / React Native 0.81, three.js (react-three-fiber)",
+   "purpose": "\"Top-down arcade-y driving game. Run swarms of zombies over with your bumper\"",
+   "purpose_src": "ccr-27903f19-fy49jb:README.md",
+   "authoritative": "docs/BRANCH_LEDGER.md (ccr-27903f19-fy49jb) names the working branch `ccr-27903f19-fy49jb` (PR #1) as the authoritative line; `main` \"is the GitHub default branch but is **not** a product line\". The README on that branch instead calls `Github-build-pipeline-zombie-crusher` the \"Primary working branch\": conflicting records.",
+   "status": "active"
+  },
+  "voiceforge": {
+   "visibility": "private",
+   "display": "Voice Forge",
+   "kind": "app",
+   "engine": "Expo / React Native, TypeScript (plus trainer/)",
+   "purpose": "\"voice cloner for an AI\"",
+   "purpose_src": "main:README.md",
+   "authoritative": "unresolved (CLAUDE.md sets release naming; no branch ledger read).",
+   "status": "dormant"
+  },
+  "LLM-Trainer": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "LLM Trainer",
+   "kind": "tool",
+   "engine": "Python factory core + Kotlin/Gradle Android app",
+   "purpose": "\"A reusable **specialist-model factory**: ingest authorized domain material, build and evaluate specialist LLMs\"",
+   "purpose_src": "ccr-a278e57a-o761ch:README.md",
+   "authoritative": "README: \"Authoritative requirements: `CLAUDE.md` and `docs/START_PROMPT.md`\". Authoritative branch: unresolved.",
+   "status": "active"
+  },
+  "Cfm-calculator": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Verbal's CFM Calculator",
+   "kind": "app (HVAC tool)",
+   "engine": "Capacitor 8 / Android API 36, TypeScript + Vite",
+   "purpose": "\"Verbal's CFM Calculator (gas-heating CFM per ton and refrigerant subcooling checks).\"",
+   "purpose_src": "ccr-ac67996a-npuzs3:README.md",
+   "authoritative": "CLAUDE.md: \"`release/VERSION` is the single source of truth (versionCode == N)\"; branch: unresolved.",
+   "status": "dormant"
+  },
+  "spiroglyphics": {
+   "visibility": "private",
+   "display": "Spiroglyphics",
+   "kind": "app",
+   "engine": "Expo / React Native, TypeScript",
+   "purpose": "\"Android app (React Native / Expo) that turns a photo into a printable coloring page made of one continuous spiral lane.\"",
+   "purpose_src": "claude/spiroglyphics-coloring-app-Stwjt:README.md",
+   "authoritative": "CLAUDE.md: version single source `public-version.json`; branch: unresolved.",
+   "status": "dormant"
+  },
+  "personal-assistant-": {
+   "visibility": "private",
+   "display": "Personal Assistant",
+   "kind": "app",
+   "engine": "Expo / React Native, TypeScript",
+   "purpose": "\"A polished iOS + Android recording app that auto-transcribes and turns your audio into structured notes\"",
+   "purpose_src": "main:README.md",
+   "authoritative": "unresolved.",
+   "status": "dormant"
+  },
+  "Manual-J": {
+   "visibility": "not stated (read through the session git proxy; may be private)",
+   "display": "Manual J",
+   "kind": "app (HVAC tool)",
+   "engine": "Capacitor / TypeScript + Vite",
+   "purpose": "\"Field-first residential heating/cooling load **survey and calculation** tool (phone/tablet, offline). **Not ACCA-approved; not an official Manual J result.**\"",
+   "purpose_src": "ccr-5e589233-wbh6h3:README.md",
+   "authoritative": "unresolved. CLAUDE.md says \"do not publish OTAs or make the repo public\"; its visibility was not given to this scan and could not be checked.",
+   "status": "dormant"
+  },
+  "web_auditor": {
+   "visibility": "private",
+   "display": "Website Auditor",
+   "kind": "tool",
+   "engine": "Python (PyInstaller spec, build.bat)",
+   "purpose": "\"Crawls any website, screenshots every page at desktop and mobile sizes, and produces a PDF report\"",
+   "purpose_src": "main:README.md",
+   "authoritative": "single branch `main`.",
+   "status": "dormant"
+  },
+  "HotAtticGames.github.io": {
+   "visibility": "public",
+   "display": "Hot Attic Games studio site",
+   "kind": "website",
+   "engine": "GitHub Pages (README only)",
+   "purpose": "\"Hot Attic Games home page\"",
+   "purpose_src": "main:README.md",
+   "authoritative": "single branch `main`; it holds only README.md, so there is no site content yet.",
+   "status": "dormant"
+  }
+ }
+}
