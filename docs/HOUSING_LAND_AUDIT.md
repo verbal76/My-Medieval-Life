@@ -73,4 +73,6 @@ NPCs never build, own land or move house. Nothing can be rented. There is no pro
 
 ## Questions for the owner
 
-See the conversation of 2026-10-18; answers go to `docs/DECISIONS.md`.
+Answered by the owner on 2026-10-18; see the property and construction entry in `docs/DECISIONS.md`.
+Still open: amounts (land prices, rents, wages, workshop costs) stay provisional until the balance
+review; save version 4 must keep the current two plots and any house built on them.
