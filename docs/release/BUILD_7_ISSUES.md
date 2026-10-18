@@ -53,7 +53,7 @@ files and systems, the test evidence and the fixing commit.
 | B7-010 | 2026-10-18 | Bug | S3 | Android (all) | The status panel sits too far from the top-left corner; HUD placed by fixed coordinates inside an inset root | Fixed (staging) | `633898f` | Yes |
 | B7-011 | 2026-10-18 | Bug | S2 | Android (all, touch) | "Mine"/"Fell" prompts appear while walking past, but tapping a tree or ore does nothing and how to gather is unclear | Fixed (staging) | `633898f`, `c8dce2e` | Yes |
 | B7-012 | 2026-10-18 | Enhancement (approved) | — | All | Gather mode: a toggle; tap a resource; walk to it and gather until it runs out or is stopped | Done (staging) | `c8dce2e` | Yes |
-| B7-013 | 2026-10-18 | Enhancement (approved) | — | All | Icons from the flat UI pack's set 2 as brown glyphs on a transparent background for the HUD status panel, equipment slots, skills and journal, and the action bar | Ready | — | Yes (looks) |
+| B7-013 | 2026-10-18 | Enhancement (approved) | — | All | Icons from the flat UI pack's set 2 as brown glyphs on a transparent background for the HUD status panel, equipment slots, skills and journal, and the action bar | Done (staging) | see detail | Yes (looks) |
 
 Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`),
 measured with `game/tests/earn_sim.gd`, seed 1. The owner approved the corrections for B7-001 to
@@ -171,7 +171,16 @@ Test evidence for `ae0e01f` (run on this machine):
 - Device check: needed (touch on the phone, a real gamepad).
 
 ### B7-013 Brown glyph icons
-- Owner, 2026-10-18: icons from the flat UI pack's set 2, drawn as a brown glyph on a transparent background (not a white glyph on a brown tile), for the HUD status panel, equipment slots, skills and journal, and the action bar. Status: ready, after B7-012.
+- Owner, 2026-10-18: icons from the flat UI pack's set 2, drawn as a brown glyph on a transparent background (not a white glyph on a brown tile), for the HUD status panel, equipment slots, skills and journal, and the action bar.
+- Implementation: `tools/import_game_assets.py` draws the glyph alone, wood brown (111, 74, 44) on a transparent background with a thin cream edge (the interface's text colour) so it reads over grass, stone, dark windows and parchment (an agent addition for legibility; easy to remove if unwanted). It covers:
+  - the action bar (Use, Gather, Attack, Fire, Pack, Skills, Map, Menu, Recenter) and the status icons (health, hunger, stamina, coins);
+  - new empty-slot glyphs for the six gear slots (set 2: sword, axe, breastplate, helmet, necklace, ring), which replace the faded item sprites;
+  - a glyph beside each skill in the skills window (torch, axe, hammer, rope, campfire, sword, scroll, money bag, paw print);
+  - a `journal` scroll glyph for the journal page.
+
+  Window buttons (close, back, save, settings) keep their tiles. Each file's source and processing is in `game/assets/PROVENANCE.json`.
+- Looked at: a contact sheet over four backgrounds; the HUD and action bar, the pack with filled and empty slots, and the skills window, on a 2400x1080 phone.
+- Device check: how it looks on the phone.
 
 ### B7-009 The manor cannot afford paid work for its first twelve days
 - Reported: 2026-10-18, agent, while checking the reeve's work.

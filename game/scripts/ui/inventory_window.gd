@@ -40,8 +40,6 @@ const CELL := Vector2(18, 18)
 const GEAR_AT := {"head": Vector2(12, 52), "amulet": Vector2(12, 70), "armor": Vector2(12, 88),
 	"weapon": Vector2(66, 52), "tool": Vector2(66, 70), "ring": Vector2(66, 88)}
 const GEAR_NAMES := {"weapon": "In hand", "tool": "Tool", "armor": "Body", "head": "Head", "amulet": "Amulet", "ring": "Ring"}
-const GEAR_GHOST := {"weapon": "rusty_sword", "tool": "pickaxe", "armor": "leather_armor", "head": "leather_cap",
-	"amulet": "amulet", "ring": "copper_ring"}
 const GEAR_HINT := {"weapon": "Nothing in hand. Wield a sword here.", "tool": "No tool in hand. Pickaxes and axes go here.",
 	"armor": "Nothing worn. Clothes and armour go here.", "head": "Nothing worn. Caps and helmets go here.",
 	"amulet": "Nothing worn. An amulet goes here.", "ring": "Nothing worn. A ring goes here."}
@@ -412,7 +410,8 @@ func _draw() -> void:
 		if id != "" and p.inv.has(id):
 			draw_texture_rect(_icon(ICON % id), _r(Rect2(at + Vector2(1, 1), Vector2(16, 16))), false)
 		else:
-			draw_texture_rect(_icon(ICON % GEAR_GHOST[slot]), _r(Rect2(at + Vector2(1, 1), Vector2(16, 16))), false, Color(0.3, 0.2, 0.1, 0.35))
+			# an empty slot shows what goes there: the flat UI pack's brown glyph (owner, B7-013)
+			draw_texture_rect(_icon("res://assets/ui/slot_%s.png" % slot), _r(Rect2(at + Vector2(2, 2), Vector2(14, 14))), false, Color(1, 1, 1, 0.8))
 		if selected == "gear:" + slot:
 			draw_rect(_r(Rect2(at, CELL)), PALE, false, k)
 	var fs := maxi(11, int(round(5.5 * k)))

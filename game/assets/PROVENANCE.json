@@ -1006,8 +1006,8 @@
    "file": "assets/ui/attack.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "ab19a5e722a9731cc1183023ca3206711daa7b8738049a9fefc2cb01a0d8aa2c"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 8; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "b8a02e5e979de0f0b511ac23b43f3e528a20ddf9eb69bfdcc5f91fca03d359e6"
   },
   {
    "file": "assets/ui/back.png",
@@ -1027,29 +1027,29 @@
    "file": "assets/ui/coins.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "4d9b067f0305b9cede00b2152ebf5c81b5e488f994a1b81e2330bab7e77e1ef5"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 0; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "d715de0ca6998c9d46d728d7c89dceccc2bea2a32e80bbfbefe498e69c1628ba"
   },
   {
    "file": "assets/ui/fire.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 4, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "3104770d453da4dfb2c124b543f5757c59894f52bce0e981ea7cd1a5d081f2b0"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 4, column 0; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "0f0b39339e276d12fffa9da7db651542c43506fce66bfe4332648dadd13b3f48"
   },
   {
    "file": "assets/ui/gather.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 4; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "bc754f19c7cc59295f915c63b62398a586ff8a59711969a2a20f1d24462ce4fa"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 4; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "612fcb45eab9acb14e1753da1e084a35369f5ed1ee7db13e11044249b12f249a"
   },
   {
    "file": "assets/ui/health.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 0, column 3; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "63e3094960f5f6d104534f3958d07d41bbe973359f33874f66a755fc4b08a47e"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 0, column 3; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "fe5b424e914b8fd975ce8311be15db77cbac3279cadddf10d1582f6cf689c5fc"
   },
   {
    "file": "assets/ui/home.png",
@@ -1062,29 +1062,36 @@
    "file": "assets/ui/hunger.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 5; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "9025d07769e7e25c453f579aff68b1b879dfdf84a99dacfab777c5d7caea232e"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 5; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "693007b475639f621626782bdb67cdb261deeb5f33341d89402b82ba84952385"
+  },
+  {
+   "file": "assets/ui/journal.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 9, column 6; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "95723c9d2c29b06dd7f01d597adc75ea87bf4949eac14fd6b55f5f20e8632dd1"
   },
   {
    "file": "assets/ui/map.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 5, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "e0f51b93571a6c490c270f5195e99675fed05b3b8ed84dfe03a8553fea1957f0"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 5, column 0; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "fba82b6c2b40646dbe275f4f5bbfd132cdcb05ad6b17334bf104f9475145e3a5"
   },
   {
    "file": "assets/ui/menu.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_1.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "6ef24c831222bcc62ae1c225dc86c2e9c87f71d3510009a5beb1dbb8c8d9e158"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 8; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "106354cb95cdc6133811de6c22fe3a0188b89678638e7331c8a08d60662d5175"
   },
   {
    "file": "assets/ui/pack.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "76b3539086bd0b615d872ca002e641140e81d905e6511939817f3093c3447e97"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 0; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "0fd389a6f973a954bcd8ca2a673aac403370931b5f210177cc5143910b7b973c"
   },
   {
    "file": "assets/ui/play.png",
@@ -1097,8 +1104,8 @@
    "file": "assets/ui/recenter.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_1.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 2; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "5557aa0364b5ec1023bfd82ea872d23b402991d811a0bd2d4c5c3dd8c08da14a"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 2; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "4435821b3d5ea0bb2e555cadceb716d54b7f7ca581a2fcfa3410bea7daef8a4c"
   },
   {
    "file": "assets/ui/save.png",
@@ -1122,18 +1129,123 @@
    "sha256": "1c60be7f12b7cb9007c3020e97f407b990df318f7f3937a965971b182ebec3c4"
   },
   {
+   "file": "assets/ui/skill_combat.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 8, column 3; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "1b46d0da367c86f3171422ab39fd2e03f62cc0d2d3c729afef25e67c1bf7a16b"
+  },
+  {
+   "file": "assets/ui/skill_cooking.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 7; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "3b6a8309fb39e574f1c35307eff82bea78ccd839e4b460e36111d3fc728c85bc"
+  },
+  {
+   "file": "assets/ui/skill_crafting.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 5, column 3; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "6ae415a16f7f0cedb48f1a7fa7115884c2fab737c161da79f24619c4cbfd9133"
+  },
+  {
+   "file": "assets/ui/skill_magic.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 9, column 3; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "c77bcda0a14d9a5ed6bdd9fd12185595f5abc9156a6dfdaf06a63f9bd6352009"
+  },
+  {
+   "file": "assets/ui/skill_mining.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 3; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "3544c39e36599562902bd73d1967a04cf2bb062167b63c4bc2ab9436152dcb2d"
+  },
+  {
+   "file": "assets/ui/skill_smithing.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 8, column 5; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "af55df923336e93fbc03f496f36cc7708a04a535e0fd2970fa8b64bab938a399"
+  },
+  {
+   "file": "assets/ui/skill_stealth.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 4, column 3; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "9403066c0de8d265eee5832fb749233288842641c4e5995649bca5aaf8af4f17"
+  },
+  {
+   "file": "assets/ui/skill_trading.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 0; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "d715de0ca6998c9d46d728d7c89dceccc2bea2a32e80bbfbefe498e69c1628ba"
+  },
+  {
+   "file": "assets/ui/skill_woodcutting.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 1; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "7989b51f6bfb8184bb4a5af1c55a84cb6b2344dd818327febe58c7c1be21a175"
+  },
+  {
    "file": "assets/ui/skills.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_1.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "d135f51d03479e345869c618858e2ca2a82225cac52e355a3aca5a59a6341a40"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 8; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "d915989953152a0465b4c8aba33e1dad2bd4f14266549210d2745c5d0e3dcd9e"
+  },
+  {
+   "file": "assets/ui/slot_amulet.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 2, column 6; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "2c15fe253a80cca148a646d1edcd3d3ef3ed68a23dddc85eff48fc82851b916e"
+  },
+  {
+   "file": "assets/ui/slot_armor.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 5; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "ff5265b5f5fae8839d9d91c7625be9875bb088158cf3ec3bda0a119a0264697b"
+  },
+  {
+   "file": "assets/ui/slot_head.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 3; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "af7ac744bc664a078c9f2ff2454fe6ab756a61d7d50979403a44de9c99b841ae"
+  },
+  {
+   "file": "assets/ui/slot_ring.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 2, column 7; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "132190956072f70afc7de15e0ae0217e1c76470380cf137354a07719b92b029c"
+  },
+  {
+   "file": "assets/ui/slot_tool.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 1; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "7989b51f6bfb8184bb4a5af1c55a84cb6b2344dd818327febe58c7c1be21a175"
+  },
+  {
+   "file": "assets/ui/slot_weapon.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 8; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "b8a02e5e979de0f0b511ac23b43f3e528a20ddf9eb69bfdcc5f91fca03d359e6"
   },
   {
    "file": "assets/ui/stamina.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "910e6c9806071dd0c20c8b12a3b0eaea40fcd523cebd9910ee6eb3f60f4b5b64"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 0; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "46c12fada38bffe9a3c2e1159d0490e395290dec171ab4d6161349fed8b62fa2"
   },
   {
    "file": "assets/ui/trade.png",
@@ -1146,8 +1258,8 @@
    "file": "assets/ui/use.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_2.ai",
-   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
-   "sha256": "24f034219aac61c66367984ea94d743df7e5d4d4f6eb0ea624a25c9d2d8eadd1"
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 8; the white glyph only, recoloured to brown (111, 74, 44) on a transparent background with a (246, 236, 214) edge; resized to 128 px",
+   "sha256": "d840e590ac2228c9948db48a3b25beb5916f71a5a33690a9487e9c58345e1885"
   },
   {
    "file": "assets/ui/button.png",

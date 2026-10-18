@@ -1526,7 +1526,14 @@ func show_skills() -> void:
 		var s: Dictionary = GameData.skills[k]
 		var lv := p.level(k)
 		var into := p.xp_into_level(k)
-		_label("%s — level %d  (%d / %d xp)" % [s.name, lv, into.x, into.y], 20, Color(1, 0.85, 0.5))
+		var head := HBoxContainer.new()
+		head.add_child(_ui_icon("skill_" + str(k), 28))          # the skill's glyph (owner, B7-013)
+		var name_l := _label("%s — level %d  (%d / %d xp)" % [s.name, lv, into.x, into.y], 20, Color(1, 0.85, 0.5))
+		panel_body.remove_child(name_l)
+		name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		name_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		head.add_child(name_l)
+		panel_body.add_child(head)
 		var h := HBoxContainer.new()
 		var levels: Array = s.unlocks.keys()
 		levels.sort()

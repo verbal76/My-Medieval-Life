@@ -160,6 +160,11 @@ func _ready() -> void:
 				ui.show_journal(-1)
 			"journal_quests":
 				ui.show_journal(-1, true)
+			"inventory_bare":
+				# a new character's pack: the empty gear slots show their glyphs (B7-013)
+				for slot in PlayerState.GEAR:
+					world.player.set(slot, "")
+				ui.toggle_inventory()
 			"gather":
 				# Gather mode on, an iron seam chosen and being mined (B7-012)
 				gather_button()

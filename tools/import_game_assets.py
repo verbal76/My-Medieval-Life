@@ -64,6 +64,26 @@ UI_ICONS = {
     "play": ("icons_set_1.ai", 1, 6), "scroll": ("icons_set_2.ai", 9, 6), "trade": ("icons_set_1.ai", 4, 1),
     "map": ("icons_set_2.ai", 5, 0), "recenter": ("icons_set_1.ai", 1, 2), "gather": ("icons_set_2.ai", 3, 4),
 }
+# owner, 2026-10-18 (B7-013): the action bar, the status icons and the empty gear slots draw the
+# glyph alone, brown on a transparent background (with a thin cream edge so it reads over the map),
+# not a white glyph on a brown tile. Names here are cut from UI_ICONS or, for the slots, from set 2.
+UI_GLYPHS = {"use", "gather", "attack", "fire", "pack", "skills", "map", "menu", "recenter",
+             "health", "hunger", "stamina", "coins"}
+UI_SLOT_ICONS = {
+    "slot_weapon": ("icons_set_2.ai", 6, 8), "slot_tool": ("icons_set_2.ai", 7, 1),
+    "slot_armor": ("icons_set_2.ai", 7, 5), "slot_head": ("icons_set_2.ai", 7, 3),
+    "slot_amulet": ("icons_set_2.ai", 2, 6), "slot_ring": ("icons_set_2.ai", 2, 7),
+}
+# a glyph for each skill (game/data/skills.json), shown beside it in the skills window
+UI_SKILL_ICONS = {
+    "skill_mining": ("icons_set_2.ai", 3, 3), "skill_woodcutting": ("icons_set_2.ai", 7, 1),
+    "skill_smithing": ("icons_set_2.ai", 8, 5), "skill_crafting": ("icons_set_2.ai", 5, 3),
+    "skill_cooking": ("icons_set_2.ai", 3, 7), "skill_combat": ("icons_set_2.ai", 8, 3),
+    "skill_magic": ("icons_set_2.ai", 9, 3), "skill_trading": ("icons_set_2.ai", 6, 0),
+    "skill_stealth": ("icons_set_2.ai", 4, 3), "journal": ("icons_set_2.ai", 9, 6),
+}
+UI_GLYPH_BROWN = (111, 74, 44)    # the same wood brown as the buttons
+UI_GLYPH_EDGE = (246, 236, 214)   # the interface's cream text colour
 UI_TILE = 128          # icon tiles are saved at this size
 UI_WOOD = (111, 74, 44)  # the pack's navy recoloured to a wood brown (owner, 2026-10-18)
 PROMPT_ZIP = "kenney_input-prompts_1.5.zip"
@@ -234,7 +254,8 @@ def _import_ui(record):
     ui = OUT / "ui"
     ui.mkdir(parents=True, exist_ok=True)
     pages = {}
-    for name, (ai_file, row, col) in sorted(UI_ICONS.items()):
+    glyphs = {**UI_SLOT_ICONS, **UI_SKILL_ICONS}
+    for name, (ai_file, row, col) in sorted({**UI_ICONS, **glyphs}.items()):
         if ai_file not in pages:
             page = np.asarray(_rasterise(ai_file, 150)).astype(np.float64)
             bg = page[5, 5]
@@ -251,8 +272,14 @@ def _import_ui(record):
         t = np.clip((rgb.mean(axis=2) - navy.mean()) / (255.0 - navy.mean()), 0.0, 1.0)[..., None]
         wood = np.array(UI_WOOD, dtype=np.float64)
         rgb = wood + t * (255.0 - wood)
-        img = Image.fromarray(np.dstack([rgb, alpha * 255.0]).round().astype(np.uint8), "RGBA")
         dest = ui / f"{name}.png"
+        if name in UI_GLYPHS or name in glyphs:
+            _glyph(t[..., 0] * alpha).resize((UI_TILE, UI_TILE), Image.LANCZOS).save(dest)
+            record(dest, UI_PACK, ai_file, f"rasterised at 150 dpi with pdftoppm; grid row {row}, column {col}; "
+                   f"the white glyph only, recoloured to brown {UI_GLYPH_BROWN} on a transparent background with a "
+                   f"{UI_GLYPH_EDGE} edge; resized to {UI_TILE} px")
+            continue
+        img = Image.fromarray(np.dstack([rgb, alpha * 255.0]).round().astype(np.uint8), "RGBA")
         img.resize((UI_TILE, UI_TILE), Image.LANCZOS).save(dest)
         record(dest, UI_PACK, ai_file, f"rasterised at 150 dpi with pdftoppm; grid row {row}, column {col}; "
                f"background made transparent; navy recoloured to wood brown {UI_WOOD}; resized to {UI_TILE} px")
@@ -264,6 +291,24 @@ def _import_ui(record):
     button.save(dest)
     record(dest, UI_PACK, "Flat_game_UI_set_3.ai", "rasterised at 100 dpi with pdftoppm; a 40 px square "
            f"from a blank tile of the dark LEVELS window (the pack's button colour), recoloured to wood brown {UI_WOOD}")
+
+
+def _glyph(cover):
+    """A glyph (its coverage, 0-1) drawn brown on a transparent background, inside a thin cream edge
+    (the glyph's coverage grown by a few pixels) so it reads on grass, stone and dark windows alike."""
+    import numpy as np
+    from PIL import Image, ImageFilter
+    h, w = cover.shape
+    pad = 6
+    c = np.zeros((h + 2 * pad, w + 2 * pad))
+    c[pad:pad + h, pad:pad + w] = cover
+    glyph = Image.fromarray((c * 255).round().astype(np.uint8), "L")
+    edge = np.asarray(glyph.filter(ImageFilter.MaxFilter(7))).astype(np.float64) / 255.0
+    brown = np.array(UI_GLYPH_BROWN, dtype=np.float64)
+    cream = np.array(UI_GLYPH_EDGE, dtype=np.float64)
+    rgb = cream + c[..., None] * (brown - cream)
+    alpha = np.maximum(edge, c)
+    return Image.fromarray(np.dstack([rgb, alpha * 255.0]).round().astype(np.uint8), "RGBA")
 
 
 def _seal(img):
