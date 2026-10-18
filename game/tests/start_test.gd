@@ -1140,6 +1140,7 @@ func _run() -> void:
 	the_smith.plan.clear()
 	ui.hide_all()
 
+	_resources_tests()
 	_gather_tests()
 
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1301,3 +1302,64 @@ func _gather_tests() -> void:
 	check(not JSON.stringify(d).contains("gather") and w2.total_coins() == w.total_coins(), "gathering is not part of a save; the save loads unchanged")
 	w2.dispose()
 	main.stop_gather("")
+
+
+func _texts(node: Node) -> String:
+	return "\n".join(node.find_children("*", "", true, false).filter(func(c): return c is Label or c is Button).map(func(c): return c.text))
+
+
+## The journal's Resources & Gathering page (B7-012): built from resources.json through ResourceNodes.
+func _resources_tests() -> void:
+	var ui = main.ui
+	# it opens from the journal, beside Quests
+	ui.show_journal(-1)
+	check(_press("Resources") and ui.is_open("journal") and ui.title_label.text == "JOURNAL: RESOURCES", "the journal's Resources button opens Resources & Gathering")
+	var text := _texts(ui.panel_body)
+	check(text.contains("How to gather") and GameUI.GATHER_STEPS.all(func(t): return text.contains(t)), "the page starts with the Gather mode steps")
+	check(text.contains("press G") and text.contains("D-pad down"), "and the keyboard and gamepad ways to gather")
+	# exactly the player-harvestable nodes, each with its name, tool and products from the data
+	var want := ResourceNodes.defs().keys().filter(func(id): return bool(ResourceNodes.def(id).player_harvest))
+	var cards: Array = ui.panel_body.find_children("*", "PanelContainer", true, false).filter(func(c): return c.has_meta("node"))
+	check(cards.map(func(c): return c.get_meta("node")) == want, "it lists exactly the player-harvestable nodes %s" % [want])
+	var bad := []
+	for c in cards:
+		var d := ResourceNodes.def(c.get_meta("node"))
+		var ct := _texts(c)
+		var ok: bool = ct.contains(str(d.name)) and ct.contains(ui._res_tool(d)) and ct.contains("Uses")
+		if str(d.tool) != "":
+			ok = ok and ct.contains(str(d.tool).capitalize())
+		for id in ResourceNodes.products(d):
+			ok = ok and ct.contains("%s x%d" % [GameData.item_name(id), int(ResourceNodes.products(d)[id])])
+		if not ok:
+			bad.append(c.get_meta("node"))
+	check(bad.is_empty(), "each node shows its name, tool and products from resources.json %s" % [bad])
+	var kept := ResourceNodes.defs().keys().filter(func(id): return not bool(ResourceNodes.def(id).player_harvest))
+	check(text.contains("Not yours to gather") and kept.all(func(id): return text.contains(str(ResourceNodes.def(id).name))), "the keepers' animals are under Not yours to gather")
+	check(not text.contains(".gd") and not text.contains("World.") and not text.contains("_days"), "no code names reach the player")
+	# with no axe, the tree's card says where to get one
+	var tree_card: Control = cards.filter(func(c): return c.get_meta("node") == "tree")[0]
+	check(main.world.player.tool_of("axe") != "" or _texts(tree_card).contains(str(ResourceNodes.def("tree").tool_hint).left(20)), "without the tool, the card says where to get one")
+	# a node's page: its product's uses are uses_of, its chain is chain
+	var open: Button = _buttons(tree_card, []).filter(func(b): return b.text == "Uses")[0]
+	open.pressed.emit()
+	text = _texts(ui.panel_body)
+	var uses := ResourceNodes.uses_of("log")
+	check(not uses.is_empty() and uses.all(func(u): return text.contains(ui._res_use_text(u))), "the tree's page lists every use of a log (%d)" % uses.size())
+	check(uses.any(func(u): return u.kind == "recipe" and u.station == "sawhorse") and uses.any(func(u): return u.kind == "building"), "a log's uses include a sawhorse recipe and a building cost")
+	check(text.contains("Crafting: 1 makes Plank x2 at the sawhorse") and text.contains("Building: "), "both are on the page")
+	# follow the chain: log -> plank (sawhorse) -> pickaxe (anvil)
+	check(_press("Plank x2") and _texts(ui.panel_body).contains("Pickaxe x1") and _texts(ui.panel_body).contains("at the anvil"), "following a plank shows what it becomes (a pickaxe at the anvil)")
+	text = _texts(ui.panel_body)
+	check(ResourceNodes.uses_of("plank").all(func(u): return text.contains(ui._res_use_text(u))) and text.contains("Where it comes from"), "the plank's own uses and sources")
+	check(_press("Back") and _texts(ui.panel_body).contains(str(ResourceNodes.def("tree").name)) and _press("Back") and _texts(ui.panel_body).contains("How to gather"), "Back returns to the node, then to the list")
+	# every button is a touch target and focusable for the pad
+	var small := _buttons(ui.panel_body, []).filter(func(b): return b.get_combined_minimum_size().y < 48 or b.focus_mode == Control.FOCUS_NONE)
+	check(small.is_empty(), "every button on the page is at least 48 px tall and focusable")
+	# the other journal pages still work, and B closes the page
+	check(_press("Quests") and ui.title_label.text == "JOURNAL: QUESTS" and _texts(ui.panel_body).contains("Earning money"), "Quests still opens the quests page")
+	check(_press("Village record") and ui.title_label.text == "JOURNAL" and _press("Resources"), "and the village record, with Resources beside it")
+	var pad_b := InputEventJoypadButton.new()
+	pad_b.button_index = JOY_BUTTON_B
+	pad_b.pressed = true
+	main._unhandled_input(pad_b)
+	check(not ui.modal(), "B on the gamepad closes it")

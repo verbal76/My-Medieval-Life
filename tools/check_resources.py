@@ -19,7 +19,9 @@ consumer is a recorded exception (and no exception is stale); tool requirements 
 type; every node has its fields, owner and theft rules, a valid depletion, and a gather flag;
 minutes_key and balance keys exist; cited files and functions exist; the code-defined notes match the
 code they cite (NPCBrain.BUYS items, the caravan's smith caps, ManorWork.MATERIALS, the start
-stock, World.fell's logs); and the generated documents are current.
+stock, World.fell's logs); the journal's Resources & Gathering page (game_ui.gd show_resources
+and its _res_* helpers) reads the registry through ResourceNodes and names no node, node name or
+product in its own code; and the generated documents are current.
 
     python3 tools/check_resources.py           # check; exit 1 and list problems if any
     python3 tools/check_resources.py --write   # regenerate the two documents, then check
@@ -505,6 +507,37 @@ def problems(ctx):
     for i in sorted(exc):
         if i not in want:
             out.append("stale exception: %s (%s) is no longer a finding" % (i, exc[i]["finding"]))
+    ui = root / "game" / "scripts" / "ui" / "game_ui.gd"
+    if ui.is_file():
+        out += journal_problems(res, ui.read_text())
+    return out
+
+
+JOURNAL_PAGE = r"show_resources|_res_\w+"         # game_ui.gd: the journal's Resources & Gathering page
+JOURNAL_CONSTS = r"GATHER_\w+|RES_\w+"
+
+
+def journal_problems(res, text):
+    """The journal's resources page must be built from the registry: its functions read
+    ResourceNodes, and no string in them or in their constants names a node id, a node's name, a
+    product or an icon (one list, resources.json, not a second one in the interface)."""
+    names = sorted(set(re.findall(r"^func (%s)\(" % JOURNAL_PAGE, text, re.M)))
+    bodies = [(f, func_body(text, f)) for f in names]
+    if "show_resources" not in names or not any("ResourceNodes." in b for _, b in bodies):
+        return ["game_ui.gd: the journal's resources page (show_resources) does not read ResourceNodes"]
+    for m in re.finditer(r"^const (%s) := .*?(?=^\S)" % JOURNAL_CONSTS, text, re.M | re.S):
+        bodies.append((m.group(1), m.group(0)))
+    terms = set()
+    for nid, n in res.get("nodes", {}).items():
+        terms |= {nid, n.get("name", ""), n.get("icon", "")} | set(n.get("yields", {}))
+    terms.discard("")
+    out = []
+    for name, body in bodies:
+        for lit in re.findall(r'"((?:[^"\\]|\\.)*)"', body):
+            for t in sorted(terms):
+                if re.search(r"(?<!\w)%s(?!\w)" % re.escape(t), lit, re.I):
+                    out.append("game_ui.gd %s: the literal %r names %r from resources.json: read it through ResourceNodes"
+                               % (name, lit, t))
     return out
 
 

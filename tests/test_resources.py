@@ -88,6 +88,22 @@ class ResourceRegistryTest(unittest.TestCase):
                 self.assertIn(("recipe", r), [(k, x) for k, x, *_ in cr.sources_of(self.ctx, o)])
         self.assertEqual(cr.raw_needs(self.ctx, "pickaxe"), {"iron_ore": 4.0, "coal": 2.0, "log": 0.5})
 
+    def test_the_journal_page_reads_the_registry(self):
+        ui = (cr.ROOT / "game" / "scripts" / "ui" / "game_ui.gd").read_text()
+        res = self.ctx["res"]
+        self.assertEqual(cr.journal_problems(res, ui), [])
+        self.assertIn("func show_resources(", ui)
+        # a node id, a node's name or a product written into the page's code is refused
+        for literal in ['"tree"', '"Iron seam"', '"Gives: Log"']:
+            bad = ui.replace("func _res_list(lines: VBoxContainer) -> void:\n",
+                             "func _res_list(lines: VBoxContainer) -> void:\n\tprint(%s)\n" % literal, 1)
+            self.assertNotEqual(bad, ui)
+            self.assertTrue(cr.journal_problems(res, bad), literal)
+        bad = ui.replace('const GATHER_KEYS := "', 'const GATHER_KEYS := "Wheat field: ', 1)
+        self.assertTrue(cr.journal_problems(res, bad))
+        # ...and a page that does not read ResourceNodes is refused
+        self.assertTrue(cr.journal_problems(res, ui.replace("ResourceNodes.", "Other.")))
+
 
 if __name__ == "__main__":
     unittest.main()
