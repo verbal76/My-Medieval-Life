@@ -66,7 +66,7 @@ def human(n):
 
 
 LOOSE_NOTES = {
-    "LivingForest_v1.3.2.unitypackage": "Paid. Living Forest, Tree Lifecycle & Chopping System v1.3.2 by YET ART STUDIO, a Unity package (gzip tar) supplied by the owner on 2026-10-18, bytes unchanged: 1,086 assets (874 PNG: oak and pine trees in summer, autumn and snow at 3 sizes and 3 health stages, stumps, chopped tops, saplings, rot and collapse frames, chips, dust, leaves, birds, log and plank items, night mushrooms and fireflies, Halloween props; 20 WAV sound effects; Unity prefabs, C# and shaders). Pack licence (LICENSE.txt): the purchaser may use, modify and ship the assets packed in their own games; credit appreciated, \"Trees by YET ART STUDIO\". Some sounds are built from CC0 sources (Kenney Impact Sounds; farfadet46; EZduzziteh, per CREDITS.txt). Not yet imported into the game.",
+    "private-assets/LivingForest_v1.3.2.unitypackage": "Paid; kept out of the public repository (private asset workflow), its game files imported by tools/import_game_assets.py. Living Forest, Tree Lifecycle & Chopping System v1.3.2 by YET ART STUDIO, a Unity package (gzip tar) supplied by the owner on 2026-10-18, bytes unchanged: 1,086 assets (874 PNG: oak and pine trees in summer, autumn and snow at 3 sizes and 3 health stages, stumps, chopped tops, saplings, rot and collapse frames, chips, dust, leaves, birds, log and plank items, night mushrooms and fireflies, Halloween props; 20 WAV sound effects; Unity prefabs, C# and shaders). Pack licence (LICENSE.txt): the purchaser may use, modify and ship the assets packed in their own games; credit appreciated, \"Trees by YET ART STUDIO\". Some sounds are built from CC0 sources (Kenney Impact Sounds; farfadet46; EZduzziteh, per CREDITS.txt). Not yet imported into the game.",
     "Miniworld-Guide.docx": "Shade's guide to Miniworld buildings and animation timings.",
     "punyworld-dungeon-tileset.png": "Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0.",
 }
@@ -75,7 +75,7 @@ FOLDER_NOTES = {
     "Flat Game UI Icon Pack": ("verify", "Flat game UI pack supplied by the owner on 2026-10-18 in parts (the owner's folder is \"Flat design UI pack\"): icon sets 1 and 2 (white glyphs on dark rounded squares: interface, media and platform icons; RPG items, weapons, armour, potions, scrolls and status icons) as Illustrator .ai and .eps; \"Flat game UI set 3\" (login, skills, pause, levels, win, shop, upgrade and settings windows in several colour schemes) as .ai and .pdf; and preview images (exact duplicate uploads dropped). Set 3's .eps and .svg could not be uploaded; the .ai and .pdf hold the same art. No licence file; source and terms to be confirmed by the owner."),
     "16x16 Assorted RPG Icons (partial)": ("free", "Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items."),
 }
-NOT_ASSETS = {"ASSET_MANIFEST.md", "asset_manifest.csv", ".gitignore", "tools", "out", ".git",
+NOT_ASSETS = {"private-assets", "ASSET_MANIFEST.md", "asset_manifest.csv", ".gitignore", "tools", "out", ".git",
               "data", "docs", "tests", "research", "game", ".github", "CLAUDE.md", "README.md"}
 
 

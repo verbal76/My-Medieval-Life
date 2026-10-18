@@ -33,7 +33,6 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `miniworld +__rainbow-refresh.zip` | CC BY 4.0 | 10 | 642.9 KB | 16x16 miniworld + by octoshrimpy, rainbow refresh (02/15/2023, newer): recoloured sheets plus chests. terrain.png has 20 terrain modules (water depths, sand, grasses, forest, snow, ice, dirts, cave floors) in one shared autotile layout; no Tiled/wang data included. |
 | `16x16 Assorted RPG Icons (partial)/` (folder) | free | 9 | 113.9 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items. |
 | `Flat Game UI Icon Pack/` (folder) | verify | 11 | 26.9 MB | Flat game UI pack supplied by the owner on 2026-10-18 in parts (the owner's folder is "Flat design UI pack"): icon sets 1 and 2 (white glyphs on dark rounded squares: interface, media and platform icons; RPG items, weapons, armour, potions, scrolls and status icons) as Illustrator .ai and .eps; "Flat game UI set 3" (login, skills, pause, levels, win, shop, upgrade and settings windows in several colour schemes) as .ai and .pdf; and preview images (exact duplicate uploads dropped). Set 3's .eps and .svg could not be uploaded; the .ai and .pdf hold the same art. No licence file; source and terms to be confirmed by the owner. |
-| `LivingForest_v1.3.2.unitypackage` (loose file) | | 1 | 5.3 MB | Paid. Living Forest, Tree Lifecycle & Chopping System v1.3.2 by YET ART STUDIO, a Unity package (gzip tar) supplied by the owner on 2026-10-18, bytes unchanged: 1,086 assets (874 PNG: oak and pine trees in summer, autumn and snow at 3 sizes and 3 health stages, stumps, chopped tops, saplings, rot and collapse frames, chips, dust, leaves, birds, log and plank items, night mushrooms and fireflies, Halloween props; 20 WAV sound effects; Unity prefabs, C# and shaders). Pack licence (LICENSE.txt): the purchaser may use, modify and ship the assets packed in their own games; credit appreciated, "Trees by YET ART STUDIO". Some sounds are built from CC0 sources (Kenney Impact Sounds; farfadet46; EZduzziteh, per CREDITS.txt). Not yet imported into the game. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
 | `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0. |
 
@@ -64,7 +63,6 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 | `.xcf` | 2 |
 | `.json` | 2 |
 | `.pdf` | 1 |
-| `.unitypackage` | 1 |
 | `.tds` | 1 |
 | `.html` | 1 |
 

@@ -2,3 +2,6 @@ out/
 __pycache__/
 game/.godot/
 .claude/
+
+# Restricted source packages, kept out of the public repository (CLAUDE.md section 3: private asset workflow)
+private-assets/

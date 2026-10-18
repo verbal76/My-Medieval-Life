@@ -81,6 +81,18 @@ generated data. One implementation per concern.
   integrate, test and build with the approved assets.
 - **Continuity:** do not halt approved development, refuse to integrate assets or delay builds because
   the repository is public; handle asset organisation and packaging as normal development work.
+- **Asset handling (owner, 2026-10-18; standing):** the owner buys assets legitimately and uses CC0 assets
+  where appropriate, and does not intend to redistribute third-party source packages. Tell apart: assets
+  bought for use in the game; original source packages that stay private; assets incorporated into the
+  finished game under their usage rights; assets licensed for redistribution (CC0). A restriction on
+  redistributing an original package is not a restriction on using its assets in the game.
+- **Private asset workflow:** a source package that may not be redistributed is never committed to the
+  public repository: it lives in `private-assets/` (git-ignored), with a private off-machine copy (the
+  owner's private "Medieval Life Backups" artifact), and `tools/import_game_assets.py` reads it from there
+  to produce the files the game needs in `game/assets/` (committed, with provenance), so builds never need
+  the package. Never ask the owner to prove ownership or explain copyright law; raise a licensing issue
+  only for a specific, material restriction that prevents the intended use and cannot be handled this
+  way, once, with a practical solution, and carry on with all unaffected work.
 
 ## 4. Coding conventions
 
