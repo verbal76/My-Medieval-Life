@@ -933,7 +933,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if ore == "":
 				return false
 			n.inv.add(ore)
+			w.stat("mined_" + ore)
 			if n.inv.wear("pickaxe", 1):
+				w.stat("broke_pickaxe")
 				w.note("%s %s's pickaxe broke." % [n.name, n.family])
 			return true
 		"chop":
@@ -943,7 +945,10 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if logs <= 0:
 				return false
 			n.inv.add("log", logs)
+			w.stat("trees_felled")
+			w.stat("felled_log", logs)
 			if n.inv.wear("axe", 3):
+				w.stat("broke_axe")
 				w.note("%s %s's axe broke." % [n.name, n.family])
 			return true
 		"craft":
@@ -957,7 +962,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			for id in rec.in:
 				w.stat("used_" + id, float(rec.in[id]))
 			if rec.station == "anvil":
-				n.inv.wear("hammer", 2)
+				if n.inv.wear("hammer", 2):
+					w.stat("broke_hammer")
 			return true
 		"harvest":
 			var f := _field(a.field)
@@ -990,6 +996,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			w.fauna.claims.erase(int(a.animal))
 			if prey == null or prey.pos.distance_to(n.pos) > 3.0:
 				return true            # it got away; the hunter picks another
+			w.stat("hunted_" + prey.species)
 			var bag: Inventory = w.fauna.kill(prey)
 			for id in bag.ids():
 				n.inv.add(id, bag.count(id))
@@ -1016,6 +1023,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if beast == null or beast.area != a.pen:
 				return true
 			once("slaughter_%d_%d" % [n.id, w.day()], "%s %s slaughtered a %s." % [n.name, n.family, beast.label()])
+			w.stat("slaughtered_" + beast.species)
 			var meat: Inventory = w.fauna.kill(beast)
 			for id in meat.ids():
 				n.inv.add(id, meat.count(id))
@@ -1026,7 +1034,10 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				if w.rng.randf() < 0.25:
 					var game: Animal = w.fauna.nearest_game(Vector2(w.bandit_camp), 30.0)
 					if game != null:
-						w.fauna.kill(game)          # eaten at the camp
+						w.stat("poached_" + game.species)
+						var eaten: Inventory = w.fauna.kill(game)          # eaten at the camp
+						for id in eaten.ids():
+							w.stat("poached_lost_" + id, eaten.count(id))
 			return true
 		"look_out":
 			var foe := _bandit_near(n.pos, 10.0)
@@ -1162,6 +1173,7 @@ func reeve_day() -> void:
 				if price > budget:
 					break
 				o.inv.remove(id)              # used up in repairs
+				w.stat("used_repairs_" + id)
 				o.coins += price
 				o.earned += price
 				w.treasury -= price
@@ -1727,6 +1739,7 @@ func caravan() -> void:
 				o.earned += price
 				budget -= price
 				w.coin_sources += price
+				w.stat("caravan_coins_in", price)
 				bought += price
 				extra -= 1
 	var sold := _caravan_imports()
@@ -1755,6 +1768,7 @@ func _caravan_imports() -> int:
 				o.spent += price
 				o.inv.add(id)
 				w.coin_sources -= price
+				w.stat("caravan_coins_out", price)
 				spent += price
 				w.stat("imported_" + id)
 	return spent
