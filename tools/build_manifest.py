@@ -22,7 +22,7 @@ from assetzip import REPO
 # "paid" = in the 50% Sale October bundle receipt; its licence forbids
 # redistributing the original files.
 NOTES = {
-    "16x16 Armour RPG Icons.zip": ("paid", "Armour icon sheets: boots, breastplates, headgear, trousers."),
+    "16x16 Armour RPG Icons.zip": ("paid", "Armour icon sheets: boots, breastplates, headgear, trousers. \"16x16 Armor RPG Icons\" by Shade, in the owner's itch.io library (screenshot 2026-10-18)."),
     "16x16 Jewelry RPG Icons.zip": ("paid", "Jewelry icons (rings, necklaces, bracelets, brooches...) as sheets plus thousands of individual 16x16 PNGs. Includes LICENSE.txt."),
     "16x16 Survival RPG Icons.zip": ("paid", "Survival/crafting icons by category (food, gems, plants & alchemy, textile, armour, dirt & clay...). Includes LICENSE.txt."),
     "PUNY-WORLD-PAID_v1.zip": ("paid", "Puny World medieval tileset: 3520x2112 tile sheet, atlas, 9 sample Tiled maps, sample 32x32 characters, GIF previews."),
@@ -72,7 +72,7 @@ LOOSE_NOTES = {
 }
 # Asset folders committed unzipped: name -> (licence, description)
 FOLDER_NOTES = {
-    "Flat Game UI Icon Pack": ("verify", "Flat game UI pack supplied by the owner on 2026-10-18 in parts (the owner's folder is \"Flat design UI pack\"): icon sets 1 and 2 (white glyphs on dark rounded squares: interface, media and platform icons; RPG items, weapons, armour, potions, scrolls and status icons) as Illustrator .ai and .eps; \"Flat game UI set 3\" (login, skills, pause, levels, win, shop, upgrade and settings windows in several colour schemes) as .ai and .pdf; and preview images (exact duplicate uploads dropped). Set 3's .eps and .svg could not be uploaded; the .ai and .pdf hold the same art. No licence file; source and terms to be confirmed by the owner."),
+    "Flat Game UI Icon Pack": ("verify", "Flat game UI pack supplied by the owner on 2026-10-18 in parts (the owner's folder is \"Flat design UI pack\"): icon sets 1 and 2 (white glyphs on dark rounded squares: interface, media and platform icons; RPG items, weapons, armour, potions, scrolls and status icons) as Illustrator .ai and .eps; \"Flat game UI set 3\" (login, skills, pause, levels, win, shop, upgrade and settings windows in several colour schemes) as .ai and .pdf; and preview images (exact duplicate uploads dropped). Set 3's .eps and .svg could not be uploaded; the .ai and .pdf hold the same art. No licence file. Source: \"Flat design UI pack\" by SunGraphica, in the owner's itch.io library (screenshot 2026-10-18); terms not stated in the files."),
     "16x16 Assorted RPG Icons (partial)": ("free", "Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items."),
 }
 NOT_ASSETS = {"private-assets", "ASSET_MANIFEST.md", "asset_manifest.csv", ".gitignore", "tools", "out", ".git",
