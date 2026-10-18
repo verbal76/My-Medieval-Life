@@ -491,8 +491,10 @@ func _farmer(n: NPC) -> bool:
 		_:
 			if n.inv.count("wheat") > reserve(n, "wheat") and _buyer_for(n, "wheat") != null:
 				return _plan_sell(n, "wheat")
-			n.doing = "tending the field"
-			n.plan = [go(spot), work(60, "", {}, "work")]
+			# the crop grows by itself: the farmer keeps watch, without swinging a tool at nothing
+			# (Build 8 report: villagers swinging tools with no visible work)
+			n.doing = "watching the crop grow"
+			n.plan = [go(spot), work(60, "", {}, "idle")]
 	return true
 
 

@@ -52,6 +52,7 @@ func _init() -> void:
 	test_resource_registry()
 	test_save_store()
 	test_doorways()
+	test_work_has_purpose()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -2985,3 +2986,18 @@ func test_doorways() -> void:
 			continue
 		var inner := (b.interior.doors as Array).map(func(c): return Vector2i(int(c[0]), int(c[1])))
 		check(inner.any(func(c): return town.has(c)), "%s (%s): walking in through a doorway reaches inside %s" % [b.id, b.type, inner])
+
+
+## Nobody plays the work animation without real work (Build 8 report: villagers swinging tools at
+## nothing): a day of village life, sampled, finds every working villager doing an act.
+func test_work_has_purpose() -> void:
+	var w := new_world()
+	var idle_work := {}
+	for step in 2880:
+		w.update(0.5)
+		if step % 40 != 0:
+			continue
+		for n: NPC in w.npcs:
+			if n.alive and n.anim == "work" and not n.plan.is_empty() and str(n.plan[0].get("act", "")) == "":
+				idle_work[n.job + ": " + n.doing] = true
+	check(idle_work.is_empty(), "every villager swinging a tool is doing real work %s" % [idle_work.keys()])
