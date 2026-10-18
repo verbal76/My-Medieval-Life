@@ -6,6 +6,8 @@ marked *Proposed* until the owner approves it.
 
 | Date | Decision | By | Notes |
 |---|---|---|---|
+| 2026-10-18 | Master build, release and work-preservation policy: Linux, Windows and Android always at the same level from one revision and build number; no push, build, upload or release without explicit approval; fixes accumulate; work preserved with local commits and verified backups; a readiness report and an approval checkpoint before each coordinated release; agents follow the same rules | Owner | Owner's policy; CLAUDE.md section 5, `tools/checkpoint.py`, release workflow manual-only |
+| 2026-10-18 | The first storyline quest: learn Fireball from the sage in the hut to the north | Owner | Owner message |
 | 2026-10-18 | Side quests are authorized (a new mechanic): a few side quests discovered from villagers; every quest giver shows a little green diamond over their head; side quests now, a main storyline proposed later | Owner | Owner message and answers |
 | 2026-10-18 | Busy villagers acknowledge the player with comic-style speech bubbles ("Can't talk right now", "Who are you?") until they know the player; many villagers should offer basic side quests | Owner | Owner message. Bubbles are being built; side quests need a design proposal for the owner's approval |
 | 2026-10-18 | Trees: only the trunk blocks; the player walks under the foliage, which shows over the character and turns semi-transparent while the player is under it | Owner | Owner messages |

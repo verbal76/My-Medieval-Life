@@ -1,16 +1,16 @@
-# Builds the game for Android, Windows and Linux and publishes them as a GitHub Release.
-# Every push to main or to an agent branch (claude/...) is a build; the owner asked for all builds
-# to be listed under Releases (docs/DECISIONS.md, 2026-10-18). Builds from branches other than main
-# are marked as pre-releases. Run it by hand from the Actions tab with "Run workflow".
+# Builds the game for Android, Windows and Linux from one source revision, with one shared build
+# number, and publishes them together as a GitHub Release.
+#
+# Owner's release policy (docs/DECISIONS.md, 2026-10-18): a release is a deliberate decision by the
+# owner. This workflow therefore never runs on a push; it runs only when started by hand from the
+# Actions tab ("Run workflow") after the owner approves the coordinated three-platform build.
+# Releases from branches other than main are marked as pre-releases.
 #
 # The APK is a debug build signed with a debug keystore made on the runner (no secrets needed);
 # a store release would need the owner's release keystore as a repository secret.
 name: Build and release
 
 on:
-  push:
-    branches: [main, "claude/**"]
-    paths: ["game/**", ".github/workflows/release.yml"]
   workflow_dispatch:
 
 permissions:

@@ -21,7 +21,7 @@ Status (keep current):
 | Engine | Godot 4.7 prototype in `game/`, built at the owner's request; the formal engine entry in `docs/DECISIONS.md` is still *Proposed* |
 | Platforms | Android APK first, then PC (Windows, Linux), as the owner directed; touch, gamepad, and keyboard and mouse |
 | Gameplay code | Playable prototype in `game/` (village simulation, player, economy); rules and open questions in `docs/BUILD_DECISIONS.md` |
-| Builds | Every push to `main` or a `claude/` branch that changes `game/` is built and published as a GitHub Release by `.github/workflows/release.yml` (owner request, 2026-10-18) |
+| Builds | Linux, Windows and Android from one revision with one build number, by `.github/workflows/release.yml`, run by hand only after the owner approves a coordinated release (section 5) |
 
 ## 2. Repository layout
 
@@ -91,9 +91,20 @@ generated data. One implementation per concern.
   ```
   A failing test is fixed, never skipped, disabled or weakened to pass.
 - Visual output must actually be looked at before it is reported as verified.
-- Store uploads and store releases happen only with owner authorization (section 11). The owner
-  has authorized publishing every development build as a GitHub Release (2026-10-18); the workflow
-  does this. Builds are numbered by the workflow run ("Build N"); semver comes with a store release.
+- **Release and push policy (owner, 2026-10-18; supersedes earlier release rules).** Never push,
+  build a release, upload, publish or distribute without the owner's explicit approval for that
+  occasion: not after a fix, a milestone or a passing test. Local tests and compiles are fine.
+  Fixes accumulate; the current release stays the test build until the owner approves the next.
+- When the accumulated changes are stable, stop and ask, with a release-readiness report:
+  changes since the last build, known issues, test results, manifest updates, save compatibility,
+  Linux / Windows / Android readiness, confirmation that all three have the same features and
+  content, and the proposed shared build number. On approval, run `.github/workflows/release.yml`
+  by hand (it never runs on a push): all three platforms come from one revision with one number.
+- **Work preservation.** Commit completed work locally (a local commit is not a push), and run
+  `python3 tools/checkpoint.py` before major changes and after completed fixes: it bundles every
+  branch and saves every working tree's uncommitted changes (agent worktrees included) outside the
+  repository, then proves they restore. Never reset or clean a tree in a way that loses work; never
+  overwrite another agent's work; integrate agents' changes through the lead agent.
 
 ## 6. Deterministic generation
 
