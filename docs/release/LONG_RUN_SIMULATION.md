@@ -259,3 +259,42 @@ All of them are `World.stat` calls next to existing code; none changes a value t
 | `game/scripts/core/fauna.gd:138` | `starved_<species>` |
 | `game/scripts/core/fauna.gd:190` | `born_<species>` |
 | `game/scripts/core/fauna.gd:244` | `made_hide` |
+
+
+## With the manor's job board (staging `f836aca`, 2026-10-18)
+
+The same harness, rerun from a worktree pinned at `f836aca`. That commit adds the Build 7 economy corrections, the quest-reward reserves, the caravan stone and the manor's job board (INT-066). Seeds 1 and 2; the raw outputs were in `/home/user/mml-sim/out/longrun/` (not committed).
+
+| | Seed 1, 365 days | Seed 2, 365 days |
+|---|---|---|
+| Alive, starvation deaths | 100/100, 0 | 100/100, 0 |
+| Food stock (days of need), mean hunger | 49.6, 68 | 51.2, 68 |
+| Missed meals: no food for sale / no money | 451 / 14 | 299 / 45 |
+| Currency start → end, leak | 2,882 → 36,214, 0 | 2,858 → 34,336, 0 |
+| Caravan coins in / out (net) | 62,995 / 29,678 (+33,317) | 60,985 / 29,522 (+31,463) |
+| Household cash min / median / max | 72 / 1,111 / 3,359 | 107 / 1,255 / 3,382 |
+| Treasury; tax, wages, repairs in the year | 2,871; 44,467, 28,500, 13,337 | 3,461; 51,769, 34,766, 13,709 |
+| Traders at 0 coins | tanners 2 of 2, tavernkeeper 1 of 2; goods merchants 2 coins between them | goods merchants 2 of 2, tavernkeeper 1 of 2 |
+| Manor jobs done (haul, mend, quarry); wages | 5,328 (2,002, 3,326, 0); 3,970 | 5,518 (2,099, 3,419, 0); 4,776 |
+| Manor hands at the end | 4 | 10 |
+| Seams left | 1 stone | none |
+| Imported iron ore / coal / copper ore | 4,214 / 2,824 / 1,450 | 4,193 / 2,810 / 1,440 |
+| Exported logs, planks, wheat | 3,204, 2,957, 3,618 | 3,411, 2,222, 3,620 |
+| Wild boar, rabbit (adults at the end); hunted | 16, 4; 182 | 16, 4; 300 |
+| Building sites, houses, households split | 0, 0, 0 | 0, 0, 0 |
+
+The 100-day runs (seed 1 / seed 2):
+- All 100 alive; currency 13,317 and 13,387; no leaks.
+- Manor jobs 1,131 and 1,261.
+
+**What the year shows**
+- **The village survives and conserves.** Every coin, item, deposit and animal balances on both seeds, and nobody starves.
+- **The job board works without inventing demand.** Villagers carry and use the manor's repair materials every day: about 15 jobs a day, paid from the treasury. The manor buys up to its 40-load stock, so that much always waits at a seller's for carriers. No quarry job ever ran: the stone seams are worked out by about day 10, before the reeve looks for stone.
+- **Unbounded money from the caravan.** The caravan buys every surplus every 2 days, so currency grows about twelvefold in a year. Prices are fixed values, so this shows as idle cash, not inflation. This is the root of proposal P1.3 (a finite regional market).
+- **Food sits where it is not for sale.** About 300,000 food points are held by villagers, mostly farmers' and cooks' stock, while meals are missed 300–450 times for "no food for sale".
+- **Two trades go broke.** The tanners and the goods merchants buy more than they sell back and end at 0 coins.
+- **Nothing is ever built.** No household grows without births, so none splits and nobody builds (tracked future work F-2).
+- **The forge runs on imports.** Every iron, copper and coal unit after day 10 is imported.
+- **Wildlife holds at the hunting floor.** Boar settle at 16 wild adults; rabbits at 4 adults with almost no births on seed 2.
+
+These are logged as B7-014 to B7-017 in `BUILD_7_ISSUES.md`. All need the owner's choice among the proposals in `ECONOMY_SUSTAINABILITY_PROPOSALS.md`, so nothing was changed.

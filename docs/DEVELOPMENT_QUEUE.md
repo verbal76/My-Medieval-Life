@@ -24,9 +24,10 @@ Release gate: Build 7 is the testing release. No Build 8, no replacement release
 | 3 | Resource Node Manifest and Resource Usage Registry from one authoritative definition, with validation | Integrated | staging `95fc554` | — | `game/data/resources.json`, `tools/check_resources.py`, `docs/systems/*.md`; INT-067 |
 | 4 | In-game Resources & Gathering journal page from the same definitions | Device check | staging `8641ff6` | 3 | Includes the Gather mode instructions |
 | 5 | Reeve employment: real jobs, NPCs by the same rules | Integrated | lead, staging | — | INT-066; save version 8 |
-| 6 | Long-duration simulations (10/30/100/365 days) | In progress | lead (worktree pinned at `f836aca`) | 5 | Seeds 1 and 2; results go to `docs/release/LONG_RUN_SIMULATION.md` |
+| 6 | Long-duration simulations (10/30/100/365 days) | Integrated | staging | 5 | Results in `docs/release/LONG_RUN_SIMULATION.md`; defects B7-014 to B7-017 |
 | 7 | Build 7 economy corrections (B7-001 to B7-005, B7-007 stone) | Device check | staging `ae0e01f` | — | See the issue register |
 | 9 | Brown glyph icons for the HUD, gear slots, skills and journal (B7-013) | Device check | staging `49f5cb9` | — | — |
+| 10 | Hot Attic Games read-only registry | In progress | inventory agent, branch `inventory/registry` | — | Discovery only; nothing moved |
 | 8 | Resource depletion and wildlife sustainability | Blocked: owner's choice among the proposals | — | Owner decision | `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` P1–P3; B7-009 options |
 
 ## Waiting on the owner (decisions, not work)

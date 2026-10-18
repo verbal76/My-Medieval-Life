@@ -54,6 +54,10 @@ files and systems, the test evidence and the fixing commit.
 | B7-011 | 2026-10-18 | Bug | S2 | Android (all, touch) | "Mine"/"Fell" prompts appear while walking past, but tapping a tree or ore does nothing and how to gather is unclear | Fixed (staging) | `633898f`, `c8dce2e` | Yes |
 | B7-012 | 2026-10-18 | Enhancement (approved) | — | All | Gather mode: a toggle; tap a resource; walk to it and gather until it runs out or is stopped | Done (staging) | `c8dce2e` | Yes |
 | B7-013 | 2026-10-18 | Enhancement (approved) | — | All | Icons from the flat UI pack's set 2 as brown glyphs on a transparent background for the HUD status panel, equipment slots, skills and journal, and the action bar | Done (staging) | `f94ece2` | Yes (looks) |
+| B7-014 | 2026-10-18 | Bug (economy) | S3 | All | The caravan's unlimited buying grows the village's currency about twelvefold in a year | Diagnosed; proposal P1.3 awaits owner | — | No |
+| B7-015 | 2026-10-18 | Bug (economy) | S3 | All | Meals are missed for "no food for sale" (300–450 a year) while 50 days of food sit in villagers' stock | Diagnosed; needs a design decision | — | No |
+| B7-016 | 2026-10-18 | Bug (economy) | S3 | All | Tanners and goods merchants end the year at 0 coins | Diagnosed; proposal P3 awaits owner | — | No |
+| B7-017 | 2026-10-18 | Limitation | S4 | All | No building in a year: households never grow (no births), so none splits or builds | Tracked future work F-2 | — | No |
 
 Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`),
 measured with `game/tests/earn_sim.gd`, seed 1. The owner approved the corrections for B7-001 to
@@ -182,6 +186,14 @@ Test evidence for `ae0e01f` (run on this machine):
   Window buttons (close, back, save, settings) keep their tiles. Each file's source and processing is in `game/assets/PROVENANCE.json`.
 - Looked at: a contact sheet over four backgrounds; the HUD and action bar, the pack with filled and empty slots, and the skills window, on a 2400x1080 phone.
 - Device check: how it looks on the phone.
+
+### B7-014 to B7-017 From the year-long simulations
+- Evidence: `LONG_RUN_SIMULATION.md`, "With the manor's job board": seeds 1 and 2, 365 days, from `f836aca`; no leaks.
+- B7-014: caravan coins in 61,000–63,000, out about 29,500; currency 2,882 → 36,214.
+- B7-015: 451 / 299 missed meals for no food for sale, with about 300,000 food points held by villagers; how villagers sell or share food needs a decision.
+- B7-016: tanners 0 and 0 coins, goods merchants 2 and 0 at day 365.
+- B7-017: 0 sites, 0 splits on both seeds.
+- Nothing changed: these need the owner's choice among the sustainability proposals.
 
 ### B7-009 The manor cannot afford paid work for its first twelve days
 - Reported: 2026-10-18, agent, while checking the reeve's work.
