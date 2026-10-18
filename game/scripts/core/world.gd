@@ -690,6 +690,37 @@ func stations_of(kind: String) -> Array:
 
 
 # ---------------------------------------------------------------- building -------------------
+## Saves made before the village generator moved the building plots (they lay over houses b20-b22)
+## keep the plots where they were. Move each plot to its place on the map, with its owner, its
+## building site and the house built on it, and the player with them if they stood on it; the trees
+## the generator cleared from the new plots go too. Nothing owned is lost.
+func _move_plots_to_map(m: VillageMap) -> void:
+	var placed := {}
+	for mp in m.data.plots:
+		placed[mp.id] = mp
+	for p in plots:
+		var mp: Dictionary = placed.get(p.id, {})
+		if mp.is_empty() or (int(p.x) == int(mp.x) and int(p.y) == int(mp.y)):
+			continue
+		var old := Rect2(float(p.x), float(p.y), float(p.w), float(p.h))
+		var shift := Vector2(int(mp.x) - int(p.x), int(mp.y) - int(p.y))
+		p.x = int(mp.x)
+		p.y = int(mp.y)
+		p.door = [int(mp.door[0]), int(mp.door[1])]
+		if buildings.has("house_" + p.id):
+			var b: Dictionary = buildings["house_" + p.id]
+			b.x = p.x
+			b.y = p.y
+			b.door = p.door.duplicate()
+		if old.has_point(player.pos):
+			player.pos += shift
+		note("The manor's surveyor marked %s out anew, at the forest edge north of the east houses." % p.id)
+	var on_map := {}
+	for t in m.data.trees:
+		on_map[Vector2i(int(t.x), int(t.y))] = true
+	trees = trees.filter(func(t): return on_map.has(Vector2i(int(t.x), int(t.y))))
+
+
 func plot(id: String) -> Dictionary:
 	for p in plots:
 		if p.id == id:
@@ -937,6 +968,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	quests = Quests.new(self)
 	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them
 	quests.start_story()                             # saves from before the storyline get its quests
+	_move_plots_to_map(m)
 	# re-apply world changes to the collision map
 	for t in trees:
 		if t.state != "grown":

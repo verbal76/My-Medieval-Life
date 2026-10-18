@@ -144,7 +144,7 @@ static func opening(w: World, n: NPC) -> String:
 	if n.id == w.sage_id:
 		lines.append("Fire answers those who learn its rules. I can teach you to call it.")
 	elif n.id == w.reeve_id:
-		lines.append("Land by the east houses is for sale. Find the plots past the last houses and buy one there; the coins go to the manor.")
+		lines.append("Land by the east houses is for sale: two clearings at the forest edge, just north of them. Buy one there; the coins go to the manor.")
 	else:
 		lines.append(_doing(w, n))
 	var hungry := _hunger(w, n) if not _eating(n) else ""

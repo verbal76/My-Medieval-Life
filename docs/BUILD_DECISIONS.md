@@ -66,7 +66,7 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 | Granary: buys surplus wheat up to 7 days of village food from money above the 10-day reserve; a farmer keeps 3 days of household food, the livestock feed reserve and 10 more; a merchant keeps half its stock; nothing is bought in a famine or when the village holds under 3 days of food | No artificial shortages |
 | Day labour: an adult of a short household who has earned nothing today may work a day at the manor for 6 coins while the treasury is above its reserve; farmers, cooks, hunters and tavern keepers stay at their work | |
 | A household needing relief on 4 of the last 7 days is named in the log | Relief must not hide a living that does not pay |
-| Building plots are sold by the manor; the price goes to the treasury (`World.buy_plot`) | |
+| Building plots are sold by the manor; the price goes to the treasury (`World.buy_plot`). The two plots are clearings at the forest edge north of the east houses (they used to lie over houses b20-b22) | Owner asked for the overlap fixed; see DECISIONS |
 | The evening business and the wages run at most once a day (`last_reeve_day`, `last_payday`, saved) | No double payments |
 | Saves are version 3 (treasury, granary). Older saves move the reeve's coins beyond his purse into the treasury; no coin is lost | CLAUDE.md section 7 |
 
@@ -142,6 +142,7 @@ Result, 3 seeds over 100 days:
 | The giver remembers the help ("helped by ...") | Ready for friendlier talk and reputation later |
 | Markers over quest givers (owner's scheme): a green swallow-tailed pennant for story quests; for side quests what the quest is about: a sealed scroll (a quest that teaches a skill), wheat (food), iron ore (mining), crossed swords (combat), and, extending the scheme, a log (wood) and an axe (tools). 16 px icons from the Survival pack with a 1 px dark outline; the pennant is drawn in the same style (`tools/import_game_assets.py` MARKERS) | The owner found "!" and diamonds overused |
 | A quest giver inside their own home (asleep or resting) shows their marker over the house door, side by side if several of the household have one; at a workplace such as the tavern they are visible and marked as usual | The owner asked how to find a quest giver who is indoors |
+| Quest markers and the attack-target sword draw over roofs and tree canopies, so a marker over a door or a villager under a tree is never hidden | Found when checking the door marker on screen: roofs covered it |
 | Story quests (`"story": true`) are not offered from needs: every new player, and every heir, starts them; their giver shows the story marker until they are done. The first: "The sage in the north", learn Fireball from the sage in the hut at the north edge of the village, at his usual price (50 coins) | The owner chose the first storyline quest; the price is the existing one |
 
 ## Controls, screen and settings (owner direction; the details are agent proposals)

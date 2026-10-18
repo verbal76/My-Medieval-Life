@@ -950,6 +950,37 @@ func test_save_round_trip() -> void:
 	check(w5.treasury == treasury_then and w5.npc(w5.reeve_id).coins == int(GameData.b("reeve_purse")), "a version 2 save's reeve coins move into the treasury (%d)" % w5.treasury)
 	check(w5.total_coins() == w.total_coins(), "a version 2 save keeps every coin")
 	check(int(d.save_version) == 3 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 3 with the treasury and granary")
+	# a save from before the plots moved (they lay over houses b20-b22): plot0 owned with a house on
+	# it and the player inside, plot1 unsold, and a tree where the new plot0 is
+	var lay: Dictionary = JSON.parse_string(text)
+	lay.plots[0].x = 94; lay.plots[0].y = 78; lay.plots[0].door = [98, 87]
+	lay.plots[0].owner = "player"; lay.plots[0].site = {"need": {}, "done": true}
+	lay.plots[1].x = 106; lay.plots[1].y = 78; lay.plots[1].door = [110, 87]
+	lay.buildings["house_plot0"] = {"id": "house_plot0", "type": "player_house", "x": 94, "y": 78, "w": 9, "h": 10, "door": [98, 87], "name": "Test family house"}
+	lay.player.home = "house_plot0"
+	lay.player.plots = ["plot0"]
+	lay.player.pos = [98.5, 80.5]
+	lay.trees.append({"x": 91, "y": 23, "trunk": 459, "top": 1562, "bottom": 1782, "state": "grown", "regrow": 0.0})
+	var w8 := World.new()
+	var m8 := VillageMap.load_default()
+	w8.load_dict(m8, lay)
+	var p0 := w8.plot("plot0")
+	var mp0: Dictionary = m8.data.plots[0]
+	var h0: Dictionary = w8.buildings["house_plot0"]
+	check(int(p0.x) == int(mp0.x) and int(p0.y) == int(mp0.y) and p0.owner == "player" and p0.site.done, "an old save's plot moves to the map's plot with its owner and site")
+	check(int(h0.x) == int(mp0.x) and int(h0.y) == int(mp0.y) and int(h0.door[1]) == int(mp0.door[1]) and w8.player.home == "house_plot0", "the house built on it moves with it and stays the player's home")
+	check(Rect2(float(p0.x), float(p0.y), 9.0, 10.0).has_point(w8.player.pos), "the player standing in it moves with it")
+	check(int(w8.plot("plot1").y) == int(m8.data.plots[1].y) and w8.plot("plot1").owner == "", "an unsold plot moves too")
+	check(not w8.trees.any(func(t): return int(t.x) == 91 and int(t.y) == 23), "trees the generator cleared from the new plots are gone from the old save")
+	check(m8.is_solid(Vector2i(95, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
+	var w9 := World.new()
+	w9.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w8.to_dict())))
+	var w10 := World.new()
+	var saved9 := JSON.stringify(w9.to_dict())
+	w10.load_dict(VillageMap.load_default(), JSON.parse_string(saved9))
+	var surveys := func(w: World) -> int: return w.log_lines.filter(func(l): return str(l).contains("surveyor")).size()
+	check(surveys.call(w8) == 2 and surveys.call(w9) == 2 and int(w9.plot("plot0").x) == int(mp0.x), "loading the corrected save again moves nothing and notes nothing")
+	check(JSON.stringify(w10.to_dict()) == saved9, "and the corrected save is stable from then on")
 	# a save from before quests (Build 4) gets the storyline on load, once
 	var pre: Dictionary = JSON.parse_string(text)
 	pre.erase("quest_offers")

@@ -306,8 +306,10 @@ class Village:
             for i in range(2):
                 self.field(ox + 2 + i * 14, oy + 2 + j * 9, 11, 6)
         self.forest(ox, oy, CH, CH, 0.03, clear=[(ox, oy, CH, CH - 2)])
-        # plots the player can buy and build on (east house district, empty strip)
-        self.plots(3 * CH, 2 * CH + 28)
+        # plots the player can buy and build on: two clearings at the forest edge north of the east
+        # houses (generator v1 put them over houses b20-b22). Only the trees standing on them are
+        # removed, after the forests, so every other tree stays where v1 put it.
+        self.plots(((3 * CH, 20), (3 * CH + 17, 20)))
         self.ents["spawns"]["player"] = [CH + 14, CH + 23]
         self.roads()
         return self
@@ -378,10 +380,17 @@ class Village:
         self.ents["pens"].append({"id": f"pen_{kind}", "kind": kind, "x": x, "y": y, "w": w, "h": h,
                                   "gate": list(gate), "feed_at": [gate[0], gate[1] - 1]})
 
-    def plots(self, x0, y0):
-        for i in range(2):
-            self.ents["plots"].append({"id": f"plot{i}", "x": x0 + 4 + i * 12, "y": y0 - 10, "w": 9, "h": 10,
-                                       "door": [x0 + 8 + i * 12, y0 - 1], "price": 60})
+    def plots(self, corners):
+        for i, (x, y) in enumerate(corners):
+            p = {"id": f"plot{i}", "x": x, "y": y, "w": 9, "h": 10, "door": [x + 4, y + 9], "price": 60}
+            self.ents["plots"].append(p)
+            # clear the land: trees whose trunk or canopy is on the plot
+            for t in [t for t in self.ents["trees"]
+                      if x <= t["x"] < x + 9 and y <= t["y"] <= y + 10]:
+                self.put("below", 0, t["x"], t["y"], -1)
+                self.put("above", 0, t["x"], t["y"] - 1, -1)
+                self.put("above", 0, t["x"], t["y"], -1)
+                self.ents["trees"].remove(t)
 
     # ---- collision and roads ----------------------------------------------------------------
     def solid_grid(self):

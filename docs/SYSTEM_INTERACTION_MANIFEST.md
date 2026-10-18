@@ -255,14 +255,14 @@ Rules:
 - **Trigger:** The player delivers materials to their plot.
 - **Source:** `game/scripts/core/world.gd::start_site`, `game/scripts/core/world.gd::deliver`
 - **Affects:** Building, Inventory
-- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time.
+- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall.
 - **Tests:** `game/tests/play_test.gd`
 
 ### INT-031 · Saving and loading
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
-- **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/player_state.gd::to_dict`
-- **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock
-- **Expected:** Written atomically as save_version 3. Versions 1 and 2 load, with no coin lost. Fields added later (sex, look, tool, crimes) load with defaults. A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. An unreadable save is kept and a new game starts.
+- **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/player_state.gd::to_dict`
+- **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building
+- **Expected:** Written atomically as save_version 3. Versions 1 and 2 load, with no coin lost. Fields added later (sex, look, tool, crimes) load with defaults. A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
 - **Tests:** `game/tests/run_tests.gd::test_save_round_trip`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
@@ -335,7 +335,7 @@ Rules:
   - Accepting moves an offer to the player's quests (at most `quest_max_active`).
   - Completing moves the asked-for goods to the giver and up to the reward in coins from the giver's purse to the player; coins are conserved.
   - A giver's death fails a side quest. Offers and accepted quests are saved.
-  - Story quests start with every new player and every heir, and on loading a save from before they existed. Their giver shows the story marker, a green pennant, until done; a villager with an offer shows what the quest is about (scroll for a skill, wheat for food, iron for ore, crossed swords for combat, a log, an axe). A giver who is inside their own home shows the marker over the house door instead; givers at work (the tavern, the smithy) are seen and marked as usual. "The sage in the north" is done when the player learns Fireball.
+  - Story quests start with every new player and every heir, and on loading a save from before they existed. Their giver shows the story marker, a green pennant, until done; a villager with an offer shows what the quest is about (scroll for a skill, wheat for food, iron for ore, crossed swords for combat, a log, an axe). A giver who is inside their own home shows the marker over the house door instead; givers at work (the tavern, the smithy) are seen and marked as usual. Markers draw over roofs and tree canopies. "The sage in the north" is done when the player learns Fireball.
   - In conversation: "Need any help?" hears an offer, then "I'll do it" or "Not now"; "Here you are" hands in a ready quest. A quest giver always stops to talk, even when busy (INT-039). The journal has a Quests page.
 - **Tests:** `game/tests/run_tests.gd::test_quests`, `game/tests/start_test.gd`
 
@@ -388,7 +388,7 @@ Rules:
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033 |
 | Bandits | INT-012, INT-014 |
-| Building | INT-018, INT-026, INT-030 |
+| Building | INT-018, INT-026, INT-030, INT-031 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021 |
 | Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039 |
 | Interface | INT-001, INT-002, INT-032, INT-033, INT-034, INT-039, INT-040 |
