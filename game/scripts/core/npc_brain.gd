@@ -39,6 +39,9 @@ const OUTLETS := {
 }
 const FOOD := ["roast_meat", "pottage", "wheat", "ale"]
 const COOKED := ["roast_meat", "pottage", "ale"]
+# the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
+# the village (when the seams are worked out) but does not carry the village's away (B7-007)
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone"]
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -457,6 +460,10 @@ func _smith(n: NPC) -> bool:
 		return _do_recipe(n, "smelt_iron")
 	if inv.has_all({"copper_ore": 2, "coal": 1}) and inv.count("copper_bar") < 6:
 		return _do_recipe(n, "smelt_copper")
+	# the goods merchant is the smith's wholesale buyer (B7-016): tools beyond the smith's own go to its stall
+	for id in ["pickaxe", "axe", "iron_sword", "copper_sword"]:
+		if inv.count(id) > 1 and _buyer_for(n, id) != null:
+			return _plan_sell(n, id)
 	# forge whatever is scarcest
 	var wants := []
 	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor"]:
@@ -787,20 +794,29 @@ func _vendor_with_food(n: NPC) -> NPC:
 	return best
 
 
+## Who sells `id` to a household: the carpenters and the raw-goods merchants, and for firewood a
+## woodcutter with logs in hand too (B7-016: a woodcutter whose buyers were out of coin could not sell
+## what households needed and had the money to buy).
 func _seller_of(id: String, buyer: NPC) -> NPC:
 	for o: NPC in w.npcs:
 		if o.alive and o != buyer and not w.asleep(o) and (o.job == "carpenter" or buy_role(o) == "merchant_raw") and o.inv.has(id):
 			return o
+	if id == "log":
+		for o: NPC in w.npcs:
+			if o.alive and o != buyer and not w.asleep(o) and o.job == "woodcutter" and o.inv.has(id):
+				return o
 	return null
 
 
 func _get_tool(n: NPC, tool: String) -> bool:
-	for o: NPC in w.npcs:
-		if o.alive and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.has(tool) and not KEEPS.get(o.job, []).has(tool):
-			if n.coins >= w.sell_price(o, tool):
-				n.doing = "buying a new %s" % tool
-				n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
-				return true
+	# the goods merchant retails tools (the smith's wholesale buyer, B7-016); the smith sells what the merchant lacks
+	for role in ["merchant_goods", "smith"]:
+		for o: NPC in w.npcs:
+			if o.alive and ((o.job == "smith") if role == "smith" else (buy_role(o) == role)) and o.inv.has(tool) and not KEEPS.get(o.job, []).has(tool):
+				if n.coins >= w.sell_price(o, tool):
+					n.doing = "buying a new %s" % tool
+					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
+					return true
 	once("no_tool_%d_%d" % [n.id, w.day()], "%s %s has no %s and cannot get one." % [n.name, n.family, tool])
 	n.doing = "out of work: needs a %s" % tool
 	n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(90, "", {}, "idle")]
@@ -1786,10 +1802,27 @@ func _day_labour(n: NPC) -> bool:
 	return true
 
 
-## A merchant caravan passes through: it buys the market's surplus. This is the village's only
-## source of new coins (logged in coin_sources), and the goods leave the village.
+## A merchant caravan passes through. It is a finite regional market (B7-014, agent decision under the
+## owner's authorization of 2026-10-18; every number provisional): it holds a purse (World.caravan_purse),
+## which gains the regional demand for the village's goods (`caravan_allowance` coins a day, up to
+## `caravan_float`, tapering to nothing as the village's coins reach `caravan_ceiling_per_head` a head)
+## and every coin the village pays it for ore, coal and stone; it spends from it, at
+## most `caravan_coins` a visit, and never pays out a coin it does not hold. It sells first, then buys
+## the market's surplus (never the mine's raw ore, coal and stone, NOT_EXPORTED) at 0.8 x value, the smiths' work first (their ore is paid for in the metal goods
+## the caravan carries off), one unit at a time from each seller in turn so a short purse is shared.
+## The village's currency can therefore grow only by the allowance, and never past its ceiling; the
+## goods leave the village; the coins are logged in coin_sources.
 func caravan() -> void:
-	var budget := int(GameData.b("caravan_coins"))
+	var every := maxi(1, int(GameData.b("caravan_every_days")))
+	var float_coins := int(GameData.b("caravan_float"))
+	if w.caravan_purse < float_coins:
+		# the region's demand tops the purse up, less and less as the village's coins near their ceiling
+		var ceiling := float(GameData.b("caravan_ceiling_per_head")) * float(w.alive_count() - w.alive_count("bandit"))
+		var room := clampf(1.0 - float(w.total_coins()) / maxf(1.0, ceiling), 0.0, 1.0)
+		w.caravan_purse = mini(float_coins, w.caravan_purse + roundi(float(GameData.b("caravan_allowance")) * every * room))
+	var sold := _caravan_imports()
+	var stone := _caravan_stone()
+	var budget := mini(int(GameData.b("caravan_coins")), w.caravan_purse)
 	var bought := 0
 	# merchants do not sell the village's food away when there is less than a few days of it (the
 	# village's need weighted by age, as everywhere)
@@ -1804,8 +1837,7 @@ func caravan() -> void:
 	for f in FOOD:
 		food += w.table_food(f) * float(GameData.item(f).food)
 	var keep_food := food < village_day_food() * float(GameData.b("caravan_food_reserve_days"))
-	# a caravan bringing stone to a village whose own is worked out does not carry the village's away
-	var keep_stone := _stone_scarce()
+	var lines := []                # [seller, item, units for sale]
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
@@ -1813,26 +1845,38 @@ func caravan() -> void:
 		if o.job == "smith":
 			caps = {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
 		for id in o.inv.ids():
-			if not caps.has(id) or (keep_food and (FOOD.has(id) or id == "meat")) or (keep_stone and id == "stone"):
+			if not caps.has(id) or NOT_EXPORTED.has(id) or (keep_food and (FOOD.has(id) or id == "meat")):
 				continue
-			var keep := int(caps.get(id, 6)) / 2
-			var extra := o.inv.count(id) - keep
-			while extra > 0 and budget > 0:
+			var extra := o.inv.count(id) - int(caps.get(id, 6)) / 2
+			if extra > 0:
+				lines.append([o, id, extra])
+	# the smiths' lines first (they pay for ore with the metal goods the caravan takes), then the others
+	var smiths := lines.filter(func(l): return (l[0] as NPC).job == "smith")
+	var others := lines.filter(func(l): return (l[0] as NPC).job != "smith")
+	for group in [smiths, others]:
+		var first: int = (w.day() / every) % maxi(1, group.size())          # who is served first turns
+		var moved := true
+		while moved and budget > 0:
+			moved = false
+			for k in group.size():
+				var line: Array = group[(k + first) % group.size()]
+				var o: NPC = line[0]
+				var id: String = line[1]
 				var price := maxi(1, roundi(GameData.value(id) * 0.8))
-				if price > budget:
-					break
+				if int(line[2]) <= 0 or price > budget:
+					continue
+				line[2] = int(line[2]) - 1
 				o.inv.remove(id)
 				w.stat("exported_" + id)
 				o.coins += price
 				o.earned += price
 				budget -= price
+				w.caravan_purse -= price
 				w.coin_sources += price
 				w.stat("caravan_coins_in", price)
 				w.stat("caravan_in_" + buy_role(o), price)
 				bought += price
-				extra -= 1
-	var sold := _caravan_imports()
-	var stone := _caravan_stone()
+				moved = true
 	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s%s." % [bought,
 		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else "",
 		(" and %d stone to the market" % stone) if stone > 0 else ""])
@@ -1859,6 +1903,7 @@ func _caravan_imports() -> int:
 				o.spent += price
 				o.inv.add(id)
 				w.coin_sources -= price
+				w.caravan_purse += price
 				w.stat("caravan_coins_out", price)
 				spent += price
 				w.stat("imported_" + id)
@@ -1890,6 +1935,7 @@ func _caravan_stone() -> int:
 			o.spent += price
 			o.inv.add("stone")
 			w.coin_sources -= price
+			w.caravan_purse += price
 			w.stat("imported_stone")
 			w.stat("caravan_stone_coins", price)
 			w.stat("caravan_coins_out", price)
