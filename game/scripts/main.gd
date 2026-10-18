@@ -22,6 +22,11 @@ var action := {}               # {label, left, total, done: Callable}
 var paused := true             # the title screen starts paused
 var running := false
 var move_to: Vector2 = Vector2.INF   # tap-to-move destination (tiles)
+var walk_path := PackedVector2Array()  # the route to move_to, cell by cell (the villagers' pathfinder)
+var walk_i := 0
+var walk_goal := Vector2i(-1, -1)      # the cell walk_path leads to
+var walk_stuck := 0.0                  # seconds without progress along the route
+var talk_to: NPC = null                # a tapped villager the player walks up to, to talk
 var touch_points := {}
 var pinch_start := 0.0
 var zoom_start := 3.0
@@ -212,6 +217,9 @@ func _clear_world() -> void:
 	if world:
 		world.dispose()
 	chase = null
+	talk_to = null
+	move_to = Vector2.INF
+	walk_goal = Vector2i(-1, -1)
 	strike_pending = false
 	if attack_mode:
 		attack_mode = false
@@ -445,20 +453,20 @@ func _player_step(delta: float) -> void:
 	var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if v.length() > 0.1:
 		chase = null
+		talk_to = null
 	_chase_step()
+	_talk_step()
 	if v.length() > 0.1:
 		move_to = Vector2.INF
 	elif move_to != Vector2.INF:
-		var d := move_to - p.pos
-		if d.length() < 0.15:
-			move_to = Vector2.INF
-		else:
-			v = d.normalized()
+		v = _route_step(delta)
 	if v.length() > 0.1:
 		var speed := float(GameData.b("player_tiles_per_second"))
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
+		var before := p.pos
 		_try_move(Vector2(step.x, 0))
 		_try_move(Vector2(0, step.y))
+		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < step.length() * 0.3 else 0.0
 		player_sprite.face(v)
 		player_sprite.play("walk")
 	elif player_sprite.anim == "walk":
@@ -474,6 +482,55 @@ func _player_step(delta: float) -> void:
 		ui.toggle_inventory()
 	if Input.is_action_just_pressed("skills"):
 		ui.toggle_skills()
+
+
+## The direction to walk this frame towards move_to, around walls and trees: the route comes
+## from the map's pathfinder and is found again when the goal moves to another cell or the player
+## gets stuck. Arriving (or finding no way) clears move_to.
+func _route_step(_delta: float) -> Vector2:
+	var p := world.player
+	var goal := Vector2i(floori(move_to.x), floori(move_to.y))
+	if goal != walk_goal or walk_stuck > 0.5:
+		walk_goal = goal
+		walk_stuck = 0.0
+		walk_path = map.find_path(Vector2i(floori(p.pos.x), floori(p.pos.y)), goal)
+		walk_i = 1                       # the first point is the cell the player stands in
+		if walk_path.is_empty():
+			move_to = Vector2.INF
+			walk_goal = Vector2i(-1, -1)
+			return Vector2.ZERO
+	# the last stretch goes to the exact point; before it, to the centre of each cell on the way
+	var target := move_to if walk_i >= walk_path.size() - 1 else walk_path[walk_i] + Vector2(0.5, 0.5)
+	if map.is_solid(goal) and walk_i >= walk_path.size() - 1:
+		target = walk_path[walk_path.size() - 1] + Vector2(0.5, 0.5)
+	var d := target - p.pos
+	if d.length() < 0.15:
+		if walk_i >= walk_path.size() - 1:
+			move_to = Vector2.INF
+			walk_goal = Vector2i(-1, -1)
+			return Vector2.ZERO
+		walk_i += 1
+		return _route_step(_delta)
+	return d.normalized()
+
+
+## Walk up to a tapped villager, following as they move, and talk once beside them.
+func _talk_step() -> void:
+	if talk_to == null:
+		return
+	if not talk_to.alive or talk_to.hidden or talk_to.pos.distance_to(world.player.pos) > 25.0:
+		talk_to = null
+		move_to = Vector2.INF
+		return
+	var d := talk_to.pos - world.player.pos
+	if d.length() > 1.3:
+		move_to = talk_to.pos
+		return
+	move_to = Vector2.INF
+	player_sprite.face(d)
+	var who := talk_to
+	talk_to = null
+	ui.show_talk(who)
 
 
 func _try_move(step: Vector2) -> void:
@@ -937,6 +994,11 @@ func _tap(screen_pos: Vector2) -> void:
 		move_to = wpos
 		return
 	chase = null
+	talk_to = null
+	var tapped := _creature_at(wpos)
+	if tapped is NPC and tapped.role != "bandit":
+		talk_to = tapped                  # walk up to them (following if they move) and talk
+		return
 	if wpos.distance_to(world.player.pos) < 1.8:
 		player_sprite.face(wpos - world.player.pos)
 		_find_target()

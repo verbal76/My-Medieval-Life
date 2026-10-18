@@ -53,6 +53,22 @@ func _press(text: String) -> bool:
 	return false
 
 
+## Two walkable cells about 6 apart with a solid cell on the straight line between them, and a
+## path between them (the player must go around).
+func _blocked_pair(w: World) -> Array:
+	var m: VillageMap = w.map
+	for y in range(5, m.h - 5):
+		for x in range(5, m.w - 10):
+			var a := Vector2i(x, y)
+			var b := Vector2i(x + 6, y)
+			if m.is_solid(a) or m.is_solid(b) or not m.is_solid(Vector2i(x + 3, y)):
+				continue
+			var path := m.find_path(a, b)
+			if path.size() > 7 and path.size() < 20:
+				return [a, b]
+	return []
+
+
 func _run() -> void:
 	var ui = main.ui
 	# 1-3. character creation: a name, a family, a female look in a tunic
@@ -236,6 +252,45 @@ func _run() -> void:
 		main.interact()
 		check(p.inv.total() > inv0, "looted the bag")
 	check(w.total_coins() - w.coin_sources == coins0 - src0, "coins conserved through mining, the fight and the looting")
+
+	# tap-to-walk goes around walls and trees: a goal behind an obstacle is reached
+	var route := _blocked_pair(w)
+	check(not route.is_empty(), "found a spot with an obstacle in the straight line")
+	if not route.is_empty():
+		p.pos = Vector2(route[0]) + Vector2(0.5, 0.5)
+		main.chase = null
+		main.attack_mode = false
+		main.move_to = Vector2(route[1]) + Vector2(0.5, 0.5)
+		var t := 0
+		while main.move_to != Vector2.INF and t < 400:
+			main._player_step(0.05)
+			t += 1
+		check(p.pos.distance_to(Vector2(route[1]) + Vector2(0.5, 0.5)) < 0.3, "walked around the obstacle to the tapped spot (%.1f s)" % (t * 0.05))
+	# a tap on a villager who is walking away: follow, catch up and talk
+	var walker: NPC = null
+	for i in 400:
+		w.update(0.1)
+		for n: NPC in w.npcs:
+			if n.alive and not n.hidden and n.role == "adult" and n.anim == "walk" and n.path.size() - n.path_i > 8:
+				walker = n
+				break
+		if walker:
+			break
+	if walker:
+		# stand about 6 tiles from them, somewhere the player can walk from
+		var spot: Vector2i = w.map.nearest_walkable(walker.cell() + Vector2i(6, 0))
+		p.pos = Vector2(spot) + Vector2(0.5, 0.5)
+	check(walker != null, "a villager walking somewhere")
+	if walker:
+		main._tap(main.get_canvas_transform() * ((walker.pos - Vector2(0, 0.4)) * main.T))
+		check(main.talk_to == walker, "tapping a villager sets them as the one to talk to")
+		var steps_t := 0
+		while not ui.is_open("talk") and steps_t < 600:
+			main._player_step(0.05)
+			w.update(0.05)
+			steps_t += 1
+		check(ui.is_open("talk"), "followed %s and the talk opened (%.1f s)" % [walker.name, steps_t * 0.05])
+		ui.hide_all()
 
 	# 18. talk to a villager
 	var v: NPC = null

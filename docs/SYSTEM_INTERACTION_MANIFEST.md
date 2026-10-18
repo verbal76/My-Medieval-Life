@@ -267,11 +267,11 @@ Rules:
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
 - **Trigger:** Any input. A tap or click on the map; the touch action bar; a gamepad or key press.
-- **Source:** `game/scripts/main.gd::_input`, `game/scripts/main.gd::_unhandled_input`, `game/scripts/main.gd::_tap`, `game/scripts/main.gd::attack_button`, `game/scripts/main.gd::strike`, `game/scripts/main.gd::_chase_step`, `game/scripts/ui/game_ui.gd::set_scheme`, `game/scripts/ui/game_ui.gd::blocks`
+- **Source:** `game/scripts/main.gd::_input`, `game/scripts/main.gd::_unhandled_input`, `game/scripts/main.gd::_tap`, `game/scripts/main.gd::attack_button`, `game/scripts/main.gd::strike`, `game/scripts/main.gd::_chase_step`, `game/scripts/main.gd::_route_step`, `game/scripts/main.gd::_talk_step`, `game/scripts/ui/game_ui.gd::set_scheme`, `game/scripts/ui/game_ui.gd::blocks`
 - **Affects:** Interface, Combat, Crime, Inventory
 - **Expected:**
   - The scheme follows the last input. Touch buttons show only for touch (setting: auto, always, never). Prompts name the key or pad button. With keys or a pad, panels take focus. The pad's B button closes panels.
-  - A tap or click next to the player uses the target; elsewhere the player walks there. A tap on a button or panel never moves the player.
+  - A tap or click next to the player uses the target; elsewhere the player walks there along the villagers' pathfinder, around walls and trees, finding the way again if stuck. A tap on a villager walks up to them, following as they move, and opens the talk. A tap on a button or panel never moves the player.
   - The Attack button toggles attack mode. In it:
     - A tap on a person or animal puts the sword marker on it. The player walks over and strikes once; each further tap on it strikes again.
     - A tap on someone else moves the marker. A tap on open ground walks there and clears the mark.
