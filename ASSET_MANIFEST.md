@@ -15,6 +15,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `ClimbUp_restore_backup.zip` | n/a | 3 | 2.9 MB | NOT an art pack: backup of a separate 'Climb up' game-designer project (project.json + splash image). |
 | `CozyFarm_full_version.zip` | paid | 410 | 2.5 MB | Cozy Farm (full version) by shubibubi, 16x16 grid, the same scale as the Puny packs. Uploaded as full_version.zip and stored under this name, bytes unchanged. Animals with walk/sleep sheets (cows in 3 colours, pigs, sheep, goats, chickens, turkey, bunnies, plus babies; frame sizes in info.txt), 37 crops with growth stages (also wet and winter variants), seeds, scarecrows, farm tools, artisan machines (butter churn, cheese press, spindle, cloth and mayo makers), seasonal trees, flowers and gates, farm tiles, buildings (barn, coop, market, greenhouse, NPC houses, plus a hospital, museum and slime hut that fit the setting less), slime and bat enemies, UI and item icons. No licence file in the archive. Bought by the owner on itch.io (shubibubi.itch.io, Cozy Farm Asset Pack, full version dated 2021-12-06; purchase page screenshot 2026-10-17). Complete-version licence per the pack page (owner screenshot 2026-10-17): usable in any commercial or non-commercial project, modification allowed, no resale or redistribution even if modified, credit appreciated. |
 | `MiniWorldSprites.zip` | free | 208 | 2.1 MB | 16x16 Miniworld: buildings in 5 team colours, units, monsters, animals, nature, ground, UI. Shade's guide: free to use, no credit needed, do not resell. |
+| `My_Medieval_Life_Icon_Pack.zip` | verify | 9 | 2.8 MB | The game's app icon, supplied by the owner on 2026-10-18: one picture (a ragged hero with a rusty sword before a village and castle, in a gold rounded frame) at 48, 72, 96, 144, 192, 256, 432, 512 and 1024 px. No licence file in the archive; origin and terms to be confirmed by the owner. |
 | `PUNY-WORLD-PAID_v1.zip` | paid | 32 | 15.3 MB | Puny World medieval tileset: 3520x2112 tile sheet, atlas, 9 sample Tiled maps, sample 32x32 characters, GIF previews. |
 | `PUNY_CHARACTERS_v2.1.zip` | paid | 515 | 59.5 MB | Puny Characters Editor Edition: pre-made 8-direction spritesheets, GIMP layer file, Tiled ortho/iso/hex demo maps (ortho tileset has a terrain wangset). |
 | `PUNY_CHARACTERS_v2.1_tdsm-2026.zip` | paid | 116 | 689.5 KB | Puny Characters as a Top-Down Sprite Maker style: manifest.tds, per-layer part sheets, CSV part lists, palette ramps. This is the headless character generator's source (tools/puny_chargen.py). |
@@ -24,9 +25,14 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `PUNY_WORLD_v1.zip` | verify | 7 | 206.2 KB | FREE Puny World overworld tileset (432x1040, 1755 tiles) with 5 sample Tiled maps. Its .tsx has a full Tiled terrain setup: corner wangset 'overworld' (grass, dirt, sand, cliff, river, 3 sea depths; trees/trees2/cliff-transparent as an overlay over 'air') and edge wangset 'pathways' (dirt, sand, water paths). Basis for tools/puny_world_terrain.py. Linked as 'Free 16x16 Puny World Tileset' from Shade's pages; licence page not yet seen. |
 | `Puny-Characters.zip` | CC0 | 24 | 547.4 KB | Free Puny Characters: 19 8-direction sheets (768x256 = 24 frames x 8 directions, 32px cells; idle, walk, sword, bow, stave, throw, hurt, death): Character-Base plus soldiers, warriors, archers, mages, workers and orcs in team colours; a 480x32 single-row Slime sheet; 4 environment tiles (16x16). Older/smaller layout than the 29-frame Editor Edition. |
 | `PunyMonsters.zip` | CC0 | 9 | 133.4 KB | Puny Monsters: 9 animals/monsters (panther, dog, 2 boars, 2 spiders, wolf, rat, cat), each 384x256 = 12 frames x 8 directions, 32px cells. Second download on the free Puny Characters itch.io page, under its CC0 licence. |
+| `Simple_Falt_Game_Interface_Pack.zip` | paid | 960 | 67.1 MB | Simple Flat Game Interface Kit by SunGraphica (sungraphica.itch.io; the archive is spelt "Falt"), bought by the owner on itch.io in SunGraphica's All-in-One Game UI bundle on 2026-03-12 (purchase page screenshot 2026-10-18). Menu, inventory, items, levels, settings, shop, level-complete and progress-bar screens as PSDs and as PNG pieces in five colours (PNG, Blue, Green, Pink, Red), two icon sets and a 512 px button. The archive's only note names the author and store; the bundle also offers a "FREE ver.zip", not uploaded. No licence file. Not used in the game yet. |
+| `SunGraphica_Minimal_Icons_FREE.zip` | paid | 541 | 27.8 MB | The free version of "600 clean and minimal game Icons ultimate pack" by SunGraphica, uploaded as FREE.zip and stored under this name, bytes unchanged. Part of the same All-in-One Game UI bundle the owner bought on itch.io on 2026-03-12 (purchase page screenshot 2026-10-18). About 90 minimal game icons in light and dark versions at 0.5x, 1x and 2x. The full pack ("Minimal icons.zip", 73 MB) is not uploaded. No licence file. Not used in the game yet. |
 | `TinyRanch_Assets.zip` | free | 7 | 21.9 KB | Tiny Ranch by Gustavo Vituri, drawn on an 8x8 grid (half the 16x16 scale of the Puny packs): farm animals with walk frames (cows, pigs, sheep, chickens, ducks, geese, horses and more), 8 crops with seed, growth stages and harvest icons, farm items, trees and rocks, barns, silos, windmill and well, tilled soil and grass tiles, and 8x8 farmer characters. No licence file in the archive; per the itch.io page (screenshot from the owner): free for personal and commercial use, modification allowed, crediting not required but appreciated (credit Gustavo Vituri), do not redistribute, no NFTs. |
+| `kenney_input-prompts_1.5.zip` | CC0 | 4667 | 5.7 MB | Input Prompts 1.5 by Kenney (kenney.nl): over 1,500 button and key icons for Xbox, PlayStation, Nintendo, Steam devices, keyboard and mouse, touch gestures and generic controls, as 64 px and 128 px PNGs, SVGs, sprite sheets and fonts. CC0 per the archive's License.txt and the itch.io page (owner screenshot 2026-10-18). Used for the control prompts on screen. |
+| `kenney_splatpack.zip` | CC0 | 113 | 453.5 KB | Splat Pack 1.0 by Kenney (kenney.nl): 36 white splat shapes as 256 px and 512 px PNGs and SVGs. CC0 per the archive's License.txt (credit appreciated, not required). Used, shrunk and tinted, for blood where someone is slain; meant later for thrown potions and water splashes. |
 | `miniworld +__rainbow-refresh.zip` | CC BY 4.0 | 10 | 642.9 KB | 16x16 miniworld + by octoshrimpy, rainbow refresh (02/15/2023, newer): recoloured sheets plus chests. terrain.png has 20 terrain modules (water depths, sand, grasses, forest, snow, ice, dirts, cave floors) in one shared autotile layout; no Tiled/wang data included. |
 | `16x16 Assorted RPG Icons (partial)/` (folder) | free | 9 | 113.9 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items. |
+| `Flat Game UI Icon Pack/` (folder) | verify | 11 | 26.9 MB | Flat game UI pack supplied by the owner on 2026-10-18 in parts (the owner's folder is "Flat design UI pack"): icon sets 1 and 2 (white glyphs on dark rounded squares: interface, media and platform icons; RPG items, weapons, armour, potions, scrolls and status icons) as Illustrator .ai and .eps; "Flat game UI set 3" (login, skills, pause, levels, win, shop, upgrade and settings windows in several colour schemes) as .ai and .pdf; and preview images (exact duplicate uploads dropped). Set 3's .eps and .svg could not be uploaded; the .ai and .pdf hold the same art. No licence file; source and terms to be confirmed by the owner. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
 | `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0. |
 
@@ -38,17 +44,27 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 12457 |
+| `.png` | 17071 |
+| `.svg` | 1542 |
 | `.gif` | 353 |
+| `.txt` | 44 |
+| `.xml` | 34 |
 | `.tmj` | 23 |
+| `.psd` | 21 |
+| `.otf` | 17 |
+| `.ttf` | 17 |
 | `.tsx` | 13 |
 | `.csv` | 11 |
-| `.txt` | 6 |
+| `.ai` | 6 |
+| `.url` | 5 |
+| `.eps` | 3 |
+| `.jpg` | 3 |
 | `.docx` | 2 |
 | `.xcf` | 2 |
 | `.json` | 2 |
-| `.psd` | 1 |
+| `.pdf` | 1 |
 | `.tds` | 1 |
+| `.html` | 1 |
 
 ## Contents by folder
 
@@ -193,6 +209,12 @@ Each folder lists its file count and the most common image sizes.
 | `MiniWorldSprites/Objects` | 9 | 32x16 (4), 32x32 (3), 64x32 (1), ... | `ArrowLong.png`, `ArrowShort.png`, `Axe.png`, `BallistaBolt.png`, ... |
 | `MiniWorldSprites/Templates` | 3 | 720x288 (1), 192x271 (1), 160x160 (1) | `16x16Large.png`, `16x16Small.png`, `32x32Small.png` |
 | `MiniWorldSprites/User Interface` | 4 | 32x16 (1), 80x16 (1), 64x64 (1), ... | `BoxSelector.png`, `Highlighted-Boxes.png`, `Icons-Essentials.png`, `UiIcons.png` |
+
+### My_Medieval_Life_Icon_Pack.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `.` | 9 | 1024x1024 (1), 432x432 (1), 144x144 (1), ... | `My_Medieval_Life_1024x1024.png`, `My_Medieval_Life_432x432.png`, `My_Medieval_Life_144x144.png`, `My_Medieval_Life_48x48.png`, ... |
 
 ### PUNY-WORLD-PAID_v1.zip
 
@@ -416,11 +438,146 @@ Each folder lists its file count and the most common image sizes.
 |---|---:|---|---|
 | `PunyMonsters` | 9 | 384x256 | `Black-Panther-32x32.png`, `Blonde-Dog-32x32.png`, `Brown-Boar-32x32.png`, `Brown-Spider-32x32.png`, ... |
 
+### Simple_Falt_Game_Interface_Pack.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `Simple Falt Game Interface Pack` | 10 |  | `Cover.psd`, `Inventory.psd`, `Items.psd`, `level complate.psd`, ... |
+| `Simple Falt Game Interface Pack/Icon collection` | 1 | 512x512 | `Button  512 px.png` |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 1` | 1 |  | `Untitled-4.ai` |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 1/0.5x` | 89 | 256x256 (19), 207x256 (4), 167x256 (4), ... | `Alarm 256 px.png`, `Apple 256 px.png`, `Back 2 256 px.png`, `Back 256 px.png`, ... |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 1/1x` | 88 | 512x512 (18), 333x512 (4), 415x512 (2), ... | `Alarm 512 px.png`, `Apple 512 px.png`, `Back 2 512 px.png`, `Back 512 px.png`, ... |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 1/2x` | 89 | 1024x1024 (18), 666x1024 (4), 829x1024 (2), ... | `Alarm.png`, `Apple.png`, `Back 2.png`, `Back.png`, ... |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 2` | 8 |  | `Icon 1.psd`, `Icon 2.psd`, `Icon 3.0.psd`, `Icon 3.1.psd`, ... |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 2/128 px` | 170 | 128x128 (12), 128x111 (8), 128x127 (7), ... | `Arrow_ 128 px.png`, `Avatar 128 px.png`, `avatar 2 128 px.png`, `Axe 128 px.png`, ... |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 2/256 px` | 170 | 256x256 (9), 214x256 (6), 256x254 (6), ... | `Arrow_ 256 px.png`, `avatar 2 256 px.png`, `Avatar 256 px.png`, `Axe 256 px.png`, ... |
+| `Simple Falt Game Interface Pack/Icon collection/Icon set 2/512 px` | 170 | 428x512 (6), 512x442 (6), 512x512 (6), ... | `Arrow_ 512 px.png`, `avatar 2 512 px.png`, `Avatar 512 px.png`, `Axe 512 px.png`, ... |
+| `Simple Falt Game Interface Pack/PNG` | 27 | 2160x3840 (7), 435x435 (6), 1303x370 (3), ... | `Frame.png`, `Grid copy 10.png`, `Grid copy 2-2.png`, `Grid copy 2.png`, ... |
+| `Simple Falt Game Interface Pack/PNG Blue` | 31 | 435x435 (8), 2160x3840 (7), 1384x431 (3), ... | `Frame.png`, `Grid copy 11-2.png`, `Grid copy 11-3.png`, `Grid copy 11.png`, ... |
+| `Simple Falt Game Interface Pack/PNG Green` | 30 | 435x435 (8), 2160x3840 (7), 1384x431 (3), ... | `Frame.png`, `Grid copy 11-2.png`, `Grid copy 11-3.png`, `Grid copy 11.png`, ... |
+| `Simple Falt Game Interface Pack/PNG Pink` | 30 | 435x435 (8), 2160x3840 (7), 1384x431 (3), ... | `Frame.png`, `Grid copy 11-2.png`, `Grid copy 11-3.png`, `Grid copy 11.png`, ... |
+| `Simple Falt Game Interface Pack/PNG Red` | 29 | 435x435 (8), 2160x3840 (7), 1384x431 (3), ... | `Frame.png`, `Grid copy 11-2.png`, `Grid copy 11-3.png`, `Grid copy 11.png`, ... |
+| `Simple Falt Game Interface Pack/Progress bars` | 17 | 1903x67 (7), 44x67 (3), 484x476 (2), ... | `Ellipse 1 copy.png`, `Ellipse 1.png`, `Progress bars.psd`, `Rectangle 1 copy 10-2.png`, ... |
+
+### SunGraphica_Minimal_Icons_FREE.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `.` | 1 |  | `Sungraphica + info .txt` |
+| `FREE version/Icon set 1` | 4 |  | `icons set 1 copy.svg`, `icons set 1.eps`, `Untitled-11.psd`, `Untitled-4.ai` |
+| `FREE version/Icon set 1/0.5x` | 89 | 256x256 (19), 207x256 (4), 167x256 (4), ... | `Alarm 256 px.png`, `Apple 256 px.png`, `Back 2 256 px.png`, `Back 256 px.png`, ... |
+| `FREE version/Icon set 1/1x` | 88 | 512x512 (18), 333x512 (4), 415x512 (2), ... | `Alarm 512 px.png`, `Apple 512 px.png`, `Back 2 512 px.png`, `Back 512 px.png`, ... |
+| `FREE version/Icon set 1/2x` | 89 | 1024x1024 (18), 666x1024 (4), 829x1024 (2), ... | `Alarm.png`, `Apple.png`, `Back 2.png`, `Back.png`, ... |
+| `FREE version/Icon set 1/Dark Icons` | 2 |  | `Untitled-11.ai`, `Untitled-11.psd` |
+| `FREE version/Icon set 1/Dark Icons/0.5x` | 89 | 256x256 (19), 207x256 (4), 167x256 (4), ... | `Alarm x256.png`, `Apple x256.png`, `Back 2 x256.png`, `Back x256.png`, ... |
+| `FREE version/Icon set 1/Dark Icons/1x` | 89 | 512x512 (19), 333x512 (4), 415x512 (2), ... | `Alarm x512.png`, `Apple x512.png`, `Back 2 x512.png`, `Back x512.png`, ... |
+| `FREE version/Icon set 1/Dark Icons/2x` | 90 | 1024x1024 (18), 666x1024 (4), 1024x765 (2), ... | `Alarm .png`, `Alarm.png`, `Apple.png`, `Back 2.png`, ... |
+
 ### TinyRanch_Assets.zip
 
 | Folder | Files | Image sizes | Examples |
 |---|---:|---|---|
 | `TinyRanch_Assets` | 7 | 128x48 (1), 24x192 (1), 56x120 (1), ... | `TinyFarm_Animals.png`, `TinyFarm_Characters.png`, `TinyFarm_Crops.png`, `TinyFarm_Items.png`, ... |
+
+### kenney_input-prompts_1.5.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `.` | 19 | 918x515 | `Best practices.url`, `License.txt`, `Overview.html`, `Preview Flairs & Overlays.png`, ... |
+| `Flairs` | 4 | 640x640 (1), 1280x1280 (1) | `flairs_sheet_default.png`, `flairs_sheet_default.xml`, `flairs_sheet_double.png`, `flairs_sheet_double.xml` |
+| `Flairs/Default` | 93 | 64x64 | `controller_battery_empty.png`, `controller_battery_full.png`, `controller_battery_half.png`, `controller_connecting_a.png`, ... |
+| `Flairs/Double` | 93 | 128x128 | `controller_battery_empty.png`, `controller_battery_full.png`, `controller_battery_half.png`, `controller_connecting_a.png`, ... |
+| `Flairs/Fonts` | 4 |  | `kenney_input_flairs.otf`, `kenney_input_flairs.ttf`, `kenney_input_flairs_characters.txt`, `kenney_input_flairs_map.txt` |
+| `Flairs/Vector` | 93 |  | `controller_battery_empty.svg`, `controller_battery_full.svg`, `controller_battery_half.svg`, `controller_connecting_a.svg`, ... |
+| `Generic` | 4 | 384x384 (1), 768x768 (1) | `generic_sheet_default.png`, `generic_sheet_default.xml`, `generic_sheet_double.png`, `generic_sheet_double.xml` |
+| `Generic/Default` | 36 | 64x64 | `generic_button.png`, `generic_button_circle.png`, `generic_button_circle_fill.png`, `generic_button_circle_outline.png`, ... |
+| `Generic/Double` | 36 | 128x128 | `generic_button.png`, `generic_button_circle.png`, `generic_button_circle_fill.png`, `generic_button_circle_outline.png`, ... |
+| `Generic/Fonts` | 4 |  | `kenney_input_generic.otf`, `kenney_input_generic.ttf`, `kenney_input_generic_characters.txt`, `kenney_input_generic_map.txt` |
+| `Generic/Vector` | 36 |  | `generic_button.svg`, `generic_button_circle.svg`, `generic_button_circle_fill.svg`, `generic_button_circle_outline.svg`, ... |
+| `Keyboard & Mouse` | 4 | 1088x1024 (1), 2176x2048 (1) | `keyboard-&-mouse_sheet_default.png`, `keyboard-&-mouse_sheet_default.xml`, `keyboard-&-mouse_sheet_double.png`, `keyboard-&-mouse_sheet_double.xml` |
+| `Keyboard & Mouse/Default` | 257 | 64x64 | `keyboard.png`, `keyboard_0.png`, `keyboard_0_outline.png`, `keyboard_1.png`, ... |
+| `Keyboard & Mouse/Double` | 257 | 128x128 | `keyboard.png`, `keyboard_0.png`, `keyboard_0_outline.png`, `keyboard_1.png`, ... |
+| `Keyboard & Mouse/Fonts` | 4 |  | `kenney_input_keyboard_&_mouse.otf`, `kenney_input_keyboard_&_mouse.ttf`, `kenney_input_keyboard_&_mouse_characters.txt`, `kenney_input_keyboard_&_mouse_map.txt` |
+| `Keyboard & Mouse/Vector` | 257 |  | `keyboard.svg`, `keyboard_0.svg`, `keyboard_0_outline.svg`, `keyboard_1.svg`, ... |
+| `Meta Quest` | 4 | 512x448 (1), 1024x896 (1) | `meta-quest_sheet_default.png`, `meta-quest_sheet_default.xml`, `meta-quest_sheet_double.png`, `meta-quest_sheet_double.xml` |
+| `Meta Quest/Default` | 50 | 64x64 | `controller_quest_left.png`, `controller_quest_left_letter.png`, `controller_quest_right.png`, `controller_quest_right_letter.png`, ... |
+| `Meta Quest/Double` | 50 | 128x128 | `controller_quest_left.png`, `controller_quest_left_letter.png`, `controller_quest_right.png`, `controller_quest_right_letter.png`, ... |
+| `Meta Quest/Fonts` | 4 |  | `kenney_input_meta_quest.otf`, `kenney_input_meta_quest.ttf`, `kenney_input_meta_quest_characters.txt`, `kenney_input_meta_quest_map.txt` |
+| `Meta Quest/Vector` | 50 |  | `controller_quest_left.svg`, `controller_quest_left_letter.svg`, `controller_quest_right.svg`, `controller_quest_right_letter.svg`, ... |
+| `Nintendo Gamecube` | 4 | 576x576 (1), 1152x1152 (1) | `nintendo-gamecube_sheet_default.png`, `nintendo-gamecube_sheet_default.xml`, `nintendo-gamecube_sheet_double.png`, `nintendo-gamecube_sheet_double.xml` |
+| `Nintendo Gamecube/Default` | 73 | 64x64 | `gamecube_button_a.png`, `gamecube_button_a_outline.png`, `gamecube_button_b.png`, `gamecube_button_b_outline.png`, ... |
+| `Nintendo Gamecube/Double` | 73 | 128x128 | `gamecube_button_a.png`, `gamecube_button_a_outline.png`, `gamecube_button_b.png`, `gamecube_button_b_outline.png`, ... |
+| `Nintendo Gamecube/Fonts` | 4 |  | `kenney_input_nintendo_gamecube.otf`, `kenney_input_nintendo_gamecube.ttf`, `kenney_input_nintendo_gamecube_characters.txt`, `kenney_input_nintendo_gamecube_map.txt` |
+| `Nintendo Gamecube/Vector` | 73 |  | `gamecube_button_a.svg`, `gamecube_button_a_outline.svg`, `gamecube_button_b.svg`, `gamecube_button_b_outline.svg`, ... |
+| `Nintendo Switch` | 4 | 704x704 (1), 1408x1408 (1) | `nintendo-switch_sheet_default.png`, `nintendo-switch_sheet_default.xml`, `nintendo-switch_sheet_double.png`, `nintendo-switch_sheet_double.xml` |
+| `Nintendo Switch 2` | 4 | 768x704 (1), 1536x1408 (1) | `nintendo-switch-2_sheet_default.png`, `nintendo-switch-2_sheet_default.xml`, `nintendo-switch-2_sheet_double.png`, `nintendo-switch-2_sheet_double.xml` |
+| `Nintendo Switch 2/Default` | 122 | 64x64 | `controller_switch.png`, `controller_switch_joycon_down.png`, `controller_switch_joycon_up.png`, `controller_switch_pro.png`, ... |
+| `Nintendo Switch 2/Double` | 122 | 128x128 | `controller_switch.png`, `controller_switch_joycon_down.png`, `controller_switch_joycon_up.png`, `controller_switch_pro.png`, ... |
+| `Nintendo Switch 2/Fonts` | 4 |  | `kenney_input_nintendo_switch_2.otf`, `kenney_input_nintendo_switch_2.ttf`, `kenney_input_nintendo_switch_2_characters.txt`, `kenney_input_nintendo_switch_2_map.txt` |
+| `Nintendo Switch 2/Vector` | 122 |  | `controller_switch.svg`, `controller_switch_joycon_down.svg`, `controller_switch_joycon_up.svg`, `controller_switch_pro.svg`, ... |
+| `Nintendo Switch/Default` | 112 | 64x64 | `controller_switch.png`, `controller_switch_joycon_down.png`, `controller_switch_joycon_up.png`, `controller_switch_pro.png`, ... |
+| `Nintendo Switch/Double` | 112 | 128x128 | `controller_switch.png`, `controller_switch_joycon_down.png`, `controller_switch_joycon_up.png`, `controller_switch_pro.png`, ... |
+| `Nintendo Switch/Fonts` | 4 |  | `kenney_input_nintendo_switch.otf`, `kenney_input_nintendo_switch.ttf`, `kenney_input_nintendo_switch_characters.txt`, `kenney_input_nintendo_switch_map.txt` |
+| `Nintendo Switch/Vector` | 112 |  | `controller_switch.svg`, `controller_switch_joycon_down.svg`, `controller_switch_joycon_up.svg`, `controller_switch_pro.svg`, ... |
+| `Nintendo Wii` | 4 | 640x576 (1), 1280x1152 (1) | `nintendo-wii_sheet_default.png`, `nintendo-wii_sheet_default.xml`, `nintendo-wii_sheet_double.png`, `nintendo-wii_sheet_double.xml` |
+| `Nintendo Wii/Default` | 84 | 64x64 | `controller_wii_classic.png`, `controller_wii_classic_pro.png`, `wii_button_1.png`, `wii_button_1_outline.png`, ... |
+| `Nintendo Wii/Double` | 84 | 128x128 | `controller_wii_classic.png`, `controller_wii_classic_pro.png`, `wii_button_1.png`, `wii_button_1_outline.png`, ... |
+| `Nintendo Wii/Fonts` | 4 |  | `kenney_input_nintendo_wii.otf`, `kenney_input_nintendo_wii.ttf`, `kenney_input_nintendo_wii_characters.txt`, `kenney_input_nintendo_wii_map.txt` |
+| `Nintendo Wii/Vector` | 84 |  | `controller_wii_classic.svg`, `controller_wii_classic_pro.svg`, `wii_button_1.svg`, `wii_button_1_outline.svg`, ... |
+| `Nintendo WiiU` | 4 | 576x512 (1), 1152x1024 (1) | `nintendo-wiiu_sheet_default.png`, `nintendo-wiiu_sheet_default.xml`, `nintendo-wiiu_sheet_double.png`, `nintendo-wiiu_sheet_double.xml` |
+| `Nintendo WiiU/Default` | 68 | 64x64 | `controller_wiiu_pro.png`, `wiiu_button_1.png`, `wiiu_button_1_outline.png`, `wiiu_button_2.png`, ... |
+| `Nintendo WiiU/Double` | 68 | 128x128 | `controller_wiiu_pro.png`, `wiiu_button_1.png`, `wiiu_button_1_outline.png`, `wiiu_button_2.png`, ... |
+| `Nintendo WiiU/Fonts` | 4 |  | `kenney_input_nintendo_wiiu.otf`, `kenney_input_nintendo_wiiu.ttf`, `kenney_input_nintendo_wiiu_characters.txt`, `kenney_input_nintendo_wiiu_map.txt` |
+| `Nintendo WiiU/Vector` | 68 |  | `controller_wiiu_pro.svg`, `wiiu_button_1.svg`, `wiiu_button_1_outline.svg`, `wiiu_button_2.svg`, ... |
+| `PlayStation Series` | 4 | 768x768 (1), 1536x1536 (1) | `playstation-series_sheet_default.png`, `playstation-series_sheet_default.xml`, `playstation-series_sheet_double.png`, `playstation-series_sheet_double.xml` |
+| `PlayStation Series/Default` | 136 | 64x64 | `controller_playstation1.png`, `controller_playstation2.png`, `controller_playstation3.png`, `controller_playstation4.png`, ... |
+| `PlayStation Series/Double` | 136 | 128x128 | `controller_playstation1.png`, `controller_playstation2.png`, `controller_playstation3.png`, `controller_playstation4.png`, ... |
+| `PlayStation Series/Fonts` | 4 |  | `kenney_input_playstation_series.otf`, `kenney_input_playstation_series.ttf`, `kenney_input_playstation_series_characters.txt`, `kenney_input_playstation_series_map.txt` |
+| `PlayStation Series/Vector` | 136 |  | `controller_playstation1.svg`, `controller_playstation2.svg`, `controller_playstation3.svg`, `controller_playstation4.svg`, ... |
+| `Playdate` | 4 | 384x320 (1), 768x640 (1) | `playdate_sheet_default.png`, `playdate_sheet_default.xml`, `playdate_sheet_double.png`, `playdate_sheet_double.xml` |
+| `Playdate/Default` | 28 | 64x64 | `playdate_button_a.png`, `playdate_button_a_outline.png`, `playdate_button_b.png`, `playdate_button_b_outline.png`, ... |
+| `Playdate/Double` | 28 | 128x128 | `playdate_button_a.png`, `playdate_button_a_outline.png`, `playdate_button_b.png`, `playdate_button_b_outline.png`, ... |
+| `Playdate/Fonts` | 4 |  | `kenney_input_playdate.otf`, `kenney_input_playdate.ttf`, `kenney_input_playdate_characters.txt`, `kenney_input_playdate_map.txt` |
+| `Playdate/Vector` | 28 |  | `playdate_button_a.svg`, `playdate_button_a_outline.svg`, `playdate_button_b.svg`, `playdate_button_b_outline.svg`, ... |
+| `Steam Controller` | 4 | 640x640 (1), 1280x1280 (1) | `steam-controller_sheet_default.png`, `steam-controller_sheet_default.xml`, `steam-controller_sheet_double.png`, `steam-controller_sheet_double.xml` |
+| `Steam Controller/Default` | 100 | 64x64 | `controller_button_l1.png`, `controller_button_l1_outline.png`, `controller_button_l2.png`, `controller_button_l2_outline.png`, ... |
+| `Steam Controller/Double` | 100 | 128x128 | `controller_button_l1.png`, `controller_button_l1_outline.png`, `controller_button_l2.png`, `controller_button_l2_outline.png`, ... |
+| `Steam Controller/Fonts` | 4 |  | `kenney_input_steam_controller.otf`, `kenney_input_steam_controller.ttf`, `kenney_input_steam_controller_characters.txt`, `kenney_input_steam_controller_map.txt` |
+| `Steam Controller/Vector` | 100 |  | `controller_button_l1.svg`, `controller_button_l1_outline.svg`, `controller_button_l2.svg`, `controller_button_l2_outline.svg`, ... |
+| `Steam Deck` | 4 | 704x704 (1), 1408x1408 (1) | `steam-deck_sheet_default.png`, `steam-deck_sheet_default.xml`, `steam-deck_sheet_double.png`, `steam-deck_sheet_double.xml` |
+| `Steam Deck/Default` | 116 | 64x64 | `controller_steamdeck.png`, `steamdeck_button_a.png`, `steamdeck_button_a_outline.png`, `steamdeck_button_b.png`, ... |
+| `Steam Deck/Double` | 116 | 128x128 | `controller_steamdeck.png`, `steamdeck_button_a.png`, `steamdeck_button_a_outline.png`, `steamdeck_button_b.png`, ... |
+| `Steam Deck/Fonts` | 4 |  | `kenney_input_steam_deck.otf`, `kenney_input_steam_deck.ttf`, `kenney_input_steam_deck_characters.txt`, `kenney_input_steam_deck_map.txt` |
+| `Steam Deck/Vector` | 116 |  | `controller_steamdeck.svg`, `steamdeck_button_a.svg`, `steamdeck_button_a_outline.svg`, `steamdeck_button_b.svg`, ... |
+| `Steam Frame` | 4 | 576x512 (1), 1152x1024 (1) | `steam-frame_sheet_default.png`, `steam-frame_sheet_default.xml`, `steam-frame_sheet_double.png`, `steam-frame_sheet_double.xml` |
+| `Steam Frame/Default` | 65 | 64x64 | `controller_frame_left.png`, `controller_frame_left_letter.png`, `controller_frame_right.png`, `controller_frame_right_letter.png`, ... |
+| `Steam Frame/Double` | 65 | 128x128 | `controller_frame_left.png`, `controller_frame_left_letter.png`, `controller_frame_right.png`, `controller_frame_right_letter.png`, ... |
+| `Steam Frame/Fonts` | 4 |  | `kenney_input_steam_frame.otf`, `kenney_input_steam_frame.ttf`, `kenney_input_steam_frame_characters.txt`, `kenney_input_steam_frame_map.txt` |
+| `Steam Frame/Vector` | 65 |  | `controller_frame_left.svg`, `controller_frame_left_letter.svg`, `controller_frame_right.svg`, `controller_frame_right_letter.svg`, ... |
+| `Touch` | 4 | 384x320 (1), 768x640 (1) | `touch_sheet_default.png`, `touch_sheet_default.xml`, `touch_sheet_double.png`, `touch_sheet_double.xml` |
+| `Touch/Default` | 28 | 64x64 | `touch_finger_one.png`, `touch_finger_two.png`, `touch_hand_closed.png`, `touch_hand_open.png`, ... |
+| `Touch/Double` | 28 | 128x128 | `touch_finger_one.png`, `touch_finger_two.png`, `touch_hand_closed.png`, `touch_hand_open.png`, ... |
+| `Touch/Fonts` | 4 |  | `kenney_input_touch.otf`, `kenney_input_touch.ttf`, `kenney_input_touch_characters.txt`, `kenney_input_touch_map.txt` |
+| `Touch/Vector` | 28 |  | `touch_finger_one.svg`, `touch_finger_two.svg`, `touch_hand_closed.svg`, `touch_hand_open.svg`, ... |
+| `Valve Index` | 4 | 448x384 (1), 896x768 (1) | `valve-index_sheet_default.png`, `valve-index_sheet_default.xml`, `valve-index_sheet_double.png`, `valve-index_sheet_double.xml` |
+| `Valve Index/Default` | 37 | 64x64 | `controller_index_left.png`, `controller_index_right.png`, `index_button.png`, `index_button_a.png`, ... |
+| `Valve Index/Double` | 37 | 128x128 | `controller_index_left.png`, `controller_index_right.png`, `index_button.png`, `index_button_a.png`, ... |
+| `Valve Index/Fonts` | 4 |  | `kenney_input_valve_index.otf`, `kenney_input_valve_index.ttf`, `kenney_input_valve_index_characters.txt`, `kenney_input_valve_index_map.txt` |
+| `Valve Index/Vector` | 37 |  | `controller_index_left.svg`, `controller_index_right.svg`, `index_button.svg`, `index_button_a.svg`, ... |
+| `Xbox Series` | 4 | 640x640 (1), 1280x1280 (1) | `xbox-series_sheet_default.png`, `xbox-series_sheet_default.xml`, `xbox-series_sheet_double.png`, `xbox-series_sheet_double.xml` |
+| `Xbox Series/Default` | 99 | 64x64 | `controller_xbox360.png`, `controller_xboxone.png`, `controller_xboxseries.png`, `controller_xbox_adaptive.png`, ... |
+| `Xbox Series/Double` | 99 | 128x128 | `controller_xbox360.png`, `controller_xboxone.png`, `controller_xboxseries.png`, `controller_xbox_adaptive.png`, ... |
+| `Xbox Series/Fonts` | 4 |  | `kenney_input_xbox_series.otf`, `kenney_input_xbox_series.ttf`, `kenney_input_xbox_series_characters.txt`, `kenney_input_xbox_series_map.txt` |
+| `Xbox Series/Vector` | 99 |  | `controller_xbox360.svg`, `controller_xboxone.svg`, `controller_xboxseries.svg`, `controller_xbox_adaptive.svg`, ... |
+
+### kenney_splatpack.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `.` | 4 | 918x515 | `License.txt`, `Preview.png`, `Visit Kenney.url`, `Visit Patreon.url` |
+| `PNG/Default (256px)` | 36 | 256x256 | `splat00.png`, `splat01.png`, `splat02.png`, `splat03.png`, ... |
+| `PNG/Double (512px)` | 36 | 512x512 | `splat00.png`, `splat01.png`, `splat02.png`, `splat03.png`, ... |
+| `Vector` | 37 |  | `overview.svg`, `splat00.svg`, `splat01.svg`, `splat02.svg`, ... |
 
 ### miniworld +__rainbow-refresh.zip
 
@@ -434,17 +591,28 @@ Each folder lists its file count and the most common image sizes.
 |---|---:|---|---|
 | `.` | 9 | 112x16 (2), 144x304 (1), 224x192 (1), ... | `armours.png`, `books.png`, `chests.png`, `consumables.png`, ... |
 
+### Flat Game UI Icon Pack/
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `.` | 11 | 4167x4167 | `Flat_game_UI_set_3.ai`, `Flat_game_UI_set_3_copy.pdf`, `icons_set_1.ai`, `icons_set_1_copy.eps`, ... |
+
 ## Identical content
 
-520 distinct files appear more than once (byte-identical, by SHA-256).
+1398 distinct files appear more than once (byte-identical, by SHA-256).
 These are copies inside the packs, not duplicate uploads, so nothing was removed.
 
 | Where the copies are | Distinct files |
 |---|---:|
+| `kenney_input-prompts_1.5.zip` | 587 |
 | `16x16 Jewelry RPG Icons.zip` | 372 |
+| `Simple_Falt_Game_Interface_Pack.zip` + `SunGraphica_Minimal_Icons_FREE.zip` | 268 |
 | `PUNY_SKILLS_v1.zip` | 78 |
 | `PUNY_CHARACTERS_v2.1.zip` + `PUNY_CHARACTERS_v2.1_tdsm-2026.zip` | 63 |
+| `Simple_Falt_Game_Interface_Pack.zip` | 20 |
 | `16x16 Survival RPG Icons.zip` | 3 |
 | `PUNY_CHARACTERS_v2.1.zip` | 2 |
+| `kenney_input-prompts_1.5.zip` + `kenney_splatpack.zip` | 2 |
 | `(repo root)` + `PUNY_DUNGEON_v1.zip` | 1 |
 | `16x16 Jewelry RPG Icons.zip` + `16x16 Survival RPG Icons.zip` | 1 |
+| `SunGraphica_Minimal_Icons_FREE.zip` | 1 |
