@@ -28,6 +28,7 @@ func _init() -> void:
 	test_government()
 	test_households_and_work()
 	test_player_actions()
+	test_tree_canopy()
 	test_trades_and_works()
 	test_quests()
 	test_simulation(days)
@@ -617,6 +618,68 @@ func test_player_actions() -> void:
 
 
 ## Phase 1: skilled trades keep their inputs and buyers, and the treasury's excess is spent.
+## Trees: only the trunk cell is solid; the canopy (top at y - 1, bottom over the trunk) is in an
+## "above" layer, walkable, and is taken away by felling and put back by regrowth.
+func test_tree_canopy() -> void:
+	var w := new_world()
+	var m := w.map
+	var above0: Array = []
+	for lay in m.data.layers:
+		if lay.name == "above0":
+			above0 = lay.data
+	check(lay_is_above(m, "above0"), "tree canopies are in a layer drawn over the characters")
+	var t := {}
+	for tr in w.trees:
+		var x := int(tr.x)
+		var y := int(tr.y)
+		if y < 30 and m.is_solid(Vector2i(x, y)) and not m.is_solid(Vector2i(x - 1, y - 1)) and not m.is_solid(Vector2i(x + 1, y - 1)):
+			t = tr
+			break
+	check(not t.is_empty(), "a standing tree with open ground beside its canopy")
+	if t.is_empty():
+		return
+	var trunk := Vector2i(int(t.x), int(t.y))
+	var top := trunk + Vector2i.UP
+	check(m.is_solid(trunk), "a standing tree's trunk is solid")
+	check(not m.is_solid(top), "a standing tree's canopy is walkable")
+	check(int(above0[top.y * m.w + top.x]) == int(t.top) and int(above0[trunk.y * m.w + trunk.x]) == int(t.bottom), "both canopy tiles are drawn above the characters")
+	var path := m.find_path(top + Vector2i.LEFT, top + Vector2i.RIGHT)
+	check(path.size() == 3 and path.has(Vector2(top)), "a path goes straight through a canopy: %s" % [path])
+	var seen := {}
+	w.tile_changed.connect(func(c: Vector2i, kind: String, v: int): seen["%s %d,%d" % [kind, c.x, c.y]] = v)
+	check(w.fell(t, 0) > 0 and t.state == "stump", "the tree is felled")
+	check(not m.is_solid(trunk), "a stump is walkable")
+	check(seen.get("above %d,%d" % [top.x, top.y], 0) == -1 and seen.get("above %d,%d" % [trunk.x, trunk.y], 0) == -1, "felling takes the whole canopy away")
+	check(seen.get("below %d,%d" % [trunk.x, trunk.y], -1) == int(t.trunk), "the tree's stump is left")
+	# regrowth: stump -> sapling -> grown, with the canopy and the solid trunk back
+	t.regrow = w.day()
+	w._new_day()
+	check(t.state == "sapling" and not m.is_solid(trunk), "a stump grows into a walkable sapling")
+	seen.clear()
+	t.regrow = w.day()
+	w._new_day()
+	check(t.state == "grown" and m.is_solid(trunk) and not m.is_solid(top), "a regrown tree's trunk is solid again and its canopy walkable")
+	check(seen.get("above %d,%d" % [top.x, top.y], -1) == int(t.top) and seen.get("above %d,%d" % [trunk.x, trunk.y], -1) == int(t.bottom), "regrowth puts the whole canopy back")
+	# saves: a felled tree stays walkable; an old save's tree tiles come from the map
+	w.fell(t, 0)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	for st in d.trees:
+		st.erase("bottom")
+		st.trunk = 2662
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(not w2.map.is_solid(trunk) and not w2.map.is_solid(top), "after loading, a felled tree's cells are walkable")
+	var t2 := w2.tree_at(trunk)
+	check(t2.state == "stump" and int(t2.trunk) == int(t.trunk) and int(t2.bottom) == int(t.bottom), "a loaded tree's tiles come from the map, also in saves made before two-tile trees")
+
+
+func lay_is_above(m: VillageMap, name: String) -> bool:
+	for lay in m.data.layers:
+		if lay.name == name:
+			return lay.z == "above"
+	return false
+
+
 func test_trades_and_works() -> void:
 	var w := new_world()
 	var coins0 := w.total_coins() - w.coin_sources

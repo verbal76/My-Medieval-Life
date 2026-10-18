@@ -11,6 +11,7 @@ approves it; owner decisions live in `docs/DECISIONS.md`. Tunable numbers are in
 |---|---|
 | 100 villagers in 23 households, plus 6 bandits, with jobs from `game/scripts/core/population.gd` (`JOBS`, 26 children, 18 elders) | The owner's target of 100 NPCs. The job mix is chosen to keep food, tools and coin moving |
 | The map is a fixed 120 x 90 tile village built from Shade's sample maps (`tools/build_village.py`) | A hand-made village first; world generation comes later |
+| Trees are Shade's two-tile trees (canopy top and bottom over a stump, as in his sample maps): only the trunk cell is solid, the canopy is drawn over people and animals and is walkable for the player and villagers' paths, and the canopy over the player fades to 45% in 0.15 s. People are drawn with their feet on their position (5 px lower than before), so the player can step behind a canopy | The owner's request: walk between and behind trees, with only the trunk blocking. The generated forests had paired canopy halves with bushes and stumps, so a bush blocked while the tree's trunk did not |
 | NPCs near the player update every frame, the rest every 0.5 s with the same rules | 100 NPCs at phone frame rates |
 | Coins only enter through the merchant caravan; the reeve taxes, pays for repairs and gives relief; guards are paid | Bob's spec wants a closed economy; something has to stop money pooling in one place |
 | Households share a food "tab": anyone without coin can eat on the richest member's money | Children and elders have no income |

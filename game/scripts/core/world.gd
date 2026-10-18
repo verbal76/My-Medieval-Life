@@ -31,7 +31,9 @@ var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
 var stations := {}                 # id -> dict
 var stalls := {}                   # id -> dict (kind, owner)
-var trees: Array = []              # {x, y, trunk, top, state, regrow}
+var trees: Array = []              # {x, y, trunk, top, bottom, state, regrow}: trunk is the stump tile
+                                   # at (x, y), the only solid cell; the canopy (top at y - 1, bottom at y)
+                                   # is drawn over the characters, who can walk behind it
 var deposits: Array = []           # {x, y, ore, amount}
 var fields: Array = []             # {id, x, y, w, h, state, ready, owner}
 var plots: Array = []              # {id, x, y, w, h, door, price, owner, site}
@@ -77,7 +79,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		s.owner = -1
 		stalls[s.id] = s
 	for t in m.data.trees:
-		trees.append({"x": int(t.x), "y": int(t.y), "trunk": int(t.trunk), "top": int(t.top), "state": "grown", "regrow": 0.0})
+		trees.append({"x": int(t.x), "y": int(t.y), "trunk": int(t.trunk), "top": int(t.top), "bottom": int(t.bottom),
+				"state": "grown", "regrow": 0.0})
 	for d in m.data.deposits:
 		deposits.append({"x": int(d.x), "y": int(d.y), "ore": d.ore, "amount": int(d.amount)})
 	for f in m.data.fields:
@@ -250,6 +253,7 @@ func _new_day() -> void:
 				t.state = "grown"
 				tile_changed.emit(Vector2i(t.x, t.y), "below", t.trunk)
 				tile_changed.emit(Vector2i(t.x, t.y - 1), "above", t.top)
+				tile_changed.emit(Vector2i(t.x, t.y), "above", t.bottom)
 				map.set_solid(Vector2i(t.x, t.y), true)
 	fauna.new_day()
 	brain.dawn()
@@ -520,8 +524,9 @@ func fell(t: Dictionary, bonus: int) -> int:
 	t.state = "stump"
 	var r: Array = GameData.b("tree_regrow_days")
 	t.regrow = day() + rng.randi_range(int(r[0]), int(r[1]))
-	tile_changed.emit(Vector2i(t.x, t.y), "below", map.data.tiles.stump)
+	tile_changed.emit(Vector2i(t.x, t.y), "below", t.trunk)       # the stump under the canopy
 	tile_changed.emit(Vector2i(t.x, t.y - 1), "above", -1)
+	tile_changed.emit(Vector2i(t.x, t.y), "above", -1)
 	map.set_solid(Vector2i(t.x, t.y), false)
 	return 4 + bonus
 
@@ -877,6 +882,17 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	buildings = d.buildings
 	stalls = d.stalls
 	trees = d.trees
+	# a tree's tiles are map data, not state: take them from the map (saves made before the
+	# two-tile trees hold other tiles and no bottom)
+	var kinds := {}
+	for t in m.data.trees:
+		kinds[Vector2i(int(t.x), int(t.y))] = t
+	for t in trees:
+		var k: Dictionary = kinds.get(Vector2i(int(t.x), int(t.y)), {})
+		if not k.is_empty():
+			t.trunk = int(k.trunk)
+			t.top = int(k.top)
+			t.bottom = int(k.bottom)
 	deposits = d.deposits
 	fields = d.fields
 	plots = d.plots

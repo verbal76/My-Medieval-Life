@@ -28,7 +28,7 @@ func setup(sheet_path: String) -> void:
 	texture = load(sheet_path)
 	hframes = 29
 	vframes = 8
-	offset = Vector2(0, -12)
+	offset = Vector2(0, -7)          # the drawn feet (frame row 23) on the position, where collision has them
 	frame = 0
 
 

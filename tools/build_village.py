@@ -50,6 +50,7 @@ PEOPLE_MIN = 126 * 220                       # rows 126+ hold the tiny people Sh
 ORE = {"iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "stone": 1743, "gold_ore": 1965}
 DEPLETED_ROCK = 1964
 STUMP = 459
+TREE_DRAWS = 22                              # tree kinds drawn per tree by generator v1 (keeps the layout)
 SAPLING = 4304
 FIELD_TILES = {"tilled": 3737, "growing": 1971, "ripe": 2851}
 FRAME = 3499                                 # wooden construction frame (build sites)
@@ -170,22 +171,41 @@ class Village:
             for x in range(x0, x0 + w):
                 self.put("ground", 0, x, y, tile_val(1, self.rng.choice(opts)))
 
-    def tree_stamps(self):
-        """(trunk, top) pairs from sample village 1: an Objects tile with a Tree Top tile above."""
-        layers = dict(self.sample("village-1"))
-        objs, tops = layers["Objects"], layers["Tree Top"]
+    def canopy_pairs(self):
+        """(top, bottom) canopy tiles of Shade's two-tile trees, from sample village 1's Tree Top
+        layer: two stacked tiles where the bottom is the atlas tile directly under the top."""
+        tops = dict(self.sample("village-1"))["Tree Top"]
         pairs = set()
         for y in range(1, 30):
             for x in range(30):
-                if objs[y * 30 + x] >= 0 and tops[(y - 1) * 30 + x] >= 0:
-                    pairs.add((objs[y * 30 + x], tops[(y - 1) * 30 + x]))
+                a, b = tops[(y - 1) * 30 + x], tops[y * 30 + x]
+                if a >= 0 and b == a + 220:
+                    pairs.add((a, b))
         return sorted(pairs)
 
+    def tree_stamps(self):
+        """(stump, top, bottom) trees from sample village 1. Shade draws a tree as two canopy tiles in
+        the Tree Top layer (the bottom one holds the trunk) over a stump in the Objects layer: the
+        stump cell is the trunk, and is the tree's only solid cell."""
+        layers = dict(self.sample("village-1"))
+        objs, tops = layers["Objects"], layers["Tree Top"]
+        canopy = set(self.canopy_pairs())
+        stamps = set()
+        for y in range(1, 30):
+            for x in range(30):
+                top, bottom, stump = tops[(y - 1) * 30 + x], tops[y * 30 + x], objs[y * 30 + x]
+                if stump >= 0 and (top, bottom) in canopy and objs[(y - 1) * 30 + x] < 0:
+                    stamps.add((stump, top, bottom))
+        return sorted(stamps)
+
     def place_tree(self, x, y, kind=None):
-        trunk, top = kind or self.rng.choice(self.trees)
-        self.put("below", 0, x, y, tile_val(0, trunk))
+        # v1 drew from 22 (object, top) pairs; drawing the same range keeps every tree, and everything
+        # generated after the forests, where it was
+        stump, top, bottom = kind or self.trees[self.rng.randrange(TREE_DRAWS) % len(self.trees)]
+        self.put("below", 0, x, y, tile_val(0, stump))
         self.put("above", 0, x, y - 1, tile_val(0, top))
-        self.ents["trees"].append({"x": x, "y": y, "trunk": trunk, "top": top})
+        self.put("above", 0, x, y, tile_val(0, bottom))
+        self.ents["trees"].append({"x": x, "y": y, "trunk": stump, "top": top, "bottom": bottom})
 
     def free_cell(self, x, y):
         return (0 <= x < W and 0 <= y < H and not self.has_object(x, y) and (x, y) not in self.roof
@@ -458,7 +478,8 @@ class Village:
                         {"name": "cozy", "image": "res://assets/tiles/cozyfarm-tiles.png", "columns": COZY_COLS}],
             "animated": {str(CAMPFIRE): [CAMPFIRE, CAMPFIRE + 1, CAMPFIRE + 2, CAMPFIRE + 3]},
             "tiles": {"ore": ORE, "depleted_rock": DEPLETED_ROCK, "stump": STUMP, "sapling": SAPLING,
-                      "field": FIELD_TILES, "frame": FRAME},
+                      "field": FIELD_TILES, "frame": FRAME,
+                      "canopy": [list(p) for p in self.canopy_pairs()]},
             "layers": layers,
             "stamps": {"house": stamp},
             "solid": ["".join("1" if s else "0" for s in row) for row in solid],

@@ -272,6 +272,50 @@ func _run() -> void:
 			main._player_step(0.05)
 			t += 1
 		check(p.pos.distance_to(Vector2(route[1]) + Vector2(0.5, 0.5)) < 0.3, "walked around the obstacle to the tapped spot (%.1f s)" % (t * 0.05))
+	# walking behind a tree: its canopy fades while the player is under it, and comes back after
+	var tree := {}
+	for tr in w.trees:
+		if tr.state == "grown" and int(tr.get("claimed", -1)) == -1 and w.map.is_solid(Vector2i(int(tr.x), int(tr.y))):
+			tree = tr
+			break
+	check(not tree.is_empty(), "a standing tree to walk behind")
+	if not tree.is_empty():
+		var trunk := Vector2i(int(tree.x), int(tree.y))
+		var top := trunk + Vector2i.UP
+		var above0: TileMapLayer = main.view.layer("above0")
+		p.pos = Vector2(top) + Vector2(0.5, 0.6)
+		main.canopy.update(p.pos, 1.0)
+		check(main.canopy.is_faded(top) and main.canopy.is_faded(trunk), "the canopy over the player fades")
+		check(above0.get_cell_source_id(top) == -1, "the faded canopy is drawn from its own layer")
+		p.pos = Vector2(top) + Vector2(0.5, -3.0)
+		main.canopy.update(p.pos, 1.0)
+		check(not main.canopy.is_faded(top) and main.view.tile_value(above0, top) == int(tree.top) and main.view.tile_value(above0, trunk) == int(tree.bottom), "the canopy is whole again once the player leaves")
+		# felled while faded: the canopy is gone and does not come back
+		p.pos = Vector2(top) + Vector2(0.5, 0.6)
+		main.canopy.update(p.pos, 1.0)
+		w.fell(tree, 0)
+		main.canopy.update(p.pos, 1.0)
+		check(not main.canopy.is_faded(top) and above0.get_cell_source_id(top) == -1 and above0.get_cell_source_id(trunk) == -1, "a tree felled while its canopy is faded leaves no canopy")
+	# the trees in Shade's sample districts (their own Tree Top layer) fade the same way
+	var sample_top := Vector2i(-1, -1)
+	var canopy_tops := {}
+	for pair in w.map.data.tiles.canopy:
+		canopy_tops[int(pair[0])] = int(pair[1])
+	for y in range(30, 60):
+		for x in range(1, 29):
+			var c := Vector2i(x, y)
+			var v: int = main.view.tile_value(main.view.layer("above2"), c)
+			if canopy_tops.has(v) and main.view.tile_value(main.view.layer("above2"), c + Vector2i.DOWN) == canopy_tops[v] and not w.map.is_solid(c):
+				sample_top = c
+				break
+		if sample_top.x >= 0:
+			break
+	check(sample_top.x >= 0, "a tree in sample village 1")
+	if sample_top.x >= 0:
+		main.canopy.update(Vector2(sample_top) + Vector2(0.5, 0.6), 1.0)
+		check(main.canopy.is_faded(sample_top) and main.canopy.is_faded(sample_top + Vector2i.DOWN), "a sample village tree's canopy fades over the player")
+		main.canopy.update(Vector2(sample_top) + Vector2(0.5, -4.0), 1.0)
+		check(not main.canopy.is_faded(sample_top) and main.view.layer("above2").get_cell_source_id(sample_top) != -1, "and comes back")
 	# a tap on a villager who is walking away: follow, catch up and talk
 	var walker: NPC = null
 	for i in 400:
