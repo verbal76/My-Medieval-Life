@@ -51,8 +51,8 @@ files and systems, the test evidence and the fixing commit.
 | B7-008 | 2026-10-18 | Usability | S4 | All | The player can sell a buyer down to 0 coins and kill every wild animal (NPCs leave a floor of 15 coins and 2 animals) | Diagnosed; proposal awaits owner | — | No |
 | B7-009 | 2026-10-18 | Bug | S2 | All | The manor's treasury starts (270) below its own 10-day reserve (460) and falls to about 100 by day 5: the reeve has no paid work, for the player or villagers, until about day 12 | Diagnosed; proposal awaits owner | — | No |
 | B7-010 | 2026-10-18 | Bug | S3 | Android (all) | The status panel sits too far from the top-left corner; HUD placed by fixed coordinates inside an inset root | Fixed (staging) | `633898f` | Yes |
-| B7-011 | 2026-10-18 | Bug | S2 | Android (all, touch) | "Mine"/"Fell" prompts appear while walking past, but tapping a tree or ore does nothing and how to gather is unclear | Fixed (staging) | `633898f`, Gather commit | Yes |
-| B7-012 | 2026-10-18 | Enhancement (approved) | — | All | Gather mode: a toggle; tap a resource; walk to it and gather until it runs out or is stopped | Done (staging) | Gather commit | Yes |
+| B7-011 | 2026-10-18 | Bug | S2 | Android (all, touch) | "Mine"/"Fell" prompts appear while walking past, but tapping a tree or ore does nothing and how to gather is unclear | Fixed (staging) | `633898f`, `c8dce2e` | Yes |
+| B7-012 | 2026-10-18 | Enhancement (approved) | — | All | Gather mode: a toggle; tap a resource; walk to it and gather until it runs out or is stopped | Done (staging) | `c8dce2e` | Yes |
 | B7-013 | 2026-10-18 | Enhancement (approved) | — | All | Icons from the flat UI pack's set 2 as brown glyphs on a transparent background for the HUD status panel, equipment slots, skills and journal, and the action bar | Ready | — | Yes (looks) |
 
 Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`),
