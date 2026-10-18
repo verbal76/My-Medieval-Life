@@ -1175,6 +1175,7 @@ func _run() -> void:
 	_pad_cycle_tests()
 	_sign_tests()
 	_child_size_tests()
+	_animal_size_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1752,3 +1753,21 @@ func _child_size_tests() -> void:
 	main.recenter()
 	main._sync_sprites()
 	check(is_equal_approx(main.sprites[adult.id].scale.x, 1.0), "an adult is full size")
+
+
+## Young animals are drawn at half size until grown, then full size (owner, 2026-10-18).
+func _animal_size_tests() -> void:
+	var w: World = main.world
+	var a: Animal = w.fauna.animals.filter(func(x): return x.alive)[0]
+	var pos0 := a.pos
+	a.pos = main.camera.get_screen_center_position() / main.T      # in view
+	var born0 := a.born
+	a.born = w.minutes                                 # just born
+	main._sync_animals()
+	var s: Node2D = main.animal_sprites.get(a.id)
+	check(s != null and is_equal_approx(s.scale.x, 0.5), "a young animal is drawn at half size")
+	a.born = w.minutes - 1440.0 * (float(a.spec().grow_days) + 1.0)   # grown
+	main._sync_animals()
+	check(s != null and is_equal_approx(s.scale.x, 1.0), "grown, full size")
+	a.born = born0
+	a.pos = pos0
