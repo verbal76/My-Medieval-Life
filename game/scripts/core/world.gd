@@ -277,6 +277,8 @@ func _new_day() -> void:
 	for hh in households:
 		if not hh.pantry.remove("log"):
 			cold += 1
+		else:
+			stat("burned_log")
 	if cold > 0:
 		note("%d households had no firewood last night." % cold)
 
