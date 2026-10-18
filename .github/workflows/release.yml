@@ -4,7 +4,10 @@
 # Owner's release policy (docs/DECISIONS.md, 2026-10-18): a release is a deliberate decision by the
 # owner. This workflow therefore never runs on a push; it runs only when started by hand from the
 # Actions tab ("Run workflow") after the owner approves the coordinated three-platform build.
-# Releases from branches other than main are marked as pre-releases.
+# Releases from branches other than main are marked as pre-releases. Pushes never start it, so the
+# staging/my-medieval-life and wip/* branches the agents push to every day build nothing; an
+# approved test build is run by hand on the approved staging commit. The build files are attached
+# to the GitHub Release, which keeps them (never only the cloud machine).
 #
 # The APK is a debug build signed with a debug keystore made on the runner (no secrets needed);
 # a store release would need the owner's release keystore as a repository secret.

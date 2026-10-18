@@ -14,7 +14,13 @@ Nothing is pushed anywhere. Restore with:
 
     python3 tools/checkpoint.py [--dir DIR] [--keep N]     (keeps the newest N checkpoints, default 5)
 
-Off-machine package (owner's rule: at least one verified copy off the cloud machine):
+Day-to-day preservation (owner, standing authorization): push to GitHub
+    python3 tools/checkpoint.py --push [--wip agent-x,agent-y]
+pushes the current branch to staging/my-medieval-life (never forced; tools/git_hooks/pre-push also
+refuses force and deletion) and each named agent worktree's uncommitted work, as a snapshot commit,
+to wip/<worktree name>, then checks that every remote hash equals the local one.
+
+Off-machine package for disaster recovery (owner's rule: at least one verified copy off the cloud machine):
     python3 tools/checkpoint.py --offsite DIR
 records every agent worktree's uncommitted work (untracked files included) as a snapshot commit
 under refs/backup/agent-<name> without touching the worktree, points refs/backup/<branch> at HEAD,
@@ -100,9 +106,11 @@ def verify(bundle: Path, trees, dest: Path, stamp: str) -> None:
                     tar.getmembers()                                     # readable
 
 
-def snapshot(path: Path, name: str) -> str:
+def snapshot(path: Path, name: str, previous: str = "") -> str:
     """A commit of a working tree's current state (untracked files included) on top of its HEAD,
-    made through a temporary index so the tree and its own index are untouched."""
+    made through a temporary index so the tree and its own index are untouched. The previous
+    snapshot, if any, is a second parent, so a WIP branch only ever moves forward; an unchanged
+    tree returns the previous snapshot."""
     with tempfile.TemporaryDirectory() as tmp:
         env = {**os.environ, "GIT_INDEX_FILE": str(Path(tmp) / "index")}
         run = lambda *a: subprocess.run(["git", *a], cwd=path, env=env, check=True, capture_output=True).stdout.decode().strip()
@@ -110,7 +118,39 @@ def snapshot(path: Path, name: str) -> str:
         run("read-tree", head)
         run("add", "-A")
         tree = run("write-tree")
-        return run("commit-tree", tree, "-p", head, "-m", f"Backup snapshot of {name}'s uncommitted work")
+        if previous and run("rev-parse", previous + "^{tree}") == tree:
+            return previous
+        parents = ["-p", head] + (["-p", previous] if previous and previous != head else [])
+        return run("commit-tree", tree, *parents, "-m", f"WIP snapshot of {name}'s uncommitted work")
+
+
+def _ref(name: str) -> str:
+    return git("rev-parse", "--verify", "--quiet", name, check=False)
+
+
+STAGING = "staging/my-medieval-life"
+
+
+def push(wip: list) -> list:
+    """Push the current branch's commits to the staging branch (never forced) and each named
+    worktree's uncommitted work to its own wip/<name> branch, then check the remote hashes."""
+    pushed = [("HEAD", git("rev-parse", "HEAD"), f"refs/heads/{STAGING}")]
+    trees = {name: path for name, path, _head in worktrees()}
+    for name in wip:
+        sha = snapshot(trees[name], name, _ref(f"refs/backup/{name}"))
+        git("update-ref", f"refs/backup/{name}", sha)
+        pushed.append((name, sha, f"refs/heads/wip/{name}"))
+    main = trees.get("main")
+    if main and git("status", "--porcelain", cwd=main):
+        sha = snapshot(main, "the main checkout", _ref("refs/backup/main-uncommitted"))
+        git("update-ref", "refs/backup/main-uncommitted", sha)
+        pushed.append(("main checkout", sha, "refs/heads/wip/main-uncommitted"))
+    git("push", "origin", *[f"{sha}:{ref}" for _n, sha, ref in pushed])
+    remote = dict(line.split("\t")[::-1] for line in git("ls-remote", "origin", *[r for _n, _s, r in pushed]).splitlines())
+    for name, sha, ref in pushed:
+        if remote.get(ref) != sha:
+            raise SystemExit(f"remote {ref} is {remote.get(ref)}, expected {sha} ({name})")
+    return pushed
 
 
 def offsite(dest: Path) -> list:
@@ -123,10 +163,10 @@ def offsite(dest: Path) -> list:
     for name, path, _head in worktrees():
         if name == "main":
             if git("status", "--porcelain", cwd=path):
-                git("update-ref", "refs/backup/main-uncommitted", snapshot(path, "the main checkout"))
+                git("update-ref", "refs/backup/main-uncommitted", snapshot(path, "the main checkout", _ref("refs/backup/main-uncommitted")))
                 refs.append("refs/backup/main-uncommitted")
             continue
-        git("update-ref", f"refs/backup/{name}", snapshot(path, name))
+        git("update-ref", f"refs/backup/{name}", snapshot(path, name, _ref(f"refs/backup/{name}")))
         refs.append(f"refs/backup/{name}")
     bundle = dest / f"mml-{stamp}.bundle"
     have = git("rev-parse", "--verify", "--quiet", remote, check=False)
@@ -156,6 +196,11 @@ def offsite(dest: Path) -> list:
 
 
 def main(argv):
+    if "--push" in argv:
+        wip = argv[argv.index("--wip") + 1].split(",") if "--wip" in argv else []
+        for name, sha, ref in push([w for w in wip if w]):
+            print(f"pushed {name} {sha[:7]} -> {ref} (remote hash checked)")
+        return
     if "--offsite" in argv:
         for p in offsite(Path(argv[argv.index("--offsite") + 1])):
             print(f"saved {p} ({p.stat().st_size} bytes)")

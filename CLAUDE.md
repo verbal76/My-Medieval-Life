@@ -78,8 +78,18 @@ generated data. One implementation per concern.
 
 ## 5. Branching, commits, tests, releases
 
-- `main` is changed only by merging a reviewed PR, and only the owner merges. Agents work on
-  `claude/<topic>` branches and open **draft** PRs.
+- **GitHub is the source of truth; the cloud machine is a temporary workspace (owner, 2026-10-18).**
+  - `staging/my-medieval-life` is the remote branch for ongoing development. Committing and pushing
+    development checkpoints to it is a **standing authorization**: push completed, tested work
+    regularly, without asking. Never force-push or delete it (`tools/git_hooks/pre-push`, enabled
+    with `git config core.hooksPath tools/git_hooks`, refuses both).
+  - Unfinished agent work goes to `wip/<worktree name>` branches as snapshot commits.
+  - `python3 tools/checkpoint.py --push [--wip <worktrees>]` does both and checks every remote hash.
+  - `main` is the approved integrated source: it changes only when the owner merges or explicitly
+    permits a merge. Staging-push authorization is not permission to merge, build, deploy or release.
+  - Integrate agents' work into staging carefully: keep both sides of overlapping changes and run the
+    regression tests before pushing.
+  - The manifest, decision logs and test records are committed alongside the code.
 - Commits: one logical change each, imperative subject (e.g. "Add rivers and roads to the Puny World
   generator"), and a body that says what changed and why.
 - Before every push, run:
@@ -91,10 +101,14 @@ generated data. One implementation per concern.
   ```
   A failing test is fixed, never skipped, disabled or weakened to pass.
 - Visual output must actually be looked at before it is reported as verified.
-- **Release and push policy (owner, 2026-10-18; supersedes earlier release rules).** Never push,
-  build a release, upload, publish or distribute without the owner's explicit approval for that
-  occasion: not after a fix, a milestone or a passing test. Local tests and compiles are fine.
-  Fixes accumulate; the current release stays the test build until the owner approves the next.
+- **Release policy (owner, 2026-10-18; supersedes earlier release rules).** Never build a release,
+  upload, publish, deploy or distribute without the owner's explicit approval for that occasion: not
+  after a fix, a milestone or a passing test. Local tests and compiles are fine. Fixes accumulate;
+  the current release stays the test build until the owner approves the next. Pushes go only to
+  staging and `wip/*` branches (above); other branches, the active PR's branch included, need
+  explicit approval. An approved test build may come from an approved staging commit without
+  merging into `main`. Linux, Windows and Android are always built from the same exact commit, and
+  the build files are kept in GitHub Releases, never only on the cloud machine.
 - When the accumulated changes are stable, stop and ask, with a release-readiness report:
   changes since the last build, known issues, test results, manifest updates, save compatibility,
   Linux / Windows / Android readiness, confirmation that all three have the same features and
@@ -117,10 +131,10 @@ generated data. One implementation per concern.
   - **When:** before integrating an agent's work, before a save-format migration, before anything
     destructive, and after every completed piece of work; never let more than a few commits or one
     agent's work go unsecured. If the off-machine copy fails, report it at once and stop risky work.
-  - **Why not a backup branch:** this session can push only to its own development branch (the git
-    proxy refuses other refs), and repository webhooks and app installations cannot be inspected
-    from here, so a branch push could not be proven safe. Pushing the development branch itself
-    still needs the owner's explicit approval.
+  - **Day to day,** GitHub staging is the preservation mechanism (above); the off-machine package is
+    the occasional independent disaster-recovery copy. Webhooks, Pages, environments and app
+    installations cannot be inspected from this session (the proxy refuses those endpoints), nor
+    can rulesets or branch protection be written, so staging is protected by the local hook only.
 
 ## 6. Deterministic generation
 

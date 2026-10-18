@@ -1,0 +1,14 @@
+#!/bin/sh
+# Refuse to delete or force-push the staging branch (owner rule: never force-push or delete
+# staging/my-medieval-life). Installed by: git config core.hooksPath tools/git_hooks
+zero=0000000000000000000000000000000000000000
+while read local_ref local_sha remote_ref remote_sha; do
+  [ "$remote_ref" = "refs/heads/staging/my-medieval-life" ] || continue
+  if [ "$local_sha" = "$zero" ]; then
+    echo "pre-push: refusing to delete staging/my-medieval-life" >&2; exit 1
+  fi
+  if [ "$remote_sha" != "$zero" ] && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+    echo "pre-push: refusing a non-fast-forward (force) push to staging/my-medieval-life" >&2; exit 1
+  fi
+done
+exit 0
