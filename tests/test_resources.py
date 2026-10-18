@@ -1,0 +1,93 @@
+"""Tests for the resource registry (game/data/resources.json) and its validator."""
+import copy
+import json
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+
+import check_resources as cr  # noqa: E402
+
+
+class ResourceRegistryTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.ctx = cr.load()
+
+    def mutated(self, change):
+        ctx = dict(self.ctx)
+        ctx["res"] = copy.deepcopy(self.ctx["res"])
+        change(ctx["res"])
+        return cr.problems(ctx)
+
+    def test_the_repository_registry_is_valid_and_its_documents_current(self):
+        self.assertEqual(cr.problems(self.ctx), [])
+        for path, text in cr.documents(self.ctx).items():
+            self.assertEqual(path.read_text(), text, "%s is stale: run tools/check_resources.py --write" % path.name)
+
+    def test_generation_is_deterministic(self):
+        self.assertEqual(cr.documents(self.ctx), cr.documents(cr.load()))
+
+    def test_every_harvestable_kind_needs_a_node(self):
+        found = self.mutated(lambda r: r["nodes"].pop("copper_seam"))
+        self.assertTrue(any("deposit ore 'copper_ore'" in p for p in found))
+        found = self.mutated(lambda r: r["nodes"].pop("wild_rabbit"))
+        self.assertTrue(any("species 'rabbit' has no node" in p for p in found))
+        found = self.mutated(lambda r: r["nodes"].pop("tree"))
+        self.assertTrue(any("trees but no tree node" in p for p in found))
+
+    def test_duplicate_ids_are_refused(self):
+        with self.assertRaises(ValueError):
+            json.loads('{"nodes": {"tree": {}, "tree": {}}}', object_pairs_hook=cr._unique_pairs)
+
+    def test_bad_node_fields(self):
+        def bad(r):
+            n = r["nodes"]["iron_seam"]
+            n["yields"] = {"mithril": 1}
+            n["tool"] = "spade"
+            n["depletion"] = "sometimes"
+            n["minutes_key"] = "dig_minutes"
+            n["gather"] = False
+            n["sources"] = ["game/scripts/core/world.gd::dig_unit"]
+            del n["owner"]
+        found = self.mutated(bad)
+        for want in ("unknown item 'mithril'", "tool 'spade'", "depletion 'sometimes'", "minutes_key 'dig_minutes'",
+                     "needs gather true", "has no func dig_unit", "missing owner"):
+            self.assertTrue(any(want in p for p in found), want)
+
+    def test_findings_must_be_recorded_and_exceptions_must_not_be_stale(self):
+        found = self.mutated(lambda r: r["exceptions"].pop(0))
+        self.assertTrue(any("finding not recorded: gold_ore" in p for p in found))
+        found = self.mutated(lambda r: r["exceptions"].append({"item": "log", "finding": "no_source", "status": "implemented", "reason": "x"}))
+        self.assertTrue(any("stale exception: log" in p for p in found))
+
+    def test_code_notes_must_match_the_code(self):
+        found = self.mutated(lambda r: r["exports"]["smith_caps"].pop("pickaxe"))
+        self.assertTrue(any("smith_caps" in p for p in found))
+        found = self.mutated(lambda r: r["materials"].pop("plank"))
+        self.assertTrue(any("ManorWork.MATERIALS" in p for p in found))
+        found = self.mutated(lambda r: r["code_sources"][0]["items"].remove("axe"))
+        self.assertTrue(any("population.gd::_equip" in p for p in found))
+
+    def test_the_findings_the_owner_asked_for(self):
+        s = cr.summary(self.ctx)
+        self.assertEqual(s["no_source"], ["apple", "gold_ore"])
+        self.assertEqual(s["missing_recipes"], ["forge_gold_ring", "smelt_gold"])
+        self.assertEqual(s["finite"], ["coal_seam", "copper_seam", "iron_seam", "stone_seam"])
+        self.assertEqual(s["finite_no_replacement"], [])
+        self.assertIn(("log", "plank", "pickaxe"), s["chains"])
+        self.assertFalse(any("bread" in p for p in s["chains"]), "there is no bread recipe")
+        self.assertEqual(s["not_gather"], ["chicken_pen", "cow_pen", "pig_pen", "sheep_pen"])
+
+    def test_both_directions_agree_with_recipes(self):
+        for r, rec in self.ctx["recipes"].items():
+            for i in rec["in"]:
+                self.assertIn(("recipe", r), [(k, x) for k, x, *_ in cr.uses_of(self.ctx, i)])
+            for o in rec["out"]:
+                self.assertIn(("recipe", r), [(k, x) for k, x, *_ in cr.sources_of(self.ctx, o)])
+        self.assertEqual(cr.raw_needs(self.ctx, "pickaxe"), {"iron_ore": 4.0, "coal": 2.0, "log": 0.5})
+
+
+if __name__ == "__main__":
+    unittest.main()

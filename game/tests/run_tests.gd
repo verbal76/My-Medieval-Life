@@ -2874,4 +2874,35 @@ func test_resource_registry() -> void:
 	check(not cows.is_empty() and ResourceNodes.can_harvest(w, ResourceNodes.def("cow_pen"), cows[0]).contains("keeper"), "the keeper's livestock is not the player's to take")
 	var boar: Dictionary = GameData.b("animals").boar
 	check(ResourceNodes.products(ResourceNodes.def("wild_boar")) == {"meat": int(boar.meat), "hide": int(boar.hide)}, "products resolve balance keys")
+	# uses_of, sources_of and chain agree with recipes.json
+	ok = true
+	for r in GameData.recipes:
+		var rec: Dictionary = GameData.recipes[r]
+		for id in rec.in:
+			ok = ok and ResourceNodes.uses_of(id).any(func(u): return u.kind == "recipe" and u.id == r and int(u.qty) == int(rec.in[id]))
+			ok = ok and ResourceNodes.chain(id, 1).becomes.any(func(s): return s.recipe == r and s.makes == rec.out)
+		for id in rec.out:
+			ok = ok and ResourceNodes.sources_of(id).any(func(s): return s.kind == "recipe" and s.id == r and int(s.qty) == int(rec.out[id]))
+	check(ok, "every recipe is a use of each of its inputs, a source of its outputs and a step of their chains")
+	var recipe_uses := 0
+	for id in GameData.items:
+		for u in ResourceNodes.uses_of(id):
+			if u.kind == "recipe":
+				recipe_uses += 1
+				ok = ok and GameData.recipes[u.id].in.has(id)
+	var inputs := 0
+	for r in GameData.recipes:
+		inputs += GameData.recipes[r].in.size()
+	check(ok and recipe_uses == inputs, "uses_of names no recipe that does not consume the item (%d)" % recipe_uses)
+	var logs := ResourceNodes.chain("log", 3)
+	var planks: Array = logs.becomes.filter(func(s): return s.recipe == "saw_planks")
+	check(not planks.is_empty() and planks[0].then[0].item == "plank" and planks[0].then[0].becomes.any(func(s): return s.recipe == "forge_pickaxe"),
+		"a real chain: tree -> log -> plank (sawhorse) -> pickaxe (anvil)")
+	check(ResourceNodes.sources_of("log").any(func(s): return s.kind == "node" and s.id == "tree"), "logs come from trees")
+	check(ResourceNodes.sources_of("gold_ore").is_empty(), "gold ore has no source (a recorded exception)")
+	check(not ResourceNodes.sources_of("bread").any(func(s): return s.kind == "recipe") and ResourceNodes.sources_of("bread").any(func(s): return s.kind == "start_kit"), "bread: no recipe, only the start kit")
+	check(ResourceNodes.uses_of("iron_ore").any(func(u): return u.kind == "buyer" and u.id == "smith" and int(u.qty) == int(NPCBrain.BUYS.smith.iron_ore)), "buyers come from NPCBrain.BUYS")
+	check(ResourceNodes.uses_of("stone").any(func(u): return u.kind == "building" and u.id == "house") and ResourceNodes.uses_of("log").any(func(u): return u.kind == "fuel"), "building costs and fuel are uses")
+	check(ResourceNodes.uses_of("pickaxe").any(func(u): return u.kind == "tool" and u.id == "iron_seam"), "a pickaxe is the tool for the seams")
+	check(ResourceNodes.sources_of("stone").any(func(s): return s.kind == "import") and ResourceNodes.sources_of("iron_ore").any(func(s): return s.kind == "import"), "caravan imports are sources")
 	w.dispose()
