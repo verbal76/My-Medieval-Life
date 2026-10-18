@@ -185,6 +185,5 @@ Result, 3 seeds over 100 days:
 - The player cannot own livestock, harvest fields, or hire helpers to deliver building materials.
 - No eggs, milk or wool (the owner asked only for meat).
 - No aging, no births of people, no audio yet (the volume settings are ready for it).
-- Villagers keep only their last 8 memories, so a busy village can push out "met <player>" and they
-  treat the player as a stranger again. A keeper whose animal the player killed remembers it as
-  "attacked by", so they say the player attacked them.
+- Villagers keep only their last 8 memories (having met someone is never forgotten), so older
+  grudges and sightings fade.

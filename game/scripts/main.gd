@@ -971,7 +971,7 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 	var bag: Inventory = world.fauna.kill(a)
 	world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what})
 	if keeper != null:
-		_crime(keeper)
+		_crime(keeper, "%s killed my %s" % [world.player.name, what])
 		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
 
 
@@ -986,8 +986,9 @@ func _hit(n: NPC, dmg: float) -> void:
 
 
 ## Attacking a villager is a crime: guards who see it and adults who are hit fight back.
-func _crime(victim: NPC) -> void:
-	victim.remember("attacked by %s" % world.player.name)
+## `memory` is what the victim remembers (by default that the player attacked them).
+func _crime(victim: NPC, memory := "") -> void:
+	victim.remember(memory if memory != "" else "attacked by %s" % world.player.name)
 	if victim.role == "adult":
 		victim.target = -2
 	for g: NPC in world.near(victim.pos, 15.0):

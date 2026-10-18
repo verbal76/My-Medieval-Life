@@ -651,5 +651,24 @@ func _run() -> void:
 	check(main.world != w, "a fresh world was loaded from the save")
 	check(now == snap, "the save restores the player: %s" % (str(now) + " vs " + str(snap) if now != snap else "name, look, coins, health, equipment, wheat, crimes, time, place"))
 
+	# 21. a villager who has met the player never forgets it, however much else happens to them
+	var w2: World = main.world
+	var acquaintance: NPC = w2.npcs.filter(func(n): return n.alive and n.role == "adult")[0]
+	Dialogue.meet(w2, acquaintance)
+	for i in 20:
+		acquaintance.remember("busy day %d" % i)
+	check(Dialogue.met(w2, acquaintance) and acquaintance.memory.size() == 8, "a villager stays acquainted with the player after many other memories")
+	# 22. killing a villager's livestock: the keeper remembers the animal, not an attack on them
+	var beast: Animal = null
+	for a: Animal in w2.fauna.animals:
+		if a.alive and not a.wild() and int(w2.fauna.pens[a.area].owner) != -1:
+			beast = a
+			break
+	var keeper: NPC = w2.npc(int(w2.fauna.pens[beast.area].owner))
+	var kind := beast.label().to_lower()
+	main._hit_animal(beast, 9999.0)
+	check(not Dialogue.attacked(w2, keeper) and Dialogue.animal_killed(w2, keeper) == kind, "the keeper remembers that the player killed their %s" % kind)
+	check(Dialogue.opening(w2, keeper).contains(kind), "and says so: \"%s\"" % Dialogue.opening(w2, keeper))
+
 	print("%d steps, %d failures" % [steps.size(), failures])
 	quit(1 if failures else 0)

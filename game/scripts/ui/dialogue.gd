@@ -61,6 +61,15 @@ static func attacked(w: World, n: NPC) -> bool:
 	return n.memory.has("attacked by " + w.player.name)
 
 
+## The animal of theirs this villager knows the player killed (the latest), or "".
+static func animal_killed(w: World, n: NPC) -> String:
+	var prefix := "%s killed my " % w.player.name
+	for i in range(n.memory.size() - 1, -1, -1):
+		if str(n.memory[i]).begins_with(prefix):
+			return str(n.memory[i]).substr(prefix.length())
+	return ""
+
+
 ## What this villager saw the player take (the latest), in plain words, or "".
 static func theft_seen(w: World, n: NPC) -> String:
 	var prefix := "saw %s take " % _player_name(w)
@@ -129,6 +138,9 @@ static func busy(n: NPC) -> bool:
 static func opening(w: World, n: NPC) -> String:
 	if n.role == "bandit":
 		return "Your purse or your life."
+	var animal := animal_killed(w, n)
+	if animal != "" and not attacked(w, n):
+		return _pick(w, n, ["You killed my %s. Get away from me." % animal, "That %s was mine, and you killed it. Keep away." % animal])
 	if attacked(w, n):
 		return _pick(w, n, {
 			"child": ["You hurt me! Go away!", "Go away! You hit me!"],
@@ -340,6 +352,8 @@ static func brush_off(w: World, n: NPC) -> String:
 		return "Your purse or your life."
 	if attacked(w, n):
 		return _pick(w, n, ["Stay away from me.", "Keep your distance!", "Don't come near me!"], 6)
+	if animal_killed(w, n) != "":
+		return _pick(w, n, ["You killed my %s!" % animal_killed(w, n), "Keep away from my animals!"], 6)
 	if theft_seen(w, n) != "":
 		return _pick(w, n, ["Thief! Keep away.", "I saw what you did.", "Stay away from me, thief."], 6)
 	if n.target != -1:

@@ -54,10 +54,16 @@ func avg_income(days := 5) -> float:
 	return t / recent.size()
 
 
+## Keep the last 8 memories, but never forget having met someone ("met <name>"): a villager who
+## knows the player stays acquainted however busy the village gets.
 func remember(text: String) -> void:
 	memory.append(text)
 	if memory.size() > 8:
-		memory.pop_front()
+		for i in memory.size():
+			if not str(memory[i]).begins_with("met "):
+				memory.remove_at(i)
+				return
+		memory.pop_front()                  # only acquaintances (many heirs): the oldest goes
 
 
 func to_dict() -> Dictionary:
