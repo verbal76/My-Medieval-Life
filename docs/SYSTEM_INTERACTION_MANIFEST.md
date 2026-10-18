@@ -191,8 +191,9 @@ Rules:
 - **Affects:** Market, Coins, Ledger
 - **Expected:**
   - The only source of new coins (counted in `coin_sources`). It does not buy food while the village holds under 3 days of it, days of its age-weighted need (INT-047).
-  - A finite regional market (B7-014, agent decision under the owner's authorization of 2026-10-18; provisional): its purse is `caravan_float` less `World.caravan_balance`, the coins it has paid the village net (paid out less taken back by sales of ore, coal and stone). It sells first (INT-035, INT-065), then buys the surplus at 0.8 x value with that purse, at most `caravan_coins` a visit, one unit at a time from each seller in turn so a short purse is shared. It never pays out coins it does not hold, so the village's currency can grow only by the float.
-  - `caravan_balance` is saved from save_version 9; an older save takes its `coin_sources` as the balance (no coin changes hands).
+  - A finite regional market (B7-014, agent decision under the owner's authorization of 2026-10-18; every number provisional). It holds a purse, `World.caravan_purse` (starting at `caravan_float`). The purse gains the region's demand for the village's surplus, up to `caravan_allowance` coins a day (a visit adds the days between visits' worth), never above the float, and less and less as the village's coins approach `caravan_ceiling_per_head` a head (nothing at the ceiling); and it gains every coin the village pays it for ore, coal and stone (INT-035, INT-065).
+  - It sells first, then buys the surplus at 0.8 x value (never the mine's raw iron ore, copper ore, gold ore, coal or stone, `NPCBrain.NOT_EXPORTED`: they are the forge's and the builders' finite input, B7-007; 79% of the stone mined in the first ten days used to be carried off), at most `caravan_coins` a visit and never more than the purse holds. The smiths' metal goods are bought first (they pay for the caravan's ore with them), then the others; one unit at a time from each seller in turn, the first turning each visit, so a short purse is shared. The village's currency can therefore grow only by the allowance and never past the ceiling (a year-long run with no player: 12-fold before, about 3.4-fold after). A closed currency with no allowance was tried and stalled the village (traders out of cash, 14,000 missed meals for lack of money, three deaths in a year): see `docs/release/LONG_RUN_SIMULATION.md`.
+  - `caravan_purse` is saved from save_version 9; an older save's caravan arrives with its float (no village coin changes hands).
 - **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_child_food`, `game/tests/run_tests.gd::test_caravan_purse`
 
 ### INT-021 · Crafting and stations
@@ -573,7 +574,7 @@ Rules:
 - **Expected:** (owner, 2026-10-18; B7-007)
   - The caravan carries at most `caravan_stone.load` stone a visit from a quarry on its road, sold at value × `caravan_stone.markup` (cartage; provisional).
   - The raw-goods merchants, the village's stone sellers, buy it up to their stock cap while keeping the trader cash floor; the rest goes back with the cart. The coins leave the village (`coin_sources`, `imported_stone`, `caravan_stone_coins`).
-  - While it brings stone it buys none of the village's.
+  - It never buys the village's stone (or ore, or coal) at all (INT-020).
 - **Tests:** `game/tests/run_tests.gd::test_build7_economy`
 
 ### INT-066 · The manor's work: real jobs for the player and villagers alike
@@ -631,6 +632,17 @@ Rules:
   - Same purchase rules as before (`buy_from`/`buy_food` through `World.trade`, atomic, the seller's price, the buyer needs 3 to 4 coins); nothing is made or lost. A stocked household sends no one.
 - **Tests:** `game/tests/run_tests.gd::test_long_run_economy`
 
+### INT-071 · The smith's tools are retailed by the goods merchant, and a woodcutter sells firewood
+- **Trigger:** A smith has spare tools; a villager needs a tool; a household needs firewood and no trader has logs.
+- **Source:** `game/scripts/core/npc_brain.gd::_smith`, `game/scripts/core/npc_brain.gd::_get_tool`, `game/scripts/core/npc_brain.gd::_seller_of`
+- **Affects:** Market, Coins, Crafting, Households
+- **Expected:** (agent decision under the owner's authorization of 2026-10-18, B7-016; provisional)
+  - A smith with more than one pickaxe, axe or sword takes the spare to the goods merchant (a buyer within its stock cap, `NPCBrain.BUYS`, and its cash floor) before forging more; the goods merchant therefore has stock to retail and to sell on to the caravan (INT-020). Before, the smith kept its tools (`> 3` while forging stopped at 3), so the goods merchant's only supply was leather and it ended the year with no coin.
+  - A villager without a tool buys it from the goods merchant first, else from the smith (`World.trade`, the seller's price).
+  - A household that needs firewood buys it from a carpenter or raw-goods merchant with logs, else from a woodcutter carrying some (never any other item).
+  - Nothing is made or lost; coins only move between purses.
+- **Tests:** `game/tests/run_tests.gd::test_long_run_economy`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -648,14 +660,14 @@ Rules:
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-070 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-071 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-071 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-070, INT-071 |
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066 |
 | Wages | INT-023, INT-029, INT-059, INT-066 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-070 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-070, INT-071 |
 | Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067 |
 | Inheritance | INT-017, INT-062 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067 |

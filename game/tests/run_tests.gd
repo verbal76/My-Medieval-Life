@@ -2922,6 +2922,19 @@ func test_caravan_purse() -> void:
 	var paid := w.total_coins() - coins0
 	check(paid > 0 and paid <= int(GameData.b("caravan_coins")) and w.caravan_purse == float_coins - paid and paid == w.coin_sources, "B7-014: it pays for the surplus (%d coins) out of its purse" % paid)
 	check(w.total_coins() - w.coin_sources == base, "B7-014: coins are conserved")
+	# B7-007: the mine's raw output is not carried away, whatever the merchants hold above half their caps
+	var raws: Array = w.npcs.filter(func(o): return o.alive and b.buy_role(o) == "merchant_raw")
+	for o: NPC in raws:
+		for id in NPCBrain.NOT_EXPORTED:
+			o.inv.add(id, 20)
+		o.inv.add("plank", 20)
+	w.caravan_purse = float_coins
+	var raw0 := NPCBrain.NOT_EXPORTED.map(func(id): return int(w.stats.get("exported_" + id, 0)))
+	var plank0 := int(w.stats.get("exported_plank", 0))
+	b.caravan()
+	var raw1 := NPCBrain.NOT_EXPORTED.map(func(id): return int(w.stats.get("exported_" + id, 0)))
+	check(raw0 == raw1 and int(w.stats.get("exported_plank", 0)) > plank0, "B7-007: the caravan buys the merchants' planks but none of the mine's ore, coal or stone")
+	w.caravan_purse = float_coins - paid
 	# an empty purse buys nothing; the allowance refills it a little each visit
 	w.caravan_purse = 0
 	stock.call()

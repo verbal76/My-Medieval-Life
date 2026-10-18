@@ -1,0 +1,5 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+day   0: alive 100 (starved 0, other deaths 0), food 3.0 days, mean hunger 79, unemployed 0, hh cash min/med/max 30/73/420, treasury 270, traders unable to buy 0, ore left { "iron_ore": 300, "coal": 200, "stone": 240, "copper_ore": 60 }, logs 36 planks 28 trees 305, wild 20 penned 13, sites 0/0 houses 0 hh 24, coins 2897 (leak 0), item leaks 0
+day  30: alive 100 (starved 0, other deaths 0), food 8.9 days, mean hunger 67, unemployed 0, hh cash min/med/max 15/174/293, treasury 454, traders unable to buy 5, ore left { "iron_ore": 0, "coal": 0, "stone": 61, "copper_ore": 0 }, logs 188 planks 123 trees 232, wild 19 penned 33, sites 0/0 houses 0 hh 24, coins 4637 (leak 0), item leaks 0
+day  60: alive 100 (starved 0, other deaths 0), food 13.5 days, mean hunger 68, unemployed 0, hh cash min/med/max 43/182/295, treasury 489, traders unable to buy 5, ore left { "iron_ore": 0, "coal": 0, "stone": 3, "copper_ore": 0 }, logs 182 planks 121 trees 231, wild 28 penned 33, sites 0/0 houses 0 hh 24, coins 4875 (leak 0), item leaks 0

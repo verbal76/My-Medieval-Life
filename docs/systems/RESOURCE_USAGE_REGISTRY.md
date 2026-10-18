@@ -106,7 +106,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `stone_seam` · Stone seam (implemented)
 
 - **stone** (1 a cycle)
-  - used as it is: building a bakehouse; building a carpentry; building a house; building a smithy; bought by the merchant raw; bought by the passing caravan; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
+  - used as it is: building a bakehouse; building a carpentry; building a house; building a smithy; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
 
 ### `tree` · Tree (implemented)
 
@@ -220,9 +220,9 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `apple` Apple | food | **none** | food `apple` |
 | `axe` Axe | tool | recipe `forge_axe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; quest `a_new_axe` ×1; tool `tree` |
 | `bread` Loaf of bread | food | start_kit `player_start_items` ×1 | food `bread` |
-| `coal` Coal | resource | import `caravan`; node `coal_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; export `caravan`; recipe `smelt_copper` ×1; recipe `smelt_gold` ×1; recipe `smelt_iron` ×1 |
+| `coal` Coal | resource | import `caravan`; node `coal_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; recipe `smelt_copper` ×1; recipe `smelt_gold` ×1; recipe `smelt_iron` ×1 |
 | `copper_bar` Copper bar | resource | recipe `smelt_copper` ×1 | buyer `merchant_goods` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_copper_ring` ×1; recipe `forge_copper_sword` ×2 |
-| `copper_ore` Copper ore | resource | import `caravan`; node `copper_seam` ×1 | buyer `merchant_raw` ×15; buyer `smith` ×20; export `caravan`; recipe `smelt_copper` ×2 |
+| `copper_ore` Copper ore | resource | import `caravan`; node `copper_seam` ×1 | buyer `merchant_raw` ×15; buyer `smith` ×20; recipe `smelt_copper` ×2 |
 | `copper_ring` Copper ring | ring | recipe `forge_copper_ring` ×1 | buyer `merchant_goods` ×3; equip `ring`; export `caravan` |
 | `copper_sword` Copper sword | weapon | recipe `forge_copper_sword` ×1; start_stock `start_0`; start_stock `start_2` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
 | `gold_bar` Gold bar | resource | recipe `smelt_gold` ×1 | buyer `merchant_goods` ×4; export `caravan`; recipe `forge_gold_ring` ×1 |
@@ -233,7 +233,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `iron_armor` Iron armour | armor | recipe `forge_iron_armor` ×1 | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
 | `iron_bar` Iron bar | resource | recipe `smelt_iron` ×1; start_stock `start_0` | building `smithy` ×4; buyer `merchant_goods` ×6; export `caravan`; manor_job `iron_bar`; recipe `forge_axe` ×2; recipe `forge_hammer` ×1; recipe `forge_iron_armor` ×5; recipe `forge_iron_helmet` ×2; recipe `forge_iron_sword` ×3; recipe `forge_pickaxe` ×2 |
 | `iron_helmet` Iron helmet | head | recipe `forge_iron_helmet` ×1 | buyer `merchant_goods` ×2; equip `head`; export `caravan` |
-| `iron_ore` Iron ore | resource | import `caravan`; node `iron_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; export `caravan`; quest `ore_for_the_forge` ×6; quest `work_the_mine` ×6; recipe `smelt_iron` ×2 |
+| `iron_ore` Iron ore | resource | import `caravan`; node `iron_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; quest `ore_for_the_forge` ×6; quest `work_the_mine` ×6; recipe `smelt_iron` ×2 |
 | `iron_sword` Iron sword | weapon | recipe `forge_iron_sword` ×1; start_stock `start_0` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
 | `leather` Leather | resource | recipe `tan_leather` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `smith` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_iron_armor` ×2; recipe `forge_iron_helmet` ×1; recipe `forge_iron_sword` ×1; recipe `leather_armor` ×4; recipe `leather_cap` ×2 |
 | `leather_armor` Leather armour | armor | recipe `leather_armor` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
@@ -248,7 +248,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `rotten_apple` Rotten apple | food | start_kit `player_start_items` ×1 | food `rotten_apple` |
 | `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `coal_seam`; tool `copper_seam`; tool `iron_seam`; tool `stone_seam` |
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
-| `stone` Stone | resource | import `caravan`; node `stone_seam` ×1; start_stock `start_0` | building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `smithy` ×30; buyer `merchant_raw` ×40; export `caravan`; manor_job `stone` |
+| `stone` Stone | resource | import `caravan`; node `stone_seam` ×1; start_stock `start_0` | building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `smithy` ×30; buyer `merchant_raw` ×40; manor_job `stone` |
 | `wheat` Wheat | resource | node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_3` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `brew_ale` ×3; recipe `cook_pottage` ×2 |
 
 ## Code-defined uses and sources
@@ -273,7 +273,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `wheat` | start stock (source) | The granary starts with start_granary_days of the village's food in wheat. | `game/scripts/core/world.gd::setup` |
 | `coal`, `copper_ore`, `iron_ore` | import (source) | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. | `game/scripts/core/npc_brain.gd::_caravan_imports` |
 | `stone` | import (source) | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. | `game/scripts/core/npc_brain.gd::_caravan_stone` |
-| `ale`, `amulet`, `axe`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `meat`, `pickaxe`, `plank`, `pottage`, `roast_meat`, `stone`, `wheat` | export | Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food (or of stone, while it brings stone). It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
+| `ale`, `amulet`, `axe`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `meat`, `pickaxe`, `plank`, `pottage`, `roast_meat`, `wheat` | export | Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
 
 ## Findings
 

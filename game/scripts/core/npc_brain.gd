@@ -39,6 +39,9 @@ const OUTLETS := {
 }
 const FOOD := ["roast_meat", "pottage", "wheat", "ale"]
 const COOKED := ["roast_meat", "pottage", "ale"]
+# the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
+# the village (when the seams are worked out) but does not carry the village's away (B7-007)
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone"]
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -1803,7 +1806,7 @@ func _day_labour(n: NPC) -> bool:
 ## `caravan_float`, tapering to nothing as the village's coins reach `caravan_ceiling_per_head` a head)
 ## and every coin the village pays it for ore, coal and stone; it spends from it, at
 ## most `caravan_coins` a visit, and never pays out a coin it does not hold. It sells first, then buys
-## the market's surplus at 0.8 x value, the smiths' work first (their ore is paid for in the metal goods
+## the market's surplus (never the mine's raw ore, coal and stone, NOT_EXPORTED) at 0.8 x value, the smiths' work first (their ore is paid for in the metal goods
 ## the caravan carries off), one unit at a time from each seller in turn so a short purse is shared.
 ## The village's currency can therefore grow only by the allowance, and never past its ceiling; the
 ## goods leave the village; the coins are logged in coin_sources.
@@ -1832,8 +1835,6 @@ func caravan() -> void:
 	for f in FOOD:
 		food += w.table_food(f) * float(GameData.item(f).food)
 	var keep_food := food < village_day_food() * float(GameData.b("caravan_food_reserve_days"))
-	# a caravan bringing stone to a village whose own is worked out does not carry the village's away
-	var keep_stone := _stone_scarce()
 	var lines := []                # [seller, item, units for sale]
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
@@ -1842,7 +1843,7 @@ func caravan() -> void:
 		if o.job == "smith":
 			caps = {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
 		for id in o.inv.ids():
-			if not caps.has(id) or (keep_food and (FOOD.has(id) or id == "meat")) or (keep_stone and id == "stone"):
+			if not caps.has(id) or NOT_EXPORTED.has(id) or (keep_food and (FOOD.has(id) or id == "meat")):
 				continue
 			var extra := o.inv.count(id) - int(caps.get(id, 6)) / 2
 			if extra > 0:
