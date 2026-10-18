@@ -1171,6 +1171,7 @@ func _run() -> void:
 	_save_safety_tests()
 	_collision_tests()
 	_hit_feedback_tests()
+	_roof_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1578,3 +1579,32 @@ func _hit_feedback_tests() -> void:
 	check(a.hp == hp0 - 1.0, "the blow takes 1 health (%.1f -> %.1f)" % [hp0, a.hp])
 	check(bar != null and bar.visible and (bar.get_node("Fill") as ColorRect).size.x < 16.0, "a health bar over the animal shows the loss")
 	check(s != null and s.modulate != Color.WHITE, "the animal flashes")
+
+
+## The roof of the building the player is in stays lifted everywhere inside its outline, also on
+## cells its interior list missed (Build 8 report: roofs flicker while inside).
+func _roof_tests() -> void:
+	var w: World = main.world
+	var tav: Dictionary = main.map.data.buildings.filter(func(b): return b.type == "tavern")[0]
+	var area := {}
+	for c in tav.interior.area:
+		area[Vector2i(int(c[0]), int(c[1]))] = true
+	var a0: Vector2i = area.keys().filter(func(c): return not main.map.is_solid(c))[0]
+	var gap := Vector2i(-1, -1)
+	for y in range(int(tav.y), int(tav.y) + int(tav.h) - 1):
+		for x in range(int(tav.x), int(tav.x) + int(tav.w)):
+			var c := Vector2i(x, y)
+			if gap.x < 0 and not area.has(c) and not main.map.is_solid(c) and w.place_of(Vector2(c) + Vector2(0.5, 0.5)) == "":
+				gap = c
+	w.player.pos = Vector2(a0) + Vector2(0.5, 0.5)
+	for i in 20:
+		main._sync_sprites()
+	check(main.roofs.is_open(tav.id), "inside the tavern its roof is lifted")
+	check(gap.x >= 0, "the tavern has a walkable cell its interior list missed (%s)" % gap)
+	if gap.x >= 0:
+		w.player.pos = Vector2(gap) + Vector2(0.5, 0.5)
+		var steady := true
+		for i in 30:
+			main._sync_sprites()
+			steady = steady and main.roofs.is_open(tav.id)
+		check(steady, "on that cell the roof stays lifted, no flicker")

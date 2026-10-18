@@ -50,7 +50,8 @@ const PAN_SPEED := 700.0               # screen pixels a second the right stick 
 var autosave_hour := -1
 var save_path := SAVE_PATH             # tests point this elsewhere so they never touch a player's save
 var save_blocked := ""                 # why saving is off this session ("" = saving allowed): see continue_game
-var save_failing := false              # the last save failed: say so once, not at every autosave
+var save_failing := false
+var inside_hold := ""                  # the building the player was last inside (see _sync_sprites)              # the last save failed: say so once, not at every autosave
 var shot_path := ""
 var shot_frames := 0
 var shot_warp := Vector2.INF
@@ -817,6 +818,13 @@ func _sync_sprites() -> void:
 	var inside := world.place_of(p.pos)
 	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
 		inside = ""
+	# still inside while within the building's outline, on a cell its interior missed (a back room,
+	# a courtyard cell): otherwise the roof flicks between lifted and eaves-faded (Build 8 report)
+	if inside == "" and inside_hold != "" and world.buildings.has(inside_hold):
+		var hb: Dictionary = world.buildings[inside_hold]
+		if Rect2(float(hb.x), float(hb.y), float(hb.w), float(hb.h)).has_point(p.pos):
+			inside = inside_hold
+	inside_hold = inside
 	# behind the eaves a roof fades only when it would hide the player: over their feet and head both
 	var under := world.roof_over(p.pos)
 	if under != "" and world.roof_over(p.pos + Vector2(0, -1)) != under:
@@ -1137,7 +1145,7 @@ func _reach_step() -> void:
 		interact()
 
 
-const BODY := [Vector2(-0.3, -0.15), Vector2(0.3, -0.15), Vector2(-0.3, 0.2), Vector2(0.3, 0.2)]   # the player's feet (tiles)
+const BODY := [Vector2(-0.38, -0.15), Vector2(0.38, -0.15), Vector2(-0.38, 0.2), Vector2(0.38, 0.2)]   # the player's feet, about as wide as the sprite (tiles; Build 8: walls overlapped the sprite)
 
 
 ## How many corners of the player's feet, standing at `at`, are on a blocked cell.
