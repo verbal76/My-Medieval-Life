@@ -36,11 +36,50 @@ func refresh() -> void:
 	for q in w.player.quests:
 		busy[int(q.giver)] = true
 	for t in templates():
+		if t.get("story", false):
+			continue
 		for n: NPC in w.npcs:
 			if offers.size() >= int(GameData.b("quest_max_offers")):
 				return
 			if n.alive and not offers.has(n.id) and not busy.has(n.id) and _wants(n, t):
 				offers[n.id] = t.id
+
+
+## Give the player every story quest they do not have yet and have not finished (a new game, and
+## each heir, who must learn everything anew).
+func start_story() -> void:
+	for t in templates():
+		if not t.get("story", false) or w.player.quests.any(func(q): return q.id == t.id):
+			continue
+		if t.has("learn") and w.player.spells.get(t.learn, false):
+			continue
+		var giver := _giver_of(t)
+		w.player.quests.append({"id": t.id, "giver": giver.id if giver else -1, "day": w.day(), "target": -1})
+		w.note("%s %s: %s" % [w.player.name, w.player.family, t.get("start", t.title)])
+
+
+func _giver_of(t: Dictionary) -> NPC:
+	for n: NPC in w.npcs:
+		if n.alive and _wants(n, t):
+			return n
+	return null
+
+
+## The player learned a spell: story quests that ask for it are done.
+func on_learned(spell: String) -> void:
+	for q in w.player.quests.duplicate():
+		if template(q.id).get("learn", "") == spell:
+			complete(q)
+
+
+## Who shows the green diamond: villagers with an offer, and the giver of each unfinished story quest.
+func diamond(n: NPC) -> bool:
+	if offers.has(n.id):
+		return true
+	for q in w.player.quests:
+		if int(q.giver) == n.id and template(q.id).get("story", false):
+			return true
+	return false
 
 
 func _wants(n: NPC, t: Dictionary) -> bool:
@@ -102,6 +141,8 @@ func ready(q: Dictionary) -> bool:
 	var t := template(q.id)
 	if t.has("need"):
 		return w.player.inv.has_all(t.need)
+	if t.has("learn"):
+		return w.player.spells.get(t.learn, false)
 	var target: NPC = w.npc(int(q.target))
 	return target == null or not target.alive
 
@@ -124,7 +165,7 @@ func complete(q: Dictionary) -> int:
 	w.player.quests.erase(q)
 	n.remember("helped by %s" % w.player.name)
 	w.stat("quests_done")
-	w.note("%s %s finished \"%s\" for %s %s (%d coins)." % [w.player.name, w.player.family, t.title, n.name, n.family, pay])
+	w.note("%s %s finished \"%s\" for %s %s%s." % [w.player.name, w.player.family, t.title, n.name, n.family, (" (%d coins)" % pay) if pay > 0 else ""])
 	return pay
 
 
@@ -132,6 +173,8 @@ func complete(q: Dictionary) -> int:
 func drop_failed() -> void:
 	for q in w.player.quests.duplicate():
 		var n: NPC = w.npc(int(q.giver))
+		if template(q.id).get("story", false):
+			continue                         # a story quest waits for a new giver (see start_story)
 		if n == null or not n.alive:
 			w.player.quests.erase(q)
 			w.note("\"%s\" can no longer be finished: %s." % [template(q.id).get("title", q.id), "the one who asked has died"])

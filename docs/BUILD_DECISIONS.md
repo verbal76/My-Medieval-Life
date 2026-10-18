@@ -139,6 +139,7 @@ Result, 3 seeds over 100 days:
 | Delivered goods go to the giver; the reward comes from the giver's purse, all they have if less (a poor giver says so). Nothing is created | The economy stays closed |
 | A quest fails if its giver dies. An heir does not inherit the dead player's quests | Simple and clear |
 | The giver remembers the help ("helped by ...") | Ready for friendlier talk and reputation later |
+| Story quests (`"story": true`) are not offered from needs: every new player, and every heir, starts them; their giver shows the green diamond until they are done. The first: "The sage in the north", learn Fireball from the sage in the hut at the north edge of the village, at his usual price (50 coins) | The owner chose the first storyline quest; the price is the existing one |
 
 ## Controls, screen and settings (owner direction; the details are agent proposals)
 

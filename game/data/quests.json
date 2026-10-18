@@ -1,12 +1,33 @@
 {
   "format": "mml-quests/1",
-  "_note": "Side quests. A villager offers one when the condition in 'giver' holds for them at dawn. 'need' is goods the player hands over (they go to the giver); 'kill' names a target ('robber': the bandit who robbed the giver). 'reward' is coins the giver pays from their own purse (all they have, if less). Lines are spoken by the giver: {need} is replaced by the goods asked for, {target} by the target's name. docs/BUILD_DECISIONS.md, 'Side quests'.",
+  "_note": "Side quests. A villager offers one when the condition in 'giver' holds for them at dawn. 'need' is goods the player hands over (they go to the giver); 'kill' names a target ('robber': the bandit who robbed the giver). 'reward' is coins the giver pays from their own purse (all they have, if less). Lines are spoken by the giver: {need} is replaced by the goods asked for, {target} by the target's name. Story quests ('story': true) are not offered from needs: every player starts with them, and their giver always shows the green diamond until they are done; 'learn' names a spell the giver teaches. docs/BUILD_DECISIONS.md, 'Side quests'.",
   "quests": [
+    {
+      "id": "the_sage_in_the_north",
+      "title": "The sage in the north",
+      "story": true,
+      "giver": {
+        "job": "sage"
+      },
+      "learn": "fireball",
+      "reward": 0,
+      "start": "They say a sage lives in a hut at the north edge of the village, and that he teaches fire to those who can pay.",
+      "offer": "So you found me. Fire answers to those who learn its words. Fifty coins, and I will teach you to call it.",
+      "waiting": "Fifty coins, and the fire is yours. Come back when you have them.",
+      "thanks": "Speak the words, and keep your hand steady. Fire does not forgive the careless."
+    },
     {
       "id": "ore_for_the_forge",
       "title": "Ore for the forge",
-      "giver": {"job": "smith", "fewer_than": {"iron_ore": 4}},
-      "need": {"iron_ore": 6},
+      "giver": {
+        "job": "smith",
+        "fewer_than": {
+          "iron_ore": 4
+        }
+      },
+      "need": {
+        "iron_ore": 6
+      },
       "reward": 20,
       "offer": "My forge goes cold without iron. Bring me {need} and I'll pay you twenty coins.",
       "waiting": "Still no ore? The fire won't wait forever.",
@@ -15,8 +36,15 @@
     {
       "id": "wood_for_the_hearth",
       "title": "Wood for the hearth",
-      "giver": {"job": "cook", "fewer_than": {"log": 2}},
-      "need": {"log": 5},
+      "giver": {
+        "job": "cook",
+        "fewer_than": {
+          "log": 2
+        }
+      },
+      "need": {
+        "log": 5
+      },
       "reward": 10,
       "offer": "I can't cook on a cold stove. Fetch me {need} and there's ten coins in it.",
       "waiting": "The stove's still cold. {need}, remember?",
@@ -25,8 +53,15 @@
     {
       "id": "a_new_axe",
       "title": "A new axe",
-      "giver": {"job": "woodcutter", "fewer_than": {"axe": 1}},
-      "need": {"axe": 1},
+      "giver": {
+        "job": "woodcutter",
+        "fewer_than": {
+          "axe": 1
+        }
+      },
+      "need": {
+        "axe": 1
+      },
       "reward": 30,
       "offer": "My axe broke on a knot and I can't work without one. Bring me {need} and I'll pay what it's worth.",
       "waiting": "No axe yet? Every day without one is a day without pay.",
@@ -35,8 +70,13 @@
     {
       "id": "food_for_the_family",
       "title": "Food for the family",
-      "giver": {"role": "elder", "household_food_below": 1.5},
-      "need": {"pottage": 3},
+      "giver": {
+        "role": "elder",
+        "household_food_below": 1.5
+      },
+      "need": {
+        "pottage": 3
+      },
       "reward": 4,
       "offer": "There's little in our pot and the young ones are hungry. Could you bring {need}? It's not much I can give you.",
       "waiting": "The children ask when you'll come.",
@@ -45,7 +85,9 @@
     {
       "id": "bandit_trouble",
       "title": "Bandit trouble",
-      "giver": {"robbed": true},
+      "giver": {
+        "robbed": true
+      },
       "kill": "robber",
       "reward": 12,
       "offer": "{target} robbed me on the road. Deal with that thief and I'll give you what I can.",

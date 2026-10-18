@@ -685,6 +685,14 @@ func test_trades_and_works() -> void:
 func test_quests() -> void:
 	var w := new_world()
 	var p := w.player
+	var side := func() -> Array: return p.quests.filter(func(q): return not Quests.template(q.id).get("story", false))
+	# the storyline: every new player is sent to the sage in the north
+	var sage: NPC = w.npc(w.sage_id)
+	check(p.quests.any(func(q): return q.id == "the_sage_in_the_north" and int(q.giver) == sage.id), "a new game starts the story quest: the sage in the north")
+	check(w.quests.diamond(sage), "the sage shows the green diamond")
+	p.spells["fireball"] = true
+	w.quests.on_learned("fireball")
+	check(not p.quests.any(func(q): return q.id == "the_sage_in_the_north") and not w.quests.diamond(sage), "learning Fireball finishes the story quest")
 	var cook: NPC = null
 	for n: NPC in w.npcs:
 		if n.job == "cook":
@@ -697,14 +705,14 @@ func test_quests() -> void:
 	check(w.quests.offers.size() <= int(GameData.b("quest_max_offers")), "no more offers than the cap")
 	check(w.quests.line({"id": "wood_for_the_hearth", "giver": cook.id}, "offer").contains("5 log"), "the offer names the goods")
 	var q: Dictionary = w.quests.accept(cook)
-	check(not q.is_empty() and p.quests.size() == 1 and w.quests.offer_of(cook).is_empty(), "accepting moves the offer to the player's quests")
+	check(not q.is_empty() and side.call().size() == 1 and w.quests.offer_of(cook).is_empty(), "accepting moves the offer to the player's quests")
 	check(not w.quests.ready(q), "not ready without the logs")
 	p.inv.add("log", 5)
 	cook.coins = 40
 	var coins0 := w.total_coins() - w.coin_sources
 	var logs0 := cook.inv.count("log")
 	var paid: int = w.quests.complete(q)
-	check(paid == 10 and p.quests.is_empty() and cook.inv.count("log") == logs0 + 5 and not p.inv.has("log"), "the logs go to the cook and the reward to the player (%d)" % paid)
+	check(paid == 10 and side.call().is_empty() and cook.inv.count("log") == logs0 + 5 and not p.inv.has("log"), "the logs go to the cook and the reward to the player (%d)" % paid)
 	check(w.total_coins() - w.coin_sources == coins0, "a quest reward makes no coins")
 	check(cook.memory.has("helped by %s" % p.name), "the cook remembers the help")
 	# a poor giver pays what they have
@@ -740,10 +748,14 @@ func test_quests() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
 	check(w2.quests.offers.get(giver2.id, "") == "a_new_axe" and w2.player.quests.size() == 1 and int(w2.player.quests[0].giver) == victim.id, "offers and accepted quests are saved")
+	# an heir must seek the sage again (spells are not inherited)
+	w2.damage_player(9999, "test")
+	w2.continue_as_heir()
+	check(w2.player.quests.any(func(q): return q.id == "the_sage_in_the_north"), "an heir starts the story quest again")
 	# the giver dies: the quest fails
 	w.kill(victim, "a fever")
 	w.quests.drop_failed()
-	check(w.player.quests.is_empty(), "a quest fails when its giver dies")
+	check(side.call().is_empty(), "a quest fails when its giver dies")
 	w.dispose()
 	w2.dispose()
 

@@ -113,6 +113,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	brain.dawn(false)                  # the first morning's snapshot of everyone's earnings
 	quests = Quests.new(self)
 	quests.refresh()
+	quests.start_story()
 	note("Day 1 begins in the village.")
 
 
@@ -418,6 +419,7 @@ func continue_as_heir() -> void:
 		var sp = map.data.spawns.player
 		heir.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	player = heir
+	quests.start_story()                   # the heir must seek the sage again: spells are not inherited
 	# whoever was fighting the dead player has no quarrel with the heir
 	for n: NPC in npcs:
 		if n.target == -2:

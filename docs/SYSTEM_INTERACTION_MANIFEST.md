@@ -326,13 +326,14 @@ Rules:
 
 ### INT-038 · Side quests
 - **Trigger:** Dawn (offers are refreshed); the player accepts or completes a quest in conversation; a giver dies.
-- **Source:** `game/scripts/core/quests.gd::refresh`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/npc_brain.gd::dawn`, `game/data/quests.json`
+- **Source:** `game/scripts/core/quests.gd::refresh`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/quests.gd::start_story`, `game/scripts/core/quests.gd::on_learned`, `game/scripts/core/quests.gd::diamond`, `game/scripts/core/npc_brain.gd::dawn`, `game/scripts/core/world.gd::continue_as_heir`, `game/data/quests.json`
 - **Affects:** Households, Inventory, Coins, Crime, Save
 - **Expected:**
   - Offers come only from villagers whose condition holds (job or role, holding too little of something, a household short of food, a living bandit who robbed them), at most `quest_max_offers`.
   - Accepting moves an offer to the player's quests (at most `quest_max_active`).
   - Completing moves the asked-for goods to the giver and up to the reward in coins from the giver's purse to the player; coins are conserved.
-  - A giver's death fails the quest. Offers and accepted quests are saved.
+  - A giver's death fails a side quest. Offers and accepted quests are saved.
+  - Story quests start with every new player and every heir. Their giver shows the green diamond (as do villagers with an offer) until done. "The sage in the north" is done when the player learns Fireball.
 - **Tests:** `game/tests/run_tests.gd::test_quests`
 
 ## Reverse dependency index
