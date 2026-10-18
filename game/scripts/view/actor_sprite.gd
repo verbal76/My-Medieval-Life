@@ -22,6 +22,40 @@ var dir := 0
 var t := 0.0
 var once := false
 var label: Label
+var cover: Sprite2D            # the blanket drawn over someone lying in bed
+
+
+## Lie in a bed (or on a pallet) whose cell centre is `at` (pixels), head toward `head` ("up", "left",
+## "right"), under `blanket` (the bed tile's blanket, or null): the standing frame turned on its side
+## (or, head up, as it is), the body over the bed cell and the head on the pillow.
+func lie(at: Vector2, head: String, blanket: Texture2D) -> void:
+	var turn := float({"up": 0.0, "left": -PI / 2.0, "right": PI / 2.0}.get(head, -PI / 2.0))
+	# the drawn body's centre is 8 px from the feet (the position) toward the head: put it 1 px from
+	# the bed's middle toward the foot, so the head lies on the pillow
+	var to_body := Vector2(0, -8).rotated(turn)
+	var toward_head := to_body.normalized()
+	position = at - to_body - toward_head
+	rotation = turn
+	dir = 0
+	if anim != "idle":
+		play("idle")
+	if cover == null:
+		cover = Sprite2D.new()
+		cover.top_level = true
+		cover.z_index = 1
+		cover.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		add_child(cover)
+	cover.visible = blanket != null and visible
+	if blanket != null:
+		cover.texture = blanket
+		cover.global_position = at - toward_head * 3.0
+
+
+## Up again (any other animation).
+func stand() -> void:
+	rotation = 0.0
+	if cover:
+		cover.visible = false
 
 
 func setup(sheet_path: String) -> void:

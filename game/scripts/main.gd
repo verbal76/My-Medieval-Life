@@ -12,6 +12,8 @@ var actors: Node2D
 var above: Node2D
 const MARKER_Z := 20                 # markers draw over roofs and canopies (their layers are z 10 in `above`)
 var canopy: CanopyFade         # fades the tree canopy the player walks behind
+var roofs: RoofFade            # fades the roof of the building the player is in (or behind)
+var blankets := {}             # bed tile -> its blanket (AtlasTexture), drawn over a sleeper
 var camera: Camera2D
 var ui: GameUI
 var sprites := {}              # npc id -> ActorSprite
@@ -173,12 +175,14 @@ func _ready() -> void:
 				world.player.pos = Vector2(float(pl.door[0]) + 2.5, float(pl.door[1]) + 1.5)
 				follow_at = _in_view(world.player.pos * T)
 			"quest_home":
-				# a quest giver inside their house: the marker hangs over the door
+				# a quest giver inside their house (its roof on): the marker hangs over the door
 				for n: NPC in world.npcs:
-					if n.alive and n.hidden and n.role == "adult" and world.buildings.has(n.home) and world.buildings[n.home].type == "house" \
+					if n.alive and n.role == "adult" and world.buildings.has(n.home) and world.buildings[n.home].type == "house" \
 							and world.building_door(n.home).x > 20 and world.building_door(n.home).x < 100:
 						world.quests.offers[n.id] = "food_for_the_family"
-						n.hidden = true
+						n.pos = Vector2(world.home_cell(n, "bed")) + Vector2(0.5, 0.5)
+						n.plan = [world.brain.work(600, "", {}, "sleep")]
+						n.anim = "sleep"
 						world.player.pos = Vector2(world.building_door(n.home)) + Vector2(2.5, 3.0)
 						break
 			"blood":
@@ -192,7 +196,7 @@ func _ready() -> void:
 				ui._talk_view(world.npcs[2], Dialogue.home(world, world.npcs[2]))
 			"bubble":
 				for n: NPC in world.near(world.player.pos, 8.0):
-					if n.role != "bandit" and not n.hidden:
+					if n.role != "bandit":
 						say(n, Dialogue.brush_off(world, n))
 						break
 			"trade":
@@ -311,7 +315,7 @@ func resume_after_origin() -> void:
 func continue_game() -> void:
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
 	var d = JSON.parse_string(text)
-	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2, 3]:
+	if not d is Dictionary or not int(d.get("save_version", 0)) in [1, 2, 3, 4]:
 		ui.message("The save file could not be read; it was kept unchanged. Starting a new game.")
 		new_game()
 		return
@@ -384,6 +388,9 @@ func _build_scene() -> void:
 	canopy = CanopyFade.new()
 	above.add_child(canopy)
 	canopy.setup(view, map.data.tiles.get("canopy", []))
+	roofs = RoofFade.new()
+	above.add_child(roofs)
+	roofs.setup(view, map.data.get("roof_layers", []))
 	for n: NPC in world.npcs:
 		var s := ActorSprite.new()
 		s.setup(n.sprite)
@@ -442,11 +449,13 @@ func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
 	if layer:
 		if layer_name.begins_with("above"):
 			canopy.restore_all()          # a faded canopy's tiles go back first, so the change sticks
+			roofs.restore_all()
 		view.set_tile(layer, cell, value)
 
 
 func _on_building_added(b: Dictionary) -> void:
 	canopy.restore_all()
+	roofs.restore_all()
 	var stamp: Dictionary = map.data.stamps.house
 	for lname in stamp.layers:
 		var layer := view.layer(lname)
@@ -481,6 +490,41 @@ func _process(delta: float) -> void:
 	ui.update_hud()
 
 
+## Someone inside a building whose roof is on (the player is not under it) is under that roof: not
+## drawn, not tapped, their marker over the door. Inside the building the player is in, they show.
+func _covered(n: NPC) -> bool:
+	var at := world.place_of(n.pos)
+	return at != "" and at != world.roof_over(world.player.pos) and not (world.interiors[at].roof as Array).is_empty()
+
+
+## The blanket of a bed tile: the part of it away from the pillow, drawn over whoever lies in it.
+func _blanket(tile: int, head: String) -> Texture2D:
+	if tile < 0 or tile % 100000 == 593:
+		return null                    # a straw pallet: no blanket
+	var key := "%d%s" % [tile, head]
+	if not blankets.has(key):
+		var t := tile % 100000
+		var a := tile / 100000
+		var tex := AtlasTexture.new()
+		tex.atlas = view.sources[a].texture
+		var o := Vector2(t % view.columns[a], t / view.columns[a]) * T
+		tex.region = {"left": Rect2(o + Vector2(6, 0), Vector2(10, 16)), "right": Rect2(o, Vector2(10, 16))}.get(head, Rect2(o + Vector2(0, 6), Vector2(16, 10)))
+		blankets[key] = tex
+	return blankets[key]
+
+
+## Draw a villager asleep in their own bed (at its use cell, World.home_spot) lying in it.
+func _show_sleeper(n: NPC, s: ActorSprite) -> bool:
+	if not world.asleep(n):
+		return false
+	var bed := world.home_spot(n, "bed")
+	if bed.is_empty() or n.cell() != Vector2i(int(bed.use[0]), int(bed.use[1])):
+		return false
+	var head := str(bed.get("head", "left"))
+	s.lie((Vector2(int(bed.at[0]), int(bed.at[1])) + Vector2(0.5, 0.5)) * T, head, _blanket(int(bed.get("tile", -1)), head))
+	return true
+
+
 func _sync_sprites() -> void:
 	var cam := camera.get_screen_center_position() / T
 	for n: NPC in world.npcs:
@@ -490,21 +534,27 @@ func _sync_sprites() -> void:
 			# the body falls, flickers and is gone
 			var left: float = dying.get(n.id, FLICKER) - get_process_delta_time()
 			dying[n.id] = left
-			s.visible = left > 0.0 and near and not n.hidden and int(left * 12.0) % 2 == 0
+			s.visible = left > 0.0 and near and not _covered(n) and int(left * 12.0) % 2 == 0
+			s.stand()
 			if s.visible:
 				s.position = n.pos * T
 				if s.anim != "death":
 					s.play("death", true)
 			continue
-		s.visible = not n.hidden and near
+		s.visible = near and not _covered(n)
 		if not s.visible:
 			continue
+		if _show_sleeper(n, s):
+			continue
+		s.stand()
 		s.position = n.pos * T
 		s.face(n.facing)
-		s.play(n.anim)
+		s.play(n.anim if n.anim != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
 	canopy.update(p.pos, get_process_delta_time())
+	var under := world.roof_over(p.pos)
+	roofs.update(under, world.interiors[under].roof if under != "" else [], get_process_delta_time())
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
@@ -530,9 +580,11 @@ func _sync_diamonds() -> void:
 	var at_door := {}                  # door cell -> markers already placed there
 	for n: NPC in world.npcs:
 		var kind: String = world.quests.marker(n) if n.alive else ""
-		if kind == "" or (n.hidden and not world.buildings.has(n.home)):
+		if kind == "":
 			continue
-		var at := Vector2(world.building_door(n.home)) if n.hidden else n.pos
+		var covered := _covered(n)
+		var inside := world.place_of(n.pos)
+		var at := Vector2(world.building_door(inside)) if covered else n.pos
 		if at.distance_to(cam) > 30.0:
 			continue
 		shown[n.id] = true
@@ -544,10 +596,10 @@ func _sync_diamonds() -> void:
 			above.add_child(d)
 			diamonds[n.id] = d
 		d.texture = load("res://assets/markers/%s.png" % kind)
-		if n.hidden:
-			# indoors (asleep or resting at home): the marker hangs over the house door instead,
-			# side by side if more than one of the household has a quest
-			var door := world.building_door(n.home)
+		if covered:
+			# inside a building whose roof is on: the marker hangs over its door instead, side by
+			# side if more than one inside has a quest
+			var door := world.building_door(inside)
 			var k: int = at_door.get(door, 0)
 			at_door[door] = k + 1
 			d.position = (Vector2(door) + Vector2(0.5, 0.0)) * T + Vector2(k * 20.0, -26 + bob)
@@ -588,7 +640,7 @@ func _sync_bubbles() -> void:
 	for id in bubbles.keys():
 		var b: SpeechBubble = bubbles[id]
 		var n := world.npc(id)
-		if not b.tick(get_process_delta_time()) or n == null or not n.alive or n.hidden:
+		if not b.tick(get_process_delta_time()) or n == null or not n.alive or _covered(n):
 			b.queue_free()
 			bubbles.erase(id)
 			continue
@@ -768,7 +820,7 @@ func _route_step(_delta: float) -> Vector2:
 func _talk_step() -> void:
 	if talk_to == null:
 		return
-	if not talk_to.alive or talk_to.hidden or talk_to.pos.distance_to(world.player.pos) > 25.0:
+	if not talk_to.alive or _covered(talk_to) or world.asleep(talk_to) or talk_to.pos.distance_to(world.player.pos) > 25.0:
 		talk_to = null
 		move_to = Vector2.INF
 		return
@@ -900,6 +952,14 @@ func _find_target() -> void:
 			var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
 			if door.distance_to(p.pos) < 1.3:
 				best = {"kind": "home", "label": "Your house: rest, store things"}
+			elif world.place_of(p.pos) == p.home:
+				# inside: the bed rests, the chest is the family's store
+				for sp in world.interiors[p.home].spots:
+					var at := Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)
+					if at.distance_to(probe) < 0.9 and sp.kind == "bed":
+						best = {"kind": "rest", "label": "Your bed: rest until morning"}
+					elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
+						best = {"kind": "home", "label": "Your chest: store things, rest"}
 	target = best
 	ui.prompt(target.get("label", ""))
 
@@ -1069,6 +1129,8 @@ func interact() -> void:
 			ui.show_build(target.plot)
 		"home":
 			ui.show_home()
+		"rest":
+			rest()
 
 
 func start_action(label: String, secs: float, done: Callable) -> void:
@@ -1149,7 +1211,7 @@ func _creature_at(wpos: Vector2) -> Object:
 	var best: Object = null
 	var bd := 0.9
 	for n: NPC in world.near(at, bd):
-		if not n.hidden and n.pos.distance_to(at) < bd:
+		if not _covered(n) and n.pos.distance_to(at) < bd:
 			bd = n.pos.distance_to(at)
 			best = n
 	for a: Animal in world.fauna.near(at, bd):
@@ -1165,7 +1227,7 @@ func _chase_step() -> void:
 	if chase == null:
 		return
 	var p := world.player
-	if not chase.alive or (chase is NPC and chase.hidden) or chase.pos.distance_to(p.pos) > 12.0:
+	if not chase.alive or (chase is NPC and (_covered(chase) or world.asleep(chase))) or chase.pos.distance_to(p.pos) > 12.0:
 		chase = null
 		strike_pending = false
 		move_to = Vector2.INF
@@ -1519,7 +1581,7 @@ func _screenshot_step(_delta: float) -> void:
 		if OS.get_environment("MML_SHOT_DEBUG") != "":
 			for id in diamonds:
 				var nn: NPC = world.npc(int(id))
-				print("marker ", id, " ", nn.name, " hidden=", nn.hidden, " home=", nn.home, " at ", diamonds[id].position / T, " npc ", nn.pos, " cam ", camera.get_screen_center_position() / T)
+				print("marker ", id, " ", nn.name, " inside=", world.place_of(nn.pos), " home=", nn.home, " at ", diamonds[id].position / T, " npc ", nn.pos, " cam ", camera.get_screen_center_position() / T)
 		var img := get_viewport().get_texture().get_image()
 		img.save_png(shot_path)
 		print("screenshot saved to ", shot_path)

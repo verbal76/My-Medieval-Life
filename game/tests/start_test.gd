@@ -296,7 +296,12 @@ func _run() -> void:
 	main._player_step(0.1)
 	check(main.chase == null and main.attack_mode, "the mark is gone with the bandit; attack mode stays on (%d taps)" % taps)
 	# tapping open ground walks there; the Attack button again turns the mode off
-	main._tap(main.get_canvas_transform() * ((p.pos + Vector2(2, 0)) * main.T))
+	var open_at := p.pos + Vector2(2, 0)
+	for off in [Vector2(2, 0), Vector2(-2, 0), Vector2(0, 2), Vector2(0, -2), Vector2(3, 3)]:
+		if main._creature_at(p.pos + off) == null:        # open ground: nobody (another bandit) there
+			open_at = p.pos + off
+			break
+	main._tap(main.get_canvas_transform() * (open_at * main.T))
 	check(main.chase == null and main.move_to != Vector2.INF, "in attack mode, a tap on open ground walks there")
 	main.attack_button()
 	check(not main.attack_mode, "Attack again turns attack mode off")
@@ -380,7 +385,7 @@ func _run() -> void:
 	for i in 400:
 		w.update(0.1)
 		for n: NPC in w.npcs:
-			if n.alive and not n.hidden and n.role == "adult" and n.anim == "walk" and n.path.size() - n.path_i > 8:
+			if n.alive and not main._covered(n) and not w.asleep(n) and n.role == "adult" and n.anim == "walk" and n.path.size() - n.path_i > 8:
 				walker = n
 				break
 		if walker:
@@ -411,7 +416,7 @@ func _run() -> void:
 	var busy_one: NPC = null
 	for i in 400:
 		for n: NPC in w.npcs:
-			if n.alive and not n.hidden and n.role == "adult" and Dialogue.busy(n) and n.target == -1 and not Dialogue.met(w, n) and not Dialogue.attacked(w, n) and Dialogue.theft_seen(w, n) == "":
+			if n.alive and not main._covered(n) and not w.asleep(n) and n.role == "adult" and Dialogue.busy(n) and n.target == -1 and not Dialogue.met(w, n) and not Dialogue.attacked(w, n) and Dialogue.theft_seen(w, n) == "":
 				busy_one = n
 				break
 		if busy_one:
@@ -432,7 +437,7 @@ func _run() -> void:
 		check(not main.bubbles.has(busy_one.id), "the bubble goes after a few seconds")
 	var idle_one: NPC = null
 	for n: NPC in w.npcs:
-		if n.alive and not n.hidden and n.role != "bandit" and not Dialogue.busy(n) and not w.at_post(n):
+		if n.alive and not main._covered(n) and not w.asleep(n) and n.role != "bandit" and not Dialogue.busy(n) and not w.at_post(n):
 			idle_one = n            # (a shopkeeper at their post opens the shop instead: tested with the shops)
 			break
 	if idle_one:
@@ -525,7 +530,7 @@ func _run() -> void:
 	# a pickpocket's choice in the conversation with someone beside the player
 	var mark: NPC = null
 	for n: NPC in w.npcs:
-		if n.alive and not n.hidden and n.role == "adult" and n.job != "guard" and not w.at_post(n) and n != v:
+		if n.alive and not main._covered(n) and not w.asleep(n) and n.role == "adult" and n.job != "guard" and not w.at_post(n) and n != v:
 			mark = n
 			break
 	mark.pos = p.pos + Vector2(1.0, 0)
@@ -716,7 +721,8 @@ func _run() -> void:
 			home_q = n
 			break
 	w.quests.offers[home_q.id] = "food_for_the_family"
-	home_q.hidden = true
+	var home_was := home_q.pos
+	home_q.pos = Vector2(w.home_cell(home_q, "bed")) + Vector2(0.5, 0.5)       # inside, under the roof
 	var door_cell := w.building_door(home_q.home)
 	p.pos = Vector2(door_cell) + Vector2(0.5, 2.5)
 	main.camera.position = p.pos * main.T
@@ -728,7 +734,7 @@ func _run() -> void:
 	for l in main.view.above_layers:
 		roof_z = maxi(roof_z, l.z_index)
 	check(main.diamonds[home_q.id].z_index > roof_z and main.target_marker.z_index > roof_z, "quest and target markers draw over roofs and tree canopies")
-	home_q.hidden = false
+	home_q.pos = home_was
 	w.quests.offers.erase(home_q.id)
 	p.pos = sage.pos + Vector2(0, 2)
 	ui.show_talk(cook_q)

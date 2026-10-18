@@ -34,6 +34,7 @@ func _init() -> void:
 	test_trades_and_works()
 	test_quests()
 	test_building_site()
+	test_interiors()
 	test_chest_keeps_marks()
 	test_theft_and_shops()
 	test_simulation(days)
@@ -903,6 +904,163 @@ func test_building_site() -> void:
 	check(absf(w.site_progress(pl) - 20.0 / 60.0) < 0.001 and w.site_delivered(pl) == {"plank": 20}, "older sites assume the house cost")
 
 
+## Interiors (owner decision: roof fade, one entry mechanic for all): every roofed building has an
+## inside entered only through its doors, walls solid and floor walkable; villagers walk in and sleep in
+## their own beds; witnesses see only what happens in the same place; old saves move the people who
+## were "hidden" at home inside; a house the player builds gets the same interior.
+func test_interiors() -> void:
+	var w := new_world()
+	var m := w.map
+	# every enterable building has an inside, and every home a sleeping place for each of its people
+	for id in ["b_v1_house", "b_manor", "b2", "b3", "b4", "b5", "b24"]:
+		check(w.interiors.has(id) and not (w.interiors[id].floor as Array).is_empty(), "%s has an interior with a floor" % id)
+	var short := []
+	for hh in w.households:
+		var beds := {}
+		for mid in hh.members:
+			var s := w.home_spot(w.npc(int(mid)), "bed")
+			if not s.is_empty():
+				beds[str(s.at)] = true
+		if beds.size() < (hh.members as Array).size():
+			short.append("%s (%d people, %d places)" % [hh.home, hh.members.size(), beds.size()])
+	check(short.is_empty(), "every villager has a bed or pallet of their own at home %s" % [short])
+	var houses := 0
+	for id in w.interiors:
+		if w.buildings[id].type == "house" and (w.interiors[id].spots as Array).filter(func(s): return s.kind == "bed" and int(s.tile) != 593).size() >= 5:
+			houses += 1
+	check(houses == 21, "all 21 houses have five beds (%d)" % houses)
+	# walls block, the floor is walkable, and the inside is reached only through a door
+	var leaks := []
+	for id in w.interiors:
+		var it: Dictionary = w.interiors[id]
+		var doors := {}
+		for c in it.doors:
+			doors[Vector2i(int(c[0]), int(c[1]))] = true
+		for c in it.floor:
+			var cell := Vector2i(int(c[0]), int(c[1]))
+			if m.is_solid(cell):
+				leaks.append("%s floor %s solid" % [id, cell])
+			if doors.has(cell):
+				continue
+			for d in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+				var n: Vector2i = cell + d
+				if w.place_of(Vector2(n)) != id and not m.is_solid(n):
+					leaks.append("%s %s -> %s" % [id, cell, n])
+	check(leaks.is_empty(), "walls enclose every inside; only doors lead out %s" % [leaks.slice(0, 6)])
+	var b5: Dictionary = w.buildings["b5"]
+	check(m.is_solid(Vector2i(int(b5.x), int(b5.y) + 4)) and m.is_solid(Vector2i(int(b5.x) + 3, int(b5.y) + 1)), "a house's side and back walls are solid")
+	var step := w.building_door("b5")
+	var walker: NPC = null
+	for n: NPC in w.npcs:
+		if n.home == "b5" and n.role == "adult":
+			walker = n
+			break
+	var bed := w.home_cell(walker, "bed")
+	var path := m.find_path(step, bed)
+	var through := ""
+	for i in range(1, path.size()):
+		var a := w.place_of(path[i - 1] + Vector2(0.5, 0.5))
+		var b := w.place_of(path[i] + Vector2(0.5, 0.5))
+		if a == "" and b == "b5":
+			through = str(Vector2i(path[i]))
+	check(not path.is_empty() and through == str(Vector2i(int(w.interiors["b5"].doors[0][0]), int(w.interiors["b5"].doors[0][1]))), "the way from the door step to a bed goes in through the door (%s)" % through)
+	# a villager goes home at night and sleeps in their bed, inside (not hidden, not on the step)
+	w.minutes = floorf(w.minutes / World.DAY) * World.DAY + 21.6 * 60.0
+	w.last_hour = int(w.minutes / 60.0)
+	walker.pos = Vector2(step) + Vector2(0.5, 1.5)
+	walker.plan.clear()
+	walker.target = -1
+	walker.hunger = 100.0
+	w.player.pos = Vector2(step) + Vector2(0.5, 3.5)
+	var slept := false
+	for i in 400:
+		walker.hunger = 100.0
+		w._update_npc(walker, 0.1)
+		if w.asleep(walker):
+			slept = true
+			break
+	check(slept and w.place_of(walker.pos) == "b5" and walker.cell() == bed, "%s walks in and lies down in bed (%s, %s)" % [walker.name, walker.doing, walker.cell()])
+	check(not w.near(w.player.pos, 30.0).has(walker), "asleep indoors, they see nothing outside")
+	# witnesses: those inside a building see only what happens in it, and those outside only outside
+	var crate: Dictionary = {}
+	for c in w.containers:
+		if c.at == "b5" and w.place_of(Vector2(int(c.x), int(c.y))) == "b5":
+			crate = c
+	check(not crate.is_empty(), "a household crate stands inside house b5")
+	for n: NPC in w.npcs:
+		if n.alive and n.pos.distance_to(Vector2(step)) < 20.0:
+			n.pos = FAR_PEOPLE
+			n.plan = [w.brain.work(600, "", {}, "idle")]
+	var inside_eye: NPC = null
+	var outside_eye: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.job != "guard" and n.home != "b5" and n.household >= 0:
+			if inside_eye == null:
+				inside_eye = n
+			elif outside_eye == null:
+				outside_eye = n
+	var floor0: Array = w.interiors["b5"].floor
+	inside_eye.pos = Vector2(int(floor0[0][0]), int(floor0[0][1])) + Vector2(0.5, 0.5)
+	outside_eye.pos = Vector2(step) + Vector2(1.5, 0.5)
+	for n in [inside_eye, outside_eye]:
+		n.plan = [w.brain.work(600, "", {}, "idle")]
+		n.anim = "idle"
+	w.player.pos = Vector2(w.home_cell(walker, "chest")) + Vector2(0.5, 0.5)
+	var crimes0 := w.player.crimes.size()
+	w.player_take(crate)
+	check(w.player.crimes.size() == crimes0 + 1 and int(w.player.crimes[-1].witnesses) == 1, "a theft inside a house is seen by the one awake inside, not by the one at the door or the sleeper")
+	check(inside_eye.memory.any(func(t): return str(t).begins_with("saw ")) and not outside_eye.memory.any(func(t): return str(t).begins_with("saw ")), "%s inside saw it; %s outside did not" % [inside_eye.name, outside_eye.name])
+	var barrel: Dictionary = {}
+	for c in w.containers:
+		if c.at == "b5" and w.place_of(Vector2(int(c.x), int(c.y))) == "" and w.container_pick(c) != "":
+			barrel = c
+	w.player.pos = Vector2(int(barrel.x), int(barrel.y)) + Vector2(0.5, 1.5)
+	outside_eye.pos = w.player.pos + Vector2(1.0, 0)
+	w.player_take(barrel)
+	check(int(w.player.crimes[-1].witnesses) == 1 and outside_eye.memory.filter(func(t): return str(t).begins_with("saw ")).size() == 1, "outside, the one outside sees it and the one inside does not")
+	# an old save: villagers "hidden" at home stood on the door step; they load inside, in bed
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	d.save_version = 3
+	var moved := 0
+	for nd in d.npcs:
+		if nd.home == "b5" and bool(nd.alive):
+			nd.hidden = true
+			nd.pos = [step.x + 0.5, step.y + 0.5]
+			moved += 1
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var ok := true
+	for n: NPC in w2.npcs:
+		if n.home == "b5" and n.alive:
+			ok = ok and w2.place_of(n.pos) == "b5" and n.cell() == w2.home_cell(n, "bed")
+	check(moved > 0 and ok, "a version 3 save's %d people hidden at home load inside, each at their own bed" % moved)
+	var d2: Dictionary = w2.to_dict()
+	check(int(d2.save_version) == 4 and not JSON.stringify(d2.npcs).contains("\"hidden\""), "saves are version 4 and hold where people are, not \"hidden\"")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d2)))
+	check(w3.npc(walker.id).pos == w2.npc(walker.id).pos and w3.place_of(w3.npc(walker.id).pos) == "b5", "a villager inside a house is still there after saving and loading")
+	# a house the player builds gets the stamp's interior: walkable floor, solid walls, beds, a roof
+	var p := w.player
+	var pl: Dictionary = w.plots[0]
+	p.coins += int(pl.price)
+	w.buy_plot(pl)
+	w.start_site(pl)
+	var cost: Dictionary = GameData.b("house_cost")
+	for id in cost:
+		p.inv.add(id, int(cost[id]))
+	check(w.deliver(pl, p.inv), "the player's house is finished")
+	var hid := "house_" + str(pl.id)
+	var hi: Dictionary = w.interiors.get(hid, {})
+	check(not hi.is_empty() and hi.floor.size() == w.interiors["b5"].floor.size() and hi.spots.size() == w.interiors["b5"].spots.size(), "the built house has the same interior as Shade's house")
+	var f0 := Vector2i(int(hi.floor[0][0]), int(hi.floor[0][1]))
+	check(not m.is_solid(f0) and w.place_of(Vector2(f0) + Vector2(0.5, 0.5)) == hid and w.roof_over(Vector2(f0) + Vector2(0.5, 0.5)) == hid, "its floor is walkable, inside it and under its roof")
+	check(m.is_solid(Vector2i(int(pl.x), int(pl.y) + 4)) and not m.is_solid(Vector2i(int(pl.door[0]), int(pl.door[1]) - 1)), "its walls are solid and its doorway open")
+	var w4 := World.new()
+	var m4 := VillageMap.load_default()
+	w4.load_dict(m4, JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(not m4.is_solid(f0) and m4.is_solid(Vector2i(int(pl.x), int(pl.y) + 4)) and w4.place_of(Vector2(f0) + Vector2(0.5, 0.5)) == hid, "after loading, the built house's inside is the same")
+
+
 ## Every item in the village, wherever it is (people, pantries, tables, the granary, the player's
 ## pack and chest, bags on the ground): id -> count.
 func _all_goods(w: World) -> Dictionary:
@@ -989,7 +1147,7 @@ func test_theft_and_shops() -> void:
 	check(_all_goods(w) == goods0, "still nothing made or lost")
 	# a guard who sees it stops the player: the goods go back and the fine goes to the treasury
 	adult.pos = FAR_PEOPLE
-	guard.pos = p.pos + Vector2(3, 0)
+	guard.pos = p.pos + Vector2(2, 0)          # beside the player, inside the tavern with them
 	p.coins = 40
 	coins0 = w.total_coins()
 	var t0 := w.treasury
@@ -1260,7 +1418,7 @@ func test_save_round_trip() -> void:
 	w5.load_dict(VillageMap.load_default(), v2)
 	check(w5.treasury == treasury_then and w5.npc(w5.reeve_id).coins == int(GameData.b("reeve_purse")), "a version 2 save's reeve coins move into the treasury (%d)" % w5.treasury)
 	check(w5.total_coins() == w.total_coins(), "a version 2 save keeps every coin")
-	check(int(d.save_version) == 3 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 3 with the treasury and granary")
+	check(int(w5.to_dict().save_version) == 4 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 4 with the treasury and granary")
 	# a save from before the plots moved (they lay over houses b20-b22): plot0 owned with a house on
 	# it and the player inside, plot1 unsold, and a tree where the new plot0 is
 	var lay: Dictionary = JSON.parse_string(text)
@@ -1283,7 +1441,7 @@ func test_save_round_trip() -> void:
 	check(Rect2(float(p0.x), float(p0.y), 9.0, 10.0).has_point(w8.player.pos), "the player standing in it moves with it")
 	check(int(w8.plot("plot1").y) == int(m8.data.plots[1].y) and w8.plot("plot1").owner == "", "an unsold plot moves too")
 	check(not w8.trees.any(func(t): return int(t.x) == 91 and int(t.y) == 23), "trees the generator cleared from the new plots are gone from the old save")
-	check(m8.is_solid(Vector2i(95, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
+	check(m8.is_solid(Vector2i(91, 79)) and m8.is_solid(Vector2i(int(mp0.x) + 1, int(mp0.y) + 1)), "house b20's wall and the moved house are both solid")
 	var w9 := World.new()
 	w9.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w8.to_dict())))
 	var w10 := World.new()
