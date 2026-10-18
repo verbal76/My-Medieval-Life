@@ -90,6 +90,13 @@ generated data. One implementation per concern.
   - Integrate agents' work into staging carefully: keep both sides of overlapping changes and run the
     regression tests before pushing.
   - The manifest, decision logs and test records are committed alongside the code.
+- **Continuous development (owner, 2026-10-18; standing).** The default state is active
+  development. Build authorization is separate from development authorization: "do not build"
+  means no distributable release, never stop working. When one task is blocked on an owner decision,
+  ask, and continue with other approved tasks; when an approved task is done, take the next from
+  `docs/DEVELOPMENT_PLAN.md` without waiting to be told. Scheduled check-ins only preserve work; they
+  neither start nor end development. Only an explicit owner instruction to pause stops approved work.
+  If a session must end, push a handoff (`docs/HANDOFF.md`) naming the next approved task.
 - Commits: one logical change each, imperative subject (e.g. "Add rivers and roads to the Puny World
   generator"), and a body that says what changed and why.
 - Before every push, run:
