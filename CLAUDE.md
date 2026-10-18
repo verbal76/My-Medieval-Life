@@ -100,11 +100,27 @@ generated data. One implementation per concern.
   Linux / Windows / Android readiness, confirmation that all three have the same features and
   content, and the proposed shared build number. On approval, run `.github/workflows/release.yml`
   by hand (it never runs on a push): all three platforms come from one revision with one number.
-- **Work preservation.** Commit completed work locally (a local commit is not a push), and run
-  `python3 tools/checkpoint.py` before major changes and after completed fixes: it bundles every
-  branch and saves every working tree's uncommitted changes (agent worktrees included) outside the
-  repository, then proves they restore. Never reset or clean a tree in a way that loses work; never
+- **Work preservation (owner, mandatory; a permanent part of the workflow).** Commit completed work
+  locally (a local commit is not a push). Never reset or clean a tree in a way that loses work; never
   overwrite another agent's work; integrate agents' changes through the lead agent.
+  - **Local checkpoint:** `python3 tools/checkpoint.py` bundles every branch and saves every working
+    tree's uncommitted changes (agent worktrees included) outside the repository, then proves they
+    restore. It is on the same machine, so it is not a backup by itself.
+  - **Off-machine copy:** `python3 tools/checkpoint.py --offsite DIR` snapshots every worktree's
+    uncommitted work as `refs/backup/*` commits (without touching the worktrees) and writes a git
+    bundle of everything GitHub lacks, as base64 text plus a README with its sha256. The lead agent
+    uploads both text files to the owner's private "Medieval Life Backups" artifact
+    (https://claude.ai/artifact/2cTyP9BigtJUmmsxEywQjF), adds the checkpoint to that page, then
+    **verifies**: downloads the bundle back from the artifact, checks the sha256, restores it into a
+    fresh clone from GitHub and confirms the head commit, the commit count and each snapshot's tree.
+    Only then is the checkpoint reported as secured.
+  - **When:** before integrating an agent's work, before a save-format migration, before anything
+    destructive, and after every completed piece of work; never let more than a few commits or one
+    agent's work go unsecured. If the off-machine copy fails, report it at once and stop risky work.
+  - **Why not a backup branch:** this session can push only to its own development branch (the git
+    proxy refuses other refs), and repository webhooks and app installations cannot be inspected
+    from here, so a branch push could not be proven safe. Pushing the development branch itself
+    still needs the owner's explicit approval.
 
 ## 6. Deterministic generation
 
