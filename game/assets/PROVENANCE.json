@@ -20,7 +20,7 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1000, human, natural skin, headwear per kind: {\"clothes\": \"ninja\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m7\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "46582498a6169312f0e44fc3eda040f03b31b5dd98b71df84d2f9010a4e51d28"
+   "sha256": "d9942ff3523ee94febc64720b4ec90af8a3ab53697fb4227210e2d7c74657b26"
   },
   {
    "file": "assets/characters/villager_01.png",
@@ -34,77 +34,77 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1002, human, natural skin, headwear per kind: {\"clothes\": \"ninja\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m6\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "2b16b8f3808ef17a23a55cc52995a98b7445e812e326d700b54d10d5de3528fa"
+   "sha256": "d9396fbccdb9d1057510579d65628aeffa0f2f1d9c430eb9dc0639f4fecc05b7"
   },
   {
    "file": "assets/characters/villager_03.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1003, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": \"n3\", \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m5\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "c4cc9ac4dfd309765121d28f2a8d6bd32f04495c46f1ab046344666bf276aef9"
+   "sha256": "9c07893693dea0dba0fab6b39086ce6c59c3934b54f2234a45b91bcc09d4ee61"
   },
   {
    "file": "assets/characters/villager_04.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1004, human, natural skin, headwear per kind: {\"clothes\": \"ronin\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f2\", \"headwear\": \"traveller-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "a83b5aa0a0db3001762b69f0b3925a3c9c539cfec5b82b119773bfcd35cda7ff"
+   "sha256": "b0868c826f55af64f93c1111ba33498e409d8ef1bb72940f4664034af343b7c5"
   },
   {
    "file": "assets/characters/villager_05.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1005, human, natural skin, headwear per kind: {\"clothes\": \"ninja\", \"ears-&-horns\": null, \"eyelashes\": \"m2\", \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"m9\", \"headwear\": \"rogue-hood\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "09ec65d59ab475ef488414d4d0846bd34e9b4980b17335f977345f6639d9db9f"
+   "sha256": "0bb4dace09a3c2b170ed5a48b08d85f98bef9344b526a6cda38b42abbd5339e9"
   },
   {
    "file": "assets/characters/villager_06.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1006, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "d283aa7fab57adf3b59cc79a439cf9b55b64667d676d2332297af4decef168d6"
+   "sha256": "25adad0891f8861383838622428f6a52eccd6f0fac40aad924942d199ff429e0"
   },
   {
    "file": "assets/characters/villager_07.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1007, human, natural skin, headwear per kind: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m9\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "108b17151c1f74b97d179a0efc2048efca4ea5d8961dc48983f04a5f1699b559"
+   "sha256": "e6d67c1c7f5ead3bcbf977d3217414014fbfa123f8ffcbc54dd84988fddb54e7"
   },
   {
    "file": "assets/characters/villager_08.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1008, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"f2\", \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m4\", \"headwear\": \"villager-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "e654c91b85d2bc6fa7bb0332a677f61b3159b71f9cc2269717fb434fe2438905"
+   "sha256": "38260b9402d0c4aec7b5f9db7a765a1b8ca8352fc5788553aeb0dc43ce709c07"
   },
   {
    "file": "assets/characters/villager_09.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1009, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "0ae42c34254a232edfd51f94a35416731f941a1a7282c3a776bb5824c03164f9"
+   "sha256": "260b3c7c590cb3d1fb58a54b213deff87150bd08bf1bb22c00bd93bc17da0c9f"
   },
   {
    "file": "assets/characters/villager_10.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1010, human, natural skin, headwear per kind: {\"clothes\": \"ninja\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m6\", \"headwear\": \"traveller-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "8ca9e9cb96ce7755e6a36afd65f5249a2ceea5d2c71b6c9a7c0ed80b7eeb4c2a"
+   "sha256": "5d0ec9fb04727d24c939aff7ac93e1aa3fc216e9451d0fc42eaab88b9488ab1a"
   },
   {
    "file": "assets/characters/villager_11.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1011, human, natural skin, headwear per kind: {\"clothes\": \"traveller\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "77c8e20c29d64aff74e89fe054f3e07c16703b3ed480d82a908e762f20a595f4"
+   "sha256": "39f1168917ea653402cebf3a7d9dbf97fe4efabb0bd6e42ce8701c50828d8d38"
   },
   {
    "file": "assets/characters/villager_12.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1012, human, natural skin, headwear per kind: {\"clothes\": \"samurai\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f3\", \"headwear\": \"rogue-hood\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "34cd138925714da7d9f9d2719f0ff4a3c88f1b147c39fe191524c74965ba4e0b"
+   "sha256": "21000239457a989c32997ec5c12593fe36bf53a7371aae6497b620d9fdc9dfc4"
   },
   {
    "file": "assets/characters/villager_13.png",
@@ -118,147 +118,147 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1014, human, natural skin, headwear per kind: {\"clothes\": \"traveller\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"f1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "ebb70cff3617aa26bf618dd97d41474ba4b211a7e657b2c58148e45f6f94924b"
+   "sha256": "40a96fddc19d4ec850a3447b27e5d24433d3c625d0b0d3ba8d46ff3d1a9dac5b"
   },
   {
    "file": "assets/characters/villager_15.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1015, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"n3\", \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"m9\", \"headwear\": \"ranger-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "b462eaf1dc5f0e8b750c3567602db677086e601189b80860f5514b1d1426e5ed"
+   "sha256": "cb88abb2c8bf746dba960cb4777d1d16ee3055c9fe71b9c5eb87718b3a91605d"
   },
   {
    "file": "assets/characters/villager_16.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1016, human, natural skin, headwear per kind: {\"clothes\": \"samurai\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m8\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "e2f9aa1a278810d09632c87d5ccf41563104a865a268077d56b51ded5bee99e9"
+   "sha256": "c643568cce89e83f18c4f1bafb363944ac1eb1e3a9e9d76928e9376362bca0de"
   },
   {
    "file": "assets/characters/villager_17.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1017, human, natural skin, headwear per kind: {\"clothes\": \"samurai\", \"ears-&-horns\": null, \"eyelashes\": \"n1\", \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m7\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "50833c519eb8c2dc99dd4bf0531e3c8d544d6501b10b8c4600f26bf980f09496"
+   "sha256": "4bf7c1ce061cfb6ae3bad6e400b34af52de186473a6a8365a4c5096c595c56e6"
   },
   {
    "file": "assets/characters/villager_18.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1018, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m7\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "f497f4e93de91cee28091a59dc55d1cf88191e19303473db48862760c82ed003"
+   "sha256": "d4033ec6a3b956327e722af2a1123b046f605e6c814f15c69e691ee6cbef5848"
   },
   {
    "file": "assets/characters/villager_19.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1019, human, natural skin, headwear per kind: {\"clothes\": \"yabusame\", \"ears-&-horns\": null, \"eyelashes\": \"n3\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m2\", \"headwear\": \"traveller-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "ddcabb9b137dd0b92add354e536f54b095432eaf72d3fe03f2a25dda48fade39"
+   "sha256": "b1e6bc17226cfa80753718ec1e85c35debc420d59ff116ec56e155c4266284a1"
   },
   {
    "file": "assets/characters/villager_20.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1020, human, natural skin, headwear per kind: {\"clothes\": \"traveller\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"f1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "5a53ee82f28538afe260ef1c8eca296bab6e45b604a77d6f8125e5c0a536a6b9"
+   "sha256": "43e07af33cbc5001f8f9e401c0bd1c73d206a55f462f137f301a62abc9719962"
   },
   {
    "file": "assets/characters/villager_21.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1021, human, natural skin, headwear per kind: {\"clothes\": \"samurai\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m5\", \"headwear\": \"rogue-hood\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "bccbef8d0d1a7888730dfc6cdbe66fcf67cf8c6bd034a193f600dd0fdc76b842"
+   "sha256": "70ee9c200280eebc0dc91362ac178bc17abe381b2d274d26829640c12301cf46"
   },
   {
    "file": "assets/characters/villager_22.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1022, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m3\", \"headwear\": \"hunter-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "4a80c48640e5b2435368173d655597e72786b5734d434ee33c639a1832b55947"
+   "sha256": "10cbae43b62f3e54f95628172f7ce50f2dbe6e854f72f2cc5055fc38885a6b97"
   },
   {
    "file": "assets/characters/villager_23.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1023, human, natural skin, headwear per kind: {\"clothes\": \"yabusame\", \"ears-&-horns\": null, \"eyelashes\": \"n2\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m8\", \"headwear\": \"rogue-hood\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "4160a2c87ddd81f7e3ffae778137e459bc6c6d0cce3f735541407b4c4ff5e525"
+   "sha256": "168063ea78f7ef03a3200ed08fc47b34c678d211cd1eb93b20e9402f2903adfe"
   },
   {
    "file": "assets/characters/villager_24.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1024, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"m4\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "5b6380cf000a4589ab0e4738e2d8885783bca69df80e0606c13ce321be739155"
+   "sha256": "ae2a17ed952b38e91f4004841a70ab8938bbfc0e03024c726c0b78a0030c5d07"
   },
   {
    "file": "assets/characters/villager_25.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1025, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"f1\", \"headwear\": \"hunter-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "907ddf1cc187aa9f7ec5c853e9a49cd361b95663376bbb9c9cc7b7c44056a975"
+   "sha256": "30b5a2aae1101792e91306322f159c2a908ed7fa1585569db570b1812c7a5a96"
   },
   {
    "file": "assets/characters/villager_26.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1026, human, natural skin, headwear per kind: {\"clothes\": \"ronin\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m4\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "11654520c8c296dd108c3bc4d45f93618bf45af042dda9c14f8c2410339db703"
+   "sha256": "bfb4e33058887cef1ab351e8f9ccf4937f6dec696d90d3c85b247955847c6910"
   },
   {
    "file": "assets/characters/villager_27.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1027, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"n3\", \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"f2\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "9bff62684f62af5b6874639a4a46e5ed2b01900e70580c4c15feeb50a0c8b853"
+   "sha256": "5098c1603641d12ee371eeb7c335de8dc36f793f6899237d17407eed78db6c71"
   },
   {
    "file": "assets/characters/villager_28.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1028, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": \"m2\", \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"m6\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "e1cadb8e073b591fa410651ebab97980b18851e22642eb28724cab15c774c8fd"
+   "sha256": "d94470ffd154495dde6f16ae0b5537b16984db15bc7a193cbc5396785820de4f"
   },
   {
    "file": "assets/characters/villager_29.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1029, human, natural skin, headwear per kind: {\"clothes\": \"traveller\", \"ears-&-horns\": null, \"eyelashes\": \"n2\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "c7571f30d8b09fd49836eba22f2c15ccd2a8fc5eb5d2d225f23ce7b715fa7e8d"
+   "sha256": "ecb6563fd0f5aabc693647ff348af416e3c7e83a4b88004d59b763516d089483"
   },
   {
    "file": "assets/characters/villager_30.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1030, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"m3\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "defc386b1b063835a1d3cc99c022fb79ef0b12bfab0a477cc5f329bbeca9fe7b"
+   "sha256": "5da2da01219fe661ed98e3dd7030c376e7b586cd9b1ca4a25219fbde5a6007b6"
   },
   {
    "file": "assets/characters/villager_31.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1031, human, natural skin, headwear per kind: {\"clothes\": \"yabusame\", \"ears-&-horns\": null, \"eyelashes\": \"n1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m6\", \"headwear\": \"ranger-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "921ac333cf43497a16b43dc1762cc2ce9a9765ca5d2994eadc8fb118af01e1e3"
+   "sha256": "28a108b374994299469bb312da86a187b3af8a49a739912a7d3ffccbdf09456d"
   },
   {
    "file": "assets/characters/villager_32.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1032, human, natural skin, headwear per kind: {\"clothes\": \"yabusame\", \"ears-&-horns\": null, \"eyelashes\": \"n1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m7\", \"headwear\": \"traveller-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "c7a0d9c19cad88f135b6b24ceda4bee6793423eb73dbf996f8bdb5cd2c1adab0"
+   "sha256": "52145fa9be749361065cc71bbd7f3b21204c3af0eeffb71f3272cecc0e8fcbc2"
   },
   {
    "file": "assets/characters/villager_33.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1033, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"f4\", \"headwear\": \"traveller-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "92d0d47844648be54ff3d314eee2dfbb02c01dfa8344931ef7839a19a3593b5d"
+   "sha256": "d65b99747c2573ff27cfc7afedbdfde80116dbce660c4f54869c91b39bb62435"
   },
   {
    "file": "assets/characters/villager_34.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1034, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m7\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "f13b65d61944fd9da2d493c438c6f246ce7f773d794ebaa27278023007a93543"
+   "sha256": "5ce2110383c1075bbcdc57a3bb4752f1c3e032a431e92fdd19d3a3df477a5775"
   },
   {
    "file": "assets/characters/villager_35.png",
@@ -272,63 +272,63 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1036, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": \"f2\", \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m8\", \"headwear\": \"rogue-hood\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "0a83f15d1c1ebb454d7da766530b393abb46e2e4090cbb4b165b6d5e0b8ad3fa"
+   "sha256": "7f28835980ea43063c89f49703c65002397030103af734d760ec6330f8deb6ad"
   },
   {
    "file": "assets/characters/villager_37.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1037, human, natural skin, headwear per kind: {\"clothes\": \"traveller\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m4\", \"headwear\": \"villager-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "8e690dbdfd2ae57403ed9714f2c01c2f66459cbb7f0ef6c99eb62a9dff332a2b"
+   "sha256": "1efa776afb1f6916eac915670d3fa120a7887d307fb2912ef15def2b470165b9"
   },
   {
    "file": "assets/characters/villager_38.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1038, human, natural skin, headwear per kind: {\"clothes\": \"traveller\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f2\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "60daa90bc52f9d29d558585be1f2177775b763929bc9fc8f7fe73798166780f9"
+   "sha256": "8d76d678dfe811e2659f2b19a26cec20ea25cca570504c8cf1b8f043ee00f0ac"
   },
   {
    "file": "assets/characters/villager_39.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1039, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m7\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "f198bed4b73c216ecf9d5cad681c162e7ac6b2754f343a3d6d8be55451c25082"
+   "sha256": "2526af186aa368f39e9ad2826f3a9be44f91c51c4d9f20830fb88c5b9e5b4236"
   },
   {
    "file": "assets/characters/villager_40.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1040, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"f3\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "e38dd6f590f7182c6c723ce029356f443f3ff25b425b7cfa46deb744f524bd3f"
+   "sha256": "43d5599bf5fc2496ae5c04e286fcfd6a5a932ff6d340b6fbd657e04f6023984f"
   },
   {
    "file": "assets/characters/villager_41.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1041, human, natural skin, headwear per kind: {\"clothes\": \"samurai\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f3\", \"headwear\": \"villager-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "0e88ae3371c488a39fb1af350763f828c283688d8457d4a5ff74f037c8f3b71e"
+   "sha256": "436d31e18cf13bfb74e92febd0115e6b5c569686664b6055f1259670ca68203b"
   },
   {
    "file": "assets/characters/villager_42.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1042, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": \"m2\", \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"f3\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "742730b2909d90ab6f6854075ccc0eb74d8ae4f2655e2b82bb5bc140767b42a4"
+   "sha256": "4c9927c740b430e5ca6da745ee2b5444c335233ce5666c4b75e9c9338a241a7e"
   },
   {
    "file": "assets/characters/villager_43.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1043, human, natural skin, headwear per kind: {\"clothes\": \"ninja\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m2\", \"headwear\": \"ranger-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "531213ef12176be14522430df72c669a3ed5c409659fd1c0ffa37007278d7161"
+   "sha256": "07c4cda3c90fc9f168de2925a33db303f57944f1a0e89ccdea30fe699c55536c"
   },
   {
    "file": "assets/characters/villager_44.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1044, human, natural skin, headwear per kind: {\"clothes\": \"ronin\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"m2\", \"headwear\": \"villager-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "9b1bfeaf8c6f613ce9b0bea2a81c2be3d92d7741b1727ad3cdf290d7abccf76d"
+   "sha256": "f71a63596a84308daa8bd0ba678d8a83b8347df2d0bfcc9814d4bb7d189dd854"
   },
   {
    "file": "assets/characters/villager_45.png",
@@ -342,7 +342,7 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 1046, human, natural skin, headwear per kind: {\"clothes\": \"traveller\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"m6\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "b371aef47f3436811871684a2c7924b49f172305617e1eade3d51b0edcd0e47b"
+   "sha256": "910eeb4772703c3ce874274d516fd13bc0fbca82672e7a9523474cf370c3f1e5"
   },
   {
    "file": "assets/characters/villager_47.png",
@@ -356,28 +356,28 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 2000, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"f1\", \"headwear\": \"assassin-bandana\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "d604e8b1277ab1f6fc96e62c3f1863ca273ca2928b1edbf68ae474f1114f424b"
+   "sha256": "d21f548f4069f936c8aab688a390c70b71b3db3402308158ce0c1c8f936cc82f"
   },
   {
    "file": "assets/characters/bandit_01.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 2001, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f1\", \"headwear\": \"thief-bandana\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "a938ffb9fe61200e822b54d76d814a5dfeb66cd5cde7b21deb312d6c359f11f8"
+   "sha256": "db85c2f54920aeca4a22b12d3489344f7743bbcbf25cb026298fe478979c04ea"
   },
   {
    "file": "assets/characters/bandit_02.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 2002, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": \"f2\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f1\", \"headwear\": \"assassin-bandana\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "6fa9dbbb9514f65e12e911dbe90e9563a8f6a53f20382c22f504a3dc241443f5"
+   "sha256": "66952beddb71f847ebad261037fd443de9d9a9c1dcde091ac820309ef135b83d"
   },
   {
    "file": "assets/characters/bandit_03.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 2003, human, natural skin, headwear per kind: {\"clothes\": \"ronin\", \"ears-&-horns\": null, \"eyelashes\": \"m2\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m8\", \"headwear\": \"assassin-bandana\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "a8d97bd96b801a1d6f4f953f6194a5ccdab007eebe8041454285374d2cda2280"
+   "sha256": "7bf1d4b57a7fe41b102982c67fde32e07e4a8c7942cba26a0250557f45cdc7f8"
   },
   {
    "file": "assets/characters/bandit_04.png",
@@ -391,7 +391,7 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 2005, human, natural skin, headwear per kind: {\"clothes\": \"metal-armour\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f1\", \"headwear\": \"assassin-bandana\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "b36d2826f3c50a2b1a0f4054d05070b1840882dafb8ee00f965ac2d23a8cdf95"
+   "sha256": "0629219c56f582e2ada2a4b6d35a8312275f3c2354acf73b06a007d002dbfdb6"
   },
   {
    "file": "assets/characters/player_00.png",
@@ -405,21 +405,21 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 3001, human, natural skin, headwear per kind: {\"clothes\": \"yabusame\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m8\", \"headwear\": \"villager-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"metal-boots\"}",
-   "sha256": "7f3f81160c1de3ecf05cf0e1a48b692472a77f82e49059bdef309b0db43a867c"
+   "sha256": "d03a7e9c5b12e040c04f568dad209363bd3a0b93d21cd7e29aa4841cca82018e"
   },
   {
    "file": "assets/characters/player_02.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 3002, human, natural skin, headwear per kind: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": \"metal-gloves\", \"hair\": \"m8\", \"headwear\": \"villager-straw-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "7fccb363066821b21a20b5bf76f2d5837f5f01da783101cec8760e2ce1f1db14"
+   "sha256": "d7edc2850f55b8ce9705e1ac8b832e4c74c0fba296885d0a9f0f836a30efe712"
   },
   {
    "file": "assets/characters/player_03.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 3003, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m4\", \"headwear\": \"ranger-hat\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "a6852bad2c7900254ff6560a0e75c71d2ee60f3a1d0ac47c33af61914265f71b"
+   "sha256": "e478d7660276fa56802742882b88b29c82b553c8d4e54e1956e16f28e7a3284b"
   },
   {
    "file": "assets/characters/guard_00.png",
@@ -447,14 +447,14 @@
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 4003, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": null, \"facial-hair\": null, \"gloves\": null, \"hair\": \"f4\", \"headwear\": \"soldier-helm\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
-   "sha256": "e542b8f8f270a21aae21cfb7059f3830000830176ccbe197b7ef14bce5a55bfb"
+   "sha256": "11d8eb49db86805d429b908b540ac9d690b4569b22d4b49a1827af5c06c63913"
   },
   {
    "file": "assets/characters/guard_04.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 4004, human, natural skin, headwear per kind: {\"clothes\": \"ninja\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": \"leather-gloves\", \"hair\": \"m8\", \"headwear\": \"novice-helm\", \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
-   "sha256": "f2440a611e68772e607ae3e38665cd79d7ce33c3c4ce180e677516cf59c3ee1c"
+   "sha256": "2be6c4a8282761b5544eaa73f662ffae269232bd6cb8a8f116c3f231f4bec7ee"
   },
   {
    "file": "assets/characters/guard_05.png",
@@ -462,6 +462,118 @@
    "member": "assets/* layers per recipe",
    "transform": "tools/puny_chargen.py recipe seed 4005, human, natural skin, headwear per kind: {\"clothes\": \"musketeer\", \"ears-&-horns\": null, \"eyelashes\": \"f2\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m8\", \"headwear\": \"knight-helm\", \"jaw\": null, \"race\": \"human\", \"shoes\": null}",
    "sha256": "68ededa4775a32bde1f557bf7c098cdf1cf4dcc4912c2cc42352b74b2ed8549a"
+  },
+  {
+   "file": "assets/characters/player_m0_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5000, male, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m2\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "f858107b2c0a9581ee0a59bb3011dedef156e2fc80ae2b1f9da9225ef1905afe"
+  },
+  {
+   "file": "assets/characters/player_m0_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5001, male, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m2\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "6c63c58a79340dcf4b0d9d9239b2ccb7b2ca68da4b3fed3fd06210f1ee6576d9"
+  },
+  {
+   "file": "assets/characters/player_m1_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5002, male, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": \"beard1\", \"gloves\": null, \"hair\": \"m5\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "0cc008c3d44973e836d41c486aa8f8e28ece766ae98e5dfc8db4413ac7097478"
+  },
+  {
+   "file": "assets/characters/player_m1_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5003, male, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": \"beard1\", \"gloves\": null, \"hair\": \"m5\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "18f01418d6e7898142014698a25664e53fd9d26ada350bc8e353cef280c2ee8c"
+  },
+  {
+   "file": "assets/characters/player_m2_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5004, male, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": \"mustache\", \"gloves\": null, \"hair\": \"m7\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "427baab413c9cdc1d5c6948be1b08274faa9130dcdad75d0f3a69422a289d2da"
+  },
+  {
+   "file": "assets/characters/player_m2_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5005, male, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": \"mustache\", \"gloves\": null, \"hair\": \"m7\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "8f1e2b803df3c6c34e73e21dbf0ccbbd96b9a801cffd4e96d7a296fd8eba9037"
+  },
+  {
+   "file": "assets/characters/player_m3_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5006, male, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m9\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "937b3ff809c07410295223d066a02d165697da73dfc07eaeb20c926e6c8e1267"
+  },
+  {
+   "file": "assets/characters/player_m3_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5007, male, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"m1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"m9\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "4aa92ffbac8b2af2012b6d68282c14f5bc7b05ede6ca1904eddbf8df68ab6cec"
+  },
+  {
+   "file": "assets/characters/player_f0_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5008, female, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "0931cce08de5b7f5413f19568dfaabea023eb9aaa866e619ec142db17e4c7513"
+  },
+  {
+   "file": "assets/characters/player_f0_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5009, female, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f1\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "7fed3b4690ae8d000171eb9e7c27d2ea9b0eae2e8a185987e95d042a235ca8d9"
+  },
+  {
+   "file": "assets/characters/player_f1_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5010, female, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f2\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "932ed681b6abf9879d48b964e1a3090ffa4266a1a1cbd78d79a3155dca338d7e"
+  },
+  {
+   "file": "assets/characters/player_f1_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5011, female, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f2\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "7a7c4bd5c94c2ddb5a66f686f9aab74f9d05c83b16bfb84e0517ba8ba101adcc"
+  },
+  {
+   "file": "assets/characters/player_f2_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5012, female, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f3\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "f0b37b91de3bf78ad832950e18334344212ead7f1d03af8c77edb41944c50e24"
+  },
+  {
+   "file": "assets/characters/player_f2_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5013, female, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f3\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "ae3b39e5b90a4cfda4ee2f6df93a2613f5884bcf6487fda2261cbed7ce405729"
+  },
+  {
+   "file": "assets/characters/player_f3_basic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5014, female, basic clothes: {\"clothes\": \"basic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f4\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "f1cc881d1945dc9e6ee686e103dc0ce191c14fe1f08f3e77ab84d44a7d673c35"
+  },
+  {
+   "file": "assets/characters/player_f3_tunic.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/* layers per recipe",
+   "transform": "tools/puny_chargen.py recipe seed 5015, female, tunic clothes: {\"clothes\": \"tunic\", \"ears-&-horns\": null, \"eyelashes\": \"f1\", \"facial-hair\": null, \"gloves\": null, \"hair\": \"f4\", \"headwear\": null, \"jaw\": null, \"race\": \"human\", \"shoes\": \"leather-boots\"}",
+   "sha256": "0e3505a970295bc2047c53b5e51ae371337bdaa39d4d776daf6e480766122deb"
   },
   {
    "file": "assets/icons/ale.png",
@@ -721,6 +833,426 @@
    "member": "full version/animals/sheep animation.png",
    "transform": "copied unchanged",
    "sha256": "aa423f2e063ba97e7c526ff0d269ccf7c0ba3eb2a9cce7ea7212e7707c365b0c"
+  },
+  {
+   "file": "assets/icons/bread.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "cell (2,3), Cozy Farm's butter block, used as a placeholder loaf",
+   "sha256": "fb8164b7f2d526cfb5c6c2a08fc47ad78e755cd530ca47aab63d2cf9af60605f"
+  },
+  {
+   "file": "assets/icons/apple.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "cell (0,2), apple",
+   "sha256": "5baf90ba8d1a0029bed32c2bac034e8298c28bfb808672797cc3f53a03be270f"
+  },
+  {
+   "file": "assets/icons/rotten_apple.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "cell (0,2), apple, tinted brown 55% (rotten)",
+   "sha256": "3e7ffae44a2faa8c6f6984ee3d4a824a797698ff99b5708078d0f1d9849f5bcb"
+  },
+  {
+   "file": "assets/icons/plain_clothes.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "cell (4,5), white cloth",
+   "sha256": "f9d6863a756a9c00ad11a68e0e73f8b2a23b748f58355a3e09b4d9c4ef1efa17"
+  },
+  {
+   "file": "assets/icons/rusty_sword.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Sword-01.png",
+   "transform": "tinted rust-brown 45%",
+   "sha256": "bb05513e37c5677dd867bc25db49f46d91abdbbfb09dd6e34da9931ab5981154"
+  },
+  {
+   "file": "assets/icons/rusty_pickaxe.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Pickaxe-02.png",
+   "transform": "tinted rust-brown 45%",
+   "sha256": "0511a3466b894899a4333b12f38fba90cc3ad1ca734d798f46681625f69941c7"
+  },
+  {
+   "file": "assets/fx/blood_0.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat00.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "8cf07a8d5151952f27db02e29b616aac1857631262c6fe85b50eab3ab764755e"
+  },
+  {
+   "file": "assets/fx/blood_1.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat04.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "3ad1adf9c63dc662c1e8cabb5e05f6eb29f958c3c43fde0af345e8f34828af99"
+  },
+  {
+   "file": "assets/fx/blood_2.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat09.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "546b5f9e304c0f699e5562b4cc82a31d7e2366fd864ef285fd3946d461bd6d13"
+  },
+  {
+   "file": "assets/fx/blood_3.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat13.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "ea0c01bdb398f475f53cf6ddb658d3c7f15635ae9b086393dcb337a6ae7afa72"
+  },
+  {
+   "file": "assets/fx/blood_4.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat17.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "e50660d9ad35f2dc7c8fb77c9a467daec119b53b0b7b1259901dea239671871f"
+  },
+  {
+   "file": "assets/fx/blood_5.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat21.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "a02f18602b7a7e3dab9cd64dff3da0db8839a1b0ba96a9929df8ffb941751817"
+  },
+  {
+   "file": "assets/fx/blood_6.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat26.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "6b290d2c0e00435cdc80f1ecb816b00bdfe0dc520992496c47da0d17f9baf247"
+  },
+  {
+   "file": "assets/fx/blood_7.png",
+   "source": "kenney_splatpack.zip",
+   "member": "PNG/Default (256px)/splat31.png",
+   "transform": "resized to 16 px, alpha cut at 50%, dark red with a darker edge",
+   "sha256": "5412c67dc0e17b260984cdf1fd324d23975aafd4ba4929c3ebfab166e0799861"
+  },
+  {
+   "file": "assets/icon/icon_192.png",
+   "source": "My_Medieval_Life_Icon_Pack.zip",
+   "member": "My_Medieval_Life_192x192.png",
+   "transform": "copied unchanged",
+   "sha256": "3510dd62037356dd7dbd838898518360f8832cf516fa33518642a4758cd0e10a"
+  },
+  {
+   "file": "assets/icon/icon_432.png",
+   "source": "My_Medieval_Life_Icon_Pack.zip",
+   "member": "My_Medieval_Life_432x432.png",
+   "transform": "copied unchanged",
+   "sha256": "4f03979b16ecd34416f8cc833ed1e82273b855d54a8f331efea6c113d58034b1"
+  },
+  {
+   "file": "assets/icon/icon_512.png",
+   "source": "My_Medieval_Life_Icon_Pack.zip",
+   "member": "My_Medieval_Life_512x512.png",
+   "transform": "copied unchanged",
+   "sha256": "8ef16364d461c381809039dbf0972277ba8786fa0a6c57a2cfa83a703abfcb6a"
+  },
+  {
+   "file": "assets/icon/icon_background_432.png",
+   "source": "",
+   "member": "",
+   "transform": "generated: solid dark brown 432 px background for the Android adaptive icon",
+   "sha256": "7c1abf9d4a069ee1a90b13a26ae1c21e194ec8d6a01b6f3dc531ceaaededc164"
+  },
+  {
+   "file": "assets/ui/attack.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "ab19a5e722a9731cc1183023ca3206711daa7b8738049a9fefc2cb01a0d8aa2c"
+  },
+  {
+   "file": "assets/ui/back.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 2, column 1; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "e62c9dc6291763bac21a9704365c90d413ce2c987e2b245bb57096c0b84a4f30"
+  },
+  {
+   "file": "assets/ui/close.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 2, column 5; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "46851ea4ea208452fbd3f4f1e163428d640ed6d64c540fdd92bb311e8649d915"
+  },
+  {
+   "file": "assets/ui/coins.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "4d9b067f0305b9cede00b2152ebf5c81b5e488f994a1b81e2330bab7e77e1ef5"
+  },
+  {
+   "file": "assets/ui/fire.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 4, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "3104770d453da4dfb2c124b543f5757c59894f52bce0e981ea7cd1a5d081f2b0"
+  },
+  {
+   "file": "assets/ui/health.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 0, column 3; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "63e3094960f5f6d104534f3958d07d41bbe973359f33874f66a755fc4b08a47e"
+  },
+  {
+   "file": "assets/ui/home.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 2, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "2714e08f4f4db88d7b0a23b55a68ce3a9d0c00c4554c490c725d1c4ac39c11be"
+  },
+  {
+   "file": "assets/ui/hunger.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 6, column 5; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "9025d07769e7e25c453f579aff68b1b879dfdf84a99dacfab777c5d7caea232e"
+  },
+  {
+   "file": "assets/ui/menu.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "6ef24c831222bcc62ae1c225dc86c2e9c87f71d3510009a5beb1dbb8c8d9e158"
+  },
+  {
+   "file": "assets/ui/pack.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 3, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "76b3539086bd0b615d872ca002e641140e81d905e6511939817f3093c3447e97"
+  },
+  {
+   "file": "assets/ui/play.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 6; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "68ca4dfea93aaf2affcf176b9c8a64f89742f4b3debe58f284acf3d667495dab"
+  },
+  {
+   "file": "assets/ui/save.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 0, column 5; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "01adebadddeb87ab97f5318fea95bcfbcca5f6b1b28f049e10369bdd63900621"
+  },
+  {
+   "file": "assets/ui/scroll.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 9, column 6; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "8b1937d081abe6c7968493880f5391d3b27f1f585ee2005d4e35646eaf9fd8e8"
+  },
+  {
+   "file": "assets/ui/settings.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 5, column 2; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "1c60be7f12b7cb9007c3020e97f407b990df318f7f3937a965971b182ebec3c4"
+  },
+  {
+   "file": "assets/ui/skills.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "d135f51d03479e345869c618858e2ca2a82225cac52e355a3aca5a59a6341a40"
+  },
+  {
+   "file": "assets/ui/stamina.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "910e6c9806071dd0c20c8b12a3b0eaea40fcd523cebd9910ee6eb3f60f4b5b64"
+  },
+  {
+   "file": "assets/ui/trade.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 4, column 1; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "c220019093d8a9958ef0db8e1f4c677a9e7429c4b77106a6587987ac484ffa51"
+  },
+  {
+   "file": "assets/ui/use.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 7, column 8; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "24f034219aac61c66367984ea94d743df7e5d4d4f6eb0ea624a25c9d2d8eadd1"
+  },
+  {
+   "file": "assets/ui/button.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "Flat_game_UI_set_3.ai",
+   "transform": "rasterised at 100 dpi with pdftoppm; a 40 px square from a blank tile of the dark LEVELS window (the pack's button colour), recoloured to wood brown (111, 74, 44)",
+   "sha256": "5d50e5678aed025b80534c89cf15d6aa1e7b9119eb0ea8653562033db7fb362f"
+  },
+  {
+   "file": "assets/prompts/keyboard_a.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_a.png",
+   "transform": "copied unchanged",
+   "sha256": "1c0cd66c5e5874dc58178101079711092fad41afa61ba159cd8e76049efe2be0"
+  },
+  {
+   "file": "assets/prompts/keyboard_d.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_d.png",
+   "transform": "copied unchanged",
+   "sha256": "9d0425030c1abe92de4a80d679e08653e23b81508d626e95b152bff2e2b6f425"
+  },
+  {
+   "file": "assets/prompts/keyboard_e.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_e.png",
+   "transform": "copied unchanged",
+   "sha256": "6299bcd537dee8496be6c86e9fc35126e0df8319bd9e4c94e4806e8b1b61c72d"
+  },
+  {
+   "file": "assets/prompts/keyboard_escape.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_escape.png",
+   "transform": "copied unchanged",
+   "sha256": "9b85675aa9a3c6edcfb94da7314aa3a77cf77f9934b6c645059577cf901a1bde"
+  },
+  {
+   "file": "assets/prompts/keyboard_f.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_f.png",
+   "transform": "copied unchanged",
+   "sha256": "f674c5618bd569477fbd66cb718c836199e9c49ed4697b404458dc245e04a89d"
+  },
+  {
+   "file": "assets/prompts/keyboard_i.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_i.png",
+   "transform": "copied unchanged",
+   "sha256": "ca98dc72e77067cc170f3e11a59bd6a506402813d4ed4a8cc592b38936d421dd"
+  },
+  {
+   "file": "assets/prompts/keyboard_l.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_l.png",
+   "transform": "copied unchanged",
+   "sha256": "297216214ef305455161e20d61e3c698b784565b42232469a3091f9ae75ddac4"
+  },
+  {
+   "file": "assets/prompts/keyboard_s.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_s.png",
+   "transform": "copied unchanged",
+   "sha256": "b504d48f2b2452bc895fc03a243e83564ad01d7e9b6fdb11f044e85e6c3b9ff2"
+  },
+  {
+   "file": "assets/prompts/keyboard_space.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_space.png",
+   "transform": "copied unchanged",
+   "sha256": "7f25e4d93c3589ef947f03dd3e76f9b7cc17479a0b2e0040cf150be17279c6f4"
+  },
+  {
+   "file": "assets/prompts/keyboard_w.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_w.png",
+   "transform": "copied unchanged",
+   "sha256": "80afe8ada6813562b89433b7728222e5cf79076e07edb521144da74fa49bcb6f"
+  },
+  {
+   "file": "assets/prompts/mouse_left.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/mouse_left.png",
+   "transform": "copied unchanged",
+   "sha256": "b008b3981c39400991002b597992216eab13761dcd3e34676f45189e86d7d94c"
+  },
+  {
+   "file": "assets/prompts/mouse_right.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/mouse_right.png",
+   "transform": "copied unchanged",
+   "sha256": "2bb942eb636491e1249f6b85f576dafb0eeae3d3a5b8d7a60711ccd8d73f9c2b"
+  },
+  {
+   "file": "assets/prompts/mouse_scroll.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/mouse_scroll.png",
+   "transform": "copied unchanged",
+   "sha256": "a67365a6a3c625a7728be4bbb9223a37c3d28084cfc7873180766ac921f398d0"
+  },
+  {
+   "file": "assets/prompts/touch_finger_one.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Touch/Double/touch_finger_one.png",
+   "transform": "copied unchanged",
+   "sha256": "8c15dc271eb356c10fc5f5319d8b613b33dec5a88a700952af62c3ec7a2c105c"
+  },
+  {
+   "file": "assets/prompts/touch_tap.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Touch/Double/touch_tap.png",
+   "transform": "copied unchanged",
+   "sha256": "917768452844406b0c95c62dd82fdf4c15b3248a049dbe39946e5851e7ed3104"
+  },
+  {
+   "file": "assets/prompts/touch_zoom_in.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Touch/Double/touch_zoom_in.png",
+   "transform": "copied unchanged",
+   "sha256": "db38dd530fa76b179120af4110334d4d50cd1e5d45b1233d9650fb9a1c41f6a8"
+  },
+  {
+   "file": "assets/prompts/xbox_button_a.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_button_a.png",
+   "transform": "copied unchanged",
+   "sha256": "8cb54cb79449712f2ef7d3c8344197378eb8ec2c31070d69266c5961223a077a"
+  },
+  {
+   "file": "assets/prompts/xbox_button_b.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_button_b.png",
+   "transform": "copied unchanged",
+   "sha256": "8fb40910582d1ebcdef9471aecef72ae5afad807a6232914f1df80c0bd338efd"
+  },
+  {
+   "file": "assets/prompts/xbox_button_menu.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_button_menu.png",
+   "transform": "copied unchanged",
+   "sha256": "b0854e263e6b95b66f981b761f098f08bbea301540b79bea108d1f7ecb447ad7"
+  },
+  {
+   "file": "assets/prompts/xbox_button_view.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_button_view.png",
+   "transform": "copied unchanged",
+   "sha256": "9fc708afe796b96ff0f4b8840672354ee03cdd68eb1874dd9c3a50d5c6947477"
+  },
+  {
+   "file": "assets/prompts/xbox_button_x.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_button_x.png",
+   "transform": "copied unchanged",
+   "sha256": "f7e01f4d530e4294fb3c79c51eaeb97229f03172678ca434465562245ff75c92"
+  },
+  {
+   "file": "assets/prompts/xbox_button_y.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_button_y.png",
+   "transform": "copied unchanged",
+   "sha256": "00d4b498e1aaa2c6712eaa0f350d7f1cf37a0423b1680e1e0e4f358dd777bd05"
+  },
+  {
+   "file": "assets/prompts/xbox_stick_l.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_stick_l.png",
+   "transform": "copied unchanged",
+   "sha256": "68edebe98e5efdbfc800154bcc523e67c6b6812df39ee45cf5a6362d6d670861"
   }
  ]
 }

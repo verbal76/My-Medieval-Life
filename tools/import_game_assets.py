@@ -13,6 +13,12 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/tiles/cozyfarm-tiles.png             CozyFarm_full_version.zip (fences, gates)
     game/assets/animals/<species>.png                CozyFarm_full_version.zip (livestock, bunnies) and
                                                      PunyMonsters.zip (boars)
+    game/assets/characters/player_<s><n>_<outfit>.png player looks for character creation (listed in
+                                                     game/data/appearances.json)
+    game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
+    game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
+    game/assets/ui/<name>.png                        Flat Game UI Icon Pack/ (icon tiles, the button tile)
+    game/assets/prompts/<name>.png                   kenney_input-prompts_1.5.zip (keys, pad buttons, touch)
     game/assets/PROVENANCE.json                      source, path and transformation of every file
 
 Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E, NE, N, NW, W,
@@ -21,12 +27,17 @@ SW), columns as listed in tools/puny_chargen.py ANIMS.
 Cozy Farm animal sheets are 4 frames x 5 rows (down, up, left, right, sleep), square frames of the size
 in the pack's info.txt; Puny Monsters sheets are 12 x 8 frames of 32 px in the Puny direction order.
 
+The flat UI pack is Illustrator files; they are rasterised with pdftoppm (poppler-utils), which
+must be installed.
+
 Usage:
     python3 tools/import_game_assets.py
 """
 import hashlib
 import json
 import random
+import subprocess
+import tempfile
 
 from assetzip import AssetZip, REPO
 import puny_chargen
@@ -36,6 +47,30 @@ OUT = REPO / "game" / "assets"
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
 ICON_ZIP = "16x16 Survival RPG Icons.zip"
 COZY_ZIP = "CozyFarm_full_version.zip"
+SPLAT_ZIP = "kenney_splatpack.zip"
+APP_ICON_ZIP = "My_Medieval_Life_Icon_Pack.zip"
+BLOOD_SPLATS = [0, 4, 9, 13, 17, 21, 26, 31]   # varied shapes from the 36
+UI_PACK = "Flat Game UI Icon Pack"
+# icon tiles used by the game: name -> (file, row, column) in the pack's 9-column grids
+UI_ICONS = {
+    "use": ("icons_set_2.ai", 7, 8), "attack": ("icons_set_2.ai", 6, 8), "fire": ("icons_set_2.ai", 4, 0),
+    "pack": ("icons_set_2.ai", 3, 0), "skills": ("icons_set_1.ai", 7, 8), "menu": ("icons_set_1.ai", 1, 8),
+    "close": ("icons_set_1.ai", 2, 5), "settings": ("icons_set_1.ai", 5, 2), "save": ("icons_set_1.ai", 0, 5),
+    "back": ("icons_set_1.ai", 2, 1), "health": ("icons_set_2.ai", 0, 3), "hunger": ("icons_set_2.ai", 6, 5),
+    "stamina": ("icons_set_2.ai", 1, 0), "coins": ("icons_set_2.ai", 6, 0), "home": ("icons_set_1.ai", 2, 0),
+    "play": ("icons_set_1.ai", 1, 6), "scroll": ("icons_set_2.ai", 9, 6), "trade": ("icons_set_1.ai", 4, 1),
+}
+UI_TILE = 128          # icon tiles are saved at this size
+UI_WOOD = (111, 74, 44)  # the pack's navy recoloured to a wood brown (owner, 2026-10-18)
+PROMPT_ZIP = "kenney_input-prompts_1.5.zip"
+# input prompt icons shown with prompts and on the controls list: name -> member (128 px "Double" set)
+PROMPTS = {name: f"Keyboard & Mouse/Double/{name}.png" for name in
+           ["keyboard_e", "keyboard_f", "keyboard_i", "keyboard_l", "keyboard_space", "keyboard_escape",
+            "keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d", "mouse_left", "mouse_right", "mouse_scroll"]}
+PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
+                ["xbox_button_a", "xbox_button_b", "xbox_button_x", "xbox_button_y", "xbox_button_view",
+                 "xbox_button_menu", "xbox_stick_l"]})
+PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in"]})
 MONSTER_ZIP = "PunyMonsters.zip"
 # game species -> (archive, member)
 ANIMALS = {
@@ -65,6 +100,9 @@ ICONS = {
 }
 # Medieval-village look: natural skin tones (rows 0-6 of the skin ramp), no horns, and headwear
 # from a short list per kind (None = bare head).
+# natural hair colours: rows of the generator's hair ramp (auburn, dark brown, black, grey, white,
+# blonde); the other rows are pure reds, greens and blues
+NATURAL_HAIR = [0, 1, 2, 3, 4, 6]
 HATS = {
     "villager": [None] * 7 + ["villager-straw-hat", "rogue-hood", "ranger-hat", "hunter-hat", "traveller-straw-hat"],
     "player": [None, "villager-straw-hat", "ranger-hat"],
@@ -75,6 +113,68 @@ HATS = {
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _rasterise(ai_file, dpi):
+    """Render the first page of an Illustrator (PDF-compatible) file to an RGB image."""
+    from PIL import Image
+    with tempfile.TemporaryDirectory() as tmp:
+        subprocess.run(["pdftoppm", "-r", str(dpi), "-png", "-f", "1", "-l", "1", str(REPO / UI_PACK / ai_file),
+                        tmp + "/page"], check=True)
+        Image.MAX_IMAGE_PIXELS = None
+        return Image.open(tmp + "/page-1.png").convert("RGB")
+
+
+def _bands(counts, threshold):
+    out, start = [], None
+    for i, c in enumerate(list(counts) + [0]):
+        if c > threshold and start is None:
+            start = i
+        elif c <= threshold and start is not None:
+            out.append((start, i))
+            start = None
+    return out
+
+
+def _import_ui(record):
+    """Icon tiles from the flat UI pack (white glyphs on rounded navy squares), cut from the
+    9-column grids with the page's grey background made transparent, and set 3's plain slate
+    button square, which every button in the game is drawn with."""
+    import numpy as np
+    from PIL import Image
+    ui = OUT / "ui"
+    ui.mkdir(parents=True, exist_ok=True)
+    pages = {}
+    for name, (ai_file, row, col) in sorted(UI_ICONS.items()):
+        if ai_file not in pages:
+            page = np.asarray(_rasterise(ai_file, 150)).astype(np.float64)
+            bg = page[5, 5]
+            mask = np.abs(page - bg).sum(axis=2) > 30
+            pages[ai_file] = (page, bg, _bands(mask.sum(axis=1), 50), _bands(mask.sum(axis=0), 50))
+        page, bg, rows, cols = pages[ai_file]
+        (y0, y1), (x0, x1) = rows[row], cols[col]
+        tile = page[y0:y1, x0:x1]
+        navy = tile[tile.shape[0] // 2, 4]
+        # alpha from how far a pixel is from the background towards the tile colour (soft corners)
+        alpha = np.clip(np.abs(tile - bg).sum(axis=2) / np.abs(navy - bg).sum(), 0.0, 1.0)
+        rgb = np.where(alpha[..., None] < 1.0, navy, tile)
+        # recolour: how far each pixel is from the navy towards the white glyph, applied to wood brown
+        t = np.clip((rgb.mean(axis=2) - navy.mean()) / (255.0 - navy.mean()), 0.0, 1.0)[..., None]
+        wood = np.array(UI_WOOD, dtype=np.float64)
+        rgb = wood + t * (255.0 - wood)
+        img = Image.fromarray(np.dstack([rgb, alpha * 255.0]).round().astype(np.uint8), "RGBA")
+        dest = ui / f"{name}.png"
+        img.resize((UI_TILE, UI_TILE), Image.LANCZOS).save(dest)
+        record(dest, UI_PACK, ai_file, f"rasterised at 150 dpi with pdftoppm; grid row {row}, column {col}; "
+               f"background made transparent; navy recoloured to wood brown {UI_WOOD}; resized to {UI_TILE} px")
+    # set 3's slate button colour, as a plain square cut from a blank level tile of the dark scheme
+    page = _rasterise("Flat_game_UI_set_3.ai", 100)
+    button = page.crop((205, 655, 245, 695))
+    button = Image.new("RGB", button.size, UI_WOOD) if len(button.getcolors()) == 1 else button
+    dest = ui / "button.png"
+    button.save(dest)
+    record(dest, UI_PACK, "Flat_game_UI_set_3.ai", "rasterised at 100 dpi with pdftoppm; a 40 px square "
+           f"from a blank tile of the dark LEVELS window (the pack's button colour), recoloured to wood brown {UI_WOOD}")
 
 
 def main():
@@ -107,12 +207,36 @@ def main():
             recipe["picks"]["race"] = "human"
             recipe["picks"]["headwear"] = rng.choice(HATS[kind])
             recipe["swatches"]["skin"] = rng.randrange(7)
+            recipe["swatches"]["hair"] = recipe["swatches"]["facial_hair"] = rng.choice(NATURAL_HAIR[:4] + NATURAL_HAIR[5:])
             img = style.render(recipe)
             dest = chars / f"{kind}_{i:02d}.png"
             img.save(dest)
             record(dest, zip_name, "assets/* layers per recipe",
                    f"tools/puny_chargen.py recipe seed {seed0 + i}, human, natural skin, headwear per kind: "
                    + json.dumps(recipe["picks"], sort_keys=True))
+    # player appearances for character creation: 4 faces per sex, each in plain clothes or a tunic
+    looks = []
+    faces = {"male": [("m2", None), ("m5", "beard1"), ("m7", "mustache"), ("m9", None)],
+             "female": [("f1", None), ("f2", None), ("f3", None), ("f4", None)]}
+    for sex, rows in faces.items():
+        for i, (hair, beard) in enumerate(rows):
+            for outfit in ("basic", "tunic"):
+                seed = 5000 + len(looks)
+                rng = random.Random(seed)
+                recipe = style.random_recipe(rng, {"ears-&-horns": 1.0})
+                recipe["picks"].update({"race": "human", "hair": hair, "facial-hair": beard, "headwear": None,
+                                        "eyelashes": ("f" if sex == "female" else "m") + "1", "jaw": None,
+                                        "clothes": outfit, "shoes": "leather-boots", "gloves": None})
+                recipe["swatches"]["skin"] = i * 2 % 7
+                recipe["swatches"]["hair"] = recipe["swatches"]["facial_hair"] = [1, 0, 2, 6][i]
+                img = style.render(recipe)
+                name = f"player_{sex[0]}{i}_{outfit}"
+                dest = chars / f"{name}.png"
+                img.save(dest)
+                record(dest, zip_name, "assets/* layers per recipe",
+                       f"tools/puny_chargen.py recipe seed {seed}, {sex}, {outfit} clothes: " + json.dumps(recipe["picks"], sort_keys=True))
+                looks.append({"id": name, "sex": sex, "face": i, "outfit": outfit, "sprite": f"res://assets/characters/{name}.png"})
+    (REPO / "game" / "data" / "appearances.json").write_text(json.dumps({"format": "mml-appearances/1", "looks": looks}, indent=1) + "\n")
     icons = OUT / "icons"
     icons.mkdir(parents=True, exist_ok=True)
     iz = AssetZip(ICON_ZIP)
@@ -130,6 +254,78 @@ def main():
         dest = animals / f"{species}.png"
         dest.write_bytes(AssetZip(zname).read(member))
         record(dest, zname, member, "copied unchanged")
+    # starter-kit icons from Cozy Farm's item sheet (16 px cells) and tinted copies of survival icons
+    from PIL import Image
+    import io
+    cozy_items = Image.open(io.BytesIO(AssetZip(COZY_ZIP).read("full version/ui/items.png"))).convert("RGBA")
+
+    def cell(col, row):
+        return cozy_items.crop((col * 16, row * 16, col * 16 + 16, row * 16 + 16))
+
+    def tint(img, rgb, amount):
+        out = img.copy()
+        px = out.load()
+        for y in range(out.height):
+            for x in range(out.width):
+                r, g, b_, a_ = px[x, y]
+                if a_:
+                    px[x, y] = (int(r + (rgb[0] - r) * amount), int(g + (rgb[1] - g) * amount), int(b_ + (rgb[2] - b_) * amount), a_)
+        return out
+
+    kit = {
+        "bread": (cell(2, 3), "full version/ui/items.png", "cell (2,3), Cozy Farm's butter block, used as a placeholder loaf"),
+        "apple": (cell(0, 2), "full version/ui/items.png", "cell (0,2), apple"),
+        "rotten_apple": (tint(cell(0, 2), (90, 70, 30), 0.55), "full version/ui/items.png", "cell (0,2), apple, tinted brown 55% (rotten)"),
+        "plain_clothes": (cell(4, 5), "full version/ui/items.png", "cell (4,5), white cloth"),
+    }
+    for item, (img, member, how) in kit.items():
+        dest = icons / f"{item}.png"
+        img.save(dest)
+        record(dest, COZY_ZIP, member, how)
+    for item, src in (("rusty_sword", "Tools/Sword-01"), ("rusty_pickaxe", "Tools/Pickaxe-02")):
+        member = f"16x16 Survival RPG Icons/{src}.png"
+        img = tint(Image.open(io.BytesIO(iz.read(member))).convert("RGBA"), (140, 70, 30), 0.45)
+        dest = icons / f"{item}.png"
+        img.save(dest)
+        record(dest, ICON_ZIP, member, "tinted rust-brown 45%")
+    # blood: Kenney splats shrunk to 16 px pixel art (alpha cut at half) and tinted dark red
+    fx = OUT / "fx"
+    fx.mkdir(parents=True, exist_ok=True)
+    splat_zip = AssetZip(SPLAT_ZIP)
+    for i, n in enumerate(BLOOD_SPLATS):
+        member = f"PNG/Default (256px)/splat{n:02d}.png"
+        src = Image.open(io.BytesIO(splat_zip.read(member))).convert("RGBA").resize((16, 16), Image.LANCZOS)
+        out = Image.new("RGBA", (16, 16))
+        for y in range(16):
+            for x in range(16):
+                if src.getpixel((x, y))[3] >= 128:
+                    inner = all(0 <= x + dx < 16 and 0 <= y + dy < 16 and src.getpixel((x + dx, y + dy))[3] >= 128
+                                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+                    out.putpixel((x, y), (112, 14, 16, 255) if inner else (78, 8, 12, 255))
+        dest = fx / f"blood_{i}.png"
+        out.save(dest)
+        record(dest, SPLAT_ZIP, member, "resized to 16 px, alpha cut at 50%, dark red with a darker edge")
+    # the app icon: the owner's pictures, copied unchanged; a plain dark background for the adaptive icon
+    icon_dir = OUT / "icon"
+    icon_dir.mkdir(parents=True, exist_ok=True)
+    icon_zip = AssetZip(APP_ICON_ZIP)
+    for size in (192, 432, 512):
+        member = f"My_Medieval_Life_{size}x{size}.png"
+        dest = icon_dir / f"icon_{size}.png"
+        dest.write_bytes(icon_zip.read(member))
+        record(dest, APP_ICON_ZIP, member, "copied unchanged")
+    dest = icon_dir / "icon_background_432.png"
+    Image.new("RGBA", (432, 432), (34, 24, 16, 255)).save(dest)
+    prov.append({"file": str(dest.relative_to(REPO / "game")), "source": "", "member": "",
+                 "transform": "generated: solid dark brown 432 px background for the Android adaptive icon", "sha256": sha(dest)})
+    _import_ui(record)
+    prompts = OUT / "prompts"
+    prompts.mkdir(parents=True, exist_ok=True)
+    pz = AssetZip(PROMPT_ZIP)
+    for name, member in sorted(PROMPTS.items()):
+        dest = prompts / f"{name}.png"
+        dest.write_bytes(pz.read(member))
+        record(dest, PROMPT_ZIP, member, "copied unchanged")
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

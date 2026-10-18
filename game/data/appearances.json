@@ -1,0 +1,117 @@
+{
+ "format": "mml-appearances/1",
+ "looks": [
+  {
+   "id": "player_m0_basic",
+   "sex": "male",
+   "face": 0,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_m0_basic.png"
+  },
+  {
+   "id": "player_m0_tunic",
+   "sex": "male",
+   "face": 0,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_m0_tunic.png"
+  },
+  {
+   "id": "player_m1_basic",
+   "sex": "male",
+   "face": 1,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_m1_basic.png"
+  },
+  {
+   "id": "player_m1_tunic",
+   "sex": "male",
+   "face": 1,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_m1_tunic.png"
+  },
+  {
+   "id": "player_m2_basic",
+   "sex": "male",
+   "face": 2,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_m2_basic.png"
+  },
+  {
+   "id": "player_m2_tunic",
+   "sex": "male",
+   "face": 2,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_m2_tunic.png"
+  },
+  {
+   "id": "player_m3_basic",
+   "sex": "male",
+   "face": 3,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_m3_basic.png"
+  },
+  {
+   "id": "player_m3_tunic",
+   "sex": "male",
+   "face": 3,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_m3_tunic.png"
+  },
+  {
+   "id": "player_f0_basic",
+   "sex": "female",
+   "face": 0,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_f0_basic.png"
+  },
+  {
+   "id": "player_f0_tunic",
+   "sex": "female",
+   "face": 0,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_f0_tunic.png"
+  },
+  {
+   "id": "player_f1_basic",
+   "sex": "female",
+   "face": 1,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_f1_basic.png"
+  },
+  {
+   "id": "player_f1_tunic",
+   "sex": "female",
+   "face": 1,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_f1_tunic.png"
+  },
+  {
+   "id": "player_f2_basic",
+   "sex": "female",
+   "face": 2,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_f2_basic.png"
+  },
+  {
+   "id": "player_f2_tunic",
+   "sex": "female",
+   "face": 2,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_f2_tunic.png"
+  },
+  {
+   "id": "player_f3_basic",
+   "sex": "female",
+   "face": 3,
+   "outfit": "basic",
+   "sprite": "res://assets/characters/player_f3_basic.png"
+  },
+  {
+   "id": "player_f3_tunic",
+   "sex": "female",
+   "face": 3,
+   "outfit": "tunic",
+   "sprite": "res://assets/characters/player_f3_tunic.png"
+  }
+ ]
+}
