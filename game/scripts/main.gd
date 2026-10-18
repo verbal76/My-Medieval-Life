@@ -55,6 +55,12 @@ var shot_zoom := 0.0
 var shot_panel := ""
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
 var walking := false           # the player moved this frame (resource prompts wait until they stop)
+## Gather mode (B7-012, owner 2026-10-18): the Gather button; a tap (or Use) on a resource walks to it
+## and gathers it, cycle after cycle by the usual actions, until it runs out or something stops it.
+var gather_mode := false
+var gather := {}               # what is being gathered: {def, ref, continuous, hp, tries, cycles}; {} for nothing
+var gather_warned = null       # the field whose owner the player was warned of: a second tap takes it anyway
+var gather_mark: Line2D        # the outline round the chosen resource
 var attack_mode := false       # toggled by the Attack button: a tap on a person or animal targets it
 var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
 var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
@@ -154,6 +160,20 @@ func _ready() -> void:
 				ui.show_journal(-1)
 			"journal_quests":
 				ui.show_journal(-1, true)
+			"gather":
+				# Gather mode on, an iron seam chosen and being mined (B7-012)
+				gather_button()
+				var near := {}
+				for d in world.deposits:
+					if d.ore == "iron_ore" and (near.is_empty() or Vector2(d.x, d.y).distance_to(world.player.pos) < Vector2(near.x, near.y).distance_to(world.player.pos)):
+						near = d
+				var at := Vector2i(int(near.x), int(near.y))
+				world.player.pos = Vector2(world.brain.beside(at, at + Vector2i(0, 1))) + Vector2(0.5, 0.5)
+				follow_at = _in_view(world.player.pos * T)
+				select_resource(ResourceNodes.node_at(world, at, true), true)
+				for k in 4:
+					_player_step(0.05)
+				ui.toast_t = 0.01
 			"opening":
 				_start(true)                     # a new game's first message (where paid work is)
 			"manor_offer":
@@ -415,11 +435,11 @@ func _setup_input() -> void:
 		"move_down": [KEY_S, KEY_DOWN], "interact": [KEY_E, KEY_ENTER], "attack": [KEY_SPACE, KEY_J],
 		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "journal": [KEY_B], "pause": [KEY_ESCAPE, KEY_P],
 		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
-		"map": [KEY_M], "recenter": [KEY_C], "build": [KEY_H],
+		"map": [KEY_M], "recenter": [KEY_C], "build": [KEY_H], "gather": [KEY_G],
 	}
 	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
 		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER,
-		"map": JOY_BUTTON_LEFT_SHOULDER, "recenter": JOY_BUTTON_RIGHT_STICK}
+		"map": JOY_BUTTON_LEFT_SHOULDER, "recenter": JOY_BUTTON_RIGHT_STICK, "gather": JOY_BUTTON_DPAD_DOWN}
 	for a in keys:
 		if not InputMap.has_action(a):
 			InputMap.add_action(a)
@@ -520,6 +540,12 @@ func _clear_world() -> void:
 	move_to = Vector2.INF
 	walk_goal = Vector2i(-1, -1)
 	strike_pending = false
+	gather = {}
+	gather_warned = null
+	gather_mark = null              # its node goes with the scene
+	if gather_mode:
+		gather_mode = false
+		ui.set_gather_mode(false)
 	if cam_free:
 		recenter()
 	if attack_mode:
@@ -669,6 +695,7 @@ func _process(delta: float) -> void:
 	if running and not world.player.alive and not ui.is_open("death"):
 		ui.show_death()
 	_sync_sprites()
+	_sync_gather_mark()
 	ui.update_hud()
 
 
@@ -941,12 +968,15 @@ func _player_step(delta: float) -> void:
 		player_sprite.play("idle")
 		return
 	var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	if v.length() > 0.1 and not gather.is_empty():
+		stop_gather("You stop gathering.")          # walking away stops it; Gather mode stays on
 	if v.length() > 0.1:
 		chase = null
 		talk_to = null
 		reach_to = Vector2.INF
 		if cam_free:
 			recenter()                    # walking with keys or the stick brings the view back
+	_gather_step()
 	_chase_step()
 	_talk_step()
 	_reach_step()
@@ -981,6 +1011,8 @@ func _player_step(delta: float) -> void:
 		ui.show_journal(-1)
 	if Input.is_action_just_pressed("build"):
 		ui.show_build_menu()
+	if Input.is_action_just_pressed("gather"):
+		gather_button()
 
 
 ## The direction to walk this frame towards move_to, around walls and trees: the route comes
@@ -1188,7 +1220,10 @@ func _find_target() -> void:
 	target = best
 	# a seam, tree, field or animal is offered when the player stops by it, not flashed while walking past
 	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "animal"]
-	ui.prompt("" if passing else target.get("label", ""))
+	if not gather.is_empty():
+		ui.prompt(gather_status())     # gathering: what is going on, not what Use would do
+	else:
+		ui.prompt("" if passing else target.get("label", ""))
 
 
 ## What the next step of a manor job says at its place.
@@ -1274,6 +1309,29 @@ func _who(n: NPC) -> String:
 func interact() -> void:
 	if target.is_empty():
 		return
+	# in Gather mode, Use (keys, pad, the touch button) on a resource in front chooses it to gather
+	if gather_mode and target.kind in ["deposit", "tree", "field"]:
+		var cell: Vector2i = _target_cell(target)
+		var hit := ResourceNodes.node_at(world, cell, true)
+		if not hit.is_empty():
+			select_resource(hit, true)
+			return
+	_use()
+
+
+func _target_cell(t: Dictionary) -> Vector2i:
+	match str(t.kind):
+		"deposit":
+			return Vector2i(int(t.dep.x), int(t.dep.y))
+		"tree":
+			return Vector2i(int(t.tree.x), int(t.tree.y))
+		"field":
+			return Vector2i(int(t.field.x), int(t.field.y))
+	return Vector2i.ZERO
+
+
+## Do what the current target offers, once (Use; and each cycle of gathering).
+func _use() -> void:
 	var p := world.player
 	match target.kind:
 		"npc":
@@ -1469,6 +1527,8 @@ func attack(only: Object = null) -> void:
 ## with none, wait for a tap on who or what to attack. Villagers are only attacked by choice.
 func attack_button() -> void:
 	attack_mode = not attack_mode
+	if attack_mode and gather_mode:
+		gather_button()                # Attack and Gather exclude each other
 	if not attack_mode:
 		chase = null
 		strike_pending = false
@@ -1904,6 +1964,13 @@ func _tap(screen_pos: Vector2) -> void:
 	if ui.blocks(screen_pos):
 		return
 	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	if gather_mode:
+		var hit := _resource_tap(wpos)
+		if hit.is_empty():
+			ui.message("Nothing to gather there: tap a seam, a tree, a ripe field or game.")
+		else:
+			select_resource(hit, true)
+		return
 	if attack_mode:
 		var who := _creature_at(wpos)
 		if who != null:
@@ -1919,6 +1986,11 @@ func _tap(screen_pos: Vector2) -> void:
 	var tapped := _creature_at(wpos)
 	if tapped is NPC and tapped.role != "bandit":
 		talk_to = tapped                  # walk up to them (following if they move) and talk
+		return
+	# a seam, a tree or a field: walk to it and use it once (B7-011; Gather mode keeps going)
+	var res := _resource_tap(wpos)
+	if not res.is_empty() and str(res.def.match.kind) != "animal":
+		select_resource(res, false)
 		return
 	var use := _usable_at(wpos)
 	if use != Vector2.INF:
@@ -2010,3 +2082,175 @@ func _screenshot_step(_delta: float) -> void:
 		img.save_png(shot_path)
 		print("screenshot saved to ", shot_path)
 		get_tree().quit()
+
+
+# ---------------------------------------------------------------- gathering ------------------
+## The Gather button (B7-012): on, a tap chooses a resource to gather until it runs out; off stops
+## gathering and walking to it. Gather and Attack exclude each other.
+func gather_button() -> void:
+	gather_mode = not gather_mode
+	if gather_mode and attack_mode:
+		attack_button()
+	if not gather_mode:
+		stop_gather("")
+	ui.set_gather_mode(gather_mode)
+	ui.message("Gather: tap a seam, a tree, a ripe field or game; you gather it until it runs out. Tap Gather again to stop."
+			if gather_mode else "Gather off.")
+
+
+## The resource drawn at a map position: an animal by its sprite, else the seam, tree (trunk or
+## canopy) or field at that cell exactly (ResourceNodes, the one definition of what can be gathered).
+func _resource_tap(wpos: Vector2) -> Dictionary:
+	var who := _creature_at(wpos)
+	if who is Animal:
+		var d := ResourceNodes.def_for("animal", (who as Animal).species)
+		return {} if d.is_empty() else {"def": d, "ref": who}
+	if who != null:
+		return {}
+	return ResourceNodes.node_at(world, Vector2i(floori(wpos.x), floori(wpos.y)), true)
+
+
+## Choose a resource: say why not if it cannot be gathered (no tool, worked out, not ripe, the keeper's),
+## warn once before taking someone's field, then walk to it and gather (`continuous`: until it runs
+## out; else once).
+func select_resource(hit: Dictionary, continuous: bool) -> void:
+	var d: Dictionary = hit.def
+	var why := ResourceNodes.can_harvest(world, d, hit.ref)
+	if why != "":
+		stop_gather("")
+		ui.message(why)
+		return
+	var note := ResourceNodes.theft_note(world, d, hit.ref)
+	var hired: bool = str(d.match.kind) == "field" and not world.quests.hired_on(hit.ref).is_empty()
+	if note != "" and not hired and gather_warned != hit.ref:
+		gather_warned = hit.ref
+		ui.message("%s. Tap it again to take it anyway." % World.cap(note))
+		return
+	stop_gather("")
+	talk_to = null
+	reach_to = Vector2.INF
+	gather = {"def": d, "ref": hit.ref, "continuous": continuous, "hp": world.player.hp, "tries": 0, "cycles": 0}
+	if str(d.get("action", "")) == "attack":
+		strike(hit.ref)                # game is hunted with the weapon, as in attack mode
+
+
+## Stop gathering (and walking to it); `why` is said if not "".
+func stop_gather(why: String) -> void:
+	if gather.is_empty():
+		return
+	if str(gather.def.get("action", "")) == "attack" and chase == gather.ref:
+		chase = null
+		strike_pending = false
+	gather = {}
+	move_to = Vector2.INF
+	if why != "":
+		ui.message(why)
+
+
+## Each frame: walk to the chosen resource, then gather it a cycle at a time through the usual action
+## (its time, tool wear, yield, depletion, theft and inventory rules), until it runs out, the pack is
+## full, the tool is gone, the player is hurt, or (a single use) after one cycle.
+func _gather_step() -> void:
+	if gather.is_empty() or not action.is_empty():
+		return
+	var p := world.player
+	var d: Dictionary = gather.def
+	var ref = gather.ref
+	if p.hp < float(gather.hp) - 0.01:
+		stop_gather("You stop gathering: something is hurting you.")
+		return
+	gather.hp = p.hp
+	if int(gather.cycles) > 0 and not gather.continuous:
+		stop_gather("")
+		return
+	var why := ResourceNodes.can_harvest(world, d, ref)
+	if why != "" or ResourceNodes.remaining(world, d, ref) <= 0:
+		stop_gather(why if why != "" else "Nothing is left here.")
+		return
+	if str(d.get("action", "")) == "attack":
+		if chase != ref:
+			chase = ref
+		strike_pending = true          # keep striking until it falls
+		return
+	for id in ResourceNodes.products(d):
+		if not p.inv.can_add(id):
+			stop_gather("Your pack is full.")
+			return
+	var stand := _gather_stand(d, ref)
+	if p.pos.distance_to(stand) > 0.6:
+		if move_to == Vector2.INF:
+			gather.tries = int(gather.tries) + 1
+			if int(gather.tries) > 3:
+				stop_gather("You can't reach it from here.")
+				return
+			move_to = stand
+		return
+	move_to = Vector2.INF
+	gather.tries = 0
+	var at := Vector2(ResourceNodes.cell_of(world, d, ref)) + Vector2(0.5, 0.5)
+	if str(d.match.kind) == "field":
+		at = p.pos + Vector2(0, -0.1)
+	player_sprite.face(at - p.pos)
+	target = _gather_target(d, ref)
+	gather.cycles = int(gather.cycles) + 1
+	_use()
+
+
+## Where to stand to gather: beside a seam or a tree's trunk (the free cell nearest the player), on
+## the nearest cell of a field.
+func _gather_stand(d: Dictionary, ref) -> Vector2:
+	var p := world.player
+	if str(d.match.kind) == "field":
+		var r := Rect2(Vector2(int(ref.x), int(ref.y)), Vector2(int(ref.w), int(ref.h)))
+		var c := Vector2(clampf(p.pos.x, r.position.x + 0.5, r.end.x - 0.5), clampf(p.pos.y, r.position.y + 0.5, r.end.y - 0.5))
+		return Vector2(floori(c.x), floori(c.y)) + Vector2(0.5, 0.5)
+	var cell := ResourceNodes.cell_of(world, d, ref)
+	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)))) + Vector2(0.5, 0.5)
+
+
+func _gather_target(d: Dictionary, ref) -> Dictionary:
+	match str(d.match.kind):
+		"deposit":
+			return {"kind": "deposit", "dep": ref, "label": ""}
+		"tree":
+			return {"kind": "tree", "tree": ref, "label": ""}
+		"field":
+			return {"kind": "field", "field": ref, "label": ""}
+	return {}
+
+
+## What the HUD says while gathering: walking to it, or the action and what is left.
+func gather_status() -> String:
+	if gather.is_empty():
+		return ""
+	var d: Dictionary = gather.def
+	var left := ResourceNodes.remaining(world, d, gather.ref)
+	if not action.is_empty() or str(d.get("action", "")) == "attack" and chase == gather.ref:
+		return "%s the %s  ·  %d left" % [str(d.get("verb", "Gathering")), str(d.get("name", "")).to_lower(), left]
+	return "Walking to the %s" % str(d.get("name", "")).to_lower()
+
+
+## The outline round the chosen resource (a field: its edge).
+func _sync_gather_mark() -> void:
+	if gather_mark == null:
+		gather_mark = Line2D.new()
+		gather_mark.width = 2.0
+		gather_mark.default_color = Color(1.0, 0.85, 0.3, 0.95)
+		gather_mark.z_index = MARKER_Z
+		add_child(gather_mark)
+	gather_mark.visible = not gather.is_empty()
+	if gather.is_empty():
+		return
+	var d: Dictionary = gather.def
+	var r := Rect2()
+	match str(d.match.kind):
+		"field":
+			r = Rect2(Vector2(int(gather.ref.x), int(gather.ref.y)), Vector2(int(gather.ref.w), int(gather.ref.h)))
+		"tree":
+			r = Rect2(Vector2(int(gather.ref.x), int(gather.ref.y) - 1), Vector2(1, 2))
+		"animal":
+			r = Rect2((gather.ref as Animal).pos - Vector2(0.5, 0.9), Vector2(1, 1))
+		_:
+			r = Rect2(Vector2(ResourceNodes.cell_of(world, d, gather.ref)), Vector2(1, 1))
+	gather_mark.points = PackedVector2Array([r.position * T, Vector2(r.end.x, r.position.y) * T, r.end * T,
+			Vector2(r.position.x, r.end.y) * T, r.position * T])

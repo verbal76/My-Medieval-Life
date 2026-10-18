@@ -84,7 +84,7 @@ func _run() -> void:
 	# every gamepad button the game binds is on the controls list (RB, Skills, was missing)
 	var pad_prompt := {JOY_BUTTON_A: "xbox_button_a", JOY_BUTTON_B: "xbox_button_b", JOY_BUTTON_X: "xbox_button_x",
 		JOY_BUTTON_Y: "xbox_button_y", JOY_BUTTON_BACK: "xbox_button_view", JOY_BUTTON_START: "xbox_button_menu",
-		JOY_BUTTON_LEFT_SHOULDER: "xbox_lb", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb", JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press"}
+		JOY_BUTTON_LEFT_SHOULDER: "xbox_lb", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb", JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press", JOY_BUTTON_DPAD_DOWN: "xbox_dpad_down"}
 	var listed := {}
 	for row in GameUI.CONTROLS.gamepad:
 		for icon in row[0]:
@@ -1140,5 +1140,164 @@ func _run() -> void:
 	the_smith.plan.clear()
 	ui.hide_all()
 
+	_gather_tests()
+
 	print("%d steps, %d failures" % [steps.size(), failures])
 	quit(1 if failures else 0)
+
+
+## Step the player (movement, gathering, actions) without advancing the village.
+func run_frames(n: int, dt := 0.1) -> void:
+	for i in n:
+		main._player_step(dt)
+
+
+## Tap the screen where a map position is drawn (touch and mouse go through main._tap).
+func tap_at(wpos: Vector2) -> void:
+	main._tap(main.get_canvas_transform() * (wpos * main.T))
+
+
+## Gather mode (B7-012) and tapping resources (B7-011), through the real input routing.
+func _gather_tests() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p := w.player
+	var ui = main.ui
+	ui.hide_all()
+	# the button: on and off; Gather and Attack exclude each other
+	main.gather_button()
+	check(main.gather_mode and ui.gather_btn.text == "Gather ON", "Gather turns gather mode on (the button shows it)")
+	main.attack_button()
+	check(main.attack_mode and not main.gather_mode and ui.gather_btn.text == "Gather", "Attack turns Gather off")
+	main.gather_button()
+	check(main.gather_mode and not main.attack_mode, "and Gather turns Attack off")
+	# a seam: tap it, the player walks there and mines it cycle after cycle until it runs out
+	var dep: Dictionary = {}
+	for d in w.deposits:
+		if d.ore == "iron_ore" and (dep.is_empty() or Vector2(d.x, d.y).distance_to(p.pos) < Vector2(dep.x, dep.y).distance_to(p.pos)):
+			dep = d
+	dep.amount = 3
+	var cell := Vector2i(int(dep.x), int(dep.y))
+	p.pos = Vector2(w.brain.beside(cell, cell + Vector2i(0, 1))) + Vector2(4.5, 3.5)
+	if w.map.is_solid(Vector2i(floori(p.pos.x), floori(p.pos.y))):
+		p.pos = Vector2(w.brain.beside(cell, cell + Vector2i(0, 1))) + Vector2(0.5, 0.5)
+	var ore0 := p.inv.count("iron_ore")
+	var stamina0 := p.stamina
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	check(not main.gather.is_empty() and str(main.gather.def.match.kind) == "deposit" and main.gather.ref == dep, "in Gather mode a tap on a seam chooses it")
+	main._sync_gather_mark()
+	check(main.gather_mark.visible, "the chosen seam is outlined")
+	var guard := 0
+	while not main.gather.is_empty() and guard < 20000:
+		run_frames(1, 0.05)
+		guard += 1
+	check(int(dep.amount) == 0 and p.inv.count("iron_ore") >= ore0 + 3, "the player walks to it and mines it, cycle after cycle, until it is worked out (%d ore)" % (p.inv.count("iron_ore") - ore0))
+	check(main.gather.is_empty() and main.gather_mode, "then gathering stops and Gather mode stays on")
+	check(p.stamina >= stamina0, "mining costs no stamina (the existing rule; ResourceNodes action_cost)")
+	# no tool: a tree without an axe says so and does nothing
+	p.inv.remove("axe", p.inv.count("axe"))
+	var tree: Dictionary = {}
+	for t in w.trees:
+		if t.state == "grown" and (tree.is_empty() or Vector2(t.x, t.y).distance_to(p.pos) < Vector2(tree.x, tree.y).distance_to(p.pos)):
+			tree = t
+	tap_at(Vector2(int(tree.x), int(tree.y) - 1) + Vector2(0.5, 0.5))          # its canopy
+	check(main.gather.is_empty() and ui.toast.text.to_lower().contains("axe"), "a tree tapped on its canopy, without an axe: \"%s\"" % ui.toast.text)
+	# with an axe it is felled once (a tree gives its logs in one cycle), and gathering stops
+	p.inv.add("axe")
+	var logs0 := p.inv.count("log")
+	tap_at(Vector2(int(tree.x), int(tree.y) - 1) + Vector2(0.5, 0.5))
+	guard = 0
+	while not main.gather.is_empty() and guard < 20000:
+		run_frames(1, 0.05)
+		guard += 1
+	check(str(tree.state) != "grown" and p.inv.count("log") > logs0, "with an axe the tree is felled (%d logs) and gathering stops at the stump" % (p.inv.count("log") - logs0))
+	# moving cancels gathering; Gather stays on
+	dep.amount = 5
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	run_frames(4, 0.05)
+	Input.action_press("move_left")
+	run_frames(1)
+	Input.action_release("move_left")
+	check(main.gather.is_empty() and main.gather_mode, "moving by hand stops gathering; Gather mode stays on")
+	# Gather off cancels walking and gathering
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	run_frames(1)
+	main.gather_button()
+	check(main.gather.is_empty() and main.move_to == Vector2.INF and not main.gather_mode, "Gather off cancels the walk and the gathering")
+	# a full pack stops it
+	main.gather_button()
+	var stacks := p.inv.max_stacks
+	p.inv.max_stacks = p.inv.items.size()
+	p.inv.remove("iron_ore", p.inv.count("iron_ore"))
+	p.inv.max_stacks = p.inv.items.size()
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	run_frames(6, 0.05)
+	check(main.gather.is_empty() and ui.toast.text.contains("pack is full"), "a full pack stops gathering: \"%s\"" % ui.toast.text)
+	p.inv.max_stacks = stacks
+	# a farmer's field: warned once, then taken (theft, as by hand)
+	var f: Dictionary = w.fields[0]
+	w.set_field(f, "ripe")
+	f.crop = 12
+	var crimes0 := p.crimes.size()
+	var fc := Vector2(int(f.x) + 1, int(f.y) + 1) + Vector2(0.5, 0.5)
+	tap_at(fc)
+	check(main.gather.is_empty() and ui.toast.text.contains("theft"), "a farmer's field: a warning first (\"%s\")" % ui.toast.text)
+	tap_at(fc)
+	guard = 0
+	while not main.gather.is_empty() and guard < 20000:
+		run_frames(1, 0.05)
+		guard += 1
+	check(int(f.crop) == 0 and p.crimes.size() > crimes0, "tapped again it is harvested to the end, as theft (crimes %d -> %d)" % [crimes0, p.crimes.size()])
+	# out of Gather mode, a tap on a seam walks to it and mines it once
+	main.gather_button()
+	dep.amount = 5
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	guard = 0
+	while not main.gather.is_empty() and guard < 20000:
+		run_frames(1, 0.05)
+		guard += 1
+	check(int(dep.amount) in [3, 4], "without Gather mode, a tap on a seam walks there and mines once (%d left)" % int(dep.amount))
+	# keys and pad: Use in front of a seam in Gather mode chooses it
+	main.gather_button()
+	stand_by(cell)
+	main.interact()
+	check(not main.gather.is_empty() and main.gather.ref == dep, "in Gather mode, Use in front of a seam chooses it (keys and pad)")
+	# unreachable: walled in, the player gives up with a message
+	main.stop_gather("")
+	var walls := []
+	for dc in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]:
+		if not w.map.is_solid(cell + dc):
+			walls.append(cell + dc)
+			w.map.set_solid(cell + dc, true)
+	p.pos = Vector2(cell) + Vector2(6.5, 6.5)
+	if w.map.is_solid(Vector2i(floori(p.pos.x), floori(p.pos.y))):
+		p.pos = Vector2(cell) + Vector2(-5.5, 6.5)
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	guard = 0
+	while not main.gather.is_empty() and guard < 20000:
+		run_frames(1, 0.05)
+		guard += 1
+	check(ui.toast.text.contains("can't reach"), "a seam that cannot be reached: \"%s\"" % ui.toast.text)
+	for c in walls:
+		w.map.set_solid(c, false)
+	# game: in Gather mode a tap on a wild animal hunts it (the weapon, as attack mode strikes)
+	main.stop_gather("")
+	var game: Animal = null
+	for an: Animal in w.fauna.animals:
+		if an.alive and an.wild():
+			game = an
+			break
+	p.pos = game.pos + Vector2(2.0, 0)
+	main._creature_at(game.pos)
+	tap_at(game.pos - Vector2(0, 0.4))
+	check(not main.gather.is_empty() and main.gather.ref == game and main.chase == game, "in Gather mode a tap on wild game hunts it")
+	main.stop_gather("")
+	check(main.chase == null, "and stopping drops the chase")
+	# gathering is not saved: a save mid-gather loads with nothing chosen
+	tap_at(Vector2(cell) + Vector2(0.5, 0.5))
+	var d := w.to_dict()
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
+	check(not JSON.stringify(d).contains("gather") and w2.total_coins() == w.total_coins(), "gathering is not part of a save; the save loads unchanged")
+	w2.dispose()
+	main.stop_gather("")

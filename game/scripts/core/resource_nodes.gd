@@ -95,8 +95,10 @@ static func instances(world: World, d: Dictionary) -> Array:
 ## The harvestable instance at a cell or beside it (its four neighbours, in the order the player's
 ## interaction looks), as {def, ref}; {} if none. Instances that cannot be harvested now (a worked-out
 ## seam, a stump, a field not ripe, the keeper's animals) are found too: can_harvest says why.
-static func node_at(world: World, cell: Vector2i) -> Dictionary:
-	for dc: Vector2i in NEIGHBOURS:
+## `exact`: only the cell itself (a tap or click names one thing; a tree counts on its trunk and
+## the canopy cell above it, World.tree_at).
+static func node_at(world: World, cell: Vector2i, exact := false) -> Dictionary:
+	for dc: Vector2i in ([Vector2i.ZERO] if exact else NEIGHBOURS):
 		var c: Vector2i = cell + dc
 		var dep := world.deposit_at(c)
 		if not dep.is_empty():

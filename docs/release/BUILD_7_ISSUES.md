@@ -50,9 +50,9 @@ files and systems, the test evidence and the fixing commit.
 | B7-007 | 2026-10-18 | Bug | S2 | All | Ore and stone deposits never refill and the caravan brings no stone: the village works them out by about day 10, after which no house can be built | Stone imports fixed (staging); depletion itself diagnosed, proposal awaits owner | `ae0e01f` | No |
 | B7-008 | 2026-10-18 | Usability | S4 | All | The player can sell a buyer down to 0 coins and kill every wild animal (NPCs leave a floor of 15 coins and 2 animals) | Diagnosed; proposal awaits owner | — | No |
 | B7-009 | 2026-10-18 | Bug | S2 | All | The manor's treasury starts (270) below its own 10-day reserve (460) and falls to about 100 by day 5: the reeve has no paid work, for the player or villagers, until about day 12 | Diagnosed; proposal awaits owner | — | No |
-| B7-010 | 2026-10-18 | Bug | S3 | Android (all) | The status panel sits too far from the top-left corner; HUD placed by fixed coordinates inside an inset root | Fixed (staging) | see detail | Yes |
-| B7-011 | 2026-10-18 | Bug | S2 | Android (all, touch) | "Mine"/"Fell" prompts appear while walking past, but tapping a tree or ore does nothing and how to gather is unclear | In progress | — | Yes |
-| B7-012 | 2026-10-18 | Enhancement (approved) | — | All | Gather mode: a toggle; tap a resource; walk to it and gather until it runs out or is stopped | In progress | — | Yes |
+| B7-010 | 2026-10-18 | Bug | S3 | Android (all) | The status panel sits too far from the top-left corner; HUD placed by fixed coordinates inside an inset root | Fixed (staging) | `633898f` | Yes |
+| B7-011 | 2026-10-18 | Bug | S2 | Android (all, touch) | "Mine"/"Fell" prompts appear while walking past, but tapping a tree or ore does nothing and how to gather is unclear | Fixed (staging) | `633898f`, Gather commit | Yes |
+| B7-012 | 2026-10-18 | Enhancement (approved) | — | All | Gather mode: a toggle; tap a resource; walk to it and gather until it runs out or is stopped | Done (staging) | Gather commit | Yes |
 | B7-013 | 2026-10-18 | Enhancement (approved) | — | All | Icons from the flat UI pack's set 2 as brown glyphs on a transparent background for the HUD status panel, equipment slots, skills and journal, and the action bar | Ready | — | Yes (looks) |
 
 Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`),
@@ -158,12 +158,17 @@ Test evidence for `ae0e01f` (run on this machine):
   - Nobody starts with an axe (the kit is a rusty sword and a rusty pickaxe), yet the prompt still said "Fell this tree".
   - Resource prompts were shown for whatever was in front of the player, so they flashed while walking past.
   - Tools need only be carried, not equipped (`PlayerState.tool_of`); that rule is unchanged.
-- Fix (in progress): the prompts now say when a tool is missing and where to get it ("A tree: requires an axe (the smith sells them)") and wait until the player stops; taps on a resource use the registry's `ResourceNodes.node_at` (a tree's canopy counts), walk to it and use it, or say why not (B7-012 shares this).
+- Fix: the prompts say when a tool is missing and where to get it ("A tree: requires an axe (the smith sells them)") and wait until the player stops (`633898f`). A tap or click on a seam, tree (trunk or canopy) or field finds it through the registry (`ResourceNodes.node_at`, exact cell), walks there and uses it once; a refusal is always said (the tool and where to get it, worked out, not ripe, out of reach). Use with keys or the pad still acts on what is in front. The tool rule (carried, not equipped) is unchanged.
+- Files: `game/scripts/main.gd`, `game/scripts/core/resource_nodes.gd`, `game/tests/start_test.gd`; INT-068.
+- Tests: `start_test` (a canopy tap without an axe says so; a tap on a seam outside Gather mode walks there and mines once; Use in front of a seam in Gather mode). Looked at: Gather mode on a 2400x1080 phone.
 - Device check: needed.
 
 ### B7-012 Gather mode
 - Approved by the owner, 2026-10-18: a Gather button; tap a resource; walk to it and gather until it is depleted or stopped; the same rules for time, tools, stamina, depletion, inventory, ownership and theft.
-- Built on the resource registry (`game/data/resources.json`, `ResourceNodes`). Status: in progress.
+- Implementation: a Gather button (the branch icon) beside Use, G on the keyboard, D-pad down on the pad; Gather and Attack exclude each other. A tap or click (or Use in front) chooses a resource from the registry; it is outlined; the player walks there by the usual pathfinding and gathers it a cycle at a time through the existing action (time, tool wear, yield, skill bonus, depletion, inventory, theft; no stamina, the existing rule) until it runs out, the pack is full, the tool is gone, the player is hurt or moves, chooses another or turns Gather off. Gather mode stays on when a resource runs out; nothing else is chosen automatically. Someone's field warns once; hired harvest work does not. Wild game is hunted with the weapon. The prompt shows "Walking to the …" or "Mining the iron seam · 60 left"; the progress bar sits above the player. Not saved.
+- Files: `game/scripts/main.gd`, `game/scripts/ui/game_ui.gd`, `game/scripts/core/resource_nodes.gd`, `tools/import_game_assets.py` (G and D-pad prompt icons), `game/tests/start_test.gd`; INT-068.
+- Tests (`start_test`): the toggle and Attack exclusivity; selection by tap; the outline; walking to it; repeated cycles to depletion; mode kept; no axe; a tree felled once; cancelled by moving and by Gather off; a full pack; a farmer's field warned then taken as theft; a single use outside Gather mode; Use in front (keys and pad); out of reach; wild game; nothing saved.
+- Device check: needed (touch on the phone, a real gamepad).
 
 ### B7-013 Brown glyph icons
 - Owner, 2026-10-18: icons from the flat UI pack's set 2, drawn as a brown glyph on a transparent background (not a white glyph on a brown tile), for the HUD status panel, equipment slots, skills and journal, and the action bar. Status: ready, after B7-012.

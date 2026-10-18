@@ -70,11 +70,11 @@ PROMPT_ZIP = "kenney_input-prompts_1.5.zip"
 # input prompt icons shown with prompts and on the controls list: name -> member (128 px "Double" set)
 PROMPTS = {name: f"Keyboard & Mouse/Double/{name}.png" for name in
            ["keyboard_b", "keyboard_e", "keyboard_f", "keyboard_i", "keyboard_l", "keyboard_space", "keyboard_escape",
-            "keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d", "keyboard_c", "keyboard_m", "mouse_left", "mouse_right",
+            "keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d", "keyboard_c", "keyboard_m", "keyboard_g", "mouse_left", "mouse_right",
             "mouse_scroll", "mouse_move"]}
 PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
                 ["xbox_button_a", "xbox_button_b", "xbox_button_x", "xbox_button_y", "xbox_button_view",
-                 "xbox_button_menu", "xbox_stick_l", "xbox_stick_r", "xbox_stick_r_press", "xbox_lb", "xbox_rb"]})
+                 "xbox_button_menu", "xbox_stick_l", "xbox_stick_r", "xbox_stick_r_press", "xbox_lb", "xbox_rb", "xbox_dpad_down"]})
 PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in",
                                                                 "touch_swipe_two_move"]})
 MONSTER_ZIP = "PunyMonsters.zip"

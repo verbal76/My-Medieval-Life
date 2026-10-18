@@ -35,6 +35,7 @@ var top_row: HBoxContainer     # the window's title tab and X (the pack window d
 var close_btn: Button
 var touch_bar: HBoxContainer
 var attack_btn: Button
+var gather_btn: Button
 var recenter_btn: Button       # shown while the camera is looking around, away from the player
 var prompt_text := ""
 var scheme := "kbm"
@@ -53,20 +54,22 @@ const PROMPT := "res://assets/prompts/%s.png"
 const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "touch_tap"}
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
 const CONTROLS := {
-	"touch": [[["touch_tap"], "Tap the ground to walk there; tap next to someone or something to use it"],
+	"touch": [[["touch_tap"], "Tap the ground to walk there; tap someone or something to walk to it and use it"],
+		[["touch_finger_one"], "Gather turns gather mode on; then tap a seam, tree, ripe field or game to gather it until it runs out"],
 		[["touch_finger_one"], "Attack turns attack mode on; then tap who to attack, and tap them again to strike"],
 		[["touch_zoom_in"], "Pinch to zoom"],
 		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you"],
 		[["touch_finger_one"], "Map opens the village map; tap a spot on it to look there"]],
 	"kbm": [[["keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d"], "Move"],
 		[["mouse_left"], "Walk to where you click, or use what you click next to you"],
-		[["keyboard_e"], "Use"], [["keyboard_space"], "Swing at what is in front of you"],
+		[["keyboard_e"], "Use"], [["keyboard_g"], "Gather mode: click a resource (or Use in front of one) to gather it until it runs out"],
+		[["keyboard_space"], "Swing at what is in front of you"],
 		[["mouse_right"], "Attack whoever you click"], [["keyboard_f"], "Fireball (once learned)"],
 		[["keyboard_i"], "Pack"], [["keyboard_l"], "Skills"], [["keyboard_b"], "Journal"], [["keyboard_escape"], "Menu"],
 		[["mouse_scroll"], "Zoom"], [["mouse_scroll", "mouse_move"], "Hold the wheel and drag to look around"],
 		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
-		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_button_y"], "Fireball (once learned)"],
+		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned)"],
 		[["xbox_button_view"], "Pack"], [["xbox_rb"], "Skills"], [["xbox_button_menu"], "Menu (the journal is there)"],
 		[["xbox_button_b"], "Close a window"],
 		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"]],
@@ -360,7 +363,7 @@ func _build_hud() -> void:
 
 	action_bar = ProgressBar.new()
 	action_bar.set_anchors_preset(Control.PRESET_CENTER)
-	action_bar.position = Vector2(-90, 40)
+	action_bar.position = Vector2(-90, -70)       # above the player's head, clear of the prompt
 	action_bar.custom_minimum_size = Vector2(180, 18)
 	action_bar.show_percentage = false
 	action_bar.visible = false
@@ -372,7 +375,7 @@ func _build_hud() -> void:
 	touch_bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	touch_bar.add_theme_constant_override("separation", 8)
 	hud.add_child(touch_bar)
-	for b in [["Use", "interact", "use"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
+	for b in [["Use", "interact", "use"], ["Gather", "gather", "gather"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
 			["Skills", "skills", "skills"], ["Map", "map", "map"], ["Menu", "pause", "menu"]]:
 		var btn := _tile_button(b[2], b[0], 72)
 		btn.focus_mode = Control.FOCUS_NONE
@@ -381,6 +384,8 @@ func _build_hud() -> void:
 		touch_bar.add_child(btn)
 		if act == "attack":
 			attack_btn = btn
+		if act == "gather":
+			gather_btn = btn
 	# Recenter sits above the touch bar's right end, in every control scheme, while looking around
 	recenter_btn = _tile_button("recenter", "Recenter", 72)
 	recenter_btn.focus_mode = Control.FOCUS_NONE
@@ -468,6 +473,11 @@ func set_scheme(s: String) -> void:
 		_focus_first()
 
 
+func set_gather_mode(on: bool) -> void:
+	gather_btn.self_modulate = Color(1.0, 0.85, 0.4) if on else Color.WHITE
+	gather_btn.text = "Gather ON" if on else "Gather"
+
+
 func set_attack_mode(on: bool) -> void:
 	attack_btn.self_modulate = Color(1.0, 0.45, 0.4) if on else Color.WHITE
 	attack_btn.text = "Attack ON" if on else "Attack"
@@ -499,6 +509,8 @@ func _touch_action(act: String) -> void:
 			main.interact()
 		"attack":
 			main.attack_button()
+		"gather":
+			main.gather_button()
 		"fireball":
 			main.fireball()
 		"inventory":
