@@ -108,3 +108,15 @@ A branch is listed when it is not contained in the repository's reference line (
 - Remove the byte-identical duplicate uploads on My-Medieval-Life `main` when the owner next merges staging (staging already has one copy).
 - Put the Upwardly Steam store and library art in `branding/steam/` on the authoritative line once located, beside the icons and achievements.
 - Give HotAtticGames.github.io real content (it holds only README.md), e.g. one page per product from this registry.
+
+## Corrections from the lead agent (2026-10-18)
+
+- **Visibility:** the session's repository listing (`list_repos`, 2026-10-18) gives these as **public**:
+  - My-Medieval-Life, Tartaria-RPG, Game-Designer, Fix-Tremors, Climb-Up, Backrooms-Survivor, Axolotl, Ocean-spore, Purgatory-Dungeon, Ragdoll-Rally, Endless-Escaspe, Idle-game, My-Personal-Crossow0rd, Zombie-squisher, LLM-Trainer, Cfm-calculator, Manual-J, HotAtticGames.github.io.
+
+  Only 808-Beats, voiceforge, Spiroglyphics, Personal-Assistant- and Web_Auditor are private. Manual-J is public, although its own instructions say it must not be made public: an **unresolved conflict for the owner**.
+- **My-Medieval-Life `wip/agent-a71e3cddb5b8d02d4` and `wip/agent-a892fc619ec33a8eb`:** their committed work was integrated into `staging/my-medieval-life` by cherry-pick, so the commit SHAs differ and an ancestry test misses it.
+  - The harness: `7636000` became `3c6d8e6`.
+  - The registry: `36f66e1` and `394195d` became `b683461` and `95fc554`.
+
+  The other wip heads are snapshot commits of worktrees whose work also reached staging. They are kept as recovery points; nothing should be deleted without the owner's approval.
