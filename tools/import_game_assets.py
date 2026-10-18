@@ -21,6 +21,10 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/ui/inventory_*.png, tab_*.png        CozyFarm_full_version.zip (the pack window, its tabs and
                                                      bag icon) and tab icons from the Assorted and Survival packs
     game/assets/prompts/<name>.png                   kenney_input-prompts_1.5.zip (keys, pad buttons, touch)
+    game/assets/trees/*, icons/oak_sapling.png, icons/pine_sapling.png
+                                                     the Living Forest package in private-assets/ (not in the
+                                                     repository), by tools/living_forest.py (skipped, files kept,
+                                                     if the package is missing)
     game/assets/PROVENANCE.json                      source, path and transformation of every file
 
 Character sheets are 29 x 8 frames of 32 px: rows are the 8 directions (S, SE, E, NE, N, NW, W,
@@ -45,6 +49,7 @@ import tempfile
 from assetzip import AssetZip, REPO
 import puny_chargen
 import puny_world_terrain as pwt
+import living_forest
 
 OUT = REPO / "game" / "assets"
 VILLAGERS, BANDITS, PLAYERS, GUARDS = 48, 6, 4, 6
@@ -529,6 +534,7 @@ def main():
         dest = prompts / f"{name}.png"
         dest.write_bytes(pz.read(member))
         record(dest, PROMPT_ZIP, member, "copied unchanged")
+    living_forest.import_into(prov, record)           # the trees: from the private package if it is there, else kept as they are
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

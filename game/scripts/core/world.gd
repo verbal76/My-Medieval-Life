@@ -15,6 +15,9 @@ extends RefCounted
 
 const PLANT_LAYER := "below1"      # the layer Shade drew the flowers and berry bushes in (village.json plants)
 signal tile_changed(cell: Vector2i, kind: String, value: int)   # kind: below | above | path
+signal tree_changed(t: Dictionary)                    # a tree's stage changed, it was felled, planted or cleared (the view redraws it)
+signal tree_hit(t: Dictionary, side: int, hits: int)  # an axe blow that did not fell it: the cut mark, chips and leaves
+signal tree_felled(t: Dictionary, side: int)          # a mature tree fell to the side (-1 left, 1 right) the blows came from
 signal event(text: String)
 signal npc_died(npc: NPC)
 signal building_added(b: Dictionary)
@@ -32,9 +35,11 @@ var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
 var stations := {}                 # id -> dict
 var stalls := {}                   # id -> dict (kind, owner, tenant: the merchant who keeps it)
-var trees: Array = []              # {x, y, trunk, top, bottom, state, regrow}: trunk is the stump tile
-                                   # at (x, y), the only solid cell; the canopy (top at y - 1, bottom at y)
-                                   # is drawn over the characters, who can walk behind it
+var trees: Array = []              # the village's trees (Trees: the one tree model): {x, y, species, state, regrow, born, ...}.
+                                   # (x, y) is the trunk's cell, the only solid one (growing and mature trees); the sprite is
+                                   # drawn by TreeView and the characters walk behind its canopy. Trees the player planted
+                                   # have planted: true. trunk/top/bottom are the old tile ids (map data), kept for the tests
+var tree_damage := {}              # Vector2i -> {hits, side, at}: the axe blows a mature tree has taken (not saved: they heal)
 var deposits: Array = []           # {x, y, ore, amount}
 var plants: Array = []             # wild flowers and berry bushes (village generator v5): {id, x, y, kind, tile, state, regrow}.
                                    # state: ripe | picked (bare, ripe again on day `regrow`) | cleared (grubbed up for building).
@@ -91,9 +96,11 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		s.owner = MANOR                # the manor's market; Population lets each to its merchant
 		s.tenant = ""
 		stalls[s.id] = s
-	for t in m.data.trees:
-		trees.append({"x": int(t.x), "y": int(t.y), "trunk": int(t.trunk), "top": int(t.top), "bottom": int(t.bottom),
-				"state": "grown", "regrow": 0.0})
+	for t in m.data.trees + m.decor_trees():          # the woods, and the woodland at the map's edge: all one tree model
+		trees.append(_new_tree(t))
+	for t in trees:
+		Trees.sync(t, minutes)
+		m.set_solid(Vector2i(int(t.x), int(t.y)), Trees.solid(str(t.state)))
 	_make_plants(m)
 	for d in m.data.deposits:
 		deposits.append({"x": int(d.x), "y": int(d.y), "ore": d.ore, "amount": int(d.amount)})
@@ -200,6 +207,8 @@ func is_night() -> bool:
 func update(real_dt: float) -> void:
 	var gm: float = real_dt * float(GameData.b("game_minutes_per_second"))
 	minutes += gm
+	if map.overworld != null:
+		map.overworld.clock = minutes
 	var h := int(minutes / 60.0)
 	if h != last_hour:
 		last_hour = h
@@ -247,6 +256,7 @@ func famine() -> bool:
 
 
 func _on_hour(h: int) -> void:
+	_grow_trees()
 	_update_food_days()
 	serve_tables()
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
@@ -268,21 +278,6 @@ func _on_hour(h: int) -> void:
 
 func _new_day() -> void:
 	var d := day()
-	for t in trees:
-		if t.state != "grown" and t.state != "cleared" and d >= t.regrow:
-			if t.state == "stump":
-				t.state = "sapling"
-				t.regrow = d + 2
-				tile_changed.emit(Vector2i(t.x, t.y), "below", map.data.tiles.sapling)
-			elif _someone_on(Vector2i(t.x, t.y)):
-				t.regrow = d + 1           # never grow a tree under someone's feet: try again tomorrow
-			else:
-				t.state = "grown"
-				tile_changed.emit(Vector2i(t.x, t.y), "below", t.trunk)
-				tile_changed.emit(Vector2i(t.x, t.y - 1), "above", t.top)
-				tile_changed.emit(Vector2i(t.x, t.y), "above", t.bottom)
-				map.set_solid(Vector2i(t.x, t.y), true)
-	_regrow_overworld_trees(d)
 	for pl in plants:
 		if pl.state == "picked" and d >= pl.regrow:
 			pl.state = "ripe"
@@ -553,10 +548,34 @@ func deposit_at(c: Vector2i) -> Dictionary:
 func tree_at(c: Vector2i) -> Dictionary:
 	for t in trees:
 		if t.x == c.x and (t.y == c.y or t.y - 1 == c.y):
+			sync_tree(t)
 			return t
 	if map.overworld != null:
-		return map.overworld.tree_at(c)         # a tree of the world outside the village ({} inside it)
+		var t: Dictionary = map.overworld.tree_at(c)         # a tree of the world outside the village ({} inside it)
+		if not t.is_empty():
+			sync_tree(t)
+		return t
 	return {}
+
+
+## A village tree of the map's own trees: a stage and a species from its cell (some are saplings, young
+## or growing when the game starts, and grow on by the clock).
+func _new_tree(t: Dictionary) -> Dictionary:
+	var tr := {"x": int(t.x), "y": int(t.y), "trunk": int(t.trunk), "top": int(t.top), "bottom": int(t.bottom),
+			"state": "grown", "regrow": 0.0, "born": Trees.initial_born(int(t.x), int(t.y))}
+	tr.species = _tree_species(tr)
+	return tr
+
+
+## The species of a village tree from the tiles the map draws it with (its group: leafy, autumn, mixed,
+## conifer) and a hash of its cell.
+func _tree_species(t: Dictionary) -> String:
+	var group := "mixed"
+	for k in map.overworld.tiles.trees:
+		if int(k.top) == int(t.top):
+			group = str(k.group)
+			break
+	return Trees.species_for(group, int(t.x), int(t.y), false)
 
 
 ## The map's wild plants, all ripe (their place and tile are map data; load_dict applies a save's state).
@@ -600,45 +619,182 @@ func mine_unit(d: Dictionary) -> String:
 	return d.ore
 
 
-## Fell a grown tree: returns the number of logs (0 if it is not grown).
-func fell(t: Dictionary, bonus: int) -> int:
+## Fell a mature tree: returns the number of logs (0 if it is not mature: only a mature tree can be
+## felled). It leaves a stump, falling to `side` (-1 left, 1 right: the side the blows came from); the
+## stump sprouts tree_regrow_days later (Trees.sync) and grows through the stages again.
+func fell(t: Dictionary, bonus: int, side := 1) -> int:
 	if t.is_empty() or t.state != "grown":
 		return 0
+	var cell := Vector2i(int(t.x), int(t.y))
 	t.state = "stump"
 	var r: Array = GameData.b("tree_regrow_days")
-	t.regrow = day() + rng.randi_range(int(r[0]), int(r[1]))
-	tile_changed.emit(Vector2i(t.x, t.y), "below", t.trunk)       # the stump under the canopy
-	tile_changed.emit(Vector2i(t.x, t.y - 1), "above", -1)
-	tile_changed.emit(Vector2i(t.x, t.y), "above", -1)
-	map.set_solid(Vector2i(t.x, t.y), false)
+	t.regrow = Trees.regrow_day(minutes, rng.randi_range(int(r[0]), int(r[1])))
+	t.erase("born")
+	tree_damage.erase(cell)
 	if t.get("ow", false):
 		map.overworld.note_tree(t)             # a tree outside the village: the change is saved, the rest of the world is not
+	else:
+		map.set_solid(cell, false)
+	tree_felled.emit(t, side)
+	tree_changed.emit(t)
 	return 4 + bonus
 
 
-## Trees the player felled outside the village regrow by the village's rules (stump, then sapling two
-## days on, then a tree again unless someone stands there); a regrown one is the generated world again.
-func _regrow_overworld_trees(d: float) -> void:
-	if map.overworld == null:
-		return
-	var cells: Array = map.overworld.changes.keys()
-	cells.sort()
-	for c: Vector2i in cells:
-		var t: Dictionary = map.overworld.changes[c]
-		if d < float(t.regrow):
-			continue
-		if t.state == "stump":
-			t.state = "sapling"
-			t.regrow = d + 2
-			tile_changed.emit(c, "below", map.data.tiles.sapling)
-		elif _someone_on(c):
-			t.regrow = d + 1
-		else:
-			t.state = "grown"
-			map.overworld.note_tree(t)
-			tile_changed.emit(c, "below", t.trunk)
-			tile_changed.emit(c + Vector2i.UP, "above", t.top)
-			tile_changed.emit(c, "above", t.bottom)
+## One axe blow at a mature tree from `side`: the cut marks show the damage, and the last of
+## balance.json tree_growth.chops blows fells it. Returns {hits, chops, logs}: logs is 0 until it falls.
+## A hurt tree heals after heal_minutes (the damage is not saved).
+func chop_tree(t: Dictionary, side: int, bonus: int) -> Dictionary:
+	var chops := int(Trees.cfg().chops)
+	if t.is_empty() or t.state != "grown":
+		return {"hits": 0, "chops": chops, "logs": 0}
+	var cell := Vector2i(int(t.x), int(t.y))
+	var hits := tree_hits(cell) + 1
+	tree_damage[cell] = {"hits": hits, "side": side, "at": minutes}
+	if hits >= chops:
+		return {"hits": hits, "chops": chops, "logs": fell(t, bonus, side)}
+	tree_hit.emit(t, side, hits)
+	return {"hits": hits, "chops": chops, "logs": 0}
+
+
+## The axe blows the tree at a cell has taken and not yet healed.
+func tree_hits(cell: Vector2i) -> int:
+	var d: Dictionary = tree_damage.get(cell, {})
+	if d.is_empty():
+		return 0
+	if minutes - float(d.at) > float(Trees.cfg().heal_minutes):
+		tree_damage.erase(cell)
+		return 0
+	return int(d.hits)
+
+
+## A mature tree's sapling(s) for the player: balance.json tree_growth sapling_count with chance
+## sapling_chance. Returns {item: count} ({} for none).
+func sapling_drop(t: Dictionary) -> Dictionary:
+	var c: Dictionary = Trees.cfg()
+	if rng.randf() >= float(c.sapling_chance):
+		return {}
+	return {Trees.sapling_item(str(t.get("species", "oak_summer"))): int(c.sapling_count)}
+
+
+## Bring a tree's stage up to the game clock (growth is lazy: nothing simulates a tree), keeping the
+## collision and the view in step. A young tree does not become a solid growing one under somebody's
+## feet. True if it changed.
+func sync_tree(t: Dictionary) -> bool:
+	var cell := Vector2i(int(t.x), int(t.y))
+	if map.overworld != null:
+		map.overworld.clock = minutes
+	var hold: bool = t.state == "young" and Trees.next_change(t) <= minutes and _someone_on(cell)
+	if not Trees.sync(t, minutes, hold):
+		return false
+	if t.get("ow", false):
+		map.overworld.note_tree(t)
+	else:
+		map.set_solid(cell, Trees.solid(str(t.state)))
+	tree_changed.emit(t)
+	return true
+
+
+## Hourly: every tree that is not full grown (the village's, and the ones the player changed outside it)
+## catches up with the clock; a hurt tree heals. Untouched overworld trees have no record, no cost.
+func _grow_trees() -> void:
+	for t in trees:
+		if t.state in ["stump", "sapling", "young", "growing"]:
+			sync_tree(t)
+	if map.overworld != null:
+		map.overworld.clock = minutes
+		var cells: Array = map.overworld.changes.keys()
+		cells.sort()
+		for c: Vector2i in cells:
+			var t: Dictionary = map.overworld.changes.get(c, {})
+			if not t.is_empty() and t.state in ["stump", "sapling", "young", "growing"]:
+				sync_tree(t)
+	for c: Vector2i in tree_damage.keys():
+		tree_hits(c)
+
+
+## Why the player cannot plant a sapling at a cell, "" if they can: free, walkable grass, not on a
+## road, a door, a field, a plot or a building, and not beside another tree.
+func plant_refusal(cell: Vector2i) -> String:
+	if not map.in_village(cell):
+		return map.overworld.plant_refusal(cell) if map.overworld != null else "You cannot plant here."
+	if map.is_solid(cell):
+		return "Something is in the way there."
+	if place_of(Vector2(cell) + Vector2(0.5, 0.5)) != "":
+		return "You cannot plant indoors."
+	if _road_cells().has(cell):
+		return "You cannot plant on the road."
+	if _exit_cells().has(cell):
+		return "That is the path out of the village."
+	for t in trees:
+		if t.state != "cleared" and absi(int(t.x) - cell.x) <= 1 and absi(int(t.y) - cell.y) <= 1:
+			return "There is a tree here already." if (t.x == cell.x and t.y == cell.y) else "Too close to another tree."
+	var near := Rect2i(cell - Vector2i(1, 1), Vector2i(3, 3))
+	for b in buildings.values():
+		if Rect2i(int(b.x), int(b.y), int(b.w), int(b.h) + 1).grow(1).has_point(cell):
+			return "Too near a building."
+		if Vector2i(int(b.door[0]), int(b.door[1])).distance_to(cell) < 3.0:
+			return "Keep the doorway clear."
+	for pl in plots:
+		if Rect2i(int(pl.x), int(pl.y), int(pl.w), int(pl.h) + 1).has_point(cell):
+			return "That ground is surveyed for building."
+	for f in fields:
+		if Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).grow(1).has_point(cell):
+			return "That is a field."
+	for pen in fauna.pens.values():
+		if Rect2i(int(pen.x), int(pen.y), int(pen.w), int(pen.h)).grow(1).has_point(cell):
+			return "That is a pen."
+	for id in stalls:
+		if near.has_point(Vector2i(int(stalls[id].x), int(stalls[id].y))) or near.has_point(Vector2i(int(stalls[id].use[0]), int(stalls[id].use[1]))):
+			return "That is the market."
+	for id in stations:
+		if near.has_point(Vector2i(int(stations[id].at[0]), int(stations[id].at[1]))) or near.has_point(Vector2i(int(stations[id].use[0]), int(stations[id].use[1]))):
+			return "Something is worked there."
+	for e in containers + deposits:
+		if near.has_point(Vector2i(int(e.x), int(e.y))):
+			return "Something stands there."
+	if not plant_at(cell).is_empty():
+		return "Wild plants grow there."
+	return ""
+
+
+var _road_set := {}
+var _exit_set := {}
+
+
+func _road_cells() -> Dictionary:
+	if _road_set.is_empty():
+		for c in map.data.road:
+			_road_set[Vector2i(int(c[0]), int(c[1]))] = true
+		_road_set[Vector2i(-1, -1)] = false
+	return _road_set
+
+
+func _exit_cells() -> Dictionary:
+	if _exit_set.is_empty():
+		for e in map.exits():
+			for c: Vector2i in e.trail:
+				_exit_set[c] = true
+		_exit_set[Vector2i(-1, -1)] = false
+	return _exit_set
+
+
+## Plant the sapling `item` at a cell (check plant_refusal first): a new tree, a sapling, saved with the
+## world. Returns the tree record, {} if the cell is refused.
+func plant_tree(cell: Vector2i, item: String) -> Dictionary:
+	if plant_refusal(cell) != "":
+		return {}
+	var species := Trees.planted_species(item, cell)
+	var t := {}
+	if map.in_village(cell):
+		t = {"x": cell.x, "y": cell.y, "trunk": -1, "top": -1, "bottom": -1, "species": species, "state": "sapling",
+				"regrow": 0.0, "born": minutes, "planted": true}
+		trees.append(t)
+		map.set_solid(cell, false)
+	else:
+		t = map.overworld.plant(cell, species, minutes)
+	stat("trees_planted")
+	tree_changed.emit(t)
+	return t
 
 
 func nearest_tree(from: Vector2i, max_d := 60.0) -> Dictionary:
@@ -1015,7 +1171,7 @@ func _move_plots_to_map(m: VillageMap) -> void:
 	var on_map := {}
 	for t in m.data.trees:
 		on_map[Vector2i(int(t.x), int(t.y))] = true
-	trees = trees.filter(func(t): return on_map.has(Vector2i(int(t.x), int(t.y))))
+	trees = trees.filter(func(t): return t.get("planted", false) or on_map.has(Vector2i(int(t.x), int(t.y))))
 
 
 func plot(id: String) -> Dictionary:
@@ -1709,7 +1865,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
-const SAVE_VERSION := 11           # 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 12          # 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -2050,14 +2206,24 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	# a tree's tiles are map data, not state: take them from the map (saves made before the
 	# two-tile trees hold other tiles and no bottom)
 	var kinds := {}
-	for t in m.data.trees:
+	for t in m.data.trees + m.decor_trees():
 		kinds[Vector2i(int(t.x), int(t.y))] = t
+	var have := {}
+	for t in trees:
+		have[Vector2i(int(t.x), int(t.y))] = true
+	for c: Vector2i in kinds:                  # saves from before the map's edge woodland was made of trees
+		if not have.has(c):
+			trees.append(_new_tree(kinds[c]))
 	for t in trees:
 		var k: Dictionary = kinds.get(Vector2i(int(t.x), int(t.y)), {})
 		if not k.is_empty():
 			t.trunk = int(k.trunk)
 			t.top = int(k.top)
 			t.bottom = int(k.bottom)
+		if not t.has("species"):
+			t.species = _tree_species(t) if not k.is_empty() else "oak_summer"
+		if not t.has("born"):
+			t.born = -1.0e7 if t.state == "grown" else Trees.born_of(t)
 	# a plant's place and tile are map data; its state is the save's (older saves: every plant ripe)
 	_make_plants(m)
 	var saved_plants := {}
@@ -2130,9 +2296,12 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		quests.drop_manor_quarry()                   # version 7's single manor job gives way to the job board
 	_move_plots_to_map(m)
 	# re-apply world changes to the collision map
+	if map.overworld != null:
+		map.overworld.clock = minutes
 	for t in trees:
-		if t.state != "grown":
-			map.set_solid(Vector2i(int(t.x), int(t.y)), false)
+		if t.state in ["stump", "sapling", "young", "growing"]:
+			Trees.sync(t, minutes)             # grown since the save was made (the clock is the save's: nothing yet)
+		map.set_solid(Vector2i(int(t.x), int(t.y)), Trees.solid(str(t.state)))
 	for id in buildings:
 		var b: Dictionary = buildings[id]
 		if is_built(b):

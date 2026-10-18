@@ -13,7 +13,8 @@ var ow_view: OverworldView     # the world outside the village (chunks round the
 var actors: Node2D
 var above: Node2D
 const MARKER_Z := 20                 # markers draw over roofs and canopies (their layers are z 10 in `above`)
-var canopy: CanopyFade         # fades the tree canopy the player walks behind
+var canopy: CanopyFade         # fades the tile canopies the player walks behind (the trees are TreeView's sprites)
+var tree_view: TreeView        # every tree as a sprite, in `actors` so characters walk behind them
 var roofs: RoofFade            # fades the roof of the building the player is in (or behind)
 var blankets := {}             # bed tile -> its blanket (AtlasTexture), drawn over a sleeper
 var camera: Camera2D
@@ -213,6 +214,8 @@ func _ready() -> void:
 				_start(true)                     # a new game's first message (where paid work is)
 			"credits":
 				ui.show_credits()
+			"trees":
+				_trees_panel()
 			"manor_offer":
 				# the reeve's day of work for the manor (the answer to "Any work for me?")
 				var reeve: NPC = world.npc(world.reeve_id)
@@ -678,6 +681,8 @@ func _build_scene() -> void:
 	actors = Node2D.new()
 	actors.y_sort_enabled = true
 	add_child(actors)
+	tree_view = TreeView.new()
+	actors.add_child(tree_view)
 	above = Node2D.new()
 	above.z_index = 10
 	add_child(above)
@@ -695,7 +700,10 @@ func _build_scene() -> void:
 	above.add_child(ghost)
 	view.build(map, above)
 	_draw_village_exits()
+	tree_view.setup(world)
+	_replace_tree_tiles()
 	ow_view.setup(view, map.overworld, int(GameData.b("overworld_chunk_radius")))
+	ow_view.tree_sink = tree_view
 	bubble_layer = CanvasLayer.new()
 	bubble_layer.layer = 5               # over the map, under the interface (layer 20)
 	add_child(bubble_layer)
@@ -734,13 +742,90 @@ func _build_scene() -> void:
 	world.show_tables()                  # the tavern's tables show only the food that is on them
 
 
-func _apply_world_changes() -> void:
+## The village map draws its trees as tiles; the game draws them as sprites (TreeView). Take the tree
+## tiles out of the layers: every tree of the model (World.trees, the map's edge woodland included) from
+## the tiles it was made from. Collision is the map's, set by each tree's stage.
+func _replace_tree_tiles() -> void:
+	var lays := []
+	for lay in map.data.layers:
+		var n := str(lay.name)
+		if n.begins_with("below") or n.begins_with("above"):
+			lays.append([n, lay.data])
+	var blank := func(cell: Vector2i, value: int) -> void:
+		if cell.y < 0 or value < 0:
+			return
+		for l in lays:
+			if int(l[1][cell.y * map.w + cell.x]) == value:
+				view.set_tile(view.layer(l[0]), cell, -1)
 	for t in world.trees:
-		if t.state != "grown":
-			# a stump, a sapling, or nothing where a stump was grubbed up to build (Property.claim)
-			_on_tile_changed(Vector2i(t.x, t.y), "below", int(t.trunk) if t.state == "stump" else (-1 if t.state == "cleared" else int(map.data.tiles.sapling)))
-			_on_tile_changed(Vector2i(t.x, t.y - 1), "above", -1)
-			_on_tile_changed(Vector2i(t.x, t.y), "above", -1)
+		if t.get("planted", false):
+			continue
+		var cell := Vector2i(int(t.x), int(t.y))
+		blank.call(cell, int(t.trunk))
+		blank.call(cell + Vector2i.UP, int(t.top))
+		blank.call(cell, int(t.bottom))
+
+
+## Screenshot panel "trees": a meadow outside the village's west exit with every species at every growth
+## stage in rows (sapling, young, growing, mature, stump) and two mature trees with axe blows in them.
+func _trees_panel() -> void:
+	var o := map.overworld
+	var out: Vector2i = map.exits()[3].out
+	var species: Array = Trees.art().variants.keys()
+	var stages := ["sapling", "young", "growing", "grown", "stump"]
+	var origin := Vector2i(-1000, -1000)
+	for dx in range(-200, -8, 3):
+		for dy in range(-60, 60, 3):
+			var c := out + Vector2i(dx, dy)
+			var ok := true
+			for i in 5:
+				for j in 5:
+					if ok and o.plant_refusal(c + Vector2i(j * 5, i * 8)) != "":
+						ok = false
+			if ok and origin.x < -999:
+				origin = c
+	if origin.x < -999:
+		origin = out + Vector2i(-40, 0)
+	world.player.pos = Vector2(origin + Vector2i(14, 18)) + Vector2(0.5, 0.5)
+	follow_at = _in_view(world.player.pos * T)
+	ow_view.follow(world.player.pos, world.player.pos, 0.0, -1)
+	var backdrop := ColorRect.new()                          # a plain meadow under the rows
+	backdrop.color = Color(0.53, 0.67, 0.3)
+	backdrop.position = Vector2(origin - Vector2i(4, 4)) * T
+	backdrop.size = Vector2(40, 52) * T
+	add_child(backdrop)
+	move_child(backdrop, actors.get_index())
+	for cy in range(origin.y - 3, origin.y + 44):              # the meadow: the generated trees there are cleared
+		for cx in range(origin.x - 3, origin.x + 34):
+			var base := o.base_tree(Vector2i(cx, cy))
+			if not base.is_empty():
+				base.state = "cleared"
+				o.changes[Vector2i(cx, cy)] = base
+				tree_view.refresh(base)
+	var now := world.minutes
+	for i in species.size():
+		for j in stages.size():
+			var cell := origin + Vector2i(j * 5, i * 8)
+			var t := o.plant(cell, str(species[i]), now)
+			t.state = stages[j]
+			t.born = now - 10.0 - {"sapling": 0.0, "young": Trees.stage_minutes("sapling"), "growing": Trees.stage_minutes("sapling") + Trees.stage_minutes("young")}.get(stages[j], 0.0)
+			if stages[j] == "stump":
+				t.regrow = world.day() + 3.0
+			tree_view.refresh(t)
+	var hurt := o.plant(origin + Vector2i(27, 0), "oak_summer", now)
+	hurt.state = "grown"
+	tree_view.refresh(hurt)
+	world.chop_tree(hurt, -1, 0)
+	world.chop_tree(hurt, -1, 0)
+	var hurt2 := o.plant(origin + Vector2i(27, 8), "pine_summer", now)
+	hurt2.state = "grown"
+	tree_view.refresh(hurt2)
+	for k in 3:
+		world.chop_tree(hurt2, 1, 0)
+	ui.toast_t = 0.01
+
+
+func _apply_world_changes() -> void:
 	for d in world.deposits:
 		if int(d.amount) <= 0:
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
@@ -911,6 +996,7 @@ func _sync_sprites() -> void:
 	player_sprite.position = p.pos * T
 	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
+	tree_view.update(p.pos, get_process_delta_time())
 	ow_view.follow(camera.get_screen_center_position() / T, p.pos, get_process_delta_time())
 	var inside := world.place_of(p.pos)
 	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
@@ -1349,8 +1435,13 @@ func _find_target() -> void:
 						else "%s seam: requires a pickaxe (the smith sells them)" % GameData.item_name(dep.ore)}
 				break
 			var tr := world.tree_at(cell)
-			if not tr.is_empty() and tr.state == "grown":
-				best = {"kind": "tree", "tree": tr, "label": "Fell this tree" if p.tool_of("axe") != "" else "A tree: requires an axe (the smith sells them)"}
+			if not tr.is_empty() and tr.state != "cleared":
+				var lab: String
+				if tr.state == "grown":
+					lab = "Fell this tree" if p.tool_of("axe") != "" else "A tree: requires an axe (the smith sells them)"
+				else:
+					lab = "%s: %s" % [Trees.describe(str(tr.state)), Trees.hint(str(tr.state))]
+				best = {"kind": "tree", "tree": tr, "label": lab}
 				break
 			var pl := world.plant_at(cell)
 			if not pl.is_empty() and pl.state == "ripe":
@@ -1612,14 +1703,11 @@ func _use() -> void:
 			if p.level("woodcutting") >= 3:
 				secs *= 0.7
 			var tr: Dictionary = target.tree
-			start_action("Felling", secs, func():
-				var logs := world.fell(tr, 1 if p.level("woodcutting") >= 2 else 0)
-				if logs > 0:
-					if not p.inv.add("log", logs):
-						ui.message("Your pack is full.")
-					p.inv.wear(axe, 3)
-					ui.message("Felled the tree: %d logs." % logs)
-					_xp("woodcutting", 12))
+			var why := Trees.refusal(str(tr.state))         # only a mature tree can be felled
+			if why != "":
+				ui.message(why)
+				return
+			_chop(tr, axe, secs)
 		"station":
 			ui.show_craft(target.id)
 		"field":
@@ -1678,6 +1766,54 @@ func _use() -> void:
 				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)))
 			else:
 				finish.call(mw.do_step(mj, "player", p.inv))
+
+
+## Fell a mature tree blow by blow: each blow is a short action that cuts the tree (its cut marks, chips
+## and leaves show it), and the last one brings it down. `secs` is the whole felling's time.
+func _chop(tr: Dictionary, axe: String, secs: float) -> void:
+	var p := world.player
+	var chops := int(Trees.cfg().chops)
+	var cell := Vector2i(int(tr.x), int(tr.y))
+	var side := -1 if p.pos.x < float(cell.x) + 0.5 else 1
+	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
+	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
+		if tr.state != "grown":
+			return                                       # someone else felled it meanwhile
+		var r := world.chop_tree(tr, side, 1 if p.level("woodcutting") >= 2 else 0)
+		if int(r.logs) <= 0:
+			_chop(tr, axe, secs)
+			return
+		if p.inv.add("log", int(r.logs)):
+			ui.gain("+%d logs" % int(r.logs))           # a short line in the corner, not a banner
+		else:
+			ui.message("Your pack is full.")
+		var saplings := world.sapling_drop(tr)
+		for id in saplings:
+			if p.inv.add(id, int(saplings[id])):
+				ui.gain("+%d %s" % [int(saplings[id]), GameData.item_name(id).to_lower()])
+		p.inv.wear(axe, 3)
+		_xp("woodcutting", 12))
+
+
+## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.
+func plant_sapling(item: String) -> void:
+	var p := world.player
+	var cell := Vector2i((p.pos + facing_vec() * 1.0).floor())
+	var why := world.plant_refusal(cell)
+	ui.hide_all()
+	if why != "":
+		ui.message(why)
+		return
+	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
+	start_action("Planting", float(Trees.cfg().plant_seconds), func():
+		if not p.inv.has(item) or world.plant_refusal(cell) != "":
+			ui.message("It cannot be planted there now.")
+			return
+		var t := world.plant_tree(cell, item)
+		if not t.is_empty():
+			p.inv.remove(item, 1)
+			ui.message("You plant the %s. It will grow into a tree in a few days." % GameData.item_name(item).to_lower().replace(" sapling", " sapling"))
+	)
 
 
 func start_action(label: String, secs: float, done: Callable) -> void:

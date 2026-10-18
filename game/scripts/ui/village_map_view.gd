@@ -43,7 +43,7 @@ func setup(m) -> void:
 static func image_for(map: VillageMap, world: World) -> Image:
 	var grown := 0
 	for t in world.trees:
-		if t.state == "grown":
+		if Trees.solid(str(t.state)):
 			grown += 1
 	var key := "%d/%d/%d" % [world.get_instance_id(), world.buildings.size(), grown]
 	if _img == null or key != _key:
@@ -101,7 +101,7 @@ static func build_image(map: VillageMap, world: World) -> Image:
 	for f in world.fields:
 		_box(img, Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)), FIELD.get(f.state, FIELD.tilled), FIELD.get(f.state, FIELD.tilled))
 	for t in world.trees:
-		if t.state == "grown":
+		if Trees.solid(str(t.state)):
 			img.set_pixel(int(t.x), int(t.y), TREE)
 			if int(t.y) > 0:
 				img.set_pixel(int(t.x), int(t.y) - 1, TREE)

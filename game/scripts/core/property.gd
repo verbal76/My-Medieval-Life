@@ -545,7 +545,8 @@ func claim(rect: Rect2i, ref: String, lease_it := false) -> Dictionary:
 	for t in w.trees:
 		if t.state != "grown" and t.state != "cleared" and rect.has_point(Vector2i(int(t.x), int(t.y))):
 			t.state = "cleared"
-			w.tile_changed.emit(Vector2i(int(t.x), int(t.y)), "below", -1)
+			w.map.set_solid(Vector2i(int(t.x), int(t.y)), false)
+			w.tree_changed.emit(t)
 	for pl in w.plants:                    # so are the wild plants: nothing grows on a building ground
 		if pl.state != "cleared" and rect.has_point(Vector2i(int(pl.x), int(pl.y))):
 			pl.state = "cleared"

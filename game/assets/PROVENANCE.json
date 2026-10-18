@@ -1631,6 +1631,741 @@
    "member": "Xbox Series/Double/xbox_stick_r_press.png",
    "transform": "copied unchanged",
    "sha256": "f0e502e4868f6d21b4bfb03e544696bbc534649db8be808259096ceefb3968ee"
+  },
+  {
+   "file": "assets/trees/oak_summer_young.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/SmallHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "67f4b392f455ec35ced8bb4215e67e329d79b1b0867cbe2c5a0f6866ae7a5805"
+  },
+  {
+   "file": "assets/trees/oak_summer_growing.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/MediumHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "73be3e1c116ef750e2e90ca1efa47f963647a462f4527d7ef9edf8f7a871ad63"
+  },
+  {
+   "file": "assets/trees/oak_summer_mature.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "243d89518ff043fffccf4b306c3b43ecadccd98eae14f54e242315334916906e"
+  },
+  {
+   "file": "assets/trees/oak_summer_top.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_top.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "77495094c69e76b1a8247be371a1d248c2bfe90a3c5d0224f83ef3ddcd4be597"
+  },
+  {
+   "file": "assets/trees/oak_summer_stump.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_stump.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "adaac3fac954ed5643a907740627919faac4e4317769d7fb7643cfdac6167293"
+  },
+  {
+   "file": "assets/trees/oak_summer_cut_left_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_cut_left_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "91235a55be795821d6bb978659d1a9678e618786f5df7984e019d7842a984964"
+  },
+  {
+   "file": "assets/trees/oak_summer_cut_left_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_cut_left_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "51e54c3fd791326a1be0022bad4713fa09f83776c919b51503720e57801b20c6"
+  },
+  {
+   "file": "assets/trees/oak_summer_cut_left_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_cut_left_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "39db0c40a2195fbd60d603b4c5789d6f8152365a478b2150c746d720e7d7b4e1"
+  },
+  {
+   "file": "assets/trees/oak_summer_cut_right_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_cut_right_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "8bf631435160258a9824069d0ab0fd19cad3c707fef3380c2d11a439d71b8738"
+  },
+  {
+   "file": "assets/trees/oak_summer_cut_right_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_cut_right_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "118a06972b5632cd35f6adbcbf2c85787c6e339d5b58b80afdc90b6f3dd79f5c"
+  },
+  {
+   "file": "assets/trees/oak_summer_cut_right_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_cut_right_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "c91c474dcb653daf6e30d07861793a61268c9f91a71c84f2af8959f6f0bb2ac5"
+  },
+  {
+   "file": "assets/trees/oak_summer_sapling.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/MediumHealthy/T_sapling.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "0dc6bb4b8f3028e0c6edd1999f26236bf4c6def5af7c531823e55ee885f30a01"
+  },
+  {
+   "file": "assets/trees/leaf_oak_summer_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_leaf_0.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "42c2102b0e8b544f5fe6ca602ba9c4c36ab85d9a96351357fa66cfbcb45d8b21"
+  },
+  {
+   "file": "assets/trees/leaf_oak_summer_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_leaf_1.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "fe68424bf0b2f9f3185044d28068743aae2a00840991354dc1ef12e7bca762bc"
+  },
+  {
+   "file": "assets/trees/leaf_oak_summer_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_leaf_2.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "93d54840ebb26090529b1fae9220f6deee0f117299a2671cb43cbe62876cf1c5"
+  },
+  {
+   "file": "assets/trees/leaf_oak_summer_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_leaf_3.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "65acc16b9b3fc21516b06ad9d9394fc6a8239d7119a6d7f90810fe4c10627eaf"
+  },
+  {
+   "file": "assets/trees/leaf_oak_summer_4.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_leaf_4.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "074f8e866f7ec286d6786d7be2ee83aa55264e7713cb241cc63c017add386bd9"
+  },
+  {
+   "file": "assets/trees/leaf_oak_summer_5.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/LargeHealthy/T_leaf_5.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "4f9af3729393113638a0be9730e1a3e0a3a718e3a9d1887e448f017621a3914b"
+  },
+  {
+   "file": "assets/trees/oak_autumn_young.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/SmallHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "9aceff9a4bcb3d6f85f0aaf09606cacb223caa7e86c572d47ee06750fb052132"
+  },
+  {
+   "file": "assets/trees/oak_autumn_growing.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/MediumHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "09c0d16d13d85b625d65e3b37c7c2084edd97100c93c59fd91dca17d66e0cc7e"
+  },
+  {
+   "file": "assets/trees/oak_autumn_mature.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "ccc4a5c5fb0b23408e2038a0f94c93178dfb41c355639e17bf6fe0529a630ed1"
+  },
+  {
+   "file": "assets/trees/oak_autumn_top.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_top.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "735e79c453079529389bd3fda5eb3cd2a0e84849d4c1f62c3eb6d76024997521"
+  },
+  {
+   "file": "assets/trees/oak_autumn_stump.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_stump.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "49f95035e4db198df2deaf6af7dcc87873812ee11789d036e117c0607c24aeb5"
+  },
+  {
+   "file": "assets/trees/oak_autumn_cut_left_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_cut_left_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "91235a55be795821d6bb978659d1a9678e618786f5df7984e019d7842a984964"
+  },
+  {
+   "file": "assets/trees/oak_autumn_cut_left_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_cut_left_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "51e54c3fd791326a1be0022bad4713fa09f83776c919b51503720e57801b20c6"
+  },
+  {
+   "file": "assets/trees/oak_autumn_cut_left_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_cut_left_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "39db0c40a2195fbd60d603b4c5789d6f8152365a478b2150c746d720e7d7b4e1"
+  },
+  {
+   "file": "assets/trees/oak_autumn_cut_right_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_cut_right_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "8bf631435160258a9824069d0ab0fd19cad3c707fef3380c2d11a439d71b8738"
+  },
+  {
+   "file": "assets/trees/oak_autumn_cut_right_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_cut_right_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "118a06972b5632cd35f6adbcbf2c85787c6e339d5b58b80afdc90b6f3dd79f5c"
+  },
+  {
+   "file": "assets/trees/oak_autumn_cut_right_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_cut_right_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "c91c474dcb653daf6e30d07861793a61268c9f91a71c84f2af8959f6f0bb2ac5"
+  },
+  {
+   "file": "assets/trees/oak_autumn_sapling.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/MediumHealthy/T_sapling.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "711452f6feac533e12319a3fc6102022e616b0254208ab1ccd5d98dd405a115c"
+  },
+  {
+   "file": "assets/trees/leaf_oak_autumn_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_leaf_0.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "f69458bbfe0b26f6010426c6fd393bdf776263dac872a081d99f93b8761f287a"
+  },
+  {
+   "file": "assets/trees/leaf_oak_autumn_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_leaf_1.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "64f364164e69cacc7803f0fb5fd776d697d7cfbebeac9b98ddf469af5367346c"
+  },
+  {
+   "file": "assets/trees/leaf_oak_autumn_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_leaf_2.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "c8a159190c73d627c434eaa5e99203570ebbbe0d255cf33b8b582bf8bb5f4b79"
+  },
+  {
+   "file": "assets/trees/leaf_oak_autumn_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_leaf_3.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "6e1298ddeea4b1ebdddc02a45c3caac83fba334738f51b6c2da41ffc6a7ea678"
+  },
+  {
+   "file": "assets/trees/leaf_oak_autumn_4.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_leaf_4.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "f13a7a90833e88333d6cc5daaadd0cbd2b0f3f6763f5f30d8e97e9214c37f033"
+  },
+  {
+   "file": "assets/trees/leaf_oak_autumn_5.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Autumn/LargeHealthy/T_leaf_5.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "52076e5d1f668720bed449c4b29ad4f01d448e3cfc74ba764ceb1dae98c13d62"
+  },
+  {
+   "file": "assets/trees/oak_snow_young.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/SmallHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "4d9880bdcc948f7960841e18050fa56c857badcb6c4e4d22c4db00316c9c84f5"
+  },
+  {
+   "file": "assets/trees/oak_snow_growing.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/MediumHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "f3348a7623a63aedef07021a1330441878be08a27358b60b8d60d45eb2bd21ce"
+  },
+  {
+   "file": "assets/trees/oak_snow_mature.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "52b2b71a577f6917442b182ceaf62a8cdb798ba505dfe312664c5f833eb023ce"
+  },
+  {
+   "file": "assets/trees/oak_snow_top.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_top.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "d59aafbdc4769a188405fe9b988986e1be304d481068aeebf78adc64ec44ee23"
+  },
+  {
+   "file": "assets/trees/oak_snow_stump.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_stump.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "e98bebd14cce33b7399d5808d232cb83cebbbdb3217f1ac6951296e3615f989b"
+  },
+  {
+   "file": "assets/trees/oak_snow_cut_left_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_cut_left_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "fe4a3d3b35555a515ce5386960d5f6580e258e2671ec28a3d5f5d0a1820a7381"
+  },
+  {
+   "file": "assets/trees/oak_snow_cut_left_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_cut_left_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "61420738415a78fc812f620908303d84ce042fee2dc6c16c62e49d26be63b8e2"
+  },
+  {
+   "file": "assets/trees/oak_snow_cut_left_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_cut_left_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "685e70eec269b35688aec548fa9cb7dc97088859343022c50f1275eb58628b55"
+  },
+  {
+   "file": "assets/trees/oak_snow_cut_right_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_cut_right_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "7be2da010968195cfafe48be4aca953c9b8ceda0c923d9af64413ad4856e28aa"
+  },
+  {
+   "file": "assets/trees/oak_snow_cut_right_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_cut_right_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "5975d571bae7b4ceded59448e820f609fc488c1c9fc3c7886fa46e8bcac9d763"
+  },
+  {
+   "file": "assets/trees/oak_snow_cut_right_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_cut_right_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "40485fc50d4e85dc72fdd1db9af33cbd9d5d0009acd984fd44c9ea86399f6435"
+  },
+  {
+   "file": "assets/trees/oak_snow_sapling.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/MediumHealthy/T_sapling.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "600e8a36d3a1d931a0c88b0f33f6b272828c0f42a81022f64921cf370d6f1fc8"
+  },
+  {
+   "file": "assets/trees/leaf_oak_snow_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_leaf_0.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "df02a82a0d666165e3e547858f6316bfd9fb3957c6d4631056e7adfef7542eed"
+  },
+  {
+   "file": "assets/trees/leaf_oak_snow_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_leaf_1.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "fe9d9c28ee8629fedb9ce324739c0f6649a23bfd9b82cba538ebae16eaf0d964"
+  },
+  {
+   "file": "assets/trees/leaf_oak_snow_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_leaf_2.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "cd7ddf95ac81573d3cd80bfc61bfa749b4a86865b6ebe43ccfd5e5c59df9817c"
+  },
+  {
+   "file": "assets/trees/leaf_oak_snow_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_leaf_3.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "4d09e2c35078bdaee56857a01b79c17fea93fd6bdf28b4466f5071ef8e648854"
+  },
+  {
+   "file": "assets/trees/leaf_oak_snow_4.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_leaf_4.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "fc0f5eee9e4e77f7dde0940fcde905d2ce4f6d4d76353b00814503bbde9ad194"
+  },
+  {
+   "file": "assets/trees/leaf_oak_snow_5.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Snow/LargeHealthy/T_leaf_5.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "4ef66be32cc2529c454332f638cc7bc4d71d0a6babe79ea2449b56754188748c"
+  },
+  {
+   "file": "assets/trees/pine_summer_young.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/SmallHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "8eb81ba747035ead4ef6a2c614c38ce01917856aaf7d8812d6c1e9e027d3327b"
+  },
+  {
+   "file": "assets/trees/pine_summer_growing.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/MediumHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "db719c92229e4f366efa3da6ac52830d22a7e31724587ae90f4f671a117e32de"
+  },
+  {
+   "file": "assets/trees/pine_summer_mature.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "61c5882bba4e27c233a3fc314a488cae1242150c46c7f02abe70dcc3be95225d"
+  },
+  {
+   "file": "assets/trees/pine_summer_top.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_top.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "3e868189be7b59123de10bc37404eb7d5d2847a749953c995b500ba4c97bfd91"
+  },
+  {
+   "file": "assets/trees/pine_summer_stump.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_stump.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "45067ea322045dc5dda02c0550e0b28b4983cee7d54efd5fea93c6d7b236cfbe"
+  },
+  {
+   "file": "assets/trees/pine_summer_cut_left_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_cut_left_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "c5096640e3f77f863316f939e07f28d81d948fbab82b87bf697f3cccc1a6816a"
+  },
+  {
+   "file": "assets/trees/pine_summer_cut_left_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_cut_left_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "b4c45d9447b531a788505be3d2918fff02e735dad505b35a63fccafc107bb101"
+  },
+  {
+   "file": "assets/trees/pine_summer_cut_left_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_cut_left_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "d18d530ab6f66af457e6ac7852085a1782b4a61fb20c9cc55659a04881b3c553"
+  },
+  {
+   "file": "assets/trees/pine_summer_cut_right_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_cut_right_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "c5096640e3f77f863316f939e07f28d81d948fbab82b87bf697f3cccc1a6816a"
+  },
+  {
+   "file": "assets/trees/pine_summer_cut_right_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_cut_right_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "7bc4e2af465ff7945d8557ab007966ed27cc1dd0dc997b325b42fadf04bf97fc"
+  },
+  {
+   "file": "assets/trees/pine_summer_cut_right_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_cut_right_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "b5b5f9f8c0af713bd9e820b9b7629021aa91e5057f5672794285be207988636e"
+  },
+  {
+   "file": "assets/trees/pine_summer_sapling.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/MediumHealthy/T_sapling.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "86383c8e66c9fe0b47727864ab02277d818846da4cd1fbd64656e311fd56b191"
+  },
+  {
+   "file": "assets/trees/leaf_pine_summer_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_leaf_0.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "ba0605a10095c5df8b4e7d4c51463a026d412c442a264bf9dafb0aff1f4c716e"
+  },
+  {
+   "file": "assets/trees/leaf_pine_summer_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_leaf_1.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "d0b32b8519c0cf0501ea5ba7b9e1d424a62dacf5de8d8acacb0fe32e07281b69"
+  },
+  {
+   "file": "assets/trees/leaf_pine_summer_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_leaf_2.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "434bf2a870078c2700a72b09d09987cd3319212f19dc4fddf65646e6f674bb5d"
+  },
+  {
+   "file": "assets/trees/leaf_pine_summer_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_leaf_3.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "93230b8dca1e6322ee8a8bb12e6b457e600da745244954c5ab2dbd6e848f294a"
+  },
+  {
+   "file": "assets/trees/leaf_pine_summer_4.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_leaf_4.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "b3d2eb7c48d48d0f471bd1d06bf9f1b17660b8b2c52fccb6d5dc0498d27eb007"
+  },
+  {
+   "file": "assets/trees/leaf_pine_summer_5.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/LargeHealthy/T_leaf_5.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "8c8c2f9c35456095b36af354e2b26df8e3a84e28eecee48cbf2a2bbd7f4f9499"
+  },
+  {
+   "file": "assets/trees/pine_snow_young.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/SmallHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "04a22f4f0aa4d91bb38bde40abf54b61f65e7118b7b02840dfe6a45eca2920de"
+  },
+  {
+   "file": "assets/trees/pine_snow_growing.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/MediumHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "3aaaa99b9c42313dcdf286e378a03d465f6cf2a475c8a1d81bf34260cb804aa2"
+  },
+  {
+   "file": "assets/trees/pine_snow_mature.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_tree.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "adbfd7797ccd0a4096c3561f68f44256f2322ae7dcb017d17f08c8f37f1e98f3"
+  },
+  {
+   "file": "assets/trees/pine_snow_top.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_top.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "cccbe2047c545e6eaaf6b1bd16252b871d4af249dadad92b74d68d8c365fd3a1"
+  },
+  {
+   "file": "assets/trees/pine_snow_stump.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_stump.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "c3b52c775c624aefbf9e1fcdf5ec88b1b2c01b583395b6beb85dd4341ccbc8b7"
+  },
+  {
+   "file": "assets/trees/pine_snow_cut_left_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_cut_left_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "1098f43f3c85724265da2f664eb56ea3eba7eea3715548d0fba9c6f650604394"
+  },
+  {
+   "file": "assets/trees/pine_snow_cut_left_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_cut_left_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "a5df5537e858f7cea8f757dd41d1e99179a41d94c89212c441b08d2161ddb1e8"
+  },
+  {
+   "file": "assets/trees/pine_snow_cut_left_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_cut_left_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "17aa1932b2ccdb3b9ed091b5f0da1939654a02a80351a2bfea3fb2624ea3fdb3"
+  },
+  {
+   "file": "assets/trees/pine_snow_cut_right_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_cut_right_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "1098f43f3c85724265da2f664eb56ea3eba7eea3715548d0fba9c6f650604394"
+  },
+  {
+   "file": "assets/trees/pine_snow_cut_right_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_cut_right_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "0a87ab7a1b273162d622f3c4fa56074b592cdfc2a31ba392f858ffa45b377a4b"
+  },
+  {
+   "file": "assets/trees/pine_snow_cut_right_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_cut_right_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "c809b27fb3dfb8877cba21c36831da1786636efdb1e72c9d484b50b5033bb678"
+  },
+  {
+   "file": "assets/trees/pine_snow_sapling.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/MediumHealthy/T_sapling.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half); cropped to its pixels",
+   "sha256": "6d74010eafc2f7a98f4fdc897a747a44f101728a673d28791291e5b367faf0fb"
+  },
+  {
+   "file": "assets/trees/leaf_pine_snow_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_leaf_0.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "57d6732cd158c76e12eda177e64ce7947505dec3ac1ab620f5716b1bd8a67f8a"
+  },
+  {
+   "file": "assets/trees/leaf_pine_snow_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_leaf_1.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "8b9ed88361b96dbd08a617c016ca01e07034a3c3343f91a4570b072d05389066"
+  },
+  {
+   "file": "assets/trees/leaf_pine_snow_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_leaf_2.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "8943b8040d4300f57ce0aa1643839a548be8f1004a101b468d09864137488e0b"
+  },
+  {
+   "file": "assets/trees/leaf_pine_snow_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_leaf_3.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "e211301712953b501108b674def2ce613292396e5ee71b127cb15597c0c94d35"
+  },
+  {
+   "file": "assets/trees/leaf_pine_snow_4.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_leaf_4.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "70c171ca83614afa586ec51359c3e210de1f769098719bc190d1b8840abbfd5d"
+  },
+  {
+   "file": "assets/trees/leaf_pine_snow_5.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Snow/LargeHealthy/T_leaf_5.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "9f32786dc8a8445e5402226584198adc13bd3bad46b7bc2289d9015e4239be1a"
+  },
+  {
+   "file": "assets/trees/fx_chip_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_chip_0.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "77b2943faa7d2efd26f122423fa60b488f05bba7309aba46f8750921537f4113"
+  },
+  {
+   "file": "assets/trees/fx_chip_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_chip_1.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "b0cb098981b115ca6538c75c3cba8ac3f80a72ebb64f56a8e1e7d981c4645559"
+  },
+  {
+   "file": "assets/trees/fx_chip_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_chip_2.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "eb95cb75c2aeb28c209fff0861bda7525c30ec0482815699cd064561d4bded9d"
+  },
+  {
+   "file": "assets/trees/fx_chip_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_chip_3.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "e87f214e4bdacc6161cec0187cc0ec4231b153e07b13e371ad913351f988e484"
+  },
+  {
+   "file": "assets/trees/fx_poof_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_poof_0.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "92b8283c74c1ca81216ffb04d9fea2a78966ae824967a96b88cc450409d5f81a"
+  },
+  {
+   "file": "assets/trees/fx_poof_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_poof_1.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "d3306b61822b5e691474abd0fe05c9be0bafbd849a36bc5037a50d7521cc43fc"
+  },
+  {
+   "file": "assets/trees/fx_poof_2.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_poof_2.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "9dc1f514c8f59c9d22690ad6777e18b54c32a20799ebdb1a23edd516334fdd3f"
+  },
+  {
+   "file": "assets/trees/fx_poof_3.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_poof_3.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "3d3a9fd6c0d0ab312c1f267111d8cb594eb91f3b1dde8630e861d4108f910ae1"
+  },
+  {
+   "file": "assets/trees/fx_poof_4.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_poof_4.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "499a1e0a3ef59fef41e76a90d902c7f493229e83bbdddd12440e587e99a2eb05"
+  },
+  {
+   "file": "assets/trees/fx_poof_5.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_poof_5.png",
+   "transform": "reduced to 1/2 size (box average, alpha cut at half)",
+   "sha256": "997358f2d3ab0a6c7cb3a7b80bdebe326aa08f82aab1fd4d8c6ad1339f7b30bf"
+  },
+  {
+   "file": "assets/trees/fx_dust_0.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_dust_0.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "2c7eb62048b0fc976422d246c9a7b20f02b2341e7c73654e22e7ad4c6438b32c"
+  },
+  {
+   "file": "assets/trees/fx_dust_1.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Effects/T_dust_1.png",
+   "transform": "copied unchanged (decoded and re-saved as PNG)",
+   "sha256": "b1a3471fa3a6730428f94e7a6738aaf3d3226a75864024017df8d2c6e069fb17"
+  },
+  {
+   "file": "assets/icons/oak_sapling.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Oak/Summer/MediumHealthy/T_sapling.png",
+   "transform": "cropped to its pixels and fitted into a 16 px icon (box filter, bottom centre)",
+   "sha256": "f55079b1984a4ac67b170500d192692c5ce7d2ceee7d76dfe129571adbacb977"
+  },
+  {
+   "file": "assets/icons/pine_sapling.png",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "Assets/LivingForest/Art/Trees/Pine/Summer/MediumHealthy/T_sapling.png",
+   "transform": "cropped to its pixels and fitted into a 16 px icon (box filter, bottom centre)",
+   "sha256": "383f4513636a0eb85160cc144beda7ab3b99cb41e5505b5db477db33bdd5f8ba"
+  },
+  {
+   "file": "assets/trees/trees.json",
+   "source": "LivingForest_v1.3.2.unitypackage",
+   "member": "(generated)",
+   "transform": "tools/living_forest.py: what each imported tree file is, its size, offset and pivot",
+   "sha256": "5a0f5559f5b5c9086fc354edd50965d127e8a7b9482b6cc2e40daa793f52fad4"
   }
  ]
 }
