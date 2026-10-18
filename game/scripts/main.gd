@@ -31,6 +31,12 @@ var talk_to: NPC = null                # a tapped villager the player walks up t
 var touch_points := {}
 var pinch_start := 0.0
 var zoom_start := 3.0
+var pinch_mid := Vector2.ZERO          # the midpoint of two touches: moving it pans the camera
+var multi_touch := false               # two fingers were down: lifting them is not a tap
+var cam_free := false                  # looking around: the camera stays at cam_at instead of following the player
+var cam_at := Vector2.ZERO             # where the camera looks while cam_free (pixels)
+var mid_drag := false                  # the middle mouse button is held: mouse motion pans
+const PAN_SPEED := 700.0               # screen pixels a second the right stick pans at full tilt
 var autosave_hour := -1
 var shot_path := ""
 var shot_frames := 0
@@ -113,6 +119,13 @@ func _ready() -> void:
 				ui.show_controls(ui.hide_all)
 			"journal":
 				ui.show_journal(-1)
+			"map", "map_home":
+				if shot_panel == "map_home":
+					world.player.home = "b11"          # a house to show the home marker
+				ui.show_map()
+			"panned":
+				ui.set_scheme("touch")
+				pan_camera(Vector2(-420, -260) * view_scale)
 			"marker":
 				attack_mode = true
 				ui.set_attack_mode(true)
@@ -151,9 +164,11 @@ func _setup_input() -> void:
 		"move_down": [KEY_S, KEY_DOWN], "interact": [KEY_E, KEY_ENTER], "attack": [KEY_SPACE, KEY_J],
 		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "journal": [KEY_B], "pause": [KEY_ESCAPE, KEY_P],
 		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
+		"map": [KEY_M], "recenter": [KEY_C],
 	}
 	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
-		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER}
+		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER,
+		"map": JOY_BUTTON_LEFT_SHOULDER, "recenter": JOY_BUTTON_RIGHT_STICK}
 	for a in keys:
 		if not InputMap.has_action(a):
 			InputMap.add_action(a)
@@ -166,7 +181,11 @@ func _setup_input() -> void:
 			j.button_index = pads[a]
 			InputMap.action_add_event(a, j)
 	for pair in [["move_left", JOY_AXIS_LEFT_X, -1.0], ["move_right", JOY_AXIS_LEFT_X, 1.0],
-			["move_up", JOY_AXIS_LEFT_Y, -1.0], ["move_down", JOY_AXIS_LEFT_Y, 1.0]]:
+			["move_up", JOY_AXIS_LEFT_Y, -1.0], ["move_down", JOY_AXIS_LEFT_Y, 1.0],
+			["look_left", JOY_AXIS_RIGHT_X, -1.0], ["look_right", JOY_AXIS_RIGHT_X, 1.0],
+			["look_up", JOY_AXIS_RIGHT_Y, -1.0], ["look_down", JOY_AXIS_RIGHT_Y, 1.0]]:
+		if not InputMap.has_action(pair[0]):
+			InputMap.add_action(pair[0])
 		var m := InputEventJoypadMotion.new()
 		m.axis = pair[1]
 		m.axis_value = pair[2]
@@ -236,6 +255,8 @@ func _clear_world() -> void:
 	move_to = Vector2.INF
 	walk_goal = Vector2i(-1, -1)
 	strike_pending = false
+	if cam_free:
+		recenter()
 	if attack_mode:
 		attack_mode = false
 		ui.set_attack_mode(false)
@@ -357,6 +378,7 @@ func _process(delta: float) -> void:
 		world.update(delta)
 		_player_step(delta)
 		_projectiles_step(delta)
+		_look_step(delta)
 		var h := int(world.minutes / 60.0)
 		if h != autosave_hour:
 			autosave_hour = h
@@ -394,7 +416,7 @@ func _sync_sprites() -> void:
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
-	camera.position = p.pos * T
+	camera.position = cam_at if cam_free else p.pos * T
 	target_marker.visible = chase != null and chase.alive
 	if target_marker.visible:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
@@ -554,6 +576,8 @@ func _player_step(delta: float) -> void:
 	if v.length() > 0.1:
 		chase = null
 		talk_to = null
+		if cam_free:
+			recenter()                    # walking with keys or the stick brings the view back
 	_chase_step()
 	_talk_step()
 	if v.length() > 0.1:
@@ -1010,17 +1034,33 @@ func _unhandled_input(e: InputEvent) -> void:
 		if e.pressed:
 			touch_points[e.index] = e.position
 			if touch_points.size() == 2:
+				multi_touch = true
 				pinch_start = touch_points.values()[0].distance_to(touch_points.values()[1])
 				zoom_start = camera.zoom.x
+				pinch_mid = (touch_points.values()[0] + touch_points.values()[1]) / 2.0
 		else:
-			touch_points.erase(e.index)
-			if touch_points.is_empty() and not ui.modal():
-				_tap(e.position)
+			# a lift is a tap only for a finger that went down on the map, alone
+			var mine := touch_points.erase(e.index)
+			if touch_points.is_empty():
+				if mine and not multi_touch and not ui.modal():
+					_tap(e.position)
+				multi_touch = false
 	elif e is InputEventScreenDrag:
+		if not touch_points.has(e.index):
+			return
 		touch_points[e.index] = e.position
 		if touch_points.size() == 2 and pinch_start > 0.0:
+			# two fingers: their distance zooms, their midpoint drags the view
 			var d: float = touch_points.values()[0].distance_to(touch_points.values()[1])
 			_set_zoom(zoom_start * d / pinch_start)
+			var mid: Vector2 = (touch_points.values()[0] + touch_points.values()[1]) / 2.0
+			if not ui.modal() and running:
+				pan_camera(pinch_mid - mid)
+			pinch_mid = mid
+	elif e is InputEventMouseButton and e.button_index == MOUSE_BUTTON_MIDDLE:
+		mid_drag = e.pressed and not ui.modal()
+	elif e is InputEventMouseMotion and mid_drag:
+		pan_camera(-e.relative)
 	elif e is InputEventMouseButton and e.pressed:
 		if e.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_set_zoom(camera.zoom.x * 1.1)
@@ -1044,6 +1084,52 @@ func _unhandled_input(e: InputEvent) -> void:
 			ui.hide_all()
 		elif running:
 			ui.show_pause()
+	if e.is_action_pressed("map"):
+		ui.toggle_map()
+	if e.is_action_pressed("recenter") and not ui.modal():
+		recenter()
+
+
+# ---------------------------------------------------------------- looking around -------------
+## Move the view by a screen distance (a two-finger or middle-button drag, the right stick): the
+## camera stops following the player until recentred. Kept over the map.
+func pan_camera(screen_delta: Vector2) -> void:
+	if world == null or screen_delta == Vector2.ZERO:
+		return
+	if not cam_free:
+		cam_at = camera.get_screen_center_position()
+	look_at_tile((cam_at + screen_delta / camera.zoom) / T)
+
+
+## Look at a spot on the map (a tile position), without moving the player.
+func look_at_tile(tile: Vector2) -> void:
+	var half := get_viewport().get_visible_rect().size / camera.zoom / 2.0
+	var world_px := Vector2(map.w, map.h) * T
+	var at := tile * T
+	for k in 2:
+		at[k] = clampf(at[k], half[k], world_px[k] - half[k]) if world_px[k] > half[k] * 2.0 else world_px[k] / 2.0
+	cam_at = at
+	if not cam_free:
+		cam_free = true
+		camera.position_smoothing_enabled = false        # the view sticks to the fingers
+		ui.show_recenter(true)
+
+
+## Follow the player again; the camera glides back.
+func recenter() -> void:
+	cam_free = false
+	if camera:
+		camera.position_smoothing_enabled = shot_path == ""
+	ui.show_recenter(false)
+
+
+## The right stick looks around.
+func _look_step(delta: float) -> void:
+	if ui.modal():
+		return
+	var look := Input.get_vector("look_left", "look_right", "look_up", "look_down", 0.2)
+	if look != Vector2.ZERO:
+		pan_camera(look * PAN_SPEED * delta)
 
 
 ## Which controls are in use, from the latest input: the HUD follows (touch buttons, prompts).
@@ -1127,6 +1213,15 @@ func save_game(show := true) -> void:
 
 
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		# Android's Back: closes an open window (the map, the pack...); otherwise saves and quits as before
+		if ui and ui.modal() and ui.close_btn.visible:
+			ui.hide_all()
+			return
+		if running:
+			save_game(false)
+		get_tree().quit()
+		return
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		if running:
 			save_game(false)

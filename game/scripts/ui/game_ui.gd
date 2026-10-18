@@ -30,6 +30,7 @@ var title_label: Label
 var close_btn: Button
 var touch_bar: HBoxContainer
 var attack_btn: Button
+var recenter_btn: Button       # shown while the camera is looking around, away from the player
 var prompt_text := ""
 var scheme := "kbm"
 const JOURNAL_PER_PAGE := 6    # lines on a journal page (a day heading counts as one)
@@ -43,16 +44,20 @@ const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "to
 const CONTROLS := {
 	"touch": [[["touch_tap"], "Tap the ground to walk there; tap next to someone or something to use it"],
 		[["touch_finger_one"], "Attack turns attack mode on; then tap who to attack, and tap them again to strike"],
-		[["touch_zoom_in"], "Pinch to zoom"]],
+		[["touch_zoom_in"], "Pinch to zoom"],
+		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you"],
+		[["touch_finger_one"], "Map opens the village map; tap a spot on it to look there"]],
 	"kbm": [[["keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d"], "Move"],
 		[["mouse_left"], "Walk to where you click, or use what you click next to you"],
 		[["keyboard_e"], "Use"], [["keyboard_space"], "Swing at what is in front of you"],
 		[["mouse_right"], "Attack whoever you click"], [["keyboard_f"], "Fireball (once learned)"],
 		[["keyboard_i"], "Pack"], [["keyboard_l"], "Skills"], [["keyboard_b"], "Journal"], [["keyboard_escape"], "Menu"],
-		[["mouse_scroll"], "Zoom"]],
+		[["mouse_scroll"], "Zoom"], [["mouse_scroll", "mouse_move"], "Hold the wheel and drag to look around"],
+		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
 		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_button_y"], "Fireball (once learned)"],
-		[["xbox_button_view"], "Pack"], [["xbox_button_menu"], "Menu"], [["xbox_button_b"], "Close a window"]],
+		[["xbox_button_view"], "Pack"], [["xbox_button_menu"], "Menu"], [["xbox_button_b"], "Close a window"],
+		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"]],
 }
 const SCHEME_NAMES := {"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
@@ -254,7 +259,7 @@ func _build_hud() -> void:
 	touch_bar.add_theme_constant_override("separation", 8)
 	hud.add_child(touch_bar)
 	for b in [["Use", "interact", "use"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
-			["Skills", "skills", "skills"], ["Menu", "pause", "menu"]]:
+			["Skills", "skills", "skills"], ["Map", "map", "map"], ["Menu", "pause", "menu"]]:
 		var btn := _tile_button(b[2], b[0], 72)
 		btn.focus_mode = Control.FOCUS_NONE
 		var act: String = b[1]
@@ -262,6 +267,16 @@ func _build_hud() -> void:
 		touch_bar.add_child(btn)
 		if act == "attack":
 			attack_btn = btn
+	# Recenter sits above the touch bar's right end, in every control scheme, while looking around
+	recenter_btn = _tile_button("recenter", "Recenter", 72)
+	recenter_btn.focus_mode = Control.FOCUS_NONE
+	recenter_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	recenter_btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	recenter_btn.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	recenter_btn.offset_right = -10
+	recenter_btn.visible = false
+	recenter_btn.pressed.connect(func(): main.recenter())
+	hud.add_child(recenter_btn)
 
 
 ## The controls in use changed: touch buttons only for touch (unless set otherwise), and prompts
@@ -270,6 +285,7 @@ func set_scheme(s: String) -> void:
 	scheme = s
 	var mode: String = main.settings.touch_buttons
 	touch_bar.visible = mode == "always" or (mode == "auto" and s == "touch")
+	recenter_btn.offset_bottom = -10.0 - (104.0 if touch_bar.visible else 0.0)
 	prompt(prompt_text)
 	if is_open("title"):
 		show_title(FileAccess.file_exists(main.SAVE_PATH))       # its controls list follows the scheme
@@ -314,6 +330,8 @@ func _touch_action(act: String) -> void:
 			toggle_inventory()
 		"skills":
 			toggle_skills()
+		"map":
+			toggle_map()
 		"pause":
 			show_pause()
 
@@ -456,7 +474,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_bar.get_children() if touch_bar.visible else []) + [hud.get_child(0)]:
+	for c in (touch_bar.get_children() if touch_bar.visible else []) + [hud.get_child(0), recenter_btn]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false
@@ -1170,6 +1188,27 @@ func show_skills() -> void:
 			b.add_theme_color_override("font_color", Color(0.6, 1.0, 0.6) if got else Color(0.7, 0.7, 0.7))
 			h.add_child(b)
 		panel_body.add_child(h)
+
+
+# ---------------------------------------------------------------- village map ----------------
+func toggle_map() -> void:
+	if is_open("map"):
+		hide_all()
+	elif not modal() and main.running and main.world != null:
+		show_map()
+
+
+## The whole village drawn small, with the named places, your home and where you are
+## (scripts/ui/village_map_view.gd). Close it with Map, the X, M, the pad's B or LB, or Back.
+func show_map() -> void:
+	_open("map", "Village map")
+	var m := VillageMapPanel.new()
+	panel_body.add_child(m)
+	m.setup(main)
+
+
+func show_recenter(on: bool) -> void:
+	recenter_btn.visible = on
 
 
 # ---------------------------------------------------------------- building / home ------------

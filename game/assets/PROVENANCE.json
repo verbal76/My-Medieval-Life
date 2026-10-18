@@ -1017,6 +1017,13 @@
    "sha256": "9025d07769e7e25c453f579aff68b1b879dfdf84a99dacfab777c5d7caea232e"
   },
   {
+   "file": "assets/ui/map.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_2.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 5, column 0; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "e0f51b93571a6c490c270f5195e99675fed05b3b8ed84dfe03a8553fea1957f0"
+  },
+  {
    "file": "assets/ui/menu.png",
    "source": "Flat Game UI Icon Pack",
    "member": "icons_set_1.ai",
@@ -1036,6 +1043,13 @@
    "member": "icons_set_1.ai",
    "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 6; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
    "sha256": "68ca4dfea93aaf2affcf176b9c8a64f89742f4b3debe58f284acf3d667495dab"
+  },
+  {
+   "file": "assets/ui/recenter.png",
+   "source": "Flat Game UI Icon Pack",
+   "member": "icons_set_1.ai",
+   "transform": "rasterised at 150 dpi with pdftoppm; grid row 1, column 2; background made transparent; navy recoloured to wood brown (111, 74, 44); resized to 128 px",
+   "sha256": "5557aa0364b5ec1023bfd82ea872d23b402991d811a0bd2d4c5c3dd8c08da14a"
   },
   {
    "file": "assets/ui/save.png",
@@ -1157,6 +1171,13 @@
    "sha256": "37ea09a5908b33f83b1c0da8383930f623cae05639e2af01508518c965b3fe09"
   },
   {
+   "file": "assets/prompts/keyboard_c.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_c.png",
+   "transform": "copied unchanged",
+   "sha256": "b567b9677cee28ed6cee1e60a5213ebdb631816fabfd44824990860d1d07f4a4"
+  },
+  {
    "file": "assets/prompts/keyboard_d.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_d.png",
@@ -1199,6 +1220,13 @@
    "sha256": "297216214ef305455161e20d61e3c698b784565b42232469a3091f9ae75ddac4"
   },
   {
+   "file": "assets/prompts/keyboard_m.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_m.png",
+   "transform": "copied unchanged",
+   "sha256": "3655322614be6ad0246730a81e4f9b5a0a875b7baf81a66e047a58a4c322f6f7"
+  },
+  {
    "file": "assets/prompts/keyboard_s.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_s.png",
@@ -1227,6 +1255,13 @@
    "sha256": "b008b3981c39400991002b597992216eab13761dcd3e34676f45189e86d7d94c"
   },
   {
+   "file": "assets/prompts/mouse_move.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/mouse_move.png",
+   "transform": "copied unchanged",
+   "sha256": "fc35076abef7b687c8ca62076472520f3f08a8050268fbc5d738ba509abab37e"
+  },
+  {
    "file": "assets/prompts/mouse_right.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/mouse_right.png",
@@ -1246,6 +1281,13 @@
    "member": "Touch/Double/touch_finger_one.png",
    "transform": "copied unchanged",
    "sha256": "8c15dc271eb356c10fc5f5319d8b613b33dec5a88a700952af62c3ec7a2c105c"
+  },
+  {
+   "file": "assets/prompts/touch_swipe_two_move.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Touch/Double/touch_swipe_two_move.png",
+   "transform": "copied unchanged",
+   "sha256": "cd237faf63cd4983e4633dc0e172b036cbab363fcdeff01394c49c1324c8c892"
   },
   {
    "file": "assets/prompts/touch_tap.png",
@@ -1304,11 +1346,32 @@
    "sha256": "00d4b498e1aaa2c6712eaa0f350d7f1cf37a0423b1680e1e0e4f358dd777bd05"
   },
   {
+   "file": "assets/prompts/xbox_lb.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_lb.png",
+   "transform": "copied unchanged",
+   "sha256": "6ca8c3411823d389dd94c6fa7015299a93d58c7e67ad1831280b5901792b6755"
+  },
+  {
    "file": "assets/prompts/xbox_stick_l.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Xbox Series/Double/xbox_stick_l.png",
    "transform": "copied unchanged",
    "sha256": "68edebe98e5efdbfc800154bcc523e67c6b6812df39ee45cf5a6362d6d670861"
+  },
+  {
+   "file": "assets/prompts/xbox_stick_r.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_stick_r.png",
+   "transform": "copied unchanged",
+   "sha256": "0b4b5433b6706aea900c26523b07ccf430a3d203407773552a1bda8c3d5ddfb7"
+  },
+  {
+   "file": "assets/prompts/xbox_stick_r_press.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_stick_r_press.png",
+   "transform": "copied unchanged",
+   "sha256": "f0e502e4868f6d21b4bfb03e544696bbc534649db8be808259096ceefb3968ee"
   }
  ]
 }

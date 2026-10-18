@@ -432,6 +432,99 @@ func _run() -> void:
 	var shown: Array = ui.log_box.get_children().filter(func(c): return not c.is_queued_for_deletion())
 	check(shown.size() == ui.LOG_LINES and shown[-1].text == "event 3", "only the latest %d village events are shown" % ui.LOG_LINES)
 
+	# looking around: two fingers drag the view off the player, Recenter brings it back, one finger still walks
+	ui.hide_all()
+	main.move_to = Vector2.INF
+	main.talk_to = null
+	main._input(InputEventScreenTouch.new())
+	var touch_at := func(i: int, at: Vector2, down: bool) -> void:
+		var t := InputEventScreenTouch.new()
+		t.index = i
+		t.position = at
+		t.pressed = down
+		main._unhandled_input(t)
+	var drag_to := func(i: int, at: Vector2) -> void:
+		var dr := InputEventScreenDrag.new()
+		dr.index = i
+		dr.position = at
+		main._unhandled_input(dr)
+	main._sync_sprites()
+	var zoom1: float = main.camera.zoom.x
+	var mid: Vector2 = get_root().get_visible_rect().size / 2.0
+	# move the fingers away from the map's middle, so the view moves towards it (not into an edge)
+	var toward: Vector2 = (p.pos - Vector2(w.map.w, w.map.h) / 2.0).normalized() * 30.0
+	touch_at.call(0, mid + Vector2(-60, 0), true)
+	touch_at.call(1, mid + Vector2(60, 0), true)
+	for k in range(1, 6):
+		drag_to.call(0, mid + Vector2(-60, 0) + toward * k)
+		drag_to.call(1, mid + Vector2(60, 0) + toward * k)
+	touch_at.call(0, mid + Vector2(-60, 0) + toward * 5, false)
+	touch_at.call(1, mid + Vector2(60, 0) + toward * 5, false)
+	main._sync_sprites()
+	check(main.cam_free and main.camera.position.distance_to(p.pos * main.T) > 20.0 and ui.recenter_btn.visible,
+		"a two-finger drag moves the view off the player (%.0f px) and shows Recenter" % main.camera.position.distance_to(p.pos * main.T))
+	check(is_equal_approx(main.camera.zoom.x, zoom1), "dragging without spreading the fingers keeps the zoom")
+	check(main.move_to == Vector2.INF and main.talk_to == null, "lifting two fingers does not walk")
+	for i in 3:
+		main._process(0.1)
+	check(main.cam_free and main.camera.position == main.cam_at, "the view stays where it was dragged while the world runs")
+	ui.recenter_btn.pressed.emit()
+	main._sync_sprites()
+	check(not main.cam_free and main.camera.position == p.pos * main.T and not ui.recenter_btn.visible, "Recenter follows the player again and hides")
+	# one finger: a tap on open ground still walks there
+	var spot := Vector2.INF
+	for off in [Vector2(3, 0), Vector2(-3, 0), Vector2(0, 3), Vector2(0, -3)]:
+		var c: Vector2 = p.pos + off
+		if not w.map.is_solid(Vector2i(c)) and main._creature_at(c) == null:
+			spot = c
+			break
+	var spot_screen: Vector2 = main.get_canvas_transform() * (spot * main.T)
+	touch_at.call(0, spot_screen, true)
+	touch_at.call(0, spot_screen, false)
+	check(main.move_to != Vector2.INF and main.move_to.distance_to(spot) < 0.1, "a single tap still sets a walk target")
+	main.move_to = Vector2.INF
+	# the village map: the Map button opens and closes it
+	var map_btn: Button = null
+	for b in ui.touch_bar.get_children():
+		if b.text == "Map":
+			map_btn = b
+	check(map_btn != null and ui.touch_bar.visible, "a Map button on the touch bar")
+	map_btn.pressed.emit()
+	check(ui.is_open("map") and main.paused, "the Map button opens the village map (the world waits)")
+	var mv: VillageMapPanel = ui.panel_body.get_child(0)
+	await process_frame
+	var img := VillageMapPanel.image_for(w.map, w)
+	check(img.get_width() == w.map.w and img.get_height() == w.map.h, "the map image is the village's size (%dx%d)" % [img.get_width(), img.get_height()])
+	var tavern: Dictionary = w.buildings["b2"]
+	check(img.get_pixel(int(tavern.x) + 3, int(tavern.y) + 3).is_equal_approx(VillageMapPanel.ROOF), "buildings are drawn on the map")
+	var r: Rect2 = mv.map_rect()
+	check(r.size.y > 200.0 and r.end.y <= mv.size.y and r.end.x <= mv.size.x + 0.5, "the map fits the window (%.0fx%.0f)" % [r.size.x, r.size.y])
+	check(r.has_point(mv.player_point()) and mv.player_point().distance_to(r.position + p.pos * r.size.x / w.map.w) < 0.5, "the player is marked on the map")
+	check(mv.places().any(func(pl): return pl[0] == "The Well House"), "the named buildings are labelled")
+	map_btn.pressed.emit()
+	check(not ui.modal() and not main.paused, "the Map button closes it again")
+	var m_key := InputEventKey.new()
+	m_key.physical_keycode = KEY_M
+	m_key.pressed = true
+	main._unhandled_input(m_key)
+	check(ui.is_open("map"), "M opens the map")
+	main._unhandled_input(m_key)
+	check(not ui.modal(), "M closes it")
+	# a tap on the map looks there
+	ui.toggle_map()
+	mv = ui.panel_body.get_child(0)
+	await process_frame
+	var tap_map := InputEventScreenTouch.new()
+	tap_map.pressed = true
+	tap_map.position = mv.map_rect().get_center()
+	mv._gui_input(tap_map)
+	check(not ui.modal() and main.cam_free and ui.recenter_btn.visible, "a tap on the map closes it and looks there")
+	var c_key := InputEventKey.new()
+	c_key.physical_keycode = KEY_C
+	c_key.pressed = true
+	main._unhandled_input(c_key)
+	check(not main.cam_free, "C recenters")
+
 	# the controls follow the input in use
 	var pad := InputEventJoypadButton.new()
 	pad.button_index = JOY_BUTTON_A

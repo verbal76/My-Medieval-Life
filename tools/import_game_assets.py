@@ -59,6 +59,7 @@ UI_ICONS = {
     "back": ("icons_set_1.ai", 2, 1), "health": ("icons_set_2.ai", 0, 3), "hunger": ("icons_set_2.ai", 6, 5),
     "stamina": ("icons_set_2.ai", 1, 0), "coins": ("icons_set_2.ai", 6, 0), "home": ("icons_set_1.ai", 2, 0),
     "play": ("icons_set_1.ai", 1, 6), "scroll": ("icons_set_2.ai", 9, 6), "trade": ("icons_set_1.ai", 4, 1),
+    "map": ("icons_set_2.ai", 5, 0), "recenter": ("icons_set_1.ai", 1, 2),
 }
 UI_TILE = 128          # icon tiles are saved at this size
 UI_WOOD = (111, 74, 44)  # the pack's navy recoloured to a wood brown (owner, 2026-10-18)
@@ -66,11 +67,13 @@ PROMPT_ZIP = "kenney_input-prompts_1.5.zip"
 # input prompt icons shown with prompts and on the controls list: name -> member (128 px "Double" set)
 PROMPTS = {name: f"Keyboard & Mouse/Double/{name}.png" for name in
            ["keyboard_b", "keyboard_e", "keyboard_f", "keyboard_i", "keyboard_l", "keyboard_space", "keyboard_escape",
-            "keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d", "mouse_left", "mouse_right", "mouse_scroll"]}
+            "keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d", "keyboard_c", "keyboard_m", "mouse_left", "mouse_right",
+            "mouse_scroll", "mouse_move"]}
 PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
                 ["xbox_button_a", "xbox_button_b", "xbox_button_x", "xbox_button_y", "xbox_button_view",
-                 "xbox_button_menu", "xbox_stick_l"]})
-PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in"]})
+                 "xbox_button_menu", "xbox_stick_l", "xbox_stick_r", "xbox_stick_r_press", "xbox_lb"]})
+PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in",
+                                                                "touch_swipe_two_move"]})
 MONSTER_ZIP = "PunyMonsters.zip"
 # game species -> (archive, member)
 ANIMALS = {
