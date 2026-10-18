@@ -55,6 +55,7 @@ func _init() -> void:
 	test_doorways()
 	test_field_edges()
 	test_work_has_purpose()
+	test_no_child_pickpocket()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -3167,3 +3168,16 @@ func test_work_has_purpose() -> void:
 			if n.alive and n.anim == "work" and not n.plan.is_empty() and str(n.plan[0].get("act", "")) == "":
 				idle_work[n.job + ": " + n.doing] = true
 	check(idle_work.is_empty(), "every villager swinging a tool is doing real work %s" % [idle_work.keys()])
+
+
+## Children's pockets are never picked (owner, B8-010).
+func test_no_child_pickpocket() -> void:
+	var w := new_world()
+	var kids := w.npcs.filter(func(n): return n.alive and n.role == "child")
+	check(not kids.is_empty(), "the village has children")
+	if kids.is_empty():
+		return
+	var k: NPC = kids[0]
+	var c0 := k.coins
+	var r := w.pickpocket(k)
+	check(not r.ok and k.coins == c0 and w.player.crimes.is_empty(), "picking a child's pocket is refused: %s" % r.text)

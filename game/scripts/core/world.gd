@@ -1518,6 +1518,8 @@ func shop_name(n: NPC) -> String:
 func pickpocket(n: NPC) -> Dictionary:
 	if not n.alive or n.role == "bandit":
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
+	if n.role == "child":                       # owner, 2026-10-18 (B8-010): never a child's pocket
+		return {"ok": false, "what": "", "text": "You will not rob a child."}
 	var lv := player.level("stealth")
 	var chance := minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * (lv - 1), float(GameData.b("pickpocket_chance_max")))
 	var sleeping := asleep(n)

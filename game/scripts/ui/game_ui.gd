@@ -1704,7 +1704,8 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	if n.id == w.reeve_id:
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)
-	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH:
+	# ...never a child's (owner, 2026-10-18: B8-010, keep disabled)
+	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child":
 		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))
 	_talk_choice(choices, "How are things at home?", func(): _talk_view(n, Dialogue.home(w, n)))
@@ -1765,9 +1766,10 @@ func show_sleeper(n: NPC) -> void:
 		hide_all()
 		message("You wake %s." % n.name)
 		show_talk(n))
-	_button("Pick pocket while asleep — theft", func():
-		hide_all()
-		main.pickpocket(n))
+	if n.role != "child":                 # never a child's pocket (owner, B8-010)
+		_button("Pick pocket while asleep — theft", func():
+			hide_all()
+			main.pickpocket(n))
 	_button("Let them sleep", hide_all)
 
 
