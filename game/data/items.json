@@ -96,14 +96,16 @@
       "type": "tool",
       "tool": "pickaxe",
       "value": 32,
-      "durability": 120
+      "durability": 120,
+      "speed": 1.0
     },
     "axe": {
       "name": "Axe",
       "type": "tool",
       "tool": "axe",
       "value": 32,
-      "durability": 120
+      "durability": 120,
+      "speed": 1.0
     },
     "hammer": {
       "name": "Smith's hammer",
@@ -137,6 +139,46 @@
       "type": "armor",
       "value": 80,
       "armor": 6
+    },
+    "rusty_sword": {
+      "name": "Rusty sword",
+      "type": "weapon",
+      "value": 6,
+      "damage": 5,
+      "durability": 80
+    },
+    "rusty_pickaxe": {
+      "name": "Rusty pickaxe",
+      "type": "tool",
+      "tool": "pickaxe",
+      "value": 8,
+      "durability": 60,
+      "speed": 0.7
+    },
+    "bread": {
+      "name": "Loaf of bread",
+      "type": "food",
+      "value": 3,
+      "food": 50
+    },
+    "apple": {
+      "name": "Apple",
+      "type": "food",
+      "value": 1,
+      "food": 15
+    },
+    "rotten_apple": {
+      "name": "Rotten apple",
+      "type": "food",
+      "value": 0,
+      "food": 6,
+      "harm": 3
+    },
+    "plain_clothes": {
+      "name": "Plain clothes",
+      "type": "armor",
+      "value": 2,
+      "armor": 0
     }
   }
 }

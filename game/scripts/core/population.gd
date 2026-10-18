@@ -121,6 +121,7 @@ static func populate(w: World) -> void:
 			hh.members.append(n.id)
 			w.npcs.append(n)
 		hh.pantry.add("pottage", 3)
+		hh.pantry.add("wheat", int(GameData.b("start_household_wheat_per_member")) * hh.members.size())   # provisions the settlers brought
 
 	for i in int(GameData.b("bandits")):
 		var b := NPC.new()

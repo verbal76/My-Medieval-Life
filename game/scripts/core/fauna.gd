@@ -145,6 +145,7 @@ func _eat(a: Animal) -> void:
 	var need := int(a.spec().feed)
 	if int(pen.trough) >= need:
 		pen.trough = int(pen.trough) - need
+		w.stat("feed_eaten_wheat", float(need))
 		a.hunger = 100.0
 		a.hp = minf(float(a.spec().hp), a.hp + float(a.spec().hp) * 0.25)
 
@@ -232,6 +233,8 @@ func kill(a: Animal) -> Inventory:
 	var adult := a.adult(w.minutes)
 	var meat := int(s.meat) if adult else maxi(1, int(s.meat) / 2)
 	bag.add("meat", meat)
+	w.stat("made_meat", float(meat))
+	w.bled.emit(a.pos)
 	if adult and int(s.hide) > 0:
 		bag.add("hide", int(s.hide))
 	remove(a)

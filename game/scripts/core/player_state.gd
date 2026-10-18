@@ -18,6 +18,10 @@ var stamina := 100.0
 var skills := {}              # skill -> xp
 var weapon := ""              # equipped item id
 var armor := ""
+var tool := ""                # the tool in hand (a pickaxe or an axe)
+var sex := "male"             # chosen at character creation
+var look := "player_m0_basic" # appearance id (game/data/appearances.json)
+var crimes: Array = []        # {day, kind, what, victim, witnesses}: what the village saw the player do
 var spells := {}              # "fireball": true
 var fireball_cd := 0.0
 var attack_cd := 0.0
@@ -70,6 +74,17 @@ func damage() -> float:
 	return d
 
 
+## The tool of a kind the player uses: the one in hand if it is of that kind, else the best carried.
+func tool_of(kind: String) -> String:
+	if tool != "" and inv.has(tool) and GameData.item(tool).get("tool", "") == kind:
+		return tool
+	var best := ""
+	for id in inv.ids():
+		if GameData.item(id).get("tool", "") == kind and (best == "" or float(GameData.item(id).get("speed", 1.0)) > float(GameData.item(best).get("speed", 1.0))):
+			best = id
+	return best
+
+
 func defense() -> float:
 	if armor != "" and inv.has(armor):
 		return float(GameData.item(armor).get("armor", 0))
@@ -82,7 +97,7 @@ func to_dict() -> Dictionary:
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(), "plots": plots.duplicate(),
-		"alive": alive, "deaths": deaths,
+		"alive": alive, "deaths": deaths, "tool": tool, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
 	}
 
 
@@ -102,4 +117,8 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.spells = d.spells.duplicate()
 	p.plots = d.plots.duplicate()
 	p.alive = bool(d.alive)
+	p.tool = str(d.get("tool", ""))                   # older saves: no tool slot, no look, no record
+	p.sex = str(d.get("sex", "male"))
+	p.look = str(d.get("look", ""))
+	p.crimes = d.get("crimes", []).duplicate(true)
 	return p

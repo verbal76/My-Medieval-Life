@@ -11,7 +11,7 @@ func _init() -> void:
 		elif args[i] == "--days":
 			days = int(args[i + 1])
 	var w := World.new()
-	w.setup(VillageMap.load_default(), 1)
+	w.setup(VillageMap.load_default(), int(args[args.find("--seed") + 1]) if "--seed" in args else 1)
 	var deaths := []
 	var events := []
 	w.event.connect(func(t): events.append(t))
@@ -27,6 +27,11 @@ func _init() -> void:
 					var hh: Dictionary = w.households[n.household]
 					print("%s %s %s alive=%s hp=%d hunger=%d coins=%d doing=%s pantry=%s inv=%s" % [w.clock_text(), n.family, n.job, n.alive, n.hp, n.hunger, n.coins, n.doing, hh.pantry.items, n.inv.items])
 	print("deaths: ", deaths)
+	if "--grep" in args:
+		var pat: String = args[args.find("--grep") + 1]
+		for l in events:
+			if pat in l:
+				print(l)
 	if "--household" in args:
 		var fam: String = args[args.find("--household") + 1]
 		for hh in w.households:

@@ -117,6 +117,8 @@ func decide(n: NPC) -> void:
 		n.plan = [go(wander_cell(spot, 3), 0.6), work(w.rng.randf_range(40, 90), "", {}, "idle")]
 		return
 	if h >= WORK_START and h < WORK_END and n.job != "":
+		if h < 12.0 and _day_labour(n):
+			return
 		if _plan_job(n):
 			return
 	_plan_evening(n, h)
@@ -147,12 +149,19 @@ func _plan_evening(n: NPC, h: float) -> void:
 			n.plan = [go(_workplace_cell(seller)), doit("buy_from", {"vendor": seller.id, "item": "log", "qty": 1, "pantry": true})]
 			return
 	if n.coins >= 4 and stocked < dependants + 1:
+		# grain to cook at home feeds a family for far less than meals bought at the tavern
+		var grain := _grain_seller(n)
+		if grain:
+			n.doing = "buying grain for the household"
+			n.plan = [go(_workplace_cell(grain) if grain.job != "farmer" else grain.cell()), doit("buy_from", {"vendor": grain.id, "item": "wheat", "qty": 2, "pantry": true})]
+			return
 		var v := _vendor_with_food(n)
 		if v:
 			n.doing = "buying food for the household"
 			n.plan = [go(_workplace_cell(v)), doit("buy_food", {"vendor": v.id, "pantry": true})]
 			return
-	if h >= WORK_END and n.coins >= 3 and w.rng.randf() < 0.35:
+	# an evening at the tavern only when the household is provided for and there is coin to spare
+	if h >= WORK_END and n.coins >= int(GameData.b("tavern_spare_coins")) and stocked >= dependants + 1 and w.rng.randf() < 0.35:
 		var counter := w.station_use(w.stations_of("tavern_counter")[0])
 		n.doing = "at the tavern"
 		n.plan = [go(wander_cell(counter + Vector2i(-6, 4), 3)), work(w.rng.randf_range(30, 70), "drink", {}, "idle")]
@@ -162,18 +171,25 @@ func _plan_evening(n: NPC, h: float) -> void:
 
 
 func _plan_eat(n: NPC) -> bool:
-	for f in FOOD:
+	for f in COOKED:
 		if n.inv.has(f):
 			n.doing = "eating"
-			n.plan = [work(10, "eat", {}, "idle")]
+			n.plan = [work(10, "eat", {"cooked_only": true}, "idle")]
 			return true
 	var hh: Dictionary = w.households[n.household] if n.household >= 0 else {}
 	if not hh.is_empty():
+		var home_food := n.inv.has("wheat")
 		for f in FOOD:
 			if hh.pantry.has(f):
-				n.doing = "going home to eat"
-				n.plan = [go(w.building_door(n.home)), work(15, "eat_home", {}, "idle")]
-				return true
+				home_food = true
+		if home_food:
+			n.doing = "going home to eat"
+			n.plan = [go(w.building_door(n.home)), work(15, "eat_home", {}, "idle")]
+			return true
+	elif n.inv.has("wheat"):
+		n.doing = "eating"
+		n.plan = [work(10, "eat", {}, "idle")]
+		return true
 	var payer := n
 	if n.coins < 2 and n.household >= 0:
 		payer = _richest_in_household(n)     # the family's tab at the tavern, for anyone without coin
@@ -185,10 +201,12 @@ func _plan_eat(n: NPC) -> bool:
 			return true
 	if payer != null and payer.coins >= 3:
 		for o: NPC in w.npcs:
-			if o.alive and o != n and not o.hidden and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") >= 2:
+			if o.alive and o != n and not o.hidden and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
 				n.doing = "buying grain for porridge"
-				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": 2, "payer": payer.id}), work(15, "eat", {}, "idle")]
+				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": 2, "payer": payer.id}),
+						go(w.building_door(n.home)), work(15, "eat_home", {}, "idle")]
 				return true
+	w.stat("missed_meal_" + ("no_money" if payer == null or payer.coins < 2 else "no_food_for_sale"))
 	once("hungry_%d_%d" % [n.id, w.day()], "%s %s is hungry and cannot get food." % [n.name, n.family])
 	return false
 
@@ -218,6 +236,25 @@ func _plan_job(n: NPC) -> bool:
 			n.doing = {"tavernkeeper": "serving at the tavern", "merchant": "minding the stall", "reeve": "keeping the manor"}[n.job]
 			n.plan = [go(_workplace_cell(n)), work(60, "", {}, "idle")]
 			return true
+		"manor_hand":
+			for f in w.fields:
+				var worked := false
+				for o in f.owner:
+					var fo := w.npc(int(o))
+					if fo and fo.alive and fo.job == "farmer":
+						worked = true
+				if not worked:
+					f.owner.append(n.id)
+					n.job = "farmer"
+					n.left_job = "manor_hand"
+					n.job_since = w.day()
+					n.workplace = f.id
+					once("takes_field_%d" % n.id, "%s %s takes over the untended field %s." % [n.name, n.family, f.id])
+					evaluate_household(n.household)
+					return _farmer(n)
+			n.doing = "working for the manor"
+			n.plan = [go(wander_cell(w.building_door(_manor_id()), 5)), work(90, "", {}, "work")]
+			return true
 		"sage":
 			n.doing = "pondering lore"
 			n.plan = [go(wander_cell(w.building_door("b_hut") if w.buildings.has("b_hut") else w.building_door(n.home), 3), 0.7), work(60, "", {}, "idle")]
@@ -225,11 +262,43 @@ func _plan_job(n: NPC) -> bool:
 	return false
 
 
+## A death changes the household and the village's work: a pen whose keeper died passes to another
+## farmer (the same household first), and the household re-evaluates its living.
+func on_death(n: NPC) -> void:
+	_hand_over_pens(n)
+	if n.household >= 0:
+		evaluate_household(n.household)
+
+
+## A pen whose keeper died or left farming passes to another farmer (the same household first).
+func _hand_over_pens(n: NPC) -> void:
+	for id in w.fauna.pens:
+		var pen: Dictionary = w.fauna.pens[id]
+		if int(pen.owner) != n.id:
+			continue
+		var next: NPC = null
+		for o: NPC in w.npcs:
+			if o.alive and o != n and o.job == "farmer" and _keeper_pen(o).is_empty() and (next == null or (o.household == n.household and next.household != n.household)):
+				next = o
+		pen.owner = next.id if next else -1
+		if next:
+			w.note("%s %s takes over the %s pen from %s." % [next.name, next.family, pen.kind, n.name])
+
+
+func _manor_id() -> String:
+	for id in w.buildings:
+		if w.buildings[id].type == "manor":
+			return id
+	return w.npc(w.reeve_id).home
+
+
+## Who pays on the family tab: the member with the most coins who can buy, an elder as well as an
+## adult (a household's cash feeds all of it, as the manor's relief assumes).
 func _richest_in_household(n: NPC) -> NPC:
 	var best: NPC = null
 	for m in w.households[n.household].members:
 		var o := w.npc(m)
-		if o and o.alive and o.role == "adult" and (best == null or o.coins > best.coins):
+		if o and o.alive and o.role in ["adult", "elder"] and (best == null or o.coins > best.coins):
 			best = o
 	return best
 
@@ -242,6 +311,9 @@ func _idle_at_work(n: NPC, why: String) -> bool:
 
 func _miner(n: NPC) -> bool:
 	if not n.inv.has("pickaxe"):
+		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+			if n.inv.has(o) and _buyer_for(n, o) != null:
+				return _plan_sell_all(n)
 		return _get_tool(n, "pickaxe")
 	var ores := _wanted_ores()
 	if n.job == "laborer":
@@ -266,8 +338,8 @@ func _miner(n: NPC) -> bool:
 		if carried > 0:
 			return _plan_sell_all(n)
 		if w.nearest_deposit(n.cell(), ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]).is_empty():
-			once("mine_out_%d" % n.id, "%s %s finds no ore left to mine." % [n.name, n.family])
-			n.job = ""
+			# the mine is worked out: the manor takes on those who lose their living
+			_change_job(n, "manor_hand", "the mine is worked out")
 			return false
 		return _idle_at_work(n, "waiting for ore buyers")
 	var at := Vector2i(d.x, d.y)
@@ -289,6 +361,9 @@ func _wanted_ores() -> Array:
 
 func _woodcutter(n: NPC) -> bool:
 	if not n.inv.has("axe"):
+		# sell what was felled before the axe broke; the carpenters may be waiting for it
+		if n.inv.has("log") and _buyer_for(n, "log") != null:
+			return _plan_sell_all(n)
 		return _get_tool(n, "axe")
 	if n.inv.count("log") >= int(GameData.b("carry_logs")):
 		return _plan_sell_all(n)
@@ -309,10 +384,8 @@ func _woodcutter(n: NPC) -> bool:
 func _crafter(n: NPC, recipes: Array) -> bool:
 	for r in recipes:
 		var rec: Dictionary = GameData.recipes[r]
-		if n.inv.has_all(rec.in):
-			var st := _station_for(n, rec.station)
+		if n.inv.has_all(rec.in) and _do_recipe(n, r):        # reserves the station, or tries the next recipe
 			n.doing = "working at the %s" % rec.station
-			n.plan = [go(w.station_use(st)), work(float(rec.minutes), "craft", {"recipe": r}, "work", _station_at(st))]
 			return true
 	# nothing to work on: sell surplus, else wait at the bench for deliveries
 	for id in n.inv.items:
@@ -409,7 +482,7 @@ func reserve(n: NPC, id: String) -> int:
 	if id != "wheat" or n.job != "farmer":
 		return 0
 	var pen := _keeper_pen(n)
-	return 0 if pen.is_empty() else w.fauna.daily_need(pen) * 4
+	return 0 if pen.is_empty() else w.fauna.daily_need(pen) * (1 if w.famine() else 4)
 
 
 func _keeper(n: NPC) -> bool:
@@ -422,6 +495,15 @@ func _keeper(n: NPC) -> bool:
 			return _plan_sell(n, "meat" if n.inv.has("meat") else "hide")
 	var at := Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))
 	var need := w.fauna.daily_need(pen)
+	if w.famine():
+		# people come first: the herd is cut back to its breeding stock for meat, and only that
+		# stock is fed grain
+		var cut: Animal = w.fauna.surplus(pen, true)
+		if cut != null and w.fauna.count(pen.id, pen.kind) > int(GameData.b("animals")[pen.kind].keep) + 1:
+			once("famine_cull_%d_%d" % [n.id, w.day()], "Food is short: %s %s slaughters the %s down to the breeding stock." % [n.name, n.family, GameData.b("animals")[pen.kind].name.to_lower()])
+			n.doing = "slaughtering a %s for the hungry" % pen.kind
+			n.plan = [go(at), work(30, "slaughter", {"pen": pen.id, "animal": cut.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+			return true
 	if int(pen.trough) < need * 2:
 		var feed_step := work(15, "feed_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))
 		n.doing = "feeding the %s" % GameData.b("animals")[pen.kind].name.to_lower()
@@ -587,6 +669,40 @@ func _overstock(n: NPC, id: String) -> bool:
 	return n.inv.count(id) > int(caps.get(id, 6)) + 4
 
 
+## A household cooks its grain over the hearth: the cook's pottage recipe (2 wheat -> 6 pottage),
+## when the pantry has no cooked food left. Grain the eater carries goes into the pot too.
+func _cook_at_home(n: NPC, pantry: Inventory) -> void:
+	for f in COOKED:
+		if pantry.has(f):
+			return
+	var rec: Dictionary = GameData.recipes["cook_pottage"]
+	var need := int(rec.in.wheat)
+	if pantry.count("wheat") < need and n.inv.has("wheat"):
+		w.transfer(n.inv, pantry, "wheat", mini(need - pantry.count("wheat"), n.inv.count("wheat")))
+	if pantry.count("wheat") >= need:
+		pantry.remove("wheat", need)
+		pantry.add("pottage", int(rec.out.pottage))
+		w.stat("made_pottage", float(rec.out.pottage))
+		w.stat("used_wheat", float(need))
+		w.stat("home_cooked")
+
+
+## The nearest farmer or food merchant with grain to spare.
+func _grain_seller(n: NPC) -> NPC:
+	var best: NPC = null
+	var bd := 1e9
+	for o: NPC in w.npcs:
+		if not o.alive or o == n or o.hidden or not (o.job == "farmer" or buy_role(o) == "merchant_food"):
+			continue
+		if o.inv.count("wheat") - reserve(o, "wheat") < 2:
+			continue
+		var d := n.pos.distance_to(o.pos)
+		if d < bd:
+			bd = d
+			best = o
+	return best
+
+
 func _vendor_with_food(n: NPC) -> NPC:
 	var best: NPC = null
 	var bd := 1e9
@@ -632,15 +748,33 @@ func _do_recipe(n: NPC, r: String) -> bool:
 	var rec: Dictionary = GameData.recipes[r]
 	var st := _station_for(n, rec.station)
 	if st == "":
+		w.stat("station_busy_" + str(rec.station))
 		return false
+	# the station is reserved for the walk there and the work, plus an hour's slack
+	w.stations[st].users[n.id] = w.minutes + w.map.data.w + float(rec.minutes) + 60.0
 	n.doing = "%s" % r.replace("_", " ")
-	n.plan = [go(w.station_use(st)), work(float(rec.minutes), "craft", {"recipe": r}, "work", _station_at(st))]
+	n.plan = [go(w.station_use(st)), work(float(rec.minutes), "craft", {"recipe": r, "station": st}, "work", _station_at(st))]
 	return true
 
 
-func _station_for(_n: NPC, kind: String) -> String:
-	var ids := w.stations_of(kind)
-	return ids[0] if not ids.is_empty() else ""
+## A station of this kind with room for one more worker (a station holds `capacity` workers, 1 unless
+## the village data says otherwise); "" if all are taken. Lapsed reservations and the dead are cleared.
+func _station_for(n: NPC, kind: String) -> String:
+	for id in w.stations_of(kind):
+		var st: Dictionary = w.stations[id]
+		var users: Dictionary = st.users
+		for u in users.keys():
+			var o := w.npc(int(u))
+			if float(users[u]) < w.minutes or o == null or not o.alive:
+				users.erase(u)
+		if users.has(n.id) or users.size() < int(st.get("capacity", 1)):
+			return id
+	return ""
+
+
+func release_station(n: NPC, st: String) -> void:
+	if w.stations.has(st):
+		w.stations[st].users.erase(n.id)
 
 
 func _station_at(id: String) -> Vector2i:
@@ -706,18 +840,23 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			n.hidden = false
 			return true
 		"eat":
-			for f in FOOD:
+			for f in (COOKED if a.get("cooked_only", false) else FOOD):
 				if n.inv.has(f):
 					n.inv.remove(f)
 					n.hunger = minf(100.0, n.hunger + float(GameData.item(f).food))
+					w.stat("eaten_food", float(GameData.item(f).food))
+					w.stat("eaten_" + f)
 					return true
 			return false
 		"eat_home":
 			var pantry: Inventory = w.households[n.household].pantry
+			_cook_at_home(n, pantry)
 			for f in FOOD:
 				if pantry.has(f):
 					pantry.remove(f)
 					n.hunger = minf(100.0, n.hunger + float(GameData.item(f).food))
+					w.stat("eaten_food", float(GameData.item(f).food))
+					w.stat("eaten_" + f)
 					return true
 			return false
 		"drink":
@@ -726,6 +865,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				if w.trade(n, keeper, "ale", 1, w.sell_price(keeper, "ale")):
 					n.inv.remove("ale")
 					n.hunger = minf(100.0, n.hunger + float(GameData.item("ale").food))
+					w.stat("eaten_food", float(GameData.item("ale").food))
+					w.stat("eaten_ale")
 			return true
 		"buy_food":
 			var v := w.npc(int(a.vendor))
@@ -791,10 +932,14 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"craft":
 			var rec: Dictionary = GameData.recipes[a.recipe]
+			release_station(n, a.get("station", ""))
 			if not n.inv.remove_all(rec.in):
 				return false
 			for id in rec.out:
 				n.inv.add(id, int(rec.out[id]))
+				w.stat("made_" + id, float(rec.out[id]))
+			for id in rec.in:
+				w.stat("used_" + id, float(rec.in[id]))
 			if rec.station == "anvil":
 				n.inv.wear("hammer", 2)
 			return true
@@ -802,14 +947,15 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var f := _field(a.field)
 			if f.is_empty() or f.state != "ripe":
 				return false
-			n.inv.add("wheat", int(GameData.b("field_yield")))
+			n.inv.add("wheat", w.take_crop(f, 1 << 30))          # whatever is left on the field
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
 			# who shares this field before anything is sold
 			for pid in w.fauna.pens:
 				var pen: Dictionary = w.fauna.pens[pid]
 				var need := w.fauna.daily_need(pen)
-				if f.owner.has(int(pen.owner)) and int(pen.trough) < need * 4 and need > 0:
-					n.plan.push_front(work(15, "feed_pen", {"pen": pen.id, "qty": need * 4 - int(pen.trough)}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1]))))
+				var days := 1 if w.famine() else 4
+				if f.owner.has(int(pen.owner)) and int(pen.trough) < need * days and need > 0:
+					n.plan.push_front(work(15, "feed_pen", {"pen": pen.id, "qty": need * days - int(pen.trough)}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1]))))
 					n.plan.push_front(go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))))
 			var pantry: Inventory = w.households[n.household].pantry
 			var keep := maxi(0, 10 - pantry.count("wheat"))
@@ -830,6 +976,15 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var bag: Inventory = w.fauna.kill(prey)
 			for id in bag.ids():
 				n.inv.add(id, bag.count(id))
+			return true
+		"day_labour":
+			var wage := int(GameData.b("day_labour_wage"))
+			if w.treasury >= wage:
+				w.treasury -= wage
+				n.coins += wage
+				n.earned += wage
+				w.stat("gov_wages", wage)
+				w.stat("gov_day_labour", wage)
 			return true
 		"take_pantry":
 			var pantry: Inventory = w.households[n.household].pantry
@@ -931,74 +1086,548 @@ func fight(n: NPC, dt: float) -> void:
 
 
 # ---------------------------------------------------------------- village events -------------
-## Evening business at the manor: the reeve taxes wealth above a threshold, pays for repairs
-## (planks and stone bought and used up) and gives relief to households with no food. Coins only
-## move between people; the materials are consumed.
+## The manor's evening business (owner-approved B3 plan). The treasury is the manor's, not the
+## reeve's purse, so it goes on if the reeve dies. Every coin and grain moves between named
+## parties and is counted in the ledger (w.stats gov_*).
+##  1. tax: per household, on its cash above what a household of its size needs to live and trade:
+##     12% while the treasury holds under 10 days of its obligations (wages), 6% up to 30 days,
+##     none above;
+##  2. emergency relief comes before everything but wages (pay_guards): see 5;
+##  3. repairs (planks, stone, logs, iron bars for fittings), bought from the village's sellers
+##     with money beyond 3 days of wages;
+##  4. the granary buys farmers' genuine surplus with money above the 10-day reserve, never in a
+##     famine and never what a farm needs for its household or its animals;
+##  5. relief: a household that can cover under 2 days of food (pantry plus what its cash buys)
+##     gets food into its pantry up to 3 days: granary grain first, then grain or cooked food the
+##     manor buys for it. A household under 1 day of food is helped even below the reserve, down
+##     to one day of wages. A household that keeps needing relief is named in the log.
 func reeve_day() -> void:
-	var reeve := w.npc(w.reeve_id)
-	if reeve == null or not reeve.alive:
-		once("no_reeve_%d" % w.day(), "There is no reeve to keep the village's accounts.")
-		return
-	var thr := int(GameData.b("tax_threshold"))
+	update_market()
+	var obligations := daily_obligations()
+	var reserve := obligations * float(GameData.b("treasury_reserve_days"))
 	var taxed := 0
-	for o: NPC in w.npcs:
-		if o.alive and o.role == "adult" and o != reeve and o.coins > thr:
-			var t := int((o.coins - thr) * float(GameData.b("tax_rate")))
-			o.coins -= t
-			reeve.coins += t
-			taxed += t
-	var budget := int(reeve.coins * float(GameData.b("repairs_budget_share")))
+	if w.treasury < obligations * float(GameData.b("treasury_tax_holiday_days")):
+		var rate := float(GameData.b("tax_rate_low_treasury")) if w.treasury < reserve else float(GameData.b("tax_rate_normal"))
+		for h in w.households.size():
+			var members := _members(h)
+			if members.is_empty():
+				continue
+			var cash := 0
+			for o: NPC in members:
+				cash += o.coins
+			var exempt := int(GameData.b("tax_exemption_base")) + int(GameData.b("tax_exemption_per_member")) * members.size()
+			var t := int(maxi(0, cash - exempt) * rate)
+			members.sort_custom(func(x: NPC, y: NPC) -> bool: return x.coins > y.coins or (x.coins == y.coins and x.id < y.id))
+			for o: NPC in members:
+				if t <= 0:
+					break
+				var take := mini(t, o.coins)
+				o.coins -= take
+				w.treasury += take
+				taxed += take
+				t -= take
+				w.stat("gov_tax", take)
+	# relief first (it is bought before anything optional), then repairs and the granary
+	var relief := _relief(obligations, reserve)
+	var budget := int(maxf(0.0, w.treasury - 3.0 * obligations) * float(GameData.b("repairs_budget_share")))
 	var bought := 0
-	for id in ["plank", "stone", "log"]:
+	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
 		for o: NPC in w.npcs:
-			if not o.alive or not (o.job == "carpenter" or buy_role(o) == "merchant_raw" or o.job == "laborer"):
+			if not o.alive or not (o.job in ["carpenter", "laborer", "smith"] or buy_role(o) == "merchant_raw"):
 				continue
 			while o.inv.count(id) > 6 and budget > 0 and bought < 40:
 				var price := w.buy_price(o, id)
-				if price > budget or not w.trade(reeve, o, id, 1, price):
+				if price > budget:
 					break
-				reeve.inv.remove(id)          # used up in repairs
+				o.inv.remove(id)              # used up in repairs
+				o.coins += price
+				o.earned += price
+				w.treasury -= price
 				budget -= price
 				bought += 1
-	var relief := 0
-	for hh in w.households:
-		var food := 0
-		for f in FOOD:
-			food += hh.pantry.count(f)
-		var cash := 0
-		var members := 0
-		for m in hh.members:
-			var o := w.npc(m)
-			if o and o.alive:
-				members += 1
-				cash += o.coins
-		if members > 0 and food < members and cash < 4 * members:
-			var gift := mini(reeve.coins, int(GameData.b("relief_coins_per_member")) * members)
-			for m in hh.members:
-				var o := w.npc(m)
-				if o and o.alive and o.role == "adult" and gift > 0:
-					o.coins += gift
-					reeve.coins -= gift
-					relief += gift
+				w.stat("gov_repairs", price)
+	var works := _public_works(obligations)
+	var grain := 0
+	var target := int(w.alive_count() * _day_food() * float(GameData.b("granary_target_days")) / 120.0)
+	if not w.famine() and w.food_days >= float(GameData.b("relief_fill_days")):
+		for o: NPC in w.npcs:
+			if not o.alive or not (o.job == "farmer" or buy_role(o) == "merchant_food"):
+				continue
+			while w.granary.count("wheat") < target and surplus_wheat(o) > 0:
+				var price := w.buy_price(o, "wheat")
+				if w.treasury - price < reserve:
 					break
-	if taxed + bought + relief > 0:
-		w.note("The reeve took %d coins in tax, bought %d loads for repairs and gave %d coins in relief." % [taxed, bought, relief])
+				o.inv.remove("wheat")
+				o.coins += price
+				o.earned += price
+				w.treasury -= price
+				w.granary.add("wheat")
+				grain += 1
+				w.stat("gov_procurement", price)
+				w.stat("gov_granary_in", 1)
+	if taxed + bought + grain + relief > 0:
+		w.note("The manor took %d coins in tax, bought %d loads for repairs and %d grain for the granary, and gave %d households food." % [taxed, bought, grain, relief])
+	if works > 0:
+		w.note("The manor's public works used %d loads of planks, iron and stone." % works)
 
 
-func pay_guards() -> void:
+## Public works: money the treasury holds beyond its tax-holiday level (30 days of wages) is not
+## left idle. A share of the excess is spent each day on planks from the carpenters, iron bars from
+## the smiths and stone, used up in building and mending (bridges, the mill race, walls). Only
+## while there is a reeve to commission them: without one the money lies idle. Returns loads used.
+func _public_works(obligations: float) -> int:
 	var reeve := w.npc(w.reeve_id)
-	var wage := int(GameData.b("guard_wage_per_day"))
-	var sage := w.npc(w.sage_id)
-	if sage and sage.alive and reeve and reeve.alive and reeve.coins >= 4:
-		reeve.coins -= 4
-		sage.coins += 4
+	if reeve == null or not reeve.alive:
+		return 0
+	var excess := w.treasury - obligations * float(GameData.b("treasury_tax_holiday_days"))
+	var budget := int(maxf(0.0, excess) * float(GameData.b("public_works_share")))
+	var keep: Dictionary = GameData.b("public_works_seller_keeps")
+	var used := 0
+	for id in ["plank", "iron_bar", "stone"]:
+		for o: NPC in w.npcs:
+			if not o.alive or not o.job in ["carpenter", "smith", "merchant", "laborer"] or o.hidden:
+				continue
+			while o.inv.count(id) > int(keep.get(id, 6)) and budget > 0 and used < int(GameData.b("public_works_max_loads")):
+				var price := w.buy_price(o, id)
+				if price > budget:
+					break
+				o.inv.remove(id)              # used up in the works
+				o.coins += price
+				o.earned += price
+				w.treasury -= price
+				budget -= price
+				used += 1
+				w.stat("gov_public_works", price)
+				w.stat("used_works_" + id)
+	return used
+
+
+## Food relief into household pantries. Returns how many households were helped.
+func _relief(obligations: float, reserve: float) -> int:
+	var helped := 0
+	for h in w.households.size():
+		var members := _members(h)
+		if members.is_empty():
+			continue
+		var days := household_food_days(h)
+		if days >= float(GameData.b("relief_trigger_days")):
+			continue
+		var pantry: Inventory = w.households[h].pantry
+		var need := (float(GameData.b("relief_fill_days")) - days) * members.size() * _day_food()
+		var wheat := mini(ceili(need / 120.0), w.granary.count("wheat"))
+		if wheat > 0:
+			w.transfer(w.granary, pantry, "wheat", wheat)
+			need -= wheat * 120.0
+			w.stat("gov_relief_grain", wheat)
+		# what the granary cannot give, the manor buys for the household: an emergency (under a day of
+		# food) may spend down to one day of wages, otherwise only money above the reserve
+		var floor_coins := obligations if days < 1.0 else reserve
+		while need > 0.0:
+			var seller := _relief_seller()
+			if seller == null:
+				break
+			var item := "wheat" if seller.inv.has("wheat") and surplus_wheat(seller) > 0 else "pottage"
+			var price := w.sell_price(seller, item)
+			if w.treasury - price < floor_coins or not seller.inv.has(item):
+				break
+			seller.inv.remove(item)
+			seller.coins += price
+			seller.earned += price
+			w.treasury -= price
+			pantry.add(item)
+			need -= 120.0 if item == "wheat" else 40.0
+			w.stat("gov_relief_bought", price)
+			w.stat("gov_relief_bought_" + item, 1)
+		if need < (float(GameData.b("relief_fill_days")) - days) * members.size() * _day_food():
+			helped += 1
+			_note_relief(h)
+	return helped
+
+
+## Grain from a farmer's surplus first, then cooked food from a food seller.
+func _relief_seller() -> NPC:
+	for o: NPC in w.npcs:
+		if o.alive and (o.job == "farmer" or buy_role(o) == "merchant_food") and surplus_wheat(o) > 0:
+			return o
+	for o: NPC in w.npcs:
+		if o.alive and (o.job == "tavernkeeper" or buy_role(o) == "merchant_food") and o.inv.has("pottage"):
+			return o
+	return null
+
+
+## A household that keeps needing relief is named, once a week: relief is not meant to hide a living
+## that does not pay.
+func _note_relief(h: int) -> void:
+	var hh: Dictionary = w.households[h]
+	var days: Array = hh.get("relief_days", [])
+	days.append(w.day())
+	days = days.filter(func(d) -> bool: return int(d) > w.day() - 7)
+	hh.relief_days = days
+	if days.size() >= int(GameData.b("chronic_relief_days")):
+		once("chronic_%d_%d" % [h, w.day() / 7], "The %s household has needed the manor's food on %d of the last 7 days: its work does not keep it fed." % [hh.family, days.size()])
+		w.stat("gov_chronic_relief_households")
+
+
+## Wheat a farmer or food merchant can spare without short-changing anyone: a farmer keeps food for
+## the household (3 days), the livestock feed reserve and a buffer; a merchant keeps half its stock
+## for the market.
+func surplus_wheat(o: NPC) -> int:
+	return maxi(0, o.inv.count("wheat") - keep_wheat(o))
+
+
+func keep_wheat(o: NPC) -> int:
+	var keep := int(GameData.b("granary_keep_buffer"))
+	if o.job == "farmer":
+		keep += reserve(o, "wheat") + ceili(_members(o.household).size() * _day_food() * float(GameData.b("granary_keep_household_days")) / 120.0)
+	else:
+		keep += int(BUYS.get(buy_role(o), {}).get("wheat", 0)) / 2
+	return keep
+
+
+func _day_food() -> float:
+	return 24.0 * float(GameData.b("hunger_per_hour"))
+
+
+func daily_obligations() -> float:
+	var n := 4.0 + float(GameData.b("reeve_wage_per_day"))
 	for o: NPC in w.npcs:
 		if o.alive and o.job == "guard":
-			if reeve and reeve.alive and reeve.coins >= wage:
-				reeve.coins -= wage
+			n += float(GameData.b("guard_wage_per_day"))
+		elif o.alive and o.job == "manor_hand":
+			n += float(GameData.b("manor_wage_per_day"))
+	return n
+
+
+func _members(h: int) -> Array:
+	var out := []
+	if h < 0:
+		return out
+	for m in w.households[h].members:
+		var o := w.npc(m)
+		if o and o.alive:
+			out.append(o)
+	return out
+
+
+## Days of food a household can cover from its pantry (grain counted as cooked at home) and what
+## its cash can buy (about 60 food points a coin), but only up to the household's share of the
+## food actually for sale: coins buy nothing when the market is empty.
+func household_food_days(h: int) -> float:
+	var p: Inventory = w.households[h].pantry
+	var pts := p.count("pottage") * 40.0 + p.count("roast_meat") * 60.0 + p.count("ale") * 10.0 + p.count("wheat") * 120.0
+	var members := _members(h)
+	var cash := 0
+	for o: NPC in members:
+		cash += o.coins
+	var share := market_food_points * members.size() / maxf(1.0, float(w.alive_count() - w.alive_count("bandit")))
+	pts += minf(cash * 60.0, share)
+	return pts / maxf(1.0, members.size() * _day_food())
+
+
+## Food for sale in the village: cooked food at the tavern and food stalls, and the grain farmers and
+## merchants can spare. Updated each morning and before the evening's relief.
+var market_food_points := 0.0
+
+
+var market_wheat_price := 3
+
+
+func update_market() -> void:
+	var pts := 0.0
+	market_wheat_price = int(GameData.value("wheat"))
+	var cheapest := 0
+	for o: NPC in w.npcs:
+		if not o.alive:
+			continue
+		if o.job == "tavernkeeper" or buy_role(o) == "merchant_food":
+			pts += o.inv.count("pottage") * 40.0 + o.inv.count("roast_meat") * 60.0 + o.inv.count("ale") * 10.0
+		if o.job == "farmer" or buy_role(o) == "merchant_food":
+			pts += surplus_wheat(o) * 120.0
+			if o.inv.count("wheat") >= 2:
+				var p := w.sell_price(o, "wheat")
+				if cheapest == 0 or p < cheapest:
+					cheapest = p
+	market_food_points = pts
+	if cheapest > 0:
+		market_wheat_price = cheapest
+
+
+## Wages from the treasury: the sage, the reeve, the guards and the manor's hands.
+func pay_guards() -> void:
+	var sage := w.npc(w.sage_id)
+	if sage and sage.alive and w.treasury >= 4:
+		w.treasury -= 4
+		sage.coins += 4
+		sage.earned += 4
+		w.stat("gov_wages", 4)
+	var rv := w.npc(w.reeve_id)
+	var rw := int(GameData.b("reeve_wage_per_day"))
+	if rv and rv.alive and w.treasury >= rw:
+		w.treasury -= rw
+		rv.coins += rw
+		rv.earned += rw
+		w.stat("gov_wages", rw)
+	var wage := int(GameData.b("guard_wage_per_day"))
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "guard":
+			if w.treasury >= wage:
+				w.treasury -= wage
 				o.coins += wage
+				o.earned += wage
+				w.stat("gov_wages", wage)
 			else:
-				once("unpaid_%d" % w.day(), "The reeve cannot pay the guards today.")
+				once("unpaid_%d" % w.day(), "The manor cannot pay the guards today.")
+	var hand_wage := int(GameData.b("manor_wage_per_day"))
+	if w.treasury < 2.0 * daily_obligations():
+		# the manor cannot keep everyone on: the most recently hired hand is let go
+		var last: NPC = null
+		for o: NPC in w.npcs:
+			if o.alive and o.job == "manor_hand" and (last == null or o.job_since > last.job_since or (o.job_since == last.job_since and o.id > last.id)):
+				last = o
+		if last:
+			_change_job(last, "", "the manor can no longer pay its hands")
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "manor_hand":
+			if w.treasury >= hand_wage:
+				w.treasury -= hand_wage
+				o.coins += hand_wage
+				o.earned += hand_wage
+				w.stat("gov_wages", hand_wage)
+			else:
+				once("unpaid_hands_%d" % w.day(), "The manor cannot pay its hands today.")
+
+
+# ---------------------------------------------------------------- households and work ------
+## A household's economic position, recomputed every morning and right after an event that changes
+## it (a death, a job change; marriage, births and adoption will call it too). Stored in hh.econ:
+## members, adults, dependants, daily food need (points) and cost (food at today's grain price plus
+## firewood), income (members' average daily earnings over 5 days), balance, days of food in hand
+## (pantry plus what its cash can buy), its runway (days its cash and sellable trade stock would last),
+## whether it is sustainable (income covers costs, or it holds 10 days of food or runway), and for how
+## many mornings in a row it has not been.
+func evaluate_household(h: int, daily := false) -> Dictionary:
+	var hh: Dictionary = w.households[h]
+	var members := _members(h)
+	if members.is_empty():
+		hh.econ = {}
+		return hh.econ
+	var adults := 0
+	var income := 0.0
+	for o: NPC in members:
+		if o.role == "adult":
+			adults += 1
+		income += o.avg_income(5)
+	var need := members.size() * _day_food()
+	var cost := need / 120.0 * market_wheat_price + float(GameData.value("log"))
+	var days := household_food_days(h)
+	# what the household could live on: cash, plus the trade stock its members could sell (a smith's
+	# iron, a merchant's goods) at what buyers pay, counted only while someone is buying it
+	var assets := 0.0
+	for o: NPC in members:
+		assets += o.coins
+		for id in o.inv.ids():
+			if not NPCBrain.FOOD.has(id) and not KEEPS.get(o.job, []).has(id) and _buyer_for(o, id) != null:
+				assets += mini(o.inv.count(id), wants(_buyer_for(o, id), id)) * GameData.value(id) * float(GameData.b("sell_ratio"))
+	var runway := assets / maxf(0.1, cost)
+	var savings := float(GameData.b("household_savings_days"))
+	var sustainable := income >= cost or days >= savings or runway >= savings
+	var streak := int(hh.get("unsustainable_days", 0))
+	if daily:
+		streak = 0 if sustainable else streak + 1
+		hh.unsustainable_days = streak
+	hh.econ = {"members": members.size(), "adults": adults, "dependants": members.size() - adults, "need": need,
+		"cost": cost, "income": income, "balance": income - cost, "days": days, "runway": runway, "sustainable": sustainable, "streak": streak}
+	return hh.econ
+
+
+## The jobs open to a villager who needs better work, built from the village's existing jobs: what
+## those doing them have actually earned lately, and how many more the work can take. Skilled trades
+## (smith, carpenter, tanner, cook, tavern, merchant) need training the game does not have, and
+## government posts are appointed, so neither is open here.
+func job_market() -> Dictionary:
+	var earn := {}
+	var heads := {}
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.income_days.size() >= 3:
+			earn[o.job] = float(earn.get(o.job, 0.0)) + o.avg_income(5)
+			heads[o.job] = int(heads.get(o.job, 0)) + 1
+	var count := func(job: String) -> int:
+		var c := 0
+		for o: NPC in w.npcs:
+			if o.alive and o.job == job:
+				c += 1
+		return c
+	var avg := func(job: String, fallback: float) -> float:
+		return float(earn[job]) / int(heads[job]) if heads.has(job) else fallback
+	var market := {}
+	var wage := float(GameData.b("manor_wage_per_day"))
+	var reserve := daily_obligations() * float(GameData.b("treasury_reserve_days"))
+	market["manor_hand"] = {"pay": wage, "open": maxi(0, int((w.treasury - reserve) / (wage * float(GameData.b("manor_hire_runway_days"))))),
+		"tool": "", "at": w.building_door(_manor_id())}
+	var field_open := 0
+	for f in w.fields:
+		field_open += maxi(0, int(GameData.b("field_workers_max")) - _field_workers(f))
+	market["farmer"] = {"pay": avg.call("farmer", 0.0), "open": field_open, "tool": "", "at": Vector2i(int(w.fields[0].x), int(w.fields[0].y))}
+	var trees := 0
+	for t in w.trees:
+		if t.state == "grown":
+			trees += 1
+	market["woodcutter"] = {"pay": avg.call("woodcutter", 0.0), "open": maxi(0, trees / int(GameData.b("trees_per_woodcutter")) - count.call("woodcutter")),
+		"tool": "axe", "at": Vector2i(15, 15)}
+	var game := 0
+	for a: Animal in w.fauna.animals:
+		if a.wild() and a.adult(w.minutes):
+			game += 1
+	market["hunter"] = {"pay": avg.call("hunter", 0.0), "open": maxi(0, game / int(GameData.b("game_per_hunter")) - count.call("hunter")),
+		"tool": "", "at": Vector2i(15, 15)}
+	var ore := 0
+	for dp in w.deposits:
+		ore += int(dp.amount)
+	market["miner"] = {"pay": avg.call("miner", 0.0), "open": maxi(0, ore / int(GameData.b("ore_per_miner")) - count.call("miner") - count.call("laborer")),
+		"tool": "pickaxe", "at": Vector2i(w.map.data.mine.yard[0], w.map.data.mine.yard[1])}
+	return market
+
+
+func _field_workers(f: Dictionary) -> int:
+	var c := 0
+	for o in f.owner:
+		var fo := w.npc(int(o))
+		if fo and fo.alive and fo.job == "farmer":
+			c += 1
+	return c
+
+
+## Every morning: the unemployed, and adults whose household has not been able to live on its income
+## for several mornings and who earn less than their share of its costs, look for better work. They
+## weigh what each open job actually pays against the cost of a tool and the walk from home, and only
+## move for a clear gain. A taken opening is gone for the next villager. Deterministic: households in
+## order, members by id.
+func seek_work() -> void:
+	var market := job_market()
+	var cooldown := int(GameData.b("job_switch_cooldown_days"))
+	for h in w.households.size():
+		var econ: Dictionary = w.households[h].get("econ", {})
+		if econ.is_empty():
+			continue
+		var members := _members(h)
+		members.sort_custom(func(x: NPC, y: NPC) -> bool: return x.id < y.id)
+		for n: NPC in members:
+			if n.role != "adult" or n.job in ["guard", "reeve", "sage"]:
+				continue
+			var unemployed := n.job == ""
+			var share := float(econ.cost) / maxi(1, int(econ.adults))
+			if not unemployed:
+				var settling := n.left_job != "" and w.day() - n.job_since < cooldown     # just changed jobs: give it time
+				if int(econ.streak) < int(GameData.b("mobility_unsustainable_days")) or settling:
+					continue
+				if n.income_days.size() < 5 or n.avg_income(5) >= share:
+					continue
+			var current := 0.0 if unemployed else n.avg_income(5)
+			var best := ""
+			var best_score := -1e9
+			var home := w.building_door(n.home)
+			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner"]:
+				var opt: Dictionary = market[job]
+				if int(opt.open) <= 0 or job == n.job:
+					continue
+				if job == n.left_job and w.day() - n.job_since < int(GameData.b("job_return_days")):
+					continue
+				var setup := 0.0
+				if opt.tool != "" and not n.inv.has(opt.tool):
+					var seller := _seller_of(opt.tool, n)
+					if seller == null or n.coins < w.sell_price(seller, opt.tool):
+						continue
+					setup = w.sell_price(seller, opt.tool) / 10.0
+				var score: float = float(opt.pay) - setup - Vector2(home).distance_to(Vector2(opt.at)) / 60.0
+				if score > best_score:
+					best_score = score
+					best = job
+			if best == "":
+				if unemployed:
+					once("no_work_%d_%d" % [n.id, w.day()], "%s %s looks for work and finds none." % [n.name, n.family])
+				continue
+			if not unemployed and best_score < maxf(current * float(GameData.b("job_switch_margin")), current + float(GameData.b("job_switch_min_gain"))):
+				continue
+			market[best].open = int(market[best].open) - 1
+			var why := "out of work" if unemployed else "%s did not keep the household fed" % (n.job.replace("_", " ") + " work")
+			_change_job(n, best, why)
+
+
+## Take up a job (or lose one: job ""). The old workplace is given up: a stall falls vacant, a pen
+## passes to another farmer. The household re-evaluates at once.
+func _change_job(n: NPC, job: String, why: String) -> void:
+	var old := n.job
+	if w.stalls.has(n.workplace) and int(w.stalls[n.workplace].owner) == n.id:
+		w.stalls[n.workplace].owner = -1
+	if old == "farmer" and not _keeper_pen(n).is_empty():
+		_hand_over_pens(n)
+	n.left_job = old
+	n.job = job
+	n.job_since = w.day()
+	n.plan.clear()
+	match job:
+		"manor_hand":
+			n.workplace = "manor"
+		"farmer":
+			var pick: Dictionary = {}
+			for f in w.fields:
+				if _field_workers(f) < int(GameData.b("field_workers_max")) and (pick.is_empty() or _field_workers(f) < _field_workers(pick)):
+					pick = f
+			if not pick.is_empty():
+				pick.owner.append(n.id)
+				n.workplace = pick.id
+		"woodcutter", "hunter":
+			n.workplace = "forest"
+		"miner":
+			n.workplace = "mine"
+		_:
+			n.workplace = ""
+	if job == "":
+		w.note("%s %s loses the work as %s: %s." % [n.name, n.family, old.replace("_", " "), why])
+	elif old == "":
+		w.note("%s %s takes work as a %s (%s)." % [n.name, n.family, job.replace("_", " "), why])
+	else:
+		w.note("%s %s leaves work as a %s to be a %s: %s." % [n.name, n.family, old.replace("_", " "), job.replace("_", " "), why])
+	w.stat("job_changes")
+	if n.household >= 0:
+		evaluate_household(n.household)
+
+
+## Day labour at the manor: an adult of a household short of food who has earned nothing today may
+## work a day for a wage while the treasury is above its reserve. Food producers stay at their work.
+var earned_at_dawn := {}
+var laboured_today := {}
+
+
+func dawn(record := true) -> void:
+	update_market()
+	if record:
+		for o: NPC in w.npcs:
+			if o.alive and earned_at_dawn.has(o.id):
+				o.income_days.append(o.earned - int(earned_at_dawn[o.id]))
+				if o.income_days.size() > 7:
+					o.income_days.pop_front()
+	earned_at_dawn.clear()
+	laboured_today.clear()
+	for o: NPC in w.npcs:
+		earned_at_dawn[o.id] = o.earned
+	if record:
+		for h in w.households.size():
+			evaluate_household(h, true)
+		seek_work()
+
+
+func _day_labour(n: NPC) -> bool:
+	if n.role != "adult" or n.job in ["guard", "reeve", "manor_hand", "sage", "", "farmer", "cook", "hunter", "tavernkeeper"] or laboured_today.has(n.id):
+		return false
+	if n.earned != int(earned_at_dawn.get(n.id, n.earned)) or household_food_days(n.household) >= float(GameData.b("relief_trigger_days")):
+		return false
+	if w.treasury - int(GameData.b("day_labour_wage")) < daily_obligations() * float(GameData.b("treasury_reserve_days")):
+		return false
+	laboured_today[n.id] = true
+	n.doing = "doing a day's work for the manor"
+	n.plan = [go(wander_cell(w.building_door(_manor_id()), 5)), work(240, "day_labour", {}, "work")]
+	return true
 
 
 ## A merchant caravan passes through: it buys the market's surplus. This is the village's only
@@ -1006,6 +1635,18 @@ func pay_guards() -> void:
 func caravan() -> void:
 	var budget := int(GameData.b("caravan_coins"))
 	var bought := 0
+	# merchants do not sell the village's food away when there is less than a few days of it
+	var food := 0.0
+	var people := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role != "bandit":
+			people += 1
+			for f in FOOD:
+				food += o.inv.count(f) * float(GameData.item(f).food)
+	for hh in w.households:
+		for f in FOOD:
+			food += hh.pantry.count(f) * float(GameData.item(f).food)
+	var keep_food := food < people * 24.0 * float(GameData.b("hunger_per_hour")) * float(GameData.b("caravan_food_reserve_days"))
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
@@ -1013,7 +1654,7 @@ func caravan() -> void:
 		if o.job == "smith":
 			caps = {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
 		for id in o.inv.ids():
-			if not caps.has(id):
+			if not caps.has(id) or (keep_food and (FOOD.has(id) or id == "meat")):
 				continue
 			var keep := int(caps.get(id, 6)) / 2
 			var extra := o.inv.count(id) - keep
@@ -1022,10 +1663,39 @@ func caravan() -> void:
 				if price > budget:
 					break
 				o.inv.remove(id)
+				w.stat("exported_" + id)
 				o.coins += price
 				o.earned += price
 				budget -= price
 				w.coin_sources += price
 				bought += price
 				extra -= 1
-	w.note("A merchant caravan passes through and buys %d coins' worth from the market." % bought)
+	var sold := _caravan_imports()
+	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s." % [bought,
+		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else ""])
+
+
+## When the village's own seams of an ore (or coal) are worked out, the caravan brings it: each
+## smith buys up to `caravan_import_stock` at the caravan's price while keeping the trader cash
+## floor. The coins leave the village (coin_sources falls). Returns the coins spent.
+func _caravan_imports() -> int:
+	var left := {}
+	for d in w.deposits:
+		left[d.ore] = int(left.get(d.ore, 0)) + int(d.amount)
+	var stock: Dictionary = GameData.b("caravan_import_stock")
+	var spent := 0
+	for o: NPC in w.npcs:
+		if not o.alive or o.job != "smith":
+			continue
+		for id in stock:
+			if int(left.get(id, 0)) > int(GameData.b("caravan_import_when_left")):
+				continue
+			var price := maxi(1, roundi(GameData.value(id) * float(GameData.b("caravan_import_markup"))))
+			while o.inv.count(id) < int(stock[id]) and o.coins - price >= int(GameData.b("trader_cash_floor")):
+				o.coins -= price
+				o.spent += price
+				o.inv.add(id)
+				w.coin_sources -= price
+				spent += price
+				w.stat("imported_" + id)
+	return spent

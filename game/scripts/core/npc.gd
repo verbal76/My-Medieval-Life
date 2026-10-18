@@ -34,10 +34,24 @@ var memory: Array = []       # notable events this NPC knows about
 var earned := 0
 var spent := 0
 var tick_acc := 0.0          # for abstract (distant) simulation
+var income_days: Array = []  # coins earned on each of the last 7 days (sales and wages), oldest first
+var job_since := 0           # the day this villager took up the current job
+var left_job := ""           # the job given up at the last change (not taken up again for a while)
 
 
 func cell() -> Vector2i:
 	return Vector2i(floori(pos.x), floori(pos.y))
+
+
+## Average daily earnings over the last `days` recorded days (0 with no history).
+func avg_income(days := 5) -> float:
+	var recent := income_days.slice(-days)
+	if recent.is_empty():
+		return 0.0
+	var t := 0.0
+	for v in recent:
+		t += float(v)
+	return t / recent.size()
 
 
 func remember(text: String) -> void:
@@ -52,7 +66,7 @@ func to_dict() -> Dictionary:
 		"sprite": sprite, "home": home, "workplace": workplace, "inv": inv.to_dict(), "coins": coins,
 		"hunger": hunger, "hp": hp, "max_hp": max_hp, "damage": damage, "armor": armor, "alive": alive,
 		"hidden": hidden, "pos": [pos.x, pos.y], "doing": doing, "memory": memory.duplicate(),
-		"earned": earned, "spent": spent,
+		"earned": earned, "spent": spent, "income_days": income_days.duplicate(), "job_since": job_since, "left_job": left_job,
 	}
 
 
@@ -69,4 +83,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.inv = Inventory.from_dict(d.inv)
 	n.pos = Vector2(float(d.pos[0]), float(d.pos[1]))
 	n.memory = d.memory.duplicate()
+	n.income_days = d.get("income_days", []).duplicate()         # older saves: no history yet
+	n.job_since = int(d.get("job_since", 0))
+	n.left_job = str(d.get("left_job", ""))
 	return n

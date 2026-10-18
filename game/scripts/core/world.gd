@@ -4,7 +4,10 @@ extends RefCounted
 ## money. Headless: the view only reads this and listens to the signals.
 ##
 ## Invariants (tested in tests/run_tests.gd):
-##  - coins are only created by the explicit caravan source and never destroyed;
+##  - coins are only created by the explicit caravan source and never destroyed (the manor
+##    treasury counts as coins in the village);
+##  - grain only enters by harvest and only leaves by being eaten, cooked, fed to animals or sold
+##    to the caravan; the manor granary holds what the treasury bought;
 ##  - items only appear through extraction (mining, felling, hunting, slaughter, harvest) or recipes that
 ##    consume their inputs, and only vanish by being eaten, used up in a recipe or a building,
 ##    or worn out;
@@ -14,6 +17,7 @@ signal tile_changed(cell: Vector2i, kind: String, value: int)   # kind: below | 
 signal event(text: String)
 signal npc_died(npc: NPC)
 signal building_added(b: Dictionary)
+signal bled(pos: Vector2)          # someone or something was slain here (drawn as blood; not saved)
 
 const DAY := 1440.0
 
@@ -33,9 +37,14 @@ var fields: Array = []             # {id, x, y, w, h, state, ready, owner}
 var plots: Array = []              # {id, x, y, w, h, door, price, owner, site}
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
+var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
+var granary := Inventory.new()     # the manor's grain, bought from farmers' surplus, given out as relief
+var last_reeve_day := -1           # the day the reeve's evening business last ran (never twice a day)
+var last_payday := -1              # the day wages were last paid
 var player := PlayerState.new()
 var coin_sources := 0              # coins that entered the village (caravan)
 var log_lines: Array = []
+var stats := {}                    # running ledger (food made, eaten, exported, meals missed ...) for diagnostics; not saved
 var last_hour := -1
 var guard_posts: Array = []        # patrol points
 var bandit_camp := Vector2i.ZERO
@@ -59,7 +68,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		buildings[b.id] = b.duplicate(true)
 	for s in m.data.stations:
 		var st: Dictionary = s.duplicate(true)
-		st.busy = -1
+		st.users = {}                  # npc id -> game minute their reservation lapses (capacity: st.get("capacity", 1))
 		stations[st.id] = st
 	for i in m.data.stalls.size():
 		var s: Dictionary = m.data.stalls[i].duplicate(true)
@@ -73,6 +82,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	for f in m.data.fields:
 		var fd: Dictionary = f.duplicate(true)
 		fd.state = "ripe"
+		fd.crop = int(GameData.b("field_yield"))
 		fd.ready = 0.0
 		fd.owner = []
 		fields.append(fd)
@@ -84,16 +94,39 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
 	Population.populate(self)
+	_open_treasury()
+	# the settlers' grain store: a finite stock of last year's harvest, 7 days of the village's food
+	var settlers := 0
+	for n: NPC in npcs:
+		if n.role != "bandit":
+			settlers += 1
+	granary.add("wheat", ceili(settlers * 24.0 * float(GameData.b("hunger_per_hour")) * float(GameData.b("start_granary_days")) / 120.0))
 	fauna = Fauna.new(self)
 	fauna.populate()
 	_assign_keepers()
 	var sp = m.data.spawns.player
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	player.coins = int(GameData.b("start_coins_player"))
-	player.inv.add("pottage", 2)
+	player.max_hp = float(GameData.b("player_max_hp"))
+	player.hp = player.max_hp
+	var kit: Dictionary = GameData.b("player_start_items")
+	for id in kit:
+		player.inv.add(id, int(kit[id]))
+	player.armor = GameData.b("player_start_armor")
 	for n: NPC in npcs:
 		by_id[n.id] = n
+	brain.dawn(false)                  # the first morning's snapshot of everyone's earnings
 	note("Day 1 begins in the village.")
+
+
+## The manor's funds are the treasury; the reeve keeps only a purse. Used for a new world and to
+## move an older save's reeve coins into the treasury.
+func _open_treasury() -> void:
+	for n: NPC in npcs:
+		if n.id == reeve_id:
+			var purse := mini(n.coins, int(GameData.b("reeve_purse")))
+			treasury += n.coins - purse
+			n.coins = purse
 
 
 ## Each pen gets a keeper: the farmers in id order, one pen each, and a start of feed in the trough.
@@ -165,12 +198,43 @@ func update(real_dt: float) -> void:
 	_update_player(real_dt, gm)
 
 
+## Days of food the village holds for its people (all food in hands and pantries), updated hourly.
+var food_days := 99.0
+
+
+func _update_food_days() -> void:
+	var points := 0.0
+	var people := 0
+	for n: NPC in npcs:
+		if n.alive and n.role != "bandit":
+			people += 1
+			for f in NPCBrain.FOOD:
+				points += n.inv.count(f) * float(GameData.item(f).food)
+	for hh in households:
+		for f in NPCBrain.FOOD:
+			points += hh.pantry.count(f) * float(GameData.item(f).food)
+	points += granary.count("wheat") * float(GameData.item("wheat").food)
+	food_days = points / maxf(1.0, people * 24.0 * float(GameData.b("hunger_per_hour")))
+
+
+func famine() -> bool:
+	return food_days < float(GameData.b("famine_food_days"))
+
+
 func _on_hour(h: int) -> void:
+	_update_food_days()
+	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
+		if f.state == "growing" and minutes >= f.ready:
+			f.state = "ripe"
+			f.crop = int(GameData.b("field_yield"))
+			_field_tiles(f)
 	if h == 6:
 		_new_day()
-	if h == 17:
+	if h == 17 and last_reeve_day != day():
+		last_reeve_day = day()
 		brain.reeve_day()
-	if h == 18:
+	if h == 18 and last_payday != day():
+		last_payday = day()
 		brain.pay_guards()
 	if h == 12 and day() % int(GameData.b("caravan_every_days")) == 1:
 		brain.caravan()
@@ -189,11 +253,8 @@ func _new_day() -> void:
 				tile_changed.emit(Vector2i(t.x, t.y), "below", t.trunk)
 				tile_changed.emit(Vector2i(t.x, t.y - 1), "above", t.top)
 				map.set_solid(Vector2i(t.x, t.y), true)
-	for f in fields:
-		if f.state == "growing" and minutes >= f.ready:
-			f.state = "ripe"
-			_field_tiles(f)
 	fauna.new_day()
+	brain.dawn()
 	var cold := 0
 	for hh in households:
 		if not hh.pantry.remove("log"):
@@ -400,7 +461,7 @@ func player_price_factor(buying: bool) -> float:
 
 
 func total_coins() -> int:
-	var n := player.coins
+	var n := player.coins + treasury
 	for a: NPC in npcs:
 		n += a.coins
 	for l in loot:
@@ -498,8 +559,14 @@ func kill(n: NPC, cause: String) -> void:
 	n.alive = false
 	n.hp = 0.0
 	n.plan.clear()
+	if cause.begins_with("slain"):
+		bled.emit(n.pos)
 	n.target = -1
-	if n.inv.total() > 0 or n.coins > 0:
+	var heir := _heir(n)
+	if heir != null and not cause.begins_with("slain"):
+		_inherit(n, heir)
+	elif n.inv.total() > 0 or n.coins > 0:
+		# what someone slain carried lies where they fell (it can be looted), as it always has
 		var bag := Inventory.new()
 		for id in n.inv.items:
 			bag.add(id, n.inv.items[id])
@@ -515,7 +582,44 @@ func kill(n: NPC, cause: String) -> void:
 			var o := npc(m)
 			if o and o.alive:
 				o.remember("%s died (%s)" % [n.name, cause])
+	brain.on_death(n)
 	npc_died.emit(n)
+
+
+## Who inherits: a surviving adult of the household first, then an elder, then a child (lowest id
+## first, so the choice is deterministic). Null when nobody in the household survives.
+func _heir(n: NPC) -> NPC:
+	if n.household < 0:
+		return null
+	for role in ["adult", "elder", "child"]:
+		for m in households[n.household].members:
+			var o := npc(m)
+			if o and o.alive and o != n and o.role == role:
+				return o
+	return null
+
+
+## Inheritance: food goes into the household's pantry, coins and everything else to the heir. Nothing
+## is created or lost.
+func _inherit(n: NPC, heir: NPC) -> void:
+	var pantry: Inventory = households[n.household].pantry
+	for id in n.inv.ids():
+		var c := n.inv.count(id)
+		if NPCBrain.FOOD.has(id):
+			pantry.add(id, c)
+		else:
+			heir.inv.add(id, c)
+		stat("inherited_items", c)
+	n.inv = Inventory.new()
+	if n.coins > 0:
+		heir.coins += n.coins
+		stat("inherited_coins", n.coins)
+		n.coins = 0
+	heir.remember("inherited what %s left" % n.name)
+
+
+func stat(key: String, n := 1.0) -> void:
+	stats[key] = float(stats.get(key, 0.0)) + n
 
 
 func note(text: String) -> void:
@@ -604,6 +708,113 @@ func deliver(p: Dictionary, inv: Inventory) -> bool:
 	return false
 
 
+# ---------------------------------------------------------------- the player's actions -------
+## Take crop from a ripe field: the player gathers a handful at a time, a farmer the rest. Returns
+## the wheat taken. A field with nothing left is tilled again.
+func take_crop(f: Dictionary, most: int) -> int:
+	if f.state != "ripe":
+		return 0
+	var n := mini(most, int(f.get("crop", GameData.b("field_yield"))))
+	f.crop = int(f.get("crop", GameData.b("field_yield"))) - n
+	stat("made_wheat", n)
+	if int(f.crop) <= 0:
+		set_field(f, "tilled")
+	return n
+
+
+## The player harvests a handful from a field. A field is the farmers' who work it: taking from it
+## without being one of them is theft, and anyone within sight remembers it.
+func player_harvest(f: Dictionary) -> int:
+	var n := take_crop(f, int(GameData.b("harvest_handful")))
+	if n <= 0:
+		return 0
+	player.inv.add("wheat", n)
+	if not f.owner.is_empty():
+		var victim: NPC = null
+		for o in f.owner:
+			var fo := npc(int(o))
+			if fo and fo.alive:
+				victim = fo
+				break
+		witness("theft", "%d wheat from %s" % [n, f.id], victim)
+	return n
+
+
+## Record what the village saw the player do: people within sight (not asleep indoors) remember it,
+## and so does the victim. Returns how many saw it.
+func witness(kind: String, what: String, victim: NPC) -> int:
+	var seen := []
+	for n: NPC in near(player.pos, float(GameData.b("witness_radius"))):
+		if n.role != "bandit":
+			seen.append(n)
+			n.remember("saw %s %s take %s" % [player.name, player.family, what])
+	if victim and not seen.has(victim):
+		victim.remember("found %s missing" % what)
+	player.crimes.append({"day": day(), "kind": kind, "what": what, "victim": victim.id if victim else -1, "witnesses": seen.size()})
+	if seen.size() > 0:
+		note("%s %s was seen taking %s%s." % [player.name, player.family, what, (" (" + victim.name + " " + victim.family + "'s)") if victim else ""])
+	stat("player_" + kind)
+	return seen.size()
+
+
+func player_eat(id: String) -> bool:
+	var it: Dictionary = GameData.item(id)
+	if not it.has("food") or not player.inv.remove(id):
+		return false
+	player.hunger = minf(100.0, player.hunger + float(it.food))
+	if it.has("harm"):
+		damage_player(float(it.harm), "spoiled food")
+	stat("eaten_food", float(it.food))
+	stat("eaten_" + id)
+	return true
+
+
+## Hold a weapon, wear armour or take a tool in hand; "" in a slot means nothing there.
+func player_equip(id: String) -> bool:
+	if not player.inv.has(id):
+		return false
+	match GameData.item(id).get("type", ""):
+		"weapon":
+			player.weapon = id
+		"armor":
+			player.armor = id
+		"tool":
+			player.tool = id
+		_:
+			return false
+	return true
+
+
+func player_unequip(slot: String) -> void:
+	player.set(slot, "")
+
+
+## Drop items on the ground where the player stands: they can be picked up again by anyone looking.
+func player_drop(id: String, qty: int) -> bool:
+	if qty <= 0 or not player.inv.remove(id, qty):
+		return false
+	for slot in ["weapon", "armor", "tool"]:
+		if player.get(slot) == id and not player.inv.has(id):
+			player.set(slot, "")
+	var bag := Inventory.new()
+	bag.add(id, qty)
+	loot.append({"pos": player.pos + Vector2(0, 0.4), "inv": bag, "coins": 0, "from": "dropped by %s" % player.name})
+	return true
+
+
+## The player buys a building plot; the price goes to the manor's treasury.
+func buy_plot(p: Dictionary) -> bool:
+	if p.owner != "" or player.coins < int(p.price):
+		return false
+	player.coins -= int(p.price)
+	treasury += int(p.price)
+	p.owner = "player"
+	player.plots.append(p.id)
+	stat("gov_land_sales", float(p.price))
+	note("%s %s bought %s from the manor." % [player.name, player.family, p.id])
+	return true
+
+
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
 	brain = null
@@ -624,7 +835,8 @@ func to_dict() -> Dictionary:
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
 	return {
-		"save_version": 2, "format": "mml-save/2", "seed": seed, "minutes": minutes,
+		"save_version": 3, "format": "mml-save/3", "seed": seed, "minutes": minutes,
+		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
 		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
@@ -642,7 +854,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	last_hour = int(minutes / 60.0)
 	for s in m.data.stations:
 		var st: Dictionary = s.duplicate(true)
-		st.busy = -1
+		st.users = {}                  # npc id -> game minute their reservation lapses (capacity: st.get("capacity", 1))
 		stations[st.id] = st
 	buildings = d.buildings
 	stalls = d.stalls
@@ -665,6 +877,18 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	if d.has("treasury"):
+		treasury = int(d.treasury)
+		granary = Inventory.from_dict(d.granary)
+		last_reeve_day = int(d.last_reeve_day)
+		last_payday = int(d.last_payday)
+	else:
+		# save_version 1-2 (before the manor treasury): the reeve's coins were the village's funds;
+		# they move into the treasury and the reeve keeps a purse. Total coins are unchanged. The
+		# day's business is marked done if the save was made after 17:00 / 18:00.
+		_open_treasury()
+		last_reeve_day = day() if hour() >= 17.0 else day() - 1
+		last_payday = day() if hour() >= 18.0 else day() - 1
 	fauna = Fauna.new(self)
 	if d.has("fauna"):
 		fauna.load_dict(d.fauna)
@@ -675,6 +899,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		_assign_keepers()
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()
+	brain.dawn(false)
 	# re-apply world changes to the collision map
 	for t in trees:
 		if t.state != "grown":
