@@ -13,8 +13,23 @@ Nothing is pushed anywhere. Restore with:
   git apply <stamp>-<tree>.patch && tar xzf <stamp>-<tree>-new.tar.gz
 
     python3 tools/checkpoint.py [--dir DIR] [--keep N]     (keeps the newest N checkpoints, default 5)
+
+Off-machine package (owner's rule: at least one verified copy off the cloud machine):
+    python3 tools/checkpoint.py --offsite DIR
+records every agent worktree's uncommitted work (untracked files included) as a snapshot commit
+under refs/backup/agent-<name> without touching the worktree, points refs/backup/<branch> at HEAD,
+and writes into DIR a git bundle of everything GitHub does not have yet (HEAD and the snapshots,
+on top of the branch's remote-tracking ref), the same bundle as base64 text (mml-<stamp>-bundle.b64.txt)
+and a README with its sha256 and the restore steps; it checks that the text decodes back to the
+verified bundle. The lead agent then uploads the two text files to the "Medieval Life Backups"
+artifact, downloads the bundle back from there and restores it into a fresh GitHub clone
+(CLAUDE.md, section 5). Secrets never go in: the bundle holds only tracked and untracked,
+not-ignored project files.
 """
+import base64
+import hashlib
 import datetime
+import os
 import subprocess
 import sys
 import tarfile
@@ -85,7 +100,67 @@ def verify(bundle: Path, trees, dest: Path, stamp: str) -> None:
                     tar.getmembers()                                     # readable
 
 
+def snapshot(path: Path, name: str) -> str:
+    """A commit of a working tree's current state (untracked files included) on top of its HEAD,
+    made through a temporary index so the tree and its own index are untouched."""
+    with tempfile.TemporaryDirectory() as tmp:
+        env = {**os.environ, "GIT_INDEX_FILE": str(Path(tmp) / "index")}
+        run = lambda *a: subprocess.run(["git", *a], cwd=path, env=env, check=True, capture_output=True).stdout.decode().strip()
+        head = run("rev-parse", "HEAD")
+        run("read-tree", head)
+        run("add", "-A")
+        tree = run("write-tree")
+        return run("commit-tree", tree, "-p", head, "-m", f"Backup snapshot of {name}'s uncommitted work")
+
+
+def offsite(dest: Path) -> list:
+    dest.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d-%H%MZ")
+    branch = git("rev-parse", "--abbrev-ref", "HEAD")
+    remote = f"origin/{branch}"
+    git("update-ref", f"refs/backup/{branch.split('/')[-1]}", "HEAD")
+    refs = [f"refs/heads/{branch}", f"refs/backup/{branch.split('/')[-1]}"]
+    for name, path, _head in worktrees():
+        if name == "main":
+            if git("status", "--porcelain", cwd=path):
+                git("update-ref", "refs/backup/main-uncommitted", snapshot(path, "the main checkout"))
+                refs.append("refs/backup/main-uncommitted")
+            continue
+        git("update-ref", f"refs/backup/{name}", snapshot(path, name))
+        refs.append(f"refs/backup/{name}")
+    bundle = dest / f"mml-{stamp}.bundle"
+    have = git("rev-parse", "--verify", "--quiet", remote, check=False)
+    git("bundle", "create", str(bundle), *([f"^{remote}"] if have else []), *refs)
+    git("bundle", "verify", str(bundle))
+    raw = bundle.read_bytes()
+    text = dest / f"mml-{stamp}-bundle.b64.txt"
+    text.write_text(base64.encodebytes(raw).decode())
+    assert base64.decodebytes(text.read_bytes()) == raw, "base64 copy does not decode to the bundle"
+    sha = hashlib.sha256(raw).hexdigest()
+    heads = git("bundle", "list-heads", str(bundle))
+    count = git("rev-list", "--count", f"{remote}..HEAD") if have else "all"
+    readme = dest / f"mml-{stamp}-README.txt"
+    readme.write_text(
+        f"My Medieval Life: off-machine backup {stamp}\n\n"
+        f"Bundle file: {text.name} (base64 of a git bundle)\nsha256 of the decoded bundle: {sha}\n"
+        f"Bundle size: {len(raw)} bytes\nBuilds on (already on GitHub): {have or 'nothing: full history'}\n"
+        f"Commits not on GitHub: {count}\n\nRefs in the bundle:\n{heads}\n\n"
+        "Restore:\n"
+        f"  base64 -d {text.name} > mml.bundle && sha256sum mml.bundle   # must match the sha256 above\n"
+        "  git clone https://github.com/verbal76/My-Medieval-Life restored && cd restored\n"
+        f"  git fetch origin {branch}\n"
+        "  git fetch ../mml.bundle 'refs/heads/*:refs/heads/*' 'refs/backup/*:refs/backup/*'\n"
+        f"  git checkout {branch}\n"
+        "  git diff <snapshot>^ <snapshot> | git apply   # an agent's or the checkout's uncommitted work\n")
+    return [bundle, text, readme]
+
+
 def main(argv):
+    if "--offsite" in argv:
+        for p in offsite(Path(argv[argv.index("--offsite") + 1])):
+            print(f"saved {p} ({p.stat().st_size} bytes)")
+        print("verified: the bundle verifies and its base64 copy decodes back to it; now upload the .txt files and test a restore")
+        return
     dest = Path(argv[argv.index("--dir") + 1]) if "--dir" in argv else Path.home() / "mml-backups"
     saved = checkpoint(dest)
     keep = int(argv[argv.index("--keep") + 1]) if "--keep" in argv else 5
