@@ -92,6 +92,13 @@ func _run() -> void:
 				if not listed.has(pad_prompt.get(ev.button_index, "?")):
 					unlisted.append("%s (button %d)" % [action, ev.button_index])
 	check(unlisted.is_empty(), "every gamepad button is on the controls list %s" % [unlisted])
+	# on a phone the interface keeps clear of rounded screen corners
+	main.settings.phone = true
+	ui.fit_safe_area()
+	check(ui.root.offset_left >= GameUI.CORNER_MARGIN.x and ui.root.offset_top >= GameUI.CORNER_MARGIN.y
+		and ui.root.offset_right <= -GameUI.CORNER_MARGIN.x and ui.root.offset_bottom <= -GameUI.CORNER_MARGIN.y, "on a phone, windows and buttons keep clear of the screen corners")
+	main.settings.phone = false
+	ui.fit_safe_area()
 	# 1-3. character creation: a name, a family, a female look in a tunic
 	check(ui.is_open("title"), "the title screen opens")
 	_press("New game")

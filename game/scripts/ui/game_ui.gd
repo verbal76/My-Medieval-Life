@@ -60,6 +60,9 @@ const CONTROLS := {
 		[["xbox_button_b"], "Close a window"],
 		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"]],
 }
+# On a phone the interface keeps at least this far from the screen edges (interface units; the layout
+# is 450 high): rounded corners on common phones cut off less than this.
+const CORNER_MARGIN := Vector2(28, 14)
 const SCHEME_NAMES := {"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -73,6 +76,29 @@ func build(m) -> void:
 	root.theme = _theme()
 	_build_hud()
 	_build_panel()
+	fit_safe_area()
+	get_viewport().size_changed.connect(fit_safe_area)
+
+
+## Keep the whole interface inside the part of the screen that shows: the device's safe area (notches,
+## cutouts, system bars), and on a phone at least CORNER_MARGIN from the edges, so windows, the
+## status box and the corner buttons are not cut off by rounded screen corners.
+func fit_safe_area() -> void:
+	var win := Vector2(DisplayServer.window_get_size())
+	var view := get_viewport().get_visible_rect().size
+	var inset := [0.0, 0.0, 0.0, 0.0]               # left, top, right, bottom, in interface units
+	if win.x > 0 and win.y > 0 and DisplayServer.get_name() != "headless":
+		var safe := Rect2(DisplayServer.get_display_safe_area())
+		var k := view / win
+		inset = [maxf(safe.position.x, 0.0) * k.x, maxf(safe.position.y, 0.0) * k.y,
+			maxf(win.x - safe.end.x, 0.0) * k.x, maxf(win.y - safe.end.y, 0.0) * k.y]
+	if main.settings.phone:
+		inset = [maxf(inset[0], CORNER_MARGIN.x), maxf(inset[1], CORNER_MARGIN.y),
+			maxf(inset[2], CORNER_MARGIN.x), maxf(inset[3], CORNER_MARGIN.y)]
+	root.offset_left = inset[0]
+	root.offset_top = inset[1]
+	root.offset_right = -inset[2]
+	root.offset_bottom = -inset[3]
 
 
 ## A dark box behind text drawn over the map, so it reads on bright ground.
