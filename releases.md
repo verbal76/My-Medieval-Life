@@ -286,3 +286,41 @@ Releases for My-Medieval-Life, voiceforge, spiroglyphics, personal-assistant- an
 | Tags | Commit | Commit date |
 |---|---|---|
 | `snow-build-106`, `snow-build-107` | `8827159abfad2cbdd283e524608205f268e8ea0c` | 2026-05-08 |
+
+## My-Personal-Crossow0rd
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `v10` | `963389d07981e49568446dcc6ba805933b643a42` | 2026-10-05 |
+| `v9` | `c43b9b37292e88e556b6efb8602080c826a8a692` | 2026-10-04 |
+| `v8` | `fb6b0010e08c080215ad9b4a3480becb5ff9076c` | 2026-10-04 |
+| `v7` | `e295e130f8c873bc57e0e21957b5216833e3d092` | 2026-10-04 |
+
+## Zombie-squisher
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `apk-build-58`, `apk-build-59`, `apk-build-60`, `apk-build-61`, `apk-build-62`, `apk-build-63`, `apk-build-64`, `apk-build-65`, `apk-build-66`, `apk-build-68`, `apk-build-70`, `apk-build-71`, `apk-build-72`, `apk-build-74`, `apk-build-75`, `apk-build-76` | `1707a6a8b5e0c2a37eeda8c276b6f9f21b72b591` | 2026-05-11 |
+| `apk-build-36`, `apk-build-37`, `apk-build-38`, `apk-build-41`, `apk-build-42`, `apk-build-43`, `apk-build-44`, `apk-build-52`, `apk-build-55`, `apk-build-56`, `apk-build-57` | `bd10062e97690a641ac0c44276d83332d9c8abfa` | 2026-05-09 |
+| `apk-build-18`, `apk-build-19`, `apk-build-20`, `apk-build-21` | `214f7ba947443356f35a3c5a4c64a59d35c6aa65` | 2026-05-09 |
+| `apk-build-17` | `1b6736336e10cfee8da123fc7197d651e55d1cd8` | 2026-05-08 |
+
+## voiceforge
+
+| Release | Tag | Source commit | Published | Pre-release |
+|---|---|---|---|---|
+| Voice Forge v10 | `voice-forge-v10` | `fde80f7123510beef316eefa5c1050ee1590c686` | 2026-10-08 | no |
+| Voice Forge v9 | `voice-forge-v9` | `5fe38c06141625f86daca8000cfd665446b0f510` | 2026-10-06 | no |
+| Voice Forge v8 | `voice-forge-v8` | `5b51e0b09bdefe452c68ddd8ffad6ac35019b0be` | 2026-10-06 | no |
+| Voice Forge v7 | `voice-forge-v7` | `1d36eb5468c7bb330b3c3e2e06877d9d6ba44870` | 2026-10-06 | no |
+| Voice Forge v6 | `voice-forge-v6` | `de96d6bb70abcb830c1870ebd120c625744e513b` | 2026-10-04 | yes |
+| Voice Forge v5 | `android-internal-vc5-1656acf` | `1656acfb7809078a6f120ba48bcd03206b3a573d` | 2026-10-03 | yes |
+| Voice Forge v4 | `android-internal-vc4-3073b9b` | `3073b9b85437f70cec150dd0b14a83a60cb58724` | 2026-10-03 | yes |
+| Voice Forge v3 | `android-internal-vc3-d30f35c` | `d30f35c62653e221a47526d996abe74e616a6fa8` | 2026-10-03 | yes |
+
+## LLM-Trainer
+
+| Tags | Commit | Commit date |
+|---|---|---|
+| `ota-stable` | `28de300c0a9afc175c118c2ed952b784b7ddddea` | 2026-10-05 |
+| `v1` | `2e146d4a6d5c89d2a9bdaf04c7448dd919b8f086` | 2026-10-05 |

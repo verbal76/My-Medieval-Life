@@ -4,25 +4,73 @@ Observations only. Every item is a proposal; nothing was moved, merged, renamed 
 
 ## Duplicated files across repositories (same git blob SHA)
 
-- 161 blobs appear in two or more repositories.
-- 148 are controller/keyboard glyph PNGs (the same prompt icon pack copied under different names into up to 9 repos, e.g. blob `3bf4371d26e8` = Xbox A).
-- The studio logo blob `e11f8c576652` is in 9 repos (see assets.md).
+- 233 blobs appear in two or more repositories.
+- 149 are controller/keyboard glyph PNGs (the same prompt icon pack copied under different names into up to 9 repos, e.g. blob `3bf4371d26e8` = Xbox A).
+- The studio logo blob `e11f8c576652` is in 13 repos (see assets.md).
 
 | Blob | Repositories and paths |
 |---|---|
-| `e11f8c576652` | Axolotl: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Climb-Up: `assets/branding/studio_splash.png` (+1); Endless-Escaspe: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Idle-game: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Purgatory-Dungeon: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Ragdoll-Rally: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` (+2); Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` |
-| `809546b9eeeb` | Endless-Escaspe: `assets/characters/texture-d.png`; Idle-game: `src/assets/character-texture.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-d.png` |
+| `e11f8c576652` | Axolotl: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Climb-Up: `assets/branding/studio_splash.png` (+1); Endless-Escaspe: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Idle-game: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; LLM-Trainer: `branding/hot-attic-games/studio-logo.png`; My-Personal-Crossow0rd: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` (+2); Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Purgatory-Dungeon: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Ragdoll-Rally: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` (+2); Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; Zombie-squisher: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`; voiceforge: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` |
+| `809546b9eeeb` | Endless-Escaspe: `assets/characters/texture-d.png`; Idle-game: `src/assets/character-texture.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-d.png`; Zombie-squisher: `assets-source/characters/texture-d.png` (+1) |
+| `1b33c55baabb` | Climb-Up: `gradle/wrapper/gradle-wrapper.jar`; Game-Designer: `gradle/wrapper/gradle-wrapper.jar`; LLM-Trainer: `gradle/wrapper/gradle-wrapper.jar` |
+| `23d15a936707` | Climb-Up: `gradlew`; Game-Designer: `gradlew`; LLM-Trainer: `gradlew` |
+| `5eed7ee84528` | Climb-Up: `gradlew.bat`; Game-Designer: `gradlew.bat`; LLM-Trainer: `gradlew.bat` |
+| `6cb06fdae2cc` | Endless-Escaspe: `assets/characters/texture-g.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-g.png`; Zombie-squisher: `assets-source/characters/texture-g.png` (+1) |
+| `7c74a3c1be7d` | Endless-Escaspe: `assets/characters/texture-j.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-j.png`; Zombie-squisher: `assets-source/characters/texture-j.png` (+1) |
+| `052c4e8e54b4` | Ocean-spore: `assets/blaster-l.glb`; Zombie-squisher: `assets/blaster-l.glb` |
+| `0894e4d6e6c1` | Ocean-spore: `assets/blaster-n.glb`; Zombie-squisher: `assets/blaster-n.glb` |
 | `0cfbf08886fc` | Climb-Up: `tools/otalab/live_e2e_run.txt` (+2); Purgatory-Dungeon: `VERSION` |
-| `1b33c55baabb` | Climb-Up: `gradle/wrapper/gradle-wrapper.jar`; Game-Designer: `gradle/wrapper/gradle-wrapper.jar` |
-| `23d15a936707` | Climb-Up: `gradlew`; Game-Designer: `gradlew` |
+| `0e259d42c996` | Backrooms-Survivor: `godot/assets/third_party/animated_traps/LICENSE.txt`; My-Personal-Crossow0rd: `desktop/packaging/licenses/CC0-1.0.txt` |
+| `1087bbafd229` | Ocean-spore: `assets/blaster-q.glb`; Zombie-squisher: `assets/blaster-q.glb` |
+| `11fd02fa2cf8` | Ocean-spore: `assets/bullet-foam-tip-thick.glb`; Zombie-squisher: `assets/bullet-foam-tip-thick.glb` |
+| `19ec6cba8f8a` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-i.png`; Zombie-squisher: `assets-source/characters/texture-i.png` (+1) |
+| `1a69bef536a7` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-o.glb`; Zombie-squisher: `assets-source/characters/character-o.glb` (+1) |
+| `1be9f8e1ec1d` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-i.glb`; Zombie-squisher: `assets-source/characters/character-i.glb` (+1) |
+| `20c0c70ea047` | Ocean-spore: `assets/blaster-i.glb`; Zombie-squisher: `assets/blaster-i.glb` |
+| `25284ee29228` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-d.glb`; Zombie-squisher: `assets-source/characters/character-d.glb` (+1) |
+| `2565a681ced4` | Ocean-spore: `assets/blaster-f.glb`; Zombie-squisher: `assets/blaster-f.glb` |
+| `2e99b7874675` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-a.glb`; Zombie-squisher: `assets-source/characters/character-a.glb` (+1) |
+| `3212ae2cdd69` | Ocean-spore: `assets/blaster-k.glb`; Zombie-squisher: `assets/blaster-k.glb` |
+| `38fe58986f18` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-f.png`; Zombie-squisher: `assets-source/characters/texture-f.png` (+1) |
+| `394b9c272e33` | Ocean-spore: `assets/blaster-r.glb`; Zombie-squisher: `assets/blaster-r.glb` |
+| `398889119c9e` | Ocean-spore: `assets/blaster-p.glb`; Zombie-squisher: `assets/blaster-p.glb` |
+| `3a1baaeb36f7` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-g.glb`; Zombie-squisher: `assets-source/characters/character-g.glb` (+1) |
+| `3a49ea259ff9` | Ocean-spore: `assets/blaster-g.glb`; Zombie-squisher: `assets/blaster-g.glb` |
+| `3fcae2199335` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-l.glb`; Zombie-squisher: `assets-source/characters/character-l.glb` (+1) |
+| `43eddd9d8791` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-p.png`; Zombie-squisher: `assets-source/characters/texture-p.png` (+1) |
+| `44ae9b08bdb6` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-q.glb`; Zombie-squisher: `assets-source/characters/character-q.glb` (+1) |
+| `46f06e61538d` | Ocean-spore: `assets/blaster-j.glb`; Zombie-squisher: `assets/blaster-j.glb` |
+| `47e95c8a1d94` | Ocean-spore: `assets/blaster-c.glb`; Zombie-squisher: `assets/blaster-c.glb` |
+| `52a1ae1e624e` | Ocean-spore: `assets/silencer-larger.glb`; Zombie-squisher: `assets/silencer-larger.glb` |
 | `573541ac9702` | Backrooms-Survivor: `godot/min_base_build.txt`; Tartaria-RPG: `.ci-mission-claims-baseline` (+1) |
-| `5eed7ee84528` | Climb-Up: `gradlew.bat`; Game-Designer: `gradlew.bat` |
-| `6cb06fdae2cc` | Endless-Escaspe: `assets/characters/texture-g.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-g.png` |
+| `59493405ab26` | Ocean-spore: `assets/grenade-a.glb`; Zombie-squisher: `assets/grenade-a.glb` |
+| `5ad33102dc6a` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-n.png`; Zombie-squisher: `assets-source/characters/texture-n.png` (+1) |
+| `5fd059fd0674` | Idle-game: `index.js`; Zombie-squisher: `index.js` (+1) |
+| `6247ec57d1c8` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-f.glb`; Zombie-squisher: `assets-source/characters/character-f.glb` (+1) |
+| `68f3cf5bd237` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-e.png`; Zombie-squisher: `assets-source/characters/texture-e.png` (+1) |
+| `6a01b552c717` | Ocean-spore: `assets/grenade-b.glb`; Zombie-squisher: `assets/grenade-b.glb` |
+| `6b0063df06b0` | Ocean-spore: `assets/scope-large-b.glb`; Zombie-squisher: `assets/scope-large-b.glb` |
+| `71119df61fdf` | Ocean-spore: `assets/scope-large-a.glb`; Zombie-squisher: `assets/scope-large-a.glb` |
+| `755957019277` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-c.glb`; Zombie-squisher: `assets-source/characters/character-c.glb` (+1) |
+| `76171dca3314` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-r.png`; Zombie-squisher: `assets-source/characters/texture-r.png` (+1) |
 | `7a60b85e148f` | Purgatory-Dungeon: `tools/ota/.gitignore`; Ragdoll-Rally: `.gitignore` |
-| `7c74a3c1be7d` | Endless-Escaspe: `assets/characters/texture-j.png`; Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-j.png` |
+| `7c054d8d6898` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-a.png`; Zombie-squisher: `assets-source/characters/texture-a.png` (+1) |
 | `7ed6ff82de6b` | Climb-Up: `tools/otalab/release_flag.txt`; Purgatory-Dungeon: `VERSION` |
-| `b8626c4cff28` | Purgatory-Dungeon: `VERSION`; Tartaria-RPG: `.ci-handoff-causes-baseline` |
-| `c18dd8d83cee` | Backrooms-Survivor: `.gitignore`; Fix-Tremors: `.gitignore` |
+| `7fcd30d11631` | Ocean-spore: `assets/blaster-b.glb`; Zombie-squisher: `assets/blaster-b.glb` |
+| `81a5cc60b339` | Ocean-spore: `eas.json`; Zombie-squisher: `eas.json` |
+| `832c3b0855e3` | Ocean-spore: `assets/blaster-m.glb`; Zombie-squisher: `assets/blaster-m.glb` |
+| `83820c6e11cd` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-m.glb`; Zombie-squisher: `assets-source/characters/character-m.glb` (+1) |
+| `8600f846c9c2` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-k.glb`; Zombie-squisher: `assets-source/characters/character-k.glb` (+1) |
+| `8b98e3d03ef0` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-m.png`; Zombie-squisher: `assets-source/characters/texture-m.png` (+1) |
+| `8de04f32906c` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/character-b.glb`; Zombie-squisher: `assets-source/characters/character-b.glb` (+1) |
+| `90de91ed2dc6` | Ocean-spore: `assets/bullet-foam-tip.glb`; Zombie-squisher: `assets/bullet-foam-tip.glb` |
+| `9cc9513fc890` | Ocean-spore: `assets/scope-small.glb`; Zombie-squisher: `assets/scope-small.glb` |
+| `9d2eff024b77` | Ocean-spore: `assets/silencer-small.glb`; Zombie-squisher: `assets/silencer-small.glb` |
+| `9d7f85c2342a` | Ragdoll-Rally: `launch/assets/kenney/blocky-characters/Textures/texture-b.png`; Zombie-squisher: `assets-source/characters/texture-b.png` (+1) |
+| `9d89e131194f` | Zombie-squisher: `babel.config.js`; voiceforge: `babel.config.js` |
+| `9e8def57476d` | Ocean-spore: `assets/bullet-foam-thick.glb`; Zombie-squisher: `assets/bullet-foam-thick.glb` |
+| `a29ebc86f4bd` | Ocean-spore: `assets/bullet-foam.glb`; Zombie-squisher: `assets/bullet-foam.glb` |
+| ... | 24 more |
 
 ## Possibly abandoned or stale branches
 
@@ -36,6 +84,9 @@ A branch is listed when it is not contained in the repository's reference line (
 - **Ragdoll-Rally** (reference `claude/launch-gameplay-pivot`): `main` (2026-10-04, `41f5f5a8667b`)
 - **Endless-Escaspe** (reference `claude/api36-native-qualification`): `Github-APK-Transition-Escap` (2026-05-11, `e970c74d6842`), `claude/boss-pickups-scene-rebuild-0YBha` (2026-04-28, `481e30774301`), `claude/fix-apk-screen-issue-etmic` (2026-05-11, `b595f5d0678b`), `claude/hold-ci-hardening` (2026-10-03, `5e8b92fbd15a`), `claude/hold-scenarios` (2026-10-03, `1c962e51118c`), `claude/ledger-docs` (2026-10-03, `d2c9c4e5e14e`), `main` (2026-10-04, `84f6b740b8ac`)
 - **Idle-game** (reference `claude/repo-gameplay-review-loq9rq`): `Github-APK-Transition-snow` (2026-10-03, `bf96e840e574`), `claude/compile-teaching-document-zZQy6` (2026-05-11, `2d64524e17fb`), `claude/fix-ota-updates-rBtFA` (2026-05-08, `7e12a93dd48f`), `claude/hold-api36-migration` (2026-10-03, `db672e2d1aa4`), `claude/hold-save-export` (2026-10-03, `a59ab981e4cf`), `main` (2026-10-06, `968e195d5dac`)
+- **My-Personal-Crossow0rd** (reference `claude/native-stack-modernization`): `claude/review-crossword-repro-5mjbG` (2026-04-26, `0960350ef4ec`), `main` (2026-10-04, `f7775d606c15`)
+- **Zombie-squisher** (reference `ccr-27903f19-fy49jb`): `claude/fix-bounding-box-controls-7LQLQ` (2026-05-13, `4f454c3d157e`), `claude/fix-build-artifacts-visibility-rwXqU` (2026-05-09, `c74ae564b225`), `claude/github-game-builds-AAswD` (2026-05-09, `dba8096b15ae`)
+- **voiceforge** (reference `claude/youthful-brahmagupta-n6sglt`): `claude/follow-dev-doc-KzL3e` (2026-05-18, `9ac6e3d98402`), `claude/pto-ledger-balance-cap-29vll2` (2026-09-18, `87fe0737ac5c`)
 
 ## Conflicting or unresolved sources of truth
 

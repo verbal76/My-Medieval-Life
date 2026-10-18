@@ -45,10 +45,14 @@ Blob `e11f8c576652b82780967a02ee4b4acd12e8a3c8` (1536x1024 PNG, 2,838,266 bytes;
 - Endless-Escaspe: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Game-Designer: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Idle-game: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- LLM-Trainer: `branding/hot-attic-games/studio-logo.png`
+- My-Personal-Crossow0rd: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`, `app/src/main/res/drawable-nodpi/hot_attic_logo.png`, `branding/Hot_Attic_Games_Master_Logo.png`
 - Ocean-spore: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Purgatory-Dungeon: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Ragdoll-Rally: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`, `launch/branding/Hot_Attic_Games_Master_Logo.png`, `launch/branding/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 - Tartaria-RPG: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- Zombie-squisher: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
+- voiceforge: `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png`
 
 ## Per-repository key art
 
@@ -254,3 +258,58 @@ App icons, logos, splash screens, branding and large images (512 px or more). Fu
 | `src/assets/splash-bg.png` | 941x1672 | `claude/repo-gameplay-review-loq9rq` | [view](https://github.com/verbal76/Idle-game/blob/41c8cfbbe8d747e6fce072c9e2164d0d2e7ade77/src/assets/splash-bg.png) |
 | `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/hold-candidate-next` | [view](https://github.com/verbal76/Idle-game/blob/471436a724909699a5010c7dfef9e52759de52af/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
 | `src/assets/studio-logo.webp` | 1536x1024 | `claude/hold-candidate-next` | [view](https://github.com/verbal76/Idle-game/blob/471436a724909699a5010c7dfef9e52759de52af/src/assets/studio-logo.webp) |
+
+### My-Personal-Crossow0rd
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `app/src/main/assets/images/drawable-xxhdpi/verbal28_I_envision_a_book_cover_for_a_new_ttrpg_based_on_the_T_8bd2d5a0-2aa2-4863-817e-92acdf3575f9.webp` | 1080x1920 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/app/src/main/assets/images/drawable-xxhdpi/verbal28_I_envision_a_book_cover_for_a_new_ttrpg_based_on_the_T_8bd2d5a0-2aa2-4863-817e-92acdf3575f9.webp) |
+| `app/src/main/assets/images/drawable-xxhdpi/verbal28_sine_wave_snow_covered_rocky_mountains_meets_signal_pr_25822056-42e7-4ef3-9062-39d1bf64586b.webp` | 1080x1920 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/app/src/main/assets/images/drawable-xxhdpi/verbal28_sine_wave_snow_covered_rocky_mountains_meets_signal_pr_25822056-42e7-4ef3-9062-39d1bf64586b.webp) |
+| `app/src/main/assets/images/drawable-xxxhdpi/verbal28_I_envision_a_book_cover_for_a_new_ttrpg_based_on_the_T_8bd2d5a0-2aa2-4863-817e-92acdf3575f9.webp` | 1440x2560 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/app/src/main/assets/images/drawable-xxxhdpi/verbal28_I_envision_a_book_cover_for_a_new_ttrpg_based_on_the_T_8bd2d5a0-2aa2-4863-817e-92acdf3575f9.webp) |
+| `app/src/main/assets/images/drawable-xxxhdpi/verbal28_sine_wave_snow_covered_rocky_mountains_meets_signal_pr_25822056-42e7-4ef3-9062-39d1bf64586b.webp` | 1440x2560 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/app/src/main/assets/images/drawable-xxxhdpi/verbal28_sine_wave_snow_covered_rocky_mountains_meets_signal_pr_25822056-42e7-4ef3-9062-39d1bf64586b.webp) |
+| `app/src/main/ic_launcher-playstore.png` | 512x512 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/app/src/main/ic_launcher-playstore.png) |
+| `app/src/main/res/drawable-nodpi/hot_attic_logo.png` | 1536x1024 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/app/src/main/res/drawable-nodpi/hot_attic_logo.png) |
+| `app/src/main/res/drawable-nodpi/mpc_splash.png` | 1080x2280 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/app/src/main/res/drawable-nodpi/mpc_splash.png) |
+| `branding/Hot_Attic_Games_Master_Logo.png` | 1536x1024 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/branding/Hot_Attic_Games_Master_Logo.png) |
+| `branding/my_personal_crossword_app_icon.png` | 1024x1024 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/branding/my_personal_crossword_app_icon.png) |
+| `branding/my_personal_crossword_splash_1080x2280.png` | 1080x2280 | `claude/native-stack-modernization` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/4720ffbea8cc18471ae59022c04189e6a34fcd0c/branding/my_personal_crossword_splash_1080x2280.png) |
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `main` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/f7775d606c15e71e5966a34356ad42cb2fbe7e2a/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `desktop/packaging/icon.ico` | 256x256 | `claude/desktop-multiplatform` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/0b04ebfdcd8eda98b9dc9f963b30b57e64c0381f/desktop/packaging/icon.ico) |
+| `desktop/packaging/icon.png` | 512x512 | `claude/desktop-multiplatform` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/0b04ebfdcd8eda98b9dc9f963b30b57e64c0381f/desktop/packaging/icon.png) |
+| `my_personal_crossword_app_icon.png` | 1024x1024 | `main` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/f7775d606c15e71e5966a34356ad42cb2fbe7e2a/my_personal_crossword_app_icon.png) |
+| `my_personal_crossword_splash_1080x2280.png` | 1080x2280 | `main` | [view](https://github.com/verbal76/My-Personal-Crossow0rd/blob/f7775d606c15e71e5966a34356ad42cb2fbe7e2a/my_personal_crossword_splash_1080x2280.png) |
+
+### Zombie-squisher
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `ccr-27903f19-fy49jb` | [view](https://github.com/verbal76/Zombie-squisher/blob/b1f89f410bff21c171741cd517caad441c6ca43d/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `assets/brand/adaptive-icon-foreground.png` | 1024x1024 | `ccr-27903f19-fy49jb` | [view](https://github.com/verbal76/Zombie-squisher/blob/b1f89f410bff21c171741cd517caad441c6ca43d/assets/brand/adaptive-icon-foreground.png) |
+| `assets/brand/adaptive-icon-monochrome.png` | 1024x1024 | `ccr-27903f19-fy49jb` | [view](https://github.com/verbal76/Zombie-squisher/blob/b1f89f410bff21c171741cd517caad441c6ca43d/assets/brand/adaptive-icon-monochrome.png) |
+| `assets/brand/hag-logo.png` | 1024x667 | `ccr-27903f19-fy49jb` | [view](https://github.com/verbal76/Zombie-squisher/blob/b1f89f410bff21c171741cd517caad441c6ca43d/assets/brand/hag-logo.png) |
+| `assets/brand/icon.png` | 1024x1024 | `ccr-27903f19-fy49jb` | [view](https://github.com/verbal76/Zombie-squisher/blob/b1f89f410bff21c171741cd517caad441c6ca43d/assets/brand/icon.png) |
+| `assets/brand/splash-blank.png` | 288x288 | `ccr-27903f19-fy49jb` | [view](https://github.com/verbal76/Zombie-squisher/blob/b1f89f410bff21c171741cd517caad441c6ca43d/assets/brand/splash-blank.png) |
+| `assets/adaptive-icon-foreground.png` | 1024x1024 | `archive/scratch-rewrite-97a5729` | [view](https://github.com/verbal76/Zombie-squisher/blob/97a57298d594d5aef52dc8ccb31d8f0b2aad376c/assets/adaptive-icon-foreground.png) |
+| `assets/hag-logo.png` | 1024x667 | `archive/scratch-rewrite-97a5729` | [view](https://github.com/verbal76/Zombie-squisher/blob/97a57298d594d5aef52dc8ccb31d8f0b2aad376c/assets/hag-logo.png) |
+| `assets/icon.png` | 1024x1024 | `archive/scratch-rewrite-97a5729` | [view](https://github.com/verbal76/Zombie-squisher/blob/97a57298d594d5aef52dc8ccb31d8f0b2aad376c/assets/icon.png) |
+| `assets/splash-blank.png` | 288x288 | `archive/scratch-rewrite-97a5729` | [view](https://github.com/verbal76/Zombie-squisher/blob/97a57298d594d5aef52dc8ccb31d8f0b2aad376c/assets/splash-blank.png) |
+| `src/assets/icon.png` | unknown | `Github-build-pipeline-zombie-crusher` | [view](https://github.com/verbal76/Zombie-squisher/blob/7004f7d46b260dc2cf739006353987df85395854/src/assets/icon.png) |
+
+### voiceforge
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png` | 1536x1024 | `claude/youthful-brahmagupta-n6sglt` | [view](https://github.com/verbal76/voiceforge/blob/deaffe8bee52cba0a564aa37c5df41735b162c6c/Hot_Attic_Games_Master_Logo_ALPHA_FINAL.png) |
+| `assets/images/adaptive-icon-monochrome.png` | 1024x1024 | `claude/youthful-brahmagupta-n6sglt` | [view](https://github.com/verbal76/voiceforge/blob/deaffe8bee52cba0a564aa37c5df41735b162c6c/assets/images/adaptive-icon-monochrome.png) |
+| `assets/images/adaptive-icon.png` | 1024x1024 | `claude/youthful-brahmagupta-n6sglt` | [view](https://github.com/verbal76/voiceforge/blob/deaffe8bee52cba0a564aa37c5df41735b162c6c/assets/images/adaptive-icon.png) |
+| `assets/images/favicon.png` | 48x48 | `claude/youthful-brahmagupta-n6sglt` | [view](https://github.com/verbal76/voiceforge/blob/deaffe8bee52cba0a564aa37c5df41735b162c6c/assets/images/favicon.png) |
+| `assets/images/icon.png` | 1024x1024 | `claude/youthful-brahmagupta-n6sglt` | [view](https://github.com/verbal76/voiceforge/blob/deaffe8bee52cba0a564aa37c5df41735b162c6c/assets/images/icon.png) |
+| `assets/images/splash-blank.png` | 512x512 | `claude/youthful-brahmagupta-n6sglt` | [view](https://github.com/verbal76/voiceforge/blob/deaffe8bee52cba0a564aa37c5df41735b162c6c/assets/images/splash-blank.png) |
+| `assets/images/splash-icon.png` | 512x512 | `claude/youthful-brahmagupta-n6sglt` | [view](https://github.com/verbal76/voiceforge/blob/deaffe8bee52cba0a564aa37c5df41735b162c6c/assets/images/splash-icon.png) |
+| `assets/images/splash.png` | 1284x2778 | `claude/follow-dev-doc-KzL3e` | [view](https://github.com/verbal76/voiceforge/blob/9ac6e3d984024ea72929e456e6a71912972c7384/assets/images/splash.png) |
+
+### LLM-Trainer
+
+| Path | Size | Seen on | Link |
+|---|---|---|---|
+| `branding/hot-attic-games/studio-logo.png` | 1536x1024 | `ccr-a278e57a-o761ch` | [view](https://github.com/verbal76/LLM-Trainer/blob/deda455a5f622339281b476cbb2e519ab213d913/branding/hot-attic-games/studio-logo.png) |
