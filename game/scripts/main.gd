@@ -149,7 +149,13 @@ func _ready() -> void:
 			"manor_offer":
 				# the reeve's day of work for the manor (the answer to "Any work for me?")
 				var reeve: NPC = world.npc(world.reeve_id)
-				world.treasury = maxi(world.treasury, 1000)
+				world.treasury = maxi(world.treasury, 3000)
+				# the manor's evening business has bought repair materials: they wait to be carried
+				for c: NPC in world.npcs:
+					if c.job == "carpenter":
+						c.inv.add("plank", 20)
+				world.last_reeve_day = -1
+				world.brain.reeve_day()
 				reeve.pos = world.player.pos + Vector2(1.0, 0)
 				reeve.plan = [world.brain.work(600, "", {}, "idle")]
 				ui.show_talk(reeve)
@@ -1160,8 +1166,30 @@ func _find_target() -> void:
 						best = {"kind": "rest", "label": "Your bed: rest until morning"}
 					elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
 						best = {"kind": "home", "label": "Your chest: store things, rest"}
+	# the next step of the player's work for the manor, where it is done
+	var mw: ManorWork = world.manor_work
+	var mj := mw.job_of("player")
+	if not mj.is_empty() and (best.is_empty() or not best.kind in ["npc", "shop"]):
+		var at := Vector2(mw.step_cell(mj)) + Vector2(0.5, 0.5)
+		if at.distance_to(p.pos) < 1.6:
+			best = {"kind": "manor_job", "label": _manor_label(mj)}
 	target = best
 	ui.prompt(target.get("label", ""))
+
+
+## What the next step of a manor job says at its place.
+func _manor_label(j: Dictionary) -> String:
+	var mw: ManorWork = world.manor_work
+	match mw.step(j):
+		"take":
+			return "Collect the manor's goods: %s" % mw.describe(j).trim_prefix("Carry ").get_slice(" from ", 0) if j.kind == "haul" else "Collect a load of materials for mending"
+		"put":
+			if j.kind == "quarry":
+				return "Bring %d stone to the works yard (you have %d)" % [int(j.qty), world.player.inv.count("stone")]
+			return "Put the manor's goods in %s" % mw.dest_name(j.to)
+		"mend":
+			return "Mend %s (%d hours)" % [str(j.get("place", "the road")), roundi(float(ManorWork.cfg("mend_minutes")) / 60.0)]
+	return ""
 
 
 ## The counters and stalls the player can buy at: {id, stall, cells (tile centres to use)}.
@@ -1335,6 +1363,24 @@ func interact() -> void:
 			ui.show_home()
 		"rest":
 			rest()
+		"manor_job":
+			var mw: ManorWork = world.manor_work
+			var mj := mw.job_of("player")
+			if mj.is_empty():
+				return
+			var pay := int(mj.reserved)
+			var finish := func(ok: bool) -> void:
+				if not ok:
+					ui.message("You need %d stone for the manor: mine it at the stone seams." % int(mj.qty) if mj.kind == "quarry" else "There is nothing here to take.")
+				elif mw.job_of("player").is_empty():
+					ui.message("Work for the manor done. The manor pays you %d coins." % pay)
+				else:
+					ui.message("You take the manor's goods. %s" % ui._manor_next(mj))
+			if mw.step(mj) == "mend":
+				var secs := float(ManorWork.cfg("mend_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
+				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)))
+			else:
+				finish.call(mw.do_step(mj, "player", p.inv))
 
 
 func start_action(label: String, secs: float, done: Callable) -> void:

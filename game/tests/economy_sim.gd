@@ -296,6 +296,14 @@ func _sample(start: Dictionary) -> Dictionary:
 			exp[str(k).substr(9)] = int(w.stats[k])
 		elif str(k).begins_with("imported_"):
 			imp[str(k).substr(9)] = int(w.stats[k])
+	var mw: ManorWork = w.manor_work
+	var open_kinds := {}
+	for j in mw.jobs:
+		var k := "%s_%s" % [j.kind, "taken" if j.taker != "" else "open"]
+		open_kinds[k] = int(open_kinds.get(k, 0)) + 1
+	s.manor_work = {"jobs_now": open_kinds, "taken": int(_st("manor_jobs_taken")), "done": int(_st("manor_jobs_done")),
+		"done_by_kind": {"haul": int(_st("manor_job_haul")), "quarry": int(_st("manor_job_quarry")), "mend": int(_st("manor_job_mend"))},
+		"wages": int(_st("gov_manor_jobs")), "lots": mw.lots.size(), "lot_goods": mw.goods(), "yard": mw.yard.total(), "mended": int(_st("works_mended"))}
 	s.trade = {"caravans": events.caravans, "exported": exp, "imported": imp, "coins_in": int(_st("caravan_coins_in")),
 		"coins_out": int(_st("caravan_coins_out")), "coin_sources": w.coin_sources}
 	# currency and flow accounts
@@ -326,7 +334,7 @@ func _keys_with(prefix: String, ids: Array) -> Dictionary:
 ## Every coin, by who holds it. World.total_coins counts the same holders.
 func _coins() -> Dictionary:
 	var out := {"villagers": 0, "bandits": 0, "dead": 0, "player": w.player.coins, "treasury": w.treasury, "loot": 0,
-		"quest_reserves": w.quests.reserved_total()}
+		"quest_reserves": w.quests.reserved_total(), "manor_wages_reserved": w.manor_work.reserved_total()}
 	for n: NPC in w.npcs:
 		out["dead" if not n.alive else ("bandits" if n.role == "bandit" else "villagers")] += n.coins
 	for l in w.loot:
@@ -341,7 +349,7 @@ func _coins() -> Dictionary:
 ## Every item, by holder group: id -> count. The groups together are run_tests' _all_goods plus the
 ## pens' troughs (wheat put out as feed).
 func _holders() -> Dictionary:
-	var g := {"npcs": {}, "markets": {}, "households": {}, "granary": {}, "troughs": {}, "sites": {}, "player": {}, "loot": {}}
+	var g := {"npcs": {}, "markets": {}, "households": {}, "granary": {}, "troughs": {}, "sites": {}, "player": {}, "loot": {}, "manor_work": {}}
 	var add := func(to: Dictionary, inv: Inventory) -> void:
 		for id in inv.items:
 			to[id] = int(to.get(id, 0)) + int(inv.items[id])
@@ -357,6 +365,9 @@ func _holders() -> Dictionary:
 	add.call(g.player, w.player.chest)
 	for l in w.loot:
 		add.call(g.loot, l.inv)
+	var mg: Dictionary = w.manor_work.goods()      # the manor's lots, works yard and job loads
+	for id in mg:
+		g.manor_work[id] = int(g.manor_work.get(id, 0)) + int(mg[id])
 	for src in [w.site_goods(), w.construction.carried()]:
 		for id in src:
 			g.sites[id] = int(g.sites.get(id, 0)) + int(src[id])
@@ -506,6 +517,7 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("wildlife: %s" % JSON.stringify(s.wildlife))
 	print("building: %s" % JSON.stringify(s.building))
 	print("trade: %s" % JSON.stringify(s.trade))
+	print("manor work: %s" % JSON.stringify(s.manor_work))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
 	print("events: %s" % JSON.stringify(s.events))

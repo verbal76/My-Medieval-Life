@@ -49,6 +49,7 @@ var last_payday := -1              # the day wages were last paid
 var player := PlayerState.new()
 var coin_sources := 0              # coins that entered the village (caravan)
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
+var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
 var log_lines: Array = []
 var stats := {}                    # running ledger (food made, eaten, exported, meals missed ...) for diagnostics; not saved
 var last_hour := -1
@@ -128,6 +129,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	quests = Quests.new(self)
 	quests.refresh()
 	quests.start_story()
+	manor_work = ManorWork.new(self)
 	note("Day 1 begins in the village.")
 
 
@@ -227,6 +229,8 @@ func _update_food_days() -> void:
 		points += table_food(f) * float(GameData.item(f).food)
 	for f in NPCBrain.FOOD:
 		points += granary.count(f) * float(GameData.item(f).food)      # wheat, and stores of a house fallen to the manor
+	if manor_work:
+		points += manor_work.food_points()                              # grain the manor has bought or sent, on its way
 	food_days = points / maxf(1.0, brain.village_day_food())          # children weighted by age
 
 
@@ -270,6 +274,7 @@ func _new_day() -> void:
 				map.set_solid(Vector2i(t.x, t.y), true)
 	fauna.new_day()
 	brain.dawn()
+	manor_work.dawn()                  # undone manor jobs are released
 	property.collect_rents()
 	property.relet_stalls()
 	construction.daily()               # helpers' days end; crowded households split; founders build
@@ -423,6 +428,7 @@ func continue_as_heir() -> void:
 	if bag.total() > 0 or p.coins > 0:
 		loot.append({"pos": p.pos, "inv": bag, "coins": p.coins, "from": "%s %s" % [p.name, p.family]})
 	quests.release_all()                   # what givers set aside for the dead player's quests goes back
+	manor_work.release_player()            # and the manor's work they had taken
 	var heir := PlayerState.new()
 	heir.family = p.family
 	heir.generation = p.generation + 1
@@ -503,7 +509,11 @@ func player_price_factor(buying: bool) -> float:
 
 
 func total_coins() -> int:
-	var n := player.coins + treasury + quests.reserved_total()
+	var n := player.coins + treasury
+	if quests:
+		n += quests.reserved_total()
+	if manor_work:
+		n += manor_work.reserved_total()
 	for a: NPC in npcs:
 		n += a.coins
 	for l in loot:
@@ -1594,7 +1604,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
-const SAVE_VERSION := 7            # 7: quest rewards set aside (reserved), work for the manor; 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 8            # 8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -1885,6 +1895,7 @@ func to_dict() -> Dictionary:
 	return {
 		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
+		"manor_work": manor_work.to_dict(),
 		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
@@ -1980,6 +1991,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	quests.start_story()                             # saves from before the storyline get its quests
 	if int(d.get("save_version", 1)) < 7:
 		quests.migrate_reserves()
+	manor_work = ManorWork.new(self)
+	manor_work.load_dict(d.get("manor_work", {}))    # older saves: nothing in lots, the yard or jobs
+	if int(d.get("save_version", 1)) == 7:
+		quests.drop_manor_quarry()                   # version 7's single manor job gives way to the job board
 	_move_plots_to_map(m)
 	# re-apply world changes to the collision map
 	for t in trees:

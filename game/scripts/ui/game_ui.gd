@@ -967,11 +967,31 @@ func _quest_items() -> Array:
 			var target: NPC = w.npc(int(q.target))
 			want = "Deal with %s." % (target.name if target else "the thief")
 		out.append({"day": false, "text": want + ("  Ready: go back to them." if w.quests.ready(q) else "")})
+	var mj: Dictionary = w.manor_work.job_of("player")
+	if not mj.is_empty():
+		out.append({"day": true, "text": "Work for the manor"})
+		out.append({"day": false, "text": "%s, for %d coins (taken on day %d; it lapses if not done by the next morning)." % [w.manor_work.describe(mj), int(mj.wage), int(mj.day)]})
+		out.append({"day": false, "text": _manor_next(mj)})
 	if out.is_empty():
 		out.append({"day": false, "text": "No quests. Look for people with a marker over their head."})
 	out.append({"day": true, "text": "Earning money"})
 	out.append({"day": false, "text": EARNING_HINT})
 	return out
+
+
+## The next step of the player's manor job, in words.
+func _manor_next(j: Dictionary) -> String:
+	var mw: ManorWork = main.world.manor_work
+	match mw.step(j):
+		"take":
+			return "Next: collect it at %s." % (str(j.src) if j.kind == "haul" else "the manor's works yard")
+		"put":
+			if j.kind == "quarry":
+				return "Next: bring %d stone to the manor's works yard (you have %d)." % [int(j.qty), main.world.player.inv.count("stone")]
+			return "Next: take it to %s." % mw.dest_name(j.to)
+		"mend":
+			return "Next: mend %s." % str(j.get("place", "the road"))
+	return ""
 
 
 func _journal_items() -> Array:
@@ -1038,6 +1058,9 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 	if not offer.is_empty():
 		_talk_choice(choices, "Need any help?", func():
 			_talk_view(n, w.quests.line({"id": offer.id, "giver": n.id}, "offer"), true))
+	# the manor's work (owner, 2026-10-18): the reeve offers its list of real jobs
+	if n.job == "reeve":
+		_talk_choice(choices, "Any work for me?", func(): show_manor_jobs(n))
 	# paid work (owner: the player can work and earn money): asked for, never marked
 	if w.quests.hires(n):
 		_talk_choice(choices, "Any work for me?", func():
@@ -1046,6 +1069,58 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 				_talk_view(n, w.quests.no_work_line(n))
 			else:
 				_talk_view(n, w.quests.line({"id": job.id, "giver": n.id}, "offer"), true, job.id))
+
+
+## The reeve's list of the manor's open jobs, each with its wage (paid when it is done), or why there
+## is none. The player takes one at a time.
+func show_manor_jobs(reeve: NPC) -> void:
+	var w: World = main.world
+	var mw: ManorWork = w.manor_work
+	var mine := mw.job_of("player")
+	if not mine.is_empty():
+		_talk_view(reeve, "Finish what you're doing for the manor first: %s." % _lower_first(mw.describe(mine)))
+		return
+	var open := mw.open_for("player")
+	if open.is_empty():
+		var any := mw.jobs.any(func(j): return j.taker == "")
+		_talk_view(reeve, "The manor's chest can't spare a wage today. Ask me another day." if any
+				else "There's nothing the manor needs carried, quarried or mended just now.")
+		return
+	_open("manor_jobs", "Work for the manor  ·  you have %d coins" % w.player.coins)
+	_label("%s: \"This is what the manor needs doing. You're paid from the manor's chest when it's done.\"" % reeve.name, 18, Color(1, 0.85, 0.5))
+	# the same job several times over (loads of one lot) is one line with how many there are
+	var lines := []
+	var seen := {}
+	for j in open:
+		var key := "%s|%d" % [mw.describe(j), int(j.wage)]
+		if seen.has(key):
+			seen[key].n += 1
+		else:
+			seen[key] = {"job": j, "n": 1}
+			lines.append(seen[key])
+	for line in lines.slice(0, 6):
+		var j: Dictionary = line.job
+		var h := HBoxContainer.new()
+		var l := Label.new()
+		l.text = "%s  ·  %d coins%s" % [mw.describe(j), int(j.wage), ("  (%d such jobs)" % int(line.n)) if int(line.n) > 1 else ""]
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 18)
+		h.add_child(l)
+		panel_body.add_child(h)
+		var job: Dictionary = j
+		_button("Take it", func():
+			if mw.take(job, "player"):
+				message("Work for the manor: %s. It is written in your journal." % mw.describe(job))
+				hide_all()
+			else:
+				message(mw.last_refusal)
+				show_manor_jobs(reeve), true, h)
+	_button("Back", func(): show_talk(reeve))
+
+
+static func _lower_first(s: String) -> String:
+	return s.substr(0, 1).to_lower() + s.substr(1)
 
 
 ## "I'll do it" or "Not now" to an offer: the villager's quest, or (`hire`) the work they offered.

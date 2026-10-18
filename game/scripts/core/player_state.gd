@@ -28,7 +28,6 @@ var crimes: Array = []        # {day, kind, what, victim, witnesses}: what the v
 var stolen := {}              # item id -> {owner npc id (string): count}: carried goods their owner knows as theirs
 var chest_stolen := {}        # the same marks for goods kept in the home chest (they keep their marks there)
 var quests: Array = []          # accepted side quests: {id, giver, day, target, reserved} (scripts/core/quests.gd)
-var manor_day := -1           # the day the player last took on work for the manor (once a day)
 var spells := {}              # "fireball": true
 var fireball_cd := 0.0
 var attack_cd := 0.0
@@ -233,7 +232,6 @@ func to_dict() -> Dictionary:
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
 		"alive": alive, "deaths": deaths, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
-		"manor_day": manor_day,
 	}
 
 
@@ -263,7 +261,6 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	for q in p.quests:
 		if q.has("reserved"):
 			q.reserved = int(q.reserved)               # coins set aside stay whole numbers
-	p.manor_day = int(d.get("manor_day", -1))          # older saves: no work for the manor yet
 	var marks: Dictionary = d.get("stolen", {})           # older saves: nothing marked
 	for id in marks:
 		for o in marks[id]:

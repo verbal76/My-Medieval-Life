@@ -17,11 +17,9 @@ extends RefCounted
 ## Promised coins are set aside (owner, 2026-10-18): a quest with a reward, or work with a wage, is
 ## offered only by someone who can pay it, and the coins are reserved when the player accepts
 ## (`reserved` on the accepted quest, saved with it), so the giver cannot spend them elsewhere. The
-## exact sum is paid on completion; it goes back to the giver (or the manor's treasury) when the
+## exact sum is paid on completion; it goes back to the giver when the
 ## quest lapses, its giver dies or the player dies. Reserved coins are counted in reserved_total().
-## Work for the manor ("manor": true) is asked of the reeve and paid from the treasury: only while
-## the treasury keeps its reserve after the wage, once a day, and only while the village's own
-## deposits can give what is asked; the goods go into the manor's repairs.
+## Work for the manor is not a quest: the reeve offers the manor's jobs (ManorWork).
 ## Wheat cut for harvest work is the employer's (owner, 2026-10-18): work that lapses with it uncut
 ## or kept leaves the player holding the farmer's wheat, marked stolen from them (settle_harvest).
 
@@ -131,11 +129,6 @@ func _wants(n: NPC, t: Dictionary) -> bool:
 		var f := field_of(n)
 		if f.is_empty() or f.state != "ripe" or int(f.get("crop", 0)) < int(g.field_ripe):
 			return false
-	for id in g.get("deposit_left", {}):           # work at the village's own seams, while they last
-		if deposit_left(id) < int(g.deposit_left[id]):
-			return false
-	if t.get("manor", false) and w.player.manor_day == w.day():
-		return false                               # one day's work for the manor a day
 	if promised(t) > 0 and not can_fund(n, t):
 		return false
 	return true
@@ -146,13 +139,9 @@ static func promised(t: Dictionary) -> int:
 	return int(t.get("wage", 0)) if t.get("hire", false) else int(t.get("reward", 0))
 
 
-## Whether this giver can set the promised coins aside now: their own purse, or for the manor's work
-## the treasury, keeping its reserve of treasury_reserve_days of obligations (as day labour does).
+## Whether this giver can set the promised coins aside now, from their own purse.
 func can_fund(n: NPC, t: Dictionary) -> bool:
-	var pay := promised(t)
-	if t.get("manor", false):
-		return w.treasury - pay >= w.brain.daily_obligations() * float(GameData.b("treasury_reserve_days"))
-	return n != null and n.coins >= pay
+	return n != null and n.coins >= promised(t)
 
 
 ## Set the promised coins aside for this accepted quest. False if the giver cannot.
@@ -163,27 +152,21 @@ func _reserve(q: Dictionary, n: NPC, t: Dictionary) -> bool:
 		return true
 	if not can_fund(n, t):
 		return false
-	if t.get("manor", false):
-		w.treasury -= pay
-	else:
-		n.coins -= pay
+	n.coins -= pay
 	q.reserved = pay
 	return true
 
 
-## The reserved coins go back to whoever set them aside (the giver, or the treasury for the manor's
-## work). A giver who has died gets them before what they leave is passed on (on_giver_died).
+## The reserved coins go back to the giver. A giver who has died gets them before what they leave is
+## passed on (on_giver_died).
 func _release(q: Dictionary) -> void:
 	var held := int(q.get("reserved", 0))
 	q.reserved = 0
 	if held <= 0:
 		return
-	if template(q.id).get("manor", false):
-		w.treasury += held
-	else:
-		var n: NPC = w.npc(int(q.giver))
-		if n:
-			n.coins += held
+	var n: NPC = w.npc(int(q.giver))
+	if n:
+		n.coins += held
 
 
 ## Coins set aside for the player's accepted quests (part of the village's money, not spendable).
@@ -237,12 +220,6 @@ func no_work_line(n: NPC) -> String:
 	for t in templates():
 		if not t.get("hire", false) or str(t.giver.get("job", "")) != n.job:
 			continue
-		if t.get("manor", false):
-			if w.player.manor_day == w.day():
-				return "You've done your day for the manor. Come back tomorrow."
-			if not can_fund(n, t):
-				return "The manor's chest can't spare a wage just now. Ask me another day."
-			return "The stone pits are worked out. There's no quarrying to be had."
 		if not can_fund(n, t):
 			return "I can't pay anyone just now. I've hardly a coin to my name."
 	return "Not today. There's nothing I can't manage myself just now."
@@ -310,8 +287,6 @@ func accept(n: NPC, hire := "") -> Dictionary:
 		offers.erase(n.id)
 		last_refusal = "%s can no longer pay what they offered." % n.name
 		return {}
-	if t.get("manor", false):
-		w.player.manor_day = w.day()
 	if t.get("kill", "") == "robber":
 		var r := robber_of(n)
 		q.target = r.id if r else -1
@@ -349,7 +324,7 @@ func can_pay(q: Dictionary) -> bool:
 var last_learned := ""
 
 
-## Hand over the goods (they go to the giver; for the manor's work, into its repairs) and pay the
+## Hand over the goods (they go to the giver) and pay the
 ## promised coins set aside for it, exactly; a teacher raises the skill they teach.
 ## Returns the coins paid, -1 if the quest is not ready, -2 if the coins are not set aside and the
 ## giver cannot pay (only a quest from an older save, accepted before reserving).
@@ -367,18 +342,11 @@ func complete(q: Dictionary) -> int:
 		w.player.inv.remove_all(t.need)
 		w.player.trim_stolen()
 		for id in t.need:
-			if t.get("manor", false):
-				w.stat("used_works_" + id, int(t.need[id]))       # used up in mending
-			else:
-				n.inv.add(id, int(t.need[id]))
+			n.inv.add(id, int(t.need[id]))
 	var hired: bool = t.get("hire", false)
 	var pay := int(q.get("reserved", 0))
 	q.reserved = 0
-	if t.get("manor", false):
-		w.stat("gov_wages", pay)
-		w.stat("gov_player_work", pay)
-	else:
-		n.spent += pay
+	n.spent += pay
 	w.player.coins += pay
 	w.player.quests.erase(q)
 	if t.has("teach"):
@@ -430,11 +398,21 @@ func migrate_reserves() -> void:
 				q.reserved = 0
 
 
+## Version 7 saves: the single "work for the manor" quest (10 stone for the reeve) gave way to the
+## manor's job board; one accepted is dropped, its wage back in the treasury it came from.
+func drop_manor_quarry() -> void:
+	for q in w.player.quests.duplicate():
+		if str(q.id) == "work_for_the_manor":
+			w.treasury += int(q.get("reserved", 0))
+			w.player.quests.erase(q)
+			w.note("The reeve's work is now offered from the manor's list of jobs.")
+
+
 ## A giver dies: the coins set aside for their quest go back into their purse first, so they pass to
 ## their heir (or lie where they fell) with the rest. The quest is dropped at the next dawn.
 func on_giver_died(n: NPC) -> void:
 	for q in w.player.quests:
-		if int(q.giver) == n.id and not template(q.id).get("manor", false):
+		if int(q.giver) == n.id:
 			_release(q)
 
 

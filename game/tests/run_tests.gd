@@ -48,6 +48,7 @@ func _init() -> void:
 	test_households_split()
 	test_construction_migration()
 	test_build7_economy()
+	test_manor_work()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -372,7 +373,7 @@ func test_government() -> void:
 	w.food_days = 99.0
 	w.last_reeve_day = -1
 	b.reeve_day()
-	check(w.granary.count("wheat") > 0 and farmer.inv.count("wheat") >= keep, "outside a famine it buys only the surplus (farmer keeps %d)" % farmer.inv.count("wheat"))
+	check(w.granary.count("wheat") + w.manor_work.bound("granary", "wheat") > 0 and farmer.inv.count("wheat") >= keep, "outside a famine it buys only the surplus, left at the farmer's for the manor's carriers (farmer keeps %d)" % farmer.inv.count("wheat"))
 	# a household that keeps needing relief is named
 	var named := [false]
 	w.event.connect(func(t: String): named[0] = named[0] or "has needed the manor's food" in t)
@@ -972,7 +973,8 @@ func test_child_food() -> void:
 	farmer.coins = 0
 	w.last_reeve_day = -1
 	b.reeve_day()
-	check(w.granary.count("wheat") == int(b.village_day_food() * float(GameData.b("granary_target_days")) / 120.0) and b.village_day_food() < (w.alive_count() - w.alive_count("bandit")) * 72.0,"the granary's target is 7 days of the weighted need (%d)" % w.granary.count("wheat"))
+	var granary_wheat := w.granary.count("wheat") + w.manor_work.bound("granary", "wheat")
+	check(granary_wheat == int(b.village_day_food() * float(GameData.b("granary_target_days")) / 120.0) and b.village_day_food() < (w.alive_count() - w.alive_count("bandit")) * 72.0,"the granary's target is 7 days of the weighted need, with what is on its way (%d)" % granary_wheat)
 	# the village's days of food
 	w._update_food_days()
 	var pts := 0.0
@@ -986,6 +988,7 @@ func test_child_food() -> void:
 	for f in NPCBrain.FOOD:
 		pts += w.table_food(f) * float(GameData.item(f).food)
 	pts += w.granary.count("wheat") * float(GameData.item("wheat").food)
+	pts += w.manor_work.food_points()
 	check(is_equal_approx(w.food_days, pts / b.village_day_food()), "the village's food days use the weighted need (%.2f)" % w.food_days)
 	# the caravan: food between the weighted and the unweighted 3-day reserve is not held back
 	var seller: NPC = null
@@ -1353,7 +1356,7 @@ func _all_goods(w: World) -> Dictionary:
 		add.call(l.inv)
 	# materials delivered to unfinished building sites and carried by hired helpers are still goods
 	# held (the audit: site materials count in the goods-conservation test)
-	for src in [w.site_goods(), w.construction.carried()]:
+	for src in [w.site_goods(), w.construction.carried(), w.manor_work.goods()]:
 		for id in src:
 			out[id] = int(out.get(id, 0)) + int(src[id])
 	return out
@@ -2562,38 +2565,6 @@ func test_build7_economy() -> void:
 	w6b.dispose()
 	w.quests._release(qo)
 	p.quests.erase(qo)
-	# work for the manor: the reeve, the treasury, stone
-	var reeve: NPC = w.npc(w.reeve_id)
-	w.treasury = 500
-	check(w.quests.hires(reeve) and w.quests.hire_offer(reeve).get("id", "") == "work_for_the_manor", "manor work: the reeve offers a day's work")
-	check(w.quests.line({"id": "work_for_the_manor", "giver": reeve.id}, "offer").contains("10 stone") and w.quests.line({"id": "work_for_the_manor", "giver": reeve.id}, "offer").contains("six coins"), "manor work: ten stone for six coins")
-	var t0 := w.total_coins() - w.coin_sources
-	var qm: Dictionary = w.quests.accept(reeve, "work_for_the_manor")
-	check(not qm.is_empty() and w.treasury == 494 and int(qm.reserved) == 6 and p.manor_day == w.day(), "manor work: the wage is set aside from the treasury")
-	p.inv.add("stone", 10)
-	var reeve_stone := reeve.inv.count("stone")
-	var works0 := int(w.stats.get("used_works_stone", 0))
-	var coins_p := p.coins
-	check(w.quests.complete(qm) == 6 and p.coins == coins_p + 6 and not p.inv.has("stone") and reeve.inv.count("stone") == reeve_stone and int(w.stats.get("used_works_stone", 0)) == works0 + 10,
-			"manor work: the stone goes into the repairs, the wage to the player")
-	check(w.treasury == 494 and w.total_coins() - w.coin_sources == t0, "manor work: paid from the treasury, no coin made")
-	check(w.quests.hire_offer(reeve).is_empty() and w.quests.no_work_line(reeve).contains("done your day") and w.quests.accept(reeve, "work_for_the_manor").is_empty(), "manor work: once a day, not again")
-	p.manor_day = w.day() - 1
-	w.treasury = int(b.daily_obligations() * float(GameData.b("treasury_reserve_days")))
-	check(w.quests.hire_offer(reeve).is_empty() and w.quests.no_work_line(reeve).contains("can't spare"), "manor work: none the treasury cannot afford above its reserve")
-	w.treasury = 500
-	var amounts := {}
-	for d in w.deposits:
-		if d.ore == "stone":
-			amounts[w.deposits.find(d)] = int(d.amount)
-			d.amount = 5 if amounts.size() == 1 else 0
-	check(w.quests.hire_offer(reeve).is_empty() and w.quests.no_work_line(reeve).contains("worked out"), "manor work: none once the stone pits cannot give ten")
-	for i in amounts:
-		w.deposits[i].amount = amounts[i]
-	var ql: Dictionary = w.quests.accept(reeve, "work_for_the_manor")
-	ql.day = w.day() - 2
-	w.quests.drop_failed()
-	check(not p.quests.has(ql) and w.treasury == 500, "manor work: undone, it lapses and the wage goes back to the treasury")
 	# B7-004: wheat cut for harvest work stays the farmer's
 	var farmer: NPC = null
 	for o: NPC in w.npcs:
@@ -2661,4 +2632,173 @@ func test_build7_economy() -> void:
 	var cs2 := w.coin_sources
 	var sold := b._caravan_stone()
 	check(sold > 0 and cs2 - w.coin_sources == sold * each, "B7-007: the coins for it leave the village (%d)" % (cs2 - w.coin_sources))
+	w.dispose()
+
+
+## The manor's work (owner, 2026-10-18): the reeve's jobs come only from the manor's real business,
+## goods are carried and used (never made or lost), wages come from the treasury, set aside when a job
+## is taken and paid when it is done, and villagers work by the same rules as the player.
+func test_manor_work() -> void:
+	var w := new_world()
+	var p := w.player
+	var b: NPCBrain = w.brain
+	var mw: ManorWork = w.manor_work
+	p.pos = FAR_GUARDS
+	check(mw.jobs.is_empty() and mw.lots.is_empty() and mw.yard.total() == 0, "a new village: the manor has nothing to carry or mend, so no jobs")
+	check(not mw.sites.is_empty(), "the village's works to mend: the well and the roads (%d)" % mw.sites.size())
+	# the manor's evening buys repair materials: they wait at the seller's as the manor's lot
+	var carp: NPC = w.npcs.filter(func(o): return o.job == "carpenter")[0]
+	carp.inv.add("plank", 30)
+	w.treasury = 3000
+	var goods0 := _ledger(w, ["plank", "stone", "log", "iron_bar", "wheat"])
+	var coins0 := w.total_coins()
+	w.food_days = 0.5                                   # (a famine: the granary buys nothing this evening)
+	w.last_reeve_day = -1
+	b.reeve_day()
+	var plank_lot := mw.lots.filter(func(l): return l.inv.count("plank") > 0)
+	check(not plank_lot.is_empty() and str(plank_lot[0].to.kind) == "yard", "repair planks bought are left at the carpenter's as the manor's lot, bound for the works yard")
+	check(mw.jobs.any(func(j): return j.kind == "haul") and mw.jobs.all(func(j): return j.taker == ""), "carrying them is posted as jobs")
+	check(_ledger(w, ["plank", "stone", "log", "iron_bar", "wheat"]) == goods0 and w.total_coins() == coins0, "buying moves goods and coins: nothing made or lost")
+	# the player carries a load to the works yard
+	var hauls: Array = mw.open_for("player").filter(func(j): return j.kind == "haul" and str(j.to.kind) == "yard")
+	var j: Dictionary = hauls[0]
+	var t0 := w.treasury
+	check(mw.take(j, "player") and w.treasury == t0 - int(j.wage) and int(j.reserved) == int(j.wage) and w.total_coins() == coins0, "taking a job sets its wage aside from the treasury (still counted)")
+	check(not mw.take(mw.open_for("player")[0], "player") and mw.last_refusal.contains("already"), "one job at a time")
+	check(mw.step(j) == "take" and mw.step_cell(j) == Vector2i(int(j.at[0]), int(j.at[1])), "first: collect the goods where they lie")
+	var q := int(j.qty)
+	var coins_p := p.coins
+	check(mw.do_step(j, "player", p.inv) and j.load.total() == q and not p.inv.has("plank"), "collected: the manor's goods ride in the job's load, not the pack")
+	check(mw.step(j) == "put" and mw.step_cell(j) == mw.yard_cell(), "then: to the works yard")
+	check(mw.do_step(j, "player", p.inv) and mw.yard.count("plank") == q and p.coins == coins_p + int(j.wage) and mw.job_of("player").is_empty(), "delivered: in the yard, the wage paid")
+	check(_ledger(w, ["plank", "stone", "log", "iron_bar", "wheat"]) == goods0 and w.total_coins() == coins0, "carrying makes and loses nothing")
+	# mending uses the yard's materials (posted only when the yard holds a load)
+	var load := int(ManorWork.cfg("mend_load"))
+	check(mw.jobs.filter(func(x): return x.kind == "mend").size() == mw.yard.total() / load, "a mending job for each load in the yard (%d)" % (mw.yard.total() / load))
+	var m: Dictionary = mw.open_for("player").filter(func(x): return x.kind == "mend")[0]
+	var used0 := int(w.stats.get("used_repairs_plank", 0))
+	mw.take(m, "player")
+	mw.do_step(m, "player", p.inv)
+	check(m.load.total() == load and mw.step(m) == "mend" and mw.step_cell(m) == Vector2i(int(m.site[0]), int(m.site[1])), "a mend takes a load from the yard to its site")
+	coins_p = p.coins
+	mw.do_step(m, "player", p.inv)
+	check(int(w.stats.get("used_repairs_plank", 0)) == used0 + load and p.coins == coins_p + int(m.wage), "mending uses the load up (used_repairs_) and pays")
+	var held := _all_goods(w)
+	check(int(held.get("plank", 0)) + int(w.stats.get("used_repairs_plank", 0)) - used0 == int(goods0.plank) , "planks held plus planks used: still every plank")
+	# a villager does the same work by the same rules
+	var worker: NPC = w.npcs.filter(func(o): return o.role == "adult" and o.job == "woodcutter")[0]
+	var open_now := mw.open_for(World.npc_ref(worker.id))
+	var wc_coins := worker.coins
+	check(mw.seek(worker) and not worker.plan.is_empty() and not mw.job_of(World.npc_ref(worker.id)).is_empty(), "a villager takes the most needed open job and plans it")
+	var wj := mw.job_of(World.npc_ref(worker.id))
+	check(wj.id == open_now[0].id and int(wj.reserved) == int(wj.wage), "the same job list and the same set-aside wage as the player's")
+	var guard := 0
+	while not mw.job_of(World.npc_ref(worker.id)).is_empty() and guard < 6:
+		var st: Dictionary = worker.plan.filter(func(x): return x.get("act", "") in ["mj_step", "mj_mine"] or x.get("k", "") == "do")[0]
+		b.act(worker, str(st.get("act", "mj_step")), st.get("args", {}))
+		if not mw.job_of(World.npc_ref(worker.id)).is_empty():
+			mw.plan(worker)
+		guard += 1
+	check(mw.job_of(World.npc_ref(worker.id)).is_empty() and worker.coins == wc_coins + int(wj.wage), "the villager does the steps and is paid the wage when done")
+	# a manor hand is already paid: takes jobs unpaid
+	var hand: NPC = worker
+	hand.job = "manor_hand"
+	var hj: Array = mw.open_for(World.npc_ref(hand.id))
+	if not hj.is_empty():
+		mw.take(hj[0], World.npc_ref(hand.id))
+		check(int(hj[0].reserved) == 0, "a manor hand takes the manor's work without a second wage")
+		mw.release(hj[0])
+	hand.job = "woodcutter"
+	# no funds, no paid work: the treasury keeps its reserve
+	w.treasury = 0
+	check(mw.open_for("player").is_empty() and not mw.jobs.is_empty(), "with an empty treasury no paid job is open, though the work waits")
+	var poor: NPC = w.npcs.filter(func(o): return o.role == "adult" and o.job == "miner")[0]
+	b.laboured_today.erase(poor.id)
+	check(not mw.seek(poor), "and nobody is paid for standing about: no job, no day labour")
+	w.treasury = 3000
+	# undone work lapses at the next dawn: the wage back, the goods back where they were
+	var lj: Dictionary = mw.open_for("player").filter(func(x): return x.kind == "haul")[0] if mw.open_for("player").any(func(x): return x.kind == "haul") else mw.open_for("player")[0]
+	var tl := w.treasury
+	mw.take(lj, "player")
+	mw.do_step(lj, "player", p.inv)
+	w.minutes += 1440.0
+	mw.dawn()
+	check(lj.taker == "" and lj.load.total() == 0 and w.treasury == tl, "undone, a job lapses at dawn: its wage and load go back")
+	check(_ledger(w, ["plank", "stone", "log", "iron_bar", "wheat"]).plank + int(w.stats.get("used_repairs_plank", 0)) - used0 == int(goods0.plank), "and no plank is lost")
+	# quarrying: the manor's own stone for its works, only while the yard lacks it
+	mw.yard = Inventory.new()
+	mw.refresh()
+	w.last_reeve_day = -1
+	w.food_days = 0.5
+	b.reeve_day()
+	var qj: Array = mw.jobs.filter(func(x): return x.kind == "quarry")
+	check(qj.size() == 1 and int(qj[0].qty) == int(ManorWork.cfg("quarry_qty")), "the reeve posts one quarry job while the works lack stone")
+	if qj.size() == 1:
+		var qq: Dictionary = qj[0]
+		mw.take(qq, "player")
+		p.inv.remove("stone", p.inv.count("stone"))
+		check(not mw.do_step(qq, "player", p.inv), "the player must bring the stone")
+		p.inv.add("stone", int(qq.qty))
+		coins_p = p.coins
+		check(mw.do_step(qq, "player", p.inv) and mw.yard.count("stone") == int(qq.qty) and p.coins == coins_p + int(qq.wage), "ten stone to the yard: paid")
+	# the granary's grain is carried from the farmer's
+	var farmer: NPC = w.npcs.filter(func(o): return o.job == "farmer")[0]
+	farmer.inv.add("wheat", 400)
+	w.granary.items.clear()
+	w.food_days = 99.0
+	w.last_reeve_day = -1
+	var g0: int = int(_all_goods(w).get("wheat", 0))
+	b.reeve_day()
+	var bound := mw.bound("granary", "wheat")
+	check(bound > 0 and w.granary.count("wheat") == 0 and int(_all_goods(w).get("wheat", 0)) == int(g0), "grain the granary buys waits at the farmer's (%d), counted, nothing lost" % bound)
+	# relief: carried to the household unless it is urgent
+	var h := -1
+	for i in w.households.size():
+		if b._members(i).size() > 0 and b._members(i).all(func(o): return o.job != "farmer"):
+			h = i
+			break
+	w.granary.add("wheat", 200)
+	for o: NPC in b._members(h):
+		o.coins = 0
+		for f in NPCBrain.FOOD:
+			o.inv.remove(f, o.inv.count(f))
+	var pantry: Inventory = w.households[h].pantry
+	pantry.items.clear()
+	pantry.add("wheat", ceili(1.5 * b.household_day_food(h) / 120.0))
+	var before := pantry.count("wheat")
+	b._relief(b.daily_obligations(), 0.0)
+	check(mw.pending_for(h) > 0 and pantry.count("wheat") == before, "relief for a household with a day and a half of food is carried to it (a job)")
+	pantry.items.clear()
+	b._relief(b.daily_obligations(), 0.0)
+	check(mw.pending_for(h) == 0 and pantry.count("wheat") > 0, "under a day of food, it is brought at once")
+	# saved and loaded: lots, yard, jobs and wages set aside
+	var any := mw.open_for("player")
+	if not any.is_empty():
+		mw.take(any[0], "player")
+		mw.do_step(any[0], "player", p.inv)
+	var saved := JSON.stringify(w.to_dict())
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(saved))
+	check(w2.total_coins() == w.total_coins() and _all_goods(w2) == _all_goods(w) and w2.manor_work.jobs.size() == mw.jobs.size() and w2.manor_work.reserved_total() == mw.reserved_total(),
+			"saved and loaded: every coin, good, job and wage set aside")
+	var again := JSON.stringify(w2.to_dict())
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(again))
+	check(JSON.stringify(w3.to_dict()) == again, "saved again: stable")
+	w2.dispose()
+	w3.dispose()
+	# the player dies: their job goes back
+	var c_before := w.total_coins() - w.coin_sources
+	w.continue_as_heir()
+	check(mw.job_of("player").is_empty() and w.total_coins() - w.coin_sources == c_before, "the player's death gives their manor job back, wage and all")
+	# a version 7 save's single manor job (10 stone for the reeve) is dropped, its wage back in the treasury
+	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	old.save_version = 7
+	old.erase("manor_work")
+	old.treasury = int(old.treasury) - 6
+	old.player.quests.append({"id": "work_for_the_manor", "giver": w.reeve_id, "day": w.day(), "target": -1, "reserved": 6})
+	var w7 := World.new()
+	w7.load_dict(VillageMap.load_default(), old)
+	check(not w7.player.quests.any(func(x): return x.id == "work_for_the_manor") and w7.treasury == int(old.treasury) + 6, "v7 save: the old single manor job is dropped, its six coins back in the treasury")
+	w7.dispose()
 	w.dispose()

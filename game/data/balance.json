@@ -72,6 +72,7 @@
   "caravan_import_when_left": 10,
   "caravan_import_markup": 1.0,
   "caravan_stone": {"load": 20, "markup": 2.0},
+  "manor_jobs": {"haul_max": 10, "haul_wage": 2, "quarry_qty": 10, "quarry_wage": 6, "mend_load": 4, "mend_minutes": 180, "mend_wage": 4, "works_stock_max": 40, "days": 1, "latest_start": 15},
   "animals": {
     "_note": "Owner rules: animals get hungry and die unfed like the villagers; keepers and the player feed livestock, wild animals graze; a well-fed male and female breed; babies are half scale until grown; animals become meat. The numbers are agent proposals (docs/BUILD_DECISIONS.md). start = [males, females] per pen or per wood; keep = breeding adults that hunters and keepers leave; feed = wheat per meal.",
     "cow": {

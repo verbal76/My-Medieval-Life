@@ -29,7 +29,7 @@ On branch `claude/charming-albattani-8jjfya` (draft PR #1).
 
 ## P1. Godot prototype (current work) 🔨
 
-On `staging/my-medieval-life`. Build 7 (commit `6799071`) is the active testing release; issues
+The prioritized queue of approved work is `docs/DEVELOPMENT_QUEUE.md`. On `staging/my-medieval-life`. Build 7 (commit `6799071`) is the active testing release; issues
 found while the owner tests it are kept in `docs/release/BUILD_7_ISSUES.md`, and Build 8 waits for
 the owner's approval. The owner asked for a playable prototype
 before Gate A closed: Godot 4.7 in `game/`, Android APK first, then Windows and Linux, all three
@@ -66,6 +66,7 @@ owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separa
   crowded households that split, get an empty house or build one and move in; the player respects
   villagers' station reservations; readable place names; save version 6
 
+- ✅ The manor's job board (owner, 2026-10-18): real jobs (carrying the manor's goods, mending, quarrying) for the player and villagers by the same rules (INT-066)
 - ✅ Interiors with a roof fade for every enterable building (owner, 2026-10-18): fully transparent
   inside, a half fade only when a roof would hide the player, no flicker; sleepers reachable (woken,
   robbed, attacked) with sleep limiting awareness; families in beds, guards and cooks on pallets

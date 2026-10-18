@@ -124,6 +124,9 @@ func decide(n: NPC) -> void:
 	# hired to carry building materials (or carrying for their own new house): the day's work
 	if h >= WORK_START and h < WORK_END and w.construction.plan_helper(n):
 		return
+	# a job taken for the manor is carried on to the end (ManorWork)
+	if h >= WORK_START and h < WORK_END and w.manor_work.plan(n):
+		return
 	if h >= WORK_START and h < WORK_END and n.job != "":
 		if h < 12.0 and _day_labour(n):
 			return
@@ -263,8 +266,12 @@ func _plan_job(n: NPC) -> bool:
 					once("takes_field_%d" % n.id, "%s %s takes over the untended field %s." % [n.name, n.family, f.id])
 					evaluate_household(n.household)
 					return _farmer(n)
-			n.doing = "working for the manor"
-			n.plan = [go(wander_cell(w.building_door(_manor_id()), 5)), work(90, "", {}, "work")]
+			# the manor's hands do its open work (unpaid by the job: they have a day's wage); with none,
+			# they wait at the manor
+			if w.manor_work.seek(n):
+				return true
+			n.doing = "waiting for the manor's work"
+			n.plan = [go(wander_cell(w.building_door(_manor_id()), 5)), work(90, "", {}, "idle")]
 			return true
 		"sage":
 			n.doing = "pondering lore"
@@ -280,6 +287,7 @@ func on_death(n: NPC) -> void:
 	_hand_over_pens(n)
 	_give_up_stall(n)
 	w.construction.on_death(n)
+	w.manor_work.on_death(n)
 	if n.household >= 0:
 		evaluate_household(n.household)
 
@@ -317,7 +325,11 @@ func _richest_in_household(n: NPC) -> NPC:
 	return best
 
 
+## A worker whose own trade has nothing to do asks the reeve for the manor's work, as the player can
+## (agent decision under the owner's equal-rules directive, 2026-10-18); with none, they wait at work.
 func _idle_at_work(n: NPC, why: String) -> bool:
+	if n.role == "adult" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek(n):
+		return true
 	n.doing = why
 	n.plan = [go(_workplace_cell(n)), work(45, "", {}, "idle")]
 	return true
@@ -1004,6 +1016,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			for id in bag.ids():
 				n.inv.add(id, bag.count(id))
 			return true
+		"mj_step", "mj_mine":
+			return w.manor_work.act(n, what, a)
 		"day_labour":
 			var wage := int(GameData.b("day_labour_wage"))
 			if w.treasury >= wage:
@@ -1167,16 +1181,23 @@ func reeve_day() -> void:
 	var relief := _relief(obligations, reserve)
 	var budget := int(maxf(0.0, w.treasury - 3.0 * obligations) * float(GameData.b("repairs_budget_share")))
 	var bought := 0
+	# stone for the works from the village's own seams, when the yard lacks it (a job for the reeve's list)
+	if budget > 0:
+		w.manor_work.post_quarry()
+	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
 	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
+		if id == "stone" and quarrying:
+			continue                          # the manor's own stone is being quarried
 		for o: NPC in w.npcs:
 			if not o.alive or not (o.job in ["carpenter", "laborer", "smith"] or buy_role(o) == "merchant_raw"):
 				continue
-			while o.inv.count(id) > 6 + w.construction.open_need(id) and budget > 0 and bought < 40:
+			while o.inv.count(id) > 6 + w.construction.open_need(id) and budget > 0 and bought < 40 and w.manor_work.works_want():
 				var price := w.buy_price(o, id)
 				if price > budget:
 					break
-				o.inv.remove(id)              # used up in repairs
-				w.stat("used_repairs_" + id)
+				# paid now; it waits at the seller's, the manor's, to be carried to the works yard and used
+				# in mending (ManorWork: used_repairs_ when used)
+				w.manor_work.consign(o.inv, _workplace_cell(o), id, 1, {"kind": "yard"}, "repairs", _seller_words(o))
 				o.coins += price
 				o.earned += price
 				w.treasury -= price
@@ -1190,22 +1211,23 @@ func reeve_day() -> void:
 		for o: NPC in w.npcs:
 			if not o.alive or not (o.job == "farmer" or buy_role(o) == "merchant_food"):
 				continue
-			while w.granary.count("wheat") < target and surplus_wheat(o) > 0:
+			while w.granary.count("wheat") + w.manor_work.bound("granary", "wheat") < target and surplus_wheat(o) > 0:
 				var price := w.buy_price(o, "wheat")
 				if w.treasury - price < reserve:
 					break
-				o.inv.remove("wheat")
+				# bought now; it waits at the farmer's, the manor's, to be carried to the granary
+				w.manor_work.consign(o.inv, _workplace_cell(o), "wheat", 1, {"kind": "granary"}, "granary", _seller_words(o))
 				o.coins += price
 				o.earned += price
 				w.treasury -= price
-				w.granary.add("wheat")
 				grain += 1
 				w.stat("gov_procurement", price)
 				w.stat("gov_granary_in", 1)
 	if taxed + bought + grain + relief > 0:
 		w.note("The manor took %d coins in tax, bought %d loads for repairs and %d grain for the granary, and gave %d households food." % [taxed, bought, grain, relief])
 	if works > 0:
-		w.note("The manor's public works used %d loads of planks, iron and stone." % works)
+		w.note("The manor bought %d loads of planks, iron and stone for its public works." % works)
+	w.manor_work.refresh()
 
 
 ## Public works: money the treasury holds beyond its tax-holiday level (30 days of wages) is not
@@ -1226,18 +1248,18 @@ func _public_works(obligations: float) -> int:
 				continue
 			# what open building sites still need stays on sale for their builders (audit: public
 			# works would starve builders)
-			while o.inv.count(id) > int(keep.get(id, 6)) + w.construction.open_need(id) and budget > 0 and used < int(GameData.b("public_works_max_loads")):
+			while o.inv.count(id) > int(keep.get(id, 6)) + w.construction.open_need(id) and budget > 0 and used < int(GameData.b("public_works_max_loads")) and w.manor_work.works_want():
 				var price := w.buy_price(o, id)
 				if price > budget:
 					break
-				o.inv.remove(id)              # used up in the works
+				# to the works yard, to be used in mending (ManorWork)
+				w.manor_work.consign(o.inv, _workplace_cell(o), id, 1, {"kind": "yard"}, "works", _seller_words(o))
 				o.coins += price
 				o.earned += price
 				w.treasury -= price
 				budget -= price
 				used += 1
 				w.stat("gov_public_works", price)
-				w.stat("used_works_" + id)
 	return used
 
 
@@ -1251,11 +1273,28 @@ func _relief(obligations: float, reserve: float) -> int:
 		var days := household_food_days(h)
 		if days >= float(GameData.b("relief_trigger_days")):
 			continue
+		# relief already on its way is awaited; under a day of food it is brought at once
+		if w.manor_work.pending_for(h) > 0:
+			if days < 1.0:
+				w.manor_work.deliver_now(h)
+				helped += 1
+				_note_relief(h)
+			continue
+		# relief is carried to the household (a job), unless it has under a day of food: then at once
+		var urgent := days < 1.0
 		var pantry: Inventory = w.households[h].pantry
 		var need := (float(GameData.b("relief_fill_days")) - days) * household_day_food(h)
 		var wheat := mini(ceili(need / 120.0), w.granary.count("wheat"))
+		if urgent and wheat < ceili(need / 120.0):
+			# the manor's grain still at the farmers' for the granary goes straight to them
+			var sent := w.manor_work.take_bound("granary", "wheat", ceili(need / 120.0) - wheat, pantry)
+			need -= sent * 120.0
+			w.stat("gov_relief_grain", sent)
 		if wheat > 0:
-			w.transfer(w.granary, pantry, "wheat", wheat)
+			if urgent:
+				w.transfer(w.granary, pantry, "wheat", wheat)
+			else:
+				w.manor_work.consign(w.granary, w.manor_work.yard_cell(), "wheat", wheat, {"kind": "pantry", "hh": h}, "relief", "the manor's granary")
 			need -= wheat * 120.0
 			w.stat("gov_relief_grain", wheat)
 		# what the granary cannot give, the manor buys for the household: an emergency (under a day of
@@ -1269,11 +1308,14 @@ func _relief(obligations: float, reserve: float) -> int:
 			var price := w.sell_price(seller, item)
 			if w.treasury - price < floor_coins or not seller.inv.has(item):
 				break
-			seller.inv.remove(item)
+			if urgent:
+				seller.inv.remove(item)
+				pantry.add(item)
+			else:
+				w.manor_work.consign(seller.inv, _workplace_cell(seller), item, 1, {"kind": "pantry", "hh": h}, "relief", _seller_words(seller))
 			seller.coins += price
 			seller.earned += price
 			w.treasury -= price
-			pantry.add(item)
 			need -= 120.0 if item == "wheat" else 40.0
 			w.stat("gov_relief_bought", price)
 			w.stat("gov_relief_bought_" + item, 1)
@@ -1281,6 +1323,11 @@ func _relief(obligations: float, reserve: float) -> int:
 			helped += 1
 			_note_relief(h)
 	return helped
+
+
+## Where a seller's goods wait for the manor's carriers, in words: "Clement Ward the smith's".
+func _seller_words(o: NPC) -> String:
+	return "%s %s the %s's" % [o.name, o.family, o.job if o.job != "merchant" else "merchant"]
 
 
 ## Grain from a farmer's surplus first, then cooked food from a food seller.
@@ -1695,11 +1742,11 @@ func _day_labour(n: NPC) -> bool:
 		return false
 	if n.earned != int(earned_at_dawn.get(n.id, n.earned)) or household_food_days(n.household) >= float(GameData.b("relief_trigger_days")):
 		return false
-	if w.treasury - int(GameData.b("day_labour_wage")) < daily_obligations() * float(GameData.b("treasury_reserve_days")):
+	# a real job from the manor's work, or none (owner, 2026-10-18: no pay for standing about, no
+	# work guaranteed); paid when it is done (ManorWork)
+	if not w.manor_work.seek(n):
 		return false
 	laboured_today[n.id] = true
-	n.doing = "doing a day's work for the manor"
-	n.plan = [go(wander_cell(w.building_door(_manor_id()), 5)), work(240, "day_labour", {}, "work")]
 	return true
 
 

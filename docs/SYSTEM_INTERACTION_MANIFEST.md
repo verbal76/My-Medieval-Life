@@ -210,28 +210,28 @@ Rules:
 - **Trigger:** Payday, once a day.
 - **Source:** `game/scripts/core/npc_brain.gd::pay_guards`, `game/scripts/core/npc_brain.gd::_day_labour`
 - **Affects:** Wages, Treasury, Coins, Employment
-- **Expected:** The sage, reeve, guards and manor hands are paid from the treasury. The newest hand is let go when two days of wages cannot be paid. Day labour pays an adult of a short household who has earned nothing that day. A manor hand hired out for the day to carry building materials (INT-059) is paid by the employer, not the manor, that day.
+- **Expected:** The sage, reeve, guards and manor hands are paid from the treasury. The newest hand is let go when two days of wages cannot be paid. Day labour is a real job from the manor's work (INT-066), paid when done; an adult of a short household who has earned nothing that day seeks one, and with none open there is no pay. A manor hand hired out for the day to carry building materials (INT-059) is paid by the employer, not the manor, that day.
 - **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_households_and_work`
 
 ### INT-024 · Relief
 - **Trigger:** A household can cover under 2 days of food.
 - **Source:** `game/scripts/core/npc_brain.gd::_relief`, `game/scripts/core/npc_brain.gd::household_food_days`, `game/scripts/core/npc_brain.gd::_note_relief`
 - **Affects:** Relief, Treasury, Granary, Households, Market
-- **Expected:** Food goes into the pantry up to 3 days, from the granary first, then bought. Under 1 day of food it is paid below the reserve, down to one day of wages. Cash counts as food only up to the market's share. Chronic relief is named in the log. Days and the fill are measured against the household's age-weighted need (INT-047).
+- **Expected:** Food goes to the pantry up to 3 days, from the granary first, then bought: carried there as a manor job (INT-066), or at once when the household has under 1 day of food (then also from grain still at the farmers' for the granary); a household with relief on its way waits for it. Under 1 day of food it is paid below the reserve, down to one day of wages. Cash counts as food only up to the market's share. Chronic relief is named in the log. Days and the fill are measured against the household's age-weighted need (INT-047).
 - **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_child_food`
 
 ### INT-025 · Granary purchases
 - **Trigger:** The manor's evening business.
 - **Source:** `game/scripts/core/npc_brain.gd::surplus_wheat`, `game/scripts/core/npc_brain.gd::keep_wheat`, `game/scripts/core/npc_brain.gd::reeve_day`
 - **Affects:** Granary, Treasury, Market, Fields
-- **Expected:** Only genuine surplus is bought: never a farmer's household food, feed reserve or buffer, never in a famine. The granary starts with 7 days of food and is finite. The household food, the target and the start are age-weighted (INT-047).
+- **Expected:** Bought grain waits at the farmer's, the manor's, until carried to the granary (INT-066); what is on its way counts toward the granary's target and the village's food. Only genuine surplus is bought: never a farmer's household food, feed reserve or buffer, never in a famine. The granary starts with 7 days of food and is finite. The household food, the target and the start are age-weighted (INT-047).
 - **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`
 
 ### INT-026 · Repairs and land sales
 - **Trigger:** The evening business (repairs); the player buys, leases or sells land or a house (INT-052).
 - **Source:** `game/scripts/core/npc_brain.gd::reeve_day`, `game/scripts/core/world.gd::buy_plot`, `game/scripts/core/property.gd::buy`, `game/scripts/core/property.gd::lease`, `game/scripts/core/property.gd::sell`
 - **Affects:** Treasury, Market, Coins, Building, Property
-- **Expected:** Repairs are bought from village sellers with money beyond 3 days of wages. A plot's price (`plot_price`, provisional) and every sale or rent go to the treasury; a house sold back is paid from it (`gov_land_sales`, `gov_rent`, `gov_land_bought`). The treasury's level then decides wages, repairs and works as before.
+- **Expected:** Repairs are bought from village sellers with money beyond 3 days of wages, left at the seller's for the manor's carriers and used up mending (INT-066); the manor buys no more while it holds `manor_jobs.works_stock_max` unused, and buys no stone while its own is being quarried. A plot's price (`plot_price`, provisional) and every sale or rent go to the treasury; a house sold back is paid from it (`gov_land_sales`, `gov_rent`, `gov_land_bought`). The treasury's level then decides wages, repairs and works as before.
 - **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_property`, `game/tests/play_test.gd`
 ### INT-027 · Pens and keepers
 - **Trigger:** Hourly animal update; a keeper's day; a keeper dies or changes job.
@@ -264,7 +264,7 @@ Rules:
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
 - **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_migrate_construction`, `game/scripts/core/construction.gd::to_dict`, `game/scripts/core/construction.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/world.gd::_migrate_property`, `game/scripts/core/fauna.gd::load_dict`, `game/scripts/core/property.gd::settle_ended_households`, `game/scripts/core/player_state.gd::to_dict`
 - **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building, Containers, Property
-- **Expected:** Written atomically as save_version 7 (`World.SAVE_VERSION`; 7 adds the coins set aside for each accepted quest (`reserved`) and the day of the player's last work for the manor; version 1-6 saves load with each accepted quest's promise set aside if its giver can pay, every coin kept (`Quests.migrate_reserves`, INT-062); 6 adds each site's kind, workshops with their stamp and leave list, the day's hired helpers with what they carry, and founded households with where they came from; version 5 saves load with every site a house's and every built house drawn from the house stamp, `World._migrate_construction`, and nothing moves; villagers have no "hidden" flag: where they are is their position, inside a building or not; every property record carries its owner and tenant references, leases their rent, due day and arrears, `next_parcel` counts claimed parcels, a settled household is `ended`; the player has no plot list). Versions 1-4 load, with no coin lost: plot owners ""/"player" (and the player's plot list) become the manor's or the player's, a field's farmer ids give way to the manor's ownership (its farmers are those working it), a stall's and a pen's NPC id become their tenant reference (a dead one leaves it vacant), buildings get their starting owners and a house the player built is theirs on its plot, and a household that had died out gives its house and stores to the manor (INT-054); plots, houses and the player stay exactly where they are (`World._migrate_property`). Versions 1-3 also: their villagers "hidden" at home (standing on the door step) are moved inside, each to their own bed's spot (`World._move_indoors`). Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
+- **Expected:** Written atomically as save_version 8 (`World.SAVE_VERSION`; 8 adds the manor's work, its lots, works yard and jobs (INT-066), loading older saves with nothing outstanding and dropping a version 7 save's single manor quarry job with its wage back (INT-063); 7 adds the coins set aside for each accepted quest (`reserved`) and the day of the player's last work for the manor; version 1-6 saves load with each accepted quest's promise set aside if its giver can pay, every coin kept (`Quests.migrate_reserves`, INT-062); 6 adds each site's kind, workshops with their stamp and leave list, the day's hired helpers with what they carry, and founded households with where they came from; version 5 saves load with every site a house's and every built house drawn from the house stamp, `World._migrate_construction`, and nothing moves; villagers have no "hidden" flag: where they are is their position, inside a building or not; every property record carries its owner and tenant references, leases their rent, due day and arrears, `next_parcel` counts claimed parcels, a settled household is `ended`; the player has no plot list). Versions 1-4 load, with no coin lost: plot owners ""/"player" (and the player's plot list) become the manor's or the player's, a field's farmer ids give way to the manor's ownership (its farmers are those working it), a stall's and a pen's NPC id become their tenant reference (a dead one leaves it vacant), buildings get their starting owners and a house the player built is theirs on its plot, and a household that had died out gives its house and stores to the manor (INT-054); plots, houses and the player stay exactly where they are (`World._migrate_property`). Versions 1-3 also: their villagers "hidden" at home (standing on the door step) are moved inside, each to their own bed's spot (`World._move_indoors`). Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
 - **Tests:** `game/tests/run_tests.gd::test_save_round_trip`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_interiors`, `game/tests/run_tests.gd::test_construction_migration`, `game/tests/run_tests.gd::test_helpers`, `game/tests/run_tests.gd::test_households_split`, `game/tests/start_test.gd`
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
@@ -550,14 +550,11 @@ Rules:
 - **Tests:** `game/tests/run_tests.gd::test_build7_economy`, `game/tests/run_tests.gd::test_quests`, `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`
 
 ### INT-063 · Work for the manor
-- **Trigger:** The player asks the reeve "Any work for me?", accepts, hands in the stone; dawn (lapses).
-- **Source:** `game/scripts/core/quests.gd::_wants`, `game/scripts/core/quests.gd::can_fund`, `game/scripts/core/quests.gd::no_work_line`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::deposit_left`, `game/scripts/core/npc_brain.gd::daily_obligations`, `game/data/quests.json`
-- **Affects:** Employment, Treasury, Wages, Resources, Coins, Ledger, Save
-- **Expected:** (owner, 2026-10-18; the task chosen by the agent: quarrying)
-  - The reeve offers a day's work, ten stone quarried for the manor's repairs for `wage` 6 (provisional), only while the treasury keeps `treasury_reserve_days` of obligations after the wage (the rule NPC day labour follows, INT-023), while the village's own stone deposits hold the ten (`deposit_left`), and once a day (`PlayerState.manor_day`).
-  - The wage is set aside from the treasury on acceptance (INT-062) and paid on completion (`gov_wages`, `gov_player_work`); the stone is used up in mending (`used_works_stone`), not stored. Undone, it lapses and the wage goes back to the treasury.
-  - Otherwise the reeve says why not: the day's work is done, the manor's chest cannot spare it, or the stone pits are worked out.
-- **Tests:** `game/tests/run_tests.gd::test_build7_economy`
+- **Trigger:** Removed.
+- **Source:** `game/scripts/core/quests.gd::drop_manor_quarry`
+- **Affects:** Employment, Treasury
+- **Expected:** Removed (2026-10-18, owner: the reeve offers a choice of real jobs): the single quarrying quest is superseded by the manor's job board (INT-066). A version 7 save's accepted one is dropped and its wage returned to the treasury.
+- **Tests:** `game/tests/run_tests.gd::test_manor_work`
 
 ### INT-064 · Wheat cut for harvest work is the farmer's
 - **Trigger:** Harvest work lapses (dawn).
@@ -576,6 +573,18 @@ Rules:
   - While it brings stone it buys none of the village's.
 - **Tests:** `game/tests/run_tests.gd::test_build7_economy`
 
+### INT-066 · The manor's work: real jobs for the player and villagers alike
+- **Trigger:** The manor's evening business buys or gives goods; the reeve's list ("Any work for me?"); a villager seeks day labour, waits idle at work or is a manor hand; a worker does a step; dawn; a worker dies; saving and loading.
+- **Source:** `game/scripts/core/manor_work.gd::consign`, `game/scripts/core/manor_work.gd::refresh`, `game/scripts/core/manor_work.gd::post_quarry`, `game/scripts/core/manor_work.gd::works_want`, `game/scripts/core/manor_work.gd::open_for`, `game/scripts/core/manor_work.gd::take`, `game/scripts/core/manor_work.gd::release`, `game/scripts/core/manor_work.gd::do_step`, `game/scripts/core/manor_work.gd::plan`, `game/scripts/core/manor_work.gd::seek`, `game/scripts/core/manor_work.gd::dawn`, `game/scripts/core/manor_work.gd::deliver_now`, `game/scripts/core/manor_work.gd::take_bound`, `game/scripts/core/manor_work.gd::goods`, `game/scripts/core/npc_brain.gd::reeve_day`, `game/scripts/core/npc_brain.gd::_relief`, `game/scripts/core/npc_brain.gd::_public_works`, `game/scripts/core/npc_brain.gd::_day_labour`, `game/scripts/core/npc_brain.gd::_idle_at_work`, `game/scripts/core/npc_brain.gd::decide`, `game/scripts/ui/game_ui.gd::show_manor_jobs`, `game/scripts/ui/game_ui.gd::_quest_items`, `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::total_coins`, `game/data/balance.json`
+- **Affects:** Employment, Treasury, Wages, Market, Granary, Relief, Building, Resources, Coins, Inventory, Households, Ledger, Save, Interface
+- **Expected:** (owner, 2026-10-18: a choice of real jobs, NPCs by the same rules; the details are agent proposals, numbers provisional)
+  - Jobs are made only by the manor's own business: what it buys for repairs, public works and the granary waits at the seller's as the manor's *lot* until carried (to the works yard or the granary); relief goes from the granary (or a seller) as a lot for a household's pantry; the works yard's materials are used up by "mend" jobs (`mend_load` at a works site, the well or the roads, `mend_minutes`); one "quarry" job (`quarry_qty` stone from the village's seams) while repairs are funded and the works lack stone. No work is posted for its own sake, and none is guaranteed.
+  - Taking a job sets its wage aside from the treasury, only while the treasury keeps `treasury_reserve_days` of obligations after it; it is paid when done (`gov_manor_jobs`). Manor hands are already paid: they take jobs unpaid. One job at a time per worker. Undone work is released at the next dawn after `days`: the wage back, the load back to its lot.
+  - Carried goods ride in the job's load, never a pack; goods are only moved or used up (`used_repairs_`), coins only moved: the goods census and `World.total_coins` count lots, yard, loads and wages set aside. A household under 1 day of food gets its relief at once.
+  - The player and villagers see the same open jobs, most needed first (relief, the granary, the yard, mending, quarrying). Villagers seek them as day labour, when their own trade is idle (before `latest_start`), and as manor hands; they do the same steps (collect, carry, quarry, mend). The player takes one from the reeve's list, the journal shows its next step, and "Use" at the place does it.
+  - Saved as `manor_work` (save version 8); older saves load with nothing outstanding.
+- **Tests:** `game/tests/run_tests.gd::test_manor_work`, `game/tests/run_tests.gd::test_government`, `game/tests/economy_sim.gd`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -584,7 +593,7 @@ Rules:
 |---|---|
 | Character | INT-001, INT-018, INT-031 |
 | Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
@@ -592,25 +601,25 @@ Rules:
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064 |
-| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-063, INT-065 |
+| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-063, INT-065 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063 |
-| Wages | INT-023, INT-029, INT-059, INT-063 |
-| Relief | INT-024, INT-047 |
-| Granary | INT-024, INT-025, INT-031, INT-047, INT-054 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066 |
+| Wages | INT-023, INT-029, INT-059, INT-066 |
+| Relief | INT-024, INT-047, INT-066 |
+| Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066 |
 | Inheritance | INT-017, INT-062 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066 |
 | Workshops | INT-021, INT-030, INT-058 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-063, INT-065 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-063 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061 |
