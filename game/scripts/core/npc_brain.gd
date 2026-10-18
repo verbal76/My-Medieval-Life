@@ -155,35 +155,58 @@ func _plan_bed(n: NPC, mins: float) -> void:
 	n.plan = [go(w.home_cell(n, "bed")), doit("enter"), work(mins, "leave", {}, "sleep")]
 
 
-func _plan_evening(n: NPC, h: float) -> void:
+## Stock the household's pantry: firewood when it has none, grain (or cooked food) when it holds fewer
+## units than it has members. Done in the evening, and by a guard whenever the shops are open (B7-015:
+## a guard's duty and bed left no evening, so a guard's household pantry stayed empty and the guard
+## went hungry in the night while the village held weeks of food). True when a trip is planned.
+func _plan_provision(n: NPC) -> bool:
 	var hh: Dictionary = w.households[n.household]
-	var dependants := 0
-	for m in hh.members:
-		var o := w.npc(m)
-		if o and o.alive and o.role != "adult":
-			dependants += 1
-	var pantry: Inventory = hh.pantry
-	var stocked := 0
-	for f in FOOD:
-		stocked += pantry.count(f)
-	if n.coins >= 3 and pantry.count("log") < 1:
+	var dependants := _dependants(hh)
+	var stocked := _stocked(hh)
+	if n.coins >= 3 and (hh.pantry as Inventory).count("log") < 1:
 		var seller := _seller_of("log", n)
 		if seller:
 			n.doing = "buying firewood"
 			n.plan = [go(_workplace_cell(seller)), doit("buy_from", {"vendor": seller.id, "item": "log", "qty": 1, "pantry": true})]
-			return
+			return true
 	if n.coins >= 4 and stocked < dependants + 1:
 		# grain to cook at home feeds a family for far less than meals bought at the tavern
 		var grain := _grain_seller(n)
 		if grain:
 			n.doing = "buying grain for the household"
 			n.plan = [go(_workplace_cell(grain) if grain.job != "farmer" else grain.cell()), doit("buy_from", {"vendor": grain.id, "item": "wheat", "qty": 2, "pantry": true})]
-			return
+			return true
 		var v := _vendor_with_food(n)
 		if v:
 			n.doing = "buying food for the household"
 			n.plan = [go(_workplace_cell(v)), doit("buy_food", {"vendor": v.id, "pantry": true})]
-			return
+			return true
+	return false
+
+
+func _dependants(hh: Dictionary) -> int:
+	var dependants := 0
+	for m in hh.members:
+		var o := w.npc(m)
+		if o and o.alive and o.role != "adult":
+			dependants += 1
+	return dependants
+
+
+## Food units in the household pantry.
+func _stocked(hh: Dictionary) -> int:
+	var stocked := 0
+	for f in FOOD:
+		stocked += (hh.pantry as Inventory).count(f)
+	return stocked
+
+
+func _plan_evening(n: NPC, h: float) -> void:
+	if _plan_provision(n):
+		return
+	var hh: Dictionary = w.households[n.household]
+	var dependants := _dependants(hh)
+	var stocked := _stocked(hh)
 	# an evening at the tavern only when the household is provided for and there is coin to spare
 	if h >= WORK_END and n.coins >= int(GameData.b("tavern_spare_coins")) and stocked >= dependants + 1 and w.rng.randf() < 0.35:
 		var counter := w.station_use(w.stations_of("tavern_counter")[0])
@@ -588,7 +611,10 @@ func _hunter(n: NPC) -> bool:
 
 func _guard(n: NPC, h: float) -> void:
 	var on_duty := (h >= WAKE and h < SLEEP) if n.workplace == "day" else (h >= SLEEP - 1.0 or h < WAKE + 1.0)
+	var shops_open := h >= WORK_START and h < WORK_END
 	if not on_duty:
+		if shops_open and _plan_provision(n):
+			return
 		var mins := 120.0
 		n.doing = "off duty"
 		_plan_bed(n, mins)
@@ -597,6 +623,8 @@ func _guard(n: NPC, h: float) -> void:
 	if foe:
 		n.target = foe.id
 		n.doing = "fighting %s" % foe.name
+		return
+	if shops_open and _plan_provision(n):          # on the rounds: a trip to the market for the household
 		return
 	var post: Vector2i = w.guard_posts[w.rng.randi() % w.guard_posts.size()]
 	n.doing = "on patrol"
