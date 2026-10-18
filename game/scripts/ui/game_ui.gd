@@ -63,6 +63,7 @@ const CONTROLS := {
 # On a phone the interface keeps at least this far from the screen edges (interface units; the layout
 # is 450 high): rounded corners on common phones cut off less than this.
 const CORNER_MARGIN := Vector2(28, 14)
+const BUTTON_MIN_WIDTH := 260.0       # window buttons are at least this wide, else as wide as their text
 const SCHEME_NAMES := {"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -548,6 +549,11 @@ func _button(text: String, cb: Callable, enabled := true, parent: Control = null
 	var b := Button.new()
 	b.text = text
 	b.custom_minimum_size = Vector2(0, 48)
+	if parent == null:
+		# a button in a window is as wide as its words (at least BUTTON_MIN_WIDTH), centred, not a
+		# bar across the screen (owner: "they are buttons")
+		b.custom_minimum_size.x = BUTTON_MIN_WIDTH
+		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	b.disabled = not enabled
 	b.pressed.connect(cb)
 	(parent if parent else panel_body).add_child(b)
