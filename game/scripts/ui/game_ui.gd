@@ -36,6 +36,10 @@ var prompt_text := ""
 var scheme := "kbm"
 var place_bar: PanelContainer  # while placing a building: whether it may go here, Place and Cancel
 var place_label: Label
+## Where a new player finds money (owner, 2026-10-18): shown when a game starts and kept on the
+## journal's quests page.
+const EARNING_HINT := "For paid work, ask farmers, miners and woodcutters \"Any work for me?\", or the reeve at the manor. Sell ore to the smith, logs to the carpenter, hides to the tanner, and goods at the market stalls."
+const OPENING_HINT := "For paid work, ask farmers, miners, woodcutters or the reeve \"Any work for me?\". Who buys what is in the journal."
 const JOURNAL_PER_PAGE := 6    # lines on a journal page (a day heading counts as one)
 const PARCHMENT := Color8(236, 222, 186)
 const INK := Color8(58, 38, 22)
@@ -536,10 +540,10 @@ func show_controls(back: Callable) -> void:
 	_button("Back", back)
 
 
-func message(text: String) -> void:
+func message(text: String, seconds := 4.0) -> void:
 	toast.text = text
 	toast.visible = true
-	toast_t = 4.0
+	toast_t = seconds
 	toast.offset_bottom = -160.0 if not place_bar.visible else -(place_bar.size.y + 24.0)    # above the placing bar
 
 
@@ -964,7 +968,9 @@ func _quest_items() -> Array:
 			want = "Deal with %s." % (target.name if target else "the thief")
 		out.append({"day": false, "text": want + ("  Ready: go back to them." if w.quests.ready(q) else "")})
 	if out.is_empty():
-		out.append({"day": false, "text": "No quests. Look for people with a green diamond over their head."})
+		out.append({"day": false, "text": "No quests. Look for people with a marker over their head."})
+	out.append({"day": true, "text": "Earning money"})
+	out.append({"day": false, "text": EARNING_HINT})
 	return out
 
 
@@ -1048,7 +1054,7 @@ func _offer_choices(n: NPC, choices: GridContainer, hire := "") -> void:
 	_talk_choice(choices, "I'll do it", func():
 		var q: Dictionary = w.quests.accept(n, hire)
 		if q.is_empty():
-			message("You have too many tasks already (%d)." % int(GameData.b("quest_max_active")))
+			message(w.quests.last_refusal if w.quests.last_refusal != "" else "That is no longer on offer.")
 			_talk_view(n, Dialogue.opening(w, n))
 			return
 		if hire != "":
@@ -1240,7 +1246,7 @@ func show_trade(n: NPC) -> void:
 	var w: World = main.world
 	var p := w.player
 	if w.at_post(n):
-		_open("trade", "Buy from %s %s (%s)  ·  you have %d coins" % [n.name, n.family, w.shop_name(n), p.coins])
+		_open("trade", "Trade with %s %s (%s)  ·  you have %d coins" % [n.name, n.family, w.shop_name(n), p.coins])
 	else:
 		_open("trade", "Trade with %s %s  (you have %d coins)" % [n.name, n.family, p.coins])
 	var sale: Array = w.brain.for_sale(n)

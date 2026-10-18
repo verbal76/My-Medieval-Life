@@ -136,9 +136,11 @@ func _run() -> void:
 	check(ui.is_open("origin") and main.paused, "the origin story is shown and the world waits")
 	_press("Begin")
 	check(not ui.modal() and not main.paused and main.running, "into the village")
+	check(ui.toast.visible and ui.toast.text.contains("Any work for me?") and ui.toast.text.contains("reeve") and ui.toast.text.contains("journal"),
+			"the opening message says where paid work is, and that the journal says who buys what: %s" % ui.toast.text)
 
 	# the starting kit (balance.json)
-	check(p.hp == 100.0 and p.max_hp == 100.0 and p.coins == 5, "100 health and 5 coins")
+	check(p.hp == 100.0 and p.max_hp == 100.0 and p.coins == 20, "100 health and 20 coins (owner, provisional)")
 	for id in ["rusty_sword", "rusty_pickaxe", "bread", "rotten_apple", "plain_clothes"]:
 		check(p.inv.count(id) == 1, "carries %s" % GameData.item_name(id))
 	check(p.armor == "plain_clothes" and p.weapon == "" and p.tool == "", "wearing plain clothes, nothing in hand")
@@ -488,9 +490,9 @@ func _run() -> void:
 	p.pos = tk.pos + Vector2(0, 1.0)
 	main.player_sprite.face(Vector2(0, -1))
 	main._find_target()
-	check(main.target.get("kind", "") == "shop" and main.target.label == "Buy from %s (tavern)" % tk.name, "facing the keeper at the counter: \"%s\"" % main.target.get("label", ""))
+	check(main.target.get("kind", "") == "shop" and main.target.label == "Trade with %s (tavern)" % tk.name, "facing the keeper at the counter: \"%s\"" % main.target.get("label", ""))
 	main.interact()
-	check(ui.is_open("trade") and ui.title_label.text.to_lower().begins_with(("Buy from %s" % tk.name).to_lower()), "using it opens %s's shop: %s" % [tk.name, ui.title_label.text])
+	check(ui.is_open("trade") and ui.title_label.text.to_lower().begins_with(("Trade with %s" % tk.name).to_lower()), "using it opens %s's shop: %s" % [tk.name, ui.title_label.text])
 	var coins_before := p.coins
 	p.coins += 20
 	check(_press("Buy") and p.coins < coins_before + 20, "bought something from the tavern (%d coins left)" % p.coins)
@@ -509,7 +511,7 @@ func _run() -> void:
 	merchant.pos = w.shop_post(merchant)
 	merchant.plan = [w.brain.work(600, "", {}, "idle")]
 	stand_by(Vector2i(int(w.stalls[sid].x), int(w.stalls[sid].y)))
-	check(str(main.target.get("label", "")) == "Buy from %s (%s)" % [merchant.name, w.shop_name(merchant)], "with the merchant there: \"%s\"" % main.target.get("label", ""))
+	check(str(main.target.get("label", "")) == "Trade with %s (%s)" % [merchant.name, w.shop_name(merchant)], "with the merchant there: \"%s\"" % main.target.get("label", ""))
 	# taking food from a tavern table: theft, said in the prompt, the dish goes into the pack
 	var table: Dictionary = {}
 	for c in w.containers:
@@ -774,6 +776,7 @@ func _run() -> void:
 	ui.show_journal(-1, true)
 	var jtext: String = " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text))
 	check(jtext.contains("Work the harvest") and jtext.contains("for 6 coins"), "the journal lists the work and its wage")
+	check(jtext.contains("Earning money") and jtext.contains("the reeve at the manor"), "the journal's quests page keeps the note on earning money")
 	ui.hide_all()
 	var crimes0 := p.crimes.size()
 	var marks0 := p.stolen_count("wheat")
@@ -782,8 +785,11 @@ func _run() -> void:
 	check(p.crimes.size() == crimes0 and p.stolen_count("wheat") == marks0, "cutting the wheat one was hired to cut is not theft (crimes %d -> %d, marks %d -> %d)" % [crimes0, p.crimes.size(), marks0, p.stolen_count("wheat")])
 	var wage0 := p.coins
 	var coins_all := w.total_coins()
+	var purse_h := farmer_h.coins
+	var held_q: Dictionary = w.quests.active_from(farmer_h)
 	ui.show_talk(farmer_h)
-	check(_press("Here you are") and p.coins == wage0 + 6 and farmer_h.coins == 14 and w.total_coins() == coins_all, "handing in the wheat pays the wage from the farmer's purse")
+	check(int(held_q.get("reserved", 0)) == 6 and _press("Here you are") and p.coins == wage0 + 6 and farmer_h.coins == purse_h and w.total_coins() == coins_all,
+			"handing in the wheat pays the wage the farmer set aside from their purse")
 	ui.hide_all()
 	# a skill quest: the tanner teaches Crafting for two hides, under the scroll marker
 	var tanner: NPC = null

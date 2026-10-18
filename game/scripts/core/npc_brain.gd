@@ -19,7 +19,10 @@ const BUYS := {
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10},
 	"merchant_goods": {"pickaxe": 4, "axe": 4, "hammer": 2, "copper_sword": 3, "iron_sword": 3,
-		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4},
+		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
+		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
+		# like the other made goods, and the caravan carries the surplus away
+		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2},
 }
 # items an NPC keeps for its own work and will not sell
 const KEEPS := {"miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
@@ -1706,6 +1709,8 @@ func caravan() -> void:
 	for f in FOOD:
 		food += w.table_food(f) * float(GameData.item(f).food)
 	var keep_food := food < village_day_food() * float(GameData.b("caravan_food_reserve_days"))
+	# a caravan bringing stone to a village whose own is worked out does not carry the village's away
+	var keep_stone := _stone_scarce()
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
@@ -1713,7 +1718,7 @@ func caravan() -> void:
 		if o.job == "smith":
 			caps = {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}
 		for id in o.inv.ids():
-			if not caps.has(id) or (keep_food and (FOOD.has(id) or id == "meat")):
+			if not caps.has(id) or (keep_food and (FOOD.has(id) or id == "meat")) or (keep_stone and id == "stone"):
 				continue
 			var keep := int(caps.get(id, 6)) / 2
 			var extra := o.inv.count(id) - keep
@@ -1730,8 +1735,10 @@ func caravan() -> void:
 				bought += price
 				extra -= 1
 	var sold := _caravan_imports()
-	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s." % [bought,
-		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else ""])
+	var stone := _caravan_stone()
+	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s%s." % [bought,
+		(" and sells %d coins' worth of ore and coal to the smiths" % sold) if sold > 0 else "",
+		(" and %d stone to the market" % stone) if stone > 0 else ""])
 
 
 ## When the village's own seams of an ore (or coal) are worked out, the caravan brings it: each
@@ -1758,3 +1765,35 @@ func _caravan_imports() -> int:
 				spent += price
 				w.stat("imported_" + id)
 	return spent
+
+
+func _stone_scarce() -> bool:
+	return w.quests.deposit_left("stone") <= int(GameData.b("caravan_import_when_left"))
+
+
+## Stone (owner, 2026-10-18; B7-007): once the village's own stone is worked out, the caravan brings
+## a cart of it from a quarry on its road: at most caravan_stone.load a visit, bought there at its
+## value and sold at value times caravan_stone.markup (the cartage of a heavy, cheap load). The
+## raw-goods merchants, the village's stone sellers (Construction.SELLERS), buy it up to their
+## stock cap while keeping the trader cash floor; what they cannot pay for goes back with the cart.
+## The coins leave the village (coin_sources falls). Returns the stone sold.
+func _caravan_stone() -> int:
+	if not _stone_scarce():
+		return 0
+	var cfg: Dictionary = GameData.b("caravan_stone")
+	var cart := int(cfg.load)
+	var price := maxi(1, roundi(GameData.value("stone") * float(cfg.markup)))
+	var sold := 0
+	for o: NPC in w.npcs:
+		if not o.alive or buy_role(o) != "merchant_raw":
+			continue
+		while cart > 0 and wants(o, "stone") > 0 and o.coins - price >= int(GameData.b("trader_cash_floor")):
+			o.coins -= price
+			o.spent += price
+			o.inv.add("stone")
+			w.coin_sources -= price
+			w.stat("imported_stone")
+			w.stat("imported_stone_coins", price)
+			cart -= 1
+			sold += 1
+	return sold

@@ -47,6 +47,7 @@ func _init() -> void:
 	test_helpers()
 	test_households_split()
 	test_construction_migration()
+	test_build7_economy()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -835,11 +836,25 @@ func test_quests() -> void:
 		if n.job == "smith":
 			smith = n
 			break
-	w.quests.offers[smith.id] = "ore_for_the_forge"
-	var q2: Dictionary = w.quests.accept(smith)
-	p.inv.add("iron_ore", 6)
+	# owner, 2026-10-18 (B7-002): a reward is offered only by someone who can pay it, set aside when
+	# the player agrees, and paid in full
+	smith.inv.remove("iron_ore", smith.inv.count("iron_ore"))
+	var forge := Quests.template("ore_for_the_forge")
 	smith.coins = 7
-	check(w.quests.complete(q2) == 7 and smith.coins == 0, "a giver who cannot pay in full pays all they have")
+	check(not w.quests._wants(smith, forge), "a smith who cannot pay twenty coins does not offer them")
+	w.quests.offers[smith.id] = "ore_for_the_forge"
+	check(w.quests.accept(smith).is_empty() and w.quests.offer_of(smith).is_empty() and smith.coins == 7 and w.quests.last_refusal.contains("no longer pay"),
+			"an offer the giver can no longer pay is withdrawn, and they keep their coins")
+	smith.coins = 30
+	check(w.quests._wants(smith, forge), "with the coins, the smith offers it")
+	w.quests.offers[smith.id] = "ore_for_the_forge"
+	var c1 := w.total_coins()
+	var q2: Dictionary = w.quests.accept(smith)
+	check(int(q2.reserved) == 20 and smith.coins == 10 and w.total_coins() == c1, "the twenty coins are set aside when the player agrees (still counted)")
+	p.inv.add("iron_ore", 6)
+	smith.coins = 0                                      # the smith spends everything else
+	var c2 := w.total_coins()
+	check(w.quests.complete(q2) == 20 and smith.coins == 0 and int(q2.reserved) == 0 and w.total_coins() == c2, "the promised twenty are paid in full though the smith spent the rest")
 	# bandit trouble: a villager robbed by a living bandit
 	var bandit: NPC = null
 	for n: NPC in w.npcs:
@@ -1048,14 +1063,13 @@ func test_hiring() -> void:
 	p.inv.remove("wheat", p.inv.count("wheat") - 24)        # (what was stolen, unless a guard took it back)
 	p.trim_stolen()
 	check(w.quests.ready(q), "ready with the wheat")
-	# paid in full or not at all
+	# the wage was set aside when the work was taken on (B7-002), so it is paid in full
+	check(int(q.reserved) == 6, "the wage was set aside from the farmer's purse when the player took the work")
+	farmer.coins = 0                                     # the farmer spends everything else
 	var coins0 := w.total_coins()
 	var wheat0 := farmer.inv.count("wheat")
-	farmer.coins = 3
-	check(w.quests.complete(q) == -2 and p.inv.count("wheat") == 24 and p.quests.has(q), "an employer who cannot pay keeps nothing and pays nothing")
-	farmer.coins = 20
 	var purse := p.coins
-	check(w.quests.complete(q) == 6 and p.coins == purse + 6 and farmer.coins == 14 and farmer.inv.count("wheat") == wheat0 + 24 and not p.quests.has(q), "the wage comes from the farmer's purse; the wheat goes to the farmer")
+	check(w.quests.complete(q) == 6 and p.coins == purse + 6 and farmer.coins == 0 and farmer.inv.count("wheat") == wheat0 + 24 and not p.quests.has(q), "the wage set aside is paid in full; the wheat goes to the farmer")
 	check(w.total_coins() == coins0, "a wage makes no coins")
 	check(int(w.stats.get("hired_wages", 0)) == 6, "the ledger records the wage")
 	# a woodcutter's day: logs delivered; undone work lapses
@@ -1988,7 +2002,7 @@ func test_construction_migration() -> void:
 	var again := JSON.stringify(w2.to_dict())
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(again))
-	check(int(w2.to_dict().save_version) == 6 and JSON.stringify(w3.to_dict()) == again, "v5: saved again as version 6, stable")
+	check(int(w2.to_dict().save_version) == World.SAVE_VERSION and JSON.stringify(w3.to_dict()) == again, "v5: saved again as the current version, stable")
 	w.dispose()
 	w2.dispose()
 	w3.dispose()
@@ -2467,3 +2481,184 @@ func test_save_round_trip() -> void:
 	var w7 := World.new()
 	w7.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w6.to_dict())))
 	check(w7.player.quests.filter(func(q): return q.id == "the_sage_in_the_north").size() == 1, "loading again does not start it twice")
+
+
+## Build 7 economy corrections (owner, 2026-10-18; docs/release/BUILD_7_ISSUES.md B7-001 to B7-007).
+func test_build7_economy() -> void:
+	var w := new_world()
+	var p := w.player
+	var b: NPCBrain = w.brain
+	p.pos = FAR_GUARDS
+	check(p.coins == 20 and int(GameData.b("start_coins_player")) == 20, "B7-001: a new player starts with 20 coins")
+	# B7-002: rewards set aside, returned when a quest ends unpaid
+	var cook: NPC = w.npcs.filter(func(o): return o.job == "cook")[0]
+	cook.inv.remove("log", cook.inv.count("log"))
+	cook.coins = 40
+	w.quests.offers.clear()
+	w.quests.offers[cook.id] = "wood_for_the_hearth"
+	var base := w.total_coins() - w.coin_sources
+	var q: Dictionary = w.quests.accept(cook)
+	check(int(q.reserved) == 10 and cook.coins == 30 and w.quests.reserved_total() == 10 and w.total_coins() - w.coin_sources == base, "B7-002: the cook's ten coins are set aside, still counted")
+	var saved := JSON.stringify(w.to_dict())
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(saved))
+	check(int(w2.player.quests.filter(func(x): return x.id == "wood_for_the_hearth")[0].reserved) == 10 and w2.total_coins() == w.total_coins(), "B7-002: the reserve is saved and loaded, nothing doubled or lost")
+	w2.dispose()
+	var heir_of: NPC = w._heir(cook)
+	var heir_coins := heir_of.coins if heir_of else 0
+	w.kill(cook, "illness")
+	check(int(q.reserved) == 0 and (heir_of == null or heir_of.coins == heir_coins + 30 + 10) and w.total_coins() - w.coin_sources == base, "B7-002: a giver who dies has the reserve back first; it passes on with the rest")
+	w.quests.drop_failed()
+	check(not p.quests.has(q) and w.total_coins() - w.coin_sources == base, "B7-002: the quest is dropped without paying twice")
+	# work that lapses gives the wage back
+	var wc: NPC = w.npcs.filter(func(o): return o.job == "woodcutter")[0]
+	wc.inv.remove("log", wc.inv.count("log"))
+	wc.coins = 20
+	base = w.total_coins() - w.coin_sources
+	var qw: Dictionary = w.quests.accept(wc, "work_the_woods")
+	check(wc.coins == 14 and int(qw.reserved) == 6, "B7-002: a wage is set aside when the work is taken on")
+	qw.day = w.day() - 3
+	w.quests.drop_failed()
+	check(not p.quests.has(qw) and wc.coins == 20 and w.total_coins() - w.coin_sources == base, "B7-002: lapsed work gives the wage back to the employer")
+	# the player dies: every reserve goes back
+	var smith: NPC = w.npcs.filter(func(o): return o.job == "smith")[0]
+	smith.inv.remove("iron_ore", smith.inv.count("iron_ore"))
+	smith.coins = 25
+	w.quests.offers[smith.id] = "ore_for_the_forge"
+	var qs: Dictionary = w.quests.accept(smith)
+	check(smith.coins == 5 and int(qs.reserved) == 20, "B7-002: the smith's twenty set aside")
+	var before_heir := w.total_coins() - w.coin_sources
+	w.continue_as_heir()
+	check(smith.coins == 25 and w.quests.reserved_total() == 0 and w.total_coins() - w.coin_sources == before_heir, "B7-002: when the player dies the twenty go back to the smith")
+	p = w.player
+	p.pos = FAR_GUARDS
+	# a save from before reserving (version 6): accepted quests are funded on load if they can be
+	smith.coins = 25
+	w.quests.offers[smith.id] = "ore_for_the_forge"
+	var qo: Dictionary = w.quests.accept(smith)
+	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	old.save_version = 6
+	for x in old.player.quests:
+		if x.id == "ore_for_the_forge":
+			x.erase("reserved")
+	for o in old.npcs:
+		if int(o.id) == smith.id:
+			o.coins = 25                                 # as a version 6 save had it: nothing set aside
+	var w6 := World.new()
+	w6.load_dict(VillageMap.load_default(), old)
+	var q6: Dictionary = w6.player.quests.filter(func(x): return x.id == "ore_for_the_forge")[0]
+	check(int(q6.reserved) == 20 and w6.npc(smith.id).coins == 5 and w6.total_coins() == w.total_coins(), "B7-002: v6 save: the promised twenty are set aside on load, every coin kept")
+	for o in old.npcs:
+		if int(o.id) == smith.id:
+			o.coins = 3                                  # a giver who cannot pay yet
+	var w6b := World.new()
+	w6b.load_dict(VillageMap.load_default(), old)
+	var q6b: Dictionary = w6b.player.quests.filter(func(x): return x.id == "ore_for_the_forge")[0]
+	w6b.player.inv.add("iron_ore", 6)
+	check(int(q6b.reserved) == 0 and w6b.quests.complete(q6b) == -2 and w6b.player.inv.count("iron_ore") >= 6, "B7-002: v6 save, a giver who cannot pay: nothing changes hands yet")
+	w6b.npc(smith.id).coins = 30
+	check(w6b.quests.complete(q6b) == 20 and w6b.npc(smith.id).coins == 10, "B7-002: once they can, the exact twenty are paid")
+	w6.dispose()
+	w6b.dispose()
+	w.quests._release(qo)
+	p.quests.erase(qo)
+	# work for the manor: the reeve, the treasury, stone
+	var reeve: NPC = w.npc(w.reeve_id)
+	w.treasury = 500
+	check(w.quests.hires(reeve) and w.quests.hire_offer(reeve).get("id", "") == "work_for_the_manor", "manor work: the reeve offers a day's work")
+	check(w.quests.line({"id": "work_for_the_manor", "giver": reeve.id}, "offer").contains("10 stone") and w.quests.line({"id": "work_for_the_manor", "giver": reeve.id}, "offer").contains("six coins"), "manor work: ten stone for six coins")
+	var t0 := w.total_coins() - w.coin_sources
+	var qm: Dictionary = w.quests.accept(reeve, "work_for_the_manor")
+	check(not qm.is_empty() and w.treasury == 494 and int(qm.reserved) == 6 and p.manor_day == w.day(), "manor work: the wage is set aside from the treasury")
+	p.inv.add("stone", 10)
+	var reeve_stone := reeve.inv.count("stone")
+	var works0 := int(w.stats.get("used_works_stone", 0))
+	var coins_p := p.coins
+	check(w.quests.complete(qm) == 6 and p.coins == coins_p + 6 and not p.inv.has("stone") and reeve.inv.count("stone") == reeve_stone and int(w.stats.get("used_works_stone", 0)) == works0 + 10,
+			"manor work: the stone goes into the repairs, the wage to the player")
+	check(w.treasury == 494 and w.total_coins() - w.coin_sources == t0, "manor work: paid from the treasury, no coin made")
+	check(w.quests.hire_offer(reeve).is_empty() and w.quests.no_work_line(reeve).contains("done your day") and w.quests.accept(reeve, "work_for_the_manor").is_empty(), "manor work: once a day, not again")
+	p.manor_day = w.day() - 1
+	w.treasury = int(b.daily_obligations() * float(GameData.b("treasury_reserve_days")))
+	check(w.quests.hire_offer(reeve).is_empty() and w.quests.no_work_line(reeve).contains("can't spare"), "manor work: none the treasury cannot afford above its reserve")
+	w.treasury = 500
+	var amounts := {}
+	for d in w.deposits:
+		if d.ore == "stone":
+			amounts[w.deposits.find(d)] = int(d.amount)
+			d.amount = 5 if amounts.size() == 1 else 0
+	check(w.quests.hire_offer(reeve).is_empty() and w.quests.no_work_line(reeve).contains("worked out"), "manor work: none once the stone pits cannot give ten")
+	for i in amounts:
+		w.deposits[i].amount = amounts[i]
+	var ql: Dictionary = w.quests.accept(reeve, "work_for_the_manor")
+	ql.day = w.day() - 2
+	w.quests.drop_failed()
+	check(not p.quests.has(ql) and w.treasury == 500, "manor work: undone, it lapses and the wage goes back to the treasury")
+	# B7-004: wheat cut for harvest work stays the farmer's
+	var farmer: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "farmer" and not w.quests.field_of(o).is_empty() and w.quests.active_from(o).is_empty():
+			farmer = o
+			break
+	var f: Dictionary = w.quests.field_of(farmer)
+	w.set_field(f, "ripe")
+	f.crop = 60
+	farmer.coins = 20
+	p.inv.remove("wheat", p.inv.count("wheat"))
+	p.trim_stolen()
+	var qh: Dictionary = w.quests.accept(farmer, "work_the_harvest")
+	for i in 4:
+		w.player_harvest(f)
+	check(p.inv.count("wheat") == 24 and p.stolen_count("wheat") == 0, "B7-004: the hired wheat is cut without theft")
+	w.transfer(p.inv, p.chest, "wheat", 6)
+	var crimes0 := p.crimes.size()
+	qh.day = w.day() - 2
+	w.quests.drop_failed()
+	check(not p.quests.has(qh) and farmer.coins == 20, "B7-004: the work lapses; the farmer has the wage back")
+	check(int(p.stolen.get("wheat", {}).get(str(farmer.id), 0)) == 18 and int(p.chest_stolen.get("wheat", {}).get(str(farmer.id), 0)) == 6,
+			"B7-004: the kept wheat is marked the farmer's, carried and in the chest")
+	check(p.crimes.size() == crimes0 + 1 and str(p.crimes[-1].kind) == "theft" and Dialogue.caught(w, farmer), "B7-004: it is a theft on the record, and the farmer knows")
+	# B7-003: the goods merchant buys made jewellery and helmets, within its means and caps
+	var gm: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and b.buy_role(o) == "merchant_goods":
+			gm = o
+	for id in ["copper_ring", "gold_ring", "amulet", "leather_cap", "iron_helmet"]:
+		gm.inv.remove(id, gm.inv.count(id))
+		check(b.wants(gm, id) > 0 and w.buy_price(gm, id) > 0, "B7-003: the goods merchant buys a %s" % GameData.item_name(id).to_lower())
+	gm.coins = 100
+	p.inv.add("copper_ring", 4)
+	var price := w.buy_price(gm, "copper_ring")
+	var pc := p.coins
+	check(w.player_sell(gm, "copper_ring", price).result == "sold" and p.coins == pc + price and gm.coins == 100 - price, "B7-003: selling a ring pays from the merchant's purse")
+	w.player_sell(gm, "copper_ring", w.buy_price(gm, "copper_ring"))
+	w.player_sell(gm, "copper_ring", w.buy_price(gm, "copper_ring"))
+	check(b.wants(gm, "copper_ring") == 0 and gm.inv.count("copper_ring") == 3, "B7-003: no more than its stock cap")
+	gm.coins = 0
+	check(w.player_sell(gm, "copper_ring", w.buy_price(gm, "copper_ring")).result == "failed", "B7-003: a merchant without the coins cannot buy")
+	# B7-007: stone by caravan once the village's own is worked out
+	var raws: Array = w.npcs.filter(func(o): return o.alive and b.buy_role(o) == "merchant_raw")
+	for o: NPC in raws:
+		o.inv.remove("stone", o.inv.count("stone"))
+		o.coins = 100
+	check(b._caravan_stone() == 0, "B7-007: no stone brought while the village has its own")
+	for d in w.deposits:
+		if d.ore == "stone":
+			d.amount = 0
+	var exp0 := int(w.stats.get("exported_stone", 0))
+	b.caravan()
+	var got := 0
+	for o: NPC in raws:
+		got += o.inv.count("stone")
+		check(o.inv.count("stone") <= int(NPCBrain.BUYS.merchant_raw.stone) and o.coins >= int(GameData.b("trader_cash_floor")), "B7-007: %s buys within the stock cap and keeps the cash floor" % o.name)
+	var cfg: Dictionary = GameData.b("caravan_stone")
+	var each := maxi(1, roundi(GameData.value("stone") * float(cfg.markup)))
+	check(got > 0 and got <= int(cfg.load) and int(w.stats.get("imported_stone", 0)) == got, "B7-007: the caravan sells at most a cart of stone (%d)" % got)
+	check(int(w.stats.get("imported_stone_coins", 0)) == got * each, "B7-007: at its price (%d each), recorded" % each)
+	check(int(w.stats.get("exported_stone", 0)) == exp0, "B7-007: while it brings stone it carries none of the village's away")
+	for o: NPC in raws:
+		o.inv.remove("stone", o.inv.count("stone"))
+	var cs2 := w.coin_sources
+	var sold := b._caravan_stone()
+	check(sold > 0 and cs2 - w.coin_sources == sold * each, "B7-007: the coins for it leave the village (%d)" % (cs2 - w.coin_sources))
+	w.dispose()

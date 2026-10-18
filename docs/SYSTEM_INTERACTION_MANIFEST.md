@@ -182,8 +182,8 @@ Rules:
 - **Trigger:** The player or a villager buys or sells.
 - **Source:** `game/scripts/core/world.gd::trade`, `game/scripts/core/world.gd::sell_price`, `game/scripts/core/world.gd::buy_price`, `game/scripts/core/npc_brain.gd::_plan_sell`
 - **Affects:** Market, Coins, Inventory, Ledger
-- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock. The player sells through `World.player_sell`, which handles stolen goods first (INT-045).
-- **Tests:** `game/tests/run_tests.gd::test_trade_is_atomic`, `game/tests/play_test.gd`
+- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock. The player sells through `World.player_sell`, which handles stolen goods first (INT-045). What each trade buys, and its stock cap, is `NPCBrain.BUYS`: the goods merchant also takes made rings, amulets and helmets (B7-003, owner 2026-10-18), within its coins and caps.
+- **Tests:** `game/tests/run_tests.gd::test_trade_is_atomic`, `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_build7_economy`
 
 ### INT-020 · The caravan
 - **Trigger:** Noon on caravan days.
@@ -264,7 +264,7 @@ Rules:
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
 - **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_migrate_construction`, `game/scripts/core/construction.gd::to_dict`, `game/scripts/core/construction.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/world.gd::_migrate_property`, `game/scripts/core/fauna.gd::load_dict`, `game/scripts/core/property.gd::settle_ended_households`, `game/scripts/core/player_state.gd::to_dict`
 - **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building, Containers, Property
-- **Expected:** Written atomically as save_version 6 (`World.SAVE_VERSION`; 6 adds each site's kind, workshops with their stamp and leave list, the day's hired helpers with what they carry, and founded households with where they came from; version 5 saves load with every site a house's and every built house drawn from the house stamp, `World._migrate_construction`, and nothing moves; villagers have no "hidden" flag: where they are is their position, inside a building or not; every property record carries its owner and tenant references, leases their rent, due day and arrears, `next_parcel` counts claimed parcels, a settled household is `ended`; the player has no plot list). Versions 1-4 load, with no coin lost: plot owners ""/"player" (and the player's plot list) become the manor's or the player's, a field's farmer ids give way to the manor's ownership (its farmers are those working it), a stall's and a pen's NPC id become their tenant reference (a dead one leaves it vacant), buildings get their starting owners and a house the player built is theirs on its plot, and a household that had died out gives its house and stores to the manor (INT-054); plots, houses and the player stay exactly where they are (`World._migrate_property`). Versions 1-3 also: their villagers "hidden" at home (standing on the door step) are moved inside, each to their own bed's spot (`World._move_indoors`). Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
+- **Expected:** Written atomically as save_version 7 (`World.SAVE_VERSION`; 7 adds the coins set aside for each accepted quest (`reserved`) and the day of the player's last work for the manor; version 1-6 saves load with each accepted quest's promise set aside if its giver can pay, every coin kept (`Quests.migrate_reserves`, INT-062); 6 adds each site's kind, workshops with their stamp and leave list, the day's hired helpers with what they carry, and founded households with where they came from; version 5 saves load with every site a house's and every built house drawn from the house stamp, `World._migrate_construction`, and nothing moves; villagers have no "hidden" flag: where they are is their position, inside a building or not; every property record carries its owner and tenant references, leases their rent, due day and arrears, `next_parcel` counts claimed parcels, a settled household is `ended`; the player has no plot list). Versions 1-4 load, with no coin lost: plot owners ""/"player" (and the player's plot list) become the manor's or the player's, a field's farmer ids give way to the manor's ownership (its farmers are those working it), a stall's and a pen's NPC id become their tenant reference (a dead one leaves it vacant), buildings get their starting owners and a house the player built is theirs on its plot, and a household that had died out gives its house and stores to the manor (INT-054); plots, houses and the player stay exactly where they are (`World._migrate_property`). Versions 1-3 also: their villagers "hidden" at home (standing on the door step) are moved inside, each to their own bed's spot (`World._move_indoors`). Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
 - **Tests:** `game/tests/run_tests.gd::test_save_round_trip`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_interiors`, `game/tests/run_tests.gd::test_construction_migration`, `game/tests/run_tests.gd::test_helpers`, `game/tests/run_tests.gd::test_households_split`, `game/tests/start_test.gd`
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
@@ -310,6 +310,7 @@ Rules:
   - Only once the village's own deposits of iron ore, copper ore or coal are down to `caravan_import_when_left`.
   - Each smith buys up to `caravan_import_stock` at the item's value, keeping the trader cash floor.
   - The coins leave the village: `coin_sources` falls by what was spent, so coins stay conserved.
+  - Stone comes the same way, to the raw-goods merchants instead (INT-065).
 - **Tests:** `game/tests/run_tests.gd::test_trades_and_works`
 
 ### INT-036 · Public works and repairs buy from the trades
@@ -337,7 +338,7 @@ Rules:
 - **Expected:**
   - Offers come only from villagers whose condition holds (job or role, holding too little of something, a household short of food, a living bandit who robbed them), at most `quest_max_offers`.
   - Accepting moves an offer to the player's quests (at most `quest_max_active`).
-  - Completing moves the asked-for goods to the giver and up to the reward in coins from the giver's purse to the player; coins are conserved.
+  - Completing moves the asked-for goods to the giver and the promised reward, set aside when the player accepted, to the player (INT-062); coins are conserved. A giver who cannot pay the reward does not offer it.
   - A giver's death fails a side quest. Offers and accepted quests are saved.
   - Story quests start with every new player and every heir, and on loading a save from before they existed. Their giver shows the story marker, a green pennant, until done; a villager with an offer shows what the quest is about (scroll for a skill, wheat for food, iron for ore, crossed swords for combat, a log, an axe). A giver who is inside their own home shows the marker over the house door instead; givers at work (the tavern, the smithy) are seen and marked as usual. Markers draw over roofs and tree canopies. "The sage in the north" is done when the player learns Fireball.
   - A quest with `teach` raises a player skill to its level when done ("The tanner's craft": 2 hides for Crafting 2), offered only below that level (`player_below`), under the skill scroll; the talk window says what was learned under the giver's words.
@@ -415,8 +416,8 @@ Rules:
 - **Affects:** Employment, Coins, Inventory, Fields, Crime, Interface, Ledger, Save
 - **Expected:**
   - A working adult whose job a `hire` template names (farmer, woodcutter, miner) offers work only when it exists (a ripe field, too few logs or ore) and they hold the whole wage; otherwise they say why not. Never a dawn offer or marker. One job per employer; at most `quest_max_active` tasks.
-  - Handing in moves the goods to the employer and the whole wage from their purse to the player (`hired_wages`); an employer who cannot pay keeps nothing and pays nothing. No coins are created.
-  - A hired harvest hand cuts up to the hired amount from the employer's field without theft; the field's farmers leave it meanwhile. Undone work lapses after its `days`; it fails if the employer dies. Accepted work is saved with the player's quests.
+  - Taking the work on sets the whole wage aside from the employer's purse (INT-062); handing in moves the goods to the employer and that wage to the player (`hired_wages`). No coins are created. The reeve offers work for the manor (INT-063).
+  - A hired harvest hand cuts up to the hired amount from the employer's field without theft; the field's farmers leave it meanwhile. Undone work lapses after its `days` (the wage goes back to the employer); it fails if the employer dies. Wheat cut for harvest work that lapses is the farmer's (INT-064). Accepted work is saved with the player's quests.
 - **Tests:** `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`
 
 ### INT-047 · Children eat by age in every food reckoning
@@ -537,6 +538,44 @@ Rules:
 - **Expected:** No internal id ("plot0", "parcel3", "b7") reaches the player. A building is named for the family who live there or hold it ("the Reed family's house", "the Ashdown family's smithy"), the family that died out ("the Ford family's old house"), or where it stands ("the empty house north of the well"); ground for where it lies, by the nearest landmark ("the clearing north of the Reed family's house", "the ground west of the tavern"); a site for its family and kind. A name two places share gets where the place lies added, never by a landmark of the same name.
 - **Tests:** `game/tests/run_tests.gd::test_construction`, `game/tests/start_test.gd`
 
+### INT-062 · Promised coins are set aside
+- **Trigger:** The player accepts a quest with a reward or paid work; completes it; it lapses; its giver or the player dies; an older save loads.
+- **Source:** `game/scripts/core/quests.gd::can_fund`, `game/scripts/core/quests.gd::_reserve`, `game/scripts/core/quests.gd::_release`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/quests.gd::on_giver_died`, `game/scripts/core/quests.gd::release_all`, `game/scripts/core/quests.gd::migrate_reserves`, `game/scripts/core/quests.gd::reserved_total`, `game/scripts/core/world.gd::kill`, `game/scripts/core/world.gd::continue_as_heir`, `game/scripts/core/world.gd::total_coins`, `game/scripts/core/player_state.gd::from_dict`
+- **Affects:** Coins, Households, Treasury, Inheritance, Save, Interface
+- **Expected:** (owner, 2026-10-18; B7-002)
+  - A quest with a reward, or work with a wage, is offered only by a giver who can pay it in full (the manor: INT-063).
+  - Accepting sets the promised sum aside from the giver's purse (`reserved` on the accepted quest); if the giver spent it since offering, the offer is withdrawn with a reason and nothing is accepted.
+  - Completing pays exactly the reserved sum. A lapse, the giver's death (before what they leave passes on, INT-017) or the player's death (INT-018) returns it to the giver or the treasury.
+  - Reserved coins are counted in `World.total_coins`; saving and loading keep them, neither doubled nor lost. A version 1-6 save sets them aside on load if the giver can pay; otherwise completing pays only once they can.
+- **Tests:** `game/tests/run_tests.gd::test_build7_economy`, `game/tests/run_tests.gd::test_quests`, `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`
+
+### INT-063 · Work for the manor
+- **Trigger:** The player asks the reeve "Any work for me?", accepts, hands in the stone; dawn (lapses).
+- **Source:** `game/scripts/core/quests.gd::_wants`, `game/scripts/core/quests.gd::can_fund`, `game/scripts/core/quests.gd::no_work_line`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::deposit_left`, `game/scripts/core/npc_brain.gd::daily_obligations`, `game/data/quests.json`
+- **Affects:** Employment, Treasury, Wages, Resources, Coins, Ledger, Save
+- **Expected:** (owner, 2026-10-18; the task chosen by the agent: quarrying)
+  - The reeve offers a day's work, ten stone quarried for the manor's repairs for `wage` 6 (provisional), only while the treasury keeps `treasury_reserve_days` of obligations after the wage (the rule NPC day labour follows, INT-023), while the village's own stone deposits hold the ten (`deposit_left`), and once a day (`PlayerState.manor_day`).
+  - The wage is set aside from the treasury on acceptance (INT-062) and paid on completion (`gov_wages`, `gov_player_work`); the stone is used up in mending (`used_works_stone`), not stored. Undone, it lapses and the wage goes back to the treasury.
+  - Otherwise the reeve says why not: the day's work is done, the manor's chest cannot spare it, or the stone pits are worked out.
+- **Tests:** `game/tests/run_tests.gd::test_build7_economy`
+
+### INT-064 · Wheat cut for harvest work is the farmer's
+- **Trigger:** Harvest work lapses (dawn).
+- **Source:** `game/scripts/core/quests.gd::settle_harvest`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/quests.gd::hired_harvest`, `game/scripts/core/player_state.gd::mark_stolen`
+- **Affects:** Crime, Inventory, Fields, Households
+- **Expected:** (owner, 2026-10-18; B7-004) The wheat cut under the work (`harvested`) stays the farmer's. If the work lapses, what the player carries of it is marked stolen from the farmer (INT-045), then what lies in the home chest (INT-044); the farmer remembers catching the player keeping it, and a theft goes on the player's record. Handing the work in clears it as before (INT-046).
+- **Tests:** `game/tests/run_tests.gd::test_build7_economy`
+
+### INT-065 · Stone by caravan
+- **Trigger:** A caravan passes while the village's own stone deposits are down to `caravan_import_when_left`.
+- **Source:** `game/scripts/core/npc_brain.gd::caravan`, `game/scripts/core/npc_brain.gd::_caravan_stone`, `game/scripts/core/npc_brain.gd::_stone_scarce`, `game/data/balance.json`
+- **Affects:** Market, Coins, Building, Resources, Ledger
+- **Expected:** (owner, 2026-10-18; B7-007)
+  - The caravan carries at most `caravan_stone.load` stone a visit from a quarry on its road, sold at value × `caravan_stone.markup` (cartage; provisional).
+  - The raw-goods merchants, the village's stone sellers, buy it up to their stock cap while keeping the trader cash floor; the rest goes back with the cart. The coins leave the village (`coin_sources`, `imported_stone`, `imported_stone_coins`).
+  - While it brings stone it buys none of the village's.
+- **Tests:** `game/tests/run_tests.gd::test_build7_economy`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -545,33 +584,33 @@ Rules:
 |---|---|
 | Character | INT-001, INT-018, INT-031 |
 | Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
 | Combat | INT-004, INT-012, INT-013, INT-032 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
-| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051 |
-| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064 |
+| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-063, INT-065 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060 |
-| Wages | INT-023, INT-029, INT-059 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-063, INT-065 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063 |
+| Wages | INT-023, INT-029, INT-059, INT-063 |
 | Relief | INT-024, INT-047 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059 |
-| Inheritance | INT-017 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063 |
+| Inheritance | INT-017, INT-062 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065 |
 | Workshops | INT-021, INT-030, INT-058 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-063, INT-065 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-063 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061 |

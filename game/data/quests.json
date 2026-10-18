@@ -1,6 +1,6 @@
 {
   "format": "mml-quests/1",
-  "_note": "Side quests. A villager offers one when the condition in 'giver' holds for them at dawn. 'need' is goods the player hands over (they go to the giver); 'kill' names a target ('robber': the bandit who robbed the giver). 'reward' is coins the giver pays from their own purse (all they have, if less). Lines are spoken by the giver: {need} is replaced by the goods asked for, {target} by the target's name. Story quests ('story': true) are not offered from needs: every player starts with them, and their giver shows the story marker (a green pennant) until they are done; 'learn' names a spell the giver teaches. docs/BUILD_DECISIONS.md, 'Side quests'. 'marker' is the icon over a giver with that offer (game/assets/markers/: skill, food, mineral, combat, wood, tool; default skill). 'teach' raises a player skill to a level when the quest is done; 'player_below' offers it only to a player below that level. Paid work ('hire': true) is never offered at dawn: a villager whose condition holds and who has the 'wage' offers it when the player asks for work; 'wage' is paid in full from their purse; 'harvest' lets the player cut that much wheat from the employer's field ('field_ripe': at least that much ripe) without theft; undone work lapses after 'days'. Wages and the jobs chosen are agent proposals, provisional: balance review pending (docs/BUILD_DECISIONS.md, 'Paid work for the player').",
+  "_note": "Side quests. A villager offers one when the condition in 'giver' holds for them at dawn. 'need' is goods the player hands over (they go to the giver); 'kill' names a target ('robber': the bandit who robbed the giver). 'reward' is coins the giver pays from their own purse, in full (set aside at acceptance). Lines are spoken by the giver: {need} is replaced by the goods asked for, {target} by the target's name. Story quests ('story': true) are not offered from needs: every player starts with them, and their giver shows the story marker (a green pennant) until they are done; 'learn' names a spell the giver teaches. docs/BUILD_DECISIONS.md, 'Side quests'. 'marker' is the icon over a giver with that offer (game/assets/markers/: skill, food, mineral, combat, wood, tool; default skill). 'teach' raises a player skill to a level when the quest is done; 'player_below' offers it only to a player below that level. Paid work ('hire': true) is never offered at dawn: a villager whose condition holds and who has the 'wage' offers it when the player asks for work; 'wage' is paid in full from their purse; 'harvest' lets the player cut that much wheat from the employer's field ('field_ripe': at least that much ripe) without theft; undone work lapses after 'days'. Promised rewards and wages are set aside when the player accepts, and quests are offered only by someone who can pay them (owner, 2026-10-18). Work for the manor ('manor': true) is asked of the reeve and paid from the treasury, once a day, while the treasury keeps its reserve; 'deposit_left' offers it only while the village's own deposits hold that much; the goods go into the manor's repairs. Wages and the jobs chosen are agent proposals, provisional: balance review pending (docs/BUILD_DECISIONS.md, 'Paid work for the player').",
   "quests": [
     {
       "id": "the_sage_in_the_north",
@@ -182,6 +182,27 @@
       "waiting": "Still digging? {need}, that's the job.",
       "thanks": "That's honest ore. Here's your wage.",
       "unpaid": "I can't pay you yet. The smiths owe me; come back later."
+    },
+    {
+      "id": "work_for_the_manor",
+      "title": "A day's work for the manor",
+      "hire": true,
+      "manor": true,
+      "giver": {
+        "job": "reeve",
+        "deposit_left": {
+          "stone": 10
+        }
+      },
+      "need": {
+        "stone": 10
+      },
+      "wage": 6,
+      "days": 1,
+      "offer": "The manor has walls and a bridge to mend. Quarry me {need} and the manor will pay you {wage} coins for the day's work.",
+      "waiting": "{need} for the mending, that's the day's work. Bring your own pick.",
+      "thanks": "That'll mend a good stretch of wall. Here's your wage from the manor.",
+      "unpaid": "The manor can't pay you just now. Come back another day."
     }
   ]
 }

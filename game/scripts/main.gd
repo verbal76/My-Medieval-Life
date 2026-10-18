@@ -142,6 +142,18 @@ func _ready() -> void:
 				ui.show_controls(ui.hide_all)
 			"journal":
 				ui.show_journal(-1)
+			"journal_quests":
+				ui.show_journal(-1, true)
+			"opening":
+				_start(true)                     # a new game's first message (where paid work is)
+			"manor_offer":
+				# the reeve's day of work for the manor (the answer to "Any work for me?")
+				var reeve: NPC = world.npc(world.reeve_id)
+				world.treasury = maxi(world.treasury, 1000)
+				reeve.pos = world.player.pos + Vector2(1.0, 0)
+				reeve.plan = [world.brain.work(600, "", {}, "idle")]
+				ui.show_talk(reeve)
+				_press(ui.panel_body, "Any work for me?")
 			"map", "map_home":
 				if shot_panel == "map_home":
 					world.player.home = "b11"          # a house to show the home marker
@@ -440,7 +452,7 @@ func new_game(spec := {}) -> void:
 		p.heir_sprite = spec.sprite
 	_build_scene()
 	if spec.is_empty():
-		_start()
+		_start(true)
 	else:
 		paused = true
 		running = true
@@ -448,7 +460,7 @@ func new_game(spec := {}) -> void:
 
 
 func resume_after_origin() -> void:
-	_start()
+	_start(true)
 	save_game(false)
 
 
@@ -468,12 +480,16 @@ func continue_game() -> void:
 	_start()
 
 
-func _start() -> void:
+## `fresh`: a new game, which also says where paid work is (owner, 2026-10-18: guidance, no tutorial).
+func _start(fresh := false) -> void:
 	paused = false
 	running = true
 	autosave_hour = int(world.minutes / 60.0)
 	ui.hide_all()
-	ui.message("%s %s, %s. Explore the village: talk to people, work, trade, build." % [world.player.name, world.player.family, world.clock_text()])
+	if fresh:
+		ui.message("%s %s, %s. %s" % [world.player.name, world.player.family, world.clock_text(), GameUI.OPENING_HINT], 8.0)
+	else:
+		ui.message("%s %s, %s. Explore the village: talk to people, work, trade, build." % [world.player.name, world.player.family, world.clock_text()])
 
 
 func _clear_world() -> void:
@@ -1043,7 +1059,7 @@ func _find_target() -> void:
 			if world.asleep(n):
 				best = {"kind": "npc", "npc": n, "label": "%s is asleep" % _who(n)}
 			elif world.at_post(n):
-				best = {"kind": "shop", "npc": n, "label": "Buy from %s (%s)" % [n.name, world.shop_name(n)]}
+				best = {"kind": "shop", "npc": n, "label": "Trade with %s (%s)" % [n.name, world.shop_name(n)]}
 			else:
 				best = {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}
 	for c in world.containers:
@@ -1167,7 +1183,7 @@ func _shop_posts() -> Array:
 func _shop_target(post: Dictionary) -> Dictionary:
 	var keeper := world.shopkeeper_at(post.id)
 	if keeper:
-		return {"kind": "shop", "npc": keeper, "label": "Buy from %s (%s)" % [keeper.name, world.shop_name(keeper)]}
+		return {"kind": "shop", "npc": keeper, "label": "Trade with %s (%s)" % [keeper.name, world.shop_name(keeper)]}
 	if post.stall:
 		var s: Dictionary = world.stalls[post.id]
 		return _container_target({"id": post.id, "kind": "stall", "x": int(s.x), "y": int(s.y), "at": post.id})

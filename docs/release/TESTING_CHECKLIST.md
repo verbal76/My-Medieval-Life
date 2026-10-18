@@ -3,9 +3,10 @@
 What you can actually try in this build. Controls: tap (touch), click (mouse) or press **A** / **E**
 next to someone or something to use it. Menu > Controls lists every control.
 
-**Coins first.** You start with 5 coins, and land costs 60 or more, so earn some before testing
-property: ask a farmer, woodcutter or miner **"Any work for me?"** (paid from their purse), do side
-quests (markers over villagers' heads), or sell goods with **Trade**.
+**Coins first.** You start with 20 coins, and land costs 60 or more, so earn some before testing
+property: ask a farmer, woodcutter, miner or the reeve **"Any work for me?"** (the reeve pays from
+the manor's chest when it can spare it), do side quests (markers over villagers' heads), or sell
+goods with **Trade with …**. The journal's Quests page says who buys what.
 
 1. **Land purchase.** Talk to the reeve at the manor and choose **Land and houses**: buy or lease
    ground or an empty house; **Make it home** picks which house is your home. An empty house can
@@ -19,7 +20,7 @@ quests (markers over villagers' heads), or sell goods with **Trade**.
    site** returns everything. To get help, talk to someone out of work and choose **Hire to carry
    building materials**: they carry from your chest, or buy the rest with your coins.
 4. **Shops.** Use the tavern counter or a market stall (or its keeper) and the shop opens:
-   **Buy from …**. **Talk to …** opens the conversation.
+   **Trade with …** (buy and sell). **Talk to …** opens the conversation.
 5. **Theft.** Prompts say when something is theft: food on the tavern tables, crates and barrels,
    an unattended stall. **Pick pocket — theft** is in the conversation when you stand close. Anyone
    awake who sees it remembers; guards fine you. Try selling stolen goods back to their owner: they

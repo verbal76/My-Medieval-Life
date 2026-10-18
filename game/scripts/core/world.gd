@@ -420,6 +420,7 @@ func continue_as_heir() -> void:
 		bag.add(id, p.inv.items[id])
 	if bag.total() > 0 or p.coins > 0:
 		loot.append({"pos": p.pos, "inv": bag, "coins": p.coins, "from": "%s %s" % [p.name, p.family]})
+	quests.release_all()                   # what givers set aside for the dead player's quests goes back
 	var heir := PlayerState.new()
 	heir.family = p.family
 	heir.generation = p.generation + 1
@@ -500,7 +501,7 @@ func player_price_factor(buying: bool) -> float:
 
 
 func total_coins() -> int:
-	var n := player.coins + treasury
+	var n := player.coins + treasury + quests.reserved_total()
 	for a: NPC in npcs:
 		n += a.coins
 	for l in loot:
@@ -602,6 +603,7 @@ func kill(n: NPC, cause: String) -> void:
 	if cause.begins_with("slain"):
 		bled.emit(n.pos)
 	n.target = -1
+	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	var heir := _heir(n)
 	if heir != null and not cause.begins_with("slain"):
 		_inherit(n, heir)
@@ -1590,7 +1592,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
-const SAVE_VERSION := 6            # 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 7            # 7: quest rewards set aside (reserved), work for the manor; 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -1974,6 +1976,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	quests = Quests.new(self)
 	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them
 	quests.start_story()                             # saves from before the storyline get its quests
+	if int(d.get("save_version", 1)) < 7:
+		quests.migrate_reserves()
 	_move_plots_to_map(m)
 	# re-apply world changes to the collision map
 	for t in trees:
