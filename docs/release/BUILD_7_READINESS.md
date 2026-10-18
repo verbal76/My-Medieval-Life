@@ -95,3 +95,14 @@ button and the phone layout, so they carry the same features and content.
 ## Decision needed
 
 Whether to run Build 7 for Linux, Windows and Android from `staging/my-medieval-life` at `5fb28ac`.
+
+## Released (owner-authorized, 2026-10-18)
+
+Build 7 was built by workflow run 7 (https://github.com/verbal76/My-Medieval-Life/actions/runs/39100056624)
+from `staging/my-medieval-life` at commit `679907121654c7630b170690752429b55a74b8ac`, after the
+Windows icon fix, and published as the pre-release `build-7`
+(https://github.com/verbal76/My-Medieval-Life/releases/tag/build-7): the Android APK, the Windows and
+Linux zips, `SHA256SUMS.txt`, and release notes with the testing checklist. The files were downloaded
+back and checked: every checksum matches, the released Windows `.exe` carries the game's icon (checked
+pixel by pixel), and the released Linux build launches to the title screen. Windows, Android and
+gamepad play have not been verified on real hardware. `main` was not changed.
