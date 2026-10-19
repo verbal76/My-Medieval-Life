@@ -1246,6 +1246,12 @@ func _wheat_held(w: World) -> int:
 		n += int(w.fauna.pens[id].trough)
 	for l in w.loot:
 		n += l.inv.count("wheat")
+	for l in w.manor_work.lots:            # wheat the manor has on its way (a relief or granary haul) is still held
+		n += l.inv.count("wheat")
+	for j in w.manor_work.jobs:
+		if j.get("load") is Inventory:
+			n += (j.load as Inventory).count("wheat")
+	n += w.manor_work.yard.count("wheat")
 	return n
 
 
@@ -1886,7 +1892,11 @@ func test_construction() -> void:
 	other.plan = [w.brain.work(60, "craft", {"recipe": "smelt_iron", "station": "s4"})]
 	check(w.brain._station_for(smith, "forge") == "", "with the village's forge reserved, a smith does not use the player's without leave")
 	# reservations (audit defect 3): the player waits for a villager working at a station they do not hold
-	check(w.station_refusal("s4").contains("is working at the forge"), "the player respects a villager's reservation: %s" % w.station_refusal("s4"))
+	check(w.station_refusal("s4") == "", "a villager only on the way (not at the forge) does not block the player (PL2-001)")
+	other.pos = Vector2(w.station_use("s4")) + Vector2(0.5, 0.5)
+	other.anim = "work"
+	other.target = -1
+	check(w.station_refusal("s4").contains("is using the forge"), "the player respects a villager at work at a station: %s" % w.station_refusal("s4"))
 	other.plan.clear()
 	check(w.station_refusal("s4") == "" and not s4.users.has(other.id), "a reservation whose villager has gone to other work lapses")
 	w.reserve_for_player("s4", 30.0)
@@ -3160,7 +3170,7 @@ func test_wild_plants() -> void:
 	var tiled := true
 	for pl in w.plants:
 		walk = walk and not w.map.is_solid(Vector2i(pl.x, pl.y))
-		tiled = tiled and [2657, 2658, 2660, 2662].has(int(pl.tile)) and int(below1[int(pl.y) * w.map.w + int(pl.x)]) == int(pl.tile)
+		tiled = tiled and [2656, 2657, 2658, 2659, 2660, 2662].has(int(pl.tile)) and int(below1[int(pl.y) * w.map.w + int(pl.x)]) == int(pl.tile)
 	check(walk, "every plant cell is walkable")
 	check(tiled, "every plant is drawn with its own tile in layer below1")
 	var by := {}

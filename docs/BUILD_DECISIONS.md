@@ -375,6 +375,24 @@ All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile
 - Not done: sprite art by season, marriage ceremonies, adolescent apprenticeships, a household for the player
   (a partner keeps their own home; the player's children are villagers of the partner's household).
 
+## Gameplay punch list, batch 1 (PL2-001, 004, 006, 007, 011, PL1-06, PL1-12; agent proposals)
+
+- A station counts as in use only while its villager is at it, awake and working (INT-082).
+- Hunted animals: nothing was wrong with the yields (a boar gives meat and hide, a rabbit meat, no coins);
+  the pile was drawn as a coin, could not be tapped, was only reachable at the probe point and never
+  went away. It now shows its contents, is tappable and spoils after 3 days. Rabbits and chickens keep
+  meat only (no new items); the hide path is the existing `tan_leather` recipe at the workbench
+  (INT-083). Open: feathers and pelts would need new items and icons.
+- The low red flower is tile 2656 and the white one 2659; both are wild `flower` plants (item: wild
+  flower, used for the herbal tonic). The village generator registers them (the red one's plant id
+  shifts later ids: saves are disposable). The overworld generator was not changed: it still draws
+  purple, yellow and white flowers, never the red one. Bare bushes (2661, 2663) stay decorative
+  (INT-084).
+- Boulders: small 2 uses, large 6 (was 3 for all), about 55% small by a hash of the cell; the small
+  sprite is the plain boulder scaled down at run time (a fourth, generated atlas in MapView).
+- Fields stand ripe 12 game hours before the farmers cut them; this slows the farmers' cycle by about
+  a fifth (wheat is in surplus). Seasons will plug into `World.field_grow_days`.
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals

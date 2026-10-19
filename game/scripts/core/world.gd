@@ -113,6 +113,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		fd.state = "ripe"
 		fd.crop = int(GameData.b("field_yield"))
 		fd.ready = 0.0
+		fd.ripe_at = minutes             # the crop stands ripe, in sight, before the farmers cut it (field_ripe_wait_hours)
 		fd.owner = MANOR               # the manor's open fields, worked by its farmers (field_workers)
 		fd.tenant = ""
 		fields.append(fd)
@@ -279,6 +280,7 @@ func _on_hour(h: int) -> void:
 		if f.state == "growing" and minutes >= f.ready:
 			f.state = "ripe"
 			f.crop = int(GameData.b("field_yield"))
+			f.ripe_at = f.ready
 			_field_tiles(f)
 	if h == 6:
 		_new_day()
@@ -296,6 +298,13 @@ func _new_day() -> void:
 	# a carcass nobody took spoils after ANIMAL_LOOT_DAYS: no leftover markers (PL2-004)
 	loot = loot.filter(func(l): return not (str(l.from).begins_with("the ") and l.has("t") and minutes - float(l.t) > ANIMAL_LOOT_DAYS * 1440.0))
 	var d := day()
+	if map.overworld != null:                 # wild flowers outside the village grow back too: their tile returns
+		for c: Vector2i in map.overworld.plant_changes.keys():
+			if int(map.overworld.plant_changes[c]) <= d:
+				map.overworld.plant_changes.erase(c)
+				var back: Dictionary = map.overworld.flower_at(c)
+				if not back.is_empty():
+					tile_changed.emit(c, "below", int(back.tile))
 	for pl in plants:
 		if pl.state == "picked" and d >= pl.regrow:
 			pl.state = "ripe"
@@ -581,9 +590,8 @@ func deposit_at(c: Vector2i) -> Dictionary:
 ## The village's boulders, from the map (VillageMap.decor_boulders): fresh ones, three uses each.
 func _make_boulders(m: VillageMap) -> void:
 	boulders.clear()
-	var uses := int(ResourceNodes.def("boulder").uses)
 	for c in m.decor_boulders():
-		boulders.append({"x": int(c.x), "y": int(c.y), "ore": "stone", "amount": uses, "boulder": true})
+		boulders.append({"x": int(c.x), "y": int(c.y), "ore": "stone", "amount": ResourceNodes.boulder_uses(Vector2i(int(c.x), int(c.y))), "boulder": true})
 
 
 ## Show the boulders already broken (a loaded world): their tiles go and their cells open. The view
@@ -640,6 +648,8 @@ func plant_at(c: Vector2i) -> Dictionary:
 	for pl in plants:
 		if pl.x == c.x and pl.y == c.y and pl.state != "cleared":
 			return pl
+	if map.overworld != null:
+		return map.overworld.flower_at(c)           # a wild flower of the world outside the village ({} inside it; PL2-006)
 	return {}
 
 
@@ -652,7 +662,11 @@ func pick_plant(pl: Dictionary) -> Dictionary:
 	pl.state = "picked"
 	var r: Array = GameData.b("plant_regrow_days")
 	pl.regrow = day() + rng.randi_range(int(r[0]), int(r[1]))
-	tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, -1)
+	if pl.get("ow", false):
+		map.overworld.note_flower(Vector2i(pl.x, pl.y), int(pl.regrow))
+		tile_changed.emit(Vector2i(pl.x, pl.y), "below", -1)
+	else:
+		tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, -1)
 	stat("plants_picked")
 	return got
 
@@ -682,7 +696,7 @@ func _remove_boulder(b: Dictionary) -> void:
 		return
 	map.set_solid(cell, false)
 	for lay in map.data.layers:                 # the boulder is in whichever "below" layer the map drew it
-		if str(lay.name).begins_with("below") and int(lay.data[cell.y * map.w + cell.x]) == int(map.data.tiles.ore.stone):
+		if str(lay.name).begins_with("below") and [int(map.data.tiles.ore.stone), MapView.SMALL_BOULDER_TILE].has(int(lay.data[cell.y * map.w + cell.x])):
 			lay.data[cell.y * map.w + cell.x] = -1
 			tile_changed.emit(cell, str(lay.name), -1)
 
@@ -908,10 +922,24 @@ static func field_cell_tile(base: int, w: int, h: int, i: int, j: int, cols: int
 	return base + row * cols + col
 
 
+## Days a sown field takes to ripen. The one place to make it depend on the season (B8-029's calendar
+## arrives with seasons later: a hook, not a mechanic yet).
+func field_grow_days(_f: Dictionary) -> float:
+	return float(GameData.b("field_grow_days"))
+
+
+## Whether the farmers may cut this ripe field: it has stood ripe for field_ripe_wait_hours (PL2-007: they
+## used to cut it within the hour it ripened, so the player never saw a ripe field).
+func field_cuttable(f: Dictionary) -> bool:
+	return f.state == "ripe" and minutes >= float(f.get("ripe_at", 0.0)) + float(GameData.b("field_ripe_wait_hours")) * 60.0
+
+
 func set_field(f: Dictionary, state: String) -> void:
 	f.state = state
 	if state == "growing":
-		f.ready = minutes + float(GameData.b("field_grow_days")) * DAY
+		f.ready = minutes + field_grow_days(f) * DAY
+	elif state == "ripe":
+		f.ripe_at = minutes
 	_field_tiles(f)
 
 
@@ -1119,6 +1147,35 @@ func _cell_lookup(idx: PackedInt32Array, p: Vector2) -> String:
 ## The building whose inside a point (tiles) is in, "" outdoors.
 func place_of(p: Vector2) -> String:
 	return _cell_lookup(place_idx, p)
+
+
+## Whether the player at `from` and something at `to` are on the same side of every wall (PL2-011): not
+## across a building's boundary (inside to outside, or one building to another) unless one of them stands
+## in that building's doorway, and not through a building that neither is in. Used by every way of
+## targeting (the target list, taps, gathering, using).
+func reaches(from: Vector2, to: Vector2) -> bool:
+	var a := place_of(from)
+	var b := place_of(to)
+	if a != b:
+		var door_ok := false
+		for id in [a, b]:
+			if id != "" and buildings.has(id):
+				var dc := Vector2(building_door(id)) + Vector2(0.5, 0.5)
+				if dc.distance_to(from) <= 1.3 or dc.distance_to(to) <= 1.3:
+					door_ok = true
+		if not door_ok:
+			return false
+	var ra := roof_over(from)
+	var rb := roof_over(to)
+	var steps := ceili(from.distance_to(to) / 0.25)
+	for k in range(1, steps):
+		var s := from.lerp(to, float(k) / float(steps))
+		var in_b := place_of(s)
+		if in_b == "":
+			in_b = roof_over(s)
+		if in_b != "" and not [a, b, ra, rb].has(in_b):
+			return false
+	return true
 
 
 ## The building whose roof covers a point, "" for none (inside it, or behind its eaves).

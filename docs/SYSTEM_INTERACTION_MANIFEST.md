@@ -743,6 +743,41 @@ Rules:
 - **Expected:** newborn, juvenile, adult, elderly by age (`balance.json` animals: `juvenile_days`, `grow_days`, `elder_days`). Only adults breed (the existing rules kept), and the chance falls to nothing as the area nears its cap. The elderly move at 0.7x and, from `death_days[0]`, die of old age by a daily chance spread evenly to `death_days[1]`; meat and hide rules are unchanged. Newborns and juveniles draw the Cozy Farm baby sheet at full scale (the boar, with none, at half scale). The starting animals have varied ages.
 - **Tests:** `game/tests/aging_test.gd::test_animals`, `game/tests/aging_test.gd::test_baby_art`
 
+### INT-082 · A station is blocked only by a villager actually working at it
+- **Trigger:** The player opens a station; a villager plans a recipe.
+- **Source:** `game/scripts/core/world.gd::station_workers`, `game/scripts/core/world.gd::station_refusal`, `game/scripts/core/npc_brain.gd::_station_for`
+- **Affects:** Workshops, Employment, Interface
+- **Expected:** A reservation (`users`) is made for the walk and the work, but the player is refused ("X is using the forge") only while that villager is alive, awake, not fighting, has the station's work as the current plan step and stands at its use cell. Someone on the way, asleep, fighting, dead or gone to another task does not block, and their reservation is cleared the next time the station is asked about. Reservations are never saved.
+- **Tests:** `game/tests/world_test.gd::_pl2_001`, `game/tests/run_tests.gd::test_building_site`
+
+### INT-083 · Hunted animals leave a pile that can be seen, tapped and taken, and that spoils
+- **Trigger:** The player (or a hunter) kills an animal; the player taps or uses the pile; a dawn passes.
+- **Source:** `game/scripts/main.gd::_hit_animal`, `game/scripts/main.gd::_loot_at`, `game/scripts/main.gd::_loot_icon`, `game/scripts/main.gd::_find_target`, `game/scripts/core/world.gd::_new_day`
+- **Affects:** Wildlife, Loot, Inventory, Interface, Save
+- **Expected:** Fauna.kill yields meat and (adults of kinds that have one) hide, never coins. The pile is drawn with its first item's icon, the prompt names its contents, a tap in any mode walks to it and takes it, and it can be taken from underfoot. A carcass spoils after `World.ANIMAL_LOOT_DAYS` (3) days; piles of the dead (people) stay. The pile's time `t` is saved. A hide is tanned to leather by the `tan_leather` recipe at the workbench.
+- **Tests:** `game/tests/world_test.gd::_pl2_004`
+
+### INT-084 · Wild flowers and boulders outside the village are real nodes
+- **Trigger:** The player targets a flower or a boulder anywhere; a dawn passes; the game is saved.
+- **Source:** `game/scripts/core/overworld.gd::flower_at`, `game/scripts/core/overworld.gd::boulder_at`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/resource_nodes.gd::boulder_uses`
+- **Affects:** Overworld, Inventory, Save, Interface
+- **Expected:** Every generated flower decoration outside the village is a ripe `flower` plant until picked, bare until `plant_regrow_days` later (`Overworld.plant_changes`, saved, the sprite hidden and restored at dawn); the village's red (2656) and white (2659) flowers are registered plants like the purple and yellow. Every boulder drawn outside the village is minable (mountain boulders too). A boulder is small (2 uses, drawn smaller) or large (6 uses) from a hash of its cell, the uses left are saved as before.
+- **Tests:** `game/tests/world_test.gd::_pl2_006`, `game/tests/world_test.gd::_boulders`
+
+### INT-085 · Nothing is targeted across a wall
+- **Trigger:** The player uses, taps, gathers, talks to or attacks something.
+- **Source:** `game/scripts/core/world.gd::reaches`, `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_use`, `game/scripts/main.gd::select_resource`
+- **Affects:** Interiors, Interface, Combat
+- **Expected:** `World.reaches(from, to)` is false across a building's boundary (inside to outside, either way, or building to building) unless one end stands in that building's doorway, and false through a building neither end is in. The target list, the use guard, Gather taps and attacks all ask it; indoor stations, furniture, containers and people still work.
+- **Tests:** `game/tests/world_test.gd::_pl2_011`
+
+### INT-086 · A field ripens on game time and stands ripe before the farmers cut it
+- **Trigger:** The game hour passes; a farmer decides.
+- **Source:** `game/scripts/core/world.gd::_on_hour`, `game/scripts/core/world.gd::field_cuttable`, `game/scripts/core/world.gd::field_grow_days`, `game/scripts/core/npc_brain.gd::_farmer`
+- **Affects:** Fields, Employment, Granary
+- **Expected:** A sown field is ripe `field_grow_days` later; it then stands ripe for `field_ripe_wait_hours` (12) before the farmers cut it, so the player sees and can harvest ripe wheat (it used to be cut within the hour). Farmers then cut, till and sow again. `field_grow_days` is the hook for seasons.
+- **Tests:** `game/tests/world_test.gd::_pl2_007`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -751,14 +786,14 @@ Rules:
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
 | Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-084 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080 |
-| Combat | INT-004, INT-012, INT-013, INT-032, INT-068 |
+| Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-085 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069 |
-| Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
-| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068 |
+| Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-083 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-086 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075 |
 | Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076 |
@@ -766,23 +801,23 @@ Rules:
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066 |
 | Wages | INT-023, INT-029, INT-059, INT-066 |
 | Relief | INT-024, INT-047, INT-066 |
-| Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066 |
+| Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-086 |
 | Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-082, INT-086 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081 |
-| Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081 |
+| Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-083 |
 | Bandits | INT-012, INT-014, INT-050 |
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079 |
-| Workshops | INT-021, INT-030, INT-058 |
+| Workshops | INT-021, INT-030, INT-058, INT-082 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-083, INT-084 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-083, INT-084, INT-085 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055 |
-| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079 |
+| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-085 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075 |
 | Calendar | INT-077 |
 | Family | INT-077, INT-078, INT-079, INT-080 |
-| Overworld | INT-071, INT-074, INT-076 |
+| Overworld | INT-071, INT-074, INT-076, INT-084 |
 
 <!-- index:end -->
