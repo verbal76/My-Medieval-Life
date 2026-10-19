@@ -138,6 +138,7 @@ static func populate(w: World) -> void:
 		b.inv.add("copper_sword")
 		b.hunger = 100.0
 		w.npcs.append(b)
+	Life.seed_population(w)          # B8-029: sexes, ages and the explicit family links
 
 
 static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall_ids: Array) -> void:

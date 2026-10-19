@@ -3386,7 +3386,7 @@ func test_save_store() -> void:
 	var nw: Dictionary = SaveStore.inspect(path, 8, 0)
 	check(nw.state == "newer" and nw.version == 9 and nw.reason.contains("newer version"), "a later version's save is 'newer': %s" % nw.reason)
 	# a save from before the village was rebuilt (generator v6, Build 8) is 'older': refused, kept unchanged, never written over
-	check(SaveStore.MIN_VERSION <= World.SAVE_VERSION and World.SAVE_VERSION >= 13 and SaveStore.MIN_VERSION == 13, "saves older than the rebuilt village are refused (reads %d to %d)" % [SaveStore.MIN_VERSION, World.SAVE_VERSION])
+	check(SaveStore.MIN_VERSION <= World.SAVE_VERSION and World.SAVE_VERSION >= 14 and SaveStore.MIN_VERSION == 14, "saves older than the rebuilt village are refused (reads %d to %d)" % [SaveStore.MIN_VERSION, World.SAVE_VERSION])
 	var old_text := '{"save_version": %d, "n": 7}' % (SaveStore.MIN_VERSION - 1)
 	put.call(path, old_text)
 	var og: Dictionary = SaveStore.inspect(path, World.SAVE_VERSION)

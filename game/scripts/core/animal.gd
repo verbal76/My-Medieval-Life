@@ -35,6 +35,35 @@ func adult(now: float) -> bool:
 	return age_days(now) >= float(spec().grow_days)
 
 
+## newborn -> juvenile -> adult -> elderly by age in game days (balance.json "animals": juvenile_days,
+## grow_days, elder_days). The stage is a pure function of `born` and the clock (B8-029).
+func stage(now: float) -> String:
+	var d := age_days(now)
+	var sp := spec()
+	if d < float(sp.juvenile_days):
+		return "newborn"
+	if d < float(sp.grow_days):
+		return "juvenile"
+	if d < float(sp.elder_days):
+		return "adult"
+	return "elderly"
+
+
+func elderly(now: float) -> bool:
+	return stage(now) == "elderly"
+
+
+## In its breeding prime: grown and not yet elderly.
+func breeds(now: float) -> bool:
+	return stage(now) == "adult"
+
+
+## The baby sheet (res://assets/animals/<skin>_baby.png) if the species has art for one.
+func baby_skin() -> String:
+	var path := "res://assets/animals/%s_baby.png" % skin
+	return skin + "_baby" if ResourceLoader.exists(path) else ""
+
+
 func wild() -> bool:
 	return spec().kind == "wild"
 

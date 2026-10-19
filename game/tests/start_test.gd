@@ -1747,9 +1747,15 @@ func _child_size_tests() -> void:
 	main.recenter()
 	main._sync_sprites()
 	check(is_equal_approx(main.sprites[kid.id].scale.x, 0.5), "a child is drawn at half size")
+	var kid_born := kid.born
+	kid.born = w.minutes - 20.0 * Life.year_minutes()      # B8-029: size follows age (adolescents 0.75), not the role
 	kid.role = "adult"
 	main._sync_sprites()
 	check(is_equal_approx(main.sprites[kid.id].scale.x, 1.0), "grown up, full size")
+	kid.born = w.minutes - 14.0 * Life.year_minutes()
+	main._sync_sprites()
+	check(is_equal_approx(main.sprites[kid.id].scale.x, 0.75), "an adolescent is drawn at three quarters")
+	kid.born = kid_born
 	kid.role = "child"
 	w.player.pos = adult.pos + Vector2(1, 0)
 	main.recenter()
@@ -1757,7 +1763,8 @@ func _child_size_tests() -> void:
 	check(is_equal_approx(main.sprites[adult.id].scale.x, 1.0), "an adult is full size")
 
 
-## Young animals are drawn at half size until grown, then full size (owner, 2026-10-18).
+## Young animals are drawn at half size until grown, then full size (owner, 2026-10-18); B8-029: a species with
+## baby art (every one but the boar) draws the baby sheet at full scale instead.
 func _animal_size_tests() -> void:
 	var w: World = main.world
 	var a: Animal = w.fauna.animals.filter(func(x): return x.alive)[0]
@@ -1767,10 +1774,16 @@ func _animal_size_tests() -> void:
 	a.born = w.minutes                                 # just born
 	main._sync_animals()
 	var s: Node2D = main.animal_sprites.get(a.id)
-	check(s != null and is_equal_approx(s.scale.x, 0.5), "a young animal is drawn at half size")
+	var has_baby: bool = a.baby_skin() != ""
+	check(s != null and is_equal_approx(s.scale.x, 1.0 if has_baby else 0.5) and s.baby == has_baby, "a young animal draws its baby sheet at full size, or half size with no baby art (%s)" % a.species)
 	a.born = w.minutes - 1440.0 * (float(a.spec().grow_days) + 1.0)   # grown
 	main._sync_animals()
-	check(s != null and is_equal_approx(s.scale.x, 1.0), "grown, full size")
+	check(s != null and is_equal_approx(s.scale.x, 1.0) and not s.baby, "grown, full size on the adult sheet")
+	var boar := w.fauna.spawn("woods_w", "boar", "f", null)
+	boar.pos = main.camera.get_screen_center_position() / main.T
+	main._sync_animals()
+	check(is_equal_approx(main.animal_sprites[boar.id].scale.x, 0.5), "a newborn boar (no baby art) is drawn at half size")
+	w.fauna.remove(boar)
 	a.born = born0
 	a.pos = pos0
 

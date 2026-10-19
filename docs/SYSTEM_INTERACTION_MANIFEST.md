@@ -49,6 +49,8 @@ Rules:
 - **Containers** — crates, barrels, stalls and the tavern's tables: their owners' stock
 - **Interiors** — the insides of buildings under their roofs: floor, walls, doors, beds and other spots, roof fade
 - **Property** — who owns and who holds land, buildings, stalls, pens, fields and stations (one owner reference); the land registry, sales, leases, weekly rent
+- **Calendar** — the world calendar: years of 8 days in four seasons, ages in years, the HUD clock (B8-029)
+- **Family** — born, sex, the explicit links mother, father, partner and children, life stages, partnering, births, old-age death (B8-029)
 - **Overworld** — the generated world outside the village: chunks, roads, mountains, trees, collision, the trees the player felled
 
 ## Interactions
@@ -169,14 +171,14 @@ Rules:
 - **Trigger:** A villager dies of hunger, illness or a fall.
 - **Source:** `game/scripts/core/world.gd::kill`, `game/scripts/core/world.gd::_heir`, `game/scripts/core/world.gd::_inherit`, `game/scripts/core/npc_brain.gd::on_death`
 - **Affects:** Inheritance, Households, Coins, Employment, Livestock, Property
-- **Expected:** Food goes to the pantry. Coins and goods go to the heir: an adult, else an elder, else a child, lowest id first. A household with nobody left leaves the goods where they fell, and its house, leases and stores go to the manor (INT-054). The household's reckoning reruns at once. Pens pass on (INT-027); a merchant's stall falls vacant (INT-055).
+- **Expected:** Food goes to the pantry. Coins and goods go to the heir: the family first (INT-080: the eldest adult child, then the partner, then other kin), else an adult of the household, else an elder, else a child, lowest id first. A household with nobody left leaves the goods where they fell, and its house, leases and stores go to the manor (INT-054). The household's reckoning reruns at once. Pens pass on (INT-027); a merchant's stall falls vacant (INT-055).
 - **Tests:** `game/tests/run_tests.gd::test_households_and_work`, `game/tests/scenarios.gd`
 
 ### INT-018 · Player death and the heir
-- **Trigger:** The player's health reaches zero.
+- **Trigger:** The player's health reaches zero, or the player dies of old age (INT-080).
 - **Source:** `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::continue_as_heir`, `game/scripts/core/world.gd::give_start_kit`, `game/scripts/main.gd::continue_as_heir`
 - **Affects:** Health, Character, Player state, Loot, Building, Property
-- **Expected:** What the dead carried lies where they fell, for anyone to take, the heir too. The heir keeps the home, the chest and everything the family owns or leases (all held as "player", INT-051), starts every skill from nothing and carries only the starting kit, whose coins are counted in `coin_sources`. Anyone fighting the dead player stops; the heir inherits no fight. The world is not reset.
+- **Expected:** What the dead carried lies where they fell, for anyone to take, the heir too. The heir keeps the home, the chest and everything the family owns or leases (all held as "player", INT-051), starts every skill from nothing and carries only the starting kit, whose coins are counted in `coin_sources`. Anyone fighting the dead player stops; the heir inherits no fight. The world is not reset. If the player has a living child of 16 or more, the eldest becomes the heir and keeps their name, sprite, age and sex (INT-080); otherwise a relative takes over as before.
 - **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_property`
 
 ### INT-019 · Trade
@@ -706,18 +708,53 @@ Rules:
   - The village's boulders are saved with the world (`boulders`); the overworld's in `Overworld.rock_changes` (`overworld.rocks`), so a broken boulder stays broken across chunk reloads and saves.
 - **Tests:** `game/tests/world_test.gd::_deposits`, `game/tests/world_test.gd::_boulders`, `tools/check_resources.py`
 
+### INT-077 · The calendar sets ages, stages and the clock
+- **Trigger:** The world clock advances; a villager, the player or an animal is asked its age; the HUD shows the time.
+- **Source:** `game/scripts/core/life.gd::age_years`, `game/scripts/core/life.gd::season`, `game/scripts/core/life.gd::clock_text`, `game/scripts/core/life.gd::stage_of`, `game/scripts/core/world.gd::clock_text`, `game/scripts/core/animal.gd::stage`
+- **Affects:** Calendar, Family, Livestock, Wildlife, Interface, Save
+- **Expected:** (owner-approved 2026-10-19, B8-029) A year is `calendar.year_days` (8) game days, in the seasons of `calendar.seasons` / `season_days`; the clock reads "Spring, Year 1  Day 3  07:00". Age in years is `(now - born) / year`; an animal's stage is its age in days against `juvenile_days`, `grow_days`, `elder_days`. Both are pure functions of `born` and the clock, so a reload and the areas the player is not near stay consistent; only `born` is saved.
+- **Tests:** `game/tests/aging_test.gd::test_calendar`, `game/tests/aging_test.gd::test_save_load`
+
+### INT-078 · Ages set roles, jobs and how people look and walk
+- **Trigger:** Each dawn and on loading a save: a villager has passed 12, 16 or 55.
+- **Source:** `game/scripts/core/life.gd::sync_roles`, `game/scripts/core/life.gd::role_for`, `game/scripts/core/life.gd::npc_scale`, `game/scripts/core/life.gd::walk_factor`, `game/scripts/core/npc_brain.gd::_apprentice_for`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::_sync_sprites`
+- **Affects:** Family, Employment, Households, Interface
+- **Expected:** `NPC.role` follows age: child (under 16; drawn at 0.5 until 12, 0.75 as an adolescent), adult (16-55), elder (55+, walk 0.8x). Adolescents hold no job and are nobody's apprentice. A child turning 16 is an adult without a trade, so the job market, apprenticeship and succession (INT-075) take them. An adult turning 55 retires: the post opens like a death's (INT-075), pens and stalls pass on, manor jobs are released. Bandits age but keep their role; the sage and the reeve keep their posts for life.
+- **Tests:** `game/tests/aging_test.gd::test_coming_of_age_and_retiring`, `game/tests/start_test.gd::_child_size_tests`
+
+### INT-079 · Partners and births join households
+- **Trigger:** Each dawn.
+- **Source:** `game/scripts/core/life.gd::partnering`, `game/scripts/core/life.gd::births`, `game/scripts/core/life.gd::birth`, `game/scripts/core/life.gd::partner_player`, `game/scripts/core/life.gd::seed_population`
+- **Affects:** Family, Households, Building, Interiors, Food
+- **Expected:** Households are not families: relationships are explicit links (`mother`, `father`, `partner`, `children`), recorded for the starting households by `seed_population` and never inferred from a shared house. Two unpartnered adults of opposite sex, 18-50, not kin, become partners (`partner_chance_per_year`), one moving into the other's home if it has a free bed. Births are only to partners: a woman of 18-42, a free bed in the household's house, `birth_min_food_days` of food, no child in the last year; about one in `birth_interval_years` years of days. The newborn is a child of the mother's household, with a name, a sprite and both parents recorded. The player partners an adult by asking (`partner_player`); their children are villagers of the partner's household.
+- **Tests:** `game/tests/aging_test.gd::test_start_population`, `game/tests/aging_test.gd::test_partners_and_births`
+
+### INT-080 · Old age kills, and the family inherits
+- **Trigger:** Each dawn, a villager or the player is 60 or older.
+- **Source:** `game/scripts/core/life.gd::death_chance`, `game/scripts/core/life.gd::_natural_deaths`, `game/scripts/core/life.gd::_player_dawn`, `game/scripts/core/life.gd::heir_of`, `game/scripts/core/life.gd::player_heir_child`, `game/scripts/core/life.gd::make_heir`, `game/scripts/core/world.gd::_heir`, `game/scripts/core/world.gd::continue_as_heir`
+- **Affects:** Family, Health, Inheritance, Employment, Households, Player state, Character
+- **Expected:** From 60 a daily chance rising to certain death at 80 (`life.mortality_*`); the cause is "old age" and the death runs the ordinary hooks (INT-017: inheritance, vacancy, pens, stalls, household ended). Heirs come from the family graph first: the eldest adult child, then the partner, then other kin (parents, then siblings), then a minor child; only with no family heir does the household order of INT-017 apply. The player's old-age death shows "You died of old age."; the heir is the player's eldest living child of 16+, who leaves the villagers and keeps name, sprite, age and sex; with none, a relative takes over (INT-018).
+- **Tests:** `game/tests/aging_test.gd::test_old_age_and_inheritance`, `game/tests/aging_test.gd::test_player`
+
+### INT-081 · Animals pass through life stages and die of old age
+- **Trigger:** Each dawn; an animal is drawn or breeds.
+- **Source:** `game/scripts/core/fauna.gd::_old_age`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::breed_chance`, `game/scripts/core/fauna.gd::_start`, `game/scripts/core/animal.gd::stage`, `game/scripts/view/animal_sprite.gd::show_state`
+- **Affects:** Livestock, Wildlife, Interface
+- **Expected:** newborn, juvenile, adult, elderly by age (`balance.json` animals: `juvenile_days`, `grow_days`, `elder_days`). Only adults breed (the existing rules kept), and the chance falls to nothing as the area nears its cap. The elderly move at 0.7x and, from `death_days[0]`, die of old age by a daily chance spread evenly to `death_days[1]`; meat and hide rules are unchanged. Newborns and juveniles draw the Cozy Farm baby sheet at full scale (the boar, with none, at half scale). The starting animals have varied ages.
+- **Tests:** `game/tests/aging_test.gd::test_animals`, `game/tests/aging_test.gd::test_baby_art`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
 
 | System | Interactions |
 |---|---|
-| Character | INT-001, INT-018, INT-031 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053 |
+| Character | INT-001, INT-018, INT-031, INT-080 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080 |
 | Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072 |
-| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079 |
+| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080 |
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
@@ -730,20 +767,22 @@ Rules:
 | Wages | INT-023, INT-029, INT-059, INT-066 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075 |
-| Inheritance | INT-017, INT-062, INT-075 |
-| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067 |
-| Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080 |
+| Inheritance | INT-017, INT-062, INT-075, INT-080 |
+| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081 |
+| Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079 |
 | Workshops | INT-021, INT-030, INT-058 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055 |
-| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060 |
+| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075 |
+| Calendar | INT-077 |
+| Family | INT-077, INT-078, INT-079, INT-080 |
 | Overworld | INT-071, INT-074, INT-076 |
 
 <!-- index:end -->

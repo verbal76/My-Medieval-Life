@@ -67,3 +67,4 @@ jobs:
           $godot --headless --path game --script res://tests/overworld_test.gd
           $godot --headless --path game --script res://tests/tree_test.gd
           $godot --headless --path game --script res://tests/world_test.gd
+          $godot --headless --path game --script res://tests/aging_test.gd

@@ -1014,6 +1014,10 @@ func _show_sleeper(n: NPC, s: ActorSprite) -> bool:
 
 func _sync_sprites() -> void:
 	var cam := camera.get_screen_center_position() / T
+	for id in sprites.keys():                      # a child who became the player (Life.make_heir) leaves the people
+		if not world.by_id.has(id):
+			sprites[id].queue_free()
+			sprites.erase(id)
 	for n: NPC in world.npcs:
 		var s: ActorSprite = sprites.get(n.id)
 		if s == null:                               # a newcomer (NPCBrain succession) gets a sprite when first seen
@@ -1035,7 +1039,7 @@ func _sync_sprites() -> void:
 			continue
 		# children are drawn at half an adult's size, full size once grown (owner, 2026-10-18); the
 		# feet are the sprite's origin, so they stay on the ground
-		s.scale = Vector2.ONE * (CHILD_SCALE if n.role == "child" else 1.0)
+		s.scale = Vector2.ONE * Life.npc_scale(n, world.minutes)       # child 0.5, adolescent 0.75 (balance.json "life"; B8-029)
 		s.visible = near and not _covered(n)
 		if not s.visible:
 			continue
@@ -1187,7 +1191,7 @@ func _sync_animals() -> void:
 		var s: AnimalSprite = animal_sprites.get(a.id)
 		if s == null:
 			s = AnimalSprite.new()
-			s.setup(a)
+			s.setup(a, world.minutes)
 			actors.add_child(s)
 			animal_sprites[a.id] = s
 		s.visible = a.pos.distance_to(cam) < 30.0
