@@ -1177,7 +1177,9 @@ func fight(n: NPC, dt: float) -> void:
 		n.plan = [go(w.bandit_camp, 1.2)]
 		return
 	if n.target == -2:
-		w.damage_player(n.damage, n.name)
+		# the death screen names who struck: "Wat the guard", "Rob the bandit", or just the name
+		var who := n.job if n.job != "" else ("bandit" if n.role == "bandit" else "")
+		w.damage_player(n.damage, n.name + (" the " + who if who != "" else ""))
 	else:
 		tnpc.hp -= maxf(0.5, n.damage - tnpc.armor * 0.5)
 		w.wake_near(tnpc.pos, float(GameData.b("sleep_wake_radius")))    # the blow wakes them, and the noise others
