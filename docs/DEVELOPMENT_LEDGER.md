@@ -10,7 +10,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 38 |
+| APPROVED — NOT STARTED | 41 |
 | ACTIVE DEVELOPMENT | 7 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
@@ -21,8 +21,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **268** |
-| Outstanding (not complete, superseded or canceled) | 130 |
+| **Total approved** | **271** |
+| Outstanding (not complete, superseded or canceled) | 133 |
 
 Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -52,7 +52,7 @@ Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 
-## APPROVED — NOT STARTED (38)
+## APPROVED — NOT STARTED (41)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -60,6 +60,9 @@ Automated tests do not count as device verification.
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | owner message 2026-10-19 |  |  | Generate the package with tools/assets/sheets.py contact |
+| CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | docs/directives/2026-10-19_courtship_friendship.md |  | after DVW-B1 |  |
+| CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | docs/directives/2026-10-19_courtship_friendship.md |  | after DVW-B1 |  |
+| CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  |  |

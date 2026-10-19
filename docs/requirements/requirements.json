@@ -4666,6 +4666,132 @@
    "acceptance_derived": true
   },
   {
+   "id": "CRT-01",
+   "title": "Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "we need to add gifting to get friends and marriages going. Traditional dating gifts, like food, flowers, alcohol, clothes, those start to build attraction, attraction grows to dating, dating grows into an option to propose. the partner whether npc or other player can decline if you ask to early.",
+   "description": "Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early",
+   "source": "docs/directives/2026-10-19_courtship_friendship.md",
+   "approval": "owner message 2026-10-19",
+   "acceptance": [
+    "Gifts of food, flowers, alcohol and clothes build attraction",
+    "Attraction grows into dating",
+    "Dating unlocks the option to propose",
+    "The NPC (or another player) can decline a proposal made too early",
+    "Marriage uses the existing explicit partner link"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "DVW-B1"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_courtship_friendship.md"
+    }
+   ]
+  },
+  {
+   "id": "CRT-02",
+   "title": "Friendship: a Befriend option appears after help and gifts; no proposal needed",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "friendships can be chosen as well you do not propose for friendship, but a befriend button should popup after help and gifts.",
+   "description": "Friendship: a Befriend option appears after help and gifts; no proposal needed",
+   "source": "docs/directives/2026-10-19_courtship_friendship.md",
+   "approval": "owner message 2026-10-19",
+   "acceptance": [
+    "Help and gifts raise a villager's regard for the player",
+    "Past a threshold a Befriend button appears in the conversation",
+    "Choosing it makes a recorded friendship (no proposal step)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "DVW-B1"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_courtship_friendship.md"
+    }
+   ]
+  },
+  {
+   "id": "CRT-03",
+   "title": "Courtship between players in multiplayer (the other player may decline a proposal)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "the partner whether npc or other player can decline if you ask to early.",
+   "description": "Courtship between players in multiplayer (the other player may decline a proposal)",
+   "source": "docs/directives/2026-10-19_courtship_friendship.md",
+   "approval": "owner message 2026-10-19 ('whether npc or other player')",
+   "acceptance": [
+    "Player-to-player gifts, dating and proposals over the network, either side may decline"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "CRT-01",
+    "MP-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Belongs on wip/multiplayer; multiplayer stays isolated until the owner authorizes integration",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_courtship_friendship.md"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "notes",
+     "why": "multiplayer stays isolated"
+    }
+   ]
+  },
+  {
    "id": "DGA-D1",
    "title": "Meaning of \"isometric\"",
    "kind": "proposal",
