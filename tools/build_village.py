@@ -100,6 +100,9 @@ CAMPFIRE = 5958                              # animated in the tileset (5958-596
 CRATE, BARREL = 3500, 3502
 RAIL_V, RAIL_TOP, RAIL_END = 1083, 863, 1303  # the track: a straight rail, its top end and its bottom end
 MINE_CART = 3009                             # the mine cart on its rail
+ROCK_FILL = (16750, 16751, 16752, 16753, 16970, 16971, 16972, 16973, 17190, 17191, 17192, 17193, 17410, 17411, 17412, 17413)
+ROCK_SLAB = (9286, 9287, 9288, 9289, 9726, 9727, 9728, 9729)   # grey cobbled stone, for the quarry's slabs
+ROCK_LEDGE = (9499, 9500)                    # a dark rock lip along the lower half of the cell
 ADIT = FREE + 154                            # the timbered mine mouth of the free tileset, over a cliff face
 PLANKS = (1024, 1025)                        # piles of planks and logs (the smithy's carpenter's corner)
 # Containers the player can take from (or steal from): the crate and barrel tiles Shade drew by the
@@ -558,6 +561,7 @@ class Village:
         self.yards()
         self.mine_hill()
         self.paint_ground()
+        self.rock_top()
 
         # --- things on the ground ---------------------------------------------------------------
         E["mine"] = self.mine()
@@ -642,6 +646,25 @@ class Village:
                     self.corner[y][x] = self.GRASS
         self.adit = (48, 9)                              # the face cell the adit is drawn over
         self.put("below", 2, self.adit[0], self.adit[1], ADIT)
+
+    def rock_top(self):
+        """B8-004: the hill's top is bare rock, not the grass of the free tileset's plateau: Shade's rock ground
+        (PUNY-WORLD-PAID, the grey-brown stone of his sample overworld's mountain) over every cell whose four
+        corners are cliff, in ground1, a few cells with cracks."""
+        top = set()
+        for y in range(H):
+            for x in range(W):
+                if all(c == self.CLIFF for c in (self.corner[y][x], self.corner[y][x + 1],
+                                                  self.corner[y + 1][x], self.corner[y + 1][x + 1])):
+                    top.add((x, y))
+        for x, y in sorted(top):
+            fill = ROCK_SLAB if vnoise(x, y, 3, 62) > 0.66 else ROCK_FILL
+            self.put("ground", 1, x, y, tile_val(0, fill[int(_hash(x, y, 61) * len(fill)) % len(fill)]))
+        for y in (5, 7):                    # two quarry ledges: a dark lip along the rock's terraces, in pieces
+            run = [x for x in range(W) if (x, y) in top and (x, y - 1) in top and (x, y + 1) in top]
+            for x in run:
+                if vnoise(x, y, 6, 63) > 0.3 and abs(x - self.adit[0]) > 1:
+                    self.put("ground", 1, x, y, tile_val(0, ROCK_LEDGE[(x + y) % 2]))
 
     # ---- the mine ----------------------------------------------------------------------------
     def mine(self):
@@ -819,6 +842,8 @@ class Village:
         camp = self.ents["spawns"]["bandit_camp"]
         keep |= self.rect_cells(camp[0] - 4, camp[1] - 4, 9, 9)
         keep |= self.rect_cells(self.adit[0] - 2, 9, 5, 11)
+        for c in self.hill:                 # no tree on or beside the hill's rim (B8-004)
+            keep |= self.rect_cells(c[0] - 2, c[1] - 2, 5, 5)
         for (cat, i), data in self.layers.items():
             if cat in ("below", "above"):
                 keep |= {(k % W, k // W) for k, v in enumerate(data) if v >= 0}
