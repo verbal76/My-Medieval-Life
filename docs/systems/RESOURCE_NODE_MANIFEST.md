@@ -61,14 +61,14 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `boulder` · Boulder
 
 - **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "boulder", "ore": "stone"}`.
-- **Where:** Small grey boulders standing alone: in the mine's highland and across the map outside the village. **In the world:** 18 in the village (3 stone each), and the overworld's solid rocks.
+- **Where:** Grey boulders standing alone, small and large: in the mine's highland and across the map outside the village (every boulder drawn there, mountain boulders included). **In the world:** 18 in the village (6 stone each), and the overworld's solid rocks.
 - **Action:** Mining (interact): "Mine stone". **Range (tiles):** 1. The cell 0.9 tiles in front of the player, or one of its four neighbours (main.gd _find_target).
 - **Tool:** pickaxe (required). You need a pickaxe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `pickaxe`: recipe (forge_pickaxe); resold by the merchant_goods; `rusty_pickaxe`: start kit (player_start_items).
 - **Skill:** mining, level 1.
 - **Time:** `mine_minutes` (25 game minutes). As for every seam: mine_minutes game minutes a unit for a villager; the player's swing is shorter, divided by the pickaxe's speed.
 - **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing.
 - **Yields a cycle:** 1 stone. Player only: from Mining 2, a 25% chance of a second unit from the same boulder.
-- **Total:** uses (3) stone a boulder; the village's boulders are not counted among the seams (the caravan's stone rule and the miners look at the seams only).
+- **Total:** uses_small (2) stone from a small boulder, uses (6) from a large one (ResourceNodes.boulder_small: a hash of its cell, about 55% are small); the village's boulders are not counted among the seams (the caravan's stone rule and the miners look at the seams only).
 - **Depletion:** finite. None: a boulder broken up is gone for good and its cell is open ground. The change is saved (the village's with the world, the overworld's with Overworld.rock_changes).
 - **Owner:** Nobody. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers no. Villagers mine the seams, not the boulders.
@@ -151,20 +151,20 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `flower_patch` · Wild flower
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "flower"}`.
-- **Where:** Meadows, verges and clearings across the map (purple and yellow flowers). **In the world:** 158 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers). **In the world:** 159 plants on the map, each ripe again plant_regrow_days after it is picked.
 - **Action:** Picking (interact): "Pick wild flower". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
 - **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers do not pick them.
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 1 flower. 1 flower a plant, all at once (World.pick_plant).
-- **Total:** 1 flower from each ripe plant of this kind in village.json plants (tile 2658).
-- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Total:** 1 flower from each ripe plant of this kind: village.json plants (tiles 2656 red, 2657 purple, 2658 yellow, 2659 white) and every flower the overworld generator draws outside the village (Overworld.flower_at).
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. Outside the village the picked flower is saved in Overworld.plant_changes.
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers no. Villagers do not forage yet (no NPC action picks plants).
 - **Gather mode:** yes. **Icon:** `flower`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
-- **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
+- **Code:** `game/scripts/core/overworld.gd::flower_at`, `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
 
 ### `iron_seam` · Iron seam
 
@@ -347,7 +347,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 
 | Node | In the world | Replacement once worked out |
 |---|---|---|
-| `boulder` | 18 in the village (3 stone each), and the overworld's solid rocks | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
+| `boulder` | 18 in the village (6 stone each), and the overworld's solid rocks | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 | `coal_seam` | 200 coal in 4 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `copper_seam` | 60 copper_ore in 2 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `iron_seam` | 300 iron_ore in 5 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |

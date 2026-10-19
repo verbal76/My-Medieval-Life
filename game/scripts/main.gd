@@ -69,6 +69,7 @@ var shot_advance := 0.0
 var shot_zoom := 0.0
 var shot_panel := ""
 var shot_field_state := ""
+var shot_pick := 0.0
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
 var walking := false           # the player moved this frame (resource prompts wait until they stop)
 ## Gather mode (B7-012, owner 2026-10-18): the Gather button; a tap (or Use) on a resource walks to it
@@ -125,6 +126,8 @@ func _ready() -> void:
 				shot_zoom = float(args[i + 1])
 			"--panel":
 				shot_panel = args[i + 1]
+			"--pick":
+				shot_pick = float(args[i + 1])          # pick every wild plant within this many tiles of the warp point (screenshots)
 			"--field-state":
 				shot_field_state = args[i + 1]          # tilled | growing | ripe: every field in that state
 			"--safe", "--cutout":
@@ -150,6 +153,11 @@ func _ready() -> void:
 		if shot_warp != Vector2.INF:
 			world.player.pos = shot_warp
 			follow_at = _in_view(shot_warp * T)
+			if shot_pick > 0.0:
+				var r := int(ceil(shot_pick))
+				for dy in range(-r, r + 1):
+					for dx in range(-r, r + 1):
+						world.pick_plant(world.plant_at(Vector2i(floori(shot_warp.x) + dx, floori(shot_warp.y) + dy)))
 		if shot_zoom > 0.0:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
@@ -925,6 +933,13 @@ func _apply_world_changes() -> void:
 		if int(d.amount) <= 0:
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
 	world.sync_boulders()                    # boulders already broken up (B8-026)
+	for b in world.boulders:                 # the small ones are drawn small (PL1-06)
+		var bc := Vector2i(int(b.x), int(b.y))
+		if int(b.amount) > 0 and ResourceNodes.boulder_small(bc):
+			var rock := int(map.data.tiles.ore.stone)
+			for lay in map.data.layers:
+				if str(lay.name).begins_with("below") and int(lay.data[bc.y * map.w + bc.x]) == rock:
+					view.set_tile(view.layer(str(lay.name)), bc, MapView.SMALL_BOULDER_TILE)
 	for f in world.fields:
 		world._field_tiles(f)
 	for pl in world.plants:
@@ -1312,6 +1327,21 @@ func _on_bled(pos: Vector2) -> void:
 	tw.tween_callback(s.queue_free)
 
 
+## What a pile holds, for its prompt: "4 meat, 1 hide" ("" when it holds only coins or nothing).
+func _loot_text(l: Dictionary) -> String:
+	var parts := []
+	for id in l.inv.ids():
+		parts.append("%d %s" % [l.inv.count(id), GameData.item_name(id).to_lower()])
+	return ", ".join(parts)
+
+
+## The icon a pile is drawn with: its first item (meat from a carcass), coins if it holds only coins.
+func _loot_icon(l: Dictionary) -> Texture2D:
+	var ids: Array = l.inv.ids()
+	var path := "res://assets/icons/%s.png" % (str(ids[0]) if not ids.is_empty() else "coins")
+	return load(path) if ResourceLoader.exists(path) else load("res://assets/icons/coins.png")
+
+
 func _sync_loot() -> void:
 	while loot_nodes.size() < world.loot.size():
 		var tr := TextureRect.new()
@@ -1325,6 +1355,10 @@ func _sync_loot() -> void:
 		loot_nodes.pop_back().queue_free()
 	for i in world.loot.size():
 		loot_nodes[i].position = world.loot[i].pos * T
+		var rect := loot_nodes[i].get_child(0) as TextureRect
+		var icon := _loot_icon(world.loot[i])
+		if rect.texture != icon:
+			rect.texture = icon
 
 
 # ---------------------------------------------------------------- player ---------------------
@@ -1596,7 +1630,7 @@ func _find_target() -> void:
 	var near: Array = []        # [distance to the probe, order, target]
 	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
-		if d < 1.5:
+		if d < 1.5 and world.reaches(p.pos, n.pos):
 			if world.asleep(n):
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "%s is asleep" % _who(n)}])
 			elif world.at_post(n):
@@ -1608,23 +1642,24 @@ func _find_target() -> void:
 		if at.distance_to(p.pos) > 2.2:
 			continue
 		var d := at.distance_to(probe)
-		if d < 1.5:
+		if d < 1.5 and world.reaches(p.pos, at):
 			near.append([d, near.size(), _container_target(c)])
 	for post in _shop_posts():
 		for at: Vector2 in post.cells:
 			if at.distance_to(p.pos) > 2.2:
 				continue
 			var d := at.distance_to(probe)
-			if d < 1.5:
+			if d < 1.5 and world.reaches(p.pos, at):
 				near.append([d, near.size(), _shop_target(post)])
 	for i in world.loot.size():
 		var d: float = world.loot[i].pos.distance_to(probe)
-		if d < 1.5:
+		if (d < 1.5 or world.loot[i].pos.distance_to(p.pos) < 1.2) and world.reaches(p.pos, world.loot[i].pos):       # underfoot counts too (PL2-004)
 			var from: String = world.loot[i].from
-			near.append([d, near.size(), {"kind": "loot", "i": i, "label": ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}])
+			var what := _loot_text(world.loot[i])
+			near.append([minf(d, 1.4), near.size(), {"kind": "loot", "i": i, "label": ("Take %s from %s" % [what, from]) if from.begins_with("the ") and what != "" else ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}])
 	for a: Animal in world.fauna.near(probe, 1.2):
 		var d := a.pos.distance_to(probe)
-		if d < 1.5:
+		if d < 1.5 and world.reaches(p.pos, a.pos):
 			var what := "%s (%s%s)" % [a.label().to_lower(), "young, " if not a.adult(world.minutes) else "", "male" if a.sex == "m" else "female"]
 			near.append([d, near.size(), {"kind": "animal", "animal": a, "label": ("A " if a.wild() else "The keeper's ") + what + (": attack to hunt it" if a.wild() else "")}])
 	near.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
@@ -1633,6 +1668,8 @@ func _find_target() -> void:
 	var front := {}
 	for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
 		var cell: Vector2i = c + dc
+		if not world.reaches(p.pos, Vector2(cell) + Vector2(0.5, 0.5)):
+			continue                       # across a wall or the inside/outside boundary (PL2-011)
 		var dep := world.deposit_at(cell)
 		if not dep.is_empty() and int(dep.amount) > 0:
 			front = {"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
@@ -1837,6 +1874,14 @@ func _container_target(c: Dictionary) -> Dictionary:
 
 
 ## The centre of the counter, stall or container at a map position, or INF.
+## The pile of loot drawn at a map position (within 0.8 tile), or INF.
+func _loot_at(wpos: Vector2) -> Vector2:
+	for l in world.loot:
+		if l.pos.distance_to(wpos) < 0.8:
+			return l.pos
+	return Vector2.INF
+
+
 func _usable_at(wpos: Vector2) -> Vector2:
 	var cell := Vector2i(floori(wpos.x), floori(wpos.y))
 	var at := Vector2(cell) + Vector2(0.5, 0.5)
@@ -1904,6 +1949,12 @@ func _gain(text: String, item := "") -> void:
 ## Do what the current target offers, once (Use; and each cycle of gathering).
 func _use() -> void:
 	var p := world.player
+	if str(target.get("kind", "")) in ["deposit", "tree", "plant", "loot"]:
+		var tp: Vector2 = world.loot[target.i].pos if target.kind == "loot" and target.i < world.loot.size() else Vector2(_target_cell(target)) + Vector2(0.5, 0.5)
+		if not world.reaches(p.pos, tp):
+			stop_gather("")
+			ui.message("A wall is in the way.")
+			return
 	match target.kind:
 		"npc":
 			approach(target.npc)
@@ -1939,6 +1990,8 @@ func _use() -> void:
 				_gain("+%d coins" % int(l.coins), "coins")
 			elif taken == 0:
 				ui.message("Your pack is full." if l.inv.total() > 0 else "There is nothing left.")
+			elif l.inv.total() > 0:
+				ui.message("Your pack is full: some is left behind.")
 			p.coins += int(l.coins)
 			l.coins = 0
 			if l.inv.total() == 0:
@@ -2160,12 +2213,12 @@ func attack(only: Object = null) -> void:
 	player_sprite.play("sword", true)
 	var probe := p.pos + facing_vec() * 0.8
 	for n: NPC in world.present(probe, 1.1):
-		if only == null or only == n:
+		if (only == null or only == n) and world.reaches(p.pos, n.pos):
 			_hit(n, p.damage())
 			_xp("combat", 4)
 			return
 	for a: Animal in world.fauna.near(probe, 1.1):
-		if only == null or only == a:
+		if (only == null or only == a) and world.reaches(p.pos, a.pos):
 			_hit_animal(a, p.damage())
 			return
 
@@ -2242,7 +2295,8 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 		keeper = world.pen_keeper(world.fauna.pens[a.area])
 	var what := a.label().to_lower()
 	var bag: Inventory = world.fauna.kill(a)
-	world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what})
+	if bag.total() > 0:
+		world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": world.minutes})
 	if keeper != null:
 		_crime(keeper, "%s killed my %s" % [world.player.name, what])
 		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
@@ -2689,6 +2743,17 @@ func _tap(screen_pos: Vector2) -> void:
 		cancel_action("You stop.")     # a tap while working stops it (B8-011)
 		return
 	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	var pile := _loot_at(wpos)
+	if pile != Vector2.INF and _creature_at(wpos) == null:
+		# a tapped pile (a carcass, a dropped bag): walk up to it and take it, in any mode (PL2-004)
+		chase = null
+		talk_to = null
+		stop_gather("")
+		reach_to = pile
+		move_to = pile if pile.distance_to(world.player.pos) > 1.2 else Vector2.INF
+		if move_to == Vector2.INF:
+			_reach_step()
+		return
 	if gather_mode:
 		var hit := _resource_tap(wpos)
 		if hit.is_empty():
@@ -2888,6 +2953,11 @@ func _resource_tap(wpos: Vector2) -> Dictionary:
 ## out; else once).
 func select_resource(hit: Dictionary, continuous: bool) -> void:
 	var d: Dictionary = hit.def
+	var hp := Vector2(ResourceNodes.cell_of(world, d, hit.ref)) + Vector2(0.5, 0.5)
+	if world.place_of(world.player.pos) != world.place_of(hp) and not world.reaches(world.player.pos, hp):
+		stop_gather("")
+		ui.message("A wall is in the way.")          # inside to outside or the reverse (PL2-011)
+		return
 	var why := ResourceNodes.can_harvest(world, d, hit.ref)
 	if why != "":
 		stop_gather("")

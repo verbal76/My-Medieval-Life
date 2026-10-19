@@ -40,6 +40,7 @@ func _run() -> void:
 	_boulders()
 	_roofs()
 	_succession()
+	_pl_gameplay()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -103,8 +104,7 @@ func _boulders() -> void:
 	var m: VillageMap = main.map
 	var p: PlayerState = w.player
 	p.inv.add("pickaxe")
-	var uses := int(ResourceNodes.def("boulder").uses)
-	check(w.boulders.size() > 0 and uses >= 2, "the village has %d small boulders, %d uses each" % [w.boulders.size(), uses])
+	check(w.boulders.size() > 0 and int(ResourceNodes.def("boulder").uses_small) < int(ResourceNodes.def("boulder").uses), "the village has %d boulders, small ones with fewer uses than large ones" % w.boulders.size())
 	var taken := {}
 	for t in w.trees:
 		taken[Vector2i(int(t.x), int(t.y))] = "tree"
@@ -122,6 +122,7 @@ func _boulders() -> void:
 	# a village boulder: a node of its own, stone, the right prompt, a few swings, then gone and walkable
 	var b: Dictionary = w.boulders[0]
 	var cell := Vector2i(b.x, b.y)
+	var uses := int(b.amount)
 	var node := ResourceNodes.node_at(w, cell, true)
 	check(not node.is_empty() and node.def.id == "boulder" and ResourceNodes.products(node.def) == {"stone": 1}, "a boulder is the boulder node and gives stone")
 	check(m.is_solid(cell) and ResourceNodes.can_harvest(w, node.def, node.ref) == "", "it is solid and can be mined with a pickaxe")
@@ -167,21 +168,23 @@ func _boulders() -> void:
 	for r in range(4, 120):
 		for dy in range(-r, r + 1):
 			var sc := west + Vector2i(-r, dy)
-			if oc.x == -9999 and o.has_boulder(sc) and o.boulder_at(sc).amount == uses and not o.is_road(sc):
+			if oc.x == -9999 and o.has_boulder(sc) and not o.is_road(sc):
 				oc = sc
 	check(oc.x != -9999, "an overworld boulder exists near the west road")
 	var od := w.deposit_at(oc)
+	var ouses := int(od.amount)
+	check(ouses == ResourceNodes.boulder_uses(oc), "its uses follow its size (%d)" % ouses)
 	check(not od.is_empty() and od.get("ow", false) and od.ore == "stone" and ResourceNodes.node_at(w, oc, true).def.id == "boulder", "it is a boulder node too")
 	check(o.is_solid(oc), "and it blocks the way")
 	p.pos = Vector2(oc) + Vector2(-0.5, 0.5)
 	main.camera.position = p.pos * 16.0
 	main.ow_view.follow(p.pos, p.pos, 0.1, -1)
 	var oview: Dictionary = main.ow_view.chunks[Overworld.chunk_of(oc)]
-	check(main.ow_view.tile_value(oview.objects, oc) == int(o.tiles.rock), "it is drawn")
+	check(main.ow_view.tile_value(oview.objects, oc) == (MapView.SMALL_BOULDER_TILE if ResourceNodes.boulder_small(oc) else int(o.tiles.rock)), "it is drawn, small ones smaller")
 	var got := ""
-	for k in uses:
+	for k in ouses:
 		got = w.mine_unit(w.deposit_at(oc))
-	check(got == "stone" and w.deposit_at(oc).is_empty() and not o.is_solid(oc) and o.rock_gone(oc), "%d uses break it for stone; its cell is open" % uses)
+	check(got == "stone" and w.deposit_at(oc).is_empty() and not o.is_solid(oc) and o.rock_gone(oc), "%d uses break it for stone; its cell is open" % ouses)
 	check(main.ow_view.tile_value(oview.objects, oc) == -1, "and its sprite is erased")
 	var far := Vector2(oc) + Vector2(400.5, 0.5)
 	p.pos = far
@@ -201,8 +204,10 @@ func _boulders() -> void:
 			if half.x == -9999 and sc != oc and o.has_boulder(sc) and not o.rock_gone(sc) and not o.is_road(sc):
 				half = sc
 	w.mine_unit(w.deposit_at(half))
-	check(int(w.deposit_at(half).amount) == uses - 1, "a boulder half mined keeps %d uses" % (uses - 1))
+	var huses := ResourceNodes.boulder_uses(half)
+	check(int(w.deposit_at(half).amount) == huses - 1, "a boulder half mined keeps %d uses" % (huses - 1))
 	var vb: Dictionary = w.boulders[1]
+	var vuses := int(vb.amount)
 	w.mine_unit(vb)
 	var vcell := Vector2i(vb.x, vb.y)
 	check(main.save_game(false), "the game saves")
@@ -210,7 +215,7 @@ func _boulders() -> void:
 	var w2: World = main.world
 	check(w2.deposit_at(cell).is_empty() and not w2.map.is_solid(cell), "after loading the village boulder is still broken")
 	check(w2.map.overworld.rock_gone(oc) and not w2.map.overworld.is_solid(oc) and w2.deposit_at(oc).is_empty(), "after loading the overworld boulder is still broken")
-	check(int(w2.deposit_at(half).amount) == uses - 1 and int(w2.deposit_at(vcell).amount) == uses - 1, "and the half-mined ones keep their uses")
+	check(int(w2.deposit_at(half).amount) == huses - 1 and int(w2.deposit_at(vcell).amount) == vuses - 1, "and the half-mined ones keep their uses")
 	check(w2.boulders.filter(func(x): return int(x.amount) <= 0).size() == 1 and w2.deposits.size() == main.world.deposits.size(), "the seams are untouched")
 
 
@@ -437,3 +442,225 @@ func _succession() -> void:
 		if not o.alive:
 			dead_ids[o.id] = true
 	check(dead_ids.has(dead.id) and dead_ids.size() >= 5, "the dead are still dead after loading (%d)" % dead_ids.size())
+
+
+# ---------------------------------------------------------------- PL2-001 / 004 / 006 / 007 / 011 -----------
+func _pl_gameplay() -> void:
+	main.new_game()
+	_pl2_001()
+	_pl2_004()
+	_pl2_011()
+	_pl2_006()
+	_pl2_007()
+
+
+## A station is "in use" only by a villager at it, awake and working there.
+func _pl2_001() -> void:
+	var w: World = main.world
+	var st_id := ""
+	var n: NPC = null
+	for id in w.stations:
+		if w.stations[id].type in ["forge", "anvil", "workbench"] and w.station_refusal(id) == "":
+			st_id = id
+			break
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult":
+			n = o
+			break
+	check(st_id != "" and n != null, "PL2-001: a station and a villager to test with")
+	var st: Dictionary = w.stations[st_id]
+	var at := Vector2(w.station_use(st_id)) + Vector2(0.5, 0.5)
+	var work := {"k": "work", "min": 60.0, "anim": "work", "act": "craft", "args": {"station": st_id, "recipe": "tan_leather"}}
+	st.users[n.id] = w.minutes + 500.0
+	n.plan = [{"k": "go", "to": w.station_use(st_id), "speed": 1.0}, work.duplicate(true)]
+	n.pos = at + Vector2(30, 0)
+	check(w.station_refusal(st_id) == "", "PL2-001: a villager only on the way (or far off) does not block the forge")
+	n.plan = [work.duplicate(true)]
+	n.pos = at
+	n.anim = "work"
+	n.target = -1
+	st.users[n.id] = w.minutes + 500.0
+	var msg := w.station_refusal(st_id)
+	check(msg.contains("is using the %s" % st.type) and msg.contains(n.name), "PL2-001: at it and working, the message names them: \"%s\"" % msg)
+	n.anim = "sleep"
+	check(w.station_refusal(st_id) == "", "PL2-001: asleep, they are not using it")
+	n.anim = "work"
+	n.plan.clear()
+	check(w.station_refusal(st_id) == "" and not st.users.has(n.id), "PL2-001: a task switch releases the reservation")
+	n.plan = [work.duplicate(true)]
+	st.users[n.id] = w.minutes + 500.0
+	w.kill(n, "test")
+	check(w.station_refusal(st_id) == "" and not st.users.has(n.id), "PL2-001: a death releases it")
+	var b: NPCBrain = w.brain
+	var m: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult":
+			m = o
+			break
+	st.users[m.id] = w.minutes + 500.0
+	m.plan = [{"k": "go", "to": Vector2i(1, 1), "speed": 1.0}]
+	b._station_for(m, st.type)
+	check(not st.users.has(m.id), "PL2-001: a villager who moved on to something else loses the station's reservation")
+	var sv := w.to_dict()
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), sv)
+	check(w2.stations[st_id].users.is_empty(), "PL2-001: no stale lock survives a reload")
+
+
+## A hunted animal leaves a pile you can see, take and tan.
+func _pl2_004() -> void:
+	var w: World = main.world
+	var p := w.player
+	var boar: Animal = null
+	for a: Animal in w.fauna.animals:
+		if a.species == "boar" and a.adult(w.minutes):
+			boar = a
+			break
+	check(boar != null, "PL2-004: a wild boar")
+	boar.hp = 0.5
+	var spot := boar.pos
+	p.pos = spot + Vector2(-0.7, 0)
+	main.player_sprite.face(Vector2(1, 0))
+	var loot0 := w.loot.size()
+	main._hit_animal(boar, 5.0)
+	check(w.loot.size() == loot0 + 1, "PL2-004: the kill leaves one pile")
+	var pile: Dictionary = w.loot[-1]
+	check(pile.inv.count("meat") >= 1 and pile.inv.count("hide") >= 1 and int(pile.coins) == 0, "PL2-004: a boar leaves meat and a hide, no coins")
+	check(main._loot_at(spot) == pile.pos and main._loot_at(spot + Vector2(3, 0)) == Vector2.INF, "PL2-004: a tap on the pile finds it")
+	p.pos = spot + Vector2(0, 0.6)
+	main._find_target()
+	check(main.target.get("kind", "") == "loot" and str(main.target.label).contains("meat") and str(main.target.label).contains("hide"), "PL2-004: the prompt names what is there: \"%s\"" % main.target.get("label", ""))
+	var meat0 := p.inv.count("meat")
+	main.interact()
+	check(p.inv.count("meat") > meat0 and p.inv.has("hide") and not w.loot.has(pile), "PL2-004: taking it fills the pack and removes the pile")
+	check(int(GameData.recipes.tan_leather.in.hide) == 1 and int(GameData.recipes.tan_leather.out.leather) == 1, "PL2-004: a hide is tanned to leather at the workbench")
+	w.loot.append({"pos": Vector2(5.5, 5.5), "inv": Inventory.from_dict({"meat": 2}), "coins": 0, "from": "the wild boar", "t": w.minutes - 4.0 * 1440.0})
+	w.loot.append({"pos": Vector2(6.5, 5.5), "inv": Inventory.from_dict({"meat": 1}), "coins": 0, "from": "Somebody", "t": w.minutes - 4.0 * 1440.0})
+	var n0 := w.loot.size()
+	w._new_day()
+	check(w.loot.size() == n0 - 1, "PL2-004: a carcass spoils after %d days, a dead person's belongings stay" % int(World.ANIMAL_LOOT_DAYS))
+	w.loot.clear()
+	main._sync_loot()
+
+
+## Nothing is reached across a wall.
+func _pl2_011() -> void:
+	var w: World = main.world
+	var p := w.player
+	var home := ""
+	var f := Vector2i.ZERO
+	var out := Vector2i.ZERO
+	for id in w.interiors:
+		var door := Vector2(w.building_door(id)) + Vector2(0.5, 0.5)
+		for c in w.interiors[id].floor:
+			var cell := Vector2i(int(c[0]), int(c[1]))
+			if (Vector2(cell) + Vector2(0.5, 0.5)).distance_to(door) < 3.0:
+				continue
+			for d in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0)]:
+				for k in range(2, 4):
+					var o: Vector2i = cell + d * k
+					if home == "" and w.place_of(Vector2(o) + Vector2(0.5, 0.5)) == "" and not main.map.is_solid(o) and (Vector2(o) + Vector2(0.5, 0.5)).distance_to(door) > 3.0:
+						home = id
+						f = cell
+						out = o
+	check(home != "", "PL2-011: a house with open ground beyond its wall")
+	var inside := Vector2(f) + Vector2(0.5, 0.5)
+	var outside := Vector2(out) + Vector2(0.5, 0.5)
+	check(not w.reaches(inside, outside) and not w.reaches(outside, inside), "PL2-011: not across the wall, in either direction")
+	check(w.reaches(inside, inside + Vector2(0.4, 0)) and w.reaches(outside, outside + Vector2(0.4, 0)), "PL2-011: indoors and outdoors reach as before")
+	var door := Vector2(w.building_door(home)) + Vector2(0.5, 0.5)
+	check(w.reaches(door, door + Vector2(0, 1.0)), "PL2-011: from the doorway the street is in reach")
+	p.pos = inside
+	var fake := {"id": "t", "x": out.x, "y": out.y, "kind": "flower", "tile": 2657, "state": "ripe", "regrow": 0.0}
+	w.plants.append(fake)
+	main.target = {"kind": "plant", "plant": fake, "label": "Pick flower"}
+	var flowers0 := p.inv.count("flower")
+	main._use()
+	_finish_action()
+	check(fake.state == "ripe" and p.inv.count("flower") == flowers0, "PL2-011: using the flower across the wall picks nothing")
+	main.player_sprite.face(Vector2(out - f).sign())
+	main._find_target()
+	check(main.target.get("kind", "") != "plant" or main.target.plant != fake, "PL2-011: the target list does not offer it")
+	main.select_resource({"def": ResourceNodes.def_for("plant", "flower"), "ref": fake}, true)
+	check(main.gather.is_empty(), "PL2-011: tapping it (Gather) does not start gathering")
+	w.plants.erase(fake)
+	p.pos = outside
+	main.target = {}
+
+
+## Flowers outside the village, the red one, and boulders of both sizes.
+func _pl2_006() -> void:
+	var w: World = main.world
+	var m: VillageMap = main.map
+	var p := w.player
+	var o: Overworld = m.overworld
+	var reds := w.plants.filter(func(pl): return int(pl.tile) == 2656)
+	check(reds.size() >= 1 and reds[0].kind == "flower", "PL1-12: the low red flower (tile 2656) is a registered, pickable plant")
+	var got := w.pick_plant(reds[0])
+	check(got == {"flower": 1} and reds[0].state == "picked", "PL1-12: picking it gives a flower, and it is bare after")
+	var west: Vector2i = m.exits()[3].out
+	var fc := Vector2i(-9999, 0)
+	var small := Vector2i(-9999, 0)
+	var large := Vector2i(-9999, 0)
+	for r in range(4, 140):
+		for dy in range(-r, r + 1):
+			var sc := west + Vector2i(-r, dy)
+			if fc.x == -9999 and not o.flower_at(sc).is_empty() and not o.is_road(sc):
+				fc = sc
+			if o.has_boulder(sc) and not o.is_road(sc) and o.is_solid(sc):
+				if small.x == -9999 and ResourceNodes.boulder_small(sc):
+					small = sc
+				if large.x == -9999 and not ResourceNodes.boulder_small(sc):
+					large = sc
+	check(fc.x != -9999, "PL2-006: a wild flower outside the village")
+	check(small.x != -9999 and large.x != -9999 and w.deposit_at(small).amount < w.deposit_at(large).amount, "PL1-06: a small boulder has fewer uses than a large one")
+	p.pos = Vector2(fc) + Vector2(0.5, 0.5)
+	main.camera.position = p.pos * 16.0
+	main.ow_view.follow(p.pos, p.pos, 0.1, -1)
+	var node := ResourceNodes.node_at(w, fc, true)
+	check(not node.is_empty() and node.def.id == "flower_patch" and ResourceNodes.can_harvest(w, node.def, node.ref) == "", "PL2-006: it is a flower node, ripe")
+	main.player_sprite.face(Vector2(0, 1))
+	main.target = {"kind": "plant", "plant": node.ref, "label": ""}
+	var f0 := p.inv.count("flower")
+	main._use()
+	_finish_action()
+	check(p.inv.count("flower") == f0 + 1 and o.flower_gone(fc), "PL2-006: picked outside the village: +1 flower, bare")
+	var oview: Dictionary = main.ow_view.chunks[Overworld.chunk_of(fc)]
+	check(main.ow_view.tile_value(oview.objects, fc) == -1, "PL2-006: its sprite is gone")
+	check(ResourceNodes.can_harvest(w, node.def, w.plant_at(fc)) != "", "PL2-006: and it cannot be picked again at once")
+	check(main.save_game(false), "PL2-006: saves")
+	main.continue_game()
+	var w2: World = main.world
+	check(w2.map.overworld.flower_gone(fc) and w2.plant_at(fc).state == "picked", "PL2-006: after loading it is still bare")
+	w2.minutes = float(int(w2.map.overworld.plant_changes[fc]) + 1) * 1440.0 + 360.0
+	w2.map.overworld.clock = w2.minutes
+	w2._new_day()
+	check(not w2.map.overworld.flower_gone(fc) and w2.plant_at(fc).state == "ripe", "PL2-006: it grows back")
+	for c in [small, large]:
+		var d: Dictionary = w2.deposit_at(c)
+		var n := int(d.amount)
+		var st := 0
+		for k in n:
+			if w2.mine_unit(w2.deposit_at(c)) == "stone":
+				st += 1
+		check(st == n and w2.deposit_at(c).is_empty() and not w2.map.overworld.is_solid(c), "PL1-06: a %s boulder gave %d stone and is gone" % ["small" if c == small else "large", st])
+
+
+## A sown field ripens on game time and stands ripe, in sight, before the farmers cut and replant it.
+func _pl2_007() -> void:
+	var w := World.new()
+	w.setup(VillageMap.load_default(), 1)
+	var f: Dictionary = w.fields[0]
+	check(w.field_cuttable(f) == false, "PL2-007: a field that has just ripened is not cut at once")
+	var ripe_samples := 0
+	var after := false
+	for hour in 24 * 5:
+		for i in 60:
+			w.update(0.5)
+		if f.state == "ripe" and w.day() >= 1:
+			ripe_samples += 1
+		if ripe_samples > 0 and f.state in ["tilled", "growing"]:
+			after = true
+	check(ripe_samples >= 6, "PL2-007: a field stood ripe for %d game hours (from day 1) where the player can harvest it" % ripe_samples)
+	check(after, "PL2-007: and the farmers then cut it and sowed it again")
+	check(is_equal_approx(w.field_grow_days(f), float(GameData.b("field_grow_days"))), "PL2-007: the season hook (field_grow_days) gives the base grow time")

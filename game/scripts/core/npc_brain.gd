@@ -524,7 +524,10 @@ func _farmer(n: NPC) -> bool:
 		return _plan_sell(n, "wheat")
 	var spot := Vector2i(int(f.x) + w.rng.randi_range(0, int(f.w) - 1), int(f.y) + int(f.h))
 	# a field whose farmer hired the player to bring in the harvest is left to them (Quests)
-	match "hired" if f.state == "ripe" and not w.quests.hired_on(f).is_empty() else f.state:
+	var st: String = f.state
+	if st == "ripe" and not w.field_cuttable(f):
+		st = "standing"                            # ripe in sight for a while before the cutting (PL2-007)
+	match "hired" if f.state == "ripe" and not w.quests.hired_on(f).is_empty() else st:
 		"ripe":
 			n.doing = "harvesting wheat"
 			n.plan = [go(spot), work(90, "harvest", {"field": f.id}, "work")]
@@ -855,8 +858,9 @@ func _station_for(n: NPC, kind: String) -> String:
 		var users: Dictionary = st.users
 		for u in users.keys():
 			var o := w.npc(int(u))
-			if float(users[u]) < w.minutes or o == null or not o.alive:
-				users.erase(u)
+			if float(users[u]) < w.minutes or o == null or not o.alive or o.target != -1 \
+					or not o.plan.any(func(s): return str(s.get("args", {}).get("station", "")) == id):
+				users.erase(u)             # lapsed, dead, fighting or moved on to another task (PL2-001)
 		var player_there := 1 if float(st.get("player_until", -1.0)) > w.minutes else 0
 		if users.has(n.id) or users.size() + player_there < int(st.get("capacity", 1)):
 			return id
@@ -1041,7 +1045,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"harvest":
 			var f := _field(a.field)
-			if f.is_empty() or f.state != "ripe" or not w.quests.hired_on(f).is_empty():
+			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():
 				return false                                       # (left to the player hired to cut it)
 			n.inv.add("wheat", w.take_crop(f, 1 << 30))          # whatever is left on the field
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper

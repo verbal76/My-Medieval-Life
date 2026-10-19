@@ -72,7 +72,8 @@ ORIGIN = {"village-1": (0, CH), "village-2": (2 * CH, CH), "village-3": (CH, CH)
 # --- atlas facts (tile ids in punyworld-tiles.png, 220 columns) -------------------------------
 DOORS = {3875, 3799, 3801}                   # doors and archways: walkable
 # generator v5: gatherable plants, paid-atlas tile values (0 * 100000 + id), identified visually
-PLANTS = {2658: "flower", 2657: "flower", 2660: "redberry", 2662: "blueberry"}
+# (PL1-12: 2656 is the low red flower, 2659 the white one; both are wild flowers like the purple and yellow)
+PLANTS = {2656: "flower", 2658: "flower", 2657: "flower", 2659: "flower", 2660: "redberry", 2662: "blueberry"}
 PEOPLE_MIN = 126 * 220                       # rows 126+ hold the tiny people Shade drew into maps
 ORE = {"iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "stone": 1964, "gold_ore": 1965}
 DEPLETED_ROCK = 1964

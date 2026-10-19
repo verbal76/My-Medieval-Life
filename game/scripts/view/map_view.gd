@@ -4,6 +4,7 @@ extends Node2D
 ## "above" layers (roofs, tree tops) are drawn over them.
 
 const T := 16
+const SMALL_BOULDER_TILE := 300000     # PL1-06: the extra "runtime" atlas (index 3, tile 0): the plain boulder drawn smaller, for small boulders
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []
@@ -38,6 +39,7 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 		sources.append(src)
 		columns.append(int(a.columns))
 		tileset.add_source(src)
+	_add_small_boulder(m)
 	for k in m.data.animated:
 		animated[int(k)] = m.data.animated[k].size()
 	for lay in m.data.layers:
@@ -63,6 +65,28 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 			var v := int(d[i])
 			if v >= 0:
 				set_tile(layer, Vector2i(i % m.w, i / m.w), v)
+
+
+## The fourth atlas: one tile, the paid atlas's plain boulder scaled down (nearest) and stood on the
+## bottom of its cell, so a small boulder reads smaller than a large one (the full sprite).
+func _add_small_boulder(m: VillageMap) -> void:
+	if sources.size() != 3:
+		return
+	GameData.ensure()
+	var id := int(GameData.resources.deposit_tiles.boulder)
+	var atlas: Image = sources[0].texture.get_image()
+	var cols := int(m.data.atlases[0].columns)
+	var tile := atlas.get_region(Rect2i((id % cols) * T, (id / cols) * T, T, T))
+	tile.convert(Image.FORMAT_RGBA8)
+	tile.resize(10, 10, Image.INTERPOLATE_NEAREST)
+	var img := Image.create(T, T, false, Image.FORMAT_RGBA8)
+	img.blit_rect(tile, Rect2i(0, 0, 10, 10), Vector2i(3, T - 10))
+	var src := TileSetAtlasSource.new()
+	src.texture = ImageTexture.create_from_image(img)
+	src.texture_region_size = Vector2i(T, T)
+	sources.append(src)
+	columns.append(1)
+	tileset.add_source(src)
 
 
 func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:

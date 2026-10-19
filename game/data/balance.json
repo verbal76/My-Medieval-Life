@@ -81,6 +81,7 @@
   ],
   "_plants_note": "Wild flowers and berry bushes (owner B8-015/B8-016): a picked plant is bare, and ripe again at the dawn this many days later. Agent proposal, provisional: balance review pending (docs/BUILD_DECISIONS.md).",
   "field_grow_days": 2,
+  "field_ripe_wait_hours": 12,
   "field_yield": 60,
   "caravan_every_days": 2,
   "caravan_coins": 600,

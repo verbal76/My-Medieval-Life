@@ -61,6 +61,7 @@ var village := Rect2i(0, 0, 120, 90)
 var gates: Array = []                    # {out: Vector2i, dir: Vector2i}: where the village's roads leave
 var tiles := {}                          # overworld_tiles.json
 var changes := {}                        # Vector2i -> a tree the player changed (felled, growing, planted): {x, y, species, state, regrow, born, ow, planted?}
+var plant_changes := {}                  # Vector2i -> the game day a picked wild flower outside the village is ripe again (saved; PL2-006)
 var rock_changes := {}                   # Vector2i -> uses left of a boulder the player has worked on (0: broken up and gone); saved like `changes`
 var clock := 0.0                         # the game minute (World keeps it): changed trees grow lazily by it
 var cache := {}                          # Vector2i -> Chunk
@@ -591,7 +592,7 @@ func is_solid(c: Vector2i) -> bool:
 func boulder_at(c: Vector2i) -> Dictionary:
 	if not has_boulder(c):
 		return {}
-	var left: int = rock_changes.get(c, int(ResourceNodes.def("boulder").uses))
+	var left: int = rock_changes.get(c, ResourceNodes.boulder_uses(c))
 	if left <= 0:
 		return {}
 	return {"x": c.x, "y": c.y, "ore": "stone", "amount": left, "boulder": true, "ow": true}
@@ -603,7 +604,38 @@ func has_boulder(c: Vector2i) -> bool:
 		return false
 	var ch := get_chunk(chunk_of(c))
 	var i := _cell_of(ch, c)
-	return ch.deco[i] == int(tiles.rock) and ch.solid[i] != 0 and ch.kind[i] == NO_TREE
+	return ch.deco[i] == int(tiles.rock) and ch.kind[i] == NO_TREE          # a mountain's boulders too (PL2-006)
+
+
+## The wild flower standing on a cell outside the village (any generated flower decoration), as a
+## plant record like the village's {id, x, y, kind: "flower", tile, state, regrow, ow: true}; {} if none.
+## Ripe unless the player picked it and its day has not come (plant_changes).
+func flower_at(c: Vector2i) -> Dictionary:
+	if village.has_point(c):
+		return {}
+	var ch := get_chunk(chunk_of(c))
+	var v: int = ch.deco[_cell_of(ch, c)]
+	if v < 0:
+		return {}
+	var is_flower := false
+	for t in tiles.flowers:                      # (JSON numbers: compare as ints)
+		if int(t) == v:
+			is_flower = true
+	if not is_flower:
+		return {}
+	var back: int = plant_changes.get(c, 0)
+	var day := int(clock / 1440.0)
+	return {"id": "ow_%d_%d" % [c.x, c.y], "x": c.x, "y": c.y, "kind": "flower", "tile": v,
+			"state": "picked" if back > day else "ripe", "regrow": float(back), "ow": true}
+
+
+## Whether the flower here is picked and not yet grown back (the view does not draw it).
+func flower_gone(c: Vector2i) -> bool:
+	return plant_changes.get(c, 0) > int(clock / 1440.0)
+
+
+func note_flower(c: Vector2i, ripe_day: int) -> void:
+	plant_changes[c] = ripe_day
 
 
 ## Whether the boulder here has been broken up (the view does not draw it again).
@@ -736,12 +768,17 @@ func to_dict() -> Dictionary:
 		if t.get("planted", false):
 			e["planted"] = true
 		list.append(e)
+	var flowers := []
+	var fcells: Array = plant_changes.keys()
+	fcells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+	for c: Vector2i in fcells:
+		flowers.append([c.x, c.y, int(plant_changes[c])])
 	var rocks := []
 	var rcells: Array = rock_changes.keys()
 	rcells.sort()
 	for c: Vector2i in rcells:
 		rocks.append([c.x, c.y, int(rock_changes[c])])
-	return {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks}
+	return {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks, "flowers": flowers}
 
 
 ## Apply saved changes: the seed is set by the caller (create); a save from another generator
@@ -749,6 +786,9 @@ func to_dict() -> Dictionary:
 func load_dict(d: Dictionary) -> void:
 	changes.clear()
 	rock_changes.clear()
+	plant_changes.clear()
+	for f in d.get("flowers", []):
+		plant_changes[Vector2i(int(f[0]), int(f[1]))] = int(f[2])
 	if int(d.get("gen", GEN_VERSION)) != GEN_VERSION:
 		return
 	for r in d.get("rocks", []):
