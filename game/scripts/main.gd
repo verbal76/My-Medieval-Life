@@ -698,7 +698,7 @@ func _build_scene() -> void:
 	ghost.visible = false
 	ghost.z_index = MARKER_Z
 	above.add_child(ghost)
-	view.build(map, above)
+	view.build(map, above, actors)             # overlay tiles of solid cells are drawn among the characters (B8-025)
 	_draw_village_exits()
 	tree_view.setup(world)
 	_replace_tree_tiles()

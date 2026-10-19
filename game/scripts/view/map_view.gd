@@ -12,10 +12,24 @@ var layers := {}                 # layer name -> TileMapLayer
 var above_layers: Array[TileMapLayer] = []   # the layers drawn over the characters, in draw order
 var animated := {}               # first tile id -> frame count
 var map: VillageMap
+var sorted_of := {}              # an "above" layer -> its twin that is drawn among the characters (B8-025), see set_tile
+var _sorted_parent: Node2D       # the y-sorted node the twins live in (the characters' own), null: no twins
+var _canopy := {}                # tile ids that are tree canopies: never sorted (CanopyFade fades them)
+const SORT_ORIGIN := 8           # a tile sorts by its cell's bottom edge (the tile's centre plus half a tile)
 
 
-func build(m: VillageMap, above_parent: Node2D) -> void:
+## `sorted_parent`: the characters' y-sorted node. With it, the overlay tiles of solid cells in the
+## non-roof "above" layers (the upper half of an anvil, a bench, a rack, a wall top) are drawn among the
+## characters by their cell's bottom edge, so someone standing south of the object is in front of it
+## and someone north of it behind it, never clipped by its upper half (Build 8 report B8-025). Roofs,
+## canopies and the overlays of cells one can walk through (a lintel, an awning) stay over everyone.
+func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) -> void:
 	map = m
+	_sorted_parent = sorted_parent
+	for pr in m.data.tiles.get("canopy", []):
+		_canopy[int(pr[0])] = true
+		_canopy[int(pr[1])] = true
+	var roofs: Array = m.data.get("roof_layers", [])
 	tileset.tile_size = Vector2i(T, T)
 	for a in m.data.atlases:
 		var src := TileSetAtlasSource.new()
@@ -34,6 +48,13 @@ func build(m: VillageMap, above_parent: Node2D) -> void:
 			layer.z_index = 10
 			above_parent.add_child(layer)
 			above_layers.append(layer)
+			if sorted_parent != null and not roofs.has(lay.name):
+				var twin := TileMapLayer.new()
+				twin.name = str(lay.name) + "_sorted"
+				twin.tile_set = tileset
+				twin.y_sort_enabled = true
+				sorted_parent.add_child(twin)
+				sorted_of[layer] = twin
 		else:
 			add_child(layer)
 		layers[lay.name] = layer
@@ -45,6 +66,15 @@ func build(m: VillageMap, above_parent: Node2D) -> void:
 
 
 func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
+	var twin: TileMapLayer = sorted_of.get(layer)
+	if twin != null:
+		if v < 0:
+			twin.erase_cell(cell)
+		elif map != null and map.is_solid(cell) and not _canopy.has(v % 100000):
+			layer.erase_cell(cell)
+			layer = twin                     # drawn among the characters, by its cell's bottom edge
+		else:
+			twin.erase_cell(cell)
 	if v < 0:
 		layer.erase_cell(cell)
 		return
@@ -54,6 +84,7 @@ func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	var src := sources[atlas]
 	if not src.has_tile(coords):
 		src.create_tile(coords)
+		src.get_tile_data(coords, 0).y_sort_origin = SORT_ORIGIN
 		if animated.has(t):
 			src.set_tile_animation_columns(coords, animated[t])
 			src.set_tile_animation_frames_count(coords, animated[t])
