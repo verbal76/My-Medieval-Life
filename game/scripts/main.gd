@@ -32,6 +32,7 @@ var sprinting := false         # B8-027: running (LT toggles on a pad; Shift hel
 var save_meta := {}            # PL1-11: the save's identity for portable and cloud saves (_save_meta)
 var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
 var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
+var sprint_latched := false    # touch Run (Build 13): sprint whenever walking until Run is pressed again or stamina runs out
 var sprint_spent := false      # stamina ran out while Shift was held: release it to sprint again
 var target_pref := ""          # the key (_target_key) of the option the player cycled to
 var paused := true             # the title screen starts paused
@@ -805,6 +806,7 @@ func _clear_world() -> void:
 	strike_pending = false
 	action = {}
 	sprinting = false
+	sprint_latched = false
 	target_options = []
 	target_pref = ""
 	gather = {}
@@ -1588,6 +1590,8 @@ func cancel_action(why := "") -> void:
 ## multiplier is returned and the cost taken (net of the regeneration the world just added).
 func _sprint_step(delta: float) -> float:
 	var p := world.player
+	if sprint_latched and not sprinting and p.stamina >= float(GameData.b("sprint_min_stamina")):
+		sprinting = true
 	if not bool(GameData.b("sprint_toggle")):
 		if Input.is_action_pressed("sprint"):
 			if not sprinting and not sprint_spent and p.stamina >= float(GameData.b("sprint_min_stamina")):
@@ -1602,6 +1606,9 @@ func _sprint_step(delta: float) -> float:
 	if p.stamina <= 0.0:
 		sprinting = false            # out of breath: back to walking until Shift is let go and pressed again
 		sprint_spent = true
+		if sprint_latched:
+			sprint_latched = false
+			ui.set_sprint_mode(false)
 		return 1.0
 	return float(GameData.b("sprint_speed"))
 
@@ -1612,6 +1619,18 @@ func toggle_sprint() -> void:
 		sprinting = false
 	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")) and action.is_empty():
 		sprinting = true
+
+
+## The touch Run button (Build 13): latches sprint on, so pressing it while standing and then tapping a
+## destination runs there; the same speed and stamina cost as LT and Shift. Pressed again, or out of
+## stamina, it is off. It cannot latch without sprint_min_stamina.
+func toggle_run_latch() -> void:
+	if sprint_latched:
+		sprint_latched = false
+		sprinting = false
+	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")):
+		sprint_latched = true
+	ui.set_sprint_mode(sprint_latched)
 
 
 func _sprint_scale() -> float:

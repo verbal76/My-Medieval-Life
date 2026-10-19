@@ -2207,6 +2207,54 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	check(not main.sprinting, "no sprint while attacking")
 	p.attack_cd = 0.0
 	main.player_sprite.play("idle")
+	# touch: a Run button on the touch bar latches sprint (Build 13), same speed and cost as LT and Shift
+	ui.set_scheme("touch")
+	await process_frame
+	var run_btn: Button = ui.sprint_btn
+	check(run_btn != null and ui.touch_bar.visible and run_btn.get_parent() == ui.touch_bar and run_btn.text == "Run", "the touch bar has a Run button")
+	main.sprinting = false
+	main.sprint_latched = false
+	p.stamina = 100.0
+	run_btn.pressed.emit()
+	check(main.sprint_latched and run_btn.text == "Run ON", "Run lights up when pressed")
+	main._player_step(0.05)
+	check(main.sprint_latched, "standing still keeps Run on, ready for the next walk")
+	Input.action_press("move_right")
+	p.pos = open
+	var run_st0 := p.stamina
+	main._player_step(0.05)
+	check(main.sprinting and absf((p.pos.x - open.x) - walk_step * float(GameData.b("sprint_speed"))) < 0.02 and p.stamina < run_st0, "walking with Run on runs at the sprint speed and spends stamina")
+	Input.action_release("move_right")
+	run_btn.pressed.emit()
+	check(not main.sprint_latched and not main.sprinting and run_btn.text == "Run", "Run pressed again turns it off")
+	p.stamina = float(GameData.b("sprint_min_stamina")) - 1.0
+	run_btn.pressed.emit()
+	check(not main.sprint_latched and run_btn.text == "Run", "Run cannot start without the stamina for it")
+	p.stamina = float(GameData.b("sprint_min_stamina")) + 0.5
+	run_btn.pressed.emit()
+	Input.action_press("move_right")
+	for i in 40:
+		p.pos = open
+		main._player_step(0.05)
+	Input.action_release("move_right")
+	check(not main.sprint_latched and not main.sprinting and run_btn.text == "Run", "out of stamina, Run goes off by itself")
+	# the touch bar with Run fits the screen and overlaps nothing, at a 16:9, a 20:9 phone and a 4:3 shape
+	var size0 := get_root().content_scale_size
+	for sz in [Vector2i(1280, 720), Vector2i(1600, 720), Vector2i(960, 720)]:
+		get_root().content_scale_size = sz
+		ui.fit_safe_area()
+		await process_frame
+		await process_frame
+		var view: Rect2 = main.get_viewport().get_visible_rect()
+		var bar: Rect2 = ui.touch_bar.get_global_rect()
+		var clash := []
+		for c in [ui.status_box, ui.log_box]:
+			if c.visible and c.get_global_rect().intersects(bar):
+				clash.append(c.name)
+		check(view.encloses(bar) and clash.is_empty() and run_btn.get_global_rect().size.x >= 64.0, "at %s the touch bar with Run is on screen and clear of the HUD (%s, clash %s)" % [sz, bar, clash])
+	get_root().content_scale_size = size0
+	ui.fit_safe_area()
+	ui.set_scheme("kbm")
 
 
 ## Six free cells in a row to the east, for the sprint measurements: the first one's centre.
@@ -2337,6 +2385,35 @@ func _pl_trade_ui_tests() -> void:
 	check(w.player_sell_many(goods, "iron_bar", 1).sold == 0 and goods.coins == 0, "a buyer with no coins buys nothing")
 	p.inv.items.erase("iron_bar")
 	ui.hide_all()
+	# -- B on a pad (and Esc) closes only an open quantity control, never the window under it (Build 13)
+	ui.set_scheme("pad")
+	goods.inv.add("iron_sword", 1)
+	p.coins = 500
+	ui.show_trade(goods, {"id": "iron_sword", "mode": "buy"})
+	check(ui.panel_body.get_node_or_null("QuantityPicker") != null, "a quantity control is open over the trade window")
+	main._unhandled_input(_pad(JOY_BUTTON_B))
+	await process_frame
+	check(ui.is_open("trade") and ui.panel_body.find_child("QuantityPicker", true, false) == null, "B closes only the quantity control; the trade window stays")
+	check(p.coins == 500, "and nothing was bought")
+	main._unhandled_input(_pad(JOY_BUTTON_B))
+	await process_frame
+	check(not ui.panel.visible, "a second B closes the trade window")
+	ui.show_trade(goods, {"id": "iron_sword", "mode": "buy"})
+	main._unhandled_input(_key(KEY_ESCAPE))
+	await process_frame
+	check(ui.is_open("trade") and ui.panel_body.find_child("QuantityPicker", true, false) == null, "Esc does the same on a keyboard")
+	ui.hide_all()
+	p.chest.items.clear()
+	p.inv.add("coal", 3)
+	ui.show_home({"id": "coal", "from": "pack"})
+	check(ui.panel_body.find_child("QuantityPicker", true, false) != null, "the store control is open over the home chest")
+	main._unhandled_input(_pad(JOY_BUTTON_B))
+	await process_frame
+	await process_frame
+	check(ui.panel.visible and ui.panel_body.find_child("QuantityPicker", true, false) == null and p.inv.count("coal") == 3, "B closes only the store control; the chest window stays and nothing moved")
+	var fo: Control = ui.get_viewport().gui_get_focus_owner()
+	check(fo != null and ui.panel.is_ancestor_of(fo), "focus stays in the chest window for the pad (%s)" % (fo.name if fo else "none"))
+	ui.set_scheme("kbm")
 	# -- storage
 	ui.hide_all()
 	p.chest.items.clear()

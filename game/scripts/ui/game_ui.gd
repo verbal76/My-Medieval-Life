@@ -42,6 +42,7 @@ var title_label: Label
 var top_row: HBoxContainer     # the window's title tab and X (the pack window draws its own)
 var close_btn: Button
 var touch_bar: HBoxContainer
+var sprint_btn: Button          # the touch bar's Run toggle (Build 13)
 var attack_btn: Button
 var gather_btn: Button
 var recenter_btn: Button       # shown while the camera is looking around, away from the player
@@ -437,7 +438,7 @@ func _build_hud() -> void:
 	touch_bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	touch_bar.add_theme_constant_override("separation", 8)
 	hud.add_child(touch_bar)
-	for b in [["Use", "interact", "use"], ["Gather", "gather", "gather"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
+	for b in [["Run", "sprint", "stamina"], ["Use", "interact", "use"], ["Gather", "gather", "gather"], ["Attack", "attack", "attack"], ["Fire", "fireball", "fire"], ["Pack", "inventory", "pack"],
 			["Skills", "skills", "skills"], ["Map", "map", "map"], ["Menu", "pause", "menu"]]:
 		var btn := _tile_button(b[2], b[0], 72)
 		btn.focus_mode = Control.FOCUS_NONE
@@ -448,6 +449,8 @@ func _build_hud() -> void:
 			attack_btn = btn
 		if act == "gather":
 			gather_btn = btn
+		if act == "sprint":
+			sprint_btn = btn
 	# Recenter sits above the touch bar's right end, in every control scheme, while looking around
 	recenter_btn = _tile_button("recenter", "Recenter", 72)
 	recenter_btn.focus_mode = Control.FOCUS_NONE
@@ -535,6 +538,16 @@ func set_scheme(s: String) -> void:
 		_focus_first()
 
 
+## The touch bar's Run button shows whether you are sprinting (lit while on, like Gather and Attack).
+func set_sprint_mode(on: bool) -> void:
+	if sprint_btn == null:
+		return
+	var txt := "Run ON" if on else "Run"
+	if sprint_btn.text != txt:
+		sprint_btn.self_modulate = Color(0.55, 0.95, 0.55) if on else Color.WHITE
+		sprint_btn.text = txt
+
+
 func set_gather_mode(on: bool) -> void:
 	gather_btn.self_modulate = Color(1.0, 0.85, 0.4) if on else Color.WHITE
 	gather_btn.text = "Gather ON" if on else "Gather"
@@ -578,6 +591,8 @@ func _focus_first() -> void:
 
 func _touch_action(act: String) -> void:
 	match act:
+		"sprint":
+			main.toggle_run_latch()          # touch sprint (Build 13): latched, same speed and cost as LT
 		"interact":
 			main.interact()
 		"attack":
@@ -868,6 +883,8 @@ func is_open(kind: String) -> bool:
 func go_back() -> void:
 	if not panel.visible or panel_kind in ["title", "origin", "death"]:
 		return
+	if dismiss_control():
+		return
 	if inner_back.is_valid() and inner_back.call():
 		return
 	if panel_back.is_valid():
@@ -875,6 +892,20 @@ func go_back() -> void:
 		b.call()
 	else:
 		hide_all()
+
+
+## Back while a quantity or price control is open inside a window (Build 13): it closes only that
+## control, as its Cancel does, and the trade, chest or stall window stays open under it. True if one closed.
+func dismiss_control() -> bool:
+	var qp := panel_body.find_child("QuantityPicker", true, false)
+	if qp != null and not qp.is_queued_for_deletion():
+		qp.cancel()
+		return true
+	var pe := panel_body.find_child("PriceEditor", true, false)
+	if pe != null and not pe.is_queued_for_deletion():
+		pe.cancelled.emit()
+		return true
+	return false
 
 
 func hide_all() -> void:
