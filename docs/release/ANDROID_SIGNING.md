@@ -1,5 +1,11 @@
 # Android signing
 
+**Status (2026-10-19): not configured.** The three test-key secrets below did not exist when Build 13 was made
+(release runs 13 and 15 stopped at signing), so every test build so far used a throwaway key and every update needs an
+uninstall that deletes the save. Stable signing is reported as working only after a build signed with the secrets
+installs over another on a phone and keeps the save (the check at the end). Never paste a keystore, a password or the
+base64 text into a chat, an issue, a commit or a file in this repository; they go only into GitHub's secret store.
+
 ## The problem (audit finding P1-1)
 
 Builds 1–8 were signed with a debug key that `release.yml` generated fresh on every run. Android
@@ -73,7 +79,33 @@ adb push save1.json /data/local/tmp/save1.json
 adb shell run-as com.hotatticgames.mymedievallife.dev cp /data/local/tmp/save1.json files/save1.json
 ```
 
-A Build 7 or 8 save loads in later builds: saves of versions 4 to 8 are migrated.
+Saves older than save version 14 are refused (owner decision: the fixed village of generator v6 and the aging
+rules made older saves disposable; `SaveStore.MIN_VERSION`), so a save from Build 13 or later carries over this way;
+older ones do not.
+
+## Keeping the key (it is the app's identity)
+
+- The keystore file and its password are the only way to sign updates that install over earlier test builds. Keep two
+  copies in separate safe places (a password manager and an offline copy), never in the repository or a shared drive.
+- Do not change the alias, the password or the keystore once testers have a stable-key build: GitHub secrets can be
+  updated, but a different key is a different signing identity.
+- **If the key is lost or replaced:** Android refuses to update the installed app with an APK signed by another key
+  ("App not installed" or a signature conflict). Every tester must uninstall, which deletes the save unless it is
+  copied off first (above), and then install the new build. There is no way to recover a lost key.
+- **If the key leaks:** anyone holding it could sign an APK that installs over the testers' copy. Make a new key, update
+  the secrets, and treat the next build as a reinstall for everyone.
+- The test key never signs a store release (below).
+
+## Checking that an update keeps the save (once the secrets exist)
+
+1. Run `release.yml` with the secrets present (leave `allow_temporary_key` unticked); the job fails rather than fall
+   back to a throwaway key.
+2. On a phone: install that build, start a game, save, close.
+3. Install the next stable-key build over it, without uninstalling. Android must update it in place.
+4. Open the game: Continue must offer the same save (same character, day and coins).
+5. Optional, with a computer: `apksigner verify --print-certs` on both APKs shows the same certificate digest.
+6. Record the result (date, builds, phone model) in the requirements register under B13-15; only then is stable
+   signing reported as working.
 
 ## Production signing (later; not built yet)
 

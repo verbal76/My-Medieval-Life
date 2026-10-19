@@ -11,18 +11,18 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 33 |
-| ACTIVE DEVELOPMENT | 10 |
-| PARTIALLY IMPLEMENTED | 20 |
+| ACTIVE DEVELOPMENT | 4 |
+| PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 2 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 17 |
-| BLOCKED | 15 |
-| DEFERRED | 5 |
-| COMPLETE AND VERIFIED | 110 |
-| SUPERSEDED | 12 |
+| BLOCKED | 17 |
+| DEFERRED | 8 |
+| COMPLETE AND VERIFIED | 120 |
+| SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
-| UNKNOWN — INVESTIGATION REQUIRED | 1 |
-| **Total approved** | **225** |
-| Outstanding (not complete, superseded or canceled) | 103 |
+| UNKNOWN — INVESTIGATION REQUIRED | 8 |
+| **Total approved** | **258** |
+| Outstanding (not complete, superseded or canceled) | 121 |
 
 Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -49,6 +49,8 @@ Automated tests do not count as device verification.
 | PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | PL1-05 | current/max inside bars | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | Q-04 | Resources & Gathering journal page | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
+| WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 
 ## APPROVED — NOT STARTED (33)
 
@@ -56,11 +58,8 @@ Automated tests do not count as device verification.
 |---|---|---|---|---|---|
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
-| B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | Plough horse from the caravan: purchase, keeping (pen), tilling faster with the hand plough |
+| B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | owner message 2026-10-19 |  |  | Generate the package with tools/assets/sheets.py contact |
-| B14R-04 | Build 14 tester notes | same directive s.4 |  |  |  |
-| B14R-05 | Identify the Build 14 candidate commit and ask the owner for build approval | same directive s.5 |  | after B14R-01; after B14R-04; after B14R-12 |  |
-| B14R-09 | Stable Android test-signing procedure documented (credentials, secrets, setup, key preservation, risks, install and update test) | same directive s.28 |  | after B13-15 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  |  |
@@ -83,33 +82,29 @@ Automated tests do not count as device verification.
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit |  |  |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
-| REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership | owner: World Design Rule 16 topic; directive 2026-10-19 (requirements preservation) s.26 |  |  |  |
-| REQ-GRAVE | Graveyards, ancestry and NPC legacy | owner: World Design Rule 14 topic; directive 2026-10-19 (requirements preservation) s.26 |  | after GM-01 |  |
+| REC-001 | Adoption and orphan guardianship (NPCs and the player) | owner message #46 2026-10-17T22:58Z (MASTER DEVELOPMENT PROMPT, section 10 'ADOPTION AND ORPHAN CARE', scenarios 11 and 16); reaffirmed #47 2026-10-17T23:35Z section 17.4 ('Orphaned children should have possible adoption or guardianship paths. Family members may receive priority, followed by suitable willing households') and 17.5 ('The player must be eligible for marriage, children, household formation, and adoption under the same basic systems as NPCs') |  |  |  |
+| REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id) |  |  |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
+| WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
+| WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II |  |  |  |
 
-## ACTIVE DEVELOPMENT (10)
+## ACTIVE DEVELOPMENT (4)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| B14R-01 | Record completed 100-day economy simulations (start, seeds, currency, wealth, jobs, trade, resources, food, population, shortages, regressions) | docs/directives/2026-10-19_build14_readiness_requirements_preservation.md s.1 |  |  |  |
-| B14R-02 | Compare the manor reserve and the caravan money limit (four configurations) and recommend | same directive s.2 |  | after B7-009; after B7-014 |  |
-| B14R-03 | Investigate iron and coal running out by day 10; document sustainable alternatives without changing the resource model | same directive s.3 |  | after OD-01 |  |
-| B14R-06 | Permanent requirements register, lifecycle, validation, silent-deletion detection, startup and handoff rules | same directive Parts II, V, VI |  |  |  |
-| B14R-07 | Second historical requirements recovery pass and coverage report | same directive Part III |  |  |  |
-| B14R-10 | Separate real-device verification queue (phone, controller, Windows, cross-platform and two-device LAN) | same directive s.29 |  |  |  |
-| B14R-11 | Review draft PR #1 for unique content before recommending closure | same directive s.30 |  |  |  |
-| B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1) |  |  |  |
+| B14R-05 | Identify the Build 14 candidate commit and ask the owner for build approval | same directive s.5 |  | after B14R-01; after B14R-04; after B14R-12 |  |
+| B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1) |  |  | implement WR-01, then re-run 365 days |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 
-## PARTIALLY IMPLEMENTED (20)
+## PARTIALLY IMPLEMENTED (32)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | docs/release/AUDIT_REMEDIATION.md (audit inventory row 368) |  |  |  |
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | owner message 2026-10-19 | `f9fb853` |  |  |
-| B14R-08 | Reconcile the original 16 World Design Rules (restore text if the source is found) | same directive Part IV |  | original rule text not found in any accessible source |  |
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
 | B7-017 | No building in a year (no births) | docs/release/BUILD_7_ISSUES.md (audit inventory row 58) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
@@ -117,6 +112,8 @@ Automated tests do not count as device verification.
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250) |  |  |  |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
+| OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
+| OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |
 | OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | docs/DECISIONS.md (audit inventory row 344) |  | after MP-01; after DGA-D1; after DGA-D9 |  |
 | PL1-07 | NPCs sunk into beds/chairs | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 144) |  |  |  |
 | PL1-10 | Player businesses, staged (1-4) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 147) |  |  |  |
@@ -127,6 +124,17 @@ Automated tests do not count as device verification.
 | PL2-013 | Usable furniture | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 168) |  |  |  |
 | PL2-014 | Modular house/workshop expansion | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 169) |  |  |  |
 | PL2-015 | Farming, livestock, hand plough | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 170) |  |  |  |
+| WDR-001-C | Comply with World Design Rule 1: Material Interdependency | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Material report (WDR-007-C), then recipes or justified exceptions |
+| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Profession supply audit |
+| WDR-004-C | Comply with World Design Rule 4: Economic Consequences | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Comparison runs (B14R-02); scarcity responses audit |
+| WDR-005-C | Comply with World Design Rule 5: Living World Independence | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Idle-player construction and housing (B7-017, B14R-12) |
+| WDR-007-C | Comply with World Design Rule 7: Automated Compliance | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Material interdependency report with positive and negative fixtures in CI |
+| WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | FR-06 pages; device checks |
+| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | GM-01 |
+| WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Device playtest; cart route feedback |
+| WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Competition audit and design |
+| WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
+| WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
 ## IMPLEMENTED — TESTING REQUIRED (2)
 
@@ -157,7 +165,7 @@ Automated tests do not count as device verification.
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
 | Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |
 
-## BLOCKED (15)
+## BLOCKED (17)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -176,18 +184,23 @@ Automated tests do not count as device verification.
 | PL1-11 | Google Drive cloud saves (staged) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 148) |  |  |  |
 | Q-08 | Resource depletion and wildlife sustainability | docs/DEVELOPMENT_QUEUE.md (audit inventory row 224) |  | owner decision OD-01 |  |
 | Q-10 | Hot Attic Games read-only registry | docs/DEVELOPMENT_QUEUE.md (audit inventory row 226) |  |  |  |
+| REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | Game Designer ('Bob') spec, owner interview answers: /root/.claude/uploads/754052d8-fb21-5c64-b3f9-641f462e2c23/23b72163-The_Well_corrected_two_documents.zip CLAUDE.md Part A s.A0 and A2 (lines 55-62, 149-151) and MASTER_PROMPT.md line 42; owner message #27 2026-10-17T18:46Z |  | owner input (see notes) |  |
+| REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | owner message #109 2026-10-18T06:00Z; AskUserQuestion round 2026-10-18T06:46Z (wear model, staff fallback, manor hands on the job board, board wage basis) left unanswered; docs/HANDOFF.md and docs/DEVELOPMENT_QUEUE.md 'Waiting on the owner: A need-based maintenance model' |  | owner input (see notes) |  |
 
-## DEFERRED (5)
+## DEFERRED (8)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B12A-08 | Open | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 358) |  |  |  |
 | F-1 | NPC workshop construction | docs/release/BUILD_7_ISSUES.md (audit inventory row 62) |  |  |  |
-| F-3 | Music and sound | docs/release/BUILD_7_ISSUES.md (audit inventory row 64) |  |  |  |
 | FR-09 | Crime from desperation | owner design intent 2026-10-17, deferred by the owner ('no desperation crime yet') |  |  |  |
 | FR-10 | Archery | docs/directives/2026-10-19_sword_combat.md (future, not authorised) |  |  |  |
+| REC-006 | Castles, dungeons and caves in the world | Game Designer spec Part A s.A1/A2 (bob/CLAUDE.md lines 67, 76, 90), the owner's interview in their own words |  |  |  |
+| REC-007 | Several settlements (villages, towns, cities) with their own economies; NPC migration and regional jobs between them | owner message #47 2026-10-17T23:35Z sections 6, 13 (regional job opportunity) and 14; #144 2026-10-18T18:20Z s.10H lists additional villages and towns as future, not authorised now |  |  |  |
+| REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
+| REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (110)
+## COMPLETE AND VERIFIED (120)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -213,6 +226,16 @@ Automated tests do not count as device verification.
 | B14-04 | Cart parts and handcarts | docs/DECISIONS.md (owner, Build 14) | `d01376c`; home_test |  |  |
 | B14-05 | Local-availability pricing | docs/DECISIONS.md (owner, Build 14) | `75093bf`; home_test, business_test |  |  |
 | B14-08 | Forest animals (MiniFolks): grazers, predators, fox raids, fights | docs/DECISIONS.md (owner, Build 14) | `2caca5a`, `f9fb853`; wildlife_test |  |  |
+| B14R-01 | Record completed 100-day economy simulations (start, seeds, currency, wealth, jobs, trade, resources, food, population, shortages, regressions) | docs/directives/2026-10-19_build14_readiness_requirements_preservation.md s.1 | `a5cf3e8`; game/tests/economy_sim.gd (seeds 1, 2; 100 and 365 days) |  |  |
+| B14R-02 | Compare the manor reserve and the caravan money limit (four configurations) and recommend | same directive s.2 | economy_sim.gd --set overrides, seed 1, 100 days | after B7-009; after B7-014 |  |
+| B14R-03 | Investigate iron and coal running out by day 10; document sustainable alternatives without changing the resource model | same directive s.3 | economy_sim.gd seeds 1, 2 | after OD-01 |  |
+| B14R-04 | Build 14 tester notes | same directive s.4 | n/a (document) |  |  |
+| B14R-06 | Permanent requirements register, lifecycle, validation, silent-deletion detection, startup and handoff rules | same directive Parts II, V, VI | `386498b`; tests/test_requirements.py; tools/check_requirements.py in tests.yml and pre-push |  |  |
+| B14R-07 | Second historical requirements recovery pass and coverage report | same directive Part III | tools/check_requirements.py |  |  |
+| B14R-08 | Reconcile the original 16 World Design Rules (restore text if the source is found) | same directive Part IV |  |  |  |
+| B14R-09 | Stable Android test-signing procedure documented (credentials, secrets, setup, key preservation, risks, install and update test) | same directive s.28 |  | after B13-15 |  |
+| B14R-10 | Separate real-device verification queue (phone, controller, Windows, cross-platform and two-device LAN) | same directive s.29 | `386498b`; tests/test_requirements.py |  |  |
+| B14R-11 | Review draft PR #1 for unique content before recommending closure | same directive s.30 | n/a (review) |  | owner: authorise closing PR #1 |
 | B7-002 | Quest rewards reserved | docs/release/BUILD_7_ISSUES.md (audit inventory row 43) |  |  |  |
 | B7-003 | Jewellery/helmets have buyers | docs/release/BUILD_7_ISSUES.md (audit inventory row 44) |  |  |  |
 | B7-004 | Harvest-work wheat theft | docs/release/BUILD_7_ISSUES.md (audit inventory row 45) |  |  |  |
@@ -275,9 +298,7 @@ Automated tests do not count as device verification.
 | OWN-15 | Property phases 1-2, construction, helpers, households split | docs/DECISIONS.md (audit inventory row 331) |  |  |  |
 | OWN-16 | GitHub workflow; work preservation; off-machine copies; backup branch | docs/DECISIONS.md (audit inventory row 332) |  |  |  |
 | OWN-18 | Inventory tabs, six gear slots, tavern food theft, stealing, pickpocketing, buttons sized, camera dead zone | docs/DECISIONS.md (audit inventory row 334) |  |  |  |
-| OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  |  |
 | OWN-20 | Trees walk-under; heir kit; journal book | docs/DECISIONS.md (audit inventory row 336) |  |  |  |
-| OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  |  |  |
 | OWN-23 | UI recolour brown; flat UI pack buttons; Kenney prompts | docs/DECISIONS.md (audit inventory row 339) |  |  |  |
 | OWN-25 | Attack mode; blood splats; readable phone text | docs/DECISIONS.md (audit inventory row 341) |  |  |  |
 | OWN-26 | Animal breeding, hunger, livestock as meat, wild animals hunted | docs/DECISIONS.md (audit inventory row 342) |  |  |  |
@@ -301,8 +322,10 @@ Automated tests do not count as device verification.
 | Q-03 | Resource manifest and registry (INT-067) | docs/DEVELOPMENT_QUEUE.md (audit inventory row 219) |  |  |  |
 | Q-05 | Reeve employment, real jobs, NPCs same rules (INT-066) | docs/DEVELOPMENT_QUEUE.md (audit inventory row 221) |  |  |  |
 | Q-06 | Long-duration simulations 10/30/100/365 | docs/DEVELOPMENT_QUEUE.md (audit inventory row 222) |  |  |  |
+| REC-005 | Working title 'The Well'; repository, package and identifiers stay My Medieval Life | AskUserQuestion answer 2026-10-17T18:46:03Z; owner message #27 2026-10-17T18:46Z | observed in project.godot and the export package name |  |  |
+| WDR-006-C | Comply with World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | check_interactions (CI) |  |  |
 
-## SUPERSEDED (12)
+## SUPERSEDED (17)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -313,17 +336,29 @@ Automated tests do not count as device verification.
 | B8R-005 | Hunger icon looked like coin bag | docs/release/BUILD_8_ISSUES.md (audit inventory row 78) |  | superseded by B8-019 |  |
 | B8R-006 | Where to cook raw meat | docs/release/BUILD_8_ISSUES.md (audit inventory row 79) |  | superseded by FR-03 |  |
 | F-2 | Births, children, aging, family growth | docs/release/BUILD_7_ISSUES.md (audit inventory row 63) |  | superseded by B8-029 |  |
+| F-3 | Music and sound | docs/release/BUILD_7_ISSUES.md (audit inventory row 64) |  | superseded by FR-08 |  |
 | K-3 | Every provisional number awaits the owner's balance review | docs/release/BUILD_7_ISSUES.md (audit inventory row 61) |  | superseded by OD-02 |  |
 | OWN-12 | Build 7 corrections; "Not approved yet (investigate first)": mining wage 15+, 15-coin reserve on player sales, deposit regeneration, wildlife respawn, broad changes | docs/DECISIONS.md (audit inventory row 328) |  | superseded by OD-01 |  |
 | OWN-17 | Provisional numbers await a separate balance review | docs/DECISIONS.md (audit inventory row 333) |  | superseded by OD-02 |  |
 | OWN-21 | Every build published under GitHub Releases | docs/DECISIONS.md (audit inventory row 337) |  | superseded by OWN-09 |  |
 | OWN-24 | Lizards and spiders as enemies | docs/DECISIONS.md (audit inventory row 340) |  | superseded by FR-01 |  |
+| REC-015 | NPC competition and economic rivalry (as a game system) | owner messages #168 2026-10-19T06:15Z s.7, #188 16:50Z s.11, #194 18:32Z s.3; rule topic 12 in the 2026-10-19T19:09Z directive |  | superseded by WDR-012-C |  |
+| REC-016 | NPC self-improvement and prosperity (as a game system) | owner messages #168 2026-10-19T06:15Z s.7, #188 s.11, #194 s.3; #47 2026-10-17T23:35Z s.19 (better housing, business ownership, social standing); rule topic 11 in the 2026-10-19T19:09Z directive |  | superseded by WDR-011-C |  |
+| REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership | owner: World Design Rule 16 topic; directive 2026-10-19 (requirements preservation) s.26 |  | superseded by WDR-016-C |  |
+| REQ-GRAVE | Graveyards, ancestry and NPC legacy | owner: World Design Rule 14 topic; directive 2026-10-19 (requirements preservation) s.26 |  | after GM-01; superseded by WDR-014-C |  |
 
-## UNKNOWN — INVESTIGATION REQUIRED (1)
+## UNKNOWN — INVESTIGATION REQUIRED (8)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | owner message 2026-10-17 |  |  |  |
+| REC-003 | Android builds target API 36 (Hot Attic Games standing platform policy) | Game Designer spec Part A s.A0 (bob/CLAUDE.md lines 47-53) and MASTER_PROMPT.md line 41, supplied by the owner 2026-10-17T18:44Z; the agent's merge proposal planned to add it to CLAUDE.md s.8 but never did |  |  |  |
+| REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | owner message #27 2026-10-17T18:46Z; agent merge proposal (transcript -home-user-My-Medieval-Life/754052d8...jsonl, 'Merge proposal for your approval'); owner #28 18:48Z then built from 'the Game Designer documents we have just reviewed and reconciled' |  |  |  |
+| REC-008 | Near/far simulation tiers (detailed near the player, abstract far away, nothing duplicated on switching) | Game Designer spec Part A (owner's interview answer, bob/CLAUDE.md line 131); owner directive #16 2026-10-17T16:23Z s.9 ('do not assume every NPC requires full simulation at all times. Propose simulation detail appropriate to the player's location') |  |  |  |
+| REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | Game Designer spec Part A s.A2 (bob/CLAUDE.md line 119); agent merge proposal planned a DECISIONS entry 'combat style' that was never written |  |  |  |
+| REC-010 | Class progression, 'system jobs' and a tech/research tree | Game Designer spec Part A s.A1/A2 (bob/CLAUDE.md lines 67, 77, 91, 101); agent merge proposal conflict C2 ('Unresolved; your call') never answered |  |  |  |
+| REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
+| WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
 ## Open owner decision (10)
 
@@ -344,22 +379,22 @@ Automated tests do not count as device verification.
 
 | ID | Item | Status | Source |
 |---|---|---|---|
-| WDR-001 | World Design Rule 1: Material Interdependency | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-002 | World Design Rule 2: Professional Interdependency | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-003 | World Design Rule 3: Meaningful Recipes | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-004 | World Design Rule 4: Economic Consequences | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-005 | World Design Rule 5: Living World Independence | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-006 | World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-007 | World Design Rule 7: Automated Compliance | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-008 | World Design Rule 8: Player Knowledge and Wiki | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-009 | World Design Rule 9: Emergent Gameplay | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-010 | World Design Rule 10: Depth Without Obscurity | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-011 | World Design Rule 11: NPC Self-Improvement and Prosperity | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-012 | World Design Rule 12: NPC Competition and Economic Rivalry | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-013 | World Design Rule 13: Finite Resources and Actual Consumption | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-014 | World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-015 | World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
-| WDR-016 | World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-001 | World Design Rule 1: Material Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-002 | World Design Rule 2: Professional Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-003 | World Design Rule 3: Meaningful Recipes | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-004 | World Design Rule 4: Economic Consequences | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-005 | World Design Rule 5: Living World Independence | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-006 | World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-007 | World Design Rule 7: Automated Compliance | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-008 | World Design Rule 8: Player Knowledge and Wiki | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-009 | World Design Rule 9: Emergent Gameplay | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-010 | World Design Rule 10: Depth Without Obscurity | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-011 | World Design Rule 11: NPC Self-Improvement and Prosperity | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-012 | World Design Rule 12: NPC Competition and Economic Rivalry | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-013 | World Design Rule 13: Finite Resources and Actual Consumption | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-014 | World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-015 | World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
+| WDR-016 | World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
 | WDR-017 | World Design Rule 17: Generational Memory and Living History | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-018 | World Design Rule 18: Protected Ecological Continuity | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-019 | World Design Rule 19: Living Political Agency and Democratic Consequences | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |

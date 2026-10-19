@@ -101,3 +101,5 @@ marked *Proposed* until the owner approves it.
 | 2026-10-19 | Heirs come from the family graph (eldest adult child, then partner, then other kin; the household order only as fallback); the player's heir is their own child of 16+ through an explicit partner, else a relative as before | Owner | Revision of B8-029 |
 | 2026-10-19 | Animals gain stages newborn / juvenile / adult / elderly, natural death, slower breeding near the cap and the Cozy Farm baby sheets (existing maturation and breeding kept) | Owner | B8-029 |
 
+| 2026-10-19 | Builds 14, 15 and 16 may each be built and pushed as the three-platform package once every test is green ("For builds 14,15,16 of all test come back green you have my permission to push the 3 build package for each"). Private draft releases; public visibility still needs its own approval | Owner | Build authorization, 2026-10-19; `docs/release/BUILD_14_READINESS.md` |
+| 2026-10-19 | The horse's role: "A plough horse available for purchase from the visiting caravan." No other horse capability (riding, carts, breeding) is approved | Owner | Build 14 readiness directive; register B14-11 |

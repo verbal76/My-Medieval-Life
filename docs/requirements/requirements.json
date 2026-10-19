@@ -1622,7 +1622,7 @@
    "title": "Animal Farm pack: the horse and farm animals",
    "kind": "approved",
    "status": "APPROVED — NOT STARTED",
-   "owner_wording": null,
+   "owner_wording": "A plough horse available for purchase from the visiting caravan.",
    "description": "Animal Farm pack: the horse and farm animals",
    "source": "owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan",
    "approval": "owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan",
@@ -1643,7 +1643,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Plough horse from the caravan: purchase, keeping (pen), tilling faster with the hand plough",
+   "next_action": "implement the caravan's plough horse",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -1653,6 +1653,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "owner_wording; next_action",
+     "why": "owner decided the horse's role: a plough horse available for purchase from the visiting caravan; nothing else"
     }
    ],
    "acceptance_derived": true
@@ -1741,7 +1746,7 @@
    "id": "B14R-01",
    "title": "Record completed 100-day economy simulations (start, seeds, currency, wealth, jobs, trade, resources, food, population, shortages, regressions)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Record completed 100-day economy simulations (start, seeds, currency, wealth, jobs, trade, resources, food, population, shortages, regressions)",
    "source": "docs/directives/2026-10-19_build14_readiness_requirements_preservation.md s.1",
@@ -1749,11 +1754,13 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/release/LONG_RUN_SIMULATION.md section Build 14 candidate; BUILD_14_READINESS.md",
+   "tests": "game/tests/economy_sim.gd (seeds 1, 2; 100 and 365 days)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a5cf3e8"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -1770,6 +1777,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit a5cf3e8; tests; implementation",
+     "why": "100-day seeds 1 and 2 and the 365-day run recorded"
     }
    ],
    "acceptance_derived": true
@@ -1778,7 +1790,7 @@
    "id": "B14R-02",
    "title": "Compare the manor reserve and the caravan money limit (four configurations) and recommend",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Compare the manor reserve and the caravan money limit (four configurations) and recommend",
    "source": "same directive s.2",
@@ -1786,8 +1798,8 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "LONG_RUN_SIMULATION.md 'The two economy changes'; BUILD_14_READINESS.md",
+   "tests": "economy_sim.gd --set overrides, seed 1, 100 days",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -1810,6 +1822,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "four configurations and two moderate settings compared; recommendations returned, decisions stay with the owner (B7-009, B7-014)"
     }
    ],
    "acceptance_derived": true
@@ -1818,7 +1835,7 @@
    "id": "B14R-03",
    "title": "Investigate iron and coal running out by day 10; document sustainable alternatives without changing the resource model",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Investigate iron and coal running out by day 10; document sustainable alternatives without changing the resource model",
    "source": "same directive s.3",
@@ -1826,8 +1843,8 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "BUILD_14_READINESS.md 'Deposits running out'",
+   "tests": "economy_sim.gd seeds 1, 2",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -1849,6 +1866,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "causes confirmed, options P1.1-P1.5 documented, resource model unchanged; the fix itself awaits the owner (OD-1, B7-007)"
     }
    ],
    "acceptance_derived": true
@@ -1857,7 +1879,7 @@
    "id": "B14R-04",
    "title": "Build 14 tester notes",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Build 14 tester notes",
    "source": "same directive s.4",
@@ -1865,8 +1887,8 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/release/BUILD_14_TESTER_NOTES.md",
+   "tests": "n/a (document)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -1886,6 +1908,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "tester notes written"
     }
    ],
    "acceptance_derived": true
@@ -1894,7 +1921,7 @@
    "id": "B14R-05",
    "title": "Identify the Build 14 candidate commit and ask the owner for build approval",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Identify the Build 14 candidate commit and ask the owner for build approval",
    "source": "same directive s.5",
@@ -1902,7 +1929,7 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
+   "implementation": "docs/release/BUILD_14_READINESS.md",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -1927,6 +1954,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; implementation",
+     "why": "candidate identified in BUILD_14_READINESS.md; owner authorised Builds 14-16 when all tests are green"
     }
    ],
    "acceptance_derived": true
@@ -1935,7 +1967,7 @@
    "id": "B14R-06",
    "title": "Permanent requirements register, lifecycle, validation, silent-deletion detection, startup and handoff rules",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Permanent requirements register, lifecycle, validation, silent-deletion detection, startup and handoff rules",
    "source": "same directive Parts II, V, VI",
@@ -1943,11 +1975,13 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/requirements/requirements.json; tools/check_requirements.py; CLAUDE.md section 9a",
+   "tests": "tests/test_requirements.py; tools/check_requirements.py in tests.yml and pre-push",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "386498b"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -1964,6 +1998,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 386498b; tests; implementation",
+     "why": "register, lifecycle, validator, deletion detection, pre-push hook and CI in place"
     }
    ],
    "acceptance_derived": true
@@ -1972,7 +2011,7 @@
    "id": "B14R-07",
    "title": "Second historical requirements recovery pass and coverage report",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Second historical requirements recovery pass and coverage report",
    "source": "same directive Part III",
@@ -1980,8 +2019,8 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/requirements/RECOVERY_2026-10-19.md",
+   "tests": "tools/check_requirements.py",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -2001,6 +2040,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "second pass done: 17 recovered items, 5 corrections, coverage gaps listed"
     }
    ],
    "acceptance_derived": true
@@ -2009,7 +2053,7 @@
    "id": "B14R-08",
    "title": "Reconcile the original 16 World Design Rules (restore text if the source is found)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Reconcile the original 16 World Design Rules (restore text if the source is found)",
    "source": "same directive Part IV",
@@ -2017,16 +2061,14 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
+   "implementation": "docs/WORLD_DESIGN_RULES.md",
    "tests": "",
    "playtest": [],
    "branch": "",
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text not found in any accessible source"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -2040,6 +2082,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "implementation",
+     "why": "docs/WORLD_DESIGN_RULES.md holds 001-016 by topic and 017-019; the original rule text was not found in any accessible source"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED",
+     "why": "rules 001-016 restored verbatim from the owner's PDF; 017-019 kept; compliance entries WDR-001-C..016-C added"
     }
    ],
    "acceptance_derived": true
@@ -2048,7 +2100,7 @@
    "id": "B14R-09",
    "title": "Stable Android test-signing procedure documented (credentials, secrets, setup, key preservation, risks, install and update test)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Stable Android test-signing procedure documented (credentials, secrets, setup, key preservation, risks, install and update test)",
    "source": "same directive s.28",
@@ -2056,7 +2108,7 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
+   "implementation": "docs/release/ANDROID_SIGNING.md (2026-10-19)",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -2079,6 +2131,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; implementation",
+     "why": "docs/release/ANDROID_SIGNING.md now covers credentials, secrets, setup, key preservation, the risks of a changed or leaked key, and the install-and-update check; stable signing itself stays B13-15 (blocked on the owner's secrets)"
     }
    ],
    "acceptance_derived": true
@@ -2087,7 +2144,7 @@
    "id": "B14R-10",
    "title": "Separate real-device verification queue (phone, controller, Windows, cross-platform and two-device LAN)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Separate real-device verification queue (phone, controller, Windows, cross-platform and two-device LAN)",
    "source": "same directive s.29",
@@ -2095,11 +2152,13 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/DEVELOPMENT_LEDGER.md 'Real-device verification queue'",
+   "tests": "tests/test_requirements.py",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "386498b"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -2116,6 +2175,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 386498b; tests; implementation",
+     "why": "the ledger renders the real-device verification queue from every entry's playtest field"
     }
    ],
    "acceptance_derived": true
@@ -2124,7 +2188,7 @@
    "id": "B14R-11",
    "title": "Review draft PR #1 for unique content before recommending closure",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Review draft PR #1 for unique content before recommending closure",
    "source": "same directive s.30",
@@ -2132,8 +2196,8 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/requirements/RECOVERY_2026-10-19.md",
+   "tests": "n/a (review)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -2143,7 +2207,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "owner: authorise closing PR #1",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -2153,6 +2217,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests; implementation; next_action",
+     "why": "PR #1 reviewed: no unique content; closing it needs owner authorization"
     }
    ],
    "acceptance_derived": true
@@ -2180,7 +2249,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "implement WR-01, then re-run 365 days",
    "priority": "immediate",
    "workstream": "",
    "superseded_by": null,
@@ -2190,6 +2259,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "next_action",
+     "why": "diagnosed: wildlife collapse is the missing breeding refuges (WR-01, approved, next); population and housing decline over ~45 game years not reached in normal play; tester notes list it"
     }
    ],
    "acceptance_derived": true
@@ -6482,7 +6556,7 @@
    "id": "F-3",
    "title": "Music and sound",
    "kind": "approved",
-   "status": "DEFERRED",
+   "status": "SUPERSEDED",
    "owner_wording": null,
    "description": "Music and sound",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 64)",
@@ -6504,13 +6578,18 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "FR-08",
    "notes": "",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "DEFERRED -> SUPERSEDED",
+     "why": "the same requirement as FR-08"
     }
    ],
    "acceptance_derived": true
@@ -6731,7 +6810,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Also: production chains follow only an item's first recipe; hand-written numbers in pages are untested (recovery pass)",
    "history": [
     {
      "date": "2026-10-19",
@@ -8170,7 +8249,7 @@
    "id": "OWN-19",
    "title": "Quest markers; Fireball storyline; side quests; busy-villager bubbles",
    "kind": "approved",
-   "status": "COMPLETE AND VERIFIED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Quest markers; Fireball storyline; side quests; busy-villager bubbles",
    "source": "docs/DECISIONS.md (audit inventory row 335)",
@@ -8189,7 +8268,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "More side-quest templates",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -8199,6 +8278,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "COMPLETE AND VERIFIED -> PARTIALLY IMPLEMENTED",
+     "why": "recovery pass: only 6 side-quest templates against the owner's 'a lot of these people should have basic side quests'"
     }
    ],
    "acceptance_derived": true
@@ -8286,7 +8370,7 @@
    "id": "OWN-22",
    "title": "Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings",
    "kind": "approved",
-   "status": "COMPLETE AND VERIFIED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings",
    "source": "docs/DECISIONS.md (audit inventory row 338)",
@@ -8300,7 +8384,9 @@
    "branch": "",
    "commits": [],
    "parent": null,
-   "depends_on": [],
+   "depends_on": [
+    "FR-08"
+   ],
    "blockers": [],
    "rules": [],
    "interactions": [],
@@ -8315,6 +8401,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "COMPLETE AND VERIFIED -> PARTIALLY IMPLEMENTED",
+     "why": "recovery pass: the music and sound sliders control nothing (no audio; FR-08)"
     }
    ],
    "acceptance_derived": true
@@ -9906,10 +9997,653 @@
    "acceptance_derived": true
   },
   {
+   "id": "REC-001",
+   "title": "Adoption and orphan guardianship (NPCs and the player)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Adoption is an intended feature of this game. ... If adoption is missing, document the required implementation and propose rules before adding the new mechanic.",
+   "description": "When a child's parents die, the child gets a guardian or adoptive household (family first, then willing suitable households), household membership, food needs and inheritance update at once, and the player can adopt under the same rules. #46 asked for the rules to be proposed before implementation.",
+   "source": "owner message #46 2026-10-17T22:58Z (MASTER DEVELOPMENT PROMPT, section 10 'ADOPTION AND ORPHAN CARE', scenarios 11 and 16); reaffirmed #47 2026-10-17T23:35Z section 17.4 ('Orphaned children should have possible adoption or guardianship paths. Family members may receive priority, followed by suitable willing households') and 17.5 ('The player must be eligible for marriage, children, household formation, and adoption under the same basic systems as NPCs')",
+   "approval": "Owner states adoption is an intended feature and lists it in the 'core long-term game vision' (#47 s17); the rules themselves were to be proposed to the owner first (#46 s10).",
+   "acceptance": [
+    "As described: When a child's parents die, the child gets a guardian or adoptive household (family first, then willing suitable households), household membership, food needs and inheritance update at once, and the player can adopt under the same rules. #46 asked for the rules to be proposed before implementation."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Not implemented. The only mention in code is a comment in game/scripts/core/npc_brain.gd:2137 ('marriage, births and adoption will call it too'); no adopt/orphan/guardian logic in game/scripts. docs/BUILD_DECISIONS.md 'Known gaps' (line 442) still lists adoption as missing. Partnering, births and heirs exist (life.gd, B8-029). No requirement id in the ledger, queue, audits or docs/requirements/requirements.json covers adoption.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: B8-029, OWN-03, F-2, FR-11, GM-01, DVW-B1",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-002",
+   "title": "Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic)",
+   "kind": "approved",
+   "status": "BLOCKED",
+   "owner_wording": "Over-the-air updates: Yes - over-the-air updates (Mote architecture) ... How automatic updates are: Fully automatic (owner interview answers recorded in the Game Designer spec); 'Preserve the existing Mote system and its integration requirements. Identify any missing access or dependencies rather than inventing replacements.'",
+   "description": "An OTA update path for the game, following the Hot Attic Games 'Mote' OTA reference implementation (compatibility fingerprint, signed artifacts, staging, rollback, owner-controlled publication), fully automatic per the owner's answer; native changes still need a new build.",
+   "source": "Game Designer ('Bob') spec, owner interview answers: /root/.claude/uploads/754052d8-fb21-5c64-b3f9-641f462e2c23/23b72163-The_Well_corrected_two_documents.zip CLAUDE.md Part A s.A0 and A2 (lines 55-62, 149-151) and MASTER_PROMPT.md line 42; owner message #27 2026-10-17T18:46Z",
+   "approval": "Owner's own interview answer (Part A 'owner requirements'), then the owner's explicit instruction to preserve the Mote system when merging the spec (#27).",
+   "acceptance": [
+    "As described: An OTA update path for the game, following the Hot Attic Games 'Mote' OTA reference implementation (compatibility fingerprint, signed artifacts, staging, rollback, owner-controlled publication), fully automatic per the owner's answer; native changes still need a new build."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Nothing exists: no update system in game/ or .github/workflows. The agent reported on 2026-10-17 'Mote ... Not in this repository' and asked the owner for its repo name (merge proposal, transcript); no answer recorded. Lead found since: the Hot Attic Games registry scan (commit a35575b on the deleted public branch inventory/registry, still at origin/inventory/registry) lists verbal76/Axolotl titled 'Mote' (Godot, Android + iPhone) with a branch claude/mote-release-source, which is probably the reference; GitHub code search (user:verbal76, 'Mote OTA') also hits verbal76/Tartaria-RPG HANDOFF.md and .github/workflows/sentry-inbox.yml. Also needs CLAUDE.md s.11 approval (network features). Not in any register.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [
+    "owner input (see notes)"
+   ],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: OWN-28, B13-15, Q-10, AR-P1-2",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-003",
+   "title": "Android builds target API 36 (Hot Attic Games standing platform policy)",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "Android Target API 36 is REQUIRED (Hot Attic Games standing policy; it is not negotiable per project).",
+   "description": "compileSdk/targetSdk 36 for the APK, a compatible toolchain recorded in DECISIONS, and the built artifact checked (aapt2 dump badging).",
+   "source": "Game Designer spec Part A s.A0 (bob/CLAUDE.md lines 47-53) and MASTER_PROMPT.md line 41, supplied by the owner 2026-10-17T18:44Z; the agent's merge proposal planned to add it to CLAUDE.md s.8 but never did",
+   "approval": "Presented in the owner's spec as a standing studio policy (Part A, owner requirements).",
+   "acceptance": [
+    "As described: compileSdk/targetSdk 36 for the APK, a compatible toolchain recorded in DECISIONS, and the built artifact checked (aapt2 dump badging)."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Unknown. game/export_presets.cfg sets no target/min SDK (gradle build off, Godot template defaults); .github/workflows/release.yml sets only SDK and JDK paths. No document records the target API. Not in any register.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: OWN-22, B13-15, B14R-09",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-004",
+   "title": "Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "Merge the corrected documents with the existing Medieval Life project documentation, but do not begin implementing game features. ... Before modifying any files, show me exactly what you intend to merge, preserve, replace, or remove",
+   "description": "Store Bob's CLAUDE.md, MASTER_PROMPT.md and CORRECTION_NOTES.md verbatim (proposed docs/game-designer/), write SPEC_RECONCILIATION.md, and add DECISIONS entries for the owner's interview answers (working title, platforms incl. Steam Deck, combat style, progression, permadeath with descendants, ~100-NPC village, OTA/Mote, test builds via GitHub pre-release, asset priority, lore source). Open owner calls from it: C1 'one hero' vs not the chosen one, C2 'class progression', C10 view.",
+   "source": "owner message #27 2026-10-17T18:46Z; agent merge proposal (transcript -home-user-My-Medieval-Life/754052d8...jsonl, 'Merge proposal for your approval'); owner #28 18:48Z then built from 'the Game Designer documents we have just reviewed and reconciled'",
+   "approval": "Owner instructed the merge (#27); the proposal itself was never explicitly approved, and #28 treated the reconciliation as done.",
+   "acceptance": [
+    "As described: Store Bob's CLAUDE.md, MASTER_PROMPT.md and CORRECTION_NOTES.md verbatim (proposed docs/game-designer/), write SPEC_RECONCILIATION.md, and add DECISIONS entries for the owner's interview answers (working title, platforms incl. Steam Deck, combat style, progression, permadeath with descendants, ~100-"
+   ],
+   "acceptance_derived": true,
+   "implementation": "Not done. No docs/game-designer/ or SPEC_RECONCILIATION.md in any branch (git log --all); the three files exist only in the uploads zip. docs/DECISIONS.md has no entry for the working title, OTA or API 36. BUILD_DECISIONS.md cites 'Bob's spec' only in passing. The owner's interview answers (several below) therefore never entered a register.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: OD-03, DGA-D1, OWN-28, OWN-29",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-005",
+   "title": "Working title 'The Well'; repository, package and identifiers stay My Medieval Life",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "In the repository and in all of our developments called my medieval life, but the working title that might be the publishing title is probably going to be the well ... Treat The Well as the working game title only. Do not rename the repository, Android package, project directories, or application identifiers without my explicit approval.",
+   "description": "A naming rule: The Well is the working/possible publishing title; nothing is renamed without approval.",
+   "source": "AskUserQuestion answer 2026-10-17T18:46:03Z; owner message #27 2026-10-17T18:46Z",
+   "approval": "Owner decision.",
+   "acceptance": [
+    "As described: A naming rule: The Well is the working/possible publishing title; nothing is renamed without approval."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Observed: project.godot config/name 'My Medieval Life', package com.hotatticgames.mymedievallife.dev. But the decision is recorded nowhere (not in DECISIONS.md, CLAUDE.md or the register), so a future agent could follow Bob's 'The Well Build NN' artifact names or com.hotatticgames.thewell.",
+   "tests": "observed in project.godot and the export package name",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: OWN-28",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-006",
+   "title": "Castles, dungeons and caves in the world",
+   "kind": "approved",
+   "status": "DEFERRED",
+   "owner_wording": "It's going to have taverns houses castles dungeons caves the whole nine yards.",
+   "description": "World content beyond the village: castles, dungeons and caves to explore.",
+   "source": "Game Designer spec Part A s.A1/A2 (bob/CLAUDE.md lines 67, 76, 90), the owner's interview in their own words",
+   "approval": "Listed under Part A 'Owner requirements'; the owner's later B8-011 directive (#144 s.H) named castles, ruins, caves and towns as 'future possibilities, not authorization to implement all of them now'.",
+   "acceptance": [
+    "As described: World content beyond the village: castles, dungeons and caves to explore."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Taverns and houses exist. Caves: only planned with B14-09 (owner answer 'Add cave mouths'); Puny Dungeon pack is 'planned' in docs/assets/packs.json. No castle or dungeon anywhere (grep castle/dungeon/cave in game/scripts/core finds none). No register entry for castles or dungeons.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: B14-09, B8-011, OWN-05",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-007",
+   "title": "Several settlements (villages, towns, cities) with their own economies; NPC migration and regional jobs between them",
+   "kind": "approved",
+   "status": "DEFERRED",
+   "owner_wording": "The long-term world must support villages, towns, and cities with distinct economies. NPCs should be capable of deciding to relocate. ... Design the architecture now, but implement complete multi-settlement migration incrementally after the first playable milestone",
+   "description": "More than one settlement in the overworld, each with its own economy, travel between them without teleporting, migration decisions and regional job opportunities that affect both origin and destination.",
+   "source": "owner message #47 2026-10-17T23:35Z sections 6, 13 (regional job opportunity) and 14; #144 2026-10-18T18:20Z s.10H lists additional villages and towns as future, not authorised now",
+   "approval": "Owner directive (#47), with implementation explicitly staged after the first playable; later deferred (#144).",
+   "acceptance": [
+    "As described: More than one settlement in the overworld, each with its own economy, travel between them without teleporting, migration decisions and regional job opportunities that affect both origin and destination."
+   ],
+   "acceptance_derived": true,
+   "implementation": "One village only; the overworld has no towns (B8-011 known limits). Newcomers arrive from nowhere (migration in). FR-11 covers 'personality, prestige and migration' but not settlements, distinct economies or regional jobs. No register entry.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: FR-11, B8-011, OWN-05",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-008",
+   "title": "Near/far simulation tiers (detailed near the player, abstract far away, nothing duplicated on switching)",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "Simulation speed: Near the players, NPCs are fully simulated; far away, they are simulated in simplified scheduled steps, and nothing duplicates when they switch between the two.",
+   "description": "A level-of-detail simulation so distant actors run abstractly while conserving goods, coins and schedules.",
+   "source": "Game Designer spec Part A (owner's interview answer, bob/CLAUDE.md line 131); owner directive #16 2026-10-17T16:23Z s.9 ('do not assume every NPC requires full simulation at all times. Propose simulation detail appropriate to the player's location')",
+   "approval": "Owner interview answer; #16 asked for a proposal. DECISIONS.md records the agent's tier names Detailed/Abstract/Dormant (agent).",
+   "acceptance": [
+    "As described: A level-of-detail simulation so distant actors run abstractly while conserving goods, coins and schedules."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Not implemented: all villagers stay in the one village and simulate in full; no abstract tier in code. DVW-A6 mentions 'tier transitions' only as a conservation test. Becomes necessary with more settlements or multiplayer. No register entry.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: DVW-A6, MP-01, DGA-R",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-009",
+   "title": "Combat style: real-time aimed attacks, melee combos and abilities on cooldowns",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "Combat style: Aim and shoot in real time, Melee and combos, Abilities on cooldowns (owner said: \"Aim and shoot in real time, Melee and combos, Abilities on cooldowns\")",
+   "description": "Ranged aimed combat, melee combos and cooldown abilities.",
+   "source": "Game Designer spec Part A s.A2 (bob/CLAUDE.md line 119); agent merge proposal planned a DECISIONS entry 'combat style' that was never written",
+   "approval": "Owner interview answer; archery later 'planned for future development but NOT authorized' (#192 2026-10-19T17:59Z).",
+   "acceptance": [
+    "As described: Ranged aimed combat, melee combos and cooldown abilities."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Sword swing with windup/recovery and one buffered press (CQ-01); fireball with a cooldown (skills.gd 'fireball_cooldown'); no combos (combat.gd); archery deferred (FR-10). The combo part is in no register.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: CQ-01, FR-10, DGA-D6",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-010",
+   "title": "Class progression, 'system jobs' and a tech/research tree",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "It's going to have class progression, system jobs, whole nine yards. ... I like a mix of an tech and research tree and new abilities and equipment",
+   "description": "Progression through classes/jobs and a tech or research tree alongside skills and equipment.",
+   "source": "Game Designer spec Part A s.A1/A2 (bob/CLAUDE.md lines 67, 77, 91, 101); agent merge proposal conflict C2 ('Unresolved; your call') never answered",
+   "approval": "Owner interview statements; meaning of 'class progression' left to the owner (C2).",
+   "acceptance": [
+    "As described: Progression through classes/jobs and a tech or research tree alongside skills and equipment."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Skills 1-10 with perks (PL2-005) and professions exist; no class system and no tech/research tree. Question C2 unanswered and unrecorded.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: PL2-005, DVW-B8, OD-09",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-011",
+   "title": "Main storyline after the first story quest (side quests now, story later)",
+   "kind": "approved",
+   "status": "DEFERRED",
+   "owner_wording": "Side quests now, story later (Recommended)",
+   "description": "A storyline beyond 'The sage in the north' (fireball), built from the Morris research as world history rather than a chosen-one plot.",
+   "source": "AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north'",
+   "approval": "Owner answer defers a story to later; it is not cancelled.",
+   "acceptance": [
+    "As described: A storyline beyond 'The sage in the north' (fireball), built from the Morris research as world history rather than a chosen-one plot."
+   ],
+   "acceptance_derived": true,
+   "implementation": "game/data/quests.json has one story quest (the_sage_in_the_north). OWN-19 is marked COMPLETE with the note 'main storyline proposed later not approved'; DVW-B13 is BLOCKED (owner's call). The deferred storyline itself has no entry.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: OWN-19, DVW-B13",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-012",
+   "title": "Tiny Ranch pack: on hold by the owner, not cancelled",
+   "kind": "approved",
+   "status": "DEFERRED",
+   "owner_wording": "We might need to tweak the way these look to make them fit the rest of the feel but these have animals in them that we need and farm tiles and crops ... Leave that bundle on hold for a minute then and try this next one I just purchased",
+   "description": "Restyle Tiny Ranch animals, farm tiles and crops to fit, or get the owner's cancellation.",
+   "source": "owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z",
+   "approval": "Owner asked for it to be used, then put it on hold.",
+   "acceptance": [
+    "As described: Restyle Tiny Ranch animals, farm tiles and crops to fit, or get the owner's cancellation."
+   ],
+   "acceptance_derived": true,
+   "implementation": "docs/assets/packs.json tiny_ranch status 'unused', decision by the agent ('8 px grid ... Cozy Farm covers the same animals'). Credited in credits.json. No owner cancellation; no register entry (OWN-01 only mentions the registry).",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: OWN-01, B14-10",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-013",
+   "title": "Need-based maintenance (wear) model and the other unanswered job-board questions",
+   "kind": "approved",
+   "status": "BLOCKED",
+   "owner_wording": "Make sure the reeve can offer reasonable recurring maintenance and logistical work when the manor genuinely needs it, but do not guarantee employment when there is no funded work available.",
+   "description": "Structures that wear so maintenance demand is real (instead of repairs bought with surplus money), plus three open questions from the same round.",
+   "source": "owner message #109 2026-10-18T06:00Z; AskUserQuestion round 2026-10-18T06:46Z (wear model, staff fallback, manor hands on the job board, board wage basis) left unanswered; docs/HANDOFF.md and docs/DEVELOPMENT_QUEUE.md 'Waiting on the owner: A need-based maintenance model'",
+   "approval": "Owner approved recurring maintenance work tied to real need; the model behind 'need' is an open owner decision.",
+   "acceptance": [
+    "As described: Structures that wear so maintenance demand is real (instead of repairs bought with surplus money), plus three open questions from the same round."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Mend jobs exist (manor_work.gd KINDS haul/quarry/mend) driven by surplus spending, not wear. The decision is listed in the queue and HANDOFF without an id; requirements.json has no entry for maintenance, staff fallback or board wages (grep).",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [
+    "owner input (see notes)"
+   ],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: Q-05, OD-02, DVW-B4, B7-009",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-014",
+   "title": "Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": "The foundational settlement, agriculture, food production, resource distribution, population, and trade systems will be revisited using research we have recently discussed.",
+   "description": "A planned rework of the economy foundations informed by research (possibly the living-world design or Designing Virtual Worlds).",
+   "source": "owner message #149 2026-10-18T20:43Z Phase 1",
+   "approval": "Owner statement of intent when stopping the 365-day simulations; scope and the 'research' are not identified.",
+   "acceptance": [
+    "As described: A planned rework of the economy foundations informed by research (possibly the living-world design or Designing Virtual Worlds)."
+   ],
+   "acceptance_derived": true,
+   "implementation": "No entry. DVW-A3/A4 and ECON-P1..P3 overlap but none is framed as this rework. Needs the owner to say what research and whether it still stands.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: DVW-A3, DVW-A4, ECON-P1.1, ECON-P3, OD-01",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
+   "id": "REC-015",
+   "title": "NPC competition and economic rivalry (as a game system)",
+   "kind": "approved",
+   "status": "SUPERSEDED",
+   "owner_wording": "Economic competition. ... NPC prosperity and competition (lists of permanent World Design Rules); 'NPC competition.' (minimum audit checklist)",
+   "description": "NPC businesses competing for customers, workers and supplies, able to win or fail.",
+   "source": "owner messages #168 2026-10-19T06:15Z s.7, #188 16:50Z s.11, #194 18:32Z s.3; rule topic 12 in the 2026-10-19T19:09Z directive",
+   "approval": "Named by the owner as an existing permanent rule to enforce and as a system to audit.",
+   "acceptance": [
+    "As described: NPC businesses competing for customers, workers and supplies, able to win or fail."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Partial mechanisms: local-availability pricing (B14-05), a dearer stall loses the sale (business_test), merchants can go bankrupt (B7-016). requirements.json has WDR-012 (the rule, text missing) but, unlike REQ-BANDIT and REQ-GRAVE for rules 16 and 14, no feature entry. Uncertain whether a separate feature entry is wanted.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": "WDR-012-C",
+   "notes": "Related: WDR-012, B14-05, B7-016, PL1-10",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "UNKNOWN — INVESTIGATION REQUIRED -> SUPERSEDED",
+     "why": "the owner's rule document makes this the compliance requirement WDR-012-C"
+    }
+   ]
+  },
+  {
+   "id": "REC-016",
+   "title": "NPC self-improvement and prosperity (as a game system)",
+   "kind": "approved",
+   "status": "SUPERSEDED",
+   "owner_wording": "NPC prosperity and ambition. ... NPC self-improvement and prosperity.",
+   "description": "NPCs save, train, upgrade housing, open businesses and rise socially through real means.",
+   "source": "owner messages #168 2026-10-19T06:15Z s.7, #188 s.11, #194 s.3; #47 2026-10-17T23:35Z s.19 (better housing, business ownership, social standing); rule topic 11 in the 2026-10-19T19:09Z directive",
+   "approval": "Owner rule list and audit checklist; #47 s.19 approved housing/prestige/social advancement as long-term goals.",
+   "acceptance": [
+    "As described: NPCs save, train, upgrade housing, open businesses and rise socially through real means."
+   ],
+   "acceptance_derived": true,
+   "implementation": "Partial: job mobility and apprenticeships, villager storefronts (B14-03), households building houses. FR-11 (prestige) is UNKNOWN; WDR-011 is the rule only. No feature entry. Uncertain whether FR-11 should absorb it.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": "WDR-011-C",
+   "notes": "Related: WDR-011, FR-11, B14-03",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "UNKNOWN — INVESTIGATION REQUIRED -> SUPERSEDED",
+     "why": "the owner's rule document makes this the compliance requirement WDR-011-C"
+    }
+   ]
+  },
+  {
+   "id": "REC-017",
+   "title": "Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "If your execution session ends or you cannot continue autonomously, leave a clear, GitHub-pushed handoff identifying the next approved task so work can resume immediately.",
+   "description": "Update docs/HANDOFF.md (still 2026-10-18, Build 7), DEVELOPMENT_PLAN.md, GAME_DESIGN.md (U1 'Undecided' though platforms are owner-decided), BUILD_DECISIONS.md 'Known gaps' (says no births, aging, adoption), CLAUDE.md release history (drafts 9-11), and resources.json's handcart exception still 'proposed' after B14-06.",
+   "source": "owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id)",
+   "approval": "Owner standing rule (handoff and accurate documentation); the staleness was found by the Build 14 audit, which listed it without an id.",
+   "acceptance": [
+    "As described: Update docs/HANDOFF.md (still 2026-10-18, Build 7), DEVELOPMENT_PLAN.md, GAME_DESIGN.md (U1 'Undecided' though platforms are owner-decided), BUILD_DECISIONS.md 'Known gaps' (says no births, aging, adoption), CLAUDE.md release history (drafts 9-11), and resources.json's handcart exception still 'prop"
+   ],
+   "acceptance_derived": true,
+   "implementation": "docs/HANDOFF.md last changed 6aabb9f (2026-10-18). GAME_DESIGN.md line 62 U1 still open. BUILD_DECISIONS.md lines 440-455 stale. B13-10 fixed earlier stale text only. No id covers this.",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Related: B13-10, OWN-22, B14R-06",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "recovered and entered in the register",
+     "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    }
+   ]
+  },
+  {
    "id": "REQ-BANDIT",
    "title": "Bandit factions, criminal careers and outlaw leadership",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "SUPERSEDED",
    "owner_wording": null,
    "description": "Bandit factions, criminal careers and outlaw leadership",
    "source": "owner: World Design Rule 16 topic; directive 2026-10-19 (requirements preservation) s.26",
@@ -9933,13 +10667,18 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "WDR-016-C",
    "notes": "",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> SUPERSEDED",
+     "why": "the owner's rule document makes this the compliance requirement WDR-016-C"
     }
    ],
    "acceptance_derived": true
@@ -9948,7 +10687,7 @@
    "id": "REQ-GRAVE",
    "title": "Graveyards, ancestry and NPC legacy",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "SUPERSEDED",
    "owner_wording": null,
    "description": "Graveyards, ancestry and NPC legacy",
    "source": "owner: World Design Rule 14 topic; directive 2026-10-19 (requirements preservation) s.26",
@@ -9974,13 +10713,18 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "WDR-014-C",
    "notes": "",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> SUPERSEDED",
+     "why": "the owner's rule document makes this the compliance requirement WDR-014-C"
     }
    ],
    "acceptance_derived": true
@@ -10032,10 +10776,10 @@
    "id": "WDR-001",
    "title": "World Design Rule 1: Material Interdependency",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 1: Material Interdependency",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10047,9 +10791,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10057,24 +10799,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-001-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-001-C",
+   "title": "Comply with World Design Rule 1: Material Interdependency",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 001's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Measured 2026-10-19 from recipes.json (station as a stand-in for profession): 5 of 24 consumed materials meet >=3 recipes and >=2 professions; 19 do not (ores, cart parts, ale, egg, milk, wool, hide, log, meat and others), some possibly specialized exceptions to justify",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-001"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Material report (WDR-007-C), then recipes or justified exceptions",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-002",
    "title": "World Design Rule 2: Professional Interdependency",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 2: Professional Interdependency",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10086,9 +10871,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10096,24 +10879,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-002-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-002-C",
+   "title": "Comply with World Design Rule 2: Professional Interdependency",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 002's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Chains exist (farmer>cook, woodcutter>carpenter, miner>smith, hunter>tanner, keeper>cook); not audited per profession",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-002"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Profession supply audit",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-003",
    "title": "World Design Rule 3: Meaningful Recipes",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 3: Meaningful Recipes",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10125,9 +10951,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10135,24 +10959,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-003-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-003-C",
+   "title": "Comply with World Design Rule 3: Meaningful Recipes",
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 003's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "No per-recipe purpose record",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-003"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Document each counted recipe's purpose",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-004",
    "title": "World Design Rule 4: Economic Consequences",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 4: Economic Consequences",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10164,9 +11031,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10174,24 +11039,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-004-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-004-C",
+   "title": "Comply with World Design Rule 4: Economic Consequences",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 004's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Scarcity and local-availability pricing, caravan imports after depletion; 100-day runs 2026-10-19",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-004"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Comparison runs (B14R-02); scarcity responses audit",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-005",
    "title": "World Design Rule 5: Living World Independence",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 5: Living World Independence",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10203,9 +11111,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10213,24 +11119,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-005-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-005-C",
+   "title": "Comply with World Design Rule 5: Living World Independence",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 005's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Villagers live, work, trade and age without the player; 0 houses built in 365 days (B14R-12)",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-005"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Idle-player construction and housing (B7-017, B14R-12)",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-006",
    "title": "World Design Rule 6: Maintain the Existing Interlocking Systems Manifest",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 6: Maintain the Existing Interlocking Systems Manifest",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10242,9 +11191,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10252,24 +11199,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-006-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-006-C",
+   "title": "Comply with World Design Rule 6: Maintain the Existing Interlocking Systems Manifest",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 006's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "docs/SYSTEM_INTERACTION_MANIFEST.md (147 entries) validated by tools/check_interactions.py in CI",
+   "tests": "check_interactions (CI)",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-006"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-007",
    "title": "World Design Rule 7: Automated Compliance",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 7: Automated Compliance",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10281,9 +11271,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10291,24 +11279,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-007-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-007-C",
+   "title": "Comply with World Design Rule 7: Automated Compliance",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 007's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "check_interactions, check_resources, check_assets, check_requirements in CI; no material interdependency report with thresholds",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-007"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Material interdependency report with positive and negative fixtures in CI",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-008",
    "title": "World Design Rule 8: Player Knowledge and Wiki",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 8: Player Knowledge and Wiki",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10320,9 +11351,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10330,24 +11359,70 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-008-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-008-C",
+   "title": "Comply with World Design Rule 8: Player Knowledge and Wiki",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 008's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Generated wiki with search and categories (PL2-009); gaps FR-06; touch/controller navigation unverified on devices",
+   "tests": "",
+   "playtest": [
+    "phone",
+    "controller"
+   ],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-008"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "FR-06 pages; device checks",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-009",
    "title": "World Design Rule 9: Emergent Gameplay",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 9: Emergent Gameplay",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10359,9 +11434,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10369,24 +11442,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-009-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-009-C",
+   "title": "Comply with World Design Rule 9: Emergent Gameplay",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 009's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Shared systems with consequences; the 30-planks provenance chain not built (GM-01)",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-009"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "GM-01",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-010",
    "title": "World Design Rule 10: Depth Without Obscurity",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 10: Depth Without Obscurity",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10398,9 +11514,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10408,24 +11522,70 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-010-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-010-C",
+   "title": "Comply with World Design Rule 10: Depth Without Obscurity",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 010's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Sword reach and timing readable (CQ-01); wiki guides; cart route feedback not checked",
+   "tests": "",
+   "playtest": [
+    "phone",
+    "controller"
+   ],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-010"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Device playtest; cart route feedback",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-011",
    "title": "World Design Rule 11: NPC Self-Improvement and Prosperity",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 11: NPC Self-Improvement and Prosperity",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10437,9 +11597,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10447,24 +11605,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-011-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-011-C",
+   "title": "Comply with World Design Rule 11: NPC Self-Improvement and Prosperity",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 011's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "No aspiration domains; job mobility, apprenticeships and storefronts exist (REC-016)",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-011"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Design the five aspiration domains",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-012",
    "title": "World Design Rule 12: NPC Competition and Economic Rivalry",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 12: NPC Competition and Economic Rivalry",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10476,9 +11677,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10486,24 +11685,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-012-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-012-C",
+   "title": "Comply with World Design Rule 12: NPC Competition and Economic Rivalry",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 012's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Local pricing, dearer stall loses the sale, merchants can fail (REC-015); no specialization, relocation or hiring competition",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-012"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Competition audit and design",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-013",
    "title": "World Design Rule 13: Finite Resources and Actual Consumption",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 13: Finite Resources and Actual Consumption",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10515,9 +11757,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10525,24 +11765,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-013-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-013-C",
+   "title": "Comply with World Design Rule 13: Finite Resources and Actual Consumption",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 013's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Money and goods conserved over 100 days (economy_sim, leak 0); deposits never regenerate; wildlife reaches 0 (B14R-12, WR-01)",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "WR-01; owner decision OD-01 on deposits",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-014",
    "title": "World Design Rule 14: Graveyards, Ancestry, and NPC Legacy",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 14: Graveyards, Ancestry, and NPC Legacy",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10554,9 +11837,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10564,24 +11845,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-014-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-014-C",
+   "title": "Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 014's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "No graveyard or headstones; deaths are logged and inherited (B8-029)",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-014"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Graveyard and headstones with GM-01",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-015",
    "title": "World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10593,9 +11917,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10603,24 +11925,67 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-015-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
   },
   {
+   "id": "WDR-015-C",
+   "title": "Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 015's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Manor treasury with taxes, wages, relief, repairs; reeve, guards; no elections, council, magistrate (VP-01)",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "VP-01",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
+  },
+  {
    "id": "WDR-016",
    "title": "World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership",
    "kind": "rule",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership",
-   "source": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
    "approval": "owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found",
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
@@ -10632,9 +11997,7 @@
    "commits": [],
    "parent": null,
    "depends_on": [],
-   "blockers": [
-    "original rule text awaiting source recovery"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10642,15 +12005,58 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Topic preserved; detailed text not invented",
+   "notes": "Text recorded verbatim in docs/WORLD_DESIGN_RULES.md; compliance is WDR-016-C",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "rule text restored from the owner's World Design Rules document (PDF supplied 2026-10-19)"
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-016-C",
+   "title": "Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
+   "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
+   "approval": "owner's approved World Design Rules v1.0: 'Any unimplemented mechanics should be tracked as development work'",
+   "acceptance": [
+    "Rule 016's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
+   ],
+   "implementation": "Bandits are hostile NPCs who rob and poach; no factions, careers, ranks or leadership",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-016"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Design factions and careers",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    }
+   ]
   },
   {
    "id": "WDR-017",

@@ -298,3 +298,128 @@ The 100-day runs (seed 1 / seed 2):
 - **Wildlife holds at the hunting floor.** Boar settle at 16 wild adults; rabbits at 4 adults with almost no births on seed 2.
 
 These are logged as B7-014 to B7-017 in `BUILD_7_ISSUES.md`. All need the owner's choice among the proposals in `ECONOMY_SUSTAINABILITY_PROPOSALS.md`, so nothing was changed.
+
+
+## Build 14 candidate (staging `386498b`, 2026-10-19)
+
+The first long runs since Build 7 rules, on the code that will become Build 14. Diagnostics only: no game numbers were
+changed to obtain these results.
+
+### How it was run
+
+`game/tests/economy_sim.gd -- --days 100 --seed N --every 10` for seeds 1 and 2:
+- no player activity;
+- one game minute per step;
+- an 8-day year, so 100 days is 12.5 game years.
+
+**Starting conditions:** the fixed village (generator v6), with:
+- 100 people, 24 households;
+- 2,927 coins (seed 1) and 2,903 (seed 2);
+- treasury 270;
+- deposits: 300 iron ore, 200 coal, 240 stone, 60 copper ore, 8 gold ore;
+- 54 wild animals and 13 penned.
+
+The runs are reproducible: the same seed gives the same fingerprint.
+
+**Ledger fix first.** The first runs reported 15 "item leaks". None was a duplication; the simulation's ledger did not
+count production paths added since Build 7 (foraging, apple picking, pen products, seed kept back, handcarts set
+down, wildlife eating berries). Those are now recorded (commit `a5cf3e8`). Both runs now
+balance money, every item and every animal kind exactly (leak 0).
+
+### Results
+
+| Run | Day | Alive | Unemployed | Coins | Household cash min/median/max | Treasury | Wild animals | Food (days) | Caravans |
+|---|---|---|---|---|---|---|---|---|---|
+| seed 1 | 0 | 100 | 0 | 2927 | 38/73/420 | 270 | 54 | 3.0 | 0 |
+| seed 1 | 20 | 103 | 0 | 4589 | 8/169/261 | 239 | 29 | 5.7 | 10 |
+| seed 1 | 40 | 104 | 3 | 4752 | 2/180/240 | 200 | 24 | 5.6 | 20 |
+| seed 1 | 60 | 101 | 12 | 4912 | 1/166/282 | 182 | 18 | 7.1 | 30 |
+| seed 1 | 80 | 104 | 16 | 5067 | 0/172/309 | 191 | 16 | 8.5 | 40 |
+| seed 1 | 100 | 104 | 24 | 5217 | 19/168/437 | 360 | 6 | 8.6 | 50 |
+| seed 2 | 0 | 100 | 0 | 2903 | 28/64/420 | 270 | 54 | 3.0 | 0 |
+| seed 2 | 20 | 104 | 0 | 4568 | 27/166/278 | 185 | 26 | 5.6 | 10 |
+| seed 2 | 40 | 106 | 2 | 4737 | 1/172/227 | 182 | 20 | 5.7 | 20 |
+| seed 2 | 60 | 107 | 6 | 4899 | 3/171/238 | 190 | 13 | 7.0 | 30 |
+| seed 2 | 80 | 105 | 9 | 5059 | 2/140/296 | 240 | 5 | 8.5 | 40 |
+| seed 2 | 100 | 102 | 13 | 5210 | 2/134/417 | 165 | 2 | 9.0 | 50 |
+
+**What each run shows**
+
+- **Currency:** grows from 2,927 to 5,217 in 100 days (seed 1), and 2,903 to 5,210 (seed 2), about 1.8 times.
+  - The caravan brings 4,972 coins in and takes 2,682 out (seed 1).
+  - Under Build 7 rules the currency grew about tenfold in a year; the caravan's finite purse holds it far lower.
+- **People:**
+  - No starvation.
+  - Deaths are all of old age (12 and 17).
+  - The population holds at 101–107.
+- **Work:** unemployment rises from 0 to 24 (seed 1) and 13 (seed 2) of about 76 adults. These are young adults who
+  come of age with no trade to take up; building never starts (0 sites, 0 houses).
+- **Food:** stocks rise from 3 to about 9 days of need.
+  - Missed meals: 738 in seed 1 (553 of them laborers') and 234 in seed 2.
+  - Missed meals come from money, not supply: laborers cannot always afford a meal.
+- **Household wealth:** the median holds at about 135–180. The poorest household dips to 0–3 coins at times, and
+  recovers.
+- **Resources:** local iron ore, coal and copper ore run out by day 10, and gold by day 10.
+  - After that the caravan imports ore: 401 iron ore, 235 coal and 109 copper ore over 100 days in seed 1.
+  - With that, the forge keeps producing (330 iron bars).
+  - In the first ten days the village also exports 57 iron bars.
+  - Stone lasts to about day 40–100.
+- **Trade:** the caravan visits 50 times and buys 941 goods (bars, tools, planks, food, feathers).
+- **Wildlife:** collapses.
+  - Wild animals fall from 54 to 6 (seed 1) and 2 (seed 2).
+  - In seed 1, rabbits are gone by day 40, boar and foxes by day 70, deer and wolves by day 90; 2 bears and a few birds remain.
+  - The village hunter took only 6 deer, 4 boar and 9 rabbits. The rest died to predators and old age, faster than they bred.
+  - This is the B14-08 food chain without the protected breeding refuges the owner has since approved (WR-01).
+
+### 365 days (seed 1, the same code before the ledger fix; money and population figures unaffected)
+
+- Population falls from 100 to 69: 68 deaths, almost all of old age over about 45 game years.
+- Wildlife reaches 0 by day 320.
+- No house is built.
+- The currency reaches 6,522.
+
+Recorded as B14R-12 for investigation; the owner's companion to the World Design Rules asks for its causes to be
+found, not assumed.
+
+### The two economy changes made without an owner decision (B14R-02)
+
+Seed 1, 100 days. "Off" means:
+- **Manor reserve off:** `manor_job_reserve_days` = 10, the long reserve.
+- **Caravan limit off:** an unlimited caravan purse, as before B7-014.
+
+| Configuration | Coins day 100 | Caravan coins in / out | Treasury | Manor wages | Manor jobs | Unemployed | Household cash min/median/max | Missed meals | Deaths | Goods exported |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Both on (current) | 5,217 | 4,972 / 2,682 | 360 | 4,896 | 1,507 | 24 | 19/168/437 | 738 | 12 | 941 |
+| Reserve on, limit off | 11,639 | 12,515 / 3,803 | 1,900 | 2,460 | 2,134 | 10 | 17/328/618 | 77 | 14 | 4,221 |
+| Limit on, reserve off | 5,210 | 7,061 / 4,778 | 415 | 1,940 | 662 | 24 | 0/175/306 | 910 | 15 | 953 |
+| Both off | 12,051 | 14,645 / 5,521 | 2,236 | 1,988 | 1,913 | 6 | 14/276/616 | 121 | 16 | 4,378 |
+
+**Limitations:**
+- One seed, 100 days, no player.
+- The differences in deaths (12–16) are within the natural spread of old age.
+
+Two moderate caravan settings (limit on, seed 1, 100 days) were also run:
+
+| Configuration | Coins day 100 | Caravan coins in / out | Treasury | Manor wages | Manor jobs | Unemployed | Household cash min/median/max | Missed meals | Deaths | Goods exported |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Ceiling 200 coins a head | 5,543 | 5,344 / 2,728 | 478 | 4,566 | 1,438 | 23 | 2/167/387 | 1,048 | 14 | 1,041 |
+| Allowance 30 coins a day | 5,913 | 6,268 / 3,282 | 635 | 3,952 | 1,524 | 24 | 1/183/372 | 589 | 13 | 1,194 |
+
+**Findings**
+
+**Manor reserve (B7-009):**
+- More paid manor work (1,507 jobs against 662 with the caravan limit on).
+- Fewer missed meals (738 against 910).
+- No effect on the money supply.
+- Recommendation: keep it.
+
+**Caravan money limit (B7-014):**
+- It does what it was built for. Without it, the village's money quadruples in 100 days (to about 11,600),
+  the runaway growth seen under Build 7 rules.
+- It also cuts what the caravan buys (941 goods against 4,221), so laborers earn less. Missed meals rise from 77 to
+  738 and unemployment from 10 to 24.
+- Recommendation: keep the limit, and consider a larger daily allowance (30 instead of 15). In this one run that
+  allowance cut missed meals to 589, with the money supply at 5,913 instead of 11,639.
+- Raising the per-head ceiling instead did not help.
+- Both are owner decisions (B7-009 and B7-014 in the register).
+
