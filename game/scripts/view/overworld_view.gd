@@ -94,8 +94,11 @@ func _build(cc: Vector2i) -> void:
 				set_tile(ground, cell, ch.ground[i])
 			if ch.path[i] >= 0:
 				set_tile(path, cell, ch.path[i])
-			if ch.deco[i] >= 0 and not overworld.rock_gone(cell):          # a boulder the player broke up stays gone
-				set_tile(objects, cell, ch.deco[i])
+			if ch.deco[i] >= 0 and not overworld.rock_gone(cell) and not overworld.flower_gone(cell):    # a broken boulder or a picked flower stays gone
+				var v: int = ch.deco[i]
+				if v == int(overworld.tiles.rock) and ResourceNodes.boulder_small(cell) and sources.size() > 3:
+					v = MapView.SMALL_BOULDER_TILE
+				set_tile(objects, cell, v)
 	if tree_sink != null:
 		tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
 	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops}
