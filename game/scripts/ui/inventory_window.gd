@@ -23,7 +23,7 @@ const BODY_TOP := 33                # where the panel's body (below the tabs) st
 # id, caption, icon, item types shown ("skills" and "journal" open those windows instead)
 const TABS := [
 	["all", "All", "res://assets/ui/tab_all.png", []],
-	["food", "Food", "res://assets/icons/bread.png", ["food"]],
+	["food", "Food", "res://assets/icons/bread.png", ["food", "medicine"]],
 	["materials", "Materials", "res://assets/icons/log.png", ["resource"]],
 	["tools", "Tools", "res://assets/icons/pickaxe.png", ["tool"]],
 	["weapons", "Weapons", "res://assets/icons/iron_sword.png", ["weapon"]],

@@ -1950,7 +1950,7 @@ func show_trade(n: NPC) -> void:
 	if w.at_post(n):
 		_open("trade", "Trade with %s %s (%s)  ·  you have %d coins" % [n.name, n.family, w.shop_name(n), p.coins])
 	elif n.id == w.sage_id:
-		_open("trade", "Apothecary: %s %s  ·  you have %d coins" % [n.name, n.family, p.coins])
+		_open("trade", "Apothecary: %s  ·  you have %d coins" % [n.name, p.coins])
 	else:
 		_open("trade", "Trade with %s %s  (you have %d coins)" % [n.name, n.family, p.coins])
 	var sale: Array = w.brain.for_sale(n)
@@ -1998,7 +1998,7 @@ func show_craft(station_id: String) -> void:
 	var w: World = main.world
 	var st: Dictionary = w.stations[station_id]
 	var p := w.player
-	_open("craft", "The %s" % st.type)
+	_open("craft", "Stove — Cooking & Tonics" if st.type == "stove" else "The %s" % st.type)
 	var no := w.station_refusal(station_id)
 	if no != "":
 		_label(no, 18, Color(1, 0.7, 0.55))

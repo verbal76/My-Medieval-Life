@@ -14,7 +14,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 |---|---|
 | Implemented harvestable node types | 16 (12 player-harvestable) |
 | Materials the nodes produce | 13: blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, red_berries, stone, wheat |
-| Production chains documented (node product to finished item) | 34 (33 workable, 1 blocked by gold ore) |
+| Production chains documented (node product to finished item) | 36 (35 workable, 1 blocked by gold ore) |
 | Materials with no current use | 0 |
 | Recipes with a missing raw-material source | 2: forge_gold_ring, smelt_gold |
 | Finite node types with no replacement | 0 |
@@ -79,6 +79,9 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `flower_patch` · Wild flower (implemented)
 
 - **flower** (1 a cycle)
+  - 5 flower → **1 healing_tonic** (brew_healing_tonic, stove)
+    - 2 healing_tonic + 1 ale → **1 strong_healing_tonic** (brew_strong_tonic, stove)
+  - 2 flower → **1 herbal_poultice** (brew_poultice, stove)
   - 3 flower → **1 herbal_tonic** (brew_tonic, stove)
 
 ### `iron_seam` · Iron seam (implemented)
@@ -146,6 +149,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 - **wheat** (6 a cycle)
   - 3 wheat → **4 ale** (brew_ale, stove)
+    - 1 ale + 2 healing_tonic → **1 strong_healing_tonic** (brew_strong_tonic, stove)
   - 2 wheat → **6 pottage** (cook_pottage, stove)
 
 ### `wild_boar` · Wild boar (implemented)
@@ -183,6 +187,8 @@ Every recipe path from a node's product to an item no recipe consumes:
 - copper_ore → copper_bar → amulet
 - copper_ore → copper_bar → copper_ring
 - copper_ore → copper_bar → copper_sword
+- flower → healing_tonic → strong_healing_tonic
+- flower → herbal_poultice
 - flower → herbal_tonic
 - hide → leather → amulet
 - hide → leather → iron_armor
@@ -202,7 +208,7 @@ Every recipe path from a node's product to an item no recipe consumes:
 - log → plank → pickaxe
 - log → roast_meat
 - meat → roast_meat
-- wheat → ale
+- wheat → ale → strong_healing_tonic
 - wheat → pottage
 
 ## From an item or building: raw materials and nodes
@@ -220,6 +226,8 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | gold_bar | 1 coal, 2 gold_ore | `coal_seam` | coal: import; gold_ore: **no renewable source** |
 | gold_ring | 1 coal, 2 gold_ore | `coal_seam` | coal: import; gold_ore: **no renewable source** |
 | hammer | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
+| healing_tonic | 5 flower | `flower_patch` | - |
+| herbal_poultice | 2 flower | `flower_patch` | - |
 | herbal_tonic | 3 flower | `flower_patch` | - |
 | iron_armor | 5 coal, 2 hide, 10 iron_ore | `coal_seam`, `cow_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_boar` | coal: import; iron_ore: import |
 | iron_bar | 1 coal, 2 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
@@ -232,6 +240,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | plank | 0.5 log | `tree` | - |
 | pottage | 0.33 wheat | `wheat_field` | - |
 | roast_meat | 0.5 log, 0.5 meat | `chicken_pen`, `cow_pen`, `pig_pen`, `sheep_pen`, `tree`, `wild_boar`, `wild_rabbit` | - |
+| strong_healing_tonic | 10 flower, 0.75 wheat | `flower_patch`, `wheat_field` | - |
 | building: bakehouse | 20 log, 30 stone | `boulder`, `stone_seam`, `tree` | stone: import |
 | building: carpentry | 30 log, 15 stone | `boulder`, `stone_seam`, `tree` | stone: import |
 | building: house | 25 log, 20 stone | `boulder`, `stone_seam`, `tree` | stone: import |
@@ -241,7 +250,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 
 | Item | Type | Sources | Uses |
 |---|---|---|---|
-| `ale` Ale | food | recipe `brew_ale` ×4; start_stock `start_0` | buyer `merchant_food` ×15; buyer `tavernkeeper` ×20; export `caravan`; food `ale` |
+| `ale` Ale | food | recipe `brew_ale` ×4; start_stock `start_0` | buyer `merchant_food` ×15; buyer `tavernkeeper` ×20; export `caravan`; food `ale`; recipe `brew_strong_tonic` ×1 |
 | `amulet` Copper amulet | amulet | recipe `forge_amulet` ×1 | buyer `merchant_goods` ×2; equip `amulet`; export `caravan` |
 | `apple` Apple | food | **none** | food `apple` |
 | `axe` Axe | tool | recipe `forge_axe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; quest `a_new_axe` ×1; tool `tree` |
@@ -252,11 +261,13 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `copper_ore` Copper ore | resource | import `caravan`; node `copper_seam` ×1 | buyer `merchant_raw` ×15; buyer `smith` ×20; recipe `smelt_copper` ×2 |
 | `copper_ring` Copper ring | ring | recipe `forge_copper_ring` ×1 | buyer `merchant_goods` ×3; equip `ring`; export `caravan` |
 | `copper_sword` Copper sword | weapon | recipe `forge_copper_sword` ×1; start_stock `start_0`; start_stock `start_2` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
-| `flower` Wild flower | resource | node `flower_patch` ×1 | recipe `brew_tonic` ×3 |
+| `flower` Wild flower | resource | node `flower_patch` ×1 | buyer `sage` ×20; recipe `brew_healing_tonic` ×5; recipe `brew_poultice` ×2; recipe `brew_tonic` ×3 |
 | `gold_bar` Gold bar | resource | recipe `smelt_gold` ×1 | buyer `merchant_goods` ×4; export `caravan`; recipe `forge_gold_ring` ×1 |
 | `gold_ore` Gold ore | resource | **none** | buyer `smith` ×10; recipe `smelt_gold` ×2 |
 | `gold_ring` Gold ring | ring | recipe `forge_gold_ring` ×1 | buyer `merchant_goods` ×2; equip `ring`; export `caravan` |
 | `hammer` Smith's hammer | tool | recipe `forge_hammer` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `tool`; export `caravan`; tool `hammer` |
+| `healing_tonic` Healing tonic | medicine | recipe `brew_healing_tonic` ×1 | recipe `brew_strong_tonic` ×2 |
+| `herbal_poultice` Herbal poultice | medicine | recipe `brew_poultice` ×1 | **none** |
 | `herbal_tonic` Herbal tonic | food | recipe `brew_tonic` ×1 | food `herbal_tonic` |
 | `hide` Hide | resource | node `cow_pen` ×1; node `pig_pen` ×1; node `sheep_pen` ×1; node `wild_boar` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; quest `the_tanners_craft` ×2; recipe `tan_leather` ×1 |
 | `iron_armor` Iron armour | armor | recipe `forge_iron_armor` ×1 | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
@@ -267,6 +278,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `leather` Leather | resource | recipe `tan_leather` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `smith` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_iron_armor` ×2; recipe `forge_iron_helmet` ×1; recipe `forge_iron_sword` ×1; recipe `leather_armor` ×4; recipe `leather_cap` ×2 |
 | `leather_armor` Leather armour | armor | recipe `leather_armor` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
 | `leather_cap` Leather cap | head | recipe `leather_cap` ×1 | buyer `merchant_goods` ×3; equip `head`; export `caravan` |
+| `linen_bandage` Linen bandage | medicine | start_kit `player_start_items` ×2 | **none** |
 | `log` Log | resource | node `tree` ×4; start_stock `start_0` | building `bakehouse` ×10; building `carpentry` ×15; building `house` ×10; building `smithy` ×10; buyer `carpenter` ×30; buyer `cook` ×10; buyer `merchant_raw` ×20; export `caravan`; fuel `log`; fuel `log`; manor_job `log`; quest `wood_for_the_hearth` ×5; quest `work_the_woods` ×6; recipe `roast_meat` ×1; recipe `saw_planks` ×1 |
 | `meat` Raw meat | resource | node `chicken_pen` ×1; node `cow_pen` ×6; node `pig_pen` ×4; node `sheep_pen` ×3; node `wild_boar` ×4; node `wild_rabbit` ×1; start_stock `start_0` | buyer `cook` ×15; buyer `merchant_food` ×10; export `caravan`; recipe `roast_meat` ×1 |
 | `oak_sapling` Oak sapling | resource | node `tree` ×1 | plant `oak_sapling` |
@@ -281,6 +293,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `iron_seam`; tool `stone_seam` |
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
 | `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `stone_seam` ×1; start_stock `start_0` | building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `smithy` ×30; buyer `merchant_raw` ×40; manor_job `stone` |
+| `strong_healing_tonic` Strong healing tonic | medicine | recipe `brew_strong_tonic` ×1 | **none** |
 | `wheat` Wheat | resource | node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_3` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `brew_ale` ×3; recipe `cook_pottage` ×2 |
 
 ## Code-defined uses and sources
@@ -315,11 +328,11 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`ale`, `amulet`, `apple`, `axe`, `blueberries`, `bread`, `copper_ring`, `copper_sword`, `gold_ring`, `hammer`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `oak_sapling`, `pickaxe`, `pine_sapling`, `plain_clothes`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`
+`amulet`, `apple`, `axe`, `blueberries`, `bread`, `copper_ring`, `copper_sword`, `gold_ring`, `hammer`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `linen_bandage`, `oak_sapling`, `pickaxe`, `pine_sapling`, `plain_clothes`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`, `strong_healing_tonic`
 
 ### Orphaned items
 
-Items with no source at all: `apple`, `gold_ore`. Items only in the player's start kit: `bread`, `plain_clothes`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`.
+Items with no source at all: `apple`, `gold_ore`. Items only in the player's start kit: `bread`, `linen_bandage`, `plain_clothes`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`.
 
 ### Recipes needing materials with no legitimate source
 
@@ -360,6 +373,7 @@ finding not recorded here.
 | `gold_ring` | no_source | defect | Follows from gold_ore: its only source is forge_gold_ring. |
 | `bread` | start_kit_only | implemented | There is no flour or bread recipe: a loaf comes only in the player's start kit. Eaten for food; nobody buys it. |
 | `apple` | no_source | implemented | No tree, recipe or kit gives apples: the item is defined but never made (the start kit has a rotten apple only). |
+| `linen_bandage` | start_kit_only | implemented | No linen or cloth is grown or woven yet, so bandages are not craftable: the player starts with two, and the sage's apothecary holds some and buys more from the caravan (balance.json caravan_apothecary_stock; PL1-04). |
 | `rotten_apple` | start_kit_only | implemented | Only in the player's start kit: spoiled food that harms when eaten. |
 | `rusty_sword` | start_kit_only | implemented | Only in the player's start kit; nobody buys it. |
 | `rusty_pickaxe` | start_kit_only | implemented | Only in the player's start kit; a slower pickaxe nobody buys. |

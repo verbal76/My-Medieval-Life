@@ -211,8 +211,8 @@ func _run() -> void:
 	check(p.weapon == "rusty_sword", "the rusty sword is in hand")
 	pack_win.choose("rusty_pickaxe")
 	check(_press("Use") and p.tool == "rusty_pickaxe", "the rusty pickaxe is the tool")
-	var tab_shows := {"food": ["bread", "rotten_apple"], "materials": [], "tools": ["rusty_pickaxe"], "weapons": ["rusty_sword"],
-		"armour": ["plain_clothes"], "all": ["bread", "plain_clothes", "rotten_apple", "rusty_pickaxe", "rusty_sword"]}
+	var tab_shows := {"food": ["bread", "linen_bandage", "rotten_apple"], "materials": [], "tools": ["rusty_pickaxe"], "weapons": ["rusty_sword"],
+		"armour": ["plain_clothes"], "all": ["bread", "linen_bandage", "plain_clothes", "rotten_apple", "rusty_pickaxe", "rusty_sword"]}
 	for t in tab_shows:
 		pack_win.tab_buttons[pack_win.TABS.map(func(x): return x[0]).find(t)].pressed.emit()
 		check(pack_win.tab == t and pack_win.items_shown() == tab_shows[t], "the %s tab shows %s" % [t, pack_win.items_shown()])

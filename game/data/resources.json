@@ -533,6 +533,7 @@
     {"item": "gold_ring", "finding": "no_source", "reason": "Follows from gold_ore: its only source is forge_gold_ring.", "status": "defect"},
     {"item": "bread", "finding": "start_kit_only", "reason": "There is no flour or bread recipe: a loaf comes only in the player's start kit. Eaten for food; nobody buys it.", "status": "implemented"},
     {"item": "apple", "finding": "no_source", "reason": "No tree, recipe or kit gives apples: the item is defined but never made (the start kit has a rotten apple only).", "status": "implemented"},
+    {"item": "linen_bandage", "finding": "start_kit_only", "reason": "No linen or cloth is grown or woven yet, so bandages are not craftable: the player starts with two, and the sage's apothecary holds some and buys more from the caravan (balance.json caravan_apothecary_stock; PL1-04).", "status": "implemented"},
     {"item": "rotten_apple", "finding": "start_kit_only", "reason": "Only in the player's start kit: spoiled food that harms when eaten.", "status": "implemented"},
     {"item": "rusty_sword", "finding": "start_kit_only", "reason": "Only in the player's start kit; nobody buys it.", "status": "implemented"},
     {"item": "rusty_pickaxe", "finding": "start_kit_only", "reason": "Only in the player's start kit; a slower pickaxe nobody buys.", "status": "implemented"},
