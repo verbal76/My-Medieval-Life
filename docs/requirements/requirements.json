@@ -5149,6 +5149,51 @@
    ]
   },
   {
+   "id": "CRT-12",
+   "title": "Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family)",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "Remember NPCs can still reject a proposal from another NPC or player. They might not want to get married or have a suitor with a better offer. The things you do might make her not like you, of you kill villagers or are a criminal, or stole from their friends or family or things like that they can deny you",
+   "description": "Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family)",
+   "source": "owner message 2026-10-19 (chat)",
+   "approval": "owner instruction",
+   "acceptance": [
+    "Some people do not want to marry and refuse any proposal",
+    "A rival suitor they prefer leads them to refuse",
+    "Killing villagers or a criminal reputation leads to refusal",
+    "Harm to their family or friends lowers their regard for the player",
+    "Applies to proposals from villagers and the player alike"
+   ],
+   "implementation": "relations.gd::refusal, willing, rival, notoriety, harmed, slain_by_player; world.gd::kill",
+   "tests": "game/tests/relations_test.gd::test_refusals",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-19 (chat)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "refusals for unwillingness, rivals, killings, notoriety and low regard; harm spreads to kin and friends; tested"
+    }
+   ]
+  },
+  {
    "id": "DGA-D1",
    "title": "Meaning of \"isometric\"",
    "kind": "proposal",

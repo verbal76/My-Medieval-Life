@@ -1091,6 +1091,8 @@ func kill(n: NPC, cause: String) -> void:
 	if cause.begins_with("slain"):
 		bled.emit(n.pos)
 	n.target = -1
+	if cause.begins_with("slain by %s" % player.name) and n.role != "bandit":
+		relations.slain_by_player(n)       # family and friends never forget it (CRT-12)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	var heir := _heir(n)
 	if heir != null and not cause.begins_with("slain"):

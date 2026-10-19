@@ -42,6 +42,7 @@ const MEDICINE := ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_
 var w
 var ties := {}          # "a:b" (a < b; the player is Life.PLAYER_ID) -> tie (see _blank)
 var interests := {}     # villager id -> the id of the one they are courting (CRT-04)
+var killings := 0       # villagers the player has slain (CRT-12: no one marries a killer lightly)
 
 
 func _init(world) -> void:
@@ -227,11 +228,87 @@ func _touch(t: Dictionary) -> void:
 
 
 ## Harm the player did a villager or that they saw (CRT-10): regard and attraction fall.
-func harmed(n: NPC, amount: float) -> void:
-	if n == null or not n.alive or n.role == "bandit":
+## Harm done to someone reaches those close to them (CRT-12: "stole from their friends or family"): their kin
+## (parents, children, siblings, partner) lose kin_harm_share of it, their friends friend_harm_share.
+func harmed(n: NPC, amount: float, spread := true) -> void:
+	if n == null or n.role == "bandit":
 		return
-	var t := tie(Life.PLAYER_ID, n.id)
-	_raise(t, -amount, -amount * 0.5, false)
+	if n.alive:
+		_raise(tie(Life.PLAYER_ID, n.id), -amount, -amount * 0.5, false)
+	if not spread:
+		return
+	var c := cfg()
+	for o: NPC in w.npcs:
+		if o == n or not o.alive or o.role == "bandit":
+			continue
+		var share := 0.0
+		if o.partner == n.id or Life.kin(o.id, o.mother, o.father, n.id, n.mother, n.father):
+			share = float(c.kin_harm_share)
+		elif friends(o.id, n.id):
+			share = float(c.friend_harm_share)
+		if share > 0.0:
+			_raise(tie(Life.PLAYER_ID, o.id), -amount * share, -amount * share * 0.5, false)
+
+
+## The player slew a villager (World.kill): their family and friends turn hard against the player
+## (kill_harm through harmed), and it is never forgotten (killings).
+func slain_by_player(n: NPC) -> void:
+	if n.role == "bandit":
+		return
+	killings += 1
+	harmed(n, float(cfg().kill_harm))
+
+
+## How the village sees the player (CRT-12): crimes seen in the last notoriety_days, and every villager slain
+## counts killing_weight.
+func notoriety() -> int:
+	var c := cfg()
+	var n := killings * int(c.killing_weight)
+	for cr in w.player.crimes:
+		if int(cr.get("witnesses", 0)) > 0 and w.day() - int(cr.get("day", 0)) <= int(c.notoriety_days):
+			n += 1
+	return n
+
+
+## Some people do not mean to marry (unwilling_percent of villagers; fixed per person and world).
+func willing(n: NPC) -> bool:
+	return (n.id * 7919 + int(w.seed) * 31) % 100 >= int(cfg().unwilling_percent)
+
+
+## The strongest attraction anyone else courting `n` holds (a rival suitor), else 0.
+func rival(n: NPC, suitor: int) -> float:
+	var best := 0.0
+	for k in ties:
+		var t: Dictionary = ties[k]
+		if str(t.stage) != "courting":
+			continue
+		var ids: PackedStringArray = str(k).split(":")
+		var x := int(ids[0])
+		var y := int(ids[1])
+		if (x == n.id and y != suitor) or (y == n.id and x != suitor):
+			best = maxf(best, float(t.attraction))
+	return best
+
+
+## Why `n` will not marry `suitor` whatever the courting (CRT-12), or "": they do not mean to marry; the
+## suitor is a known killer or criminal (notoriety); they do not think well enough of them (marry_regard;
+## harm to them, their family or friends lowers it); someone else courting them is dearer to them.
+func refusal(suitor: int, n: NPC) -> String:
+	var c := cfg()
+	if not willing(n):
+		return "I'm fond of you, but I don't mean to marry. Not now, maybe not ever."
+	var t := peek(suitor, n.id)
+	if suitor == Life.PLAYER_ID:
+		if killings > 0:
+			return "Marry you? You have killed people of this village. No."
+		if notoriety() >= int(c.notoriety_refuse):
+			return "Everyone knows what you've been doing. I won't marry a thief."
+	if float(t.regard) < float(c.marry_regard):
+		return "I don't think well enough of you for that."
+	var other := rival(n, suitor)
+	if other > float(t.attraction):
+		return "I'm sorry. There's someone else I care for more."
+	return ""
 
 
 ## The player killed a bandit or a dangerous beast near villagers: those within witness_radius who saw it
@@ -350,6 +427,8 @@ func ask_court(a: int, n: NPC) -> String:
 	var t := tie(a, n.id)
 	if not can_court(a, n.id):
 		return "That's not for us."
+	if a == Life.PLAYER_ID and (killings > 0 or notoriety() >= int(cfg().notoriety_refuse)):
+		return "Walk out with you? After what you've done? No."
 	if float(t.attraction) < float(cfg().court_at) or int(t.days_known) < int(cfg().court_min_days):
 		_raise(t, 0.0, -float(cfg().too_soon_penalty) * 0.5, false)
 		return "Court me? We hardly know each other yet."
@@ -366,6 +445,12 @@ func propose(a: int, n: NPC) -> String:
 	var t := tie(a, n.id)
 	if str(t.stage) != "courting" or not can_court(a, n.id):
 		return "We aren't courting."
+	var why := refusal(a, n)
+	if why != "":
+		w.stat("proposals_refused")
+		if not willing(n) or rival(n, a) > float(t.attraction):
+			t.stage = ""                              # it ends here: they will not have this suitor
+		return why
 	var days: int = w.day() - int(t.since)
 	if float(t.attraction) < float(cfg().propose_at) or days < int(cfg().propose_min_days) or int(t.days_known) < int(cfg().marry_min_days):
 		_raise(t, 0.0, -float(cfg().too_soon_penalty), false)
@@ -503,7 +588,7 @@ func _villagers_court() -> void:
 			interests.erase(n.id)
 			target = null
 		if target == null:
-			if w.rng.randf() >= float(c.npc_court_chance):
+			if not willing(n) or w.rng.randf() >= float(c.npc_court_chance):
 				continue
 			# only someone they have come to know: the strongest attraction of those they may court (CRT-08)
 			var best: NPC = null
@@ -530,6 +615,8 @@ func _villagers_court() -> void:
 			if propose(n.id, target) == "":
 				interests.erase(n.id)
 				interests.erase(target.id)
+			elif str(t.stage) == "":
+				interests.erase(n.id)                  # refused for good: they look elsewhere
 
 
 ## A gift a villager has to give: one of the other's favourites, else a traditional gift, else "".
@@ -553,7 +640,7 @@ func to_dict() -> Dictionary:
 	var ins := {}
 	for k in interests:
 		ins[str(k)] = int(interests[k])
-	return {"ties": out, "interests": ins}
+	return {"ties": out, "interests": ins, "killings": killings}
 
 
 func load_dict(d: Dictionary) -> void:
@@ -577,6 +664,7 @@ func load_dict(d: Dictionary) -> void:
 		for f in ["att_today", "reg_today", "near_min", "near_reg"]:
 			t[f] = float(t[f])
 		ties[str(k)] = t
+	killings = int(d.get("killings", 0))
 	var ins: Dictionary = d.get("interests", {})
 	for k in ins:
 		interests[int(k)] = int(ins[k])

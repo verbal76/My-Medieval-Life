@@ -396,7 +396,10 @@ func test_couples_found_households() -> void:
 	t.stage = "courting"
 	t.since = w.day() - 10
 	t.days_known = int(Relations.cfg().marry_min_days)
+	t.regard = 60.0
+	GameData.b("relations").unwilling_percent = 0              # this check is about rooms, not willingness
 	check(w.relations.propose(f.id, m) == "", "a proposal after courting long enough is accepted")
+	GameData.b("relations").unwilling_percent = 12
 	for n: NPC in w.npcs:
 		if n.partner == -5:
 			n.partner = -1

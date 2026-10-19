@@ -33,6 +33,7 @@ func _init() -> void:
 	test_closeness()
 	test_no_rushing()
 	test_seek_company()
+	test_refusals()
 	test_same_sex()
 	test_save()
 	print("%d checks, %d failures" % [checks, failures])
@@ -43,7 +44,7 @@ func _init() -> void:
 func single(w: World, job := "", not_id := -99) -> NPC:
 	for n: NPC in w.npcs:
 		if n.alive and n.role == "adult" and n.partner < 0 and n.id != not_id and (job == "" or n.job == job) \
-				and Life.npc_age(w, n) >= 18.0 and Life.npc_age(w, n) <= 50.0 and w.relations.can_court(ME, n.id):
+				and Life.npc_age(w, n) >= 18.0 and Life.npc_age(w, n) <= 50.0 and w.relations.can_court(ME, n.id) and w.relations.willing(n):
 			return n
 	return null
 
@@ -119,6 +120,7 @@ func test_courting() -> void:
 	check(r.ask_court(ME, n) != "" and r.stage(ME, n.id) == "", "asking to court a stranger is declined")
 	var c := Relations.cfg()
 	var t := r.tie(ME, n.id)
+	t.regard = float(c.marry_regard) + 10.0
 	t.attraction = float(c.court_at) + 10.0
 	t.days_known = int(c.court_min_days) - 1
 	check(r.ask_court(ME, n) != "", "drawn to you but known only %d days: not yet" % (int(c.court_min_days) - 1))
@@ -383,13 +385,108 @@ func test_seek_company() -> void:
 	GameData.b("relations").seek.chance = 0.6
 
 
+## CRT-12: proposals can be refused: not the marrying kind, a rival they prefer, a killer or a known thief,
+## and harm done to someone's family or friends turns them against the player.
+func test_refusals() -> void:
+	var c := Relations.cfg()
+	var ready := func(w: World, n: NPC) -> Dictionary:      # a courtship that would otherwise succeed
+		var t: Dictionary = w.relations.tie(ME, n.id)
+		t.regard = 60.0
+		t.attraction = 90.0
+		t.days_known = int(c.marry_min_days)
+		t.stage = "courting"
+		t.since = w.day() - int(c.propose_min_days)
+		return t
+	# not the marrying kind
+	var w := new_world()
+	var unwilling: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.partner < 0 and w.relations.can_court(ME, o.id) and not w.relations.willing(o):
+			unwilling = o
+			break
+	check(unwilling != null, "some villagers do not mean to marry (%d%%)" % int(c.unwilling_percent))
+	if unwilling != null:
+		ready.call(w, unwilling)
+		check(w.relations.propose(ME, unwilling).contains("don't mean to marry") and w.player.partner == -1, "they refuse however well the courting went")
+	# a rival suitor they prefer
+	var n := single(w)
+	var t: Dictionary = ready.call(w, n)
+	var rival: NPC = null
+	for o: NPC in w.npcs:
+		if o != n and o.alive and o.role == "adult" and w.relations.can_court(o.id, n.id):
+			rival = o
+			break
+	var rt := w.relations.tie(rival.id, n.id)
+	rt.stage = "courting"
+	rt.attraction = 95.0
+	check(w.relations.propose(ME, n).contains("someone else") and w.player.partner == -1, "a rival suitor they care for more: refused")
+	# too little regard (harm lowered it)
+	var w2 := new_world()
+	var m := single(w2)
+	var t2: Dictionary = ready.call(w2, m)
+	t2.regard = float(c.marry_regard) - 1.0
+	check(w2.relations.propose(ME, m).contains("think well enough"), "not thinking well enough of the suitor: refused")
+	# a killer
+	var w3 := new_world()
+	var k := single(w3)
+	ready.call(w3, k)
+	var victim: NPC = w3.npcs.filter(func(o: NPC) -> bool: return o.alive and o.role == "adult" and o != k and o.job != "guard")[0]
+	w3.kill(victim, "slain by %s %s" % [w3.player.name, w3.player.family])
+	check(w3.relations.killings == 1 and w3.relations.propose(ME, k).contains("killed"), "a suitor who has killed a villager: refused")
+	check(w3.relations.ask_court(ME, single(w3, "", k.id)) != "", "and nobody will even court them")
+	# a known thief
+	var w4 := new_world()
+	var q := single(w4)
+	ready.call(w4, q)
+	for i in int(c.notoriety_refuse):
+		w4.player.crimes.append({"day": w4.day(), "kind": "theft", "what": "bread", "victim": -1, "witnesses": 2, "items": {}, "qty": 1, "value": 2})
+	check(w4.relations.propose(ME, q).contains("thief"), "a suitor seen stealing again and again: refused")
+	# stealing from someone's family or friend lowers their regard too
+	var w5 := new_world()
+	var mum: NPC = null
+	var kid: NPC = null
+	for o: NPC in w5.npcs:
+		if o.alive and o.mother >= 0 and w5.npc(o.mother) != null and w5.npc(o.mother).alive:
+			kid = o
+			mum = w5.npc(o.mother)
+			break
+	var pal := single(w5, "", mum.id)
+	w5.relations.befriend(pal.id, kid.id)
+	w5.relations.tie(ME, mum.id).regard = 40.0
+	w5.relations.tie(ME, pal.id).regard = 40.0
+	w5.relations.harmed(kid, float(c.victim_harm))
+	check(float(w5.relations.peek(ME, mum.id).regard) < 40.0, "robbing someone lowers their mother's regard for you (%.1f)" % float(w5.relations.peek(ME, mum.id).regard))
+	check(float(w5.relations.peek(ME, pal.id).regard) < 40.0 and float(w5.relations.peek(ME, pal.id).regard) > float(w5.relations.peek(ME, mum.id).regard),
+			"and, less, their friend's")
+	# villagers refuse villagers too
+	var w6 := new_world()
+	var u: NPC = null
+	var v: NPC = null
+	for o: NPC in w6.npcs:
+		if o.alive and o.role == "adult" and o.partner < 0 and not w6.relations.willing(o):
+			u = o
+			break
+	for o: NPC in w6.npcs:
+		if u != null and o != u and o.alive and o.role == "adult" and o.partner < 0 and w6.relations.can_court(o.id, u.id) and w6.relations.willing(o):
+			v = o
+			break
+	if u != null and v != null:
+		var tv := w6.relations.tie(v.id, u.id)
+		tv.regard = 60.0
+		tv.attraction = 90.0
+		tv.days_known = int(c.marry_min_days)
+		tv.stage = "courting"
+		tv.since = w6.day() - int(c.propose_min_days)
+		check(w6.relations.propose(v.id, u) != "" and u.partner == -1, "a villager can refuse a villager's proposal too")
+
+
 # ---------------------------------------------------------------- same sex -------------------
 func test_same_sex() -> void:
 	var w := new_world()
 	var r := w.relations
 	var n: NPC = null
 	for o: NPC in w.npcs:
-		if o.alive and o.role == "adult" and o.partner < 0 and o.sex == w.player.sex and r.can_court(ME, o.id):
+		if o.alive and o.role == "adult" and o.partner < 0 and o.sex == w.player.sex and r.can_court(ME, o.id) and r.willing(o):
 			n = o
 			break
 	check(n != null and r.can_court(ME, n.id), "the player may court someone of the same sex (CRT-07)")
@@ -397,6 +494,7 @@ func test_same_sex() -> void:
 		return
 	var t := r.tie(ME, n.id)
 	t.attraction = 90.0
+	t.regard = 60.0
 	t.days_known = int(Relations.cfg().marry_min_days)
 	r.ask_court(ME, n)
 	for i in int(Relations.cfg().propose_min_days):
