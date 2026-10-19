@@ -33,6 +33,10 @@ var toast_bottom := -160.0     # where the toast's bottom edge sits (above the p
 var action_bar: ProgressBar
 var panel: PanelContainer
 var panel_kind := ""
+var panel_back := Callable()   # what X, Esc and the pad's B do in the open window (PL1-01); empty: close it
+var inner_back := Callable()   # a window's own step back first (the wiki's previous page); returns true when it stepped
+var settings_tab := "audio"
+var wiki_win: WikiWindow       # the open wiki, while Settings shows its tab
 var panel_body: VBoxContainer
 var title_label: Label
 var top_row: HBoxContainer     # the window's title tab and X (the pack window draws its own)
@@ -621,7 +625,7 @@ func _build_panel() -> void:
 	top.add_child(title_label)
 	top.add_child(gap)
 	close_btn = _tile_button("close", "", 52)
-	close_btn.pressed.connect(hide_all)
+	close_btn.pressed.connect(go_back)
 	top.add_child(close_btn)
 	outer.add_child(top)
 	var scroll := ScrollContainer.new()
@@ -748,14 +752,17 @@ func _controls_list(s: String) -> void:
 	panel_body.add_child(grid)
 
 
+## Controls: the Controls tab of Settings (kept as an entry point for the title and pause menus).
 func show_controls(back: Callable) -> void:
-	_open("controls", "Controls", main.paused)
+	show_settings(back, "controls")
+
+
+func _controls_tab() -> void:
 	_label("The game switches by itself to whichever you use.", 16)
 	_label("The bars top left: Health (at 0 you die), Food (falls with time; at 0 you starve and lose health, so eat from the Pack) and Stamina (spent by casting Fireball, refills by itself). A bar turns red and blinks when it is low.", 15)
 	for s in [scheme] + ["touch", "kbm", "gamepad"].filter(func(x): return x != scheme):
 		_label(SCHEME_NAMES[s] + (" (in use)" if s == scheme else ""), 22, Color(1, 0.85, 0.5))
 		_controls_list(s)
-	_button("Back", back)
 
 
 func message(text: String, seconds := 4.0) -> void:
@@ -855,7 +862,24 @@ func is_open(kind: String) -> bool:
 	return panel.visible and panel_kind == kind
 
 
+## X, Esc and the pad's B in a window (PL1-01): a window opened from another returns to it (Settings
+## to the pause menu or the title screen), a window of play closes, and the title, character
+## creation, origin and death screens do not close at all (closing the title left the world grey and paused).
+func go_back() -> void:
+	if not panel.visible or panel_kind in ["title", "origin", "death"]:
+		return
+	if inner_back.is_valid() and inner_back.call():
+		return
+	if panel_back.is_valid():
+		var b := panel_back
+		b.call()
+	else:
+		hide_all()
+
+
 func hide_all() -> void:
+	panel_back = Callable()
+	inner_back = Callable()
 	panel.visible = false
 	hud.visible = true
 	panel_kind = ""
@@ -865,6 +889,8 @@ func hide_all() -> void:
 
 func _open(kind: String, title: String, pause := true) -> void:
 	panel_kind = kind
+	panel_back = Callable()
+	inner_back = Callable()
 	title_label.text = title.to_upper()
 	close_btn.visible = not kind in ["title", "origin", "death", "creation"]
 	for c in panel_body.get_children():
@@ -947,10 +973,11 @@ func show_title(can_continue: bool) -> void:
 	_label("A living village of a hundred people who work, trade, eat and sleep whether or not you are watching. You are one of them.")
 	_button("Continue", func(): main.continue_game(), can_continue)
 	_button("New game", func(): show_creation({}))
-	_button("Settings", func(): show_settings(func(): show_title(main.can_continue())))
+	_button("Settings", func(): show_settings(func(): show_title(main.can_continue()), "audio"))
 	if not main.settings.phone:
 		_button("Quit", func(): main.get_tree().quit())
 	_button("Controls", func(): show_controls(func(): show_title(main.can_continue())))
+	_button("Wiki", func(): show_settings(func(): show_title(main.can_continue()), "wiki"))
 	_button("Credits", show_credits)
 	_controls_list(scheme)
 
@@ -959,6 +986,7 @@ func show_title(can_continue: bool) -> void:
 func show_credits() -> void:
 	var c: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/credits.json"))
 	_open("credits", "Credits", true)
+	panel_back = func(): show_title(main.can_continue())
 	_label("My Medieval Life, by Hot Attic Games.", 18)
 	for p in c.packs:
 		_label("%s: %s (%s)" % [p.creator if p.creator != "to be confirmed" else "Creator to be confirmed", p.packs, p.licence], 15)
@@ -976,6 +1004,7 @@ func show_creation(spec: Dictionary) -> void:
 	if look == "" or mine.filter(func(l): return l.id == look).is_empty():
 		look = mine[0].id
 	_open("creation", "Who are you?", false)
+	panel_back = func(): show_title(main.can_continue())
 	var names := HBoxContainer.new()
 	panel_body.add_child(names)
 	var name_edit := LineEdit.new()
@@ -1072,20 +1101,75 @@ func show_pause() -> void:
 	_button("Save", func(): main.save_game())
 	_button("Journal", func(): show_journal(-1))
 	_button("Build", show_build_menu)
-	_button("Settings", func(): show_settings(show_pause))
+	_button("Settings", func(): show_settings(show_pause, "audio"))
 	_button("Controls", func(): show_controls(show_pause))
+	_button("Wiki", func(): show_settings(show_pause, "wiki"))
 	_button("Save and quit to title", func():
 		main.save_game(false)
 		main.running = false
 		show_title(true))
 
 
-## Settings: sound, display (windows only on a computer), interface size and touch buttons. Each
-## change is applied and saved at once; `back` reopens the screen it came from.
-func show_settings(back: Callable) -> void:
-	var st: GameSettings = main.settings
+const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["wiki", "Wiki"]]
+
+
+## Settings: one screen with tabs (Audio, Display, Interface, Controls, Wiki) and a Back button. Each
+## change is applied and saved at once. `back` reopens the screen it came from (the title or the
+## pause menu, or closes to play); X, Esc and the pad's B do the same, after stepping back inside the
+## wiki. Opening it keeps the pause state it found, so closing restores play (PL1-01, PL1-02).
+func show_settings(back: Callable, tab := "") -> void:
 	var was_paused: bool = main.paused
 	_open("settings", "Settings", was_paused)
+	panel_back = back
+	if tab != "":
+		settings_tab = tab
+	_settings_page()
+
+
+func _settings_page() -> void:
+	var back := panel_back
+	for c in panel_body.get_children():
+		panel_body.remove_child(c)
+		c.queue_free()
+	inner_back = Callable()
+	var tabs := HFlowContainer.new()
+	tabs.name = "SettingsTabs"
+	panel_body.add_child(tabs)
+	for t in SETTINGS_TABS:
+		var id: String = t[0]
+		var b := Button.new()
+		b.text = t[1]
+		b.name = "Tab_" + id
+		b.toggle_mode = true
+		b.button_pressed = id == settings_tab
+		b.custom_minimum_size = Vector2(120, 48)
+		b.pressed.connect(func():
+			settings_tab = id
+			_settings_page.call_deferred())
+		tabs.add_child(b)
+	match settings_tab:
+		"audio":
+			_settings_audio()
+		"display":
+			_settings_display()
+		"interface":
+			_settings_interface()
+		"controls":
+			_controls_tab()
+		"wiki":
+			var wk := WikiWindow.new()
+			wk.open(self, panel_body)
+			wiki_win = wk
+			inner_back = wk.step_back
+	_button("Back", back if back.is_valid() else hide_all)
+	if scheme != "touch":
+		var tb: Button = tabs.get_node_or_null("Tab_" + settings_tab)
+		if tb:
+			(func(): if is_instance_valid(tb) and tb.is_inside_tree(): tb.grab_focus()).call_deferred()
+
+
+func _settings_audio() -> void:
+	var st: GameSettings = main.settings
 	for row in [["Master volume", "master"], ["Music", "music"], ["Sound effects", "sfx"]]:
 		var key: String = row[1]
 		var sl := HSlider.new()
@@ -1098,6 +1182,11 @@ func show_settings(back: Callable) -> void:
 			st.set(key, v / 100.0)
 			main.apply_settings())
 		_setting_row(row[0], sl)
+	_label("Sound volumes take effect once the game has sounds.", 14)
+
+
+func _settings_display() -> void:
+	var st: GameSettings = main.settings
 	if not st.phone:
 		_choice("Display", ["windowed", "fullscreen", "borderless"], st.display, func(v):
 			st.display = v)
@@ -1110,10 +1199,12 @@ func show_settings(back: Callable) -> void:
 		_choice("VSync", ["on", "off"], "on" if st.vsync else "off", func(v): st.vsync = v == "on")
 	_choice("Frame rate cap", ["none", "30", "60", "120"], "none" if st.max_fps == 0 else str(st.max_fps), func(v):
 		st.max_fps = 0 if v == "none" else int(v))
+
+
+func _settings_interface() -> void:
+	var st: GameSettings = main.settings
 	_choice("Interface size", ["small", "normal", "large"], st.ui_size, func(v): st.ui_size = v)
 	_choice("On-screen buttons", ["auto", "always", "never"], st.touch_buttons, func(v): st.touch_buttons = v)
-	_label("Controls switch by themselves to touch, gamepad or keyboard and mouse, whichever you use. Sound volumes take effect once the game has sounds.", 14)
-	_button("Back", back)
 
 
 func _setting_row(text: String, control: Control) -> void:
