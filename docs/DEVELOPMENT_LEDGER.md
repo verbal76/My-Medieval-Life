@@ -10,7 +10,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 33 |
+| APPROVED — NOT STARTED | 41 |
 | ACTIVE DEVELOPMENT | 5 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 2 |
@@ -21,8 +21,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **259** |
-| Outstanding (not complete, superseded or canceled) | 122 |
+| **Total approved** | **267** |
+| Outstanding (not complete, superseded or canceled) | 130 |
 
 Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -52,7 +52,7 @@ Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 
-## APPROVED — NOT STARTED (33)
+## APPROVED — NOT STARTED (41)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -77,6 +77,14 @@ Automated tests do not count as device verification.
 | DVW-B6 | Wildlife wandering in from the overworld | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 278) |  |  |  |
 | DVW-B7 | Life chronicle, titles, memorial | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 279) |  |  |  |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 281) |  |  |  |
+| EQ-01 | Human civilization sustains itself without the player | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after B14R-12 |  |
+| EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after WR-01 |  |
+| EQ-03 | Humans and nature affect each other through real NPC decisions | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
+| EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
+| EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
+| EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
+| EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after B14R-12 | diagnose births, household formation and the construction pipeline |
+| EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |

@@ -2243,7 +2243,7 @@
    "playtest": [],
    "branch": "",
    "commits": [],
-   "parent": null,
+   "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
    "rules": [],
@@ -2264,6 +2264,11 @@
      "date": "2026-10-19",
      "change": "next_action",
      "why": "diagnosed: wildlife collapse is the missing breeding refuges (WR-01, approved, next); population and housing decline over ~45 game years not reached in normal play; tester notes list it"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "parent EQ-07",
+     "why": "Build 16 world equilibrium directive section 7"
     }
    ],
    "acceptance_derived": true
@@ -6472,6 +6477,370 @@
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "EQ-01",
+   "title": "Human civilization sustains itself without the player",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Without player intervention, NPCs must be capable of: Producing and distributing food. Forming families and raising new generations. Maintaining a viable population over time. Building, repairing, and replacing housing. ...",
+   "description": "Human civilization sustains itself without the player",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "Food produced and distributed",
+    "Families form and raise children; population not inevitably collapsing",
+    "Housing built, repaired, replaced",
+    "Businesses and professions operate; vacant jobs and civic posts filled",
+    "Finite resources acquired; shortages answered",
+    "Money created and spent through legitimate systems; trade maintained",
+    "Recovery from disasters and losses"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [
+    "B14R-12"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-011",
+    "WDR-013",
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "build 16",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
+  },
+  {
+   "id": "EQ-02",
+   "title": "Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Predators must not inevitably eliminate all prey, and hunting must not inevitably eliminate every species across the entire world.",
+   "description": "Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "Each listed mechanism exists",
+    "Breeding refuges preserved (WR-01)",
+    "No unavoidable global extinction from incomplete mechanics",
+    "No unlimited instant respawning"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [
+    "WR-01"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-018"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "build 15",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
+  },
+  {
+   "id": "EQ-03",
+   "title": "Humans and nature affect each other through real NPC decisions",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Neither system should exist independently as a disconnected background simulation.",
+   "description": "Humans and nature affect each other through real NPC decisions",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "Hunting, farming, deforestation and overharvesting change nature",
+    "Harvests, predators, depletion and wildlife numbers change NPC decisions"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-004",
+    "WDR-013",
+    "WDR-018"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "build 16",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
+  },
+  {
+   "id": "EQ-04",
+   "title": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "When a carpenter dies, another NPC should eventually be capable of entering that profession.",
+   "description": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "Vacant professions are refilled",
+    "Households respond to losing a provider",
+    "Government continues through leadership change",
+    "A failed business's role is filled by another or by trade"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-002",
+    "WDR-012",
+    "WDR-014",
+    "WDR-015",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "build 16",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
+  },
+  {
+   "id": "EQ-05",
+   "title": "The player is the disruptive variable: no hidden protection of the world from player consequences",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Do not secretly protect the world from legitimate player consequences.",
+   "description": "The player is the disruptive variable: no hidden protection of the world from player consequences",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "The world simulates independently of the player",
+    "Player disruption and restoration both possible through real systems",
+    "No secret protections"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "build 16",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
+  },
+  {
+   "id": "EQ-06",
+   "title": "Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Use multiple seeds so one unusually successful simulation cannot conceal a systemic problem.",
+   "description": "Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "Reproducible inactive-player runs on several seeds and starting conditions",
+    "All listed measures recorded",
+    "No consistent spiral into extinction, starvation, permanent unemployment or economic paralysis",
+    "Separate intervention scenarios change the results"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [
+    "EQ-01",
+    "EQ-02",
+    "EQ-03",
+    "EQ-04",
+    "EQ-05"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-007"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "build 16",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
+  },
+  {
+   "id": "EQ-07",
+   "title": "Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Correct underlying causes rather than introducing artificial population or resource injections that conceal broken mechanics.",
+   "description": "Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "Cause of each failure determined and recorded",
+    "Underlying causes corrected, not concealed",
+    "Re-run on several seeds"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [
+    "B14R-12"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-013",
+    "WDR-018"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "diagnose births, household formation and the construction pipeline",
+   "priority": "build 15",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
+  },
+  {
+   "id": "EQ-16",
+   "title": "World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "By Build 16, the world itself should be the functioning simulation. The player should be the variable that changes its history, not the mechanism keeping it alive.",
+   "description": "World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable",
+   "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
+   "approval": "owner directive 2026-10-19 (Build 16 target; Build 15 foundations)",
+   "acceptance": [
+    "Every child EQ-01..EQ-07 complete and verified",
+    "Not closed because a short simulation passes"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "EQ-01",
+    "EQ-02",
+    "EQ-03",
+    "EQ-04",
+    "EQ-05",
+    "EQ-06",
+    "EQ-07"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-006",
+    "WDR-013",
+    "WDR-017",
+    "WDR-018",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance",
+   "priority": "build 16",
+   "workstream": "world equilibrium",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner's Build 16 world equilibrium directive"
+    }
+   ]
   },
   {
    "id": "F-1",
