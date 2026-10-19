@@ -205,8 +205,8 @@ func _ready() -> void:
 				ui.show_creation({"name": "Ada", "family": "Thorne", "sex": "female"})
 			"origin":
 				ui.show_origin()
-			"settings":
-				ui.show_settings(ui.hide_all)
+			"settings", "settings_display", "settings_interface", "settings_controls", "settings_wiki":
+				ui.show_settings(ui.hide_all, shot_panel.trim_prefix("settings_") if shot_panel.begins_with("settings_") else "audio")
 			"controls", "controls_pad":
 				if shot_panel == "controls_pad":
 					ui.set_scheme("gamepad")
@@ -2483,15 +2483,15 @@ func _unhandled_input(e: InputEvent) -> void:
 			var who := _creature_at((get_canvas_transform().affine_inverse() * e.position) / T)
 			if who != null:
 				strike(who)
-	if e is InputEventJoypadButton and e.is_action_pressed("ui_cancel") and ui.modal() and not ui.panel_kind in ["title", "creation", "origin", "death"]:
-		ui.hide_all()
+	if e is InputEventJoypadButton and e.is_action_pressed("ui_cancel") and ui.modal() and not ui.panel_kind in ["title", "origin", "death"]:
+		ui.go_back()
 	if e.is_action_pressed("zoom_in"):
 		_set_zoom(camera.zoom.x * 1.2)
 	if e.is_action_pressed("zoom_out"):
 		_set_zoom(camera.zoom.x / 1.2)
 	if e.is_action_pressed("pause"):
 		if ui.modal():
-			ui.hide_all()
+			ui.go_back()
 		elif running:
 			ui.show_pause()
 	if e.is_action_pressed("map"):
