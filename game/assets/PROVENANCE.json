@@ -807,6 +807,13 @@
    "sha256": "33b975f4c473583e0d5032999db5fd47148108c4bab2f7fe8c4075e948d7c21b"
   },
   {
+   "file": "assets/icons/plough.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Hoe-02.png",
+   "transform": "copied unchanged",
+   "sha256": "ced1b382b6df79ce38f09da3e22f509c30d25559895da82e444f8801d057e6cf"
+  },
+  {
    "file": "assets/icons/pottage.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Metal/Metal-Pot-01.png",
@@ -854,6 +861,83 @@
    "member": "16x16 Survival RPG Icons/Plants & Alchemy/Herb-Bundle-01.png",
    "transform": "copied unchanged",
    "sha256": "b6bda1af97a1a5921f6d6cbef8c8b10c577e487a65e867ac7cbf9b311f1f78ab"
+  },
+  {
+   "file": "assets/icons/carrot.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "the 16 x 16 cell at column 0, row 0, cut out",
+   "sha256": "5a58d5653dd4f9717cd8adab2651230965600d0ddc398cccc285e605536a5562"
+  },
+  {
+   "file": "assets/icons/carrot_seed.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/seeds.png",
+   "transform": "the 16 x 16 cell at column 0, row 0, cut out",
+   "sha256": "db54f4146e8917c6cb5928d28654908124f51fb9e6b6b7a2b1dcef591a3b233c"
+  },
+  {
+   "file": "assets/icons/cheese.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "the 16 x 16 cell at column 3, row 3, cut out",
+   "sha256": "5a912ef4fe19df225dc0905922258764458a8470068431eefc1ccccd878cb328"
+  },
+  {
+   "file": "assets/icons/egg.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "the 16 x 16 cell at column 2, row 4, cut out",
+   "sha256": "d27f8d0ec1fe878aa4a7f340adfe0c7aa9da16bfc1d66220404d2f5e56629d25"
+  },
+  {
+   "file": "assets/icons/herb_seed.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/seeds.png",
+   "transform": "the 16 x 16 cell at column 2, row 2, cut out",
+   "sha256": "01715a494ae5814c06446207fd590c77c7fc5ebb7c58c116c6e7fa48788445d7"
+  },
+  {
+   "file": "assets/icons/milk.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "the 16 x 16 cell at column 0, row 3, cut out",
+   "sha256": "c8af02c143b2c5af3dd474b021022d12ad52e278c2999cf71df1482dbb76649d"
+  },
+  {
+   "file": "assets/icons/potato.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "the 16 x 16 cell at column 5, row 0, cut out",
+   "sha256": "63b05fea9188b00e4c0c9dfd9fadc375af9560bec63e0c1aa8f83e33507bac3a"
+  },
+  {
+   "file": "assets/icons/potato_seed.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/seeds.png",
+   "transform": "the 16 x 16 cell at column 5, row 0, cut out",
+   "sha256": "d61eaa13982f2bfb2cfcb8220d8509d6b85c9e4217aa1ffaa39b6158eba21052"
+  },
+  {
+   "file": "assets/icons/wheat_seed.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/farming/seeds.png",
+   "transform": "the 16 x 16 cell at column 2, row 1, cut out",
+   "sha256": "e99da1e75f64d182ea8e4e6ec258ab308676f0fadc1fbd5414e5e7e9d0924ba3"
+  },
+  {
+   "file": "assets/icons/wool.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "the 16 x 16 cell at column 0, row 5, cut out",
+   "sha256": "0cd1b2bb05781cd599a7dd45031558832c2b92afa9bbc48ee16d518dd719fae1"
+  },
+  {
+   "file": "assets/icons/wool_cloth.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/ui/items.png",
+   "transform": "the 16 x 16 cell at column 4, row 5, cut out",
+   "sha256": "f9d6863a756a9c00ad11a68e0e73f8b2a23b748f58355a3e09b4d9c4ef1efa17"
   },
   {
    "file": "assets/icons/amulet.png",

@@ -411,5 +411,30 @@
   "pickpocket_chance_max": 0.85,
   "pickpocket_coins_max": 5,
   "tavern_hours": [7, 22],
-  "table_keep": 4
+  "table_keep": 4,
+  "farming": {
+    "_note": "PL2-015 farming by the player (docs/BUILD_DECISIONS.md 'Farming'; every number is an agent proposal, provisional). Land: only ground the player owns or leases. Tilling a cell: by hand (no tool, slow and tiring) or with the hand plough (the baseline); a draught animal is deferred. seconds are real seconds; stamina is taken at the start and the player needs that much to begin (stamina regenerates player_stamina_regen_per_second). Crops grow by an hourly progress step: 1 / (days * 24) times the season's rate, ripe at 1; no sowing in sow_seasons-excluded seasons (winter), growth slows in autumn and stops in winter. yield is the crop item per cell, seeds_back the seed items a harvest returns (seed saving), seed_price what a farmer or the food merchant charges for a seed. pens: [width, height] of a player pen by species; fence cells cost one plank per fence_cells_per_plank. animal_price is an adult's price from the keeper (young_price_share for a juvenile). products: what an adult pen animal gives (sex f/any) every `days` game days while well fed, kept in the pen (product_cap each) until collected.",
+    "till": {"hand": {"seconds": 7.0, "stamina": 80.0}, "plough": {"seconds": 2.5, "stamina": 25.0}},
+    "clear": {"stump_seconds": 4.0, "stump_stamina": 20.0, "young_seconds": 2.0, "bush_seconds": 1.5},
+    "sow_seconds": 0.8,
+    "harvest_seconds": 0.8,
+    "season_rate": {"Spring": 1.0, "Summer": 1.0, "Autumn": 0.5, "Winter": 0.0},
+    "sow_seasons": ["Spring", "Summer", "Autumn"],
+    "crops": {
+      "wheat": {"name": "Wheat", "seed": "wheat_seed", "item": "wheat", "days": 2.0, "yield": 3, "seeds_back": 1, "seed_price": 2},
+      "carrot": {"name": "Carrots", "seed": "carrot_seed", "item": "carrot", "days": 1.5, "yield": 3, "seeds_back": 1, "seed_price": 2},
+      "potato": {"name": "Potatoes", "seed": "potato_seed", "item": "potato", "days": 2.5, "yield": 3, "seeds_back": 1, "seed_price": 2},
+      "herb": {"name": "Herbs", "seed": "herb_seed", "item": "flower", "days": 1.0, "yield": 2, "seeds_back": 1, "seed_price": 2}
+    },
+    "pens": {"chicken": [5, 4], "sheep": [7, 5], "pig": [6, 5], "cow": [7, 6]},
+    "fence_cells_per_plank": 3,
+    "animal_price": {"chicken": 8, "sheep": 20, "pig": 18, "cow": 40},
+    "young_price_share": 0.6,
+    "products": {
+      "chicken": {"item": "egg", "sex": "f", "days": 1.0, "qty": 1},
+      "cow": {"item": "milk", "sex": "f", "days": 1.0, "qty": 2},
+      "sheep": {"item": "wool", "sex": "any", "days": 4.0, "qty": 1}
+    },
+    "product_cap": 8
+  }
 }

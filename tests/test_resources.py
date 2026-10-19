@@ -79,7 +79,7 @@ class ResourceRegistryTest(unittest.TestCase):
         self.assertIn(("log", "plank", "pickaxe"), s["chains"])
         # PL2-013: the home food table makes bread (knead_flatbread, 3 wheat), so bread is a chain now
         self.assertIn(("wheat", "bread"), s["chains"])
-        self.assertEqual(s["not_gather"], ["chicken_pen", "cow_pen", "pig_pen", "sheep_pen"])
+        self.assertEqual(s["not_gather"], ["chicken_pen", "cow_pen", "pig_pen", "player_field", "player_pen", "sheep_pen"])   # PL2-015: the player's field and pens are worked by Use, not Gather mode
 
     def test_both_directions_agree_with_recipes(self):
         for r, rec in self.ctx["recipes"].items():

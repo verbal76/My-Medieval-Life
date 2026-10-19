@@ -55,6 +55,7 @@ var business: Business             # the player's market stall and the villagers
 var construction: Construction     # building kinds, placement, hired helpers, households that split
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
+var farm: Farming                  # the player's field, pens and seeds (PL2-015, scripts/core/farming.gd)
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
 var granary := Inventory.new()     # the manor's grain, bought from farmers' surplus, given out as relief
 var last_reeve_day := -1           # the day the reeve's evening business last ran (never twice a day)
@@ -139,6 +140,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	# (its need weighted by age: children eat less)
 	granary.add("wheat", ceili(brain.village_day_food() * float(GameData.b("start_granary_days")) / 120.0))
 	fauna = Fauna.new(self)
+	farm = Farming.new(self)
 	fauna.populate()
 	_assign_keepers()
 	_init_ownership()
@@ -279,6 +281,7 @@ func famine() -> bool:
 
 func _on_hour(h: int) -> void:
 	_grow_trees()
+	farm.hour()                        # the player's crops (PL2-015)
 	_update_food_days()
 	serve_tables()
 	business.hour()                    # villagers walk to the player's open stall (PL1-10)
@@ -316,6 +319,7 @@ func _new_day() -> void:
 			pl.state = "ripe"
 			tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, int(pl.tile))
 	fauna.new_day()
+	farm.daily_products()              # eggs, milk and wool wait in the player's pens (PL2-015)
 	Life.dawn(self)                    # B8-029: roles by age, old-age deaths, partners, births
 	brain.dawn()
 	manor_work.dawn()                  # undone manor jobs are released
@@ -1340,6 +1344,7 @@ func plot(id: String) -> Dictionary:
 func start_site(p: Dictionary, kind := "house", owner := "") -> void:
 	var cost: Dictionary = construction.cost_of(kind).duplicate()
 	var ground := property.describe(p)
+	farm.give_up_cells(p)              # a field on the ground is ploughed under for the building (PL2-015)
 	p.site = {"kind": kind, "cost": cost, "need": cost.duplicate(), "done": false, "owner": owner if owner != "" else holder_of(p)}
 	var frame: int = map.data.tiles.frame
 	tile_changed.emit(_frame_cell(p), "below", frame)
@@ -2368,7 +2373,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"vacancies": vacancies, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
+		"vacancies": vacancies, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(),
 	}
@@ -2474,6 +2479,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		last_reeve_day = day() if hour() >= 17.0 else day() - 1
 		last_payday = day() if hour() >= 18.0 else day() - 1
 	fauna = Fauna.new(self)
+	farm = Farming.new(self)
 	if d.has("fauna"):
 		fauna.load_dict(d.fauna)
 	else:
@@ -2481,6 +2487,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		# stocked as in a new game. Nothing the player owned is lost.
 		fauna.populate()
 		_assign_keepers()
+	farm.load_dict(d.get("farm", {}))          # PL2-015: older saves have no field and no pens of the player's
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	_guard_posts()

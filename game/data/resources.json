@@ -424,7 +424,7 @@
       "time_note": "The keeper's slaughter is 30 game minutes.",
       "action_cost": {"stamina": 0, "tool_wear": 0, "note": "The keeper feeds the pen animals.sheep.feed wheat a meal."},
       "yields": {"meat": "animals.sheep.meat", "hide": "animals.sheep.hide"},
-      "yield_notes": "A young animal gives half the meat and no hide. Sheep give no wool: the game has no wool item.",
+      "yield_notes": "A young animal gives half the meat and no hide. The manor's sheep give no wool: only a sheep in the player's own pen is shorn (wool, farming.products; PL2-015).",
       "total": "animals.sheep.start in the pen, at most animals.sheep.pen_cap.",
       "depletion": "breeds",
       "regeneration": "Litters while a well-fed pair shares the pen and it is under its cap; animals die unfed.",
@@ -475,6 +475,77 @@
       "sources": ["game/scripts/core/npc_brain.gd::_keeper", "game/scripts/core/fauna.gd::surplus", "game/scripts/core/fauna.gd::kill"],
       "status": "implemented",
       "risk": "Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md)."
+    },
+    "player_field": {
+      "name": "Your field",
+      "category": "crop",
+      "origin": "cultivated",
+      "match": {"kind": "player_field"},
+      "where": "Ground you own or lease, cleared and tilled by you",
+      "verb": "Harvesting",
+      "action_label": "Harvest your crop",
+      "action": "interact",
+      "tool": "",
+      "tool_required": false,
+      "tool_hint": "No tool to harvest. Tilling is by hand, or quicker and easier with the hand plough (workbench: 4 planks and 2 iron bars).",
+      "skill": "",
+      "level": 0,
+      "minutes": 1,
+      "time_note": "A cell takes farming.harvest_seconds real seconds to harvest, farming.till.hand or farming.till.plough to till and farming.sow_seconds to sow. Crops ripen after farming.crops days of growth at the season's rate (farming.season_rate): spring and summer full, autumn half, winter none.",
+      "action_cost": {"stamina": 0, "tool_wear": 0, "note": "Harvesting costs nothing. Tilling a cell costs farming.till stamina (the hand plough wears one a cell)."},
+      "yields": {"wheat": "farming.crops.wheat.yield", "carrot": "farming.crops.carrot.yield", "potato": "farming.crops.potato.yield", "flower": "farming.crops.herb.yield",
+                 "wheat_seed": "farming.crops.wheat.seeds_back", "carrot_seed": "farming.crops.carrot.seeds_back", "potato_seed": "farming.crops.potato.seeds_back", "herb_seed": "farming.crops.herb.seeds_back"},
+      "yield_notes": "Per ripe cell: its crop (the herb crop is the wild flower the sage buys) and seeds_back seed of the same crop (seed saving). Seed is also sold by the farmers and the food stall's merchant at farming.crops seed_price (a standing offer, taken from nobody's stock).",
+      "total": "As many cells as the player clears and tills on ground they hold; each ripens again after it is sown again.",
+      "depletion": "ripens",
+      "regeneration": "A harvested cell is tilled soil again: sow it with a seed. Nothing grows or can be sown in winter.",
+      "owner": "The player's, on ground the player owns or leases from the manor.",
+      "theft": "Nobody else works it: the village's farmers only cut the manor's fields, and nothing of the player's can be stolen by walking over it. Leaving the lease or selling the ground gives the field up.",
+      "npc_harvest": false,
+      "npc_note": "No villager sows or cuts it.",
+      "player_harvest": false,
+      "gather": false,
+      "range": 1,
+      "range_note": "The cell 0.9 tiles in front of the player (Use on it; not part of Gather mode).",
+      "icon": "wheat",
+      "sources": ["game/scripts/core/farming.gd::harvest", "game/scripts/core/farming.gd::sow", "game/scripts/core/farming.gd::till", "game/scripts/core/farming.gd::hour", "game/scripts/core/farming.gd::buy_seed"],
+      "status": "implemented",
+      "risk": "Not at risk: the player's crops are theirs alone and the manor's fields are untouched."
+    },
+    "player_pen": {
+      "name": "Your pen",
+      "category": "livestock",
+      "origin": "bred",
+      "match": {"kind": "player_pen"},
+      "where": "A pen the player fenced on ground they hold, stocked from the keeper's pens",
+      "verb": "Collecting",
+      "action_label": "Collect eggs, milk and wool",
+      "action": "interact",
+      "tool": "",
+      "tool_required": false,
+      "tool_hint": "No tool: use the pen's gate.",
+      "skill": "",
+      "level": 0,
+      "minutes": 1,
+      "time_note": "Collecting is instant at the pen's gate. A well-fed adult makes its product each farming.products days (a hen an egg, a cow milk, a sheep wool), kept in the pen up to farming.product_cap.",
+      "action_cost": {"stamina": 0, "tool_wear": 0, "note": "The animals eat their animals feed in wheat a meal from the trough (fauna.gd), as the keepers' do."},
+      "yields": {"egg": "farming.products.chicken.qty", "milk": "farming.products.cow.qty", "wool": "farming.products.sheep.qty"},
+      "yield_notes": "Per animal per product period. Meat and hides come from slaughter as for any animal (the keeper's nodes).",
+      "total": "Up to animals pen_cap of each kind in each pen.",
+      "depletion": "breeds",
+      "regeneration": "A well-fed pair breed as in the village's pens and the young grow through the life stages; the products come from adults only.",
+      "owner": "The player's pen and animals, bought from the keeper's real stock (coins to the keeper).",
+      "theft": "Nobody else's to take; killing your own animals is no crime.",
+      "npc_harvest": false,
+      "npc_note": "No villager keeps or milks them.",
+      "player_harvest": false,
+      "gather": false,
+      "range": 1.3,
+      "range_note": "At the pen's gate (the trough cell).",
+      "icon": "egg",
+      "sources": ["game/scripts/core/farming.gd::daily_products", "game/scripts/core/farming.gd::collect", "game/scripts/core/farming.gd::buy_animal", "game/scripts/core/farming.gd::build_pen"],
+      "status": "implemented",
+      "risk": "Not at risk: bounded by product_cap and the animals' own pen caps."
     }
   },
   "materials": {
@@ -511,6 +582,18 @@
     ],
     "hammer": [
       {"use": "tool", "text": "The smith's tool: it wears 2 with every anvil recipe a villager smith makes (the player needs none).", "source": "game/scripts/core/npc_brain.gd::act"}
+    ],
+    "wheat_seed": [
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
+    ],
+    "carrot_seed": [
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
+    ],
+    "potato_seed": [
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
+    ],
+    "herb_seed": [
+      {"use": "plant", "text": "Sown on a tilled cell of the player's field: one seed a cell (used up).", "source": "game/scripts/core/farming.gd::sow"}
     ]
   },
   "code_sources": [
@@ -540,7 +623,6 @@
     {"item": "gold_ring", "finding": "no_source", "reason": "Follows from gold_ore: its only source is forge_gold_ring.", "status": "defect"},
     {"item": "feather", "finding": "no_consumer", "reason": "A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them.", "status": "implemented"},
     {"item": "apple", "finding": "no_source", "reason": "No tree, recipe or kit gives apples: the item is defined but never made (the start kit has a rotten apple only).", "status": "implemented"},
-    {"item": "linen_bandage", "finding": "start_kit_only", "reason": "No linen or cloth is grown or woven yet, so bandages are not craftable: the player starts with two, and the sage's apothecary holds some and buys more from the caravan (balance.json caravan_apothecary_stock; PL1-04).", "status": "implemented"},
     {"item": "rotten_apple", "finding": "start_kit_only", "reason": "Only in the player's start kit: spoiled food that harms when eaten.", "status": "implemented"},
     {"item": "rusty_sword", "finding": "start_kit_only", "reason": "Only in the player's start kit; nobody buys it.", "status": "implemented"},
     {"item": "rusty_pickaxe", "finding": "start_kit_only", "reason": "Only in the player's start kit; a slower pickaxe nobody buys.", "status": "implemented"},

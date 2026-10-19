@@ -2073,6 +2073,19 @@ func show_trade(n: NPC, pick := {}) -> void:
 		var bid: String = id
 		_item_row(id, n.inv.count(id), "%d coins each%s" % [price, effect_suffix(id)], "Buy", func():
 			show_trade(nn, {"id": bid, "mode": "buy", "price": price}), p.coins >= price)
+	var seeds: Array = w.farm.seed_offers(n)               # PL2-015: a farmer or the food merchant sells seed for your own field
+	if not seeds.is_empty():
+		_label("Seed for your own field:", 20, Color(1, 0.85, 0.5))
+		for crop in seeds:
+			var seed: String = Farming.crops()[crop].seed
+			var sprice: int = w.farm.seed_price(crop)
+			var scrop: String = crop
+			var snpc := n
+			_item_row(seed, p.inv.count(seed), "%d coins each (you carry these)" % sprice, "Buy 5", func():
+				var no: String = w.farm.buy_seed(snpc, scrop, 5, p)
+				if no != "":
+					message(no)
+				show_trade(snpc), p.coins >= sprice * 5)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	_label("They buy:", 20, Color(1, 0.85, 0.5))
 	var any := false
@@ -2409,11 +2422,14 @@ func show_build(pl: Dictionary) -> void:
 			var no := c.may_build(kind, World.PLAYER)
 			if Vector2i(int(pl.w), int(pl.h)) != c.footprint(kind):
 				no = "the ground is the wrong size"
+			if no == "" and w.farm.building_refusal(pl) != "":
+				no = w.farm.building_refusal(pl)
 			var k: String = kind
 			_button("%s: %s" % [World.cap(Construction.kind_name(kind)), ", ".join(cost.keys().map(func(id): return "%d %s" % [int(cost[id]), GameData.item_name(id).to_lower()]))],
 				func():
 					w.start_site(pl, k, World.PLAYER)
 					show_build(pl), no == "")
+		_farm_options(pl)
 		return
 	var kind := str(pl.site.get("kind", "house"))
 	if pl.site.done:
@@ -2451,6 +2467,24 @@ func show_build(pl: Dictionary) -> void:
 		var words: Array = back.keys().map(func(k): return "%d %s" % [int(back[k]), GameData.item_name(k).to_lower()])
 		message("The frame comes down. You take back %s." % (", ".join(words) if not words.is_empty() else "nothing; none was delivered"))
 		show_build(pl))
+
+
+## Farming on bare ground you hold (PL2-015): the field is made by Use on the soil in front of you; a pen is
+## fenced here, in front of you, from planks.
+func _farm_options(pl: Dictionary) -> void:
+	var w: World = main.world
+	var p := w.player
+	_label("Or farm it: clear the trees, stumps, rocks and bushes, then face the soil and Use to till it (a hand plough from the workbench is quicker and easier), sow seed, and harvest. Livestock need a fenced pen, built here in front of you:", 15)
+	for kind in Farming.cfg().pens:
+		var rect: Rect2i = w.farm.pen_rect_ahead(kind, p.pos, main.facing_vec())
+		var no: String = w.farm.pen_refusal(kind, rect, p)
+		var k: String = kind
+		var planks: int = w.farm.pen_planks(rect)
+		_button("Fence a %s pen in front of you (%d planks)%s" % [kind, planks, "" if no == "" else ": " + no], func():
+			var pen: Dictionary = w.farm.build_pen(k, rect, p)
+			message("The pen is fenced. Buy %s from the keeper at their pen's gate." % GameData.b("animals")[k].name.to_lower() if not pen.is_empty() else w.farm.pen_why)
+			if not pen.is_empty():
+				hide_all(), no == "")
 
 
 ## The rooms of a property and what can still be added (PL2-008, PL2-014): each is a module that stands

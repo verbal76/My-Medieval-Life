@@ -15,12 +15,13 @@ const BUYS := {
 	"carpenter": {"log": 30},
 	"tanner": {"hide": 15, "rabbit_pelt": 15},
 	"sage": {"flower": 20},          # the apothecary buys wild flowers for poultices and tonics (PL1-04)
-	"cook": {"wheat": 60, "meat": 15, "log": 10},
+	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20},
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
-	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10},
+	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
+		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20},
 	"merchant_goods": {"pickaxe": 4, "axe": 4, "hammer": 2, "copper_sword": 3, "iron_sword": 3,
-		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "rabbit_pelt": 6, "feather": 20, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
+		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "rabbit_pelt": 6, "feather": 20, "wool": 20, "wool_cloth": 10, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
 		# like the other made goods, and the caravan carries the surplus away
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2},
@@ -35,6 +36,8 @@ const OUTLETS := {
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food"],
+	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["cook", "merchant_food"],
+	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["merchant_goods"], "wool_cloth": ["merchant_goods"],
 	"pickaxe": ["merchant_goods"], "axe": ["merchant_goods"], "iron_sword": ["merchant_goods"], "copper_sword": ["merchant_goods"],
 	"hammer": ["merchant_goods"], "iron_bar": ["merchant_goods"], "leather_armor": ["merchant_goods"],
 }

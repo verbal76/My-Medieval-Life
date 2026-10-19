@@ -1018,6 +1018,76 @@ Rules:
 - **Expected:** (PL1-10 stage 1) Each morning the day's rent is taken from the purse and then the till and goes to the treasury. If it cannot be paid, sales stop (`missed` counts mornings); after `stall_evict_days` the manor takes the pitch back and the unsold goods and the till return to the player. The stall's whole state (tenant, stock, prices, sales, till, rent paid-through day) is part of World.stalls and survives save and load.
 - **Tests:** `game/tests/business_test.gd::_rent_daily`, `game/tests/business_test.gd::_save_load`
 
+### INT-121 · The player clears land they hold: stumps, saplings, wild plants and boulders go for good
+- **Trigger:** Use on a stump, a growing tree, a sapling, a wild plant or a boulder that stands on a parcel the player owns or leases.
+- **Source:** `game/scripts/core/farming.gd::obstacle`, `game/scripts/core/farming.gd::clear_tree`, `game/scripts/core/farming.gd::clear_plant`, `game/scripts/main.gd::_find_target`
+- **Affects:** Resources, Property, Player state, Inventory
+- **Expected:** (PL2-015) Only ground the player holds can be cleared this way. A mature tree is felled first (the axe, as anywhere), then its stump is dug out with an axe (stamina `farming.clear.stump_stamina`); a sapling or young tree is pulled up by hand; a wild plant is grubbed up; a boulder is mined away (B8-026). Each ends as "cleared" ground: the tree does not sprout again, the plant does not regrow, the cell is walkable and can be tilled.
+- **Tests:** `game/tests/farming_test.gd::test_land_and_clearing`
+
+### INT-122 · Tilling joins a cell to the player's field, at the cost of time and stamina
+- **Trigger:** Use on a clear cell of held ground (the plough in hand makes it the first choice).
+- **Source:** `game/scripts/core/farming.gd::till`, `game/scripts/core/farming.gd::till_cost`, `game/scripts/core/farming.gd::plan`
+- **Affects:** Fields, Player state, Inventory, Property
+- **Expected:** (PL2-015) Each tilled cell joins the player's field (`Farming.cells`), any shape; it is drawn with the field tiles closed at the edges of the shape. By hand a cell takes `farming.till.hand` seconds and stamina (the player needs that much to begin); with the hand plough (workbench: planks and iron bars) it takes `farming.till.plough`, which is less of both, and the plough wears one a cell. No draught animal exists yet. Villagers' farmers only work the manor's fields: nothing of the player's is cut or trampled.
+- **Tests:** `game/tests/farming_test.gd::test_tilling`
+
+### INT-123 · Sown crops grow by the hour at the season's rate and stop in winter
+- **Trigger:** The player sows a tilled cell with a seed; every game hour afterwards.
+- **Source:** `game/scripts/core/farming.gd::sow`, `game/scripts/core/farming.gd::hour`, `game/scripts/core/farming.gd::season_rate`, `game/scripts/core/world.gd::_on_hour`
+- **Affects:** Fields, Calendar, Inventory
+- **Expected:** (PL2-015) A seed is used up. A sown cell gains 1 / (crop days x 24) of growth an hour times the season's rate (`farming.season_rate`: spring and summer 1, autumn 0.5, winter 0) and is ripe at 1; nothing can be sown in winter (`farming.sow_seasons`). The manor's own fields keep `field_grow_days` and are not affected.
+- **Tests:** `game/tests/farming_test.gd::test_crops`
+
+### INT-124 · A harvest returns the crop and some seed (seed saving)
+- **Trigger:** Use on a ripe cell of the player's field.
+- **Source:** `game/scripts/core/farming.gd::harvest`, `game/scripts/core/farming.gd::harvest_goods`
+- **Affects:** Fields, Inventory, Food, Market
+- **Expected:** (PL2-015) The cell gives the crop's yield (wheat, carrots, potatoes, or the herb crop's wild flowers) and `seeds_back` seed of the same crop, and is tilled, empty soil again; it is refused while the pack cannot hold the goods. The crops are the player's alone (no theft rule applies).
+- **Tests:** `game/tests/farming_test.gd::test_crops`
+
+### INT-125 · Seed is bought from the farmers and the food merchant with real coins
+- **Trigger:** The player buys seed in the trade window of a farmer or the food stall's merchant.
+- **Source:** `game/scripts/core/farming.gd::buy_seed`, `game/scripts/core/farming.gd::seed_offers`, `game/scripts/ui/game_ui.gd::show_trade`
+- **Affects:** Coins, Market, Inventory
+- **Expected:** (PL2-015) A standing offer at `farming.crops` `seed_price` (adjusted by the Trading skill): the coins move from the player's purse to the seller's, the seed is made for the player (it is not taken from anyone's stock). The seeds are the only way to start a field apart from seed saved from a harvest.
+- **Tests:** `game/tests/farming_test.gd::test_crops`
+
+### INT-126 · A fenced pen on held ground is a pen of the village's livestock model
+- **Trigger:** The player fences a pen from the plot window on ground they hold, with planks.
+- **Source:** `game/scripts/core/farming.gd::build_pen`, `game/scripts/core/farming.gd::pen_refusal`, `game/scripts/core/fauna.gd::to_dict`, `game/scripts/ui/game_ui.gd::_farm_options`
+- **Affects:** Livestock, Property, Inventory, Building, Save
+- **Expected:** (PL2-015) Planks are used up; the fence ring is solid but for the gate and drawn with the Cozy Farm fence tiles; the pen is in `Fauna.pens` as the player's (`player: true`, owner the player), so feeding, hunger, breeding and the life stages are the village's own rules. It holds one species. A building cannot be marked out over it. Pens, their trough and products, and the animals are saved.
+- **Tests:** `game/tests/farming_test.gd::test_pens_and_animals`, `game/tests/farming_test.gd::test_save`
+
+### INT-127 · Livestock is bought from a keeper's real stock
+- **Trigger:** The player chooses Buy at a manor pen's gate while holding a pen of that species with room.
+- **Source:** `game/scripts/core/farming.gd::buy_animal`, `game/scripts/core/farming.gd::spare_animal`, `game/scripts/main.gd::_find_target`
+- **Affects:** Livestock, Coins, Wildlife
+- **Expected:** (PL2-015) The animal comes out of the keeper's pen into the player's: never a newborn, and never below the species' breeding stock (`animals.keep`); a juvenile costs `young_price_share` of an adult's `animal_price`. The coins go to the keeper (the treasury if the pen has none): no coin is made. The keeper's pen refills by breeding.
+- **Tests:** `game/tests/farming_test.gd::test_pens_and_animals`
+
+### INT-128 · Well-fed adults in the player's pens make eggs, milk and wool
+- **Trigger:** Each morning (`World._new_day`).
+- **Source:** `game/scripts/core/farming.gd::daily_products`, `game/scripts/core/farming.gd::collect`, `game/scripts/core/world.gd::_new_day`
+- **Affects:** Livestock, Inventory, Food, Market, Save
+- **Expected:** (PL2-015) Each adult female hen, cow or any sheep in a pen of the player's that is well fed (`animal_breed_min_hunger`) makes its product when its time comes (`farming.products`), kept in the pen up to `product_cap` until the player collects it at the gate. Hungry animals, young and elderly ones and the manor's pens make none.
+- **Tests:** `game/tests/farming_test.gd::test_pens_and_animals`, `game/tests/farming_test.gd::test_save`
+
+### INT-129 · Farm goods sell to the cook and the merchants, or from the player's stall, and feed the crafts
+- **Trigger:** The player sells eggs, milk, cheese, carrots, potatoes or wool; or crafts with them.
+- **Source:** `game/scripts/core/npc_brain.gd::wants`, `game/scripts/core/business.gd::needs`, `game/data/recipes.json`
+- **Affects:** Market, Coins, Crafting, Food, Treasury
+- **Expected:** (PL2-015) The cook and the food merchant buy eggs, milk, cheese, carrots and potatoes up to a stock; the goods merchant buys wool and cloth; the sage keeps buying flowers. Villagers with a trade's stock need buy them from the player's stall too. Cheese is pressed from milk and egg bread baked at a food table; wool is woven into cloth at the workbench and sewn into bandages (so bandages are craftable). The villagers make none of these.
+- **Tests:** `game/tests/farming_test.gd::test_market`
+
+### INT-130 · Building on ground ploughs the field under; the village never claims the player's field
+- **Trigger:** The player marks out a building on a parcel with a field on it; a villager or the player claims ground over a field.
+- **Source:** `game/scripts/core/world.gd::start_site`, `game/scripts/core/farming.gd::give_up_cells`, `game/scripts/core/farming.gd::building_refusal`, `game/scripts/core/property.gd::can_claim`
+- **Affects:** Fields, Building, Property, Save
+- **Expected:** (PL2-015) Marking out a building on a parcel gives up the field cells on it (crops and soil are lost, a note says so) and is refused while a pen of the player's stands on it; ground cannot be claimed over a parcel the player holds, so the farm is never built over by the village.
+- **Tests:** `game/tests/farming_test.gd::test_save`, `game/tests/farming_test.gd::test_tilling`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -1025,38 +1095,38 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109, INT-121, INT-122 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-121, INT-122, INT-123, INT-124, INT-125, INT-126, INT-128 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108 |
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117 |
-| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089 |
-| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-130 |
+| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-129 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089 |
 | Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119 |
 | Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
-| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113 |
-| Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113 |
+| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128 |
+| Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130 |
 | Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111 |
-| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100 |
-| Calendar | INT-077 |
+| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100, INT-121, INT-122, INT-126, INT-130 |
+| Calendar | INT-077, INT-123 |
 | Family | INT-077, INT-078, INT-079, INT-080 |
 | Overworld | INT-071, INT-074, INT-076, INT-087 |
 

@@ -13,11 +13,11 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 16 (12 the player may harvest, 4 the keeper's livestock).
-- Materials they produce: 15 (blueberries, coal, copper_ore, feather, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, rabbit_pelt, red_berries, stone, wheat).
+- Implemented node types: 18 (12 the player may harvest, 6 the keeper's livestock).
+- Materials they produce: 24 (blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
 - Finite node types: 5 (boulder, coal_seam, copper_seam, iron_seam, stone_seam); with no replacement once worked out: 0 (the caravan imports each).
 - At risk of overharvesting: 6 (coal_seam, copper_seam, iron_seam, stone_seam, wild_boar, wild_rabbit).
-- Not Gather-compatible: 4 (chicken_pen, cow_pen, pig_pen, sheep_pen).
+- Not Gather-compatible: 6 (chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen).
 
 | Node | Category | Origin | Tool | Skill | Yields a cycle | Depletion | Player | NPCs | Gather | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -30,6 +30,8 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `flower_patch` Wild flower | forage | natural | none | none | 1 flower | regrows | yes | no | yes | implemented |
 | `iron_seam` Iron seam | mineral | natural | pickaxe | mining | 1 iron_ore | finite | yes | yes | yes | implemented |
 | `pig_pen` Pigs | livestock | bred | none | none | 1 hide, 4 meat | breeds | no | yes | no | implemented |
+| `player_field` Your field | crop | cultivated | none | none | 3 carrot, 1 carrot_seed, 2 flower, 1 herb_seed, 3 potato, 1 potato_seed, 3 wheat, 1 wheat_seed | ripens | no | no | no | implemented |
+| `player_pen` Your pen | livestock | bred | none | none | 1 egg, 2 milk, 1 wool | breeds | no | no | no | implemented |
 | `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | no | yes | implemented |
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
@@ -202,6 +204,42 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Risk:** Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md).
 - **Code:** `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/fauna.gd::surplus`, `game/scripts/core/fauna.gd::kill`
 
+### `player_field` · Your field
+
+- **Status:** implemented. **Category:** crop, cultivated. **Found by:** `{"kind": "player_field"}`.
+- **Where:** Ground you own or lease, cleared and tilled by you. **In the world:** as many cells as the player clears and tills on ground they hold (PL2-015).
+- **Action:** Harvesting (interact): "Harvest your crop". **Range (tiles):** 1. The cell 0.9 tiles in front of the player (Use on it; not part of Gather mode).
+- **Tool:** none. No tool to harvest. Tilling is by hand, or quicker and easier with the hand plough (workbench: 4 planks and 2 iron bars). Where to get it: none.
+- **Skill:** none.
+- **Time:** 1 game minutes. A cell takes farming.harvest_seconds real seconds to harvest, farming.till.hand or farming.till.plough to till and farming.sow_seconds to sow. Crops ripen after farming.crops days of growth at the season's rate (farming.season_rate): spring and summer full, autumn half, winter none.
+- **Cost:** stamina 0, tool wear 0. Harvesting costs nothing. Tilling a cell costs farming.till stamina (the hand plough wears one a cell).
+- **Yields a cycle:** 3 carrot, 1 carrot_seed, 2 flower, 1 herb_seed, 3 potato, 1 potato_seed, 3 wheat, 1 wheat_seed. Per ripe cell: its crop (the herb crop is the wild flower the sage buys) and seeds_back seed of the same crop (seed saving). Seed is also sold by the farmers and the food stall's merchant at farming.crops seed_price (a standing offer, taken from nobody's stock).
+- **Total:** As many cells as the player clears and tills on ground they hold; each ripens again after it is sown again.
+- **Depletion:** ripens. A harvested cell is tilled soil again: sow it with a seed. Nothing grows or can be sown in winter.
+- **Owner:** The player's, on ground the player owns or leases from the manor. **Theft:** Nobody else works it: the village's farmers only cut the manor's fields, and nothing of the player's can be stolen by walking over it. Leaving the lease or selling the ground gives the field up.
+- **Harvested by:** the player no; villagers no. No villager sows or cuts it.
+- **Gather mode:** no. **Icon:** `wheat`.
+- **Risk:** Not at risk: the player's crops are theirs alone and the manor's fields are untouched.
+- **Code:** `game/scripts/core/farming.gd::harvest`, `game/scripts/core/farming.gd::sow`, `game/scripts/core/farming.gd::till`, `game/scripts/core/farming.gd::hour`, `game/scripts/core/farming.gd::buy_seed`
+
+### `player_pen` · Your pen
+
+- **Status:** implemented. **Category:** livestock, bred. **Found by:** `{"kind": "player_pen"}`.
+- **Where:** A pen the player fenced on ground they hold, stocked from the keeper's pens. **In the world:** as many pens as the player fences on ground they hold, each with at most pen_cap animals (PL2-015).
+- **Action:** Collecting (interact): "Collect eggs, milk and wool". **Range (tiles):** 1.3. At the pen's gate (the trough cell).
+- **Tool:** none. No tool: use the pen's gate. Where to get it: none.
+- **Skill:** none.
+- **Time:** 1 game minutes. Collecting is instant at the pen's gate. A well-fed adult makes its product each farming.products days (a hen an egg, a cow milk, a sheep wool), kept in the pen up to farming.product_cap.
+- **Cost:** stamina 0, tool wear 0. The animals eat their animals feed in wheat a meal from the trough (fauna.gd), as the keepers' do.
+- **Yields a cycle:** 1 egg, 2 milk, 1 wool. Per animal per product period. Meat and hides come from slaughter as for any animal (the keeper's nodes).
+- **Total:** Up to animals pen_cap of each kind in each pen.
+- **Depletion:** breeds. A well-fed pair breed as in the village's pens and the young grow through the life stages; the products come from adults only.
+- **Owner:** The player's pen and animals, bought from the keeper's real stock (coins to the keeper). **Theft:** Nobody else's to take; killing your own animals is no crime.
+- **Harvested by:** the player no; villagers no. No villager keeps or milks them.
+- **Gather mode:** no. **Icon:** `egg`.
+- **Risk:** Not at risk: bounded by product_cap and the animals' own pen caps.
+- **Code:** `game/scripts/core/farming.gd::daily_products`, `game/scripts/core/farming.gd::collect`, `game/scripts/core/farming.gd::buy_animal`, `game/scripts/core/farming.gd::build_pen`
+
 ### `red_berry_bush` · Red berry bush
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "redberry"}`.
@@ -229,7 +267,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** none.
 - **Time:** 30 game minutes. The keeper's slaughter is 30 game minutes.
 - **Cost:** stamina 0, tool wear 0. The keeper feeds the pen animals.sheep.feed wheat a meal.
-- **Yields a cycle:** 1 hide, 3 meat. A young animal gives half the meat and no hide. Sheep give no wool: the game has no wool item.
+- **Yields a cycle:** 1 hide, 3 meat. A young animal gives half the meat and no hide. The manor's sheep give no wool: only a sheep in the player's own pen is shorn (wool, farming.products; PL2-015).
 - **Total:** animals.sheep.start in the pen, at most animals.sheep.pen_cap.
 - **Depletion:** breeds. Litters while a well-fed pair shares the pen and it is under its cap; animals die unfed.
 - **Owner:** The manor's pen, let to its keeper (a farmer); the animals are the keeper's. **Theft:** The player killing one is a crime against the keeper (main.gd _hit_animal).
@@ -373,6 +411,8 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `flower_patch` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `iron_seam` | Overharvested: the iron seams were worked out on day 10 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `pig_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
+| `player_field` | Not at risk: the player's crops are theirs alone and the manor's fields are untouched. |
+| `player_pen` | Not at risk: bounded by product_cap and the animals' own pen caps. |
 | `red_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `stone_seam` | Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
