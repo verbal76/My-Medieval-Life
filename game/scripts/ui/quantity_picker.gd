@@ -127,6 +127,10 @@ func cancel() -> void:
 
 ## Put keyboard/pad focus on the slider (or Cancel when there is nothing to choose).
 func focus_default() -> void:
+	if not is_inside_tree():
+		if not tree_entered.is_connected(focus_default):
+			tree_entered.connect(focus_default, CONNECT_ONE_SHOT | CONNECT_DEFERRED)     # focus once it is on screen
+		return
 	if slider != null and slider.editable:
 		slider.grab_focus()
 	elif confirm_btn != null and not confirm_btn.disabled:
