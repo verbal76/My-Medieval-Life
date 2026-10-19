@@ -290,6 +290,25 @@
       "type": "amulet",
       "value": 20,
       "bonus": {"max_hp": 5}
-    }
+    },
+    "plough": {
+      "name": "Hand plough",
+      "type": "tool",
+      "tool": "plough",
+      "value": 40,
+      "durability": 150,
+      "speed": 1.0
+    },
+    "wheat_seed": {"name": "Wheat seed", "type": "resource", "value": 1},
+    "carrot_seed": {"name": "Carrot seed", "type": "resource", "value": 1},
+    "potato_seed": {"name": "Seed potato", "type": "resource", "value": 1},
+    "herb_seed": {"name": "Herb seed", "type": "resource", "value": 1},
+    "carrot": {"name": "Carrot", "type": "food", "value": 2, "food": 12},
+    "potato": {"name": "Potato", "type": "food", "value": 2, "food": 14},
+    "egg": {"name": "Egg", "type": "food", "value": 2, "food": 10},
+    "milk": {"name": "Milk", "type": "food", "value": 3, "food": 12},
+    "cheese": {"name": "Cheese", "type": "food", "value": 8, "food": 35},
+    "wool": {"name": "Wool", "type": "resource", "value": 4},
+    "wool_cloth": {"name": "Woollen cloth", "type": "resource", "value": 9}
   }
 }

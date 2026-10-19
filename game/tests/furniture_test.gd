@@ -181,7 +181,7 @@ func _run() -> void:
 	p.home = home
 	var oven_rs := GameData.recipes_at("oven")
 	check(oven_rs.has("roast_meat") and not oven_rs.any(func(r): return str(r).begins_with("smelt")), "the oven cooks and does not smelt")
-	check(GameData.recipes_at("prep") == ["knead_flatbread"], "the food table has its own preparation recipe")
+	check(GameData.recipes_at("prep") == ["bake_egg_bread", "knead_flatbread", "press_cheese"], "the food table has its own preparation recipes (flatbread, and PL2-015: cheese and egg bread)")
 	var ex := Furniture.options(w, home, _centre(hearth.at))
 	check(ex.any(func(o): return o.kind == "station" and o.id == oven_id), "facing the hearth offers the oven")
 	p.inv.add("wheat", 3)

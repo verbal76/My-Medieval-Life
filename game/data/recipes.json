@@ -29,6 +29,11 @@
     "brew_tonic":    {"station": "stove",     "in": {"flower": 3},                "out": {"herbal_tonic": 1}, "minutes": 30, "skill": "cooking", "xp": 4, "level": 1},
     "brew_poultice": {"station": "stove",     "in": {"flower": 2},                "out": {"herbal_poultice": 1}, "minutes": 20, "skill": "cooking", "xp": 4, "level": 1},
     "brew_healing_tonic": {"station": "stove", "in": {"flower": 5},               "out": {"healing_tonic": 1}, "minutes": 40, "skill": "cooking", "xp": 8, "level": 2},
-    "brew_strong_tonic": {"station": "stove", "in": {"healing_tonic": 2, "ale": 1}, "out": {"strong_healing_tonic": 1}, "minutes": 50, "skill": "cooking", "xp": 14, "level": 3}
+    "brew_strong_tonic": {"station": "stove", "in": {"healing_tonic": 2, "ale": 1}, "out": {"strong_healing_tonic": 1}, "minutes": 50, "skill": "cooking", "xp": 14, "level": 3},
+    "craft_plough":  {"station": "workbench", "in": {"plank": 4, "iron_bar": 2}, "out": {"plough": 1}, "minutes": 60, "skill": "crafting", "xp": 15, "level": 1},
+    "weave_cloth":   {"station": "workbench", "in": {"wool": 2},                   "out": {"wool_cloth": 1}, "minutes": 40, "skill": "crafting", "xp": 6, "level": 1},
+    "sew_bandages":  {"station": "workbench", "in": {"wool_cloth": 1},             "out": {"linen_bandage": 3}, "minutes": 25, "skill": "crafting", "xp": 5, "level": 1},
+    "press_cheese":  {"station": "prep",      "in": {"milk": 3},                   "out": {"cheese": 1},    "minutes": 35, "skill": "cooking", "xp": 5, "level": 1},
+    "bake_egg_bread": {"station": "prep",     "in": {"wheat": 2, "egg": 1},        "out": {"bread": 2},     "minutes": 30, "skill": "cooking", "xp": 4, "level": 1}
   }
 }

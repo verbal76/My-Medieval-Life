@@ -173,6 +173,8 @@ func _ready() -> void:
 				# PL1-04: the sage's shop (the normal trade window)
 				var sage := world.npc(world.sage_id)
 				ui.show_trade(sage)
+			"farm_tilled", "farm_growing", "farm_pen":
+				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
 			"employer_star":
 				# PL1-09: the smith who set the player a job wears the star, wherever the smith walks
 				for n: NPC in world.npcs:
@@ -1029,6 +1031,7 @@ func _apply_world_changes() -> void:
 					view.set_tile(view.layer(str(lay.name)), bc, MapView.SMALL_BOULDER_TILE)
 	for f in world.fields:
 		world._field_tiles(f)
+	world.farm.show_all()                     # the player's field and pens (PL2-015)
 	for pl in world.plants:
 		if pl.state != "ripe":
 			_on_tile_changed(Vector2i(pl.x, pl.y), World.PLANT_LAYER, -1)          # picked, or grubbed up for building
@@ -1770,15 +1773,27 @@ func _find_target() -> void:
 		var d := a.pos.distance_to(probe)
 		if d < 1.5 and world.reaches(p.pos, a.pos):
 			var what := "%s (%s%s)" % [a.label().to_lower(), "young, " if not a.adult(world.minutes) else "", "male" if a.sex == "m" else "female"]
-			near.append([d, near.size(), {"kind": "animal", "animal": a, "label": ("A " if a.wild() else "The keeper's ") + what + (": attack to hunt it" if a.wild() else "")}])
+			var mine: bool = not a.wild() and world.fauna.pens.has(a.area) and world.fauna.pens[a.area].get("player", false)
+			near.append([d, near.size(), {"kind": "animal", "animal": a, "label": ("A " if a.wild() else ("Your " if mine else "The keeper's ")) + what + (": attack to hunt it" if a.wild() else "")}])
 	near.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
 	var cands: Array = near.map(func(x): return x[2])
 	var c := Vector2i(floori(probe.x), floori(probe.y))
 	var front := {}
+	var farm_more: Array = []          # PL2-015: the other farm choices at the cell (more seeds), and the till choice
+	var farm_low: Array = []
 	for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
 		var cell: Vector2i = c + dc
 		if not world.reaches(p.pos, Vector2(cell) + Vector2(0.5, 0.5)):
 			continue                       # across a wall or the inside/outside boundary (PL2-011)
+		for ft in world.farm.targets_at(cell, p, dc == Vector2i.ZERO):
+			if ft.get("low", false):
+				farm_low.append(ft)
+			elif front.is_empty():
+				front = ft
+			else:
+				farm_more.append(ft)
+		if not front.is_empty():
+			break
 		var dep := world.deposit_at(cell)
 		if not dep.is_empty() and int(dep.amount) > 0:
 			front = {"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
@@ -1810,6 +1825,7 @@ func _find_target() -> void:
 			break
 	if not front.is_empty():
 		cands.append(front)
+		cands.append_array(farm_more)
 	# at the player's feet (the last of these was the only one offered before B8-014: it comes first)
 	var here: Array = []
 	for id in world.stations:
@@ -1833,6 +1849,17 @@ func _find_target() -> void:
 		var fa := Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
 		if fa.distance_to(p.pos) < 1.3:
 			here.append({"kind": "pen", "pen": pen, "label": "%s pen: %d hungry, trough %d wheat (they eat about %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, world.fauna.hungry(pen), int(pen.trough), world.fauna.daily_need(pen)]})
+			if pen.get("player", false):                          # PL2-015: eggs, milk and wool wait in your own pen
+				var waiting: Dictionary = world.farm.products_in(pen)
+				if not waiting.is_empty():
+					here.append({"kind": "pen_collect", "pen": pen, "label": "Collect " + ", ".join(waiting.keys().map(func(k): return "%d %s" % [int(waiting[k]), GameData.item_name(k).to_lower()]))})
+			elif not world.farm.pen_with_room(str(pen.kind)).is_empty():       # ... and the keeper sells stock to a pen of yours
+				for sx in ["f", "m"]:
+					var spare := world.farm.spare_animal(pen, sx)
+					var lab := "The keeper has no %s %s to spare" % ["female" if sx == "f" else "male", str(GameData.b("animals")[pen.kind].one).to_lower()]
+					if spare != null:
+						lab = "Buy a %s%s %s from the keeper (%d coins)" % ["young " if not spare.adult(world.minutes) else "", "female" if sx == "f" else "male", spare.label().to_lower(), world.farm.animal_price(spare)]
+					here.append({"kind": "pen_buy", "pen": pen, "sex": sx, "id": "buy_" + sx, "label": lab})
 	# a house the family holds but does not live in, or one the manor offers: its door
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
@@ -1869,6 +1896,11 @@ func _find_target() -> void:
 	here.append_array(Furniture.options(world, world.place_of(p.pos), probe))
 	here.reverse()
 	cands.append_array(here)
+	if not farm_low.is_empty():                          # tilling: the plough in hand makes it the first choice, else the last
+		if p.tool != "" and GameData.item(p.tool).get("tool", "") == "plough":
+			cands.push_front(farm_low[0])
+		else:
+			cands.append(farm_low[0])
 	# the next step of the player's work for the manor, where it is done
 	var mw: ManorWork = world.manor_work
 	var mj := mw.job_of("player")
@@ -1893,7 +1925,7 @@ func _find_target() -> void:
 		target_pref = ""
 	target = cands[pick] if not cands.is_empty() else {}
 	# a seam, tree, field or animal is offered when the player stops by it, not flashed while walking past
-	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "plant", "animal"]
+	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "plant", "animal", "farm"]
 	if not gather.is_empty():
 		ui.prompt("")     # gathering: the outline and the progress bar show it; the middle stays clear
 	else:
@@ -2228,7 +2260,29 @@ func _use() -> void:
 			var put := world.fauna.feed(target.pen, p.inv, 5)
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
 		"animal":
-			ui.message("Attack (Space) to hunt it." if target.animal.wild() else "These belong to the keeper. Killing them is theft.")
+			var own: bool = not target.animal.wild() and world.fauna.pens.has(target.animal.area) and world.fauna.pens[target.animal.area].get("player", false)
+			ui.message("Attack (Space) to hunt it." if target.animal.wild() else ("It is yours: feed it at the pen's gate. Attack (Space) to slaughter it for meat." if own else "These belong to the keeper. Killing them is theft."))
+		"farm":
+			var fp: Dictionary = world.farm.plan(target, p)
+			if not fp.ok:
+				ui.message(str(fp.why))
+				return
+			player_sprite.face(Vector2(target.cell) + Vector2(0.5, 0.5) - p.pos)
+			start_action(str(fp.label), float(fp.secs), func():
+				var r: Dictionary = fp.run.call()
+				for id in r.items:
+					_gain("+%d %s" % [int(r.items[id]), GameData.item_name(id)], id)
+				if str(r.text) != "":
+					ui.message(str(r.text)), str(fp.anim), str(fp.tool))
+		"pen_collect":
+			var got: Dictionary = world.farm.collect(target.pen, p)
+			if got.is_empty():
+				ui.message("Your pack is full.")
+			for id in got:
+				_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
+		"pen_buy":
+			var no: String = world.farm.buy_animal(target.pen, str(target.sex), p)
+			ui.message(no if no != "" else "You buy it and walk it into your pen.")
 		"plot":
 			ui.show_build(target.plot)
 		"workshop":
@@ -3202,6 +3256,61 @@ func _swing_panel(mining: bool, frame: int) -> void:
 	_use()
 	player_sprite.speed_scale = 0.0
 	player_sprite.t = float(frame) * 0.16 + 0.01
+
+
+## PL2-015 screenshots: the player holds a piece of open ground near the start and has worked it with the same
+## calls the game uses (till, sow, grow by the clock, fence a pen, buy stock). `kind`: farm_tilled (an L-shaped
+## field of tilled soil), farm_growing (the field sown with four crops, some ripe) or farm_pen (two pens with
+## animals beside the field).
+func _farm_shot(kind: String) -> void:
+	var p := world.player
+	p.coins = 3000
+	var rect := world.construction.find_ground("house", Vector2i(floori(p.pos.x), floori(p.pos.y)), World.PLAYER)
+	var pl: Dictionary = world.property.claim(rect, World.PLAYER, false)
+	if pl.is_empty():
+		print("farm shot: no ground (%s)" % world.property.why)
+		return
+	p.inv.add("plough")
+	for s in ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"]:
+		p.inv.add(s, 40)
+	p.inv.add("plank", 60)
+	var crops := ["wheat", "carrot", "potato", "herb"]
+	for j in range(1, 7):
+		for i in range(1, 8):
+			if i > 4 and j > 3:
+				continue                                   # an L shape
+			p.stamina = 100.0
+			var c := Vector2i(int(pl.x) + i, int(pl.y) + j)
+			world.farm.till(c, p)
+			if kind != "farm_tilled":
+				world.farm.sow(c, crops[(j - 1) % crops.size()], p)
+	if kind != "farm_tilled":
+		for h in 30:                                       # about a day and a half of spring: the quick crops ripen
+			world.minutes += 60.0
+			world.farm.hour()
+		world.farm.show_all()
+	var last := pl
+	if kind == "farm_pen":
+		for k in ["chicken", "sheep"]:                    # each pen on a parcel of its own beside the field
+			var next: Dictionary = world.property.claim(world.construction.find_ground("house", Vector2i(int(last.x) + 4, int(last.y) + 5), World.PLAYER), World.PLAYER, false)
+			if next.is_empty():
+				print("farm shot: no ground for the %s pen" % k)
+				continue
+			last = next
+			var r := Rect2i(Vector2i(int(next.x) + 1, int(next.y) + 2), Vector2i(Farming.cfg().pens[k][0], Farming.cfg().pens[k][1]))
+			var pen: Dictionary = world.farm.build_pen(k, r, p)
+			if pen.is_empty():
+				print("farm shot: %s pen refused: %s" % [k, world.farm.pen_why])
+				continue
+			for i in 3:
+				var a: Animal = world.fauna.spawn(pen.id, k, "f" if i != 1 else "m", null)
+				a.born = world.minutes - 6.0 * 1440.0
+			pen.trough = 6
+			pen.products = {"egg": 2} if k == "chicken" else {"wool": 1}
+	p.pos = Vector2(float(pl.x) + 4.5, float(pl.y) + float(pl.h) + 0.5)
+	var mid := (Vector2(float(pl.x), float(pl.y)) + Vector2(float(last.x), float(last.y))) / 2.0 + Vector2(4.5, 5.0)
+	follow_at = _in_view(mid * T)
+	camera.position = follow_at
 
 
 func _screenshot_step(_delta: float) -> void:

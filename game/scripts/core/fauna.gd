@@ -427,13 +427,18 @@ func to_dict() -> Dictionary:
 	for a: Animal in animals:
 		as_.append(a.to_dict())
 	var ps := {}
+	var mine := []                                      # the player's pens (PL2-015) are not on the map: saved whole
 	for id in pens:
 		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner, "tenant": pens[id].tenant}
-	return {"next_id": next_id, "animals": as_, "pens": ps}
+		if pens[id].get("player", false):
+			mine.append(pens[id])
+	return {"next_id": next_id, "animals": as_, "pens": ps, "player_pens": mine}
 
 
 func load_dict(d: Dictionary) -> void:
 	next_id = int(d.next_id)
+	for rec in d.get("player_pens", []):
+		pens[str(rec.id)] = rec.duplicate(true)
 	for ad in d.animals:
 		animals.append(Animal.from_dict(ad))
 	for id in d.pens:

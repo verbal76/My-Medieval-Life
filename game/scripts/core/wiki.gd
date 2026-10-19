@@ -103,6 +103,7 @@ static func build() -> Wiki:
 	WikiWorld.add_pages(w)
 	WikiChests.add_pages(w)
 	WikiProperty.add_pages(w)
+	WikiFarming.add_pages(w)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
@@ -577,7 +578,7 @@ func _not_yet() -> void:
 	var items := {
 		"player_shops": ["Player shops: larger stalls and attendants", "You can rent a market stall and sell from it, and build workshops on your own property (see the guides), but larger stalls, placing equipment yourself and hired attendants who sell while you are away are not built yet."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
-		"plough": ["Hand plough and farming by the player", "You cannot till or sow fields yourself; the farmers do it. You can harvest ripe wheat."],
+		"farm_more": ["Draught animals, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself (see the farming guides), but there are no horses or oxen to pull a plough, no roofed coops or shelters, no watering or weather, no traps for rabbits, no animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:
 		add_page("todo:" + id, items[id][0], "notyet", [note("Not in the game yet. " + items[id][1])], "", "not implemented planned")

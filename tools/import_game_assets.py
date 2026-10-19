@@ -150,6 +150,18 @@ ICONS = {
     "healing_tonic": "Liquid/Small-Potion-05", "strong_healing_tonic": "Liquid/Large-Potion-05",
     # locks and picks (PL2-002): a thin iron arrow-shaft as the lockpick, a lump of iron as the padlock
     "lockpick": "Tools/Arrow-05", "padlock": "Metal/Metal-Nugget-02",
+    # the hand plough (PL2-015): the pack has no plough, so its hoe stands in
+    "plough": "Tools/Hoe-02",
+}
+# Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
+# produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).
+COZY_ITEMS = {
+    "carrot": ("full version/ui/items.png", 0, 0), "potato": ("full version/ui/items.png", 5, 0),
+    "milk": ("full version/ui/items.png", 0, 3), "cheese": ("full version/ui/items.png", 3, 3),
+    "egg": ("full version/ui/items.png", 2, 4), "wool": ("full version/ui/items.png", 0, 5),
+    "wool_cloth": ("full version/ui/items.png", 4, 5),
+    "wheat_seed": ("full version/farming/seeds.png", 2, 1), "carrot_seed": ("full version/farming/seeds.png", 0, 0),
+    "potato_seed": ("full version/farming/seeds.png", 5, 0), "herb_seed": ("full version/farming/seeds.png", 2, 2),
 }
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)
@@ -485,6 +497,11 @@ def main():
         dest = icons / f"{item}.png"
         dest.write_bytes(iz.read(member))
         record(dest, ICON_ZIP, member, "copied unchanged")
+    cz = AssetZip(COZY_ZIP)
+    for item, (member, col, row) in sorted(COZY_ITEMS.items()):
+        dest = icons / f"{item}.png"
+        cz.image(member).crop((col * 16, row * 16, col * 16 + 16, row * 16 + 16)).save(dest)
+        record(dest, COZY_ZIP, member, f"the 16 x 16 cell at column {col}, row {row}, cut out")
     jz = AssetZip(JEWELRY_ZIP)
     for item, rel in sorted(JEWELRY.items()):
         member = f"16x16 Jewelry RPG Icons/{rel}.png"
