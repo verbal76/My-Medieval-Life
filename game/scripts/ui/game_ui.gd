@@ -1936,7 +1936,8 @@ func _fit_talk(side: float, choices: GridContainer) -> void:
 func _talk_choice(parent: Control, text: String, cb: Callable, enabled := true) -> void:
 	var b := _button(text, cb, enabled, parent)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART          # a long choice wraps rather than being cut off
+	b.custom_minimum_size = Vector2(160, 48)
 
 
 ## Someone asleep (owner rule: sleeping limits awareness, not interaction): wake them and talk, try
