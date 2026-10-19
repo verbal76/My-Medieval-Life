@@ -38,6 +38,15 @@ class VillageTest(unittest.TestCase):
         self.assertEqual(json.loads(build_village.OUT.read_text()), D)
         self.assertEqual(build_village.build(), D)
 
+    def test_built_rooms_have_floors(self):
+        """Every interior floor cell of a stamp the player builds (house, workshops, rooms) has a floor
+        tile, so a room built on grass never shows grass inside, under its beds either."""
+        for name, st in D["stamps"].items():
+            w = st["w"]
+            grounds = [v for k, v in st["layers"].items() if k.startswith("ground") and k != "ground0"]
+            bare = [c for c in st["interior"]["floor"] if not any(g[c[1] * w + c[0]] >= 0 for g in grounds)]
+            self.assertEqual(bare, [], name)
+
     def test_no_tree_tiles_in_any_layer(self):
         tops = {t for p in D["tiles"]["canopy"] for t in p}
         for lay in D["layers"]:

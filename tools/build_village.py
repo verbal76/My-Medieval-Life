@@ -1294,7 +1294,7 @@ class Village:
         for x, y in beds + posts:
             for name in list(layers):
                 v = layers[name][y * w + x]
-                if (name != "below0" or v == tile_val(0, MAT)) and name not in ROOF_LAYERS and not name.startswith("path"):
+                if (name != "below0" or v == tile_val(0, MAT)) and name not in ROOF_LAYERS and not name.startswith(("path", "ground")):
                     layers[name][y * w + x] = -1
             solid[y][x] = "0"
         stations = []
@@ -1356,14 +1356,23 @@ class Village:
         hb = next(b for b in self.ents["buildings"] if b["type"] == "house" and b["id"].startswith("b") and b["id"][1:].isdigit())
         stamp = {"w": hb["w"], "h": hb["h"], "door": [4, 9], "layers": {}}
         for (cat, i), data in sorted(self.layers.items()):
-            if cat == "ground":
-                continue
+            if cat == "ground" and i == 0:
+                continue                    # the village's wang grass; the house's own floor (ground1+) goes with it
             cells = [data[(hb["y"] + y) * W + hb["x"] + x] for y in range(hb["h"]) for x in range(hb["w"])]
             if any(v >= 0 for v in cells):
                 stamp["layers"][f"{cat}{i}"] = cells
-        # its interior and collision in the house's own cells, for a house built anywhere
+        # every floor cell of the built house shows a floor, never the grass of wherever it is built: a
+        # cell with no stamped floor of its own takes the house's most common floor tile
         local = lambda c: [c[0] - hb["x"], c[1] - hb["y"]]
         it = hb["interior"]
+        g1 = stamp["layers"].setdefault("ground1", [-1] * (hb["w"] * hb["h"]))
+        floor_cells = [tuple(local(c)) for c in it["floor"]]
+        seen = [g1[y * hb["w"] + x] for x, y in floor_cells if g1[y * hb["w"] + x] >= 0]
+        if seen:
+            common = max(sorted(set(seen)), key=seen.count)
+            for x, y in floor_cells:
+                if not any(stamp["layers"].get(f"ground{i}", [-1] * (hb["w"] * hb["h"]))[y * hb["w"] + x] >= 0 for i in range(1, 6)):
+                    g1[y * hb["w"] + x] = common
         stamp["interior"] = {k: [local(c) for c in it[k]] for k in ("doors", "area", "floor", "roof")}
         stamp["interior"]["spots"] = [{**sp, "at": local(sp["at"]), "use": local(sp["use"])} for sp in it["spots"]]
         stamp["solid"] = ["".join("1" if solid[hb["y"] + y][hb["x"] + x] else "0" for x in range(hb["w"]))
