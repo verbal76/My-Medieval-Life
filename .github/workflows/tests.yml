@@ -69,3 +69,4 @@ jobs:
           $godot --headless --path game --script res://tests/world_test.gd
           $godot --headless --path game --script res://tests/aging_test.gd
           $godot --headless --path game --script res://tests/wiki_test.gd
+          $godot --headless --path game --script res://tests/property_test.gd

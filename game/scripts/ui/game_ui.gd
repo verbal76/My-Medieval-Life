@@ -2276,7 +2276,7 @@ func show_build_menu() -> void:
 	var c: Construction = w.construction
 	_open("build_menu", "Build")
 	_label("Choose what to build, then a place for it: anywhere the ground is clear and nobody else's. The manor sells or leases you the ground on the spot. Then a wooden frame goes up; bring the materials (or hire a helper: ask a villager out of work) and it stands when the last load is in.", 16)
-	for kind in Construction.KINDS:
+	for kind in Construction.STANDALONE:
 		var cost := c.cost_of(kind)
 		var no := c.may_build(kind, World.PLAYER)
 		var h := HBoxContainer.new()
@@ -2294,6 +2294,18 @@ func show_build_menu() -> void:
 		var k: String = kind
 		_button("Choose a place", func(): main.begin_placement(k), no == "", h)
 		panel_body.add_child(h)
+	var estates: Array = w.property.held_by(World.PLAYER).filter(func(r): return w.property.is_parcel(r) and not w.property.building_on(r).is_empty() and w.property.estate_id(r) == str(r.id))
+	for r in estates:
+		var hh := HBoxContainer.new()
+		var ll := Label.new()
+		ll.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		ll.add_theme_font_size_override("font_size", 17)
+		ll.text = "Add rooms to %s (now: %s)" % [w.property.describe(r), ", ".join(w.property.estate_buildings(r).map(func(b): return Construction.kind_name(str(b.get("kind", "house")))))]
+		hh.add_child(ll)
+		var rr: Dictionary = r
+		_button("Open", func(): show_build(rr), true, hh)
+		panel_body.add_child(hh)
 	var sites: Array = c.sites_of(World.PLAYER)
 	if not sites.is_empty():
 		_label("Your building sites:", 20, Color(1, 0.85, 0.5))
@@ -2311,7 +2323,7 @@ func show_build_menu() -> void:
 
 ## The ground chosen for a building: buy or lease it from the manor and mark out the site in one go
 ## (owner rule), or choose again.
-func show_place_deal(kind: String, rect: Rect2i) -> void:
+func show_place_deal(kind: String, rect: Rect2i, anchor := "") -> void:
 	var w: World = main.world
 	var c: Construction = w.construction
 	var t := c.ground_terms(rect)
@@ -2322,7 +2334,7 @@ func show_place_deal(kind: String, rect: Rect2i) -> void:
 	_label("Then the frame goes up. The %s needs %s: bring them, or hire a helper." % [
 		Construction.kind_name(kind), ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))], 16)
 	var mark := func(lease: bool) -> void:
-		var p: Dictionary = c.place(kind, rect, World.PLAYER, lease)
+		var p: Dictionary = c.place(kind, rect, World.PLAYER, lease, w.plot(anchor))
 		if p.is_empty():
 			message("You cannot build there: %s." % c.why)
 			return
@@ -2368,8 +2380,8 @@ func show_build(pl: Dictionary) -> void:
 		_label("You lease this ground from the manor: %d coins a week, next due on day %d%s." % [int(pl.rent), int(pl.due_day) + 1,
 				(", %d owed" % int(pl.arrears)) if int(pl.get("arrears", 0)) > 0 else ""], 16)
 	if pl.site.is_empty():
-		_label("Mark out a building here:")
-		for kind in Construction.KINDS:
+		_label("Mark out a building here (a house to start with; rooms and workshops can be added to it later, one beside the other):")
+		for kind in Construction.STANDALONE:
 			var cost := c.cost_of(kind)
 			var no := c.may_build(kind, World.PLAYER)
 			if Vector2i(int(pl.w), int(pl.h)) != c.footprint(kind):
@@ -2383,6 +2395,7 @@ func show_build(pl: Dictionary) -> void:
 	var kind := str(pl.site.get("kind", "house"))
 	if pl.site.done:
 		_label("%s stands here. The reeve keeps the manor's land office: buy, lease or sell land and houses there." % World.cap(w.property.describe(pl)))
+		_property_rooms(pl)
 		return
 	var need: Dictionary = pl.site.need
 	var done_part := w.site_progress(pl)
@@ -2415,6 +2428,38 @@ func show_build(pl: Dictionary) -> void:
 		var words: Array = back.keys().map(func(k): return "%d %s" % [int(back[k]), GameData.item_name(k).to_lower()])
 		message("The frame comes down. You take back %s." % (", ".join(words) if not words.is_empty() else "nothing; none was delivered"))
 		show_build(pl))
+
+
+## The rooms of a property and what can still be added (PL2-008, PL2-014): each is a module that stands
+## against the buildings already there, with its own door, ground, materials and stations; nothing
+## already built is touched. The player's own property only.
+func _property_rooms(pl: Dictionary) -> void:
+	var w: World = main.world
+	var c: Construction = w.construction
+	var head: Dictionary = w.property.anchor_of(pl)
+	if not w.holds(World.PLAYER, head):
+		return
+	var have: Array = w.property.estate_buildings(head)
+	_label("This property: " + ", ".join(have.map(func(b): return Construction.kind_name(str(b.get("kind", "house"))))) + ".", 16, Color(1, 0.85, 0.5))
+	_label("Add to it (each room is its own piece of ground beside what stands; nothing is pulled down; the ground and its rent are the manor's as for any building):", 15)
+	for kind in Construction.MODULES:
+		var no := c.may_build(kind, World.PLAYER, head)
+		var cost := c.cost_of(kind)
+		var k: String = kind
+		var hb := HBoxContainer.new()
+		hb.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 16)
+		l.text = "%s (%s): %s" % [World.cap(Construction.kind_name(kind)), Construction.PURPOSE.get(kind, ""),
+			", ".join(cost.keys().map(func(id): return "%d %s" % [int(cost[id]), GameData.item_name(id).to_lower()]))]
+		if no != "":
+			l.text += ". " + no
+		hb.add_child(l)
+		var hid := str(head.id)
+		_button("Choose a place", func(): main.begin_placement(k, hid), no == "", hb)
+		panel_body.add_child(hb)
 
 
 ## A workshop at its door: its stations, whose it is, and for its holder who else may use them

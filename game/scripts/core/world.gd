@@ -1193,11 +1193,11 @@ func asleep(n: NPC) -> bool:
 ## A villager's own spot of a kind ("bed", "table", "chest", "hearth") in their home: the household
 ## shares them out by member order (beds first, then the straw pallets); {} if the home has none.
 func home_spot(n: NPC, kind: String) -> Dictionary:
-	var it: Dictionary = interiors.get(n.home, {})
 	var mine := []
-	for s in it.get("spots", []):
-		if s.kind == kind:
-			mine.append(s)
+	for room in (property.rooms_of(n.home) if kind == "bed" else [n.home]):     # living quarters add beds
+		for s in interiors.get(room, {}).get("spots", []):
+			if s.kind == kind:
+				mine.append(s)
 	if mine.is_empty():
 		return {}
 	var i := 0

@@ -480,3 +480,51 @@ Wiki notes (for the wiki agent):
 - PL1-01 root cause: X, Esc and the pad's B in every window called `hide_all`, which only unpaused when a game was running. From the title screen (Controls, Settings, Credits, character creation) it hid the panel and left the HUD over a paused, greyed world. Fix: each window records its Back (`GameUI.panel_back`); `go_back` returns to it, closes a play window, and ignores the title, origin and death screens.
 - PL1-02: Settings is one tabbed screen (Audio, Display, Interface, Controls, Wiki) with a Back button; Controls and Wiki are also direct buttons on the title and pause menus. No settings changed or were added.
 - PL2-009: the wiki is generated from game data at open time (see INT-082) with hand-written system pages and How-do-I guides whose numbers come from balance.json. Not-built ideas (lockpicking, player shops, cloud saves, hand plough, apothecary and potions) are listed as "Not in the game yet", confirmed absent from scripts and data by search on 2026-10-19. Wording of mechanics is provisional like the numbers it quotes.
+
+## Modular property (PL2-008, PL2-014; agent proposals, provisional)
+
+One foundation for both items: a property is a house (or any first building) plus modules added
+later; each module is built by the machinery every building already uses. Nothing is a parallel system.
+
+- **A module is a parcel of the same estate.** `Property.estate_id` (the parcel's `estate` field, "" =
+  its own id) groups parcels into one property; the first parcel is the anchor. A module is claimed
+  like any ground (`Property.claim`), has its own site, deal, rent and building, so helpers, NPC rules,
+  sale, lease, saves and the goods ledger all work unchanged. Modules are placed with
+  `Construction.place(..., anchor)`; `find_module_slot` suggests the nearest legal place (ground with
+  only trees in the way counts, shown red with "fell it first").
+- **Kinds.** `Construction.KINDS` now holds house, smithy, carpentry, bakehouse, kitchen, apothecary,
+  storage, quarters. All but the house are modules (`MODULES`); the first six can also stand alone
+  (`STANDALONE`; the owner's "a house first" rule still holds for a new property); storage and
+  quarters only come with a property. Kitchen and apothecary are a stove each (`workshop_kitchen`,
+  `workshop_apothecary`: the bakehouse's stove tiles, nothing new drawn), storage is the bare room,
+  quarters reuse the house stamp (its beds). New stamps come from `tools/build_village.py` `WORKSHOPS`
+  (only `stamps` changes in `village.json`).
+- **Rules.** The property must be the player's (owned or leased), its first building finished and no
+  site open on it; one room of each kind; the module's footprint (9x10) must touch a building of the
+  property along at least 3 cells, must not cover any of its door steps, and its own door step must be
+  clear and reachable (the existing check). No demolition: nothing earlier is changed.
+- **Connected = attached, not walk-through.** Rooms are separate buildings that stand against one
+  another (a party wall), each with its own street door, walls, roof (the one you are in fades) and
+  inside; navigation is the village A* through the doors. An interior doorway through the party wall is
+  not built: the stamps' furniture leaves no free cell on both sides, and cutting a wall needs new
+  art. Open question for the owner (see below).
+- **Costs, rent, footprint.** Materials: `workshop_cost` per kind (new kinds added, agent proposals).
+  Ground: bought or leased per module at the land price by area (a 9x10 module is `plot_price`); a
+  leased module pays its own weekly rent, `weekly_rent_share` of its worth (`module_price` per kind,
+  else `workshop_price`); the house's lease is untouched. A module can be sold back alone; the first
+  parcel cannot be sold or have its lease ended while rooms stand on the property ("Sell or give up the
+  rooms added to it first").
+- **Quarters and storerooms are rooms of the house** (`Property.rooms_of`): their beds count toward
+  `Construction.beds_in` and `World.home_spot("bed")`, and the family chest and beds can be used from
+  them. Other modules have stations only.
+- **No profession lock-in.** No code ties a building kind to a job or skill; stations are used by
+  type, so a house can hold a smithy, kitchen and bakehouse together.
+- **Not done.** NPC households do not add modules (they split instead); modules are not drawn with
+  their own sign or name beyond the building's name. The two survey plots are boxed in by roads and
+  houses (plot 0 has room for one module to its west or north, plot 1 for none), so modules want open
+  ground: place the first house in the open. Moving the plots or widening the lanes belongs to village
+  polish (`tools/build_village.py`), not done here.
+- **Saves.** `estate` is a new optional key on parcels; saves from before load with each parcel its own
+  property, so `SAVE_VERSION` stays 14 (tested with an estate-less save).
+- **Open question for the owner:** interior doorways between rooms (needs a wall-opening art tile or a
+  redrawn stamp), and whether the survey plots should be relaid to leave room for rooms.

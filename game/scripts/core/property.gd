@@ -56,6 +56,63 @@ func parcel_under(b: Dictionary) -> Dictionary:
 	return w.plot(str(b.get("parcel", ""))) if str(b.get("parcel", "")) != "" else {}
 
 
+# ---------------------------------------------------------------- estates (PL2-008, PL2-014) ----
+## A property grows by modules: each is a parcel of its own (so it has its own deal, rent and site,
+## all the machinery of any building) marked with the id of the property's first parcel in `estate`.
+## "" means a parcel stands alone; the first parcel is the anchor.
+func estate_id(p: Dictionary) -> String:
+	var e := str(p.get("estate", ""))
+	return e if e != "" else str(p.id)
+
+
+## The anchor parcel of the property a parcel (or a building on one) belongs to.
+func anchor_of(thing: Dictionary) -> Dictionary:
+	var p := thing if is_parcel(thing) else parcel_under(thing)
+	return w.plot(estate_id(p)) if not p.is_empty() else {}
+
+
+## Every parcel of the property, the anchor first, then the modules in the order they were added.
+func estate_parcels(thing: Dictionary) -> Array:
+	var head := anchor_of(thing)
+	if head.is_empty():
+		return []
+	var out := [head]
+	for q in w.plots:
+		if q != head and estate_id(q) == str(head.id):
+			out.append(q)
+	return out
+
+
+## The finished buildings of the property, the first building first.
+func estate_buildings(thing: Dictionary) -> Array:
+	var out := []
+	for q in estate_parcels(thing):
+		var b := building_on(q)
+		if not b.is_empty():
+			out.append(b)
+	return out
+
+
+## Whether the property has a room of this kind (a site for one counts, so there is one of each).
+func has_module(thing: Dictionary, kind: String) -> bool:
+	for q in estate_parcels(thing):
+		if not q.site.is_empty() and str(q.site.get("kind", "")) == kind:
+			return true
+	return false
+
+
+## The rooms a home has: itself, and the living quarters and storerooms of its property.
+func rooms_of(id: String) -> Array:
+	var out := [id]
+	var b: Dictionary = w.buildings.get(id, {})
+	if b.is_empty() or parcel_under(b).is_empty():
+		return out
+	for o in estate_buildings(b):
+		if str(o.id) != id and str(o.get("kind", "")) in ["quarters", "storage"] and w.holder_of(o) == w.holder_of(b):
+			out.append(str(o.id))
+	return out
+
+
 ## What changes hands together: a parcel and the building on it, or a building and its parcel. The
 ## first is the deal's record: it carries the rent.
 func unit(thing: Dictionary) -> Array:
@@ -125,7 +182,9 @@ func land_price(wd: int, ht: int) -> int:
 func price_of(thing: Dictionary) -> int:
 	for r in unit(thing):
 		if not is_parcel(r):
-			return int(GameData.b("workshop_price" if str(r.get("type", "")) == "workshop" else "house_price"))
+			if str(r.get("type", "")) == "workshop":
+				return int((GameData.b("module_price") as Dictionary).get(str(r.get("kind", "")), GameData.b("workshop_price")))
+			return int(GameData.b("house_price"))
 	return land_price(int(thing.w), int(thing.h))
 
 
@@ -304,6 +363,8 @@ func sell(thing: Dictionary, ref: String) -> String:
 	var u := unit(thing)
 	if w.owner_of(u[0]) != ref:
 		return "That is not yours to sell."
+	if estate_parcels(u[0]).size() > 1 and estate_id(u[0]) == str(u[0].id):
+		return "Sell or give up the rooms added to it first."
 	for r in u:
 		if w.tenant_of(r) != "":
 			return "It is let; it cannot be sold now."
@@ -325,6 +386,8 @@ func end_lease(thing: Dictionary, ref: String) -> String:
 	var u := unit(thing)
 	if w.tenant_of(u[0]) != ref:
 		return "You do not lease that."
+	if estate_parcels(u[0]).size() > 1 and estate_id(u[0]) == str(u[0].id):
+		return "Sell or give up the rooms added to it first."
 	var owed := mini(int(u[0].get("arrears", 0)), purse(ref))
 	_pay_manor(ref, owed)
 	_release(u, ref)
