@@ -35,3 +35,8 @@ stones and PL1-12 red plant; 7. PL1-07 furniture poses and PL1-13 stove. Then th
 PL1-10 (stall, then real demand, then expansions) and PL1-11 (portability audit, manual Drive transfer,
 conflict safety, then optional sync). The order may change for dependencies or to avoid interfering
 with other agents; deferred stages are reported, never silently dropped.
+
+
+**Status (updated for Build 13, 2026-10-19):** the Status column above is the list as received and is
+no longer kept current. The current status of every item, with evidence, is in
+`docs/DEVELOPMENT_LEDGER.md`; the Build 12 state is audited in `docs/release/BUILD_12_FULL_AUDIT.md`.

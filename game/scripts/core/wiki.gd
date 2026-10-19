@@ -21,7 +21,7 @@ const STATION_NAMES := {"anvil": "Anvil", "armory_counter": "Armory counter", "f
 	"oven": "Oven", "sawhorse": "Sawhorse", "stove": "Stove", "tavern_counter": "Tavern counter", "well": "Well",
 	"workbench": "Workbench"}
 const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "items_gear", "head": "items_gear",
-	"ring": "items_gear", "amulet": "items_gear", "food": "items_food", "resource": "items_materials"}
+	"ring": "items_gear", "amulet": "items_gear", "food": "items_food", "resource": "items_materials", "medicine": "items_medicine"}
 ## What each profession does, in a line (checked against NPCBrain's plans when written).
 const JOB_TEXT := {
 	"miner": "Works the ore seams in the mine and sells ore to the smith and the raw-goods merchant.",
@@ -260,6 +260,7 @@ func _core_categories() -> void:
 	add_category("items_tools", "Tools", "Pickaxes, axes and hammers")
 	add_category("items_gear", "Weapons and armour", "Swords, armour, caps, rings and amulets")
 	add_category("items_food", "Food and drink", "What you can eat")
+	add_category("items_medicine", "Medicine", "Bandages, poultices and tonics that heal")
 	add_category("items_materials", "Materials", "Ore, wood, bars, hides and more")
 	add_category("recipes", "Recipes", "What can be made, and where")
 	add_category("resources", "Gathering", "Where resources are found, and what they need")

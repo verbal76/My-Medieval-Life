@@ -50,7 +50,7 @@
   "sprint_stamina_per_sec": 12.0,
   "sprint_min_stamina": 12.0,
   "sprint_toggle": false,
-  "_sprint_note": "B8-027: sprint multiplies the player's speed by sprint_speed and costs sprint_stamina_per_sec net of regeneration; it ends when stamina runs out and cannot start below sprint_min_stamina. L3 toggles it on a pad; Shift is held on a keyboard unless sprint_toggle is true (then Shift toggles). Agent proposal, provisional.",
+  "_sprint_note": "B8-027: sprint multiplies the player's speed by sprint_speed and costs sprint_stamina_per_sec net of regeneration; it ends when stamina runs out and cannot start below sprint_min_stamina. LT (the left trigger) toggles it on a pad (owner correction, B8-027; L3 is unbound); Shift is held on a keyboard unless sprint_toggle is true (then Shift toggles). Agent proposal, provisional.",
   "start_coins_villager": [
     8,
     30

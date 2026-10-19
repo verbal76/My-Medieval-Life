@@ -32,3 +32,8 @@ Suggested order, following the owner's guidance (bugs and interaction reliabilit
 006, 007, 011, 003, 012; then PL2-002, 005, 010, 013; then the large shared building and farming work
 (PL2-008 with 014, then 015) and PL2-009, which gains most once the systems it documents are settled.
 This order is a proposal; nothing here has started.
+
+
+**Status (updated for Build 13, 2026-10-19):** the Status column above is the list as received and is
+no longer kept current. The current status of every item, with evidence, is in
+`docs/DEVELOPMENT_LEDGER.md`; the Build 12 state is audited in `docs/release/BUILD_12_FULL_AUDIT.md`.

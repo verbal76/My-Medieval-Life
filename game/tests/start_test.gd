@@ -170,6 +170,7 @@ func _run() -> void:
 	check(p.look == tunic.id and p.sprite == tunic.sprite and main.player_sprite != null, "the chosen look is the player's sprite (%s)" % p.sprite.get_file())
 	# 4-5. the origin story, then the village
 	check(ui.is_open("origin") and main.paused, "the origin story is shown and the world waits")
+	check(_texts(ui.panel_body).contains("%d coins" % int(GameData.b("start_coins_player"))) and not _texts(ui.panel_body).contains("five coins"), "the origin story names the real starting coins")
 	_press("Begin")
 	check(not ui.modal() and not main.paused and main.running, "into the village")
 	check(ui.toast.visible and ui.toast.text.contains("Any work for me?") and ui.toast.text.contains("reeve") and ui.toast.text.contains("journal"),

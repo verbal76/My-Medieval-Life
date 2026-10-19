@@ -1621,3 +1621,28 @@ Key:
 | PL2-013 | Usable furniture | Partial | T, G | Seated pose poor |
 | PL2-014 | Modular buildings | Partial | T, G | Shared with PL2-008 |
 | PL2-015 | Farming and livestock | Partial | T, G | Coops, help, draught animals, trapping, water deferred; one crop art |
+
+---
+
+## Addendum: corrections and Build 13 follow-up (2026-10-19)
+
+This audit describes Build 12 as built. Two of its findings were wrong or need qualifying:
+
+- **Section 16, weak tests.** `farming_test::test_market`'s station check is **not** always true. It
+  accepts a recipe's station when the village has one *or* it is a home station (`Furniture.STATION_OF`:
+  hearth to oven, table to prep), so a recipe at a station that exists nowhere would fail it. Only the two
+  `or true` assertions (`health_jobs_test.gd:80`, `run_tests.gd:99`) were genuinely always true.
+- **Section 16, defect 2 (gold ore).** The defect predated Build 12; `resources.json` already recorded it as
+  `no_source`.
+
+Build 13 corrective work since this audit is recorded as B13-01 to B13-10 in
+`docs/DEVELOPMENT_LEDGER.md`:
+- the five defects in section 16 (retirement posts, gold seam, medicine text, attendant hiring, CI
+  coverage and the `or true` checks);
+- the owner's four economy rules (funds, per-unit pricing, seed stock, per-item theft), which address
+  findings 6 to 8 of section 16;
+- the stale text in section 7.5;
+- the medicine wiki category;
+- the out-of-date documents in section 13.
+
+Everything else listed in sections 15 to 17 remains open.

@@ -93,6 +93,9 @@ func _data_tests() -> void:
 	check("item:iron_ore" in w.search("iron ore"), "'iron ore' finds the iron ore item")
 	check("todo:player_shops" in w.search("player shops") and w.pages["todo:player_shops"].blocks[0].t == "note" and not w.pages.has("todo:lockpicking") and "sys:chests" in w.search("lockpick"), "unbuilt ideas are marked Not in the game yet; lockpicking is built")
 	check(w.search("zzzz").is_empty(), "nonsense finds nothing")
+	var meds := ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_healing_tonic"]
+	check(meds.all(func(m): return w.pages["item:" + m].category == "items_medicine") and w.in_category("items_materials").all(func(pid): return not meds.has(str(pid).trim_prefix("item:"))), "medicines have their own category, not Materials (Build 12 audit)")
+	check(w.pages["sys:trading"].text.contains("every unit is priced in turn") and w.pages["sys:theft"].text.contains("what it was worth"), "the trading and theft pages describe the Build 13 rules")
 	check(w.pages["item:iron_bar"].text.contains("pickaxe"), "an item page links to what it makes (iron bar -> pickaxe)")
 	check(w.chain_lines("pickaxe").size() >= 3, "the pickaxe has a production chain down to ore")
 	check(w.pages.has("sys:calendar") and w.pages.has("sys:family") and w.pages.has("sys:inheritance") and w.pages.has("sys:animal_life"), "calendar, ageing, family, inheritance and animal life pages exist")

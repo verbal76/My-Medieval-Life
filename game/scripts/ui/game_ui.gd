@@ -84,7 +84,7 @@ const TOAST_MAX_W := 460.0
 const METERS := {
 	"hp": ["Health", "health", "Health: how much you can take. Rest at home, eat food that heals, or drink a tonic. At 0 you die."],
 	"hunger": ["Food", "bread", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
-	"stamina": ["Stamina", "stamina", "Stamina: spent by casting Fireball. It refills by itself."],
+	"stamina": ["Stamina", "stamina", "Stamina: spent by sprinting, tilling, clearing land and casting Fireball. It refills by itself."],
 }
 const GAIN_SECONDS := 1.5      # a gain line ("+2 red berries") stays this long, then fades
 const PROMPT := "res://assets/prompts/%s.png"
@@ -759,7 +759,7 @@ func show_controls(back: Callable) -> void:
 
 func _controls_tab() -> void:
 	_label("The game switches by itself to whichever you use.", 16)
-	_label("The bars top left: Health (at 0 you die), Food (falls with time; at 0 you starve and lose health, so eat from the Pack) and Stamina (spent by casting Fireball, refills by itself). A bar turns red and blinks when it is low.", 15)
+	_label("The bars top left: Health (at 0 you die), Food (falls with time; at 0 you starve and lose health, so eat from the Pack) and Stamina (spent by sprinting, tilling, clearing land and casting Fireball; refills by itself). A bar turns red and blinks when it is low.", 15)
 	for s in [scheme] + ["touch", "kbm", "gamepad"].filter(func(x): return x != scheme):
 		_label(SCHEME_NAMES[s] + (" (in use)" if s == scheme else ""), 22, Color(1, 0.85, 0.5))
 		_controls_list(s)
@@ -1087,7 +1087,7 @@ func show_origin() -> void:
 	var p: PlayerState = main.world.player
 	_open("origin", "%s %s" % [p.name, p.family], true)
 	_label("You worked another family's farm three valleys over until the harvest failed and the farmer could no longer feed you. There were hard words, and you left before dawn.")
-	_label("You carry what you could: a rusty sword that was your father's, a pickaxe nobody wanted, a loaf of bread, an apple going soft, and five coins.")
+	_label("You carry what you could: a rusty sword that was your father's, a pickaxe nobody wanted, a loaf of bread, an apple going soft, two linen bandages and %d coins." % int(GameData.b("start_coins_player")))
 	_label("This is the first village you have seen with smoke in its chimneys. A hundred people live here, and every one of them has their own work and their own worries. None of them owes you anything.")
 	_label("Find a way to live.", 20, Color(1, 0.85, 0.5))
 	_button("Begin", func():
