@@ -2126,7 +2126,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 	qp.confirmed.connect(func(q: int):
 		if buying:
 			if w.trade(p, n, id, q, price):
-				main._xp("trading", 2)
+				main._xp("trading", Skills.trade_xp(q * price))
 				message("You buy %d %s for %d coins." % [q, nm.to_lower(), q * price])
 			else:
 				message("You cannot afford that, or your pack is full.")
@@ -2134,7 +2134,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 			return
 		var r: Dictionary = w.player_sell_many(n, id, price, q)
 		if r.sold > 0:
-			main._xp("trading", 2)
+			main._xp("trading", Skills.trade_xp(r.sold * price))
 			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), r.sold * price])
 		if r.result == "sold":
 			show_trade(n)
@@ -2217,33 +2217,51 @@ func toggle_skills() -> void:
 func show_skills() -> void:
 	var p: PlayerState = main.world.player
 	_open("skills", "Skills — %s %s, generation %d" % [p.name, p.family, p.generation])
-	var keys := GameData.skills.keys()
-	for k in keys:
+	_label("Levels 1 to %d. Each skill's tiers are listed below it; what a tier gives is applied in play. Select a skill's name to fold or unfold its tiers." % Skills.max_level(), 15, Color(0.8, 0.78, 0.7))
+	for k in GameData.skills.keys():
 		var s: Dictionary = GameData.skills[k]
 		var lv := p.level(k)
 		var into := p.xp_into_level(k)
 		var head := HBoxContainer.new()
+		head.add_theme_constant_override("separation", 8)
 		head.add_child(_ui_icon("skill_" + str(k), 28))          # the skill's glyph (owner, B7-013)
-		var name_l := _label("%s — level %d  (%d / %d xp)" % [s.name, lv, into.x, into.y], 20, Color(1, 0.85, 0.5))
-		panel_body.remove_child(name_l)
-		name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		name_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		head.add_child(name_l)
+		var fold := Button.new()
+		fold.flat = true
+		fold.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		fold.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fold.custom_minimum_size = Vector2(0, 40)
+		fold.text = "%s — level %d of %d, %s" % [s.name, lv, Skills.max_level(), Skills.rank(lv)]
+		fold.add_theme_font_size_override("font_size", 20)
+		fold.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+		head.add_child(fold)
 		panel_body.add_child(head)
-		var h := HBoxContainer.new()
-		var levels: Array = s.unlocks.keys()
-		levels.sort()
-		for l in levels:
-			var b := Label.new()
+		var bar := ProgressBar.new()
+		bar.custom_minimum_size = Vector2(0, 14)
+		bar.show_percentage = false
+		bar.max_value = maxi(1, into.y)
+		bar.value = into.x if into.y > 0 else 1.0
+		panel_body.add_child(bar)
+		_label(("Top level reached  (%d xp)" % int(p.skills.get(k, 0))) if into.y == 0 else ("%d / %d xp to level %d" % [into.x, into.y, lv + 1]), 14, Color(0.75, 0.75, 0.7))
+		var tiers := VBoxContainer.new()
+		tiers.add_theme_constant_override("separation", 2)
+		var next_shown := false
+		for l in Skills.shown_levels(k):
 			var got := lv >= int(l)
-			b.text = ("[x] " if got else "[ ] ") + "L%s: %s" % [l, s.unlocks[l]]
+			var is_next := not got and not next_shown
+			next_shown = next_shown or is_next
+			var b := Label.new()
+			b.text = ("[x] " if got else (">> " if is_next else "[ ] ")) + "Level %d: %s" % [l, Skills.tier_text(k, l)]
 			b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			b.custom_minimum_size = Vector2(170, 0)
 			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			b.add_theme_font_size_override("font_size", 14)
-			b.add_theme_color_override("font_color", Color(0.6, 1.0, 0.6) if got else Color(0.7, 0.7, 0.7))
-			h.add_child(b)
-		panel_body.add_child(h)
+			b.add_theme_font_size_override("font_size", 15)
+			b.add_theme_color_override("font_color", Color(0.6, 1.0, 0.6) if got else (Color(1, 0.9, 0.55) if is_next else Color(0.62, 0.62, 0.62)))
+			tiers.add_child(b)
+		panel_body.add_child(tiers)
+		fold.pressed.connect(func(): tiers.visible = not tiers.visible)
+		var gap := Control.new()
+		gap.custom_minimum_size = Vector2(0, 10)
+		panel_body.add_child(gap)
+	body_scroll.set_deferred("scroll_vertical", 0)           # a long list opens at its top, not where the last window left the scroller
 
 
 # ---------------------------------------------------------------- village map ----------------

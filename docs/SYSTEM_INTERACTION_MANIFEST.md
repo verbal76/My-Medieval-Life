@@ -240,6 +240,7 @@ Rules:
 - **Affects:** Treasury, Market, Coins, Building, Property
 - **Expected:** Repairs are bought from village sellers with money beyond 3 days of wages, left at the seller's for the manor's carriers and used up mending (INT-066); the manor buys no more while it holds `manor_jobs.works_stock_max` unused, and buys no stone while its own is being quarried. A plot's price (`plot_price`, provisional) and every sale or rent go to the treasury; a house sold back is paid from it (`gov_land_sales`, `gov_rent`, `gov_land_bought`). The treasury's level then decides wages, repairs and works as before.
 - **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_property`, `game/tests/play_test.gd`
+
 ### INT-027 · Pens and keepers
 - **Trigger:** Hourly animal update; a keeper's day; a keeper dies or changes job.
 - **Source:** `game/scripts/core/fauna.gd::tick`, `game/scripts/core/fauna.gd::feed`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/npc_brain.gd::_hand_over_pens`
@@ -267,6 +268,7 @@ Rules:
 - **Affects:** Building, Inventory, Loot, Property, Workshops, Ledger
 - **Expected:** One construction for every builder and kind (property phase 2): `start_site(parcel, kind, owner)` marks out a house or a workshop (`Construction.KINDS`, cost `house_cost` / `workshop_cost`), `deliver(parcel, inventory, by)` takes what is still needed from any inventory, and the building is the site owner's whoever delivers. Materials delivered stay goods on the site until it stands (`World.site_goods`, counted by the goods-conservation test); then they are used up in the building (`used_building_<item>` in the ledger). A house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load (to the pack, or a bundle at the site if it is full); no coin moves. The finished house is the parcel holder's at the site's start (`site.owner`; phase 2 helpers may deliver, the owner keeps it), records its parcel (`building.parcel`, `parcel.building`) and changes hands with it (INT-052); a family's first house becomes its home. It has the house stamp's interior, collision and roof (INT-048, INT-049): its floor walkable, walls solid, its bed rests and its chest is the family's store, as the door does (INT-050). The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall. A plot can be bought or leased at the plot itself.
 - **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_building_site`, `game/tests/run_tests.gd::test_interiors`, `game/tests/run_tests.gd::test_property`, `game/tests/start_test.gd`
+
 ### INT-031 · Saving and loading
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
 - **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_migrate_construction`, `game/scripts/core/construction.gd::to_dict`, `game/scripts/core/construction.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/world.gd::_migrate_property`, `game/scripts/core/fauna.gd::load_dict`, `game/scripts/core/property.gd::settle_ended_households`, `game/scripts/core/player_state.gd::to_dict`
@@ -799,6 +801,41 @@ Rules:
 - **Expected:** A sown field is ripe `field_grow_days` later; it then stands ripe for `field_ripe_wait_hours` (12) before the farmers cut it, so the player sees and can harvest ripe wheat (it used to be cut within the hour). Farmers then cut, till and sow again. `field_grow_days` is the hook for seasons.
 - **Tests:** `game/tests/world_test.gd::_pl2_007`
 
+### INT-105 · Skill levels follow one slower curve, and saved xp keeps its meaning
+- **Trigger:** The player earns xp (mining, chopping, crafting, trading, fighting, casting, stealing), is taught a skill, or loads a save.
+- **Source:** `game/scripts/core/skills.gd::level_of`, `game/scripts/core/skills.gd::xp_for_level`, `game/scripts/core/skills.gd::trade_xp`, `game/scripts/core/player_state.gd::level`, `game/scripts/core/player_state.gd::raise_to`, `game/scripts/main.gd::_xp`
+- **Affects:** Player state, Save
+- **Expected:** (PL2-005) Levels 1 to 10 from the curve in `skills.json` (step_base x L x (1 + step_growth x (L - 1)): 100, 250, 450, 700 ... xp a level); the saved `skills` dictionary still holds raw xp under the same keys, so an old save keeps every point and only the level it works out to follows the new curve (500 mining xp stays level 3, 1000 is now level 4). A quest's lesson raises to the start of the level on this curve and prints that tier's text.
+- **Tests:** `game/tests/skills_test.gd::test_curve`, `game/tests/skills_test.gd::test_saves`, `game/tests/run_tests.gd::test_skill_quest`
+
+### INT-106 · Gathering skills change yield, speed and tool wear
+- **Trigger:** The player mines a seam, fells a tree, or the tier is reached.
+- **Source:** `game/scripts/main.gd::interact`, `game/scripts/main.gd::_chop`, `game/scripts/core/world.gd::sapling_drop`, `game/scripts/core/skills.gd::value`
+- **Affects:** Resources, Inventory, Player state
+- **Expected:** (PL2-005) Mining tiers give a chance of a second ore a swing, gold at level 3, shorter swings and a chance a swing does not wear the pickaxe; Woodcutting tiers give extra logs a tree, shorter chopping, a chance a blow does not wear the axe, and a chance of a second sapling. The values come from `skills.json` tier effects through `Skills.value`; nothing is hard-coded to a level in the code.
+- **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/skills_test.gd::test_effects_are_wired`
+
+### INT-107 · Crafting skills speed the work and stretch the materials
+- **Trigger:** The player finishes a recipe at a station.
+- **Source:** `game/scripts/main.gd::craft`, `game/scripts/core/skills.gd::is_gear`, `game/scripts/core/skills.gd::recipes_at`
+- **Affects:** Crafting, Inventory, Workshops
+- **Expected:** (PL2-005) A recipe's own skill (Smithing, Crafting, Cooking) sets how long the player's work takes (`craft_time`), the chance the materials come back unused (`save_chance`), and the chance of one extra unit of a product that is not gear (`bonus_chance`). Recipes still unlock at their own `skill` and `level` in `recipes.json`; the skills window and the wiki list them under that level. Villagers' crafting is unchanged.
+- **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/skills_test.gd::test_text_and_wiki`
+
+### INT-108 · Combat, magic and trading skills change fights, spells and prices
+- **Trigger:** The player strikes, casts Fireball, is hurt, buys or sells.
+- **Source:** `game/scripts/core/player_state.gd::damage`, `game/scripts/main.gd::_strike`, `game/scripts/main.gd::attack`, `game/scripts/main.gd::fireball`, `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::player_price_factor`
+- **Affects:** Combat, Health, Market, Coins
+- **Expected:** (PL2-005) Combat tiers raise blow damage, shorten the swing delay, give a chance of a double blow and cut damage taken (not hunger); Magic tiers shorten the Fireball cooldown, cut its stamina cost and raise its damage; Trading tiers move the player's buy and sell prices up to 20% (coins still move between real holders, so the supply is unchanged). Trade xp grows with the coins in the deal.
+- **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/skills_test.gd::test_early_play`
+
+### INT-109 · Stealth makes a pickpocket likelier and a caught one quieter
+- **Trigger:** The player tries a pocket.
+- **Source:** `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/world.gd::pickpocket_chance`
+- **Affects:** Crime, Player state
+- **Expected:** (PL2-005) The chance is `pickpocket_chance` plus `pickpocket_chance_per_level` times the tier's `pickpocket_steps`, never above `pickpocket_chance_max` (a sleeper's bonus is unchanged); higher tiers shrink the distance within which a guard hears a caught try (`guard_radius`). A guard who sees the theft still acts.
+- **Tests:** `game/tests/skills_test.gd::test_outcomes`, `game/tests/run_tests.gd::test_theft_and_shops`
+
 ### INT-115 · Every save carries its world's identity, for moving it between devices
 - **Trigger:** The game is saved, loaded, or a new game starts.
 - **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::_save_meta`, `game/scripts/main.gd::_load_save`, `game/scripts/main.gd::new_game`
@@ -813,19 +850,19 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-105, INT-106, INT-109 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-106, INT-107 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079 |
-| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083 |
-| Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069 |
+| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108 |
+| Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-109 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089 |
-| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083 |
+| Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-106 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-107 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-108 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-108 |
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
@@ -837,9 +874,9 @@ Rules:
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086 |
 | Bandits | INT-012, INT-014, INT-050 |
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079 |
-| Workshops | INT-021, INT-030, INT-058, INT-085 |
+| Workshops | INT-021, INT-030, INT-058, INT-085, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-115 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-105, INT-115 |
 | Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088 |

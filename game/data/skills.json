@@ -1,15 +1,104 @@
 {
-  "format": "mml-skills/1",
-  "note": "The laid-out skill tree. XP per level = 100 * level. Every unlock changes what the player can do (Bob's anti-slop rule: progression must be felt).",
+  "format": "mml-skills/2",
+  "note": "The laid-out skill tree (PL2-005). Levels 1 to max_level; the xp to climb from level L to L+1 is step_base * L * (1 + step_growth * (L - 1)) (Skills.xp_for_level), so level 2 comes early and the top tiers take long play. A tier is {text, effects}: `text` is flavour or a plain unlock, `effects` are numbers the code reads through Skills.value (the highest tier reached that defines a key wins); the skills window and the wiki print the numbers from here, and recipes unlock by their own skill and level in recipes.json (listed under the tier automatically). Every key is read by game code (tests/skills_test.gd checks it). Saved xp keys are unchanged.",
+  "max_level": 10,
+  "step_base": 100,
+  "step_growth": 0.25,
+  "ranks": {"1": "Novice", "3": "Apprentice", "5": "Journeyman", "7": "Expert", "9": "Master"},
   "skills": {
-    "mining":     {"name": "Mining",      "unlocks": {"1": "Mine iron, copper, coal and stone", "2": "+25% ore per swing", "3": "Mine gold ore", "4": "Tools wear half as fast"}},
-    "woodcutting":{"name": "Woodcutting", "unlocks": {"1": "Fell trees for logs", "2": "+1 log per tree", "3": "Chop 30% faster"}},
-    "smithing":   {"name": "Smithing",    "unlocks": {"1": "Smelt iron and copper; forge tools", "2": "Forge iron swords", "3": "Forge iron armour; smelt gold"}},
-    "crafting":   {"name": "Crafting",    "unlocks": {"1": "Saw planks; tan leather", "2": "Make leather armour"}},
-    "cooking":    {"name": "Cooking",     "unlocks": {"1": "Cook pottage; roast meat", "2": "Brew ale"}},
-    "combat":     {"name": "Combat",      "unlocks": {"1": "Sword swings", "2": "+20% damage", "3": "Power strike (hold attack)", "4": "+20% damage"}},
-    "magic":      {"name": "Magic",       "unlocks": {"1": "Fireball (learned from the Sage)", "2": "Fireball cooldown 4s", "3": "Fireball damage +50%"}},
-    "trading":    {"name": "Trading",     "unlocks": {"1": "Buy and sell", "2": "5% better prices", "3": "10% better prices"}},
-    "stealth":    {"name": "Stealth",     "unlocks": {"1": "Pick pockets (40% chance)", "2": "Pick pockets (52% chance)", "3": "Pick pockets (64% chance)", "4": "Pick pockets (76% chance)"}}
+    "mining": {"name": "Mining", "tiers": {
+      "1": {"text": "Mine iron, copper, coal and stone"},
+      "2": {"effects": {"ore_extra_chance": 0.25}},
+      "3": {"text": "Mine gold ore", "effects": {"gold": 1}},
+      "4": {"effects": {"tool_wear_save": 0.5}},
+      "5": {"effects": {"ore_extra_chance": 0.35}},
+      "6": {"effects": {"mine_time": 0.8}},
+      "7": {"effects": {"tool_wear_save": 0.75}},
+      "8": {"effects": {"ore_extra_chance": 0.5}},
+      "9": {"effects": {"mine_time": 0.65}},
+      "10": {"text": "Master miner", "effects": {"ore_extra_chance": 0.65, "tool_wear_save": 0.9}}
+    }},
+    "woodcutting": {"name": "Woodcutting", "tiers": {
+      "1": {"text": "Fell trees for logs"},
+      "2": {"effects": {"log_bonus": 1}},
+      "3": {"effects": {"chop_time": 0.7}},
+      "4": {"effects": {"axe_wear_save": 0.5}},
+      "5": {"effects": {"sapling_bonus": 0.15}},
+      "6": {"effects": {"chop_time": 0.6, "log_bonus": 2}},
+      "7": {"effects": {"axe_wear_save": 0.75}},
+      "8": {"effects": {"sapling_bonus": 0.3}},
+      "9": {"effects": {"chop_time": 0.5}},
+      "10": {"text": "Master woodsman", "effects": {"log_bonus": 3, "axe_wear_save": 0.9}}
+    }},
+    "smithing": {"name": "Smithing", "tiers": {
+      "1": {"text": "Smelt iron and copper; forge tools"},
+      "4": {"effects": {"craft_time": 0.8}},
+      "5": {"effects": {"save_chance": 0.15}},
+      "6": {"effects": {"bonus_chance": 0.1}},
+      "7": {"effects": {"craft_time": 0.65}},
+      "8": {"effects": {"save_chance": 0.25}},
+      "10": {"text": "Master smith", "effects": {"bonus_chance": 0.2, "craft_time": 0.5}}
+    }},
+    "crafting": {"name": "Crafting", "tiers": {
+      "1": {"text": "Saw planks; tan leather"},
+      "3": {"effects": {"craft_time": 0.85}},
+      "5": {"effects": {"save_chance": 0.15}},
+      "7": {"effects": {"bonus_chance": 0.1, "craft_time": 0.7}},
+      "9": {"effects": {"save_chance": 0.25}},
+      "10": {"text": "Master artisan", "effects": {"bonus_chance": 0.2}}
+    }},
+    "cooking": {"name": "Cooking", "tiers": {
+      "1": {"text": "Cook pottage; roast meat; brew tonics"},
+      "4": {"effects": {"craft_time": 0.8}},
+      "6": {"effects": {"save_chance": 0.15}},
+      "8": {"effects": {"bonus_chance": 0.15, "craft_time": 0.65}},
+      "10": {"text": "Master cook", "effects": {"save_chance": 0.3, "bonus_chance": 0.25}}
+    }},
+    "combat": {"name": "Combat", "tiers": {
+      "1": {"text": "Sword swings"},
+      "2": {"effects": {"damage_mult": 1.1}},
+      "3": {"effects": {"attack_time": 0.9}},
+      "4": {"effects": {"damage_mult": 1.2}},
+      "5": {"effects": {"damage_taken": 0.9, "crit_chance": 0.1}},
+      "6": {"effects": {"damage_mult": 1.35, "attack_time": 0.8}},
+      "7": {"effects": {"damage_taken": 0.8}},
+      "8": {"effects": {"damage_mult": 1.5}},
+      "9": {"effects": {"crit_chance": 0.2, "attack_time": 0.7}},
+      "10": {"text": "Master of arms", "effects": {"damage_mult": 1.7, "damage_taken": 0.7}}
+    }},
+    "magic": {"name": "Magic", "tiers": {
+      "1": {"text": "Fireball (learned from the Sage)"},
+      "2": {"effects": {"fireball_cooldown": 4.0}},
+      "3": {"effects": {"fireball_damage": 1.5}},
+      "4": {"effects": {"fireball_stamina": 0.8}},
+      "5": {"effects": {"fireball_cooldown": 3.0}},
+      "6": {"effects": {"fireball_damage": 1.8}},
+      "7": {"effects": {"fireball_stamina": 0.6}},
+      "8": {"effects": {"fireball_cooldown": 2.5}},
+      "9": {"effects": {"fireball_damage": 2.2}},
+      "10": {"text": "Archmage", "effects": {"fireball_cooldown": 2.0, "fireball_stamina": 0.5}}
+    }},
+    "trading": {"name": "Trading", "tiers": {
+      "1": {"text": "Buy and sell"},
+      "2": {"effects": {"price_bonus": 0.03}},
+      "3": {"effects": {"price_bonus": 0.05}},
+      "4": {"effects": {"price_bonus": 0.08}},
+      "5": {"effects": {"price_bonus": 0.10}},
+      "7": {"effects": {"price_bonus": 0.13}},
+      "9": {"effects": {"price_bonus": 0.16}},
+      "10": {"text": "Master merchant", "effects": {"price_bonus": 0.20}}
+    }},
+    "stealth": {"name": "Stealth", "tiers": {
+      "1": {"text": "Pick pockets"},
+      "2": {"effects": {"pickpocket_steps": 0.6}},
+      "3": {"effects": {"pickpocket_steps": 1.2}},
+      "4": {"effects": {"pickpocket_steps": 1.8}},
+      "5": {"effects": {"pickpocket_steps": 2.4}},
+      "6": {"effects": {"guard_radius": 0.75}},
+      "7": {"effects": {"pickpocket_steps": 3.2}},
+      "8": {"effects": {"guard_radius": 0.5}},
+      "9": {"effects": {"pickpocket_steps": 3.9}},
+      "10": {"text": "Shadow", "effects": {"pickpocket_steps": 4.0, "guard_radius": 0.25}}
+    }}
   }
 }

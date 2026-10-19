@@ -432,7 +432,7 @@ func damage_player(amount: float, source: String) -> void:
 	var p := player
 	if not p.alive:
 		return
-	p.hp -= maxf(0.0, amount - p.defense() * 0.5) if source != "hunger" else amount
+	p.hp -= maxf(0.0, amount * Skills.value(p, "combat", "damage_taken", 1.0) - p.defense() * 0.5) if source != "hunger" else amount
 	p.last_damage = source              # what hurt the player last: the death screen's cause (B8-020)
 	if p.hp <= 0.0:
 		p.alive = false
@@ -552,12 +552,7 @@ func buy_price(vendor: NPC, id: String) -> int:
 
 
 func player_price_factor(buying: bool) -> float:
-	var lv := player.level("trading")
-	var f := 0.0
-	if lv >= 2:
-		f = 0.05
-	if lv >= 3:
-		f = 0.10
+	var f := Skills.value(player, "trading", "price_bonus")
 	return 1.0 - f if buying else 1.0 + f
 
 
@@ -751,11 +746,12 @@ func tree_hits(cell: Vector2i) -> int:
 
 ## A mature tree's sapling(s) for the player: balance.json tree_growth sapling_count with chance
 ## sapling_chance. Returns {item: count} ({} for none).
-func sapling_drop(t: Dictionary) -> Dictionary:
+func sapling_drop(t: Dictionary, bonus := 0.0) -> Dictionary:
 	var c: Dictionary = Trees.cfg()
 	if rng.randf() >= float(c.sapling_chance):
 		return {}
-	return {Trees.sapling_item(str(t.get("species", "oak_summer"))): int(c.sapling_count)}
+	var n := int(c.sapling_count) + (1 if rng.randf() < bonus else 0)       # a woodsman's chance of a second sapling
+	return {Trees.sapling_item(str(t.get("species", "oak_summer"))): n}
 
 
 ## Bring a tree's stage up to the game clock (growth is lazy: nothing simulates a tree), keeping the
@@ -1833,8 +1829,13 @@ func shop_name(n: NPC) -> String:
 	return {"raw": "ore and timber stall", "food": "food stall", "goods": "tools and arms stall"}.get(stalls[n.workplace].kind, "stall")
 
 
+## The chance a try at an awake victim works: the base plus the Stealth tier's steps, at most the cap.
+func pickpocket_chance() -> float:
+	return minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * Skills.value(player, "stealth", "pickpocket_steps"), float(GameData.b("pickpocket_chance_max")))
+
+
 ## The player tries to pick the pocket of the villager beside them (owner rule). The chance grows
-## with Stealth (pickpocket_chance + pickpocket_chance_per_level a level, at most
+## with Stealth (pickpocket_chance + pickpocket_chance_per_level x the tier's pickpocket_steps, at most
 ## pickpocket_chance_max). Success: a few coins, or one thing they carry (marked as stolen from them),
 ## and they find it missing later. Caught: they remember it, anyone in sight sees the try, and a guard
 ## who sees it or is within `guard_call_radius` of their shout stops the player (guard_confront).
@@ -1844,8 +1845,7 @@ func pickpocket(n: NPC) -> Dictionary:
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
 	if n.role == "child":                       # owner, 2026-10-18 (B8-010): never a child's pocket
 		return {"ok": false, "what": "", "text": "You will not rob a child."}
-	var lv := player.level("stealth")
-	var chance := minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * (lv - 1), float(GameData.b("pickpocket_chance_max")))
+	var chance := pickpocket_chance()
 	var sleeping := asleep(n)
 	if sleeping:                        # a sleeper is unaware: easier, but a fumble wakes them
 		chance = minf(chance + float(GameData.b("pickpocket_asleep_bonus")), float(GameData.b("pickpocket_asleep_max")))
@@ -1879,7 +1879,7 @@ func pickpocket(n: NPC) -> Dictionary:
 	var seen := witness("pickpocket", "a try at %s's purse" % who, n, {}, null, "try to pick %s's pocket" % who)
 	var text := "%s catches your hand in their pocket!" % n.name
 	if last_guard == "":
-		var g := guard_near(n.pos, float(GameData.b("guard_call_radius")))
+		var g := guard_near(n.pos, float(GameData.b("guard_call_radius")) * Skills.value(player, "stealth", "guard_radius", 1.0))
 		if g:
 			last_guard = guard_confront(g, {}, null, n)
 	if last_guard != "":

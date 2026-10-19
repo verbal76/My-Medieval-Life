@@ -5,6 +5,7 @@ extends RefCounted
 static var items := {}
 static var recipes := {}
 static var skills := {}
+static var skill_cfg := {}                # skills.json whole: the xp curve and ranks (see Skills)
 static var balance := {}
 static var quests := []                   # side quests (res://data/quests.json)
 static var resources := {}                # resource nodes and uses (res://data/resources.json; read through ResourceNodes)
@@ -16,7 +17,8 @@ static func ensure() -> void:
 		return
 	items = _read("res://data/items.json").items
 	recipes = _read("res://data/recipes.json").recipes
-	skills = _read("res://data/skills.json").skills
+	skill_cfg = _read("res://data/skills.json")
+	skills = skill_cfg.skills
 	balance = _read("res://data/balance.json")
 	quests = _read("res://data/quests.json").quests
 	resources = _read("res://data/resources.json")
