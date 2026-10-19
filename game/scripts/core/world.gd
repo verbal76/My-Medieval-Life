@@ -52,6 +52,7 @@ var plots: Array = []              # the land registry's parcels: {id, x, y, w, 
                                    # due_day, arrears, missed, site, building} (scripts/core/property.gd)
 var property: Property             # the manor's land office: sales, leases, rent, the land registry
 var business: Business             # the player's market stall and the villagers who buy from it (PL1-10)
+var fitting: Fitting               # equipment the player places in their rooms: counters, shelves, stations (PL1-10 stage 3)
 var construction: Construction     # building kinds, placement, hired helpers, households that split
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
@@ -91,6 +92,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
+	fitting = Fitting.new(self)
 	for b in m.data.buildings:
 		buildings[b.id] = b.duplicate(true)
 	for s in m.data.stations:
@@ -2090,7 +2092,7 @@ func holds(ref: String, thing: Dictionary) -> bool:
 
 func set_owner(thing: Dictionary, ref: String) -> void:
 	thing.owner = ref
-	if str(thing.get("type", "")) == "workshop":          # a workshop's stations change hands with it
+	if str(thing.get("type", "")) in ["workshop", "player_house"]:          # a workshop's stations change hands with it
 		for id in stations:
 			if str(stations[id].get("building", "")) == str(thing.get("id", "")):
 				stations[id].owner = ref
@@ -2387,6 +2389,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
 	business = Business.new(self)
+	fitting = Fitting.new(self)
 	minutes = float(d.minutes)
 	last_hour = int(minutes / 60.0)
 	for s in m.data.stations:
@@ -2512,6 +2515,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		var b: Dictionary = buildings[id]
 		if is_built(b):
 			_built_collision(b)
+			fitting.restore(b)             # the equipment the player placed (PL1-10 stage 3)
 	index_interiors()
 	construction.load_dict(d.get("construction", {}))
 	Life.sync_roles(self)              # B8-029: roles follow age on load

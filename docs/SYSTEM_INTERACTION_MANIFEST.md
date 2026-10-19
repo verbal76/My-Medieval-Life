@@ -1001,7 +1001,7 @@ Rules:
 - **Trigger:** A villager reaches the stall to buy.
 - **Source:** `game/scripts/core/business.gd::attended`, `game/scripts/core/business.gd::arrive`, `game/scripts/core/business.gd::sell`, `game/scripts/core/npc_brain.gd::act`
 - **Affects:** Market, Coins, Inventory, Households
-- **Expected:** (PL1-10 stage 1) A sale needs the player within `stall_range` tiles of the stall and no rent owing (no attendant exists yet). The buyer's coins go into the stall's till (collected by the player, counted in World.total_coins), the goods leave the stock for the buyer's pack or household pantry, and the sale is recorded. A sale that cannot complete (stock gone, price changed, buyer cannot pay, player away) changes nothing.
+- **Expected:** (PL1-10 stage 1) A sale needs the player within `stall_range` tiles of the stall (or, from stage 4, an attendant at it: INT-136) and no rent owing. The buyer's coins go into the stall's till (collected by the player, counted in World.total_coins), the goods leave the stock for the buyer's pack or household pantry, and the sale is recorded. A sale that cannot complete (stock gone, price changed, buyer cannot pay, player away) changes nothing.
 - **Tests:** `game/tests/business_test.gd::_attended_sales`
 
 ### INT-119 · Villagers buy from the stall only for needs they really have
@@ -1018,6 +1018,48 @@ Rules:
 - **Expected:** (PL1-10 stage 1) Each morning the day's rent is taken from the purse and then the till and goes to the treasury. If it cannot be paid, sales stop (`missed` counts mornings); after `stall_evict_days` the manor takes the pitch back and the unsold goods and the till return to the player. The stall's whole state (tenant, stock, prices, sales, till, rent paid-through day) is part of World.stalls and survives save and load.
 - **Tests:** `game/tests/business_test.gd::_rent_daily`, `game/tests/business_test.gd::_save_load`
 
+### INT-131 · A larger market stall is bought from the manor
+- **Trigger:** The player chooses the larger stall in the stall window.
+- **Source:** `game/scripts/core/business.gd::upgrade`, `game/scripts/core/business.gd::listing_cap`, `game/scripts/core/business.gd::rent_of`, `game/scripts/core/business.gd::set_display`
+- **Affects:** Market, Coins, Treasury, Inventory
+- **Expected:** (PL1-10 stage 3) For `stall_large_cost` coins (paid to the treasury, so coins are conserved) the rented pitch becomes a larger stall: it holds `stall_large_listings` kinds of goods instead of `stall_max_listings`, its daily rent becomes `stall_large_rent_day`, and one item on sale can be shown on a display that makes the hourly demand reach `stall_large_reach` times as far. The purchase is an expense in the stall's books; closing the stall returns the pitch plain again.
+- **Tests:** `game/tests/business_test.gd::_larger_stall`
+
+### INT-132 · Equipment is placed in a room the player holds
+- **Trigger:** The player fits out a room they built: counter, shelves, stock chest, oven, stove, workbench, forge or anvil.
+- **Source:** `game/scripts/core/fitting.gd::place`, `game/scripts/core/fitting.gd::why_not`, `game/scripts/core/fitting.gd::remove`, `game/scripts/ui/fit_window.gd::show`, `game/scripts/main.gd::begin_fit`
+- **Affects:** Building, Inventory, Crafting, Save
+- **Expected:** (PL1-10 stage 3) A piece goes on a free floor cell inside a room the player holds (house, workshop, storeroom, quarters), never on a door, bed, chair, table or station, its use cell, or the stamp's own furniture, and only where every cell of the room reachable before stays reachable from the door. The materials (`shop_equipment`) leave the pack and are counted as used in the building; the cell becomes solid and is drawn in the furniture layer; taking the piece up returns the materials. The list is part of the building (`fit`), so it survives save and load, with collision and stations restored.
+- **Tests:** `game/tests/business_test.gd::_shop`, `game/tests/business_test.gd::_shop_save`
+
+### INT-133 · A room's stations follow the equipment placed in it, and name the shop's trade
+- **Trigger:** An oven, stove, workbench, forge or anvil is placed in or taken from a room.
+- **Source:** `game/scripts/core/fitting.gd::apply`, `game/scripts/core/fitting.gd::trade`, `game/scripts/core/fitting.gd::station_kinds`, `game/scripts/core/world.gd::set_owner`
+- **Affects:** Crafting, Building, Employment
+- **Expected:** (PL1-10 stage 3) A placed station is an ordinary World.stations entry of that building (owner, use cell, capacity): the craft window, recipes and prompts are the existing ones; the owner uses it and villagers need leave as for any workshop or home. What the shop is follows its equipment: a forge and an anvil make a smithy, an oven a bakery, a workbench a carpenter's shop, a stove a kitchen, otherwise a general store. Taking a station up removes it from the world's stations.
+- **Tests:** `game/tests/business_test.gd::_shop`
+
+### INT-134 · A shop sells like a stall, from a counter, with shelves, a back room and its books
+- **Trigger:** The player opens a shop at a placed counter, stocks it and sells.
+- **Source:** `game/scripts/core/business.gd::open_shop`, `game/scripts/core/business.gd::record`, `game/scripts/core/business.gd::store_item`, `game/scripts/core/business.gd::sell`, `game/scripts/core/business.gd::profit`, `game/scripts/ui/stall_window.gd::show`
+- **Affects:** Market, Coins, Treasury, Inventory, Households, Save
+- **Expected:** (PL1-10 stage 3) The shop's record lives in the building (`shop`, saved with it) and has the stall's fields: stock, prices, sales, till, earned, paid through day. It pays `shop_licence_day` a day to the manor (the first at opening; unpaid stops sales and, after `stall_evict_days`, closes it and returns the goods), holds `shop_listings` kinds plus `shop_shelf_listings` per shelves, and a stock chest's `shop_store_per_chest` pieces refill a sold-out kind at its price. Buyers, needs, ceilings and cash floors are the stall's (INT-119). Revenue, expenses (licence, wages) and profit are kept; the till counts in the village's coins. Taking up the counter, or losing the room, closes the shop with nothing lost.
+- **Tests:** `game/tests/business_test.gd::_shop`, `game/tests/business_test.gd::_shop_save`
+
+### INT-135 · An attendant is hired and paid a daily wage
+- **Trigger:** The player hires a villager at the stall or shop window, and each morning after.
+- **Source:** `game/scripts/core/business.gd::hire`, `game/scripts/core/business.gd::hire_refusal`, `game/scripts/core/business.gd::_wage_due`, `game/scripts/core/business.gd::dismiss`, `game/scripts/core/business.gd::candidates`
+- **Affects:** Employment, Coins, Households, Market
+- **Expected:** (PL1-10 stage 4) Only an adult without a trade of their own (`Construction.HIRABLE`: out of work, a manor hand with no job taken, or a labourer; not hired for building work, not another counter's attendant) can be hired, one attendant for each stall or shop. Today's `attendant_wage` is paid at once, from the till first and then the purse, to the villager's own coins (conserved; an expense in the books), and again every morning; when neither can pay, the attendant leaves. Closing the stall or shop, taking up the counter or a death lets them go; they keep what they were paid.
+- **Tests:** `game/tests/business_test.gd::_attendant`
+
+### INT-136 · An attendant at the counter lets the premises sell while the player is away
+- **Trigger:** A working day (7 to 18) with a hired attendant; each game hour thereafter.
+- **Source:** `game/scripts/core/business.gd::plan_attendant`, `game/scripts/core/business.gd::attended`, `game/scripts/core/business.gd::attendant_present`, `game/scripts/core/npc_brain.gd::decide`
+- **Affects:** Employment, Market, Coins, Inventory, Households
+- **Expected:** (PL1-10 stage 4) In working hours the brain plans the attendant's day to the counter (the stall, or the shop's counter cell) before their own trade, and at night they sleep as everyone does. A stall or shop sells when the rent is not owing and the player is near or the attendant is awake at the counter; with neither, nothing sells and no buyer is sent. Buyers are the same real needs with budgets (INT-119); sales made while the player is away are marked as the attendant's and give no trading experience. The attendant never buys from their own counter.
+- **Tests:** `game/tests/business_test.gd::_attendant`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -1026,7 +1068,7 @@ Rules:
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
 | Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-131, INT-132, INT-134, INT-136 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108 |
@@ -1035,23 +1077,23 @@ Rules:
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-132, INT-133 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-131, INT-134, INT-135, INT-136 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-131, INT-134, INT-135, INT-136 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-131, INT-134 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-132, INT-133 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-132, INT-134 |
 | Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111 |

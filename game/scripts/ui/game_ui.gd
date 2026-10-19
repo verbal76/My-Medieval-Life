@@ -2092,6 +2092,11 @@ func show_trade(n: NPC, pick := {}) -> void:
 		_button("Talk to %s" % n.name, func(): show_talk(talker))
 
 
+## Fitting out a room of the player's: counter, shelves, equipment (scripts/ui/fit_window.gd).
+func show_fitout(bid: String) -> void:
+	FitWindow.show(self, bid)
+
+
 ## The market stall window: rent a pitch, stock it, price it, read the sales (scripts/ui/stall_window.gd).
 func show_stall(id: String, pick := {}) -> void:
 	StallWindow.show(self, id, pick)

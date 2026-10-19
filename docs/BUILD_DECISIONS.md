@@ -599,7 +599,7 @@ Agent proposals, provisional (owner approval pending; numbers in balance.json un
   stall dict); price 1 to 4 times the item's value (`PRICE_CAP`), defaulting to its value; up to 12 kinds
   (`stall_max_listings`). Goods marked stolen cannot be listed (no fencing through the stall). Closing the stall returns
   goods and till.
-- **Sales need the player.** No attendant yet (stage 4, deferred): a sale needs the player within `stall_range` (7) tiles
+- **Sales need the player.** Stage 1 had no attendant (stage 4 adds one, below): a sale needs the player within `stall_range` (7) tiles
   of the stall. Sale coins go into the stall's **till**, which the player collects; tills count in `World.total_coins`.
 - **Demand (stage 2).** Each game hour, while the player is at a stocked stall, at most `stall_buyers_per_hour` (3) idle,
   awake adults with a need the stall can meet are sent a plan "walk to the stall, `buy_stall`"; the sale is re-checked on
@@ -619,6 +619,64 @@ Agent proposals, provisional (owner approval pending; numbers in balance.json un
   player is away) and production chains. A shopper still only buys from the player's stall while the player stands at
   it. The stall has no night rule beyond villagers being asleep. Trading perks (skills.json) are not applied to stall
   sales; each sale gives 2 trading XP.
+
+## Player businesses, stages 3 and 4: larger stall, shops, equipment, attendants (PL1-10)
+
+Agent proposals, provisional (owner approval pending; numbers in balance.json: `stall_large_*`, `shop_*`,
+`attendant_wage`). Code: `game/scripts/core/fitting.gd` (equipment), `business.gd` (premises, shop, attendants),
+windows `game/scripts/ui/fit_window.gd` and `stall_window.gd`, the placing bar in `main.gd` (`begin_fit`), wiki
+`wiki_business.gd`. The world intent holds: nothing sells unattended and villagers buy only for modelled needs with
+budgets (stage 2 is unchanged).
+
+- **Larger market stall.** An upgrade of the rented pitch, not a second kind of stall: `stall_large_cost` (40) once to
+  the manor, then `stall_large_rent_day` (9) a day instead of 5; 24 kinds of goods instead of 12; a **display** (one item
+  on sale) that makes the hourly demand reach 1.5 times as far (`stall_large_reach`). The display is data and window only;
+  no sprite is drawn over the stall (deferred). Closing the stall returns the plain pitch.
+- **Equipment placing.** The player fits out a room they built (`World.is_built`: a house, a workshop, a storeroom,
+  living quarters) and hold (owned or leased) with **Use: "Fit out this room"**. Pieces: shop counter, shelves, stock
+  chest, and the existing station types oven, stove, workbench, forge, anvil (`Fitting`). Placing reuses the building
+  placing flow: the same ghost and bar (mouse, arrow keys, d-pad or stick, tap, Place, Cancel) at one tile, green or red
+  with the reason. A piece is a `fit` entry of the building ({kind, at, use}); its cell is solid, drawn in `below1` with
+  tiles the stamps already use (the stamps' station tiles, the family chest's, the tavern counter's; the oven and forge
+  share a tile, as the stamps do); a station piece is a `World.stations` entry `ws_<building>_<kind>`, so the craft
+  window, recipes and permissions are the workshops'. **Navigation:** a cell is refused on a door or the step inside it, a
+  spot (bed, chair, table, chest, hearth) or the cell used for it, the stamp's stations, any art the stamp itself draws in
+  that layer, or where it would cut off any cell that was reachable from the door (a breadth-first check) or leave no
+  cell to stand at. One of each kind per room, except shelves (3) and stock chests (2); a station type the stamp already
+  has (a smithy's forge) cannot be doubled. Materials come from the pack (`shop_equipment`) and are counted as used in the
+  building (the goods ledger); taking a piece up returns them (and un-counts them). Taking up shelves or a chest the
+  shop still needs is refused. Only rooms the player built can be fitted: map buildings (a rented village house) are not.
+- **Shop.** A counter plus **Use: "Open a shop here"** opens it: a record `building.shop` (saved with the building) with
+  the stall's fields. Licence `shop_licence_day` (4) a day to the manor, the first at opening; unpaid for
+  `stall_evict_days` it closes (goods and till back to the player) and the counter stays. 8 kinds of goods plus 8 for each
+  shelves. **Dedicated storage:** each stock chest holds 60 spare pieces (`store`), moved with Store / Bring out; when a
+  shelf sells out the back room refills it with up to `shop_restock` (6) at the same price. A shop whose room the player
+  loses closes with nothing lost; taking up the counter closes it.
+- **Capabilities follow the equipment.** `Fitting.trade`: forge and anvil are a smithy, an oven a bakery, a workbench a
+  carpenter's shop, a stove a kitchen, otherwise a general store; the window names it and counts the recipes its stations
+  allow. It is a label and the real stations: the shop's demand rules are unchanged (no price or demand bonus by trade).
+- **Books.** Both the stall and the shop keep `costs` {rent or licence, upgrade, wages}: revenue (`earned`) minus expenses
+  is the profit shown in the window. Goods are not costed (they come from the pack at no recorded price).
+- **Attendants (stage 4).** Hire from the window: an adult **without a trade of their own** (`Construction.HIRABLE`, the same "free to be hired" set the building
+  helpers use: job none, a manor hand with no manor job taken, or a labourer; none are out of work in a fresh village, so
+  the labourers are the pool; not hired for building work; one counter each; one attendant per stall or shop). Wage
+  `attendant_wage` (8) a day, paid at hiring and every morning from the till first and then the purse to the villager's
+  own coins (conserved); unpaid, they leave. Employment is a contract on the premises record (`attendant`, `wage_day`),
+  not a new job: the villager's trade, household and needs are unchanged, so the existing hiring/helper machinery and the
+  job tests are untouched. In working hours (7 to 18) `NPCBrain.decide` plans their day to the counter after the building
+  helpers' check; hunger, night and sleep come first as for everyone. A stall or shop sells when the player is near **or**
+  the attendant is awake within 2 tiles of the counter; neither, no sale and no buyer sent. Attendant sales are marked and
+  give the player no trading experience. The attendant does not shop at their own counter.
+- **Save compatibility.** No save-version bump: the changes are optional keys only (`building.fit`, `building.shop`, and
+  `large`, `display`, `costs`, `attendant`, `wage_day` on a pitch), read with defaults, so every older save loads as
+  before (business_test loads one with the keys removed). Stations and collision of placed equipment are rebuilt on load.
+- **Deviations / deferred.** Production chains (an attendant or hired worker crafting at the shop's stations from its
+  stock) are **not built**: the stations are real and the NPC crafting code (`_do_recipe`) would work on them, but it
+  works from the villager's own pack and reservation rules, and feeding it from shop stock needs its own design
+  (ingredients, output ownership, wages for crafting). The display has no sprite. No night opening hours or per-hour
+  schedule for the attendant beyond the working day. Villagers do not enter a shop through its door with an "enter"
+  step; they walk to the counter cell (inside the room). Shops need a house the player built; renting a neighbour's
+  village house is not supported. Equipment can only be placed, not moved (take up and place again).
 
 ## Furniture poses and player housing furniture (PL1-07, PL2-013)
 
