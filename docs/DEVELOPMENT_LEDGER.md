@@ -57,7 +57,7 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | B13-12 | B closes only a quantity selector (audit item 14) | VERIFIED (headless) | staging `0570f14` | Back, Esc and X dismiss an open quantity or price control first (start_test: trade and home chest, focus kept). Not run with a real controller |
 | B13-13 | Touch sprint (audit item 15) | VERIFIED (headless) | staging `0570f14` | A Run toggle on the touch bar latches sprint; same speed and cost (start_test, layout at three shapes). Not run on a phone |
 | B13-14 | Station occupancy (audit item 16) | VERIFIED | staging `e6ba579` | Villagers wait while the player works a station, give way after 45 minutes; the player's place is freed on finish or cancel; nothing saved (world_test::_station_conflict) |
-| B13-15 | Android signing stability | See the Build 13 packet | — | Checked whether the stable test-key secrets exist (the release workflow refuses to build without them unless a temporary key is explicitly allowed) |
+| B13-15 | Android signing stability | BLOCKED (owner) | release runs 13, 15 | Checked: the stable test-key secrets are missing (run 13 stopped at signing; all three empty). Build 13 is signed with a throwaway key; consequences and the owner's steps in `docs/release/BUILD_13_PACKET.md` and `ANDROID_SIGNING.md`. No key committed |
 
 ## Decisions in this run
 
