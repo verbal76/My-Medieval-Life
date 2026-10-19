@@ -42,7 +42,7 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | PL2-015 | Farming, livestock and hand ploughing | NOT STARTED | — | Builds on B8-029 and PL2-007 |
 | PL1-10 | Player businesses and real NPC demand (staged) | NOT STARTED | — | Stage 1 first |
 | PL1-11 | Google Drive cloud saves (staged) | NOT STARTED | — | Stage 1 (portability audit) is local; later stages need a Google OAuth client registered by the owner |
-| ENV-RTK | RTK token tool and its hook | BLOCKED | — | Not installed in this container (`/root/.local/bin/rtk` absent); the environment's setup script must install it and run `rtk init -g --auto-patch` (owner action, environment settings) |
+| ENV-RTK | RTK token tool and its hook | VERIFIED (this container only) | — | Built from the official repository (`cargo install --git https://github.com/rtk-ai/rtk --tag v1.0.1 --locked rtk --root /root/.local`), `rtk init -g --auto-patch` added the Bash PreToolUse hook to `~/.claude/settings.json` (no earlier settings file, no hooks replaced); `rtk gain` shows commands routed. Persistence needs the owner: the environment setup script must run the same install and `rtk init -g --auto-patch` |
 
 ## Decisions in this run
 
