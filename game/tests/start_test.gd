@@ -89,7 +89,8 @@ func _run() -> void:
 	# every gamepad button the game binds is on the controls list (RB, Skills, was missing)
 	var pad_prompt := {JOY_BUTTON_A: "xbox_button_a", JOY_BUTTON_B: "xbox_button_b", JOY_BUTTON_X: "xbox_button_x",
 		JOY_BUTTON_Y: "xbox_button_y", JOY_BUTTON_BACK: "xbox_button_view", JOY_BUTTON_START: "xbox_button_menu",
-		JOY_BUTTON_LEFT_SHOULDER: "xbox_lb", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb", JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press", JOY_BUTTON_DPAD_DOWN: "xbox_dpad_down"}
+		JOY_BUTTON_LEFT_SHOULDER: "xbox_lb", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb", JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press", JOY_BUTTON_DPAD_DOWN: "xbox_dpad_down",
+		JOY_BUTTON_LEFT_STICK: "xbox_stick_l_press", JOY_BUTTON_DPAD_LEFT: "xbox_dpad_left", JOY_BUTTON_DPAD_RIGHT: "xbox_dpad_right"}
 	var listed := {}
 	for row in GameUI.CONTROLS.gamepad:
 		for icon in row[0]:
@@ -1177,6 +1178,7 @@ func _run() -> void:
 	await _b8_ui_tests()
 	_child_size_tests()
 	_animal_size_tests()
+	await _actions_tests()
 
 	_clear_saves()
 	print("%d steps, %d failures" % [steps.size(), failures])
@@ -1884,3 +1886,307 @@ func _b8_ui_tests() -> void:
 	p.hp = hp0
 	p.death_cause = ""
 	p.last_damage = ""
+
+
+# ---------------------------------------------------------------- Build 8 actions ---------------
+func _key(code: int) -> InputEventKey:
+	var e := InputEventKey.new()
+	e.physical_keycode = code
+	e.pressed = true
+	return e
+
+
+func _pad(button: int) -> InputEventJoypadButton:
+	var e := InputEventJoypadButton.new()
+	e.button_index = button
+	e.pressed = true
+	return e
+
+
+## A seam with `amount` left, the player beside it facing it, a pickaxe in the pack.
+func _at_seam(amount := 8) -> Dictionary:
+	var w: World = main.world
+	var d := w.nearest_deposit(Vector2i(w.player.pos), ["iron_ore", "stone", "coal"])
+	d.amount = amount
+	stand_by(Vector2i(d.x, d.y))
+	return d
+
+
+func _last_gain() -> Array:
+	return main.gain_log[-1] if not main.gain_log.is_empty() else ["", ""]
+
+
+## B8-006 .. 014, 027: one Use is one cycle and the swing ends; B, Esc, right-click and a tap cancel
+## with nothing awarded; the Pack opens mid-work; a person by a station does not hide it; sprint.
+func _actions_tests() -> void:     # a coroutine: a few steps wait for the next frame
+	main.new_game()
+	var w: World = main.world
+	var p := w.player
+	var ui = main.ui
+	ui.hide_all()
+	if main.gather_mode:
+		main.gather_button()
+	p.inv.add("axe", 1)
+	var pick := p.tool_of("pickaxe")
+	check(pick != "", "(actions) the player has a pickaxe")
+
+	# B8-006 / B8-007: one Use = one cycle; the pickaxe is in hand for it; then idle
+	var d := _at_seam()
+	check(main.target.get("kind", "") == "deposit", "(actions) standing at a seam offers it")
+	var ore: String = d.ore
+	var ore0 := p.inv.count(ore)
+	main.gain_log.clear()
+	main.interact()
+	check(not main.action.is_empty() and main.player_sprite.anim == "swing" and main.player_sprite.tool_item == pick,
+			"mining starts the swing animation with the pickaxe (%s) in hand, not a sword or staff" % pick)
+	finish_action()
+	var mined := p.inv.count(ore) - ore0
+	check(mined >= 1 and int(d.amount) == 8 - mined, "one Use mined one cycle (%d %s), the seam keeps the rest (%d)" % [mined, ore, int(d.amount)])
+	check(main.action.is_empty() and main.player_sprite.anim == "idle" and main.player_sprite.tool_item == "", "the swing stops: the player is back to idle with the tool put away")
+	check(_last_gain() == [ore, "+%d %s" % [mined, GameData.item_name(ore)]], "the notice goes through gain with the item id: %s" % [_last_gain()])
+	run_frames(40, 0.05)
+	check(main.action.is_empty() and p.inv.count(ore) == ore0 + mined and main.player_sprite.anim == "idle", "nothing repeats on its own: no second cycle, still idle")
+
+	# B8-006: a felling is one Use; the axe is in hand; idle after the tree falls
+	var tree := {}
+	for tr in w.trees:
+		if tr.state == "grown":
+			tree = tr
+			break
+	stand_by(Vector2i(int(tree.x), int(tree.y)))
+	var logs0 := p.inv.count("log")
+	main.gain_log.clear()
+	main.interact()
+	check(main.player_sprite.anim == "swing" and main.player_sprite.tool_item == p.tool_of("axe"), "chopping holds the axe (%s)" % main.player_sprite.tool_item)
+	finish_action()
+	check(p.inv.count("log") > logs0 and main.action.is_empty() and main.player_sprite.anim == "idle", "the tree falls, logs are collected and the swing stops")
+	check(main.gain_log.any(func(g): return g[0] == "log" and g[1] == "+%d %s" % [p.inv.count("log") - logs0, GameData.item_name("log")]), "the logs notice carries the item id: %s" % [main.gain_log])
+
+	# harvesting: the arms-forward gathering animation, ended, with the item id
+	var ripe := {}
+	for f in w.fields:
+		w.set_field(f, "ripe")
+		f.crop = int(GameData.b("field_yield"))
+		ripe = f
+		break
+	p.pos = Vector2(int(ripe.x), int(ripe.y)) + Vector2(0.5, 1.5)
+	main.player_sprite.face(Vector2(0, -1))
+	main._find_target()
+	main.gain_log.clear()
+	if main.target.get("kind", "") == "field":
+		main.interact()
+		check(main.player_sprite.anim == "gather", "harvesting plays the gathering animation")
+		finish_action()
+		check(main.player_sprite.anim == "idle" and _last_gain()[0] == "wheat", "harvest ends in idle, with the wheat's id in the notice: %s" % [_last_gain()])
+
+	# B8-011: B, Esc, right-click and a tap cancel at once, nothing awarded, movement is back
+	for how in ["B", "Esc", "right-click", "tap"]:
+		d = _at_seam()
+		ore0 = p.inv.count(ore)
+		var amount0 := int(d.amount)
+		main.gain_log.clear()
+		main.interact()
+		run_frames(3, 0.05)
+		check(not main.action.is_empty(), "(%s) mining is under way" % how)
+		match how:
+			"B":
+				main._unhandled_input(_pad(JOY_BUTTON_B))
+			"Esc":
+				main._unhandled_input(_key(KEY_ESCAPE))
+			"right-click":
+				var m := InputEventMouseButton.new()
+				m.button_index = MOUSE_BUTTON_RIGHT
+				m.pressed = true
+				main._unhandled_input(m)
+			"tap":
+				tap_at(p.pos + Vector2(2, 0))
+		check(main.action.is_empty() and main.player_sprite.anim == "idle" and not ui.modal() and not main.paused, "(%s) cancels: the animation stops and no window opened" % how)
+		run_frames(40, 0.05)
+		check(p.inv.count(ore) == ore0 and int(d.amount) == amount0 and main.gain_log.is_empty(), "(%s) nothing awarded: the seam and the pack are as they were" % how)
+		var x0 := p.pos
+		Input.action_press("move_down")
+		run_frames(6, 0.05)
+		Input.action_release("move_down")
+		check(p.pos != x0 and main.player_sprite.anim == "walk", "(%s) movement is back" % how)
+		run_frames(2, 0.05)
+	# Esc with nothing to cancel is still the pause menu
+	main._unhandled_input(_key(KEY_ESCAPE))
+	check(ui.modal(), "Esc with no work under way still opens the menu")
+	ui.hide_all()
+
+	# Gather mode: B stops the continuous gathering too, and Gather mode stays on
+	d = _at_seam(5)
+	main.gather_button()
+	var hit := ResourceNodes.node_at(w, Vector2i(int(d.x), int(d.y)), true)
+	main.select_resource(hit, true)
+	run_frames(10, 0.05)
+	main._unhandled_input(_pad(JOY_BUTTON_B))
+	check(main.gather.is_empty() and main.action.is_empty() and main.gather_mode and main.player_sprite.anim in ["idle", "walk"], "B stops Gather mode's continuous gathering; Gather mode stays on")
+	main.gather_button()
+
+	# B8-010: the Pack opens mid-action: the work stops, nothing is awarded, controls work after closing
+	d = _at_seam()
+	ore0 = p.inv.count(ore)
+	var amt0 := int(d.amount)
+	main.interact()
+	run_frames(3, 0.05)
+	Input.action_press("inventory")
+	run_frames(1, 0.05)
+	Input.action_release("inventory")
+	await process_frame          # the press is over for the next frame (a press counts as "just pressed" for the whole frame)
+	check(ui.is_open("inventory") and main.action.is_empty() and main.player_sprite.anim == "idle", "the Pack opens while mining and the work is stopped")
+	run_frames(60, 0.05)
+	main._process(0.05)
+	check(p.inv.count(ore) == ore0 and int(d.amount) == amt0, "nothing was awarded, and nothing is collected twice while the Pack is open")
+	ui.hide_all()
+	check(not main.paused and not ui.modal(), "closing the Pack gives the game back")
+	run_frames(40, 0.05)
+	check(p.inv.count(ore) == ore0 and main.action.is_empty(), "closing it does not resume or repeat the work")
+	d = _at_seam()
+	ore = d.ore
+	ore0 = p.inv.count(ore)
+	main.interact()
+	finish_action()
+	check(p.inv.count(ore) > ore0 and main.player_sprite.anim == "idle", "Use works again after the Pack: one fresh cycle collected")
+	# a window opened by other means (a touch button) mid-action stops it the same way
+	_at_seam()
+	main.interact()
+	run_frames(2, 0.05)
+	ui.show_skills()
+	main._process(0.05)
+	check(main.action.is_empty(), "any window that opens mid-action stops it")
+	ui.hide_all()
+
+	# B8-014: a person by a station: both are offered and the station can be used
+	var st_id := ""
+	for id in w.stations:
+		if w.stations[id].type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+			st_id = id
+			break
+	var st: Dictionary = w.stations[st_id]
+	p.pos = Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
+	main.player_sprite.face(Vector2(0, 1))
+	var bystander: NPC = w.npcs.filter(func(n): return n.alive and n.role == "adult")[0]
+	bystander.anim = "idle"
+	bystander.pos = p.pos + main.facing_vec() * 0.9
+	main._find_target()
+	var kinds: Array = main.target_options.map(func(t): return str(t.kind))
+	check(kinds.has("station") and (kinds.has("npc") or kinds.has("shop")), "(station + person) both are offered: %s" % [kinds])
+	check(ui.prompt_text.contains("\n") and ui.prompt_text.contains("next"), "the prompt names the next choice on a second line: \"%s\"" % ui.prompt_text.replace("\n", " | "))
+	var first: String = main.target.kind
+	main._unhandled_input(_key(KEY_Q))
+	check(main.target.kind != first, "Q chooses the other one (%s -> %s)" % [first, main.target.kind])
+	main._player_step(0.016)
+	check(main.target.kind != first, "the choice holds from frame to frame")
+	main._unhandled_input(_pad(JOY_BUTTON_DPAD_LEFT))
+	check(main.target.kind == first, "the D-pad goes back")
+	main._unhandled_input(_key(KEY_TAB))
+	check(main.target.kind != first and main.tab_cycled == Engine.get_process_frames(), "Tab chooses the next one and does not open the Pack with it")
+	if main.target.kind != "station":
+		main.cycle_target(1)
+	check(main.target.kind == "station", "the station can be chosen")
+	main.interact()
+	check(ui.is_open("craft"), "and used (A / E): its window opens with the person standing beside it")
+	ui.hide_all()
+	bystander.pos = p.pos + Vector2(20, 0)
+	main._find_target()
+	check(not main.target_options.any(func(t): return t.kind == "npc") and main.target_options.any(func(t): return t.kind == "station"), "with the person gone the station is still offered, and they are not")
+
+	# B8-027: sprint
+	var open := _open_stretch()
+	var walk_step := _step_x(open, false)
+	var sprint_step := _step_x(open, true)
+	check(walk_step > 0.0 and absf(sprint_step / walk_step - float(GameData.b("sprint_speed"))) < 0.05, "Shift held sprints at %.2fx the walking speed (%.3f vs %.3f tiles a step)" % [sprint_step / walk_step, sprint_step, walk_step])
+	check(main.player_sprite.speed_scale == float(GameData.b("sprint_speed")), "the walking animation runs faster while sprinting")
+	main.sprinting = false
+	p.stamina = 100.0
+	Input.action_press("sprint")
+	Input.action_press("move_right")
+	var st0 := p.stamina
+	for i in 20:
+		p.pos = open
+		w.update(0.05)
+		main._player_step(0.05)
+	check(absf((st0 - p.stamina) - float(GameData.b("sprint_stamina_per_sec")) * 1.0) < 1.5, "a second of sprinting costs about sprint_stamina_per_sec (%.1f)" % (st0 - p.stamina))
+	var guard := 0
+	while main.sprinting and guard < 400:
+		p.pos = open
+		w.update(0.05)
+		main._player_step(0.05)
+		guard += 1
+	check(not main.sprinting and p.stamina < float(GameData.b("sprint_min_stamina")), "sprint ends when stamina runs out (%.1f left)" % p.stamina)
+	p.pos = open
+	main._player_step(0.05)
+	check(absf((p.pos.x - open.x) / 0.05 - float(GameData.b("player_tiles_per_second"))) < 0.3 and not main.sprinting, "and the player is back to the walking speed, though Shift is still held")
+	Input.action_release("sprint")
+	Input.action_release("move_right")
+	await process_frame
+	main._player_step(0.05)
+	# L3 toggles on a pad
+	p.stamina = 100.0
+	main._unhandled_input(_pad(JOY_BUTTON_LEFT_STICK))
+	check(main.sprinting, "L3 turns sprint on")
+	Input.action_press("move_right")
+	p.pos = open
+	main._player_step(0.05)
+	check(main.sprinting and absf((p.pos.x - open.x) - walk_step * float(GameData.b("sprint_speed"))) < 0.02, "L3 sprint keeps going without a held button")
+	Input.action_release("move_right")
+	main.sprinting = true
+	main._unhandled_input(_pad(JOY_BUTTON_LEFT_STICK))
+	check(not main.sprinting, "L3 again turns it off")
+	# the keyboard toggle option
+	GameData.balance["sprint_toggle"] = true
+	main._unhandled_input(_key(KEY_SHIFT))
+	check(main.sprinting, "with sprint_toggle, Shift toggles sprint on")
+	main._unhandled_input(_key(KEY_SHIFT))
+	check(not main.sprinting, "and off")
+	GameData.balance["sprint_toggle"] = false
+	# never during work or attacks
+	main.sprinting = false
+	_at_seam()
+	main.interact()
+	main.toggle_sprint()
+	main._unhandled_input(_pad(JOY_BUTTON_LEFT_STICK))
+	main._player_step(0.05)
+	check(not main.sprinting, "no sprint while harvesting")
+	finish_action()
+	p.stamina = 100.0
+	main.sprinting = true
+	p.attack_cd = 0.0
+	main.attack()
+	check(not main.sprinting, "no sprint while attacking")
+	p.attack_cd = 0.0
+	main.player_sprite.play("idle")
+
+
+## Six free cells in a row to the east, for the sprint measurements: the first one's centre.
+func _open_stretch() -> Vector2:
+	var m: VillageMap = main.world.map
+	var best := Vector2.ZERO
+	var bd := INF
+	var mid := Vector2(m.w, m.h) / 2.0
+	for y in range(8, m.h - 8):
+		for x in range(8, m.w - 12):
+			if range(6).all(func(i): return not m.is_solid(Vector2i(x + i, y)) and not m.is_solid(Vector2i(x + i, y + 1)) and not m.is_solid(Vector2i(x + i, y - 1))):
+				var c := Vector2(x, y) + Vector2(0.5, 0.5)
+				if c.distance_to(mid) < bd:
+					bd = c.distance_to(mid)
+					best = c
+	return best
+
+
+## How far one 0.05 s step east takes the player, with Shift held or not.
+func _step_x(at: Vector2, sprint: bool) -> float:
+	var p: PlayerState = main.world.player
+	main.sprinting = false
+	p.stamina = 100.0
+	p.pos = at
+	if sprint:
+		Input.action_press("sprint")
+	Input.action_press("move_right")
+	main._player_step(0.05)
+	Input.action_release("move_right")
+	Input.action_release("sprint")
+	var dx: float = p.pos.x - at.x
+	main.sprinting = false
+	return dx
