@@ -6757,7 +6757,7 @@
    "id": "EQ-07",
    "title": "Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "Correct underlying causes rather than introducing artificial population or resource injections that conceal broken mechanics.",
    "description": "Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -6770,7 +6770,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "staging/my-medieval-life",
    "commits": [],
    "parent": "EQ-16",
    "depends_on": [
@@ -6784,7 +6784,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "diagnose births, household formation and the construction pipeline",
+   "next_action": "verify with 100- and 365-day runs on several seeds; wildlife part via WR-01",
    "priority": "build 15",
    "workstream": "world equilibrium",
    "superseded_by": null,
@@ -6794,6 +6794,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; next_action",
+     "why": "diagnosed no-construction and population decline: households split only when members exceed beds, which births and move-ins (both needing a free bed) make unreachable; 11 of 13 fertile couples blocked by no bed at day 30 (seed 1); a new house needed 178 coins up front against a median household purse of about 170. Fix in progress: couples found households, houses started with a first share"
     }
    ]
   },
@@ -6801,7 +6806,7 @@
    "id": "EQ-16",
    "title": "World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "By Build 16, the world itself should be the functioning simulation. The player should be the variable that changes its history, not the mechanism keeping it alive.",
    "description": "World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -6846,6 +6851,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
+     "why": "Build 15 foundations under way (EQ-07, WR-01)"
     }
    ]
   },
@@ -12610,7 +12620,7 @@
    "id": "WR-01",
    "title": "Protected wildlife breeding refuges, offspring cohorts and dispersal",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Protected wildlife breeding refuges, offspring cohorts and dispersal",
    "source": "docs/directives/2026-10-19_memory_refuges_politics.md Part II",
@@ -12633,7 +12643,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "high: wildlife reaches 0 in the 365-day run",
-   "workstream": "",
+   "workstream": "world equilibrium (agent worktree)",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -12641,6 +12651,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "started for Build 15 (EQ-02, EQ-07)"
     }
    ],
    "acceptance_derived": true

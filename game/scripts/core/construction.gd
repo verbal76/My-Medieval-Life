@@ -583,6 +583,106 @@ func daily() -> void:
 	for h in w.households.size():
 		if crowded(h) and _found(h):
 			break
+	for pair in couples_needing_home():
+		var f: NPC = pair[0]
+		var m: NPC = pair[1]
+		if f.household != m.household and Life._move_in(w, f, m):
+			w.note("%s %s and %s %s now live under one roof." % [f.name, f.family, m.name, m.family])
+			continue
+		if _found_couple(f, m):
+			break
+
+
+## Couples who want a home of their own (EQ-07): partners who live in different households, or a grown
+## child and their partner in their parents' full house. Never the reeve, the sage or a guard (their posts
+## come with a house), nor anyone with young children at home. In id order of the woman.
+func couples_needing_home() -> Array:
+	var out := []
+	for f: NPC in w.npcs:
+		if not f.alive or f.sex != "female" or f.role != "adult" or f.partner < 0:
+			continue
+		var m := w.npc(f.partner)
+		if m == null or not m.alive or m.partner != f.id or not (_may_found(f) and _may_found(m)):
+			continue
+		if f.household != m.household:
+			out.append([f, m])
+		elif not Life.has_room(w, f.household) and (_grown_child(f) or _grown_child(m)):
+			out.append([f, m])
+	return out
+
+
+func _may_found(o: NPC) -> bool:
+	if o.household < 3 or o.id == w.reeve_id or o.id == w.sage_id or o.job == "guard":
+		return false
+	for cid in o.children:
+		var k := w.npc(int(cid))
+		if k != null and k.alive and k.role == "child" and k.household == o.household:
+			return false
+	return true
+
+
+## A grown son or daughter still living with a parent.
+func _grown_child(o: NPC) -> bool:
+	for pid in [o.mother, o.father]:
+		var p := w.npc(int(pid)) if int(pid) >= 0 else null
+		if p != null and p.alive and p.household == o.household:
+			return true
+	return false
+
+
+## A couple founds a household of their own (EQ-07): their own coins and what their families can spare
+## (above what those who stay keep, _keep) pay for a home by _home_plan. Both leave their households;
+## until the new house stands they sleep where they did. False when nothing can be paid for.
+func _found_couple(f: NPC, m: NPC) -> bool:
+	var pair := [f, m]
+	var homes: Array = [f.household] if f.household == m.household else [f.household, m.household]
+	var gifts := {}
+	var spare := f.coins + m.coins
+	for h in homes:
+		var others: Array = w.brain._members(h).filter(func(o: NPC) -> bool: return not pair.has(o))
+		var theirs := 0
+		for o: NPC in others:
+			theirs += o.coins
+		gifts[h] = maxi(0, theirs - _keep(h, others.size()))
+		spare += int(gifts[h])
+	var nid := w.households.size()
+	var plan := _home_plan(spare, w.building_door(str(w.households[homes[0]].home)), World.hh_ref(nid))
+	if plan.is_empty():
+		return false
+	# the families make up what the couple's own coins do not cover, richest members first
+	var short := int(plan.cost) - f.coins - m.coins
+	for h in homes:
+		var give := mini(maxi(0, short), int(gifts[h]))
+		short -= give
+		var others: Array = w.brain._members(h).filter(func(o: NPC) -> bool: return not pair.has(o))
+		others.sort_custom(func(a: NPC, b: NPC) -> bool: return a.coins > b.coins or (a.coins == b.coins and a.id < b.id))
+		for o: NPC in others:
+			var k := mini(give, o.coins)
+			o.coins -= k
+			o.spent += k
+			f.coins += k
+			give -= k
+	var family := str(w.households[homes[0]].family)
+	var nh := {"id": nid, "family": family, "home": "", "members": [], "pantry": Inventory.new(),
+		"founded_from": int(homes[0]), "founded_day": w.day()}
+	w.households.append(nh)
+	for o: NPC in pair:
+		var old := o.household
+		(w.households[old].members as Array).erase(o.id)
+		o.household = nid
+		o.family = family
+		(nh.members as Array).append(o.id)
+		o.plan.clear()
+		if not w.property._anyone_alive(old):
+			w.property.household_ended(old)
+	w.note("%s %s and %s %s leave to found a household of their own." % [f.name, f.family, m.name, m.family])
+	_find_home(nid)
+	for h in homes:
+		w.brain.evaluate_household(int(h))
+	w.brain.evaluate_household(nid)
+	w.stat("households_founded")
+	w.stat("couples_founded")
+	return true
 
 
 ## A household that has lost its house (sold, or the lease taken back) lodges with the family it came
@@ -632,8 +732,8 @@ func _found(h: int) -> bool:
 
 ## How a household with `spare` coins gets a home (owner rule): an empty house on the market, bought,
 ## or leased with two weeks' rent in hand; else ground as near `near` as is legal, bought, and a house
-## built there by the player's rules (ground, materials at today's prices, the helpers' wages for
-## founder_build_days). {} when it cannot pay for any of them.
+## built there by the player's rules: started with the ground and found_start_share of the materials at
+## today's prices, the rest bought as the household earns. {} when it cannot pay for any of them.
 func _home_plan(spare: int, near: Vector2i, ref: String) -> Dictionary:
 	for r in w.property.market():
 		if w.property.is_home(r) or w.property.is_home(w.property.unit(r).back()):
@@ -643,8 +743,10 @@ func _home_plan(spare: int, near: Vector2i, ref: String) -> Dictionary:
 				return {"house": r, "lease": false, "cost": price}
 			if spare >= rent * 2:
 				return {"house": r, "lease": true, "cost": rent * 2}
-	var cost: int = w.property.land_price(footprint("house").x, footprint("house").y) + estimate(cost_of("house")) \
-			+ int(GameData.b("helper_wage")) * int(GameData.b("founder_build_days"))
+	# a new house is started with the ground and a first share of the materials in hand, and built as
+	# the household earns (_keep_building buys what its purse allows); EQ-07, found_start_share
+	var cost: int = w.property.land_price(footprint("house").x, footprint("house").y) \
+			+ ceili(estimate(cost_of("house")) * float(GameData.b("found_start_share")))
 	if spare < cost:
 		return {}
 	# ground the manor has surveyed already (the clearings), nearest first, then new ground
@@ -773,6 +875,17 @@ func _keep_building(h: int) -> void:
 				break
 	if helper != null:
 		hire(ref, helper, p, budget - wage)
+		return
+	# a household carries its own only when it can buy something or has something put by; otherwise its
+	# people work and save (EQ-07)
+	var cheapest := 1 << 30
+	for id in p.site.need:
+		cheapest = mini(cheapest, estimate({id: 1}))
+	var pantry: Inventory = hh.pantry
+	var stocked := false
+	for id in p.site.need:
+		stocked = stocked or pantry.count(id) > 0
+	if budget < cheapest and not stocked:
 		return
 	var founder: NPC = w.party(ref)
 	if founder != null:

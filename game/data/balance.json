@@ -161,6 +161,8 @@
   "split_keep_base": 40,
   "split_keep_per_member": 20,
   "founder_build_days": 3,
+  "found_start_share": 0.25,
+  "_found_note": "EQ-07 (agent proposal, provisional): a founding household starts its house with the ground and found_start_share of the materials' price in hand and buys the rest as it earns, instead of needing the whole price first; couples who live apart, or a grown child and partner in a full house, found households (Construction.couples_needing_home). founder_build_days is no longer used for the start.",
   "fireball_price": 50,
   "fireball_cooldown": 6.0,
   "fireball_stamina": 30,

@@ -359,7 +359,8 @@ static func has_room(w: World, h: int) -> bool:
 # ---------------------------------------------------------------- partners -------------------
 ## Unpartnered adults of opposite sex (18-50, `partner_chance_per_year` a year for each woman) record each
 ## other as partners; one moves into the other's home if it has room (a house with a free bed; the tavern,
-## manor and hut households are not moved into). Without room nobody pairs.
+## manor and hut households are not moved into). Without room they pair and live apart until a home is
+## free or they found one (Construction.couples_needing_home, EQ-07).
 static func partnering(w: World) -> void:
 	var c := cfg()
 	var chance := float(c.partner_chance_per_year) / year_days()
@@ -386,10 +387,14 @@ static func partnering(w: World) -> void:
 			if gap <= float(c.partner_max_gap) and gap < best_gap:
 				best_gap = gap
 				best = m
-		if best != null and _move_in(w, f, best):
+		if best != null:
+			var together := _move_in(w, f, best)
 			_link_partners(f, best)
 			w.stat("partnerships")
-			w.note("%s %s and %s %s become partners." % [f.name, f.family, best.name, best.family])
+			if not together:
+				w.stat("partners_apart")
+			w.note("%s %s and %s %s become partners%s." % [f.name, f.family, best.name, best.family,
+					"" if together else ", though they have no room to live together yet"])
 
 
 ## Put the pair under one roof: nothing to do if they share a household; otherwise the one whose household

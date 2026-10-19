@@ -28,6 +28,7 @@ func _init() -> void:
 	test_coming_of_age_and_retiring()
 	test_old_age_and_inheritance()
 	test_partners_and_births()
+	test_couples_found_households()
 	test_player()
 	test_save_load()
 	test_animals()
@@ -329,11 +330,89 @@ func test_partners_and_births() -> void:
 	for hh in w3.households:
 		sound = sound and living(w3, int(hh.id)) <= maxi(w3.construction.beds_in(str(hh.home)), 6) and (hh.members as Array).size() > 0
 	check(sound, "new couples are symmetrical, of opposite sex, 18+, not kin, and nobody moved into a full house")
-	# the player can have a partner too
-	var p3 := w3.player
-	var cand: NPC = w3.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.sex != p3.sex and n.partner < 0 and Life.npc_age(w3, n) >= 18.0)[0]
-	check(Life.partner_player(w3, cand) == "" and p3.partner == cand.id and cand.partner == Life.PLAYER_ID and Life.has_partner(w3, cand), "the player can partner an unattached adult (explicit link both ways)")
-	check(Life.partner_player(w3, cand) != "", "and not twice")
+	# the player can have a partner too (a fresh world: in w3 every single adult has just paired)
+	var w4 := new_world()
+	var p3 := w4.player
+	var cands: Array = w4.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.sex != p3.sex and n.partner < 0 and Life.npc_age(w4, n) >= 18.0)
+	check(not cands.is_empty(), "a new world has unattached adults for the player")
+	if cands.is_empty():
+		return
+	var cand: NPC = cands[0]
+	check(Life.partner_player(w4, cand) == "" and p3.partner == cand.id and cand.partner == Life.PLAYER_ID and Life.has_partner(w4, cand), "the player can partner an unattached adult (explicit link both ways)")
+	check(Life.partner_player(w4, cand) != "", "and not twice")
+
+
+# ---------------------------------------------------------------- new households (EQ-07) -----
+## Partners with no room together pair and live apart; a couple apart, or a grown child and partner in a
+## full house, found a household of their own with their coins and their families' spare, start a house
+## (or take an empty one) and move in when it stands. Nothing is created: coins only move.
+func test_couples_found_households() -> void:
+	var w := new_world()
+	# 1. partners with no room together still pair, living apart
+	var full: Array = []
+	for hh in w.households:
+		if int(hh.id) >= 3 and not Life.has_room(w, int(hh.id)):
+			full.append(int(hh.id))
+	var f: NPC = null
+	var m: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.partner < 0 and full.has(n.household) and Life.npc_age(w, n) >= 18.0 and Life.npc_age(w, n) <= 40.0 and w.construction._may_found(n):
+			if n.sex == "female" and f == null:
+				f = n
+			elif n.sex == "male" and m == null and (f == null or n.household != f.household):
+				m = n
+	check(f != null and m != null, "the village has single adults in full houses (%d full houses)" % full.size())
+	if f == null or m == null or f.household == m.household:
+		return
+	if Life.kin(f.id, f.mother, f.father, m.id, m.mother, m.father):
+		return
+	m.born = f.born
+	for n: NPC in w.npcs:                     # only these two may pair
+		if n != f and n != m and n.partner < 0 and n.role == "adult":
+			n.partner = -5
+	var hf := f.household
+	var hm := m.household
+	GameData.b("life").partner_chance_per_year = 8.0
+	Life.partnering(w)
+	GameData.b("life").partner_chance_per_year = 0.5
+	for n: NPC in w.npcs:
+		if n.partner == -5:
+			n.partner = -1
+	check(f.partner == m.id and m.partner == f.id and f.household == hf and m.household == hm, "with no room together they pair and each stays at home")
+	check(w.construction.couples_needing_home().any(func(pr) -> bool: return pr[0] == f and pr[1] == m), "a couple living apart wants a home of their own")
+	# 2. with the coins for a start they found a household and begin a house (or take an empty one)
+	var coins_before := 0
+	for n: NPC in w.npcs:
+		coins_before += n.coins
+	f.coins += 200
+	m.coins += 0
+	var hh_before := w.households.size()
+	check(w.construction._found_couple(f, m), "the couple founds a household")
+	var coins_after := 0
+	for n: NPC in w.npcs:
+		coins_after += n.coins
+	var nh: Dictionary = w.households[hh_before]
+	check(w.households.size() == hh_before + 1 and f.household == hh_before and m.household == hh_before and (nh.members as Array) == [f.id, m.id], "both leave their families for the new household")
+	check(not (w.households[hf].members as Array).has(f.id) and not (w.households[hm].members as Array).has(m.id), "and are no longer members of the old ones")
+	check(str(nh.get("build", "")) != "" or str(nh.home) != "", "the new household starts a house or takes an empty one")
+	check(int(w.stats.get("couples_founded", 0)) == 1, "the founding is counted")
+	# 3. no coins and nothing to spare: nothing happens
+	var w2 := new_world()
+	var g: NPC = null
+	var h: NPC = null
+	for n: NPC in w2.npcs:
+		if n.alive and n.role == "adult" and n.household >= 3 and w2.construction._may_found(n):
+			if n.sex == "female" and g == null:
+				g = n
+			elif n.sex == "male" and h == null and g != null and n.household != g.household:
+				h = n
+	if g != null and h != null:
+		Life._link_partners(g, h)
+		for hid in [g.household, h.household]:
+			for mid in w2.households[hid].members:
+				w2.npc(int(mid)).coins = 0
+		var n_hh := w2.households.size()
+		check(not w2.construction._found_couple(g, h) and w2.households.size() == n_hh and g.household != n_hh, "a couple who cannot pay for any start stay where they are")
 
 
 # ---------------------------------------------------------------- the player -----------------
