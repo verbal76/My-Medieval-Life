@@ -94,3 +94,28 @@ Added to `docs/GAME_DESIGN.md`:
    one end-to-end loop in the original county. Keep it headless-testable (doc §13).
 3. Keep catalogs data-driven JSON with `format` fields (CLAUDE.md §4), validated at load. Tag
    canon-derived goods with registry ids, so lore and economy stay linked.
+
+## Build 13 compliance with the guiding principles (2026-10-19)
+
+The review above dates from before any game code existed and is kept as written. This section records how
+the game in `game/` stands against the living-world document's guiding principles and rules as of Build 13.
+Evidence is code and automated tests; nothing here is device-verified.
+
+| Rule (living-world doc) | Build 13 state | Evidence |
+|---|---|---|
+| §1.2 Resources and money have provenance | Goods move only between real inventories; the player's and villagers' coins, tills and the treasury are conserved and every outside coin is counted (`World.coin_sources`). Seed comes from sellers' stock, farmers' saved seed and caravan purchases, never from nowhere (Build 13). Gold ore comes from a finite seam | `run_tests::test_simulation` (coins and grain conserved), `farming_test::test_crops`, `world_test::_gold` |
+| §1.3 Meaningful intermediate stages | Ore to bars to tools; logs to planks; hides and pelts to leather; milk to cheese; eggs and wheat to egg bread; wool to cloth to bandages (Build 13: villagers make cheese, egg bread, cloth and bandages) | `farming_test::test_village_chain`, manifest INT-137 to 139 |
+| §1.4 One shared ruleset | Player and villagers use the same recipes, stations, `World.trade` and inventories; a station the player works keeps villagers off it and vice versa (Build 13) | `world_test::_pl2_001`, `world_test::_station_conflict` |
+| §1.5 Conditional world reactions | A death or retirement opens a post only when the trade falls below strength; apprentices or newcomers fill it (Build 13 fixed retirements) | `aging_test::test_coming_of_age_and_retiring`, `world_test::_succession` |
+| §5 Wool to clothing, wheat to bread chains | Wool to cloth to bandages; wheat and eggs to egg bread; no clothing items yet | `farming_test::test_village_chain` |
+| §6 Finite deposits, no arbitrary duplication | Seams and boulders deplete and are saved; overworld rocks and trees persist across chunk reloads | `world_test::_boulders`, `tree_test` |
+| §9 Inventory and currency conservation | Merchants never buy without the coins; bulk deals priced unit by unit (Build 13 rules 1 and 2) | `start_test::_pl_trade_ui_tests` |
+| §9 Supply, demand and pricing | Prices follow stock; villagers buy for modelled needs within budgets; meals are chosen by food per coin at today's price (Build 13) | `business_test::_demand`, `farming_test::test_village_chain` |
+| §9 Consumption and sinks | Food eaten (meals, pantry cooking, tavern suppers of bread and cheese), tool wear, caravan purchases, fines and rent | `run_tests::test_simulation`, `farming_test::test_village_chain` |
+| §10 Actual loot, witnesses | Theft moves real goods and records the items, quantity and value; only villagers in sight witness; fines scale with value (Build 13 rule 4) | `chests_test::test_household_chest`, `chests_test::test_witnessed` |
+
+Known gaps against the document:
+- no logistics or transport cost;
+- no clothing chain beyond cloth;
+- simulation tiers are not distinct (the village is simulated in full, the overworld is scenery and resource nodes);
+- no multiplayer or authority model.

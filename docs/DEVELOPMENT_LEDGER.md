@@ -53,6 +53,11 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | B13-08 | Economy rule 3: seed from real stock | VERIFIED | staging `07d1170` | Seller seed stock, farmers save seed from harvests, caravan sells seed from the merchant's coins (farming_test; grain ledger in run_tests) |
 | B13-09 | Economy rule 4: theft counted by items, quantity, value | VERIFIED | staging `07d1170` | Crime records carry items/qty/value; fine = base + 50% of value (chests_test, run_tests) |
 | B13-10 | Stale text and documents | VERIFIED | staging | Stamina tooltip, origin coins, L3 note, medicine wiki category, B8 master list, punch-list status notes, ledger, manifest INT-076/110/111 (start_test, wiki_test) |
+| B13-11 | Livestock production chain (audit item 13) | VERIFIED | staging `a29b877` | Village pens produce; keepers collect and sell; a tavern-kitchen preparation table (s10); the cook makes cheese and egg bread; villagers eat them (meals by food per coin, tavern suppers); the tanner weaves cloth and sews bandages for the sage (farming_test::test_village_chain, an 8-day sim with coins conserved) |
+| B13-12 | B closes only a quantity selector (audit item 14) | VERIFIED (headless) | staging `0570f14` | Back, Esc and X dismiss an open quantity or price control first (start_test: trade and home chest, focus kept). Not run with a real controller |
+| B13-13 | Touch sprint (audit item 15) | VERIFIED (headless) | staging `0570f14` | A Run toggle on the touch bar latches sprint; same speed and cost (start_test, layout at three shapes). Not run on a phone |
+| B13-14 | Station occupancy (audit item 16) | VERIFIED | staging `e6ba579` | Villagers wait while the player works a station, give way after 45 minutes; the player's place is freed on finish or cancel; nothing saved (world_test::_station_conflict) |
+| B13-15 | Android signing stability | See the Build 13 packet | — | Checked whether the stable test-key secrets exist (the release workflow refuses to build without them unless a temporary key is explicitly allowed) |
 
 ## Decisions in this run
 
