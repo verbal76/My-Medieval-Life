@@ -1174,6 +1174,7 @@ func _run() -> void:
 	_roof_tests()
 	_pad_cycle_tests()
 	_sign_tests()
+	await _b8_ui_tests()
 	_child_size_tests()
 	_animal_size_tests()
 
@@ -1398,7 +1399,7 @@ func _plant_gather_tests() -> void:
 		run_frames(1, 0.05)
 		guard += 1
 	check(p.inv.count("blueberries") == bb0 + 2 and other.state == "picked" and main.gather.is_empty() and main.gather_mode, "Gather mode walks to the bush, picks it, and stops (Gather stays on)")
-	var gains: Array = ui.log_box.get_children().map(func(c): return c.text)
+	var gains: Array = ui.log_texts()
 	check(gains.any(func(t): return t.begins_with("+2 ")) and not ui.toast.text.begins_with("You pick") and not ui.prompt_text.begins_with("Picking"),
 			"a pick is a short line in the corner, not a banner in the middle: %s, toast \"%s\"" % [gains, ui.toast.text])
 	# a full pack refuses
@@ -1775,3 +1776,111 @@ func _animal_size_tests() -> void:
 	check(s != null and is_equal_approx(s.scale.x, 1.0), "grown, full size")
 	a.born = born0
 	a.pos = pos0
+
+
+## Build 8 interface fixes: gain icons, compact prompt, HUD meters, death cause, inventory highlights.
+func _b8_ui_tests() -> void:
+	var ui: GameUI = main.ui
+	var w: World = main.world
+	var p := w.player
+	ui.hide_all()
+	# B8-009: a gain with an item id shows that item's icon beside the words
+	for c in ui.log_box.get_children():
+		c.free()
+	ui.gain("+1 Iron ore", "iron_ore")
+	var line: Node = ui.log_box.get_child(ui.log_box.get_child_count() - 1)
+	var icon: TextureRect = line.find_child("ItemIcon", true, false)
+	check(icon != null and icon.texture == load("res://assets/icons/iron_ore.png") and icon.custom_minimum_size.x <= 24.0
+		and ui.log_texts().has("+1 Iron ore"), "a gain with an item id shows the item's icon and words in one compact line")
+	ui.gain("Plain note")
+	check(ui.log_texts().has("Plain note") and ui.log_box.get_child(ui.log_box.get_child_count() - 1) is Label, "a gain without an item is still a plain line")
+	ui.gain("+1 Mystery", "no_such_item")
+	check(ui.log_texts().has("+1 Mystery"), "an unknown item id falls back to the plain line")
+	# B8-013: the contextual prompt and the toast fit their words
+	ui.prompt("Fell this tree")
+	await process_frame
+	await process_frame
+	check(ui.prompt_box.size.x < GameUI.PROMPT_MAX_W - 20.0 and ui.prompt_label.get_theme_font_size("font_size") <= 16,
+		"a short prompt is a compact box (%d px wide, was 480+)" % ui.prompt_box.size.x)
+	ui.prompt("An unusually long prompt that goes on and on about what the use button will do here and why one should care about it at all")
+	await process_frame
+	await process_frame
+	check(ui.prompt_box.size.x <= GameUI.PROMPT_MAX_W + 80.0, "a long prompt wraps at a limit (%d px)" % ui.prompt_box.size.x)
+	ui.prompt("")
+	ui.message("A short hint.")
+	await process_frame
+	await process_frame
+	check(ui.toast.size.x < 300.0 and ui.toast.size.y < 80.0, "a short message is a small toast (%s)" % ui.toast.size)
+	ui.message("Gather: tap a seam, a tree, a ripe field, a flower, a berry bush or game; you gather it until it runs out. Tap Gather again to stop.")
+	await process_frame
+	await process_frame
+	check(ui.toast.size.x <= GameUI.TOAST_MAX_W + 1.0 and ui.toast.size.y < 140.0, "a long message wraps at %d px (%s)" % [GameUI.TOAST_MAX_W, ui.toast.size])
+	ui.toast_t = 0.01
+	# B8-019: every meter has words, and a low one switches to its danger state
+	var hp0 := p.hp
+	var hunger0 := p.hunger
+	var stamina0 := p.stamina
+	p.hp = p.hp_cap()
+	p.hunger = 80.0
+	p.stamina = p.stamina_cap()
+	ui.update_hud()
+	check(ui.bar_labels.hp.text.begins_with("Health ") and ui.bar_labels.hunger.text == "Food 80%" and ui.bar_labels.stamina.text.begins_with("Stamina "),
+		"the meters are labelled: %s / %s / %s" % [ui.bar_labels.hp.text, ui.bar_labels.hunger.text, ui.bar_labels.stamina.text])
+	check(not ui.bar_danger.hunger and not ui.bar_danger.hp and not ui.bar_danger.stamina, "full meters are not in danger")
+	p.hunger = 10.0
+	p.hp = p.hp_cap() * 0.1
+	p.stamina = 5.0
+	ui.update_hud()
+	check(ui.bar_danger.hunger and ui.bar_danger.hp and ui.bar_danger.stamina and (ui.bars.hunger.get_theme_stylebox("fill") as StyleBoxFlat).bg_color == GameUI.DANGER_COLOUR,
+		"low meters turn to the danger state (red)")
+	check(ui.bars.hunger.tooltip_text.contains("starve") and ui.bars.stamina.tooltip_text.contains("Fireball"), "the meters' tooltips say why they change")
+	p.hp = hp0
+	p.hunger = hunger0
+	p.stamina = stamina0
+	ui.update_hud()
+	# B8-012: highlights fit their slots (tabs, gear slots and bag cells all use a bag-cell sized box)
+	ui.show_inventory()
+	var iw: InventoryWindow = ui.inventory_window()
+	iw._layout()
+	var cell_px := InventoryWindow.CELL * iw.k
+	var ok := true
+	for i in iw.tab_buttons.size():
+		var r := iw._r(iw.tab_focus_rect(i))
+		ok = ok and is_equal_approx(r.size.x, cell_px.x) and is_equal_approx(r.size.y, cell_px.y)
+		var icon_r := iw._r(Rect2(InventoryWindow.TAB_X + InventoryWindow.TAB_STEP * i, 10 if iw.TABS[i][0] == iw.tab else 15, 16, 16))
+		ok = ok and r.encloses(icon_r)
+	check(ok, "a tab's focus box is a bag-cell sized box round its icon")
+	var same := true
+	for slot in iw.gear_buttons:
+		var b: Button = iw.gear_buttons[slot]
+		same = same and b.get_rect().is_equal_approx(iw._r(Rect2(InventoryWindow.GEAR_AT[slot], InventoryWindow.CELL)))
+	for i in iw.cells.size():
+		same = same and iw.cells[i].get_rect().is_equal_approx(iw._r(Rect2(InventoryWindow.CELL0 + InventoryWindow.CELL_STEP * Vector2(i % InventoryWindow.COLS, i / InventoryWindow.COLS), InventoryWindow.CELL)))
+	check(same, "gear slot and bag cell buttons are exactly their slots (k %.2f, cell %s, gear %s)" % [iw.k, iw.cells[0].get_rect(), iw.gear_buttons.weapon.get_rect()])
+	check(iw.tab_buttons[0].get_theme_stylebox("focus") is StyleBoxEmpty, "tab buttons draw no oversized focus ring of their own")
+	ui.hide_all()
+	# B8-020: the death screen names the cause
+	p.hp = 5.0
+	w.damage_player(100.0, "hunger")
+	check(not p.alive and p.death_cause == "hunger", "starvation is recorded as the cause of death")
+	ui.show_death()
+	var cl: Label = ui.panel_body.find_child("DeathCause", true, false)
+	check(cl != null and cl.text == "You starved.", "the death screen says \"You starved.\"")
+	var saved := PlayerState.from_dict(p.to_dict())
+	check(saved.death_cause == "hunger" and saved.last_damage == "hunger", "the cause survives a save and load")
+	ui.hide_all()
+	p.alive = true
+	p.deaths -= 1
+	p.hp = hp0
+	p.hp = 5.0
+	w.damage_player(100.0, "Wat the guard")
+	check(not p.alive and p.death_cause == "Wat the guard", "a combat kill records who struck")
+	ui.show_death()
+	cl = ui.panel_body.find_child("DeathCause", true, false)
+	check(cl != null and cl.text == "Killed by Wat the guard.", "the death screen says who killed you")
+	ui.hide_all()
+	p.alive = true
+	p.deaths -= 1
+	p.hp = hp0
+	p.death_cause = ""
+	p.last_damage = ""
