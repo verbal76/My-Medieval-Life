@@ -968,7 +968,12 @@ func _show_sleeper(n: NPC, s: ActorSprite) -> bool:
 func _sync_sprites() -> void:
 	var cam := camera.get_screen_center_position() / T
 	for n: NPC in world.npcs:
-		var s: ActorSprite = sprites[n.id]
+		var s: ActorSprite = sprites.get(n.id)
+		if s == null:                               # a newcomer (NPCBrain succession) gets a sprite when first seen
+			s = ActorSprite.new()
+			s.setup(n.sprite)
+			actors.add_child(s)
+			sprites[n.id] = s
 		var near := n.pos.distance_to(cam) < 30.0
 		if not n.alive:
 			# the body falls, flickers and is gone

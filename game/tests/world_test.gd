@@ -328,5 +328,98 @@ func _roofs() -> void:
 
 
 # ---------------------------------------------------------------- B8-016 ----------------------
+func _by_job(w: World, job: String) -> Array:
+	return w.npcs.filter(func(o: NPC): return o.alive and o.role == "adult" and o.job == job)
+
+
+func _days(w: World, n: int) -> void:
+	w.minutes += float(n) * 1440.0
+
+
 func _succession() -> void:
-	pass
+	main.new_game()
+	var w: World = main.world
+	var b: NPCBrain = w.brain
+	var wait := int(GameData.b("succession_days"))
+	var coins0 := w.total_coins() - w.coin_sources
+	var alive0 := w.npcs.filter(func(o: NPC): return o.alive).size()
+	# 1. the smith dies: the post is open, then an adult without a trade takes it, workstation and all
+	var smiths := _by_job(w, "smith")
+	var dead: NPC = smiths[0]
+	var forge := dead.workplace
+	check(smiths.size() == 2 and forge != "", "the village starts with two smiths at the forge (%s)" % forge)
+	w.kill(dead, "illness")
+	check(w.vacancies.size() == 1 and w.vacancies[0].job == "smith" and w.vacancies[0].workplace == forge, "a smith's death opens the post")
+	b.succession_dawn()
+	check(_by_job(w, "smith").size() == 1 and w.vacancies.size() == 1, "not at once: the post waits %d days" % wait)
+	_days(w, wait)
+	var laborers := _by_job(w, "laborer").size()
+	b.succession_dawn()
+	var smiths2 := _by_job(w, "smith")
+	check(smiths2.size() == 2 and w.vacancies.is_empty(), "after %d days an apprentice takes the post" % wait)
+	var apprentice: NPC = smiths2.filter(func(o: NPC): return o != smiths[1])[0]
+	check(apprentice.workplace == forge and apprentice.id != dead.id and _by_job(w, "laborer").size() == laborers - 1,
+			"%s, a labourer, works the same forge" % apprentice.name)
+	check(not dead.alive and w.npcs.filter(func(o: NPC): return o.alive and o.name == dead.name and o.family == dead.family and o.id == dead.id).is_empty(), "the dead smith stays dead")
+	check(apprentice.inv.has("hammer"), "and has the smith's hammer")
+	check(w.total_coins() - w.coin_sources == coins0, "no coins appear: coins conserved")
+	# 2. a trade nobody can be apprenticed to: a newcomer arrives with the caravan
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and NPCBrain.APPRENTICE_FROM.has(o.job):
+			o.job = "farmer"                           # nobody is without a trade
+			o.workplace = w.fields[0].id
+	var carpenters := _by_job(w, "carpenter")
+	var saw: String = carpenters[0].workplace
+	var home: String = str(carpenters[0].home)
+	for c in carpenters:
+		w.kill(c, "illness")                           # both: their household may die out
+	check(w.vacancies.size() == 2 and _by_job(w, "carpenter").is_empty(), "both carpenters die: two posts open")
+	var npcs0 := w.npcs.size()
+	_days(w, wait)
+	b.succession_dawn()
+	check(w.vacancies.size() == 2 and w.npcs.size() == npcs0, "no one without a trade: the posts wait for the caravan")
+	var coin_src0 := w.coin_sources
+	b.succession_caravan()                             # what brain.caravan() does first, apart from its trading
+	var cars := _by_job(w, "carpenter")
+	check(cars.size() == 2 and w.vacancies.is_empty() and w.npcs.size() == npcs0 + 2, "the caravan brings two newcomers who take the posts")
+	var nc: NPC = cars[0]
+	check(nc.id >= npcs0 + 1 and nc.workplace == saw and nc.home != "" and w.buildings.has(nc.home) and nc.household >= 0 and nc.alive,
+			"%s %s has the workstation, a home (%s) and a household" % [nc.name, nc.family, nc.home])
+	check(w.households[nc.household].members.has(nc.id) and not w.households[nc.household].get("ended", false), "the household lists them and is alive")
+	check(w.coin_sources == coin_src0 + 2 * int(GameData.b("newcomer_coins")) and w.total_coins() - w.coin_sources == coins0,
+			"their purses are counted as coming into the village and no other coin appears")
+	var in_home := false
+	for o: NPC in w.npcs:
+		if o.alive and o.home == home and o.job == "carpenter":
+			in_home = true
+	check(in_home or home != "", "a carpenter lives in the old house or another")
+	# the newcomer is a villager like the rest: it gets a sprite, plans, and the day runs
+	main._sync_sprites()
+	check(main.sprites.has(nc.id), "the newcomer has a sprite")
+	for k in 200:
+		w.update(0.5)
+	check(nc.alive and nc.plan.size() + int(nc.doing != "") > 0, "and plans its day (%s)" % nc.doing)
+	# 3. no caravan: a newcomer comes anyway after newcomer_max_days
+	var tanners := _by_job(w, "tanner")
+	w.kill(tanners[0], "illness")
+	_days(w, wait + 1)
+	b.succession_dawn()
+	check(w.vacancies.size() == 1, "a vacancy after %d days still waits for the caravan" % (wait + 1))
+	_days(w, int(GameData.b("newcomer_max_days")))
+	b.succession_dawn()
+	check(w.vacancies.is_empty() and _by_job(w, "tanner").size() == 2, "after newcomer_max_days one comes without it")
+	# 4. open posts survive saving and loading; the last farmer's death opens a post too
+	for o: NPC in _by_job(w, "farmer"):
+		w.kill(o, "illness")
+	check(_by_job(w, "farmer").is_empty() and w.vacancies.size() == 1 and w.vacancies[0].job == "farmer", "the last farmer's death opens a post (one for the floor of one)")
+	var alive_before := w.npcs.filter(func(o: NPC): return o.alive).size()
+	check(main.save_game(false), "the game saves")
+	main.continue_game()
+	check(main.world.vacancies.size() == 1 and main.world.vacancies[0].job == "farmer", "an open post is still open after loading")
+	var n2: int = main.world.npcs.filter(func(o: NPC): return o.alive).size()
+	check(n2 == alive_before and n2 < alive0 + 3, "nobody was resurrected (%d alive, was %d before saving)" % [n2, alive_before])
+	var dead_ids := {}
+	for o: NPC in main.world.npcs:
+		if not o.alive:
+			dead_ids[o.id] = true
+	check(dead_ids.has(dead.id) and dead_ids.size() >= 5, "the dead are still dead after loading (%d)" % dead_ids.size())

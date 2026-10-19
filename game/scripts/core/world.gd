@@ -40,6 +40,7 @@ var trees: Array = []              # the village's trees (Trees: the one tree mo
                                    # drawn by TreeView and the characters walk behind its canopy. Trees the player planted
                                    # have planted: true. trunk/top/bottom are the old tile ids (map data), kept for the tests
 var tree_damage := {}              # Vector2i -> {hits, side, at}: the axe blows a mature tree has taken (not saved: they heal)
+var vacancies: Array = []          # essential posts open after a death (B8-016, NPCBrain succession): {job, workplace, home, household, day, who}. Saved (older saves have none)
 var deposits: Array = []           # {x, y, ore, amount}: the mine's seams (the sims, miners and the caravan's stone rule look at these only)
 var boulders: Array = []           # the village's small grey boulders (B8-026): {x, y, ore: "stone", amount, boulder: true}, a few
                                    # pickaxe uses each, then gone (solid cleared). Found by deposit_at like a seam; the overworld's are Overworld.boulder_at
@@ -2215,7 +2216,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
+		"vacancies": vacancies, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(),
 	}
@@ -2277,6 +2278,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		if not sp.is_empty():
 			pl.state = str(sp.state)
 			pl.regrow = float(sp.regrow)
+	vacancies = d.get("vacancies", [])
 	deposits = d.deposits
 	_make_boulders(m)                  # a save from before boulders has none broken
 	for sb in d.get("boulders", []):

@@ -318,6 +318,7 @@ func _plan_job(n: NPC) -> bool:
 func on_death(n: NPC) -> void:
 	_hand_over_pens(n)
 	_give_up_stall(n)
+	_open_vacancy(n)
 	w.construction.on_death(n)
 	w.manor_work.on_death(n)
 	if n.household >= 0:
@@ -1750,6 +1751,8 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 		"merchant":
 			n.workplace = place
 			w.set_tenant(w.stalls[place], World.npc_ref(n.id))
+		"smith", "carpenter", "tanner", "cook", "tavernkeeper":
+			n.workplace = place                      # the workstation of the trade (succession)
 		_:
 			n.workplace = ""
 	if job == "":
@@ -1761,6 +1764,209 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 	w.stat("job_changes")
 	if n.household >= 0:
 		evaluate_household(n.household)
+
+
+# ---------------------------------------------------------------- succession ----------------
+## Essential trades are handed on (B8-016, owner 2026-10-19: "Apprentice, then newcomer"). A skilled
+## trade (smith, carpenter, tanner, cook, tavernkeeper, merchant) is kept at the strength the village
+## began with; of farmers, woodcutters and miners (whom the job market refills while any remain) at
+## least one must work. When one dies, the post, its workstation and its home are open for
+## `succession_days`; then an adult without a trade takes it (an apprentice: the dead worker's own
+## household first), and with none a newcomer comes with the next caravan, at the latest
+## `newcomer_max_days` after the death, bringing a purse of their own (counted as coming into the
+## village, World.coin_sources) and lodging in the dead worker's household, house or another empty
+## house. Death stays permanent: nobody is resurrected. World.vacancies is the saved list.
+const SKILLED := ["smith", "carpenter", "tanner", "cook", "tavernkeeper", "merchant"]
+const FLOOR_JOBS := ["farmer", "woodcutter", "miner"]
+const APPRENTICE_FROM := ["", "manor_hand", "laborer"]          # the adults who can be taken on, in order of preference
+
+
+## How many hold a trade when the village is whole: the starting count for a skilled trade, one for the rest.
+static func staff_target(job: String) -> int:
+	return int(Population.JOBS.get(job, 1)) if SKILLED.has(job) else 1
+
+
+func is_essential(job: String) -> bool:
+	return SKILLED.has(job) or FLOOR_JOBS.has(job)
+
+
+func living_in(job: String) -> int:
+	var c := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == job:
+			c += 1
+	return c
+
+
+func open_posts(job: String) -> int:
+	var c := 0
+	for v in w.vacancies:
+		if v.job == job:
+			c += 1
+	return c
+
+
+## A death in an essential trade opens its post (called from on_death), unless the trade is still at
+## strength or posts are already open for every missing hand.
+func _open_vacancy(n: NPC) -> void:
+	if n.role != "adult" or not is_essential(n.job):
+		return
+	if living_in(n.job) + open_posts(n.job) >= staff_target(n.job):
+		return
+	w.vacancies.append({"job": n.job, "workplace": n.workplace, "home": n.home, "household": n.household, "day": w.day(),
+			"who": "%s %s" % [n.name, n.family]})
+	w.note("The post of %s, left by %s, is open: an apprentice or a newcomer will take it." % [n.job.replace("_", " "), "%s %s" % [n.name, n.family]])
+
+
+## Every morning: posts open for succession_days are filled by an apprentice; one nobody can fill waits
+## for the caravan, and after newcomer_max_days a newcomer comes without it.
+func succession_dawn() -> void:
+	var wait := int(GameData.b("succession_days"))
+	var latest := int(GameData.b("newcomer_max_days"))
+	for v in w.vacancies.duplicate():
+		var age: int = w.day() - int(v.day)
+		if age < wait:
+			continue
+		if living_in(v.job) >= staff_target(v.job):
+			w.vacancies.erase(v)                     # filled some other way (a stall let again)
+			continue
+		var a := _apprentice_for(v)
+		if a != null:
+			w.vacancies.erase(v)
+			_install(a, v, "apprenticed to the late %s" % v.who)
+		elif age >= latest:
+			w.vacancies.erase(v)
+			_newcomer_for(v)
+
+
+## The caravan brings newcomers for posts nobody could take (called from caravan()).
+func succession_caravan() -> void:
+	var wait := int(GameData.b("succession_days"))
+	for v in w.vacancies.duplicate():
+		if w.day() - int(v.day) < wait:
+			continue
+		if living_in(v.job) >= staff_target(v.job):
+			w.vacancies.erase(v)
+			continue
+		var a := _apprentice_for(v)
+		w.vacancies.erase(v)
+		if a != null:
+			_install(a, v, "apprenticed to the late %s" % v.who)
+		else:
+			_newcomer_for(v)
+
+
+## An adult without a trade (or a labourer or manor hand), the dead worker's household first, then by
+## id; a merchant also needs the coins to stock a stall. null if there is none. (Children never grow up
+## in the game, so a "grown child" is an adult of the household without a trade.)
+func _apprentice_for(v: Dictionary) -> NPC:
+	var best: NPC = null
+	var best_key := 1 << 30
+	for o: NPC in w.npcs:
+		if not o.alive or o.role != "adult" or not APPRENTICE_FROM.has(o.job):
+			continue
+		if v.job == "merchant" and o.coins < int(GameData.b("stall_min_coins")):
+			continue
+		var key := APPRENTICE_FROM.find(o.job) * 100000 + (0 if (int(v.household) >= 0 and o.household == int(v.household)) else 50000) + o.id
+		if key < best_key:
+			best_key = key
+			best = o
+	return best
+
+
+## Put someone in the post: the job, the workstation (or stall) and, with the trade's tool, the tools.
+func _install(n: NPC, v: Dictionary, why: String) -> void:
+	var place := str(v.workplace)
+	if v.job == "merchant":
+		var t := w.tenant_of(w.stalls[place]) if w.stalls.has(place) else "x"
+		if t != "" and w.party(t) != null and w.party(t).alive:
+			place = ""                                # the stall was let again meanwhile: another one that is vacant
+			for sid in _sorted_keys(w.stalls):
+				if w.tenant_of(w.stalls[sid]) == "":
+					place = str(sid)
+					break
+		if place == "":
+			return
+	_change_job(n, str(v.job), why, place)
+	for tool in KEEPS.get(v.job, []):
+		if not n.inv.has(tool) and GameData.item(tool).get("tool", "") != "":
+			n.inv.add(tool)                          # the master's tools pass on
+	w.stat("successions")
+	w.stat("succession_" + str(v.job))
+
+
+func _sorted_keys(d: Dictionary) -> Array:
+	var k := d.keys()
+	k.sort()
+	return k
+
+
+func _next_npc_id() -> int:
+	var top := 0
+	for o: NPC in w.npcs:
+		top = maxi(top, o.id)
+	return top + 1
+
+
+## A newcomer takes the post, the workstation and a home: with the dead worker's household if it lives
+## (a lodger in its house), else its old house leased from the manor, else another empty house, else a
+## room with the smallest household. Their purse is new money from outside (coin_sources).
+func _newcomer_for(v: Dictionary) -> NPC:
+	var n := NPC.new()
+	n.id = _next_npc_id()
+	n.role = "adult"
+	n.name = Population.FIRST[w.rng.randi() % Population.FIRST.size()]
+	n.family = Population.FAMILY[w.rng.randi() % Population.FAMILY.size()]
+	n.sprite = "res://assets/characters/villager_%02d.png" % (n.id % 48)
+	n.coins = int(GameData.b("newcomer_coins"))
+	n.hunger = 100.0
+	w.coin_sources += n.coins                        # the purse comes in from outside
+	w.npcs.append(n)
+	w.by_id[n.id] = n
+	var h := int(v.household)
+	if h >= 0 and h < w.households.size() and not w.households[h].get("ended", false) and not _members(h).is_empty() \
+			and w.buildings.has(str(w.households[h].home)):
+		_lodge(n, h)                                 # with the dead worker's family
+	else:
+		var nh := {"id": w.households.size(), "family": n.family, "home": "", "members": [n.id], "pantry": Inventory.new(), "founded_day": w.day()}
+		w.households.append(nh)
+		n.household = int(nh.id)
+		var homes := []
+		if w.buildings.has(str(v.home)):
+			homes.append(str(v.home))
+		var ids: Array = w.buildings.keys()
+		ids.sort()
+		for id in ids:
+			if not homes.has(id):
+				homes.append(id)
+		for id in homes:
+			var b: Dictionary = w.buildings[id]
+			if w.property.is_home(b) and w.property.for_sale(b) and n.coins >= w.property.rent_of(b):
+				if w.property.lease(b, World.hh_ref(int(nh.id))) == "":
+					nh.home = id
+					n.home = id
+					break
+		if str(nh.home) == "":
+			var host := -1                           # no house to lease: a room with the smallest household
+			for hh in w.households:
+				if hh.get("ended", false) or int(hh.id) == int(nh.id) or not w.buildings.has(str(hh.home)) or _members(int(hh.id)).is_empty():
+					continue
+				if host < 0 or _members(int(hh.id)).size() < _members(host).size():
+					host = int(hh.id)
+			w.households.erase(nh)
+			_lodge(n, host)
+	n.pos = Vector2(w.building_door(n.home)) + Vector2(0.5, 0.5)
+	w.note("%s %s arrives with the caravan to take the late %s's post as %s." % [n.name, n.family, v.who, str(v.job).replace("_", " ")])
+	_install(n, v, "a newcomer")
+	return n
+
+
+## Join a household as a lodger: its family name, its house.
+func _lodge(n: NPC, h: int) -> void:
+	n.household = h
+	n.family = str(w.households[h].family)
+	n.home = str(w.households[h].home)
+	w.households[h].members.append(n.id)
 
 
 ## Day labour at the manor: an adult of a household short of food who has earned nothing today may
@@ -1784,6 +1990,7 @@ func dawn(record := true) -> void:
 	if record:
 		for h in w.households.size():
 			evaluate_household(h, true)
+		succession_dawn()
 		seek_work()
 		w.quests.drop_failed()
 		w.quests.refresh()
@@ -1813,6 +2020,7 @@ func _day_labour(n: NPC) -> bool:
 ## The village's currency can therefore grow only by the allowance, and never past its ceiling; the
 ## goods leave the village; the coins are logged in coin_sources.
 func caravan() -> void:
+	succession_caravan()                             # newcomers for the posts nobody could take (B8-016)
 	var every := maxi(1, int(GameData.b("caravan_every_days")))
 	var float_coins := int(GameData.b("caravan_float"))
 	if w.caravan_purse < float_coins:
