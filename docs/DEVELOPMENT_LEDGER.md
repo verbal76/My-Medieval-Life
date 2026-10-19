@@ -10,11 +10,11 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 38 |
-| ACTIVE DEVELOPMENT | 7 |
-| PARTIALLY IMPLEMENTED | 34 |
+| APPROVED — NOT STARTED | 37 |
+| ACTIVE DEVELOPMENT | 5 |
+| PARTIALLY IMPLEMENTED | 36 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 27 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 28 |
 | BLOCKED | 17 |
 | DEFERRED | 8 |
 | COMPLETE AND VERIFIED | 121 |
@@ -52,7 +52,7 @@ Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 
-## APPROVED — NOT STARTED (38)
+## APPROVED — NOT STARTED (37)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -78,7 +78,6 @@ Automated tests do not count as device verification.
 | DVW-B7 | Life chronicle, titles, memorial | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 279) |  |  |  |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 281) |  |  |  |
 | EQ-01 | Human civilization sustains itself without the player | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after B14R-12 |  |
-| EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after WR-01 |  |
 | EQ-03 | Humans and nature affect each other through real NPC decisions | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
@@ -95,24 +94,23 @@ Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (7)
+## ACTIVE DEVELOPMENT (5)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1) |  |  | implement WR-01, then re-run 365 days |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  |  |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | branch staging/my-medieval-life | after B14R-12 | verify with 100- and 365-day runs on several seeds; wildlife part via WR-01 |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold |
-| WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II |  |  |  |
 
-## PARTIALLY IMPLEMENTED (34)
+## PARTIALLY IMPLEMENTED (36)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | docs/release/AUDIT_REMEDIATION.md (audit inventory row 368) |  |  |  |
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | owner message 2026-10-19 | `f9fb853` |  |  |
+| B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1) | `d598e65`, `4fe265d`, `b15208a` |  | implement WR-01, then re-run 365 days |
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
 | B7-017 | No building in a year (no births) | docs/release/BUILD_7_ISSUES.md (audit inventory row 58) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
@@ -120,6 +118,7 @@ Automated tests do not count as device verification.
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250) |  |  |  |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
+| EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md | `b15208a` | after WR-01 |  |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
@@ -154,7 +153,7 @@ Automated tests do not count as device verification.
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (27)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (28)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -185,6 +184,7 @@ Automated tests do not count as device verification.
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
 | Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |
+| WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
 
 ## BLOCKED (17)
 

@@ -2237,7 +2237,7 @@
    "id": "B14R-12",
    "title": "Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run",
    "source": "Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1)",
@@ -2249,7 +2249,11 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "d598e65",
+    "4fe265d",
+    "b15208a"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -2276,6 +2280,11 @@
      "date": "2026-10-19",
      "change": "parent EQ-07",
      "why": "Build 16 world equilibrium directive section 7"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> PARTIALLY IMPLEMENTED; commit d598e65; commit 4fe265d; commit b15208a",
+     "why": "wildlife cause fixed (WR-01: no species reaches 0 in 365 days); housing and population cause fixed (EQ-07/08); the 365-day re-run with everything together is running"
     }
    ],
    "acceptance_derived": true
@@ -7071,7 +7080,7 @@
    "id": "EQ-02",
    "title": "Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "Predators must not inevitably eliminate all prey, and hunting must not inevitably eliminate every species across the entire world.",
    "description": "Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -7086,7 +7095,9 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "b15208a"
+   ],
    "parent": "EQ-16",
    "depends_on": [
     "WR-01"
@@ -7107,6 +7118,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit b15208a",
+     "why": "refuges, dispersal and recolonization in place (WR-01); grazers starve together above grass capacity (left as is); the acceptance runs (EQ-06) still to do"
     }
    ]
   },
@@ -13196,7 +13212,7 @@
    "id": "WR-01",
    "title": "Protected wildlife breeding refuges, offspring cohorts and dispersal",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Protected wildlife breeding refuges, offspring cohorts and dispersal",
    "source": "docs/directives/2026-10-19_memory_refuges_politics.md Part II",
@@ -13204,11 +13220,14 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/refuges.gd; fauna.gd; animal.gd; INT-149",
+   "tests": "game/tests/refuge_test.gd",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "b15208a",
+    "7bd1905"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -13232,6 +13251,11 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "started for Build 15 (EQ-02, EQ-07)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit b15208a; commit 7bd1905; tests; implementation",
+     "why": "refuges (count model per wood and species), seasonal litters below capacity, juveniles released and dispersed to the least crowded wood and a settling point, recolonization; save additive; refuge_test 59 checks; 100-day wild animals 83 and 81 (were 6 and 2), 365-day 84 and 88 (was 0)"
     }
    ],
    "acceptance_derived": true
