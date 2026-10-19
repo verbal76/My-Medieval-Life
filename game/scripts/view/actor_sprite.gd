@@ -15,14 +15,25 @@ const ANIMS := {
 	"death": [[22, 23, 24], 0.15],
 	"carry": [[26, 25, 27], 0.13],
 	"work": [[13, 14, 15], 0.18],
+	# Build 8 (B8-007): the sheet has no pickaxe or axe animation, only a sword (5-8) and a staff (13-15)
+	# swing with that weapon drawn in. "swing" is the bare-handed throw frames (16-18, nothing in hand)
+	# with the tool's icon drawn in the hand over them (see hold); "gather" is the arms-forward carry
+	# frames, for picking and harvesting. docs/BUILD_DECISIONS.md records the missing art.
+	"swing": [[16, 17, 18], 0.16],
+	"gather": [[26, 25, 27, 25], 0.2],
 }
+const SWING_ANGLES := [-15.0, 120.0, 95.0]    # degrees, per swing frame: the tool raised, down, following through
+const SWING_HAND := Vector2(6, -8)            # the hand, from the feet (pixels), on the side faced
 
 var anim := "idle"
 var dir := 0
 var t := 0.0
+var speed_scale := 1.0         # animation speed (a sprint plays the walk faster; the screenshots freeze it at 0)
 var once := false
 var label: Label
 var cover: Sprite2D            # the blanket drawn over someone lying in bed
+var tool_icon: Sprite2D        # the tool held in the hand while swinging
+var tool_item := ""            # the item id of the tool shown ("" = none)
 
 
 ## Lie in a bed (or on a pallet) whose cell centre is `at` (pixels), head toward `head` ("up", "left",
@@ -66,6 +77,39 @@ func setup(sheet_path: String) -> void:
 	frame = 0
 
 
+## Hold this item (a pickaxe or an axe) in the hand for the "swing" animation; "" puts it away.
+func hold(item: String) -> void:
+	tool_item = item
+	if item == "":
+		if tool_icon:
+			tool_icon.visible = false
+		return
+	if tool_icon == null:
+		tool_icon = Sprite2D.new()
+		tool_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		tool_icon.offset = Vector2(-5, -5)          # the grip (the icon's lower corner) is the pivot
+		tool_icon.z_index = 1
+		add_child(tool_icon)
+		tool_icon.position = Vector2.ZERO
+	tool_icon.texture = load("res://assets/icons/%s.png" % item)
+
+
+## Where the held tool is for this frame of the swing (the node's own offset is (0, -7), so the hand is
+## given from the sprite's centre).
+func _place_tool(i: int) -> void:
+	if tool_icon == null:
+		return
+	tool_icon.visible = anim == "swing" and tool_item != "" and tool_icon.texture != null
+	if not tool_icon.visible:
+		return
+	var side := -1.0 if dir in [5, 6, 7, 4] else 1.0        # faced west (and north: the left) or east (and south)
+	var a: float = SWING_ANGLES[i % SWING_ANGLES.size()]
+	tool_icon.scale = Vector2(side, 1.0) * 0.85
+	tool_icon.rotation = side * deg_to_rad(a + 45.0)
+	tool_icon.position = Vector2(SWING_HAND.x * side, SWING_HAND.y)
+	tool_icon.show_behind_parent = dir in [3, 4, 5]        # facing away: the tool is behind the body
+
+
 func face(v: Vector2) -> void:
 	if v.length_squared() < 0.0001:
 		return
@@ -82,7 +126,7 @@ func play(name: String, play_once := false) -> void:
 
 
 func _process(delta: float) -> void:
-	t += delta
+	t += delta * speed_scale
 	var a: Array = ANIMS.get(anim, ANIMS.idle)
 	var cols: Array = a[0]
 	var i := int(t / a[1])
@@ -92,3 +136,4 @@ func _process(delta: float) -> void:
 			anim = "idle"
 			once = false
 	frame = dir * 29 + int(cols[i % cols.size()])
+	_place_tool(i % cols.size())

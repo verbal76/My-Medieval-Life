@@ -74,7 +74,7 @@ class ResourceRegistryTest(unittest.TestCase):
         s = cr.summary(self.ctx)
         self.assertEqual(s["no_source"], ["apple", "gold_ore"])
         self.assertEqual(s["missing_recipes"], ["forge_gold_ring", "smelt_gold"])
-        self.assertEqual(s["finite"], ["coal_seam", "copper_seam", "iron_seam", "stone_seam"])
+        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "iron_seam", "stone_seam"])
         self.assertEqual(s["finite_no_replacement"], [])
         self.assertIn(("log", "plank", "pickaxe"), s["chains"])
         self.assertFalse(any("bread" in p for p in s["chains"]), "there is no bread recipe")

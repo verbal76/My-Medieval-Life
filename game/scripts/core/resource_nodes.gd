@@ -56,7 +56,7 @@ static func def_for(kind: String, key := "") -> Dictionary:
 		var m: Dictionary = defs()[id].match
 		if m.kind != kind:
 			continue
-		if kind == "deposit" and m.ore != key:
+		if kind in ["deposit", "boulder"] and m.ore != key:
 			continue
 		if kind == "animal" and m.species != key:
 			continue
@@ -64,6 +64,13 @@ static func def_for(kind: String, key := "") -> Dictionary:
 			continue
 		return defs()[id]
 	return {}
+
+
+## The definition of a deposit record: a seam of its ore, or (`boulder: true`) one of the small grey
+## boulders, which give stone from a node of their own (B8-026). The sprite decides nothing: the record
+## does (VillageMap.normalise_rocks draws each with the tile of its kind, "deposit_tiles").
+static func def_for_deposit(dep: Dictionary) -> Dictionary:
+	return def_for("boulder" if dep.get("boulder", false) else "deposit", str(dep.ore))
 
 
 ## What one harvest cycle yields: item id -> count (balance keys resolved). An animal's is an
@@ -85,6 +92,8 @@ static func instances(world: World, d: Dictionary) -> Array:
 	match str(m.get("kind", "")):
 		"deposit":
 			return world.deposits.filter(func(dp): return dp.ore == m.ore)
+		"boulder":
+			return world.boulders.filter(func(b): return int(b.amount) > 0)
 		"tree":
 			return world.trees.duplicate()
 		"field":
@@ -106,7 +115,7 @@ static func node_at(world: World, cell: Vector2i, exact := false) -> Dictionary:
 		var c: Vector2i = cell + dc
 		var dep := world.deposit_at(c)
 		if not dep.is_empty():
-			return _found(def_for("deposit", str(dep.ore)), dep)
+			return _found(def_for_deposit(dep), dep)
 		var t := world.tree_at(c)
 		if not t.is_empty():
 			return _found(def_for("tree"), t)
@@ -129,7 +138,7 @@ static func _found(d: Dictionary, ref) -> Dictionary:
 ## Where an instance stands: a seam's or a tree trunk's cell, a field's middle cell, an animal's cell.
 static func cell_of(_world: World, d: Dictionary, ref) -> Vector2i:
 	match str(d.get("match", {}).get("kind", "")):
-		"deposit", "tree", "plant":
+		"deposit", "boulder", "tree", "plant":
 			return Vector2i(int(ref.x), int(ref.y))
 		"field":
 			return Vector2i(int(ref.x) + int(ref.w) / 2, int(ref.y) + int(ref.h) / 2)
@@ -143,7 +152,7 @@ static func cell_of(_world: World, d: Dictionary, ref) -> Vector2i:
 ## is nothing to take.
 static func remaining(world: World, d: Dictionary, ref) -> int:
 	match str(d.get("match", {}).get("kind", "")):
-		"deposit":
+		"deposit", "boulder":
 			return maxi(0, int(ref.amount))
 		"tree":
 			return int(products(d).get("log", 0)) if ref.state == "grown" else 0
@@ -169,9 +178,9 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 	if not bool(d.get("player_harvest", false)):
 		return "These belong to the keeper. Killing them is theft."
 	match str(d.match.kind):
-		"deposit":
+		"deposit", "boulder":
 			if int(ref.amount) <= 0:
-				return "The seam is worked out."
+				return "The seam is worked out." if str(d.match.kind) == "deposit" else "The boulder is broken up."
 		"tree":
 			var why := Trees.refusal(str(ref.state))        # only a mature tree can be felled
 			if why != "":

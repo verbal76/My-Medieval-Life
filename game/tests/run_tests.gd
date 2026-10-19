@@ -668,8 +668,11 @@ func test_player_actions() -> void:
 	w.player.home = "house_test"
 	var before := w.total_coins() - w.coin_sources
 	w.damage_player(9999, "a guard")
+	check(not w.player.alive and w.player.death_cause == "a guard" and w.player.last_damage == "a guard", "a killing blow records its source as the cause of death (B8-020)")
+	check(PlayerState.from_dict(w.player.to_dict()).death_cause == "a guard", "the cause of death is saved")
 	w.continue_as_heir()
 	var h := w.player
+	check(h.death_cause == "" and h.last_damage == "", "the heir starts with no cause of death")
 	check(h.alive and guard.target == -1, "guards stop fighting once the player is dead and the heir takes over")
 	check(h.coins == int(GameData.b("start_coins_player")) and h.inv.total() == kit.values().reduce(func(a, x): return a + int(x), 0) and not h.inv.has("iron_sword"), "the heir carries only the starting kit")
 	check(h.skills.is_empty() and h.home == "house_test", "the heir keeps the house but starts every skill from nothing")

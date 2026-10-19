@@ -18,6 +18,8 @@ var status_box: PanelContainer   # health, hunger, stamina, coins and the clock,
 var test_safe := Rect2()         # tests only: a pretend display safe area (window pixels)
 var test_cutouts: Array = []     # tests only: pretend display cutouts (camera holes), Rect2 in window pixels
 var bars := {}
+var bar_labels := {}             # meter key -> the words drawn on its bar ("Health 80/100")
+var bar_danger := {}             # meter key -> true while that meter is low (B8-019)
 var coins_label: Label
 var clock_label: Label
 var prompt_label: Label
@@ -26,6 +28,7 @@ var prompt_icon: TextureRect
 var log_box: VBoxContainer
 var toast: Label
 var toast_t := 0.0
+var toast_bottom := -160.0     # where the toast's bottom edge sits (above the prompt and the placing bar)
 var action_bar: ProgressBar
 var panel: PanelContainer
 var panel_kind := ""
@@ -68,6 +71,15 @@ const RES_WARN := Color8(150, 34, 14)
 const RES_CARD := Color8(226, 206, 162)
 const LOG_LINES := 2           # village events shown at once, newest last
 const LOG_SECONDS := 3.0       # how long each stays before fading
+const DANGER_AT := 0.25        # a meter below this fraction of its cap turns red and blinks
+const DANGER_COLOUR := Color8(228, 52, 36)
+const PROMPT_MAX_W := 360.0    # the contextual prompt and the message toast wrap at this width
+const TOAST_MAX_W := 460.0
+const METERS := {
+	"hp": ["Health", "health", "Health: how much you can take. Rest at home, eat food that heals, or drink a tonic. At 0 you die."],
+	"hunger": ["Food", "bread", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
+	"stamina": ["Stamina", "stamina", "Stamina: spent by casting Fireball. It refills by itself."],
+}
 const GAIN_SECONDS := 1.5      # a gain line ("+2 red berries") stays this long, then fades
 const PROMPT := "res://assets/prompts/%s.png"
 const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "touch_tap"}
@@ -86,12 +98,16 @@ const CONTROLS := {
 		[["mouse_right"], "Attack whoever you click"], [["keyboard_f"], "Fireball (once learned)"],
 		[["keyboard_i"], "Pack"], [["keyboard_l"], "Skills"], [["keyboard_b"], "Journal"], [["keyboard_escape"], "Menu"],
 		[["mouse_scroll"], "Zoom"], [["mouse_scroll", "mouse_move"], "Hold the wheel and drag to look around"],
-		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"]],
+		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"],
+		[["keyboard_shift"], "Hold to sprint (it uses stamina)"], [["keyboard_q", "keyboard_tab"], "Next choice, when more than one thing can be used here"],
+		[["keyboard_escape", "mouse_right"], "While working: stop at once"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
 		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned)"],
 		[["xbox_button_view"], "Pack"], [["xbox_rb"], "Skills"], [["xbox_button_menu"], "Menu (the journal is there)"],
 		[["xbox_button_b"], "Close a window"],
-		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"], [["xbox_lt", "xbox_rt"], "In a window: step through its buttons"]],
+		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"], [["xbox_lt", "xbox_rt"], "In a window: step through its buttons"],
+		[["xbox_lt"], "Sprint on or off (it uses stamina)"], [["xbox_dpad_left", "xbox_dpad_right"], "Next choice, when more than one thing can be used here"],
+		[["xbox_button_b"], "While working: stop at once"]],
 }
 # On a phone the interface keeps at least this far from the screen edges (interface units; the layout
 # is 450 high): rounded corners on common phones cut off less than this.
@@ -304,28 +320,43 @@ func _build_hud() -> void:
 	hud.add_child(box)
 	var v := VBoxContainer.new()
 	box.add_child(v)
-	for b in [["hp", "health", "Health"], ["hunger", "hunger", "Hunger"], ["stamina", "stamina", "Stamina"]]:
+	for key in ["hp", "hunger", "stamina"]:
+		var m: Array = METERS[key]
 		var h := HBoxContainer.new()
-		var ic := _ui_icon(b[1], 24)
-		ic.tooltip_text = b[2]
+		var ic := _ui_icon(m[1], 24) if key != "hunger" else _item_icon_rect("bread", 24)
+		ic.tooltip_text = m[2]
+		ic.mouse_filter = Control.MOUSE_FILTER_PASS
 		h.add_child(ic)
 		var pb := ProgressBar.new()
-		pb.custom_minimum_size = Vector2(152, 14)
+		pb.custom_minimum_size = Vector2(156, 18)
 		pb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		pb.show_percentage = false
+		pb.tooltip_text = m[2]
 		var track := StyleBoxFlat.new()
 		track.bg_color = SLATE
 		pb.add_theme_stylebox_override("background", track)
 		var fill := StyleBoxFlat.new()
-		fill.bg_color = BAR_COLOURS[b[0]]
+		fill.bg_color = BAR_COLOURS[key]
 		pb.add_theme_stylebox_override("fill", fill)
+		var vl := Label.new()
+		vl.set_anchors_preset(Control.PRESET_FULL_RECT)
+		vl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		vl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		vl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		vl.add_theme_font_size_override("font_size", 12)
+		vl.add_theme_color_override("font_outline_color", Color.BLACK)
+		vl.add_theme_constant_override("outline_size", 4)
+		pb.add_child(vl)
 		h.add_child(pb)
 		v.add_child(h)
-		bars[b[0]] = pb
+		bars[key] = pb
+		bar_labels[key] = vl
 	var row := HBoxContainer.new()
 	row.add_child(_ui_icon("coins", 24))
 	coins_label = Label.new()
 	coins_label.custom_minimum_size = Vector2(56, 0)
+	coins_label.tooltip_text = "Coins in your purse"
+	coins_label.mouse_filter = Control.MOUSE_FILTER_PASS
 	coins_label.add_theme_font_size_override("font_size", 18)
 	row.add_child(coins_label)
 	clock_label = Label.new()
@@ -349,20 +380,26 @@ func _build_hud() -> void:
 	prompt_box.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	prompt_box.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	prompt_box.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	prompt_box.offset_bottom = -96
+	prompt_box.offset_bottom = -64
 	prompt_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	prompt_box.visible = false
 	var ph := HBoxContainer.new()
 	prompt_icon = TextureRect.new()
-	prompt_icon.custom_minimum_size = Vector2(40, 40)
+	prompt_icon.custom_minimum_size = Vector2(30, 30)
+	prompt_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	prompt_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	prompt_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	ph.add_child(prompt_icon)
 	prompt_label = Label.new()
-	prompt_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	prompt_label.custom_minimum_size = Vector2(480, 0)
+	prompt_label.add_theme_font_size_override("font_size", 16)
+	prompt_label.add_theme_color_override("font_outline_color", Color.BLACK)
+	prompt_label.add_theme_constant_override("outline_size", 3)
 	prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	ph.add_child(prompt_label)
+	ph.add_theme_constant_override("separation", 6)
+	var pm := _style(Color(WINDOW, 0.88))
+	pm.set_content_margin_all(6)
+	prompt_box.add_theme_stylebox_override("panel", pm)
 	prompt_box.add_child(ph)
 	hud.add_child(prompt_box)
 
@@ -370,9 +407,8 @@ func _build_hud() -> void:
 	toast.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	toast.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	toast.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	toast.custom_minimum_size = Vector2(620, 0)
 	toast.offset_bottom = -160
-	toast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	toast.add_theme_font_size_override("font_size", 17)
 	toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	toast.visible = false
 	_backed(toast)
@@ -605,8 +641,16 @@ func update_hud() -> void:
 	bars.stamina.max_value = p.stamina_cap()
 	bars.hunger.value = p.hunger
 	bars.stamina.value = p.stamina
+	_meter_text("hp", "Health %d/%d" % [ceili(p.hp), int(p.hp_cap())], p.hp / maxf(1.0, p.hp_cap()))
+	_meter_text("hunger", "Food %d%%" % ceili(p.hunger), p.hunger / 100.0)
+	_meter_text("stamina", "Stamina %d/%d" % [int(p.stamina), int(p.stamina_cap())], p.stamina / maxf(1.0, p.stamina_cap()))
 	coins_label.text = " %d" % p.coins
 	clock_label.text = w.clock_text()
+	# the prompt and toast follow their own size (a container's minimum size settles a frame late)
+	if prompt_box.visible:
+		_place_bottom(prompt_box, _prompt_bottom())
+	if toast.visible:
+		_place_bottom(toast, toast_bottom)
 	var a: Dictionary = main.action
 	action_bar.visible = not a.is_empty()
 	if not a.is_empty():
@@ -619,9 +663,50 @@ func update_hud() -> void:
 			toast.visible = false
 
 
+## A meter's words, and its danger state: below DANGER_AT of its cap the fill turns red and blinks.
+func _meter_text(key: String, words: String, fraction: float) -> void:
+	bar_labels[key].text = words
+	var low := fraction < DANGER_AT
+	bar_danger[key] = low
+	var fill := bars[key].get_theme_stylebox("fill") as StyleBoxFlat
+	fill.bg_color = DANGER_COLOUR if low else BAR_COLOURS[key]
+	var blink := low and int(Time.get_ticks_msec() / 400) % 2 == 0
+	bars[key].modulate = Color(1.0, 0.7, 0.65) if blink else Color.WHITE
+
+
+## Where the prompt's bottom edge sits: just above the screen edge, or above the action buttons
+## when the touch bar is showing (they fill the bottom of a phone).
+func _prompt_bottom() -> float:
+	if touch_bar != null and touch_bar.visible:
+		return -(touch_bar.get_combined_minimum_size().y + 12.0 + 8.0)
+	return -64.0
+
+
+## Centre a bottom-anchored control on its own (re-measured) size, its bottom edge at `bottom`. A
+## control that grows from its bottom edge keeps its old top when the words get shorter, and a
+## wrapping label measured while it had no width is thousands of pixels tall.
+func _place_bottom(c: Control, bottom: float) -> void:
+	var m := c.get_combined_minimum_size()
+	c.offset_left = -m.x / 2.0
+	c.offset_right = m.x / 2.0
+	c.offset_top = bottom - m.y
+	c.offset_bottom = bottom
+
+
+## Fit a label to its words: one line up to max_w, wrapped (at max_w) beyond that.
+func _fit_label(l: Label, max_w: float) -> void:
+	var f := l.get_theme_font("font")
+	var fs := l.get_theme_font_size("font_size")
+	var w := f.get_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 4.0
+	l.custom_minimum_size.x = max_w if w > max_w else 0.0     # the width first: a wrapping label measured at 0 is thousands of px tall
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if w > max_w else TextServer.AUTOWRAP_OFF
+
+
 func prompt(text: String) -> void:
 	prompt_text = text
 	prompt_label.text = text
+	_fit_label(prompt_label, PROMPT_MAX_W)
+	_place_bottom(prompt_box, _prompt_bottom())
 	prompt_icon.texture = load(PROMPT % USE_ICON.get(scheme, "touch_tap"))
 	prompt_box.visible = text != ""
 
@@ -654,6 +739,7 @@ func _controls_list(s: String) -> void:
 func show_controls(back: Callable) -> void:
 	_open("controls", "Controls", main.paused)
 	_label("The game switches by itself to whichever you use.", 16)
+	_label("The bars top left: Health (at 0 you die), Food (falls with time; at 0 you starve and lose health, so eat from the Pack) and Stamina (spent by casting Fireball, refills by itself). A bar turns red and blinks when it is low.", 15)
 	for s in [scheme] + ["touch", "kbm", "gamepad"].filter(func(x): return x != scheme):
 		_label(SCHEME_NAMES[s] + (" (in use)" if s == scheme else ""), 22, Color(1, 0.85, 0.5))
 		_controls_list(s)
@@ -662,18 +748,58 @@ func show_controls(back: Callable) -> void:
 
 func message(text: String, seconds := 4.0) -> void:
 	toast.text = text
+	_fit_label(toast, TOAST_MAX_W)
 	toast.visible = true
 	toast_t = seconds
-	toast.offset_bottom = -160.0 if not place_bar.visible else -(place_bar.size.y + 24.0)    # above the placing bar
+	toast_bottom = minf(-160.0, _prompt_bottom() - 56.0) if not place_bar.visible else -(place_bar.size.y + 24.0)    # above the placing bar
+	_place_bottom(toast, toast_bottom)
 
 
 ## Something gained or a quick hint ("+2 red berries"): a short line in the top-right corner that
 ## fades quickly, keeping the middle of the screen clear for play (owner, 2026-10-18).
-func gain(text: String) -> void:
-	log_line(text, GAIN_SECONDS)
-	var l: Label = log_box.get_child(log_box.get_child_count() - 1)
-	l.autowrap_mode = TextServer.AUTOWRAP_OFF
-	l.size_flags_horizontal = Control.SIZE_SHRINK_END      # just the words, at the right edge
+func gain(text: String, item := "") -> void:
+	if item == "" or not ResourceLoader.exists(ICON % item):
+		log_line(text, GAIN_SECONDS)
+		var l: Label = log_box.get_child(log_box.get_child_count() - 1)
+		l.autowrap_mode = TextServer.AUTOWRAP_OFF
+		l.size_flags_horizontal = Control.SIZE_SHRINK_END      # just the words, at the right edge
+		return
+	# with an item id: its pack icon left of the words, in one compact line
+	var back := PanelContainer.new()
+	back.name = "GainLine"
+	var st := _style(Color(WINDOW, 0.88))
+	st.set_content_margin_all(4)
+	back.add_theme_stylebox_override("panel", st)
+	back.size_flags_horizontal = Control.SIZE_SHRINK_END
+	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(_item_icon_rect(item, 20))
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", 16)
+	row.add_child(l)
+	back.add_child(row)
+	_add_log(back, GAIN_SECONDS)
+
+
+## A pack item's icon, sized for lines of text.
+func _item_icon_rect(item: String, size: float) -> TextureRect:
+	var t := _icon(item)
+	t.custom_minimum_size = Vector2(size, size)
+	t.name = "ItemIcon"
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return t
+
+
+## The words of the lines now in the corner log (a gain line with an icon keeps them in a child).
+func log_texts() -> Array:
+	var out := []
+	for c in log_box.get_children():
+		for n in [c] if c is Label else c.find_children("*", "Label", true, false):
+			out.append(n.text)
+	return out
 
 
 func log_line(text: String, seconds := LOG_SECONDS) -> void:
@@ -682,6 +808,10 @@ func log_line(text: String, seconds := LOG_SECONDS) -> void:
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_font_size_override("font_size", 16)
 	_backed(l)
+	_add_log(l, seconds)
+
+
+func _add_log(l: Control, seconds: float) -> void:
 	log_box.add_child(l)
 	while log_box.get_child_count() > LOG_LINES:
 		var c := log_box.get_child(0)
@@ -1490,8 +1620,21 @@ func _res_scope(d: Dictionary) -> String:
 func show_death() -> void:
 	var p: PlayerState = main.world.player
 	_open("death", "%s %s has died" % [p.name, p.family])
+	_label(death_text(p.death_cause), 24, Color(1.0, 0.55, 0.45)).name = "DeathCause"
 	_label("Death is permanent, but the village and your family go on. What %s carried lies where they fell, for anyone to take. Your heir keeps the family house and the chest, but starts with only what a wanderer carries and must learn everything anew." % p.name)
 	_button("Continue as the heir", func(): main.continue_as_heir())
+
+
+## The death screen's words for what took the last of the player's health (B8-020).
+func death_text(src: String) -> String:
+	match src:
+		"hunger":
+			return "You starved."
+		"spoiled food":
+			return "Spoiled food made you fatally sick."
+		"":
+			return "You died of your wounds."
+	return "Killed by %s." % src
 
 
 # ---------------------------------------------------------------- people ---------------------

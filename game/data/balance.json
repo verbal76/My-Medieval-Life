@@ -14,6 +14,11 @@
   "starve_damage_per_hour": 2.0,
   "player_hunger_per_hour": 3.0,
   "player_stamina_regen_per_second": 8.0,
+  "sprint_speed": 1.5,
+  "sprint_stamina_per_sec": 12.0,
+  "sprint_min_stamina": 12.0,
+  "sprint_toggle": false,
+  "_sprint_note": "B8-027: sprint multiplies the player's speed by sprint_speed and costs sprint_stamina_per_sec net of regeneration; it ends when stamina runs out and cannot start below sprint_min_stamina. L3 toggles it on a pad; Shift is held on a keyboard unless sprint_toggle is true (then Shift toggles). Agent proposal, provisional.",
   "start_coins_villager": [
     8,
     30
@@ -281,6 +286,10 @@
   "mobility_unsustainable_days": 3,
   "job_switch_cooldown_days": 7,
   "job_return_days": 14,
+  "_succession_note": "Essential trades are handed on (B8-016, owner 2026-10-19: apprentice, then newcomer; the numbers are agent proposals, provisional): when a smith, carpenter, tanner, cook, tavernkeeper or merchant dies, and when the last farmer, woodcutter or miner does, the post is open for succession_days; then an adult without a trade (the dead worker's household first) takes it as an apprentice; with none, a newcomer arrives with the next caravan (at the latest newcomer_max_days after the death) with newcomer_coins of their own and takes the post, the workstation and a home.",
+  "succession_days": 3,
+  "newcomer_max_days": 10,
+  "newcomer_coins": 60,
   "job_switch_margin": 1.25,
   "job_switch_min_gain": 2,
   "field_workers_max": 2,

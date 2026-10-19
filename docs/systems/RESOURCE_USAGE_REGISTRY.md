@@ -12,7 +12,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 | Count | Value |
 |---|---|
-| Implemented harvestable node types | 15 (11 player-harvestable) |
+| Implemented harvestable node types | 16 (12 player-harvestable) |
 | Materials the nodes produce | 13: blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, red_berries, stone, wheat |
 | Production chains documented (node product to finished item) | 34 (33 workable, 1 blocked by gold ore) |
 | Materials with no current use | 0 |
@@ -27,6 +27,11 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 - **blueberries** (2 a cycle)
   - used as it is: eaten (6 food)
+
+### `boulder` · Boulder (implemented)
+
+- **stone** (1 a cycle)
+  - used as it is: building a bakehouse; building a carpentry; building a house; building a smithy; bought by the merchant raw; Bought for repairs and public works or quarried for the manor (quarry job), carried to the works yard and used up mending (mend).
 
 ### `chicken_pen` · Chickens (implemented)
 
@@ -227,10 +232,10 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | plank | 0.5 log | `tree` | - |
 | pottage | 0.33 wheat | `wheat_field` | - |
 | roast_meat | 0.5 log, 0.5 meat | `chicken_pen`, `cow_pen`, `pig_pen`, `sheep_pen`, `tree`, `wild_boar`, `wild_rabbit` | - |
-| building: bakehouse | 20 log, 30 stone | `stone_seam`, `tree` | stone: import |
-| building: carpentry | 30 log, 15 stone | `stone_seam`, `tree` | stone: import |
-| building: house | 25 log, 20 stone | `stone_seam`, `tree` | stone: import |
-| building: smithy | 4 coal, 8 iron_ore, 20 log, 30 stone | `coal_seam`, `iron_seam`, `stone_seam`, `tree` | coal: import; iron_ore: import; stone: import |
+| building: bakehouse | 20 log, 30 stone | `boulder`, `stone_seam`, `tree` | stone: import |
+| building: carpentry | 30 log, 15 stone | `boulder`, `stone_seam`, `tree` | stone: import |
+| building: house | 25 log, 20 stone | `boulder`, `stone_seam`, `tree` | stone: import |
+| building: smithy | 4 coal, 8 iron_ore, 20 log, 30 stone | `boulder`, `coal_seam`, `iron_seam`, `stone_seam`, `tree` | coal: import; iron_ore: import; stone: import |
 
 ## Every item: sources and uses
 
@@ -265,7 +270,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `log` Log | resource | node `tree` ×4; start_stock `start_0` | building `bakehouse` ×10; building `carpentry` ×15; building `house` ×10; building `smithy` ×10; buyer `carpenter` ×30; buyer `cook` ×10; buyer `merchant_raw` ×20; export `caravan`; fuel `log`; fuel `log`; manor_job `log`; quest `wood_for_the_hearth` ×5; quest `work_the_woods` ×6; recipe `roast_meat` ×1; recipe `saw_planks` ×1 |
 | `meat` Raw meat | resource | node `chicken_pen` ×1; node `cow_pen` ×6; node `pig_pen` ×4; node `sheep_pen` ×3; node `wild_boar` ×4; node `wild_rabbit` ×1; start_stock `start_0` | buyer `cook` ×15; buyer `merchant_food` ×10; export `caravan`; recipe `roast_meat` ×1 |
 | `oak_sapling` Oak sapling | resource | node `tree` ×1 | plant `oak_sapling` |
-| `pickaxe` Pickaxe | tool | recipe `forge_pickaxe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; tool `coal_seam`; tool `copper_seam`; tool `iron_seam`; tool `stone_seam` |
+| `pickaxe` Pickaxe | tool | recipe `forge_pickaxe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `iron_seam`; tool `stone_seam` |
 | `pine_sapling` Pine sapling | resource | node `tree` ×1 | plant `pine_sapling` |
 | `plain_clothes` Plain clothes | armor | start_kit `player_start_items` ×1 | equip `armor` |
 | `plank` Plank | resource | recipe `saw_planks` ×2; start_stock `start_0` | building `bakehouse` ×20; building `carpentry` ×30; building `house` ×30; building `smithy` ×20; buyer `merchant_raw` ×20; buyer `smith` ×10; export `caravan`; manor_job `plank`; recipe `forge_axe` ×1; recipe `forge_copper_sword` ×1; recipe `forge_hammer` ×1; recipe `forge_pickaxe` ×1 |
@@ -273,9 +278,9 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `red_berries` Red berries | food | node `red_berry_bush` ×2 | food `red_berries` |
 | `roast_meat` Roast meat | food | recipe `roast_meat` ×2; start_stock `start_0` | buyer `merchant_food` ×10; buyer `tavernkeeper` ×20; export `caravan`; food `roast_meat` |
 | `rotten_apple` Rotten apple | food | start_kit `player_start_items` ×1 | food `rotten_apple` |
-| `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `coal_seam`; tool `copper_seam`; tool `iron_seam`; tool `stone_seam` |
+| `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `iron_seam`; tool `stone_seam` |
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
-| `stone` Stone | resource | import `caravan`; node `stone_seam` ×1; start_stock `start_0` | building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `smithy` ×30; buyer `merchant_raw` ×40; manor_job `stone` |
+| `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `stone_seam` ×1; start_stock `start_0` | building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `smithy` ×30; buyer `merchant_raw` ×40; manor_job `stone` |
 | `wheat` Wheat | resource | node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_3` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `brew_ale` ×3; recipe `cook_pottage` ×2 |
 
 ## Code-defined uses and sources
@@ -323,7 +328,7 @@ Items with no source at all: `apple`, `gold_ore`. Items only in the player's sta
 
 ### Finite resources with no replacement
 
-None of the finite node types: once a seam is worked out, the caravan imports its ore (`coal_seam, copper_seam, iron_seam, stone_seam`). Gold ore has no source at all (see the exceptions).
+None of the finite node types: once a seam is worked out, the caravan imports its ore (`boulder, coal_seam, copper_seam, iron_seam, stone_seam`). Gold ore has no source at all (see the exceptions).
 
 ### Chains dependent on imports
 
