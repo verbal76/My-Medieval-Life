@@ -24,6 +24,13 @@ The key design aspiration is **systemic emergence**: consequences arise from int
 7. **Complexity should create choices, not chores.** Allow specialization, hired labor, and eventual workshop production to reduce repetition.
 8. **The world is host-owned and pauses when closed.** No requirement for offline, real-time simulation after the host stops the game.
 9. **Data-driven and extensible.** Hundreds or thousands of resources, recipes, and item types should be possible without rewriting core logic.
+10. **Generational memory and living history** (owner directive 2026-10-19, `docs/directives/2026-10-19_memory_refuges_politics.md` section 40). Significant actions must be capable of becoming persistent historical events whose consequences can influence future generations. NPC knowledge must have plausible sources, familial relationships must be understood, and memories must connect to actual people, resources, properties, and outcomes.
+11. **Protected ecological continuity** (same directive). Wildlife populations must be finite and responsive to hunting and environmental pressures, while protected breeding refuges allow gradual, habitat-dependent recovery through reproduction and dispersal.
+12. **Living political agency and democratic consequences** (same directive). Eligible NPCs must cast genuine individual votes based on their knowledge, relationships, family histories, interests, and assessment of candidates. Political offices must have real responsibilities and consequences. Elections, governance, and political succession must continue independently of the player and persist across generations.
+
+The directive refers to "16 World Design Rules". The repository holds these nine principles, plus the rules in
+`CLAUDE.md` and `docs/LIVING_WORLD_ALIGNMENT.md`; no list of 16 was found, so rules 10 to 12 continue this list
+(`docs/release/BUILD_14_OPEN_ITEMS_AUDIT.md`, owner action list).
 
 ## 2. Confirmed direction versus open design questions
 

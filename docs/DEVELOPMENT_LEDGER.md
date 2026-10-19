@@ -61,15 +61,51 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it (owner playtest) | VERIFIED (headless) | staging `60a365b` | start_test: A mines with a villager there, Y and T talk, no offer with nobody near; T prompt imported with provenance. Not run with a real controller |
 | B14-02 | Villagers' home production: forage, brew poultices at home, treat their own wounds | VERIFIED | staging `b94dc22` | home_test (healing, foraging and brewing, an 8-day village with coins conserved) |
 | B14-03 | House storefronts (player and villager households) | VERIFIED | staging `a9c6db0`, `d01376c` | home_test (player storefront incl. save/load, villager build, keeper, buying medicine); screenshot looked at; storefront_coins raised to 150 in `d01376c` |
-| B14-04 | Cart parts and handcarts (wheel, axle, ironwork, handcart) | VERIFIED | staging `d01376c` | home_test (carpenter, smith, household assembly or purchase, 12-day run with coins conserved). The handcart has no use yet (B14-06) |
+| B14-04 | Cart parts and handcarts (wheel, axle, ironwork, handcart) | VERIFIED | staging `d01376c` | home_test (carpenter, smith, household assembly or purchase, 12-day run with coins conserved). Handcarts are used since B14-06 |
 | B14-05 | Local-availability pricing | VERIFIED | staging `75093bf` | home_test::test_local_pricing; business_test (a dearer stall loses the sale) |
-| B14-06 | Carts in play: pulled storage, parking, hubs, deliveries | NOT STARTED | - | Owner-approved; next in the owner's order |
+| B14-06 | Carts in play: pulled storage, parking, cart stops, deliveries, household market runs | VERIFIED (headless) | staging `512f1bc`, `f9fb853`, `8ae29c2` | Set down, pull (slower walk), park, fill like a chest, owner/family/hired help only, theft from another's cart, two market cart stops where the player's attendant unloads into the stall, households' market runs, save/load (home_test::test_carts_in_play, INT-146); screenshot looked at 2026-10-19; wiki updated. Stand-in art (mine cart). "Hubs" are the two market cart stops; more hubs not built. Not tried on a device |
 | B14-07 | Cliff steps, wooden stairs and walkways | NOT STARTED | - | Owner answers recorded (task after carts) |
 | B14-08 | Forest animals (MiniFolks): grazers, predators, fox raids, fights | VERIFIED | staging `2caca5a` | wildlife_test (50 checks incl. a 20-day food chain); screenshot looked at; also fixes the player's waypoint overshoot |
 | B14-09 | Skeletons in caves and uncleared woods | NOT STARTED | - | Owner answers recorded; only the sword skeleton is in the free pack |
-| B14-10 | Craftpix farm plants, produce and crates, fruit trees | NOT STARTED | - | Pack in private-assets; questions to the owner first |
-| B14-11 | Animal Farm pack (horse and farm animals) | NOT STARTED | - | Pack in private-assets; 1.0 is a .rar the tools cannot read |
+| B14-10 | Craftpix farm plants, produce and crates, fruit trees | PARTIALLY COMPLETED | staging `f9fb853` | Apple trees in play (INT-147, home_test::test_apple_trees). Not done: crop growth stages, produce icons, crates as storefront displays, plum and yellow-fruit trees (docs/assets/packs.json) |
+| B14-11 | Animal Farm pack (horse and farm animals) | BLOCKED (owner decision) | staging `a91b8f1`, `f9fb853` | Pack extracted; horse imported at 1/3 with the "farm" sprite layout (wildlife_test). How horses enter the village and what they do (plough, carts, riding) is the owner's call (CLAUDE.md s.11); options in the Build 14 audit |
 | B14-12 | Sprite list with pixel-grid copies for the owner | NOT STARTED | - | Requested with the cliff work |
+| B14-13 | A controller connected to a phone hides the touch buttons (owner, 2026-10-19 18:25) | VERIFIED (headless) | staging `1458da8` | `joy_connection_changed` and a pad present at start switch to the pad scheme; unplugging returns a phone to touch (start_test). Not tried with a real phone and controller |
+| CQ-01 | Sword responsiveness and hit detection (owner directive `docs/directives/2026-10-19_sword_combat.md`) | VERIFIED (headless) | staging `3e283b6` | combat_test (41 checks, CI); real Android touch feel not verified; archery not authorised |
+| MP-01 | Player-hosted multiplayer, two-player LAN milestone (`docs/directives/2026-10-19_multiplayer_foundation.md`) | IN PROGRESS | `wip/multiplayer` `d18d7d1` (isolated; not in staging) | Host/join menus, UDP discovery, identity by key hash, host-validated movement, reconnect and host restart restore the guest; shared pick_fruit; net_test 36 checks with separate processes; all single-player suites pass on the branch. Guests can only walk. Not tried on two real devices; Android hosting unverified (docs/MULTIPLAYER.md) |
+| GM-01 | Generational memory and historical consequences (`docs/directives/2026-10-19_memory_refuges_politics.md` Part I) | NOT STARTED | — | Depends on DVW-B1 relationships. Acceptance: the 30-planks multigenerational chain from real records |
+| WR-01 | Protected wildlife breeding refuges, cohorts, dispersal (same directive Part II) | NOT STARTED | — | Will replace the scavenging floor of `f9fb853` |
+| VP-01 | Living village politics, elections, civic offices (same directive Part III) | NOT STARTED | — | Depends on GM-01 and DVW-B1; directive section 32 lists its tests |
+| WDR-10..12 | World design rules 10-12: generational memory, ecological continuity, political agency (same directive s.40) | COMPLETED | staging (this audit) | Added to `MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` s.1 after the nine existing principles; no 16-rule list exists |
+| DVW-B1 | Villager relationships: favours, gifts, harms, gossip (owner chose, `749a9cd`) | NOT STARTED | — | GM-01 and VP-01 build on it |
+| DVW-B2 | Assault and killing as recorded, fined crimes; what passes to an heir | NOT STARTED | — | Today an attack only turns guards hostile |
+| DVW-B3 | Coin sinks worth spending on (luxuries, feasts, weddings, offerings, heriot) | NOT STARTED | — | Sized after DVW-A3's re-measure |
+| DVW-B4 | Goods decay and wear (grain spoils; clothes, armour and carts wear) | NOT STARTED | — | |
+| DVW-B5 | Predictable taxes with hysteresis, announced in advance | NOT STARTED | — | |
+| DVW-B6 | Wildlife wandering in from the overworld | NOT STARTED | — | Overlaps WR-01 dispersal; build together |
+| DVW-B7 | Life chronicle, titles and a memorial | NOT STARTED | — | Overlaps GM-01 |
+| DVW-B9 | Readable danger: howl and roar cues, lethal-need warnings, cause on the succession screen | PARTIALLY COMPLETED | staging | Cause of death exists (B8-020); howl/roar rows unused; no lethal-need warning |
+| DVW-A2 | Rotate several dated save backups instead of one .bak | NOT STARTED | — | SaveStore keeps one .bak |
+| DVW-A3 | Re-measure the money supply, 100 and 365 days, no player | IN PROGRESS | staging `1458da8` | Runs started 2026-10-19 (seeds 1-2 at 100 days, seed 1 at 365); results go in LONG_RUN_SIMULATION.md |
+| DVW-A4 | Coin and goods source/sink ledger | NOT STARTED | — | |
+| DVW-A5 | Exploit test (arbitrage, round trips, cornering, flooding) | NOT STARTED | — | Plus the owner question whether honest arbitrage is intended |
+| DVW-A6 | Coins and goods conserved across save/load | PARTIALLY COMPLETED | staging | Coins checked across load in run_tests and start_test; goods not |
+| DVW-A7 | Over-production from raising skills by use | NOT STARTED | — | |
+| DVW-A8 | Audit player-only perks against the same rules | NOT STARTED | — | Known: saplings, overworld gathering, fireball; NPCs craft regardless of skill |
+| DVW-A9 | The player can always escape predators and bandits | NOT STARTED | — | |
+| DVW-A12 | Keep rules in core, not UI (audit list) | NOT STARTED | — | Crime and storefront-target rules still in main.gd |
+| DVW-A14 | Play one whole life before each release | NOT STARTED | — | Add to TESTING_CHECKLIST |
+| FR-01 | Lizards and spiders as enemies (owner, 2026-10-18: "good enemies") | BLOCKED (art) | — | No lizard or spider pack supplied; Puny Monsters has spiders for caves (with B14-09) |
+| FR-02 | Forgotten Memories waterfalls, fences and props (owner, 2026-10-19) | NOT STARTED | — | Pack stored and credited; ramps go with B14-07 |
+| FR-03 | Cooking raw meat outside the village: a campfire (owner request, Build 8 testing) | NOT STARTED | — | Recorded in BUILD_8_ISSUES as "needs owner approval"; the owner asked for it, so it is approved |
+| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list (B12 audit) | NOT STARTED | — | |
+| FR-05 | Title window opens scrolled to the bottom (Build 13 packet) | NOT STARTED | — | Not investigated |
+| FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits (B12 audit) | PARTIALLY COMPLETED | staging | Sword fighting page added (CQ-01); carts and apple trees added (`8ae29c2`) |
+| FR-07 | economy_sim and households_sim not run by CI | NOT STARTED | — | Both exit 1 on failure; long, so a short-day variant in CI |
+| FR-08 | Music and sound (volume sliders control nothing) | BLOCKED (assets) | — | No audio supplied |
+| FR-09 | Crime from desperation (owner design intent 2026-10-17: hunger can drive theft and violence) | DEFERRED (owner: "no desperation crime yet") | — | Revisit with DVW-B2 and VP-01 (constables) |
+| FR-10 | Archery | DEFERRED (owner: future, not authorised) | — | Named in the sword directive as planned, not for now |
+| FR-11 | Personality, prestige and migration from the owner's living-society list (2026-10-17) | STATUS UNKNOWN | staging (partly) | Apprenticeships, memories (8 events), migration of newcomers and families exist; personality traits and prestige not found; scope to confirm against GM-01/VP-01 |
 
 ## Decisions in this run
 
