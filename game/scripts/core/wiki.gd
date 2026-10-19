@@ -438,7 +438,15 @@ func _animals() -> void:
 		if int(a.get("hide", 0)) > 0:
 			ls.append("item:hide")
 		blocks.append(links(ls))
-		blocks.append(p("Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown." if not wild else "Wild animals graze and breed in the woods. Hunting them takes a weapon."))
+		var diet: String = {"graze": "It grazes in its wood.", "seeds": "It picks seeds in its wood.",
+			"hunt": "It hunts %s in its wood." % ", ".join((a.get("prey", []) as Array).map(func(k): return str(an[k].name).to_lower())),
+			"omnivore": "It eats ripe berries near its wood and hunts %s." % ", ".join((a.get("prey", []) as Array).map(func(k): return str(an[k].name).to_lower()))}.get(str(a.get("diet", "graze")), "")
+		if a.has("raids"):
+			diet += " At night a hungry one takes %s from the pens." % str(an[a.raids].name).to_lower()
+		if bool(a.get("people", false)):
+			diet += " Struck, it fights back (%d a bite), and a starving one goes for a person alone in its wood." % int(a.bite)
+		blocks.append(p("Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown." if not wild
+				else "Wild animals feed and breed in the woods. " + diet + " Hunting them takes a weapon."))
 		add_page("animal:" + id, str(a.name), "animals", blocks, icon_path(str(GameData.resources.nodes.get(node.trim_prefix("node:"), {}).get("icon", ""))), id)
 
 
@@ -558,7 +566,7 @@ func _systems() -> void:
 		links(["sys:death", "sys:saving", "sys:family"])])
 	sys.call("animal_life", "Animals through life", [
 		p("Animals are newborn, juvenile, adult and elderly by their age in game days. Only adults breed, and breeding slows as an area fills up. The elderly move slower and die of old age somewhere in their last stage. Young animals are drawn with the baby art. Each animal's page lists its stage lengths."),
-		links(["animal:cow", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "sys:calendar"])])
+		links(["animal:cow", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "animal:deer", "animal:wolf", "animal:fox", "animal:bear", "animal:bird", "sys:calendar"])])
 	sys.call("saving", "Saving and your heir", [
 		p("Saves are versioned and keep your world. Resting at home and the pause menu's Save write the save; Continue loads it. If you die, an heir takes over: see Inheritance."),
 		links(["sys:inheritance", "sys:death", "guide:save"])])

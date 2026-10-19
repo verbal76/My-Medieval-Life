@@ -13,10 +13,10 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 19 (13 the player may harvest, 6 the keeper's livestock).
+- Implemented node types: 24 (18 the player may harvest, 6 the keeper's livestock).
 - Materials they produce: 25 (blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
 - Finite node types: 6 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, stone_seam); with no replacement once worked out: 1 (gold_seam).
-- At risk of overharvesting: 6 (coal_seam, copper_seam, iron_seam, stone_seam, wild_boar, wild_rabbit).
+- At risk of overharvesting: 4 (coal_seam, copper_seam, iron_seam, stone_seam).
 - Not Gather-compatible: 6 (chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen).
 
 | Node | Category | Origin | Tool | Skill | Yields a cycle | Depletion | Player | NPCs | Gather | Status |
@@ -38,8 +38,13 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
 | `tree` Tree | wood | natural | axe | woodcutting | 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
+| `wild_bear` Bear | game | natural | weapon | combat | 2 hide, 6 meat | breeds | yes | no | yes | implemented |
+| `wild_bird` Bird | game | natural | weapon | combat | 1 feather | breeds | yes | yes | yes | implemented |
 | `wild_boar` Wild boar | game | natural | weapon | combat | 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
+| `wild_deer` Deer | game | natural | weapon | combat | 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
+| `wild_fox` Fox | game | natural | weapon | combat | 1 hide, 1 meat | breeds | yes | no | yes | implemented |
 | `wild_rabbit` Rabbit | game | natural | weapon | combat | 1 meat, 1 rabbit_pelt | breeds | yes | yes | yes | implemented |
+| `wild_wolf` Wolf | game | natural | weapon | combat | 1 hide, 2 meat | breeds | yes | no | yes | implemented |
 
 ## Nodes
 
@@ -349,6 +354,42 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Risk:** Not at risk: farmers hold surplus grain (14495 wheat by day 365, seed 1; LONG_RUN_SIMULATION.md finding 6).
 - **Code:** `game/scripts/core/world.gd::take_crop`, `game/scripts/core/world.gd::player_harvest`, `game/scripts/core/world.gd::set_field`, `game/scripts/core/world.gd::_on_hour`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_farmer`, `game/scripts/core/quests.gd::hired_harvest`
 
+### `wild_bear` · Bear
+
+- **Status:** implemented. **Category:** game, natural. **Found by:** `{"kind": "animal", "species": "bear"}`.
+- **Where:** The woods in the north-west. **In the world:** 4 at the start (1 male, 1 female in each of 2 woods), at most 2 a wood; hunters keep 2 adults.
+- **Action:** Hunting (attack): "Hunt the bear". **Range (tiles):** 1.1. An attack reaches 1.1 tiles around a point 0.8 tiles in front of the player (main.gd attack).
+- **Tool:** weapon. Any weapon helps (bare hands do 2 damage). The smith and the goods merchant sell swords, or forge one at the anvil. Where to get it: `copper_sword`: recipe (forge_copper_sword); resold by the merchant_goods; `iron_sword`: recipe (forge_iron_sword); resold by the merchant_goods; `rusty_sword`: start kit (player_start_items).
+- **Skill:** combat, level 0.
+- **Time:** `hunt_minutes` (40 game minutes). A bear struck fights back, biting for animals.bear.bite; a starving one goes for a person alone in its wood. It eats ripe berries near its wood first.
+- **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
+- **Yields a cycle:** 2 hide, 6 meat. A young bear gives half the meat and no hide. Bears are tough (animals.bear.hp).
+- **Total:** animals.bear.start (males, females) in each wood it lives in (animals.bear.only), at most animals.bear.woods_cap a wood.
+- **Depletion:** breeds. Litters while a well-fed pair shares the wood and it is under its cap; nobody takes the last grown male or female of a wood (Fauna.spare).
+- **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers no. The village hunter leaves it alone (animals.bear.game is false); only the player hunts it.
+- **Gather mode:** yes. **Icon:** `meat`.
+- **Risk:** A single pair; numbers provisional (B14).
+- **Code:** `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::_move`, `game/scripts/main.gd::_hit_animal`
+
+### `wild_bird` · Bird
+
+- **Status:** implemented. **Category:** game, natural. **Found by:** `{"kind": "animal", "species": "bird"}`.
+- **Where:** The woods in the north-west and north-east. **In the world:** 12 at the start (3 male, 3 female in each of 2 woods), at most 10 a wood; hunters keep 2 adults.
+- **Action:** Hunting (attack): "Hunt the bird". **Range (tiles):** 1.1. An attack reaches 1.1 tiles around a point 0.8 tiles in front of the player (main.gd attack).
+- **Tool:** weapon. Any weapon helps (bare hands do 2 damage). The smith and the goods merchant sell swords, or forge one at the anvil. Where to get it: `copper_sword`: recipe (forge_copper_sword); resold by the merchant_goods; `iron_sword`: recipe (forge_iron_sword); resold by the merchant_goods; `rusty_sword`: start kit (player_start_items).
+- **Skill:** combat, level 0.
+- **Time:** `hunt_minutes` (40 game minutes). Birds flee within animals.bird.flee tiles; foxes take them.
+- **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
+- **Yields a cycle:** 1 feather. A bird gives a feather and no meat (animals.bird.meat is 0).
+- **Total:** animals.bird.start (males, females) in each wood, at most animals.bird.woods_cap a wood.
+- **Depletion:** breeds. Litters while a well-fed pair shares the wood and it is under its cap; nobody takes the last grown male or female of a wood (Fauna.spare).
+- **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers yes. Hunters leave animals.bird.keep + wildlife.hunter_spare a wood; wolves, foxes and bears hunt it too (Fauna._predate).
+- **Gather mode:** yes. **Icon:** `feather`.
+- **Risk:** Numbers provisional (B14).
+- **Code:** `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::_move`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/npc_brain.gd::_hunter`
+
 ### `wild_boar` · Wild boar
 
 - **Status:** implemented. **Category:** game, natural. **Found by:** `{"kind": "animal", "species": "boar"}`.
@@ -364,8 +405,44 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Hunters (NPCBrain._hunter, act "hunt") leave animals.boar.keep adults a wood; bandits poach (act "poach").
 - **Gather mode:** yes. **Icon:** `meat`.
-- **Risk:** Overharvested: hunters kill down to the sex-blind floor of 2 adults a wood on day 1; boar stop breeding from about day 79-250 (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 2; LONG_RUN_SIMULATION.md finding 8).
+- **Risk:** Was overharvested to a sex-blind floor of 2 adults (LONG_RUN_SIMULATION.md finding 8); since B14 nobody takes the last grown male or female of a wood and the hunter leaves wildlife.hunter_spare more, but wolves and bears now hunt boar too.
 - **Code:** `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::nearest_game`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/npc_brain.gd::_hunter`
+
+### `wild_deer` · Deer
+
+- **Status:** implemented. **Category:** game, natural. **Found by:** `{"kind": "animal", "species": "deer"}`.
+- **Where:** The woods in the north-west and north-east. **In the world:** 12 at the start (2 male, 4 female in each of 2 woods), at most 10 a wood; hunters keep 2 adults.
+- **Action:** Hunting (attack): "Hunt the deer". **Range (tiles):** 1.1. An attack reaches 1.1 tiles around a point 0.8 tiles in front of the player (main.gd attack).
+- **Tool:** weapon. Any weapon helps (bare hands do 2 damage). The smith and the goods merchant sell swords, or forge one at the anvil. Where to get it: `copper_sword`: recipe (forge_copper_sword); resold by the merchant_goods; `iron_sword`: recipe (forge_iron_sword); resold by the merchant_goods; `rusty_sword`: start kit (player_start_items).
+- **Skill:** combat, level 0.
+- **Time:** `hunt_minutes` (40 game minutes). Deer flee the player and wolves within animals.deer.flee tiles.
+- **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
+- **Yields a cycle:** 1 hide, 4 meat. A young deer gives half the meat and no hide. Stags (males) carry antlers; does do not.
+- **Total:** animals.deer.start (males, females) in each wood, at most animals.deer.woods_cap a wood.
+- **Depletion:** breeds. Litters while a well-fed pair shares the wood and it is under its cap; nobody takes the last grown male or female of a wood (Fauna.spare).
+- **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers yes. Hunters leave animals.deer.keep + wildlife.hunter_spare a wood; wolves, foxes and bears hunt it too (Fauna._predate).
+- **Gather mode:** yes. **Icon:** `meat`.
+- **Risk:** Prey of wolves and bears as well as the hunter (B14); provisional numbers, watch the 20-day wildlife test.
+- **Code:** `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::_move`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/npc_brain.gd::_hunter`
+
+### `wild_fox` · Fox
+
+- **Status:** implemented. **Category:** game, natural. **Found by:** `{"kind": "animal", "species": "fox"}`.
+- **Where:** The woods in the north-west and north-east. **In the world:** 4 at the start (1 male, 1 female in each of 2 woods), at most 4 a wood; hunters keep 2 adults.
+- **Action:** Hunting (attack): "Hunt the fox". **Range (tiles):** 1.1. An attack reaches 1.1 tiles around a point 0.8 tiles in front of the player (main.gd attack).
+- **Tool:** weapon. Any weapon helps (bare hands do 2 damage). The smith and the goods merchant sell swords, or forge one at the anvil. Where to get it: `copper_sword`: recipe (forge_copper_sword); resold by the merchant_goods; `iron_sword`: recipe (forge_iron_sword); resold by the merchant_goods; `rusty_sword`: start kit (player_start_items).
+- **Skill:** combat, level 0.
+- **Time:** `hunt_minutes` (40 game minutes). Foxes flee the player within animals.fox.flee tiles and never attack people.
+- **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
+- **Yields a cycle:** 1 hide, 1 meat. A young fox gives half the meat and no hide.
+- **Total:** animals.fox.start (males, females) in each wood, at most animals.fox.woods_cap a wood.
+- **Depletion:** breeds. Litters while a well-fed pair shares the wood and it is under its cap; nobody takes the last grown male or female of a wood (Fauna.spare).
+- **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers no. The village hunter leaves it alone (animals.fox.game is false); only the player hunts it.
+- **Gather mode:** yes. **Icon:** `meat`.
+- **Risk:** Takes pen chickens at night (wildlife.fox_raid_chance_per_hour); numbers provisional (B14).
+- **Code:** `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::_move`, `game/scripts/main.gd::_hit_animal`
 
 ### `wild_rabbit` · Rabbit
 
@@ -382,8 +459,26 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Hunters leave animals.rabbit.keep adults a wood; bandits poach.
 - **Gather mode:** yes. **Icon:** `meat`.
-- **Risk:** Overharvested: rabbits stop breeding from about day 10 (seed 1), frozen at 4 adults (LONG_RUN_SIMULATION.md finding 8).
+- **Risk:** Was frozen at 4 adults from about day 10 (LONG_RUN_SIMULATION.md finding 8); since B14 a breeding pair always remains, but foxes and wolves now hunt rabbits too.
 - **Code:** `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::_move`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/npc_brain.gd::_hunter`
+
+### `wild_wolf` · Wolf
+
+- **Status:** implemented. **Category:** game, natural. **Found by:** `{"kind": "animal", "species": "wolf"}`.
+- **Where:** The woods in the north-west and north-east. **In the world:** 4 at the start (1 male, 1 female in each of 2 woods), at most 4 a wood; hunters keep 2 adults.
+- **Action:** Hunting (attack): "Hunt the wolf". **Range (tiles):** 1.1. An attack reaches 1.1 tiles around a point 0.8 tiles in front of the player (main.gd attack).
+- **Tool:** weapon. Any weapon helps (bare hands do 2 damage). The smith and the goods merchant sell swords, or forge one at the anvil. Where to get it: `copper_sword`: recipe (forge_copper_sword); resold by the merchant_goods; `iron_sword`: recipe (forge_iron_sword); resold by the merchant_goods; `rusty_sword`: start kit (player_start_items).
+- **Skill:** combat, level 0.
+- **Time:** `hunt_minutes` (40 game minutes). A wolf struck fights back for wildlife.anger_seconds, biting for animals.wolf.bite; a starving one goes for a person alone in its wood.
+- **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
+- **Yields a cycle:** 1 hide, 2 meat. A young wolf gives half the meat and no hide.
+- **Total:** animals.wolf.start (males, females) in each wood, at most animals.wolf.woods_cap a wood.
+- **Depletion:** breeds. Litters while a well-fed pair shares the wood and it is under its cap; nobody takes the last grown male or female of a wood (Fauna.spare).
+- **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers no. The village hunter leaves it alone (animals.wolf.game is false); only the player hunts it.
+- **Gather mode:** yes. **Icon:** `meat`.
+- **Risk:** Starves when its prey is at its breeding stock; numbers provisional (B14).
+- **Code:** `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/fauna.gd::_move`, `game/scripts/main.gd::_hit_animal`
 
 ## Not harvest nodes
 
@@ -439,5 +534,10 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `stone_seam` | Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `tree` | Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9). |
 | `wheat_field` | Not at risk: farmers hold surplus grain (14495 wheat by day 365, seed 1; LONG_RUN_SIMULATION.md finding 6). |
-| `wild_boar` | Overharvested: hunters kill down to the sex-blind floor of 2 adults a wood on day 1; boar stop breeding from about day 79-250 (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 2; LONG_RUN_SIMULATION.md finding 8). |
-| `wild_rabbit` | Overharvested: rabbits stop breeding from about day 10 (seed 1), frozen at 4 adults (LONG_RUN_SIMULATION.md finding 8). |
+| `wild_bear` | A single pair; numbers provisional (B14). |
+| `wild_bird` | Numbers provisional (B14). |
+| `wild_boar` | Was overharvested to a sex-blind floor of 2 adults (LONG_RUN_SIMULATION.md finding 8); since B14 nobody takes the last grown male or female of a wood and the hunter leaves wildlife.hunter_spare more, but wolves and bears now hunt boar too. |
+| `wild_deer` | Prey of wolves and bears as well as the hunter (B14); provisional numbers, watch the 20-day wildlife test. |
+| `wild_fox` | Takes pen chickens at night (wildlife.fox_raid_chance_per_hour); numbers provisional (B14). |
+| `wild_rabbit` | Was frozen at 4 adults from about day 10 (LONG_RUN_SIMULATION.md finding 8); since B14 a breeding pair always remains, but foxes and wolves now hunt rabbits too. |
+| `wild_wolf` | Starves when its prey is at its breeding stock; numbers provisional (B14). |

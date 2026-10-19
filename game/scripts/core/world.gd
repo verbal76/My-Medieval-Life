@@ -2618,6 +2618,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	farm = Farming.new(self)
 	if d.has("fauna"):
 		fauna.load_dict(d.fauna)
+		fauna.seed_new_species()              # B14: the forest animals join an older save's woods
 	else:
 		# save_version 1 (before animals): the deer count is dropped and the pens and woods are
 		# stocked as in a new game. Nothing the player owned is lost.

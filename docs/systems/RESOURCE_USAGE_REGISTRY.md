@@ -12,7 +12,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 | Count | Value |
 |---|---|
-| Implemented harvestable node types | 19 (13 player-harvestable) |
+| Implemented harvestable node types | 24 (18 player-harvestable) |
 | Materials the nodes produce | 25: blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool |
 | Production chains documented (node product to finished item) | 62 (62 workable, 0 blocked by gold ore) |
 | Materials with no current use | 2: feather, handcart |
@@ -220,6 +220,24 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
   - 2 wheat → **6 pottage** (cook_pottage, stove)
   - 3 wheat → **1 bread** (knead_flatbread, prep)
 
+### `wild_bear` · Bear (implemented)
+
+- **hide** (2 a cycle)
+  - 1 hide → **1 leather** (tan_leather, workbench)
+    - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
+    - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
+    - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 4 leather → **1 leather_armor** (leather_armor, workbench)
+    - 2 leather → **1 leather_cap** (leather_cap, workbench)
+- **meat** (6 a cycle)
+  - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
+
+### `wild_bird` · Bird (implemented)
+
+- **feather** (1 a cycle)
+  - used as it is: bought by the merchant goods; bought by the passing caravan
+
 ### `wild_boar` · Wild boar (implemented)
 
 - **hide** (1 a cycle)
@@ -231,6 +249,32 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
 - **meat** (4 a cycle)
+  - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
+
+### `wild_deer` · Deer (implemented)
+
+- **hide** (1 a cycle)
+  - 1 hide → **1 leather** (tan_leather, workbench)
+    - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
+    - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
+    - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 4 leather → **1 leather_armor** (leather_armor, workbench)
+    - 2 leather → **1 leather_cap** (leather_cap, workbench)
+- **meat** (4 a cycle)
+  - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
+
+### `wild_fox` · Fox (implemented)
+
+- **hide** (1 a cycle)
+  - 1 hide → **1 leather** (tan_leather, workbench)
+    - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
+    - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
+    - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 4 leather → **1 leather_armor** (leather_armor, workbench)
+    - 2 leather → **1 leather_cap** (leather_cap, workbench)
+- **meat** (1 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
 ### `wild_rabbit` · Rabbit (implemented)
@@ -245,6 +289,19 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+
+### `wild_wolf` · Wolf (implemented)
+
+- **hide** (1 a cycle)
+  - 1 hide → **1 leather** (tan_leather, workbench)
+    - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
+    - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
+    - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 4 leather → **1 leather_armor** (leather_armor, workbench)
+    - 2 leather → **1 leather_cap** (leather_cap, workbench)
+- **meat** (2 a cycle)
+  - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
 ### Production chains
 
@@ -320,7 +377,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | Item or building | Raw materials | From nodes | Other sources |
 |---|---|---|---|
 | ale | 0.75 wheat | `player_field`, `wheat_field` | - |
-| amulet | 1 coal, 2 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `pig_pen`, `sheep_pen`, `wild_boar` | coal: import; copper_ore: import |
+| amulet | 1 coal, 2 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
 | axe | 2 coal, 4 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | bread | 0.5 egg, 1 wheat | `player_field`, `player_pen`, `wheat_field` | - |
 | cart_axle | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
@@ -337,13 +394,13 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | healing_tonic | 5 flower | `flower_patch`, `player_field` | - |
 | herbal_poultice | 2 flower | `flower_patch`, `player_field` | - |
 | herbal_tonic | 3 flower | `flower_patch`, `player_field` | - |
-| iron_armor | 5 coal, 2 hide, 10 iron_ore | `coal_seam`, `cow_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_boar` | coal: import; iron_ore: import |
+| iron_armor | 5 coal, 2 hide, 10 iron_ore | `coal_seam`, `cow_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
 | iron_bar | 1 coal, 2 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
-| iron_helmet | 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_boar` | coal: import; iron_ore: import |
-| iron_sword | 3 coal, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_boar` | coal: import; iron_ore: import |
-| leather | 1 hide | `cow_pen`, `pig_pen`, `sheep_pen`, `wild_boar` | - |
-| leather_armor | 4 hide | `cow_pen`, `pig_pen`, `sheep_pen`, `wild_boar` | - |
-| leather_cap | 2 hide | `cow_pen`, `pig_pen`, `sheep_pen`, `wild_boar` | - |
+| iron_helmet | 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| iron_sword | 3 coal, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| leather | 1 hide | `cow_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | - |
+| leather_armor | 4 hide | `cow_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | - |
+| leather_cap | 2 hide | `cow_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | - |
 | linen_bandage | 0.67 wool | `player_pen` | - |
 | lockpick | 0.33 coal, 0.67 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
 | padlock | 2 coal, 4 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
@@ -351,7 +408,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | plank | 0.5 log | `tree` | - |
 | plough | 2 coal, 4 iron_ore, 2 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | pottage | 0.33 wheat | `player_field`, `wheat_field` | - |
-| roast_meat | 0.5 log, 0.5 meat | `chicken_pen`, `cow_pen`, `pig_pen`, `sheep_pen`, `tree`, `wild_boar`, `wild_rabbit` | - |
+| roast_meat | 0.5 log, 0.5 meat | `chicken_pen`, `cow_pen`, `pig_pen`, `sheep_pen`, `tree`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_rabbit`, `wild_wolf` | - |
 | strong_healing_tonic | 10 flower, 0.75 wheat | `flower_patch`, `player_field`, `wheat_field` | - |
 | wool_cloth | 2 wool | `player_pen` | - |
 | building: apothecary | 18 log, 15 stone | `boulder`, `stone_seam`, `tree` | stone: import |
@@ -385,7 +442,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `copper_ring` Copper ring | ring | recipe `forge_copper_ring` ×1 | buyer `merchant_goods` ×3; equip `ring`; export `caravan` |
 | `copper_sword` Copper sword | weapon | recipe `forge_copper_sword` ×1; start_stock `start_0`; start_stock `start_2` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
 | `egg` Egg | food | node `player_pen` ×1 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `egg`; recipe `bake_egg_bread` ×1 |
-| `feather` Feathers | resource | node `chicken_pen` ×2 | buyer `merchant_goods` ×20; export `caravan` |
+| `feather` Feathers | resource | node `chicken_pen` ×2; node `wild_bird` ×1 | buyer `merchant_goods` ×20; export `caravan` |
 | `flower` Wild flower | resource | node `flower_patch` ×1; node `player_field` ×2 | buyer `sage` ×20; recipe `brew_healing_tonic` ×5; recipe `brew_poultice` ×2; recipe `brew_tonic` ×3 |
 | `gold_bar` Gold bar | resource | recipe `smelt_gold` ×1 | buyer `merchant_goods` ×4; export `caravan`; recipe `forge_gold_ring` ×1 |
 | `gold_ore` Gold ore | resource | node `gold_seam` ×1 | buyer `smith` ×10; recipe `smelt_gold` ×2 |
@@ -396,7 +453,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `herb_seed` Herb seed | resource | node `player_field` ×1 | plant `herb_seed` |
 | `herbal_poultice` Herbal poultice | medicine | recipe `brew_poultice` ×1 | **none** |
 | `herbal_tonic` Herbal tonic | food | recipe `brew_tonic` ×1 | food `herbal_tonic` |
-| `hide` Hide | resource | node `cow_pen` ×1; node `pig_pen` ×1; node `sheep_pen` ×1; node `wild_boar` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; quest `the_tanners_craft` ×2; recipe `tan_leather` ×1 |
+| `hide` Hide | resource | node `cow_pen` ×1; node `pig_pen` ×1; node `sheep_pen` ×1; node `wild_bear` ×2; node `wild_boar` ×1; node `wild_deer` ×1; node `wild_fox` ×1; node `wild_wolf` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; quest `the_tanners_craft` ×2; recipe `tan_leather` ×1 |
 | `iron_armor` Iron armour | armor | recipe `forge_iron_armor` ×1 | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
 | `iron_bar` Iron bar | resource | recipe `smelt_iron` ×1; start_stock `start_0` | building `smithy` ×4; buyer `merchant_goods` ×6; export `caravan`; manor_job `iron_bar`; recipe `craft_plough` ×2; recipe `forge_axe` ×2; recipe `forge_cart_axle` ×1; recipe `forge_cart_ironwork` ×1; recipe `forge_hammer` ×1; recipe `forge_iron_armor` ×5; recipe `forge_iron_helmet` ×2; recipe `forge_iron_sword` ×3; recipe `forge_lockpicks` ×1; recipe `forge_padlock` ×2; recipe `forge_pickaxe` ×2 |
 | `iron_helmet` Iron helmet | head | recipe `forge_iron_helmet` ×1 | buyer `merchant_goods` ×2; equip `head`; export `caravan` |
@@ -408,7 +465,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `linen_bandage` Linen bandage | medicine | recipe `sew_bandages` ×3; start_kit `player_start_items` ×2 | buyer `sage` ×8 |
 | `lockpick` Lockpick | resource | recipe `forge_lockpicks` ×3 | tool `lockpick` |
 | `log` Log | resource | node `tree` ×4; start_stock `start_0` | building `apothecary` ×8; building `bakehouse` ×10; building `carpentry` ×15; building `house` ×10; building `kitchen` ×8; building `quarters` ×10; building `smithy` ×10; building `storage` ×10; buyer `carpenter` ×30; buyer `cook` ×10; buyer `merchant_raw` ×20; export `caravan`; fuel `log`; fuel `log`; manor_job `log`; quest `wood_for_the_hearth` ×5; quest `work_the_woods` ×6; recipe `roast_meat` ×1; recipe `saw_planks` ×1 |
-| `meat` Raw meat | resource | node `chicken_pen` ×1; node `cow_pen` ×6; node `pig_pen` ×4; node `sheep_pen` ×3; node `wild_boar` ×4; node `wild_rabbit` ×1; start_stock `start_0` | buyer `cook` ×15; buyer `merchant_food` ×10; export `caravan`; recipe `roast_meat` ×1 |
+| `meat` Raw meat | resource | node `chicken_pen` ×1; node `cow_pen` ×6; node `pig_pen` ×4; node `sheep_pen` ×3; node `wild_bear` ×6; node `wild_boar` ×4; node `wild_deer` ×4; node `wild_fox` ×1; node `wild_rabbit` ×1; node `wild_wolf` ×2; start_stock `start_0` | buyer `cook` ×15; buyer `merchant_food` ×10; export `caravan`; recipe `roast_meat` ×1 |
 | `milk` Milk | food | node `player_pen` ×2 | buyer `cook` ×12; buyer `merchant_food` ×10; export `caravan`; food `milk`; recipe `press_cheese` ×3 |
 | `oak_sapling` Oak sapling | resource | node `tree` ×1 | plant `oak_sapling` |
 | `padlock` Padlock | resource | recipe `forge_padlock` ×1 | tool `padlock` |
@@ -500,8 +557,6 @@ on caravan stone after the stone seams are gone.
 - `copper_seam`: Overharvested: worked out on day 4 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
 - `iron_seam`: Overharvested: the iron seams were worked out on day 10 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
 - `stone_seam`: Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1.
-- `wild_boar`: Overharvested: hunters kill down to the sex-blind floor of 2 adults a wood on day 1; boar stop breeding from about day 79-250 (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 2; LONG_RUN_SIMULATION.md finding 8).
-- `wild_rabbit`: Overharvested: rabbits stop breeding from about day 10 (seed 1), frozen at 4 adults (LONG_RUN_SIMULATION.md finding 8).
 
 ### Exceptions recorded
 

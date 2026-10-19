@@ -1666,7 +1666,9 @@ func _route_step(_delta: float) -> Vector2:
 	if map.is_solid_world(goal) and walk_i >= walk_path.size() - 1:
 		target = walk_path[walk_path.size() - 1] + Vector2(0.5, 0.5)
 	var d := target - p.pos
-	if d.length() < 0.15:
+	# a waypoint is reached within 0.15 tiles, or within most of a frame's step: a long frame (a slow
+	# phone, a test's 0.1 s step) would otherwise overshoot it to and fro for ever
+	if d.length() < maxf(0.15, float(GameData.b("player_tiles_per_second")) * _sprint_scale() * _delta * 0.6):
 		if walk_i >= walk_path.size() - 1:
 			move_to = Vector2.INF
 			walk_goal = Vector2i(-1, -1)
@@ -2614,6 +2616,7 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 	_hit_fx(animal_sprites.get(a.id), before, a.hp, dmg)
 	_xp("combat", 2)
 	if a.hp > 0.0:
+		world.fauna.provoke(a, "player")            # a wolf or a bear fights back (B14)
 		return
 	var keeper: NPC = null
 	if not a.wild():

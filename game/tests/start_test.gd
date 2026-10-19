@@ -323,6 +323,17 @@ func _run() -> void:
 	# touch: Attack turns attack mode on; a tap on the bandit puts the sword on it; the player walks
 	# over and strikes once, and each further tap on it is another strike
 	p.pos = bandit.pos + Vector2(-4.0, 0)
+	for off in [Vector2(-4, 0), Vector2(4, 0), Vector2(0, 4), Vector2(0, -4), Vector2(-3, 3), Vector2(3, 3)]:
+		var clear := true                           # 4 tiles off with open ground all the way (the camp's spot depends on the seed)
+		var side: Vector2 = off.normalized().orthogonal() * 0.45
+		for k in range(0, 17):
+			for sd in [-side, Vector2.ZERO, side]:
+				var c: Vector2 = bandit.pos + off * (float(k) / 16.0) + sd
+				if main.map.is_solid_world(Vector2i(floori(c.x), floori(c.y))):
+					clear = false
+		if clear:
+			p.pos = bandit.pos + off
+			break
 	main.chase = null
 	main.attack_button()
 	check(main.attack_mode and main.chase == null, "Attack turns attack mode on")
@@ -854,6 +865,7 @@ func _run() -> void:
 	w.quests.offers.erase(tanner.id)
 	w.quests.refresh()
 	w.quests.offers[tanner.id] = "the_tanners_craft"         # (the dawn's offers may be full already)
+	tanner.pos = main.camera.get_screen_center_position() / main.T + Vector2(2, 0)     # markers show within sight of the camera
 	main._sync_diamonds()
 	check(main.diamonds.has(tanner.id) and main.diamonds[tanner.id].texture.resource_path.ends_with("skill.png"), "the tanner with a skill to teach shows the scroll")
 	ui.show_talk(tanner)

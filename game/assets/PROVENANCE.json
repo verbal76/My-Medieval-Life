@@ -1122,6 +1122,62 @@
    "sha256": "970740a455db94f22e3d32381c3ea69ea181c97235277840afb63253ca43e092"
   },
   {
+   "file": "assets/animals/mini_bear.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniBear.png",
+   "transform": "copied unchanged",
+   "sha256": "f6da7353bbd3d0813f9a698d50cb3a0dbbaaef65e62cbd062c1e08e86087cb28"
+  },
+  {
+   "file": "assets/animals/mini_bird.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniBird.png",
+   "transform": "copied unchanged",
+   "sha256": "4b4e2bf1d0bc51d3b1489458b839b0063b30ec1c0507711c0054b6d205ef77c3"
+  },
+  {
+   "file": "assets/animals/mini_boar.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniBoar.png",
+   "transform": "copied unchanged",
+   "sha256": "391c06b4b1f03a7400ce3a532c763ebb9034eb45470349d6cf80facab557ed09"
+  },
+  {
+   "file": "assets/animals/mini_bunny.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniBunny.png",
+   "transform": "copied unchanged",
+   "sha256": "18dbfd4840d7e96f855fc358c95e6a8a8cf80ae044cfa77f129832c1ff3e6561"
+  },
+  {
+   "file": "assets/animals/mini_doe.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniDeer1.png",
+   "transform": "copied unchanged",
+   "sha256": "d3006cc199323b9b8ad467f7c498be77833b8138245e95b176923184d447724a"
+  },
+  {
+   "file": "assets/animals/mini_fox.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniFox.png",
+   "transform": "copied unchanged",
+   "sha256": "cf0f0fadd0a4a6fd6842af84ac044938cd1e9cd76c6ca2bd5a32f1c6c7f81918"
+  },
+  {
+   "file": "assets/animals/mini_stag.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniDeer2.png",
+   "transform": "copied unchanged",
+   "sha256": "d1735fc76f0792786da234ccdbb9df67c9c50a134f01a4bc9ee7b098156a8cc4"
+  },
+  {
+   "file": "assets/animals/mini_wolf.png",
+   "source": "MiniFolks Forest Animals",
+   "member": "Outline/MiniWolf.png",
+   "transform": "copied unchanged",
+   "sha256": "a37fdfd27e84edb93588eb51ba9e38b6a7eb59aa1f20cedd8259a3c0828ae43a"
+  },
+  {
    "file": "assets/icons/bread.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/ui/items.png",

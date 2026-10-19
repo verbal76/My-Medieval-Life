@@ -300,8 +300,10 @@
       "kind": "wild",
       "skins": [
         "boar",
-        "boar_grey"
+        "boar_grey",
+        "mini_boar"
       ],
+      "skin_art": {"mini_boar": {"layout": "minifolks", "frame": 32}},
       "frame": 32,
       "layout": "puny",
       "hp": 25,
@@ -328,8 +330,10 @@
       "kind": "wild",
       "skins": [
         "rabbit",
-        "rabbit_grey"
+        "rabbit_grey",
+        "mini_bunny"
       ],
+      "skin_art": {"mini_bunny": {"layout": "minifolks", "frame": 32}},
       "frame": 17,
       "layout": "cozy",
       "hp": 4,
@@ -352,9 +356,25 @@
       "keep": 2,
       "flee": 3.5,
       "one": "rabbit"
-    }
+    },
+    "deer": {"name": "Deer", "kind": "wild", "skins": ["mini_doe"], "skins_m": ["mini_stag"], "frame": 32, "layout": "minifolks", "diet": "graze",
+      "hp": 18, "speed": 1.5, "grow_days": 4, "juvenile_days": 1, "elder_days": 60, "death_days": [72, 96], "breed_days": 6, "litter": 1,
+      "meat": 4, "hide": 1, "start": [2, 4], "woods_cap": 10, "keep": 2, "flee": 5.0, "one": "deer"},
+    "wolf": {"name": "Wolves", "kind": "wild", "skins": ["mini_wolf"], "frame": 32, "layout": "minifolks", "diet": "hunt", "prey": ["deer", "boar", "rabbit"],
+      "hunger_per_hour": 1.0, "hp": 22, "speed": 1.7, "grow_days": 5, "juvenile_days": 1, "elder_days": 64, "death_days": [72, 96], "breed_days": 10, "litter": 2,
+      "meat": 2, "hide": 1, "start": [1, 1], "woods_cap": 4, "keep": 2, "flee": 0.0, "bite": 6, "bite_seconds": 1.2, "people": true, "game": false, "one": "wolf"},
+    "fox": {"name": "Foxes", "kind": "wild", "skins": ["mini_fox"], "frame": 32, "layout": "minifolks", "diet": "hunt", "prey": ["rabbit", "bird"], "raids": "chicken",
+      "hunger_per_hour": 1.2, "hp": 8, "speed": 1.8, "grow_days": 3, "juvenile_days": 1, "elder_days": 40, "death_days": [48, 64], "breed_days": 8, "litter": 2,
+      "meat": 1, "hide": 1, "start": [1, 1], "woods_cap": 4, "keep": 2, "flee": 4.0, "bite": 2, "bite_seconds": 1.0, "people": false, "game": false, "one": "fox"},
+    "bear": {"name": "Bears", "kind": "wild", "skins": ["mini_bear"], "frame": 32, "layout": "minifolks", "diet": "omnivore", "prey": ["deer", "boar"],
+      "hunger_per_hour": 0.8, "hp": 60, "speed": 1.3, "grow_days": 8, "juvenile_days": 2, "elder_days": 96, "death_days": [110, 140], "breed_days": 20, "litter": 1,
+      "meat": 6, "hide": 2, "start": [1, 1], "woods_cap": 2, "keep": 2, "flee": 0.0, "bite": 12, "bite_seconds": 1.6, "people": true, "game": false, "one": "bear", "only": ["woods_w"]},
+    "bird": {"name": "Birds", "kind": "wild", "skins": ["mini_bird"], "frame": 16, "layout": "minifolks", "diet": "seeds",
+      "hp": 2, "speed": 2.4, "grow_days": 2, "juvenile_days": 0.5, "elder_days": 30, "death_days": [36, 48], "breed_days": 4, "litter": 2,
+      "meat": 0, "hide": 0, "feathers": 1, "start": [3, 3], "woods_cap": 10, "keep": 2, "flee": 4.0, "one": "bird"}
   },
   "trader_cash_floor": 15,
+  "wildlife": {"_note": "B14 (owner: forest animals roam and feed on their own; carnivores hunt and eat the grazers, grazers graze; owner answers 2026-10-19). Hunters (diet hunt, and the bear as an omnivore) that are hungry kill one of their prey species in their wood, at most hunt_chance_per_hour an hour, never taking a species below its keep; near the player the chase is seen (chase_speed x speed, the kill within kill_range). Prey flee a hunter within its flee distance. The bear eats a ripe berry bush within berry_range of its wood first. A hungry fox takes a pen chicken at night (night_from to night_to) at fox_raid_chance_per_hour, never below the pen's keep. Wolves and bears ('people': true) fight back for anger_seconds when struck, and one below people_hunger hunger goes for a person standing in its wood with nobody else within alone_radius tiles; foxes never attack people. Nobody takes the last grown male or female of a kind in a wood, and the village hunter leaves hunter_spare more than a kind's keep for the predators. Agent proposal, provisional.", "hunt_chance_per_hour": 0.3, "chase_speed": 1.4, "kill_range": 0.8, "berry_range": 4, "fox_raid_chance_per_hour": 0.06, "night_from": 21, "night_to": 5, "anger_seconds": 20, "people_hunger": 15, "alone_radius": 6, "hunter_spare": 2},
   "animal_hunger_per_hour": 3.0,
   "animal_eat_below": 55,
   "animal_starve_hp_per_hour": 0.1,

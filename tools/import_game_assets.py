@@ -104,6 +104,11 @@ PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
 PROMPTS.update({name: f"Touch/Double/{name}.png" for name in ["touch_tap", "touch_finger_one", "touch_zoom_in",
                                                                 "touch_swipe_two_move"]})
 MONSTER_ZIP = "PunyMonsters.zip"
+# MiniFolks forest animals (B14, LYASeeK; a loose folder, the owner's .7z extracted byte for byte): skin -> the
+# outlined side-view sheet (32 px frames, the bird's 16 px; one row per animation, facing right)
+FOREST_DIR = "MiniFolks Forest Animals"
+FOREST = {"mini_bear": "MiniBear", "mini_boar": "MiniBoar", "mini_doe": "MiniDeer1", "mini_stag": "MiniDeer2",
+          "mini_fox": "MiniFox", "mini_wolf": "MiniWolf", "mini_bunny": "MiniBunny", "mini_bird": "MiniBird"}
 # game species -> (archive, member)
 ANIMALS = {
     "cow": (COZY_ZIP, "full version/animals/cow animation.png"),
@@ -521,6 +526,10 @@ def main():
         dest = animals / f"{species}.png"
         dest.write_bytes(AssetZip(zname).read(member))
         record(dest, zname, member, "copied unchanged")
+    for skin, name in sorted(FOREST.items()):
+        dest = animals / f"{skin}.png"
+        dest.write_bytes((REPO / FOREST_DIR / "Outline" / f"{name}.png").read_bytes())
+        record(dest, FOREST_DIR, f"Outline/{name}.png", "copied unchanged")
     # starter-kit icons from Cozy Farm's item sheet (16 px cells) and tinted copies of survival icons
     from PIL import Image
     import io

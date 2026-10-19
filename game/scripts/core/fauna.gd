@@ -20,6 +20,7 @@ var pens := {}               # id -> {kind, x, y, w, h, gate, feed_at, trough, o
                              # let to its keeper (tenant "npc:<id>"; World "ownership", World.pen_keeper)
 var woods := {}              # id -> {x, y, w, h}
 var next_id := 1
+var seeded: Array = []       # wild species that have been started in the woods (saved; B14 adds species to old saves)
 var claims := {}             # animal id -> npc id hunting it (not saved; hunters re-plan after loading)
 var _cells := {}             # area id -> Array[Vector2i] of cells an animal may stand on
 
@@ -86,7 +87,19 @@ func populate() -> void:
 				kinds.append(k)
 		kinds.sort()
 		for k in kinds:
+			if GameData.b("animals")[k].has("only") and not (GameData.b("animals")[k].only as Array).has(id):
+				continue
 			_start(id, k)
+	seeded = wild_species()
+
+
+func wild_species() -> Array:
+	var kinds := []
+	for k in GameData.b("animals"):
+		if not k.begins_with("_") and GameData.b("animals")[k].kind == "wild":
+			kinds.append(k)
+	kinds.sort()
+	return kinds
 
 
 func _start(area: String, species: String) -> void:
@@ -115,7 +128,7 @@ func spawn(area: String, species: String, sex: String, mother: Animal) -> Animal
 	a.area = area
 	a.born = w.minutes
 	a.hp = float(s.hp)
-	var skins: Array = s.skins
+	var skins: Array = s.get("skins_m", s.skins) if sex == "m" else s.skins       # the stag and the doe (B14)
 	a.skin = skins[w.rng.randi() % skins.size()]
 	var cs := cells(area)
 	if mother != null:
@@ -136,9 +149,9 @@ func tick(gm: float) -> void:
 	for a: Animal in animals.duplicate():
 		if not a.alive:
 			continue
-		a.hunger = maxf(0.0, a.hunger - gm / 60.0 * per_hour)
+		a.hunger = maxf(0.0, a.hunger - gm / 60.0 * float(a.spec().get("hunger_per_hour", per_hour)))     # a kill lasts a hunter days (B14)
 		if a.hunger < eat_below:
-			_eat(a)
+			_eat(a, gm)
 		if a.hunger <= 0.0:
 			a.hp -= gm / 60.0 * float(a.spec().hp) * float(GameData.b("animal_starve_hp_per_hour"))
 			if a.hp <= 0.0:
@@ -147,10 +160,20 @@ func tick(gm: float) -> void:
 				remove(a)
 
 
-func _eat(a: Animal) -> void:
+func _eat(a: Animal, gm := 60.0) -> void:
 	if a.wild():
-		if grazers(a.area) <= graze_capacity(a.area):
-			a.hunger = 100.0
+		match a.diet():
+			"graze":
+				if grazers(a.area) <= graze_capacity(a.area):
+					a.hunger = 100.0
+			"seeds":
+				a.hunger = 100.0                       # birds pick seeds anywhere in the wood
+			"hunt", "omnivore":
+				if a.diet() == "omnivore" and _forage_berries(a):
+					return
+				if a.species == "fox" and _raid(a, gm):
+					return
+				_predate(a, gm)
 		return
 	var pen: Dictionary = pens[a.area]
 	var need := int(a.spec().feed)
@@ -161,6 +184,164 @@ func _eat(a: Animal) -> void:
 		a.hp = minf(float(a.spec().hp), a.hp + float(a.spec().hp) * 0.25)
 
 
+# ---------------------------------------------------------------- the food chain (B14) ------
+static func wl() -> Dictionary:
+	return GameData.b("wildlife")
+
+
+## Whether `pred` may take `prey` now: one of its prey species, grown or young, in the same wood, and the
+## prey's kind left with at least its breeding stock.
+func can_take(pred: Animal, prey: Animal) -> bool:
+	return prey.alive and prey != pred and prey.area == pred.area and (pred.spec().get("prey", []) as Array).has(prey.species) \
+			and spare(prey)
+
+
+## Whether `a` can be taken (by a hunter, a predator or a poacher) without breaking its wood's stock: more than
+## its kind's `keep` (plus `extra`) in the area, and not the last grown male or female there (B14: a pair
+## always remains to breed).
+func spare(a: Animal, extra := 0) -> bool:
+	if count(a.area, a.species) <= int(a.spec().keep) + extra:
+		return false
+	if not a.adult(w.minutes):
+		return true
+	for b: Animal in animals:
+		if b != a and b.alive and b.area == a.area and b.species == a.species and b.sex == a.sex and b.adult(w.minutes):
+			return true
+	return false
+
+
+## A hungry hunter makes a kill in its wood at most hunt_chance_per_hour an hour, wherever the player is.
+## Near the player it is seen chasing the nearest prey (_move), which it may also catch sooner; the hourly
+## chance still feeds it, so a quick runner cannot starve a hunter that is watched.
+func _predate(a: Animal, gm: float) -> void:
+	if a.pos.distance_to(w.player.pos) <= w.detail_radius and (by_id(a.hunt) == null or not can_take(a, by_id(a.hunt))):
+		a.hunt = -1
+		var bd := 1e9
+		for b: Animal in animals:
+			if can_take(a, b) and a.pos.distance_to(b.pos) < bd:
+				bd = a.pos.distance_to(b.pos)
+				a.hunt = b.id
+	if w.rng.randf() >= float(wl().hunt_chance_per_hour) * gm / 60.0:
+		return
+	if a.hunt != -1 and by_id(a.hunt) != null:
+		take(a, by_id(a.hunt))
+		return
+	var options := []
+	for b: Animal in animals:
+		if can_take(a, b):
+			options.append(b)
+	if not options.is_empty():
+		take(a, options[w.rng.randi() % options.size()])
+
+
+## `pred` kills and eats `prey`: the prey is gone (counted, a pool of blood where it fell) and the hunter fed.
+func take(pred: Animal, prey: Animal) -> void:
+	w.stat("eaten_%s_by_%s" % [prey.species, pred.species])
+	w.bled.emit(prey.pos)
+	remove(prey)
+	pred.hunger = 100.0
+	pred.hunt = -1
+	pred.act = "attack"
+	pred.act_left = 0.6
+
+
+## The bear eats a ripe berry bush within berry_range of its wood (the bush is picked, as by anyone).
+func _forage_berries(a: Animal) -> bool:
+	var r: Dictionary = woods.get(a.area, {})
+	if r.is_empty():
+		return false
+	var m := int(wl().berry_range)
+	for pl in w.plants:
+		if pl.state == "ripe" and str(pl.kind) in ["redberry", "blueberry"] and int(pl.x) >= int(r.x) - m and int(pl.x) < int(r.x) + int(r.w) + m \
+				and int(pl.y) >= int(r.y) - m and int(pl.y) < int(r.y) + int(r.h) + m:
+			w.pick_plant(pl)
+			w.stat("bear_ate_berries")
+			a.hunger = 100.0
+			return true
+	return false
+
+
+## A hungry fox takes a pen chicken at night, never below the pen's breeding stock.
+func _raid(a: Animal, gm: float) -> bool:
+	var h: float = w.hour()
+	if not (h >= float(wl().night_from) or h < float(wl().night_to)) or w.rng.randf() >= float(wl().fox_raid_chance_per_hour) * gm / 60.0:
+		return false
+	var ids := pens.keys()
+	ids.sort()
+	for id in ids:
+		var pen: Dictionary = pens[id]
+		if pen.kind != str(a.spec().get("raids", "")) or count(id, pen.kind) <= int(GameData.b("animals")[pen.kind].keep):
+			continue
+		for c: Animal in animals:
+			if c.alive and c.area == id:
+				w.stat("fox_took_" + c.species)
+				w.note("A fox took a %s from the %s in the night." % [c.label(), "your pen" if pen.get("player", false) else "pens"])
+				remove(c)
+				a.hunger = 100.0
+				return true
+	return false
+
+
+## Someone struck it: a wolf or a bear fights back for anger_seconds (`who`: "player" or "npc:<id>").
+func provoke(a: Animal, who: String) -> void:
+	a.act = "hit"
+	a.act_left = 0.4
+	if bool(a.spec().get("people", false)):
+		a.anger = who
+		a.anger_left = float(wl().anger_seconds)
+
+
+## The position of whoever `who` names, or INF if they are gone.
+func _foe_pos(who: String) -> Vector2:
+	if who == "player":
+		return w.player.pos if w.player.alive else Vector2.INF
+	var n: NPC = w.npc(int(who.trim_prefix("npc:")))
+	return n.pos if n != null and n.alive else Vector2.INF
+
+
+## A starving wolf or bear goes for a person standing in its wood with nobody else within alone_radius.
+func _hunt_people(a: Animal) -> void:
+	if a.anger != "" or not bool(a.spec().get("people", false)) or a.hunger >= float(wl().people_hunger):
+		return
+	var people := [["player", w.player.pos]] if w.player.alive else []
+	for n: NPC in w.npcs:
+		if n.alive and not w.asleep(n) and n.pos.distance_to(a.pos) <= w.detail_radius:
+			people.append(["npc:%d" % n.id, n.pos])
+	for p in people:
+		var at: Vector2 = p[1]
+		if not cells(a.area).has(Vector2i(floori(at.x), floori(at.y))) or at.distance_to(a.pos) > 8.0:
+			continue
+		var alone := true
+		for q in people:
+			if q != p and (q[1] as Vector2).distance_to(at) <= float(wl().alone_radius):
+				alone = false
+		if alone:
+			a.anger = p[0]
+			a.anger_left = float(wl().anger_seconds)
+			w.stat("animal_went_for_" + ("player" if p[0] == "player" else "villager"))
+			return
+
+
+## A bite at whoever it is fighting, if within reach.
+func _bite(a: Animal, foe: Vector2) -> void:
+	if a.bite_cd > 0.0 or foe.distance_to(a.pos) > 1.0:
+		return
+	a.bite_cd = float(a.spec().get("bite_seconds", 1.0))
+	a.act = "attack"
+	a.act_left = 0.5
+	var dmg := float(a.spec().get("bite", 0))
+	if a.anger == "player":
+		w.damage_player(dmg, "a " + a.label())
+	else:
+		var n: NPC = w.npc(int(a.anger.trim_prefix("npc:")))
+		if n == null:
+			return
+		n.hp -= maxf(0.5, dmg - n.armor * 0.5)
+		if n.hp <= 0.0:
+			w.kill(n, "killed by a %s" % a.label())
+			a.anger = ""
+
+
 ## Wild animals a wood can feed: one per `graze_cells_per_animal` open cells.
 func graze_capacity(area: String) -> int:
 	return cells(area).size() / int(GameData.b("graze_cells_per_animal"))
@@ -169,7 +350,7 @@ func graze_capacity(area: String) -> int:
 func grazers(area: String) -> int:
 	var c := 0
 	for a: Animal in animals:
-		if a.alive and a.area == area:
+		if a.alive and a.area == area and a.diet() == "graze":
 			c += 1
 	return c
 
@@ -274,9 +455,10 @@ func kill(a: Animal) -> Inventory:
 	var bag := Inventory.new()
 	var s := a.spec()
 	var adult := a.adult(w.minutes)
-	var meat := int(s.meat) if adult else maxi(1, int(s.meat) / 2)
-	bag.add("meat", meat)
-	w.stat("made_meat", float(meat))
+	var meat := int(s.meat) if adult else (maxi(1, int(s.meat) / 2) if int(s.meat) > 0 else 0)
+	if meat > 0:                                # a bird gives only a feather
+		bag.add("meat", meat)
+		w.stat("made_meat", float(meat))
 	w.bled.emit(a.pos)
 	if adult and int(s.hide) > 0:
 		bag.add("hide", int(s.hide))
@@ -318,10 +500,10 @@ func nearest_game(from: Vector2, max_d := 200.0) -> Animal:
 	var best: Animal = null
 	var bd := max_d
 	for a: Animal in animals:
-		if not a.alive or not a.wild() or not a.adult(w.minutes) or claims.has(a.id):
-			continue
-		if count(a.area, a.species, true) - _claimed(a.area, a.species) <= int(a.spec().keep):
-			continue
+		if not a.alive or not a.wild() or not a.adult(w.minutes) or claims.has(a.id) or not bool(a.spec().get("game", true)):
+			continue                                    # the village hunter leaves wolves, foxes and bears alone (B14)
+		if count(a.area, a.species, true) - _claimed(a.area, a.species) <= int(a.spec().keep) or not spare(a, int(wl().hunter_spare)):
+			continue                                    # the hunter leaves the predators their share (B14)
 		var d := a.pos.distance_to(from)
 		if d < bd:
 			bd = d
@@ -370,9 +552,17 @@ func surplus(pen: Dictionary, short_of_feed := false) -> Animal:
 ## sees them move, and births, feeding and hunting do not depend on where they stand.
 func update(dt: float) -> void:
 	tick(dt * float(GameData.b("game_minutes_per_second")))
-	for a: Animal in animals:
+	for a: Animal in animals.duplicate():
 		if not a.alive:
 			continue
+		a.bite_cd = maxf(0.0, a.bite_cd - dt)
+		a.act_left = maxf(0.0, a.act_left - dt)
+		if a.act_left <= 0.0:
+			a.act = ""
+		if a.anger != "":
+			a.anger_left -= dt
+			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
+				a.anger = ""
 		if a.pos.distance_to(w.player.pos) > w.detail_radius:
 			a.moving = false
 			continue
@@ -382,10 +572,29 @@ func update(dt: float) -> void:
 func _move(a: Animal, dt: float) -> void:
 	var s := a.spec()
 	var flee := float(s.get("flee", 0.0))
-	if flee > 0.0 and w.player.alive and w.player.pos.distance_to(a.pos) < flee:
-		var away: Vector2 = (a.pos - w.player.pos).normalized()
-		a.goal = a.pos + away * 3.0
+	var fleeing := false
+	_hunt_people(a)
+	if a.anger != "":                                       # fighting someone: after them, biting in reach
+		var foe := _foe_pos(a.anger)
+		_bite(a, foe)
+		a.goal = foe
 		a.wait = 0.0
+	elif a.hunt != -1 and by_id(a.hunt) != null:            # a hunter's chase, seen near the player
+		var prey := by_id(a.hunt)
+		if prey.pos.distance_to(a.pos) <= float(wl().kill_range):
+			take(a, prey)
+			return
+		a.goal = prey.pos
+		a.wait = 0.0
+	else:
+		var threat: Vector2 = w.player.pos if w.player.alive and w.player.pos.distance_to(a.pos) < flee else Vector2.INF
+		for b: Animal in animals:                           # prey run from a hunter that could take them
+			if flee > 0.0 and b.alive and b.area == a.area and (b.spec().get("prey", []) as Array).has(a.species) and b.pos.distance_to(a.pos) < flee:
+				threat = b.pos
+		if threat != Vector2.INF:
+			a.goal = a.pos + (a.pos - threat).normalized() * 3.0
+			a.wait = 0.0
+			fleeing = true
 	if a.goal == Vector2.INF:
 		a.wait -= dt
 		a.moving = false
@@ -402,7 +611,8 @@ func _move(a: Animal, dt: float) -> void:
 			c = Vector2i((Vector2(c) - a.pos).limit_length(5.0) + a.pos)
 		a.goal = Vector2(c) + Vector2(0.5, 0.5)
 	var d: Vector2 = a.goal - a.pos
-	var speed := float(s.speed) * (float(GameData.b("animal_elder_speed")) if a.elderly(w.minutes) else 1.0) * (2.2 if flee > 0.0 and w.player.pos.distance_to(a.pos) < flee else 1.0)
+	var speed := float(s.speed) * (float(GameData.b("animal_elder_speed")) if a.elderly(w.minutes) else 1.0) * (2.2 if fleeing else 1.0) \
+			* (float(wl().chase_speed) if a.anger != "" or a.hunt != -1 else 1.0)
 	var step := speed * dt
 	if d.length() <= step:
 		a.goal = Vector2.INF
@@ -432,11 +642,12 @@ func to_dict() -> Dictionary:
 		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner, "tenant": pens[id].tenant, "products": pens[id].get("products", {}).duplicate()}
 		if pens[id].get("player", false):
 			mine.append(pens[id])
-	return {"next_id": next_id, "animals": as_, "pens": ps, "player_pens": mine}
+	return {"next_id": next_id, "animals": as_, "pens": ps, "player_pens": mine, "seeded": seeded.duplicate()}
 
 
 func load_dict(d: Dictionary) -> void:
 	next_id = int(d.next_id)
+	seeded = (d.get("seeded", ["boar", "rabbit"]) as Array).duplicate()     # saves before B14 had the boar and the rabbit
 	for rec in d.get("player_pens", []):
 		pens[str(rec.id)] = rec.duplicate(true)
 	for ad in d.animals:
@@ -454,3 +665,18 @@ func load_dict(d: Dictionary) -> void:
 				# saves before property (1-4): `owner` was the keeper's id, -1 for none
 				var k = w.npc(int(sp.get("owner", -1)))
 				pens[id].tenant = World.npc_ref(k.id) if k != null and k.alive else ""
+
+
+## A save made before a wild species existed gets that species started in the woods (B14 forest animals),
+## once: a species the player later hunts out stays gone.
+func seed_new_species() -> void:
+	var ids := woods.keys()
+	ids.sort()
+	for k in wild_species():
+		if seeded.has(k):
+			continue
+		for id in ids:
+			if not (GameData.b("animals")[k].has("only") and not (GameData.b("animals")[k].only as Array).has(id)):
+				_start(id, k)
+		seeded.append(k)
+	seeded.sort()

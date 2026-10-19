@@ -3668,7 +3668,7 @@ func test_credits() -> void:
 			if not credited.has(name):
 				missing[name] = true
 	for name in DirAccess.get_directories_at(root):
-		if name in ["16x16 Assorted RPG Icons (partial)", "Flat Game UI Icon Pack"] and not credited.has(name):
+		if name in ["16x16 Assorted RPG Icons (partial)", "Flat Game UI Icon Pack", "MiniFolks Forest Animals"] and not credited.has(name):
 			missing[name] = true
 	check(missing.is_empty(), "every asset pack and imported-art source is credited %s" % [missing.keys()])
 

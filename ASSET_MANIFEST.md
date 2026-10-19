@@ -26,6 +26,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `Puny-Characters.zip` | CC0 | 24 | 547.4 KB | Free Puny Characters: 19 8-direction sheets (768x256 = 24 frames x 8 directions, 32px cells; idle, walk, sword, bow, stave, throw, hurt, death): Character-Base plus soldiers, warriors, archers, mages, workers and orcs in team colours; a 480x32 single-row Slime sheet; 4 environment tiles (16x16). Older/smaller layout than the 29-frame Editor Edition. |
 | `PunyMonsters.zip` | CC0 | 9 | 133.4 KB | Puny Monsters: 9 animals/monsters (panther, dog, 2 boars, 2 spiders, wolf, rat, cat), each 384x256 = 12 frames x 8 directions, 32px cells. Second download on the free Puny Characters itch.io page, under its CC0 licence. |
 | `Simple_Falt_Game_Interface_Pack.zip` | paid | 960 | 67.1 MB | Simple Flat Game Interface Kit by SunGraphica (sungraphica.itch.io; the archive is spelt "Falt"), bought by the owner on itch.io in SunGraphica's All-in-One Game UI bundle on 2026-03-12 (purchase page screenshot 2026-10-18). Menu, inventory, items, levels, settings, shop, level-complete and progress-bar screens as PSDs and as PNG pieces in five colours (PNG, Blue, Green, Pink, Red), two icon sets and a 512 px button. The archive's only note names the author and store; the bundle also offers a "FREE ver.zip", not uploaded. No licence file. Not used in the game yet. |
+| `Skeletons_Free_Pack.zip` | free | 24 | 88.5 KB | Pixel Art Skeletons (free pack) by MonoPixelArt (monopixelart.itch.io), supplied by the owner on 2026-10-19 (name-your-own-price page), bytes unchanged: the sword skeleton only (the page's axe and shield skeletons are not in this download), white and yellow, each with and without white swoosh VFX: Idle, Walk, Attack1, Attack2, Hurt and Die strips. No licence file in the archive; terms per the itch.io page the owner provided. |
 | `SunGraphica_Minimal_Icons_FREE.zip` | paid | 541 | 27.8 MB | The free version of "600 clean and minimal game Icons ultimate pack" by SunGraphica, uploaded as FREE.zip and stored under this name, bytes unchanged. Part of the same All-in-One Game UI bundle the owner bought on itch.io on 2026-03-12 (purchase page screenshot 2026-10-18). About 90 minimal game icons in light and dark versions at 0.5x, 1x and 2x. The full pack ("Minimal icons.zip", 73 MB) is not uploaded. No licence file. Not used in the game yet. |
 | `TinyRanch_Assets.zip` | free | 7 | 21.9 KB | Tiny Ranch by Gustavo Vituri, drawn on an 8x8 grid (half the 16x16 scale of the Puny packs): farm animals with walk frames (cows, pigs, sheep, chickens, ducks, geese, horses and more), 8 crops with seed, growth stages and harvest icons, farm items, trees and rocks, barns, silos, windmill and well, tilled soil and grass tiles, and 8x8 farmer characters. No licence file in the archive; per the itch.io page (screenshot from the owner): free for personal and commercial use, modification allowed, crediting not required but appreciated (credit Gustavo Vituri), do not redistribute, no NFTs. |
 | `kenney_input-prompts_1.5.zip` | CC0 | 4667 | 5.7 MB | Input Prompts 1.5 by Kenney (kenney.nl): over 1,500 button and key icons for Xbox, PlayStation, Nintendo, Steam devices, keyboard and mouse, touch gestures and generic controls, as 64 px and 128 px PNGs, SVGs, sprite sheets and fonts. CC0 per the archive's License.txt and the itch.io page (owner screenshot 2026-10-18). Used for the control prompts on screen. |
@@ -33,6 +34,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `miniworld +__rainbow-refresh.zip` | CC BY 4.0 | 10 | 642.9 KB | 16x16 miniworld + by octoshrimpy, rainbow refresh (02/15/2023, newer): recoloured sheets plus chests. terrain.png has 20 terrain modules (water depths, sand, grasses, forest, snow, ice, dirts, cave floors) in one shared autotile layout; no Tiled/wang data included. |
 | `16x16 Assorted RPG Icons (partial)/` (folder) | free | 9 | 113.9 KB | Sheets from Shade's free 16x16 Assorted RPG Icons pack, shared individually (not the full pack): books, chests, consumables, potions, weapons, armours, tools/gems/ingots, misc items. |
 | `Flat Game UI Icon Pack/` (folder) | verify | 11 | 26.9 MB | Flat game UI pack supplied by the owner on 2026-10-18 in parts (the owner's folder is "Flat design UI pack"): icon sets 1 and 2 (white glyphs on dark rounded squares: interface, media and platform icons; RPG items, weapons, armour, potions, scrolls and status icons) as Illustrator .ai and .eps; "Flat game UI set 3" (login, skills, pause, levels, win, shop, upgrade and settings windows in several colour schemes) as .ai and .pdf; and preview images (exact duplicate uploads dropped). Set 3's .eps and .svg could not be uploaded; the .ai and .pdf hold the same art. No licence file. Source: "Flat design UI pack" by SunGraphica, in the owner's itch.io library (screenshot 2026-10-18); terms not stated in the files. |
+| `MiniFolks Forest Animals/` (folder) | free | 24 | 107.5 KB | MiniFolks - Forest Animals by LYASeeK (lyaseek.itch.io), supplied by the owner on 2026-10-19 as MinifolksForestAnimals.7z and ase.7z (name-your-own-price), stored extracted here byte for byte (the tools read only zips): 8 side-view animals on 32 x 32 frames (the bird 16 x 16), Outline/ and Without outline/ PNG sheets, plus the Aseprite sources (Aseprite/). Bear, boar, two deer, fox, wolf, bunny and bird; one row per animation (idle, walk, jump, attack, hit, death; the bear's roar and the wolf's howl). Itch.io page: use as you like, do not resell; credit not required but appreciated. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
 | `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0. |
 
@@ -44,7 +46,7 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 17071 |
+| `.png` | 17111 |
 | `.svg` | 1542 |
 | `.gif` | 353 |
 | `.txt` | 44 |
@@ -55,6 +57,7 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 | `.ttf` | 17 |
 | `.tsx` | 13 |
 | `.csv` | 11 |
+| `.aseprite` | 8 |
 | `.ai` | 6 |
 | `.url` | 5 |
 | `.eps` | 3 |
@@ -459,6 +462,15 @@ Each folder lists its file count and the most common image sizes.
 | `Simple Falt Game Interface Pack/PNG Red` | 29 | 435x435 (8), 2160x3840 (7), 1384x431 (3), ... | `Frame.png`, `Grid copy 11-2.png`, `Grid copy 11-3.png`, `Grid copy 11.png`, ... |
 | `Simple Falt Game Interface Pack/Progress bars` | 17 | 1903x67 (7), 44x67 (3), 484x476 (2), ... | `Ellipse 1 copy.png`, `Ellipse 1.png`, `Progress bars.psd`, `Rectangle 1 copy 10-2.png`, ... |
 
+### Skeletons_Free_Pack.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `Skeletons_Free_Pack/Skeleton_Sword/Skeleton_White/Skeleton_With_VFX` | 6 | 960x64 (2), 864x64 (1), 1248x64 (1), ... | `Skeleton_01_White_Attack1.png`, `Skeleton_01_White_Attack2.png`, `Skeleton_01_White_Die.png`, `Skeleton_01_White_Hurt.png`, ... |
+| `Skeletons_Free_Pack/Skeleton_Sword/Skeleton_White/Skeleton_Without_VFX` | 6 | 960x64 (2), 864x64 (1), 1248x64 (1), ... | `Skeleton_01_White_Attack1.png`, `Skeleton_01_White_Attack2.png`, `Skeleton_01_White_Die.png`, `Skeleton_01_White_Hurt.png`, ... |
+| `Skeletons_Free_Pack/Skeleton_Sword/Skeleton_Yellow/Skeleton_With_VFX` | 6 | 960x64 (2), 864x64 (1), 1248x64 (1), ... | `Skeleton_01_Yellow_Attack1.png`, `Skeleton_01_Yellow_Attack2.png`, `Skeleton_01_Yellow_Die.png`, `Skeleton_01_Yellow_Hurt.png`, ... |
+| `Skeletons_Free_Pack/Skeleton_Sword/Skeleton_Yellow/Skeleton_Without_VFX` | 6 | 960x64 (2), 864x64 (1), 1248x64 (1), ... | `Skeleton_01_Yellow_Attack1.png`, `Skeleton_01_Yellow_Attack2.png`, `Skeleton_01_Yellow_Die.png`, `Skeleton_01_Yellow_Hurt.png`, ... |
+
 ### SunGraphica_Minimal_Icons_FREE.zip
 
 | Folder | Files | Image sizes | Examples |
@@ -597,9 +609,17 @@ Each folder lists its file count and the most common image sizes.
 |---|---:|---|---|
 | `.` | 11 | 4167x4167 | `Flat_game_UI_set_3.ai`, `Flat_game_UI_set_3_copy.pdf`, `icons_set_1.ai`, `icons_set_1_copy.eps`, ... |
 
+### MiniFolks Forest Animals/
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `Aseprite` | 8 |  | `MiniBear.aseprite`, `MiniBird.aseprite`, `MiniBoar.aseprite`, `MiniBunny.aseprite`, ... |
+| `Outline` | 8 | 160x192 (2), 320x256 (1), 64x48 (1), ... | `MiniBear.png`, `MiniBird.png`, `MiniBoar.png`, `MiniBunny.png`, ... |
+| `Without outline` | 8 | 160x192 (2), 320x256 (1), 64x48 (1), ... | `MiniBear.png`, `MiniBird.png`, `MiniBoar.png`, `MiniBunny.png`, ... |
+
 ## Identical content
 
-1398 distinct files appear more than once (byte-identical, by SHA-256).
+1404 distinct files appear more than once (byte-identical, by SHA-256).
 These are copies inside the packs, not duplicate uploads, so nothing was removed.
 
 | Where the copies are | Distinct files |
@@ -610,6 +630,7 @@ These are copies inside the packs, not duplicate uploads, so nothing was removed
 | `PUNY_SKILLS_v1.zip` | 78 |
 | `PUNY_CHARACTERS_v2.1.zip` + `PUNY_CHARACTERS_v2.1_tdsm-2026.zip` | 63 |
 | `Simple_Falt_Game_Interface_Pack.zip` | 20 |
+| `Skeletons_Free_Pack.zip` | 6 |
 | `16x16 Survival RPG Icons.zip` | 3 |
 | `PUNY_CHARACTERS_v2.1.zip` | 2 |
 | `kenney_input-prompts_1.5.zip` + `kenney_splatpack.zip` | 2 |

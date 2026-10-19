@@ -18,6 +18,13 @@ var hunger := 100.0          # 100 = full, like the villagers
 var next_birth := 0.0        # game minutes: a female can give birth again from then
 var next_product := 0.0      # game minutes: a pen animal of the player makes its next egg, milk or wool then (0: not set yet; PL2-015)
 var moving := false
+# B14 wildlife (not saved: a chase or a fight is picked up again after loading)
+var hunt := -1               # the prey animal a hunter is chasing, -1 for none
+var anger := ""              # who it is fighting: "player" or "npc:<id>", "" for nobody
+var anger_left := 0.0        # real seconds the fight lasts unless renewed
+var bite_cd := 0.0           # real seconds before it can bite again
+var act := ""                # a one-off animation playing: "attack", "hit" ("" for none)
+var act_left := 0.0
 
 
 func cell() -> Vector2i:
@@ -63,6 +70,20 @@ func breeds(now: float) -> bool:
 func baby_skin() -> String:
 	var path := "res://assets/animals/%s_baby.png" % skin
 	return skin + "_baby" if ResourceLoader.exists(path) else ""
+
+
+## The sheet's art for this animal's skin: {layout, frame} (a species may mix packs: balance "skin_art").
+func art() -> Dictionary:
+	var sp := spec()
+	var per: Dictionary = sp.get("skin_art", {})
+	if per.has(skin):
+		return per[skin]
+	return {"layout": sp.layout, "frame": sp.frame}
+
+
+## What it eats: "graze" (grass, the default), "seeds", "hunt" (its `prey`), "omnivore" (berries, then prey).
+func diet() -> String:
+	return str(spec().get("diet", "graze"))
 
 
 func wild() -> bool:

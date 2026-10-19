@@ -107,6 +107,8 @@ treasury held as the reeve's own coins) left about two-thirds of all coins in th
 | Hunters hunt real animals and never take a kind below 2 adults per wood. Bandits poach near their camp. The player hunts with the sword or a fireball and takes the carcass (meat, hide) | Replaces the old invisible "deer count" |
 | Saves from before hunger load with every animal full. Old saves (`save_version` 1) load: the deer count is dropped, and pens and woods are stocked as in a new game | CLAUDE.md section 7 |
 | Puny Monsters boar frames 0-3 are used as the walk cycle | **Uncertain**: the sheet has no frame notes |
+| B14: MiniFolks Forest Animals (outlined) for deer (stag: MiniDeer2, doe: MiniDeer1), wolf, fox, bear and bird, and as a third skin for boar and rabbits. Side views facing right, flipped for left; rows idle, walk, attack, hit, death as listed in `AnimalSprite.ROWS` (from the pack page: idle, walk, jump, attack, attack2, hit, death; the bear's roar and the wolf's howl unused). No baby art: young are drawn at half scale | The owner's pack and choice of the outlined style |
+| The MiniFolks bunny's rows 2 and 3 are taken as hit and death, and the bird's rows 1 and 2 as flight and death | **Uncertain**: the pack page does not name the bunny's or the bird's rows |
 
 ## Skilled trades and the treasury's excess (Phase 1, agent proposals)
 
