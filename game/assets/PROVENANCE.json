@@ -632,6 +632,13 @@
    "sha256": "6eaba3365636d93adf0aa8882c48a57533f705e27037869c7b26549a340d0102"
   },
   {
+   "file": "assets/icons/feather.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Leaf-05.png",
+   "transform": "copied unchanged",
+   "sha256": "e56e0c4a01e30e5f3c7e35afc3a7aab7bde4f95de4d23ad76aa16ac9da89bdcf"
+  },
+  {
    "file": "assets/icons/fireball.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Tools/Magic-Staff-05.png",
@@ -791,6 +798,13 @@
    "member": "16x16 Survival RPG Icons/Metal/Metal-Pot-01.png",
    "transform": "copied unchanged",
    "sha256": "4540e32914ab13fbbd20aba1bc15dc7fda97c9f2a107e43e9e6e8a1123014ead"
+  },
+  {
+   "file": "assets/icons/rabbit_pelt.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Textile/Rodent-Pelt-01.png",
+   "transform": "copied unchanged",
+   "sha256": "6e7c620165e55e16b883eae285cd5abc279ce6b6d87abc7fc126f13acbd02788"
   },
   {
    "file": "assets/icons/red_berries.png",

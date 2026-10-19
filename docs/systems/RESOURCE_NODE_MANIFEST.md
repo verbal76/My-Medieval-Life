@@ -14,7 +14,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ## Summary
 
 - Implemented node types: 16 (12 the player may harvest, 4 the keeper's livestock).
-- Materials they produce: 13 (blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, red_berries, stone, wheat).
+- Materials they produce: 15 (blueberries, coal, copper_ore, feather, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, rabbit_pelt, red_berries, stone, wheat).
 - Finite node types: 5 (boulder, coal_seam, copper_seam, iron_seam, stone_seam); with no replacement once worked out: 0 (the caravan imports each).
 - At risk of overharvesting: 6 (coal_seam, copper_seam, iron_seam, stone_seam, wild_boar, wild_rabbit).
 - Not Gather-compatible: 4 (chicken_pen, cow_pen, pig_pen, sheep_pen).
@@ -23,7 +23,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 |---|---|---|---|---|---|---|---|---|---|---|
 | `blue_berry_bush` Blue berry bush | forage | natural | none | none | 2 blueberries | regrows | yes | no | yes | implemented |
 | `boulder` Boulder | mineral | natural | pickaxe | mining | 1 stone | finite | yes | no | yes | implemented |
-| `chicken_pen` Chickens | livestock | bred | none | none | 1 meat | breeds | no | yes | no | implemented |
+| `chicken_pen` Chickens | livestock | bred | none | none | 2 feather, 1 meat | breeds | no | yes | no | implemented |
 | `coal_seam` Coal seam | mineral | natural | pickaxe | mining | 1 coal | finite | yes | yes | yes | implemented |
 | `copper_seam` Copper seam | mineral | natural | pickaxe | mining | 1 copper_ore | finite | yes | yes | yes | implemented |
 | `cow_pen` Cows | livestock | bred | none | none | 1 hide, 6 meat | breeds | no | yes | no | implemented |
@@ -36,14 +36,14 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `tree` Tree | wood | natural | axe | woodcutting | 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
 | `wild_boar` Wild boar | game | natural | weapon | combat | 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
-| `wild_rabbit` Rabbit | game | natural | weapon | combat | 1 meat | breeds | yes | yes | yes | implemented |
+| `wild_rabbit` Rabbit | game | natural | weapon | combat | 1 meat, 1 rabbit_pelt | breeds | yes | yes | yes | implemented |
 
 ## Nodes
 
 ### `blue_berry_bush` · Blue berry bush
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "blueberry"}`.
-- **Where:** Meadows, verges and clearings across the map (blue berries). **In the world:** 35 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map (blue berries). **In the world:** 32 plants on the map, each ripe again plant_regrow_days after it is picked.
 - **Action:** Picking (interact): "Pick blue berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -85,7 +85,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** none.
 - **Time:** 30 game minutes. The keeper's slaughter is 30 game minutes.
 - **Cost:** stamina 0, tool wear 0. The keeper feeds the pen animals.chicken.feed wheat a meal.
-- **Yields a cycle:** 1 meat. Chickens have no hide and lay no eggs: the game has no egg item.
+- **Yields a cycle:** 2 feather, 1 meat. Chickens have no hide and lay no eggs: the game has no egg item. An adult gives feathers (animals.chicken.feathers; PL2-004), a trade good only: the game has no arrows, so the goods merchant is the one buyer. A young one gives none.
 - **Total:** animals.chicken.start in the pen, at most animals.chicken.pen_cap.
 - **Depletion:** breeds. Litters while a well-fed pair shares the pen and it is under its cap; animals die unfed.
 - **Owner:** The manor's pen, let to its keeper (a farmer); the animals are the keeper's. **Theft:** The player killing one is a crime against the keeper (main.gd _hit_animal).
@@ -151,7 +151,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `flower_patch` · Wild flower
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "flower"}`.
-- **Where:** Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers). **In the world:** 159 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers). **In the world:** 151 plants on the map, each ripe again plant_regrow_days after it is picked.
 - **Action:** Picking (interact): "Pick wild flower". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -259,7 +259,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `tree` · Tree
 
 - **Status:** implemented. **Category:** wood, natural. **Found by:** `{"kind": "tree"}`.
-- **Where:** The woods west and east of the village and the woodland at its edge, and every tree across the map. **In the world:** 232 trees, 928 logs while all are grown.
+- **Where:** The woods west and east of the village and the woodland at its edge, and every tree across the map. **In the world:** 226 trees, 904 logs while all are grown.
 - **Action:** Felling (interact): "Fell this tree". **Range (tiles):** 1. The trunk or the canopy top above it, in the cell 0.9 tiles in front of the player or one of its four neighbours (World.tree_at, main.gd _find_target).
 - **Tool:** axe (required). You need an axe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `axe`: recipe (forge_axe); resold by the merchant_goods.
 - **Skill:** woodcutting, level 1.
@@ -319,7 +319,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** combat, level 0.
 - **Time:** `hunt_minutes` (40 game minutes). A hunter works hunt_minutes game minutes a kill. Rabbits flee the player within animals.rabbit.flee tiles.
 - **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
-- **Yields a cycle:** 1 meat. Rabbits have no hide (animals.rabbit.hide is 0). A young one gives at least 1 meat.
+- **Yields a cycle:** 1 meat, 1 rabbit_pelt. Rabbits have no hide (animals.rabbit.hide is 0) but an adult gives a pelt (animals.rabbit.pelt; PL2-004), tanned to leather at the workbench (tan_pelts) or sold to the tanner or goods merchant. A young one gives at least 1 meat and no pelt.
 - **Total:** animals.rabbit.start (males, females) in each wood, at most animals.rabbit.woods_cap a wood.
 - **Depletion:** breeds. As for boar: litters while a well-fed pair shares the wood and it is under its cap; no migration.
 - **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.

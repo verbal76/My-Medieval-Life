@@ -55,6 +55,8 @@ func _init() -> void:
 	test_save_store()
 	test_doorways()
 	test_village_layout()
+	test_polish_work_looks()
+	test_polish_game_leftovers()
 	test_field_edges()
 	test_work_has_purpose()
 	test_no_child_pickpocket()
@@ -3664,3 +3666,45 @@ func test_credits() -> void:
 		if name in ["16x16 Assorted RPG Icons (partial)", "Flat Game UI Icon Pack"] and not credited.has(name):
 			missing[name] = true
 	check(missing.is_empty(), "every asset pack and imported-art source is credited %s" % [missing.keys()])
+
+
+## B8-007: a villager's work step shows the matching tool (INT-112)
+func test_polish_work_looks() -> void:
+	var w := new_world()
+	var n: NPC = w.npcs[0]
+	var expect := {"mine": ["swing", "pickaxe"], "chop": ["swing", "axe"], "mj_step": ["swing", "hammer"],
+		"hunt": ["swing", "rusty_sword"], "harvest": ["gather", ""], "sow": ["gather", ""]}
+	for act in expect:
+		n.plan = [w.brain.work(10, act, {}, "work")]
+		check(w.brain.work_look(n) == expect[act], "B8-007: a villager's %s shows %s" % [act, str(expect[act])])
+	var anvil: String = w.stations_of("anvil")[0]
+	n.plan = [w.brain.work(10, "craft", {"station": anvil, "recipe": "forge_pickaxe"}, "work")]
+	check(w.brain.work_look(n) == ["swing", "hammer"], "B8-007: smithing shows the hammer")
+	var oven: String = w.stations_of("oven")[0]
+	n.plan = [w.brain.work(10, "craft", {"station": oven, "recipe": "roast_meat"}, "work")]
+	check(w.brain.work_look(n) == ["gather", ""], "B8-007: cooking shows no tool")
+	n.plan = []
+	check(w.brain.work_look(n)[1] == "", "B8-007: no tool when not working")
+	w.dispose()
+
+
+## PL2-004: rabbits give a pelt and chickens feathers; the pelt is tanned or sold (INT-113, INT-114)
+func test_polish_game_leftovers() -> void:
+	var w := new_world()
+	var day := 1440.0
+	var rabbit := w.fauna.spawn("woods_w", "rabbit", "m", null)
+	var chicken := w.fauna.spawn("woods_w", "chicken", "m", null)
+	rabbit.born = w.minutes - 40.0 * day
+	chicken.born = w.minutes - 40.0 * day
+	var rbag := w.fauna.kill(rabbit)
+	var cbag := w.fauna.kill(chicken)
+	check(rbag.count("rabbit_pelt") == 1 and rbag.count("meat") >= 1 and rbag.count("feather") == 0, "PL2-004: an adult rabbit gives meat and a pelt")
+	check(cbag.count("feather") == 2 and cbag.count("rabbit_pelt") == 0, "PL2-004: an adult chicken gives feathers")
+	var kit := w.fauna.spawn("woods_w", "rabbit", "m", null)
+	check(w.fauna.kill(kit).count("rabbit_pelt") == 0, "PL2-004: a young rabbit gives no pelt")
+	var rec: Dictionary = GameData.recipes["tan_pelts"]
+	check(rec.station == "workbench" and int(rec["in"].get("rabbit_pelt", 0)) == 2 and int(rec.out.get("leather", 0)) == 1, "PL2-004: two pelts tan to leather at the workbench")
+	for id in ["rabbit_pelt", "feather"]:
+		check(GameData.items.has(id) and FileAccess.file_exists("res://assets/icons/%s.png" % id), "PL2-004: %s is an item with an icon" % id)
+	check(NPCBrain.OUTLETS.has("rabbit_pelt") and NPCBrain.OUTLETS.has("feather") and NPCBrain.BUYS.merchant_goods.has("feather"), "PL2-004: pelts and feathers have buyers")
+	w.dispose()

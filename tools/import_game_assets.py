@@ -132,7 +132,9 @@ ICONS = {
     "coal": "Stone/Coal-01", "stone": "Stone/Rock-Chunk-01", "log": "Wood/Wood-Log-01",
     "plank": "Wood/Wooden-Planks-01", "wheat": "Plants & Alchemy/Herb-Bundle-01",
     "pottage": "Metal/Metal-Pot-01", "roast_meat": "Food/Steak-01", "ale": "Liquid/Brew-01",
-    "meat": "Food/Meat-01", "hide": "Textile/Deer-Pelt-07", "leather": "Textile/Leather-Fabric-07",
+    "meat": "Food/Meat-01", "hide": "Textile/Deer-Pelt-07",
+    # PL2-004: a grey rodent pelt for the rabbit; the pack has no feather, so a golden leaf stands in (BUILD_DECISIONS)
+    "rabbit_pelt": "Textile/Rodent-Pelt-01", "feather": "Plants & Alchemy/Leaf-05", "leather": "Textile/Leather-Fabric-07",
     "iron_bar": "Metal/Metal-Ingot-02", "copper_bar": "Metal/Metal-Ingot-01", "gold_bar": "Metal/Metal-Ingot-08",
     "pickaxe": "Tools/Pickaxe-02", "axe": "Tools/Axe-02", "iron_sword": "Tools/Sword-02",
     "copper_sword": "Tools/Sword-01", "leather_armor": "Armour/Leather-Jacket-08",

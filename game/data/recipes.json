@@ -11,6 +11,7 @@
     "forge_copper_sword": {"station": "anvil", "in": {"copper_bar": 2, "plank": 1}, "out": {"copper_sword": 1}, "minutes": 60, "skill": "smithing", "xp": 18, "level": 1},
     "forge_iron_sword":   {"station": "anvil", "in": {"iron_bar": 3, "leather": 1}, "out": {"iron_sword": 1},  "minutes": 90, "skill": "smithing", "xp": 30, "level": 2},
     "forge_iron_armor":   {"station": "anvil", "in": {"iron_bar": 5, "leather": 2}, "out": {"iron_armor": 1},  "minutes": 150, "skill": "smithing", "xp": 50, "level": 3},
+    "tan_pelts":     {"station": "workbench", "in": {"rabbit_pelt": 2},             "out": {"leather": 1},   "minutes": 30, "skill": "crafting", "xp": 4, "level": 1},
     "tan_leather":   {"station": "workbench", "in": {"hide": 1},                   "out": {"leather": 1},   "minutes": 40, "skill": "crafting", "xp": 6, "level": 1},
     "leather_armor": {"station": "workbench", "in": {"leather": 4},                "out": {"leather_armor": 1}, "minutes": 90, "skill": "crafting", "xp": 25, "level": 2},
     "leather_cap":   {"station": "workbench", "in": {"leather": 2},                "out": {"leather_cap": 1}, "minutes": 50, "skill": "crafting", "xp": 10, "level": 1},

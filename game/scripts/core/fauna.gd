@@ -269,7 +269,7 @@ func hungry(pen: Dictionary) -> int:
 
 
 # ---------------------------------------------------------------- death ----------------------
-## Kill an animal; returns what it yields (meat, and hide for kinds that have one).
+## Kill an animal; returns what it yields (meat; hide, rabbit pelt or feathers for the kinds that have them).
 func kill(a: Animal) -> Inventory:
 	var bag := Inventory.new()
 	var s := a.spec()
@@ -281,6 +281,12 @@ func kill(a: Animal) -> Inventory:
 	if adult and int(s.hide) > 0:
 		bag.add("hide", int(s.hide))
 		w.stat("made_hide", float(s.hide))
+	if adult:                                   # PL2-004: a rabbit's pelt, a chicken's feathers
+		for key in ["pelt", "feathers"]:
+			var item: String = "rabbit_pelt" if key == "pelt" else "feather"
+			if int(s.get(key, 0)) > 0:
+				bag.add(item, int(s[key]))
+				w.stat("made_" + item, float(s[key]))
 	remove(a)
 	return bag
 
