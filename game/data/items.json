@@ -75,6 +75,17 @@
       "type": "resource",
       "value": 14
     },
+    "lockpick": {
+      "name": "Lockpick",
+      "type": "resource",
+      "value": 8
+    },
+    "padlock": {
+      "name": "Padlock",
+      "type": "resource",
+      "value": 24,
+      "lock_level": 2
+    },
     "copper_bar": {
       "name": "Copper bar",
       "type": "resource",

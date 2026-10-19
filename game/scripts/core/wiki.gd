@@ -97,6 +97,7 @@ static func build() -> Wiki:
 	w._systems()
 	w._guides()
 	w._not_yet()
+	WikiChests.add_pages(w)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
@@ -571,7 +572,6 @@ func _medicine_list() -> String:
 
 func _not_yet() -> void:
 	var items := {
-		"lockpicking": ["Lockpicking", "Locks and lockpicks are not built; theft today is pickpocketing."],
 		"player_shops": ["Player shops and stalls", "You cannot rent a stall or open a shop of your own and sell from it yet."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"plough": ["Hand plough and farming by the player", "You cannot till or sow fields yourself; the farmers do it. You can harvest ripe wheat."],

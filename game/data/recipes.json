@@ -5,6 +5,8 @@
     "smelt_iron":    {"station": "forge",     "in": {"iron_ore": 2, "coal": 1},   "out": {"iron_bar": 1},  "minutes": 40, "skill": "smithing", "xp": 10, "level": 1},
     "smelt_copper":  {"station": "forge",     "in": {"copper_ore": 2, "coal": 1}, "out": {"copper_bar": 1}, "minutes": 40, "skill": "smithing", "xp": 8, "level": 1},
     "smelt_gold":    {"station": "forge",     "in": {"gold_ore": 2, "coal": 1},   "out": {"gold_bar": 1},  "minutes": 60, "skill": "smithing", "xp": 20, "level": 3},
+    "forge_lockpicks": {"station": "anvil", "in": {"iron_bar": 1}, "out": {"lockpick": 3}, "minutes": 25, "skill": "smithing", "xp": 8, "level": 1},
+    "forge_padlock": {"station": "anvil", "in": {"iron_bar": 2}, "out": {"padlock": 1}, "minutes": 40, "skill": "smithing", "xp": 12, "level": 2},
     "forge_pickaxe": {"station": "anvil",     "in": {"iron_bar": 2, "plank": 1},  "out": {"pickaxe": 1},   "minutes": 60, "skill": "smithing", "xp": 18, "level": 1},
     "forge_axe":     {"station": "anvil",     "in": {"iron_bar": 2, "plank": 1},  "out": {"axe": 1},       "minutes": 60, "skill": "smithing", "xp": 18, "level": 1},
     "forge_hammer":  {"station": "anvil",     "in": {"iron_bar": 1, "plank": 1},  "out": {"hammer": 1},    "minutes": 40, "skill": "smithing", "xp": 10, "level": 1},

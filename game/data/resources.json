@@ -503,6 +503,12 @@
     "pine_sapling": [
       {"use": "plant", "text": "Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature pine by the game clock.", "source": "game/scripts/core/world.gd::plant_tree"}
     ],
+    "lockpick": [
+      {"use": "tool", "text": "Picks a locked chest: one attempt takes game time, may open the lock until dawn or snap the pick (used up); a seen attempt is a crime.", "source": "game/scripts/core/chests.gd::attempt"}
+    ],
+    "padlock": [
+      {"use": "tool", "text": "Fitted to the player's own chest (used up once): the chest is then locked or unlocked with the player's key.", "source": "game/scripts/core/chests.gd::set_own_lock"}
+    ],
     "hammer": [
       {"use": "tool", "text": "The smith's tool: it wears 2 with every anvil recipe a villager smith makes (the player needs none).", "source": "game/scripts/core/npc_brain.gd::act"}
     ]
@@ -519,7 +525,7 @@
   ],
   "exports": {"text": "Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf.", "smith_caps": {"iron_bar": 8, "pickaxe": 4, "axe": 4, "iron_sword": 4, "copper_sword": 4, "copper_bar": 8, "gold_bar": 2}, "source": "game/scripts/core/npc_brain.gd::caravan"},
   "non_harvestable": [
-    {"id": "container", "kinds": ["crate", "barrel", "table"], "what": "Crates, barrels and the tavern's tables (village.json containers)", "reason": "Their owners' stock, not a node: nothing grows or is made there. Taking from one is theft; a tavern table holds a keeper's dish while the tavern is open.", "source": "game/scripts/core/world.gd::player_take"},
+    {"id": "container", "kinds": ["crate", "barrel", "table"], "what": "Crates, barrels and the tavern's tables (village.json containers), and the chests inside buildings", "reason": "Their owners' stock, not a node: nothing grows or is made there. Taking from one is theft; a tavern table holds a keeper's dish while the tavern is open.", "source": "game/scripts/core/world.gd::player_take"},
     {"id": "stall", "what": "The market stalls", "reason": "A merchant's shop: goods are bought, or the stall's stock is stolen while its merchant is away.", "source": "game/scripts/core/world.gd::shop_post"},
     {"id": "well", "what": "The well (a station)", "reason": "A works site the manor's mend jobs repair and where elders take the air. It gives nothing: the game has no water item.", "source": "game/scripts/core/manor_work.gd::_find_sites"},
     {"id": "station", "kinds": ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"], "what": "Crafting stations", "reason": "They turn materials into goods by recipes.json; they yield nothing themselves.", "source": "game/scripts/main.gd::craft"},
