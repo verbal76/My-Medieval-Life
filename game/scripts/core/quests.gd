@@ -367,7 +367,7 @@ func complete(q: Dictionary) -> int:
 		var lv := int(t.teach.level)
 		if w.player.raise_to(sk, lv):
 			var s: Dictionary = GameData.skills[sk]
-			var unlock: String = s.unlocks.get(str(lv), "")
+			var unlock := Skills.tier_text(sk, lv)
 			last_learned = "%s is now level %d.%s" % [s.name, lv, (" Unlocked: " + unlock) if unlock != "" else ""]
 			w.note("%s %s taught %s %s: %s" % [n.name, n.family, w.player.name, w.player.family, last_learned])
 			w.stat("quests_taught")

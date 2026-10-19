@@ -480,3 +480,37 @@ Wiki notes (for the wiki agent):
 - PL1-01 root cause: X, Esc and the pad's B in every window called `hide_all`, which only unpaused when a game was running. From the title screen (Controls, Settings, Credits, character creation) it hid the panel and left the HUD over a paused, greyed world. Fix: each window records its Back (`GameUI.panel_back`); `go_back` returns to it, closes a play window, and ignores the title, origin and death screens.
 - PL1-02: Settings is one tabbed screen (Audio, Display, Interface, Controls, Wiki) with a Back button; Controls and Wiki are also direct buttons on the title and pause menus. No settings changed or were added.
 - PL2-009: the wiki is generated from game data at open time (see INT-082) with hand-written system pages and How-do-I guides whose numbers come from balance.json. Not-built ideas (lockpicking, player shops, cloud saves, hand plough, apothecary and potions) are listed as "Not in the game yet", confirmed absent from scripts and data by search on 2026-10-19. Wording of mechanics is provisional like the numbers it quotes.
+
+## Skill tiers and the XP curve (PL2-005)
+
+Agent proposals, owner approval pending. Skills had reached level 3 or 4 (most of their perks) within the first
+village loop, and two perks were not implemented ("Power strike (hold attack)" did not exist; the sapling chance was
+already 1.0). Now:
+
+- **Curve.** Levels 1 to 10. XP to climb from level L: `100 x L x (1 + 0.25 x (L - 1))` = 100, 250, 450, 700, 1000,
+  1350, 1750, 2200, 2700; a level starts at 0, 100, 350, 800, 1500, 2500, 3850, 5600, 7800, 10500 xp (`Skills`,
+  numbers in `skills.json`: `max_level`, `step_base`, `step_growth`). Level 2 stays at 100 xp (ten iron smelts,
+  the tanner's lesson), so quests and tests that assume it hold; level 3 moved from 300 to 350.
+- **Early play.** Per-action xp is unchanged except trading (was a flat 2 a deal; now `2 + coins / 5`, at most 30) and
+  Fireball (6 on a cast, 6 more when it lands). Mining 30 ore (240 xp) is level 2; felling 5 trees (4 blows x 12 xp
+  each, 240 xp) is level 2; 100 ore is still only level 4. A tree gives 48 xp, so levelling does not need felling the
+  woods (and a level-3 woodcutter's axe saves wear and yields more logs per tree, not more trees).
+- **Saves.** The saved `skills` dictionary holds raw xp under the same keys; nothing is migrated or rescaled. Levels are
+  derived, so a character with 1000 stealth xp (level 5 before) is level 4 now and keeps every point; no perk is
+  lost for good, it returns as they play. `raise_to` (the lesson) uses the new curve.
+- **Tiers are data.** `skills.json` format `mml-skills/2`: a tier is `{text, effects}`; effects are numbers read in code
+  through `Skills.value` (highest tier reached that defines the key wins). `Skills.EFFECTS` names each key, how it
+  prints, and the script that reads it; `tests/skills_test.gd` checks every key in the data is declared, appears in that
+  script, and moves the value the game reads. The skills window and the wiki print the tier text from the same
+  numbers, plus the recipes that unlock at that level from `recipes.json`.
+- **Perks removed:** "Power strike (hold attack)" (never built; replaced by a crit chance and a quicker swing at later
+  Combat tiers), and the percentage in the old Pick pockets lines (now printed from the real chance).
+- **Perks added** (all implemented): Mining chance of a second ore, tool-wear saving, faster swings, gold at 3;
+  Woodcutting extra logs (up to +3), faster chopping, axe-wear saving, a chance of a second sapling; Smithing, Crafting
+  and Cooking craft time, a chance materials are not used, a chance of one extra unit of non-gear output (the player
+  only); Combat damage, swing speed, crit, damage taken; Magic cooldown, damage, stamina cost; Trading price bonus up
+  to 20%; Stealth pickpocket chance and a shorter distance over which a guard hears a caught try.
+- **Not done / open:** no new recipes were added (recipe levels are unchanged: tests and quests depend on them, and
+  every recipe needs art and `resources.json` entries); the later tiers are unlocks of effects rather than recipes.
+  The numbers are provisional pending a balance review. A `lockpicking` skill (PL chests agent) adds one entry to
+  `skills.json`; its tiers must use keys declared in `Skills.EFFECTS`.

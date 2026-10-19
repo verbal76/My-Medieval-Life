@@ -91,6 +91,7 @@ static func build() -> Wiki:
 	w._nodes()
 	w._stations()
 	w._skills()
+	WikiSkills.add_pages(w)
 	w._animals()
 	w._jobs()
 	w._controls()
@@ -387,11 +388,9 @@ func _skills() -> void:
 	for id in GameData.skills:
 		var s: Dictionary = GameData.skills[id]
 		var rows := []
-		var lv: Array = s.unlocks.keys()
-		lv.sort_custom(func(a, b): return int(a) < int(b))
-		for l in lv:
-			rows.append(["Level " + str(l), str(s.unlocks[l])])
-		var blocks := [p("Experience for each level is 100 times the level you are going for. You gain it by doing the work."), stats(rows)]
+		for l in Skills.shown_levels(id):
+			rows.append(["Level " + str(l), Skills.tier_text(id, l)])
+		var blocks := [p("Levels 1 to %d. You gain experience by doing the work; see Skills and levels for the curve." % Skills.max_level()), stats(rows)]
 		var rl := []
 		for r in GameData.recipes:
 			if GameData.recipes[r].skill == id:

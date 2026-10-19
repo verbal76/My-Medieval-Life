@@ -56,21 +56,12 @@ func _init() -> void:
 
 
 func level(skill: String) -> int:
-	var xp := int(skills.get(skill, 0))
-	var lv := 1
-	while xp >= 100 * lv:
-		xp -= 100 * lv
-		lv += 1
-	return lv
+	return Skills.level_of(int(skills.get(skill, 0)))
 
 
+## (xp into the level, xp the level needs; 0 at the top level).
 func xp_into_level(skill: String) -> Vector2i:
-	var xp := int(skills.get(skill, 0))
-	var lv := 1
-	while xp >= 100 * lv:
-		xp -= 100 * lv
-		lv += 1
-	return Vector2i(xp, 100 * lv)
+	return Skills.progress(int(skills.get(skill, 0)))
 
 
 ## Adds xp; returns the new level if it went up, else 0.
@@ -86,7 +77,7 @@ func gain(skill: String, xp: int) -> int:
 func raise_to(skill: String, lv: int) -> bool:
 	if level(skill) >= lv:
 		return false
-	skills[skill] = 50 * lv * (lv - 1)             # 100 + 200 + ... + 100 (lv - 1): the start of level lv
+	skills[skill] = Skills.xp_for_level(lv)        # the start of level lv
 	return true
 
 
@@ -94,12 +85,7 @@ func damage() -> float:
 	var d := 2.0
 	if weapon != "" and inv.has(weapon):
 		d = float(GameData.item(weapon).get("damage", 2))
-	var lv := level("combat")
-	if lv >= 2:
-		d *= 1.2
-	if lv >= 4:
-		d *= 1.2
-	return d
+	return d * Skills.value(self, "combat", "damage_mult", 1.0)
 
 
 ## The tool of a kind the player uses: the one in hand if it is of that kind, else the best carried.

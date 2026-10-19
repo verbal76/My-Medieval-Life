@@ -2002,17 +2002,17 @@ func _use() -> void:
 			if pick == "":
 				ui.message("Requires a pickaxe. The smith sells them.")
 				return
-			if dep.ore == "gold_ore" and p.level("mining") < 3:
+			if dep.ore == "gold_ore" and not Skills.has(p, "mining", "gold"):
 				ui.message("Gold needs Mining level 3.")
 				return
-			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0))
+			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0)) * Skills.value(p, "mining", "mine_time", 1.0)
 			start_action("Mining", secs, func():
 				var ore := world.mine_unit(dep)
 				if ore == "":
 					ui.message("The seam is worked out.")
 					return
 				var n := 1
-				if p.level("mining") >= 2 and world.rng.randf() < 0.25:
+				if world.rng.randf() < Skills.value(p, "mining", "ore_extra_chance"):
 					var extra := world.mine_unit(dep)
 					if extra != "":
 						n += 1
@@ -2020,7 +2020,7 @@ func _use() -> void:
 					_gain("+%d %s" % [n, GameData.item_name(ore)], ore)
 				else:
 					ui.message("Your pack is full.")
-				if p.inv.wear(pick, 1 if p.level("mining") < 4 or world.rng.randf() < 0.5 else 0):
+				if p.inv.wear(pick, 0 if world.rng.randf() < Skills.value(p, "mining", "tool_wear_save") else 1):
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
 					if p.tool == pick:
 						p.tool = ""
@@ -2031,8 +2031,7 @@ func _use() -> void:
 				ui.message("Requires an axe. The smith sells them.")
 				return
 			var secs := float(GameData.b("chop_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.5 / float(GameData.item(axe).get("speed", 1.0))
-			if p.level("woodcutting") >= 3:
-				secs *= 0.7
+			secs *= Skills.value(p, "woodcutting", "chop_time", 1.0)
 			var tr: Dictionary = target.tree
 			var why := Trees.refusal(str(tr.state))         # only a mature tree can be felled
 			if why != "":
@@ -2110,7 +2109,7 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 	start_action("Chopping %d/%d" % [world.tree_hits(cell) + 1, chops], secs / float(chops), func():
 		if tr.state != "grown":
 			return                                       # someone else felled it meanwhile
-		var r := world.chop_tree(tr, side, 1 if p.level("woodcutting") >= 2 else 0)
+		var r := world.chop_tree(tr, side, int(Skills.value(p, "woodcutting", "log_bonus")))
 		if int(r.logs) <= 0:
 			_chop(tr, axe, secs)
 			return
@@ -2118,11 +2117,11 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
 		else:
 			ui.message("Your pack is full.")
-		var saplings := world.sapling_drop(tr)
+		var saplings := world.sapling_drop(tr, Skills.value(p, "woodcutting", "sapling_bonus"))
 		for id in saplings:
 			if p.inv.add(id, int(saplings[id])):
 				_gain("+%d %s" % [int(saplings[id]), GameData.item_name(id)], id)
-		p.inv.wear(axe, 3)
+		p.inv.wear(axe, 0 if world.rng.randf() < Skills.value(p, "woodcutting", "axe_wear_save") else 3)
 		_xp("woodcutting", 12), "swing", axe)
 
 
@@ -2162,7 +2161,7 @@ func _xp(skill: String, n: int) -> void:
 	var up := world.player.gain(skill, n)
 	if up > 0:
 		var s: Dictionary = GameData.skills[skill]
-		var unlock: String = s.unlocks.get(str(up), "")
+		var unlock := Skills.tier_text(skill, up)
 		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""])
 
 
@@ -2188,15 +2187,20 @@ func craft(recipe: String, station := "") -> void:
 	if not p.inv.has_all(r.in):
 		ui.message("You do not have the materials.")
 		return
-	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5
+	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(r.skill), "craft_time", 1.0)
 	if station != "":
 		world.reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
 	ui.hide_all()
 	start_action("Crafting", secs, func():
 		if not p.inv.remove_all(r.in):
 			return
+		var saved := world.rng.randf() < Skills.value(p, str(r.skill), "save_chance")
+		if saved:                                       # a practised hand wastes nothing
+			for id in r.in:
+				p.inv.add(id, int(r.in[id]))
+		var bonus := world.rng.randf() < Skills.value(p, str(r.skill), "bonus_chance")
 		for id in r.out:
-			p.inv.add(id, int(r.out[id]))
+			p.inv.add(id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0))
 		_xp(r.skill, int(r.xp))
 		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))),
 			"swing" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "gather", "hammer" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "")
@@ -2208,19 +2212,28 @@ func attack(only: Object = null) -> void:
 	var p := world.player
 	if p.attack_cd > 0.0 or not action.is_empty():
 		return
-	p.attack_cd = 0.6
+	p.attack_cd = 0.6 * Skills.value(p, "combat", "attack_time", 1.0)
 	sprinting = false                  # no sprint while attacking
 	player_sprite.play("sword", true)
 	var probe := p.pos + facing_vec() * 0.8
 	for n: NPC in world.present(probe, 1.1):
 		if (only == null or only == n) and world.reaches(p.pos, n.pos):
-			_hit(n, p.damage())
+			_hit(n, _strike(p))
 			_xp("combat", 4)
 			return
 	for a: Animal in world.fauna.near(probe, 1.1):
 		if (only == null or only == a) and world.reaches(p.pos, a.pos):
-			_hit_animal(a, p.damage())
+			_hit_animal(a, _strike(p))
 			return
+
+
+## The damage of one blow: the weapon's, and a double blow with the Combat tier's crit chance.
+func _strike(p: PlayerState) -> float:
+	var d := p.damage()
+	if world.rng.randf() < Skills.value(p, "combat", "crit_chance"):
+		ui.message("A telling blow!")
+		return d * 2.0
+	return d
 
 
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
@@ -2381,13 +2394,12 @@ func fireball() -> void:
 	if not p.spells.get("fireball", false):
 		ui.message("You do not know any spells. The Sage in the hut north of the tavern teaches them.")
 		return
-	var cd := float(GameData.b("fireball_cooldown"))
-	if p.level("magic") >= 2:
-		cd = 4.0
-	if p.fireball_cd > 0.0 or p.stamina < float(GameData.b("fireball_stamina")):
+	var cd := Skills.value(p, "magic", "fireball_cooldown", float(GameData.b("fireball_cooldown")))
+	var cost := float(GameData.b("fireball_stamina")) * Skills.value(p, "magic", "fireball_stamina", 1.0)
+	if p.fireball_cd > 0.0 or p.stamina < cost:
 		return
 	p.fireball_cd = cd
-	p.stamina -= float(GameData.b("fireball_stamina"))
+	p.stamina -= cost
 	player_sprite.play("throw", true)
 	var node := Sprite2D.new()
 	node.texture = load("res://assets/icons/fireball.png")
@@ -2405,7 +2417,7 @@ func _projectiles_step(delta: float) -> void:
 		pr.node.position = pr.pos * T
 		pr.node.rotation += delta * 12.0
 		var hit := false
-		var dmg := 14.0 * (1.5 if world.player.level("magic") >= 3 else 1.0)
+		var dmg := 14.0 * Skills.value(world.player, "magic", "fireball_damage", 1.0)
 		for n: NPC in world.present(pr.pos, 0.6):
 			_hit(n, dmg)
 			hit = true
@@ -2415,6 +2427,8 @@ func _projectiles_step(delta: float) -> void:
 				_hit_animal(a, dmg)
 				hit = true
 				break
+		if hit:
+			_xp("magic", 6)                    # a spell that lands teaches more than one that is cast
 		if hit or pr.left <= 0.0 or map.is_solid_world(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
 			pr.node.queue_free()
 			projectiles.erase(pr)
