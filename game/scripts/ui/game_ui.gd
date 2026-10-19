@@ -1004,8 +1004,12 @@ func _item_row(id: String, count: int, text: String, btn: String, cb: Callable, 
 func show_title(can_continue: bool) -> void:
 	_open("title", "My Medieval Life  (working title: The Well)", false)
 	_label("A living village of a hundred people who work, trade, eat and sleep whether or not you are watching. You are one of them.")
+	_label("Single Player", 20)
 	_button("Continue", func(): main.continue_game(), can_continue)
 	_button("New game", func(): show_creation({}))
+	_label("Play with friends", 20)
+	_button("Host With Friends", func(): show_host())
+	_button("Join Nearby Game", func(): show_join())
 	_button("Settings", func(): show_settings(func(): show_title(main.can_continue()), "audio"))
 	if not main.settings.phone:
 		_button("Quit", func(): main.get_tree().quit())
@@ -1137,8 +1141,22 @@ func show_pause() -> void:
 	_button("Settings", func(): show_settings(show_pause, "audio"))
 	_button("Controls", func(): show_controls(show_pause))
 	_button("Wiki", func(): show_settings(show_pause, "wiki"))
+	if main.guest_world:
+		_button("Players", show_players)
+		_button("Leave world", func(): main.leave_guest_world("You left the world."))
+		return
+	if main.net.is_host():
+		_button("Players", show_players)
+		_button("Stop hosting", func():
+			main.net.stop()
+			main.save_game(false)
+			message("Your world is single player again.")
+			show_pause())
+	else:
+		_button("Host With Friends", func(): show_host(true))
 	_button("Save and quit to title", func():
 		main.save_game(false)
+		main.net.stop()
 		main.running = false
 		show_title(true))
 
@@ -2241,6 +2259,8 @@ func show_craft(station_id: String) -> void:
 
 # ---------------------------------------------------------------- inventory ------------------
 func toggle_inventory() -> void:
+	if main.guest_blocked():
+		return
 	if is_open("inventory"):
 		hide_all()
 	else:
@@ -2353,6 +2373,8 @@ func show_recenter(on: bool) -> void:
 ## rule: house first, then workshops), each with what it takes; then a place for it (main
 ## begin_placement). The family's unfinished sites are listed to open.
 func show_build_menu() -> void:
+	if main.guest_blocked():
+		return
 	var w: World = main.world
 	var c: Construction = w.construction
 	_open("build_menu", "Build")
@@ -2786,3 +2808,137 @@ func _home_focus(rows: Dictionary, focus: Dictionary) -> void:
 				break
 	if target != null:
 		target.grab_focus.call_deferred()
+
+# ---------------------------------------------------------------- multiplayer (MP-01) --------
+var _mp := {"world": "saved", "max": 2}
+
+
+## A text box that closes the phone keyboard when the player is done (Enter or tapping away).
+func _text_box(hint: String, text := "", secret := false) -> LineEdit:
+	var e := LineEdit.new()
+	e.placeholder_text = hint
+	e.text = text
+	e.secret = secret
+	e.max_length = 40
+	e.custom_minimum_size = Vector2(0, 52)
+	e.add_theme_font_size_override("font_size", 20)
+	e.text_submitted.connect(func(_t):
+		e.release_focus()
+		DisplayServer.virtual_keyboard_hide())
+	e.focus_exited.connect(func(): DisplayServer.virtual_keyboard_hide())
+	panel_body.add_child(e)
+	return e
+
+
+## Host With Friends: which world, how many players, an optional password, then Start.
+## `running`: from the pause menu, the world being played now.
+func show_host(running := false) -> void:
+	_open("host", "Host With Friends", not running)
+	panel_back = (func(): show_pause()) if running else (func(): show_title(main.can_continue()))
+	_label("Friends on the same Wi-Fi network see your world under Join Nearby Game. Your device keeps the world: while you play, it goes on for everyone; when you stop, it stops.", 18)
+	if not running:
+		_label("World", 20)
+		var row := HBoxContainer.new()
+		panel_body.add_child(row)
+		var saved: bool = main.can_continue()
+		if not saved:
+			_mp.world = "new"
+		_button(("> " if _mp.world == "saved" else "") + "My saved world", func():
+			_mp.world = "saved"
+			show_host(running), saved, row)
+		_button(("> " if _mp.world == "new" else "") + "A new world", func():
+			_mp.world = "new"
+			show_host(running), true, row)
+	_label("Players (you included)", 20)
+	var counts := HBoxContainer.new()
+	panel_body.add_child(counts)
+	for n in [2, 3, 4]:
+		var k: int = n
+		_button(("> " if _mp.max == k else "") + str(k), func():
+			_mp.max = k
+			show_host(running), true, counts)
+	_label("Password (optional)", 20)
+	var pw := _text_box("No password", "", true)
+	var start := func():
+		var opts := {"max_players": int(_mp.max), "password": pw.text.strip_edges()}
+		if running:
+			var why: String = main.host_game(opts)
+			message(why if why != "" else "Hosting. Friends can join now.", 8.0)
+			hide_all()
+		elif _mp.world == "saved":
+			main.continue_game()
+			var why2: String = main.host_game(opts)
+			if why2 != "":
+				message(why2, 8.0)
+		else:
+			main.pending_host = opts
+			show_creation({})
+	_button("Start hosting", start)
+	_button("Back", panel_back)
+
+
+## Join Nearby Game: the games found on this network, refreshed every second; Advanced joins by address.
+func show_join(advanced := false) -> void:
+	_open("join", "Join Nearby Game", false)
+	panel_back = func():
+		main.net.discovery.close()
+		show_title(main.can_continue())
+	if not main.net.discovery.udp.is_bound() or main.net.discovery.hosting:
+		main.net.discovery.look()
+	_label("Your name in that world", 20)
+	var who := _text_box("Your name")
+	who.text_changed.connect(func(t): _mp["name"] = t)
+	if str(_mp.get("name", "")) != "":
+		who.text = str(_mp.name)
+	var pw := _text_box("Password (if the world has one)", str(_mp.get("pw", "")), true)
+	pw.text_changed.connect(func(t): _mp["pw"] = t)
+	var games: Array = main.net.discovery.games()
+	if games.is_empty():
+		_label("Looking for nearby games...", 22)
+		_label("Both devices must be on the same Wi-Fi network, and the host must have chosen Host With Friends. Some routers and phone hotspots hide games from each other: then use Advanced.", 16)
+	for g in games:
+		var gg: Dictionary = g
+		var same: bool = str(gg.version) == NetProtocol.full_version()
+		var text := "%s  -  hosted by %s  (%d of %d players)%s" % [gg.world, gg.name, int(gg.players), int(gg.max), "  [password]" if gg.locked else ""]
+		if not same:
+			text += "  (a different game version)"
+		_button(text, func(): _join(str(gg.ip), int(gg.port), who.text, pw.text), same and int(gg.players) < int(gg.max))
+	if advanced:
+		_label("Join by address (troubleshooting)", 20)
+		var ip := _text_box("The host's address, e.g. 192.168.1.20", str(_mp.get("ip", "")))
+		ip.text_changed.connect(func(t): _mp["ip"] = t)
+		_button("Join by address", func(): _join(ip.text.strip_edges(), NetProtocol.GAME_PORT, who.text, pw.text))
+	else:
+		_button("Advanced", func(): show_join(true))
+	_button("Back", panel_back)
+	get_tree().create_timer(1.0).timeout.connect(func():
+		if panel_kind == "join" and panel.visible and not (who.has_focus() or pw.has_focus()) and get_viewport().gui_get_focus_owner() == null:
+			show_join(advanced))
+
+
+func _join(ip: String, port: int, who: String, pw: String) -> void:
+	if who.strip_edges() == "":
+		message("Please give your character a name.", 6.0)
+		return
+	if ip == "":
+		message("Type the host's address first.", 6.0)
+		return
+	main.net.discovery.close()
+	var why: String = main.net.join(ip, port, NetProtocol.identity_key(), who.strip_edges(), pw)
+	if why != "":
+		message(why, 8.0)
+		return
+	_open("joining", "Joining world", false)
+	_label("Joining world...", 24)
+	_button("Cancel", func():
+		main.net.leave()
+		show_join())
+
+
+## Who is in the world now.
+func show_players() -> void:
+	_open("players", "Players", not (main.net.is_host() or main.guest_world))
+	panel_back = show_pause
+	for n in main.net.player_names():
+		_label(str(n), 22)
+	_button("Back", show_pause)

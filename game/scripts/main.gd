@@ -87,6 +87,11 @@ var attack_mode := false       # toggled by the Attack button: a tap on a person
 var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
 var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
 var swing := Combat.new()      # the sword swing: windup, blow, recovery and one buffered press (CQ-01)
+var net: NetSession            # MP-01 player-hosted multiplayer (scripts/net, docs/MULTIPLAYER.md)
+var guest_world := false       # this machine shows a host's world: it never simulates or saves it
+var avatar_sprites := {}       # the other players, by session id
+var _guest_note_t := -100.0
+var pending_host := {}         # host this new world once it starts (Host With Friends, A new world)
 var target_marker: Sprite2D    # the sword shown over the target
 var settings := GameSettings.new()
 var scheme := "kbm"            # the controls in use, from the last input: touch | gamepad | kbm
@@ -114,6 +119,14 @@ func _ready() -> void:
 	scheme = "touch" if settings.phone else "kbm"
 	ui = GameUI.new()
 	add_child(ui)
+	net = NetSession.new()
+	net.name = "NetSession"
+	net.main = self
+	add_child(net)
+	net.changed.connect(func(t):
+		ui.message(t, 8.0)
+		if ui.panel_kind == "joining" and not net.is_guest():
+			ui.show_join())          # refused or unreachable: back to the list, with the reason shown
 	ui.build(self)
 	ui.set_scheme(scheme)
 	var args := OS.get_cmdline_user_args()
@@ -736,6 +749,11 @@ func new_game(spec := {}) -> void:
 func resume_after_origin() -> void:
 	_start(true)
 	save_game(false)
+	if not pending_host.is_empty():
+		var why := host_game(pending_host)
+		pending_host = {}
+		if why != "":
+			ui.message(why, 8.0)
 
 
 ## Continue from the save. A save that cannot be used (damaged, or from a newer version) is never
@@ -777,6 +795,83 @@ func _load_save(d: Dictionary) -> void:
 	_start()
 
 
+# ---------------------------------------------------------------- multiplayer (MP-01) --------
+## Host: open the world that is running now to friends (NetSession.host). "" when hosting, else why not.
+func host_game(opts: Dictionary) -> String:
+	if world == null or guest_world:
+		return "Start or continue a world first."
+	var why := net.host(opts)
+	if why == "":
+		save_game(false)
+	return why
+
+
+## Guest: the host's world arrived (NetSession.s_welcome): show it, with this player's own character.
+## Nothing here is simulated or saved; the host sends what changes.
+func start_guest_world(d: Dictionary) -> void:
+	save_meta = {}
+	_clear_world()
+	guest_world = true
+	map = VillageMap.load_default()
+	world = World.new()
+	world.load_dict(map, d)
+	_build_scene()
+	_apply_world_changes()
+	_start()
+
+
+## Guest: back to the title (the host left, the connection was lost, or the player chose to leave).
+func leave_guest_world(text := "") -> void:
+	if net.is_guest():
+		net.leave()
+	guest_world = false
+	running = false
+	paused = true
+	_clear_world()
+	world = null
+	ui.show_title(can_continue())
+	if text != "":
+		ui.message(text, 10.0)
+
+
+## True (with a short note now and then) when this machine is a guest: so far a guest walks the shared
+## world; working, fighting and trading there come with the later phases (docs/MULTIPLAYER.md).
+func guest_blocked() -> bool:
+	if not guest_world:
+		return false
+	var now := Time.get_ticks_msec() / 1000.0
+	if now - _guest_note_t > 4.0:
+		_guest_note_t = now
+		ui.message("In a friend's world you can walk and look around for now. Working, fighting and trading there come later.", 5.0)
+	return true
+
+
+## The other players: one sprite each, eased toward where the host says they are.
+func _sync_avatars(dt: float) -> void:
+	var others := net.others()
+	for id in avatar_sprites.keys():
+		if not others.has(id):
+			avatar_sprites[id].queue_free()
+			avatar_sprites.erase(id)
+	for id in others:
+		var e: Dictionary = others[id]
+		var s: ActorSprite = avatar_sprites.get(id)
+		if s == null:
+			s = ActorSprite.new()
+			s.setup(str(e.get("sprite", "res://assets/characters/player_02.png")))
+			actors.add_child(s)
+			s.position = (e.pos as Vector2) * T
+			avatar_sprites[id] = s
+		var to: Vector2 = (e.pos as Vector2) * T
+		s.position = s.position.lerp(to, minf(1.0, dt * 12.0)) if s.position.distance_to(to) < 48.0 else to
+		if (e.get("dir", Vector2.ZERO) as Vector2).length() > 0.1:
+			s.face(e.dir)
+		var anim := str(e.get("anim", "idle"))
+		s.play(anim if anim in ["idle", "walk", "sword", "swing", "gather", "work"] else "idle")
+		if not bool(e.get("alive", true)) and s.anim != "death":
+			s.play("death", true)
+
+
 ## `fresh`: a new game, which also says where paid work is (owner, 2026-10-18: guidance, no tutorial).
 func _start(fresh := false) -> void:
 	paused = false
@@ -798,6 +893,10 @@ func _clear_world() -> void:
 			sg.queue_free()
 	house_signs.clear()
 	swing.cancel()
+	for s in avatar_sprites.values():
+		if is_instance_valid(s):
+			s.queue_free()
+	avatar_sprites.clear()
 	chase = null
 	talk_to = null
 	reach_to = Vector2.INF
@@ -825,7 +924,7 @@ func _clear_world() -> void:
 		attack_mode = false
 		ui.set_attack_mode(false)
 	for c in get_children():
-		if c != ui:
+		if c != ui and c != net:          # the network session outlives a world (MP-01)
 			c.queue_free()
 	sprites.clear()
 	animal_sprites.clear()
@@ -1128,7 +1227,12 @@ func _process(delta: float) -> void:
 		_placing_step(delta)
 	if not action.is_empty() and (ui.modal() or not world.player.alive):
 		cancel_action("")          # a window opened (the Pack, a menu) or the player fell: the work stops, nothing is awarded
-	if not paused and world.player.alive:
+	if guest_world:
+		if not paused and world.player.alive:
+			_player_step(delta)             # walking only: the host's world is simulated on the host (MP-01)
+	elif net.is_host() and (paused or not world.player.alive):
+		world.update(delta)                 # guests are playing: the host's menus do not stop the world
+	if not guest_world and not paused and world.player.alive:
 		world.update(delta)
 		save_meta["play_seconds"] = float(save_meta.get("play_seconds", 0.0)) + delta
 		_player_step(delta)
@@ -1251,6 +1355,7 @@ func _sync_sprites() -> void:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
 		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
+	_sync_avatars(get_process_delta_time())
 	_sync_carts()
 	_sync_loot()
 	_sync_bubbles()
@@ -2243,6 +2348,8 @@ func talk_to_alt() -> void:
 
 
 func interact() -> void:
+	if guest_blocked():
+		return
 	if target.is_empty():
 		return
 	# in Gather mode, Use (keys, pad, the touch button) on a resource in front chooses it to gather
@@ -2612,6 +2719,8 @@ func craft(recipe: String, station := "") -> void:
 ## A press while swinging is kept for the next swing when the swing is nearly over (Combat, CQ-01).
 ## Returns "start", "queued" or "ignored".
 func attack(only: Object = null) -> String:
+	if guest_blocked():
+		return "ignored"
 	if not action.is_empty():
 		return "ignored"
 	var r := swing.press(swing_time(), only)
@@ -2665,6 +2774,8 @@ func _strike(p: PlayerState) -> float:
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
 ## with none, wait for a tap on who or what to attack. Villagers are only attacked by choice.
 func attack_button() -> void:
+	if guest_blocked():
+		return
 	var foe := _foe_in_reach()
 	if foe != null:                    # a foe in reach: the button swings at it (CQ-01), the mode stays as it is
 		player_sprite.face(foe.pos - world.player.pos)
@@ -2700,6 +2811,8 @@ func _foe_in_reach() -> Object:
 ## Mark a person or animal with the sword and strike it: the player walks over if needed. Each
 ## further tap (or right-click) on it is another strike; picking someone else moves the sword.
 func strike(who: Object) -> void:
+	if guest_blocked():
+		return
 	chase = who
 	strike_pending = true
 
@@ -2841,6 +2954,8 @@ func _crime(victim: NPC, memory := "") -> void:
 
 
 func fireball() -> void:
+	if guest_blocked():
+		return
 	var p := world.player
 	if not p.spells.get("fireball", false):
 		ui.message("You do not know any spells. The Sage in the hut north of the tavern teaches them.")
@@ -3384,7 +3499,9 @@ func _tap(screen_pos: Vector2) -> void:
 ## Save safely (SaveStore): written aside, verified, then swapped in, the previous save kept as the
 ## backup. Returns whether it saved; a failure leaves the last save unchanged and says why.
 func save_game(show := true) -> bool:
-	if world == null or not world.player.alive:
+	if guest_world:
+		return false                       # the host keeps the world and the guests' characters (MP-01)
+	if world == null or (not world.player.alive and not net.is_host()):
 		return false
 	if save_blocked != "":
 		if show:
@@ -3673,6 +3790,8 @@ func _screenshot_step(_delta: float) -> void:
 ## The Gather button (B7-012): on, a tap chooses a resource to gather until it runs out; off stops
 ## gathering and walking to it. Gather and Attack exclude each other.
 func gather_button() -> void:
+	if guest_blocked():
+		return
 	gather_mode = not gather_mode
 	if gather_mode and attack_mode:
 		attack_button()
@@ -3699,6 +3818,8 @@ func _resource_tap(wpos: Vector2) -> Dictionary:
 ## warn once before taking someone's field, then walk to it and gather (`continuous`: until it runs
 ## out; else once).
 func select_resource(hit: Dictionary, continuous: bool) -> void:
+	if guest_blocked():
+		return
 	var d: Dictionary = hit.def
 	var hp := Vector2(ResourceNodes.cell_of(world, d, hit.ref)) + Vector2(0.5, 0.5)
 	if world.place_of(world.player.pos) != world.place_of(hp) and not world.reaches(world.player.pos, hp):

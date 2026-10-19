@@ -63,6 +63,7 @@ var granary := Inventory.new()     # the manor's grain, bought from farmers' sur
 var last_reeve_day := -1           # the day the reeve's evening business last ran (never twice a day)
 var last_payday := -1              # the day wages were last paid
 var player := PlayerState.new()
+var guests := {}               # MP-01: other players' characters in this world, by identity hash: {name, state: PlayerState} (scripts/net)
 var coin_sources := 0              # coins that entered the village (caravan)
 var caravan_purse := 0             # coins the caravan holds to spend on the village's goods (B7-014; starts at caravan_float); saved from version 9
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
@@ -2545,7 +2546,16 @@ func to_dict() -> Dictionary:
 		"vacancies": vacancies, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
+		"guests": _guests_to_dict(),
 	}
+
+
+## MP-01: the guests' characters as saved (optional in the save: a world nobody joined has none).
+func _guests_to_dict() -> Dictionary:
+	var out := {}
+	for k in guests:
+		out[k] = {"name": guests[k].name, "player": (guests[k].state as PlayerState).to_dict()}
+	return out
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -2640,6 +2650,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	guests = {}
+	var gd: Dictionary = d.get("guests", {})                # saves before MP-01 have no guests
+	for k in gd:
+		guests[k] = {"name": str(gd[k].name), "state": PlayerState.from_dict(gd[k].player)}
 	_migrate_property(d)
 	if d.has("treasury"):
 		treasury = int(d.treasury)
