@@ -24,6 +24,8 @@ var moved := []                        # [layer index, cell, source, coords, alt
 var want := ""                         # what the player's position asks for, held for `held` seconds
 var want_alpha := 1.0
 var held := 0.0
+var resume_building := ""              # the roof put back by restore_all while it was lifted, and how far (B8-018):
+var resume_alpha := 1.0                # lifted again at that alpha, not from fully on, so a map change never flashes it
 
 
 func setup(v: MapView, roof_layers: Array) -> void:
@@ -39,6 +41,27 @@ func setup(v: MapView, roof_layers: Array) -> void:
 		d.visible = false
 		add_child(d)
 		dst.append(d)
+
+
+## What the player's position asks of the roofs: {inside, inside_roof, under, under_roof}, the arguments of
+## follow. `hold` is the building the player was last inside ("" none): within its outline the player
+## stays inside it, on a cell its interior missed (a back room, a courtyard cell), or the roof would
+## flick between lifted and eaves-faded (Build 8 reports). Pure: main.gd calls it every frame, the
+## tests walk every building with it.
+static func probe(world: World, pos: Vector2, hold: String) -> Dictionary:
+	var inside := world.place_of(pos)
+	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
+		inside = ""
+	if inside == "" and hold != "" and world.buildings.has(hold) and world.interiors.has(hold):
+		var hb: Dictionary = world.buildings[hold]
+		if Rect2(float(hb.x), float(hb.y), float(hb.w), float(hb.h)).has_point(pos):
+			inside = hold
+	# behind the eaves a roof fades only when it would hide the player: over their feet and head both
+	var under := world.roof_over(pos)
+	if under != "" and world.roof_over(pos + Vector2(0, -1)) != under:
+		under = ""
+	return {"inside": inside, "inside_roof": world.interiors[inside].roof if inside != "" else [],
+			"under": under, "under_roof": world.interiors[under].roof if under != "" else []}
 
 
 ## Called every frame with the building the player is inside ("" none) and the one whose roof is
@@ -68,6 +91,9 @@ func update(building: String, roof_cells: Array, target := ALPHA, delta := 0.0) 
 			if building != "":
 				_lift(building, roof_cells)
 				goal = target
+				if building == resume_building:
+					alpha = resume_alpha          # it was already lifted this far: carry on from there
+				resume_building = ""
 	else:
 		goal = target if building != "" else 1.0
 		alpha = move_toward(alpha, goal, step)
@@ -77,6 +103,9 @@ func update(building: String, roof_cells: Array, target := ALPHA, delta := 0.0) 
 
 ## Put the lifted roof back at once (before the map's roof tiles change).
 func restore_all() -> void:
+	if current != "":
+		resume_building = current
+		resume_alpha = alpha
 	for m in moved:
 		var s: TileMapLayer = src[m[0]]
 		s.set_cell(m[1], m[2], m[3], m[4])
