@@ -11,18 +11,18 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 41 |
-| ACTIVE DEVELOPMENT | 5 |
+| ACTIVE DEVELOPMENT | 4 |
 | PARTIALLY IMPLEMENTED | 32 |
 | IMPLEMENTED — TESTING REQUIRED | 2 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 17 |
 | BLOCKED | 17 |
 | DEFERRED | 8 |
-| COMPLETE AND VERIFIED | 120 |
+| COMPLETE AND VERIFIED | 121 |
 | SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
 | **Total approved** | **267** |
-| Outstanding (not complete, superseded or canceled) | 130 |
+| Outstanding (not complete, superseded or canceled) | 129 |
 
 Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -98,15 +98,14 @@ Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II |  |  |  |
 
-## ACTIVE DEVELOPMENT (5)
+## ACTIVE DEVELOPMENT (4)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| B14R-05 | Identify the Build 14 candidate commit and ask the owner for build approval | same directive s.5 |  | after B14R-01; after B14R-04; after B14R-12 |  |
 | B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1) |  |  | implement WR-01, then re-run 365 days |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
-| REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md |  |  | Build 14 from 5f0a07b once CI is green; then Build 15 work |
+| REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold |
 
 ## PARTIALLY IMPLEMENTED (32)
 
@@ -209,7 +208,7 @@ Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (120)
+## COMPLETE AND VERIFIED (121)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -239,6 +238,7 @@ Automated tests do not count as device verification.
 | B14R-02 | Compare the manor reserve and the caravan money limit (four configurations) and recommend | same directive s.2 | economy_sim.gd --set overrides, seed 1, 100 days | after B7-009; after B7-014 |  |
 | B14R-03 | Investigate iron and coal running out by day 10; document sustainable alternatives without changing the resource model | same directive s.3 | economy_sim.gd seeds 1, 2 | after OD-01 |  |
 | B14R-04 | Build 14 tester notes | same directive s.4 | n/a (document) |  |  |
+| B14R-05 | Identify the Build 14 candidate commit and ask the owner for build approval | same directive s.5 | `7dbae4f`; CI 39313936196; release run 39315420666 | after B14R-01; after B14R-04; after B14R-12 |  |
 | B14R-06 | Permanent requirements register, lifecycle, validation, silent-deletion detection, startup and handoff rules | same directive Parts II, V, VI | `386498b`; tests/test_requirements.py; tools/check_requirements.py in tests.yml and pre-push |  |  |
 | B14R-07 | Second historical requirements recovery pass and coverage report | same directive Part III | tools/check_requirements.py |  |  |
 | B14R-08 | Reconcile the original 16 World Design Rules (restore text if the source is found) | same directive Part IV |  |  |  |

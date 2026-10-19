@@ -1921,7 +1921,7 @@
    "id": "B14R-05",
    "title": "Identify the Build 14 candidate commit and ask the owner for build approval",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Identify the Build 14 candidate commit and ask the owner for build approval",
    "source": "same directive s.5",
@@ -1929,11 +1929,13 @@
    "acceptance": [
     "As recorded in the source; evidence named in implementation and tests"
    ],
-   "implementation": "docs/release/BUILD_14_READINESS.md",
-   "tests": "",
+   "implementation": "docs/release/BUILD_14_PACKET.md",
+   "tests": "CI 39313936196; release run 39315420666",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "7dbae4f"
+   ],
    "parent": null,
    "depends_on": [
     "B14R-01",
@@ -1959,6 +1961,11 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; implementation",
      "why": "candidate identified in BUILD_14_READINESS.md; owner authorised Builds 14-16 when all tests are green"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 7dbae4f; tests; implementation",
+     "why": "candidate 7dbae4f identified and built as Build 14 under the owner's authorization"
     }
    ],
    "acceptance_derived": true
@@ -11032,14 +11039,16 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "7dbae4f"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Build 14 from 5f0a07b once CI is green; then Build 15 work",
+   "next_action": "Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold",
    "priority": "",
    "workstream": "releases",
    "superseded_by": null,
@@ -11059,6 +11068,11 @@
      "date": "2026-10-19",
      "change": "notes",
      "why": "owner 2026-10-19: 'Keep them private drafts for now'"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "commit 7dbae4f; next_action",
+     "why": "Build 14 released as a private draft from 7dbae4f (run 39315420666); conditions checked in BUILD_14_PACKET.md; condition 5 gap on the release page fixed in release.yml for Builds 15-16"
     }
    ]
   },

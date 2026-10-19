@@ -1,7 +1,7 @@
-# Build 14: tester notes (draft, for the owner's approval)
+# Build 14: tester notes
 
-Build 14 has **not** been made. These notes go with it if the owner approves it. They describe the candidate commit in
-`docs/release/BUILD_14_READINESS.md`: single player only, with no multiplayer code in the build.
+Build 14 is a private draft release made from `7dbae4f` (packet: `docs/release/BUILD_14_PACKET.md`; readiness:
+`docs/release/BUILD_14_READINESS.md`). It is single player only, with no multiplayer code in the build.
 
 How to read them:
 - **Tested** means checked by an automated test or a screenshot looked at on the build machine.

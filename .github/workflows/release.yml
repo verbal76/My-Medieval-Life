@@ -181,6 +181,8 @@ jobs:
             echo "- **Linux:** unzip and run \`MyMedievalLife.x86_64\`"
             echo "- \`SHA256SUMS.txt\` lists each file's checksum."
             echo
+            # the build's own tester notes (what is new, known limitations) when they exist (owner release condition 5)
+            if [ -f "docs/release/BUILD_${n}_TESTER_NOTES.md" ]; then cat "docs/release/BUILD_${n}_TESTER_NOTES.md"; echo; fi
             cat docs/release/TESTING_CHECKLIST.md; } > notes.md
 
       - name: Remove the signing key from the runner
