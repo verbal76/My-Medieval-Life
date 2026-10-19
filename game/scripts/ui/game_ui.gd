@@ -2153,9 +2153,9 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 # ---------------------------------------------------------------- crafting -------------------
 func show_craft(station_id: String) -> void:
 	var w: World = main.world
-	var st: Dictionary = w.stations[station_id]
+	var st: Dictionary = Furniture.station_def(station_id) if Furniture.is_home_station(station_id) else w.stations[station_id]
 	var p := w.player
-	_open("craft", "Stove — Cooking & Tonics" if st.type == "stove" else "The %s" % st.type)
+	_open("craft", "Stove — Cooking & Tonics" if st.type == "stove" else ("Your oven" if st.type == "oven" and st.has("home") else ("Food table — Preparing food" if st.type == "prep" else "The %s" % st.type)))
 	var no := w.station_refusal(station_id)
 	if no != "":
 		_label(no, 18, Color(1, 0.7, 0.55))

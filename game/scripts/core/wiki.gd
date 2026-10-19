@@ -95,6 +95,7 @@ static func build() -> Wiki:
 	w._jobs()
 	w._controls()
 	w._systems()
+	WikiHome.add_pages(w)
 	w._guides()
 	w._not_yet()
 	for c in providers:

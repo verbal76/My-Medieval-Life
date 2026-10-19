@@ -22,6 +22,10 @@ const ANIMS := {
 	"swing": [[16, 17, 18], 0.16],
 	"gather": [[26, 25, 27, 25], 0.2],
 }
+const LIE_BODY_Y := -4.5      # the lying frame's body centre, from the feet (px; measured on the sheets: rows 12..24 of 32)
+const LIE_FOOT_SHIFT := 1.5   # the body (17 px) is a little longer than the bed (16): shifted toward the foot this much
+const SIT_DROP := -1.0        # seated: the feet are this far below the chair's centre (the cut line, 5 px above it, is the stool's top: the stool shows under the body)
+const SIT_CUT := -4.0         # seated: nothing below this local y (the knees) is drawn
 const SWING_ANGLES := [-15.0, 120.0, 95.0]    # degrees, per swing frame: the tool raised, down, following through
 const SWING_HAND := Vector2(6, -8)            # the hand, from the feet (pixels), on the side faced
 
@@ -32,41 +36,83 @@ var speed_scale := 1.0         # animation speed (a sprint plays the walk faster
 var once := false
 var label: Label
 var cover: Sprite2D            # the blanket drawn over someone lying in bed
+var pose := ""                 # "" standing, "lie" in a bed, "sit" on a chair (PL1-07)
+var pose_row := 2              # the sheet row of the lying frame (2 east: head left; 6 west: head right)
 var tool_icon: Sprite2D        # the tool held in the hand while swinging
 var tool_item := ""            # the item id of the tool shown ("" = none)
 
 
 ## Lie in a bed (or on a pallet) whose cell centre is `at` (pixels), head toward `head` ("up", "left",
-## "right"), under `blanket` (the bed tile's blanket, or null): the standing frame turned on its side
-## (or, head up, as it is), the body over the bed cell and the head on the pillow.
+## "right"), under `blanket` (the bed tile's blanket, or null). PL1-07: the sheet has a lying frame (the
+## last frame of the fall, "death" column 24: the body flat, head to the west in the east row), so the
+## sleeper is drawn from that, not the standing frame turned on its side: head left = the east row, head
+## right = the west row, head up = the east row turned a quarter. The body's centre is put on the bed's
+## middle and the sprite is drawn above the bed's own tiles (it lies ON the bed), the blanket over it.
 func lie(at: Vector2, head: String, blanket: Texture2D) -> void:
-	var turn := float({"up": 0.0, "left": -PI / 2.0, "right": PI / 2.0}.get(head, -PI / 2.0))
-	# the drawn body's centre is 8 px from the feet (the position) toward the head: put it 2 px from
-	# the bed's middle toward the foot, so the head lies on the pillow
-	var to_body := Vector2(0, -8).rotated(turn)
-	var toward_head := to_body.normalized()
-	position = at - to_body - toward_head * 2.0
+	pose = "lie"
+	pose_row = 6 if head == "right" else 2
+	var turn := PI / 2.0 if head == "up" else 0.0
+	var body := Vector2(0, LIE_BODY_Y).rotated(turn) * scale.x          # the lying body's centre, from the feet
+	var to_foot: Vector2 = {"up": Vector2(0, 1), "left": Vector2(1, 0), "right": Vector2(-1, 0)}.get(head, Vector2(1, 0))
+	position = at - body + to_foot * LIE_FOOT_SHIFT * scale.x          # the head a little inside the headboard
 	rotation = turn
-	dir = 0
+	z_index = 1
+	_set_cut(false)
 	if anim != "idle":
 		play("idle")
 	if cover == null:
 		cover = Sprite2D.new()
 		cover.top_level = true
-		cover.z_index = 1
 		cover.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		add_child(cover)
+	cover.z_index = 2
 	cover.visible = blanket != null and visible
 	if blanket != null:
 		cover.texture = blanket
-		cover.global_position = at - toward_head * 4.0
+		cover.global_position = at + {"up": Vector2(0, 4), "left": Vector2(4, 0), "right": Vector2(-4, 0)}.get(head, Vector2(4, 0))
+
+
+## Sit on a chair whose cell centre is `at` (pixels), looking toward direction index `d` (0 = south, see
+## DIRS). PL1-07: the sheet has no sitting frames, so the standing frame is cut off at the knees (a shader,
+## no art invented) and set down on the seat: the hips on the chair, the legs under whatever table or tile
+## is drawn in front of it, or the stool's own top showing under the body.
+func sit(at: Vector2, d: int) -> void:
+	pose = "sit"
+	dir = d
+	rotation = 0.0
+	z_index = 1                     # over the chair's own tile (a solid cell's overlay sorts by its bottom edge), whose seat shows under the hips
+	if cover:
+		cover.visible = false
+	position = at + Vector2(0, SIT_DROP) * scale.x
+	_set_cut(true)
+	if anim != "idle":
+		play("idle")
 
 
 ## Up again (any other animation).
 func stand() -> void:
+	if pose == "":
+		return
+	pose = ""
 	rotation = 0.0
+	z_index = 0
+	_set_cut(false)
 	if cover:
 		cover.visible = false
+
+
+## Seated: the lower legs are not drawn (local y below SIT_CUT, the feet being 0).
+func _set_cut(on: bool) -> void:
+	if not on:
+		material = null
+		return
+	if material == null:
+		var sh := Shader.new()
+		sh.code = "shader_type canvas_item;\nvarying float ly;\nuniform float cut = -4.0;\nvoid vertex() { ly = VERTEX.y; }\nvoid fragment() { if (ly > cut) { discard; } }"
+		var m := ShaderMaterial.new()
+		m.shader = sh
+		material = m
+	(material as ShaderMaterial).set_shader_parameter("cut", SIT_CUT)
 
 
 func setup(sheet_path: String) -> void:
@@ -135,5 +181,8 @@ func _process(delta: float) -> void:
 		if anim != "death":
 			anim = "idle"
 			once = false
+	if pose == "lie":
+		frame = pose_row * 29 + 24
+		return
 	frame = dir * 29 + int(cols[i % cols.size()])
 	_place_tool(i % cols.size())

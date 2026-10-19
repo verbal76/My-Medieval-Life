@@ -1113,6 +1113,22 @@ func interior_for(b: Dictionary) -> Dictionary:
 	return out
 
 
+## An interior with the chair spots found in its own tiles (Furniture.with_chairs, PL1-07/PL2-013): the
+## map's layers for the map's buildings, the stamp's for one the player builds.
+func _with_chairs(b: Dictionary, it: Dictionary) -> Dictionary:
+	if it.is_empty():
+		return it
+	for mb in map.data.buildings:
+		if mb.id == b.id:
+			var lays := {}
+			for l in map.data.layers:
+				if Furniture.LAYERS.has(str(l.name)):
+					lays[str(l.name)] = l.data
+			return Furniture.with_chairs(it, lays, map.w, Vector2i.ZERO)
+	var stamp := stamp_of(b)
+	return Furniture.with_chairs(it, stamp.get("layers", {}), int(stamp.w), Vector2i(int(b.x), int(b.y)))
+
+
 ## (Re)build the interiors and the cell lookups (at start, on load, when a house is finished).
 func index_interiors() -> void:
 	interiors.clear()
@@ -1124,7 +1140,7 @@ func index_interiors() -> void:
 	var ids := buildings.keys()
 	ids.sort()
 	for id in ids:
-		var it := interior_for(buildings[id])
+		var it := _with_chairs(buildings[id], interior_for(buildings[id]))
 		if it.is_empty() or it.area.is_empty():
 			continue
 		interiors[id] = it
@@ -2264,6 +2280,8 @@ func station_workers(id: String) -> Array:
 ## reservation is respected while they are at it or on their way (the player waits or uses another
 ## station; the owner of a workshop never waits in it).
 func station_refusal(id: String) -> String:
+	if Furniture.is_home_station(id):          # a home's oven or food table (PL2-013): its household's, nobody queues
+		return Furniture.home_refusal(self, id)
 	var st: Dictionary = stations[id]
 	var b: Dictionary = buildings.get(str(st.get("building", "")), {})
 	if not may_use(PLAYER, st):

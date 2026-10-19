@@ -77,7 +77,8 @@ class ResourceRegistryTest(unittest.TestCase):
         self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "iron_seam", "stone_seam"])
         self.assertEqual(s["finite_no_replacement"], [])
         self.assertIn(("log", "plank", "pickaxe"), s["chains"])
-        self.assertFalse(any("bread" in p for p in s["chains"]), "there is no bread recipe")
+        # PL2-013: the home food table makes bread (knead_flatbread, 3 wheat), so bread is a chain now
+        self.assertIn(("wheat", "bread"), s["chains"])
         self.assertEqual(s["not_gather"], ["chicken_pen", "cow_pen", "pig_pen", "sheep_pen"])
 
     def test_both_directions_agree_with_recipes(self):

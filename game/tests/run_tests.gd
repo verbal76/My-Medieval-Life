@@ -3349,7 +3349,7 @@ func test_resource_registry() -> void:
 		"a real chain: tree -> log -> plank (sawhorse) -> pickaxe (anvil)")
 	check(ResourceNodes.sources_of("log").any(func(s): return s.kind == "node" and s.id == "tree"), "logs come from trees")
 	check(ResourceNodes.sources_of("gold_ore").is_empty(), "gold ore has no source (a recorded exception)")
-	check(not ResourceNodes.sources_of("bread").any(func(s): return s.kind == "recipe") and ResourceNodes.sources_of("bread").any(func(s): return s.kind == "start_kit"), "bread: no recipe, only the start kit")
+	check(ResourceNodes.sources_of("bread").any(func(s): return s.kind == "recipe") and ResourceNodes.sources_of("bread").any(func(s): return s.kind == "start_kit"), "bread: the home food table makes it (PL2-013), and the start kit has it")
 	check(ResourceNodes.uses_of("iron_ore").any(func(u): return u.kind == "buyer" and u.id == "smith" and int(u.qty) == int(NPCBrain.BUYS.smith.iron_ore)), "buyers come from NPCBrain.BUYS")
 	check(ResourceNodes.uses_of("stone").any(func(u): return u.kind == "building" and u.id == "house") and ResourceNodes.uses_of("log").any(func(u): return u.kind == "fuel"), "building costs and fuel are uses")
 	check(ResourceNodes.uses_of("pickaxe").any(func(u): return u.kind == "tool" and u.id == "iron_seam"), "a pickaxe is the tool for the seams")

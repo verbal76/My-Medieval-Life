@@ -14,7 +14,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 |---|---|
 | Implemented harvestable node types | 16 (12 player-harvestable) |
 | Materials the nodes produce | 13: blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, red_berries, stone, wheat |
-| Production chains documented (node product to finished item) | 36 (35 workable, 1 blocked by gold ore) |
+| Production chains documented (node product to finished item) | 37 (36 workable, 1 blocked by gold ore) |
 | Materials with no current use | 0 |
 | Recipes with a missing raw-material source | 2: forge_gold_ring, smelt_gold |
 | Finite node types with no replacement | 0 |
@@ -151,6 +151,7 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
   - 3 wheat → **4 ale** (brew_ale, stove)
     - 1 ale + 2 healing_tonic → **1 strong_healing_tonic** (brew_strong_tonic, stove)
   - 2 wheat → **6 pottage** (cook_pottage, stove)
+  - 3 wheat → **1 bread** (knead_flatbread, prep)
 
 ### `wild_boar` · Wild boar (implemented)
 
@@ -209,6 +210,7 @@ Every recipe path from a node's product to an item no recipe consumes:
 - log → roast_meat
 - meat → roast_meat
 - wheat → ale → strong_healing_tonic
+- wheat → bread
 - wheat → pottage
 
 ## From an item or building: raw materials and nodes
@@ -220,6 +222,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | ale | 0.75 wheat | `wheat_field` | - |
 | amulet | 1 coal, 2 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `pig_pen`, `sheep_pen`, `wild_boar` | coal: import; copper_ore: import |
 | axe | 2 coal, 4 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
+| bread | 3 wheat | `wheat_field` | - |
 | copper_bar | 1 coal, 2 copper_ore | `coal_seam`, `copper_seam` | coal: import; copper_ore: import |
 | copper_ring | 1 coal, 2 copper_ore | `coal_seam`, `copper_seam` | coal: import; copper_ore: import |
 | copper_sword | 2 coal, 4 copper_ore, 0.5 log | `coal_seam`, `copper_seam`, `tree` | coal: import; copper_ore: import |
@@ -255,7 +258,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `apple` Apple | food | **none** | food `apple` |
 | `axe` Axe | tool | recipe `forge_axe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; quest `a_new_axe` ×1; tool `tree` |
 | `blueberries` Blueberries | food | node `blue_berry_bush` ×2 | food `blueberries` |
-| `bread` Loaf of bread | food | start_kit `player_start_items` ×1 | food `bread` |
+| `bread` Loaf of bread | food | recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | food `bread` |
 | `coal` Coal | resource | import `caravan`; node `coal_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; recipe `smelt_copper` ×1; recipe `smelt_gold` ×1; recipe `smelt_iron` ×1 |
 | `copper_bar` Copper bar | resource | recipe `smelt_copper` ×1 | buyer `merchant_goods` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_copper_ring` ×1; recipe `forge_copper_sword` ×2 |
 | `copper_ore` Copper ore | resource | import `caravan`; node `copper_seam` ×1 | buyer `merchant_raw` ×15; buyer `smith` ×20; recipe `smelt_copper` ×2 |
@@ -294,7 +297,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
 | `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `stone_seam` ×1; start_stock `start_0` | building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `smithy` ×30; buyer `merchant_raw` ×40; manor_job `stone` |
 | `strong_healing_tonic` Strong healing tonic | medicine | recipe `brew_strong_tonic` ×1 | **none** |
-| `wheat` Wheat | resource | node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_3` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `brew_ale` ×3; recipe `cook_pottage` ×2 |
+| `wheat` Wheat | resource | node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_3` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `brew_ale` ×3; recipe `cook_pottage` ×2; recipe `knead_flatbread` ×3 |
 
 ## Code-defined uses and sources
 
@@ -332,7 +335,7 @@ Items no recipe consumes: the end of every chain. They are eaten, worn or used, 
 
 ### Orphaned items
 
-Items with no source at all: `apple`, `gold_ore`. Items only in the player's start kit: `bread`, `linen_bandage`, `plain_clothes`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`.
+Items with no source at all: `apple`, `gold_ore`. Items only in the player's start kit: `linen_bandage`, `plain_clothes`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`.
 
 ### Recipes needing materials with no legitimate source
 
@@ -371,7 +374,6 @@ finding not recorded here.
 | `gold_ore` | no_source | defect | Defect: gold ore is an item, the smith buys it, smelt_gold uses it and the mine code gates it at Mining 3, but no deposit in village.json holds it, no start stock has it and no caravan brings it. So smelt_gold, gold_bar, forge_gold_ring and gold_ring cannot be made. Whether to add gold seams is an owner decision. |
 | `gold_bar` | no_source | defect | Follows from gold_ore: its only source is smelt_gold. |
 | `gold_ring` | no_source | defect | Follows from gold_ore: its only source is forge_gold_ring. |
-| `bread` | start_kit_only | implemented | There is no flour or bread recipe: a loaf comes only in the player's start kit. Eaten for food; nobody buys it. |
 | `apple` | no_source | implemented | No tree, recipe or kit gives apples: the item is defined but never made (the start kit has a rotten apple only). |
 | `linen_bandage` | start_kit_only | implemented | No linen or cloth is grown or woven yet, so bandages are not craftable: the player starts with two, and the sage's apothecary holds some and buys more from the caravan (balance.json caravan_apothecary_stock; PL1-04). |
 | `rotten_apple` | start_kit_only | implemented | Only in the player's start kit: spoiled food that harms when eaten. |

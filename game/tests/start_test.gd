@@ -948,7 +948,7 @@ func _run() -> void:
 	main._sync_sprites()
 	var bed := pi.home_spot(resident, "bed")
 	var rs: ActorSprite = main.sprites[resident.id]
-	check(rs.visible and absf(rs.rotation) > 0.1 and rs.position.distance_to((Vector2(int(bed.at[0]), int(bed.at[1])) + Vector2(0.5, 0.5)) * main.T) < 12.0, "asleep, %s lies in their bed" % resident.name)
+	check(rs.visible and rs.pose == "lie" and (rs.position + Vector2(0, ActorSprite.LIE_BODY_Y).rotated(rs.rotation) * rs.scale.x).distance_to((Vector2(int(bed.at[0]), int(bed.at[1])) + Vector2(0.5, 0.5)) * main.T) < 3.0, "asleep, %s lies in their bed" % resident.name)
 	resident.anim = "idle"
 	pi.player.pos = outside_at
 	main._sync_sprites()

@@ -103,11 +103,21 @@ func once(key: String, text: String) -> void:
 		w.note(text)
 
 
+## The home meal (PL1-07): walk to one's own chair and eat seated (World.home_spot "chair", found in the
+## home's stool tiles by Furniture); a home without a chair eats standing at its table as before. The
+## plan's length and the eating are unchanged, so no schedule moves.
+func _home_meal(n: NPC) -> Array:
+	var chair := w.home_spot(n, "chair")
+	if chair.is_empty():
+		return [go(w.home_cell(n, "table")), work(15, "eat_home", {}, "idle")]
+	return [go(Vector2i(int(chair.use[0]), int(chair.use[1]))), work(15, "eat_home", {}, "sit")]
+
+
 # ---------------------------------------------------------------- deciding -------------------
 func decide(n: NPC) -> void:
 	var h := w.hour()
-	if n.anim == "sleep":
-		n.anim = "idle"                    # up from bed
+	if n.anim == "sleep" or n.anim == "sit":
+		n.anim = "idle"                    # up from bed, or from the chair (PL1-07)
 	if n.role == "bandit":
 		_bandit(n, h)
 		return
@@ -235,7 +245,7 @@ func _plan_eat(n: NPC) -> bool:
 				home_food = true
 		if home_food:
 			n.doing = "going home to eat"
-			n.plan = [go(w.home_cell(n, "table")), work(15, "eat_home", {}, "idle")]
+			n.plan = _home_meal(n)
 			return true
 	elif n.inv.has("wheat"):
 		n.doing = "eating"
@@ -255,7 +265,7 @@ func _plan_eat(n: NPC) -> bool:
 			if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
 				n.doing = "buying grain for porridge"
 				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": 2, "payer": payer.id}),
-						go(w.home_cell(n, "table")), work(15, "eat_home", {}, "idle")]
+						] + _home_meal(n)
 				return true
 	w.stat("missed_meal_" + ("no_money" if payer == null or payer.coins < 2 else "no_food_for_sale"))
 	if track_misses:
