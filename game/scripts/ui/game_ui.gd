@@ -96,6 +96,7 @@ const CONTROLS := {
 		[["touch_finger_one"], "Gather turns gather mode on; then tap a seam, tree, ripe field, flower, berry bush or game to gather it until it runs out"],
 		[["touch_finger_one"], "Attack swings at a foe within sword reach; with none near, it turns attack mode on: tap who to attack, and tap them again to strike"],
 		[["touch_zoom_in"], "Pinch to zoom"],
+		[["xbox_button_a"], "Connect a Bluetooth or wired controller and the game switches to its controls and hides these buttons"],
 		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you"],
 		[["touch_finger_one"], "Map opens the village map; tap a spot on it to look there"],
 		[["touch_finger_one"], "Run turns sprint on (it lights up): walk anywhere to run, using stamina; tap Run again to walk"]],

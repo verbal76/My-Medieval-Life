@@ -119,8 +119,8 @@ func _ready() -> void:
 	# a controller connected to a phone (or already there at start) hides the touch buttons and uses the
 	# pad's controls; unplugged, the phone goes back to touch (owner, 2026-10-19)
 	Input.joy_connection_changed.connect(_on_joy_connection)
-	if settings.phone and not Input.get_connected_joypads().is_empty():
-		_on_joy_connection(Input.get_connected_joypads()[0], true)
+	if settings.phone and not _real_pads().is_empty():
+		_on_joy_connection(_real_pads()[0], true)
 	var args := OS.get_cmdline_user_args()
 	for i in args.size():
 		if i + 1 >= args.size():
@@ -3286,11 +3286,13 @@ func _look_step(delta: float) -> void:
 
 
 ## A controller was connected or disconnected: switch to its controls, or back to touch on a phone.
-func _on_joy_connection(_device: int, connected: bool) -> void:
+func _on_joy_connection(device: int, connected: bool) -> void:
+	if connected and not is_pad(Input.get_joy_name(device)):
+		return                            # a phone's fingerprint reader or keyboard, not a controller
 	var s := scheme
 	if connected:
 		s = "gamepad"
-	elif Input.get_connected_joypads().is_empty() and scheme == "gamepad":
+	elif _real_pads().is_empty() and scheme == "gamepad":
 		s = "touch" if settings.phone else "kbm"
 	if s != scheme:
 		scheme = s
@@ -3298,12 +3300,30 @@ func _on_joy_connection(_device: int, connected: bool) -> void:
 		ui.message("Controller connected: touch buttons hidden." if connected else "Controller disconnected.", 4.0)
 
 
+## Many Android phones report their fingerprint reader (and some keyboards and styluses) as a joypad: those
+## never count as a controller, so they cannot hide the touch buttons. An unnamed device counts.
+const NOT_PADS := ["fpc", "fingerprint", "goodix", "uinput", "gf_input", "keyboard", "touch", "mouse", "stylus", "pen"]
+
+
+static func is_pad(joy_name: String) -> bool:
+	var n := joy_name.to_lower()
+	for w in NOT_PADS:
+		if n.contains(w):
+			return false
+	return true
+
+
+## The connected devices that are real controllers.
+func _real_pads() -> Array:
+	return Input.get_connected_joypads().filter(func(d): return is_pad(Input.get_joy_name(d)))
+
+
 ## Which controls are in use, from the latest input: the HUD follows (touch buttons, prompts).
 func _input(e: InputEvent) -> void:
 	var s := scheme
 	if e is InputEventScreenTouch or e is InputEventScreenDrag:
 		s = "touch"
-	elif e is InputEventJoypadButton or (e is InputEventJoypadMotion and absf(e.axis_value) > 0.5):
+	elif (e is InputEventJoypadButton or (e is InputEventJoypadMotion and absf(e.axis_value) > 0.5)) and is_pad(Input.get_joy_name(e.device)):
 		s = "gamepad"
 	elif e is InputEventKey and get_viewport().gui_get_focus_owner() is LineEdit:
 		pass                          # typing into a text box (a phone's on-screen keyboard sends keys too)

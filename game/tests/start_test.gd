@@ -736,6 +736,9 @@ func _run() -> void:
 	check(main.scheme == "gamepad" and not ui.touch_bar.visible, "a controller connected to a phone hides the touch buttons and uses the pad's controls")
 	main._on_joy_connection(0, false)
 	check(main.scheme == ("touch" if Input.get_connected_joypads().is_empty() else "gamepad") and ui.touch_bar.visible == Input.get_connected_joypads().is_empty(), "unplugged, the phone goes back to touch")
+	check(not main.is_pad("uinput-fpc") and not main.is_pad("Goodix Fingerprint") and not main.is_pad("gf_input") and not main.is_pad("Bluetooth Keyboard")
+			and main.is_pad("Xbox Wireless Controller") and main.is_pad("DualSense Wireless Controller") and main.is_pad(""),
+		"a phone's fingerprint reader or a keyboard reported as a joypad is not a controller; real pads are")
 	main.settings.phone = was_phone
 	main._input(pad)
 	# the pack with a pad: focus starts on the first bag cell and moves between cells and tabs by
