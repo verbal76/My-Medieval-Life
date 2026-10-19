@@ -13240,7 +13240,7 @@
    "priority": "high: wildlife reaches 0 in the 365-day run",
    "workstream": "world equilibrium (agent worktree)",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner confirmed the defaults 2026-10-19: half-capacity release, proposed seasons and intervals, hidden refuges.",
    "history": [
     {
      "date": "2026-10-19",
@@ -13256,6 +13256,11 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit b15208a; commit 7bd1905; tests; implementation",
      "why": "refuges (count model per wood and species), seasonal litters below capacity, juveniles released and dispersed to the least crowded wood and a settling point, recolonization; save additive; refuge_test 59 checks; 100-day wild animals 83 and 81 (were 6 and 2), 365-day 84 and 88 (was 0)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "notes",
+     "why": "owner 2026-10-19: 'keep the defaults on all three refuge questions' (release below half capacity, seasons and intervals as proposed, refuges hidden)"
     }
    ],
    "acceptance_derived": true
