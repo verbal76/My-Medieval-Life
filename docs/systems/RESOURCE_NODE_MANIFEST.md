@@ -13,9 +13,9 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 18 (12 the player may harvest, 6 the keeper's livestock).
-- Materials they produce: 24 (blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
-- Finite node types: 5 (boulder, coal_seam, copper_seam, iron_seam, stone_seam); with no replacement once worked out: 0 (the caravan imports each).
+- Implemented node types: 19 (13 the player may harvest, 6 the keeper's livestock).
+- Materials they produce: 25 (blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
+- Finite node types: 6 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, stone_seam); with no replacement once worked out: 1 (gold_seam).
 - At risk of overharvesting: 6 (coal_seam, copper_seam, iron_seam, stone_seam, wild_boar, wild_rabbit).
 - Not Gather-compatible: 6 (chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen).
 
@@ -28,6 +28,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `copper_seam` Copper seam | mineral | natural | pickaxe | mining | 1 copper_ore | finite | yes | yes | yes | implemented |
 | `cow_pen` Cows | livestock | bred | none | none | 1 hide, 6 meat | breeds | no | yes | no | implemented |
 | `flower_patch` Wild flower | forage | natural | none | none | 1 flower | regrows | yes | no | yes | implemented |
+| `gold_seam` Gold seam | mineral | natural | pickaxe | mining | 1 gold_ore | finite | yes | yes | yes | implemented |
 | `iron_seam` Iron seam | mineral | natural | pickaxe | mining | 1 iron_ore | finite | yes | yes | yes | implemented |
 | `pig_pen` Pigs | livestock | bred | none | none | 1 hide, 4 meat | breeds | no | yes | no | implemented |
 | `player_field` Your field | crop | cultivated | none | none | 3 carrot, 1 carrot_seed, 2 flower, 1 herb_seed, 3 potato, 1 potato_seed, 3 wheat, 1 wheat_seed | ripens | no | no | no | implemented |
@@ -167,6 +168,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Gather mode:** yes. **Icon:** `flower`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
 - **Code:** `game/scripts/core/overworld.gd::flower_at`, `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
+
+### `gold_seam` · Gold seam
+
+- **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "deposit", "ore": "gold_ore"}`.
+- **Where:** In the mine north of the village (one small seam, Build 13). **In the world:** 8 gold_ore in 1 seams.
+- **Action:** Mining (interact): "Mine gold ore". **Range (tiles):** 1. The cell 0.9 tiles in front of the player, or one of its four neighbours (main.gd _find_target).
+- **Tool:** pickaxe (required). You need a pickaxe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `pickaxe`: recipe (forge_pickaxe); resold by the merchant_goods; `rusty_pickaxe`: start kit (player_start_items).
+- **Skill:** mining, level 3.
+- **Time:** `mine_minutes` (25 game minutes). As for every seam: mine_minutes game minutes a unit for a villager; the player's swing is shorter, divided by the pickaxe's speed.
+- **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing; from Mining 4 the player's wears only half the time.
+- **Yields a cycle:** 1 gold_ore. Player only: needs Mining 3 ("Gold needs Mining level 3."); from Mining 2 a 25% chance of a second unit, as for every seam.
+- **Total:** The gold seam's amount in village.json deposits (8).
+- **Depletion:** finite. None: World.mine_unit never refills a seam.
+- **Owner:** Nobody: the seams belong to no one (P1.2 proposes the manor's mining rights). **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers yes. Miners take gold only when the seams their buyers want are worked out (NPCBrain._miner falls back to any seam with a buyer); the smith and the goods merchant buy it, so mined gold reaches their stock for the player to buy.
+- **Gather mode:** yes. **Icon:** `gold_ore`.
+- **Risk:** Scarce by design: 8 units in the whole village, so gold bars and rings stay rare.
+- **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_miner`
 
 ### `iron_seam` · Iron seam
 
@@ -388,6 +407,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 | `boulder` | 18 in the village (6 stone each), and the overworld's solid rocks | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 | `coal_seam` | 200 coal in 4 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `copper_seam` | 60 copper_ore in 2 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
+| `gold_seam` | 8 gold_ore in 1 seams | **none** |
 | `iron_seam` | 300 iron_ore in 5 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `stone_seam` | 240 stone in 3 seams | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 
@@ -409,6 +429,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `copper_seam` | Overharvested: worked out on day 4 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `cow_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `flower_patch` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
+| `gold_seam` | Scarce by design: 8 units in the whole village, so gold bars and rings stay rare. |
 | `iron_seam` | Overharvested: the iron seams were worked out on day 10 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `pig_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `player_field` | Not at risk: the player's crops are theirs alone and the manor's fields are untouched. |

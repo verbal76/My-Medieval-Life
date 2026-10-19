@@ -690,15 +690,15 @@ Rules:
 - **Tests:** `game/tests/run_tests.gd::test_tree_canopy`, `game/tests/overworld_test.gd::_run_scene`, `game/tests/start_test.gd::_gather_tests`
 
 ### INT-075 · An essential trade is handed on after its worker dies: apprentice, then newcomer
-- **Trigger:** A smith, carpenter, tanner, cook, tavernkeeper or merchant dies (or the last farmer, woodcutter or miner); a day starts; the caravan comes.
+- **Trigger:** A smith, carpenter, tanner, cook, tavernkeeper or merchant dies or retires (or the last farmer, woodcutter or miner); a day starts; the caravan comes.
 - **Source:** `game/scripts/core/npc_brain.gd::on_death`, `game/scripts/core/npc_brain.gd::_open_vacancy`, `game/scripts/core/npc_brain.gd::succession_dawn`, `game/scripts/core/npc_brain.gd::succession_caravan`, `game/scripts/core/npc_brain.gd::_apprentice_for`, `game/scripts/core/npc_brain.gd::_newcomer_for`, `game/scripts/core/npc_brain.gd::_install`, `game/scripts/core/npc_brain.gd::_change_job`, `game/scripts/core/npc_brain.gd::caravan`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/main.gd::_sync_sprites`
 - **Affects:** Employment, Households, Inheritance, Coins, Market, Crafting, Save, Property
 - **Expected:** (owner decision 2026-10-19: "Apprentice, then newcomer"; the numbers are agent proposals, provisional, balance.json `succession_days`, `newcomer_max_days`, `newcomer_coins`)
-  - A death in an essential trade records an open post (`World.vacancies`: job, workstation or stall, home, household, day), unless the trade is still at its starting strength (smith 2, carpenter 2, tanner 2, cook 3, tavernkeeper 2, merchant 6; one farmer, woodcutter and miner at least) or a post is already open for every missing hand. Death stays permanent: nobody is resurrected.
+  - A death or a retirement (INT-078) in an essential trade records an open post (`World.vacancies`: job, workstation or stall, home, household, day), unless the trade is still at its starting strength without the leaver (a retiring worker is still counted as an adult in the trade when the post is checked, so they are left out of the count: Build 13 fix) (smith 2, carpenter 2, tanner 2, cook 3, tavernkeeper 2, merchant 6; one farmer, woodcutter and miner at least) or a post is already open for every missing hand. Death stays permanent: nobody is resurrected.
   - After `succession_days` an adult without a trade (no job, a labourer or a manor hand; the dead worker's household first, then the lowest id; a merchant needs the stall's stock coins) is taken on as an apprentice: the job, the workstation (`NPC.workplace`: the forge, sawhorse, workbench, stove, counter or stall) and the trade's tool. They keep their own home.
   - With no such adult the post waits for the caravan (`NPCBrain.caravan` calls `succession_caravan`), and at the latest `newcomer_max_days` after the death a newcomer arrives anyway. The newcomer takes the post and workstation, and a home: a lodger in the dead worker's household if it lives, else the old house leased from the manor, else any other empty house, else a room with the smallest household. Their purse (`newcomer_coins`) is new money from outside, counted in `World.coin_sources`, so coins stay conserved; the house lease moves coins to the treasury like any other.
   - The post is dropped if the trade is back at strength meanwhile (a stall let again by the manor). Open posts are saved (`vacancies`; older saves have none).
-- **Tests:** `game/tests/world_test.gd::_succession`
+- **Tests:** `game/tests/world_test.gd::_succession`, `game/tests/aging_test.gd::test_coming_of_age_and_retiring`
 
 ### INT-076 · A deposit is what its sprite shows, and a small grey boulder is a pickaxe node for stone
 - **Trigger:** The map loads; the player looks at, mines or leaves a rock; the game saves or loads; a chunk outside the village loads or unloads.
@@ -706,9 +706,10 @@ Rules:
 - **Affects:** Resources, Overworld, Save, Interface, Market
 - **Expected:** (owner Build 8 playtest, B8-008 and B8-026)
   - `resources.json` `deposit_tiles` gives each ore its own flecked tile and stone the plain grey boulder; `VillageMap.normalise_rocks` applies it at load: every seam is drawn with its ore's tile, a flecked rock with no seam behind it is drawn as a plain boulder, a worked-out seam has a hollow tile. So an ore-bearing sprite is always a seam of that ore: the prompt, the name and the yield come from the seam's record.
-  - A small standalone grey boulder (a solid cell holding the boulder tile in the village, or a solid rock of the overworld generator) is the `boulder` node: stone, `uses` (3) pickaxe swings, then the sprite is erased and the cell opens. Cliffs and terrain rocks stay obstacles. It is found by `World.deposit_at` like a seam, but is not in `World.deposits`, so the miners, the economy ledgers and the caravan's stone rule see the seams only.
+  - A standalone grey boulder (a solid cell holding the boulder tile in the village, or a solid rock of the overworld generator) is the `boulder` node: stone, `uses_small` (2) pickaxe swings for a small one or `uses` (6) for a large one (`ResourceNodes.boulder_uses`, PL1-06), then the sprite is erased and the cell opens. Cliffs and terrain rocks stay obstacles. It is found by `World.deposit_at` like a seam, but is not in `World.deposits`, so the miners, the economy ledgers and the caravan's stone rule see the seams only.
   - The village's boulders are saved with the world (`boulders`); the overworld's in `Overworld.rock_changes` (`overworld.rocks`), so a broken boulder stays broken across chunk reloads and saves.
-- **Tests:** `game/tests/world_test.gd::_deposits`, `game/tests/world_test.gd::_boulders`, `tools/check_resources.py`
+  - (Build 13) The mine has one gold seam (village generator v7, 8 units), the `gold_seam` node: `ResourceNodes.can_harvest` refuses it below Mining 3 ("Gold needs Mining level 3."), so the prompt, Gather mode and Use agree. Villager miners work it only when the seams their buyers want are worked out; the smith and the goods merchant buy gold ore. A save made before the seam existed gains it, full, on load (`World.load_dict` adds any map seam missing from the saved list); saved seams keep their amounts.
+- **Tests:** `game/tests/world_test.gd::_deposits`, `game/tests/world_test.gd::_gold`, `game/tests/world_test.gd::_boulders`, `tools/check_resources.py`
 
 ### INT-077 · The calendar sets ages, stages and the clock
 - **Trigger:** The world clock advances; a villager, the player or an animal is asked its age; the HUD shows the time.
@@ -721,7 +722,7 @@ Rules:
 - **Trigger:** Each dawn and on loading a save: a villager has passed 12, 16 or 55.
 - **Source:** `game/scripts/core/life.gd::sync_roles`, `game/scripts/core/life.gd::role_for`, `game/scripts/core/life.gd::npc_scale`, `game/scripts/core/life.gd::walk_factor`, `game/scripts/core/npc_brain.gd::_apprentice_for`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::_sync_sprites`
 - **Affects:** Family, Employment, Households, Interface
-- **Expected:** `NPC.role` follows age: child (under 16; drawn at 0.5 until 12, 0.75 as an adolescent), adult (16-55), elder (55+, walk 0.8x). Adolescents hold no job and are nobody's apprentice. A child turning 16 is an adult without a trade, so the job market, apprenticeship and succession (INT-075) take them. An adult turning 55 retires: the post opens like a death's (INT-075), pens and stalls pass on, manor jobs are released. Bandits age but keep their role; the sage and the reeve keep their posts for life.
+- **Expected:** `NPC.role` follows age: child (under 16; drawn at 0.5 until 12, 0.75 as an adolescent), adult (16-55), elder (55+, walk 0.8x). Adolescents hold no job and are nobody's apprentice. A child turning 16 is an adult without a trade, so the job market, apprenticeship and succession (INT-075) take them. An adult turning 55 retires: the post opens like a death's (INT-075; the retiree is not counted as staff, Build 13 fix), pens and stalls pass on, manor jobs are released. Bandits age but keep their role; the sage and the reeve keep their posts for life.
 - **Tests:** `game/tests/aging_test.gd::test_coming_of_age_and_retiring`, `game/tests/start_test.gd::_child_size_tests`
 
 ### INT-079 · Partners and births join households
@@ -754,10 +755,10 @@ Rules:
 
 ### INT-083 · Medicines heal, and the sage's apothecary stock moves between real inventories
 - **Trigger:** The player uses a medicine from the pack; the sage brews; the caravan visits.
-- **Source:** `game/scripts/core/world.gd::player_use_medicine`, `game/scripts/core/npc_brain.gd::_caravan_apothecary`, `game/scripts/core/npc_brain.gd::_do_recipe`
+- **Source:** `game/scripts/core/world.gd::player_use_medicine`, `game/scripts/core/npc_brain.gd::_caravan_apothecary`, `game/scripts/core/npc_brain.gd::_do_recipe`, `game/scripts/core/game_data.gd::effects`
 - **Affects:** Health, Inventory, Market, Coins, Crafting, Employment, Wages, Ledger
-- **Expected:** Items of type `medicine` (`items.json`: linen bandage 15, herbal poultice 30, healing tonic 50, strong healing tonic 80 health) heal only, never feed, never pass the health cap and are consumed only when they heal (at full health nothing is used). The sage keeps the village apothecary: the starting stock is `balance.json` `sage_start_stock`; the sage buys wild flowers (`BUYS.sage`, kept, not resold), brews poultices and healing tonics from them at the stove (the recipes `brew_poultice`, `brew_healing_tonic`), and sells everything else through the ordinary trade window. The caravan resupplies on each visit up to `caravan_apothecary_per_visit` pieces towards `caravan_apothecary_stock`, at base value, paid from the sage's own coins above the trader cash floor; those coins leave the village (`coin_sources` falls, the caravan purse rises), so supply is finite. The stove also makes the player's own tonics (`brew_strong_tonic` needs two healing tonics and ale).
-- **Tests:** `game/tests/health_jobs_test.gd::test_use`, `game/tests/health_jobs_test.gd::test_apothecary`
+- **Expected:** Items of type `medicine` (`items.json`: linen bandage 15, herbal poultice 30, healing tonic 50, strong healing tonic 80 health) heal only, never feed, never pass the health cap and are consumed only when they heal (at full health nothing is used). The sage keeps the village apothecary: the starting stock is `balance.json` `sage_start_stock`; the sage buys wild flowers (`BUYS.sage`, kept, not resold), brews poultices and healing tonics from them at the stove (the recipes `brew_poultice`, `brew_healing_tonic`), and sells everything else through the ordinary trade window. The caravan resupplies on each visit up to `caravan_apothecary_per_visit` pieces towards `caravan_apothecary_stock`, at base value, paid from the sage's own coins above the trader cash floor; those coins leave the village (`coin_sources` falls, the caravan purse rises), so supply is finite. The stove also makes the player's own tonics (`brew_strong_tonic` needs two healing tonics and ale). Every medicine shows its effect ("Restores 15 Health") in shop rows, the quantity control and the pack (`GameData.effects` reads `heal` without `food`: Build 13 fix).
+- **Tests:** `game/tests/health_jobs_test.gd::test_use`, `game/tests/health_jobs_test.gd::test_apothecary`, `game/tests/start_test.gd::_pl_trade_ui_tests`
 
 ### INT-084 · The employer's star
 - **Trigger:** Every frame (view); the player accepts, completes or drops a job.
@@ -943,14 +944,14 @@ Rules:
 
 ### INT-110 · Every interior floor shows a floor, not grass
 - **Trigger:** The village map is generated (and drawn, with a roof lifted or faded).
-- **Source:** `tools/build_village.py`, `tools/build_village.py`
+- **Source:** `tools/build_village.py`
 - **Affects:** Interiors
 - **Expected:** Stamped floors lie in ground1+ over the village's grass layer (ground0); the tavern's open-air kitchen, which Shade drew as grass, gets the tavern's floor tile. Every cell of every building's interior floor has a floor tile.
 - **Tests:** `game/tests/run_tests.gd::test_village_layout`
 
 ### INT-111 · The mine hill is bare rock and keeps trees off its rim
 - **Trigger:** The village map is generated.
-- **Source:** `tools/build_village.py`, `tools/build_village.py`, `game/scripts/core/wiki_world.gd::add_pages`
+- **Source:** `tools/build_village.py`, `game/scripts/core/wiki_world.gd::add_pages`
 - **Affects:** Resources, Interiors
 - **Expected:** The hill's top is rock ground with two ledges (art only, geometry and solidity unchanged, so the track, seams and reachability stand); no tree trunk or crown stands within two cells of the hill. The wiki's mine page describes it.
 - **Tests:** `game/tests/run_tests.gd::test_village_layout`
@@ -1118,9 +1119,9 @@ Rules:
 
 ### INT-135 · An attendant is hired and paid a daily wage
 - **Trigger:** The player hires a villager at the stall or shop window, and each morning after.
-- **Source:** `game/scripts/core/business.gd::hire`, `game/scripts/core/business.gd::hire_refusal`, `game/scripts/core/business.gd::_wage_due`, `game/scripts/core/business.gd::dismiss`, `game/scripts/core/business.gd::candidates`
+- **Source:** `game/scripts/core/business.gd::hire`, `game/scripts/core/business.gd::hire_refusal`, `game/scripts/core/business.gd::_wage_due`, `game/scripts/core/business.gd::dismiss`, `game/scripts/core/business.gd::candidates`, `game/scripts/core/construction.gd::can_hire`
 - **Affects:** Employment, Coins, Households, Market
-- **Expected:** (PL1-10 stage 4) Only an adult without a trade of their own (`Construction.HIRABLE`: out of work, a manor hand with no job taken, or a labourer; not hired for building work, not another counter's attendant) can be hired, one attendant for each stall or shop. Today's `attendant_wage` is paid at once, from the till first and then the purse, to the villager's own coins (conserved; an expense in the books), and again every morning; when neither can pay, the attendant leaves. Closing the stall or shop, taking up the counter or a death lets them go; they keep what they were paid.
+- **Expected:** (PL1-10 stage 4) Only an adult without a trade of their own (`Construction.HIRABLE`: out of work, a manor hand with no job taken, or a labourer; not hired for building work, not another counter's attendant) can be hired, one attendant for each stall or shop. An attendant cannot in turn be hired as a carrier by the player's or a villager's building site (`Construction.can_hire`, Build 13 fix), so the counter is never left empty on a paid day. Today's `attendant_wage` is paid at once, from the till first and then the purse, to the villager's own coins (conserved; an expense in the books), and again every morning; when neither can pay, the attendant leaves. Closing the stall or shop, taking up the counter or a death lets them go; they keep what they were paid.
 - **Tests:** `game/tests/business_test.gd::_attendant`
 
 ### INT-136 · An attendant at the counter lets the premises sell while the player is away

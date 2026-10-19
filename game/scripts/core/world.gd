@@ -2443,6 +2443,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			pl.regrow = float(sp.regrow)
 	vacancies = d.get("vacancies", [])
 	deposits = d.deposits
+	for md in m.data.deposits:          # a seam the map gained after the save was made (the gold seam, Build 13) starts full
+		if not deposits.any(func(sd): return int(sd.x) == int(md.x) and int(sd.y) == int(md.y)):
+			deposits.append({"x": int(md.x), "y": int(md.y), "ore": md.ore, "amount": int(md.amount)})
 	_make_boulders(m)                  # a save from before boulders has none broken
 	for sb in d.get("boulders", []):
 		for b in boulders:

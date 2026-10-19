@@ -199,6 +199,8 @@ static func can_harvest(world: World, d: Dictionary, ref) -> String:
 		"deposit", "boulder":
 			if int(ref.amount) <= 0:
 				return "The seam is worked out." if str(d.match.kind) == "deposit" else "The boulder is broken up."
+			if str(ref.get("ore", "")) == "gold_ore" and not Skills.has(p, "mining", "gold"):
+				return "Gold needs Mining level 3."
 		"tree":
 			var why := Trees.refusal(str(ref.state))        # only a mature tree can be felled
 			if why != "":

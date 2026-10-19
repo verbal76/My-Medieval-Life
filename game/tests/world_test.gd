@@ -37,6 +37,7 @@ func _finish_action() -> void:
 func _run() -> void:
 	main.new_game()
 	_deposits()
+	_gold()
 	_boulders()
 	_roofs()
 	_succession()
@@ -96,6 +97,36 @@ func _deposits() -> void:
 	var left := int(stone_seam.amount)
 	w.mine_unit(stone_seam)
 	check(int(stone_seam.amount) == left - 1, "mining a seam takes a unit")
+
+
+# ---------------------------------------------------------------- Build 13: gold -------------
+func _gold() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var golds := w.deposits.filter(func(d): return d.ore == "gold_ore")
+	check(golds.size() == 1 and int(golds[0].amount) == 8, "the mine has one gold seam of 8 units")
+	var g: Dictionary = golds[0]
+	var node := ResourceNodes.node_at(w, Vector2i(g.x, g.y), true)
+	check(not node.is_empty() and node.def.id == "gold_seam" and ResourceNodes.products(node.def) == {"gold_ore": 1}, "it is the gold seam node and gives gold ore")
+	p.inv.add("pickaxe")
+	var xp0 := int(p.skills.get("mining", 0))
+	p.skills["mining"] = 0
+	check(ResourceNodes.can_harvest(w, node.def, node.ref) == "Gold needs Mining level 3.", "a novice miner is refused gold")
+	p.skills["mining"] = Skills.xp_for_level(3)
+	check(ResourceNodes.can_harvest(w, node.def, node.ref) == "", "at Mining 3 the seam can be worked")
+	p.skills["mining"] = xp0
+	var smith: NPC = w.npcs.filter(func(n): return n.alive and n.job == "smith")[0]
+	check(w.brain.wants(smith, "gold_ore") > 0 and GameData.recipes.has("smelt_gold"), "the smith buys gold ore and smelts it")
+	# a save made before the gold seam existed gets it, full, on load; other seams keep their state
+	var d := w.to_dict()
+	var first: Dictionary = d.deposits.filter(func(x): return x.ore != "gold_ore")[0]
+	first.amount = 1
+	d.deposits = d.deposits.filter(func(x): return x.ore != "gold_ore")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))   # its own map: never touch the running game
+	var g2 := w2.deposits.filter(func(x): return x.ore == "gold_ore")
+	check(g2.size() == 1 and int(g2[0].amount) == 8, "an older save without the gold seam gains it full on load")
+	check(w2.deposits.size() == w.deposits.size() and int(w2.deposit_at(Vector2i(first.x, first.y)).amount) == 1, "the saved seams keep their amounts")
 
 
 # ---------------------------------------------------------------- B8-026 ----------------------

@@ -99,7 +99,7 @@ class VillageTest(unittest.TestCase):
         town = reach(solid, tuple(D["spawns"]["player"]))
         trees = {(t["x"], t["y"]) for t in D["trees"]}
         kinds = sorted(d["ore"] for d in D["deposits"])
-        self.assertEqual(kinds, sorted(["iron_ore"] * 5 + ["coal"] * 4 + ["stone"] * 3 + ["copper_ore"] * 2))
+        self.assertEqual(kinds, sorted(["iron_ore"] * 5 + ["coal"] * 4 + ["stone"] * 3 + ["copper_ore"] * 2 + ["gold_ore"]))
         for d in D["deposits"]:
             c = (d["x"], d["y"])
             self.assertNotIn(c, trees)

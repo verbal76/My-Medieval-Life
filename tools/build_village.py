@@ -713,8 +713,9 @@ class Village:
                     continue
                 cands.append(c)
         rng.shuffle(cands)
+        # Generator v7 (Build 13): the gold seam comes last, so the first fourteen seams stay where v6 put them.
         plan = ["iron_ore", "coal", "stone", "iron_ore", "copper_ore", "coal", "iron_ore", "stone",
-                "iron_ore", "coal", "stone", "iron_ore", "copper_ore", "coal"]
+                "iron_ore", "coal", "stone", "iron_ore", "copper_ore", "coal", "gold_ore"]
         taken = []
         for ore in plan:
             for c in cands:

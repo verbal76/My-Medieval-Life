@@ -57,8 +57,8 @@ class ResourceRegistryTest(unittest.TestCase):
             self.assertTrue(any(want in p for p in found), want)
 
     def test_findings_must_be_recorded_and_exceptions_must_not_be_stale(self):
-        found = self.mutated(lambda r: r["exceptions"].pop(0))
-        self.assertTrue(any("finding not recorded: gold_ore" in p for p in found))
+        found = self.mutated(lambda r: r.__setitem__("exceptions", [e for e in r["exceptions"] if e["item"] != "apple"]))
+        self.assertTrue(any("finding not recorded: apple" in p for p in found))
         found = self.mutated(lambda r: r["exceptions"].append({"item": "log", "finding": "no_source", "status": "implemented", "reason": "x"}))
         self.assertTrue(any("stale exception: log" in p for p in found))
 
@@ -72,10 +72,10 @@ class ResourceRegistryTest(unittest.TestCase):
 
     def test_the_findings_the_owner_asked_for(self):
         s = cr.summary(self.ctx)
-        self.assertEqual(s["no_source"], ["apple", "gold_ore"])
-        self.assertEqual(s["missing_recipes"], ["forge_gold_ring", "smelt_gold"])
-        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "iron_seam", "stone_seam"])
-        self.assertEqual(s["finite_no_replacement"], [])
+        self.assertEqual(s["no_source"], ["apple"])          # Build 13: the gold seam gives gold ore a source
+        self.assertEqual(s["missing_recipes"], [])          # so smelt_gold and forge_gold_ring can be made
+        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "gold_seam", "iron_seam", "stone_seam"])
+        self.assertEqual(s["finite_no_replacement"], ["gold_seam"])   # Build 13: scarce by design; the caravan brings no gold
         self.assertIn(("log", "plank", "pickaxe"), s["chains"])
         # PL2-013: the home food table makes bread (knead_flatbread, 3 wheat), so bread is a chain now
         self.assertIn(("wheat", "bread"), s["chains"])
