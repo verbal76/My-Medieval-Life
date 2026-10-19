@@ -247,12 +247,31 @@ func test_shared_hours() -> void:
 			far = o
 			break
 	check(float(r.peek(x.id, far.id).regard) == 0.0, "people far apart share nothing")
-	# the player: talking counts once a day
-	var n := single(w)
+	# the player (CRT-09): a conversation shows they were together (the hour, about 1 point, once an hour),
+	# then adds 0.25, 0.11, and less each time after, so pressing A over and over adds almost nothing
+	var sh: Dictionary = Relations.cfg().shared
+	var n := single(w, "", x.id)
+	w.minutes = float(w.day()) * 1440.0 + 5.0 * 60.0         # before work: an hour nearby
+	n.pos = w.player.pos + Vector2(20, 20)
 	r.talked(n)
-	var g := float(r.peek(ME, n.id).regard)
+	var g1 := float(r.peek(ME, n.id).regard)
+	check(absf(g1 - (float(sh.met_regard) + float(sh.talk_first))) < 0.001, "the first talk: the hour together (%.2f) and the talk (%.2f)" % [float(sh.met_regard), float(sh.talk_first)])
 	r.talked(n)
-	check(g > 0.0 and float(r.peek(ME, n.id).regard) == g, "talking with a villager counts, once a day")
+	var g2 := float(r.peek(ME, n.id).regard)
+	check(absf(g2 - g1 - float(sh.talk_more)) < 0.001, "a second talk the same hour adds only %.2f" % float(sh.talk_more))
+	for i in 20:
+		r.talked(n)
+	var g3 := float(r.peek(ME, n.id).regard)
+	check(g3 - g2 < float(sh.talk_more) * 1.01, "twenty more presses of A add less than one more talk (%.3f)" % (g3 - g2))
+	w.minutes += 60.0
+	r.talked(n)
+	check(float(r.peek(ME, n.id).regard) - g3 >= float(sh.met_regard) * 0.99, "the next hour together counts again")
+	w.minutes = float(w.day()) * 1440.0 + 9.0 * 60.0         # mid-morning: talk, then the hourly pass with them beside you
+	r.talked(n)
+	n.pos = w.player.pos + Vector2(1, 0)
+	var g4 := float(r.peek(ME, n.id).regard)
+	r.hour(9)
+	check(not w.asleep(n) and float(r.peek(ME, n.id).regard) == g4, "an hour is counted once, by the talk or the hourly pass, not both")
 
 
 # ---------------------------------------------------------------- same sex -------------------

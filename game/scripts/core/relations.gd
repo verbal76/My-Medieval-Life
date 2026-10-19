@@ -12,7 +12,8 @@ extends RefCounted
 ## Shared experiences start ties (owner, CRT-08: "working together and any personal interactions are what
 ## should start the friendships and relationships"): every hour, people awake near one another gain regard
 ## (and attraction, when they may court): most for working side by side at the same trade or place, then for
-## an evening's company, a little for passing time nearby; talking with the player counts once a day. Villagers
+## an evening's company, then simply being near (the unit, about 1 point an hour); a conversation with the
+## player shows they were together and adds a little, less each time that day (CRT-09). Villagers
 ## only court someone they have come to know this way (interest_at). Gifts add to that.
 ##
 ## Gift tastes (owner: "nothing so weird we need to play guessing games"): food, flowers, ale, clothes
@@ -48,7 +49,7 @@ static func key(a: int, b: int) -> String:
 
 static func _blank() -> Dictionary:
 	return {"regard": 0.0, "attraction": 0.0, "stage": "", "since": -1, "friends": false, "gift_day": -1, "last": -1, "recent": [],
-		"shared_day": -1, "shared_today": 0.0, "talk_day": -1}
+		"shared_day": -1, "shared_today": 0.0, "talks_today": 0, "hour_key": -1}
 
 
 ## The tie between two people (made on first use).
@@ -322,34 +323,57 @@ func _player_working_with(n: NPC) -> bool:
 	return n.job != "" and (not w.player.quests.is_empty() or not w.manor_work.job_of("player").is_empty())
 
 
-## One shared hour (or a conversation, kind "talk") between two people.
+## One shared hour between two people (kind work, social or met), counted once per pair an hour however it
+## comes about: the hourly pass, or a conversation that shows they were together (CRT-09). Regard is
+## shared.<kind>_regard (the hour nearby is the unit: met_regard 1), at most shared.daily_cap a day; attraction,
+## between people who may court, shared.<kind>_attraction in the same proportion.
 func share(a: int, b: int, kind: String) -> void:
 	var sh: Dictionary = cfg().shared
 	var t := tie(a, b)
+	var hk := int(w.minutes / 60.0)
+	if int(t.get("hour_key", -1)) == hk:
+		return
+	t.hour_key = hk
 	var d: int = w.day()
 	if int(t.get("shared_day", -1)) != d:
 		t.shared_day = d
 		t.shared_today = 0.0
-	var reg := float(sh.get(kind + "_regard", 0.0))
-	var room := float(sh.daily_cap) - float(t.shared_today)
-	if room <= 0.0 and kind != "talk":
+		t.talks_today = 0
+	var full := float(sh.get(kind + "_regard", 0.0))
+	var reg := minf(full, maxf(0.0, float(sh.daily_cap) - float(t.shared_today)))
+	if reg <= 0.0:
 		return
-	reg = minf(reg, room) if kind != "talk" else reg
 	t.shared_today = float(t.shared_today) + reg
 	t.last = d
-	var att := float(sh.get(kind + "_attraction", 0.0)) if can_court(a, b) else 0.0
+	var att := float(sh.get(kind + "_attraction", 0.0)) * (reg / full) if can_court(a, b) else 0.0
 	_raise(t, reg, att)
+	_befriend_if_close(a, b, t)
+
+
+func _befriend_if_close(a: int, b: int, t: Dictionary) -> void:
 	if a != Life.PLAYER_ID and not bool(t.friends) and float(t.regard) >= float(cfg().befriend_at):
 		befriend(a, b)                                  # villagers befriend each other on their own
 
 
-## The player talked with a villager (once a day counts): a personal interaction (CRT-08).
+## The player talked with a villager (CRT-09, the owner's weights): the talk shows they were together, so
+## the hour counts as shared (about 1 point, once an hour); the conversation itself adds talk_first (0.25)
+## the first time that day and talk_more (0.11) the next, each later one talk_decay as much again, so pressing
+## A over and over adds almost nothing.
 func talked(n: NPC) -> void:
+	var sh: Dictionary = cfg().shared
+	var h := fmod(w.minutes / 60.0, 24.0)
+	var working := h >= NPCBrain.WORK_START and h < NPCBrain.WORK_END
+	share(Life.PLAYER_ID, n.id, "work" if working and _player_working_with(n) else ("social" if h >= NPCBrain.WORK_END and h < NPCBrain.SLEEP else "met"))
 	var t := tie(Life.PLAYER_ID, n.id)
-	if int(t.get("talk_day", -1)) == w.day():
-		return
-	t.talk_day = w.day()
-	share(Life.PLAYER_ID, n.id, "talk")
+	if int(t.get("shared_day", -1)) != w.day():
+		t.shared_day = w.day()
+		t.shared_today = 0.0
+		t.talks_today = 0
+	var k := int(t.get("talks_today", 0))
+	var reg := float(sh.talk_first) if k == 0 else float(sh.talk_more) * pow(float(sh.talk_decay), k - 1)
+	t.talks_today = k + 1
+	t.last = w.day()
+	_raise(t, reg, reg * float(sh.talk_attraction_share) if can_court(Life.PLAYER_ID, n.id) else 0.0)
 
 
 # ---------------------------------------------------------------- every dawn -----------------
@@ -458,7 +482,8 @@ func load_dict(d: Dictionary) -> void:
 		t.friends = bool(t.friends)
 		t.shared_day = int(t.shared_day)
 		t.shared_today = float(t.shared_today)
-		t.talk_day = int(t.talk_day)
+		t.talks_today = int(t.talks_today)
+		t.hour_key = int(t.hour_key)
 		ties[str(k)] = t
 	var ins: Dictionary = d.get("interests", {})
 	for k in ins:

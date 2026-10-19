@@ -5018,6 +5018,50 @@
    ]
   },
   {
+   "id": "CRT-09",
+   "title": "Weighting of closeness and conversation: proximity about 1 point, a conversation 0.25, later ones about 0.11, so talk spamming does little",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "Spamming hit A to talk to, shows you were in the proximity of the named person. Let's say that's 1 point, then actually hitting it and taking would be maybe .25 points. Each subsequent discussion would be say .11 that way we weigh closeness and interactions and try to cut down on talk spamming.",
+   "description": "Weighting of closeness and conversation: proximity about 1 point, a conversation 0.25, later ones about 0.11, so talk spamming does little",
+   "source": "owner message 2026-10-19 (chat)",
+   "approval": "owner instruction ('You can probably make a better system based around that')",
+   "acceptance": [
+    "Being near someone (an hour in their company, or the proximity a conversation proves) is worth about 1 point",
+    "The first conversation of the day adds about 0.25",
+    "Later conversations add about 0.11, diminishing, so repeated talking adds little",
+    "Proximity is counted once per hour however often you talk"
+   ],
+   "implementation": "relations.gd::share, talked; balance.json relations.shared",
+   "tests": "game/tests/relations_test.gd::test_shared_hours",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-08",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-19 (chat)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented with the owner's weights; relations_test covers first talk, second talk, spam, hourly once"
+    }
+   ]
+  },
+  {
    "id": "DGA-D1",
    "title": "Meaning of \"isometric\"",
    "kind": "proposal",
