@@ -51,6 +51,7 @@ var fields: Array = []             # {id, x, y, w, h, state, ready, owner, tenan
 var plots: Array = []              # the land registry's parcels: {id, x, y, w, h, door, price, owner, tenant, rent,
                                    # due_day, arrears, missed, site, building} (scripts/core/property.gd)
 var property: Property             # the manor's land office: sales, leases, rent, the land registry
+var business: Business             # the player's market stall and the villagers who buy from it (PL1-10)
 var construction: Construction     # building kinds, placement, hired helpers, households that split
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
@@ -89,6 +90,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	chests = Chests.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
+	business = Business.new(self)
 	for b in m.data.buildings:
 		buildings[b.id] = b.duplicate(true)
 	for s in m.data.stations:
@@ -101,6 +103,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		s.owner = MANOR                # the manor's market; Population lets each to its merchant
 		s.tenant = ""
 		stalls[s.id] = s
+	Business.add_pitches(self, m)      # the manor's open pitches, for the player to rent (PL1-10)
 	for t in m.data.trees + m.decor_trees():          # the woods, and the woodland at the map's edge: all one tree model
 		trees.append(_new_tree(t))
 	for t in trees:
@@ -278,6 +281,7 @@ func _on_hour(h: int) -> void:
 	_grow_trees()
 	_update_food_days()
 	serve_tables()
+	business.hour()                    # villagers walk to the player's open stall (PL1-10)
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
 		if f.state == "growing" and minutes >= f.ready:
 			f.state = "ripe"
@@ -317,6 +321,7 @@ func _new_day() -> void:
 	manor_work.dawn()                  # undone manor jobs are released
 	property.collect_rents()
 	property.relet_stalls()
+	business.daily()                   # the stall's rent (PL1-10)
 	construction.daily()               # helpers' days end; crowded households split; founders build
 	var cold := 0
 	for hh in households:
@@ -568,6 +573,8 @@ func total_coins() -> int:
 		n += a.coins
 	for l in loot:
 		n += int(l.coins)
+	if business:
+		n += business.tills()
 	return n
 
 
@@ -2361,6 +2368,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
+	business = Business.new(self)
 	minutes = float(d.minutes)
 	last_hour = int(minutes / 60.0)
 	for s in m.data.stations:
@@ -2374,6 +2382,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	for id in bids:
 		_workshop_stations(buildings[id])
 	stalls = d.stalls
+	Business.add_pitches(self, m)      # saves made before the pitches existed get them
 	trees = d.trees
 	# a tree's tiles are map data, not state: take them from the map (saves made before the
 	# two-tile trees hold other tiles and no bottom)

@@ -948,6 +948,41 @@ Rules:
 - **Expected:** (PL1-11 stage 1) The save's `meta` holds a world id made once per new game (kept through saves and loads), its creation and last-save times, play time, the saving device's platform and the character's name, so a copy on another device can be compared (same world, newer, longer played) without merging worlds. Nothing in a save names a device path; the world regenerates from its seed. A new game gets a new id. Cloud transfer itself (stages 2-5) is not built.
 - **Tests:** `game/tests/start_test.gd::_save_meta_tests`
 
+### INT-116 · The player rents a market pitch from the manor
+- **Trigger:** The player uses an open pitch in the market and chooses Rent.
+- **Source:** `game/scripts/core/business.gd::rent`, `game/scripts/core/business.gd::add_pitches`, `game/scripts/core/property.gd::relet_stalls`
+- **Affects:** Market, Coins, Treasury, Save
+- **Expected:** (PL1-10 stage 1) The manor keeps open pitches beside the merchants' stalls (stall entries with `pitch: true`; added to new worlds and to older saves on load). The player may hold one; the first day's rent (`stall_rent_day`, 5 coins) goes from the purse to the manor's treasury and the stall's tenant becomes the player. The merchants' re-letting skips pitches and Population never gives one to a merchant. Coins are conserved.
+- **Tests:** `game/tests/business_test.gd::_rent`
+
+### INT-117 · Goods move between the pack and the stall's sale stock, priced by the player
+- **Trigger:** The player puts goods up, changes a price, takes goods back or closes the stall.
+- **Source:** `game/scripts/core/business.gd::list_item`, `game/scripts/core/business.gd::unlist`, `game/scripts/core/business.gd::set_price`, `game/scripts/core/business.gd::close`, `game/scripts/ui/stall_window.gd::show`
+- **Affects:** Inventory, Market, Crime, Loot
+- **Expected:** (PL1-10 stage 1) Listing moves real items out of the pack (all or nothing) into the stall's stock at a price of 1 to 4 times the item's value; goods marked stolen cannot be listed (no fencing through a stall). Taking back and closing return every item and the till to the player; what does not fit the pack is left at the stall as loot. Nothing is created or lost.
+- **Tests:** `game/tests/business_test.gd::_list_price_close`
+
+### INT-118 · The stall sells only while the player is at it, into a till
+- **Trigger:** A villager reaches the stall to buy.
+- **Source:** `game/scripts/core/business.gd::attended`, `game/scripts/core/business.gd::arrive`, `game/scripts/core/business.gd::sell`, `game/scripts/core/npc_brain.gd::act`
+- **Affects:** Market, Coins, Inventory, Households
+- **Expected:** (PL1-10 stage 1) A sale needs the player within `stall_range` tiles of the stall and no rent owing (no attendant exists yet). The buyer's coins go into the stall's till (collected by the player, counted in World.total_coins), the goods leave the stock for the buyer's pack or household pantry, and the sale is recorded. A sale that cannot complete (stock gone, price changed, buyer cannot pay, player away) changes nothing.
+- **Tests:** `game/tests/business_test.gd::_attended_sales`
+
+### INT-119 · Villagers buy from the stall only for needs they really have
+- **Trigger:** Each game hour while the player is at a stocked stall.
+- **Source:** `game/scripts/core/business.gd::hour`, `game/scripts/core/business.gd::needs`, `game/scripts/core/business.gd::offer`, `game/scripts/core/business.gd::ceiling`, `game/scripts/core/npc_brain.gd::wants`, `game/scripts/core/construction.gd::open_need`
+- **Affects:** Market, Employment, Households, Building, Coins, Inventory
+- **Expected:** (PL1-10 stage 2) At most `stall_buyers_per_hour` idle, awake adults with a need walk to the stall and buy. Needs reuse the brain's model: a trade restocks below half its `NPCBrain.BUYS` cap (smith ore and coal, cook grain and meat, tanner hides), the carpenter, smith and labourer cover what open building sites ask for, miners, labourers and woodcutters replace a missing tool, guards their gear, the household's head firewood and food (as `_plan_provision`). Merchants and children do not shop. A buyer pays only up to the cheapest local price (a little more when urgent), only with coins above a cash floor, and the goods go into their pack or pantry, so a met need buys nothing more.
+- **Tests:** `game/tests/business_test.gd::_demand`
+
+### INT-120 · Stall rent is paid daily; unpaid rent stops sales and then returns the pitch
+- **Trigger:** A new game day begins with a rented stall.
+- **Source:** `game/scripts/core/business.gd::daily`, `game/scripts/core/business.gd::pay_arrears`, `game/scripts/core/world.gd::_new_day`
+- **Affects:** Coins, Treasury, Market, Save
+- **Expected:** (PL1-10 stage 1) Each morning the day's rent is taken from the purse and then the till and goes to the treasury. If it cannot be paid, sales stop (`missed` counts mornings); after `stall_evict_days` the manor takes the pitch back and the unsold goods and the till return to the player. The stall's whole state (tenant, stock, prices, sales, till, rent paid-through day) is part of World.stalls and survives save and load.
+- **Tests:** `game/tests/business_test.gd::_rent_daily`, `game/tests/business_test.gd::_save_load`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -956,32 +991,32 @@ Rules:
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
 | Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-101, INT-105, INT-106, INT-109 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108 |
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109 |
-| Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117 |
+| Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-103, INT-107, INT-114 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-100, INT-102 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-100, INT-102, INT-118, INT-119 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-104, INT-105, INT-115 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-104, INT-105, INT-115, INT-116, INT-120 |
 | Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-100, INT-112 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111 |

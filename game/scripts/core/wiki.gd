@@ -97,6 +97,7 @@ static func build() -> Wiki:
 	w._controls()
 	w._systems()
 	w._guides()
+	WikiBusiness.add_pages(w)
 	w._not_yet()
 	WikiWorld.add_pages(w)
 	WikiChests.add_pages(w)
@@ -574,6 +575,8 @@ func _medicine_list() -> String:
 func _not_yet() -> void:
 	var items := {
 		"player_shops": ["Player shops and stalls", "You cannot rent a stall or open a shop of your own and sell from it yet."],
+		"lockpicking": ["Lockpicking", "Locks and lockpicks are not built; theft today is pickpocketing."],
+		"player_shops": ["Larger stalls, shops and attendants", "You can rent a market stall and sell from it (see the guide), but larger stalls, shops of your own, equipment placement and hired attendants are not built yet."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"plough": ["Hand plough and farming by the player", "You cannot till or sow fields yourself; the farmers do it. You can harvest ripe wheat."],
 	}

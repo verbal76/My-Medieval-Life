@@ -399,6 +399,24 @@ func _ready() -> void:
 				ui._talk_view(tn, Dialogue.news(world, tn))
 			"craft":
 				ui.show_craft(world.stations_of("anvil")[0])
+			"stall", "stall_pick":
+				# the player's rented market stall (PL1-10), stocked, with a sale made
+				world.player.coins = 60
+				world.player.inv.add("plank", 8)
+				world.player.inv.add("iron_ore", 5)
+				world.player.inv.add("pickaxe", 1)
+				world.player.inv.add("log", 4)
+				world.business.rent()
+				var st: Dictionary = world.business.mine()
+				world.business.list_item(st, "plank", 6)
+				world.business.list_item(st, "iron_ore", 5)
+				world.business.list_item(st, "pickaxe", 1)
+				world.business.set_price(st, "plank", 4)
+				world.player.pos = world.business.use_cell(st) + Vector2(0, 1)
+				var smith: NPC = world.npcs.filter(func(n): return n.job == "smith")[0]
+				smith.coins = 200
+				world.business.sell(st, smith, "iron_ore", 2, GameData.value("iron_ore"))
+				ui.show_stall(str(st.id), {"id": "plank", "mode": "price"} if shot_panel == "stall_pick" else {})
 			"shop", "counter":
 				# a tavern keeper at the counter: the shop window, or (counter) the prompt in front of it
 				var k := world.tavern_keeper()
@@ -1905,6 +1923,11 @@ func _shop_target(post: Dictionary) -> Dictionary:
 		return {"kind": "shop", "npc": keeper, "label": "Trade with %s (%s)" % [keeper.name, world.shop_name(keeper)]}
 	if post.stall:
 		var s: Dictionary = world.stalls[post.id]
+		if Business.is_pitch(s):
+			var mine := world.tenant_of(s) == World.PLAYER
+			if not mine and world.tenant_of(s) != "":
+				return {"kind": "info", "label": "An open market pitch", "text": "Nobody keeps this pitch."}
+			return {"kind": "stall", "id": post.id, "label": "Manage your market stall" if mine else "Rent this market pitch (%d coins a day)" % Business.rent_day()}
 		return _container_target({"id": post.id, "kind": "stall", "x": int(s.x), "y": int(s.y), "at": post.id})
 	return {"kind": "info", "label": "The tavern counter: nobody is serving", "text": "Nobody is serving at the counter now."}
 
@@ -2042,6 +2065,8 @@ func _use() -> void:
 			approach(target.npc)
 		"shop":
 			ui.show_trade(target.npc)
+		"stall":
+			ui.show_stall(str(target.id))
 		"info":
 			ui.message(target.text)
 		"container":

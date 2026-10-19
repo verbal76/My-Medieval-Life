@@ -526,6 +526,8 @@ func relet_stalls() -> void:
 	ids.sort()
 	for sid in ids:
 		var s: Dictionary = w.stalls[sid]
+		if Business.is_pitch(s):
+			continue                       # the open pitches are the player's to rent (Business)
 		var t: NPC = w.party(w.tenant_of(s))
 		if t != null and t.job == "merchant" and t.workplace == sid:
 			continue
