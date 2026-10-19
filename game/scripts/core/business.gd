@@ -755,12 +755,14 @@ func attended(s: Dictionary) -> bool:
 ## What a villager will pay at most, per piece: the cheapest price among those who sell the item in the
 ## village now (the merchants, the smith and the carpenter), or the dearest ordinary price when nobody does;
 ## a little more for an urgent need (urgency 0..2).
-func ceiling(id: String, urgency: int) -> int:
+## (`s`, the stall or shop being weighed, does not count towards the others' local supply; `buyer` is not
+## an alternative seller to themselves.)
+func ceiling(id: String, urgency: int, s := {}, buyer: NPC = null) -> int:
 	var alt := maxi(1, roundi(GameData.value(id) * float(GameData.b("price_max"))))
 	for o: NPC in w.npcs:
-		if o.alive and o.role == "adult" and o.inv.has(id) and not NPCBrain.KEEPS.get(o.job, []).has(id) and \
+		if o != buyer and o.alive and o.role == "adult" and o.inv.has(id) and not NPCBrain.KEEPS.get(o.job, []).has(id) and \
 				(o.job in ["smith", "carpenter", "cook", "tavernkeeper", "merchant", "farmer", "woodcutter"]):
-			alt = mini(alt, w.sell_price(o, id))
+			alt = mini(alt, w.sell_price(o, id, s))
 	return floori(alt * (1.0 + float(GameData.b("stall_urgency_step")) * urgency))
 
 
@@ -813,7 +815,7 @@ func offer(n: NPC, s: Dictionary) -> Dictionary:
 		if have <= 0:
 			continue
 		var price := price_of(s, id)
-		if price > ceiling(id, int(need.urgency)):
+		if price > ceiling(id, int(need.urgency), s, n):
 			continue
 		var afford := (n.coins - cash_floor(n)) / price
 		var qty := mini(mini(int(need.qty), have), mini(afford, int(GameData.b("stall_buy_max"))))

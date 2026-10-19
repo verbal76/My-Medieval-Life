@@ -566,17 +566,41 @@ func transfer(from: Inventory, to: Inventory, id: String, qty: int) -> bool:
 	return true
 
 
-func sell_price(vendor: NPC, id: String) -> int:
-	return sell_price_at(id, vendor.inv.count(id))
+func sell_price(vendor: NPC, id: String, skip := {}) -> int:
+	return sell_price_at(id, vendor.inv.count(id), local_supply(id, vendor.pos, vendor, skip))
+
+
+## How many of `id` other sellers offer within local_supply.radius of `at` (B14, owner: "pricing ...
+## determined by availability for sale in a certain diameter"): what traders (local_supply.jobs, and
+## anyone keeping a counter) hold for sale (a craftsman's own materials do not count), and the stock of
+## the player's open stall and shops. A seller among many asks less; a lone one more. `skip`: a stall
+## or shop left out (the one being compared with).
+func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) -> int:
+	var cfg: Dictionary = GameData.b("local_supply")
+	var r2 := float(cfg.radius) * float(cfg.radius)
+	var jobs: Array = cfg.jobs
+	var n := 0
+	for o: NPC in npcs:
+		if o == except or not o.alive or o.role in ["child", "bandit"] or o.pos.distance_squared_to(at) > r2:
+			continue
+		if (o.job in jobs or at_post(o)) and o.inv.has(id) and not NPCBrain.KEEPS.get(o.job, []).has(id) \
+				and (o.job == "merchant" or not NPCBrain.BUYS.get(brain.buy_role(o), {}).has(id)):     # a trade's own materials are not for sale
+			n += o.inv.count(id)
+	for s: Dictionary in business.premises():
+		if s != skip and s.has("stock") and Vector2(int(s.x), int(s.y)).distance_squared_to(at) <= r2:
+			n += int(s.stock.get(id, 0))
+	return n
 
 
 func buy_price(vendor: NPC, id: String) -> int:
 	return buy_price_at(id, vendor.inv.count(id))
 
 
-## What a seller holding `stock` asks for one: dearer as stock runs low.
-static func sell_price_at(id: String, stock: int) -> int:
-	var m := clampf(1.5 - 0.05 * stock, float(GameData.b("price_min")) + 0.2, float(GameData.b("price_max")))
+## What a seller holding `stock` asks for one, with `nearby` more for sale around them (local_supply):
+## dearer as stock runs low and when nobody near sells it, cheaper among many sellers.
+static func sell_price_at(id: String, stock: int, nearby := 0) -> int:
+	var cfg: Dictionary = GameData.b("local_supply")
+	var m := clampf(1.5 - 0.05 * stock - float(cfg.weight) * mini(nearby, int(cfg.cap)), float(GameData.b("price_min")) + 0.2, float(GameData.b("price_max")))
 	return maxi(1, roundi(GameData.value(id) * m))
 
 
@@ -594,8 +618,9 @@ func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
 	var out := []
 	var stock := n.inv.count(id)
 	var f := player_price_factor(buying)
+	var nearby := local_supply(id, n.pos, n) if buying else 0
 	for k in maxi(0, qty):
-		var base := sell_price_at(id, stock - k) if buying else buy_price_at(id, stock + k)
+		var base := sell_price_at(id, stock - k, nearby) if buying else buy_price_at(id, stock + k)
 		out.append(maxi(1, roundi(base * f)))
 	return out
 

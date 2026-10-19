@@ -198,6 +198,10 @@ func _demand() -> void:
 	smith.inv.items.erase("copper_ore")
 	smith.inv.items.erase("gold_ore")
 	smith.inv.items.erase("leather")
+	# B14 local pricing: a stall dearer than the village's local price for ore loses the sale to the merchants
+	s.prices["iron_ore"] = b.ceiling("iron_ore", 0, s, smith) + 1
+	check(b.offer(smith, s).get("item", "") != "iron_ore", "a stall asking more than the local price (%d) sells the smith no ore" % b.ceiling("iron_ore", 0, s, smith))
+	s.prices["iron_ore"] = b.ceiling("iron_ore", 0, s, smith)          # priced to the local market, it gets the trade
 	var n_buys := 0
 	for i in 20:
 		var o := b.offer(smith, s)

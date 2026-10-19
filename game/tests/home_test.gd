@@ -30,6 +30,7 @@ func _init() -> void:
 	test_cart_parts()
 	test_household_cart()
 	test_cart_days()
+	test_local_pricing()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -364,3 +365,44 @@ func test_cart_days() -> void:
 		"handcarts": st.get("made_handcart", 0), "storefronts": st.get("storefront_built_villager", 0)})
 	check(int(st.get("made_cart_wheel", 0)) > 0 and int(st.get("made_cart_axle", 0)) > 0 and int(st.get("made_cart_ironwork", 0)) > 0, "over 12 days the carpenter and smith make cart parts")
 	check(w.total_coins() == start + w.coin_sources, "coins conserved (%d + sources %d = %d)" % [start, w.coin_sources, w.total_coins()])
+
+
+## B14: a seller's asking price follows what else is for sale within local_supply.radius: a lone seller asks
+## the scarcity price, many sellers nearby bring it down; buying the parts beats a lone finished cart, and
+## goods the player puts up for sale nearby lower the villagers' price.
+func test_local_pricing() -> void:
+	var w := new_world()
+	var c: NPC = w.brain._first_with_job("carpenter")
+	var cfg: Dictionary = GameData.b("local_supply")
+	for o: NPC in w.npcs:
+		if o != c:
+			o.inv.items.erase("handcart")
+			o.inv.items.erase("cart_wheel")
+	c.inv.items["handcart"] = 1
+	var lone := w.sell_price(c, "handcart")
+	check(w.local_supply("handcart", c.pos, c) == 0 and lone == World.sell_price_at("handcart", 1), "a lone handcart seller asks the scarcity price (%d for a cart worth %d)" % [lone, int(GameData.item("handcart").value)])
+	var rec: Dictionary = GameData.recipes.build_handcart
+	var parts := 0
+	for id in rec["in"]:
+		parts += int(rec["in"][id]) * World.sell_price_at(id, 2)
+	check(parts < lone, "the parts cost less (%d) than the lone finished cart (%d): making your own pays" % [parts, lone])
+	# another trader near the carpenter with carts for sale
+	var o: NPC = w.brain._first_with_job("smith")
+	o.pos = c.pos + Vector2(3, 0)
+	o.inv.items["handcart"] = 5
+	var near := w.sell_price(c, "handcart")
+	check(w.local_supply("handcart", c.pos, c) == 5 and near < lone, "with 5 more for sale nearby the carpenter asks less (%d)" % near)
+	o.pos = c.pos + Vector2(float(cfg.radius) + 5.0, 0)
+	check(w.sell_price(c, "handcart") == lone, "beyond the radius they do not count")
+	# the player's stock for sale at a counter nearby lowers it as well
+	o.inv.items.erase("handcart")
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	var b: Dictionary = w.buildings[ids[0]]
+	b["shop"] = {"shop": true, "id": str(b.id), "building": str(b.id), "x": int(c.pos.x) + 2, "y": int(c.pos.y), "use": [int(c.pos.x) + 2, int(c.pos.y) + 1], "stock": {"handcart": 10}, "prices": {}}
+	var pl := w.sell_price(c, "handcart")
+	check(pl < near and pl >= World.sell_price_at("handcart", 1, int(cfg.cap)), "10 carts on the player's counter nearby bring it to %d" % pl)
+	b.erase("shop")
+	# the player's quote follows the same local price
+	w.player.coins = 1000
+	check(w.player_quote(c, "handcart", 1, true)[0] == maxi(1, roundi(lone * w.player_price_factor(true))), "the player is quoted the same local price")

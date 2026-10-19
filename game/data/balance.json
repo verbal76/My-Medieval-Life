@@ -59,6 +59,7 @@
   "start_coins_player": 20,
   "price_min": 0.6,
   "price_max": 1.8,
+  "local_supply": {"_note": "B14 (owner: pricing by availability for sale within a certain diameter): a seller's asking price falls by weight x the units of the item that other traders (jobs, and anyone keeping a counter) and the player's open stall and shops offer within radius tiles, counting at most cap units; a lone seller asks the full scarcity price. What buyers offer is unchanged. Agent proposal, provisional.", "radius": 40, "weight": 0.02, "cap": 25, "jobs": ["merchant", "carpenter", "smith", "tanner", "cook", "sage", "tavernkeeper"]},
   "sell_ratio": 0.6,
   "tree_growth": {
     "_note": "PROVISIONAL (agent proposal, owner approval pending): the tree lifecycle (Trees, tools/living_forest.py art). A felled mature tree is a stump for tree_regrow_days, then a sapling that grows sapling -> young -> growing -> mature; the stage lengths are in game days. Only MATURE trees can be felled: it takes `chops` axe blows, the cut marks showing the damage; a hurt tree heals after heal_minutes. Felling a mature tree gives sapling_count sapling(s) with chance sapling_chance (the player only); the player plants one on free grass in front of them. Development only: the command-line flag --tree-growth N (honoured only in debug builds, see docs/TREES.md) makes trees grow N times faster.",
