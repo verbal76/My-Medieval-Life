@@ -2540,6 +2540,7 @@ func _newcomer_for(v: Dictionary) -> NPC:
 	n.coins = int(GameData.b("newcomer_coins"))
 	n.hunger = 100.0
 	w.coin_sources += n.coins                        # the purse comes in from outside
+	w.stat("newcomer_coins_in", n.coins)
 	w.npcs.append(n)
 	w.by_id[n.id] = n
 	var h := int(v.household)

@@ -2,7 +2,7 @@ extends SceneTree
 ## Long-run economy simulation with no player activity: builds the village for a seed, steps the
 ## real World for N game days and samples, every D days and at the end, people, food, work and
 ## money, materials, wildlife, building, trade and the currency, then checks the flow accounts:
-## currency (end = start + caravan coins in - caravan coins out), each item (start + produced +
+## currency (end = start + caravan coins in + newcomers' purses - caravan coins out), each item (start + produced +
 ## imported - consumed - exported = end), each deposit (start - mined = end) and each animal kind
 ## (start + born - killed - starved = end). Any difference is printed as a leak, never hidden.
 ## Diagnostics only: the only thing it changes in the world is the player's hunger, kept full so
@@ -319,7 +319,9 @@ func _sample(start: Dictionary) -> Dictionary:
 		"coins_out": int(_st("caravan_coins_out")), "coin_sources": w.coin_sources}
 	# currency and flow accounts
 	var c := _coins()
-	var c_in := int(_st("caravan_coins_in")) - int(start.stats.get("caravan_coins_in", 0))
+	# coins from outside: the caravan's purchases, and newcomers' purses (they come in from outside)
+	var c_in := int(_st("caravan_coins_in")) - int(start.stats.get("caravan_coins_in", 0)) \
+			+ int(_st("newcomer_coins_in")) - int(start.stats.get("newcomer_coins_in", 0))
 	var c_out := int(_st("caravan_coins_out")) - int(start.stats.get("caravan_coins_out", 0))
 	var src_delta := w.coin_sources - int(start.coin_sources)
 	s.currency = {"holders": c, "total": c.total, "world_total_coins": w.total_coins(), "start_total": start.coins.total,
