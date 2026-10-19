@@ -6803,6 +6803,49 @@
    ]
   },
   {
+   "id": "EQ-08",
+   "title": "Births do not require a free bed; the crowding a birth causes is what drives a household to split and move",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": "Births shouldn't require a free bed first, the lack of a free bed probably made the baby. It will require a bed after, that's the impetus to move",
+   "description": "Births do not require a free bed; the crowding a birth causes is what drives a household to split and move",
+   "source": "owner message 2026-10-19 (chat)",
+   "approval": "owner instruction",
+   "acceptance": [
+    "A birth needs no free bed (other conditions unchanged)",
+    "A household with more people than beds splits when it can pay: a grown member founds a household",
+    "Splitting never separates partners or leaves young children behind"
+   ],
+   "implementation": "game/scripts/core/life.gd::_try_birth; game/scripts/core/construction.gd::founder_of, _found",
+   "tests": "game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-19 (chat)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; implementation; tests",
+     "why": "implemented: Life._try_birth no longer needs a free bed; founder_of prefers a grown child, never one partner alone; _found takes the partner along"
+    }
+   ]
+  },
+  {
    "id": "EQ-16",
    "title": "World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable",
    "kind": "approved",

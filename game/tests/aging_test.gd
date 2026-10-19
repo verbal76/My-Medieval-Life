@@ -260,7 +260,7 @@ func test_partners_and_births() -> void:
 			mother = n
 			h = n.household
 			break
-	check(mother != null, "a couple lives in a house with a free bed")
+	check(mother != null, "a couple lives in a house")
 	var father := w.npc(mother.partner)
 	mother.born = w.minutes - 30.0 * Y
 	father.born = w.minutes - 33.0 * Y
@@ -278,7 +278,14 @@ func test_partners_and_births() -> void:
 		over = over or living(w, h) > beds
 		born_to_her = mother.children.size()
 	check(born_to_her >= 1 and born_to_her <= 1 + 4, "the couple has a child over six years (%d children recorded)" % mother.children.size())
-	check(not over and living(w, h) == beds, "births stop at the house's capacity (%d beds, %d living)" % [beds, living(w, h)])
+	# a full house is no bar to another baby (owner, 2026-10-19): with births made likely, it grows past its beds
+	GameData.b("life").birth_interval_years = 0.05
+	for day in 24:
+		w.minutes += 1440.0
+		Life.births(w)
+		over = over or living(w, h) > beds
+	GameData.b("life").birth_interval_years = 2.0
+	check(over, "births do not wait for a free bed: the house grows past its %d beds (%d living)" % [beds, living(w, h)])
 	var baby: NPC = null
 	for id in mother.children:
 		if int(id) >= first_new:
@@ -313,7 +320,7 @@ func test_partners_and_births() -> void:
 		w2.minutes += 1440.0
 		Life.births(w2)
 	var born := w2.npcs.size() - n0
-	check(born >= 1 and born <= pairs and born <= rooms, "two years bring births to some of the %d couples, never past the free beds (%d born, %d beds free)" % [pairs, born, rooms])
+	check(born >= 1 and born <= pairs, "two years bring births to some of the %d couples, beds or no beds (%d born, %d beds were free)" % [pairs, born, rooms])
 	# partnering: a single man and woman of 18+, a room for one of them
 	var w3 := new_world()
 	GameData.b("life").partner_chance_per_year = 8.0                     # a certain chance each day
@@ -413,6 +420,56 @@ func test_couples_found_households() -> void:
 				w2.npc(int(mid)).coins = 0
 		var n_hh := w2.households.size()
 		check(not w2.construction._found_couple(g, h) and w2.households.size() == n_hh and g.household != n_hh, "a couple who cannot pay for any start stay where they are")
+	# 4. a crowded house (owner: births need no bed) sends out a grown child with their partner, never one
+	# of a couple on their own
+	var w3 := new_world()
+	var c3 := w3.construction
+	var couple_only := -1
+	for hh in w3.households:
+		var hid := int(hh.id)
+		var ad: Array = w3.brain._members(hid).filter(func(o: NPC) -> bool: return o.role == "adult")
+		if hid >= 3 and ad.size() == 2 and ad[0].partner == ad[1].id:
+			couple_only = hid
+			break
+	if couple_only >= 0:
+		var mom: NPC = w3.brain._members(couple_only).filter(func(o: NPC) -> bool: return o.role == "adult" and o.sex == "female")[0]
+		GameData.b("life").birth_interval_years = 0.05
+		for day in 40:
+			w3.minutes += 1440.0
+			Life._try_birth(w3, mom, couple_only, w3.npc(mom.partner), 1.0)
+		GameData.b("life").birth_interval_years = 2.0
+		check(c3.crowded(couple_only) or living(w3, couple_only) <= c3.beds_in(str(w3.households[couple_only].home)), "babies can crowd a couple's house")
+		check(c3.founder_of(couple_only) == null, "but neither partner of the couple is sent away alone")
+	var w4 := new_world()
+	var c4 := w4.construction
+	var hh4 := -1
+	var kid: NPC = null
+	var Y4 := float(GameData.b("calendar").year_days) * 1440.0
+	for n: NPC in w4.npcs:                     # a child of a household grows up (20) and stays at home
+		if n.alive and n.role == "child" and n.household >= 3 and c4._grown_child(n):
+			n.born = w4.minutes - 20.0 * Y4
+			n.role = "adult"
+			if c4._may_found(n):
+				kid = n
+				hh4 = n.household
+				break
+	if kid != null:
+		var mate: NPC = null
+		for n: NPC in w4.npcs:
+			if n.alive and n.role == "adult" and n.sex != kid.sex and n.partner < 0 and n.household != hh4 and c4._may_found(n) and not Life.kin(kid.id, kid.mother, kid.father, n.id, n.mother, n.father):
+				mate = n
+				break
+		Life._link_partners(kid, mate)
+		(w4.households[mate.household].members as Array).erase(mate.id)
+		w4.brain._lodge(mate, hh4)
+		while living(w4, hh4) <= c4.beds_in(str(w4.households[hh4].home)):
+			var k := Life.birth(w4, w4.npc(kid.mother) if kid.mother >= 0 else w4.npc(kid.father), null, hh4)
+		check(c4.crowded(hh4) and c4.founder_of(hh4) == kid, "in a crowded house the grown child is the one who founds")
+		kid.coins += 400
+		var n4 := w4.households.size()
+		check(c4._found(hh4) and kid.household == n4 and mate.household == n4 and (w4.households[n4].members as Array).size() == 2, "and their partner leaves with them")
+	else:
+		check(false, "a grown child lives with a parent at the start")
 
 
 # ---------------------------------------------------------------- the player -----------------

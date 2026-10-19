@@ -540,8 +540,8 @@ func beds_in(home: String) -> int:
 
 
 ## A household too big for its house (owner rule; definition an agent proposal): more living members
-## than the house has beds, in a house it holds, with two grown members or more (one founds a new
-## household and one stays with the rest).
+## than the house has beds (a birth needs no free bed, owner 2026-10-19, so babies crowd a house), in a
+## house it holds, with two grown members or more (one founds a new household and one stays with the rest).
 func crowded(h: int) -> bool:
 	var hh: Dictionary = w.households[h]
 	if hh.get("ended", false) or not w.buildings.has(str(hh.home)) or not w.property.is_home(w.buildings[hh.home]):
@@ -552,12 +552,23 @@ func crowded(h: int) -> bool:
 	return members.size() > beds_in(str(hh.home)) and members.filter(func(o: NPC) -> bool: return o.role == "adult").size() >= 2
 
 
-## Who leaves to found the new household: the last grown member by id who is not the reeve or the
-## sage (their posts go with the manor house and the hut).
+## Who leaves to found the new household: a grown son or daughter first, else an adult with no partner in
+## the household; the last such by id, never the reeve or the sage (their posts go with the manor house and
+## the hut), a guard, or a parent of young children at home. Partners are never split: a founder's partner
+## in the household leaves too (_found). Null when nobody can go.
 func founder_of(h: int) -> NPC:
-	var adults: Array = w.brain._members(h).filter(func(o: NPC) -> bool: return o.role == "adult" and o.id != w.reeve_id and o.id != w.sage_id)
+	var adults: Array = w.brain._members(h).filter(func(o: NPC) -> bool: return o.role == "adult" and _may_found(o))
 	adults.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
-	return adults.back() if adults.size() >= 1 else null
+	var grown: Array = adults.filter(func(o: NPC) -> bool: return _grown_child(o))
+	if not grown.is_empty():
+		return grown.back()
+	var single: Array = adults.filter(func(o: NPC) -> bool: return not _partner_here(o))
+	return single.back() if not single.is_empty() else null
+
+
+func _partner_here(o: NPC) -> bool:
+	var p := w.npc(o.partner) if o.partner >= 0 else null
+	return p != null and p.alive and p.household == o.household
 
 
 ## What the household keeps for those who stay (split_keep_base + split_keep_per_member each).
@@ -709,20 +720,27 @@ func _found(h: int) -> bool:
 	var founder := founder_of(h)
 	if founder == null:
 		return false
-	var spare: int = w.property.purse(World.hh_ref(h)) - _keep(h, w.brain._members(h).size() - 1)
+	var leaving: Array = [founder]
+	if _partner_here(founder):
+		leaving.append(w.npc(founder.partner))
+	var spare: int = w.property.purse(World.hh_ref(h)) - _keep(h, w.brain._members(h).size() - leaving.size())
 	var plan := _home_plan(spare, w.building_door(str(hh.home)), World.hh_ref(h))
 	if plan.is_empty():
 		return false
 	# the family (the founder among them) puts together what the new home costs and gives it to the
-	# founder, who leaves with it to found a household of their own
+	# founder, who leaves with it (and with their partner) to found a household of their own
 	_take(World.hh_ref(h), int(plan.cost))
 	founder.coins += int(plan.cost)
-	var nh := {"id": w.households.size(), "family": hh.family, "home": "", "members": [founder.id], "pantry": Inventory.new(),
+	var nh := {"id": w.households.size(), "family": hh.family, "home": "", "members": [], "pantry": Inventory.new(),
 		"founded_from": h, "founded_day": w.day()}
 	w.households.append(nh)
-	(hh.members as Array).erase(founder.id)
-	founder.household = int(nh.id)
-	w.note("The %s house is crowded: %s %s leaves to found a household of their own." % [hh.family, founder.name, founder.family])
+	for o: NPC in leaving:
+		(hh.members as Array).erase(o.id)
+		(nh.members as Array).append(o.id)
+		o.household = int(nh.id)
+		o.plan.clear()
+	w.note("The %s house is crowded: %s %s leaves to found a household of their own%s." % [hh.family, founder.name, founder.family,
+			"" if leaving.size() == 1 else " with " + leaving[1].name])
 	_find_home(int(nh.id))
 	w.brain.evaluate_household(h)
 	w.brain.evaluate_household(int(nh.id))

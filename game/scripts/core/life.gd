@@ -457,8 +457,9 @@ static func partner_player(w: World, n: NPC) -> String:
 
 
 # ---------------------------------------------------------------- births ---------------------
-## Births to partners: a woman of 18-42 with a living partner, a free bed in her household's house, food in
-## the household and no child in the last `birth_min_gap_years`. The chance a day is 1 in
+## Births to partners: a woman of 18-42 with a living partner, food in the household and no child in the
+## last `birth_min_gap_years`. No free bed is needed (owner, 2026-10-19): the crowding a baby causes is what
+## sends a grown member out to found a household (Construction.crowded, EQ-08). The chance a day is 1 in
 ## `birth_interval_years` years of days. The child records both parents (the player is -2).
 static func births(w: World) -> void:
 	var c := cfg()
@@ -481,7 +482,7 @@ static func _try_birth(w: World, mother, h: int, father, chance: float) -> bool:
 	var age: float = age_years(born_at, w.minutes)
 	if age < float(c.birth_mother_min_age) or age > float(c.birth_mother_max_age):
 		return false
-	if not has_room(w, h) or w.brain.household_food_days(h) < float(c.birth_min_food_days):
+	if h < 0 or w.brain.household_food_days(h) < float(c.birth_min_food_days):
 		return false
 	for cid in mother.children:
 		var k := w.npc(int(cid))
