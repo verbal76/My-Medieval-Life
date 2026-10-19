@@ -624,7 +624,7 @@ func _plan_evening(n: NPC, h: float) -> void:
 
 ## CRT-11 (owner: "if the single character has extra money and resources it should make them want to spend
 ## more time around other characters"): an unpartnered adult with relations.seek.coins or a gift in hand, on
-## seek.chance of evenings, goes to spend time beside the one they are courting (or, with no interest yet, the
+## seek.chance of evenings (without the means, seek.poor_chance), goes to spend time beside the one they are courting (or, with no interest yet, the
 ## friend they think most of); with seek.gift_coins to spare and nothing to give, they first buy a gift (ale
 ## from the tavern keeper, or a loaf from a food seller). Being near is what builds the tie (Relations.hour);
 ## the gift is given at dawn. Villagers without the means court more slowly.
@@ -635,9 +635,8 @@ func _plan_seek_company(n: NPC) -> bool:
 	var has_gift := false
 	for id in ["flower", "ale", "bread", "apple", "red_berries", "blueberries"]:
 		has_gift = has_gift or n.inv.has(id)
-	if n.coins < int(sk.coins) and not has_gift:
-		return false
-	if w.rng.randf() >= float(sk.chance):
+	var means := n.coins >= int(sk.coins) or has_gift
+	if w.rng.randf() >= (float(sk.chance) if means else float(sk.poor_chance)):
 		return false
 	var r: Relations = w.relations
 	var who: NPC = w.npc(int(r.interests.get(n.id, -1))) if r.interests.has(n.id) else null

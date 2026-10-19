@@ -30,6 +30,7 @@ func _init() -> void:
 	test_friends_benefits()
 	test_villagers_court()
 	test_shared_hours()
+	test_chemistry()
 	test_closeness()
 	test_no_rushing()
 	test_seek_company()
@@ -278,6 +279,44 @@ func test_shared_hours() -> void:
 	check(float(r.peek(ME, n.id).regard) - g2 < float(sh.talk_more) * 1.01, "twenty more presses of the talk button add less than one more talk")
 
 
+## Chemistry: fixed per pair and world, most pairs little, a few a great deal; it scales attraction from time
+## together; courting pairs gain faster; someone refused for good is not courted again.
+func test_chemistry() -> void:
+	var w := new_world()
+	var r := w.relations
+	var c := Relations.cfg()
+	var vals: Array = []
+	for i in 200:
+		vals.append(r.chemistry(i, i + 37))
+	vals.sort()
+	check(float(vals[0]) >= float(c.chemistry_min) and float(vals[-1]) <= float(c.chemistry_min) + float(c.chemistry_span) + 0.001, "chemistry stays within its range")
+	check(float(vals[100]) < 1.0 and float(vals[180]) > 1.2, "most pairs click a little, a few a great deal (median %.2f, top tenth %.2f)" % [float(vals[100]), float(vals[180])])
+	check(r.chemistry(5, 9) == r.chemistry(9, 5) and r.chemistry(5, 9) == new_world().relations.chemistry(5, 9), "the same for a pair either way and for the same seed")
+	var x := single(w)
+	var y: NPC = null
+	for o: NPC in w.npcs:
+		if o != x and o.alive and o.role == "adult" and r.can_court(x.id, o.id):
+			y = o
+			break
+	w.minutes = float(w.day()) * 1440.0 + 19.0 * 60.0
+	r.share(x.id, y.id, "social")
+	var plain := float(r.peek(x.id, y.id).attraction)
+	check(absf(plain - float(c.shared.social_attraction) * r.chemistry(x.id, y.id)) < 0.001, "an evening together builds attraction times their chemistry")
+	r.tie(x.id, y.id).stage = "courting"
+	w.minutes += 60.0
+	r.share(x.id, y.id, "social")
+	check(absf(float(r.peek(x.id, y.id).attraction) - plain * (1.0 + float(c.shared.courting_factor))) < 0.01, "and twice as much while courting")
+	r.tie(x.id, y.id).refused = true
+	r.tie(x.id, y.id).stage = ""
+	r.tie(x.id, y.id).attraction = 90.0
+	r.tie(x.id, y.id).days_known = 10
+	GameData.b("relations").npc_court_chance = 1.0
+	r.interests.erase(x.id)
+	r.dawn()
+	GameData.b("relations").npc_court_chance = 0.15
+	check(int(r.interests.get(x.id, -1)) != y.id, "someone who refused them for good is not courted again")
+
+
 ## The player's closeness (CRT-10): minutes near a villager, the nearest counting most, within a day's limit;
 ## a day counts as known after close.known_minutes near.
 func test_closeness() -> void:
@@ -368,7 +407,11 @@ func test_seek_company() -> void:
 	a.coins = 0
 	for id in a.inv.ids():
 		a.inv.items.erase(id)
-	check(not w.brain._plan_seek_company(a), "with nothing to spare they do not go courting tonight")
+	GameData.b("relations").seek.poor_chance = 0.0
+	check(not w.brain._plan_seek_company(a), "with nothing to spare they go out less (here: not tonight)")
+	GameData.b("relations").seek.poor_chance = 1.0
+	check(w.brain._plan_seek_company(a) and not a.plan.any(func(st) -> bool: return str(st.k) == "do" and str(st.act) == "buy_from"), "on the evenings they do go, they buy no gift")
+	GameData.b("relations").seek.poor_chance = 0.25
 	a.coins = 100
 	var ok: bool = w.brain._plan_seek_company(a)
 	check(ok and a.doing == "spending time with %s" % b.name, "with coins to spare they go to spend the evening with %s" % b.name)

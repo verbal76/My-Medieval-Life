@@ -60,7 +60,18 @@ static func key(a: int, b: int) -> String:
 static func _blank() -> Dictionary:
 	return {"regard": 0.0, "attraction": 0.0, "stage": "", "since": -1, "friends": false, "gift_day": -1, "last": -1, "recent": [],
 		"shared_day": -1, "shared_today": 0.0, "talks_today": 0, "hour_key": -1, "days_known": 0, "contact_day": -1,
-		"att_day": -1, "att_today": 0.0, "reg_today": 0.0, "near_day": -1, "near_min": 0.0, "near_reg": 0.0, "defend_day": -1}
+		"att_day": -1, "att_today": 0.0, "reg_today": 0.0, "near_day": -1, "near_min": 0.0, "near_reg": 0.0, "defend_day": -1,
+		"refused": false}
+
+
+## How well two people click (fixed per pair and world, so the same seed gives the same village): most pairs
+## little, a few a great deal (chemistry_min + chemistry_span * u^2). Time together builds attraction in
+## proportion; gifts do not depend on it (owner: traditional gifts still get you there).
+func chemistry(a: int, b: int) -> float:
+	var c := cfg()
+	var h := (mini(a, b) * 92821 + maxi(a, b) * 68917 + int(w.seed) * 7919) % 10007
+	var u := float(absi(h)) / 10006.0
+	return float(c.chemistry_min) + float(c.chemistry_span) * u * u
 
 
 ## The tie between two people (made on first use).
@@ -368,7 +379,7 @@ func _presence(n: NPC, mins: float, weight := 1.0) -> void:
 	var full := float(cl.regard_per_hour) * mins * weight / 60.0
 	var reg := minf(full, maxf(0.0, float(cl.daily_regard) - float(t.near_reg)))
 	t.near_reg = float(t.near_reg) + reg
-	var att := float(cl.attraction_per_hour) * mins * weight / 60.0 * (reg / full if full > 0.0 else 0.0) if can_court(Life.PLAYER_ID, n.id) else 0.0
+	var att := float(cl.attraction_per_hour) * mins * weight / 60.0 * chemistry(Life.PLAYER_ID, n.id) if can_court(Life.PLAYER_ID, n.id) else 0.0
 	_raise(t, reg, att, false)
 	if before < float(cl.known_minutes) and float(t.near_min) >= float(cl.known_minutes):
 		_touch(t)
@@ -450,6 +461,7 @@ func propose(a: int, n: NPC) -> String:
 		w.stat("proposals_refused")
 		if not willing(n) or rival(n, a) > float(t.attraction):
 			t.stage = ""                              # it ends here: they will not have this suitor
+			t.refused = true
 		return why
 	var days: int = w.day() - int(t.since)
 	if float(t.attraction) < float(cfg().propose_at) or days < int(cfg().propose_min_days) or int(t.days_known) < int(cfg().marry_min_days):
@@ -506,10 +518,9 @@ func hour(h: int) -> void:
 					share(n.id, o.id, kind)
 
 
-## One shared hour between two people (kind work, social or met), counted once per pair an hour however it
-## comes about: the hourly pass, or a conversation that shows they were together (CRT-09). Regard is
+## One shared hour between two people (kind work, social or met), counted once per pair an hour. Regard is
 ## shared.<kind>_regard (the hour nearby is the unit: met_regard 1), at most shared.daily_cap a day; attraction,
-## between people who may court, shared.<kind>_attraction in the same proportion.
+## between people who may court, shared.<kind>_attraction times their chemistry (within attraction_daily_cap).
 func share(a: int, b: int, kind: String) -> void:
 	var sh: Dictionary = cfg().shared
 	var t := tie(a, b)
@@ -522,13 +533,14 @@ func share(a: int, b: int, kind: String) -> void:
 		t.shared_day = d
 		t.shared_today = 0.0
 		t.talks_today = 0
-	var full := float(sh.get(kind + "_regard", 0.0))
-	var reg := minf(full, maxf(0.0, float(sh.daily_cap) - float(t.shared_today)))
-	if reg <= 0.0:
-		return
+	var reg := minf(float(sh.get(kind + "_regard", 0.0)), maxf(0.0, float(sh.daily_cap) - float(t.shared_today)))
 	t.shared_today = float(t.shared_today) + reg
 	t.last = d
-	var att := float(sh.get(kind + "_attraction", 0.0)) * (reg / full) if can_court(a, b) else 0.0
+	var att := float(sh.get(kind + "_attraction", 0.0)) * chemistry(a, b) if can_court(a, b) else 0.0
+	if str(t.stage) == "courting":
+		att *= float(sh.courting_factor)              # time together while courting counts for more
+	if reg <= 0.0 and att <= 0.0:
+		return
 	_raise(t, reg, att)
 	_befriend_if_close(a, b, t)
 
@@ -597,8 +609,9 @@ func _villagers_court() -> void:
 			for o: NPC in singles:
 				if o == n or o.partner >= 0 or not can_court(n.id, o.id):
 					continue
-				var a := float(peek(n.id, o.id).attraction)
-				if a >= best_a and absf(Life.npc_age(w, n) - Life.npc_age(w, o)) <= gap and (best == null or a > best_a):
+				var tt := peek(n.id, o.id)
+				var a := float(tt.attraction)
+				if not bool(tt.get("refused", false)) and int(tt.days_known) >= int(c.interest_days) and a >= best_a and absf(Life.npc_age(w, n) - Life.npc_age(w, o)) <= gap and (best == null or a > best_a):
 					best = o
 					best_a = a
 			if best == null:
@@ -657,6 +670,7 @@ func load_dict(d: Dictionary) -> void:
 		t.gift_day = int(t.gift_day)
 		t.last = int(t.last)
 		t.friends = bool(t.friends)
+		t.refused = bool(t.refused)
 		t.shared_day = int(t.shared_day)
 		t.shared_today = float(t.shared_today)
 		for f in ["talks_today", "hour_key", "days_known", "contact_day", "att_day", "near_day", "defend_day"]:

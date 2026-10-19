@@ -4849,6 +4849,11 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "note",
+     "why": "pace tuned: chemistry per pair, courting boost, earlier interest, poorer villagers still seek company, refused suitors move on (100-day runs had shown only 5 and 3 new couples)"
     }
    ]
   },
