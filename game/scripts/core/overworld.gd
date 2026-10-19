@@ -61,6 +61,7 @@ var village := Rect2i(0, 0, 120, 90)
 var gates: Array = []                    # {out: Vector2i, dir: Vector2i}: where the village's roads leave
 var tiles := {}                          # overworld_tiles.json
 var changes := {}                        # Vector2i -> a tree the player changed (felled, growing, planted): {x, y, species, state, regrow, born, ow, planted?}
+var rock_changes := {}                   # Vector2i -> uses left of a boulder the player has worked on (0: broken up and gone); saved like `changes`
 var clock := 0.0                         # the game minute (World keeps it): changed trees grow lazily by it
 var cache := {}                          # Vector2i -> Chunk
 var generated := 0                       # chunks generated so far (tests: the cache bound, no work for loaded chunks)
@@ -574,11 +575,45 @@ func is_solid(c: Vector2i) -> bool:
 		var t: Dictionary = changes[c]
 		if ch.kind[i] != NO_TREE or ch.solid[i] == 0:
 			return Trees.solid(str(t.state))
+	if ch.deco[i] == int(tiles.rock) and ch.solid[i] != 0 and rock_changes.get(c, 1) == 0:
+		return false                                   # a boulder broken up: open ground
 	if ch.kind[i] != NO_TREE and ch.snow[i] != 2:
 		if Trees.starts_mature(c.x, c.y):              # a generated tree: solid once its trunk has grown
 			return true
 		return Trees.solid(Trees.stage_at(clock - Trees.initial_born(c.x, c.y)))
 	return ch.solid[i] != 0
+
+
+## The small grey boulder standing on a cell outside the village (a solid rock of the generator, not a
+## cliff or a mountain's decoration): a record like a village deposit {x, y, ore: "stone", amount,
+## boulder: true, ow: true}, `amount` the pickaxe uses left, or {} if there is none or it is broken up.
+## The generated rock is fresh; the player's work on it is in `rock_changes`.
+func boulder_at(c: Vector2i) -> Dictionary:
+	if not has_boulder(c):
+		return {}
+	var left: int = rock_changes.get(c, int(ResourceNodes.def("boulder").uses))
+	if left <= 0:
+		return {}
+	return {"x": c.x, "y": c.y, "ore": "stone", "amount": left, "boulder": true, "ow": true}
+
+
+## Whether the generator stood a boulder on this cell (broken up or not).
+func has_boulder(c: Vector2i) -> bool:
+	if village.has_point(c):
+		return false
+	var ch := get_chunk(chunk_of(c))
+	var i := _cell_of(ch, c)
+	return ch.deco[i] == int(tiles.rock) and ch.solid[i] != 0 and ch.kind[i] == NO_TREE
+
+
+## Whether the boulder here has been broken up (the view does not draw it again).
+func rock_gone(c: Vector2i) -> bool:
+	return rock_changes.get(c, 1) <= 0
+
+
+## Remember the uses left of a boulder the player worked on (saved).
+func note_rock(c: Vector2i, left: int) -> void:
+	rock_changes[c] = left
 
 
 func is_road(c: Vector2i) -> bool:
@@ -672,7 +707,7 @@ func plant_refusal(cell: Vector2i) -> String:
 	var flat := false
 	for g in (tiles.cliff[0] as Array):              # the flat grass tiles (JSON numbers are floats)
 		flat = flat or int(g) == ch.ground[i]
-	if not flat or ch.solid[i] == 1 or ch.deco[i] >= 0:
+	if not flat or ch.solid[i] == 1 or (ch.deco[i] >= 0 and not rock_gone(cell)):
 		return "The ground here is not open grass."
 	for dy in range(-1, 2):
 		for dx in range(-1, 2):
@@ -701,15 +736,23 @@ func to_dict() -> Dictionary:
 		if t.get("planted", false):
 			e["planted"] = true
 		list.append(e)
-	return {"seed": seed, "gen": GEN_VERSION, "changes": list}
+	var rocks := []
+	var rcells: Array = rock_changes.keys()
+	rcells.sort()
+	for c: Vector2i in rcells:
+		rocks.append([c.x, c.y, int(rock_changes[c])])
+	return {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks}
 
 
 ## Apply saved changes: the seed is set by the caller (create); a save from another generator
 ## version keeps the seed but cannot place its changes (the trees are not where they were).
 func load_dict(d: Dictionary) -> void:
 	changes.clear()
+	rock_changes.clear()
 	if int(d.get("gen", GEN_VERSION)) != GEN_VERSION:
 		return
+	for r in d.get("rocks", []):
+		rock_changes[Vector2i(int(r[0]), int(r[1]))] = int(r[2])
 	for e in d.get("changes", []):
 		var cell := Vector2i(int(e.x), int(e.y))
 		var t := {}

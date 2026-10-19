@@ -13,15 +13,16 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 15 (11 the player may harvest, 4 the keeper's livestock).
+- Implemented node types: 16 (12 the player may harvest, 4 the keeper's livestock).
 - Materials they produce: 13 (blueberries, coal, copper_ore, flower, hide, iron_ore, log, meat, oak_sapling, pine_sapling, red_berries, stone, wheat).
-- Finite node types: 4 (coal_seam, copper_seam, iron_seam, stone_seam); with no replacement once worked out: 0 (the caravan imports each).
+- Finite node types: 5 (boulder, coal_seam, copper_seam, iron_seam, stone_seam); with no replacement once worked out: 0 (the caravan imports each).
 - At risk of overharvesting: 6 (coal_seam, copper_seam, iron_seam, stone_seam, wild_boar, wild_rabbit).
 - Not Gather-compatible: 4 (chicken_pen, cow_pen, pig_pen, sheep_pen).
 
 | Node | Category | Origin | Tool | Skill | Yields a cycle | Depletion | Player | NPCs | Gather | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `blue_berry_bush` Blue berry bush | forage | natural | none | none | 2 blueberries | regrows | yes | no | yes | implemented |
+| `boulder` Boulder | mineral | natural | pickaxe | mining | 1 stone | finite | yes | no | yes | implemented |
 | `chicken_pen` Chickens | livestock | bred | none | none | 1 meat | breeds | no | yes | no | implemented |
 | `coal_seam` Coal seam | mineral | natural | pickaxe | mining | 1 coal | finite | yes | yes | yes | implemented |
 | `copper_seam` Copper seam | mineral | natural | pickaxe | mining | 1 copper_ore | finite | yes | yes | yes | implemented |
@@ -56,6 +57,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Gather mode:** yes. **Icon:** `blueberries`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
 - **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
+
+### `boulder` · Boulder
+
+- **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "boulder", "ore": "stone"}`.
+- **Where:** Small grey boulders standing alone: in the mine's highland and across the map outside the village. **In the world:** 30 in the village (3 stone each), and the overworld's solid rocks.
+- **Action:** Mining (interact): "Mine stone". **Range (tiles):** 1. The cell 0.9 tiles in front of the player, or one of its four neighbours (main.gd _find_target).
+- **Tool:** pickaxe (required). You need a pickaxe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `pickaxe`: recipe (forge_pickaxe); resold by the merchant_goods; `rusty_pickaxe`: start kit (player_start_items).
+- **Skill:** mining, level 1.
+- **Time:** `mine_minutes` (25 game minutes). As for every seam: mine_minutes game minutes a unit for a villager; the player's swing is shorter, divided by the pickaxe's speed.
+- **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing.
+- **Yields a cycle:** 1 stone. Player only: from Mining 2, a 25% chance of a second unit from the same boulder.
+- **Total:** uses (3) stone a boulder; the village's boulders are not counted among the seams (the caravan's stone rule and the miners look at the seams only).
+- **Depletion:** finite. None: a boulder broken up is gone for good and its cell is open ground. The change is saved (the village's with the world, the overworld's with Overworld.rock_changes).
+- **Owner:** Nobody. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers no. Villagers mine the seams, not the boulders.
+- **Gather mode:** yes. **Icon:** `stone`.
+- **Risk:** Stone is cheap: a boulder breaks into only 3 stone. The caravan's quarry import rule counts the seams alone.
+- **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/core/world.gd::deposit_at`, `game/scripts/core/overworld.gd::boulder_at`, `game/scripts/main.gd::interact`
 
 ### `chicken_pen` · Chickens
 
@@ -322,12 +341,13 @@ Objects the player can use or take from that are not resource nodes, so the dist
 | The tavern counter, the armoury counter and the mine cart | tavern_counter, armory_counter, mine_cart | Map stations with no recipe and no harvest: the tavern counter is where the tavernkeeper serves and villagers drink; the others are decorative. | `game/scripts/core/npc_brain.gd::_plan_evening` |
 | The pens' troughs | - | Where livestock is fed (wheat in, nothing out); the animals in a pen are livestock nodes, the keeper's. | `game/scripts/core/fauna.gd::feed` |
 | Bags on the ground | - | What the dead or a kill left: taken once, not a node. | `game/scripts/main.gd::interact` |
-| Decorative map tiles (flowers, rocks, depleted rock, stumps' surroundings) | - | Map art with no game object behind it. | `tools/build_village.py` |
+| Decorative map tiles (flowers, cliffs and rock faces, worked-out seams, stumps' surroundings) | - | Map art with no game object behind it. | `tools/build_village.py` |
 
 ## Finite resources and their replacements
 
 | Node | In the world | Replacement once worked out |
 |---|---|---|
+| `boulder` | 30 in the village (3 stone each), and the overworld's solid rocks | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 | `coal_seam` | 200 coal in 4 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `copper_seam` | 60 copper_ore in 2 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `iron_seam` | 300 iron_ore in 5 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
@@ -345,6 +365,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | Node | Risk |
 |---|---|
 | `blue_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
+| `boulder` | Stone is cheap: a boulder breaks into only 3 stone. The caravan's quarry import rule counts the seams alone. |
 | `chicken_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `coal_seam` | Overharvested: worked out by day 8 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |
 | `copper_seam` | Overharvested: worked out on day 4 (seed 1, no player), ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1. |

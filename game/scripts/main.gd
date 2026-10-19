@@ -829,6 +829,7 @@ func _apply_world_changes() -> void:
 	for d in world.deposits:
 		if int(d.amount) <= 0:
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
+	world.sync_boulders()                    # boulders already broken up (B8-026)
 	for f in world.fields:
 		world._field_tiles(f)
 	for pl in world.plants:
@@ -998,22 +999,9 @@ func _sync_sprites() -> void:
 	canopy.update(p.pos, get_process_delta_time())
 	tree_view.update(p.pos, get_process_delta_time())
 	ow_view.follow(camera.get_screen_center_position() / T, p.pos, get_process_delta_time())
-	var inside := world.place_of(p.pos)
-	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
-		inside = ""
-	# still inside while within the building's outline, on a cell its interior missed (a back room,
-	# a courtyard cell): otherwise the roof flicks between lifted and eaves-faded (Build 8 report)
-	if inside == "" and inside_hold != "" and world.buildings.has(inside_hold):
-		var hb: Dictionary = world.buildings[inside_hold]
-		if Rect2(float(hb.x), float(hb.y), float(hb.w), float(hb.h)).has_point(p.pos):
-			inside = inside_hold
-	inside_hold = inside
-	# behind the eaves a roof fades only when it would hide the player: over their feet and head both
-	var under := world.roof_over(p.pos)
-	if under != "" and world.roof_over(p.pos + Vector2(0, -1)) != under:
-		under = ""
-	roofs.follow(inside, world.interiors[inside].roof if inside != "" else [], under,
-			world.interiors[under].roof if under != "" else [], get_process_delta_time())
+	var rf := RoofFade.probe(world, p.pos, inside_hold)         # which roof lifts (B8-018: roofs never return indoors)
+	inside_hold = rf.inside
+	roofs.follow(rf.inside, rf.inside_roof, rf.under, rf.under_roof, get_process_delta_time())
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)

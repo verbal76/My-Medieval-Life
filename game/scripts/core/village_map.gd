@@ -23,6 +23,7 @@ static func load_default() -> VillageMap:
 		var row: String = m.data.solid[y]
 		for x in m.w:
 			m.solid[y * m.w + x] = 1 if row[x] == "1" else 0
+	m.normalise_rocks()
 	m._setup_astar()
 	return m
 
@@ -107,6 +108,60 @@ func decor_trees() -> Array:
 	var cells: Array = found.keys()
 	cells.sort_custom(func(a: Vector2i, b: Vector2i): return a.y < b.y or (a.y == b.y and a.x < b.x))
 	return cells.map(func(c): return found[c])
+
+
+## One sprite, one product (B8-008; resources.json "deposit_tiles"): a seam is drawn with its ore's tile
+## and a worked-out one with the hollow tile, whatever the map data says; a flecked (ore) sprite with
+## no seam behind it is only a rock, drawn as a plain grey boulder. Idempotent. Run when the map loads.
+func normalise_rocks() -> void:
+	GameData.ensure()
+	var dt: Dictionary = GameData.resources.deposit_tiles
+	var ore := {}
+	for k in dt.ore:
+		ore[k] = int(dt.ore[k])
+	var flecked := {}
+	for t in dt.flecked:
+		flecked[int(t)] = true
+	var plain := int(dt.boulder)
+	var seams := {}
+	for d in data.deposits:
+		seams[int(d.y) * w + int(d.x)] = str(d.ore)
+	for lay in data.layers:
+		var n := str(lay.name)
+		if not (n.begins_with("below") or n.begins_with("above")):
+			continue
+		var cells: Array = lay.data
+		for i in cells.size():
+			var v := int(cells[i])
+			if seams.has(i):
+				if n == "below0" and (flecked.has(v) or v == plain):
+					cells[i] = ore[seams[i]]
+			elif flecked.has(v):
+				cells[i] = plain
+	data.tiles.ore = ore
+	data.tiles.depleted_rock = int(dt.worked_out)
+
+
+## The small grey boulders the map stands alone: a solid cell holding the plain boulder tile in a
+## "below" layer, with no seam on it (B8-026). Each is {x, y}, in row order. The caller (World) makes
+## them mineable; big terrain rocks and cliffs are other tiles and stay obstacles.
+func decor_boulders() -> Array:
+	GameData.ensure()
+	var plain := int(GameData.resources.deposit_tiles.boulder)
+	var seams := {}
+	for d in data.deposits:
+		seams[Vector2i(int(d.x), int(d.y))] = true
+	var out := []
+	for y in h:
+		for x in w:
+			var c := Vector2i(x, y)
+			if seams.has(c) or not is_solid(c):
+				continue
+			for lay in data.layers:
+				if str(lay.name).begins_with("below") and int(lay.data[y * w + x]) == plain:
+					out.append({"x": x, "y": y})
+					break
+	return out
 
 
 func in_village(c: Vector2i) -> bool:

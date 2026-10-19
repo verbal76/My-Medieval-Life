@@ -40,7 +40,9 @@ var trees: Array = []              # the village's trees (Trees: the one tree mo
                                    # drawn by TreeView and the characters walk behind its canopy. Trees the player planted
                                    # have planted: true. trunk/top/bottom are the old tile ids (map data), kept for the tests
 var tree_damage := {}              # Vector2i -> {hits, side, at}: the axe blows a mature tree has taken (not saved: they heal)
-var deposits: Array = []           # {x, y, ore, amount}
+var deposits: Array = []           # {x, y, ore, amount}: the mine's seams (the sims, miners and the caravan's stone rule look at these only)
+var boulders: Array = []           # the village's small grey boulders (B8-026): {x, y, ore: "stone", amount, boulder: true}, a few
+                                   # pickaxe uses each, then gone (solid cleared). Found by deposit_at like a seam; the overworld's are Overworld.boulder_at
 var plants: Array = []             # wild flowers and berry bushes (village generator v5): {id, x, y, kind, tile, state, regrow}.
                                    # state: ripe | picked (bare, ripe again on day `regrow`) | cleared (grubbed up for building).
                                    # The cell stays walkable; the tile is the plant's own, in layer below1.
@@ -104,6 +106,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	_make_plants(m)
 	for d in m.data.deposits:
 		deposits.append({"x": int(d.x), "y": int(d.y), "ore": d.ore, "amount": int(d.amount)})
+	_make_boulders(m)
 	for f in m.data.fields:
 		var fd: Dictionary = f.duplicate(true)
 		fd.state = "ripe"
@@ -542,7 +545,28 @@ func deposit_at(c: Vector2i) -> Dictionary:
 	for d in deposits:
 		if d.x == c.x and d.y == c.y:
 			return d
+	for b in boulders:
+		if b.x == c.x and b.y == c.y and int(b.amount) > 0:
+			return b
+	if map.overworld != null:
+		return map.overworld.boulder_at(c)               # a rock of the world outside the village ({} inside it)
 	return {}
+
+
+## The village's boulders, from the map (VillageMap.decor_boulders): fresh ones, three uses each.
+func _make_boulders(m: VillageMap) -> void:
+	boulders.clear()
+	var uses := int(ResourceNodes.def("boulder").uses)
+	for c in m.decor_boulders():
+		boulders.append({"x": int(c.x), "y": int(c.y), "ore": "stone", "amount": uses, "boulder": true})
+
+
+## Show the boulders already broken (a loaded world): their tiles go and their cells open. The view
+## calls it after it is built, like the worked-out seams (main.gd _apply_world_changes).
+func sync_boulders() -> void:
+	for b in boulders:
+		if int(b.amount) <= 0:
+			_remove_boulder(b)
 
 
 func tree_at(c: Vector2i) -> Dictionary:
@@ -613,10 +637,29 @@ func mine_unit(d: Dictionary) -> String:
 	if d.is_empty() or int(d.amount) <= 0:
 		return ""
 	d.amount = int(d.amount) - 1
+	if d.get("boulder", false):
+		if d.get("ow", false):
+			map.overworld.note_rock(Vector2i(int(d.x), int(d.y)), int(d.amount))
+		if d.amount == 0:
+			_remove_boulder(d)
+		return "stone"
 	if d.amount == 0:
 		tile_changed.emit(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
 		note("A %s seam at the mine is worked out." % GameData.item_name(d.ore).to_lower())
 	return d.ore
+
+
+## A broken boulder leaves open ground: the tile is erased and the cell can be walked.
+func _remove_boulder(b: Dictionary) -> void:
+	var cell := Vector2i(int(b.x), int(b.y))
+	if b.get("ow", false):
+		tile_changed.emit(cell, "below", -1)
+		return
+	map.set_solid(cell, false)
+	for lay in map.data.layers:                 # the boulder is in whichever "below" layer the map drew it
+		if str(lay.name).begins_with("below") and int(lay.data[cell.y * map.w + cell.x]) == int(map.data.tiles.ore.stone):
+			lay.data[cell.y * map.w + cell.x] = -1
+			tile_changed.emit(cell, str(lay.name), -1)
 
 
 ## Fell a mature tree: returns the number of logs (0 if it is not mature: only a mature tree can be
@@ -2172,7 +2215,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
+		"deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(),
 	}
@@ -2235,6 +2278,11 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			pl.state = str(sp.state)
 			pl.regrow = float(sp.regrow)
 	deposits = d.deposits
+	_make_boulders(m)                  # a save from before boulders has none broken
+	for sb in d.get("boulders", []):
+		for b in boulders:
+			if b.x == int(sb[0]) and b.y == int(sb[1]):
+				b.amount = int(sb[2])
 	fields = d.fields
 	plots = d.plots
 	coin_sources = int(d.coin_sources)
