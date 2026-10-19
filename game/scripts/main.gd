@@ -30,6 +30,7 @@ var furn := {}                 # PL2-013: the player on furniture: {kind: "sit" 
 var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain)
 var sprinting := false         # B8-027: running (LT toggles on a pad; Shift held, or toggled, on a keyboard)
 var save_meta := {}            # PL1-11: the save's identity for portable and cloud saves (_save_meta)
+var talk_alt := {}             # a villager beside the resource the player faces: Y (pad), T (keys) or a tap talks to them while A works the resource
 var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
 var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
 var sprint_latched := false    # touch Run (Build 13): sprint whenever walking until Run is pressed again or stamina runs out
@@ -665,7 +666,7 @@ func _setup_input() -> void:
 		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "journal": [KEY_B], "pause": [KEY_ESCAPE, KEY_P],
 		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
 		"map": [KEY_M], "recenter": [KEY_C], "build": [KEY_H], "gather": [KEY_G],
-		"sprint": [KEY_SHIFT], "cancel": [], "next_target": [KEY_Q], "prev_target": [],
+		"sprint": [KEY_SHIFT], "cancel": [], "next_target": [KEY_Q], "prev_target": [], "talk": [KEY_T],
 	}
 	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
 		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER,
@@ -1544,7 +1545,9 @@ func _player_step(delta: float) -> void:
 		interact()
 	if Input.is_action_just_pressed("attack"):
 		attack()
-	if Input.is_action_just_pressed("fireball"):
+	if not talk_alt.is_empty() and (Input.is_action_just_pressed("talk") or (Input.is_action_just_pressed("fireball") and scheme == "gamepad")):
+		talk_to_alt()                     # Y on a pad talks instead of casting while a villager is offered
+	elif Input.is_action_just_pressed("fireball"):
 		fireball()
 	_menu_keys()
 	if Input.is_action_just_pressed("gather"):
@@ -1941,6 +1944,13 @@ func _find_target() -> void:
 				cands.push_front(job)
 			else:
 				cands.append(job)
+	# a villager by the seam, tree or plant in front (often working it too) no longer takes the default:
+	# A works the resource and Y / T talks to them (owner, Build 13 playtest)
+	talk_alt = {}
+	if not front.is_empty() and not cands.is_empty() and str(cands[0].kind) in ["npc", "shop"]:
+		talk_alt = cands[0]
+		cands.erase(front)
+		cands.push_front(front)
 	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
 	var lawful := cands.filter(func(c): return not str(c.get("label", "")).contains("theft"))
 	cands = lawful + cands.filter(func(c): return str(c.get("label", "")).contains("theft"))
@@ -1959,7 +1969,9 @@ func _find_target() -> void:
 		ui.prompt("")     # gathering: the outline and the progress bar show it; the middle stays clear
 	else:
 		var text: String = "" if passing else target.get("label", "")
-		if text != "" and cands.size() > 1:
+		if text != "" and not talk_alt.is_empty() and _target_key(target) != _target_key(talk_alt):
+			text += "\n%s: %s" % [{"kbm": "T", "gamepad": "Y", "touch": "Tap them"}.get(scheme, "T"), talk_alt.get("label", "")]
+		elif text != "" and cands.size() > 1:
 			text += "\n" + _next_hint(cands[(pick + 1) % cands.size()], pick)
 		ui.prompt(text)
 
@@ -2142,6 +2154,14 @@ func _who(n: NPC) -> String:
 	if n.role == "bandit":
 		return n.name
 	return Dialogue.full_name(n)          # "Old Lorekeeper", not "Old Lorekeeper Lorekeeper"
+
+
+## Y / T beside a resource: talk to the villager offered with it (talk_alt), leaving A on the resource.
+func talk_to_alt() -> void:
+	if talk_alt.is_empty():
+		return
+	target = talk_alt
+	interact()
 
 
 func interact() -> void:

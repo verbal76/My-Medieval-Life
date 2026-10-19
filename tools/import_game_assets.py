@@ -96,7 +96,7 @@ PROMPT_ZIP = "kenney_input-prompts_1.5.zip"
 PROMPTS = {name: f"Keyboard & Mouse/Double/{name}.png" for name in
            ["keyboard_b", "keyboard_e", "keyboard_f", "keyboard_i", "keyboard_l", "keyboard_space", "keyboard_escape",
             "keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d", "keyboard_c", "keyboard_m", "keyboard_g", "mouse_left", "mouse_right",
-            "mouse_scroll", "mouse_move", "keyboard_q", "keyboard_tab", "keyboard_shift"]}
+            "mouse_scroll", "mouse_move", "keyboard_q", "keyboard_tab", "keyboard_shift", "keyboard_t"]}
 PROMPTS.update({name: f"Xbox Series/Double/{name}.png" for name in
                 ["xbox_button_a", "xbox_button_b", "xbox_button_x", "xbox_button_y", "xbox_button_view",
                  "xbox_button_menu", "xbox_stick_l", "xbox_stick_r", "xbox_stick_r_press", "xbox_lb", "xbox_rb", "xbox_dpad_down", "xbox_lt", "xbox_rt",

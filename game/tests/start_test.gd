@@ -2134,6 +2134,43 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	bystander.pos = p.pos + Vector2(20, 0)
 	main._find_target()
 	check(not main.target_options.any(func(t): return t.kind == "npc") and main.target_options.any(func(t): return t.kind == "station"), "with the person gone the station is still offered, and they are not")
+	# a villager at the seam the player faces (owner, Build 13 playtest): A mines it, Y (pad) or T (keys) talks
+	var seam := _at_seam()
+	main.target_pref = ""
+	bystander.anim = "idle"
+	bystander.plan.clear()
+	bystander.pos = p.pos + main.facing_vec() * 0.9
+	main._find_target()
+	check(main.target.get("kind", "") == "deposit" and main.talk_alt.get("npc") == bystander, "with a villager at the seam, A is the seam and the villager is offered to talk (%s)" % main.target.get("kind", ""))
+	main.scheme = "gamepad"
+	ui.set_scheme("gamepad")
+	main._find_target()
+	check(ui.prompt_text.contains("Y: Talk to") or ui.prompt_text.contains("Y: Trade with"), "the prompt shows Y to talk: \"%s\"" % ui.prompt_text.replace("\n", " | "))
+	var spells_before: Dictionary = p.spells.duplicate()
+	p.spells["fireball"] = true
+	Input.action_press("fireball")
+	main._player_step(0.016)
+	Input.action_release("fireball")
+	check(ui.is_open("talk") or ui.is_open("trade"), "Y talks to the villager instead of casting")
+	p.spells = spells_before
+	ui.hide_all()
+	main.scheme = "kbm"
+	ui.set_scheme("kbm")
+	main._find_target()
+	check(ui.prompt_text.contains("T: "), "on a keyboard the prompt says T")
+	Input.action_press("talk")
+	main._player_step(0.016)
+	Input.action_release("talk")
+	check(ui.is_open("talk") or ui.is_open("trade"), "T talks to them")
+	ui.hide_all()
+	main._find_target()
+	var seam_left := int(seam.amount)
+	main.interact()
+	finish_action()
+	check(int(seam.amount) < seam_left, "and A / E still mines the seam with the villager beside it")
+	bystander.pos = p.pos + Vector2(20, 0)
+	main._find_target()
+	check(main.talk_alt.is_empty(), "with nobody beside it, no talk is offered")
 
 	# B8-027: sprint
 	var open := _open_stretch()
@@ -2386,7 +2423,7 @@ func _pl_trade_ui_tests() -> void:
 	p.inv.items.erase("iron_bar")
 	ui.hide_all()
 	# -- B on a pad (and Esc) closes only an open quantity control, never the window under it (Build 13)
-	ui.set_scheme("pad")
+	ui.set_scheme("gamepad")
 	goods.inv.add("iron_sword", 1)
 	p.coins = 500
 	ui.show_trade(goods, {"id": "iron_sword", "mode": "buy"})
