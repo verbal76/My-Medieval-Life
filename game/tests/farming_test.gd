@@ -32,6 +32,7 @@ func _init() -> void:
 	test_pens_and_animals()
 	test_market()
 	test_save()
+	test_village_chain()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -386,8 +387,10 @@ func test_pens_and_animals() -> void:
 		check(int(pr.products.get(item, 0)) <= int(Farming.cfg().product_cap), "the pen holds at most %d" % int(Farming.cfg().product_cap))
 		var take: Dictionary = w.farm.collect(pr, p)
 		check(int(take.get(item, 0)) >= 1 and p.inv.count(item) >= 1, "the %s is collected" % item)
-	# the village's own pens give the player nothing and its keepers keep their stock
-	check(w.farm.products_in(src).is_empty(), "the keeper's pen collects nothing for anyone")
+	# the village's own pens give the player nothing: their eggs, milk and wool are the keeper's (Build 13)
+	src.products = {"egg": 2}
+	var e_before := p.inv.count("egg")
+	check(w.farm.collect(src, p).is_empty() and p.inv.count("egg") == e_before and int(src.products.egg) == 2, "the player cannot collect from the keeper's pen")
 
 
 func test_market() -> void:
@@ -490,3 +493,104 @@ func test_save() -> void:
 	check(w4.farm.cells.size() == 1, "(a field cell)")
 	w4.start_site(pl4, "house", World.PLAYER)
 	check(w4.farm.cells.is_empty(), "marking out a house on the ground ploughs the field under")
+
+
+## Build 13: the village's livestock chain. Pens make eggs, milk and wool; keepers collect and sell them;
+## the cook presses cheese and bakes egg bread at the kitchen's preparation table; the tanner weaves wool
+## into cloth and sews bandages for the Apothecary; villagers buy and eat cheese and bread. Every step moves
+## real goods and coins.
+func test_village_chain() -> void:
+	var w := new_world()
+	var preps: Array = w.stations_of("prep")
+	check(preps.size() == 1 and str(w.stations[preps[0]].get("building", "")) == "b2", "the tavern kitchen has a preparation table (%s)" % [preps])
+	var prep: String = preps[0]
+	# 1. a village pen makes eggs; its keeper collects them
+	var pen: Dictionary = {}
+	for id in w.fauna.pens:
+		if w.fauna.pens[id].kind == "chicken" and not w.fauna.pens[id].get("player", false):
+			pen = w.fauna.pens[id]
+	check(not pen.is_empty(), "the village has a chicken pen")
+	for a: Animal in w.fauna.animals:
+		if a.area == pen.id:
+			a.hunger = 100.0
+	w.farm.daily_products()
+	w.minutes += 1441.0
+	for a: Animal in w.fauna.animals:
+		if a.area == pen.id:
+			a.hunger = 100.0
+	w.farm.daily_products()
+	var laid := int(pen.get("products", {}).get("egg", 0))
+	check(laid > 0, "the village hens lay (%d eggs wait in the pen)" % laid)
+	var keeper: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and w.tenant_of(pen) == World.npc_ref(n.id):
+			keeper = n
+	check(keeper != null, "the pen has a keeper")
+	keeper.plan.clear()
+	keeper.hunger = 100.0
+	w.minutes = float(w.day()) * 1440.0 + 9.0 * 60.0
+	w.brain.decide(keeper)
+	check(keeper.plan.any(func(st): return str(st.get("act", st.get("a", ""))) == "collect_pen") or keeper.doing.contains("collecting"), "the keeper goes to collect: " + keeper.doing)
+	var e0 := keeper.inv.count("egg")
+	check(w.brain.act(keeper, "collect_pen", {"pen": pen.id}) and keeper.inv.count("egg") == e0 + laid and int(pen.products.egg) == 0, "collected: the eggs move from the pen into the keeper's pack")
+	# 2. the cook buys them with the cook's own coins and bakes egg bread at the table
+	var cook: NPC = w.npcs.filter(func(n): return n.alive and n.job == "cook")[0]
+	check(w.brain.wants(cook, "egg") > 0 and w.brain.wants(cook, "milk") > 0, "the cook buys eggs and milk")
+	var coins := w.total_coins()
+	var price := w.buy_price(cook, "egg")
+	var cc := cook.coins
+	check(w.trade(cook, keeper, "egg", 1, price) and cook.coins == cc - price and w.total_coins() == coins, "an egg sold to the cook for %d of the cook's coins" % price)
+	cook.inv.items.erase("bread")
+	cook.inv.add("wheat", 2)
+	var w0 := cook.inv.count("wheat")
+	var eg0 := cook.inv.count("egg")
+	check(w.brain.act(cook, "craft", {"recipe": "bake_egg_bread", "station": prep}) and cook.inv.count("bread") == 2 and cook.inv.count("egg") == eg0 - 1 and cook.inv.count("wheat") == w0 - 2, "egg bread: 1 egg and 2 wheat become 2 loaves")
+	cook.inv.items.erase("milk")
+	cook.inv.items.erase("cheese")
+	cook.inv.add("milk", 3)
+	check(w.brain.act(cook, "craft", {"recipe": "press_cheese", "station": prep}) and cook.inv.count("cheese") == 1 and not cook.inv.has("milk"), "cheese: 3 milk pressed into 1 cheese")
+	cook.inv.items.erase("milk")
+	check(w.brain.act(cook, "craft", {"recipe": "press_cheese", "station": prep}) == false and cook.inv.count("cheese") == 1, "no milk, no cheese: nothing from nothing")
+	# the cook plans it when the milk is in hand
+	cook.inv.add("milk", 3)
+	for f in NPCBrain.COOKED:
+		cook.inv.items.erase(f)
+	cook.inv.items.erase("meat")
+	cook.inv.items.erase("wheat")
+	cook.plan.clear()
+	w.brain.decide(cook)
+	check(cook.plan.any(func(st): return str(st.get("args", {}).get("recipe", "")) == "press_cheese" or str(st.get("a", {}).get("recipe", "")) == "press_cheese") or cook.doing.contains("prep"), "the cook decides to press cheese at the table: " + cook.doing)
+	# 3. villagers eat cheese and bread
+	check(NPCBrain.COOKED.has("cheese") and NPCBrain.COOKED.has("bread") and NPCBrain.FOOD.has("cheese"), "cheese and bread are meals villagers buy and eat")
+	var eater: NPC = w.npcs.filter(func(n): return n.alive and n.role == "adult" and n.job == "farmer")[0]
+	for f in NPCBrain.COOKED:
+		eater.inv.items.erase(f)
+	eater.inv.add("cheese", 1)
+	eater.hunger = 20.0
+	check(w.brain.act(eater, "eat", {"cooked_only": true}) and is_equal_approx(eater.hunger, 20.0 + float(GameData.item("cheese").food)) and not eater.inv.has("cheese"), "a villager eats the cheese")
+	# 4. wool: the tanner buys it, weaves cloth and sews bandages the sage buys
+	var tanner: NPC = w.npcs.filter(func(n): return n.alive and n.job == "tanner")[0]
+	var sage := w.npc(w.sage_id)
+	check(w.brain.wants(tanner, "wool") > 0 and w.brain.wants(sage, "linen_bandage") > 0, "the tanner buys wool, the sage buys bandages")
+	tanner.inv.items.clear()
+	tanner.inv.add("wool", 2)
+	var bench: String = w.stations_of("workbench")[0]
+	check(w.brain.act(tanner, "craft", {"recipe": "weave_cloth", "station": bench}) and tanner.inv.count("wool_cloth") == 1 and not tanner.inv.has("wool"), "2 wool woven into cloth")
+	check(w.brain.act(tanner, "craft", {"recipe": "sew_bandages", "station": bench}) and tanner.inv.count("linen_bandage") == 3 and not tanner.inv.has("wool_cloth"), "cloth sewn into 3 bandages")
+	tanner.plan.clear()
+	tanner.hunger = 100.0
+	w.brain.decide(tanner)
+	check(tanner.doing.contains("sell") or tanner.plan.any(func(st): return str(st).contains("sell")), "the tanner takes the bandages to sell: " + tanner.doing)
+	# 5. a week of village life: the chain runs on its own, with real goods and coins
+	var w2 := new_world()
+	var start := w2.total_coins()
+	var steps := int(8.0 * 1440.0 / float(GameData.b("game_minutes_per_second")) / 0.5)
+	for i in steps:
+		w2.update(0.5)
+	var st: Dictionary = w2.stats
+	print("  chain stats: ", {"collected_egg": st.get("keeper_collected_egg", 0), "collected_milk": st.get("keeper_collected_milk", 0), "collected_wool": st.get("keeper_collected_wool", 0),
+		"used_egg": st.get("used_egg", 0), "used_milk": st.get("used_milk", 0), "used_wool": st.get("used_wool", 0), "eaten_cheese": st.get("eaten_cheese", 0), "eaten_bread": st.get("eaten_bread", 0)})
+	check(int(st.get("keeper_collected_egg", 0)) > 0 and int(st.get("keeper_collected_milk", 0)) > 0, "over 8 days the keepers collect eggs and milk")
+	check(int(st.get("used_egg", 0)) + int(st.get("used_milk", 0)) > 0, "and the cook uses them at the table")
+	check(int(st.get("eaten_cheese", 0)) + int(st.get("eaten_bread", 0)) > 0, "and villagers eat cheese or egg bread")
+	check(w2.total_coins() == start + w2.coin_sources, "coins conserved through the chain (%d + sources %d = %d)" % [start, w2.coin_sources, w2.total_coins()])

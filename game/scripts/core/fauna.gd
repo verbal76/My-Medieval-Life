@@ -429,7 +429,7 @@ func to_dict() -> Dictionary:
 	var ps := {}
 	var mine := []                                      # the player's pens (PL2-015) are not on the map: saved whole
 	for id in pens:
-		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner, "tenant": pens[id].tenant}
+		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner, "tenant": pens[id].tenant, "products": pens[id].get("products", {}).duplicate()}
 		if pens[id].get("player", false):
 			mine.append(pens[id])
 	return {"next_id": next_id, "animals": as_, "pens": ps, "player_pens": mine}
@@ -445,6 +445,8 @@ func load_dict(d: Dictionary) -> void:
 		if pens.has(id):
 			pens[id].trough = int(d.pens[id].trough)
 			var sp: Dictionary = d.pens[id]
+			if not pens[id].get("player", false):
+				pens[id]["products"] = sp.get("products", {}).duplicate()      # waiting eggs, milk and wool (Build 13)
 			if sp.has("tenant"):
 				pens[id].owner = str(sp.owner)
 				pens[id].tenant = str(sp.tenant)

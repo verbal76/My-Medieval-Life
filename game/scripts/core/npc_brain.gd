@@ -13,13 +13,13 @@ const WAKE := 6.0
 const BUYS := {
 	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6},
 	"carpenter": {"log": 30},
-	"tanner": {"hide": 15, "rabbit_pelt": 15},
-	"sage": {"flower": 20},          # the apothecary buys wild flowers for poultices and tonics (PL1-04)
+	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12},          # wool: woven into cloth (Build 13)
+	"sage": {"flower": 20, "linen_bandage": 8},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
-	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20},
+	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
-		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20},
+		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15},
 	"merchant_goods": {"pickaxe": 4, "axe": 4, "hammer": 2, "copper_sword": 3, "iron_sword": 3,
 		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "rabbit_pelt": 6, "feather": 20, "wool": 20, "wool_cloth": 10, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
@@ -38,13 +38,14 @@ const OUTLETS := {
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food"],
-	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["cook", "merchant_food"],
-	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["merchant_goods"], "wool_cloth": ["merchant_goods"],
+	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
+	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["tanner", "merchant_goods"], "wool_cloth": ["merchant_goods"],
+	"bread": ["tavernkeeper", "merchant_food"], "linen_bandage": ["sage"],
 	"pickaxe": ["merchant_goods"], "axe": ["merchant_goods"], "iron_sword": ["merchant_goods"], "copper_sword": ["merchant_goods"],
 	"hammer": ["merchant_goods"], "iron_bar": ["merchant_goods"], "leather_armor": ["merchant_goods"],
 }
-const FOOD := ["roast_meat", "pottage", "wheat", "ale"]
-const COOKED := ["roast_meat", "pottage", "ale"]
+const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread"]
+const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese and egg bread: the cook's, from the pens (Build 13)
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
 const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone"]
@@ -322,7 +323,7 @@ func _plan_job(n: NPC) -> bool:
 		"smith":
 			return _smith(n)
 		"tanner":
-			return _crafter(n, ["tan_leather"])
+			return _tanner(n)
 		"cook":
 			return _cook(n)
 		"farmer":
@@ -505,6 +506,20 @@ func _crafter(n: NPC, recipes: Array) -> bool:
 	return true
 
 
+## The tanner (Build 13): hides and pelts to leather, wool to cloth, and cloth to bandages for the
+## Apothecary when the sage wants them. Everything comes out of the tanner's own stock.
+func _tanner(n: NPC) -> bool:
+	var sage := w.npc(w.sage_id)
+	if n.inv.has("linen_bandage") and sage != null and sage.alive and wants(sage, "linen_bandage") > 0:
+		return _plan_sell(n, "linen_bandage")
+	var list := ["tan_leather", "tan_pelts"]
+	if n.inv.count("wool_cloth") < 4:
+		list.append("weave_cloth")
+	if sage != null and sage.alive and wants(sage, "linen_bandage") >= 3 and n.inv.count("linen_bandage") < 3:
+		list.append("sew_bandages")
+	return _crafter(n, list)
+
+
 func _smith(n: NPC) -> bool:
 	var inv := n.inv
 	if inv.has_all({"iron_ore": 2, "coal": 1}) and inv.count("iron_bar") < 12:
@@ -545,10 +560,18 @@ func _cook(n: NPC) -> bool:
 		food += n.inv.count(f)
 	if food >= 12:
 		return _plan_sell(n, _most(n, COOKED))
+	for f in ["cheese", "bread"]:                   # the table's goods go out fresh to the tavern and the stall (Build 13)
+		if n.inv.count(f) >= 2 and _buyer_for(n, f) != null:
+			return _plan_sell(n, f)
 	if n.inv.has_all({"meat": 1, "log": 1}) and n.inv.count("roast_meat") < 6:
 		return _do_recipe(n, "roast_meat")
 	if n.inv.has("wheat", 3) and n.inv.count("ale") < 4 and w.rng.randf() < 0.3:
 		return _do_recipe(n, "brew_ale")
+	# the pens' milk and eggs (Build 13): cheese and egg bread at the kitchen's preparation table
+	if n.inv.has("milk", 3) and n.inv.count("cheese") < 6 and _do_recipe(n, "press_cheese"):
+		return true
+	if n.inv.has_all({"egg": 1, "wheat": 2}) and n.inv.count("bread") < 6 and _do_recipe(n, "bake_egg_bread"):
+		return true
 	if n.inv.has("wheat", 2):
 		return _do_recipe(n, "cook_pottage")
 	if food > 0:
@@ -608,7 +631,12 @@ func _keeper(n: NPC) -> bool:
 	var pen := _keeper_pen(n)
 	if pen.is_empty():
 		return false
-	var sells := ["meat", "hide", "feather"].filter(func(i): return n.inv.has(i))
+	# the pen's eggs, milk and wool (Build 13): collected at the gate, then sold to the cook and the tanner
+	if not w.farm.products_in(pen).is_empty():
+		n.doing = "collecting from the %s" % GameData.b("animals")[pen.kind].name.to_lower()
+		n.plan = [go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))), work(10, "collect_pen", {"pen": pen.id}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1])))]
+		return true
+	var sells := ["meat", "hide", "feather", "egg", "milk", "wool"].filter(func(i): return n.inv.has(i))
 	if not sells.is_empty():
 		var buyer := _buyer_for(n, sells[0])
 		if buyer != null:
@@ -828,6 +856,28 @@ func _grain_seller(n: NPC) -> NPC:
 	return best
 
 
+## Which meal `payer` buys from `v` (Build 13): the most food for the coin at today's prices, which rise
+## as the vendor's stock runs low, so cheap pottage gives way to egg bread when the pot is nearly empty.
+## Someone with coins to spare sometimes treats the household to cheese. "" if nothing is affordable.
+func _meal_choice(payer: NPC, v: NPC, menu: Array = COOKED) -> String:
+	var spare := payer.coins >= int(GameData.b("tavern_spare_coins"))
+	if spare and v.inv.has("cheese") and payer.coins >= w.sell_price(v, "cheese") and w.rng.randf() < float(GameData.b("cheese_treat_chance")):
+		return "cheese"
+	var best := ""
+	var best_v := -1.0
+	for f in menu:
+		if not v.inv.has(f):
+			continue
+		var price := w.sell_price(v, f)
+		if price > payer.coins:
+			continue
+		var per := float(GameData.item(f).food) / float(maxi(1, price))
+		if per > best_v:
+			best_v = per
+			best = f
+	return best
+
+
 func _vendor_with_food(n: NPC) -> NPC:
 	var best: NPC = null
 	var bd := 1e9
@@ -1006,6 +1056,26 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					n.hunger = minf(100.0, n.hunger + float(GameData.item("ale").food))
 					w.stat("eaten_food", float(GameData.item("ale").food))
 					w.stat("eaten_ale")
+				# a supper with the ale (Build 13): a hungry drinker buys the tavern's bread or cheese, the best
+				# plate for the coin (cheese as a treat), out of the keeper's own stock
+				if n.hunger < float(GameData.b("tavern_supper_hunger")):
+					var plate := _meal_choice(n, keeper, ["bread", "cheese"])
+					if plate != "" and w.trade(n, keeper, plate, 1, w.sell_price(keeper, plate)):
+						n.inv.remove(plate)
+						n.hunger = minf(100.0, n.hunger + float(GameData.item(plate).food))
+						w.stat("eaten_food", float(GameData.item(plate).food))
+						w.stat("eaten_" + plate)
+			return true
+		"collect_pen":
+			var pen: Dictionary = w.fauna.pens.get(str(a.pen), {})
+			if pen.is_empty():
+				return false
+			for id in w.farm.products_in(pen):
+				var k := int(pen.products[id])
+				if n.inv.can_add(id):
+					n.inv.add(id, k)
+					pen.products[id] = 0
+					w.stat("keeper_collected_" + id, float(k))
 			return true
 		"buy_food":
 			var v := w.npc(int(a.vendor))
@@ -1014,13 +1084,13 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var payer := w.npc(int(a.get("payer", n.id)))
 			if payer == null or not payer.alive:
 				payer = n
-			for f in COOKED:
-				if v.inv.has(f) and w.trade(payer, v, f, 1, w.sell_price(v, f)):
-					if payer != n:
-						w.transfer(payer.inv, n.inv, f, 1)
-					if a.pantry:
-						w.transfer(n.inv, w.households[n.household].pantry, f, 1)
-					return true
+			var f := _meal_choice(payer, v)
+			if f != "" and w.trade(payer, v, f, 1, w.sell_price(v, f)):
+				if payer != n:
+					w.transfer(payer.inv, n.inv, f, 1)
+				if a.pantry:
+					w.transfer(n.inv, w.households[n.household].pantry, f, 1)
+				return true
 			return false
 		"buy_from":
 			var v := w.npc(int(a.vendor))

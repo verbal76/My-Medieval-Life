@@ -29,15 +29,15 @@ const JOB_TEXT := {
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks.",
 	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil.",
-	"tanner": "Buys hides and makes leather.",
-	"farmer": "Sows, tends and harvests the wheat fields, and keeps the animal pens.",
-	"cook": "Cooks wheat and meat into pottage and roast meat.",
+	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
+	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them.",
+	"cook": "Cooks wheat and meat into pottage and roast meat, and at the kitchen's preparation table presses milk into cheese and bakes egg bread for the tavern and the food stall.",
 	"tavernkeeper": "Keeps The Well House and sells food and ale.",
 	"hunter": "Hunts wild boar and rabbits for meat and hides.",
 	"merchant": "Runs a market stall or shop and trades goods.",
 	"guard": "Watches the village: stops thieves, returns stolen goods and fines the thief.",
 	"reeve": "Runs the manor's accounts and posts its jobs on the job board.",
-	"sage": "The village lorekeeper; tells the story.",
+	"sage": "The village lorekeeper; tells the story and keeps the Apothecary (medicine brewed from flowers, bandages from the tanner).",
 }
 
 static var providers: Array = []     # Callables taking a Wiki, run by build()

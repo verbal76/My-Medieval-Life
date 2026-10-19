@@ -93,6 +93,7 @@ func _data_tests() -> void:
 	check("item:iron_ore" in w.search("iron ore"), "'iron ore' finds the iron ore item")
 	check("todo:player_shops" in w.search("player shops") and w.pages["todo:player_shops"].blocks[0].t == "note" and not w.pages.has("todo:lockpicking") and "sys:chests" in w.search("lockpick"), "unbuilt ideas are marked Not in the game yet; lockpicking is built")
 	check(w.search("zzzz").is_empty(), "nonsense finds nothing")
+	check("sys:farm_goods" in w.search("cheese") and w.pages["sys:farm_goods"].text.contains("tanner") and w.pages["job:cook"].text.contains("cheese"), "the wiki explains the village's eggs, milk and wool chain (Build 13)")
 	var meds := ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_healing_tonic"]
 	check(meds.all(func(m): return w.pages["item:" + m].category == "items_medicine") and w.in_category("items_materials").all(func(pid): return not meds.has(str(pid).trim_prefix("item:"))), "medicines have their own category, not Materials (Build 12 audit)")
 	check(w.pages["sys:trading"].text.contains("every unit is priced in turn") and w.pages["sys:theft"].text.contains("what it was worth"), "the trading and theft pages describe the Build 13 rules")

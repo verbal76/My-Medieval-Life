@@ -24,6 +24,6 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.h("Recipes")] + GameData.recipes_at("prep").map(func(r): return {"t": "recipe", "id": r}) + [
 		Wiki.links(["sys:home_oven", "sys:sitting"])], "table food prepare preparation bread dough knead")
 	w.add_page("station:prep", "Food table", "stations", [
-		Wiki.p("A table in your own house. Food is prepared here without heat."),
+		Wiki.p("A table where food is prepared without heat: one in your own house, and the preparation table in the tavern kitchen beside the oven, where the cook presses cheese and bakes egg bread from the pens' milk and eggs. Anyone may use the tavern's when it is free."),
 		Wiki.h("Recipes")] + GameData.recipes_at("prep").map(func(r): return {"t": "recipe", "id": r}) + [
 		Wiki.links(["sys:food_table"])], "", "prep table food")

@@ -23,6 +23,14 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.bullets(crop_lines),
 		Wiki.p("Wheat, carrots, potatoes and herbs sell to the cook and the food merchant (and to the sage, for herbs), at the market or from your own stall. The manor's own fields and their farmers are not affected: their crops are theirs, and taking them is theft."),
 		Wiki.links(["guide:farm_start", "guide:animals", "item:plough", "recipe:craft_plough", "item:wheat_seed", "item:carrot", "item:potato", "animal:chicken", "sys:property"])])
+	w.add_page("sys:farm_goods", "Eggs, milk and wool in the village", "systems", [
+		Wiki.p("The village's pens make eggs, milk and wool just as yours do. Their keepers collect them at the gate and sell them: eggs and milk to the cook, wool to the tanner, who pay from their own coins."),
+		Wiki.p("At the preparation table in the tavern kitchen the cook presses %d milk into a cheese and bakes an egg with %d wheat into %d loaves of egg bread. The tavern and the food stall sell them; villagers buy the meal that gives most food for the coin, those with coins to spare sometimes treat themselves to cheese, and a hungry drinker at the tavern takes bread or cheese with the ale." % [
+			int(GameData.recipes.press_cheese["in"].milk), int(GameData.recipes.bake_egg_bread["in"].wheat), int(GameData.recipes.bake_egg_bread.out.bread)]),
+		Wiki.p("The tanner weaves %d wool into a woollen cloth and sews a cloth into %d linen bandages when the sage's Apothecary needs them. Nothing in this chain appears from nowhere: no milk, no cheese." % [
+			int(GameData.recipes.weave_cloth["in"].wool), int(GameData.recipes.sew_bandages.out.linen_bandage)]),
+		Wiki.p("You can sell your own eggs, milk and wool into the same chain, or make cheese, egg bread, cloth and bandages yourself (the food table at home or the tavern's, and a workbench)."),
+		Wiki.links(["item:egg", "item:milk", "item:wool", "item:cheese", "item:wool_cloth", "item:linen_bandage", "job:cook", "job:tanner", "station:prep", "guide:animals"])], "", "eggs milk wool cheese egg bread cloth bandages keeper cook tanner")
 	w.add_page("guide:farm_start", "How do I start a farm?", "guides", [
 		Wiki.p("You need no coins to begin the work, only ground. Buy or lease a plot from the manor (the reeve's land office, or walk onto a plot and Use), then clear it: Use on a tree felled with an axe, then on its stump, on saplings, wild plants and boulders."),
 		Wiki.p("Till the soil by hand, which is slow and tiring, or make a hand plough at the workbench (%s) and carry it: tilling is then about three times quicker and far easier. Put the plough in your hand from the pack to make Use till the soil in front of you straight away." % ", ".join((GameData.recipes["craft_plough"].in as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.recipes["craft_plough"].in[k]), GameData.item_name(str(k)).to_lower()]))),

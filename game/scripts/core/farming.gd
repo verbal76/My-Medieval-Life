@@ -502,11 +502,17 @@ func buy_animal(src: Dictionary, sex: String, p: PlayerState) -> String:
 	return ""
 
 
-## Morning: each well-fed adult in a player's pen makes its product when its time comes (eggs and milk of the
-## females, wool of any); it waits in the pen, up to product_cap of each, until collected.
+## Morning: each well-fed adult in a pen makes its product when its time comes (eggs and milk of the
+## females, wool of any); it waits in the pen, up to product_cap of each, until collected: by the player
+## at their own pens, by the keeper at the village's (Build 13).
 func daily_products() -> void:
 	var now: float = w.minutes
-	for pen in player_pens():
+	var ids: Array = w.fauna.pens.keys()
+	ids.sort()
+	for pid in ids:
+		var pen: Dictionary = w.fauna.pens[pid]
+		if not pen.has("products"):
+			pen["products"] = {}
 		var spec: Dictionary = cfg().products.get(pen.kind, {})
 		if spec.is_empty():
 			continue
@@ -542,6 +548,8 @@ func products_in(pen: Dictionary) -> Dictionary:
 ## Take what waits in a player's pen into the pack, as much as fits. Returns {item: n} taken.
 func collect(pen: Dictionary, p: PlayerState) -> Dictionary:
 	var got := {}
+	if not pen.get("player", false):
+		return got                       # a keeper's pen: its eggs, milk and wool are the keeper's (Build 13)
 	for id in products_in(pen):
 		var n := 0
 		for i in int(pen.products[id]):

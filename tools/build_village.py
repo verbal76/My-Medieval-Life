@@ -769,7 +769,9 @@ class Village:
 
     def stations(self, sawmill):
         """Workstations, in a fixed order (their ids s0-s9 are quoted by tests): the tavern's, the well, the
-        smithy's, the sawmill's sawhorse, the armory's counter and the mine's cart."""
+        smithy's, the sawmill's sawhorse, the armory's counter and the mine's cart. Generator v7 (Build 13)
+        adds s10, the kitchen's preparation table beside the oven, where the cook presses cheese and bakes
+        egg bread."""
         tav = "b2"
         smithy = "b4"
         self.station("tavern_counter", (42, 41), tav, at=(42, 40))
@@ -784,6 +786,7 @@ class Village:
         self.station("sawhorse", (ox + 3, oy + 6), sawmill["id"], at=(ox + 2, oy + 6))
         self.station("armory_counter", (71, 44), smithy, at=(71, 43))
         self.station("mine_cart", (self.cart[0] + 1, self.cart[1]), None, at=self.cart)
+        self.station("prep", (55, 44), tav, at=(55, 45))     # v7: the kitchen table east of the oven
 
     # ---- market, pens, fields, camp, plots --------------------------------------------------------
     def market(self, x0, y0):

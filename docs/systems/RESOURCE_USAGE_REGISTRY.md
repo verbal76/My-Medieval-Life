@@ -345,7 +345,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `apple` Apple | food | **none** | food `apple` |
 | `axe` Axe | tool | recipe `forge_axe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; quest `a_new_axe` ×1; tool `tree` |
 | `blueberries` Blueberries | food | node `blue_berry_bush` ×2 | food `blueberries` |
-| `bread` Loaf of bread | food | recipe `bake_egg_bread` ×2; recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | food `bread` |
+| `bread` Loaf of bread | food | recipe `bake_egg_bread` ×2; recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | buyer `merchant_food` ×15; export `caravan`; food `bread` |
 | `carrot` Carrot | food | node `player_field` ×3 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `carrot` |
 | `carrot_seed` Carrot seed | resource | node `player_field` ×1 | plant `carrot_seed` |
 | `cheese` Cheese | food | recipe `press_cheese` ×1 | buyer `cook` ×10; buyer `merchant_food` ×10; export `caravan`; food `cheese` |
@@ -374,7 +374,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `leather` Leather | resource | recipe `tan_leather` ×1; recipe `tan_pelts` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `smith` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_iron_armor` ×2; recipe `forge_iron_helmet` ×1; recipe `forge_iron_sword` ×1; recipe `leather_armor` ×4; recipe `leather_cap` ×2 |
 | `leather_armor` Leather armour | armor | recipe `leather_armor` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
 | `leather_cap` Leather cap | head | recipe `leather_cap` ×1 | buyer `merchant_goods` ×3; equip `head`; export `caravan` |
-| `linen_bandage` Linen bandage | medicine | recipe `sew_bandages` ×3; start_kit `player_start_items` ×2 | **none** |
+| `linen_bandage` Linen bandage | medicine | recipe `sew_bandages` ×3; start_kit `player_start_items` ×2 | buyer `sage` ×8 |
 | `lockpick` Lockpick | resource | recipe `forge_lockpicks` ×3 | tool `lockpick` |
 | `log` Log | resource | node `tree` ×4; start_stock `start_0` | building `apothecary` ×8; building `bakehouse` ×10; building `carpentry` ×15; building `house` ×10; building `kitchen` ×8; building `quarters` ×10; building `smithy` ×10; building `storage` ×10; buyer `carpenter` ×30; buyer `cook` ×10; buyer `merchant_raw` ×20; export `caravan`; fuel `log`; fuel `log`; manor_job `log`; quest `wood_for_the_hearth` ×5; quest `work_the_woods` ×6; recipe `roast_meat` ×1; recipe `saw_planks` ×1 |
 | `meat` Raw meat | resource | node `chicken_pen` ×1; node `cow_pen` ×6; node `pig_pen` ×4; node `sheep_pen` ×3; node `wild_boar` ×4; node `wild_rabbit` ×1; start_stock `start_0` | buyer `cook` ×15; buyer `merchant_food` ×10; export `caravan`; recipe `roast_meat` ×1 |
@@ -399,7 +399,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `strong_healing_tonic` Strong healing tonic | medicine | recipe `brew_strong_tonic` ×1 | **none** |
 | `wheat` Wheat | resource | node `player_field` ×3; node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_3` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `bake_egg_bread` ×2; recipe `brew_ale` ×3; recipe `cook_pottage` ×2; recipe `knead_flatbread` ×3 |
 | `wheat_seed` Wheat seed | resource | node `player_field` ×1 | plant `wheat_seed` |
-| `wool` Wool | resource | node `player_pen` ×1 | buyer `merchant_goods` ×20; export `caravan`; recipe `weave_cloth` ×2 |
+| `wool` Wool | resource | node `player_pen` ×1 | buyer `merchant_goods` ×20; buyer `tanner` ×12; export `caravan`; recipe `weave_cloth` ×2 |
 | `wool_cloth` Woollen cloth | resource | recipe `weave_cloth` ×1 | buyer `merchant_goods` ×10; export `caravan`; recipe `sew_bandages` ×1 |
 
 ## Code-defined uses and sources
@@ -432,7 +432,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `wheat` | start stock (source) | The granary starts with start_granary_days of the village's food in wheat. | `game/scripts/core/world.gd::setup` |
 | `coal`, `copper_ore`, `iron_ore` | import (source) | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. | `game/scripts/core/npc_brain.gd::_caravan_imports` |
 | `stone` | import (source) | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. | `game/scripts/core/npc_brain.gd::_caravan_stone` |
-| `ale`, `amulet`, `axe`, `carrot`, `cheese`, `copper_bar`, `copper_ring`, `copper_sword`, `egg`, `feather`, `gold_bar`, `gold_ring`, `hammer`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `meat`, `milk`, `pickaxe`, `plank`, `potato`, `pottage`, `rabbit_pelt`, `roast_meat`, `wheat`, `wool`, `wool_cloth` | export | Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
+| `ale`, `amulet`, `axe`, `bread`, `carrot`, `cheese`, `copper_bar`, `copper_ring`, `copper_sword`, `egg`, `feather`, `gold_bar`, `gold_ring`, `hammer`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `meat`, `milk`, `pickaxe`, `plank`, `potato`, `pottage`, `rabbit_pelt`, `roast_meat`, `wheat`, `wool`, `wool_cloth` | export | Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
 
 ## Findings
 

@@ -1068,18 +1068,18 @@ Rules:
 - **Expected:** (PL2-015) The animal comes out of the keeper's pen into the player's: never a newborn, and never below the species' breeding stock (`animals.keep`); a juvenile costs `young_price_share` of an adult's `animal_price`. The coins go to the keeper (the treasury if the pen has none): no coin is made. The keeper's pen refills by breeding.
 - **Tests:** `game/tests/farming_test.gd::test_pens_and_animals`
 
-### INT-128 · Well-fed adults in the player's pens make eggs, milk and wool
+### INT-128 · Well-fed adults in pens make eggs, milk and wool
 - **Trigger:** Each morning (`World._new_day`).
-- **Source:** `game/scripts/core/farming.gd::daily_products`, `game/scripts/core/farming.gd::collect`, `game/scripts/core/world.gd::_new_day`
+- **Source:** `game/scripts/core/farming.gd::daily_products`, `game/scripts/core/farming.gd::collect`, `game/scripts/core/world.gd::_new_day`, `game/scripts/core/fauna.gd::to_dict`, `game/scripts/core/fauna.gd::load_dict`
 - **Affects:** Livestock, Inventory, Food, Market, Save
-- **Expected:** (PL2-015) Each adult female hen, cow or any sheep in a pen of the player's that is well fed (`animal_breed_min_hunger`) makes its product when its time comes (`farming.products`), kept in the pen up to `product_cap` until the player collects it at the gate. Hungry animals, young and elderly ones and the manor's pens make none.
+- **Expected:** (PL2-015; Build 13) Each adult female hen, cow or any sheep in a pen that is well fed (`animal_breed_min_hunger`) makes its product when its time comes (`farming.products`), kept in the pen up to `product_cap` until collected: the player collects at their own pens' gates, and a village pen's products are its keeper's (INT-137); the player cannot collect them. Hungry, young and elderly animals make none. A village pen's waiting products are saved with the pen (older saves: none waiting).
 - **Tests:** `game/tests/farming_test.gd::test_pens_and_animals`, `game/tests/farming_test.gd::test_save`
 
 ### INT-129 · Farm goods sell to the cook and the merchants, or from the player's stall, and feed the crafts
 - **Trigger:** The player sells eggs, milk, cheese, carrots, potatoes or wool; or crafts with them.
 - **Source:** `game/scripts/core/npc_brain.gd::wants`, `game/scripts/core/business.gd::needs`, `game/data/recipes.json`
 - **Affects:** Market, Coins, Crafting, Food, Treasury
-- **Expected:** (PL2-015) The cook and the food merchant buy eggs, milk, cheese, carrots and potatoes up to a stock; the goods merchant buys wool and cloth; the sage keeps buying flowers. Villagers with a trade's stock need buy them from the player's stall too. Cheese is pressed from milk and egg bread baked at a food table; wool is woven into cloth at the workbench and sewn into bandages (so bandages are craftable). The villagers make none of these.
+- **Expected:** (PL2-015) The cook and the food merchant buy eggs, milk, cheese, carrots and potatoes up to a stock; the goods merchant buys wool and cloth; the sage keeps buying flowers. Villagers with a trade's stock need buy them from the player's stall too. Cheese is pressed from milk and egg bread baked at a food table; wool is woven into cloth at the workbench and sewn into bandages (so bandages are craftable). (Build 13) The villagers now make them too: the cook at the kitchen's preparation table (INT-138), the tanner at the workbench (INT-139).
 - **Tests:** `game/tests/farming_test.gd::test_market`
 
 ### INT-130 · Building on ground ploughs the field under; the village never claims the player's field
@@ -1131,6 +1131,27 @@ Rules:
 - **Expected:** (PL1-10 stage 4) In working hours the brain plans the attendant's day to the counter (the stall, or the shop's counter cell) before their own trade, and at night they sleep as everyone does. A stall or shop sells when the rent is not owing and the player is near or the attendant is awake at the counter; with neither, nothing sells and no buyer is sent. Buyers are the same real needs with budgets (INT-119); sales made while the player is away are marked as the attendant's and give no trading experience. The attendant never buys from their own counter.
 - **Tests:** `game/tests/business_test.gd::_attendant`
 
+### INT-137 · Keepers collect their pens' eggs, milk and wool and sell them
+- **Trigger:** A keeper's day when their pen has products waiting; then the keeper's next plan.
+- **Source:** `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/npc_brain.gd::act`, `game/scripts/core/farming.gd::products_in`, `game/scripts/core/npc_brain.gd::_plan_sell`
+- **Affects:** Livestock, Inventory, Market, Coins, Employment
+- **Expected:** (Build 13, owner: livestock production chains) A keeper whose pen has eggs, milk or wool waiting walks to the gate and collects them (`collect_pen`: the pen's stock moves into the keeper's pack, `keeper_collected_<item>`), then sells them like meat and hides: eggs and milk to the cook (then the food merchant), wool to the tanner (then the goods merchant), each buyer paying from their own coins up to their `BUYS` cap. Nothing is made without a fed adult animal; nothing is sold to a buyer without the coins (INT-019).
+- **Tests:** `game/tests/farming_test.gd::test_village_chain`
+
+### INT-138 · The cook presses cheese and bakes egg bread at the kitchen's preparation table; villagers eat them
+- **Trigger:** The cook's working day with milk or eggs in stock; a villager buying a meal; a hungry drinker at the tavern.
+- **Source:** `tools/build_village.py`, `game/scripts/core/npc_brain.gd::_cook`, `game/scripts/core/npc_brain.gd::_do_recipe`, `game/scripts/core/npc_brain.gd::_meal_choice`, `game/scripts/core/npc_brain.gd::act`
+- **Affects:** Crafting, Food, Market, Coins, Households, Interiors
+- **Expected:** (Build 13) The tavern kitchen has a public preparation table (station s10, `prep`, village generator v7; stations are not saved, so older saves have it). The cook presses 3 milk into cheese and bakes 1 egg and 2 wheat into 2 loaves there (`press_cheese`, `bake_egg_bread`), the inputs taken from the cook's own stock, and takes cheese and bread out fresh to the tavern keeper and the food merchant. Cheese and bread are meals (`NPCBrain.COOKED`, `FOOD`): a villager buying a meal picks the most food per coin at today's prices (prices rise as a vendor's stock runs low), and one with `tavern_spare_coins` sometimes treats themselves to cheese (`cheese_treat_chance`); a drinker at the tavern below `tavern_supper_hunger` buys a bread or cheese supper from the keeper's stock. The grain used is counted (`used_wheat`), so the grain ledger balances.
+- **Tests:** `game/tests/farming_test.gd::test_village_chain`, `game/tests/run_tests.gd::test_simulation`
+
+### INT-139 · The tanner weaves wool into cloth and sews bandages for the Apothecary
+- **Trigger:** The tanner's working day with wool or cloth in stock.
+- **Source:** `game/scripts/core/npc_brain.gd::_tanner`, `game/scripts/core/npc_brain.gd::_crafter`, `game/scripts/core/npc_brain.gd::wants`
+- **Affects:** Crafting, Market, Coins, Health, Employment
+- **Expected:** (Build 13) Besides leather, the tanner buys wool (`BUYS.tanner`), weaves 2 into cloth at the workbench while holding under 4 cloth, and sews 1 cloth into 3 linen bandages when the sage wants at least 3 (`BUYS.sage` linen_bandage 8); the bandages go to the sage, who sells them in the Apothecary (INT-083), and spare cloth to the goods merchant. Every step takes its inputs from the tanner's stock.
+- **Tests:** `game/tests/farming_test.gd::test_village_chain`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -1139,26 +1160,26 @@ Rules:
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
 | Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109, INT-121, INT-122 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-121, INT-122, INT-123, INT-124, INT-125, INT-126, INT-128, INT-131, INT-132, INT-134, INT-136 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119, INT-121, INT-122, INT-123, INT-124, INT-125, INT-126, INT-128, INT-131, INT-132, INT-134, INT-136, INT-137 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129 |
-| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129, INT-138 |
+| Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108, INT-139 |
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129, INT-131, INT-134, INT-135, INT-136 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133, INT-138, INT-139 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139 |
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-129, INT-131, INT-134 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
-| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128 |
+| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127 |
 | Bandits | INT-012, INT-014, INT-050 |
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133 |
@@ -1167,7 +1188,7 @@ Rules:
 | Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134 |
 | Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104 |
-| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111 |
+| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111, INT-138 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100, INT-121, INT-122, INT-126, INT-130 |
 | Calendar | INT-077, INT-123 |
 | Family | INT-077, INT-078, INT-079, INT-080 |
