@@ -482,7 +482,7 @@ func _guides() -> void:
 		p("Cook at the stove (pottage, ale, herbal tonic) or the oven (roast meat). Cooked food restores more food than raw wheat or meat."),
 		links(["station:stove", "station:oven", "recipe:cook_pottage", "recipe:roast_meat", "recipe:brew_tonic", "skill:cooking"])])
 	guide.call("heal", "Heal", [
-		p("Health does not come back by itself. Rest in your own bed (it restores full health and stamina and saves the game), eat food that heals (the herbal tonic, made at the stove from flowers), or sleep a night at home. At 0 health you die and your heir takes over."),
+		p("Health does not come back by itself. Rest in your own bed (it restores full health and stamina and saves the game), or use medicine from your pack: %s. Medicine is never used up when you are already at full health, and never heals past your maximum. You start with two linen bandages. The sage at the hut keeps the Apothecary: buy medicine there, or sell wild flowers that the sage brews into poultices and tonics. You can brew them yourself at a stove, and the herbal tonic too. At 0 health you die and your heir takes over." % _medicine_list()),
 		links(["sys:needs", "sys:resting", "item:herbal_tonic", "recipe:brew_tonic", "item:flower", "sys:death"])])
 	guide.call("rent", "Rent or buy a house or plot", [
 		p("The manor sells and lets empty houses and plots of ground. A plot costs about %d coins, a house with its ground about %d; renting costs about %d%% of the price a week, and two missed weeks end a lease. Walk to the door of an empty house to see the offer." % [plot, house, rent_pct]),
@@ -559,13 +559,22 @@ func _systems() -> void:
 		links(["guide:planks", "guide:smelt", "guide:cook"])])
 
 
+## "Linen bandage (15 health, 3 coins), ..." from items.json's medicines.
+func _medicine_list() -> String:
+	var out := []
+	for id in GameData.items:
+		var it: Dictionary = GameData.items[id]
+		if str(it.get("type", "")) == "medicine":
+			out.append("%s (%d health, %d coins)" % [GameData.item_name(id), int(it.get("heal", 0)), GameData.value(id)])
+	return ", ".join(out)
+
+
 func _not_yet() -> void:
 	var items := {
 		"lockpicking": ["Lockpicking", "Locks and lockpicks are not built; theft today is pickpocketing."],
 		"player_shops": ["Player shops and stalls", "You cannot rent a stall or open a shop of your own and sell from it yet."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"plough": ["Hand plough and farming by the player", "You cannot till or sow fields yourself; the farmers do it. You can harvest ripe wheat."],
-		"potions": ["Apothecary and healing potions", "Besides food that heals and the herbal tonic there are no bandages, potions or apothecary shop yet."],
 	}
 	for id in items:
 		add_page("todo:" + id, items[id][0], "notyet", [note("Not in the game yet. " + items[id][1])], "", "not implemented planned")
