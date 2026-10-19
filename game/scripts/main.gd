@@ -1221,6 +1221,21 @@ func _on_bled(pos: Vector2) -> void:
 	tw.tween_callback(s.queue_free)
 
 
+## What a pile holds, for its prompt: "4 meat, 1 hide" ("" when it holds only coins or nothing).
+func _loot_text(l: Dictionary) -> String:
+	var parts := []
+	for id in l.inv.ids():
+		parts.append("%d %s" % [l.inv.count(id), GameData.item_name(id).to_lower()])
+	return ", ".join(parts)
+
+
+## The icon a pile is drawn with: its first item (meat from a carcass), coins if it holds only coins.
+func _loot_icon(l: Dictionary) -> Texture2D:
+	var ids: Array = l.inv.ids()
+	var path := "res://assets/icons/%s.png" % (str(ids[0]) if not ids.is_empty() else "coins")
+	return load(path) if ResourceLoader.exists(path) else load("res://assets/icons/coins.png")
+
+
 func _sync_loot() -> void:
 	while loot_nodes.size() < world.loot.size():
 		var tr := TextureRect.new()
@@ -1234,6 +1249,10 @@ func _sync_loot() -> void:
 		loot_nodes.pop_back().queue_free()
 	for i in world.loot.size():
 		loot_nodes[i].position = world.loot[i].pos * T
+		var rect := loot_nodes[i].get_child(0) as TextureRect
+		var icon := _loot_icon(world.loot[i])
+		if rect.texture != icon:
+			rect.texture = icon
 
 
 # ---------------------------------------------------------------- player ---------------------
@@ -1528,9 +1547,10 @@ func _find_target() -> void:
 				near.append([d, near.size(), _shop_target(post)])
 	for i in world.loot.size():
 		var d: float = world.loot[i].pos.distance_to(probe)
-		if d < 1.5:
+		if d < 1.5 or world.loot[i].pos.distance_to(p.pos) < 1.2:       # underfoot counts too (PL2-004)
 			var from: String = world.loot[i].from
-			near.append([d, near.size(), {"kind": "loot", "i": i, "label": ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}])
+			var what := _loot_text(world.loot[i])
+			near.append([minf(d, 1.4), near.size(), {"kind": "loot", "i": i, "label": ("Take %s from %s" % [what, from]) if from.begins_with("the ") and what != "" else ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}])
 	for a: Animal in world.fauna.near(probe, 1.2):
 		var d := a.pos.distance_to(probe)
 		if d < 1.5:
@@ -1746,6 +1766,14 @@ func _container_target(c: Dictionary) -> Dictionary:
 
 
 ## The centre of the counter, stall or container at a map position, or INF.
+## The pile of loot drawn at a map position (within 0.8 tile), or INF.
+func _loot_at(wpos: Vector2) -> Vector2:
+	for l in world.loot:
+		if l.pos.distance_to(wpos) < 0.8:
+			return l.pos
+	return Vector2.INF
+
+
 func _usable_at(wpos: Vector2) -> Vector2:
 	var cell := Vector2i(floori(wpos.x), floori(wpos.y))
 	var at := Vector2(cell) + Vector2(0.5, 0.5)
@@ -1848,6 +1876,8 @@ func _use() -> void:
 				_gain("+%d coins" % int(l.coins), "coins")
 			elif taken == 0:
 				ui.message("Your pack is full." if l.inv.total() > 0 else "There is nothing left.")
+			elif l.inv.total() > 0:
+				ui.message("Your pack is full: some is left behind.")
 			p.coins += int(l.coins)
 			l.coins = 0
 			if l.inv.total() == 0:
@@ -2151,7 +2181,8 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 		keeper = world.pen_keeper(world.fauna.pens[a.area])
 	var what := a.label().to_lower()
 	var bag: Inventory = world.fauna.kill(a)
-	world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what})
+	if bag.total() > 0:
+		world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": world.minutes})
 	if keeper != null:
 		_crime(keeper, "%s killed my %s" % [world.player.name, what])
 		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
@@ -2598,6 +2629,17 @@ func _tap(screen_pos: Vector2) -> void:
 		cancel_action("You stop.")     # a tap while working stops it (B8-011)
 		return
 	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
+	var pile := _loot_at(wpos)
+	if pile != Vector2.INF and _creature_at(wpos) == null:
+		# a tapped pile (a carcass, a dropped bag): walk up to it and take it, in any mode (PL2-004)
+		chase = null
+		talk_to = null
+		stop_gather("")
+		reach_to = pile
+		move_to = pile if pile.distance_to(world.player.pos) > 1.2 else Vector2.INF
+		if move_to == Vector2.INF:
+			_reach_step()
+		return
 	if gather_mode:
 		var hit := _resource_tap(wpos)
 		if hit.is_empty():

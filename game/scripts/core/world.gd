@@ -281,6 +281,8 @@ func _on_hour(h: int) -> void:
 
 
 func _new_day() -> void:
+	# a carcass nobody took spoils after ANIMAL_LOOT_DAYS: no leftover markers (PL2-004)
+	loot = loot.filter(func(l): return not (str(l.from).begins_with("the ") and l.has("t") and minutes - float(l.t) > ANIMAL_LOOT_DAYS * 1440.0))
 	var d := day()
 	for pl in plants:
 		if pl.state == "picked" and d >= pl.regrow:
@@ -1911,6 +1913,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
+const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
 const SAVE_VERSION := 13          # 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
@@ -2119,19 +2122,25 @@ func permit(b: Dictionary, ref: String, on: bool) -> void:
 	b.allow = allow
 
 
-## Villagers working at (or on their way to work at) a station: reservations whose villager is alive
-## and still has the station's work in their plan. Stale ones are cleared.
+## Villagers actually using a station now (PL2-001): alive, awake, not fighting, their current plan step
+## is the work at that station and they stand at its use cell. Someone merely heading there, asleep,
+## fighting, gone elsewhere or dead is not "using" it, and their reservation is cleared once they no
+## longer have the station's work in their plan (a task switch).
 func station_workers(id: String) -> Array:
 	var st: Dictionary = stations[id]
 	var out := []
 	var users: Dictionary = st.users
+	var at := Vector2(station_use(id)) + Vector2(0.5, 0.5)
 	for u in users.keys():
 		var o := npc(int(u))
-		var busy := o != null and o.alive and float(users[u]) >= minutes and o.plan.any(func(s): return str(s.get("args", {}).get("station", "")) == id)
-		if busy:
-			out.append(o)
-		else:
+		var held := o != null and o.alive and float(users[u]) >= minutes and o.plan.any(func(s): return str(s.get("args", {}).get("station", "")) == id)
+		if not held:
 			users.erase(u)
+			continue
+		var using: bool = o.target == -1 and not asleep(o) and not o.plan.is_empty() and o.plan[0].k == "work" \
+				and str(o.plan[0].get("args", {}).get("station", "")) == id and o.pos.distance_to(at) <= 2.5
+		if using:
+			out.append(o)
 	out.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
 	return out
 
@@ -2150,7 +2159,7 @@ func station_refusal(id: String) -> String:
 	var busy := station_workers(id)
 	if busy.size() >= int(st.get("capacity", 1)):
 		var o: NPC = busy[0]
-		return "%s %s is working at the %s. Wait a little, or use another." % [o.name, o.family, st.type]
+		return "%s %s is using the %s. Wait a little, or use another." % [o.name, o.family, st.type]
 	return ""
 
 
@@ -2206,7 +2215,7 @@ func to_dict() -> Dictionary:
 		hh.append(c)
 	var lt := []
 	for l in loot:
-		lt.append({"pos": [l.pos.x, l.pos.y], "inv": l.inv.to_dict(), "coins": l.coins, "from": l.from})
+		lt.append({"pos": [l.pos.x, l.pos.y], "inv": l.inv.to_dict(), "coins": l.coins, "from": l.from, "t": l.get("t", minutes)})
 	var ns := []
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
@@ -2301,7 +2310,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		c.pantry = Inventory.from_dict(h.pantry)
 		households.append(c)
 	for l in d.loot:
-		loot.append({"pos": Vector2(l.pos[0], l.pos[1]), "inv": Inventory.from_dict(l.inv), "coins": int(l.coins), "from": l.from})
+		loot.append({"pos": Vector2(l.pos[0], l.pos[1]), "inv": Inventory.from_dict(l.inv), "coins": int(l.coins), "from": l.from, "t": float(l.get("t", minutes))})
 	for nd in d.npcs:
 		var n := NPC.from_dict(nd)
 		npcs.append(n)

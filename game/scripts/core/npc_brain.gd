@@ -849,8 +849,9 @@ func _station_for(n: NPC, kind: String) -> String:
 		var users: Dictionary = st.users
 		for u in users.keys():
 			var o := w.npc(int(u))
-			if float(users[u]) < w.minutes or o == null or not o.alive:
-				users.erase(u)
+			if float(users[u]) < w.minutes or o == null or not o.alive or o.target != -1 \
+					or not o.plan.any(func(s): return str(s.get("args", {}).get("station", "")) == id):
+				users.erase(u)             # lapsed, dead, fighting or moved on to another task (PL2-001)
 		var player_there := 1 if float(st.get("player_until", -1.0)) > w.minutes else 0
 		if users.has(n.id) or users.size() + player_there < int(st.get("capacity", 1)):
 			return id

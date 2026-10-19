@@ -73,6 +73,24 @@ static func def_for_deposit(dep: Dictionary) -> Dictionary:
 	return def_for("boulder" if dep.get("boulder", false) else "deposit", str(dep.ore))
 
 
+## Boulder sizes (PL1-06): a cell's boulder is small (the smaller sprite, `uses_small` pickaxe uses)
+## or large (the full sprite, `uses`), from a hash of the cell alone, so it is the same in every game and
+## needs no saving: only the uses left are saved.
+const SMALL_BOULDER_PERCENT := 55
+
+
+static func boulder_small(c: Vector2i) -> bool:
+	var h: int = ((c.x * 73856093) ^ (c.y * 19349663) ^ 0x5bd1e995) & 0x7fffffff
+	h = ((h >> 7) ^ h) & 0x7fffffff
+	return h % 100 < SMALL_BOULDER_PERCENT
+
+
+## Pickaxe uses (and stone) a fresh boulder on this cell holds.
+static func boulder_uses(c: Vector2i) -> int:
+	var d := def("boulder")
+	return int(d.uses_small) if boulder_small(c) else int(d.uses)
+
+
 ## What one harvest cycle yields: item id -> count (balance keys resolved). An animal's is an
 ## adult's; a young one gives half the meat and no hide (Fauna.kill).
 static func products(d: Dictionary) -> Dictionary:
