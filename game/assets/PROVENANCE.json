@@ -877,11 +877,25 @@
    "sha256": "b7d2b1ea354375cc539942d502ae1969d58be2af51e63c57db94c7fee76dc65a"
   },
   {
+   "file": "assets/animals/chicken_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/chicken_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
+  },
+  {
    "file": "assets/animals/chicken_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_brown animation.png",
    "transform": "copied unchanged",
    "sha256": "b9555dff39a77435af43e9f2b23fb504d89a687230f6bb2edaf9258098fc89f8"
+  },
+  {
+   "file": "assets/animals/chicken_brown_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/chicken_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
   },
   {
    "file": "assets/animals/cow.png",
@@ -891,11 +905,25 @@
    "sha256": "f1100c1f866d0fefdeac466c506b7addeec5c50fecfc96d78e05c79bf9a01692"
   },
   {
+   "file": "assets/animals/cow_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/cow_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "b88b52d37f053ed7b0e9cf00191d87be14659d14182a643ba20466b9978f0e75"
+  },
+  {
    "file": "assets/animals/cow_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_brown animation.png",
    "transform": "copied unchanged",
    "sha256": "7897a910749e63d8bb82238a4c903b60eb3798dfdc096034f9110b29e31e3bbb"
+  },
+  {
+   "file": "assets/animals/cow_brown_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/cow_baby_brown animation.png",
+   "transform": "copied unchanged",
+   "sha256": "6fdfd0608932b28b68170d3c6e9d0a24ff5caf6375d9171620f4a581b35ad41d"
   },
   {
    "file": "assets/animals/pig.png",
@@ -905,11 +933,25 @@
    "sha256": "dc6df6749d46ef78224ef56f129af3e6a50fdb3f91a56cefb44f1ccab1345851"
   },
   {
+   "file": "assets/animals/pig_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/pig_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "459c910e7d1d8a8e3f855efb51d7a700b00d4ec5bf68ce935f41017e0c31acc0"
+  },
+  {
    "file": "assets/animals/rabbit.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_animations.png",
    "transform": "copied unchanged",
    "sha256": "d0cf0b0dc7ed9c0fcf6e43b0278a4c1da49612bcceb9f5d89472c137430eab71"
+  },
+  {
+   "file": "assets/animals/rabbit_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/bunny_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "f2daf1d0fd386171377b0585c8495d7dc03cb5c9f7c9ae281b2e4e8098e37120"
   },
   {
    "file": "assets/animals/rabbit_grey.png",
@@ -919,11 +961,25 @@
    "sha256": "9d147c615ec0feb4497c09d84f360fff3a764a4116a3919fccdb0ae4232b5b91"
   },
   {
+   "file": "assets/animals/rabbit_grey_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/bunny_baby_grey animation.png",
+   "transform": "copied unchanged",
+   "sha256": "9d20fce6eddb7e42ea0455e48a8144583691e4bf7877734e8aabafbc13fb7043"
+  },
+  {
    "file": "assets/animals/sheep.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/sheep animation.png",
    "transform": "copied unchanged",
    "sha256": "aa423f2e063ba97e7c526ff0d269ccf7c0ba3eb2a9cce7ea7212e7707c365b0c"
+  },
+  {
+   "file": "assets/animals/sheep_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/sheep_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "970740a455db94f22e3d32381c3ea69ea181c97235277840afb63253ca43e092"
   },
   {
    "file": "assets/icons/bread.png",

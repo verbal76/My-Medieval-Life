@@ -114,6 +114,15 @@ ANIMALS = {
     "chicken_brown": (COZY_ZIP, "full version/animals/chicken_brown animation.png"),
     "rabbit": (COZY_ZIP, "full version/animals/bunny_animations.png"),
     "rabbit_grey": (COZY_ZIP, "full version/animals/bunny_grey animation.png"),
+    # B8-029: the baby sheets (same 4 x 5 layout, smaller frames) for newborn and juvenile animals; the boar has none
+    "cow_baby": (COZY_ZIP, "full version/animals/cow_baby animation.png"),
+    "cow_brown_baby": (COZY_ZIP, "full version/animals/cow_baby_brown animation.png"),
+    "pig_baby": (COZY_ZIP, "full version/animals/pig_baby animation.png"),
+    "sheep_baby": (COZY_ZIP, "full version/animals/sheep_baby animation.png"),
+    "chicken_baby": (COZY_ZIP, "full version/animals/chicken_baby animation.png"),
+    "chicken_brown_baby": (COZY_ZIP, "full version/animals/chicken_baby animation.png"),      # no brown chick art: the same chick
+    "rabbit_baby": (COZY_ZIP, "full version/animals/bunny_baby animation.png"),
+    "rabbit_grey_baby": (COZY_ZIP, "full version/animals/bunny_baby_grey animation.png"),
     "boar": (MONSTER_ZIP, "PunyMonsters/Brown-Boar-32x32.png"),
     "boar_grey": (MONSTER_ZIP, "PunyMonsters/Dirty-Gray-Boar-32x32.png"),
 }

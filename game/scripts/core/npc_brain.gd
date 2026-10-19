@@ -1865,8 +1865,8 @@ func succession_caravan() -> void:
 
 
 ## An adult without a trade (or a labourer or manor hand), the dead worker's household first, then by
-## id; a merchant also needs the coins to stock a stall. null if there is none. (Children never grow up
-## in the game, so a "grown child" is an adult of the household without a trade.)
+## id; a merchant also needs the coins to stock a stall. null if there is none. (B8-029: children now grow up
+## at 16 and become adults without a trade, so they are in this pool; adolescents of 12-16 are not: adults only.)
 func _apprentice_for(v: Dictionary) -> NPC:
 	var best: NPC = null
 	var best_key := 1 << 30
@@ -1925,6 +1925,8 @@ func _newcomer_for(v: Dictionary) -> NPC:
 	n.role = "adult"
 	n.name = Population.FIRST[w.rng.randi() % Population.FIRST.size()]
 	n.family = Population.FAMILY[w.rng.randi() % Population.FAMILY.size()]
+	n.sex = Life.sex_of_name(n.name)                 # B8-029: a grown newcomer, no kin here
+	n.born = Life.born_for_age(w.rng.randf_range(20.0, 45.0), w.minutes)
 	n.sprite = "res://assets/characters/villager_%02d.png" % (n.id % 48)
 	n.coins = int(GameData.b("newcomer_coins"))
 	n.hunger = 100.0

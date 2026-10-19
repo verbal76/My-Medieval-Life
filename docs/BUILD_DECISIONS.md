@@ -340,6 +340,41 @@ Generator v6 (`tools/build_village.py`) lays the village out as one settlement; 
 - **Chests (B8-017).** A house's crates and barrels stand inside its own door yard; the tavern's in and by the tavern; a stall's beside it. A test checks each is by its owner and by no other building.
 - **Saves.** Version 13; `SaveStore.MIN_VERSION` refuses older saves ("older"), keeping them unchanged as `<save>.older-<time>.json`.
 
+## Calendar, ages, families and life cycles (B8-029; owner-approved 2026-10-19, the numbers are agent proposals)
+
+All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile_days`, `elder_days`, `death_days`,
+`baby_frame`; `animal_breed_slow_from`, `animal_elder_speed`). Provisional:
+
+- Calendar: 8-day year, seasons Spring, Summer, Autumn, Winter of two days. The HUD clock reads
+  "Spring, Year 1  Day 3  07:00" (Day: of the year; 28 characters). Trees are not drawn by season.
+- Stages: child to 12, adolescent 12-16, adult 16-55, elder 55+. `role` is child (to 16; drawn 0.5 then 0.75),
+  adult or elder (walks 0.8x). Adolescents have no full job and are not apprentices (succession takes adults
+  only, which now includes anyone who has just turned 16). Adults who turn 55 retire (post opens like a death's).
+  The sage and the reeve serve for life. Bandits age and keep their role.
+- Starting people: adults 17-50, elders 56-75, children 1-15 (parents 16+ years older), deterministic from the seed
+  (own RNG). Sex comes from the name list (`Life.FEMALE`). A household's first adult man and woman are recorded as
+  partners, its first elder pair likewise; its children get them as parents (or the one adult of the household).
+- Natural death: daily chance `0.1 * ((age - 60) / 20) ^ 2`, certain at 80 (median about 70).
+- Partnering: unpartnered adults 18-50, opposite sex, not kin, age gap at most 12, 50% a year for each woman;
+  one moves into the other's home if it has a free bed (the tavern, manor and hut households are not moved
+  into; the reeve, sage and guards do not move). Without room, nobody pairs.
+- Births: partners only, woman 18-42, a free bed (`beds_in` greater than living members), at least one day of
+  household food, no child in the last year; a day's chance of 1 in 16 (about one birth in two years).
+- Inheritance order: the eldest adult child, then the partner, then other kin (parents, then siblings, eldest
+  first), then a minor child; only when the family has no heir does the household order apply (adult, elder, child).
+- Player: starts 18-20; dies of old age by the same chance (cause "old age"). Heir: the eldest living child
+  of 16+ (made through an explicit partner; ask a villager "Ask to be partners"), who leaves the villagers; none:
+  a relative, 18 years old, as before. Links to the dead player become `FORMER_PLAYER` (-3).
+- Animals: existing `grow_days` and `breed_days` kept. Added juvenile_days, elder_days, death_days (game days):
+  rabbit 0.5/24/[28,40], chicken 0.5/32/[40,56], pig 1/56/[64,96], boar 1/56/[64,80], sheep 1/64/[80,104],
+  cow 2/96/[120,160]. Breeding chance is 1 up to half the cap, falling to 0 at the cap; the elderly do not breed and
+  move at 0.7x. The elderly die by a daily chance spread evenly over `death_days`. Start: adults, one juvenile
+  per group, one elderly in groups of four or more.
+- Art: Cozy Farm baby sheets (cow, brown cow, pig, sheep, chicken, rabbit, grey rabbit; the brown chicken
+  reuses the chick), full scale; the boar has none and is half scale.
+- Not done: sprite art by season, marriage ceremonies, adolescent apprenticeships, a household for the player
+  (a partner keeps their own home; the player's children are villagers of the partner's household).
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals
@@ -353,6 +388,6 @@ Generator v6 (`tools/build_village.py`) lays the village out as one settlement; 
   births yet, a household is crowded only when people move in. From outside a workshop looks like a
   house. A built building's floor is the ground it stands on (the house stamp has no floor layer).
 - No eggs, milk or wool (the owner asked only for meat).
-- No aging, no births of people, no audio yet (the volume settings are ready for it).
+- No audio yet (the volume settings are ready for it).
 - Villagers keep only their last 8 memories (having met someone is never forgotten), so older
   grudges and sightings fade.

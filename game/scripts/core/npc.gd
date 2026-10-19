@@ -36,6 +36,13 @@ var tick_acc := 0.0          # for abstract (distant) simulation
 var income_days: Array = []  # coins earned on each of the last 7 days (sales and wages), oldest first
 var job_since := 0           # the day this villager took up the current job
 var left_job := ""           # the job given up at the last change (not taken up again for a while)
+# B8-029: age and explicit relationships (Life). A shared house implies none of these.
+var born := 0.0              # game minutes (negative: older than the game); age in years is Life.age_years
+var sex := "male"            # male | female
+var mother := -1             # npc id; Life.PLAYER_ID (-2) is the player; -1 unknown
+var father := -1
+var partner := -1            # npc id, Life.PLAYER_ID for the player, -1 none
+var children: Array = []     # npc ids
 
 
 func cell() -> Vector2i:
@@ -72,6 +79,7 @@ func to_dict() -> Dictionary:
 		"hunger": hunger, "hp": hp, "max_hp": max_hp, "damage": damage, "armor": armor, "alive": alive,
 		"pos": [pos.x, pos.y], "doing": doing, "memory": memory.duplicate(),
 		"earned": earned, "spent": spent, "income_days": income_days.duplicate(), "job_since": job_since, "left_job": left_job,
+		"born": born, "sex": sex, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(),
 	}
 
 
@@ -91,4 +99,9 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.income_days = d.get("income_days", []).duplicate()         # older saves: no history yet
 	n.job_since = int(d.get("job_since", 0))
 	n.left_job = str(d.get("left_job", ""))
+	n.born = float(d.get("born", 0.0))
+	n.sex = str(d.get("sex", "male"))
+	for k in ["mother", "father", "partner"]:
+		n.set(k, int(d.get(k, -1)))
+	n.children = (d.get("children", []) as Array).map(func(c): return int(c))
 	return n

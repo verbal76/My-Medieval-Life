@@ -139,6 +139,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	var sp = m.data.spawns.player
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	give_start_kit(player)
+	Life.init_player(self)             # B8-029
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	index_interiors()
@@ -196,9 +197,20 @@ func hour() -> float:
 
 
 func clock_text() -> String:
-	var h := int(hour())
-	var m := int(fmod(minutes, 60.0))
-	return "Day %d  %02d:%02d" % [day() + 1, h, m]
+	return Life.clock_text(minutes)               # "Spring, Year 1  Day 3  07:00" (B8-029)
+
+
+func year() -> int:
+	return Life.year(minutes)
+
+
+func season() -> String:
+	return Life.season(minutes)
+
+
+## Age in years of someone born at game minute `born` (B8-029).
+func age_years(born: float) -> float:
+	return Life.age_years(born, minutes)
 
 
 func is_night() -> bool:
@@ -287,6 +299,7 @@ func _new_day() -> void:
 			pl.state = "ripe"
 			tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, int(pl.tile))
 	fauna.new_day()
+	Life.dawn(self)                    # B8-029: roles by age, old-age deaths, partners, births
 	brain.dawn()
 	manor_work.dawn()                  # undone manor jobs are released
 	property.collect_rents()
@@ -369,7 +382,7 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 		if not n.plan.is_empty() and n.plan.size() > 1 and n.plan[1].k == "work":
 			n.work_left = float(n.plan[1].min)
 		return true
-	var speed: float = float(GameData.b("walk_tiles_per_second")) * s.get("speed", 1.0)
+	var speed: float = float(GameData.b("walk_tiles_per_second")) * s.get("speed", 1.0) * Life.walk_factor(n)    # elders walk slower (B8-029)
 	var budget := speed * dt
 	n.anim = "carry" if n.inv.total() >= 4 and n.role == "adult" else "walk"
 	while budget > 0.0 and n.path_i < n.path.size():
@@ -451,6 +464,13 @@ func continue_as_heir() -> void:
 	heir.name = ["Alys", "Hob", "Maud", "Piers", "Emma", "Jack", "Agnes", "Will"][(p.generation) % 8]
 	heir.sprite = p.heir_sprite
 	heir.heir_sprite = p.sprite
+	var kid := Life.player_heir_child(self)        # B8-029: the player's own eldest child of 16+, if there is one
+	Life.retire_player_id(self)
+	if kid != null:
+		Life.make_heir(self, heir, kid, p)
+	else:
+		heir.born = Life.born_for_age(float(Life.cfg().player_start_age[0]), minutes)    # a relative: a young adult
+		heir.sex = "female" if heir.name in Life.FEMALE else "male"
 	heir.home = p.home
 	heir.chest = p.chest
 	heir.chest_stolen = p.chest_stolen
@@ -934,11 +954,15 @@ func kill(n: NPC, cause: String) -> void:
 	npc_died.emit(n)
 
 
-## Who inherits: a surviving adult of the household first, then an elder, then a child (lowest id
-## first, so the choice is deterministic). Null when nobody in the household survives.
+## Who inherits (B8-029, owner 2026-10-19): the family first (Life.heir_of: eldest adult child, partner, other
+## kin); with no family heir, a surviving adult of the household, then an elder, then a child (lowest id
+## first, so the choice is deterministic). Null when nobody survives.
 func _heir(n: NPC) -> NPC:
 	if n.household < 0:
 		return null
+	var kin := Life.heir_of(self, n)       # B8-029: the family graph first (children, partner, other kin)
+	if kin != null:
+		return kin
 	for role in ["adult", "elder", "child"]:
 		for m in households[n.household].members:
 			var o := npc(m)
@@ -1925,7 +1949,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
-const SAVE_VERSION := 13          # 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 14          # 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -2374,6 +2398,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			_built_collision(b)
 	index_interiors()
 	construction.load_dict(d.get("construction", {}))
+	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)
 	_unstick()
