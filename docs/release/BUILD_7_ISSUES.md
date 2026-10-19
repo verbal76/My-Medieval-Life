@@ -57,7 +57,7 @@ files and systems, the test evidence and the fixing commit.
 | B7-014 | 2026-10-18 | Bug (economy) | S3 | All | The caravan's unlimited buying grows the village's currency about twelvefold in a year | Diagnosed; proposal P1.3 awaits owner | — | No |
 | B7-015 | 2026-10-18 | Bug (economy) | S3 | All | Meals are missed for "no food for sale" (300–450 a year) while 50 days of food sit in villagers' stock | Diagnosed; needs a design decision | — | No |
 | B7-016 | 2026-10-18 | Bug (economy) | S3 | All | Tanners and goods merchants end the year at 0 coins | Diagnosed; proposal P3 awaits owner | — | No |
-| B7-017 | 2026-10-18 | Limitation | S4 | All | No building in a year: households never grow (no births), so none splits or builds | Tracked future work F-2 | — | No |
+| B7-017 | 2026-10-18 | Limitation | S4 | All | No building in a year: households never grow (no births), so none splits or builds | Births implemented in B8-029 (partners only, house room and food; staging, not yet released); whether households now split and build is to be measured |  — | No |
 
 Agent findings B7-001 to B7-008 come from the early-economy review (`EARLY_ECONOMY_REVIEW.md`),
 measured with `game/tests/earn_sim.gd`, seed 1. The owner approved the corrections for B7-001 to

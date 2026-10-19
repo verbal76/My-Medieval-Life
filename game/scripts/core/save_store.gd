@@ -17,7 +17,7 @@ const BAK := ".bak"
 ## The oldest save version this build reads. Build 8 laid the village out anew (tools/build_village.py
 ## generator v6: every building, road, tree and deposit has a new place; owner decision 2026-10-19, older
 ## saves are disposable): saves from before it are refused and kept on disk, never migrated.
-const MIN_VERSION := 13
+const MIN_VERSION := 14
 
 ## Test hook: the step at which the file system pretends to fail ("open", "write", "verify",
 ## "backup", "replace" in `write_text`; "preserve"); "" in the game.

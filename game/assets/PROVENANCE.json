@@ -849,11 +849,25 @@
    "sha256": "b7d2b1ea354375cc539942d502ae1969d58be2af51e63c57db94c7fee76dc65a"
   },
   {
+   "file": "assets/animals/chicken_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/chicken_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
+  },
+  {
    "file": "assets/animals/chicken_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/chicken_brown animation.png",
    "transform": "copied unchanged",
    "sha256": "b9555dff39a77435af43e9f2b23fb504d89a687230f6bb2edaf9258098fc89f8"
+  },
+  {
+   "file": "assets/animals/chicken_brown_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/chicken_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "68168e4ae48809f0d8c188a09c0d816f4011641d82dcf7602f471ea4cac17802"
   },
   {
    "file": "assets/animals/cow.png",
@@ -863,11 +877,25 @@
    "sha256": "f1100c1f866d0fefdeac466c506b7addeec5c50fecfc96d78e05c79bf9a01692"
   },
   {
+   "file": "assets/animals/cow_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/cow_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "b88b52d37f053ed7b0e9cf00191d87be14659d14182a643ba20466b9978f0e75"
+  },
+  {
    "file": "assets/animals/cow_brown.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/cow_brown animation.png",
    "transform": "copied unchanged",
    "sha256": "7897a910749e63d8bb82238a4c903b60eb3798dfdc096034f9110b29e31e3bbb"
+  },
+  {
+   "file": "assets/animals/cow_brown_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/cow_baby_brown animation.png",
+   "transform": "copied unchanged",
+   "sha256": "6fdfd0608932b28b68170d3c6e9d0a24ff5caf6375d9171620f4a581b35ad41d"
   },
   {
    "file": "assets/animals/pig.png",
@@ -877,11 +905,25 @@
    "sha256": "dc6df6749d46ef78224ef56f129af3e6a50fdb3f91a56cefb44f1ccab1345851"
   },
   {
+   "file": "assets/animals/pig_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/pig_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "459c910e7d1d8a8e3f855efb51d7a700b00d4ec5bf68ce935f41017e0c31acc0"
+  },
+  {
    "file": "assets/animals/rabbit.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/bunny_animations.png",
    "transform": "copied unchanged",
    "sha256": "d0cf0b0dc7ed9c0fcf6e43b0278a4c1da49612bcceb9f5d89472c137430eab71"
+  },
+  {
+   "file": "assets/animals/rabbit_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/bunny_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "f2daf1d0fd386171377b0585c8495d7dc03cb5c9f7c9ae281b2e4e8098e37120"
   },
   {
    "file": "assets/animals/rabbit_grey.png",
@@ -891,11 +933,25 @@
    "sha256": "9d147c615ec0feb4497c09d84f360fff3a764a4116a3919fccdb0ae4232b5b91"
   },
   {
+   "file": "assets/animals/rabbit_grey_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/bunny_baby_grey animation.png",
+   "transform": "copied unchanged",
+   "sha256": "9d20fce6eddb7e42ea0455e48a8144583691e4bf7877734e8aabafbc13fb7043"
+  },
+  {
    "file": "assets/animals/sheep.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/animals/sheep animation.png",
    "transform": "copied unchanged",
    "sha256": "aa423f2e063ba97e7c526ff0d269ccf7c0ba3eb2a9cce7ea7212e7707c365b0c"
+  },
+  {
+   "file": "assets/animals/sheep_baby.png",
+   "source": "CozyFarm_full_version.zip",
+   "member": "full version/animals/sheep_baby animation.png",
+   "transform": "copied unchanged",
+   "sha256": "970740a455db94f22e3d32381c3ea69ea181c97235277840afb63253ca43e092"
   },
   {
    "file": "assets/icons/bread.png",
@@ -1458,6 +1514,13 @@
    "sha256": "3655322614be6ad0246730a81e4f9b5a0a875b7baf81a66e047a58a4c322f6f7"
   },
   {
+   "file": "assets/prompts/keyboard_q.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_q.png",
+   "transform": "copied unchanged",
+   "sha256": "0cb36d9a91c4d894c6390c6b330eb9dadee2b95db333fb51024939c637e1e59a"
+  },
+  {
    "file": "assets/prompts/keyboard_s.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_s.png",
@@ -1465,11 +1528,25 @@
    "sha256": "b504d48f2b2452bc895fc03a243e83564ad01d7e9b6fdb11f044e85e6c3b9ff2"
   },
   {
+   "file": "assets/prompts/keyboard_shift.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_shift.png",
+   "transform": "copied unchanged",
+   "sha256": "047712e52aede18f73523cb7b7df2f28e51d07370977491a994bc9a21f129e8e"
+  },
+  {
    "file": "assets/prompts/keyboard_space.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_space.png",
    "transform": "copied unchanged",
    "sha256": "7f25e4d93c3589ef947f03dd3e76f9b7cc17479a0b2e0040cf150be17279c6f4"
+  },
+  {
+   "file": "assets/prompts/keyboard_tab.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_tab.png",
+   "transform": "copied unchanged",
+   "sha256": "b9d41ddb968a48702663e4b13bb5a047c8349ed5708897027d4de794dc35f43c"
   },
   {
    "file": "assets/prompts/keyboard_w.png",
@@ -1584,6 +1661,20 @@
    "sha256": "7f21fef66a72a7126f07e042e8b6d14092d7245909aeb8d8d5ed34fdf7f3b38c"
   },
   {
+   "file": "assets/prompts/xbox_dpad_left.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_dpad_left.png",
+   "transform": "copied unchanged",
+   "sha256": "606e97e9eb4f89d1dadd50fb3e9df32e36346bbccbf1c31f880475d8b3686ee3"
+  },
+  {
+   "file": "assets/prompts/xbox_dpad_right.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_dpad_right.png",
+   "transform": "copied unchanged",
+   "sha256": "280db7d24c98edc833d6bb520ddf4e8b3a989a90f4bda1b3b2908d2d8af58060"
+  },
+  {
    "file": "assets/prompts/xbox_lb.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Xbox Series/Double/xbox_lb.png",
@@ -1619,6 +1710,13 @@
    "sha256": "68edebe98e5efdbfc800154bcc523e67c6b6812df39ee45cf5a6362d6d670861"
   },
   {
+   "file": "assets/prompts/xbox_stick_l_press.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_stick_l_press.png",
+   "transform": "copied unchanged",
+   "sha256": "8c772ed1203af9c4923dd1bb5a67f96814a08d9569130ae8435a49fc3b33ab4e"
+  },
+  {
    "file": "assets/prompts/xbox_stick_r.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Xbox Series/Double/xbox_stick_r.png",
@@ -1631,48 +1729,6 @@
    "member": "Xbox Series/Double/xbox_stick_r_press.png",
    "transform": "copied unchanged",
    "sha256": "f0e502e4868f6d21b4bfb03e544696bbc534649db8be808259096ceefb3968ee"
-  },
-  {
-   "file": "assets/prompts/keyboard_q.png",
-   "source": "kenney_input-prompts_1.5.zip",
-   "member": "Keyboard & Mouse/Double/keyboard_q.png",
-   "transform": "copied unchanged",
-   "sha256": "0cb36d9a91c4d894c6390c6b330eb9dadee2b95db333fb51024939c637e1e59a"
-  },
-  {
-   "file": "assets/prompts/keyboard_shift.png",
-   "source": "kenney_input-prompts_1.5.zip",
-   "member": "Keyboard & Mouse/Double/keyboard_shift.png",
-   "transform": "copied unchanged",
-   "sha256": "047712e52aede18f73523cb7b7df2f28e51d07370977491a994bc9a21f129e8e"
-  },
-  {
-   "file": "assets/prompts/keyboard_tab.png",
-   "source": "kenney_input-prompts_1.5.zip",
-   "member": "Keyboard & Mouse/Double/keyboard_tab.png",
-   "transform": "copied unchanged",
-   "sha256": "b9d41ddb968a48702663e4b13bb5a047c8349ed5708897027d4de794dc35f43c"
-  },
-  {
-   "file": "assets/prompts/xbox_dpad_left.png",
-   "source": "kenney_input-prompts_1.5.zip",
-   "member": "Xbox Series/Double/xbox_dpad_left.png",
-   "transform": "copied unchanged",
-   "sha256": "606e97e9eb4f89d1dadd50fb3e9df32e36346bbccbf1c31f880475d8b3686ee3"
-  },
-  {
-   "file": "assets/prompts/xbox_dpad_right.png",
-   "source": "kenney_input-prompts_1.5.zip",
-   "member": "Xbox Series/Double/xbox_dpad_right.png",
-   "transform": "copied unchanged",
-   "sha256": "280db7d24c98edc833d6bb520ddf4e8b3a989a90f4bda1b3b2908d2d8af58060"
-  },
-  {
-   "file": "assets/prompts/xbox_stick_l_press.png",
-   "source": "kenney_input-prompts_1.5.zip",
-   "member": "Xbox Series/Double/xbox_stick_l_press.png",
-   "transform": "copied unchanged",
-   "sha256": "8c772ed1203af9c4923dd1bb5a67f96814a08d9569130ae8435a49fc3b33ab4e"
   },
   {
    "file": "assets/trees/oak_summer_young.png",

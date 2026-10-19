@@ -13,7 +13,7 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 
 | ID | Task | Status | Branch / commit | Notes |
 |---|---|---|---|---|
-| B8-029 | Calendar, aging, families, animal life cycles | IN PROGRESS | `b8-aging` | 8-day year; explicit partners and parents; save version 14 |
+| B8-029 | Calendar, aging, families, animal life cycles | VERIFIED | staging (merge of `b8-aging`) | 8-day year; explicit partners and parents; save version 14; aging_test 96 checks; baby and child screenshots looked at. Kept existing animal grow/breed days (rabbit 2, cow 6) per the owner's "preserve existing maturation" |
 | B8-004 | Mine hill look (plateau, trees on its rim) | PARTIALLY COMPLETED | staging | Track and seams done |
 | B8-007 | Tool swing art (villagers still show the staff) | PARTIALLY COMPLETED | staging | No tool-swing art in the character sheets |
 | PL1-01 | Settings > Controls exit freezes the game | NOT STARTED | — | Critical |
