@@ -294,6 +294,7 @@ func _on_hour(h: int) -> void:
 	serve_tables()
 	business.hour()                    # villagers walk to the player's open stall (PL1-10)
 	carts.hour()                       # B14: the attendant unloads the player's cart at a cart stop
+	relations.hour(h)                  # shared hours build friendships and romances (CRT-08)
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
 		if f.state == "growing" and minutes >= f.ready:
 			f.state = "ripe"

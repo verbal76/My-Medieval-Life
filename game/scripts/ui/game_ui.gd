@@ -1797,6 +1797,8 @@ func show_talk(n: NPC) -> void:
 	if not q.is_empty() and Quests.template(q.id).get("story", false):
 		said = w.quests.line(q, "offer")
 	Dialogue.meet(w, n)
+	if n.role != "bandit":
+		w.relations.talked(n)              # talking is a personal interaction (CRT-08)
 	_talk_view(n, said)
 
 

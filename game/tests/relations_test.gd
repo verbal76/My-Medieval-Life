@@ -29,6 +29,7 @@ func _init() -> void:
 	test_courting()
 	test_friends_benefits()
 	test_villagers_court()
+	test_shared_hours()
 	test_same_sex()
 	test_save()
 	print("%d checks, %d failures" % [checks, failures])
@@ -190,14 +191,68 @@ func test_friends_benefits() -> void:
 func test_villagers_court() -> void:
 	var a := new_world(3)
 	var b := new_world(3)
+	# strangers do not court: with no shared hours nobody takes an interest (CRT-08)
+	var c := new_world(3)
 	GameData.b("relations").npc_court_chance = 1.0
-	for i in 25:
+	for i in 10:
+		c.minutes += 1440.0
+		c.relations.dawn()
+	check(c.relations.interests.is_empty() and int(c.stats.get("courtships", 0)) == 0, "villagers never court someone they have not come to know")
+	# shared hours (where they stand: at home, beside neighbours and workmates) build ties, then courting
+	for d in 25:
 		for w in [a, b]:
-			w.minutes += 1440.0
+			var base := float(w.day() + 1) * 1440.0
+			for h in range(7, 22):
+				w.minutes = base + h * 60.0
+				w.relations.hour(h)
+			w.minutes = base + 23.0 * 60.0
 			w.relations.dawn()
 	GameData.b("relations").npc_court_chance = 0.15
-	check(JSON.stringify(a.relations.to_dict()) == JSON.stringify(b.relations.to_dict()), "villagers' courting is the same for the same seed")
-	check(int(a.stats.get("courtships", 0)) > 0 and int(a.stats.get("proposals_accepted", 0)) > 0, "villagers court and marry (%d courtships, %d accepted)" % [int(a.stats.get("courtships", 0)), int(a.stats.get("proposals_accepted", 0))])
+	check(JSON.stringify(a.relations.to_dict()) == JSON.stringify(b.relations.to_dict()), "villagers' ties and courting are the same for the same seed")
+	var friends := 0
+	for k in a.relations.ties:
+		if bool(a.relations.ties[k].friends):
+			friends += 1
+	check(friends > 0, "time spent together makes villagers friends on their own (%d friendships)" % friends)
+	check(int(a.stats.get("courtships", 0)) > 0 and int(a.stats.get("proposals_accepted", 0)) > 0, "people who share their days court and marry (%d courtships, %d accepted)" % [int(a.stats.get("courtships", 0)), int(a.stats.get("proposals_accepted", 0))])
+	var known := true
+	for id in a.relations.interests:
+		known = known and float(a.relations.peek(int(id), int(a.relations.interests[id])).attraction) >= float(Relations.cfg().interest_at)
+	check(known, "every interest is in someone they came to know")
+
+
+func test_shared_hours() -> void:
+	var w := new_world()
+	var r := w.relations
+	var x := single(w)
+	var y: NPC = null
+	for o: NPC in w.npcs:
+		if o != x and o.alive and o.role == "adult" and r.can_court(x.id, o.id):
+			y = o
+			break
+	y.pos = x.pos + Vector2(1, 0)
+	x.job = "woodcutter"
+	y.job = "woodcutter"
+	w.minutes = float(w.day()) * 1440.0 + 9.0 * 60.0
+	r.hour(9)
+	var t := r.peek(x.id, y.id)
+	check(float(t.regard) >= float(Relations.cfg().shared.work_regard) and float(t.attraction) > 0.0, "working side by side builds regard and attraction (%.1f, %.1f)" % [float(t.regard), float(t.attraction)])
+	for h in range(10, 18):
+		w.minutes = float(w.day()) * 1440.0 + h * 60.0
+		r.hour(h)
+	check(float(r.peek(x.id, y.id).regard) <= float(Relations.cfg().shared.daily_cap) + 0.01, "a day's shared hours count at most daily_cap")
+	var far: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.pos.distance_to(x.pos) > 10.0:
+			far = o
+			break
+	check(float(r.peek(x.id, far.id).regard) == 0.0, "people far apart share nothing")
+	# the player: talking counts once a day
+	var n := single(w)
+	r.talked(n)
+	var g := float(r.peek(ME, n.id).regard)
+	r.talked(n)
+	check(g > 0.0 and float(r.peek(ME, n.id).regard) == g, "talking with a villager counts, once a day")
 
 
 # ---------------------------------------------------------------- same sex -------------------

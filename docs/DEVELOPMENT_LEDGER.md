@@ -14,15 +14,15 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | ACTIVE DEVELOPMENT | 7 |
 | PARTIALLY IMPLEMENTED | 34 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 22 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 23 |
 | BLOCKED | 17 |
 | DEFERRED | 8 |
 | COMPLETE AND VERIFIED | 121 |
 | SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **275** |
-| Outstanding (not complete, superseded or canceled) | 137 |
+| **Total approved** | **276** |
+| Outstanding (not complete, superseded or canceled) | 138 |
 
 Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -154,7 +154,7 @@ Automated tests do not count as device verification.
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (22)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (23)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -177,6 +177,7 @@ Automated tests do not count as device verification.
 | CRT-04 | Villagers court each other through gifts, dating and proposals by the player's rules, replacing the random pairing chance | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd; aging_test |  |  |
 | CRT-05 | Gift tastes follow obvious things: a villager's trade and current needs; favourite gifts speed courting, traditional gifts always work | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd; aging_test |  |  |
 | CRT-07 | Courtship and marriage between any two humans, same sex included; humans only for now | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd; aging_test |  |  |
+| CRT-08 | Shared experiences start friendships and romances: working together and personal interactions build regard and attraction | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_villagers_court, test_shared_hours; aging_test |  |  |
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
 | Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |

@@ -49,7 +49,10 @@
     "npc_court_chance": 0.15,
     "npc_time_attraction": 3,
     "npc_time_regard": 2,
-    "friend_price": 0.1
+    "friend_price": 0.1,
+    "interest_at": 8,
+    "_shared_note": "CRT-08 (owner: shared experiences start relationships). Each hour, people awake within near_tiles share it: work (both working at the same trade or workplace), social (evening), met (otherwise), talk (the player talking with a villager, once a day): *_regard, and *_attraction between people who may court; at most daily_cap regard a pair a day from shared hours. Villagers take an interest only in someone at interest_at attraction or more.",
+    "shared": {"near_tiles": 3, "work_regard": 1.5, "work_attraction": 0.6, "social_regard": 1.5, "social_attraction": 1.0, "met_regard": 0.3, "met_attraction": 0.1, "talk_regard": 2.0, "talk_attraction": 1.0, "daily_cap": 6}
   },
   "population": 100,
   "walk_tiles_per_second": 2.6,

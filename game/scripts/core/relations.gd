@@ -9,6 +9,12 @@ extends RefCounted
 ## the receiver; nothing is made or lost. Every number is in balance.json "relations" (agent proposals,
 ## provisional).
 ##
+## Shared experiences start ties (owner, CRT-08: "working together and any personal interactions are what
+## should start the friendships and relationships"): every hour, people awake near one another gain regard
+## (and attraction, when they may court): most for working side by side at the same trade or place, then for
+## an evening's company, a little for passing time nearby; talking with the player counts once a day. Villagers
+## only court someone they have come to know this way (interest_at). Gifts add to that.
+##
 ## Gift tastes (owner: "nothing so weird we need to play guessing games"): food, flowers, ale, clothes
 ## and jewellery always help; a villager's favourites are what their trade uses (FAVOURITES) and what they
 ## need now (food when hungry, medicine when hurt), and count favourite_factor times as much.
@@ -41,7 +47,8 @@ static func key(a: int, b: int) -> String:
 
 
 static func _blank() -> Dictionary:
-	return {"regard": 0.0, "attraction": 0.0, "stage": "", "since": -1, "friends": false, "gift_day": -1, "last": -1, "recent": []}
+	return {"regard": 0.0, "attraction": 0.0, "stage": "", "since": -1, "friends": false, "gift_day": -1, "last": -1, "recent": [],
+		"shared_day": -1, "shared_today": 0.0, "talk_day": -1}
 
 
 ## The tie between two people (made on first use).
@@ -270,6 +277,81 @@ func propose(a: int, n: NPC) -> String:
 	return ""
 
 
+# ---------------------------------------------------------------- shared experiences ---------
+## Every hour (World._on_hour): people awake within shared.near_tiles of each other share the hour: at work
+## (both working, the same trade or workplace) work_*, in the evening social_*, otherwise met_*; at most
+## shared.daily_cap regard a pair a day. The player shares hours with those near them the same way. Villagers
+## who come to think well enough of each other (befriend_at) become friends on their own.
+func hour(h: int) -> void:
+	var sh: Dictionary = cfg().shared
+	var r := float(sh.near_tiles)
+	var cell := maxf(1.0, r)
+	var grid := {}
+	var people: Array = []
+	for n: NPC in w.npcs:
+		if n.alive and n.role != "bandit" and n.role != "child" and not w.asleep(n):
+			people.append(n)
+			var c := Vector2i(floori(n.pos.x / cell), floori(n.pos.y / cell))
+			if not grid.has(c):
+				grid[c] = []
+			grid[c].append(n)
+	var working := float(h) >= NPCBrain.WORK_START and float(h) < NPCBrain.WORK_END
+	var evening := float(h) >= NPCBrain.WORK_END and float(h) < NPCBrain.SLEEP
+	for n: NPC in people:
+		var c := Vector2i(floori(n.pos.x / cell), floori(n.pos.y / cell))
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				for o: NPC in grid.get(c + Vector2i(dx, dy), []):
+					if o.id <= n.id or n.pos.distance_to(o.pos) > r:
+						continue
+					var kind := "met"
+					if working and n.job != "" and (n.job == o.job or (n.workplace != "" and n.workplace == o.workplace)):
+						kind = "work"
+					elif evening:
+						kind = "social"
+					share(n.id, o.id, kind)
+	if w.player.alive:
+		for n: NPC in people:
+			if n.pos.distance_to(w.player.pos) <= r:
+				share(Life.PLAYER_ID, n.id, "work" if working and _player_working_with(n) else ("social" if evening else "met"))
+
+
+## The player works beside a villager: both at a building site, or the player on a manor job or hired work
+## while the villager works.
+func _player_working_with(n: NPC) -> bool:
+	return n.job != "" and (not w.player.quests.is_empty() or not w.manor_work.job_of("player").is_empty())
+
+
+## One shared hour (or a conversation, kind "talk") between two people.
+func share(a: int, b: int, kind: String) -> void:
+	var sh: Dictionary = cfg().shared
+	var t := tie(a, b)
+	var d: int = w.day()
+	if int(t.get("shared_day", -1)) != d:
+		t.shared_day = d
+		t.shared_today = 0.0
+	var reg := float(sh.get(kind + "_regard", 0.0))
+	var room := float(sh.daily_cap) - float(t.shared_today)
+	if room <= 0.0 and kind != "talk":
+		return
+	reg = minf(reg, room) if kind != "talk" else reg
+	t.shared_today = float(t.shared_today) + reg
+	t.last = d
+	var att := float(sh.get(kind + "_attraction", 0.0)) if can_court(a, b) else 0.0
+	_raise(t, reg, att)
+	if a != Life.PLAYER_ID and not bool(t.friends) and float(t.regard) >= float(cfg().befriend_at):
+		befriend(a, b)                                  # villagers befriend each other on their own
+
+
+## The player talked with a villager (once a day counts): a personal interaction (CRT-08).
+func talked(n: NPC) -> void:
+	var t := tie(Life.PLAYER_ID, n.id)
+	if int(t.get("talk_day", -1)) == w.day():
+		return
+	t.talk_day = w.day()
+	share(Life.PLAYER_ID, n.id, "talk")
+
+
 # ---------------------------------------------------------------- every dawn -----------------
 ## Ties cool a little without contact; villagers court (CRT-04).
 func dawn() -> void:
@@ -282,8 +364,9 @@ func dawn() -> void:
 	_villagers_court()
 
 
-## Each unpartnered adult courts one person: picks someone (npc_court_chance a day; the nearest in age of
-## those they may court, not kin), then each day gives them a gift they have (a favourite first, else a
+## Each unpartnered adult courts one person: takes an interest (npc_court_chance a day) in the one they are
+## most drawn to of those they have come to know (attraction at least interest_at; at most partner_max_gap
+## years apart; may court), then each day gives them a gift they have (a favourite first, else a
 ## traditional one) or spends time with them; asks to court at court_at and proposes when it would be accepted.
 func _villagers_court() -> void:
 	var c := cfg()
@@ -305,14 +388,17 @@ func _villagers_court() -> void:
 		if target == null:
 			if w.rng.randf() >= float(c.npc_court_chance):
 				continue
+			# only someone they have come to know: the strongest attraction of those they may court (CRT-08)
 			var best: NPC = null
+			var best_a := float(c.interest_at)
 			var gap := float(Life.cfg().partner_max_gap)
 			for o: NPC in singles:
 				if o == n or o.partner >= 0 or not can_court(n.id, o.id):
 					continue
-				var g := absf(Life.npc_age(w, n) - Life.npc_age(w, o))
-				if g <= gap and (best == null or g < absf(Life.npc_age(w, n) - Life.npc_age(w, best))):
+				var a := float(peek(n.id, o.id).attraction)
+				if a >= best_a and absf(Life.npc_age(w, n) - Life.npc_age(w, o)) <= gap and (best == null or a > best_a):
 					best = o
+					best_a = a
 			if best == null:
 				continue
 			interests[n.id] = best.id
@@ -370,6 +456,9 @@ func load_dict(d: Dictionary) -> void:
 		t.gift_day = int(t.gift_day)
 		t.last = int(t.last)
 		t.friends = bool(t.friends)
+		t.shared_day = int(t.shared_day)
+		t.shared_today = float(t.shared_today)
+		t.talk_day = int(t.talk_day)
 		ties[str(k)] = t
 	var ins: Dictionary = d.get("interests", {})
 	for k in ins:

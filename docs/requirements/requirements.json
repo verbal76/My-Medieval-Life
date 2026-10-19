@@ -4974,6 +4974,50 @@
    ]
   },
   {
+   "id": "CRT-08",
+   "title": "Shared experiences start friendships and romances: working together and personal interactions build regard and attraction",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "Common experiences like working together and any personal interactions are what should start the friendships and relationships. Shared experiences are like in real life things that make relationships happen.",
+   "description": "Shared experiences start friendships and romances: working together and personal interactions build regard and attraction",
+   "source": "owner message 2026-10-19 (chat)",
+   "approval": "owner instruction",
+   "acceptance": [
+    "Working together (same workplace or job at the same time) builds regard, and attraction between people who may court",
+    "Personal interactions (talking, eating or drinking together, fighting side by side, helping) build the tie",
+    "Villagers take an interest in people they share experiences with, not a random stranger",
+    "The player's ties grow the same way: talking, working alongside, fighting together"
+   ],
+   "implementation": "game/scripts/core/relations.gd::hour, share, talked; world.gd::_on_hour; game_ui.gd::show_talk; INT-148",
+   "tests": "game/tests/relations_test.gd::test_villagers_court, test_shared_hours; aging_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-19 (chat)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented: hourly shared experiences (work, evening company, time nearby), talking once a day; villagers befriend on their own and court only those they came to know"
+    }
+   ]
+  },
+  {
    "id": "DGA-D1",
    "title": "Meaning of \"isometric\"",
    "kind": "proposal",

@@ -321,14 +321,18 @@ func test_partners_and_births() -> void:
 		Life.births(w2)
 	var born := w2.npcs.size() - n0
 	check(born >= 1 and born <= pairs, "two years bring births to some of the %d couples, beds or no beds (%d born, %d beds were free)" % [pairs, born, rooms])
-	# courting (CRT-04): villagers take an interest, court with gifts and time, and propose; partners only
+	# courting (CRT-04, CRT-08): villagers come to know each other, take an interest, court, and propose; partners only
 	# when accepted, never kin, either sex
 	var w3 := new_world()
 	GameData.b("relations").npc_court_chance = 1.0
 	var before_pairs := w3.npcs.filter(func(n: NPC) -> bool: return n.partner >= 0).size()
 	var first_week := 0
-	for day in 30:
-		w3.minutes += 1440.0
+	for day in 30:                            # their days together (shared hours, CRT-08), then the dawn
+		var base := float(w3.day() + 1) * 1440.0
+		for hr in range(7, 22):
+			w3.minutes = base + hr * 60.0
+			w3.relations.hour(hr)
+		w3.minutes = base + 23.0 * 60.0
 		w3.relations.dawn()
 		if day == 2:
 			first_week = w3.npcs.filter(func(n: NPC) -> bool: return n.partner >= 0).size()
