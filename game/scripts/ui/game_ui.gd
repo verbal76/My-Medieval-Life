@@ -1013,6 +1013,14 @@ func show_title(can_continue: bool) -> void:
 	_button("Wiki", func(): show_settings(func(): show_title(main.can_continue()), "wiki"))
 	_button("Credits", show_credits)
 	_controls_list(scheme)
+	_scroll_to_top()                      # FR-05: the controls list must not scroll the menu out of view
+
+
+## Show a window from its top once it has laid out (its focus and growing lists can leave it scrolled down).
+func _scroll_to_top() -> void:
+	for i in 2:
+		await get_tree().process_frame
+	body_scroll.scroll_vertical = 0
 
 
 ## Every asset pack's creator, from game/data/credits.json (owner rule: everyone is credited).

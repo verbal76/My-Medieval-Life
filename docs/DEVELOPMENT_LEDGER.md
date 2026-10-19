@@ -27,6 +27,7 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | PL2-001 | Forge occupancy and stale reservations | VERIFIED | staging | Only a villager working at the station blocks it; never saved (world_test) |
 | PL2-004 | Animal loot and the path to leather | VERIFIED | staging | Piles show their item, tap and take, spoil after 3 days; hides and rabbit pelts tan to leather; chickens drop feathers (trade good; icon is a stand-in leaf) |
 | PL2-006 / PL1-12 | Resources harvestable everywhere; red flowering plant | VERIFIED | staging | Red plant is tile 2656, now a plant; every overworld flower pickable and saved (world_test, screenshots) |
+| PL1-12 | Red flowering plant outside the village | PARTIALLY COMPLETED | staging | Build 14 audit: pickable in the village, but the overworld draws no red flowers (overworld_tiles.json 2657-2659); adding them needs an overworld generator version bump (do with B14-09) |
 | PL1-06 | Every stone object minable, size-based yield | VERIFIED | staging | Small (2 uses) and large (6 uses) boulders, overworld and village (world_test, screenshot) |
 | PL2-011 | No interactions through walls | VERIFIED | staging | World.reaches guards targets, Use, Gather and attacks both ways (world_test) |
 | PL2-007 | Fields grow, ripen and regrow | VERIFIED | staging | The cycle worked; farmers cut within the hour. They now wait 12 h, so ripe fields are seen (world_test, screenshots). Seasons hook in place |
@@ -99,7 +100,7 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | FR-02 | Forgotten Memories waterfalls, fences and props (owner, 2026-10-19) | NOT STARTED | — | Pack stored and credited; ramps go with B14-07 |
 | FR-03 | Cooking raw meat outside the village: a campfire (owner request, Build 8 testing) | NOT STARTED | — | Recorded in BUILD_8_ISSUES as "needs owner approval"; the owner asked for it, so it is approved |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list (B12 audit) | NOT STARTED | — | |
-| FR-05 | Title window opens scrolled to the bottom (Build 13 packet) | NOT STARTED | — | Not investigated |
+| FR-05 | Title window opens scrolled to the bottom (Build 13 packet) | VERIFIED | staging (after `fbf2a74`) | Reproduced in a screenshot (scrolled into the controls list, buttons out of view); the title now scrolls to its top after layout; start_test checks it |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits (B12 audit) | PARTIALLY COMPLETED | staging | Sword fighting page added (CQ-01); carts and apple trees added (`8ae29c2`) |
 | FR-07 | economy_sim and households_sim not run by CI | NOT STARTED | — | Both exit 1 on failure; long, so a short-day variant in CI |
 | FR-08 | Music and sound (volume sliders control nothing) | BLOCKED (assets) | — | No audio supplied |

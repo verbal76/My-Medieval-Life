@@ -34,15 +34,15 @@ The queue (`docs/DEVELOPMENT_QUEUE.md`) gives the order of work and points to th
 
 ## The ten questions
 
-1. **Outstanding items: 81.** Every requested feature, fix or system not yet complete and verified (register below). Another 109 recorded items are complete and verified headless (ledger).
+1. **Outstanding items: 80.** Every requested feature, fix or system not yet complete and verified (register below). Another 109 recorded items are complete and verified headless (ledger).
 2. **Actively worked on: 2.**
    - The multiplayer prototype (MP-01, `wip/multiplayer`).
    - The money-supply re-measure (DVW-A3), with 100- and 365-day runs in progress.
-3. **Partially implemented: 16.**
-4. **Not started: 27** approved items.
+3. **Partially implemented: 17.**
+4. **Not started: 26** approved items.
 5. **Blocked or deferred: 18 blocked and 2 deferred.**
    - Blocked: 8 on an outside need (signing secrets, Google client, art or audio, an owner decision on the horse); 10 are groups of open owner decisions.
-   - Also 13 items implemented but unverified (real device or controller), and 3 of unknown status.
+   - Also 13 items implemented but unverified (real device or controller), and 2 of unknown status.
 6. **Approved requests missing from the backlog: 31.** All are now restored to the ledger (section C).
    - 3 more were in it with the wrong status (carts, Craftpix and Animal Farm were marked "not started").
 7. **Biggest bottleneck: verification, not code.**
@@ -96,7 +96,7 @@ The queue (`docs/DEVELOPMENT_QUEUE.md`) gives the order of work and points to th
 
 ---
 
-## A. Open-items register (81 outstanding items)
+## A. Open-items register (80 outstanding items)
 
 **Column key**
 - **Code:** code exists / committed / pushed, and the branch.
@@ -134,7 +134,7 @@ All code below is on staging and pushed, unless the branch says otherwise. The l
 | B14-13 | Controller on a phone hides touch buttons | `1458da8` | start_test | Phone with a pad | PL |
 | CQ-01 | Sword responsiveness and reach | `3e283b6` | combat_test 41 | Phone touch feel | PL |
 
-### Partially implemented (16)
+### Partially implemented (17)
 
 | ID | Item | What exists | What remains | Next action | Pri. | Build |
 |---|---|---|---|---|---|---|
@@ -153,9 +153,10 @@ All code below is on staging and pushed, unless the branch says otherwise. The l
 | DVW-B9 | Readable danger | Cause of death | Howl and roar cues, lethal-need warnings | With WR-01 | Med | NB |
 | DVW-A6 | Conservation across save/load | Coins checked | Goods | Add a goods round-trip test | High (cheap) | NB |
 | DVW-A13 | Every visible object has a use | Handcarts now used | Feathers have no consumer | Fletching or bedding recipe | Low | NB |
+| PL1-12 | Red flowering plant | Pickable in the village (tile 2656) | The overworld never draws red flowers (`overworld_tiles.json` flowers 2657–2659). Adding them changes generator output, so it needs a version bump (CLAUDE.md s.6) | With the next overworld generator change (B14-09 caves) | Low | NB |
 | FR-06 | Wiki completeness | Sword, carts, apples added | Magic, employer star, journal and map, death causes, caravan, bandits | Write the pages | Med | PL |
 
-### Planned, not started (27; all approved)
+### Planned, not started (26; all approved)
 
 | ID | Item | Deps | Next action | Pri. |
 |---|---|---|---|---|
@@ -184,7 +185,6 @@ All code below is on staging and pushed, unless the branch says otherwise. The l
 | FR-02 | Forgotten Memories waterfalls, fences, props | — | With B14-07 | Next |
 | FR-03 | Campfire for cooking outside the village | — | Small | Next |
 | FR-04 | Pad shortcuts for Journal and Build; full controls list | — | Small | Next |
-| FR-05 | Title window opens scrolled to the bottom | — | Investigate | Next (cheap) |
 | FR-07 | Economy and household sims in CI (short variant) | — | Small | Next |
 
 ### Blocked (18)
@@ -210,14 +210,13 @@ All code below is on staging and pushed, unless the branch says otherwise. The l
 | OD-9 | GAME_DESIGN items still open (U3–U5, U13, U16–U21, including monetisation) | Your decisions | NB |
 | OD-10 | Confirm or reverse what the economy agent built without a recorded decision: the B7-009 day-labour reserve, the caravan purse (B7-014 / P1.3) | Your confirmation | NB |
 
-### Deferred (2) and status unknown (3)
+### Deferred (2) and status unknown (2)
 
 | ID | Item | State |
 |---|---|---|
 | FR-09 | Crime from desperation | Deferred by you ("not yet") |
 | FR-10 | Archery | Deferred: future, not authorised |
 | FR-11 | Personality, prestige, migration | Partly present (apprenticeships, memories, newcomers). Personality traits and prestige not found. Scope to settle with GM-01 and VP-01 |
-| PL1-12 | Red flowering plant in the overworld | Ledger says verified; the Build 12 audit says it is not drawn outside the village. Recheck needed |
 | BK-1 | Off-machine backup current | Not re-verified in this audit. GitHub staging and `wip/multiplayer` hold all current work |
 
 ### Complete and verified (headless): 109 recorded items
@@ -381,7 +380,7 @@ Best checkpoint: staging after this audit's documentation commit.
 
 **The short list for B:**
 1. Finish the 100-day runs (both seeds), record them in `LONG_RUN_SIMULATION.md`, and fix any regression they show.
-2. Recheck PL1-12 (red plant outside the village) and FR-05 (title scroll). Both are cheap, and both are visible in testing.
+2. ~~Recheck PL1-12 and FR-05.~~ Done after the audit: FR-05 fixed (the title opened scrolled into the controls list; start_test checks it). PL1-12 found partial (no red flowers in the overworld) and left for the next generator change.
 3. Write the Build 14 packet with the tester notes:
    - uninstall before installing (unless your signing secrets exist by then);
    - stand-in cart art;
@@ -396,7 +395,7 @@ Best checkpoint: staging after this audit's documentation commit.
 **Immediate (now, in parallel)**
 - Option B short list.
 - B14-07 cliff steps, stairs and walkways, with FR-02 Forgotten Memories ramps, fences and waterfalls.
-- Cheap fixes: DVW-A2 backups, DVW-A6 goods conservation test, FR-04 pad shortcuts, FR-05, FR-07 sims in CI, DVW-A14 checklist line.
+- Cheap fixes: DVW-A2 backups, DVW-A6 goods conservation test, FR-04 pad shortcuts, FR-07 sims in CI, DVW-A14 checklist line.
 - Stale documents: handoff, plan, game design undecided items, BUILD_DECISIONS known gaps, CLAUDE.md drafts 9–11.
 
 **Next build (15)**

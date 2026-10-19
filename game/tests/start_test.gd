@@ -137,6 +137,11 @@ func _run() -> void:
 	ui.fit_safe_area()
 	# 1-3. character creation: a name, a family, a female look in a tunic
 	check(ui.is_open("title"), "the title screen opens")
+	ui.set_scheme("kbm")
+	ui.show_title(main.can_continue())
+	for i in 4:
+		await process_frame
+	check(ui.body_scroll.scroll_vertical == 0, "the title opens at its top, its buttons in view (FR-05; was scrolled into the controls list)")
 	_press("New game")
 	check(ui.is_open("creation"), "character creation opens")
 	_press("Female")
