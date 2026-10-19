@@ -2394,16 +2394,18 @@ func _pl_trade_ui_tests() -> void:
 	var n_eff := 0
 	for id in GameData.items:
 		var it: Dictionary = GameData.items[id]
-		if not it.has("food"):
+		if not it.has("food") and not it.has("heal"):
 			continue
 		var t := GameData.effect_text(id)
 		n_eff += 1
-		ok = ok and t.contains("%d Food" % int(it.food)) and (not it.has("heal") or t.contains("%d Health" % int(it.heal))) and (not it.has("harm") or t.contains("Harms %d" % int(it.harm)))
+		ok = ok and (int(it.get("food", 0)) <= 0 or t.contains("%d Food" % int(it.food))) and (not it.has("heal") or t.contains("%d Health" % int(it.heal))) and (not it.has("harm") or t.contains("Harms %d" % int(it.harm)))
 	check(ok and n_eff > 0, "every consumable's effect text equals its item data (%d items)" % n_eff)
 	check(GameData.effect_text("coal") == "", "a non-consumable has no effect text")
+	for med in ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_healing_tonic"]:
+		check(GameData.effect_text(med) == "Restores %d Health" % int(GameData.item(med).heal), "%s shows its healing (%s)" % [med, GameData.effect_text(med)])
 	var heal_id := ""
 	for id in GameData.items:
-		if GameData.items[id].has("heal") and not GameData.items[id].has("harm"):
+		if GameData.items[id].has("heal") and GameData.items[id].has("food") and not GameData.items[id].has("harm"):
 			heal_id = id
 			break
 	p.inv.items.erase(heal_id)

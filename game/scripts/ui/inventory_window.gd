@@ -258,7 +258,7 @@ func _build_details() -> void:
 	var worn := _slot_of(id)
 	title.text = GameData.item_name(id) + (" x%d" % count if count > 1 else "")
 	var lines: Array[String] = [KINDS.get(t, "Thing") + (", in use" if worn != "" else "") + ". Worth about %d coins." % GameData.value(id)]
-	if it.has("food"):
+	if GameData.effect_text(id) != "":
 		lines.append(GameData.effect_text(id) + ".")
 	if it.has("damage"):
 		lines.append("Damage %d." % int(it.damage))

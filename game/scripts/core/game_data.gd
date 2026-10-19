@@ -48,15 +48,16 @@ static func item_name(id: String) -> String:
 
 
 ## What eating or drinking `id` does, read from the item's own data (the same fields World.player_eat
-## applies: "heal" health, "food" hunger, "stamina"; "harm" is the damage it does). [] for a non-consumable.
+## applies: "heal" health, "food" hunger, "stamina"; "harm" is the damage it does). Medicines have "heal"
+## and no "food" (World.player_use_medicine). [] for a non-consumable.
 static func effects(id: String) -> Array:
 	var it := item(id)
 	var out := []
-	if not it.has("food"):
+	if not it.has("food") and not it.has("heal"):
 		return out
 	if int(it.get("heal", 0)) > 0:
 		out.append(["Health", int(it.heal)])
-	if int(it.food) > 0:
+	if int(it.get("food", 0)) > 0:
 		out.append(["Food", int(it.food)])
 	if int(it.get("stamina", 0)) > 0:
 		out.append(["Stamina", int(it.stamina)])
