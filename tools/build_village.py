@@ -1,36 +1,53 @@
 """Build the playable village map for the Godot game (game/data/village.json).
 
-The village is 120 x 90 tiles (16 px), assembled from twelve 30 x 30 districts:
+Generator v6 (Build 8, owner decision 2026-10-19: one new FIXED village, the same in every game): the
+village is laid out here, tile by tile, as one coherent settlement of 120 x 90 tiles (16 px). It is no
+longer assembled from the twelve 30 x 30 districts of Shade's sample maps, whose terrain seams, cut-off
+trees and loose patches showed in play.
 
-    row 0:  forest       | mine highland (Shade's cave sample) | forest | forest + bandit camp
-    row 1:  houses (Shade's village sample 1) | tavern (sample 3) | smithy + armory (sample 2) | houses
-    row 2:  houses       | market square + houses | farms | houses
+What is laid out
+    - the ground: one continuous layer of the free PUNY_WORLD_v1 corner wangset (grass; dirt yards for
+      the market, the tavern's court, the smithy, the mine, the sawmill and the camp; a rocky hill for
+      the mine), the same grass tiles the overworld (game/scripts/core/overworld.gd) draws round the
+      village, so the village's edge meets it without a seam. Dirt roads are the wangset's "pathways";
+      the four exits (north, east, south, west) are roads that run to the map's edge.
+    - the buildings, stamped from Shade's sample maps (PUNY-WORLD-PAID_v1.zip) building by building, each
+      with the floor under its roof, its walls, furniture and roof, but none of the sample's grass,
+      dirt patches, trees or people: the small house (21 homes), the manor, the tavern with its terrace
+      and well, the sage's hut and the smithy with its armory stay where Shade's samples put them
+      relative to one another and keep their ids; the sawmill is a new workshop (the small house with the
+      sawhorse of the smithy's carpenter's corner).
+    - the market (six stalls), four fenced animal pens, six fields, two building plots, the mine (a hill
+      cut by a timbered adit, a yard, a track that runs from the adit to the cart stop, and the ore
+      seams), and the bandits' camp.
+    - trees and plants. Trees are records only (village.json "trees": the trunk's cell and the old tile
+      ids that fix the species); the game draws them as Living Forest sprites (game/scripts/view/tree_view.gd)
+      and no tree tile is left in any tile layer. Wild flowers and berry bushes are the gatherable
+      plants of generator v5.
 
-Shade's sample maps (PUNY-WORLD-PAID_v1.zip) are used as they are, minus the people Shade baked into
-them as tiles; the live NPCs replace them. The generated districts reuse objects cut from those
-samples (the small house, single trees, stumps, tables, crates), ore rocks and field tiles from the
-paid atlas, and grass and dirt-road tiles from the free PUNY_WORLD_v1 wangsets (the same ones
-tools/puny_world_terrain.py uses).
+Tall objects (the tops of tables, benches, racks and armour stands that Shade drew in his "Object Top"
+layers) are put in "below" layers over their base (below3, below4): the player is drawn over them and
+can never stand under half an object. A cell holding only the top of a taller object is solid.
 
-Output (deterministic for a given seed):
+Output (deterministic for a given seed; no random numbers are drawn from the global generator):
   game/data/village.json   tile layers, collision, and every gameplay entity: buildings with doors,
                            homes, workstations, trees, ore deposits, fields, stalls, build plots,
                            containers (crates, barrels, tavern tables), spawn points, and each
                            building's interior (floor, doors, roof cells, beds and other use spots;
                            see Village.interiors) with "roof_layers" naming the layers roofs are in
-  game/assets/tiles/       the two tile atlases, copied from the archives (provenance in
+  game/assets/tiles/       the three tile atlases, copied from the archives (provenance in
                            game/assets/PROVENANCE.json, written by tools/import_game_assets.py)
 
 Tile values: atlas * 100000 + tile id (atlas 0 = paid punyworld-tiles, 1 = free overworld tiles,
 2 = Cozy Farm tiles), -1 = empty. Pens are fenced with Cozy Farm fence tiles; "woods" are the forest
-districts where wild animals live.
+patches where wild animals live.
 
 Usage:
-    python3 tools/build_village.py [--seed 1]
+    python3 tools/build_village.py [--seed 1] [--preview out/village.png [--solid]]
 """
 import argparse
-import heapq
 import json
+import math
 import random
 from pathlib import Path
 
@@ -42,19 +59,24 @@ SAMPLE = "PUNY-WORLD-PAID_v1/Tiled/sample-{}.tmj"
 FREE = 100000           # atlas offset for the free overworld tiles
 COZY = 2 * FREE         # atlas offset for the Cozy Farm tiles (fences, gates)
 COZY_COLS = 54
-CH = 30                 # district size in tiles
-W, H = 4 * CH, 3 * CH
+CH = 30                 # a sample map is 30 x 30 tiles
+W, H = 120, 90
 OUT = REPO / "game" / "data" / "village.json"
+SOUTH_X = 66            # where Mill Road leaves the map in the south (it jogs east below the south lane)
+
+# The civic buildings keep the places they had when the village was made of Shade's districts: a sample's
+# tile (x, y) lies at ORIGIN + (x, y), so the tavern, the manor, the smithy and their stations stay where
+# they were relative to one another and to the player's start.
+ORIGIN = {"village-1": (0, CH), "village-2": (2 * CH, CH), "village-3": (CH, CH)}
 
 # --- atlas facts (tile ids in punyworld-tiles.png, 220 columns) -------------------------------
 DOORS = {3875, 3799, 3801}                   # doors and archways: walkable
 # generator v5: gatherable plants, paid-atlas tile values (0 * 100000 + id), identified visually
 PLANTS = {2658: "flower", 2657: "flower", 2660: "redberry", 2662: "blueberry"}
 PEOPLE_MIN = 126 * 220                       # rows 126+ hold the tiny people Shade drew into maps
-ORE = {"iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "stone": 1743, "gold_ore": 1965}
+ORE = {"iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "stone": 1964, "gold_ore": 1965}
 DEPLETED_ROCK = 1964
 STUMP = 459
-TREE_DRAWS = 22                              # tree kinds drawn per tree by generator v1 (keeps the layout)
 SAPLING = 4304
 # Field art is a 4x4 edge set per state, named by its top-left tile: columns are narrow / left / middle
 # / right, rows are top / middle / bottom / narrow, so a field of any size closes cleanly on all four
@@ -70,9 +92,15 @@ def field_cell_tile(base, w, h, i, j, cols=PAID_COLS):
     col = 0 if w == 1 else 1 if i == 0 else 3 if i == w - 1 else 2
     row = 3 if h == 1 else 0 if j == 0 else 2 if j == h - 1 else 1
     return base + row * cols + col
+
+
 FRAME = 3499                                 # wooden construction frame (build sites)
 CAMPFIRE = 5958                              # animated in the tileset (5958-5961)
 CRATE, BARREL = 3500, 3502
+RAIL_V, RAIL_TOP, RAIL_END = 1083, 863, 1303  # the track: a straight rail, its top end and its bottom end
+MINE_CART = 3009                             # the mine cart on its rail
+ADIT = FREE + 154                            # the timbered mine mouth of the free tileset, over a cliff face
+PLANKS = (1024, 1025)                        # piles of planks and logs (the smithy's carpenter's corner)
 # Containers the player can take from (or steal from): the crate and barrel tiles Shade drew by the
 # houses, in the tavern and at the stalls, and the dishes and mugs he drew on the tavern's tables
 CRATE_TILES = {CRATE, 794, 796, 797, 1024, 1025}
@@ -85,13 +113,20 @@ FENCE = {"tl": 29 * 54 + 4, "t": 29 * 54 + 5, "tr": 29 * 54 + 6, "l": 30 * 54 + 
 GATE = 29 * 54 + 0
 PENS = ("cow", "pig", "sheep", "chicken")   # one fenced pen per kind of livestock
 
+
+def is_tree_tile(t):
+    """Tree art in the paid atlas: the crowns, trunks and stumps of columns 16-23, rows 0-11 (rows 12+
+    hold the flowers and bushes). Generator v6 never copies one into a layer: trees are records."""
+    return 16 <= t % 220 <= 23 and t // 220 <= 11
+
+
 # --- interiors (generator v3) --------------------------------------------------------------------
 # Every roofed building has an interior under its roof: Shade drew the rooms, walls and furniture of
 # his houses and the manor under their roofs, and gave the tavern and the smithy roofs of their own
-# (sample-village-3 / -2, in a "Roof" group he left hidden). The game fades a roof while the player is
+# (sample village-3 / -2, in a "Roof" group he left hidden). The game fades a roof while the player is
 # under it (game/scripts/view/roof_fade.gd).
 ROOF_LAYERS = ("above3", "above4", "above5")       # the "above" layers that hold roofs (faded, never canopies)
-HIDDEN_ROOFS = (("village-3", 1, 1), ("village-2", 2, 1))     # (sample, district x, district y)
+TOP_LAYERS = {"Object Top": 3, "Object Top Offset": 4}    # generator v6: tall objects' tops go to below3 / below4
 # Beds Shade drew (the bed's body tile -> where its head lies); the bed's other tile is a headboard
 BED_TILES = {1472: "up", 1477: "up", 1482: "up", 1691: "right", 1696: "right", 1701: "right",
              1693: "left", 1698: "left", 1703: "left"}
@@ -113,13 +148,20 @@ HOUSE_CLEAR = ((1, 4), (2, 4), (1, 6), (2, 6), (1, 7), (2, 7))
 HOUSE_BEDS = (((1, 4), (2, 4), 1693, 1694), ((1, 5), (2, 5), 1698, 1699), ((1, 6), (2, 6), 1703, 1704),
               ((1, 7), (2, 7), 1693, 1694), ((7, 5), (6, 5), 1696, 1695))
 
+# --- the building stamps (sample, rect (x, y, w, h) in the sample's tiles) ------------------------
+HOUSE_RECT = (2, 10, 9, 10)                 # Shade's small house, village-1: 9 x 10, door step at (4, 9)
+MANOR_RECT = (14, 6, 15, 18)                # the manor and its fenced garden, village-1
+TAVERN_RECT = (4, 8, 23, 18)                # the tavern, its terrace and the well, village-3
+HUT_RECT = (9, 1, 4, 3)                     # the sage's hut and its barrels, village-3
+SMITHY_RECT = (7, 10, 16, 14)               # the smithy and the armory, village-2
+
 # --- workshop stamps (property phase 2, agent proposal) -------------------------------------------
 # A workshop is Shade's small house (the house stamp: walls, roof, door, chest and tables) with its beds
 # and straw pallet taken out and the stations of his smithy (village-2) or tavern kitchen (village-3)
 # moved in, tile for tile, from where he drew them in this village: (local cell, source cell) pairs,
 # copied in the named layers. Nothing is drawn new. Each station records its object cell and the floor
 # cell it is used from. A workshop has no hearth spot (it is not a home).
-WORK_LAYERS = ("below1", "below2", "above0", "above1", "above2")
+WORK_LAYERS = ("below1", "below2", "below3", "below4", "above0", "above1")
 WORKSHOPS = {
     "smithy": {"stations": [
         {"type": "forge", "at": (5, 2), "use": (5, 3), "layers": WORK_LAYERS,
@@ -141,12 +183,47 @@ WORKSHOPS = {
          "paste": (((1, 5), (51, 47)), ((2, 5), (52, 47)), ((1, 6), (53, 47)))},       # the pan and the pot
     ]},
 }
+# The sawmill is the small house fitted as the carpenter's corner but for the workbench, so the village
+# keeps one workbench (the smithy's) and the sawhorse is where the planks are sawn.
+SAWMILL_STATIONS = (WORKSHOPS["carpentry"]["stations"][1], WORKSHOPS["carpentry"]["stations"][2])
 
 CATS = ("ground", "path", "below", "above")
+TOPS = [("above", i) for i in range(6)] + [("below", 3), ("below", 4)]     # layers whose tiles cover an object
 
 
 def tile_val(atlas, tid):
     return atlas * FREE + tid
+
+
+# ---- deterministic noise (integers in, floats out: the same on every machine) ---------------------
+def _hash(x, y, salt):
+    h = (x * 374761393 + y * 668265263 + salt * 2246822519 + 12345) & 0xFFFFFFFF
+    h = ((h ^ (h >> 13)) * 1274126177) & 0xFFFFFFFF
+    h ^= h >> 16
+    return h / 4294967296.0
+
+
+def vnoise(x, y, period, salt):
+    """Smooth value noise in 0..1, lattice `period` tiles apart."""
+    gx, gy = x / period, y / period
+    ix, iy = math.floor(gx), math.floor(gy)
+    fx, fy = gx - ix, gy - iy
+    sx, sy = fx * fx * (3 - 2 * fx), fy * fy * (3 - 2 * fy)
+    a, b = _hash(ix, iy, salt), _hash(ix + 1, iy, salt)
+    c, d = _hash(ix, iy + 1, salt), _hash(ix + 1, iy + 1, salt)
+    top, bot = a + (b - a) * sx, c + (d - c) * sx
+    return top + (bot - top) * sy
+
+
+def road_cells(*points):
+    """The 4-connected cells of a road through axis-aligned `points` (each leg horizontal or vertical)."""
+    out = []
+    for (x0, y0), (x1, y1) in zip(points, points[1:]):
+        assert x0 == x1 or y0 == y1, "a road leg is straight"
+        for x in range(min(x0, x1), max(x0, x1) + 1):
+            for y in range(min(y0, y1), max(y0, y1) + 1):
+                out.append((x, y))
+    return out
 
 
 class Village:
@@ -157,16 +234,24 @@ class Village:
         self.walkable_override = set()
         self.decor = set()          # cells whose only object is 1x1 decor (walkable)
         self.roof = set()           # cells under a roof (solid)
-        self.solid_extra = set()
         self.walls = set()          # cells holding a wall tile (Shade's "Wall" layers)
-        self.late_roof = set()      # roof cells added by interiors() (the tavern's and the smithy's)
+        self.late_roof = set()      # roof cells of the hidden roofs (the tavern's and the smithy's)
         self.floor = set()          # walkable interior floor (interiors())
+        self.hill = set()           # cells of the mine's hill: solid rock
+        self.road = set()
+        self.yard = set()           # cells all of whose corners are dirt: no road tile is drawn there
+        self.keep = set()           # cells no tree's trunk or crown may cover (set by place_trees)
         self.ents = {"buildings": [], "stations": [], "trees": [], "deposits": [], "fields": [],
                      "stalls": [], "plots": [], "pens": [], "woods": [], "spawns": {}, "mine": None,
                      "containers": []}
         self.free = pwt.load(AssetZip(pwt.ZIP))
+        _, _, ids, self.wang, self.paths = self.free
+        self.GRASS, self.DIRT, self.CLIFF = ids["grass"], ids["dirt"], ids["cliff"]
+        self.corner = [[self.GRASS] * (W + 1) for _ in range(H + 1)]
         self.paid = AssetZip(PAID)
         self.samples = {}
+        self.named_cache = {}
+        self.foot_cache = {}
 
     # ---- layers -----------------------------------------------------------------------------
     def layer(self, cat, i):
@@ -188,6 +273,7 @@ class Village:
 
     # ---- sample maps ------------------------------------------------------------------------
     def sample(self, name):
+        """The visible tile layers of a sample map: [(layer path, data)] (hidden groups left out)."""
         if name not in self.samples:
             d = json.loads(self.paid.text(SAMPLE.format(name)))
             out = []
@@ -207,55 +293,132 @@ class Village:
     def category(layer_name):
         n = layer_name.split("/")[-1]
         if "Grass" in n or n.startswith("Ground") or n == "Dirt" or n.startswith("Floor") or n == "Roof":
-            return "ground"     # the cave sample's raised plateau ("Roof/Roof") is walkable rock floor
+            return "ground"
         if "Top" in n or "Roof" in layer_name:
             return "above"
         return "below"
 
-    def paste_sample(self, name, ox, oy, rect=None):
-        """Copy a sample map (or a rect of it) to (ox, oy). Returns nothing; records roofs and
-        1x1 decorations for the collision pass."""
-        rx, ry, rw, rh = rect or (0, 0, 30, 30)
-        counters = {c: 0 for c in CATS}
+    def named(self, name):
+        """A sample's visible layers as [(cat, index, layer path, data, source cat)]: the layer a tile goes
+        to in the village. Indices count in the sample's layer order per category, as in generators v1-v5
+        (so the roofs stay in above3 / above4); the tree layer is dropped. The tops of objects ("Object Top",
+        "Object Top Offset") have the category "top": stamp() puts each in below3 / below4 or leaves it in
+        its above layer, by what stands under it (generator v6)."""
+        if name not in self.named_cache:
+            counters = {c: 0 for c in CATS}
+            out = []
+            for lname, data in self.sample(name):
+                cat = self.category(lname)
+                idx = counters[cat]
+                counters[cat] += 1
+                base = lname.split("/")[-1]
+                if base == "Tree Top":
+                    continue
+                if base in TOP_LAYERS:
+                    out.append(("top", idx, lname, data, cat))
+                else:
+                    out.append((cat, idx, lname, data, cat))
+            self.named_cache[name] = out
+        return self.named_cache[name]
+
+    def footprint(self, name):
+        """The sample cells under a building's roof (visible or hidden), where its own floor is drawn."""
+        if name not in self.foot_cache:
+            cells = set()
+            for lname, data in self.sample(name):
+                if "Roof" in lname:
+                    cells |= {(i % 30, i // 30) for i, t in enumerate(data) if 0 <= t < PEOPLE_MIN}
+            d = json.loads(self.paid.text(SAMPLE.format(name)))
+            for g in d["layers"]:
+                if g["type"] == "group" and g["name"] == "Roof":
+                    for lay in [l for l in g["layers"] if l["type"] == "tilelayer"][:2]:
+                        cells |= {(i % 30, i // 30) for i, v in enumerate(lay["data"])
+                                  if 0 <= (v & 0x1FFFFFFF) - 1 < PEOPLE_MIN}
+            self.foot_cache[name] = cells
+        return self.foot_cache[name]
+
+    def stamp(self, name, rect, ox, oy, hidden_roof=False):
+        """Copy a building of a sample map to (ox, oy): everything in `rect` except the sample's grass,
+        dirt patches, trees and people. Ground tiles (the floors) only under the building's roof; the
+        village's own wang ground is everywhere else. Records roofs, walls, doorways and 1x1 decorations
+        for the collision pass."""
+        rx, ry, rw, rh = rect
+        foot = self.footprint(name)
         objs = {}
-        for lname, data in self.sample(name):
-            cat = self.category(lname)
-            idx = counters[cat]
-            counters[cat] += 1
-            roof = "Roof" in lname and name != "cave-1"
+        tops = []
+        for cat, idx, lname, data, src in self.named(name):
+            base = lname.split("/")[-1]
+            roof = "Roof" in lname
             for y in range(rh):
                 for x in range(rw):
-                    t = data[(ry + y) * 30 + rx + x]
+                    sx, sy = rx + x, ry + y
+                    t = data[sy * 30 + sx]
                     if t < 0 or t >= PEOPLE_MIN:
                         continue
-                    self.put(cat, idx, ox + x, oy + y, tile_val(0, t))
+                    X, Y = ox + x, oy + y
+                    if cat == "ground":
+                        if (sx, sy) not in foot:
+                            continue
+                    elif is_tree_tile(t):
+                        continue
+                    if cat == "top":
+                        tops.append((idx, TOP_LAYERS[base], X, Y, t))
+                        continue
+                    self.put(cat, idx, X, Y, tile_val(0, t))
                     if roof:
-                        self.roof.add((ox + x, oy + y))
-                    if cat == "below":
+                        self.roof.add((X, Y))
+                    if src == "below":
                         objs.setdefault((x, y), []).append(t)
-                        if "Wall" in lname.split("/")[-1]:
-                            self.walls.add((ox + x, oy + y))
+                        if "Wall" in base:
+                            self.walls.add((X, Y))
                         if t in DOORS:
-                            self.walkable_override.add((ox + x, oy + y))
+                            self.walkable_override.add((X, Y))
+        if hidden_roof:
+            self.hidden_roof(name, rect, ox, oy)
+        for idx, below_idx, X, Y, t in tops:
+            self.put_top(idx, below_idx, X, Y, tile_val(0, t))
         # 1x1 objects with nothing around them and nothing on top are decorations (flowers, rocks)
         for (x, y), ts in objs.items():
+            X, Y = ox + x, oy + y
             alone = all((x + dx, y + dy) not in objs for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
-            top = any(self.get("above", i, ox + x, oy + y - 1) >= 0 or self.get("above", i, ox + x, oy + y) >= 0
-                      for i in range(4))
+            top = any(self.get(c, i, X, Y - d) >= 0 for d in (0, 1) for c, i in TOPS)
             if alone and not top and len(ts) == 1:
-                self.decor.add((ox + x, oy + y))
+                self.decor.add((X, Y))
 
-    def stamp_from_sample(self, name, rect, ox, oy):
-        self.paste_sample(name, ox, oy, rect)
+    def base_at(self, x, y):
+        """Whether a cell holds an object of its own (not the top of one)."""
+        return any(self.get("below", i, x, y) >= 0 for i in (0, 1, 2, 5))
 
-    # ---- generated content ------------------------------------------------------------------
-    def grass(self, x0, y0, w, h):
-        _, _, ids, tiles, _ = self.free
-        g = ids["grass"]
-        opts = tiles[(g, g, g, g)]
-        for y in range(y0, y0 + h):
-            for x in range(x0, x0 + w):
-                self.put("ground", 0, x, y, tile_val(1, self.rng.choice(opts)))
+    def put_top(self, idx, below_idx, x, y, val):
+        """The top of an object (Shade's "Object Top" layers): drawn under the characters, over its base, when a
+        base stands in the cell (the items on a table, bench or shelf) or directly south of it (the top half
+        of a rack or an armour stand); then no one can stand under half an object, and a cell holding only
+        a top is solid like the base below it. Over a doorway or an open passage it stays over the
+        characters (a lintel, a hanging): they walk under it."""
+        door = (x, y) in self.walkable_override
+        if not door and (self.base_at(x, y) or (self.base_at(x, y + 1) and (x, y + 1) not in self.walls
+                                                and (x, y + 1) not in self.walkable_override)):
+            self.put("below", below_idx, x, y, val)
+        else:
+            self.put("above", idx, x, y, val)
+
+    def hidden_roof(self, name, rect, ox, oy):
+        """The roof group Shade drew for a sample map but left hidden in Tiled, inside `rect`: its first
+        layer (the roof itself) into above3, its roof objects (chimneys, dormers) into above4 and its
+        fence into above5."""
+        rx, ry, rw, rh = rect
+        d = json.loads(self.paid.text(SAMPLE.format(name)))
+        group = next(g for g in d["layers"] if g["type"] == "group" and g["name"] == "Roof")
+        for j, lay in enumerate(l for l in group["layers"] if l["type"] == "tilelayer"):
+            for y in range(rh):
+                for x in range(rw):
+                    t = (lay["data"][(ry + y) * 30 + rx + x] & 0x1FFFFFFF) - 1
+                    if t < 0 or t >= PEOPLE_MIN:
+                        continue
+                    target = 3 + min(j, 2)
+                    assert self.get("above", target, ox + x, oy + y) < 0, f"roof tile over another at {(ox + x, oy + y)}"
+                    self.put("above", target, ox + x, oy + y, tile_val(0, t))
+                    self.late_roof.add((ox + x, oy + y))
 
     def canopy_pairs(self):
         """(top, bottom) canopy tiles of Shade's two-tile trees, from sample village 1's Tree Top
@@ -272,7 +435,8 @@ class Village:
     def tree_stamps(self):
         """(stump, top, bottom) trees from sample village 1. Shade draws a tree as two canopy tiles in
         the Tree Top layer (the bottom one holds the trunk) over a stump in the Objects layer: the
-        stump cell is the trunk, and is the tree's only solid cell."""
+        stump cell is the trunk, and is the tree's only solid cell. The game takes the species from the
+        tiles (World._tree_species); the tiles themselves are never drawn."""
         layers = dict(self.sample("village-1"))
         objs, tops = layers["Objects"], layers["Tree Top"]
         canopy = set(self.canopy_pairs())
@@ -284,147 +448,500 @@ class Village:
                     stamps.add((stump, top, bottom))
         return sorted(stamps)
 
-    def place_tree(self, x, y, kind=None):
-        # v1 drew from 22 (object, top) pairs; drawing the same range keeps every tree, and everything
-        # generated after the forests, where it was
-        stump, top, bottom = kind or self.trees[self.rng.randrange(TREE_DRAWS) % len(self.trees)]
-        self.put("below", 0, x, y, tile_val(0, stump))
-        self.put("above", 0, x, y - 1, tile_val(0, top))
-        self.put("above", 0, x, y, tile_val(0, bottom))
-        self.ents["trees"].append({"x": x, "y": y, "trunk": stump, "top": top, "bottom": bottom})
-
-    def free_cell(self, x, y):
-        return (0 <= x < W and 0 <= y < H and not self.has_object(x, y) and (x, y) not in self.roof
-                and all(self.get("above", i, x, y) < 0 for i in range(4)))
-
-    def forest(self, x0, y0, w, h, density, clear=()):
-        for y in range(y0 + 1, y0 + h):
-            for x in range(x0, x0 + w):
-                if any(cx <= x < cx + cw and cy <= y < cy + chh for cx, cy, cw, chh in clear):
+    # ---- ground (the free tileset's corner wangset) ------------------------------------------
+    def blob(self, cx, cy, rx, ry, terrain, salt, wobble=0.16, power=2.0):
+        """Set the corners inside an irregular, rounded shape (an ellipse, or with a high `power` a
+        rounded rectangle) to `terrain`."""
+        for y in range(int(cy - ry) - 3, int(cy + ry) + 4):
+            for x in range(int(cx - rx) - 3, int(cx + rx) + 4):
+                if not (0 <= x <= W and 0 <= y <= H):
                     continue
-                if (self.rng.random() < density and self.free_cell(x, y) and self.free_cell(x, y - 1)
-                        and not any(abs(t["x"] - x) + abs(t["y"] - y) < 2 for t in self.ents["trees"][-40:])):
-                    self.place_tree(x, y)
+                d = (abs((x - cx) / rx) ** power + abs((y - cy) / ry) ** power) ** (1 / power)
+                if d + (vnoise(x, y, 4, salt) - 0.5) * wobble * 2 <= 1.0:
+                    self.corner[y][x] = terrain
 
-    def house(self, ox, oy, kind="house"):
-        """Shade's small house from sample village 1 (9 x 10 tiles, door at (4, 8))."""
-        self.stamp_from_sample("village-1", (2, 10, 9, 10), ox, oy)
-        b = {"id": f"b{len(self.ents['buildings'])}", "type": kind, "x": ox, "y": oy, "w": 9, "h": 10,
-             "door": [ox + 4, oy + 9]}
-        self.walkable_override.add((ox + 4, oy + 8))
-        self.ents["buildings"].append(b)
-        return b
+    def dirt(self, x0, y0, x1, y1, salt, power=4.0):
+        """A dirt yard over the cells x0..x1, y0..y1: a rounded rectangle with a wobbling edge."""
+        self.blob((x0 + x1 + 1) / 2, (y0 + y1 + 1) / 2, (x1 - x0 + 1) / 2 + 0.5, (y1 - y0 + 1) / 2 + 0.5,
+                  self.DIRT, salt, power=power)
 
+    def grass_corners(self, x0, y0, x1, y1):
+        for y in range(y0, y1 + 2):
+            for x in range(x0, x1 + 2):
+                self.corner[y][x] = self.GRASS
+
+    def paint_ground(self):
+        """The ground layer: one wang tile per cell from its four corners (grass, dirt or cliff)."""
+        for y in range(H):
+            for x in range(W):
+                key = (self.corner[y][x], self.corner[y][x + 1], self.corner[y + 1][x + 1], self.corner[y + 1][x])
+                assert not (self.CLIFF in key and self.DIRT in key), f"cliff meets dirt at {(x, y)}"
+                self.put("ground", 0, x, y, tile_val(1, self.rng.choice(sorted(self.wang[key]))))
+                if key == (self.DIRT,) * 4:
+                    self.yard.add((x, y))
+                if self.CLIFF in key:
+                    self.hill.add((x, y))
+
+    # ---- buildings --------------------------------------------------------------------------
     def building(self, kind, x, y, w, h, door, **extra):
         b = {"id": f"b{len(self.ents['buildings'])}", "type": kind, "x": x, "y": y, "w": w, "h": h,
              "door": list(door), **extra}
         self.ents["buildings"].append(b)
         return b
 
+    def civic(self, sample, rect, hidden_roof=False):
+        """Stamp a civic building of a sample at the place its sample put it (ORIGIN + the rect's corner)."""
+        ox, oy = ORIGIN[sample][0] + rect[0], ORIGIN[sample][1] + rect[1]
+        self.stamp(sample, rect, ox, oy, hidden_roof)
+        return ox, oy
+
+    def house(self, ox, oy, kind="house", **extra):
+        """Shade's small house from sample village 1 (9 x 10 tiles, door step at (4, 9))."""
+        self.stamp("village-1", HOUSE_RECT, ox, oy)
+        b = self.building(kind, ox, oy, 9, 10, (ox + 4, oy + 9), **extra)
+        self.walkable_override.add((ox + 4, oy + 8))
+        return b
+
     def station(self, kind, use, building=None, at=None):
         self.ents["stations"].append({"id": f"s{len(self.ents['stations'])}", "type": kind,
                                       "use": list(use), "at": list(at or use), "building": building})
 
-    # ---- districts --------------------------------------------------------------------------
+    # ---- the layout --------------------------------------------------------------------------
     def build(self):
         self.trees = self.tree_stamps()
-        for cy in range(3):
-            for cx in range(4):
-                self.grass(cx * CH, cy * CH, CH, CH)
+        E = self.ents
 
-        # row 1: Shade's three village samples
-        self.paste_sample("village-1", 0, CH)
-        self.ents["buildings"].append({"id": "b_v1_house", "type": "house", "x": 2, "y": CH + 10, "w": 9, "h": 10,
-                                       "door": [6, CH + 19]})
-        self.ents["buildings"].append({"id": "b_manor", "type": "manor", "x": 14, "y": CH + 6, "w": 15, "h": 18,
-                                       "door": [23, CH + 22]})
-        self.paste_sample("village-3", CH, CH)
-        ox, oy = CH, CH
-        tav = self.building("tavern", ox + 4, oy + 8, 23, 14, (ox + 8, oy + 22), name="The Well House")
-        self.station("tavern_counter", (ox + 12, oy + 11), tav["id"], at=(ox + 12, oy + 10))
-        self.station("oven", (ox + 23, oy + 18), tav["id"], at=(ox + 24, oy + 17))
-        self.station("stove", (ox + 22, oy + 18), tav["id"], at=(ox + 22, oy + 17))
-        self.station("well", (ox + 15, oy + 25), None, at=(ox + 16, oy + 25))
-        # the door is in front of the hut's doorway (generator v4: v1-v3 put it one cell left, so only
-        # a diagonal step reached the doorway and the player could not get in)
-        self.building("hut", ox + 8, oy + 1, 3, 3, (ox + 10, oy + 4), name="Sage's hut")
-        self.paste_sample("village-2", 2 * CH, CH)
-        ox = 2 * CH
-        smithy = self.building("smithy", ox + 7, oy + 10, 16, 14, (ox + 11, oy + 24), name="Smithy and Armory")
-        self.station("forge", (ox + 17, oy + 12), smithy["id"], at=(ox + 17, oy + 11))
-        self.station("anvil", (ox + 18, oy + 14), smithy["id"], at=(ox + 17, oy + 13))
-        self.station("workbench", (ox + 19, oy + 16), smithy["id"], at=(ox + 19, oy + 17))
-        self.station("sawhorse", (ox + 18, oy + 15), smithy["id"], at=(ox + 17, oy + 15))
-        self.station("armory_counter", (ox + 11, oy + 14), smithy["id"], at=(ox + 11, oy + 13))
+        # --- civic buildings, where Shade's samples put them (ids as before) ---------------------
+        self.civic("village-1", HOUSE_RECT)
+        E["buildings"].append({"id": "b_v1_house", "type": "house", "x": 2, "y": CH + 10, "w": 9, "h": 10,
+                               "door": [6, CH + 19]})
+        self.walkable_override.add((6, CH + 18))
+        self.civic("village-1", MANOR_RECT)
+        E["buildings"].append({"id": "b_manor", "type": "manor", "x": 14, "y": CH + 6, "w": 15, "h": 18,
+                               "door": [23, CH + 22]})
+        self.civic("village-3", TAVERN_RECT, hidden_roof=True)
+        self.building("tavern", 34, 38, 23, 14, (38, 52), name="The Well House")                      # b2
+        self.civic("village-3", HUT_RECT, hidden_roof=True)
+        self.building("hut", 39, 31, 3, 3, (40, 34), name="Sage's hut")                               # b3
+        self.civic("village-2", SMITHY_RECT, hidden_roof=True)
+        self.building("smithy", 67, 40, 16, 14, (71, 54), name="Smithy and Armory")                   # b4
 
-        # row 0: mine highland (Shade's cave sample) between forests
-        self.paste_sample("cave-1", CH, 0)
-        self.ents["mine"] = {"entrance": [CH + 21, 15], "yard": [CH + 9, 22]}
-        self.station("mine_cart", (CH + 9, 22), None, at=(CH + 9, 21))
-        self.place_deposits(CH, 0)
-        self.forest(0, 0, CH, CH, 0.16)
-        self.forest(2 * CH, 0, CH, CH, 0.15)
-        self.ents["woods"] = [{"id": "woods_w", "x": 1, "y": 1, "w": CH - 2, "h": CH - 2},
-                              {"id": "woods_e", "x": 2 * CH + 1, "y": 1, "w": CH - 2, "h": CH - 2}]
-        camp = (3 * CH + 14, 12)
-        self.forest(3 * CH, 0, CH, CH, 0.15, clear=[(camp[0] - 4, camp[1] - 4, 9, 9)])
-        self.put("below", 0, camp[0], camp[1], tile_val(0, CAMPFIRE))
-        for dx, dy, t in ((-2, -1, CRATE), (2, -1, BARREL), (-2, 2, BARREL), (2, 2, CRATE)):
-            self.put("below", 0, camp[0] + dx, camp[1] + dy, tile_val(0, t))
-        self.ents["spawns"]["bandit_camp"] = [camp[0], camp[1] + 1]
+        # --- houses: 20 more of Shade's small house along the lanes (b5-b24) ----------------------
+        # (lane row, y offset of the row's houses above it, xs): a house stands 10 rows above its lane,
+        # so its door step (4, 9) is next to the lane; some stand a row higher and have a longer path
+        rows = [(43, (90, 100, 110), (-1, 2)), (57, (90, 100, 110), (-1, 2)),     # east houses, b5-b10
+                (71, (1, 11, 21), (0, 2)), (85, (1, 11, 21), (0, 2)),             # west houses, b11-b16
+                (71, (90, 100, 110), (-1, 2)), (85, (90, 100, 110), (-1, 2))]     # south-east houses, b17-b22
+        self.lanes = []
+        for lane, xs, (lo, hi) in rows:
+            # x shifts never decrease along a row, so neighbours keep a gap; y shifts give some a longer path
+            dxs = sorted(lo + int(_hash(i, lane, 3) * (hi - lo)) for i in range(len(xs)))
+            for x, dx in zip(xs, dxs):
+                oy = lane - 10 - int(_hash(x, lane, 4) * 2)
+                self.house(x + dx, oy)
+                self.lanes.append(road_cells((x + dx + 4, oy + 9), (x + dx + 4, lane)))
+        for x, lane in ((2, 35), (16, 35)):                             # b23, b24: the north-west hamlet
+            oy = lane - 10
+            self.house(x, oy)
+            self.lanes.append(road_cells((x + 4, oy + 9), (x + 4, lane)))
+        sawmill = self.sawmill(64, 20)
+        self.lanes.append(road_cells((68, 29), (68, 30)))
 
-        # rows 1-2: generated house districts, market and farms
-        homes = []
-        for cx, cy in ((3, 1), (0, 2), (3, 2)):
-            ox, oy = cx * CH, cy * CH
-            for j in range(2):
-                for i in range(3):
-                    homes.append(self.house(ox + 1 + i * 10, oy + 2 + j * 14))
-            self.forest(ox, oy, CH, CH, 0.06)
-        # market square with stalls, plus two houses
-        ox, oy = CH, 2 * CH
-        for i in range(2):
-            homes.append(self.house(ox + 1 + i * 20, oy + 2))
-        self.market(ox + 4, oy + 15)
+        # --- roads ------------------------------------------------------------------------------
+        self.roads()
+        # --- ground: dirt yards, the mine's hill ----------------------------------------------------
+        self.yards()
+        self.mine_hill()
+        self.paint_ground()
+
+        # --- things on the ground ---------------------------------------------------------------
+        E["mine"] = self.mine()
+        self.stations(sawmill)
+        self.market(36, 63)
         for i, kind in enumerate(PENS):
-            self.pen(kind, ox + 1 + i * 7, oy + 20, 7, 6)
-        # farms
-        ox = 2 * CH
+            self.pen(kind, 33 + i * 7, 76, 7, 6)
         for j in range(3):
             for i in range(2):
-                self.field(ox + 2 + i * 14, oy + 2 + j * 9, 11, 6)
-        self.forest(ox, oy, CH, CH, 0.03, clear=[(ox, oy, CH, CH - 2)])
-        # plots the player can buy and build on: two clearings at the forest edge north of the east
-        # houses (generator v1 put them over houses b20-b22). Only the trees standing on them are
-        # removed, after the forests, so every other tree stays where v1 put it.
-        self.plots(((3 * CH, 20), (3 * CH + 17, 20)))
-        self.ents["spawns"]["player"] = [CH + 14, CH + 23]
-        self.roads()
+                self.field(64 + i * 13, 61 + j * 9, 11, 6)
+        self.camp(104, 13)
+        self.plots(((90, 20), (107, 20)))
+        E["woods"] = [{"id": "woods_w", "x": 1, "y": 1, "w": 28, "h": 22},
+                      {"id": "woods_e", "x": 66, "y": 1, "w": 24, "h": 17}]
+        E["spawns"]["player"] = [44, 53]
+        self.place_trees()
+        self.place_boulders()
+        self.place_plants()
+        self.draw_roads()
         self.containers()
         self.interiors()
         return self
 
+    # ---- roads and yards ---------------------------------------------------------------------
+    def roads(self):
+        """The road network, laid out by hand: Main Street east-west and Mill Road north-south cross at the
+        village's heart and run out to the map's edge (the four exits); lanes serve the houses, the market,
+        the pens and the fields; the Woods Road runs north to the woodcutters' clearing; the Mine Road
+        and the Quarry Link join the mine's yard."""
+        r = set()
+        for pts in (
+            ((0, 57), (119, 57)),                        # Main Street: the west and east exits
+            ((62, 0), (62, 86), (SOUTH_X, 86), (SOUTH_X, 89)),   # Mill Road: the north and south exits
+            ((31, 24), (31, 85)),                        # Woods Road, and the way south to the lanes
+            ((2, 35), (52, 35)),                         # the north lane: hamlet, sage's hut, tavern's back door, Mine Road
+            ((38, 35), (38, 37)),
+            ((40, 34), (40, 35)),
+            ((52, 35), (52, 14)),                        # Mine Road
+            ((52, 20), (62, 20)),                        # Quarry Link
+            ((62, 30), (68, 30)),                        # the sawmill's lane
+            ((2, 71), (33, 71)), ((2, 85), (118, 85)),   # the west lane, the south lane
+            ((88, 30), (88, 85)),                        # the east connector
+            ((88, 30), (118, 30)), ((88, 43), (118, 43)), ((88, 71), (118, 71)),
+            ((94, 29), (94, 30)), ((111, 29), (111, 30)),   # the building plots' door steps
+            ((31, 75), (62, 75)),                        # the pens' lane
+            ((75, 57), (75, 85)),                        # between the fields
+            ((62, 68), (88, 68)), ((62, 77), (88, 77)),
+            ((6, 49), (6, 57)), ((23, 52), (23, 57)),    # the old house, the manor
+            ((38, 52), (38, 57)), ((71, 54), (71, 57)),  # the tavern, the smithy
+        ):
+            r.update(road_cells(*pts))
+        for cells in self.lanes:
+            r.update(cells)
+        self.road = r
+
+    def yards(self):
+        """Dirt yards of the free tileset's dirt terrain: round the tavern, in its court, the market, the
+        crossing, the smithy, the sawmill, the mine and the woodcutters' clearing and the bandits' camp."""
+        self.dirt(34, 52, 55, 57, 11, power=3.0)         # the tavern's yard and terrace, Main Street's west side
+        self.dirt(43, 47, 47, 51, 12)                    # the tavern's inner court (open to the south)
+        self.dirt(58, 53, 66, 61, 13, power=2.5)         # the crossing: Mill Road and Main Street
+        self.dirt(68, 54, 82, 57, 14, power=3.0)         # the smithy's yard
+        self.dirt(35, 60, 59, 68, 15, power=3.0)         # the market
+        self.dirt(63, 24, 74, 31, 16, power=3.0)         # the sawmill's yard
+        self.dirt(37, 12, 61, 23, 17, power=3.0)         # the mine's yard
+        self.dirt(27, 20, 34, 25, 18, power=2.5)         # the woodcutters' clearing, end of the Woods Road
+        self.blob(104, 13, 7, 5.5, self.DIRT, 19)        # the bandits' camp
+        # two flower beds on the market's edge: grass islands in the dirt
+        for cx, cy in ((41, 66), (55, 66)):
+            self.blob(cx, cy, 2.2, 1.6, self.GRASS, 20 + cx)
+
+    def mine_hill(self):
+        """The mine's hill: a plateau of the free tileset's cliff terrain (a raised, rock-rimmed top; solid,
+        the same rock as the overworld's mountains) with the timbered adit cut into its south face."""
+        rows = {3: (45, 53), 4: (42, 56), 5: (40, 58), 6: (39, 59), 7: (39, 59), 8: (40, 58), 9: (42, 56)}
+        for y, (a, b) in rows.items():
+            for x in range(a, b + 1):
+                self.corner[y][x] = self.CLIFF
+        for y in (10, 11):                               # a strip of grass between the rock face and the yard
+            for x in range(36, 63):
+                if self.corner[y][x] == self.DIRT:
+                    self.corner[y][x] = self.GRASS
+        self.adit = (48, 9)                              # the face cell the adit is drawn over
+        self.put("below", 2, self.adit[0], self.adit[1], ADIT)
+
+    # ---- the mine ----------------------------------------------------------------------------
+    def mine(self):
+        """The track runs from the adit's mouth south to the cart stop in the yard: rail, then the cart
+        standing on it, then the rail's end. Ore seams lie on the yard, each reachable on foot."""
+        x = self.adit[0]
+        for y in range(10, 19):
+            self.put("below", 2, x, y, tile_val(0, RAIL_TOP if y == 10 else RAIL_END if y == 18 else RAIL_V))
+            self.decor.add((x, y))
+        self.put("below", 3, x, 16, tile_val(0, MINE_CART))      # the cart on its rail
+        self.decor.discard((x, 16))
+        self.cart = (x, 16)
+        # crates and barrels of the mine's stores by the adit
+        for cx, cy, t in ((44, 12, CRATE), (45, 12, CRATE), (44, 13, BARREL), (53, 12, BARREL), (54, 12, CRATE)):
+            self.put("below", 1, cx, cy, tile_val(0, t))
+        self.place_deposits()
+        return {"entrance": [x, 10], "yard": [51, 21]}
+
+    def place_deposits(self):
+        """Ore rocks on the mine's yard, in two seams either side of the track: only cells with grass-free
+        dirt all round, off the track and the roads, at least three apart and each with three open
+        neighbours, so every one can be reached on foot."""
+        rng = self.rng
+        cands = []
+        for y in range(13, 25):
+            for x in range(37, 60):
+                c = (x, y)
+                if (x, y) not in self.yard or not all(n in self.yard for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))):
+                    continue
+                if abs(x - self.adit[0]) <= 2 or c in self.road or any(n in self.road for n in ((x + 1, y + 1), (x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1))):
+                    continue
+                if self.has_object(x, y) or any(self.has_object(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                    continue
+                cands.append(c)
+        rng.shuffle(cands)
+        plan = ["iron_ore", "coal", "stone", "iron_ore", "copper_ore", "coal", "iron_ore", "stone",
+                "iron_ore", "coal", "stone", "iron_ore", "copper_ore", "coal"]
+        taken = []
+        for ore in plan:
+            for c in cands:
+                if all(abs(c[0] - t[0]) + abs(c[1] - t[1]) >= 3 for t in taken):
+                    taken.append(c)
+                    cands.remove(c)
+                    self.put("below", 0, c[0], c[1], tile_val(0, ORE[ore]))
+                    self.ents["deposits"].append({"x": c[0], "y": c[1], "ore": ore,
+                                                  "amount": {"gold_ore": 8, "stone": 80, "coal": 50,
+                                                             "copper_ore": 30}.get(ore, 60)})
+                    break
+        assert len(self.ents["deposits"]) == len(plan), "not enough room for the ore seams"
+
+    # ---- the sawmill -------------------------------------------------------------------------
+    def sawmill(self, ox, oy):
+        """The sawmill: the small house fitted for sawing (the sawhorse and grindstone of Shade's carpenter's
+        corner), its door facing the sawmill's lane, planks and logs piled in its yard."""
+        b = self.house(ox, oy, "sawmill", name="Sawmill")
+        for x, y in HOUSE_CLEAR:
+            for cat, i in (("below", 1), ("below", 3), ("below", 4), ("above", 0), ("above", 1)):
+                self.put(cat, i, ox + x, oy + y, -1)
+        for st in SAWMILL_STATIONS:
+            for (x, y), (sx, sy) in st["paste"]:
+                for name in st["layers"]:
+                    key = (name[:-1], int(name[-1]))
+                    v = self.layers[key][sy * W + sx] if key in self.layers else -1
+                    if v >= 0:
+                        self.put(key[0], key[1], ox + x, oy + y, v)
+        # piles of planks and logs in the yard, east of the shed
+        for dx, dy, t in ((10, 5, 1024), (11, 5, 1025), (10, 7, 1025), (11, 7, 1024)):
+            self.put("below", 1, ox + dx, oy + dy, tile_val(0, t))
+        return b
+
+    def stations(self, sawmill):
+        """Workstations, in a fixed order (their ids s0-s9 are quoted by tests): the tavern's, the well, the
+        smithy's, the sawmill's sawhorse, the armory's counter and the mine's cart."""
+        tav = "b2"
+        smithy = "b4"
+        self.station("tavern_counter", (42, 41), tav, at=(42, 40))
+        self.station("oven", (53, 48), tav, at=(54, 47))
+        self.station("stove", (52, 48), tav, at=(52, 47))
+        self.station("well", (45, 55), None, at=(46, 55))
+        self.station("forge", (77, 42), smithy, at=(77, 41))
+        self.station("anvil", (78, 44), smithy, at=(77, 43))
+        self.station("workbench", (79, 46), smithy, at=(79, 47))
+        ox, oy = sawmill["x"], sawmill["y"]
+        self.station("sawhorse", (ox + 3, oy + 6), sawmill["id"], at=(ox + 2, oy + 6))
+        self.station("armory_counter", (71, 44), smithy, at=(71, 43))
+        self.station("mine_cart", (self.cart[0] + 1, self.cart[1]), None, at=self.cart)
+
+    # ---- market, pens, fields, camp, plots --------------------------------------------------------
+    def market(self, x0, y0):
+        """Six stalls in a row on the market's dirt: a table and a crate or barrel each, facing south."""
+        tables = dict(self.sample("village-3"))["Floor 1/Objects"]
+        table = tables[22 * 30 + 6]          # wooden table from the tavern terrace
+        for i in range(6):
+            x = x0 + i * 4
+            for (dx, dy, t) in ((0, 0, table), (1, 0, CRATE if i % 2 else BARREL)):
+                self.put("below", 0, x + dx, y0 + dy, tile_val(0, t))
+            self.ents["stalls"].append({"id": f"stall{i}", "x": x, "y": y0, "use": [x, y0 + 1]})
+
+    def field(self, x, y, w, h):
+        self.ents["fields"].append({"id": f"f{len(self.ents['fields'])}", "x": x, "y": y, "w": w, "h": h})
+        for j in range(h):
+            for i in range(w):
+                self.put("path", 1, x + i, y + j, tile_val(0, field_cell_tile(FIELD_TILES["ripe"], w, h, i, j)))
+
+    def pen(self, kind, x, y, w, h):
+        """A fenced pen with a gate in the middle of the top side. The fence is solid, the gate is
+        walkable; animals stay on the inner cells."""
+        gate = (x + w // 2, y)
+        for j in range(h):
+            for i in range(w):
+                X, Y = x + i, y + j
+                edge = {(0, 0): "tl", (w - 1, 0): "tr", (0, h - 1): "bl", (w - 1, h - 1): "br"}.get((i, j))
+                if edge is None:
+                    edge = "t" if j == 0 else "b" if j == h - 1 else "l" if i == 0 else "r" if i == w - 1 else None
+                if edge is None:
+                    continue
+                self.put("below", 5, X, Y, COZY + (GATE if (X, Y) == gate else FENCE[edge]))
+        self.walkable_override.add(gate)
+        self.ents["pens"].append({"id": f"pen_{kind}", "kind": kind, "x": x, "y": y, "w": w, "h": h,
+                                  "gate": list(gate), "feed_at": [gate[0], gate[1] - 1]})
+
+    def camp(self, cx, cy):
+        """The bandits' camp: a campfire with crates and barrels round it, in a clearing of the forest."""
+        self.put("below", 0, cx, cy, tile_val(0, CAMPFIRE))
+        for dx, dy, t in ((-2, -1, CRATE), (2, -1, BARREL), (-2, 2, BARREL), (2, 2, CRATE)):
+            self.put("below", 0, cx + dx, cy + dy, tile_val(0, t))
+        self.ents["spawns"]["bandit_camp"] = [cx, cy + 1]
+
+    def plots(self, corners):
+        for i, (x, y) in enumerate(corners):
+            self.ents["plots"].append({"id": f"plot{i}", "x": x, "y": y, "w": 9, "h": 10,
+                                       "door": [x + 4, y + 9], "price": 60})
+
+    # ---- trees and plants --------------------------------------------------------------------------
+    def rect_cells(self, x, y, w, h, grow=0):
+        return {(i, j) for j in range(y - grow, y + h + grow) for i in range(x - grow, x + w + grow)}
+
+    def protected(self):
+        """Cells a tree's trunk must not stand on: every object, building and its door yard, road (with a
+        margin), field, pen, plot, yard, the hill, the camp and the mine's track."""
+        keep = set()
+        for b in self.ents["buildings"]:
+            keep |= self.rect_cells(b["x"], b["y"], b["w"], b["h"], 1)
+            dx, dy = b["door"]
+            keep |= self.rect_cells(dx - 1, dy, 3, 3)
+        for f in self.ents["fields"] + self.ents["pens"] + self.ents["plots"]:
+            keep |= self.rect_cells(f["x"], f["y"], f["w"], f["h"], 1)
+        for s in self.ents["stalls"]:
+            keep |= self.rect_cells(s["x"] - 1, s["y"] - 1, 4, 4)
+        for s in self.ents["stations"]:
+            keep |= self.rect_cells(s["use"][0] - 1, s["use"][1] - 1, 3, 3)
+        for d in self.ents["deposits"]:
+            keep |= self.rect_cells(d["x"] - 1, d["y"] - 1, 3, 3)
+        for c in self.road:
+            keep |= self.rect_cells(c[0] - 1, c[1] - 1, 3, 3)
+        camp = self.ents["spawns"]["bandit_camp"]
+        keep |= self.rect_cells(camp[0] - 4, camp[1] - 4, 9, 9)
+        keep |= self.rect_cells(self.adit[0] - 2, 9, 5, 11)
+        for (cat, i), data in self.layers.items():
+            if cat in ("below", "above"):
+                keep |= {(k % W, k // W) for k, v in enumerate(data) if v >= 0}
+        for y in range(H):                  # ground that is not plain grass: dirt, the hill's rock
+            for x in range(W):
+                if {self.corner[y][x], self.corner[y][x + 1], self.corner[y + 1][x], self.corner[y + 1][x + 1]} != {self.GRASS}:
+                    keep.add((x, y))
+        return keep
+
+    def crown_keep(self):
+        """Cells a tree's crown (5 wide, up to 5 above the trunk) must not overhang: what people use."""
+        cb = set()
+        for b in self.ents["buildings"]:
+            cb |= self.rect_cells(b["x"], b["y"], b["w"], b["h"], 0)
+            dx, dy = b["door"]
+            cb |= self.rect_cells(dx - 1, dy - 1, 3, 3)
+        for f in self.ents["fields"] + self.ents["pens"] + self.ents["plots"]:
+            cb |= self.rect_cells(f["x"], f["y"], f["w"], f["h"], 0)
+        for s in self.ents["stalls"]:
+            cb |= self.rect_cells(s["x"] - 1, s["y"] - 1, 4, 3)
+        for s in self.ents["stations"]:
+            cb |= {tuple(s["use"]), tuple(s["at"])}
+        for d in self.ents["deposits"]:
+            cb.add((d["x"], d["y"]))
+        camp = self.ents["spawns"]["bandit_camp"]
+        cb |= self.rect_cells(camp[0] - 3, camp[1] - 3, 7, 7)
+        cb |= self.rect_cells(self.adit[0] - 1, 9, 3, 11)
+        cb |= self.yard
+        return cb
+
+    def density(self, x, y):
+        """How thickly trees stand at a cell, 0..1: the forests (the west and east woods, the bandits'
+        wood, the north band round the mine's hill), small groves elsewhere, thinning towards the
+        village's edge so the forest does not stop at a line where the overworld's meadow begins."""
+        def inside(x0, y0, x1, y1, soft):
+            dx = max(x0 - x, x - x1, 0)
+            dy = max(y0 - y, y - y1, 0)
+            return max(0.0, 1.0 - math.hypot(dx, dy) / soft)
+        woods = max(inside(0, 0, 29, 23, 4), inside(66, 0, 89, 17, 4), inside(90, 0, 119, 19, 3))
+        forest = max(woods, inside(0, 0, 119, 21, 6) * 0.55)
+        n = vnoise(x, y, 11, 31) * 0.65 + vnoise(x, y, 5, 32) * 0.35
+        grove = max(0.0, (vnoise(x, y, 13, 33) - 0.52) * 2.4)
+        clearing = 0.25 if vnoise(x, y, 8, 34) < 0.2 else 1.0
+        p = forest * (0.28 + 0.62 * n) * clearing + grove * 0.24
+        edge = min(x, W - 1 - x, y, H - 1 - y)
+        return p * min(1.0, edge / 10.0) ** 1.1
+
+    def place_trees(self):
+        """Trees: a natural scatter of the density field. Never on a protected cell, never with a crown over
+        a building, a field, a yard or a station, and no two within a tile of each other (so no tree walls
+        anything in). Records only; no tile is drawn."""
+        keep = self.protected()
+        self.keep = keep
+        blocked = self.crown_keep()
+        cells = sorted(((x, y) for y in range(1, H) for x in range(W)), key=lambda c: _hash(c[0], c[1], 5))
+        placed = set()
+        groups = {}
+        for stump, top, bottom in self.trees:
+            groups.setdefault({456: "leafy", 458: "autumn", 460: "conifer", 1120: "leafy", 1780: "mixed",
+                               1782: "mixed"}.get(bottom, "mixed"), []).append((stump, top, bottom))
+        for x, y in cells:
+            p = self.density(x, y)
+            if p <= 0 or _hash(x, y, 7) >= p or (x, y) in keep:
+                continue
+            if any((x + dx, y + dy) in placed for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                continue
+            if any((x + dx, y - dy) in blocked for dx in range(-2, 3) for dy in range(1, 6)):
+                continue
+            placed.add((x, y))
+            # the species of a patch: leafy and autumn oaks, mixed woods, conifers
+            u = vnoise(x, y, 14, 35)
+            group = "leafy" if u < 0.3 else "autumn" if u < 0.45 else "mixed" if u < 0.75 else "conifer"
+            kinds = groups.get(group) or self.trees
+            stump, top, bottom = kinds[int(_hash(x, y, 8) * len(kinds)) % len(kinds)]
+            self.ents["trees"].append({"x": x, "y": y, "trunk": stump, "top": top, "bottom": bottom})
+        self.ents["trees"].sort(key=lambda t: (t["y"], t["x"]))
+
+    def place_boulders(self):
+        """Small grey boulders (the plain boulder tile in below0): solid cells the game makes minable stone
+        (B8-026), scattered on open grass round the hill, the woods and the meadows' edge; never on or beside a
+        tree, road, door, station, plant, seam or yard, and never two within four tiles."""
+        keep = set(self.keep)
+        for t in self.ents["trees"]:
+            keep |= self.rect_cells(t["x"] - 1, t["y"] - 1, 3, 3)
+        placed = []
+        cells = sorted(((x, y) for y in range(3, H - 3) for x in range(3, W - 3)), key=lambda c: _hash(c[0], c[1], 21))
+        for x, y in cells:
+            if len(placed) == 18:
+                break
+            if (x, y) in keep or any(abs(x - px) < 4 and abs(y - py) < 4 for px, py in placed):
+                continue
+            if vnoise(x, y, 9, 43) < 0.55:
+                continue
+            placed.append((x, y))
+            self.put("below", 0, x, y, tile_val(0, DEPLETED_ROCK))
+            self.keep.add((x, y))
+
+    def place_plants(self):
+        """Wild flowers and berry bushes in loose patches on open grass (generator v5's gatherable
+        plants): never on a road, a yard, a door step or a use cell, nor on a tree."""
+        keep = set(self.keep)
+        for t in self.ents["trees"]:
+            keep.add((t["x"], t["y"]))
+            keep |= self.rect_cells(t["x"] - 1, t["y"] - 1, 3, 3)
+        for b in self.ents["buildings"]:
+            keep |= self.rect_cells(b["x"] - 1, b["y"] - 1, b["w"] + 2, b["h"] + 3)
+        for c in self.road:
+            keep.add(c)
+        out = []
+        kinds = [2657, 2658, 2658, 2660, 2662, 2662, 2657]
+        for y in range(1, H - 1):
+            for x in range(1, W - 1):
+                if (x, y) in keep:
+                    continue
+                patch = vnoise(x, y, 7, 41)
+                if patch < 0.48 or _hash(x, y, 9) > (patch - 0.40) * 1.1:
+                    continue
+                if any((x + dx, y + dy) in out for dx, dy in ((1, 0), (0, 1), (-1, 0), (0, -1))):
+                    continue
+                t = kinds[int(_hash(x, y, 10) * len(kinds))]
+                if t in (2660, 2662) and _hash(x, y, 12) > 0.5:
+                    t = 2657 + int(_hash(x, y, 13) * 2)
+                out.append((x, y))
+                self.put("below", 1, x, y, tile_val(0, t))
+
+    # ---- containers ---------------------------------------------------------------------------
     def containers(self):
-        """Interactable containers, read from the tiles already placed (no random numbers, so the rest
-        of the map is unchanged): crates and barrels by each house (its household's store), in and
-        around the tavern (its keepers' stock) and beside each market stall (the stall's), and each
-        dish or mug drawn on a tavern table (a table the tavern keepers set food on)."""
+        """Interactable containers, read from the tiles already placed (no random numbers): crates and
+        barrels by each house (its household's store), in and around the tavern (its keepers' stock) and
+        beside each market stall (the stall's), and each dish or mug drawn on a tavern table (a table
+        the tavern keepers set food on). Every one of a house's lies inside its rectangle: its door
+        yard, the cells Shade drew its crates in."""
         out = self.ents["containers"]
 
         def scan(at, x0, y0, x1, y1, dishes):
             for y in range(y0, y1):
                 for x in range(x0, x1):
                     below = [self.get("below", i, x, y) for i in range(6)]
-                    above = [self.get("above", i, x, y) for i in range(6)]
                     kind, dish = None, None
-                    if any(v in CRATE_TILES for v in below):
+                    if any(v in CRATE_TILES for v in below[:3] + below[5:]):
                         kind = "crate"
-                    elif any(v in BARREL_TILES for v in below):
+                    elif any(v in BARREL_TILES for v in below[:3] + below[5:]):
                         kind = "barrel"
-                    elif dishes and any(v in DISH_TILES for v in above):
+                    elif dishes and any(v in DISH_TILES for v in below[3:5]):
                         kind = "table"
-                        i = next(i for i, v in enumerate(above) if v in DISH_TILES)
-                        dish = {"dish": DISH_TILES[above[i]], "tile": above[i], "layer": f"above{i}"}
+                        i = next(i for i in (3, 4) if below[i] in DISH_TILES)
+                        dish = {"dish": DISH_TILES[below[i]], "tile": below[i], "layer": f"below{i}"}
                     if kind:
                         c = {"id": f"c{len(out)}", "kind": kind, "x": x, "y": y, "at": at}
                         if dish:
@@ -442,13 +959,11 @@ class Village:
     # ---- interiors (generator v3) -----------------------------------------------------------
     def interiors(self):
         """Give every roofed building an interior, after everything else is placed (no random numbers,
-        so no tree, building, plot, road or container moves): Shade's hidden tavern and smithy roofs,
-        beds in the small houses, the sage's hut's inner cell cleared, then for each building the cells
-        under its roof reached from its doors (`area`), the walkable ones (`floor`, made walkable here),
-        its roof tiles (faded by the game while the player is inside) and its use spots: beds, straw
-        pallets (homes get SLEEP_PLACES sleeping places), tables, hearths and chests."""
-        for name, dx, dy in HIDDEN_ROOFS:
-            self.paste_hidden_roof(name, dx * CH, dy * CH)
+        so no tree, building, plot, road or container moves): beds in the small houses, the sage's hut's
+        inner cell cleared, then for each building the cells under its roof reached from its doors
+        (`area`), the walkable ones (`floor`, made walkable here), its roof tiles (faded by the game while
+        the player is inside) and its use spots: beds, straw pallets (homes get SLEEP_PLACES sleeping
+        places), tables, hearths and chests."""
         for b in self.ents["buildings"]:
             if b["type"] == "hut":
                 for y in range(b["y"] - 1, b["y"] + b["h"] + 1):
@@ -484,28 +999,12 @@ class Village:
         for b in self.ents["buildings"]:
             b["interior"] = self.interior_of(b, comp, members)
 
-    def paste_hidden_roof(self, name, ox, oy):
-        """The roof group Shade drew for a sample map but left hidden in Tiled: its first layer (the
-        roof itself) into above3, its roof objects (chimneys, dormers) into above4 and its fence into above5."""
-        d = json.loads(self.paid.text(SAMPLE.format(name)))
-        group = next(g for g in d["layers"] if g["type"] == "group" and g["name"] == "Roof")
-        for j, lay in enumerate(l for l in group["layers"] if l["type"] == "tilelayer"):
-            for i, g in enumerate(lay["data"]):
-                t = (g & 0x1FFFFFFF) - 1
-                if t < 0 or t >= PEOPLE_MIN:
-                    continue
-                x, y = ox + i % 30, oy + i // 30
-                target = 3 + min(j, 2)
-                assert self.get("above", target, x, y) < 0, f"roof tile over another at {(x, y)}"
-                self.put("above", target, x, y, tile_val(0, t))
-                self.late_roof.add((x, y))
-
     def furnish_house(self, b):
         """Beds in Shade's small house (HOUSE_BEDS), where his straw mat, shelf and jars stood."""
         ox, oy = b["x"], b["y"]
         assert self.get("below", 1, ox + 1, oy + 2) in CHEST_TILES, "not Shade's small house"
         for x, y in HOUSE_CLEAR:
-            for cat, i in (("below", 1), ("above", 0), ("above", 1)):
+            for cat, i in (("below", 1), ("below", 3), ("below", 4), ("above", 0), ("above", 1)):
                 self.put(cat, i, ox + x, oy + y, -1)
         for (bx, by), (px, py), body, post in HOUSE_BEDS:
             for x, y in ((bx, by), (px, py)):
@@ -627,93 +1126,11 @@ class Village:
             out.append({"kind": "bed", "at": list(c), "use": list(use), "head": BED_TILES[body], "tile": body})
         return out
 
-    def place_deposits(self, ox, oy):
-        """Ore rocks on bare highland floor of the cave sample: cells with only ground tiles whose
-        ground is rock (not grass), at least one tile from cliffs."""
-        rng = self.rng
-        cands = []
-        layers = self.sample("cave-1")
-        ground = [d for n, d in layers if self.category(n) == "ground"]
-        grass_ids = set(dict(self.sample("village-1"))["Grass 1"]) | set(dict(layers)["Roof/Grass Top"])
-        for y in range(2, 28):
-            for x in range(2, 28):
-                X, Y = ox + x, oy + y
-                if self.has_object(X, Y) or any(self.get("above", i, X, Y) >= 0 for i in range(4)):
-                    continue
-                top = [d[y * 30 + x] for d in ground if d[y * 30 + x] >= 0]
-                if not top or top[-1] in grass_ids:
-                    continue        # grass, not rock floor
-                if any(self.has_object(X + dx, Y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
-                    continue
-                cands.append((X, Y))
-        rng.shuffle(cands)
-        plan = ["iron_ore", "coal", "stone", "iron_ore", "copper_ore", "coal", "iron_ore", "stone"] * 5 + ["gold_ore"]
-        taken = []
-        for ore in plan:
-            for c in cands:
-                if all(abs(c[0] - t[0]) + abs(c[1] - t[1]) >= 2 for t in taken):
-                    taken.append(c)
-                    cands.remove(c)
-                    self.put("below", 0, c[0], c[1], tile_val(0, ORE[ore]))
-                    self.ents["deposits"].append({"x": c[0], "y": c[1], "ore": ore,
-                                                  "amount": {"gold_ore": 8, "stone": 80, "coal": 50,
-                                                             "copper_ore": 30}.get(ore, 60)})
-                    break
-
-    def market(self, x0, y0):
-        """Open square: a row of stalls (table + crate/barrel) facing a central lane."""
-        tables = dict(self.sample("village-3"))["Floor 1/Objects"]
-        table = tables[22 * 30 + 6]          # wooden table from the tavern terrace
-        for i in range(6):
-            x = x0 + 2 + i * 4
-            for (dx, dy, t) in ((0, 0, table), (1, 0, CRATE if i % 2 else BARREL)):
-                self.put("below", 0, x + dx, y0 + dy, tile_val(0, t))
-            self.ents["stalls"].append({"id": f"stall{i}", "x": x, "y": y0, "use": [x, y0 + 1]})
-
-    def field(self, x, y, w, h):
-        self.ents["fields"].append({"id": f"f{len(self.ents['fields'])}", "x": x, "y": y, "w": w, "h": h})
-        for j in range(h):
-            for i in range(w):
-                self.put("path", 1, x + i, y + j, tile_val(0, field_cell_tile(FIELD_TILES["ripe"], w, h, i, j)))
-
-    def pen(self, kind, x, y, w, h):
-        """A fenced pen with a gate in the middle of the top side. The fence is solid, the gate is
-        walkable; animals stay on the inner cells."""
-        gate = (x + w // 2, y)
-        for j in range(h):
-            for i in range(w):
-                X, Y = x + i, y + j
-                edge = {(0, 0): "tl", (w - 1, 0): "tr", (0, h - 1): "bl", (w - 1, h - 1): "br"}.get((i, j))
-                if edge is None:
-                    edge = "t" if j == 0 else "b" if j == h - 1 else "l" if i == 0 else "r" if i == w - 1 else None
-                if edge is None:
-                    continue
-                self.put("below", 5, X, Y, COZY + (GATE if (X, Y) == gate else FENCE[edge]))
-        self.walkable_override.add(gate)
-        self.ents["pens"].append({"id": f"pen_{kind}", "kind": kind, "x": x, "y": y, "w": w, "h": h,
-                                  "gate": list(gate), "feed_at": [gate[0], gate[1] - 1]})
-
-    def plots(self, corners):
-        for i, (x, y) in enumerate(corners):
-            p = {"id": f"plot{i}", "x": x, "y": y, "w": 9, "h": 10, "door": [x + 4, y + 9], "price": 60}
-            self.ents["plots"].append(p)
-            # clear the land: trees whose trunk or canopy is on the plot
-            for t in [t for t in self.ents["trees"]
-                      if x <= t["x"] < x + 9 and y <= t["y"] <= y + 10]:
-                self.put("below", 0, t["x"], t["y"], -1)
-                self.put("above", 0, t["x"], t["y"] - 1, -1)
-                self.put("above", 0, t["x"], t["y"], -1)
-                self.ents["trees"].remove(t)
-            for j in range(y, y + 10):                    # and the plants (generator v5)
-                for i in range(x, x + 9):
-                    if self.get("below", 1, i, j) in PLANTS:
-                        self.put("below", 1, i, j, -1)
-
     # ---- collision and roads ----------------------------------------------------------------
     def plant_cells(self):
         """Gatherable plants (generator v5): cells whose only object is a flower or a berry bush, with
         nothing on top and not in a wall, roof, floor or doorway. They are walkable and are exported
-        as entities; Shade drew them as scenery, in clusters that v1-v4 treated as solid."""
+        as entities."""
         out = []
         for y in range(H):
             for x in range(W):
@@ -732,7 +1149,7 @@ class Village:
         for y in range(H):
             for x in range(W):
                 c = (x, y)
-                s = (self.has_object(x, y) and c not in self.decor) or c in self.roof
+                s = (self.has_object(x, y) and c not in self.decor) or c in self.roof or c in self.hill
                 if c in self.walkable_override or c in self.floor:
                     s = False
                 solid[y][x] = s
@@ -744,63 +1161,28 @@ class Village:
                     solid[y][x] = False
         return solid
 
-    def roads(self):
-        solid = self.solid_grid()
-        targets = [tuple(b["door"]) for b in self.ents["buildings"]]
-        targets += [tuple(s["use"]) for s in self.ents["stalls"]]
-        targets += [tuple(self.ents["mine"]["yard"]), tuple(self.ents["spawns"]["bandit_camp"])]
-        targets += [(f["x"] + f["w"] // 2, f["y"] + f["h"]) for f in self.ents["fields"]]
-        targets += [tuple(p["door"]) for p in self.ents["plots"]]
-        targets += [tuple(p["feed_at"]) for p in self.ents["pens"]]
-        hub = tuple(self.ents["spawns"]["player"])
-        assert not solid[hub[1]][hub[0]], "road hub must be walkable"
-        road = {hub}
+    def draw_roads(self):
+        """Road tiles of the free tileset's dirt pathways, chosen from the neighbouring road cells; a road
+        cell on a map edge continues outwards (the overworld's road takes it up). None on the dirt yards
+        (the yard is the road there) nor on a doorway."""
         dirs = ((0, -1), (1, 0), (0, 1), (-1, 0))
-        for t in sorted(targets, key=lambda c: abs(c[0] - hub[0]) + abs(c[1] - hub[1])):
-            if solid[t[1]][t[0]]:
+        paths = self.paths
+        for (x, y) in sorted(self.road):
+            if (x, y) in self.walkable_override or (x, y) in self.yard:
                 continue
-            dist, prev, heap = {t: 0}, {}, [(0, t)]
-            end = None
-            while heap:
-                d, c = heapq.heappop(heap)
-                if c in road:
-                    end = c
-                    break
-                if d > dist[c]:
-                    continue
-                for dx, dy in dirs:
-                    n = (c[0] + dx, c[1] + dy)
-                    if not (0 <= n[0] < W and 0 <= n[1] < H) or solid[n[1]][n[0]]:
-                        continue
-                    nd = d + (1 if n in road else 3)
-                    if nd < dist.get(n, 1e9):
-                        dist[n], prev[n] = nd, c
-                        heapq.heappush(heap, (nd, n))
-            if end is None:
-                continue
-            path = [end]
-            while path[-1] != t:
-                path.append(prev[path[-1]])
-            road.update(path)
-        self.road = road
-        _, _, _, _, paths = self.free
-        grass = set(dict(self.sample("village-1"))["Grass 1"])
-        for (x, y) in road:
-            grounds = [self.get("ground", i, x, y) for i in range(6)]
-            grounds = [g for g in grounds if g >= 0]
-            if (x, y) in self.walkable_override or not all(g >= FREE or g in grass for g in grounds):
-                continue            # sample dirt, rock, floors or a doorway: keep the original art
-            con = tuple((x + dx, y + dy) in road for dx, dy in dirs)
-            key = con if con in paths["dirt"] else None
-            if key is None:
-                continue
-            self.put("path", 0, x, y, tile_val(1, self.rng.choice(paths["dirt"][key])))
+            con = []
+            for dx, dy in dirs:
+                n = (x + dx, y + dy)
+                con.append(n in self.road or n in self.yard or not (0 <= n[0] < W and 0 <= n[1] < H))
+            con = tuple(con)
+            if con in paths["dirt"]:
+                self.put("path", 0, x, y, tile_val(1, self.rng.choice(sorted(paths["dirt"][con]))))
 
     # ---- output -----------------------------------------------------------------------------
     def workshop_stamp(self, kind, house):
         """A workshop stamp (WORKSHOPS): the house stamp with its sleeping places cleared and the
         stations' tiles copied in from where Shade drew them, with the collision, interior and
-        stations to match. Reads only the finished map, draws no random numbers."""
+        stations to match. Reads only the sample maps and the finished house, draws no random numbers."""
         w, h = house["w"], house["h"]
         layers = {k: list(v) for k, v in house["layers"].items()}
         solid = [list(row) for row in house["solid"]]
@@ -837,8 +1219,8 @@ class Village:
                 "interior": interior, "solid": ["".join(r) for r in solid], "stations": stations}
 
     def reachable_uses(self, solid):
-        """Generator v5: a station used from a cell nobody can walk to (the tavern stove, the mine cart)
-        is used from the nearest walkable cell beside it that is reached from the village square."""
+        """Generator v5: a station used from a cell nobody can walk to is used from the nearest walkable
+        cell beside it that is reached from the village square."""
         hub = tuple(self.ents["spawns"]["player"])
         seen, todo = {hub}, [hub]
         while todo:
@@ -908,8 +1290,9 @@ class Village:
         }
 
 
-def render(data, solid=False):
-    """Preview PNG of a built village (and optionally its collision)."""
+def render(data, solid=False, trees=True):
+    """Preview PNG of a built village (and optionally its collision). Trees are drawn from their records'
+    old tile ids, only so that the preview shows where they stand."""
     from PIL import Image
     paid = AssetZip(PAID).image("PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png").convert("RGBA")
     free = pwt.load(AssetZip(pwt.ZIP))[0].convert("RGBA")
@@ -917,15 +1300,29 @@ def render(data, solid=False):
     sheets = [(paid, 220), (free, free.width // 16), (cozy, COZY_COLS)]
     img = Image.new("RGBA", (W * 16, H * 16), (0, 0, 0, 255))
     cache = {}
+
+    def tile(v):
+        if v not in cache:
+            sheet, cols = sheets[v // FREE]
+            t = v % FREE
+            cache[v] = sheet.crop(((t % cols) * 16, (t // cols) * 16, (t % cols) * 16 + 16, (t // cols) * 16 + 16))
+        return cache[v]
+
+    above = []
     for lay in data["layers"]:
         for i, v in enumerate(lay["data"]):
             if v < 0:
                 continue
-            if v not in cache:
-                sheet, cols = sheets[v // FREE]
-                t = v % FREE
-                cache[v] = sheet.crop(((t % cols) * 16, (t // cols) * 16, (t % cols) * 16 + 16, (t // cols) * 16 + 16))
-            img.alpha_composite(cache[v], ((i % W) * 16, (i // W) * 16))
+            if lay["z"] == "above":
+                above.append((i, v))
+            else:
+                img.alpha_composite(tile(v), ((i % W) * 16, (i // W) * 16))
+    if trees:
+        for t in data["trees"]:
+            for dy, k in ((0, "trunk"), (-1, "top"), (0, "bottom")):
+                img.alpha_composite(tile(t[k]), (t["x"] * 16, (t["y"] + dy) * 16))
+    for i, v in above:
+        img.alpha_composite(tile(v), ((i % W) * 16, (i // W) * 16))
     if solid:
         red = Image.new("RGBA", (16, 16), (255, 0, 0, 90))
         for y, row in enumerate(data["solid"]):

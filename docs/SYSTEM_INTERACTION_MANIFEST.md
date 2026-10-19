@@ -370,6 +370,7 @@ Rules:
 - **Source:** `tools/build_village.py`, `game/scripts/core/village_map.gd::find_path`, `game/scripts/view/canopy_fade.gd::update`, `game/scripts/main.gd::_on_tile_changed`, `game/scripts/core/world.gd::fell`
 - **Affects:** Resources, Interface
 - **Expected:** Only a standing tree's trunk cell is solid, for the player's movement and every path; its two canopy tiles are drawn over people and animals, so they walk behind it. The canopy over the player fades to 45% in 0.15 s and back when they leave; villagers do not fade trees. A canopy change (felling, regrowth, a new house) puts any faded canopy back first.
+  - Generator v6 (Build 8): the village map draws no tree at all: every tree is a record in village.json `trees` (trunk cell; the old tile ids only fix the species), drawn by TreeView, so no crown or trunk tile is left in a layer; trees stand clear of roads, doors, fields, plots, stations and deposits, and their crowns never overhang a building (`tests/test_village.py`).
 - **Tests:** `game/tests/run_tests.gd::test_tree_canopy`, `game/tests/start_test.gd`
 
 ### INT-041 · Shops: a counter or stall with its keeper serves the player
@@ -388,7 +389,7 @@ Rules:
 - **Source:** `tools/build_village.py`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/world.gd::container_store`, `game/scripts/core/world.gd::container_owner`, `game/scripts/core/world.gd::serve_tables`, `game/scripts/core/world.gd::show_tables`, `game/scripts/core/world.gd::_update_food_days`, `game/scripts/core/npc_brain.gd::caravan`
 - **Affects:** Containers, Households, Market, Food, Save, Interface
 - **Expected:**
-  - village.json lists the crates and barrels by each house, in and around the tavern and beside each stall, and each dish or mug drawn on a tavern table (no map tile moves).
+  - village.json lists the crates and barrels by each house, in and around the tavern and beside each stall, and each dish or mug drawn on a tavern table (no map tile moves). Generator v6: every house's crates and barrels stand inside its own rectangle (its door yard) and the tavern's in and by the tavern, so an owner's goods are always in or directly beside their building, never in a public row (`tests/test_village.py::test_chests_stand_by_their_owners`).
   - A house's crate or barrel is the pantry of the household that holds the house (`World.holder_of`, INT-051); a tavern crate is the first alive tavern keeper's stock; a stall's crate (and the stall itself) is the stock of the merchant it is let to. A house of the player's or the manor's holds nothing in its crates (the family chest is the player's store). They hold nothing of their own.
   - A tavern table holds one dish of its own: while the tavern is open, each empty table gets one of its kind from a keeper (in turn) who has more than `table_keep` of it, else any cooked food they can spare; at closing every dish goes back to the keeper who set it out. Food on the tables counts in the village's food days and the caravan's food check. A table shows its dish tile only while it holds food.
   - Goods only move between owners and tables: nothing is made or lost.

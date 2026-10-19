@@ -54,6 +54,7 @@ func _init() -> void:
 	test_wild_plants()
 	test_save_store()
 	test_doorways()
+	test_village_layout()
 	test_field_edges()
 	test_work_has_purpose()
 	test_no_child_pickpocket()
@@ -1749,6 +1750,20 @@ func _run_until(w: World, mins: int, done: Callable) -> bool:
 
 ## Ground for a building of this kind at `at` in the forests: its trees felled, as a builder would
 ## (the stumps are grubbed up when the ground is claimed).
+## The first free place in the woods (scanning from the north-west) where a building of `kind` is refused only
+## because a mature tree stands on it, clear of `skip`: the village no longer has its trees at fixed places.
+func _wood_spot(w: World, kind: String, skip := Rect2i()) -> Vector2i:
+	var fp: Vector2i = w.construction.footprint(kind)
+	for y in range(1, 30):
+		for x in range(1, 100):
+			var r := Rect2i(Vector2i(x, y), fp)
+			if skip.intersects(r):
+				continue
+			if w.construction.can_place(kind, r, World.PLAYER).contains("fell it first"):
+				return Vector2i(x, y)
+	return Vector2i(-1, -1)
+
+
 func _cleared(w: World, kind: String, at: Vector2i) -> Rect2i:
 	var r := Rect2i(at, w.construction.footprint(kind))
 	for t in w.trees:
@@ -1801,8 +1816,9 @@ func test_construction() -> void:
 			and str(site.site.owner) == World.PLAYER and w.site_progress(site) == 0.0, "placing a house buys the ground (%d coins) and marks out the frame in one go" % price)
 	check(c.place("house", rect, World.PLAYER).is_empty() and c.why.begins_with("surveyed land"), "the same ground cannot be built on twice (%s)" % c.why)
 	# lease on placement
-	check(c.can_place("house", Rect2i(62, 15, 9, 10), World.PLAYER).contains("fell it first"), "a grown tree must be felled first")
-	var rect2 := _cleared(w, "house", Vector2i(62, 15))
+	var spot := _wood_spot(w, "house")
+	check(spot.x >= 0 and c.can_place("house", Rect2i(spot, Vector2i(9, 10)), World.PLAYER).contains("fell it first"), "a grown tree must be felled first")
+	var rect2 := _cleared(w, "house", spot)
 	check(c.can_place("house", rect2, World.PLAYER) == "", "felled, its stump does not stand in the way")
 	var rent: int = c.ground_terms(rect2).rent
 	var leased := c.place("house", rect2, World.PLAYER, true)
@@ -1836,7 +1852,7 @@ func test_construction() -> void:
 	check(_ledger(w, ids) == ledger1, "its materials are used up in it, counted in the ledger")
 	# a workshop after a house: stamps, stations, interior, roof; the owner's to use, others with leave
 	check(c.may_build("smithy", World.PLAYER) == "", "owning a house, the player may build a workshop")
-	var wr := _cleared(w, "smithy", Vector2i(72, 15))
+	var wr := _cleared(w, "smithy", _wood_spot(w, "smithy", rect2))
 	var ws := c.place("smithy", wr, World.PLAYER)
 	check(not ws.is_empty() and str(ws.site.kind) == "smithy" and ws.site.cost == GameData.b("workshop_cost").smithy, "a smithy is marked out with its own cost")
 	var wcost: Dictionary = GameData.b("workshop_cost").smithy
@@ -1940,7 +1956,7 @@ func test_helpers() -> void:
 	check(c.contract_of(helper).is_empty() and helper.memory.any(func(m): return str(m).begins_with("carried for")), "the contract ends with the building")
 	check(own.call() == ledger0 and coins.call() == c0, "goods and coins kept: the materials are in the building, the wage in the helper's purse")
 	# buying at the market with the employer's coins: nothing in the chest, a budget
-	var rect2 := _cleared(w, "carpentry", Vector2i(70, 15))
+	var rect2 := _cleared(w, "carpentry", _wood_spot(w, "carpentry"))
 	var site2 := c.place("carpentry", rect2, World.PLAYER)
 	var helper2: NPC = null
 	for o: NPC in w.npcs:
@@ -3345,12 +3361,12 @@ func test_save_store() -> void:
 		f.store_string(text)
 		f.close()
 	SaveStore.fail_at = ""
-	check(SaveStore.inspect(path, 8).state == "missing", "no file: missing")
+	check(SaveStore.inspect(path, 8, 0).state == "missing", "no file: missing")
 	var a := '{"save_version": 8, "n": 1}'
 	var b := '{"save_version": 8, "n": 2}'
 	check(SaveStore.write_text(path, a).ok and raw.call(path) == a and not FileAccess.file_exists(path + ".tmp"), "a save is written whole, with no temp file left")
 	check(SaveStore.write_text(path, b).ok and raw.call(path) == b and raw.call(path + ".bak") == a, "the next save keeps the previous one as the backup")
-	check(SaveStore.inspect(path, 8).state == "ok" and int(SaveStore.inspect(path, 8).data.n) == 2, "a good save reads back")
+	check(SaveStore.inspect(path, 8, 0).state == "ok" and int(SaveStore.inspect(path, 8, 0).data.n) == 2, "a good save reads back")
 	# every failing step leaves the save and the backup as they were
 	for step in ["open", "write", "verify", "backup", "replace"]:
 		SaveStore.fail_at = step
@@ -3359,16 +3375,27 @@ func test_save_store() -> void:
 	SaveStore.fail_at = ""
 	# an interrupted earlier write (a stale temp file) is ignored and replaced
 	put.call(path + ".tmp", '{"save_version": 8, "n": 4')
-	check(SaveStore.inspect(path, 8).state == "ok" and int(SaveStore.inspect(path, 8).data.n) == 2, "a half-written temp file does not affect the save")
+	check(SaveStore.inspect(path, 8, 0).state == "ok" and int(SaveStore.inspect(path, 8, 0).data.n) == 2, "a half-written temp file does not affect the save")
 	check(SaveStore.write_text(path, a).ok and raw.call(path) == a and not FileAccess.file_exists(path + ".tmp"), "and the next save replaces it")
 	# what cannot be used is told apart, with reasons
 	for bad in ['{"save_version": 8, "n": ', "", "[1, 2]", '{"n": 1}', "not json at all"]:
 		put.call(path, bad)
-		var st: Dictionary = SaveStore.inspect(path, 8)
+		var st: Dictionary = SaveStore.inspect(path, 8, 0)
 		check(st.state == "unreadable" and st.reason != "", "unreadable: %s -> %s" % [bad.left(20), st.reason])
 	put.call(path, '{"save_version": 9}')
-	var nw: Dictionary = SaveStore.inspect(path, 8)
+	var nw: Dictionary = SaveStore.inspect(path, 8, 0)
 	check(nw.state == "newer" and nw.version == 9 and nw.reason.contains("newer version"), "a later version's save is 'newer': %s" % nw.reason)
+	# a save from before the village was rebuilt (generator v6, Build 8) is 'older': refused, kept unchanged, never written over
+	check(SaveStore.MIN_VERSION <= World.SAVE_VERSION and World.SAVE_VERSION >= 13 and SaveStore.MIN_VERSION == 13, "saves older than the rebuilt village are refused (reads %d to %d)" % [SaveStore.MIN_VERSION, World.SAVE_VERSION])
+	var old_text := '{"save_version": %d, "n": 7}' % (SaveStore.MIN_VERSION - 1)
+	put.call(path, old_text)
+	var og: Dictionary = SaveStore.inspect(path, World.SAVE_VERSION)
+	check(og.state == "older" and og.version == SaveStore.MIN_VERSION - 1 and og.reason.contains("older version"), "an older version's save is 'older': %s" % og.reason)
+	check(SaveStore.inspect(path, World.SAVE_VERSION, 0).state == "ok", "(the tests of the file handling read old versions with min_version 0)")
+	var kept_old := SaveStore.preserve(path, og.state)
+	check(kept_old != "" and raw.call(kept_old) == old_text and not FileAccess.file_exists(path) and kept_old.get_file().begins_with("save1.older-"), "the old save is kept unchanged as %s" % kept_old.get_file())
+	put.call(path, '{"save_version": %d, "n": 8}' % World.SAVE_VERSION)
+	check(SaveStore.inspect(path, World.SAVE_VERSION).state == "ok", "a current save reads")
 	# an existing save that is not readable is never replaced by write_text
 	put.call(path, "garbage")
 	check(not SaveStore.write_text(path, a).ok and raw.call(path) == "garbage", "write_text refuses to replace a save it cannot read")
@@ -3379,6 +3406,87 @@ func test_save_store() -> void:
 	check(SaveStore.any_exists(path), "any_exists sees the save")
 	for f in DirAccess.get_files_at(dir):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))
+
+
+## The Build 8 village (generator v6): the mine's seams and the sawmill can be reached on foot with the village's own
+## path-finding, personal chests stand by their owners, no tree tile is left in any layer, and nothing
+## stands on top of anything else.
+func test_village_layout() -> void:
+	var w := new_world()
+	var m: VillageMap = w.map
+	var hub := Vector2i(int(m.data.spawns.player[0]), int(m.data.spawns.player[1]))
+	var next_to := func(c: Vector2i) -> bool:
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			if not m.is_solid(c + d) and not m.find_path(hub, c + d).is_empty():
+				return true
+		return false
+	var trees := {}
+	for t in w.trees:
+		trees[Vector2i(int(t.x), int(t.y))] = true
+	for d in w.deposits:
+		var c := Vector2i(int(d.x), int(d.y))
+		check(next_to.call(c) and not trees.has(c), "B8-004: the %s seam at %s is on open ground and can be reached on foot" % [d.ore, c])
+	var saws: Array = w.stations_of("sawhorse")
+	check(saws.size() == 1 and w.buildings[w.stations[saws[0]].building].get("name", "") == "Sawmill", "B8-028: one sawhorse, in the building named Sawmill")
+	var use: Vector2i = w.station_use(saws[0])
+	check(not m.is_solid(use) and not m.find_path(hub, use).is_empty() and not (m.data.road as Array).any(func(c): return Vector2i(int(c[0]), int(c[1])) == use), "the sawhorse's use cell is free and reachable, and no road (guard post) cell")
+	check(w.guard_posts.all(func(c: Vector2i) -> bool: return c != use), "no guard stands where the sawyer works")
+	var cart: Vector2i = w.station_use(w.stations_of("mine_cart")[0])
+	check(not m.find_path(hub, cart).is_empty(), "the mine cart can be reached")
+	# personal chests: by their own building, and by no other
+	var stalls := {}
+	for s in m.data.stalls:
+		stalls[s.id] = s
+	var far := 0
+	for c in w.containers:
+		if c.kind == "table":
+			continue
+		var cell := Vector2i(c.x, c.y)
+		if stalls.has(c.at):
+			var s: Dictionary = stalls[c.at]
+			far += 0 if absi(cell.x - int(s.x)) <= 2 and absi(cell.y - int(s.y)) <= 1 else 1
+			continue
+		var b: Dictionary = w.buildings[c.at]
+		var own := Rect2i(int(b.x) - 1, int(b.y) - 1, int(b.w) + 2, int(b.h) + 3)
+		var other := false
+		for id in w.buildings:
+			if id != c.at and Rect2i(int(w.buildings[id].x), int(w.buildings[id].y), int(w.buildings[id].w), int(w.buildings[id].h)).has_point(cell):
+				other = true
+		far += 0 if own.has_point(cell) and not other else 1
+	check(far == 0, "B8-017: every personal chest is in or directly beside its owner's building (%d are not)" % far)
+	# no tree tile in any tile layer
+	var crowns := {}
+	for pr in m.data.tiles.canopy:
+		crowns[int(pr[0])] = true
+		crowns[int(pr[1])] = true
+	var stray := 0
+	for lay in m.data.layers:
+		if lay.z == "ground":
+			continue
+		for v in lay.data:
+			if int(v) >= 0 and int(v) < 100000 and (crowns.has(int(v)) or (int(v) % 220 >= 16 and int(v) % 220 <= 23 and int(v) / 220 <= 11)):
+				stray += 1
+	check(stray == 0 and m.decor_trees().is_empty(), "B8-003: no tree tile is left in any layer (%d found)" % stray)
+	# nothing stands on anything: building cells, trees, stations, deposits, fields, pens
+	var taken := {}
+	var overlaps := [0]
+	var claim := func(cell: Vector2i) -> void:
+		if taken.has(cell):
+			overlaps[0] += 1
+		taken[cell] = true
+	for d in w.deposits:
+		claim.call(Vector2i(int(d.x), int(d.y)))
+	for t in trees:
+		claim.call(t)
+	for f in w.fields:
+		for j in int(f.h):
+			for i in int(f.w):
+				claim.call(Vector2i(int(f.x) + i, int(f.y) + j))
+	check(overlaps[0] == 0, "no seam, tree and field share a cell (%d overlaps)" % overlaps[0])
+	var roads := {}
+	for c in m.data.road:
+		roads[Vector2i(int(c[0]), int(c[1]))] = true
+	check(w.deposits.all(func(d): return not roads.has(Vector2i(int(d.x), int(d.y)))), "no seam lies on a road")
 
 
 ## Every building can be walked into and out of (Build 8 report: trapped just inside a door): from
