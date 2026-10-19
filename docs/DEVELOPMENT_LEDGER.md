@@ -58,6 +58,18 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | B13-13 | Touch sprint (audit item 15) | VERIFIED (headless) | staging `0570f14` | A Run toggle on the touch bar latches sprint; same speed and cost (start_test, layout at three shapes). Not run on a phone |
 | B13-14 | Station occupancy (audit item 16) | VERIFIED | staging `e6ba579` | Villagers wait while the player works a station, give way after 45 minutes; the player's place is freed on finish or cancel; nothing saved (world_test::_station_conflict) |
 | B13-15 | Android signing stability | BLOCKED (owner) | release runs 13, 15 | Checked: the stable test-key secrets are missing (run 13 stopped at signing; all three empty). Build 13 is signed with a throwaway key; consequences and the owner's steps in `docs/release/BUILD_13_PACKET.md` and `ANDROID_SIGNING.md`. No key committed |
+| B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it (owner playtest) | VERIFIED (headless) | staging `60a365b` | start_test: A mines with a villager there, Y and T talk, no offer with nobody near; T prompt imported with provenance. Not run with a real controller |
+| B14-02 | Villagers' home production: forage, brew poultices at home, treat their own wounds | VERIFIED | staging `b94dc22` | home_test (healing, foraging and brewing, an 8-day village with coins conserved) |
+| B14-03 | House storefronts (player and villager households) | VERIFIED | staging `a9c6db0`, `d01376c` | home_test (player storefront incl. save/load, villager build, keeper, buying medicine); screenshot looked at; storefront_coins raised to 150 in `d01376c` |
+| B14-04 | Cart parts and handcarts (wheel, axle, ironwork, handcart) | VERIFIED | staging `d01376c` | home_test (carpenter, smith, household assembly or purchase, 12-day run with coins conserved). The handcart has no use yet (B14-06) |
+| B14-05 | Local-availability pricing | VERIFIED | staging `75093bf` | home_test::test_local_pricing; business_test (a dearer stall loses the sale) |
+| B14-06 | Carts in play: pulled storage, parking, hubs, deliveries | NOT STARTED | - | Owner-approved; next in the owner's order |
+| B14-07 | Cliff steps, wooden stairs and walkways | NOT STARTED | - | Owner answers recorded (task after carts) |
+| B14-08 | Forest animals (MiniFolks): grazers, predators, fox raids, fights | VERIFIED | staging `2caca5a` | wildlife_test (50 checks incl. a 20-day food chain); screenshot looked at; also fixes the player's waypoint overshoot |
+| B14-09 | Skeletons in caves and uncleared woods | NOT STARTED | - | Owner answers recorded; only the sword skeleton is in the free pack |
+| B14-10 | Craftpix farm plants, produce and crates, fruit trees | NOT STARTED | - | Pack in private-assets; questions to the owner first |
+| B14-11 | Animal Farm pack (horse and farm animals) | NOT STARTED | - | Pack in private-assets; 1.0 is a .rar the tools cannot read |
+| B14-12 | Sprite list with pixel-grid copies for the owner | NOT STARTED | - | Requested with the cliff work |
 
 ## Decisions in this run
 
