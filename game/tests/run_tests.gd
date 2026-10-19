@@ -55,6 +55,8 @@ func _init() -> void:
 	test_save_store()
 	test_doorways()
 	test_village_layout()
+	test_polish_work_looks()
+	test_polish_game_leftovers()
 	test_field_edges()
 	test_work_has_purpose()
 	test_no_child_pickpocket()
@@ -3436,6 +3438,23 @@ func test_village_layout() -> void:
 	for d in w.deposits:
 		var c := Vector2i(int(d.x), int(d.y))
 		check(next_to.call(c) and not trees.has(c), "B8-004: the %s seam at %s is on open ground and can be reached on foot" % [d.ore, c])
+	# B8-002: every interior floor cell (and the tavern's open-air kitchen) shows a floor tile, never plain grass
+	var vw: int = int(m.data.w)
+	var floors: Array = (m.data.layers as Array).filter(func(l): return l.z == "ground" and l.name != "ground0")
+	var bare := 0
+	var cells_n := 0
+	var floor_cells: Array = []
+	for id in w.buildings:
+		var it = w.buildings[id].get("interior")
+		if it != null:
+			for c in it.floor:
+				floor_cells.append(Vector2i(int(c[0]), int(c[1])))
+	floor_cells.append(Vector2i(52, 47))
+	for c in floor_cells:
+		cells_n += 1
+		if not floors.any(func(l): return int(l.data[c.y * vw + c.x]) >= 0 and int(l.data[c.y * vw + c.x]) < 100000):
+			bare += 1
+	check(cells_n > 100 and bare == 0, "B8-002: every interior floor cell has a floor tile, not grass (%d bare of %d)" % [bare, cells_n])
 	var saws: Array = w.stations_of("sawhorse")
 	check(saws.size() == 1 and w.buildings[w.stations[saws[0]].building].get("name", "") == "Sawmill", "B8-028: one sawhorse, in the building named Sawmill")
 	var use: Vector2i = w.station_use(saws[0])
@@ -3647,3 +3666,45 @@ func test_credits() -> void:
 		if name in ["16x16 Assorted RPG Icons (partial)", "Flat Game UI Icon Pack"] and not credited.has(name):
 			missing[name] = true
 	check(missing.is_empty(), "every asset pack and imported-art source is credited %s" % [missing.keys()])
+
+
+## B8-007: a villager's work step shows the matching tool (INT-112)
+func test_polish_work_looks() -> void:
+	var w := new_world()
+	var n: NPC = w.npcs[0]
+	var expect := {"mine": ["swing", "pickaxe"], "chop": ["swing", "axe"], "mj_step": ["swing", "hammer"],
+		"hunt": ["swing", "rusty_sword"], "harvest": ["gather", ""], "sow": ["gather", ""]}
+	for act in expect:
+		n.plan = [w.brain.work(10, act, {}, "work")]
+		check(w.brain.work_look(n) == expect[act], "B8-007: a villager's %s shows %s" % [act, str(expect[act])])
+	var anvil: String = w.stations_of("anvil")[0]
+	n.plan = [w.brain.work(10, "craft", {"station": anvil, "recipe": "forge_pickaxe"}, "work")]
+	check(w.brain.work_look(n) == ["swing", "hammer"], "B8-007: smithing shows the hammer")
+	var oven: String = w.stations_of("oven")[0]
+	n.plan = [w.brain.work(10, "craft", {"station": oven, "recipe": "roast_meat"}, "work")]
+	check(w.brain.work_look(n) == ["gather", ""], "B8-007: cooking shows no tool")
+	n.plan = []
+	check(w.brain.work_look(n)[1] == "", "B8-007: no tool when not working")
+	w.dispose()
+
+
+## PL2-004: rabbits give a pelt and chickens feathers; the pelt is tanned or sold (INT-113, INT-114)
+func test_polish_game_leftovers() -> void:
+	var w := new_world()
+	var day := 1440.0
+	var rabbit := w.fauna.spawn("woods_w", "rabbit", "m", null)
+	var chicken := w.fauna.spawn("woods_w", "chicken", "m", null)
+	rabbit.born = w.minutes - 40.0 * day
+	chicken.born = w.minutes - 40.0 * day
+	var rbag := w.fauna.kill(rabbit)
+	var cbag := w.fauna.kill(chicken)
+	check(rbag.count("rabbit_pelt") == 1 and rbag.count("meat") >= 1 and rbag.count("feather") == 0, "PL2-004: an adult rabbit gives meat and a pelt")
+	check(cbag.count("feather") == 2 and cbag.count("rabbit_pelt") == 0, "PL2-004: an adult chicken gives feathers")
+	var kit := w.fauna.spawn("woods_w", "rabbit", "m", null)
+	check(w.fauna.kill(kit).count("rabbit_pelt") == 0, "PL2-004: a young rabbit gives no pelt")
+	var rec: Dictionary = GameData.recipes["tan_pelts"]
+	check(rec.station == "workbench" and int(rec["in"].get("rabbit_pelt", 0)) == 2 and int(rec.out.get("leather", 0)) == 1, "PL2-004: two pelts tan to leather at the workbench")
+	for id in ["rabbit_pelt", "feather"]:
+		check(GameData.items.has(id) and FileAccess.file_exists("res://assets/icons/%s.png" % id), "PL2-004: %s is an item with an icon" % id)
+	check(NPCBrain.OUTLETS.has("rabbit_pelt") and NPCBrain.OUTLETS.has("feather") and NPCBrain.BUYS.merchant_goods.has("feather"), "PL2-004: pelts and feathers have buyers")
+	w.dispose()

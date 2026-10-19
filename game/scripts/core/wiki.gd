@@ -98,6 +98,7 @@ static func build() -> Wiki:
 	w._systems()
 	w._guides()
 	w._not_yet()
+	WikiWorld.add_pages(w)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)

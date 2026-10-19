@@ -65,6 +65,16 @@
       "type": "resource",
       "value": 3
     },
+    "rabbit_pelt": {
+      "name": "Rabbit pelt",
+      "type": "resource",
+      "value": 3
+    },
+    "feather": {
+      "name": "Feathers",
+      "type": "resource",
+      "value": 1
+    },
     "leather": {
       "name": "Leather",
       "type": "resource",

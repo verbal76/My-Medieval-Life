@@ -100,6 +100,9 @@ CAMPFIRE = 5958                              # animated in the tileset (5958-596
 CRATE, BARREL = 3500, 3502
 RAIL_V, RAIL_TOP, RAIL_END = 1083, 863, 1303  # the track: a straight rail, its top end and its bottom end
 MINE_CART = 3009                             # the mine cart on its rail
+ROCK_FILL = (16750, 16751, 16752, 16753, 16970, 16971, 16972, 16973, 17190, 17191, 17192, 17193, 17410, 17411, 17412, 17413)
+ROCK_SLAB = (9286, 9287, 9288, 9289, 9726, 9727, 9728, 9729)   # grey cobbled stone, for the quarry's slabs
+ROCK_LEDGE = (9499, 9500)                    # a dark rock lip along the lower half of the cell
 ADIT = FREE + 154                            # the timbered mine mouth of the free tileset, over a cliff face
 PLANKS = (1024, 1025)                        # piles of planks and logs (the smithy's carpenter's corner)
 # Containers the player can take from (or steal from): the crate and barrel tiles Shade drew by the
@@ -134,6 +137,7 @@ BED_TILES = {1472: "up", 1477: "up", 1482: "up", 1691: "right", 1696: "right", 1
 TABLE_TILES = {2539, 2540, 2542, 1887, 1888, 1889, 1890, 2547, 2548, 2549, 2550}
 HEARTH_TILES = {2565, 2566, 2567, 2568}     # bread ovens / hearths
 CHEST_TILES = {355}
+KITCHEN_CELL = (52, 47)                     # a cell of the tavern's open-air kitchen (stove area)
 MAT = 593                                   # a straw pallet: a sleeping place on the floor (walkable)
 SLEEP_PLACES = 6                            # beds plus pallets in every home
 HOME_TYPES = ("house", "manor", "tavern", "hut")
@@ -358,8 +362,11 @@ class Village:
                         continue
                     X, Y = ox + x, oy + y
                     if cat == "ground":
+                        # the sample's floor goes over the village's wang ground (ground0), in ground1+
                         if (sx, sy) not in foot:
                             continue
+                        self.put(cat, idx + 1, X, Y, tile_val(0, t))
+                        continue
                     elif is_tree_tile(t):
                         continue
                     if cat == "top":
@@ -554,6 +561,7 @@ class Village:
         self.yards()
         self.mine_hill()
         self.paint_ground()
+        self.rock_top()
 
         # --- things on the ground ---------------------------------------------------------------
         E["mine"] = self.mine()
@@ -638,6 +646,25 @@ class Village:
                     self.corner[y][x] = self.GRASS
         self.adit = (48, 9)                              # the face cell the adit is drawn over
         self.put("below", 2, self.adit[0], self.adit[1], ADIT)
+
+    def rock_top(self):
+        """B8-004: the hill's top is bare rock, not the grass of the free tileset's plateau: Shade's rock ground
+        (PUNY-WORLD-PAID, the grey-brown stone of his sample overworld's mountain) over every cell whose four
+        corners are cliff, in ground1, a few cells with cracks."""
+        top = set()
+        for y in range(H):
+            for x in range(W):
+                if all(c == self.CLIFF for c in (self.corner[y][x], self.corner[y][x + 1],
+                                                  self.corner[y + 1][x], self.corner[y + 1][x + 1])):
+                    top.add((x, y))
+        for x, y in sorted(top):
+            fill = ROCK_SLAB if vnoise(x, y, 3, 62) > 0.66 else ROCK_FILL
+            self.put("ground", 1, x, y, tile_val(0, fill[int(_hash(x, y, 61) * len(fill)) % len(fill)]))
+        for y in (5, 7):                    # two quarry ledges: a dark lip along the rock's terraces, in pieces
+            run = [x for x in range(W) if (x, y) in top and (x, y - 1) in top and (x, y + 1) in top]
+            for x in run:
+                if vnoise(x, y, 6, 63) > 0.3 and abs(x - self.adit[0]) > 1:
+                    self.put("ground", 1, x, y, tile_val(0, ROCK_LEDGE[(x + y) % 2]))
 
     # ---- the mine ----------------------------------------------------------------------------
     def mine(self):
@@ -815,6 +842,8 @@ class Village:
         camp = self.ents["spawns"]["bandit_camp"]
         keep |= self.rect_cells(camp[0] - 4, camp[1] - 4, 9, 9)
         keep |= self.rect_cells(self.adit[0] - 2, 9, 5, 11)
+        for c in self.hill:                 # no tree on or beside the hill's rim (B8-004)
+            keep |= self.rect_cells(c[0] - 2, c[1] - 2, 5, 5)
         for (cat, i), data in self.layers.items():
             if cat in ("below", "above"):
                 keep |= {(k % W, k // W) for k, v in enumerate(data) if v >= 0}
@@ -1018,6 +1047,46 @@ class Village:
             members.setdefault(k, []).append(c)
         for b in self.ents["buildings"]:
             b["interior"] = self.interior_of(b, comp, members)
+        self.floor_fix()
+
+    def has_floor(self, x, y):
+        """Whether a stamped floor tile (not the village's wang ground) lies in the cell."""
+        return any(0 <= self.get("ground", i, x, y) < FREE for i in range(1, 6))
+
+    def floor_fix(self):
+        """Every interior floor cell shows a floor, never the grass of the continuous ground layer (B8-002).
+        Where a stamp left a floor cell without one (the tavern's open-air kitchen lies outside its roof,
+        and Shade's sample drew grass there), the building's most common floor tile is laid."""
+        for b in self.ents["buildings"]:
+            cells = b["interior"]["floor"]
+            kitchen = set()
+            count = {}
+            for x, y in cells:
+                for i in range(1, 6):
+                    t = self.get("ground", i, x, y)
+                    if 0 <= t < FREE:
+                        count[(i, t)] = count.get((i, t), 0) + 1
+            if not count:
+                continue
+            i, t = sorted(count.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+            if b["type"] == "tavern":           # the open-air kitchen behind its own walls, entered by a door of its own
+                todo = [KITCHEN_CELL]
+                seen = set(todo)
+                while todo:                     # spread over the cells the kitchen's walls enclose
+                    x, y = todo.pop()
+                    for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                        if (n in seen or n in self.walls or n in self.roof or n in self.floor
+                                or any(v in DOORS for v in self.below_tiles(*n))
+                                or not (b["x"] <= n[0] < b["x"] + b["w"] and b["y"] <= n[1] < b["y"] + b["h"])):
+                            continue
+                        seen.add(n)
+                        todo.append(n)
+                        kitchen.add(n)
+                assert KITCHEN_CELL in seen and len(kitchen) < 80, "the kitchen's walls leak"
+                kitchen.add(KITCHEN_CELL)
+            for x, y in list(cells) + sorted(kitchen):
+                if not self.has_floor(x, y):
+                    self.put("ground", i, x, y, t)
 
     def furnish_house(self, b):
         """Beds in Shade's small house (HOUSE_BEDS), where his straw mat, shelf and jars stood."""

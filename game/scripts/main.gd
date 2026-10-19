@@ -1117,7 +1117,10 @@ func _sync_sprites() -> void:
 		s.stand()
 		s.position = n.pos * T
 		s.face(n.facing)
-		s.play(n.anim if n.anim != "sleep" else "idle")
+		var look: Array = world.brain.work_look(n) if n.anim == "work" else [n.anim, ""]
+		if s.tool_item != look[1]:
+			s.hold(look[1])
+		s.play(look[0] if look[0] != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
 	_sync_signs(p.pos)

@@ -514,3 +514,5 @@ already 1.0). Now:
   every recipe needs art and `resources.json` entries); the later tiers are unlocks of effects rather than recipes.
   The numbers are provisional pending a balance review. A `lockpicking` skill (PL chests agent) adds one entry to
   `skills.json`; its tiers must use keys declared in `Skills.EFFECTS`.
+
+- B8-002 root cause: paint_ground wrote the wang grass into ground0 after the stamps, wiping the floors Shade keeps in his sample Grass layer; stamped ground now lies in ground1+ and the tavern's open-air kitchen (grass in the sample) gets the tavern floor (INT-110). B8-004: the mine hill's top is Shade's rock ground with ledges, trees keep two cells from the hill (INT-111); the overworld already keeps ordinary trees a cell off cliffs. B8-007: villagers at work show the tool swing (INT-112). PL2-004: adult rabbits drop a pelt (Rodent-Pelt-01), adult chickens feathers; the Survival icon pack has no feather, so a golden leaf icon (Leaf-05) stands in until the owner supplies one (INT-113, INT-114).
