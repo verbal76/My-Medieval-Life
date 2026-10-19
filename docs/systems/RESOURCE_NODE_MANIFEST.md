@@ -42,7 +42,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `blue_berry_bush` · Blue berry bush
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "blueberry"}`.
-- **Where:** Meadows, verges and clearings across the map (blue berries). **In the world:** 20 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map (blue berries). **In the world:** 35 plants on the map, each ripe again plant_regrow_days after it is picked.
 - **Action:** Picking (interact): "Pick blue berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -132,7 +132,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `flower_patch` · Wild flower
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "flower"}`.
-- **Where:** Meadows, verges and clearings across the map (purple and yellow flowers). **In the world:** 163 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map (purple and yellow flowers). **In the world:** 162 plants on the map, each ripe again plant_regrow_days after it is picked.
 - **Action:** Picking (interact): "Pick wild flower". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -186,7 +186,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `red_berry_bush` · Red berry bush
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "redberry"}`.
-- **Where:** Meadows, verges and clearings across the map (red berries). **In the world:** 25 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map (red berries). **In the world:** 20 plants on the map, each ripe again plant_regrow_days after it is picked.
 - **Action:** Picking (interact): "Pick red berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -240,7 +240,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `tree` · Tree
 
 - **Status:** implemented. **Category:** wood, natural. **Found by:** `{"kind": "tree"}`.
-- **Where:** The woods west and east of the village and the woodland at its edge, and every tree across the map. **In the world:** 305 trees, 1220 logs while all are grown.
+- **Where:** The woods west and east of the village and the woodland at its edge, and every tree across the map. **In the world:** 232 trees, 928 logs while all are grown.
 - **Action:** Felling (interact): "Fell this tree". **Range (tiles):** 1. The trunk or the canopy top above it, in the cell 0.9 tiles in front of the player or one of its four neighbours (World.tree_at, main.gd _find_target).
 - **Tool:** axe (required). You need an axe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `axe`: recipe (forge_axe); resold by the merchant_goods.
 - **Skill:** woodcutting, level 1.

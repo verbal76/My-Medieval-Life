@@ -324,6 +324,17 @@ Simulations (`game/tests/households_sim.gd`, 30 days, three households crowded a
 1 households founded, every one of them in a house it built (the third crowded household on each
 seed could not afford to split). `run_tests.gd --days 30` (seed 1, nobody crowded): all checks pass.
 
+## The Build 8 village (owner decision 2026-10-19: one fixed village; the details are agent proposals)
+
+Generator v6 (`tools/build_village.py`) lays the village out as one settlement; the same in every game. Shade's sample maps are used only as building stamps (walls, floors under the roof, furniture, roofs), never as the finished layout.
+
+- **Weapon racks and armour stands (B8-015).** Nothing in the code can take anything from a rack (the armory has a counter station, no take interaction), so they are decoration: every cell of a rack, its top half included, is solid, and the top half is drawn in a below layer (below3), so the player never stands under half a rack. Data only; nothing to take, nothing to steal.
+- **Tabletop items (B8-025, data part).** The tops of tables, benches and racks that Shade drew in his "Object Top" layers go to below3 / below4 over their base; a top over a doorway or open passage (a lintel) stays over the characters. The y-sorting itself is the view's.
+- **Sawmill (B8-028).** A small building named "Sawmill" on Mill Road north of the crossing holds the village's only sawhorse (station s7, recipe `saw_planks` unchanged), the carpenters' workplace. The smithy keeps forge, anvil, workbench and the armory counter. Planks and logs are piled in its yard.
+- **Mine (B8-004).** A rocky hill (the free tileset's cliff terrain, solid) with a timbered adit in its south face; one track runs from the adit's mouth to a cart stop in the yard, the cart standing on it; the 14 seams (5 iron, 4 coal, 3 stone, 2 copper, 60/50/80/30) lie on the yard, each with open neighbours (tested reachable).
+- **Chests (B8-017).** A house's crates and barrels stand inside its own door yard; the tavern's in and by the tavern; a stall's beside it. A test checks each is by its owner and by no other building.
+- **Saves.** Version 13; `SaveStore.MIN_VERSION` refuses older saves ("older"), keeping them unchanged as `<save>.older-<time>.json`.
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals
