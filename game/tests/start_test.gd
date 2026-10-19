@@ -90,7 +90,7 @@ func _run() -> void:
 	var pad_prompt := {JOY_BUTTON_A: "xbox_button_a", JOY_BUTTON_B: "xbox_button_b", JOY_BUTTON_X: "xbox_button_x",
 		JOY_BUTTON_Y: "xbox_button_y", JOY_BUTTON_BACK: "xbox_button_view", JOY_BUTTON_START: "xbox_button_menu",
 		JOY_BUTTON_LEFT_SHOULDER: "xbox_lb", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb", JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press", JOY_BUTTON_DPAD_DOWN: "xbox_dpad_down",
-		JOY_BUTTON_LEFT_STICK: "xbox_stick_l_press", JOY_BUTTON_DPAD_LEFT: "xbox_dpad_left", JOY_BUTTON_DPAD_RIGHT: "xbox_dpad_right"}
+		JOY_BUTTON_DPAD_LEFT: "xbox_dpad_left", JOY_BUTTON_DPAD_RIGHT: "xbox_dpad_right"}
 	var listed := {}
 	for row in GameUI.CONTROLS.gamepad:
 		for icon in row[0]:
@@ -1896,6 +1896,14 @@ func _key(code: int) -> InputEventKey:
 	return e
 
 
+## LT pulled all the way (a trigger is an axis, not a button); `down` false lets it go.
+func _lt(down := true) -> InputEventJoypadMotion:
+	var e := InputEventJoypadMotion.new()
+	e.axis = JOY_AXIS_TRIGGER_LEFT
+	e.axis_value = 1.0 if down else 0.0
+	return e
+
+
 func _pad(button: int) -> InputEventJoypadButton:
 	var e := InputEventJoypadButton.new()
 	e.button_index = button
@@ -2122,18 +2130,24 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	Input.action_release("move_right")
 	await process_frame
 	main._player_step(0.05)
-	# L3 toggles on a pad
+	# LT toggles on a pad; L3 no longer does anything for sprint
 	p.stamina = 100.0
 	main._unhandled_input(_pad(JOY_BUTTON_LEFT_STICK))
-	check(main.sprinting, "L3 turns sprint on")
+	check(not main.sprinting, "L3 does not sprint any more")
+	main._unhandled_input(_lt())
+	main._unhandled_input(_lt(false))
+	check(main.sprinting, "LT turns sprint on with one press")
 	Input.action_press("move_right")
 	p.pos = open
 	main._player_step(0.05)
-	check(main.sprinting and absf((p.pos.x - open.x) - walk_step * float(GameData.b("sprint_speed"))) < 0.02, "L3 sprint keeps going without a held button")
+	check(main.sprinting and absf((p.pos.x - open.x) - walk_step * float(GameData.b("sprint_speed"))) < 0.02, "LT sprint keeps going without holding the trigger")
 	Input.action_release("move_right")
 	main.sprinting = true
-	main._unhandled_input(_pad(JOY_BUTTON_LEFT_STICK))
-	check(not main.sprinting, "L3 again turns it off")
+	main._unhandled_input(_lt())
+	check(not main.sprinting, "LT again turns it off")
+	main._unhandled_input(_lt())
+	check(not main.sprinting, "holding LT down is one press, not a toggle every frame")
+	main._unhandled_input(_lt(false))
 	# the keyboard toggle option
 	GameData.balance["sprint_toggle"] = true
 	main._unhandled_input(_key(KEY_SHIFT))
@@ -2146,7 +2160,8 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	_at_seam()
 	main.interact()
 	main.toggle_sprint()
-	main._unhandled_input(_pad(JOY_BUTTON_LEFT_STICK))
+	main._unhandled_input(_lt())
+	main._unhandled_input(_lt(false))
 	main._player_step(0.05)
 	check(not main.sprinting, "no sprint while harvesting")
 	finish_action()

@@ -27,7 +27,7 @@ var projectiles: Array = []    # {node, pos, dir, left}
 var target := {}               # current interaction target
 var action := {}               # {label, left, total, done: Callable, anim, tool}
 var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain)
-var sprinting := false         # B8-027: running (L3 toggles on a pad; Shift held, or toggled, on a keyboard)
+var sprinting := false         # B8-027: running (LT toggles on a pad; Shift held, or toggled, on a keyboard)
 var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
 var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
 var sprint_spent := false      # stamina ran out while Shift was held: release it to sprint again
@@ -519,12 +519,12 @@ func _setup_input() -> void:
 		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "journal": [KEY_B], "pause": [KEY_ESCAPE, KEY_P],
 		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
 		"map": [KEY_M], "recenter": [KEY_C], "build": [KEY_H], "gather": [KEY_G],
-		"sprint": [KEY_SHIFT], "sprint_pad": [], "cancel": [], "next_target": [KEY_Q], "prev_target": [],
+		"sprint": [KEY_SHIFT], "cancel": [], "next_target": [KEY_Q], "prev_target": [],
 	}
 	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
 		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER,
 		"map": JOY_BUTTON_LEFT_SHOULDER, "recenter": JOY_BUTTON_RIGHT_STICK, "gather": JOY_BUTTON_DPAD_DOWN,
-		"next_target": JOY_BUTTON_DPAD_RIGHT, "prev_target": JOY_BUTTON_DPAD_LEFT, "sprint_pad": JOY_BUTTON_LEFT_STICK,
+		"next_target": JOY_BUTTON_DPAD_RIGHT, "prev_target": JOY_BUTTON_DPAD_LEFT,
 		"cancel": JOY_BUTTON_B}
 	for a in keys:
 		if not InputMap.has_action(a):
@@ -1340,7 +1340,7 @@ func cancel_action(why := "") -> void:
 		ui.message(why)
 
 
-## Sprint (B8-027): on a pad L3 toggles it (toggle_sprint), on a keyboard Shift held sprints, or toggles
+## Sprint (B8-027): on a pad LT toggles it (toggle_sprint), on a keyboard Shift held sprints, or toggles
 ## when the balance's sprint_toggle is on. It needs stamina and ends when that is gone; the speed
 ## multiplier is returned and the cost taken (net of the regeneration the world just added).
 func _sprint_step(delta: float) -> float:
@@ -1363,7 +1363,7 @@ func _sprint_step(delta: float) -> float:
 	return float(GameData.b("sprint_speed"))
 
 
-## Sprint on or off (L3; Shift when sprint_toggle is on). It cannot start without some stamina.
+## Sprint on or off (LT; Shift when sprint_toggle is on). It cannot start without some stamina.
 func toggle_sprint() -> void:
 	if sprinting:
 		sprinting = false
@@ -2412,8 +2412,11 @@ func _cell_at(screen_pos: Vector2) -> Vector2i:
 func _unhandled_input(e: InputEvent) -> void:
 	if e is InputEventJoypadMotion and (e.axis == JOY_AXIS_TRIGGER_LEFT or e.axis == JOY_AXIS_TRIGGER_RIGHT):
 		var down: bool = e.axis_value > 0.6
-		if down and not trigger_held.get(e.axis, false) and ui.modal():
-			ui.cycle_focus(1 if e.axis == JOY_AXIS_TRIGGER_RIGHT else -1)
+		if down and not trigger_held.get(e.axis, false):
+			if ui.modal():
+				ui.cycle_focus(1 if e.axis == JOY_AXIS_TRIGGER_RIGHT else -1)    # in a window: step through its buttons
+			elif e.axis == JOY_AXIS_TRIGGER_LEFT and world != null and running:
+				toggle_sprint()                                                  # in play: LT turns sprint on or off (B8-027)
 		trigger_held[e.axis] = down
 		return
 	if world == null:
@@ -2435,7 +2438,7 @@ func _unhandled_input(e: InputEvent) -> void:
 		elif e is InputEventKey and e.pressed and not e.echo and e.physical_keycode == KEY_TAB and target_options.size() > 1:
 			tab_cycled = Engine.get_process_frames()       # Tab is the Pack's key too: with a choice to make it chooses
 			cycle_target(1)
-		elif e.is_action_pressed("sprint_pad") or (e.is_action_pressed("sprint") and bool(GameData.b("sprint_toggle"))):
+		elif e.is_action_pressed("sprint") and bool(GameData.b("sprint_toggle")):
 			toggle_sprint()
 	if e is InputEventScreenTouch:
 		if e.pressed:

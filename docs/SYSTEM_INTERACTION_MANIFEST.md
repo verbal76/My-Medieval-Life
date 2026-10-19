@@ -288,7 +288,7 @@ Rules:
   - Following the player, the camera has a dead zone: it moves only when the player walks out of a box 40% x 35% of the view in the middle of the screen, then keeps them at its edge. Recenter puts the player in the middle.
   - While the player works (mining, felling, picking, harvesting, mending, crafting): B, Esc, a right-click or a tap stops it at once (B8-011), and the Pack, Skills, Journal or any window stops it (B8-010); nothing is awarded and nothing resumes on closing. Esc with nothing under way is still the menu.
   - Several things to use at once (a person beside a forge, a container, a seam, a bed) are all offered, nearest first (B8-014): Q or Tab (D-pad left and right) choose, Use does the chosen one, the prompt shows the next choice on a second line. B stays Cancel, LB and RB Map and Skills.
-  - Sprint (B8-027): Shift held (or toggled with the balance's `sprint_toggle`) or L3 toggled gives `sprint_speed` times the walking speed for `sprint_stamina_per_sec` stamina a second; it ends when stamina runs out and never starts during work or an attack.
+  - Sprint (B8-027): Shift held (or toggled with the balance's `sprint_toggle`) or LT toggled gives `sprint_speed` times the walking speed for `sprint_stamina_per_sec` stamina a second; it ends when stamina runs out and never starts during work or an attack.
   - The village map (Map button, M, pad LB; closed the same way, the X, Esc, B or Android's Back) pauses the game and draws the map data with the player, the player's home and the named places; a tap on it looks there.
 - **Tests:** `game/tests/start_test.gd`
 

@@ -106,7 +106,7 @@ const CONTROLS := {
 		[["xbox_button_view"], "Pack"], [["xbox_rb"], "Skills"], [["xbox_button_menu"], "Menu (the journal is there)"],
 		[["xbox_button_b"], "Close a window"],
 		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"], [["xbox_lt", "xbox_rt"], "In a window: step through its buttons"],
-		[["xbox_stick_l_press"], "Sprint on or off (it uses stamina)"], [["xbox_dpad_left", "xbox_dpad_right"], "Next choice, when more than one thing can be used here"],
+		[["xbox_lt"], "Sprint on or off (it uses stamina)"], [["xbox_dpad_left", "xbox_dpad_right"], "Next choice, when more than one thing can be used here"],
 		[["xbox_button_b"], "While working: stop at once"]],
 }
 # On a phone the interface keeps at least this far from the screen edges (interface units; the layout
