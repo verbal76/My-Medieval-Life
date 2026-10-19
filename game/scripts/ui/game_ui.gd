@@ -1364,12 +1364,12 @@ func _journal_items() -> Array:
 		var close := line.find("] ")
 		var stamp: String = line.substr(1, close - 1) if line.begins_with("[") and close > 0 else ""
 		var text: String = line.substr(close + 2) if stamp != "" else line
-		var parts := stamp.split("  ")
-		var d: String = parts[0] if parts.size() == 2 else ""
+		var cut := stamp.rfind("  ")               # "Spring, Year 1  Day 3  07:24": the heading, then the time (B8-029)
+		var d: String = stamp.substr(0, cut) if cut > 0 else ""
 		if d != day:
 			day = d
 			out.append({"day": true, "text": d})
-		out.append({"day": false, "text": ("%s  %s" % [parts[1], text]) if parts.size() == 2 else text})
+		out.append({"day": false, "text": ("%s  %s" % [stamp.substr(cut + 2), text]) if cut > 0 else text})
 	return out
 
 
@@ -1715,12 +1715,14 @@ func show_death() -> void:
 
 
 ## The death screen's words for what took the last of the player's health (B8-020).
-func death_text(src: String) -> String:
+static func death_text(src: String) -> String:
 	match src:
 		"hunger":
 			return "You starved."
 		"spoiled food":
 			return "Spoiled food made you fatally sick."
+		"old age":
+			return "You died of old age."
 		"":
 			return "You died of your wounds."
 	return "Killed by %s." % src
@@ -1961,6 +1963,10 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	# ...never a child's (owner, 2026-10-18: B8-010, keep disabled)
 	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child":
 		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
+	if Life.partner_refusal(w, n) == "":
+		_talk_choice(choices, "Ask to be partners", func():
+			var why := Life.partner_player(w, n)
+			_talk_view(n, "I would like that." if why == "" else why))
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))
 	_talk_choice(choices, "How are things at home?", func(): _talk_view(n, Dialogue.home(w, n)))
 	_talk_choice(choices, "Any news?", func(): _talk_view(n, Dialogue.news(w, n)))

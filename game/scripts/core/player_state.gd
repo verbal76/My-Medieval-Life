@@ -24,6 +24,11 @@ var amulet := ""
 var ring := ""
 var sex := "male"             # chosen at character creation
 var look := "player_m0_basic" # appearance id (game/data/appearances.json)
+var born := 0.0               # game minutes (B8-029); the player ages on the world calendar (Life.age_years)
+var mother := -1              # npc id of a parent still in the village, -1 none (an heir who was a villager's child)
+var father := -1
+var partner := -1             # npc id, -1 none (Life.partner_player)
+var children: Array = []      # npc ids: the children the player's family line can continue through
 var crimes: Array = []        # {day, kind, what, victim, witnesses}: what the village saw the player do
 var stolen := {}              # item id -> {owner npc id (string): count}: carried goods their owner knows as theirs
 var chest_stolen := {}        # the same marks for goods kept in the home chest (they keep their marks there)
@@ -232,7 +237,7 @@ func to_dict() -> Dictionary:
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
-		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
+		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 	}
 
@@ -260,6 +265,10 @@ static func from_dict(d: Dictionary) -> PlayerState:
 		p.set(k, str(d.get(k, "")))
 	p.sex = str(d.get("sex", "male"))
 	p.look = str(d.get("look", ""))
+	p.born = float(d.get("born", 0.0))
+	for k in ["mother", "father", "partner"]:
+		p.set(k, int(d.get(k, -1)))
+	p.children = (d.get("children", []) as Array).map(func(c): return int(c))
 	p.crimes = d.get("crimes", []).duplicate(true)
 	p.quests = d.get("quests", []).duplicate(true)
 	for q in p.quests:
