@@ -35,6 +35,7 @@ var panel_kind := ""
 var panel_back := Callable()   # what X, Esc and the pad's B do in the open window (PL1-01); empty: close it
 var inner_back := Callable()   # a window's own step back first (the wiki's previous page); returns true when it stepped
 var settings_tab := "audio"
+var wiki_win: WikiWindow       # the open wiki, while Settings shows its tab
 var panel_body: VBoxContainer
 var title_label: Label
 var top_row: HBoxContainer     # the window's title tab and X (the pack window draws its own)
@@ -1144,12 +1145,13 @@ func _settings_page() -> void:
 		"wiki":
 			var wk := WikiWindow.new()
 			wk.open(self, panel_body)
+			wiki_win = wk
 			inner_back = wk.step_back
 	_button("Back", back if back.is_valid() else hide_all)
 	if scheme != "touch":
 		var tb: Button = tabs.get_node_or_null("Tab_" + settings_tab)
 		if tb:
-			tb.grab_focus.call_deferred()
+			(func(): if is_instance_valid(tb) and tb.is_inside_tree(): tb.grab_focus()).call_deferred()
 
 
 func _settings_audio() -> void:

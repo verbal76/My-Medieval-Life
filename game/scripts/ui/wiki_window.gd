@@ -92,8 +92,6 @@ func search_for(q: String, live := false) -> void:
 			_go({"kind": "home"}, false)
 		return
 	_go({"kind": "search", "q": q}, not (live and view.kind == "search"))
-	if live:
-		_render(false)
 
 
 ## One step back: the previous page. False at the start, so Settings handles Back.
@@ -138,7 +136,7 @@ func _focus_first() -> void:
 	if host == null or not is_instance_valid(host):
 		return
 	for b in host.find_children("*", "Button", true, false):
-		if b.is_inside_tree() and b.visible and not b.disabled:
+		if is_instance_valid(b) and b.is_inside_tree() and b.visible and not b.disabled:
 			b.grab_focus()
 			return
 
@@ -163,6 +161,14 @@ func _button(text: String, cb: Callable, parent: Control = null) -> Button:
 	return b
 
 
+## A label that never wraps, for rows of icons and amounts.
+func _plain(text: String, size: int, color: Color, parent: Control) -> Label:
+	var l := _label(text, size, color, parent)
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	l.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	return l
+
+
 func _tex(path: String, size: float) -> TextureRect:
 	var t := TextureRect.new()
 	if path != "" and ResourceLoader.exists(path):
@@ -180,7 +186,7 @@ func _page_button(id: String, parent: Control, with_cat := false) -> Button:
 	var pg: Dictionary = wiki.pages[id]
 	var b := _button(pg.title + ("   (%s)" % _cat_title(pg.category) if with_cat else ""), func(): goto(id), parent)
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.name = "Link_" + id
+	b.name = "Link_" + id.replace(":", "_")
 	if pg.icon != "":
 		b.icon = load(pg.icon)
 		b.expand_icon = true
@@ -319,14 +325,14 @@ func _recipe_row(rid: String) -> void:
 	var first := true
 	for i in r["in"]:
 		if not first:
-			_label("+", 18, DIM, row)
+			_plain("+", 18, DIM, row)
 		first = false
 		row.add_child(_tex(Wiki.icon_path(i), 28))
-		_label("%d %s" % [int(r["in"][i]), GameData.item_name(i)], 16, Color8(246, 236, 214), row).size_flags_horizontal = Control.SIZE_FILL
-	_label("->", 18, DIM, row).size_flags_horizontal = Control.SIZE_FILL
+		_plain("%d %s" % [int(r["in"][i]), GameData.item_name(i)], 16, Color8(246, 236, 214), row)
+	_plain("->", 18, DIM, row)
 	for o in r.out:
 		row.add_child(_tex(Wiki.icon_path(o), 28))
-		_label("%d %s" % [int(r.out[o]), GameData.item_name(o)], 16, GOLD, row).size_flags_horizontal = Control.SIZE_FILL
+		_plain("%d %s" % [int(r.out[o]), GameData.item_name(o)], 16, GOLD, row)
 	var st: String = Wiki.STATION_NAMES.get(r.station, str(r.station).capitalize())
 	var d := _button("at the %s, %s %d" % [st.to_lower(), str(r.skill).capitalize(), int(r.level)], func(): goto("recipe:" + rid), row)
 	d.custom_minimum_size.x = 0

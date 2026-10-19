@@ -387,7 +387,7 @@ func _skills() -> void:
 	for id in GameData.skills:
 		var s: Dictionary = GameData.skills[id]
 		var rows := []
-		var lv := s.unlocks.keys()
+		var lv: Array = s.unlocks.keys()
 		lv.sort_custom(func(a, b): return int(a) < int(b))
 		for l in lv:
 			rows.append(["Level " + str(l), str(s.unlocks[l])])
@@ -419,8 +419,15 @@ func _animals() -> void:
 			["Meat", str(int(a.get("meat", 0)))], ["Hides", str(int(a.get("hide", 0)))]]
 		if a.has("feed"):
 			rows.append(["Feed", "%d wheat a meal" % int(a.feed)])
+		rows.append(["Newborn until", "%s days old (juvenile)" % str(a.get("juvenile_days", "?"))])
+		rows.append(["Adult from", "%s days old; only adults breed" % str(a.get("grow_days", "?"))])
+		rows.append(["Elderly from", "%s days old (slower)" % str(a.get("elder_days", "?"))])
+		var dd: Array = a.get("death_days", [])
+		if dd.size() == 2:
+			rows.append(["Dies of old age", "between %d and %d days old" % [int(dd[0]), int(dd[1])]])
+		rows.append(["Young per litter", str(int(a.get("litter", 1)))])
 		var blocks := [stats(rows)]
-		var node := "node:wild_" + id if wild else "node:" + id + "_pen"
+		var node: String = "node:wild_" + id if wild else "node:" + id + "_pen"
 		var ls := [node, "item:meat"]
 		if int(a.get("hide", 0)) > 0:
 			ls.append("item:hide")
@@ -518,12 +525,34 @@ func _systems() -> void:
 	sys.call("property", "Land, houses, workshops and rent", [
 		p("The manor sells and lets ground and empty houses; rent is weekly. You can build on ground you hold from the Build menu, with materials and hired helpers. Workshops come after a house. A rented home you cannot pay for is lost after missed weeks."),
 		links(["guide:rent", "sys:resting"])])
+	var cal: Dictionary = GameData.b("calendar")
+	var lf: Dictionary = GameData.b("life")
+	var yd: int = int(cal.year_days)
+	sys.call("calendar", "Calendar and seasons", [
+		p("A year is %d game days, in the seasons %s (%s days each). The clock shows the season, year, day and time, for example 'Spring, Year 1  Day 3  07:00'. A day lasts about %d real minutes, so a year is about %d real minutes." % [yd, ", ".join(cal.seasons), ", ".join(cal.season_days.map(func(x): return str(int(x)))), roundi(1440.0 / gmps / 60.0), roundi(1440.0 / gmps / 60.0 * yd)]),
+		p("Everyone's age is counted in these years from their birth date, so people and animals keep ageing wherever you are."),
+		links(["sys:ageing", "sys:animal_life", "sys:needs"])])
+	sys.call("ageing", "Ageing and life stages", [
+		p("Villagers are children until %d, adolescents until %d, adults until %d and elders after that. Children are drawn smaller (adolescents three quarters size), hold no job and are nobody's apprentice. A child who turns %d becomes an adult without a trade and takes a vacant job. An adult who turns %d retires and the post opens; elders walk slower." % [int(lf.child_until), int(lf.adolescent_until), int(lf.elder_from), int(lf.adolescent_until), int(lf.elder_from)]),
+		p("From age %d a villager (and you) can die of old age: a small daily chance that rises with age, certain at %d. The sage and the reeve keep their posts for life." % [int(lf.mortality_from), int(lf.mortality_certain_at)]),
+		links(["sys:calendar", "sys:family", "sys:inheritance", "sys:death"])])
+	sys.call("family", "Families, partners and births", [
+		p("Households are not families: people who share a house are not automatically related. Family links are real and explicit: mother, father, partner and children. Two unmarried, unrelated adults of opposite sex aged %d to %d (at most %d years apart) may become partners, and one moves into the other's home if it has a free bed. Children are born only to partners: a mother aged %d to %d, a free bed in the house, enough food, and no baby in the last year." % [int(lf.partner_min_age), int(lf.partner_max_age), int(lf.partner_max_gap), int(lf.birth_mother_min_age), int(lf.birth_mother_max_age)]),
+		p("A newborn joins the parents' household and grows through the stages. The player's own partner and children are made through the same links."),
+		links(["sys:ageing", "sys:inheritance", "sys:property"])])
+	sys.call("inheritance", "Inheritance", [
+		p("When a villager dies their coins and goods go to the family first: the eldest adult child, then the partner, then other kin; only with no family does the household take them. A household with nobody left leaves the goods where they fell and its house returns to the manor."),
+		p("If you die of old age or any other cause, your heir is your eldest living child aged %d or more, who keeps your name and look; with none, a new heir of your family takes over. The heir keeps the house, the chest and what the family owns or leases, starts every skill from nothing and carries only the starting kit." % int(lf.adolescent_until)),
+		links(["sys:death", "sys:saving", "sys:family"])])
+	sys.call("animal_life", "Animals through life", [
+		p("Animals are newborn, juvenile, adult and elderly by their age in game days. Only adults breed, and breeding slows as an area fills up. The elderly move slower and die of old age somewhere in their last stage. Young animals are drawn with the baby art. Each animal's page lists its stage lengths."),
+		links(["animal:cow", "animal:pig", "animal:sheep", "animal:chicken", "animal:boar", "animal:rabbit", "sys:calendar"])])
 	sys.call("saving", "Saving and your heir", [
-		p("Saves are versioned and keep your world. Resting at home and the pause menu's Save write the save; Continue loads it. If you die, an heir of your family takes over: they keep the house and chest and half of each skill's experience, but only the starting kit; what you carried stays where you fell."),
-		links(["sys:death", "guide:save"])])
+		p("Saves are versioned and keep your world. Resting at home and the pause menu's Save write the save; Continue loads it. If you die, an heir takes over: see Inheritance."),
+		links(["sys:inheritance", "sys:death", "guide:save"])])
 	sys.call("death", "Death", [
-		p("At 0 health you die. The world carries on; your heir starts with the starting kit, inherits the house and chest and half your skill experience, and can pick up what you dropped."),
-		links(["sys:saving", "guide:heal"])])
+		p("At 0 health, or of old age, you die. The world carries on. What you carried stays where you fell, for anyone to take, your heir too. Your heir inherits the house and chest and starts with the starting kit."),
+		links(["sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
 	sys.call("chains", "Production chains", [
 		p("Raw materials become goods through stations:"),
 		{"t": "chain", "id": "pickaxe"}, {"t": "chain", "id": "iron_sword"}, {"t": "chain", "id": "leather_armor"}, {"t": "chain", "id": "plank"}, {"t": "chain", "id": "roast_meat"}, {"t": "chain", "id": "ale"},
@@ -537,7 +566,6 @@ func _not_yet() -> void:
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"plough": ["Hand plough and farming by the player", "You cannot till or sow fields yourself; the farmers do it. You can harvest ripe wheat."],
 		"potions": ["Apothecary and healing potions", "Besides food that heals and the herbal tonic there are no bandages, potions or apothecary shop yet."],
-		"seasons": ["Seasons", "There are no seasons; days and nights pass."],
 	}
 	for id in items:
 		add_page("todo:" + id, items[id][0], "notyet", [note("Not in the game yet. " + items[id][1])], "", "not implemented planned")

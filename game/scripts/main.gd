@@ -207,6 +207,17 @@ func _ready() -> void:
 				ui.show_origin()
 			"settings", "settings_display", "settings_interface", "settings_controls", "settings_wiki":
 				ui.show_settings(ui.hide_all, shot_panel.trim_prefix("settings_") if shot_panel.begins_with("settings_") else "audio")
+			"wiki_search", "wiki_item", "wiki_guide", "wiki_recipe":
+				ui.show_settings(ui.hide_all, "wiki")
+				match shot_panel:
+					"wiki_search":
+						ui.wiki_win.search_for("plank")
+					"wiki_item":
+						ui.wiki_win.goto("item:pickaxe")
+					"wiki_guide":
+						ui.wiki_win.goto("guide:heal")
+					"wiki_recipe":
+						ui.wiki_win.goto("recipe:forge_pickaxe")
 			"controls", "controls_pad":
 				if shot_panel == "controls_pad":
 					ui.set_scheme("gamepad")

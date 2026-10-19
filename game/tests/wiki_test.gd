@@ -1,0 +1,215 @@
+extends SceneTree
+## Wiki (PL2-009) and Settings / menu flow (PL1-01, PL1-02): every item, recipe and resource node has
+## a page (with its icon where one exists), links resolve, search finds the usual words, other
+## systems can add pages, and opening Settings / Controls / Wiki and leaving by X, Esc or the pad's B
+## restores the world, the HUD and input, from the title screen and from the pause menu. Run:
+##   godot --headless --path game --script res://tests/wiki_test.gd
+
+var main
+var failures := 0
+
+
+func check(cond: bool, what: String) -> void:
+	print(("ok   " if cond else "FAIL ") + what)
+	if not cond:
+		failures += 1
+
+
+func _init() -> void:
+	main = load("res://scenes/main.tscn").instantiate()
+	root.add_child(main)
+	main.save_path = "user://test_saves/wiki_test/save1.json"
+	process_frame.connect(_run, CONNECT_ONE_SHOT)
+
+
+func _key(code: int) -> InputEventKey:
+	var e := InputEventKey.new()
+	e.physical_keycode = code
+	e.pressed = true
+	return e
+
+
+func _pad(button: int) -> InputEventJoypadButton:
+	var e := InputEventJoypadButton.new()
+	e.button_index = button
+	e.pressed = true
+	return e
+
+
+func _tab(name: String) -> void:
+	main.ui.panel_body.find_child("SettingsTabs", true, false).get_node("Tab_" + name).pressed.emit()
+
+
+func _find(text: String) -> Button:
+	for b: Button in main.ui.panel_body.find_children("*", "Button", true, false):
+		if b.text.begins_with(text):
+			return b
+	return null
+
+
+func _run() -> void:
+	await _data_tests()
+	await _flow_tests()
+	print("wiki_test: %s" % ("FAILED %d" % failures if failures else "all passed"))
+	quit(1 if failures else 0)
+
+
+func _data_tests() -> void:
+	GameData.ensure()
+	var w := Wiki.build()
+	var missing := []
+	var no_icon := []
+	for id in GameData.items:
+		if not w.pages.has("item:" + id):
+			missing.append(id)
+		elif ResourceLoader.exists("res://assets/icons/%s.png" % id) and w.pages["item:" + id].icon == "":
+			no_icon.append(id)
+	check(missing.is_empty() and no_icon.is_empty(), "every item has a page, with its icon where one exists %s %s" % [missing, no_icon])
+	missing.clear()
+	for id in GameData.recipes:
+		if not w.pages.has("recipe:" + id):
+			missing.append(id)
+	check(missing.is_empty(), "every recipe has a page %s" % [missing])
+	for id in GameData.resources.nodes:
+		if not w.pages.has("node:" + id):
+			missing.append(id)
+	check(missing.is_empty(), "every resource node has a page %s" % [missing])
+	for id in GameData.skills:
+		if not w.pages.has("skill:" + id):
+			missing.append(id)
+	for id in Population.JOBS:
+		if not w.pages.has("job:" + id):
+			missing.append(id)
+	for id in GameData.b("animals"):
+		if not str(id).begins_with("_") and not w.pages.has("animal:" + id):
+			missing.append(id)
+	check(missing.is_empty(), "every skill, job and animal has a page %s" % [missing])
+	check(w.pages.has("station:forge") and w.pages.has("station:stove") and w.pages.has("station:sawhorse"), "stations have pages")
+	check(w.broken_links().is_empty(), "every link resolves %s" % [w.broken_links()])
+	for q in ["pickaxe", "plank", "iron ore", "heal", "planks", "stove", "theft", "calendar", "lockpicking"]:
+		var r := w.search(q)
+		check(not r.is_empty(), "search finds '%s' (%d)" % [q, r.size()])
+	check(w.search("pickaxe")[0].begins_with("item:") and "item:pickaxe" in w.search("pickaxe"), "the pickaxe item is among the pickaxe results")
+	check("item:iron_ore" in w.search("iron ore"), "'iron ore' finds the iron ore item")
+	check("todo:lockpicking" in w.search("lockpick") and w.pages["todo:lockpicking"].blocks[0].t == "note", "unbuilt ideas are marked 'Not in the game yet'")
+	check(w.search("zzzz").is_empty(), "nonsense finds nothing")
+	check(w.pages["item:iron_bar"].text.contains("pickaxe"), "an item page links to what it makes (iron bar -> pickaxe)")
+	check(w.chain_lines("pickaxe").size() >= 3, "the pickaxe has a production chain down to ore")
+	check(w.pages.has("sys:calendar") and w.pages.has("sys:family") and w.pages.has("sys:inheritance") and w.pages.has("sys:animal_life"), "calendar, ageing, family, inheritance and animal life pages exist")
+	# other systems add pages
+	Wiki.add_provider(func(wk: Wiki): wk.add_page("sys:test_extra", "Extra system", "systems", [Wiki.p("A test page about glowworms.")]))
+	var w2 := Wiki.build()
+	check(w2.pages.has("sys:test_extra") and "sys:test_extra" in w2.search("glowworm"), "a provider can add a searchable page")
+	Wiki.providers.clear()
+	# the window navigates and steps back
+	var sc := ScrollContainer.new()
+	var body := VBoxContainer.new()
+	sc.add_child(body)
+	root.add_child(sc)
+	var win := WikiWindow.new()
+	win.open(null, body)
+	check(not win.step_back(), "no step back from the wiki home")
+	win.goto("item:pickaxe")
+	check(win.host.find_child("PageTitle", true, false).text == "Pickaxe" and win.host.find_child("PageIcon", true, false) != null, "an item page shows its title and icon")
+	win.goto("recipe:forge_pickaxe")
+	check(win.step_back() and win.view.id == "item:pickaxe" and not win.step_back() == false, "Back returns to the previous page")
+	win.search_for("plank")
+	check(win.view.kind == "search" and win.host.find_child("WikiResultsTitle", true, false) != null, "searching shows results")
+	sc.queue_free()
+
+
+func _flow_tests() -> void:
+	var ui = main.ui
+	main.new_game()
+	await process_frame
+	var w: World = main.world
+	check(main.running and not main.paused, "a game is running")
+	# from the pause menu: Settings > Controls > X, repeatedly, by every input
+	for round in 3:
+		ui.show_pause()
+		check(main.paused, "round %d: the pause menu pauses" % round)
+		_find("Controls").pressed.emit()
+		check(ui.is_open("settings") and ui.settings_tab == "controls" and main.paused, "round %d: Controls opens in Settings" % round)
+		check(ui.panel.get_tree().get_nodes_in_group("none").is_empty(), "no stacked windows")
+		ui.close_btn.pressed.emit()
+		check(ui.is_open("pause") and main.paused, "round %d: X returns to the pause menu" % round)
+		_find("Settings").pressed.emit()
+		main._unhandled_input(_key(KEY_ESCAPE))
+		check(ui.is_open("pause"), "round %d: Esc in Settings returns to the pause menu" % round)
+		_find("Controls").pressed.emit()
+		main._unhandled_input(_pad(JOY_BUTTON_B))
+		check(ui.is_open("pause"), "round %d: the pad's B in Controls returns to the pause menu" % round)
+		_find("Wiki").pressed.emit()
+		check(ui.is_open("settings") and ui.settings_tab == "wiki", "round %d: Wiki opens from the pause menu" % round)
+		main._unhandled_input(_key(KEY_ESCAPE))
+		check(ui.is_open("pause"), "round %d: Esc leaves the wiki" % round)
+		_find("Resume").pressed.emit()
+		check(not ui.panel.visible and ui.hud.visible and not main.paused, "round %d: Resume restores the world, the HUD and input" % round)
+	# from play: Esc opens the pause menu, Esc closes it
+	main._unhandled_input(_key(KEY_ESCAPE))
+	check(ui.is_open("pause") and main.paused, "Esc opens the pause menu")
+	main._unhandled_input(_key(KEY_ESCAPE))
+	check(not ui.panel.visible and not main.paused, "Esc closes the pause menu and play resumes")
+	# tabs and persistence
+	ui.show_pause()
+	_find("Settings").pressed.emit()
+	for t in ["audio", "display", "interface", "controls", "wiki"]:
+		_tab(t)
+		await process_frame
+		check(ui.settings_tab == t and ui.is_open("settings"), "the %s tab opens" % t)
+	_tab("interface")
+	await process_frame
+	var before: String = main.settings.ui_size
+	_find(before.capitalize()).pressed.emit()
+	check(main.settings.ui_size != before, "an interface setting changes")
+	var again := GameSettings.new()
+	again.load_file()
+	check(again.ui_size == main.settings.ui_size, "settings persist")
+	main.settings.ui_size = "normal"
+	main.apply_settings()
+	# the wiki inside Settings: pages, then Back steps through them before leaving Settings
+	_tab("wiki")
+	await process_frame
+	var win_back: Callable = ui.inner_back
+	check(win_back.is_valid(), "the wiki tab has its own Back step")
+	ui.panel_body.find_child("WikiSearch", true, false).text_changed.emit("pickaxe")
+	await process_frame
+	check(ui.panel_body.find_child("Link_item_pickaxe", true, false) != null, "typing 'pickaxe' lists the pickaxe")
+	ui.panel_body.find_child("Link_item_pickaxe", true, false).pressed.emit()
+	await process_frame
+	check(ui.panel_body.find_child("PageTitle", true, false).text == "Pickaxe", "a result opens its page")
+	main._unhandled_input(_pad(JOY_BUTTON_B))
+	await process_frame
+	check(ui.is_open("settings") and ui.panel_body.find_child("WikiResultsTitle", true, false) != null, "B steps back to the results, still in Settings")
+	ui.close_btn.pressed.emit()
+	await process_frame
+	check(ui.is_open("settings") and ui.panel_body.find_child("Cat_items_tools", true, false) != null, "X steps back to the wiki home")
+	ui.close_btn.pressed.emit()
+	check(ui.is_open("pause"), "X then leaves Settings for the pause menu")
+	_find("Resume").pressed.emit()
+	check(not ui.panel.visible and not main.paused, "play resumes after Settings and Wiki")
+	# Start (Menu) closes a window of play too
+	ui.show_pause()
+	_find("Wiki").pressed.emit()
+	main._unhandled_input(_pad(JOY_BUTTON_START))
+	check(ui.is_open("pause"), "the pad's Menu button steps back as well")
+	ui.hide_all()
+	# from the title screen: Controls / Settings / Wiki then X, Esc and B come back to the title, never to a grey world
+	main.running = false
+	main.paused = true
+	ui.show_title(false)
+	check(ui.is_open("title") and main.paused, "the title screen pauses")
+	for entry in ["Controls", "Settings", "Wiki"]:
+		_find(entry).pressed.emit()
+		check(ui.is_open("settings"), "%s opens from the title" % entry)
+		ui.close_btn.pressed.emit()
+		check(ui.is_open("title") and main.paused, "X from %s returns to the title screen" % entry)
+		_find(entry).pressed.emit()
+		main._unhandled_input(_key(KEY_ESCAPE))
+		check(ui.is_open("title"), "Esc from %s returns to the title screen" % entry)
+		_find(entry).pressed.emit()
+		main._unhandled_input(_pad(JOY_BUTTON_B))
+		check(ui.is_open("title"), "B from %s returns to the title screen" % entry)
+	main._unhandled_input(_key(KEY_ESCAPE))
+	check(ui.is_open("title"), "Esc on the title screen does nothing (it used to leave a grey world)")
+	check(w != null, "world still present")

@@ -391,3 +391,9 @@ All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile
 - No audio yet (the volume settings are ready for it).
 - Villagers keep only their last 8 memories (having met someone is never forgotten), so older
   grudges and sightings fade.
+
+## Settings, back handling and the wiki (PL1-01, PL1-02, PL2-009)
+
+- PL1-01 root cause: X, Esc and the pad's B in every window called `hide_all`, which only unpaused when a game was running. From the title screen (Controls, Settings, Credits, character creation) it hid the panel and left the HUD over a paused, greyed world. Fix: each window records its Back (`GameUI.panel_back`); `go_back` returns to it, closes a play window, and ignores the title, origin and death screens.
+- PL1-02: Settings is one tabbed screen (Audio, Display, Interface, Controls, Wiki) with a Back button; Controls and Wiki are also direct buttons on the title and pause menus. No settings changed or were added.
+- PL2-009: the wiki is generated from game data at open time (see INT-082) with hand-written system pages and How-do-I guides whose numbers come from balance.json. Not-built ideas (lockpicking, player shops, cloud saves, hand plough, apothecary and potions) are listed as "Not in the game yet", confirmed absent from scripts and data by search on 2026-10-19. Wording of mechanics is provisional like the numbers it quotes.
