@@ -39,6 +39,9 @@ func unit_of_container(c: Dictionary) -> Dictionary:
 
 
 func unit(id: String) -> Dictionary:
+	if id.begins_with("cart:"):                  # B14: a cart's load (Carts)
+		var c: Dictionary = w.carts.by_id(int(id.trim_prefix("cart:")))
+		return {} if c.is_empty() else {"id": id, "kind": "cart", "bid": "", "cart": c, "at": c.pos}
 	if id.begins_with("chest:"):
 		var parts := id.split(":")
 		for u in units_in(parts[1]):
@@ -54,6 +57,8 @@ func unit(id: String) -> Dictionary:
 func info(u: Dictionary) -> Dictionary:
 	var bid: String = u.bid
 	var p := w.player
+	if u.has("cart"):
+		return _info_cart(u)
 	if u.has("c"):
 		return _info_container(u)
 	if not w.buildings.has(bid):
@@ -77,6 +82,15 @@ func info(u: Dictionary) -> Dictionary:
 			return {"access": "foreign", "store": w.households[hh].pantry, "owner": o, "manor": manor, "family": false, "business": false,
 				"whose": "the manor's" if manor else "the %s household's" % w.households[hh].family}
 	return _decor(u)
+
+
+## A cart's load: the owner's to fill; anyone else's to take from only as theft (its owner a household adult).
+func _info_cart(u: Dictionary) -> Dictionary:
+	var c: Dictionary = u.cart
+	var owner := str(c.owner)
+	if owner == World.PLAYER:
+		return {"access": "own", "store": c.store, "owner": null, "whose": "your", "family": false, "business": false}
+	return {"access": "foreign", "store": c.store, "owner": w.party(owner), "whose": w.carts.whose(c), "family": false, "business": false}
 
 
 func _decor(_u: Dictionary) -> Dictionary:
@@ -118,7 +132,7 @@ func place(u: Dictionary) -> String:
 
 # ---------------------------------------------------------------- locks -------------------------
 func _default_level(u: Dictionary, i: Dictionary) -> int:
-	if i.access != "foreign" or u.has("c"):
+	if i.access != "foreign" or u.has("c") or u.has("cart"):
 		return 0
 	if i.business:
 		return 2
