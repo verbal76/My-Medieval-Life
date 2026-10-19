@@ -1868,7 +1868,9 @@ func open_posts(job: String) -> int:
 func _open_vacancy(n: NPC) -> void:
 	if n.role != "adult" or not is_essential(n.job):
 		return
-	if living_in(n.job) + open_posts(n.job) >= staff_target(n.job):
+	# A retiring worker is still an adult in the trade when this runs: do not count them as staff.
+	var staying := living_in(n.job) - (1 if n.alive else 0)
+	if staying + open_posts(n.job) >= staff_target(n.job):
 		return
 	w.vacancies.append({"job": n.job, "workplace": n.workplace, "home": n.home, "household": n.household, "day": w.day(),
 			"who": "%s %s" % [n.name, n.family]})

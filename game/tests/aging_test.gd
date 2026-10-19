@@ -167,6 +167,20 @@ func test_coming_of_age_and_retiring() -> void:
 	check(farmer.role == "elder" and farmer.job == "", "an adult turning 55 becomes an elder and retires from the trade")
 	check(sage.role == "adult" and sage.job == "sage", "the sage keeps the post past 55")
 	check(Life.walk_factor(farmer) < 1.0 and is_equal_approx(Life.walk_factor(farmer), float(GameData.b("life").elder_speed)), "elders walk at 0.8x")
+	# a skilled worker retiring from a fully staffed trade opens the post (Build 12 audit defect 1)
+	var smith: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.role == "adult" and n.job == "smith")[0]
+	check(w.brain.living_in("smith") >= w.brain.staff_target("smith"), "the smithy starts fully staffed")
+	var posts_before: int = w.brain.open_posts("smith")
+	smith.born = w.minutes - 54.95 * Y
+	w.minutes += 0.1 * Y
+	Life.sync_roles(w)
+	check(smith.role == "elder" and smith.job == "", "the smith retires at 55")
+	check(w.brain.open_posts("smith") == posts_before + 1, "retiring from a fully staffed trade opens one post")
+	var spare := w.npcs.any(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job == "" and n.household >= 0)
+	check(spare, "the village has a jobless adult to apprentice")
+	w.minutes += float(GameData.b("succession_days")) * 1440.0 + 1.0
+	w.brain.succession_dawn()
+	check(w.brain.open_posts("smith") == posts_before and w.brain.living_in("smith") >= w.brain.staff_target("smith"), "after the wait an apprentice fills the smith's post")
 	var bandit: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.role == "bandit")[0]
 	bandit.born = w.minutes - 70.0 * Y
 	Life.sync_roles(w)
