@@ -264,7 +264,7 @@ All checked against the code at `2caca5a`. No regressions found.
 - No document is called "World Design Rules". The permanent rules live in `CLAUDE.md`, `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` and the compliance table in `docs/LIVING_WORLD_ALIGNMENT.md`. The new work follows them: real sources, real money, the same rules for the player, nothing from nowhere.
 - `LIVING_WORLD_ALIGNMENT.md` has no B14 compliance rows yet. That is a documentation gap to fill at release time.
 
-**Designing Virtual Worlds** (Bartle): **not in the repository and not uploaded.** No document cites it, so it has not been incorporated into planning. If you want it used, a summary of its economy chapters or the file itself would be needed.
+**Designing Virtual Worlds** (Bartle): **not in the repository and not uploaded.** No document cites it, so it has not been incorporated into planning. If you want it used, a summary of its economy chapters or the file itself would be needed. *Update, later the same day:* the owner supplied it as the GitHub release "Book". It has been read in full, and its actionable items are in `docs/reference/DESIGNING_VIRTUAL_WORLDS.md`.
 
 **Exploits and gaps found**
 - **Flooding with your own stock.** Your stall stock lowers villagers' prices nearby. You could stock a stall to drive a rival's price down, then buy from the rival. The gain is bounded by `local_supply.cap` (at most half the value), and the stall ceiling leaves your own stall out of its own comparison. Low risk; worth watching.

@@ -468,8 +468,9 @@ func damage_player(amount: float, source: String) -> void:
 
 
 ## Permanent death: the next of the family line takes over. The world is not reset.
-## Decision (recorded in docs/BUILD_DECISIONS.md): the heir keeps the house, the chest and half
-## of each skill's experience; what the dead carried stays where they fell.
+## Decision (recorded in docs/BUILD_DECISIONS.md, owner 2026-10-18): the heir keeps the house, the chest
+## and what the family owns or leases, starts every skill from nothing and carries only the starting kit;
+## what the dead carried stays where they fell.
 ## The starting kit (balance.json): coins, health and the few things a wanderer carries. A new
 ## player starts with it, and so does every heir (owner rule: an heir inherits only this).
 func give_start_kit(p: PlayerState) -> void:
