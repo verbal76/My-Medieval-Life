@@ -5,15 +5,20 @@ extends Sprite2D
 ##  - "puny" (Puny Monsters): 12 x 8 frames of 32 px, rows S, SE, E, NE, N, NW, W, SW; frames 0-3
 ##    are used as the walk (the sheet has no frame notes, so this choice is marked uncertain in
 ##    docs/BUILD_DECISIONS.md).
-## Babies are drawn at half scale. The node's position is the animal's feet.
+## Babies use the Cozy Farm baby sheet at full scale (B8-029); a species with no baby art (boar) is drawn at half scale. The node's position is the animal's feet.
 
 var layout := "cozy"
 var t := 0.0
+var baby := false          # drawing the baby sheet
+var skin_now := ""
 
 
-func setup(a: Animal) -> void:
+func setup(a: Animal, now := -1.0) -> void:
 	var s := a.spec()
-	texture = load("res://assets/animals/%s.png" % a.skin)
+	var bs := a.baby_skin() if now >= 0.0 and not a.adult(now) else ""
+	baby = bs != ""
+	skin_now = bs if baby else a.skin
+	texture = load("res://assets/animals/%s.png" % skin_now)
 	layout = s.layout
 	if layout == "puny":
 		hframes = 12
@@ -21,11 +26,15 @@ func setup(a: Animal) -> void:
 	else:
 		hframes = 4
 		vframes = 5
-	offset = Vector2(0, -float(s.frame) / 2.0 + 3.0)
+	var frame_px := float(s.get("baby_frame", s.frame)) if baby else float(s.frame)
+	offset = Vector2(0, -frame_px / 2.0 + 3.0)
 
 
 func show_state(a: Animal, now: float, dt: float) -> void:
-	scale = Vector2.ONE if a.adult(now) else Vector2(0.5, 0.5)
+	var bs := a.baby_skin() if not a.adult(now) else ""
+	if (bs != "") != baby or (bs == "" and skin_now != a.skin):
+		setup(a, now)                       # grew up (or loaded as a baby): the sheet changes
+	scale = Vector2.ONE if (a.adult(now) or baby) else Vector2(0.5, 0.5)
 	t += dt
 	var col := int(t / 0.2) % 4 if a.moving else 0
 	var row := 0
