@@ -10674,7 +10674,7 @@
    "priority": "",
    "workstream": "releases",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Visibility: private drafts (owner, 2026-10-19: 'Keep them private drafts for now'). Public needs a new owner instruction.",
    "history": [
     {
      "date": "2026-10-19",
@@ -10685,6 +10685,11 @@
      "date": "2026-10-19",
      "change": "workstream; next_action",
      "why": "Build 14 under way"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "notes",
+     "why": "owner 2026-10-19: 'Keep them private drafts for now'"
     }
    ]
   },
