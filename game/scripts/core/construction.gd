@@ -252,6 +252,8 @@ func can_hire(n: NPC) -> String:
 		return "%s has work of their own." % n.name
 	if not contract_of(n).is_empty():
 		return "%s is already hired for today." % n.name
+	if w.business != null and w.business.is_attendant(n):
+		return "%s minds a counter already." % n.name
 	return ""
 
 

@@ -563,6 +563,7 @@ func _attendant() -> void:
 	check(b.hire(s, a) == "" and b.attendant_of(s) == a and a.coins == acoins + b.wage() and w.player.coins == coins - b.wage(), "an attendant is hired and paid the day's wage")
 	check(w.total_coins() == total and int(s.costs.wages) == b.wage(), "coins conserved; the wage is an expense")
 	check(b.hire(s, cands[1]) != "" and b.hire_refusal(a) != "", "one attendant at a time; a hired villager is not free")
+	check(w.construction.can_hire(a) != "", "a builder (player or villager) cannot hire the attendant away as a carrier")
 	# a real NPC with a day: the brain sends them to the counter in working hours
 	w.minutes = float(w.day()) * 1440.0 + 9.0 * 60.0
 	a.plan.clear()
