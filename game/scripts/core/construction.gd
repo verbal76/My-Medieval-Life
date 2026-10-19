@@ -15,8 +15,21 @@ extends RefCounted
 ## buildings with stations, used by their owner or tenant, others with permission. Every number is an
 ## agent proposal in balance.json, provisional until the balance review.
 
-const KINDS := ["house", "smithy", "carpentry", "bakehouse"]
-const NAMES := {"house": "house", "smithy": "smithy", "carpentry": "carpenter's shop", "bakehouse": "bakehouse"}
+## Every kind of building (PL2-008/014: one modular foundation). A house is the property's first
+## building; every other kind is a module that can be added to a property later, beside what is there
+## and without touching it, or stand alone as a shop on its own ground (STANDALONE; the owner's rule
+## "a house first" still holds for a new property). Storage and living quarters only make sense as
+## rooms of a property. No kind locks anybody into a trade: villagers and the player use any station.
+const KINDS := ["house", "smithy", "carpentry", "bakehouse", "kitchen", "apothecary", "storage", "quarters"]
+const STANDALONE := ["house", "smithy", "carpentry", "bakehouse", "kitchen", "apothecary"]
+const MODULES := ["smithy", "carpentry", "bakehouse", "kitchen", "apothecary", "storage", "quarters"]
+const NAMES := {"house": "house", "smithy": "smithy", "carpentry": "carpenter's shop", "bakehouse": "bakehouse",
+	"kitchen": "kitchen", "apothecary": "apothecary", "storage": "storeroom", "quarters": "living quarters"}
+## What each module is for, in a few words (menus and the wiki).
+const PURPOSE := {"smithy": "a forge and an anvil", "carpentry": "a workbench and a sawhorse", "bakehouse": "an oven and a stove",
+	"kitchen": "a stove for cooking and brewing", "apothecary": "a stove for tonics and poultices",
+	"storage": "a room that opens the family chest from here", "quarters": "more beds for the household"}
+const ATTACH_MIN := 3         # cells two buildings must share along a wall to count as joined
 const HIRABLE := ["", "manor_hand", "laborer"]     # out of work, or labouring: free to be hired for a day
 ## Who sells each building material (NPCBrain.buy_role), in order of preference.
 const SELLERS := {"plank": ["carpenter", "merchant_raw"], "stone": ["merchant_raw", "laborer"],
@@ -41,7 +54,7 @@ static func kind_name(kind: String, article := false) -> String:
 
 
 static func stamp_name(kind: String) -> String:
-	return "house" if kind == "house" else "workshop_" + kind
+	return "house" if kind == "house" or kind == "quarters" else "workshop_" + kind
 
 
 static func is_workshop(kind: String) -> bool:
@@ -68,9 +81,13 @@ func stations_of_kind(kind: String) -> Array:
 
 
 ## Owner rule: a house first, then workshops. A workshop needs a house the builder owns.
-func may_build(kind: String, ref: String) -> String:
+func may_build(kind: String, ref: String, anchor := {}) -> String:
 	if not KINDS.has(kind):
 		return "Nothing of that kind can be built."
+	if not anchor.is_empty():
+		return module_refusal(kind, anchor, ref)
+	if not STANDALONE.has(kind):
+		return "A %s is added to a property you hold; it does not stand alone." % kind_name(kind)
 	if kind == "house":
 		return ""
 	for id in w.property.homes_of(ref):
@@ -82,8 +99,8 @@ func may_build(kind: String, ref: String) -> String:
 ## Why a building of this kind cannot go on this ground for `ref`, "" if it can: the house-first
 ## rule, the land office's check (Property.can_claim), and a door step that is clear and reachable
 ## from the village, so nobody builds a door into a wall or a house nobody can reach.
-func can_place(kind: String, rect: Rect2i, ref: String) -> String:
-	var no := may_build(kind, ref)
+func can_place(kind: String, rect: Rect2i, ref: String, anchor := {}) -> String:
+	var no := may_build(kind, ref, anchor)
 	if no != "":
 		return no
 	if rect.size != footprint(kind):
@@ -91,6 +108,10 @@ func can_place(kind: String, rect: Rect2i, ref: String) -> String:
 	no = w.property.can_claim(rect)
 	if no != "":
 		return no
+	if not anchor.is_empty():
+		no = attach_refusal(rect, anchor)
+		if no != "":
+			return no
 	var step := door_step(kind, rect)
 	if w.map.is_solid(step):
 		return "the door would open onto %s" % ("the edge of the village" if step.y >= w.map.h - 1 else "something in the way")
@@ -114,16 +135,84 @@ func ground_terms(rect: Rect2i) -> Dictionary:
 
 ## The whole flow in one (owner rule): survey the ground, buy or lease it from the manor on the spot,
 ## and mark out the site. Returns the parcel, or {} with the reason in `why`.
-func place(kind: String, rect: Rect2i, ref: String, lease := false) -> Dictionary:
-	why = can_place(kind, rect, ref)
+func place(kind: String, rect: Rect2i, ref: String, lease := false, anchor := {}) -> Dictionary:
+	why = can_place(kind, rect, ref, anchor)
 	if why != "":
 		return {}
 	var p: Dictionary = w.property.claim(rect, ref, lease)
 	if p.is_empty():
 		why = w.property.why
 		return {}
+	if not anchor.is_empty():
+		p.estate = w.property.estate_id(anchor)       # the same property from now on
 	w.start_site(p, kind, ref)
 	return p
+
+
+# ---------------------------------------------------------------- modules (PL2-008, PL2-014) -----
+## Why `ref` cannot add a module of this kind to the property of `anchor` (any of its parcels), ""
+## if it can: the property is theirs (owned or leased), its first building stands, nothing is being
+## built on it, and it has no room of that kind yet (one of each).
+func module_refusal(kind: String, anchor: Dictionary, ref: String) -> String:
+	if not MODULES.has(kind):
+		return "A %s cannot be added to a property." % kind_name(kind)
+	var head: Dictionary = w.property.anchor_of(anchor)
+	if not w.holds(ref, head):
+		return "It is not your property."
+	if w.property.building_on(head).is_empty():
+		return "Finish the first building before adding to the property."
+	for q in w.property.estate_parcels(head):
+		if not q.site.is_empty() and not q.site.get("done", false):
+			return "Finish the building on the property first."
+	if w.property.has_module(head, kind):
+		return "The property already has a %s." % kind_name(kind)
+	return ""
+
+
+## A module must touch what the property already has: its wall shares at least ATTACH_MIN cells with
+## a building (or a site) of the property, and it must not cover any of their door steps.
+func attach_refusal(rect: Rect2i, anchor: Dictionary) -> String:
+	var touches := false
+	for q in w.property.estate_parcels(anchor):
+		var r := Rect2i(int(q.x), int(q.y), int(q.w), int(q.h))
+		var step := Vector2i(int(q.door[0]), int(q.door[1]) + 1)
+		if rect.has_point(step):
+			return "it would cover the door of %s" % w.property.describe(q)
+		var along_x := mini(rect.end.x, r.end.x) - maxi(rect.position.x, r.position.x)
+		var along_y := mini(rect.end.y, r.end.y) - maxi(rect.position.y, r.position.y)
+		if ((rect.end.y == r.position.y or r.end.y == rect.position.y) and along_x >= ATTACH_MIN) \
+				or ((rect.end.x == r.position.x or r.end.x == rect.position.x) and along_y >= ATTACH_MIN):
+			touches = true
+	return "" if touches else "it must stand against the property's buildings"
+
+
+## A good place for a module: the first (nearest the property's first building) ground that
+## can_place accepts, searched beside each building of the property; failing that, ground where only
+## trees stand in the way (the ghost shows it red with "fell it first"); or an empty rect.
+func find_module_slot(kind: String, anchor: Dictionary, ref: String) -> Rect2i:
+	var size := footprint(kind)
+	var head: Dictionary = w.property.anchor_of(anchor)
+	var best := Rect2i()
+	var best_d := 1 << 30
+	var treed := Rect2i()
+	var treed_d := 1 << 30
+	for q in w.property.estate_parcels(head):
+		var cands := []
+		for dy in range(-size.y, int(q.h) + 1, 1):
+			for dx in [-size.x, int(q.w)]:
+				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), absi(dy) * 2 + absi(dx) / 4])
+		for dx in range(-size.x, int(q.w) + 1, 1):
+			for dy in [-size.y, int(q.h)]:
+				cands.append([Rect2i(int(q.x) + dx, int(q.y) + dy, size.x, size.y), absi(dx) * 2 + absi(dy) / 4 + 3])
+		for cd in cands:
+			var no := can_place(kind, cd[0], ref, head)
+			if no == "" and cd[1] < best_d:
+				best = cd[0]
+				best_d = cd[1]
+			elif no.begins_with("a tree") and cd[1] < treed_d:
+				treed = cd[0]
+				treed_d = cd[1]
+	return best if best.size != Vector2i.ZERO else treed
 
 
 ## Unfinished sites `ref` is building (the site's owner), in registry order.
@@ -440,11 +529,11 @@ func carried() -> Dictionary:
 # ---------------------------------------------------------------- households -----------------
 ## Beds a home has for its household: its real beds; straw pallets are for lodgers and guests.
 func beds_in(home: String) -> int:
-	var it: Dictionary = w.interiors.get(home, {})
 	var n := 0
-	for s in it.get("spots", []):
-		if s.kind == "bed" and int(s.get("tile", -1)) % 100000 != 593:
-			n += 1
+	for room in w.property.rooms_of(home):           # the house and the living quarters added to it
+		for s in w.interiors.get(room, {}).get("spots", []):
+			if s.kind == "bed" and int(s.get("tile", -1)) % 100000 != 593:
+				n += 1
 	return n
 
 

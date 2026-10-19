@@ -100,6 +100,7 @@ static func build() -> Wiki:
 	w._not_yet()
 	WikiWorld.add_pages(w)
 	WikiChests.add_pages(w)
+	WikiProperty.add_pages(w)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
@@ -524,8 +525,8 @@ func _systems() -> void:
 		p("Pickpocketing needs Stealth; sleeping victims are easier. Goods you steal are marked as theirs. A guard who sees a theft, hears the victim within %d tiles, or questions you about a stolen item returns the goods and fines you %d coins." % [int(GameData.b("guard_call_radius")), int(GameData.b("theft_fine"))]),
 		links(["skill:stealth", "job:guard", "guide:theft"])])
 	sys.call("property", "Land, houses, workshops and rent", [
-		p("The manor sells and lets ground and empty houses; rent is weekly. You can build on ground you hold from the Build menu, with materials and hired helpers. Workshops come after a house. A rented home you cannot pay for is lost after missed weeks."),
-		links(["guide:rent", "sys:resting"])])
+		p("The manor sells and lets ground and empty houses; rent is weekly. You can build on ground you hold from the Build menu, with materials and hired helpers. A new property starts with a house, and rooms and workshops (a smithy, a carpenter's shop, a kitchen, living quarters and more) can be added to it later without pulling anything down. A rented home you cannot pay for is lost after missed weeks."),
+		links(["guide:rent", "sys:resting", "sys:property_modules", "guide:property_rooms"])])
 	var cal: Dictionary = GameData.b("calendar")
 	var lf: Dictionary = GameData.b("life")
 	var yd: int = int(cal.year_days)

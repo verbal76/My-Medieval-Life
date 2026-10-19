@@ -112,9 +112,15 @@
   "workshop_cost": {
     "smithy": {"plank": 20, "stone": 30, "log": 10, "iron_bar": 4},
     "carpentry": {"plank": 30, "stone": 15, "log": 15},
-    "bakehouse": {"plank": 20, "stone": 30, "log": 10}
+    "bakehouse": {"plank": 20, "stone": 30, "log": 10},
+    "kitchen": {"plank": 15, "stone": 20, "log": 8},
+    "apothecary": {"plank": 20, "stone": 15, "log": 8},
+    "storage": {"plank": 20, "stone": 10, "log": 10},
+    "quarters": {"plank": 25, "stone": 15, "log": 10}
   },
   "workshop_price": 140,
+  "module_price": {"kitchen": 100, "apothecary": 110, "storage": 80, "quarters": 110},
+  "_module_note": "PL2-008/014 (agent proposals, provisional: balance review pending, docs/BUILD_DECISIONS.md 'Modular property'). module_price: what a room added to a property is worth with its ground, as workshop_price is a workshop's (kinds not listed use workshop_price); a week's rent and the manor's buy-back follow from it as for any building. workshop_cost holds every module kind's materials.",
   "helper_wage": 6,
   "split_keep_base": 40,
   "split_keep_per_member": 20,

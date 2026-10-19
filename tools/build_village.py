@@ -187,6 +187,19 @@ WORKSHOPS = {
         {"type": "stove", "at": (2, 5), "use": (3, 5), "layers": WORK_LAYERS,
          "paste": (((1, 5), (51, 47)), ((2, 5), (52, 47)), ((1, 6), (53, 47)))},       # the stone coal bed with the pot (PL1-13)
     ]},
+    # Property modules (PL2-014): rooms that are added to a property over time. The kitchen and the
+    # apothecary are the bakehouse's coal bed and pot (the stove) on their own, the apothecary's at the
+    # far corner; storage is the bare room (its chest and tables stay). Living quarters are the house
+    # stamp itself (its beds). Nothing is drawn new.
+    "kitchen": {"stations": [
+        {"type": "stove", "at": (2, 5), "use": (3, 5), "layers": WORK_LAYERS,
+         "paste": (((1, 5), (51, 47)), ((2, 5), (52, 47)), ((1, 6), (53, 47)))},
+    ]},
+    "apothecary": {"stations": [
+        {"type": "stove", "at": (2, 6), "use": (3, 6), "layers": WORK_LAYERS,
+         "paste": (((1, 6), (51, 47)), ((2, 6), (52, 47)), ((1, 7), (53, 47)))},
+    ]},
+    "storage": {"stations": []},
 }
 # The sawmill is the small house fitted as the carpenter's corner but for the workbench, so the village
 # keeps one workbench (the smithy's) and the sawhorse is where the planks are sawn.

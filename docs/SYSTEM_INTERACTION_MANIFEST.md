@@ -801,6 +801,41 @@ Rules:
 - **Expected:** A sown field is ripe `field_grow_days` later; it then stands ripe for `field_ripe_wait_hours` (12) before the farmers cut it, so the player sees and can harvest ripe wheat (it used to be cut within the hour). Farmers then cut, till and sow again. `field_grow_days` is the hook for seasons.
 - **Tests:** `game/tests/world_test.gd::_pl2_007`
 
+### INT-090 · A room added to a property is a parcel of the same estate
+- **Trigger:** The player (holder of a property whose first building stands) chooses a module kind and a place.
+- **Source:** `game/scripts/core/construction.gd::place`, `game/scripts/core/construction.gd::module_refusal`, `game/scripts/core/construction.gd::attach_refusal`, `game/scripts/core/property.gd::estate_parcels`
+- **Affects:** Building, Property, Coins
+- **Expected:** The module's ground is claimed like any ground (bought or leased from the manor, coins to the treasury, land price by area) and its parcel carries `estate` = the first parcel's id. It must touch a building of the property along at least `ATTACH_MIN` cells, must not cover any door step of the property, and needs a clear, reachable door; the property must be the player's, its first building must stand and nothing on it may be unfinished; one room of each kind. Nothing already built is demolished, moved or changed.
+- **Tests:** `game/tests/property_test.gd::test_modules`, `game/tests/property_test.gd::test_rules`
+
+### INT-091 · A module's materials, rent and sale value follow the building rules
+- **Trigger:** A module site is delivered to; a week passes; the property's rooms are sold or a lease is ended.
+- **Source:** `game/scripts/core/world.gd::deliver`, `game/scripts/core/property.gd::price_of`, `game/scripts/core/property.gd::sell`, `game/scripts/core/property.gd::end_lease`, `game/data/balance.json`
+- **Affects:** Building, Property, Coins, Treasury
+- **Expected:** A module is a site with `workshop_cost` materials (counted as used when finished), delivered by the player or a hired helper as for any building. Its parcel has its own deal: bought, or leased at weekly_rent_share of `module_price` with its own rent; the house's own rent is unchanged. A module can be sold back on its own at the usual share; the first parcel cannot be sold or have its lease ended while rooms stand on the property.
+- **Tests:** `game/tests/property_test.gd::test_modules`
+
+### INT-092 · A module's stations, doors and roof work as any building's
+- **Trigger:** A module is finished; the player or a villager walks, uses a station, or goes indoors.
+- **Source:** `game/scripts/core/world.gd::_finish_site`, `game/scripts/core/world.gd::_workshop_stations`, `game/scripts/core/world.gd::_built_collision`, `game/scripts/core/world.gd::index_interiors`
+- **Affects:** Building, Crafting, Interiors, Workshops
+- **Expected:** A finished module is a building with its own stamp: solid walls, a doorway, its own inside and roof (the roof of the one the player is in fades), and the stations of its stamp (smithy: forge and anvil; carpentry: workbench and sawhorse; bakehouse: oven and stove; kitchen and apothecary: a stove). Its door step is reachable from the village by the map's A*, checked before it is placed. The stations are the building owner's, usable by anyone with leave.
+- **Tests:** `game/tests/property_test.gd::test_modules`
+
+### INT-093 · Living quarters and storerooms are rooms of the house
+- **Trigger:** A household sleeps or is checked for crowding; the player is inside a storeroom or quarters.
+- **Source:** `game/scripts/core/property.gd::rooms_of`, `game/scripts/core/construction.gd::beds_in`, `game/scripts/core/world.gd::home_spot`
+- **Affects:** Households, Building, Interiors
+- **Expected:** The beds of living quarters on the same property (held by the same party) count in `Construction.beds_in` for the house, so the household is crowded later, and `World.home_spot` gives members those beds. The family chest and beds can be used from a storeroom or quarters of the home as from the house.
+- **Tests:** `game/tests/property_test.gd::test_modules`
+
+### INT-094 · A property with its rooms is saved and loaded whole
+- **Trigger:** The game is saved and loaded.
+- **Source:** `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/property.gd::estate_id`
+- **Affects:** Save, Building, Interiors
+- **Expected:** Parcels (with `estate`), built rooms and sites save with the world; on load the buildings, collision, insides, roofs and stations are rebuilt and a module site goes on where it was. Saves from before estates have no `estate` field: each parcel is its own property. The save version is unchanged (14).
+- **Tests:** `game/tests/property_test.gd::test_save`
+
 ### INT-100 · Chests, crates and barrels are storage with an owner
 - **Trigger:** The player uses a chest, crate or barrel, and stores or takes goods.
 - **Source:** `game/scripts/core/chests.gd::info`, `game/scripts/core/chests.gd::store`, `game/scripts/core/chests.gd::take`, `game/scripts/ui/chest_window.gd::show`
@@ -930,27 +965,27 @@ Rules:
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-103, INT-107, INT-114 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-103, INT-107, INT-114 |
 | Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-102, INT-108 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-102 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-100, INT-102 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-100, INT-102 |
 | Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079 |
-| Workshops | INT-021, INT-030, INT-058, INT-085, INT-107 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094 |
+| Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-104, INT-105, INT-115 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-104, INT-105, INT-115 |
 | Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-100, INT-112 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104 |
-| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-110, INT-111 |
-| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-100 |
+| Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111 |
+| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100 |
 | Calendar | INT-077 |
 | Family | INT-077, INT-078, INT-079, INT-080 |
 | Overworld | INT-071, INT-074, INT-076, INT-087 |

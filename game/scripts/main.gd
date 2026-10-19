@@ -511,6 +511,38 @@ func _ready() -> void:
 					follow_at = _in_view((Vector2(spot.position) + Vector2(spot.size) / 2.0) * T)
 					ui.toast_t = 0.01
 				shot_frames = -40                  # the roof needs a moment to fade
+			"property", "property_after", "property_in", "property_menu", "property_place":
+				# PL2-008/014: a leased plot with a house, then a carpenter's shop added beside it
+				var pc: Construction = world.construction
+				var pl: Dictionary = world.plots[0]
+				world.player.coins = 2000
+				world.property.lease(pl, World.PLAYER)
+				world.start_site(pl, "house", World.PLAYER)
+				for id in pl.site.need.duplicate():
+					world.player.inv.add(id, int(pl.site.need[id]))
+				world.deliver(pl, world.player.inv, World.PLAYER)
+				for t in world.trees:
+					if Rect2i(int(pl.x) - 22, int(pl.y) - 22, 53, 53).has_point(Vector2i(int(t.x), int(t.y))) and t.state == "grown":
+						world.fell(t, 0)
+				var slot := pc.find_module_slot("carpentry", pl, World.PLAYER)
+				if shot_panel == "property_place":
+					begin_placement("carpentry", "plot0")
+				elif shot_panel != "property":
+					var mp := pc.place("carpentry", slot, World.PLAYER, false, pl)
+					for id in mp.site.need.duplicate():
+						world.player.inv.add(id, int(mp.site.need[id]))
+					world.deliver(mp, world.player.inv, World.PLAYER)
+				world.player.pos = Vector2(int(pl.x) + 4, int(pl.y) + 12) + Vector2(0.5, 0.5)
+				if shot_panel == "property_in":
+					world.player.pos = Vector2(world.station_use("ws_workshop_%s_workbench" % pl.id.replace("plot0", "parcel0"))) + Vector2(0.5, 0.5)
+				follow_at = _in_view(Vector2(int(pl.x) - 4, int(pl.y) + 5) * T)
+				if shot_panel == "property_menu":
+					ui.show_build(pl)
+				else:
+					ui.toast_t = 0.01
+					if shot_panel != "property_place":
+						ui.log_box.visible = false
+				shot_frames = -40
 			"npc_house":
 				# a crowded household splits; its founder buys ground, hires help and builds by the
 				# player's rules; two days later the family's new house stands and they live there
@@ -1749,9 +1781,9 @@ func _find_target() -> void:
 		var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
 		if door.distance_to(p.pos) < 1.3:
 			here.append({"kind": "home", "label": "Your house: rest, store things"})
-		elif world.place_of(p.pos) == p.home:
-			# inside: the bed rests, the chest is the family's store
-			for sp in world.interiors[p.home].spots:
+		elif world.property.rooms_of(p.home).has(world.place_of(p.pos)):
+			# inside the house or a living quarters / storeroom added to it: the bed rests, the chest is the family's store
+			for sp in world.interiors[world.place_of(p.pos)].spots:
 				var at := Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)
 				if at.distance_to(probe) < 0.9 and sp.kind == "bed":
 					here.append({"kind": "rest", "label": "Your bed: rest until morning"})
@@ -2493,11 +2525,15 @@ func _projectiles_step(delta: float) -> void:
 ## the land office's check, the house-first rule, a reachable door). Place (E, Enter, the pad's A, a
 ## click on the footprint, or the Place button) opens the deal for the ground; Esc, the pad's B or
 ## Cancel stops. The game waits meanwhile.
-func begin_placement(kind: String) -> void:
+func begin_placement(kind: String, anchor := "") -> void:
 	ui.hide_all()
 	var size := world.construction.footprint(kind)
 	var front := world.player.pos + facing_vec() * (size.y / 2.0 + 1.0)
-	placing = {"kind": kind, "at": Vector2i(floori(front.x) - size.x / 2, floori(front.y) - size.y / 2)}
+	placing = {"kind": kind, "at": Vector2i(floori(front.x) - size.x / 2, floori(front.y) - size.y / 2), "anchor": anchor}
+	if anchor != "":                 # a module goes against the property: start at the nearest legal place
+		var slot := world.construction.find_module_slot(kind, world.plot(anchor), World.PLAYER)
+		if slot.size != Vector2i.ZERO:
+			placing.at = slot.position
 	paused = true
 	move_to = Vector2.INF
 	ui.show_placing(true)
@@ -2527,7 +2563,7 @@ func place_rect() -> Rect2i:
 
 ## Why the footprint cannot go where it is, "" if it can.
 func place_refusal() -> String:
-	return world.construction.can_place(placing.kind, place_rect(), World.PLAYER)
+	return world.construction.can_place(placing.kind, place_rect(), World.PLAYER, world.plot(str(placing.get("anchor", ""))))
 
 
 func _update_ghost() -> void:
@@ -2567,7 +2603,7 @@ func confirm_placement() -> void:
 		return
 	ui.show_placing(false)
 	ghost.visible = true
-	ui.show_place_deal(placing.kind, place_rect())
+	ui.show_place_deal(placing.kind, place_rect(), str(placing.get("anchor", "")))
 
 
 ## A held stick, d-pad or arrow key moves the footprint a tile at a time.
