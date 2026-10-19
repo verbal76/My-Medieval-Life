@@ -1,6 +1,6 @@
 {
   "format": "mml-items/1",
-  "note": "Values are GAME EXPANSION balance numbers, not Morris canon. value = base price in coins.",
+  "note": "Values are GAME EXPANSION balance numbers, not Morris canon. value = base price in coins. type medicine = heals `heal` health when used (never above the maximum; not food, no hunger).",
   "items": {
     "copper_ore": {
       "name": "Copper ore",
@@ -202,6 +202,30 @@
       "value": 4,
       "food": 4,
       "heal": 12
+    },
+    "linen_bandage": {
+      "name": "Linen bandage",
+      "type": "medicine",
+      "value": 3,
+      "heal": 15
+    },
+    "herbal_poultice": {
+      "name": "Herbal poultice",
+      "type": "medicine",
+      "value": 6,
+      "heal": 30
+    },
+    "healing_tonic": {
+      "name": "Healing tonic",
+      "type": "medicine",
+      "value": 12,
+      "heal": 50
+    },
+    "strong_healing_tonic": {
+      "name": "Strong healing tonic",
+      "type": "medicine",
+      "value": 22,
+      "heal": 80
     },
     "rotten_apple": {
       "name": "Rotten apple",

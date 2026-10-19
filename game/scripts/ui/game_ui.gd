@@ -1846,7 +1846,7 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	var sale: Array = w.brain.for_sale(n)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	if not sale.is_empty() or not buys.is_empty():
-		_talk_choice(choices, "Trade", func(): show_trade(n))
+		_talk_choice(choices, "Apothecary: medicines and herbs" if n.id == w.sage_id else "Trade", func(): show_trade(n))
 	if n.id == w.sage_id:
 		var price := int(GameData.b("fireball_price"))
 		var known: bool = w.player.spells.get("fireball", false)
@@ -1943,6 +1943,8 @@ func show_trade(n: NPC) -> void:
 	var p := w.player
 	if w.at_post(n):
 		_open("trade", "Trade with %s %s (%s)  ·  you have %d coins" % [n.name, n.family, w.shop_name(n), p.coins])
+	elif n.id == w.sage_id:
+		_open("trade", "Apothecary: %s %s  ·  you have %d coins" % [n.name, n.family, p.coins])
 	else:
 		_open("trade", "Trade with %s %s  (you have %d coins)" % [n.name, n.family, p.coins])
 	var sale: Array = w.brain.for_sale(n)

@@ -209,7 +209,8 @@ static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall
 			n.workplace = "manor"
 			w.reeve_id = n.id
 		"sage":
-			n.coins = 30
+			n.coins = 60                    # the apothecary's float (PL1-04): it pays for the caravan's resupply
+			_give(inv, GameData.b("sage_start_stock"))
 			n.workplace = "hut"
 			w.sage_id = n.id
 			n.name = "Old Lorekeeper"

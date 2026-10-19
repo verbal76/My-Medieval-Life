@@ -133,6 +133,10 @@ ICONS = {
     # wild plants (B8-015/B8-016): yellow flower, red and blue berries, the flower tonic
     "flower": "Plants & Alchemy/Flower-09", "red_berries": "Plants & Alchemy/Berry-05",
     "blueberries": "Plants & Alchemy/Berry-16", "herbal_tonic": "Plants & Alchemy/Herbal-Potion-01",
+    # healing goods (PL1-04): white silk cloth as the bandage, a green leaf for the poultice, the small
+    # and the large red potion for the two tonics
+    "linen_bandage": "Textile/Silk-Fabric-04", "herbal_poultice": "Plants & Alchemy/Leaf-11",
+    "healing_tonic": "Liquid/Small-Potion-05", "strong_healing_tonic": "Liquid/Large-Potion-05",
 }
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)
