@@ -2092,6 +2092,11 @@ func show_trade(n: NPC, pick := {}) -> void:
 		_button("Talk to %s" % n.name, func(): show_talk(talker))
 
 
+## The market stall window: rent a pitch, stock it, price it, read the sales (scripts/ui/stall_window.gd).
+func show_stall(id: String, pick := {}) -> void:
+	StallWindow.show(self, id, pick)
+
+
 ## "  ·  Restores 12 Health / 4 Food" for a consumable (read from items.json), else "".
 static func effect_suffix(id: String) -> String:
 	var t := GameData.effect_text(id)

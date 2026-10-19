@@ -992,6 +992,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if qty > 0 and a.get("pantry", false):
 				w.transfer(n.inv, w.households[n.household].pantry, a.item, qty)
 			return qty > 0
+		"buy_stall":
+			return w.business.arrive(n, a)       # a villager at the player's market stall (PL1-10)
 		"sell_to":
 			var b := w.npc(int(a.buyer))
 			if b == null or not b.alive:

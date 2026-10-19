@@ -79,7 +79,7 @@ static func populate(w: World) -> void:
 	var next_id := 1
 	var counters := {}
 	var fields := w.fields
-	var stall_ids := w.stalls.keys()
+	var stall_ids := w.stalls.keys().filter(func(id): return not Business.is_pitch(w.stalls[id]))
 	stall_ids.sort()
 	var vsheet := 0
 	var gsheet := 0

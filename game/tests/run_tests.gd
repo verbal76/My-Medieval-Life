@@ -2292,7 +2292,7 @@ func test_property() -> void:
 		houses_ok = houses_ok and (w.owner_of(b) == ref if b.type in ["house", "hut"] else (w.owner_of(b) == World.MANOR and w.tenant_of(b) == ref))
 	check(houses_ok, "a house is its household's own; the manor house and the tavern are the manor's, let to the households living there")
 	check(w.owner_of(w.buildings["b4"]) == World.MANOR and w.owner_of(w.stations["s4"]) == World.MANOR and w.may_use(World.PLAYER, w.stations["s4"]), "the smithy and its forge are the manor's, open to the player")
-	check(w.stalls.values().all(func(s): return w.party(w.tenant_of(s)) != null and w.party(w.tenant_of(s)).job == "merchant"), "each stall is let to its merchant")
+	check(w.stalls.values().all(func(s): return Business.is_pitch(s) or (w.party(w.tenant_of(s)) != null and w.party(w.tenant_of(s)).job == "merchant")), "each stall is let to its merchant (the open pitches are the player's to rent)")
 	check(w.fields.all(func(f): return w.owner_of(f) == World.MANOR and not w.field_workers(f).is_empty()), "the fields are the manor's, worked by its farmers")
 	check(w.plots.all(func(pl): return pr.for_sale(pl)) and pr.price_of(w.plots[0]) == int(GameData.b("plot_price")) and int(w.plots[0].price) == int(GameData.b("plot_price")),
 			"the plots are the manor's, for sale at balance.json's plot_price (audit defect 4)")

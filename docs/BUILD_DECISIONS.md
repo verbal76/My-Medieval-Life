@@ -480,3 +480,46 @@ Wiki notes (for the wiki agent):
 - PL1-01 root cause: X, Esc and the pad's B in every window called `hide_all`, which only unpaused when a game was running. From the title screen (Controls, Settings, Credits, character creation) it hid the panel and left the HUD over a paused, greyed world. Fix: each window records its Back (`GameUI.panel_back`); `go_back` returns to it, closes a play window, and ignores the title, origin and death screens.
 - PL1-02: Settings is one tabbed screen (Audio, Display, Interface, Controls, Wiki) with a Back button; Controls and Wiki are also direct buttons on the title and pause menus. No settings changed or were added.
 - PL2-009: the wiki is generated from game data at open time (see INT-082) with hand-written system pages and How-do-I guides whose numbers come from balance.json. Not-built ideas (lockpicking, player shops, cloud saves, hand plough, apothecary and potions) are listed as "Not in the game yet", confirmed absent from scripts and data by search on 2026-10-19. Wording of mechanics is provisional like the numbers it quotes.
+
+## Player businesses: the market stall and real demand (PL1-10 stages 1 and 2)
+
+Agent proposals, provisional (owner approval pending; numbers in balance.json under `stall_*`). Code:
+`game/scripts/core/business.gd`, window `game/scripts/ui/stall_window.gd`, wiki `wiki_business.gd`.
+
+- **Which stall.** All six market stalls are always let to merchants (Population, `relet_stalls`), so a rentable one
+  would almost never be vacant. The manor therefore keeps two **open pitches** (`pitch0`, `pitch1`; stall entries with
+  `pitch: true`, drawn with the merchants' stall art one row north of the market, on the world's own map layer at
+  load). They are added to new worlds and to older saves on load (no save-version bump: the only change is two extra
+  `stalls` entries, and every old key is untouched). Merchants' re-letting, Population and the tenant migration skip
+  pitches. The player may hold one pitch; larger stalls and shops are stage 3 (deferred).
+- **Rent.** 5 coins per game day (`stall_rent_day`), paid to the manor's treasury (so coins are conserved): the first day
+  when renting, then each morning from the purse and then the till (`Business.daily`, from `World._new_day`). This is
+  the player's stall only; the weekly rent on land and houses is unchanged and `Property.collect_rents` ignores the
+  stall (it has no `rent` key).
+- **Unpaid rent.** The first unpaid morning stops sales (the window says why and offers "Pay the rent"); after
+  `stall_evict_days` (2) unpaid mornings the manor takes the pitch back: the unsold goods and the till return to the
+  player, and whatever does not fit the pack is left at the stall as a loot pile. Nothing is destroyed.
+- **Goods and prices.** Listing moves real items from the pack into the stall's stock (`stock`, `prices`, saved in the
+  stall dict); price 1 to 4 times the item's value (`PRICE_CAP`), defaulting to its value; up to 12 kinds
+  (`stall_max_listings`). Goods marked stolen cannot be listed (no fencing through the stall). Closing the stall returns
+  goods and till.
+- **Sales need the player.** No attendant yet (stage 4, deferred): a sale needs the player within `stall_range` (7) tiles
+  of the stall. Sale coins go into the stall's **till**, which the player collects; tills count in `World.total_coins`.
+- **Demand (stage 2).** Each game hour, while the player is at a stocked stall, at most `stall_buyers_per_hour` (3) idle,
+  awake adults with a need the stall can meet are sent a plan "walk to the stall, `buy_stall`"; the sale is re-checked on
+  arrival (player present, stock, price, need, coins). Needs reuse the brain's own model: a trade restocks below half
+  its `NPCBrain.BUYS` cap (smith: ore, coal, planks, leather; cook: grain, meat, logs; tanner: hides; tavernkeeper;
+  sage), the carpenter, smith and labourer cover what open building sites ask for (`Construction.open_need`), miners and
+  labourers without a pickaxe and woodcutters without an axe replace the tool, guards missing their sword or armour,
+  and the household's head (as `_plan_provision`) buys firewood and food for the pantry. A buyer pays at most the
+  cheapest local seller's price (10% more per urgency level), only with coins above a cash floor (the traders'
+  `trader_cash_floor`, else `stall_buyer_floor`), so a need that is met buys nothing more. Merchants (they are the
+  competition) and children do not shop. Buyers' goods go into their pack, or the household's pantry.
+- **Deviations from the brief.** Farmers have no tool need in the current game (the brain has no farmer tool), so none
+  is invented: a farmer is never offered a tool; the tool demand is carried by miners, labourers and woodcutters.
+  Builders buy through the carpenter/smith/labourer demand on open sites, not directly for the site (materials reach
+  a site through hired helpers, a separate path).
+- **Not done (deferred).** Stage 3: larger stalls, shops, equipment placement. Stage 4: hired attendants (sales while the
+  player is away) and production chains. A shopper still only buys from the player's stall while the player stands at
+  it. The stall has no night rule beyond villagers being asleep. Trading perks (skills.json) are not applied to stall
+  sales; each sale gives 2 trading XP.
