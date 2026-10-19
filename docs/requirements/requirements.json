@@ -10640,6 +10640,55 @@
    ]
   },
   {
+   "id": "REL-14-16",
+   "title": "Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "You have my standing authorization to generate and publish the three platform build packages for Builds 14, 15, and 16 without requesting separate approval for each release, provided all release conditions are satisfied.",
+   "description": "Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold",
+   "source": "docs/directives/2026-10-19_builds_14_16_release_authorization.md",
+   "approval": "owner standing authorization 2026-10-19 for Builds 14-16 only",
+   "acceptance": [
+    "1 all automated tests and regression checks pass",
+    "2 no unresolved critical crash, data corruption, save/load failure or build-blocking regression",
+    "3 long-run simulations reviewed; significant failures corrected or documented as nonblocking",
+    "4 each platform package builds and passes available validation; untested hardware named",
+    "5 known defects and limitations in the release notes",
+    "6 unfinished requirements carry forward in the register",
+    "7 multiplayer stays isolated",
+    "8 each release tied to a verified commit with the three packages under the existing naming",
+    "no placeholder builds; a failed condition is fixed and retested"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Build 14 from 5f0a07b once CI is green; then Build 15 work",
+   "priority": "",
+   "workstream": "releases",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_builds_14_16_release_authorization.md"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "workstream; next_action",
+     "why": "Build 14 under way"
+    }
+   ]
+  },
+  {
    "id": "REQ-BANDIT",
    "title": "Bandit factions, criminal careers and outlaw leadership",
    "kind": "approved",
