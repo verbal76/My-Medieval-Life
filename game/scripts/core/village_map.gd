@@ -151,6 +151,8 @@ func decor_boulders() -> Array:
 	var seams := {}
 	for d in data.deposits:
 		seams[Vector2i(int(d.x), int(d.y))] = true
+	for t in data.trees + decor_trees():           # a rock under a tree's trunk is the tree's (its cell is the tree node)
+		seams[Vector2i(int(t.x), int(t.y))] = true
 	var out := []
 	for y in h:
 		for x in w:

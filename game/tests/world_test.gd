@@ -105,6 +105,20 @@ func _boulders() -> void:
 	p.inv.add("pickaxe")
 	var uses := int(ResourceNodes.def("boulder").uses)
 	check(w.boulders.size() > 0 and uses >= 2, "the village has %d small boulders, %d uses each" % [w.boulders.size(), uses])
+	var taken := {}
+	for t in w.trees:
+		taken[Vector2i(int(t.x), int(t.y))] = "tree"
+	for st in w.stations.values():
+		taken[Vector2i(int(st.at[0]), int(st.at[1]))] = "station"
+	for c in w.containers:
+		taken[Vector2i(int(c.x), int(c.y))] = "container"
+	for pl in w.plants:
+		taken[Vector2i(int(pl.x), int(pl.y))] = "plant"
+	var clash := 0
+	for bb in w.boulders:
+		if taken.has(Vector2i(int(bb.x), int(bb.y))):
+			clash += 1
+	check(clash == 0, "no boulder shares a cell with a tree, station, container or plant (%d)" % clash)
 	# a village boulder: a node of its own, stone, the right prompt, a few swings, then gone and walkable
 	var b: Dictionary = w.boulders[0]
 	var cell := Vector2i(b.x, b.y)
