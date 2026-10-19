@@ -339,6 +339,26 @@ func _ready() -> void:
 					if n.job == "smith":
 						ui.show_trade(n)
 						break
+			"trade_qty":
+				# PL1-03: the quantity control, buying 3 of 8 affordable
+				var tk := world.tavern_keeper()
+				tk.inv.add("pottage", 12)
+				world.player.coins = 17
+				ui.show_trade(tk, {"id": "pottage", "mode": "buy", "price": 2})
+				(ui.panel_body.get_node("QuantityPicker") as QuantityPicker).set_qty(3)
+			"storage_focus":
+				# PL2-012: a long chest list with focus on a row far down
+				for id in GameData.items.keys().slice(0, 40):
+					world.player.chest.add(id, 2)
+				ui.show_home()
+				(func():
+					var btns: Array = ui.panel_body.find_children("*", "Button", true, false).filter(func(b): return b.text == "Take")
+					(btns[22] as Button).grab_focus()).call_deferred()
+			"talk_news":
+				var tn: NPC = world.npcs[2]
+				world.note("Walter Reed sold two logs to the carpenter")
+				ui.show_talk(tn)
+				ui._talk_view(tn, Dialogue.news(world, tn))
 			"craft":
 				ui.show_craft(world.stations_of("anvil")[0])
 			"shop", "counter":

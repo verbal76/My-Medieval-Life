@@ -1870,6 +1870,23 @@ func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 	return {"result": "sold", "text": ""}
 
 
+## Sell `qty` of `id` at `price` each (the quantity control, PL1-03). Checked first: you carry them, the
+## buyer still wants that many and can pay all of it, so nothing is half-sold for those reasons. Each unit
+## goes through player_sell (marked goods first, recognition, guard questions), so a stolen piece being
+## recognised stops the sale at that unit; `sold` says how many went. Returns {result, text, sold}.
+func player_sell_many(buyer: NPC, id: String, price: int, qty: int) -> Dictionary:
+	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or buyer.coins < qty * price:
+		return {"result": "failed", "text": "They cannot take that many, or cannot afford it right now.", "sold": 0}
+	var sold := 0
+	for i in qty:
+		var r: Dictionary = player_sell(buyer, id, price)
+		if r.result != "sold":
+			r["sold"] = sold
+			return r
+		sold += 1
+	return {"result": "sold", "text": "", "sold": sold}
+
+
 func player_eat(id: String) -> bool:
 	var it: Dictionary = GameData.item(id)
 	if not it.has("food") or not player.inv.remove(id):
@@ -1877,6 +1894,8 @@ func player_eat(id: String) -> bool:
 	player.hunger = minf(100.0, player.hunger + float(it.food))
 	if it.has("heal"):
 		player.hp = minf(player.hp_cap(), player.hp + float(it.heal))
+	if it.has("stamina"):
+		player.stamina = minf(player.stamina_cap(), player.stamina + float(it.stamina))
 	if it.has("harm"):
 		damage_player(float(it.harm), "spoiled food")
 	stat("eaten_food", float(it.food))

@@ -391,3 +391,28 @@ All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile
 - No audio yet (the volume settings are ready for it).
 - Villagers keep only their last 8 memories (having met someone is never forgotten), so older
   grudges and sightings fade.
+
+## Build 11 punch list: trade, storage, bars, consumables, dialogue (PL1-03, PL2-012, PL1-05, PL1-08, PL2-003)
+
+- One quantity control, `QuantityPicker` (game/scripts/ui/quantity_picker.gd): name, info line, slider with -, +,
+  Max, quantity, live total, Confirm, Cancel. It only chooses a number; the caller does the atomic move. It opens
+  at the top of the trade window (and of the house window) at 1; the unit price is fixed when it opens.
+- Buy max = min(stock, coins // price, pack room); the pack limits kinds not counts, so room is yes or no.
+  Sell max = min(carried, what the buyer still wants (`NPCBrain.wants`), buyer coins // price).
+- `World.player_sell_many` checks quantity, wants and the buyer's purse first, then sells unit by unit through
+  `player_sell`; a stolen piece being recognised or a guard's question stops the sale at that unit (units
+  already sold stand) and the player is told how many went.
+- Storage: Take/Store open the control; Take all / Store all move whole lists (Store all leaves worn and held
+  gear in the pack). Stolen marks now move with the quantity moved, stolen pieces first
+  (`PlayerState.store_marks/take_marks(id, qty)`), so a partial deposit cannot wash goods clean.
+- After a move focus returns to the same item's button, else the item that took its place, else the previous
+  one, else the other list; the window scroller follows focus (`ScrollContainer.follow_focus`).
+- Bars read plain `current/max` (food as n/100, the food meter's top) with a white label and black outline;
+  icons, colours, sizes, danger state and tooltips are unchanged.
+- Consumable effects come from `GameData.effect_text` (items.json `food`, `heal`, `harm`, and `stamina` if an
+  item ever has it, applied by `World.player_eat`): "Restores 12 Health / 4 Food". Shown in Pack details and
+  shop rows. No item has a stamina field today, and no values changed. The pack has no quick-use bar and
+  there is no medicine item yet (PL1-04 owns the Apothecary).
+- Dialogue: village-record lines repeated as news are closed as sentences, de-duplicated, and skipped when
+  addressed to the player ("Your work ..."); an unknown field no longer leaks its id; possessives end in
+  `'` after an s (`Dialogue.possessive`); talk choices wrap instead of being cut with an ellipsis.

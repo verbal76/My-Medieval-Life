@@ -18,6 +18,7 @@ var status_box: PanelContainer   # health, hunger, stamina, coins and the clock,
 var test_safe := Rect2()         # tests only: a pretend display safe area (window pixels)
 var test_cutouts: Array = []     # tests only: pretend display cutouts (camera holes), Rect2 in window pixels
 var bars := {}
+var body_scroll: ScrollContainer   # the window body's scroller (follows focus)
 var bar_labels := {}             # meter key -> the words drawn on its bar ("Health 80/100")
 var bar_danger := {}             # meter key -> true while that meter is low (B8-019)
 var coins_label: Label
@@ -71,6 +72,7 @@ const RES_WARN := Color8(150, 34, 14)
 const RES_CARD := Color8(226, 206, 162)
 const LOG_LINES := 2           # village events shown at once, newest last
 const LOG_SECONDS := 3.0       # how long each stays before fading
+const HUNGER_MAX := 100.0       # the food meter's top (PlayerState caps hunger at 100)
 const DANGER_AT := 0.25        # a meter below this fraction of its cap turns red and blinks
 const DANGER_COLOUR := Color8(228, 52, 36)
 const PROMPT_MAX_W := 360.0    # the contextual prompt and the message toast wrap at this width
@@ -343,8 +345,9 @@ func _build_hud() -> void:
 		vl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		vl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		vl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		vl.add_theme_font_size_override("font_size", 12)
-		vl.add_theme_color_override("font_outline_color", Color.BLACK)
+		vl.add_theme_font_size_override("font_size", 13)
+		vl.add_theme_color_override("font_color", Color.WHITE)
+		vl.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
 		vl.add_theme_constant_override("outline_size", 4)
 		pb.add_child(vl)
 		h.add_child(pb)
@@ -624,6 +627,8 @@ func _build_panel() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true            # PL2-012: pad/keyboard focus scrolls its row into view
+	body_scroll = scroll
 	outer.add_child(scroll)
 	panel_body = VBoxContainer.new()
 	panel_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -641,9 +646,10 @@ func update_hud() -> void:
 	bars.stamina.max_value = p.stamina_cap()
 	bars.hunger.value = p.hunger
 	bars.stamina.value = p.stamina
-	_meter_text("hp", "Health %d/%d" % [ceili(p.hp), int(p.hp_cap())], p.hp / maxf(1.0, p.hp_cap()))
-	_meter_text("hunger", "Food %d%%" % ceili(p.hunger), p.hunger / 100.0)
-	_meter_text("stamina", "Stamina %d/%d" % [int(p.stamina), int(p.stamina_cap())], p.stamina / maxf(1.0, p.stamina_cap()))
+	bars.hunger.max_value = HUNGER_MAX
+	_meter_text("hp", bar_words(p.hp, p.hp_cap()), p.hp / maxf(1.0, p.hp_cap()))
+	_meter_text("hunger", bar_words(p.hunger, HUNGER_MAX), p.hunger / HUNGER_MAX)
+	_meter_text("stamina", bar_words(p.stamina, p.stamina_cap()), p.stamina / maxf(1.0, p.stamina_cap()))
 	coins_label.text = " %d" % p.coins
 	clock_label.text = w.clock_text()
 	# the prompt and toast follow their own size (a container's minimum size settles a frame late)
@@ -661,6 +667,12 @@ func update_hud() -> void:
 		if toast_t <= 0.0:
 			toast.text = ""
 			toast.visible = false
+
+
+## The text inside a bar (PL1-05): plain "current/max", e.g. "85/100". Health rounds up so a living
+## player never reads 0; the maxima come from the player (gear changes them), never a fixed number.
+static func bar_words(value: float, cap: float) -> String:
+	return "%d/%d" % [clampi(ceili(value), 0, int(cap)), int(cap)]
 
 
 ## A meter's words, and its danger state: below DANGER_AT of its cap the fill turns red and blinks.
@@ -910,7 +922,8 @@ func _icon(id: String) -> TextureRect:
 	return t
 
 
-func _item_row(id: String, count: int, text: String, btn: String, cb: Callable, enabled := true) -> void:
+func _item_row(id: String, count: int, text: String, btn: String, cb: Callable, enabled := true) -> Button:
+	var b: Button = null
 	var h := HBoxContainer.new()
 	h.add_child(_icon(id))
 	var l := Label.new()
@@ -918,13 +931,14 @@ func _item_row(id: String, count: int, text: String, btn: String, cb: Callable, 
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(l)
 	if btn != "":
-		var b := Button.new()
+		b = Button.new()
 		b.text = btn
 		b.custom_minimum_size = Vector2(110, 48)
 		b.disabled = not enabled
 		b.pressed.connect(cb)
 		h.add_child(b)
 	panel_body.add_child(h)
+	return b
 
 
 # ---------------------------------------------------------------- title / pause / death ------
@@ -1922,7 +1936,8 @@ func _fit_talk(side: float, choices: GridContainer) -> void:
 func _talk_choice(parent: Control, text: String, cb: Callable, enabled := true) -> void:
 	var b := _button(text, cb, enabled, parent)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART          # a long choice wraps rather than being cut off
+	b.custom_minimum_size = Vector2(160, 48)
 
 
 ## Someone asleep (owner rule: sleeping limits awareness, not interaction): wake them and talk, try
@@ -1944,13 +1959,17 @@ func show_sleeper(n: NPC) -> void:
 	_button("Let them sleep", hide_all)
 
 
-func show_trade(n: NPC) -> void:
+## The merchant's window. `pick` ({id, mode: "buy"|"sell", price}) opens the quantity control at the top
+## for that item (PL1-03); Cancel just redraws the window, so it changes nothing.
+func show_trade(n: NPC, pick := {}) -> void:
 	var w: World = main.world
 	var p := w.player
 	if w.at_post(n):
 		_open("trade", "Trade with %s %s (%s)  ·  you have %d coins" % [n.name, n.family, w.shop_name(n), p.coins])
 	else:
 		_open("trade", "Trade with %s %s  (you have %d coins)" % [n.name, n.family, p.coins])
+	if not pick.is_empty():
+		_trade_picker(n, pick)
 	var sale: Array = w.brain.for_sale(n)
 	_label("They sell:", 20, Color(1, 0.85, 0.5))
 	if sale.is_empty():
@@ -1958,12 +1977,9 @@ func show_trade(n: NPC) -> void:
 	for id in sale:
 		var price := maxi(1, roundi(w.sell_price(n, id) * w.player_price_factor(true)))
 		var nn := n
-		_item_row(id, n.inv.count(id), "%d coins each" % price, "Buy", func():
-			if w.trade(p, nn, id, 1, price):
-				main._xp("trading", 2)
-			else:
-				message("You cannot afford that, or your pack is full.")
-			show_trade(nn), p.coins >= price)
+		var bid: String = id
+		_item_row(id, n.inv.count(id), "%d coins each%s" % [price, effect_suffix(id)], "Buy", func():
+			show_trade(nn, {"id": bid, "mode": "buy", "price": price}), p.coins >= price)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	_label("They buy:", 20, Color(1, 0.85, 0.5))
 	var any := false
@@ -1972,23 +1988,73 @@ func show_trade(n: NPC) -> void:
 			any = true
 			var price := maxi(1, roundi(w.buy_price(n, id) * w.player_price_factor(false)))
 			var nn := n
+			var sid: String = id
 			var hot := p.stolen_count(id)
-			_item_row(id, p.inv.count(id), "%d coins each%s" % [price, ("  ·  %d stolen" % hot) if hot > 0 else ""], "Sell", func():
-				var r: Dictionary = w.player_sell(nn, id, price)
-				if r.result == "sold":
-					main._xp("trading", 2)
-					show_trade(nn)
-				elif r.result == "failed":
-					message(r.text)
-					show_trade(nn)
-				else:
-					hide_all()
-					message(r.text), n.coins >= price)
+			_item_row(id, p.inv.count(id), "%d coins each%s%s" % [price, effect_suffix(id), ("  ·  %d stolen" % hot) if hot > 0 else ""], "Sell", func():
+				show_trade(nn, {"id": sid, "mode": "sell", "price": price}), n.coins >= price)
 	if not any:
 		_label("Nothing you carry (they want: %s)." % ", ".join(buys.keys().map(func(k): return GameData.item_name(k))) if not buys.is_empty() else "They are not buying.", 15)
 	if n.role != "bandit":
 		var talker := n
 		_button("Talk to %s" % n.name, func(): show_talk(talker))
+
+
+## "  ·  Restores 12 Health / 4 Food" for a consumable (read from items.json), else "".
+static func effect_suffix(id: String) -> String:
+	var t := GameData.effect_text(id)
+	return "" if t == "" else "  ·  " + t
+
+
+## The quantity control for one Buy or Sell press, at the top of the trade window.
+func _trade_picker(n: NPC, pick: Dictionary) -> void:
+	var w: World = main.world
+	var p := w.player
+	var id: String = pick.id
+	var price: int = pick.price
+	var buying: bool = pick.mode == "buy"
+	var nm := GameData.item_name(id)
+	var mx := 0
+	var info := ""
+	var why := ""
+	if buying:
+		var stock := n.inv.count(id)
+		mx = QuantityPicker.buy_max(stock, p.coins, price, p.inv.can_add(id))
+		info = "%d coins each  ·  %d in stock  ·  you have %d coins%s" % [price, stock, p.coins, effect_suffix(id)]
+		why = "Your pack is full." if not p.inv.can_add(id) else "You cannot afford one."
+	else:
+		var owned := p.inv.count(id)
+		mx = QuantityPicker.sell_max(owned, w.brain.wants(n, id), n.coins, price)
+		info = "%d coins each  ·  you have %d  ·  %s wants %d, has %d coins" % [price, owned, n.name, w.brain.wants(n, id), n.coins]
+		why = "They cannot afford one right now." if n.coins < price else "They want no more of these."
+	var qp := QuantityPicker.new().setup(("Buy " if buying else "Sell ") + nm, info, mx, "Buy" if buying else "Sell", price, why)
+	qp.coins_after = func(q: int) -> String:
+		return "(you will have %d coins)" % (p.coins + (-q if buying else q) * price)
+	qp.cancelled.connect(func(): show_trade(n))
+	qp.confirmed.connect(func(q: int):
+		if buying:
+			if w.trade(p, n, id, q, price):
+				main._xp("trading", 2)
+				message("You buy %d %s for %d coins." % [q, nm.to_lower(), q * price])
+			else:
+				message("You cannot afford that, or your pack is full.")
+			show_trade(n)
+			return
+		var r: Dictionary = w.player_sell_many(n, id, price, q)
+		if r.sold > 0:
+			main._xp("trading", 2)
+			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), r.sold * price])
+		if r.result == "sold":
+			show_trade(n)
+		elif r.result == "failed":
+			message(r.text)
+			show_trade(n)
+		else:
+			hide_all()
+			message(r.text))
+	panel_body.add_child(qp)
+	panel_body.move_child(qp, 0)
+	if scheme != "touch":
+		qp.focus_default.call_deferred()
 
 
 # ---------------------------------------------------------------- crafting -------------------
@@ -2356,24 +2422,119 @@ func _deal_row(t: Dictionary, again: Callable) -> void:
 	panel_body.add_child(h)
 
 
-func show_home() -> void:
+## The family house. Chest and pack share one list; Take/Store open the quantity control (PL2-012), and
+## Take All / Store All move whole lists. `pick` = {id, from: "chest"|"pack"}; `focus` = {key, idx} says
+## which button to put focus back on after a move (see _home_focus).
+func show_home(pick := {}, focus := {}) -> void:
 	var w: World = main.world
 	var p := w.player
 	_open("home", "%s family house" % p.family)
 	_button("Rest until morning (saves the game)", func():
 		hide_all()
 		main.rest())
+	if not pick.is_empty():
+		_home_picker(pick)
+	var rows := {}                                  # "chest:id" / "pack:id" / "@take_all" / "@store_all" -> Button
 	_label("Chest:", 20, Color(1, 0.85, 0.5))
+	if not p.chest.ids().is_empty():
+		rows["@take_all"] = _button("Take all", func(): _home_move_all("chest"), true)
 	for id in p.chest.ids():
 		var iid: String = id
-		_item_row(id, p.chest.count(id), "", "Take", func():
-			if w.transfer(p.chest, p.inv, iid, p.chest.count(iid)):
-				p.take_marks(iid)
-			show_home())
+		rows["chest:" + iid] = _item_row(id, p.chest.count(id), "", "Take", func():
+			show_home({"id": iid, "from": "chest"}))
 	_label("Your pack:", 20, Color(1, 0.85, 0.5))
+	if not _home_storable().is_empty():
+		rows["@store_all"] = _button("Store all", func(): _home_move_all("pack"), true)
 	for id in p.inv.ids():
 		var iid: String = id
-		_item_row(id, p.inv.count(id), "", "Store", func():
-			if w.transfer(p.inv, p.chest, iid, p.inv.count(iid)):
-				p.store_marks(iid)
-			show_home())
+		rows["pack:" + iid] = _item_row(id, p.inv.count(id), "", "Store", func():
+			show_home({"id": iid, "from": "pack"}))
+	if not focus.is_empty() and scheme != "touch":
+		_home_focus(rows, focus)
+
+
+## What Store All moves: the pack except what is worn or held (gear slots).
+func _home_storable() -> Array:
+	var p: PlayerState = main.world.player
+	var worn := []
+	for slot in PlayerState.GEAR:
+		var g = p.get(slot)
+		if g != null and str(g) != "":
+			worn.append(str(g))
+	return p.inv.ids().filter(func(id): return not worn.has(id))
+
+
+## Move `qty` of `id` between the pack and the chest, marks (stolen goods) with them. All or nothing.
+func home_move(id: String, from_chest: bool, qty: int) -> bool:
+	var w: World = main.world
+	var p := w.player
+	var src: Inventory = p.chest if from_chest else p.inv
+	var dst: Inventory = p.inv if from_chest else p.chest
+	if qty < 1 or not w.transfer(src, dst, id, qty):
+		return false
+	if from_chest:
+		p.take_marks(id, qty)
+	else:
+		p.store_marks(id, qty)
+	return true
+
+
+func _home_move_all(from: String) -> void:
+	var p: PlayerState = main.world.player
+	var from_chest := from == "chest"
+	var moved := 0
+	var left := 0
+	for id in (p.chest.ids() if from_chest else _home_storable()):
+		if home_move(id, from_chest, (p.chest if from_chest else p.inv).count(id)):
+			moved += 1
+		else:
+			left += 1
+	if left > 0:
+		message("%d kinds would not fit." % left)
+	show_home({}, {"key": "@take_all" if from_chest else "@store_all", "idx": 0})
+
+
+func _home_picker(pick: Dictionary) -> void:
+	var p: PlayerState = main.world.player
+	var id: String = pick.id
+	var from_chest: bool = pick.from == "chest"
+	var src: Inventory = p.chest if from_chest else p.inv
+	var dst: Inventory = p.inv if from_chest else p.chest
+	var have := src.count(id)
+	var mx := have if dst.can_add(id) else 0
+	var nm := GameData.item_name(id)
+	var qp := QuantityPicker.new().setup(("Take " if from_chest else "Store ") + nm,
+		"%d in the %s  ·  %d in the %s" % [have, "chest" if from_chest else "pack", dst.count(id), "pack" if from_chest else "chest"],
+		mx, "Take" if from_chest else "Store", -1, "Your pack is full." if from_chest else "The chest is full.")
+	qp.cancelled.connect(func(): show_home({}, {"key": ("chest:" if from_chest else "pack:") + id, "idx": src.ids().find(id)}))
+	qp.confirmed.connect(func(q: int):
+		var list := src.ids()
+		var idx := list.find(id)
+		home_move(id, from_chest, q)
+		show_home({}, {"key": ("chest:" if from_chest else "pack:") + id, "idx": idx}))
+	panel_body.add_child(qp)
+	panel_body.move_child(qp, 1)
+	if scheme != "touch":
+		qp.focus_default.call_deferred()
+
+
+## After a move: focus the same item's button; if it is gone, the item now in its place (the next one);
+## if it was last, the previous one; if the list is empty, the other list's first button. Never the top.
+func _home_focus(rows: Dictionary, focus: Dictionary) -> void:
+	var key: String = focus.key
+	var target: Button = rows.get(key)
+	if target == null and ":" in key:
+		var list := key.get_slice(":", 0)
+		var ids := []
+		for k in rows:
+			if str(k).begins_with(list + ":"):
+				ids.append(k)
+		if not ids.is_empty():
+			target = rows[ids[clampi(int(focus.get("idx", 0)), 0, ids.size() - 1)]]
+	if target == null:
+		for k in rows:
+			if rows[k] != null:
+				target = rows[k]
+				break
+	if target != null:
+		target.grab_focus.call_deferred()

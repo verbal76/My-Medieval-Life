@@ -185,8 +185,8 @@ Rules:
 - **Trigger:** The player or a villager buys or sells.
 - **Source:** `game/scripts/core/world.gd::trade`, `game/scripts/core/world.gd::sell_price`, `game/scripts/core/world.gd::buy_price`, `game/scripts/core/npc_brain.gd::_plan_sell`
 - **Affects:** Market, Coins, Inventory, Ledger
-- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock. The player sells through `World.player_sell`, which handles stolen goods first (INT-045). What each trade buys, and its stock cap, is `NPCBrain.BUYS`: the goods merchant also takes made rings, amulets and helmets (B7-003, owner 2026-10-18), within its coins and caps.
-- **Tests:** `game/tests/run_tests.gd::test_trade_is_atomic`, `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_build7_economy`
+- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock. The player sells through `World.player_sell`, which handles stolen goods first (INT-045). What each trade buys, and its stock cap, is `NPCBrain.BUYS`: the goods merchant also takes made rings, amulets and helmets (B7-003, owner 2026-10-18), within its coins and caps. The player's Buy and Sell open the shared quantity control (`game/scripts/ui/quantity_picker.gd`, PL1-03): buy max is min(stock, coins // price, pack room), sell max is min(carried, what the buyer still wants, buyer coins // price); Confirm calls `World.trade` (buy) or `World.player_sell_many` (sell, a quantity through `player_sell`), Cancel changes nothing. The same control moves stacks to and from the home chest (`World.transfer`; stolen marks move with the quantity, stolen first, PL2-012).
+- **Tests:** `game/tests/start_test.gd::_pl_trade_ui_tests`, `game/tests/run_tests.gd::test_trade_is_atomic`, `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_build7_economy`
 
 ### INT-020 · The caravan
 - **Trigger:** Noon on caravan days.

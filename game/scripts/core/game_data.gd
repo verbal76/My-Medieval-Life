@@ -45,6 +45,36 @@ static func item_name(id: String) -> String:
 	return item(id).get("name", id)
 
 
+## What eating or drinking `id` does, read from the item's own data (the same fields World.player_eat
+## applies: "heal" health, "food" hunger, "stamina"; "harm" is the damage it does). [] for a non-consumable.
+static func effects(id: String) -> Array:
+	var it := item(id)
+	var out := []
+	if not it.has("food"):
+		return out
+	if int(it.get("heal", 0)) > 0:
+		out.append(["Health", int(it.heal)])
+	if int(it.food) > 0:
+		out.append(["Food", int(it.food)])
+	if int(it.get("stamina", 0)) > 0:
+		out.append(["Stamina", int(it.stamina)])
+	return out
+
+
+## "Restores 12 Health / 4 Food" (plus " / Harms 3 Health" for spoiled food), or "" for a non-consumable.
+static func effect_text(id: String) -> String:
+	var parts := []
+	for e in effects(id):
+		parts.append("%d %s" % [e[1], e[0]])
+	if parts.is_empty():
+		return ""
+	var s := "Restores " + " / ".join(parts)
+	var harm := int(item(id).get("harm", 0))
+	if harm > 0:
+		s += " / Harms %d Health" % harm
+	return s
+
+
 static func value(id: String) -> int:
 	return int(item(id).get("value", 1))
 

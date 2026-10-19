@@ -543,7 +543,11 @@ func _run() -> void:
 	check(ui.is_open("trade") and ui.title_label.text.to_lower().begins_with(("Trade with %s" % tk.name).to_lower()), "using it opens %s's shop: %s" % [tk.name, ui.title_label.text])
 	var coins_before := p.coins
 	p.coins += 20
-	check(_press("Buy") and p.coins < coins_before + 20, "bought something from the tavern (%d coins left)" % p.coins)
+	var opened := _press("Buy")
+	var picker: QuantityPicker = ui.panel_body.get_node_or_null("QuantityPicker")
+	if picker != null:
+		picker.confirm()
+	check(opened and picker != null and p.coins < coins_before + 20, "bought something from the tavern (%d coins left)" % p.coins)
 	check(_press("Talk to %s" % tk.name) and ui.is_open("talk"), "the shop has a Talk button")
 	ui.hide_all()
 	main.approach(tk)
@@ -1171,6 +1175,7 @@ func _run() -> void:
 	_pad_cycle_tests()
 	_sign_tests()
 	await _b8_ui_tests()
+	await _pl_trade_ui_tests()
 	_child_size_tests()
 	_animal_size_tests()
 	await _actions_tests()
@@ -1834,7 +1839,7 @@ func _b8_ui_tests() -> void:
 	p.hunger = 80.0
 	p.stamina = p.stamina_cap()
 	ui.update_hud()
-	check(ui.bar_labels.hp.text.begins_with("Health ") and ui.bar_labels.hunger.text == "Food 80%" and ui.bar_labels.stamina.text.begins_with("Stamina "),
+	check(ui.bar_labels.hp.text == "%d/%d" % [int(p.hp_cap()), int(p.hp_cap())] and ui.bar_labels.hunger.text == "80/100" and ui.bar_labels.stamina.text == "%d/%d" % [int(p.stamina_cap()), int(p.stamina_cap())],
 		"the meters are labelled: %s / %s / %s" % [ui.bar_labels.hp.text, ui.bar_labels.hunger.text, ui.bar_labels.stamina.text])
 	check(not ui.bar_danger.hunger and not ui.bar_danger.hp and not ui.bar_danger.stamina, "full meters are not in danger")
 	p.hunger = 10.0
@@ -2213,3 +2218,218 @@ func _step_x(at: Vector2, sprint: bool) -> float:
 	var dx: float = p.pos.x - at.x
 	main.sprinting = false
 	return dx
+
+
+## PL1-03, PL2-012, PL1-05, PL1-08, PL2-003: the quantity control, storage focus, bar numbers,
+## consumable effect text and dialogue sentences.
+func _pl_trade_ui_tests() -> void:
+	var ui = main.ui
+	var w: World = main.world
+	var p := w.player
+	ui.set_scheme("kbm")
+	# -- the limits (17 coins, an item at 2 each -> 8)
+	check(QuantityPicker.buy_max(30, 17, 2) == 8, "17 coins at 2 each buys at most 8")
+	check(QuantityPicker.buy_max(5, 17, 2) == 5 and QuantityPicker.buy_max(30, 1, 2) == 0 and QuantityPicker.buy_max(30, 17, 2, false) == 0,
+		"buy max is also bounded by stock, by affording one, and by pack room")
+	check(QuantityPicker.sell_max(9, 4, 100, 2) == 4 and QuantityPicker.sell_max(9, 20, 7, 2) == 3 and QuantityPicker.sell_max(2, 20, 100, 2) == 2,
+		"sell max is bounded by what you carry, what they want and what their purse covers")
+	# -- buying through the real window
+	var keeper: NPC = w.tavern_keeper()
+	keeper.inv.items.erase("ale")
+	keeper.inv.add("ale", 30)
+	p.coins = 17
+	var ale0 := p.inv.count("ale")
+	var all0 := p.coins + keeper.coins
+	ui.show_trade(keeper, {"id": "ale", "mode": "buy", "price": 2})
+	var qp: QuantityPicker = ui.panel_body.get_node_or_null("QuantityPicker")
+	check(qp != null and qp.max_qty == 8 and qp.qty == 1, "the buy control opens at 1 with max 8")
+	qp.set_qty(99)
+	check(qp.qty == 8 and qp.total() == 16 and qp.total_label.text.contains("16"), "the quantity clamps to the max and the total is live (%s)" % qp.total_label.text)
+	qp.slider.value = 3
+	check(qp.qty == 3 and qp.total() == 6, "the slider sets the quantity")
+	qp.cancel()
+	check(ui.panel_body.get_node_or_null("QuantityPicker") == null and p.coins == 17 and p.inv.count("ale") == ale0 and keeper.inv.count("ale") == 30,
+		"Cancel changes nothing")
+	ui.show_trade(keeper, {"id": "ale", "mode": "buy", "price": 2})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	qp.set_qty(5)
+	var keeper_coins0 := keeper.coins
+	qp.confirm()
+	check(p.coins == 7 and p.inv.count("ale") == ale0 + 5 and keeper.inv.count("ale") == 25 and keeper.coins == keeper_coins0 + 10,
+		"Buy moves coins and goods together")
+	check(p.coins + keeper.coins == all0, "no coins appear or vanish")
+	p.coins = 1
+	ui.show_trade(keeper, {"id": "ale", "mode": "buy", "price": 2})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	check(qp.max_qty == 0 and qp.confirm_btn.disabled, "with too few coins nothing can be confirmed")
+	qp.confirm()
+	check(p.coins == 1 and keeper.inv.count("ale") == 25, "a refused buy moves nothing")
+	# -- selling
+	var smith: NPC = null
+	for n: NPC in w.npcs:
+		if n.job == "smith":
+			smith = n
+			break
+	smith.inv.items.erase("coal")
+	smith.coins = 100
+	p.inv.items.erase("coal")
+	p.inv.add("coal", 6)
+	p.coins = 10
+	var tot := p.coins + smith.coins
+	ui.show_trade(smith, {"id": "coal", "mode": "sell", "price": 3})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	check(qp != null and qp.max_qty == 6, "sell max is what you carry (6)")
+	qp.cancel()
+	check(p.inv.count("coal") == 6 and p.coins == 10, "Cancel on a sale changes nothing")
+	ui.show_trade(smith, {"id": "coal", "mode": "sell", "price": 3})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	qp.set_qty(4)
+	qp.confirm()
+	check(p.inv.count("coal") == 2 and smith.inv.count("coal") == 4 and p.coins == 22 and p.coins + smith.coins == tot, "Sell moves goods and coins together")
+	smith.coins = 5
+	ui.show_trade(smith, {"id": "coal", "mode": "sell", "price": 3})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	check(qp.max_qty == 1, "a poor buyer limits the sale (5 coins at 3 -> 1)")
+	check(w.player_sell_many(smith, "coal", 3, 2).sold == 0 and p.inv.count("coal") == 2, "selling more than the buyer can pay for is refused whole")
+	# -- storage
+	ui.hide_all()
+	p.chest.items.clear()
+	p.inv.items.clear()
+	for id in ["bread", "coal", "log"]:
+		p.inv.add(id, 3)
+	ui.show_home({"id": "coal", "from": "pack"})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	check(qp != null and qp.max_qty == 3, "the store control offers up to the stack")
+	qp.set_qty(1)
+	qp.confirm()
+	await process_frame
+	await process_frame
+	check(p.inv.count("coal") == 2 and p.chest.count("coal") == 1, "storing 1 of a stack moves exactly 1")
+	check(_focus_item(ui) == "Coal", "after a partial deposit focus stays on the same item (%s)" % _focus_item(ui))
+	ui.show_home({"id": "coal", "from": "pack"})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	qp.set_qty(qp.max_qty)
+	qp.confirm()
+	await process_frame
+	await process_frame
+	check(p.inv.count("coal") == 0 and p.chest.count("coal") == 3, "storing the rest empties the pack stack")
+	check(_focus_item(ui) == "Log", "after the stack is gone focus moves to the next item in its place (%s)" % _focus_item(ui))
+	ui.show_home({"id": "log", "from": "pack"})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	qp.set_qty(3)
+	qp.confirm()
+	await process_frame
+	await process_frame
+	check(_focus_item(ui) == GameData.item_name("bread"), "after the last item is stored focus moves to the previous one (%s)" % _focus_item(ui))
+	ui.show_home({"id": "coal", "from": "chest"})
+	qp = ui.panel_body.get_node_or_null("QuantityPicker")
+	qp.cancel()
+	await process_frame
+	await process_frame
+	check(ui.panel_kind == "home", "Cancel keeps the storage window open")
+	ui.show_home()
+	for b in ui.panel_body.find_children("*", "Button", true, false):
+		if b.text == "Store all":
+			b.pressed.emit()
+			break
+	check(p.inv.count("bread") == 0 and p.chest.count("bread") == 3, "Store all moves the whole pack")
+	for b in ui.panel_body.find_children("*", "Button", true, false):
+		if b.text == "Take all":
+			b.pressed.emit()
+			break
+	check(p.chest.items.is_empty() and p.inv.count("coal") == 3, "Take all brings everything back")
+	# focus scrolls a long list into view
+	var ids: Array = GameData.items.keys().slice(0, 40)
+	p.inv.items.clear()
+	for id in ids:
+		p.chest.add(id, 1)
+	ui.show_home()
+	await process_frame
+	await process_frame
+	var last: Button = null
+	for b in ui.panel_body.find_children("*", "Button", true, false):
+		if b.text == "Take":
+			last = b
+	last.grab_focus()
+	await process_frame
+	await process_frame
+	await process_frame
+	check(ui.body_scroll.scroll_vertical > 0 and ui.body_scroll.get_global_rect().encloses(last.get_global_rect().grow(-2)),
+		"focus on a row far down scrolls it into view (scroll %d)" % ui.body_scroll.scroll_vertical)
+	p.chest.items.clear()
+	ui.hide_all()
+	# -- bars: plain current/max
+	p.hp = 85.0
+	p.hunger = 80.0
+	p.stamina = 42.0
+	ui.update_hud()
+	check(ui.bar_labels.hp.text == "85/%d" % int(p.hp_cap()) and ui.bar_labels.hunger.text == "80/100" and ui.bar_labels.stamina.text == "42/%d" % int(p.stamina_cap()),
+		"the bars read n/max: %s %s %s" % [ui.bar_labels.hp.text, ui.bar_labels.hunger.text, ui.bar_labels.stamina.text])
+	check(GameUI.bar_words(120.0, 100.0) == "100/100" and GameUI.bar_words(9.2, 150.0) == "10/150", "bar text follows the maximum and never passes it")
+	p.hp = p.hp_cap()
+	p.stamina = p.stamina_cap()
+	# -- consumables
+	var ok := true
+	var n_eff := 0
+	for id in GameData.items:
+		var it: Dictionary = GameData.items[id]
+		if not it.has("food"):
+			continue
+		var t := GameData.effect_text(id)
+		n_eff += 1
+		ok = ok and t.contains("%d Food" % int(it.food)) and (not it.has("heal") or t.contains("%d Health" % int(it.heal))) and (not it.has("harm") or t.contains("Harms %d" % int(it.harm)))
+	check(ok and n_eff > 0, "every consumable's effect text equals its item data (%d items)" % n_eff)
+	check(GameData.effect_text("coal") == "", "a non-consumable has no effect text")
+	var heal_id := ""
+	for id in GameData.items:
+		if GameData.items[id].has("heal") and not GameData.items[id].has("harm"):
+			heal_id = id
+			break
+	p.inv.items.erase(heal_id)
+	p.hp = 1.0
+	p.hunger = 10.0
+	var f: float = GameData.item(heal_id).food
+	var h: float = GameData.item(heal_id).heal
+	p.inv.add(heal_id, 1)
+	check(w.player_eat(heal_id) and is_equal_approx(p.hunger, 10.0 + f) and is_equal_approx(p.hp, 1.0 + h), "using it applies exactly the listed effects")
+	check(not w.player_eat(heal_id) and is_equal_approx(p.hunger, 10.0 + f), "a second use with none left does nothing")
+	p.inv.items.erase("coal")
+	check(not w.player_eat("coal"), "a non-food cannot be used and nothing is consumed")
+	ui.show_trade(keeper)
+	check(_texts(ui.panel_body).contains("Restores") or keeper.inv.ids().filter(func(i): return GameData.effect_text(i) != "").is_empty(), "shop rows list a consumable's effects")
+	ui.hide_all()
+	# -- dialogue
+	w.note("Walter Reed sold two logs to the carpenter")
+	w.note("Your work for the manor lapsed: \"Bread\" was not done in time.")
+	w.note("Hobbs Smith bought coal from the smith")
+	w.note("Hobbs Smith bought coal from the smith")
+	check(Dialogue.possessive("Reed") == "Reed's" and Dialogue.possessive("Hobbs") == "Hobbs'", "possessives: Reed's, Hobbs'")
+	check(Dialogue.sentence("walter sold logs") == "Walter sold logs." and Dialogue.sentence("Is it?") == "Is it?", "lines are closed as sentences")
+	var bad := []
+	var seen := 0
+	var rx_dot := RegEx.create_from_string("\\.\\.|\\. \\.|  |\\s[,.!?]|'s's|\\b[a-z]\\d+\\b|\\. [a-z]")
+	for n: NPC in w.npcs.slice(0, 60):
+		if not n.alive or n.role == "bandit":
+			continue
+		if n.id % 5 == 0:
+			n.remember("found 3 wheat from f9 missing")
+		for t in [Dialogue.opening(w, n), Dialogue.work(w, n), Dialogue.home(w, n), Dialogue.news(w, n), Dialogue.brush_off(w, n)]:
+			seen += 1
+			var sents := Array(str(t).split(". ")).map(func(s: String): return s.strip_edges())
+			var dup := false
+			for i in range(1, sents.size()):
+				dup = dup or (sents[i] == sents[i - 1] and sents[i] != "")
+			if dup or rx_dot.search(str(t)) != null or str(t).contains("Your work") or str(t).contains("Someone took 3 wheat from f"):
+				bad.append("%s: %s" % [n.name, t])
+	check(bad.is_empty(), "%d generated lines are clean %s" % [seen, bad.slice(0, 3)])
+
+
+## The item name on the row holding keyboard/pad focus ("Coal"), or "".
+func _focus_item(ui) -> String:
+	var f = ui.get_viewport().gui_get_focus_owner()
+	if f == null or f.get_parent() == null:
+		return ""
+	for c in f.get_parent().get_children():
+		if c is Label:
+			return (c as Label).text.get_slice(" x", 0)
+	return ""

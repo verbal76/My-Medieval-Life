@@ -42,6 +42,29 @@ static func _article(word: String) -> String:
 	return ("an " if word.substr(0, 1).to_lower() in ["a", "e", "i", "o", "u"] else "a ") + word
 
 
+## "Reed's", "Hobbs'": a name's possessive.
+static func possessive(name: String) -> String:
+	return name + ("'" if name.ends_with("s") or name.ends_with("S") else "'s")
+
+
+## One sentence: first letter capital, closed with a full stop unless it already ends in . ! ? or a quote.
+static func sentence(text: String) -> String:
+	var t := text.strip_edges()
+	if t == "":
+		return ""
+	t = t.substr(0, 1).to_upper() + t.substr(1)
+	if not t[t.length() - 1] in [".", "!", "?", "\"", "”"]:
+		t += "."
+	return t
+
+
+## Whether a village-record line can be repeated by a villager as news: not addressed to the player
+## ("You ...", "Your ..."), not a bare heading.
+static func _repeatable(text: String) -> bool:
+	var t := text.strip_edges()
+	return t != "" and not (t.begins_with("You ") or t.begins_with("Your ") or t.begins_with("You'") or t.contains(" you ") or t.contains(" your "))
+
+
 static func _job_name(job: String) -> String:
 	return job.replace("_", " ")
 
@@ -103,9 +126,9 @@ static func _plain_what(w: World, n: NPC, what: String) -> String:
 		if workers.has(n):
 			return what.substr(0, at) + " from my field"
 		for fo: NPC in workers:
-			return what.substr(0, at) + " from %s %s's field" % [fo.name, fo.family]
+			return what.substr(0, at) + " from %s field" % possessive(full_name(fo))
 		return what.substr(0, at) + " from a field"
-	return what
+	return what.substr(0, at) + " from a field"
 
 
 # ---------------------------------------------------------------- who they are
@@ -335,7 +358,7 @@ static func news(w: World, n: NPC) -> String:
 	for i in range(n.memory.size() - 1, -1, -1):
 		var m: String = n.memory[i]
 		if m.begins_with(prefix) and m.ends_with(" missing"):
-			lines.append("Someone took %s." % _plain_what(w, n, m.substr(prefix.length(), m.length() - prefix.length() - 8)))
+			lines.append("Someone took %s." % _plain_what(w, n, m.substr(prefix.length(), m.length() - prefix.length() - 8)).trim_suffix("."))
 			break
 	var ours := RegEx.create_from_string("\\b%s\\b" % n.family) if n.family != "" else null
 	var about: Array = []
@@ -343,6 +366,11 @@ static func news(w: World, n: NPC) -> String:
 	for i in range(w.log_lines.size() - 1, -1, -1):
 		var line: String = w.log_lines[i]
 		var text := line.substr(line.find("] ") + 2) if line.begins_with("[") and line.find("] ") > 0 else line
+		if not _repeatable(text):
+			continue
+		text = sentence(text)
+		if about.has(text) or other.has(text) or lines.has(text):
+			continue
 		if ours and ours.search(text) and about.size() < 2:
 			about.append(text)
 		elif other.size() < 2:
@@ -350,7 +378,7 @@ static func news(w: World, n: NPC) -> String:
 		if about.size() >= 2 and other.size() >= 2:
 			break
 	if not about.is_empty():
-		lines.append(_pick(w, n, ["Have you heard?", "People are talking:"], 4) + " " + " ".join(about))
+		lines.append(_pick(w, n, ["Have you heard?", "People are talking."], 4) + " " + " ".join(about))
 	elif not other.is_empty():
 		lines.append(("Nothing about us. But they say: " if lines.is_empty() else "And they say: ") + other[0])
 	if lines.is_empty():
