@@ -26,6 +26,7 @@ var loot_nodes: Array = []
 var projectiles: Array = []    # {node, pos, dir, left}
 var target := {}               # current interaction target
 var action := {}               # {label, left, total, done: Callable, anim, tool}
+var furn := {}                 # PL2-013: the player on furniture: {kind: "sit" | "lie", spot, stand (tiles: the cell to get up to)}
 var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain)
 var sprinting := false         # B8-027: running (LT toggles on a pad; Shift held, or toggled, on a keyboard)
 var save_meta := {}            # PL1-11: the save's identity for portable and cloud saves (_save_meta)
@@ -347,6 +348,37 @@ func _ready() -> void:
 						n.anim = "sleep"
 						ui.show_sleeper(n)
 						break
+			"family_meal", "family_meal_before":
+				# PL1-07: the manor's family at their chairs (the "before" picture: standing at the table cell)
+				for n: NPC in world.npcs:
+					if n.alive and n.home == "b_manor":
+						var chair := world.home_spot(n, "chair")
+						if shot_panel == "family_meal" and not chair.is_empty():
+							n.pos = _cell_centre(chair.use)
+							n.anim = "sit"
+							n.plan = [world.brain.work(600, "", {}, "sit")]
+							n.work_left = 600.0
+						else:
+							n.pos = Vector2(world.home_cell(n, "table")) + Vector2(0.5, 0.5)
+							n.anim = "idle"
+							n.plan = [world.brain.work(600, "", {}, "idle")]
+							n.work_left = 600.0
+			"player_sit", "player_bed":
+				# PL2-013: the player in a house of their own, seated on a chair or lying in the bed
+				player_sprite.setup("res://assets/characters/player_m3_basic.png")          # a made character (the stand-in has a plume and a shield)
+				var hid := "b10"
+				world.player.home = hid
+				for sp in world.interiors[hid].spots:
+					if shot_panel == "player_sit" and sp.kind == "chair":
+						world.player.pos = _cell_centre(sp.use)
+						sit_down(sp)
+						break
+					if shot_panel == "player_bed" and sp.kind == "bed":
+						world.player.pos = _cell_centre(sp.use)
+						rest()
+						action.left = 600.0
+						break
+				follow_at = _in_view(world.player.pos * T)
 			"quest_home":
 				# a quest giver inside their house (its roof on): the marker hangs over the door
 				for n: NPC in world.npcs:
@@ -512,6 +544,7 @@ func _ready() -> void:
 							n.job = ""
 							n.pos = world.player.pos + Vector2(1.0, 0)
 							n.plan = [world.brain.work(600, "", {}, "idle")]
+							n.work_left = 600.0
 							ui.show_talk(n)
 							_press(ui.panel_body, "Hire to carry building materials")
 							break
@@ -749,6 +782,7 @@ func _start(fresh := false) -> void:
 
 
 func _clear_world() -> void:
+	furn = {}
 	if world:
 		world.dispose()
 	for sg in house_signs.values():
@@ -1131,6 +1165,18 @@ func _show_sleeper(n: NPC, s: ActorSprite) -> bool:
 	return true
 
 
+## Draw a villager eating at home seated on their own chair (PL1-07; World.home_spot kind "chair"): they
+## walked to the chair's use cell and the anim is "sit". Anyone not on it stands as before.
+func _show_sitter(n: NPC, s: ActorSprite) -> bool:
+	if n.anim != "sit":
+		return false
+	var chair := world.home_spot(n, "chair")
+	if chair.is_empty() or n.cell() != Vector2i(int(chair.use[0]), int(chair.use[1])):
+		return false
+	s.sit(_cell_centre(chair.at) * T, Furniture.face_dir(chair))
+	return true
+
+
 func _sync_sprites() -> void:
 	var cam := camera.get_screen_center_position() / T
 	for id in sprites.keys():                      # a child who became the player (Life.make_heir) leaves the people
@@ -1162,7 +1208,7 @@ func _sync_sprites() -> void:
 		s.visible = near and not _covered(n)
 		if not s.visible:
 			continue
-		if _show_sleeper(n, s):
+		if _show_sleeper(n, s) or _show_sitter(n, s):
 			continue
 		s.stand()
 		s.position = n.pos * T
@@ -1173,6 +1219,7 @@ func _sync_sprites() -> void:
 		s.play(look[0] if look[0] != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
+	_sync_player_pose()
 	_sync_signs(p.pos)
 	canopy.update(p.pos, get_process_delta_time())
 	tree_view.update(p.pos, get_process_delta_time())
@@ -1441,6 +1488,9 @@ func _player_step(delta: float) -> void:
 	if ui.modal():
 		player_sprite.play("idle")
 		return
+	if furn.get("kind", "") == "sit":
+		_seated_step()                    # PL2-013: any input stands the player up
+		return
 	var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if v.length() > 0.1 and not gather.is_empty():
 		stop_gather("You stop gathering.")          # walking away stops it; Gather mode stays on
@@ -1512,6 +1562,8 @@ func _rest_anim() -> void:
 ## awarded, the swing ends, Gather mode's walk to the resource is given up and movement is the player's again.
 func cancel_action(why := "") -> void:
 	var had := not action.is_empty() or not gather.is_empty()
+	if furn.get("kind", "") == "lie":
+		stand_up()                         # woken: up beside the bed, the rest cut short
 	action = {}
 	stop_gather("")
 	chase = null
@@ -1813,6 +1865,8 @@ func _find_target() -> void:
 		for cu in world.chests.units_in(inside):
 			if cu.at.distance_to(probe) < 0.9:
 				here.append(_chest_target(cu))
+	# the player's own furniture by spot kind (Furniture.options): chairs to sit on, the home oven, the food table
+	here.append_array(Furniture.options(world, world.place_of(p.pos), probe))
 	here.reverse()
 	cands.append_array(here)
 	# the next step of the player's work for the manor, where it is done
@@ -2187,6 +2241,8 @@ func _use() -> void:
 			ui.show_chest(target.id)
 		"rest":
 			rest()
+		"sit":
+			sit_down(target.spot)
 		"manor_job":
 			var mw: ManorWork = world.manor_work
 			var mj := mw.job_of("player")
@@ -2866,6 +2922,9 @@ func _tap(screen_pos: Vector2) -> void:
 		return
 	if ui.blocks(screen_pos):
 		return
+	if furn.get("kind", "") == "sit":
+		stand_up()                     # a tap stands the seated player up (PL2-013)
+		return
 	if not action.is_empty():
 		cancel_action("You stop.")     # a tap while working stops it (B8-011)
 		return
@@ -3005,7 +3064,99 @@ func continue_as_heir() -> void:
 
 
 ## Sleep at home until morning: the world keeps running (same rules), just quickly.
+## Rest (the bed, the chest, the house door). Inside the player's own home with a bed, they lie in it for
+## the night and wake beside it (PL2-013); anywhere else it is the plain rest.
 func rest() -> void:
+	var bed := _own_bed()
+	if bed.is_empty() or not furn.is_empty():
+		_rest_now()
+		return
+	lie_down(bed)
+
+
+## The bed spot of the player's own home nearest to them, {} when they are not inside it or it has none.
+func _own_bed() -> Dictionary:
+	var p := world.player
+	if p.home == "" or world.place_of(p.pos) != p.home or not world.interiors.has(p.home):
+		return {}
+	var best := {}
+	var bd := INF
+	for sp in world.interiors[p.home].spots:
+		if sp.kind == "bed":
+			var d := (Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)).distance_to(p.pos)
+			if d < bd:
+				bd = d
+				best = sp
+	return best
+
+
+func _cell_centre(c: Array) -> Vector2:
+	return Vector2(int(c[0]), int(c[1])) + Vector2(0.5, 0.5)
+
+
+## Lie in the bed: the player is drawn on it (ActorSprite.lie) while the rest runs, then wakes at its side.
+func lie_down(bed: Dictionary) -> void:
+	var p := world.player
+	furn = {"kind": "lie", "spot": bed, "stand": _cell_centre(bed.use)}
+	p.pos = _cell_centre(bed.at)
+	start_action("Sleeping", 3.0, func():
+		stand_up()
+		_rest_now(), "idle")
+
+
+## Sit on a chair (spot kind "chair", Furniture): the player is drawn seated on it until any input.
+func sit_down(spot: Dictionary) -> void:
+	if not furn.is_empty():
+		return
+	var p := world.player
+	furn = {"kind": "sit", "spot": spot, "stand": _cell_centre(spot.use)}
+	p.pos = _cell_centre(spot.at)
+	move_to = Vector2.INF
+	reach_to = Vector2.INF
+	chase = null
+	talk_to = null
+	sprinting = false
+	player_sprite.play("idle")
+	ui.message("You sit down. Move or press anything to stand up.")
+
+
+## Up again, beside the furniture (the cell it is used from).
+func stand_up() -> void:
+	if furn.is_empty():
+		return
+	world.player.pos = furn.stand
+	furn = {}
+	player_sprite.stand()
+
+
+## Seated: a movement, an action key, a stick or a button stands the player up (a tap does in _tap).
+func _seated_step() -> void:
+	var woke := Input.get_vector("move_left", "move_right", "move_up", "move_down").length() > 0.1
+	for a in InputMap.get_actions():
+		if not str(a).begins_with("ui_") and Input.is_action_just_pressed(a):
+			woke = true
+	if woke:
+		stand_up()
+		return
+	ui.prompt("Seated: move or press anything to stand up")
+
+
+## Draw the player seated or lying while on furniture.
+func _sync_player_pose() -> void:
+	var p := world.player
+	if furn.is_empty() or not p.alive:
+		player_sprite.stand()
+		return
+	var sp: Dictionary = furn.spot
+	var at := _cell_centre(sp.at) * T
+	if furn.kind == "sit":
+		player_sprite.sit(at, Furniture.face_dir(sp))
+	else:
+		var head := str(sp.get("head", "left"))
+		player_sprite.lie(at, head, _blanket(int(sp.get("tile", -1)), head))
+
+
+func _rest_now() -> void:
 	var p := world.player
 	var h := world.hour()
 	var until := 6.0 if h < 6.0 else 30.0

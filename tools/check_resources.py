@@ -352,6 +352,10 @@ def problems(ctx):
     stations = {s["type"] for s in ctx["village"]["stations"]}
     for st in ctx["village"].get("stamps", {}).values():
         stations |= {s["type"] for s in st.get("stations", [])}
+    # a home's furniture is a station too (PL2-013): Furniture.STATION_OF maps a spot kind to its station type
+    furn = (ROOT / "game/scripts/core/furniture.gd").read_text(encoding="utf-8")
+    m = re.search(r"const STATION_OF := \{([^}]*)\}", furn)
+    stations |= set(re.findall(r':\s*"([a-z_]+)"', m.group(1))) if m else set()
 
     def item_ok(where, i):
         if i not in items:

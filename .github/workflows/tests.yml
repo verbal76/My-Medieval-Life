@@ -63,6 +63,7 @@ jobs:
           $godot --headless --path game --import
           $godot --headless --path game --script res://tests/run_tests.gd
           $godot --headless --path game --script res://tests/start_test.gd
+          $godot --headless --path game --script res://tests/furniture_test.gd
           $godot --headless --path game --script res://tests/play_test.gd
           $godot --headless --path game --script res://tests/overworld_test.gd
           $godot --headless --path game --script res://tests/tree_test.gd

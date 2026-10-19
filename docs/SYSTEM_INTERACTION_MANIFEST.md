@@ -836,6 +836,41 @@ Rules:
 - **Expected:** Parcels (with `estate`), built rooms and sites save with the world; on load the buildings, collision, insides, roofs and stations are rebuilt and a module site goes on where it was. Saves from before estates have no `estate` field: each parcel is its own property. The save version is unchanged (14).
 - **Tests:** `game/tests/property_test.gd::test_save`
 
+### INT-095 · Villagers sleep lying on their beds
+- **Trigger:** A villager is asleep (`anim` "sleep") on the use cell of their bed.
+- **Source:** `game/scripts/main.gd::_show_sleeper`, `game/scripts/view/actor_sprite.gd::lie`
+- **Affects:** Households, Interface
+- **Expected:** The sleeper is drawn from the sheet's lying frame (the end of the fall: head toward the pillow, a quarter turn for a head-up bed), centred on the bed cell, above the bed's own tiles, under the bed's blanket; no furniture moves. Waking (`NPCBrain.decide`) draws them standing again. Schedules and paths are untouched: only the drawing changed.
+- **Tests:** `game/tests/furniture_test.gd::_run`
+
+### INT-096 · Villagers eat at home seated on their chair
+- **Trigger:** A villager with food at home plans a meal (`NPCBrain._plan_eat`).
+- **Source:** `game/scripts/core/npc_brain.gd::_home_meal`, `game/scripts/main.gd::_show_sitter`, `game/scripts/core/furniture.gd::with_chairs`
+- **Affects:** Households, Food, Interface
+- **Expected:** The household's chairs (stool tiles in the home, shared out by member order like beds) are spots of kind "chair". The meal walks to the chair's use cell and eats there for the same 15 minutes with anim "sit", drawn seated (legs cut at the knee, hips on the seat); the next decision stands them. A home without a chair eats standing at the table as before.
+- **Tests:** `game/tests/furniture_test.gd::_run`
+
+### INT-097 · The player sits on chairs and stands with any input
+- **Trigger:** The player uses a chair (spot kind "chair") in their own home.
+- **Source:** `game/scripts/main.gd::sit_down`, `game/scripts/main.gd::stand_up`, `game/scripts/core/furniture.gd::options`
+- **Affects:** Interface, Player state
+- **Expected:** The chair is an ordinary target (keyboard, mouse, pad and touch reach it). The player is drawn seated until a movement, a button, a stick, a key or a tap, then stands on the free cell beside the chair. Chairs of a house the player builds work the same (found by spot kind).
+- **Tests:** `game/tests/furniture_test.gd::_run`
+
+### INT-098 · The player sleeps in their own bed and wakes beside it
+- **Trigger:** The player rests inside their own home (the bed, the chest) while a bed spot exists.
+- **Source:** `game/scripts/main.gd::rest`, `game/scripts/main.gd::lie_down`, `game/scripts/main.gd::_rest_now`
+- **Affects:** Player state, Interface, Save
+- **Expected:** The player lies on the bed (drawn lying under the blanket) for a short sleeping action, then the night passes (full health and stamina, morning, saved) and they stand on the cell beside the bed; B, Esc or a tap wakes them early beside the bed with the time unchanged. Resting outside the house is the plain rest as before.
+- **Tests:** `game/tests/furniture_test.gd::_run`
+
+### INT-099 · A home's hearth is an oven and its table a food-preparation station
+- **Trigger:** The player uses a hearth or table spot in their own home.
+- **Source:** `game/scripts/core/furniture.gd::options`, `game/scripts/core/furniture.gd::home_refusal`, `game/scripts/core/world.gd::station_refusal`
+- **Affects:** Crafting, Food, Inventory
+- **Expected:** A hearth spot offers the "oven" station's recipes (roasting; never the forge's smelting), a table spot the "prep" station's (`knead_flatbread`: 3 wheat to a loaf, cold work); the same recipes.json rules and costs as every station. Only the home's household may use them; villagers' own stations are unchanged. New rooms and houses get both by spot kind.
+- **Tests:** `game/tests/furniture_test.gd::_run`
+
 ### INT-100 · Chests, crates and barrels are storage with an owner
 - **Trigger:** The player uses a chest, crate or barrel, and stores or takes goods.
 - **Source:** `game/scripts/core/chests.gd::info`, `game/scripts/core/chests.gd::store`, `game/scripts/core/chests.gd::take`, `game/scripts/ui/chest_window.gd::show`
@@ -990,24 +1025,24 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031, INT-080 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-101, INT-105, INT-106, INT-109 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053, INT-080, INT-097, INT-098, INT-101, INT-105, INT-106, INT-109 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046, INT-059, INT-064, INT-066, INT-067, INT-068, INT-069, INT-070, INT-074, INT-083, INT-086, INT-087, INT-099, INT-100, INT-101, INT-103, INT-104, INT-106, INT-107, INT-113, INT-117, INT-118, INT-119 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108 |
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111 |
-| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-103, INT-107, INT-114 |
+| Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114 |
 | Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120 |
 | Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120 |
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-100, INT-102, INT-118, INT-119 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119 |
 | Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113 |
@@ -1016,8 +1051,8 @@ Rules:
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-104, INT-105, INT-115, INT-116, INT-120 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-100, INT-112 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100 |

@@ -32,8 +32,8 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | PL2-007 | Fields grow, ripen and regrow | VERIFIED | staging | The cycle worked; farmers cut within the hour. They now wait 12 h, so ripe fields are seen (world_test, screenshots). Seasons hook in place |
 | PL1-04 | Health recovery and Apothecary | VERIFIED | staging | Four medicines, two starting bandages, the sage as Apothecary with finite stock from brewing and caravans (health_jobs_test, screenshot). Bandages not craftable: no cloth in the game |
 | PL1-09 | Gold star over the accepted job's employer | VERIFIED | staging | Keyed by NPC id, survives save/load, clears on payment (health_jobs_test, screenshot) |
-| PL1-07 | NPCs sunk into beds and chairs | NOT STARTED | — | |
-| PL2-013 | Usable furniture (sit, lie in bed, furnace, food table) | NOT STARTED | — | Shares poses with PL1-07 |
+| PL1-07 | NPCs sunk into beds and chairs | DONE (pl-furniture, local) | pl-furniture | docs/BUILD_DECISIONS.md |
+| PL2-013 | Usable furniture (sit, lie in bed, furnace, food table) | DONE (pl-furniture, local) | pl-furniture | Shares poses with PL1-07 |
 | PL1-13 | Recognisable stove | PARTIALLY COMPLETED | staging | Coal-bed hearth with pot, "Use Stove", "Stove — Cooking & Tonics"; no chimney (wall row above). The kitchen floor shows grass: a village-rebuild regression to fix |
 | PL2-010 | Recognisable sawhorse | PARTIALLY COMPLETED | staging | Trestle bench with logs from Shade tiles; no angled-trestle or saw art exists in the packs |
 | PL2-002 | Usable chests, locks and lockpicking | NOT STARTED | — | |
