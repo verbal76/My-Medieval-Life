@@ -170,25 +170,37 @@ func unmark(id: String, owner: int, n := 1) -> void:
 	_tidy(id)
 
 
-## The whole carried stack of `id` went into the home chest (or came out of it): its marks go with it,
-## so the chest does not wash stolen goods clean.
-func store_marks(id: String) -> void:
-	_move_marks(stolen, chest_stolen, id)
+## `qty` of `id` (default: the whole stack) went into the home chest or came out of it: that many marks
+## go with them (stolen pieces first), so the chest does not wash stolen goods clean.
+func store_marks(id: String, qty := -1) -> void:
+	_move_marks(stolen, chest_stolen, id, qty)
 
 
-func take_marks(id: String) -> void:
-	_move_marks(chest_stolen, stolen, id)
+func take_marks(id: String, qty := -1) -> void:
+	_move_marks(chest_stolen, stolen, id, qty)
 	trim_stolen()
 
 
-static func _move_marks(from: Dictionary, to: Dictionary, id: String) -> void:
+static func _move_marks(from: Dictionary, to: Dictionary, id: String, qty := -1) -> void:
 	if not from.has(id):
 		return
 	var m: Dictionary = to.get(id, {})
-	for o in from[id]:
-		m[o] = int(m.get(o, 0)) + int(from[id][o])
+	var owners: Array = from[id].keys()
+	owners.sort_custom(func(a, b): return int(a) < int(b))
+	var left := qty if qty >= 0 else 1 << 30
+	for o in owners:
+		var k := mini(left, int(from[id][o]))
+		if k <= 0:
+			continue
+		m[o] = int(m.get(o, 0)) + k
+		from[id][o] = int(from[id][o]) - k
+		left -= k
 	to[id] = m
-	from.erase(id)
+	var rest := 0
+	for o in from[id]:
+		rest += int(from[id][o])
+	if rest <= 0:
+		from.erase(id)
 
 
 func trim_stolen() -> void:
