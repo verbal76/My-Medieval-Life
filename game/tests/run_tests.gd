@@ -90,13 +90,17 @@ func test_trade_is_atomic() -> void:
 	var a: NPC = w.npcs[0]
 	var b: NPC = w.npcs[1]
 	var before := w.total_coins()
+	var a_start := a.coins
 	a.coins = 5
 	b.inv.add("iron_sword")
 	var ok := w.trade(a, b, "iron_sword", 1, 50)
 	check(not ok and b.inv.has("iron_sword") and a.coins == 5, "trade fails whole when buyer is short")
+	check(w.total_coins() == before - (a_start - 5), "a refused trade moves no coins")
 	a.coins = 60
-	check(w.trade(a, b, "iron_sword", 1, 50) and a.inv.has("iron_sword") and a.coins == 10, "trade moves goods and coins")
-	check(w.total_coins() == before - 5 + 60 - 0 - (5 - 5) or true, "coins")
+	var b_coins := b.coins
+	var held := w.total_coins()
+	check(w.trade(a, b, "iron_sword", 1, 50) and a.inv.has("iron_sword") and a.coins == 10 and b.coins == b_coins + 50, "trade moves goods and coins")
+	check(w.total_coins() == held, "a trade conserves the village's coins")
 
 
 func test_population() -> void:

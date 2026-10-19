@@ -77,7 +77,7 @@ func test_apothecary() -> void:
 	# the sage brews flowers into a poultice at the stove
 	sage.inv.add("flower", 2)
 	sage.inv.remove("herbal_poultice", sage.inv.count("herbal_poultice"))
-	check(w.brain.act(sage, "craft", {"recipe": "brew_poultice", "station": w.stations_of("stove")[0]}) or true, "the craft action runs")
+	check(w.brain.act(sage, "craft", {"recipe": "brew_poultice", "station": w.stations_of("stove")[0]}), "the craft action succeeds")
 	check(sage.inv.count("herbal_poultice") == 1 and not sage.inv.has("flower"), "two flowers became a poultice in the sage's hands")
 	# the caravan resupplies from the sage's own coins, and stops when they are spent
 	sage.coins = 100

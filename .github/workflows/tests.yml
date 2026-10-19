@@ -75,3 +75,4 @@ jobs:
           $godot --headless --path game --script res://tests/property_test.gd
           $godot --headless --path game --script res://tests/business_test.gd
           $godot --headless --path game --script res://tests/farming_test.gd
+          $godot --headless --path game --script res://tests/health_jobs_test.gd
