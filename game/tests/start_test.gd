@@ -1169,6 +1169,7 @@ func _run() -> void:
 	_resources_tests()
 	_gather_tests()
 	_save_safety_tests()
+	_save_meta_tests()
 	_collision_tests()
 	_hit_feedback_tests()
 	_roof_tests()
@@ -1515,6 +1516,26 @@ func _kept(state: String) -> Array:
 ## Player data is never lost: a save that cannot be read is moved aside unchanged before anything
 ## writes, the backup is used when it can be, failed writes leave the last save alone, and the
 ## messages say exactly what happened (owner, 2026-10-18: the audit's save-overwrite finding).
+## PL1-11 stage 1: a save carries its world's identity for moving it between devices.
+func _save_meta_tests() -> void:
+	main.new_game()
+	var read := func() -> Dictionary:
+		return JSON.parse_string(FileAccess.get_file_as_string(main.save_path)).get("meta", {})
+	check(main.save_game(false), "(portable saves) the game saves")
+	var m1: Dictionary = read.call()
+	check(str(m1.get("save_id", "")).length() >= 12 and int(m1.get("saved_at", 0)) > 0 and m1.has("play_seconds") and m1.get("platform", "") != ""
+			and m1.get("character", "") == main.world.player.name, "a save records its world id, times, play time, device and character: %s" % [m1])
+	main.save_game(false)
+	check(read.call().get("save_id") == m1.save_id, "saving again keeps the same world id")
+	main.continue_game()
+	main.save_game(false)
+	check(read.call().get("save_id") == m1.save_id and read.call().get("created") == m1.created, "after loading, the world id and its creation time carry on")
+	check(not FileAccess.get_file_as_string(main.save_path).contains(OS.get_user_data_dir()), "the save holds no device path")
+	main.new_game()
+	main.save_game(false)
+	check(read.call().get("save_id") != m1.save_id, "a new game is a new world id")
+
+
 func _save_safety_tests() -> void:
 	var ui = main.ui
 	SaveStore.fail_at = ""

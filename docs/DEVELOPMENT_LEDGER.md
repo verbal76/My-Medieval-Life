@@ -41,7 +41,7 @@ Statuses: NOT STARTED, IN PROGRESS, PARTIALLY COMPLETED, BLOCKED, COMPLETED (imp
 | PL2-008 / PL2-014 | Expandable property, modular house and workshops | NOT STARTED | — | One shared foundation |
 | PL2-015 | Farming, livestock and hand ploughing | NOT STARTED | — | Builds on B8-029 and PL2-007 |
 | PL1-10 | Player businesses and real NPC demand (staged) | NOT STARTED | — | Stage 1 first |
-| PL1-11 | Google Drive cloud saves (staged) | NOT STARTED | — | Stage 1 (portability audit) is local; later stages need a Google OAuth client registered by the owner |
+| PL1-11 | Google Drive cloud saves (staged) | PARTIALLY COMPLETED; stages 2-5 BLOCKED | staging | Stage 1 VERIFIED: saves are one platform-neutral JSON (user:// paths, world from its seed, versioned with SaveStore refusing older ones) and now carry a world id, times, play time, device and character for conflict checks (start_test). Blocked: Google OAuth needs a client registered by the owner in Google Cloud (consent screen, drive.appdata scope, Android and desktop client ids); without it no upload or download can be built or tested. Next once available: stage 2 manual upload/download |
 | ENV-RTK | RTK token tool and its hook | VERIFIED (this container only) | — | Built from the official repository (`cargo install --git https://github.com/rtk-ai/rtk --tag v1.0.1 --locked rtk --root /root/.local`), `rtk init -g --auto-patch` added the Bash PreToolUse hook to `~/.claude/settings.json` (no earlier settings file, no hooks replaced); `rtk gain` shows commands routed. Persistence needs the owner: the environment setup script must run the same install and `rtk init -g --auto-patch` |
 
 ## Decisions in this run

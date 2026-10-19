@@ -28,6 +28,7 @@ var target := {}               # current interaction target
 var action := {}               # {label, left, total, done: Callable, anim, tool}
 var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain)
 var sprinting := false         # B8-027: running (LT toggles on a pad; Shift held, or toggled, on a keyboard)
+var save_meta := {}            # PL1-11: the save's identity for portable and cloud saves (_save_meta)
 var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
 var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
 var sprint_spent := false      # stamina ran out while Shift was held: release it to sprint again
@@ -619,6 +620,7 @@ func _setup_input() -> void:
 func new_game(spec := {}) -> void:
 	if not spec.is_empty():
 		_keep_previous_game()
+	save_meta = {}
 	_clear_world()
 	map = VillageMap.load_default()
 	world = World.new()
@@ -674,6 +676,7 @@ func continue_game() -> void:
 
 
 func _load_save(d: Dictionary) -> void:
+	save_meta = d.get("meta", {}).duplicate()
 	_clear_world()
 	map = VillageMap.load_default()
 	world = World.new()
@@ -1028,6 +1031,7 @@ func _process(delta: float) -> void:
 		cancel_action("")          # a window opened (the Pack, a menu) or the player fell: the work stops, nothing is awarded
 	if not paused and world.player.alive:
 		world.update(delta)
+		save_meta["play_seconds"] = float(save_meta.get("play_seconds", 0.0)) + delta
 		_player_step(delta)
 		_projectiles_step(delta)
 		_look_step(delta)
@@ -2852,7 +2856,9 @@ func save_game(show := true) -> bool:
 		if show:
 			ui.message("Not saved: %s." % save_blocked, 8.0)
 		return false
-	var r := SaveStore.write_text(save_path, JSON.stringify(world.to_dict(), "", true, true))          # full precision: times and positions reload exactly
+	var d := world.to_dict()
+	d["meta"] = _save_meta()
+	var r := SaveStore.write_text(save_path, JSON.stringify(d, "", true, true))          # full precision: times and positions reload exactly
 	if not r.ok:
 		if show or not save_failing:
 			ui.message("Could not save: %s. Your last save is unchanged." % r.reason, 8.0)
@@ -2862,6 +2868,21 @@ func save_game(show := true) -> bool:
 	if show:
 		ui.message("Saved.")
 	return true
+
+
+## What identifies a save apart from the world (PL1-11, portable saves): a world id made once per new
+## game and kept through every save of it, when it was made and last saved, play time, and the device
+## that saved it. A cloud copy is compared by these (same world? which is newer? longer played?) and
+## nothing in the save depends on the device: paths are user:// and the world regenerates from its seed.
+func _save_meta() -> Dictionary:
+	if not save_meta.has("save_id"):
+		save_meta["save_id"] = Marshalls.raw_to_base64(Crypto.new().generate_random_bytes(12)).replace("/", "_").replace("+", "-")
+		save_meta["created"] = int(Time.get_unix_time_from_system())
+	save_meta["saved_at"] = int(Time.get_unix_time_from_system())
+	save_meta["play_seconds"] = int(float(save_meta.get("play_seconds", 0.0)))
+	save_meta["platform"] = OS.get_name()
+	save_meta["character"] = world.player.name
+	return save_meta.duplicate()
 
 
 ## Starting a new game over an existing one keeps the old game aside as "save1.previous.json"
