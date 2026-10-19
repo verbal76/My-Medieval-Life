@@ -44,7 +44,7 @@ const OUTLETS := {
 	"pickaxe": ["merchant_goods"], "axe": ["merchant_goods"], "iron_sword": ["merchant_goods"], "copper_sword": ["merchant_goods"],
 	"hammer": ["merchant_goods"], "iron_bar": ["merchant_goods"], "leather_armor": ["merchant_goods"],
 }
-const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread"]
+const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries"]
 const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese and egg bread: the cook's, from the pens (Build 13)
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
@@ -242,6 +242,101 @@ func _dependants(hh: Dictionary) -> int:
 	return dependants
 
 
+# ---------------------------------------------------------------- home production (B14) --------
+## Medicines in the order a villager reaches for them: the least that will do first.
+const MEDICINES := ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_healing_tonic"]
+
+
+static func hp_cfg() -> Dictionary:
+	return GameData.b("home_production")
+
+
+## A hurt villager (below medicine_use_below of their health) treats themselves (owner, Build 14:
+## villagers make medicine for their own use): a medicine they carry or the household keeps, at home;
+## else one bought from the Apothecary with their own coins. Villagers do not otherwise heal.
+func _plan_heal(n: NPC) -> bool:
+	if n.role == "bandit" or n.hp >= n.max_hp * float(hp_cfg().medicine_use_below):
+		return false
+	for m in MEDICINES:
+		if n.inv.has(m):
+			n.doing = "dressing a wound"
+			n.plan = [work(10, "use_medicine", {}, "idle")]
+			return true
+	var pantry: Inventory = w.households[n.household].pantry if n.household >= 0 else null
+	if pantry != null:
+		for m in MEDICINES:
+			if pantry.has(m):
+				n.doing = "going home to dress a wound"
+				n.plan = [go(w.home_cell(n, "chest")), work(10, "use_medicine", {"pantry": true}, "idle")]
+				return true
+	var sage := w.npc(w.sage_id)
+	if sage != null and sage.alive and not w.asleep(sage) and sage != n:
+		for m in MEDICINES:
+			if sage.inv.has(m) and n.coins >= w.sell_price(sage, m):
+				n.doing = "buying medicine"
+				n.plan = [go(_workplace_cell(sage)), doit("buy_from", {"vendor": sage.id, "item": m, "qty": 1}), work(10, "use_medicine", {}, "idle")]
+				return true
+	return false
+
+
+## Evening work for the household (B14): forage ripe wild plants near home (flowers for medicine,
+## berries for the pantry) and brew flowers into poultices at the home's hearth. Everything comes from
+## real plants and the household's own stock; a household keeps poultice_keep poultices and
+## berries_keep berries.
+func _plan_home_work(n: NPC) -> bool:
+	if n.role != "adult" or n.household < 0 or n.home == "":
+		return false
+	var cfg := hp_cfg()
+	var pantry: Inventory = w.households[n.household].pantry
+	var flowers := pantry.count("flower") + n.inv.count("flower")
+	var brew: Dictionary = GameData.recipes["brew_poultice"]
+	if pantry.count("herbal_poultice") < int(cfg.poultice_keep) and flowers >= int(brew["in"].flower):
+		n.doing = "brewing a poultice at home"
+		n.plan = [go(w.home_cell(n, "hearth")), work(float(brew.minutes), "home_brew", {}, "work")]
+		return true
+	var want := ""
+	if pantry.count("herbal_poultice") < int(cfg.poultice_keep) and flowers < int(brew["in"].flower):
+		want = "flower"
+	elif pantry.count("red_berries") + pantry.count("blueberries") < int(cfg.berries_keep):
+		want = "berry"
+	if want == "":
+		return false
+	var pl := _wild_plant_near(w.building_door(n.home), want, float(cfg.forage_range))
+	if pl.is_empty():
+		return false
+	n.doing = "gathering %s" % ("wild flowers" if want == "flower" else "berries")
+	n.plan = [go(_forage_cell(pl)), work(10, "forage", {"plant": str(pl.id)}, "gather"),
+			go(w.home_cell(n, "chest")), doit("store_home", {})]
+	return true
+
+
+## Where a villager stands to pick a plant: its own cell if open, else the open cell below it; (-1, -1) if neither.
+func _forage_cell(pl: Dictionary) -> Vector2i:
+	var c := Vector2i(int(pl.x), int(pl.y))
+	if not w.map.is_solid(c):
+		return c
+	if not w.map.is_solid(c + Vector2i(0, 1)):
+		return c + Vector2i(0, 1)
+	return Vector2i(-1, -1)
+
+
+## The nearest ripe village plant of a kind ("flower", or "berry" for either bush) within `r` of `at`.
+func _wild_plant_near(at: Vector2i, kind: String, r: float) -> Dictionary:
+	var best := {}
+	var bd := r
+	for pl in w.plants:
+		if pl.state != "ripe":
+			continue
+		var k := str(pl.kind)
+		if not (k == kind or (kind == "berry" and k in ["redberry", "blueberry"])):
+			continue
+		var d := Vector2(at).distance_to(Vector2(int(pl.x), int(pl.y)))
+		if d <= bd and _forage_cell(pl) != Vector2i(-1, -1):
+			bd = d
+			best = pl
+	return best
+
+
 ## Food units in the household pantry.
 func _stocked(hh: Dictionary) -> int:
 	var stocked := 0
@@ -251,7 +346,11 @@ func _stocked(hh: Dictionary) -> int:
 
 
 func _plan_evening(n: NPC, h: float) -> void:
+	if _plan_heal(n):
+		return
 	if _plan_provision(n):
+		return
+	if _plan_home_work(n):
 		return
 	var hh: Dictionary = w.households[n.household]
 	var dependants := _dependants(hh)
@@ -1065,6 +1164,46 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 						n.hunger = minf(100.0, n.hunger + float(GameData.item(plate).food))
 						w.stat("eaten_food", float(GameData.item(plate).food))
 						w.stat("eaten_" + plate)
+			return true
+		"use_medicine":
+			var from: Inventory = w.households[n.household].pantry if a.get("pantry", false) and n.household >= 0 else n.inv
+			for m in MEDICINES:
+				if from.has(m) and n.hp < n.max_hp:
+					from.remove(m)
+					n.hp = minf(n.max_hp, n.hp + float(GameData.item(m).heal))
+					w.stat("npc_used_" + m)
+					return true
+			return false
+		"forage":
+			var pl := {}
+			for p in w.plants:
+				if str(p.id) == str(a.plant):
+					pl = p
+			var got: Dictionary = w.pick_plant(pl)
+			for id in got:
+				n.inv.add(id, int(got[id]))
+				w.stat("villager_foraged_" + id, float(got[id]))
+			return not got.is_empty()
+		"store_home":
+			var pantry: Inventory = w.households[n.household].pantry
+			for id in ["flower", "red_berries", "blueberries"]:
+				if n.inv.has(id):
+					w.transfer(n.inv, pantry, id, n.inv.count(id))
+			return true
+		"home_brew":
+			var pantry: Inventory = w.households[n.household].pantry
+			var rec: Dictionary = GameData.recipes["brew_poultice"]
+			if n.inv.has("flower"):
+				w.transfer(n.inv, pantry, "flower", n.inv.count("flower"))
+			if not pantry.has_all(rec["in"]):
+				return false
+			pantry.remove_all(rec["in"])
+			for id in rec.out:
+				pantry.add(id, int(rec.out[id]))
+				w.stat("made_" + id, float(rec.out[id]))
+			for id in rec["in"]:
+				w.stat("used_" + id, float(rec["in"][id]))
+			w.stat("home_brewed")
 			return true
 		"collect_pen":
 			var pen: Dictionary = w.fauna.pens.get(str(a.pen), {})

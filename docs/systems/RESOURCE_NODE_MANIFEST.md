@@ -21,19 +21,19 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 | Node | Category | Origin | Tool | Skill | Yields a cycle | Depletion | Player | NPCs | Gather | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `blue_berry_bush` Blue berry bush | forage | natural | none | none | 2 blueberries | regrows | yes | no | yes | implemented |
+| `blue_berry_bush` Blue berry bush | forage | natural | none | none | 2 blueberries | regrows | yes | yes | yes | implemented |
 | `boulder` Boulder | mineral | natural | pickaxe | mining | 1 stone | finite | yes | no | yes | implemented |
 | `chicken_pen` Chickens | livestock | bred | none | none | 2 feather, 1 meat | breeds | no | yes | no | implemented |
 | `coal_seam` Coal seam | mineral | natural | pickaxe | mining | 1 coal | finite | yes | yes | yes | implemented |
 | `copper_seam` Copper seam | mineral | natural | pickaxe | mining | 1 copper_ore | finite | yes | yes | yes | implemented |
 | `cow_pen` Cows | livestock | bred | none | none | 1 hide, 6 meat | breeds | no | yes | no | implemented |
-| `flower_patch` Wild flower | forage | natural | none | none | 1 flower | regrows | yes | no | yes | implemented |
+| `flower_patch` Wild flower | forage | natural | none | none | 1 flower | regrows | yes | yes | yes | implemented |
 | `gold_seam` Gold seam | mineral | natural | pickaxe | mining | 1 gold_ore | finite | yes | yes | yes | implemented |
 | `iron_seam` Iron seam | mineral | natural | pickaxe | mining | 1 iron_ore | finite | yes | yes | yes | implemented |
 | `pig_pen` Pigs | livestock | bred | none | none | 1 hide, 4 meat | breeds | no | yes | no | implemented |
 | `player_field` Your field | crop | cultivated | none | none | 3 carrot, 1 carrot_seed, 2 flower, 1 herb_seed, 3 potato, 1 potato_seed, 3 wheat, 1 wheat_seed | ripens | no | no | no | implemented |
 | `player_pen` Your pen | livestock | bred | none | none | 1 egg, 2 milk, 1 wool | breeds | no | no | no | implemented |
-| `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | no | yes | implemented |
+| `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | yes | yes | implemented |
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
 | `tree` Tree | wood | natural | axe | woodcutting | 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
@@ -50,13 +50,13 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Action:** Picking (interact): "Pick blue berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
-- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers do not pick them.
+- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 2 blueberries. 2 blueberries a plant, all at once (World.pick_plant).
 - **Total:** 2 blueberries from each ripe plant of this kind in village.json plants (tile 2662).
 - **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers no. Villagers do not forage yet (no NPC action picks plants).
+- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
 - **Gather mode:** yes. **Icon:** `blueberries`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
 - **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
@@ -158,13 +158,13 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Action:** Picking (interact): "Pick wild flower". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
-- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers do not pick them.
+- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 1 flower. 1 flower a plant, all at once (World.pick_plant).
 - **Total:** 1 flower from each ripe plant of this kind: village.json plants (tiles 2656 red, 2657 purple, 2658 yellow, 2659 white) and every flower the overworld generator draws outside the village (Overworld.flower_at).
 - **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. Outside the village the picked flower is saved in Overworld.plant_changes.
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers no. Villagers do not forage yet (no NPC action picks plants).
+- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
 - **Gather mode:** yes. **Icon:** `flower`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
 - **Code:** `game/scripts/core/overworld.gd::flower_at`, `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`
@@ -266,13 +266,13 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Action:** Picking (interact): "Pick red berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
-- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers do not pick them.
+- **Time:** 0 game minutes. The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 2 red_berries. 2 red_berries a plant, all at once (World.pick_plant).
 - **Total:** 2 red_berries from each ripe plant of this kind in village.json plants (tile 2660).
 - **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers no. Villagers do not forage yet (no NPC action picks plants).
+- **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
 - **Gather mode:** yes. **Icon:** `red_berries`.
 - **Risk:** Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending).
 - **Code:** `game/scripts/core/world.gd::pick_plant`, `game/scripts/core/world.gd::plant_at`, `game/scripts/core/world.gd::_new_day`, `game/scripts/main.gd::interact`

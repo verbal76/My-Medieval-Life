@@ -525,6 +525,10 @@ func _systems() -> void:
 	sys.call("trading", "Trading", [
 		p("Talk to a merchant or villager to buy and sell. Prices depend on each item's base value and on supply: a seller asks more as their stock runs low, and a buyer offers less as they fill up. In a bulk deal every unit is priced in turn, so buying a seller's last few costs more each and selling a buyer a big stack fetches less each; the quantity control shows the real total. Merchants have limited coins and stock: they never buy what they cannot pay for, and a trade either completes or does not happen. Villagers buy what their work needs."),
 		links(["guide:money", "job:merchant", "sys:theft"])])
+	sys.call("home_work", "Villagers at home: food, medicine and wounds", [
+		p("Villagers look after their own households. In the evening an adult gathers wild flowers or berries near home (what they pick is gone until it grows back, for you as for them) and brews flowers into herbal poultices at the home's hearth, keeping %d in store. Berries go into the pantry as food." % int(GameData.b("home_production").poultice_keep)),
+		p("Villagers do not heal by themselves. One badly hurt (below %d%% of their health) uses a medicine they carry or the household keeps, or walks to the Apothecary and buys one with their own coins." % roundi(float(GameData.b("home_production").medicine_use_below) * 100.0)),
+		links(["item:herbal_poultice", "item:flower", "guide:heal", "job:sage"])])
 	sys.call("theft", "Theft and guards", [
 		p("Pickpocketing needs Stealth; sleeping victims are easier. Goods you steal are marked as theirs. A guard who sees a theft, hears the victim within %d tiles, or questions you about a stolen item returns the goods and fines you %d coins plus %d%% of their value. Every theft is on your record with what was taken, how many and what it was worth." % [int(GameData.b("guard_call_radius")), int(GameData.b("theft_fine")), roundi(float(GameData.b("theft_fine_share")) * 100.0)]),
 		links(["skill:stealth", "job:guard", "guide:theft"])])
