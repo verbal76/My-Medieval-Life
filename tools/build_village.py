@@ -134,6 +134,7 @@ BED_TILES = {1472: "up", 1477: "up", 1482: "up", 1691: "right", 1696: "right", 1
 TABLE_TILES = {2539, 2540, 2542, 1887, 1888, 1889, 1890, 2547, 2548, 2549, 2550}
 HEARTH_TILES = {2565, 2566, 2567, 2568}     # bread ovens / hearths
 CHEST_TILES = {355}
+KITCHEN_CELL = (52, 47)                     # a cell of the tavern's open-air kitchen (stove area)
 MAT = 593                                   # a straw pallet: a sleeping place on the floor (walkable)
 SLEEP_PLACES = 6                            # beds plus pallets in every home
 HOME_TYPES = ("house", "manor", "tavern", "hut")
@@ -358,8 +359,11 @@ class Village:
                         continue
                     X, Y = ox + x, oy + y
                     if cat == "ground":
+                        # the sample's floor goes over the village's wang ground (ground0), in ground1+
                         if (sx, sy) not in foot:
                             continue
+                        self.put(cat, idx + 1, X, Y, tile_val(0, t))
+                        continue
                     elif is_tree_tile(t):
                         continue
                     if cat == "top":
@@ -1018,6 +1022,46 @@ class Village:
             members.setdefault(k, []).append(c)
         for b in self.ents["buildings"]:
             b["interior"] = self.interior_of(b, comp, members)
+        self.floor_fix()
+
+    def has_floor(self, x, y):
+        """Whether a stamped floor tile (not the village's wang ground) lies in the cell."""
+        return any(0 <= self.get("ground", i, x, y) < FREE for i in range(1, 6))
+
+    def floor_fix(self):
+        """Every interior floor cell shows a floor, never the grass of the continuous ground layer (B8-002).
+        Where a stamp left a floor cell without one (the tavern's open-air kitchen lies outside its roof,
+        and Shade's sample drew grass there), the building's most common floor tile is laid."""
+        for b in self.ents["buildings"]:
+            cells = b["interior"]["floor"]
+            kitchen = set()
+            count = {}
+            for x, y in cells:
+                for i in range(1, 6):
+                    t = self.get("ground", i, x, y)
+                    if 0 <= t < FREE:
+                        count[(i, t)] = count.get((i, t), 0) + 1
+            if not count:
+                continue
+            i, t = sorted(count.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+            if b["type"] == "tavern":           # the open-air kitchen behind its own walls, entered by a door of its own
+                todo = [KITCHEN_CELL]
+                seen = set(todo)
+                while todo:                     # spread over the cells the kitchen's walls enclose
+                    x, y = todo.pop()
+                    for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                        if (n in seen or n in self.walls or n in self.roof or n in self.floor
+                                or any(v in DOORS for v in self.below_tiles(*n))
+                                or not (b["x"] <= n[0] < b["x"] + b["w"] and b["y"] <= n[1] < b["y"] + b["h"])):
+                            continue
+                        seen.add(n)
+                        todo.append(n)
+                        kitchen.add(n)
+                assert KITCHEN_CELL in seen and len(kitchen) < 80, "the kitchen's walls leak"
+                kitchen.add(KITCHEN_CELL)
+            for x, y in list(cells) + sorted(kitchen):
+                if not self.has_floor(x, y):
+                    self.put("ground", i, x, y, t)
 
     def furnish_house(self, b):
         """Beds in Shade's small house (HOUSE_BEDS), where his straw mat, shelf and jars stood."""
