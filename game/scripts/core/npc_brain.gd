@@ -302,7 +302,7 @@ func _plan_home_work(n: NPC) -> bool:
 	var cfg := hp_cfg()
 	var pantry: Inventory = w.households[n.household].pantry
 	var house: Dictionary = w.buildings.get(n.home, {})
-	if _plan_storefront(n, house):
+	if _plan_storefront(n, house) or _plan_cart(n, house):
 		return true
 	var keep := int(cfg.poultice_keep) + (int(cfg.storefront_stock) if house.has("front") else 0)     # a storefront household makes some to sell
 	var flowers := pantry.count("flower") + n.inv.count("flower")
@@ -412,6 +412,100 @@ func _bar_seller(n: NPC) -> NPC:
 	return null
 
 
+## Carts (B14, owner: "a recipe for carts using the materials we have ... a smithy, a carpenter"). The
+## carpenter saws cart wheels from its planks and assembles handcarts for sale at a workbench, buying the
+## axle and the ironwork from the smith with its own coins; the smith forges those (NPCBrain._smith).
+func _carpenter_carts(n: NPC) -> bool:
+	var cfg: Dictionary = GameData.b("carts")
+	var rec: Dictionary = GameData.recipes["build_handcart"]
+	if n.inv.count("handcart") < int(cfg.handcart_stock):
+		if n.inv.has_all(rec["in"]) and _do_recipe(n, "build_handcart"):
+			n.doing = "building a handcart"
+			return true
+		if n.inv.count("cart_wheel") >= int(rec["in"].cart_wheel) and n.inv.count("plank") >= int(rec["in"].plank):
+			var plan := _parts_trip(n, {"cart_axle": rec["in"].cart_axle, "cart_ironwork": rec["in"].cart_ironwork}, int(cfg.cart_coins) / 3)
+			if not plan.is_empty():
+				n.doing = "buying ironwork for a handcart"
+				n.plan = plan
+				return true
+	if n.inv.count("cart_wheel") < int(cfg.wheel_stock) and n.inv.count("plank") >= int(cfg.wheel_min_planks) and _do_recipe(n, "make_cart_wheel"):
+		n.doing = "making a cart wheel"
+		return true
+	return false
+
+
+## Who sells a cart part or a handcart: a carpenter, smith or merchant holding one (the nearest first).
+func _part_seller(id: String, n: NPC) -> NPC:
+	var best: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o != n and not w.asleep(o) and (o.job in ["carpenter", "smith"] or o.job == "merchant") and o.inv.has(id) \
+				and (best == null or o.pos.distance_to(n.pos) < best.pos.distance_to(n.pos)):
+			best = o
+	return best
+
+
+## The walk to buy the parts `need` ({id: qty}) that `n` lacks, with their own coins, keeping `floor`
+## coins in hand; [] if a part has no seller or they cannot pay. Planks also come from the timber stall.
+func _parts_trip(n: NPC, need: Dictionary, floor := 0) -> Array:
+	var plan := []
+	var cost := 0
+	for id in need:
+		var short := int(need[id]) - n.inv.count(id)
+		if short <= 0:
+			continue
+		var o := _seller_of(id, n) if id == "plank" else _part_seller(id, n)
+		if o == null or o.inv.count(id) < short:
+			return []
+		cost += w.sell_price(o, id) * short
+		plan.append_array([go(_workplace_cell(o) if o.job != "smith" else o.cell()), doit("buy_from", {"vendor": o.id, "item": id, "qty": short})])
+	if n.coins - cost < floor:
+		return []
+	return plan
+
+
+## Whether a household has a handcart: in its store or carried by a member.
+func household_cart(h: int) -> bool:
+	if w.households[h].pantry.has("handcart"):
+		return true
+	for m in w.households[h].members:
+		var o := w.npc(m)
+		if o != null and o.inv.has("handcart"):
+			return true
+	return false
+
+
+## A storefront household gets a handcart to take its goods to market (B14): an adult with cart_coins of
+## their own buys the parts they lack (wheels from the carpenter, the axle and the ironwork from the smith,
+## planks) and assembles it at a workbench, or buys a finished one from the carpenter when that is cheaper
+## or the parts are not to be had. Either way it goes into the household's store.
+func _plan_cart(n: NPC, house: Dictionary) -> bool:
+	var cfg: Dictionary = GameData.b("carts")
+	if not house.has("front") or n.coins < int(cfg.cart_coins) or household_cart(n.household):
+		return false
+	var rec: Dictionary = GameData.recipes["build_handcart"]
+	var parts := 0
+	var parts_plan := _parts_trip(n, rec["in"])
+	for id in rec["in"]:
+		var short := int(rec["in"][id]) - n.inv.count(id)
+		var o := _seller_of(id, n) if id == "plank" else _part_seller(id, n)
+		if short > 0 and o != null:
+			parts += w.sell_price(o, id) * short
+	var bench := _station_for(n, "workbench") if not parts_plan.is_empty() or n.inv.has_all(rec["in"]) else ""
+	var maker := _part_seller("handcart", n)
+	var whole := w.sell_price(maker, "handcart") if maker != null else 1 << 30
+	var home := [go(w.home_cell(n, "chest")), doit("store_home", {})]
+	if bench != "" and (parts < whole or maker == null):
+		w.stations[bench].users[n.id] = w.minutes + w.map.data.w * 3 + float(rec.minutes) + 120.0
+		n.doing = "gathering parts for a handcart"
+		n.plan = parts_plan + [go(w.station_use(bench)), work(float(rec.minutes), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
+		return true
+	if maker != null and n.coins >= whole:
+		n.doing = "buying a handcart"
+		n.plan = [go(_workplace_cell(maker) if maker.job != "smith" else maker.cell()), doit("buy_from", {"vendor": maker.id, "item": "handcart", "qty": 1})] + home
+		return true
+	return false
+
+
 ## The nearest ripe village plant of a kind ("flower", or "berry" for either bush) within `r` of `at`.
 func _wild_plant_near(at: Vector2i, kind: String, r: float) -> Dictionary:
 	var best := {}
@@ -508,6 +602,8 @@ func _plan_job(n: NPC) -> bool:
 		"woodcutter":
 			return _woodcutter(n)
 		"carpenter":
+			if _carpenter_carts(n):
+				return true
 			if n.inv.count("plank") >= 30:
 				return _plan_sell(n, "plank") if _buyer_for(n, "plank") else _idle_at_work(n, "waiting for orders")
 			return _crafter(n, ["saw_planks"])
@@ -723,9 +819,9 @@ func _smith(n: NPC) -> bool:
 			return _plan_sell(n, id)
 	# forge whatever is scarcest
 	var wants := []
-	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor", "forge_lockpicks", "forge_padlock"]:
+	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor", "forge_lockpicks", "forge_padlock", "forge_cart_axle", "forge_cart_ironwork"]:
 		var out: String = GameData.recipes[r].out.keys()[0]
-		var cap := 1 if out in ["hammer", "iron_armor", "padlock"] else 3
+		var cap := 1 if out in ["hammer", "iron_armor", "padlock", "cart_axle", "cart_ironwork"] else 3
 		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in):
 			wants.append([inv.count(out), r])
 	wants.sort()
@@ -1280,7 +1376,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return not got.is_empty()
 		"store_home":
 			var pantry: Inventory = w.households[n.household].pantry
-			for id in ["flower", "red_berries", "blueberries"]:
+			for id in ["flower", "red_berries", "blueberries", "handcart"]:
 				if n.inv.has(id):
 					w.transfer(n.inv, pantry, id, n.inv.count(id))
 			return true

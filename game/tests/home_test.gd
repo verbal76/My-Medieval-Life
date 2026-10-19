@@ -27,6 +27,9 @@ func _init() -> void:
 	test_village_days()
 	test_player_storefront()
 	test_villager_storefront()
+	test_cart_parts()
+	test_household_cart()
+	test_cart_days()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -254,3 +257,110 @@ func test_villager_storefront() -> void:
 	total = w.total_coins()
 	var k0 := n.coins
 	check(w.brain.act(other, "buy_from", buy.args) and n.coins > k0 and w.total_coins() == total, "the keeper is paid (%d coins), coins conserved" % (n.coins - k0))
+
+
+## B14 carts: the carpenter saws wheels and the smith forges the axle and ironwork from their own stock.
+func test_cart_parts() -> void:
+	var w := new_world()
+	var c: NPC = w.brain._first_with_job("carpenter")
+	c.plan.clear()
+	c.inv.items.erase("cart_wheel")
+	c.inv.items.erase("handcart")
+	c.inv.items["plank"] = 10
+	check(w.brain._carpenter_carts(c) and c.plan[-1].args.get("recipe", "") == "make_cart_wheel", "the carpenter with planks to spare makes a cart wheel: " + c.doing)
+	check(w.brain.act(c, "craft", c.plan[-1].args) and c.inv.count("cart_wheel") == 1 and c.inv.count("plank") == 7, "three planks became a wheel")
+	c.inv.items["plank"] = 4
+	c.plan.clear()
+	check(not w.brain._carpenter_carts(c), "short of planks (%d) the carpenter saws planks first" % c.inv.count("plank"))
+	var s: NPC = w.brain._first_with_job("smith")
+	for id in s.inv.ids():
+		if id != "hammer":
+			s.inv.items.erase(id)
+	s.inv.items["iron_bar"] = 1
+	s.inv.items["plank"] = 1
+	s.plan.clear()
+	check(w.brain._smith(s) and s.plan[-1].args.get("recipe", "") == "forge_cart_axle", "the smith with a bar and a plank forges an axle: " + s.doing)
+	check(w.brain.act(s, "craft", s.plan[-1].args) and s.inv.count("cart_axle") == 1 and not s.inv.has("iron_bar"), "an iron bar and a plank became an axle")
+	s.inv.items["iron_bar"] = 1
+	s.inv.items["coal"] = 1
+	s.plan.clear()
+	check(w.brain._smith(s) and s.plan[-1].args.get("recipe", "") == "forge_cart_ironwork", "then the ironwork from a bar and coal: " + s.doing)
+	check(w.brain.act(s, "craft", s.plan[-1].args) and s.inv.count("cart_ironwork") == 1, "made")
+	# the carpenter, with wheels and planks, buys the smith's axle and ironwork and builds a handcart to sell
+	c.inv.items["cart_wheel"] = 2
+	c.inv.items["plank"] = 10
+	c.coins = 200
+	c.plan.clear()
+	var total := w.total_coins()
+	check(w.brain._carpenter_carts(c) and c.plan.any(func(st): return st.get("act", "") == "buy_from" and st.args.item == "cart_axle"), "the carpenter goes to the smith for the axle and ironwork: " + c.doing)
+	for st: Dictionary in c.plan:
+		if st.get("act", "") == "buy_from":
+			w.brain.act(c, "buy_from", st.args)
+	check(c.inv.has_all(GameData.recipes.build_handcart["in"]) and w.total_coins() == total and not s.inv.has("cart_axle"), "bought with the carpenter's coins; coins conserved")
+	c.plan.clear()
+	check(w.brain._carpenter_carts(c) and c.plan[-1].args.get("recipe", "") == "build_handcart", "and assembles a handcart at the workbench: " + c.doing)
+	check(w.brain.act(c, "craft", c.plan[-1].args) and c.inv.count("handcart") == 1 and not c.inv.has("cart_axle"), "the parts became a handcart")
+	check(w.brain.for_sale(c).has("handcart"), "it is for sale at the carpenter's")
+
+
+## A storefront household's adult assembles a handcart from bought parts, or buys a finished one when cheaper.
+func test_household_cart() -> void:
+	var w := new_world()
+	_evening(w)
+	var n: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.home != "" and not o.job in ["sage", "carpenter", "smith"] and w.buildings.has(o.home) \
+				and w.holds(World.hh_ref(o.household), w.buildings[o.home]) and w.business.front_place(w.buildings[o.home]).size() > 0:
+			n = o
+			break
+	var house: Dictionary = w.buildings[n.home]
+	n.plan.clear()
+	n.inv.items.clear()
+	n.coins = 400
+	check(not w.brain._plan_cart(n, house), "a household without a storefront does not want a cart")
+	house["front"] = w.business.front_place(house)
+	var c: NPC = w.brain._first_with_job("carpenter")
+	var s: NPC = w.brain._first_with_job("smith")
+	c.inv.items["cart_wheel"] = 2
+	c.inv.items["plank"] = 20
+	c.inv.items.erase("handcart")
+	s.inv.items["cart_axle"] = 1
+	s.inv.items["cart_ironwork"] = 1
+	check(w.brain._plan_cart(n, house) and n.plan.any(func(st): return st.get("act", "") == "craft"), "with no cart for sale they buy the parts to assemble one: " + n.doing)
+	var total := w.total_coins()
+	for st: Dictionary in n.plan:
+		if st.get("act", "") in ["buy_from", "craft", "store_home"]:
+			w.brain.act(n, st.act, st.args)
+	check(w.households[n.household].pantry.has("handcart") and w.brain.household_cart(n.household) and w.total_coins() == total, "assembled from bought parts; the cart is in the household's store")
+	n.plan.clear()
+	check(not w.brain._plan_cart(n, house), "a household with a cart wants no other")
+	# a finished cart for sale and no parts: they buy it
+	w.households[n.household].pantry.items.erase("handcart")
+	c.inv.items.erase("cart_wheel")
+	c.inv.items["handcart"] = 1
+	n.coins = 400
+	n.plan.clear()
+	check(w.brain._plan_cart(n, house) and n.plan.any(func(st): return st.get("act", "") == "buy_from" and st.args.item == "handcart"), "with the parts not to be had they buy the carpenter's handcart: " + n.doing)
+	var c0 := n.coins
+	for st: Dictionary in n.plan:
+		if st.get("act", "") in ["buy_from", "store_home"]:
+			w.brain.act(n, st.act, st.args)
+	check(w.households[n.household].pantry.has("handcart") and c0 - n.coins >= int(GameData.item("handcart").value) / 2, "bought for %d coins" % (c0 - n.coins))
+	n.coins = int(GameData.b("carts").cart_coins) - 1
+	w.households[n.household].pantry.items.erase("handcart")
+	n.plan.clear()
+	check(not w.brain._plan_cart(n, house), "below cart_coins they wait")
+
+
+## Twelve days: the cart trades make parts from the village's own materials; coins conserved.
+func test_cart_days() -> void:
+	var w := new_world()
+	var start := w.total_coins()
+	var steps := int(12.0 * 1440.0 / float(GameData.b("game_minutes_per_second")) / 0.5)
+	for i in steps:
+		w.update(0.5)
+	var st: Dictionary = w.stats
+	print("  cart stats: ", {"wheels": st.get("made_cart_wheel", 0), "axles": st.get("made_cart_axle", 0), "ironwork": st.get("made_cart_ironwork", 0),
+		"handcarts": st.get("made_handcart", 0), "storefronts": st.get("storefront_built_villager", 0)})
+	check(int(st.get("made_cart_wheel", 0)) > 0 and int(st.get("made_cart_axle", 0)) > 0 and int(st.get("made_cart_ironwork", 0)) > 0, "over 12 days the carpenter and smith make cart parts")
+	check(w.total_coins() == start + w.coin_sources, "coins conserved (%d + sources %d = %d)" % [start, w.coin_sources, w.total_coins()])

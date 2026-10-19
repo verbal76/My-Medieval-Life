@@ -152,6 +152,10 @@ ICONS = {
     "lockpick": "Tools/Arrow-05", "padlock": "Metal/Metal-Nugget-02",
     # the hand plough (PL2-015): the pack has no plough, so its hoe stands in
     "plough": "Tools/Hoe-02",
+    # cart parts and the handcart (B14): stand-ins until the owner's own art, a round wooden shield as the wheel,
+    # a stick as the axle, an iron slab as the ironwork and a plank slab as the cart
+    "cart_wheel": "Armour/Wooden-Shield-01", "cart_axle": "Wood/Stick-01", "cart_ironwork": "Blocks/Metal-Slab-02",
+    "handcart": "Blocks/Wood-Plank-Slab-03",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).

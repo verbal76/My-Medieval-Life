@@ -14,8 +14,8 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 |---|---|
 | Implemented harvestable node types | 19 (13 player-harvestable) |
 | Materials the nodes produce | 25: blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool |
-| Production chains documented (node product to finished item) | 54 (54 workable, 0 blocked by gold ore) |
-| Materials with no current use | 1: feather |
+| Production chains documented (node product to finished item) | 62 (62 workable, 0 blocked by gold ore) |
+| Materials with no current use | 2: feather, handcart |
 | Recipes with a missing raw-material source | 0 |
 | Finite node types with no replacement | 1: gold_seam |
 | Nodes not Gather-compatible | 6: chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen |
@@ -43,6 +43,8 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `coal_seam` · Coal seam (implemented)
 
 - **coal** (1 a cycle)
+  - 1 coal + 1 iron_bar → **1 cart_ironwork** (forge_cart_ironwork, anvil)
+    - 1 cart_ironwork + 1 cart_axle, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
   - 1 coal + 2 copper_ore → **1 copper_bar** (smelt_copper, forge)
     - 1 copper_bar + 1 leather → **1 amulet** (forge_amulet, anvil)
     - 1 copper_bar → **1 copper_ring** (forge_copper_ring, anvil)
@@ -52,6 +54,10 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
   - 1 coal + 2 iron_ore → **1 iron_bar** (smelt_iron, forge)
     - 2 iron_bar + 4 plank → **1 plough** (craft_plough, workbench)
     - 2 iron_bar + 1 plank → **1 axe** (forge_axe, anvil)
+    - 1 iron_bar + 1 plank → **1 cart_axle** (forge_cart_axle, anvil)
+      - 1 cart_axle + 1 cart_ironwork, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
+    - 1 iron_bar + 1 coal → **1 cart_ironwork** (forge_cart_ironwork, anvil)
+      - 1 cart_ironwork + 1 cart_axle, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
     - 1 iron_bar + 1 plank → **1 hammer** (forge_hammer, anvil)
     - 5 iron_bar + 2 leather → **1 iron_armor** (forge_iron_armor, anvil)
     - 2 iron_bar + 1 leather → **1 iron_helmet** (forge_iron_helmet, anvil)
@@ -101,6 +107,10 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
   - 2 iron_ore + 1 coal → **1 iron_bar** (smelt_iron, forge)
     - 2 iron_bar + 4 plank → **1 plough** (craft_plough, workbench)
     - 2 iron_bar + 1 plank → **1 axe** (forge_axe, anvil)
+    - 1 iron_bar + 1 plank → **1 cart_axle** (forge_cart_axle, anvil)
+      - 1 cart_axle + 1 cart_ironwork, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
+    - 1 iron_bar + 1 coal → **1 cart_ironwork** (forge_cart_ironwork, anvil)
+      - 1 cart_ironwork + 1 cart_axle, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
     - 1 iron_bar + 1 plank → **1 hammer** (forge_hammer, anvil)
     - 5 iron_bar + 2 leather → **1 iron_armor** (forge_iron_armor, anvil)
     - 2 iron_bar + 1 leather → **1 iron_helmet** (forge_iron_helmet, anvil)
@@ -186,11 +196,16 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 - **log** (4 a cycle)
   - 1 log + 1 meat → **2 roast_meat** (roast_meat, oven)
   - 1 log → **2 plank** (saw_planks, sawhorse)
+    - 4 plank + 1 cart_axle, 1 cart_ironwork, 2 cart_wheel → **1 handcart** (build_handcart, workbench)
     - 4 plank + 2 iron_bar → **1 plough** (craft_plough, workbench)
     - 1 plank + 2 iron_bar → **1 axe** (forge_axe, anvil)
+    - 1 plank + 1 iron_bar → **1 cart_axle** (forge_cart_axle, anvil)
+      - 1 cart_axle + 1 cart_ironwork, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
     - 1 plank + 2 copper_bar → **1 copper_sword** (forge_copper_sword, anvil)
     - 1 plank + 1 iron_bar → **1 hammer** (forge_hammer, anvil)
     - 1 plank + 2 iron_bar → **1 pickaxe** (forge_pickaxe, anvil)
+    - 3 plank → **1 cart_wheel** (make_cart_wheel, sawhorse)
+      - 2 cart_wheel + 1 cart_axle, 1 cart_ironwork, 4 plank → **1 handcart** (build_handcart, workbench)
 - **oak_sapling** (1 a cycle)
   - used as it is: Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature oak by the game clock.
 - **pine_sapling** (1 a cycle)
@@ -235,11 +250,14 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 Every recipe path from a node's product to an item no recipe consumes:
 
+- coal → cart_ironwork → handcart
 - coal → copper_bar → amulet
 - coal → copper_bar → copper_ring
 - coal → copper_bar → copper_sword
 - coal → gold_bar → gold_ring
 - coal → iron_bar → axe
+- coal → iron_bar → cart_axle → handcart
+- coal → iron_bar → cart_ironwork → handcart
 - coal → iron_bar → hammer
 - coal → iron_bar → iron_armor
 - coal → iron_bar → iron_helmet
@@ -263,6 +281,8 @@ Every recipe path from a node's product to an item no recipe consumes:
 - hide → leather → leather_armor
 - hide → leather → leather_cap
 - iron_ore → iron_bar → axe
+- iron_ore → iron_bar → cart_axle → handcart
+- iron_ore → iron_bar → cart_ironwork → handcart
 - iron_ore → iron_bar → hammer
 - iron_ore → iron_bar → iron_armor
 - iron_ore → iron_bar → iron_helmet
@@ -272,8 +292,11 @@ Every recipe path from a node's product to an item no recipe consumes:
 - iron_ore → iron_bar → pickaxe
 - iron_ore → iron_bar → plough
 - log → plank → axe
+- log → plank → cart_axle → handcart
+- log → plank → cart_wheel → handcart
 - log → plank → copper_sword
 - log → plank → hammer
+- log → plank → handcart
 - log → plank → pickaxe
 - log → plank → plough
 - log → roast_meat
@@ -300,6 +323,9 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | amulet | 1 coal, 2 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `pig_pen`, `sheep_pen`, `wild_boar` | coal: import; copper_ore: import |
 | axe | 2 coal, 4 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | bread | 0.5 egg, 1 wheat | `player_field`, `player_pen`, `wheat_field` | - |
+| cart_axle | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
+| cart_ironwork | 2 coal, 2 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
+| cart_wheel | 1.5 log | `tree` | - |
 | cheese | 3 milk | `player_pen` | - |
 | copper_bar | 1 coal, 2 copper_ore | `coal_seam`, `copper_seam` | coal: import; copper_ore: import |
 | copper_ring | 1 coal, 2 copper_ore | `coal_seam`, `copper_seam` | coal: import; copper_ore: import |
@@ -307,6 +333,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | gold_bar | 1 coal, 2 gold_ore | `coal_seam`, `gold_seam` | coal: import |
 | gold_ring | 1 coal, 2 gold_ore | `coal_seam`, `gold_seam` | coal: import |
 | hammer | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
+| handcart | 3 coal, 4 iron_ore, 5.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | healing_tonic | 5 flower | `flower_patch`, `player_field` | - |
 | herbal_poultice | 2 flower | `flower_patch`, `player_field` | - |
 | herbal_tonic | 3 flower | `flower_patch`, `player_field` | - |
@@ -348,8 +375,11 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `bread` Loaf of bread | food | recipe `bake_egg_bread` ×2; recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | buyer `merchant_food` ×15; buyer `tavernkeeper` ×12; export `caravan`; food `bread` |
 | `carrot` Carrot | food | node `player_field` ×3 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `carrot` |
 | `carrot_seed` Carrot seed | resource | node `player_field` ×1 | plant `carrot_seed` |
+| `cart_axle` Cart axle | resource | recipe `forge_cart_axle` ×1 | recipe `build_handcart` ×1 |
+| `cart_ironwork` Cart ironwork | resource | recipe `forge_cart_ironwork` ×1 | recipe `build_handcart` ×1 |
+| `cart_wheel` Cart wheel | resource | recipe `make_cart_wheel` ×1 | recipe `build_handcart` ×2 |
 | `cheese` Cheese | food | recipe `press_cheese` ×1 | buyer `cook` ×10; buyer `merchant_food` ×10; buyer `tavernkeeper` ×8; export `caravan`; food `cheese` |
-| `coal` Coal | resource | import `caravan`; node `coal_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; recipe `smelt_copper` ×1; recipe `smelt_gold` ×1; recipe `smelt_iron` ×1 |
+| `coal` Coal | resource | import `caravan`; node `coal_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; recipe `forge_cart_ironwork` ×1; recipe `smelt_copper` ×1; recipe `smelt_gold` ×1; recipe `smelt_iron` ×1 |
 | `copper_bar` Copper bar | resource | recipe `smelt_copper` ×1 | buyer `merchant_goods` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_copper_ring` ×1; recipe `forge_copper_sword` ×2 |
 | `copper_ore` Copper ore | resource | import `caravan`; node `copper_seam` ×1 | buyer `merchant_raw` ×15; buyer `smith` ×20; recipe `smelt_copper` ×2 |
 | `copper_ring` Copper ring | ring | recipe `forge_copper_ring` ×1 | buyer `merchant_goods` ×3; equip `ring`; export `caravan` |
@@ -361,13 +391,14 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `gold_ore` Gold ore | resource | node `gold_seam` ×1 | buyer `smith` ×10; recipe `smelt_gold` ×2 |
 | `gold_ring` Gold ring | ring | recipe `forge_gold_ring` ×1 | buyer `merchant_goods` ×2; equip `ring`; export `caravan` |
 | `hammer` Smith's hammer | tool | recipe `forge_hammer` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `tool`; export `caravan`; tool `hammer` |
+| `handcart` Handcart | resource | recipe `build_handcart` ×1 | **none** |
 | `healing_tonic` Healing tonic | medicine | recipe `brew_healing_tonic` ×1 | recipe `brew_strong_tonic` ×2 |
 | `herb_seed` Herb seed | resource | node `player_field` ×1 | plant `herb_seed` |
 | `herbal_poultice` Herbal poultice | medicine | recipe `brew_poultice` ×1 | **none** |
 | `herbal_tonic` Herbal tonic | food | recipe `brew_tonic` ×1 | food `herbal_tonic` |
 | `hide` Hide | resource | node `cow_pen` ×1; node `pig_pen` ×1; node `sheep_pen` ×1; node `wild_boar` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; quest `the_tanners_craft` ×2; recipe `tan_leather` ×1 |
 | `iron_armor` Iron armour | armor | recipe `forge_iron_armor` ×1 | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
-| `iron_bar` Iron bar | resource | recipe `smelt_iron` ×1; start_stock `start_0` | building `smithy` ×4; buyer `merchant_goods` ×6; export `caravan`; manor_job `iron_bar`; recipe `craft_plough` ×2; recipe `forge_axe` ×2; recipe `forge_hammer` ×1; recipe `forge_iron_armor` ×5; recipe `forge_iron_helmet` ×2; recipe `forge_iron_sword` ×3; recipe `forge_lockpicks` ×1; recipe `forge_padlock` ×2; recipe `forge_pickaxe` ×2 |
+| `iron_bar` Iron bar | resource | recipe `smelt_iron` ×1; start_stock `start_0` | building `smithy` ×4; buyer `merchant_goods` ×6; export `caravan`; manor_job `iron_bar`; recipe `craft_plough` ×2; recipe `forge_axe` ×2; recipe `forge_cart_axle` ×1; recipe `forge_cart_ironwork` ×1; recipe `forge_hammer` ×1; recipe `forge_iron_armor` ×5; recipe `forge_iron_helmet` ×2; recipe `forge_iron_sword` ×3; recipe `forge_lockpicks` ×1; recipe `forge_padlock` ×2; recipe `forge_pickaxe` ×2 |
 | `iron_helmet` Iron helmet | head | recipe `forge_iron_helmet` ×1 | buyer `merchant_goods` ×2; equip `head`; export `caravan` |
 | `iron_ore` Iron ore | resource | import `caravan`; node `iron_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; quest `ore_for_the_forge` ×6; quest `work_the_mine` ×6; recipe `smelt_iron` ×2 |
 | `iron_sword` Iron sword | weapon | recipe `forge_iron_sword` ×1; start_stock `start_0` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
@@ -384,7 +415,7 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `pickaxe` Pickaxe | tool | recipe `forge_pickaxe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `gold_seam`; tool `iron_seam`; tool `stone_seam` |
 | `pine_sapling` Pine sapling | resource | node `tree` ×1 | plant `pine_sapling` |
 | `plain_clothes` Plain clothes | armor | start_kit `player_start_items` ×1 | equip `armor` |
-| `plank` Plank | resource | recipe `saw_planks` ×2; start_stock `start_0` | building `apothecary` ×20; building `bakehouse` ×20; building `carpentry` ×30; building `house` ×30; building `kitchen` ×15; building `quarters` ×25; building `smithy` ×20; building `storage` ×20; buyer `merchant_raw` ×20; buyer `smith` ×10; export `caravan`; manor_job `plank`; recipe `craft_plough` ×4; recipe `forge_axe` ×1; recipe `forge_copper_sword` ×1; recipe `forge_hammer` ×1; recipe `forge_pickaxe` ×1 |
+| `plank` Plank | resource | recipe `saw_planks` ×2; start_stock `start_0` | building `apothecary` ×20; building `bakehouse` ×20; building `carpentry` ×30; building `house` ×30; building `kitchen` ×15; building `quarters` ×25; building `smithy` ×20; building `storage` ×20; buyer `merchant_raw` ×20; buyer `smith` ×10; export `caravan`; manor_job `plank`; recipe `build_handcart` ×4; recipe `craft_plough` ×4; recipe `forge_axe` ×1; recipe `forge_cart_axle` ×1; recipe `forge_copper_sword` ×1; recipe `forge_hammer` ×1; recipe `forge_pickaxe` ×1; recipe `make_cart_wheel` ×3 |
 | `plough` Hand plough | tool | recipe `craft_plough` ×1 | equip `tool` |
 | `potato` Potato | food | node `player_field` ×3 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `potato` |
 | `potato_seed` Seed potato | resource | node `player_field` ×1 | plant `potato_seed` |
@@ -440,7 +471,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`amulet`, `apple`, `axe`, `blueberries`, `bread`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `feather`, `gold_ring`, `hammer`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `oak_sapling`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`, `strong_healing_tonic`, `wheat_seed`
+`amulet`, `apple`, `axe`, `blueberries`, `bread`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `feather`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `oak_sapling`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`, `strong_healing_tonic`, `wheat_seed`
 
 ### Orphaned items
 
@@ -458,7 +489,7 @@ None.
 
 Items whose only lasting source, once the finite seams are worked out, is the caravan:
 
-`amulet`, `axe`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ore`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `lockpick`, `padlock`, `pickaxe`, `plough`, `stone`
+`amulet`, `axe`, `cart_axle`, `cart_ironwork`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ore`, `gold_ring`, `hammer`, `handcart`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `lockpick`, `padlock`, `pickaxe`, `plough`, `stone`
 
 Every building needs stone (house, workshops), and the smithy needs iron bars, so all building depends
 on caravan stone after the stone seams are gone.
@@ -480,6 +511,7 @@ finding not recorded here.
 | Item | Finding | Status | Reason |
 |---|---|---|---|
 | `feather` | no_consumer | implemented | A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them. |
+| `handcart` | no_consumer | proposed | B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; its use as pulled storage, parked at home or a cart hub, comes with the carts-in-play work (B14-6). |
 | `apple` | no_source | implemented | No tree, recipe or kit gives apples: the item is defined but never made (the start kit has a rotten apple only). |
 | `rotten_apple` | start_kit_only | implemented | Only in the player's start kit: spoiled food that harms when eaten. |
 | `rusty_sword` | start_kit_only | implemented | Only in the player's start kit; nobody buys it. |

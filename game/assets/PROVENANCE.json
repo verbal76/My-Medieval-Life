@@ -597,6 +597,27 @@
    "sha256": "bbc53cd2ee33cf68f5c99c25b79e88b380c00eef801006a2d3e3df6ec5fd9ebd"
   },
   {
+   "file": "assets/icons/cart_axle.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Stick-01.png",
+   "transform": "copied unchanged",
+   "sha256": "d010b77b813b3b51e67b3dbb67822272d014633c657f452cc6fedc99f3e8f416"
+  },
+  {
+   "file": "assets/icons/cart_ironwork.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Metal-Slab-02.png",
+   "transform": "copied unchanged",
+   "sha256": "bb40f0ec12452b08faea479afd85f18765c93fc8ff6600ecd11c87da46f2ae72"
+  },
+  {
+   "file": "assets/icons/cart_wheel.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Armour/Wooden-Shield-01.png",
+   "transform": "copied unchanged",
+   "sha256": "d1a6bf7a571a53b0b5a583150388b06ed49ac23d2a5aafd4fc7fe83f2264fd07"
+  },
+  {
    "file": "assets/icons/coal.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Stone/Coal-01.png",
@@ -672,6 +693,13 @@
    "member": "16x16 Survival RPG Icons/Tools/Hammer-02.png",
    "transform": "copied unchanged",
    "sha256": "5e88cf198939525537962ad9f558bd7eb880331a415764e9b925f26cb2108c9e"
+  },
+  {
+   "file": "assets/icons/handcart.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Blocks/Wood-Plank-Slab-03.png",
+   "transform": "copied unchanged",
+   "sha256": "72189e226a70adbd8ba1a09743dbd52b6455b1009968ae01f322ab42781742d0"
   },
   {
    "file": "assets/icons/healing_tonic.png",

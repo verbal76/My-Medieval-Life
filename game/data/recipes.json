@@ -34,6 +34,10 @@
     "weave_cloth":   {"station": "workbench", "in": {"wool": 2},                   "out": {"wool_cloth": 1}, "minutes": 40, "skill": "crafting", "xp": 6, "level": 1},
     "sew_bandages":  {"station": "workbench", "in": {"wool_cloth": 1},             "out": {"linen_bandage": 3}, "minutes": 25, "skill": "crafting", "xp": 5, "level": 1},
     "press_cheese":  {"station": "prep",      "in": {"milk": 3},                   "out": {"cheese": 1},    "minutes": 35, "skill": "cooking", "xp": 5, "level": 1},
-    "bake_egg_bread": {"station": "prep",     "in": {"wheat": 2, "egg": 1},        "out": {"bread": 2},     "minutes": 30, "skill": "cooking", "xp": 4, "level": 1}
+    "bake_egg_bread": {"station": "prep",     "in": {"wheat": 2, "egg": 1},        "out": {"bread": 2},     "minutes": 30, "skill": "cooking", "xp": 4, "level": 1},
+    "make_cart_wheel": {"station": "sawhorse", "in": {"plank": 3},                 "out": {"cart_wheel": 1}, "minutes": 30, "skill": "crafting", "xp": 6, "level": 1},
+    "forge_cart_axle": {"station": "anvil",   "in": {"iron_bar": 1, "plank": 1},   "out": {"cart_axle": 1}, "minutes": 40, "skill": "smithing", "xp": 8, "level": 1},
+    "forge_cart_ironwork": {"station": "anvil", "in": {"iron_bar": 1, "coal": 1},  "out": {"cart_ironwork": 1}, "minutes": 30, "skill": "smithing", "xp": 8, "level": 1},
+    "build_handcart": {"station": "workbench", "in": {"cart_wheel": 2, "cart_axle": 1, "cart_ironwork": 1, "plank": 4}, "out": {"handcart": 1}, "minutes": 90, "skill": "crafting", "xp": 30, "level": 1}
   }
 }

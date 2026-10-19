@@ -309,6 +309,10 @@
     "milk": {"name": "Milk", "type": "food", "value": 3, "food": 12},
     "cheese": {"name": "Cheese", "type": "food", "value": 8, "food": 35},
     "wool": {"name": "Wool", "type": "resource", "value": 4},
-    "wool_cloth": {"name": "Woollen cloth", "type": "resource", "value": 9}
+    "wool_cloth": {"name": "Woollen cloth", "type": "resource", "value": 9},
+    "cart_wheel": {"name": "Cart wheel", "type": "resource", "value": 9},
+    "cart_axle": {"name": "Cart axle", "type": "resource", "value": 20},
+    "cart_ironwork": {"name": "Cart ironwork", "type": "resource", "value": 19},
+    "handcart": {"name": "Handcart", "type": "resource", "value": 90, "cart": true}
   }
 }
