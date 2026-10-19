@@ -7,12 +7,17 @@ extends RefCounted
 ## place. At every moment one complete, readable save exists on disk, so a crash or a full disk
 ## mid-save leaves the previous save (or its backup) intact.
 ##
-## Reading: a save is "ok", "missing", "unreadable" (not a save: damaged, truncated, not JSON) or
-## "newer" (written by a later version than this build reads). A save that is not "ok" is never
+## Reading: a save is "ok", "missing", "unreadable" (not a save: damaged, truncated, not JSON),
+## "newer" (written by a later version than this build reads) or "older" (written before MIN_VERSION:
+## by a version whose world this build cannot place it in). A save that is not "ok" is never
 ## written over: `preserve` renames it, bytes unchanged, to "<name>.<state>-<time>.json" first.
 
 const TMP := ".tmp"
 const BAK := ".bak"
+## The oldest save version this build reads. Build 8 laid the village out anew (tools/build_village.py
+## generator v6: every building, road, tree and deposit has a new place; owner decision 2026-10-19, older
+## saves are disposable): saves from before it are refused and kept on disk, never migrated.
+const MIN_VERSION := 14
 
 ## Test hook: the step at which the file system pretends to fail ("open", "write", "verify",
 ## "backup", "replace" in `write_text`; "preserve"); "" in the game.
@@ -20,7 +25,8 @@ static var fail_at := ""
 
 
 ## What is at `path`: {state, data (the parsed save when "ok"), version, reason (plain words)}.
-static func inspect(path: String, max_version: int) -> Dictionary:
+## Versions below `min_version` (MIN_VERSION in the game; the tests of this class pass 0) are "older".
+static func inspect(path: String, max_version: int, min_version := MIN_VERSION) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {"state": "missing", "reason": "there is no save file"}
 	var text := FileAccess.get_file_as_string(path)
@@ -35,6 +41,8 @@ static func inspect(path: String, max_version: int) -> Dictionary:
 		return {"state": "unreadable", "reason": "the file has no save version, so it is not a save this game wrote"}
 	if v > max_version:
 		return {"state": "newer", "version": v, "reason": "it was made by a newer version of the game (save version %d; this build reads up to %d)" % [v, max_version]}
+	if v < min_version:
+		return {"state": "older", "version": v, "reason": "it was made by an older version of the game, before the village was rebuilt (save version %d; this build reads %d to %d)" % [v, min_version, max_version]}
 	return {"state": "ok", "data": d, "version": v}
 
 

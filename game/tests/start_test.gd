@@ -419,26 +419,17 @@ func _run() -> void:
 		w.fell(tree, 0)
 		main.tree_view.update(p.pos, 1.0)
 		check(tn.drawn == "stump" and tn.modulate.a >= 0.99, "a tree felled while its canopy is faded leaves a whole stump")
-	# the trees in Shade's sample districts (their own Tree Top layer) fade the same way
-	var sample_top := Vector2i(-1, -1)
+	# generator v6: the village draws no tree as tiles (Shade's sample districts are gone), so there is no tile canopy to fade
 	var canopy_tops := {}
 	for pair in w.map.data.tiles.canopy:
-		canopy_tops[int(pair[0])] = int(pair[1])
-	for y in range(30, 60):
-		for x in range(1, 29):
-			var c := Vector2i(x, y)
-			var v: int = main.view.tile_value(main.view.layer("above2"), c)
-			if canopy_tops.has(v) and main.view.tile_value(main.view.layer("above2"), c + Vector2i.DOWN) == canopy_tops[v] and not w.map.is_solid(c):
-				sample_top = c
-				break
-		if sample_top.x >= 0:
-			break
-	check(sample_top.x >= 0, "a tree in sample village 1")
-	if sample_top.x >= 0:
-		main.canopy.update(Vector2(sample_top) + Vector2(0.5, 0.6), 1.0)
-		check(main.canopy.is_faded(sample_top) and main.canopy.is_faded(sample_top + Vector2i.DOWN), "a sample village tree's canopy fades over the player")
-		main.canopy.update(Vector2(sample_top) + Vector2(0.5, -4.0), 1.0)
-		check(not main.canopy.is_faded(sample_top) and main.view.layer("above2").get_cell_source_id(sample_top) != -1, "and comes back")
+		canopy_tops[int(pair[0])] = true
+		canopy_tops[int(pair[1])] = true
+	var tile_crowns := 0
+	for lay in main.view.layers.values():
+		for ccell in (lay as TileMapLayer).get_used_cells():
+			if canopy_tops.has(main.view.tile_value(lay, ccell)):
+				tile_crowns += 1
+	check(tile_crowns == 0 and w.map.decor_trees().is_empty(), "no tile canopy is left in the village's layers (%d)" % tile_crowns)
 	# a tap on a villager who is walking away: follow, catch up and talk
 	var walker: NPC = null
 	for i in 400:
@@ -1095,7 +1086,11 @@ func _run() -> void:
 	check(not main.ghost.legal and ui.place_label.text.contains("cannot go here"), "over a house the footprint is red: %s" % ui.place_label.text)
 	main.confirm_placement()
 	check(not ui.modal() and not main.placing.is_empty(), "and it cannot be placed there")
-	var build_spot := Rect2i(Vector2i(62, 15), cons.footprint("smithy"))
+	var build_spot := Rect2i(Vector2i(-1, -1), cons.footprint("smithy"))
+	for y in range(1, 30):            # the first place in the woods held only by a mature tree (the trees have no fixed places)
+		for x in range(1, 100):
+			if build_spot.position.x < 0 and cons.can_place("smithy", Rect2i(Vector2i(x, y), cons.footprint("smithy")), World.PLAYER).contains("fell it first"):
+				build_spot.position = Vector2i(x, y)
 	for t in pi.trees:
 		if t.state == "grown" and (build_spot.has_point(Vector2i(int(t.x), int(t.y))) or Vector2i(int(t.x), int(t.y)) == cons.door_step("smithy", build_spot)):
 			pi.fell(t, 0)
