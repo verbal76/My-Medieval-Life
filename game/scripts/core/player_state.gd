@@ -37,6 +37,8 @@ var home := ""                # the house the family lives in, one of those it h
 var chest := Inventory.new()  # the family chest, kept in the home (it moves with the family; out of reach while homeless)
 var alive := true
 var deaths := 0
+var last_damage := ""        # the source of the last damage taken ("hunger", an attacker's name...)
+var death_cause := ""        # the source that took hp to 0 (the death screen says it)
 
 ## The gear slots, in the order the pack window lists them. An item goes in the slot named by its
 ## type (items.json); the item stays in the pack while it is worn.
@@ -230,7 +232,7 @@ func to_dict() -> Dictionary:
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
-		"alive": alive, "deaths": deaths, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
+		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 	}
 
@@ -251,6 +253,8 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.spells = d.spells.duplicate()
 	# saves before property (1-4) list owned plots in "plots": World._migrate_property reads them
 	p.alive = bool(d.alive)
+	p.last_damage = str(d.get("last_damage", ""))     # older saves: no cause recorded
+	p.death_cause = str(d.get("death_cause", ""))
 	p.tool = str(d.get("tool", ""))                   # older saves: no tool slot, no look, no record
 	for k in ["head", "amulet", "ring"]:               # older saves: no head, amulet or ring slot
 		p.set(k, str(d.get(k, "")))

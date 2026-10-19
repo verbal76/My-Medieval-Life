@@ -101,6 +101,10 @@ func setup(game_ui, open_tab: String) -> void:
 		var tid: String = t[0]
 		b.tooltip_text = t[1]
 		b.pressed.connect(func(): choose_tab(tid))
+		# the tab's generous touch area is not its look: the focus ring is drawn tight round the icon (B8-012)
+		b.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+		b.focus_entered.connect(queue_redraw)
+		b.focus_exited.connect(queue_redraw)
 		tab_buttons.append(b)
 	details = PanelContainer.new()
 	var st := StyleBoxFlat.new()
@@ -120,6 +124,10 @@ func _flat_button() -> Button:
 	b.flat = true
 	b.focus_mode = Control.FOCUS_ALL
 	b.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	# a slot button is exactly its slot: no theme margins or text height may make it larger (B8-012)
+	for st in ["normal", "hover", "pressed", "disabled", "hover_pressed"]:
+		b.add_theme_stylebox_override(st, StyleBoxEmpty.new())
+	b.add_theme_font_size_override("font_size", 1)
 	add_child(b)
 	return b
 
@@ -441,6 +449,8 @@ func _draw() -> void:
 		var t: Texture2D = _icon(TABS[i][2])
 		if t:
 			draw_texture_rect(t, _r(Rect2(TAB_X + TAB_STEP * i, 10 if i == ti else 15, 16, 16)), false)
+		if i < tab_buttons.size() and tab_buttons[i].has_focus():
+			draw_rect(_r(tab_focus_rect(i)), PALE, false, 2.0)
 	_draw_portrait(p, font)
 	for slot in PlayerState.GEAR:
 		var id: String = p.get(slot)
@@ -476,6 +486,13 @@ func _draw() -> void:
 			draw_rect(_r(Rect2(at + Vector2(1.5, 1.5), Vector2(3, 3))), GOLD)
 		if id == selected:
 			draw_rect(_r(Rect2(at, CELL)), PALE, false, k)
+
+
+## The art-pixel rectangle a focused tab is outlined with: its icon plus a pixel round it, the size
+## of a bag cell, so tab, gear slot and bag cell highlights all fit their slot.
+func tab_focus_rect(i: int) -> Rect2:
+	var ti: int = TABS.map(func(t): return t[0]).find(tab)
+	return Rect2(TAB_X + TAB_STEP * i - 1, (10 if i == ti else 15) - 1, 18, 18)
 
 
 func _outlined(font: Font, art_pos: Vector2, s: String, size: int, colour: Color) -> void:

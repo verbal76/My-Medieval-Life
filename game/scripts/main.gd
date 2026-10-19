@@ -148,10 +148,21 @@ func _ready() -> void:
 		camera.position_smoothing_enabled = false
 		match shot_panel:
 			"gain":
-				ui.gain("+2 red berries")
+				ui.gain("+2 red berries", "red_berries")
+				ui.gain("+1 Iron ore", "iron_ore")
+				ui.gain("Tool worn")
+				(func(): for tw in get_tree().get_processed_tweens(): tw.kill()).call_deferred()    # keep the lines up for the picture
+			"hud_low", "prompt":
+				# B8-013/019: a low-food, low-health HUD, with the contextual prompt and a hint toast
+				world.player.hunger = 12.0
+				world.player.hp = 9.0
+				world.player.stamina = 20.0
+				ui.update_hud()
+				ui.prompt("Fell this tree")
+				ui.message("Gather: tap a seam, a tree, a ripe field, a flower, a berry bush or game; you gather it until it runs out. Tap Gather again to stop.", 60.0)
 			"skills":
 				ui.show_skills()
-			"inventory":
+			"inventory", "inventory_pad", "inventory_tab":
 				# a pack with something in most tabs, and the new gear worn
 				var kit := {"log": 6, "plank": 12, "iron_ore": 3, "coal": 4, "wheat": 9, "pottage": 2, "leather": 2,
 					"leather_cap": 1, "copper_ring": 1, "amulet": 1, "iron_bar": 2, "apple": 3}
@@ -159,8 +170,14 @@ func _ready() -> void:
 					world.player.inv.add(id, kit[id])
 				for id in ["rusty_sword", "rusty_pickaxe", "leather_cap", "copper_ring", "amulet"]:
 					world.player_equip(id)
+				if shot_panel != "inventory":
+					ui.set_scheme("gamepad")
 				ui.show_inventory()
 				ui.inventory_window().choose("copper_ring")
+				if shot_panel == "inventory_pad":
+					ui.inventory_window().gear_buttons["weapon"].grab_focus()
+				elif shot_panel == "inventory_tab":
+					ui.inventory_window().tab_buttons[2].grab_focus()
 			"title":
 				ui.show_title(false)
 			"creation":

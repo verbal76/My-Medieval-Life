@@ -405,8 +405,10 @@ func damage_player(amount: float, source: String) -> void:
 	if not p.alive:
 		return
 	p.hp -= maxf(0.0, amount - p.defense() * 0.5) if source != "hunger" else amount
+	p.last_damage = source              # what hurt the player last: the death screen's cause (B8-020)
 	if p.hp <= 0.0:
 		p.alive = false
+		p.death_cause = source
 		p.deaths += 1
 		note("%s %s died (%s)." % [p.name, p.family, source])
 
