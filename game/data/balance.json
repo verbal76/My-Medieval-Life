@@ -462,6 +462,7 @@
   "pickpocket_asleep_bonus": 0.3,
   "pickpocket_asleep_max": 0.95,
   "sleep_wake_radius": 6.0,
+  "player_combat": {"_note": "B14 combat-quality issue CQ-01 (owner: sword presses lost, hits needing sprite overlap). A swing: windup seconds from the press to the blow (the sword sheet draws its slash on the third frame, 0.16 s in), then recovery for the rest of the swing time (0.6 s times the Combat tier attack_time). A press while swinging is kept when buffer seconds or less remain, and one press at most. The blow lands on the nearest body within reach tiles whose direction is within the arc ahead (cosine arc_cos, about 70 degrees each side) or within close tiles in any direction, with a clear line (no wall or solid cell between); foes first. The touch Attack button swings at a foe within reach; tap-to-strike walks only into reach. Agent proposal, provisional.", "windup": 0.16, "buffer": 0.35, "reach": 1.5, "close": 0.7, "arc_cos": 0.35, "swing_time": 0.6},
   "pickpocket_chance": 0.4,
   "pickpocket_chance_per_level": 0.12,
   "pickpocket_chance_max": 0.85,

@@ -86,6 +86,7 @@ var gather_mark: Line2D        # the outline round the chosen resource
 var attack_mode := false       # toggled by the Attack button: a tap on a person or animal targets it
 var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
 var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
+var swing := Combat.new()      # the sword swing: windup, blow, recovery and one buffered press (CQ-01)
 var target_marker: Sprite2D    # the sword shown over the target
 var settings := GameSettings.new()
 var scheme := "kbm"            # the controls in use, from the last input: touch | gamepad | kbm
@@ -796,6 +797,7 @@ func _clear_world() -> void:
 		if is_instance_valid(sg):
 			sg.queue_free()
 	house_signs.clear()
+	swing.cancel()
 	chase = null
 	talk_to = null
 	reach_to = Vector2.INF
@@ -1515,6 +1517,7 @@ func _sync_loot() -> void:
 # ---------------------------------------------------------------- player ---------------------
 func _player_step(delta: float) -> void:
 	var p := world.player
+	_swing_step(delta)
 	if not action.is_empty():
 		_menu_keys()                      # the Pack and the other windows open mid-action: that stops it (B8-010)
 		if ui.modal():
@@ -2605,24 +2608,49 @@ func craft(recipe: String, station := "") -> void:
 
 
 # ---------------------------------------------------------------- combat ---------------------
-## A swing of the weapon at whatever is in front; with `only`, it can hit nobody else.
-func attack(only: Object = null) -> void:
-	var p := world.player
-	if p.attack_cd > 0.0 or not action.is_empty():
-		return
-	p.attack_cd = 0.6 * Skills.value(p, "combat", "attack_time", 1.0)
+## A press of Attack: a swing of the weapon at whatever is in front; with `only`, it can hit nobody else.
+## A press while swinging is kept for the next swing when the swing is nearly over (Combat, CQ-01).
+## Returns "start", "queued" or "ignored".
+func attack(only: Object = null) -> String:
+	if not action.is_empty():
+		return "ignored"
+	var r := swing.press(swing_time(), only)
+	if r == "start":
+		_swing_begins()
+	return r
+
+
+## Seconds one swing takes: windup, blow and recovery (the Combat tier makes it shorter).
+func swing_time() -> float:
+	return float(Combat.cfg().swing_time) * Skills.value(world.player, "combat", "attack_time", 1.0)
+
+
+func _swing_begins() -> void:
 	sprinting = false                  # no sprint while attacking
-	player_sprite.play("sword", true)
-	var probe := p.pos + facing_vec() * 0.8
-	for n: NPC in world.present(probe, 1.1):
-		if (only == null or only == n) and world.reaches(p.pos, n.pos):
-			_hit(n, _strike(p))
-			_xp("combat", 4)
-			return
-	for a: Animal in world.fauna.near(probe, 1.1):
-		if (only == null or only == a) and world.reaches(p.pos, a.pos):
-			_hit_animal(a, _strike(p))
-			return
+	if swing.only != null and swing.only.alive:
+		player_sprite.face(swing.only.pos - world.player.pos)
+	player_sprite.play("sword", true)  # the press shows at once; the blow lands on the slash frame
+
+
+func _swing_step(delta: float) -> void:
+	match swing.step(delta, swing_time()):
+		"blow":
+			_blow()
+		"start":
+			_swing_begins()
+
+
+## The blow of a swing, on the slash frame: one target, once (Combat.target).
+func _blow() -> void:
+	var p := world.player
+	var who: Object = Combat.target(world, p.pos, facing_vec(), swing.only)
+	if who is NPC:
+		swing.hits += 1
+		_hit(who, _strike(p))
+		_xp("combat", 4)
+	elif who is Animal:
+		swing.hits += 1
+		_hit_animal(who, _strike(p))
 
 
 ## The damage of one blow: the weapon's, and a double blow with the Combat tier's crit chance.
@@ -2637,6 +2665,11 @@ func _strike(p: PlayerState) -> float:
 ## The touch Attack button: fight a foe within reach (a bandit, someone fighting you, or game);
 ## with none, wait for a tap on who or what to attack. Villagers are only attacked by choice.
 func attack_button() -> void:
+	var foe := _foe_in_reach()
+	if foe != null:                    # a foe in reach: the button swings at it (CQ-01), the mode stays as it is
+		player_sprite.face(foe.pos - world.player.pos)
+		attack(foe)
+		return
 	attack_mode = not attack_mode
 	if attack_mode and gather_mode:
 		gather_button()                # Attack and Gather exclude each other
@@ -2645,6 +2678,23 @@ func attack_button() -> void:
 		strike_pending = false
 	ui.set_attack_mode(attack_mode)
 	ui.message("Attack mode: tap who or what to attack. Tap Attack again to stop." if attack_mode else "Attack mode off.")
+
+
+## The nearest foe (a bandit, anyone fighting the player) or wild game within sword reach in any direction,
+## with a clear line, or null.
+func _foe_in_reach() -> Object:
+	var p := world.player
+	var best: Object = null
+	var bd := INF
+	for n: NPC in world.present(p.pos, float(Combat.cfg().reach)):
+		if n.alive and Combat.foe(n) and not _covered(n) and Combat.in_reach(world, p.pos, n.pos - p.pos, n.pos) and p.pos.distance_to(n.pos) < bd:
+			bd = p.pos.distance_to(n.pos)
+			best = n
+	for a: Animal in world.fauna.near(p.pos, float(Combat.cfg().reach)):
+		if a.alive and a.wild() and Combat.in_reach(world, p.pos, a.pos - p.pos, a.pos) and p.pos.distance_to(a.pos) < bd:
+			bd = p.pos.distance_to(a.pos)
+			best = a
+	return best
 
 
 ## Mark a person or animal with the sword and strike it: the player walks over if needed. Each
@@ -2682,14 +2732,16 @@ func _chase_step() -> void:
 		move_to = Vector2.INF
 		return
 	var d: Vector2 = chase.pos - p.pos
-	if d.length() > 1.0:
+	# strike from sword reach; when walking in, stop a little inside it so a step back by the target does not miss
+	var reach := float(Combat.cfg().reach) - (0.2 if move_to != Vector2.INF else 0.0)
+	if d.length() > reach or not Combat.clear_line(world, p.pos, chase.pos):
 		move_to = chase.pos
 		return
 	move_to = Vector2.INF
-	if strike_pending and p.attack_cd <= 0.0 and action.is_empty():
+	if strike_pending and action.is_empty():
 		player_sprite.face(d)
-		attack(chase)
-		strike_pending = false
+		if attack(chase) != "ignored":
+			strike_pending = false
 
 
 ## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing

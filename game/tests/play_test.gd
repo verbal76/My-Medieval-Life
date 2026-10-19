@@ -32,6 +32,15 @@ func finish_action() -> void:
 		guard += 1
 
 
+## One whole sword swing: the press, the blow on the slash frame, the recovery.
+func swing_once() -> void:
+	main.attack()
+	var guard := 0
+	while main.swing.busy() and guard < 100:
+		main._swing_step(0.05)
+		guard += 1
+
+
 func stand_by(cell: Vector2i) -> void:
 	var w: World = main.world
 	var c: Vector2i = w.brain.beside(cell, cell + Vector2i(0, 1))
@@ -201,10 +210,9 @@ func _run() -> void:
 	p.pos = bandit.pos + Vector2(-0.9, 0)
 	var swings := 0
 	while bandit.alive and swings < 40:
-		p.attack_cd = 0.0
 		p.pos = bandit.pos + Vector2(-0.9, 0)
 		main.player_sprite.face(Vector2(1, 0))
-		main.attack()
+		swing_once()
 		swings += 1
 	check(not bandit.alive, "killed the bandit with the sword in %d swings" % swings)
 	var loot_found := false
@@ -223,10 +231,9 @@ func _run() -> void:
 	var meat0 := p.inv.count("meat")
 	var blows := 0
 	while boar.alive and blows < 40:
-		p.attack_cd = 0.0
 		p.pos = boar.pos + Vector2(-0.9, 0)
 		main.player_sprite.face(Vector2(1, 0))
-		main.attack()
+		swing_once()
 		blows += 1
 	check(not boar.alive, "hunted the boar in %d blows" % blows)
 	var carcass := -1
@@ -255,10 +262,9 @@ func _run() -> void:
 	for i in 20:
 		if not sheep.alive:
 			break
-		p.attack_cd = 0.0
 		p.pos = sheep.pos + Vector2(-0.9, 0)
 		main.player_sprite.face(Vector2(1, 0))
-		main.attack()
+		swing_once()
 	check(not sheep.alive and keeper.target == -2, "killing the keeper's sheep is a crime: %s comes after you" % keeper.name)
 	keeper.target = -1
 	for g: NPC in w.npcs:

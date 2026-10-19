@@ -134,10 +134,10 @@ Rules:
 
 ### INT-012 · Fighting a bandit
 - **Trigger:** The player attacks a bandit.
-- **Source:** `game/scripts/main.gd::attack`, `game/scripts/main.gd::_hit`, `game/scripts/core/npc_brain.gd::fight`
-- **Affects:** Combat, Health, Bandits
-- **Expected:** The bandit loses health by the player's damage less its armour and turns on the player, damaging them each second within reach. A bandit below 30% health flees to camp. Combat XP is gained.
-- **Tests:** `game/tests/start_test.gd`, `game/tests/play_test.gd`
+- **Source:** `game/scripts/main.gd::attack`, `game/scripts/main.gd::_swing_step`, `game/scripts/main.gd::_blow`, `game/scripts/main.gd::attack_button`, `game/scripts/main.gd::_chase_step`, `game/scripts/core/combat.gd::press`, `game/scripts/core/combat.gd::target`, `game/scripts/main.gd::_hit`, `game/scripts/core/npc_brain.gd::fight`
+- **Affects:** Combat, Health, Bandits, Interface
+- **Expected:** (CQ-01, owner 2026-10-19: sword presses lost, hits needing sprite overlap) A press starts a swing at once (the sword animation shows); the blow lands on the slash frame `player_combat.windup` seconds later, once, on the nearest body within `player_combat.reach` tiles inside the arc ahead or within `close` tiles, with a clear line; foes before bystanders. One press in the last `buffer` seconds of a swing is kept and starts the next swing; others are ignored. The touch Attack button swings at a foe in reach (else toggles attack mode); tap-to-strike walks only into reach. The bandit loses health by the player's damage less its armour and turns on the player, damaging them each second within reach. A bandit below 30% health flees to camp. Combat XP is gained. A swing in progress does not survive loading or a new world.
+- **Tests:** `game/tests/combat_test.gd`, `game/tests/start_test.gd`, `game/tests/play_test.gd`
 
 ### INT-013 · Attacking villagers or livestock is a crime
 - **Trigger:** The player hits a villager, or kills a keeper's animal.
@@ -790,10 +790,10 @@ Rules:
 
 ### INT-088 · Nothing is targeted across a wall
 - **Trigger:** The player uses, taps, gathers, talks to or attacks something.
-- **Source:** `game/scripts/core/world.gd::reaches`, `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_use`, `game/scripts/main.gd::select_resource`
+- **Source:** `game/scripts/core/world.gd::reaches`, `game/scripts/core/combat.gd::clear_line`, `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_use`, `game/scripts/main.gd::select_resource`
 - **Affects:** Interiors, Interface, Combat
-- **Expected:** `World.reaches(from, to)` is false across a building's boundary (inside to outside, either way, or building to building) unless one end stands in that building's doorway, and false through a building neither end is in. The target list, the use guard, Gather taps and attacks all ask it; indoor stations, furniture, containers and people still work.
-- **Tests:** `game/tests/world_test.gd::_pl2_011`
+- **Expected:** `World.reaches(from, to)` is false across a building's boundary (inside to outside, either way, or building to building) unless one end stands in that building's doorway, and false through a building neither end is in. The target list, the use guard, Gather taps and attacks all ask it; indoor stations, furniture, containers and people still work. A sword blow also needs no solid map cell (wall, fence, tree, rock) between the player and the target (`Combat.clear_line`).
+- **Tests:** `game/tests/world_test.gd::_pl2_011`, `game/tests/combat_test.gd::test_walls`
 
 ### INT-089 · A field ripens on game time and stands ripe before the farmers cut it
 - **Trigger:** The game hour passes; a farmer decides.
@@ -1242,7 +1242,7 @@ Rules:
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125 |
 | Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146 |
+| Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104, INT-146 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111, INT-138 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100, INT-121, INT-122, INT-126, INT-130, INT-142 |

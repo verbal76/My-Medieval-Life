@@ -2254,7 +2254,7 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	p.attack_cd = 0.0
 	main.attack()
 	check(not main.sprinting, "no sprint while attacking")
-	p.attack_cd = 0.0
+	main.swing.cancel()
 	main.player_sprite.play("idle")
 	# touch: a Run button on the touch bar latches sprint (Build 13), same speed and cost as LT and Shift
 	ui.set_scheme("touch")
