@@ -116,6 +116,11 @@ func _ready() -> void:
 	add_child(ui)
 	ui.build(self)
 	ui.set_scheme(scheme)
+	# a controller connected to a phone (or already there at start) hides the touch buttons and uses the
+	# pad's controls; unplugged, the phone goes back to touch (owner, 2026-10-19)
+	Input.joy_connection_changed.connect(_on_joy_connection)
+	if settings.phone and not Input.get_connected_joypads().is_empty():
+		_on_joy_connection(Input.get_connected_joypads()[0], true)
 	var args := OS.get_cmdline_user_args()
 	for i in args.size():
 		if i + 1 >= args.size():
@@ -3278,6 +3283,19 @@ func _look_step(delta: float) -> void:
 	var look := Input.get_vector("look_left", "look_right", "look_up", "look_down", 0.2)
 	if look != Vector2.ZERO:
 		pan_camera(look * PAN_SPEED * delta)
+
+
+## A controller was connected or disconnected: switch to its controls, or back to touch on a phone.
+func _on_joy_connection(_device: int, connected: bool) -> void:
+	var s := scheme
+	if connected:
+		s = "gamepad"
+	elif Input.get_connected_joypads().is_empty() and scheme == "gamepad":
+		s = "touch" if settings.phone else "kbm"
+	if s != scheme:
+		scheme = s
+		ui.set_scheme(s)
+		ui.message("Controller connected: touch buttons hidden." if connected else "Controller disconnected.", 4.0)
 
 
 ## Which controls are in use, from the latest input: the HUD follows (touch buttons, prompts).

@@ -722,6 +722,17 @@ func _run() -> void:
 	pad.pressed = true
 	main._input(pad)
 	check(main.scheme == "gamepad" and not ui.touch_bar.visible and ui.prompt_icon.texture.resource_path.ends_with("xbox_button_a.png"), "a gamepad press switches to gamepad controls (no touch buttons)")
+	# a controller connected to a phone: the touch buttons go at once, without a press; unplugged, they return
+	var was_phone: bool = main.settings.phone
+	main.settings.phone = true
+	main.scheme = "touch"
+	ui.set_scheme("touch")
+	main._on_joy_connection(0, true)
+	check(main.scheme == "gamepad" and not ui.touch_bar.visible, "a controller connected to a phone hides the touch buttons and uses the pad's controls")
+	main._on_joy_connection(0, false)
+	check(main.scheme == ("touch" if Input.get_connected_joypads().is_empty() else "gamepad") and ui.touch_bar.visible == Input.get_connected_joypads().is_empty(), "unplugged, the phone goes back to touch")
+	main.settings.phone = was_phone
+	main._input(pad)
 	# the pack with a pad: focus starts on the first bag cell and moves between cells and tabs by
 	# position, skipping locked cells; B closes it
 	ui.show_inventory()
