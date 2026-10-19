@@ -168,8 +168,13 @@ func _targets(species: String) -> Array:
 
 ## Young a wood can still take from refuges: up to `release_below` of the cap, counting young on their way.
 func _room(area: String, species: String) -> int:
-	var limit := floori(float(fauna.cap(area, species)) * float(cfg().release_below))
-	return maxi(0, limit - fauna.count(area, species) - _incoming(area, species))
+	return maxi(0, release_limit(fauna.cap(area, species)) - fauna.count(area, species) - _incoming(area, species))
+
+
+## How many of a kind a wood may hold before its refuge stops sending young: `release_below` of the cap, but never
+## less than a pair (a wood of bears, cap 2, would otherwise stop at one lone bear that can never breed).
+static func release_limit(cap: int) -> int:
+	return maxi(floori(float(cap) * float(cfg().release_below)), mini(cap, 2))
 
 
 func _incoming(area: String, species: String) -> int:

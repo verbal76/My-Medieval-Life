@@ -464,7 +464,7 @@ func _animals() -> void:
 				+ "and settle there; when their own wood is fuller, some cross unseen to another wood, and a few are lost on the way. "
 				+ "A wood hunted empty stays empty until they come, and fills again only slowly.")
 				% [str(rs.site), _and_list((rs.seasons as Array).map(func(s): return str(s).to_lower())), int(rs.interval_days),
-				int(a.get("litter", 1)) * maxi(1, int(rs.stock) / 2), floori(float(a.get("woods_cap", 0)) * float(rc.release_below)),
+				int(a.get("litter", 1)) * maxi(1, int(rs.stock) / 2), Refuges.release_limit(int(a.get("woods_cap", 0))),
 				roundi(float(rc.release_below) * 100.0), int(a.get("woods_cap", 0)), int(rs.disperse[0]), int(rs.disperse[1])]))
 		add_page("animal:" + id, str(a.name), "animals", blocks, icon_path(str(GameData.resources.nodes.get(node.trim_prefix("node:"), {}).get("icon", ""))), id)
 

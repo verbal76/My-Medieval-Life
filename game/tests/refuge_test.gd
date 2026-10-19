@@ -30,6 +30,7 @@ func _init() -> void:
 	test_refuges_exist()
 	test_out_of_reach()
 	test_season_and_capacity()
+	test_lone_bear()
 	test_dispersal()
 	test_migration()
 	test_overhunt_and_recolonize()
@@ -155,13 +156,27 @@ func test_season_and_capacity() -> void:
 	check(int(w.stats.get("born_boar", 0)) - born_before == _of(w, "boar").size(), "each young that leaves a refuge is counted as born for the ledger")
 	check(r.cohort.is_empty(), "the refuge's cohort is gone out")
 	# releases stay under release_below of the cap: never instant abundance
-	var limit := floori(float(w.fauna.cap("woods_e", "boar")) * float(Refuges.cfg().release_below))
+	var limit := Refuges.release_limit(w.fauna.cap("woods_e", "boar"))
 	for i in 40:
 		w.minutes += World.DAY
 		rf.new_day()
 	var most := maxi(_of(w, "boar", "woods_e").size(), _of(w, "boar", "woods_w").size())
 	check(most <= limit + litter and most >= limit, "refuges fill a wood only to about %d of a cap of %d, then stop (%d and %d boar)"
 		% [limit, w.fauna.cap("woods_e", "boar"), _of(w, "boar", "woods_e").size(), _of(w, "boar", "woods_w").size()])
+
+
+## A wood's last bear (cap 2) is not left alone for good: the cave sends a cub while its prey can feed one more.
+func test_lone_bear() -> void:
+	var w := new_world()
+	var rf: Refuges = w.fauna.refuges
+	var r: Dictionary = rf.by_id("refuge_woods_w_bear")
+	w.fauna.remove(_of(w, "bear")[0])
+	for i in 8:
+		w.fauna.spawn("woods_w", "deer", "m" if i % 2 == 0 else "f", null)
+	w.minutes = _dawn_in(w, "Spring")
+	r.next_birth = 0.0
+	rf.new_day()
+	check(Refuges.release_limit(2) == 2 and int(r.cohort.get("n", 0)) == 1, "a lone bear's wood gets a cub from the cave (%s)" % [r.cohort])
 
 
 func test_dispersal() -> void:
