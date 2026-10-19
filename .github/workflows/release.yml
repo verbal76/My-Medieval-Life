@@ -31,6 +31,10 @@ on:
         description: "Sign the APK with a throwaway key if the test-signing secrets are missing (it will not update earlier installs)"
         type: boolean
         default: false
+      build_number:
+        description: "Build number to stamp (digits only; empty = this run's number). Use it when a failed run used up a number"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -140,13 +144,18 @@ jobs:
         run: python3 -m pip install pillow==10.4.0
 
       - name: Stamp the build number into the versions
+        env:
+          BUILD_N: ${{ inputs.build_number || github.run_number }}
         run: |
-          n="${{ github.run_number }}"
+          n="$BUILD_N"
+          case "$n" in ''|*[!0-9]*) echo "::error::build_number must be digits only"; exit 1 ;; esac
           # Android needs a rising version code to update an install; Windows shows the file version
           sed -i -E "s/^version\/code=.*/version\/code=${n}/; s/^version\/name=.*/version\/name=\"0.1.${n}-test\"/; s/^application\/file_version=.*/application\/file_version=\"0.1.${n}.0\"/; s/^application\/product_version=.*/application\/product_version=\"0.1.${n}.0\"/" game/export_presets.cfg
           grep -E '^(version/code|version/name|application/file_version|application/product_version)=' game/export_presets.cfg
 
       - name: Export Android, Windows and Linux
+        env:
+          BUILD_N: ${{ inputs.build_number || github.run_number }}
         run: |
           mkdir -p out/pc/windows out/pc/linux release
           godot --headless --path game --export-debug "Android" ../out/mymedievallife-dev.apk
@@ -154,7 +163,7 @@ jobs:
           # the .exe must carry the game's icon (Godot 4.7 embeds application/icon itself: no rcedit/Wine)
           python3 tools/check_exe_icon.py out/pc/windows/MyMedievalLife.exe
           godot --headless --path game --export-release "Linux" ../out/pc/linux/MyMedievalLife.x86_64
-          n="${{ github.run_number }}"
+          n="$BUILD_N"
           cp out/mymedievallife-dev.apk "release/MyMedievalLife-build${n}-android.apk"
           (cd out/pc/windows && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-windows-x86_64.zip" MyMedievalLife.exe)
           (cd out/pc/linux && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-linux-x86_64.zip" MyMedievalLife.x86_64)
@@ -180,9 +189,9 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: build-${{ github.run_number }}
+          tag_name: build-${{ inputs.build_number || github.run_number }}
           target_commitish: ${{ github.sha }}
-          name: My Medieval Life Build ${{ github.run_number }}
+          name: My Medieval Life Build ${{ inputs.build_number || github.run_number }}
           prerelease: ${{ github.ref != 'refs/heads/main' }}
           draft: ${{ inputs.visibility != 'public' }}
           body_path: notes.md

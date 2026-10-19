@@ -21,7 +21,7 @@ If the secrets are missing, the build stops with an error, unless the run's `all
 box is ticked. Then it signs with a throwaway key as before, and the release notes say the APK cannot
 update an earlier install.
 
-Each build also stamps its build number into the versions: Android `version/code` = the run number
+Each build also stamps its build number into the versions (the run number, or the run's `build_number` input when a failed run has used a number up, digits only): Android `version/code` = the build number
 (Android refuses to update to a lower code), `version/name` = `0.1.<n>-test`, Windows file and
 product version `0.1.<n>.0`. `game/export_presets.cfg` itself is not changed in the repository.
 
