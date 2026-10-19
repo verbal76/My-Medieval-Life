@@ -1491,6 +1491,7 @@ func _player_step(delta: float) -> void:
 		action.left -= delta
 		if action.left <= 0.0:
 			var done: Callable = action.done
+			world.release_player_station(str(action.get("station", "")))
 			action = {}
 			done.call()                  # may begin the next blow of a felling
 			if action.is_empty():
@@ -1575,6 +1576,8 @@ func cancel_action(why := "") -> void:
 	var had := not action.is_empty() or not gather.is_empty()
 	if furn.get("kind", "") == "lie":
 		stand_up()                         # woken: up beside the bed, the rest cut short
+	if not action.is_empty():
+		world.release_player_station(str(action.get("station", "")))
 	action = {}
 	stop_gather("")
 	chase = null
@@ -2464,6 +2467,8 @@ func craft(recipe: String, station := "") -> void:
 		_xp(r.skill, int(r.xp))
 		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))),
 			"swing" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "gather", "hammer" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "")
+	if station != "" and not action.is_empty():
+		action["station"] = station          # released the moment the work ends or is cut short (Build 13)
 
 
 # ---------------------------------------------------------------- combat ---------------------

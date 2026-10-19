@@ -368,6 +368,18 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 					continue
 				return
 			"work":
+				var st_id := str(s.get("args", {}).get("station", "")) if s.get("act", "") == "craft" else ""
+				if st_id != "" and player_at_station(st_id):
+					# the player is working there (Build 13): wait beside it, never work it together;
+					# after station_wait_minutes give up and free the place, and plan again later
+					s["waited"] = float(s.get("waited", 0.0)) + gm
+					n.anim = "idle"
+					n.doing = "waiting for the %s" % str(stations[st_id].type)
+					if float(s.waited) >= float(GameData.b("station_wait_minutes")):
+						brain.release_station(n, st_id)
+						n.plan.clear()
+						stat("station_gave_way")
+					return
 				n.anim = s.get("anim", "work")
 				if s.has("face"):
 					n.facing = (Vector2(s.face) + Vector2(0.5, 0.5) - n.pos)
@@ -2359,7 +2371,8 @@ func station_workers(id: String) -> Array:
 			users.erase(u)
 			continue
 		var using: bool = o.target == -1 and not asleep(o) and not o.plan.is_empty() and o.plan[0].k == "work" \
-				and str(o.plan[0].get("args", {}).get("station", "")) == id and o.pos.distance_to(at) <= 2.5
+				and str(o.plan[0].get("args", {}).get("station", "")) == id and o.pos.distance_to(at) <= 2.5 \
+				and o.anim != "idle"           # one waiting beside it for the player (Build 13) is not using it
 		if using:
 			out.append(o)
 	out.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
@@ -2390,6 +2403,17 @@ func station_refusal(id: String) -> String:
 func reserve_for_player(id: String, mins: float) -> void:
 	if stations.has(id):
 		stations[id].player_until = minutes + mins
+
+
+## The player's work at a station ended or was cut short: the place is free at once (Build 13).
+func release_player_station(id: String) -> void:
+	if stations.has(id):
+		stations[id].erase("player_until")
+
+
+## Whether the player is working at station `id` now.
+func player_at_station(id: String) -> bool:
+	return stations.has(id) and float(stations[id].get("player_until", -1.0)) > minutes
 
 
 ## Owners at the start (agent proposal): a house and the sage's hut are their household's own; the

@@ -768,11 +768,11 @@ Rules:
 - **Tests:** `game/tests/health_jobs_test.gd::test_star`
 
 ### INT-085 · A station is blocked only by a villager actually working at it
-- **Trigger:** The player opens a station; a villager plans a recipe.
-- **Source:** `game/scripts/core/world.gd::station_workers`, `game/scripts/core/world.gd::station_refusal`, `game/scripts/core/npc_brain.gd::_station_for`
+- **Trigger:** The player opens or works at a station; a villager plans a recipe or arrives at its station.
+- **Source:** `game/scripts/core/world.gd::station_workers`, `game/scripts/core/world.gd::station_refusal`, `game/scripts/core/world.gd::_run_plan`, `game/scripts/core/world.gd::player_at_station`, `game/scripts/core/world.gd::release_player_station`, `game/scripts/main.gd::craft`, `game/scripts/main.gd::cancel_action`, `game/scripts/core/npc_brain.gd::_station_for`, `game/scripts/core/npc_brain.gd::release_station`
 - **Affects:** Workshops, Employment, Interface
-- **Expected:** A reservation (`users`) is made for the walk and the work, but the player is refused ("X is using the forge") only while that villager is alive, awake, not fighting, has the station's work as the current plan step and stands at its use cell. Someone on the way, asleep, fighting, dead or gone to another task does not block, and their reservation is cleared the next time the station is asked about. Reservations are never saved.
-- **Tests:** `game/tests/world_test.gd::_pl2_001`, `game/tests/run_tests.gd::test_building_site`
+- **Expected:** A reservation (`users`) is made for the walk and the work, but the player is refused ("X is using the forge") only while that villager is alive, awake, not fighting, has the station's work as the current plan step and stands at its use cell. Someone on the way, asleep, fighting, dead or gone to another task does not block, and their reservation is cleared the next time the station is asked about. Reservations are never saved. (Build 13) The player working at a station (`World.reserve_for_player`) keeps villagers off it: none can claim it (`_station_for` counts the player), and one who reserved it earlier and arrives while the player works waits beside it, idle, never working it at the same time (`_run_plan`); a villager waiting there does not count as using it. After `station_wait_minutes` the villager gives the place up, releases its reservation and plans again. The player's place is freed the moment their work finishes or is cut short (`release_player_station`, from the action's end and `cancel_action`), not when the reserved time runs out.
+- **Tests:** `game/tests/world_test.gd::_pl2_001`, `game/tests/world_test.gd::_station_conflict`, `game/tests/run_tests.gd::test_building_site`
 
 ### INT-086 · Hunted animals leave a pile that can be seen, tapped and taken, and that spoils
 - **Trigger:** The player (or a hunter) kills an animal; the player taps or uses the pile; a dawn passes.

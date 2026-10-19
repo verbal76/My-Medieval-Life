@@ -414,6 +414,8 @@
   "harvest_handful": 6,
   "witness_radius": 10,
   "_theft_note": "Theft, shops and containers (owner rules 2026-10-18; the numbers are agent proposals, docs/BUILD_DECISIONS.md). A guard who sees a theft, hears a caught pickpocket's victim within guard_call_radius, or questions a seller of stolen goods returns the goods and fines theft_fine coins to the treasury.",
+  "station_wait_minutes": 45,
+  "_station_wait_note": "Build 13: a villager arriving at a station the player is working at waits beside it this many game minutes, then gives the place up (its reservation released) and plans again. Agent proposal, provisional.",
   "cheese_treat_chance": 0.35,
   "tavern_supper_hunger": 90,
   "_cheese_note": "Build 13: a villager buying a meal with at least tavern_spare_coins buys cheese (when the vendor has it) with this chance; otherwise the meal with the most food per coin at today's price (NPCBrain._meal_choice). Agent proposal, provisional.",

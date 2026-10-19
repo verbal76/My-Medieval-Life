@@ -42,6 +42,7 @@ func _run() -> void:
 	_roofs()
 	_succession()
 	_pl_gameplay()
+	_station_conflict()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -695,3 +696,72 @@ func _pl2_007() -> void:
 	check(ripe_samples >= 6, "PL2-007: a field stood ripe for %d game hours (from day 1) where the player can harvest it" % ripe_samples)
 	check(after, "PL2-007: and the farmers then cut it and sowed it again")
 	check(is_equal_approx(w.field_grow_days(f), float(GameData.b("field_grow_days"))), "PL2-007: the season hook (field_grow_days) gives the base grow time")
+
+
+# ---------------------------------------------------------------- Build 13: station occupancy --
+## A villager who reserved the forge and arrives while the player works at it waits, never works it at the
+## same time; the player's place is freed the moment their work ends or is cut short; a villager kept waiting
+## too long gives up its reservation; nothing about a station's use survives a save and load.
+func _station_conflict() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var forge: String = w.stations_of("forge")[0]
+	for o: NPC in w.npcs:                          # nobody else at the forge for this test
+		w.stations[forge].users.erase(o.id)
+	var smith: NPC = w.npcs.filter(func(o): return o.alive and o.job == "smith")[0]
+	smith.inv.items.clear()
+	smith.inv.add("hammer")
+	smith.inv.add("iron_ore", 2)
+	smith.inv.add("coal", 1)
+	smith.target = -1
+	check(w.brain._do_recipe(smith, "smelt_iron") and w.stations[forge].users.has(smith.id), "the smith reserves the forge for a smelting")
+	# the player starts work at the forge at the same moment (the smith is only on the way)
+	main.ui.hide_all()
+	main.cancel_action("")
+	p.inv.add("iron_ore", 2)
+	p.inv.add("coal", 1)
+	p.pos = Vector2(w.station_use(forge)) + Vector2(0.5, 0.5)
+	check(w.station_refusal(forge) == "", "on the way, the smith does not block the player (PL2-001)")
+	main.craft("smelt_iron", forge)
+	check(not main.action.is_empty() and w.player_at_station(forge), "the player is working at the forge")
+	check(w.brain._station_for(w.npcs.filter(func(o): return o.alive and o.job == "smith" and o != smith)[0], "forge") == "", "no other villager can claim the forge while the player works it")
+	# the smith arrives and must wait, not work alongside
+	smith.pos = Vector2(w.station_use(forge)) + Vector2(0.5, 0.5)
+	smith.plan.pop_front()
+	smith.work_left = float(smith.plan[0].min)
+	var ore0 := smith.inv.count("iron_ore")
+	for i in 10:
+		w._run_plan(smith, 0.5, 2.0)
+	check(smith.inv.count("iron_ore") == ore0 and smith.anim == "idle" and smith.doing.contains("waiting"), "arriving while the player works, the smith waits beside the forge (%s)" % smith.doing)
+	check(w.station_refusal(forge) == "", "a waiting smith is not using the forge")
+	# interruption: the player stops; the place is free at once and the smith works
+	main.cancel_action("You stop.")
+	check(not w.player_at_station(forge), "cancelling frees the forge at once")
+	for i in 40:
+		w._run_plan(smith, 0.5, 2.0)
+	check(smith.inv.count("iron_ore") == ore0 - 2 and smith.inv.count("iron_bar") >= 1 and not w.stations[forge].users.has(smith.id), "then the smith smelts, and its reservation is released")
+	# finished work frees the place too
+	p.inv.add("iron_ore", 2)
+	p.inv.add("coal", 1)
+	main.craft("smelt_iron", forge)
+	main.action.left = 0.0
+	main._player_step(0.05)
+	check(main.action.is_empty() and not w.player_at_station(forge), "finished work frees the forge")
+	# kept waiting too long, the villager gives the place up and plans again
+	smith.inv.add("iron_ore", 2)
+	smith.inv.add("coal", 1)
+	check(w.brain._do_recipe(smith, "smelt_iron"), "the smith reserves the forge again")
+	w.reserve_for_player(forge, 600.0)
+	smith.plan.pop_front()
+	smith.work_left = float(smith.plan[0].min)
+	var waited := 0
+	while not smith.plan.is_empty() and waited < 200:
+		w._run_plan(smith, 0.5, 2.0)
+		waited += 1
+	check(smith.plan.is_empty() and not w.stations[forge].users.has(smith.id) and waited * 2 >= int(GameData.b("station_wait_minutes")), "after %d minutes the smith gives way and frees its reservation" % (waited * 2))
+	# save and load: neither a reservation nor the player's place is carried over
+	w.reserve_for_player(forge, 600.0)
+	check(main.save_game(false), "the game saves with the player at the forge")
+	main.continue_game()
+	var w2: World = main.world
+	check(not w2.player_at_station(forge) and w2.stations[forge].users.is_empty(), "after loading, the forge is free: no stale reservation")
