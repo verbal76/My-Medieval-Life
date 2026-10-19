@@ -50,7 +50,7 @@ Rules:
 - **Interiors** — the insides of buildings under their roofs: floor, walls, doors, beds and other spots, roof fade
 - **Property** — who owns and who holds land, buildings, stalls, pens, fields and stations (one owner reference); the land registry, sales, leases, weekly rent
 - **Calendar** — the world calendar: years of 8 days in four seasons, ages in years, the HUD clock (B8-029)
-- **Family** — born, sex, the explicit links mother, father, partner and children, life stages, partnering, births, old-age death (B8-029)
+- **Family** — born, sex, the explicit links mother, father, partner and children, life stages, courting and partners (Relations), births, old-age death (B8-029)
 - **Overworld** — the generated world outside the village: chunks, roads, mountains, trees, collision, the trees the player felled
 
 ## Interactions
@@ -727,9 +727,9 @@ Rules:
 
 ### INT-079 · Partners and births join households
 - **Trigger:** Each dawn.
-- **Source:** `game/scripts/core/life.gd::partnering`, `game/scripts/core/life.gd::births`, `game/scripts/core/life.gd::birth`, `game/scripts/core/life.gd::partner_player`, `game/scripts/core/life.gd::seed_population`
+- **Source:** `game/scripts/core/relations.gd::propose`, `game/scripts/core/life.gd::births`, `game/scripts/core/life.gd::birth`, `game/scripts/core/life.gd::partner_player`, `game/scripts/core/life.gd::seed_population`
 - **Affects:** Family, Households, Building, Interiors, Food
-- **Expected:** Households are not families: relationships are explicit links (`mother`, `father`, `partner`, `children`), recorded for the starting households by `seed_population` and never inferred from a shared house. Two unpartnered adults of opposite sex, 18-50, not kin, become partners (`partner_chance_per_year`), one moving into the other's home if it has a free bed; without room they pair and live apart until a home has room or they found a household (INT-060). Births are only to partners: a woman of 18-42, `birth_min_food_days` of food, no child in the last year; no free bed is needed (owner, 2026-10-19), so a birth can crowd the house and start a split (INT-060); about one in `birth_interval_years` years of days. The newborn is a child of the mother's household, with a name, a sprite and both parents recorded. The player partners an adult by asking (`partner_player`); their children are villagers of the partner's household.
+- **Expected:** Households are not families: relationships are explicit links (`mother`, `father`, `partner`, `children`), recorded for the starting households by `seed_population` and never inferred from a shared house. Two unpartnered adults, 18-50, not kin, of either sex, become partners by courting (INT-148), one moving into the other's home if it has a free bed; without room they pair and live apart until a home has room or they found a household (INT-060). Births are only to partners of opposite sex: a woman of 18-42, `birth_min_food_days` of food, no child in the last year; no free bed is needed (owner, 2026-10-19), so a birth can crowd the house and start a split (INT-060); about one in `birth_interval_years` years of days. The newborn is a child of the mother's household, with a name, a sprite and both parents recorded. The player partners an adult whose proposal was accepted (INT-148, `partner_player`); their children are villagers of the partner's household.
 - **Tests:** `game/tests/aging_test.gd::test_start_population`, `game/tests/aging_test.gd::test_partners_and_births`, `game/tests/aging_test.gd::test_couples_found_households`
 
 ### INT-080 · Old age kills, and the family inherits
@@ -1208,6 +1208,13 @@ Rules:
 - **Expected:** (asset pipeline, owner directive 2026-10-19; Craftpix fruit trees) Village trees near the houses are partly apple trees (fruit_trees orchard rules; new worlds). A grown apple tree bears fruit_trees.apple_orchard.yield apples in summer and autumn: the player or a villager picks them (the tree is then bare until regrow_days later, in season); apples are pantry food, sold at storefronts and to the food merchant. Felled, an apple tree gives logs and (by chance) an apple sapling that grows a new apple tree. Apples now have a source (the resources.json exception is gone). Saved with the trees.
 - **Tests:** `game/tests/home_test.gd::test_apple_trees`
 
+### INT-148 · Friendship, courting and marriage: gifts, help, befriending, proposals; friends' benefits
+- **Trigger:** The player gives a gift, completes a request, befriends, asks to court or proposes in the talk window; each dawn (villagers court; ties cool); the player trades with, hires or is stopped by a guard near a friend.
+- **Source:** `game/scripts/core/relations.gd::give`, `game/scripts/core/relations.gd::gift_effect`, `game/scripts/core/relations.gd::favourites`, `game/scripts/core/relations.gd::helped`, `game/scripts/core/relations.gd::befriend`, `game/scripts/core/relations.gd::ask_court`, `game/scripts/core/relations.gd::propose`, `game/scripts/core/relations.gd::dawn`, `game/scripts/core/relations.gd::_villagers_court`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/world.gd::player_quote`, `game/scripts/core/world.gd::guard_confront`, `game/scripts/core/construction.gd::hire`, `game/scripts/ui/game_ui.gd::_relation_choices`, `game/scripts/ui/game_ui.gd::show_gifts`, `game/scripts/ui/dialogue.gd::news`, `game/scripts/core/life.gd::dawn`
+- **Affects:** Family, Households, Market, Crime, Building, Interface, Save
+- **Expected:** (owner, 2026-10-19: CRT-01..07) Every pair of people has a tie: regard and attraction. A gift moves one real item from the giver to the receiver: food, flowers, ale, clothes and jewellery always add attraction (between people who may court: humans of age, not kin, not partnered elsewhere, either sex) and regard; the receiver's favourites (their trade's FAVOURITES, food when hungry, medicine when hurt) count `favourite_factor` and are marked with the reason in the gift list; one gift a day counts, a repeat counts less. Help (a request done) adds regard. At `befriend_at` regard the player may Befriend (no proposal). At `court_at` attraction a request to court is accepted, else declined; a proposal while courting is accepted after `propose_min_days` at `propose_at`, else declined as too soon and attraction drops. Villagers court each other by the same rules each dawn (replacing the random pairing), with gifts they hold or time together. Friends trade at `friend_price` better, carry for the player's site with no wage, tell who is courting, and back the player before a guard (a friend guard warns only; a friend nearby halves the fine). Partners of one sex have no children. Ties save in `relations` (older saves: strangers). Goods and coins only move.
+- **Tests:** `game/tests/relations_test.gd`, `game/tests/aging_test.gd::test_partners_and_births`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -1221,33 +1228,33 @@ Rules:
 | Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054, INT-072, INT-079, INT-096, INT-099, INT-124, INT-128, INT-129, INT-138, INT-141, INT-145, INT-147 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033, INT-080, INT-083, INT-108, INT-139, INT-141, INT-142, INT-145 |
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117, INT-146 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117, INT-146, INT-148 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117 |
 | Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121, INT-140, INT-141, INT-143, INT-145, INT-147 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-146, INT-147 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-146, INT-147, INT-148 |
 | Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056, INT-057, INT-059, INT-060, INT-062, INT-065, INT-066, INT-072, INT-073, INT-075, INT-083, INT-090, INT-091, INT-102, INT-108, INT-116, INT-118, INT-119, INT-120, INT-125, INT-127, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144 |
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056, INT-057, INT-060, INT-062, INT-063, INT-066, INT-091, INT-102, INT-116, INT-120, INT-129, INT-131, INT-134 |
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148 |
 | Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137, INT-145 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146 |
-| Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148 |
+| Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146, INT-148 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104, INT-146 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050, INT-058, INT-060, INT-079, INT-084, INT-088, INT-092, INT-093, INT-094, INT-110, INT-111, INT-138 |
 | Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056, INT-057, INT-058, INT-060, INT-061, INT-067, INT-074, INT-075, INT-090, INT-091, INT-100, INT-121, INT-122, INT-126, INT-130, INT-142 |
 | Calendar | INT-077, INT-123, INT-147 |
-| Family | INT-077, INT-078, INT-079, INT-080 |
+| Family | INT-077, INT-078, INT-079, INT-080, INT-148 |
 | Overworld | INT-071, INT-074, INT-076, INT-087 |
 
 <!-- index:end -->

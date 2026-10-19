@@ -535,8 +535,7 @@ func _growth() -> Dictionary:
 	var c := Life.cfg()
 	var con := w.construction
 	var fp := con.footprint("house")
-	var house_cost := w.property.land_price(fp.x, fp.y) + con.estimate(con.cost_of("house")) \
-			+ int(GameData.b("helper_wage")) * int(GameData.b("founder_build_days"))
+	var house_cost := w.property.land_price(fp.x, fp.y) + ceili(con.estimate(con.cost_of("house")) * float(GameData.b("found_start_share")))
 	var beds := 0
 	var living := 0
 	var full := 0
@@ -549,7 +548,7 @@ func _growth() -> Dictionary:
 			beds += con.beds_in(str(hh.home))
 			if not Life.has_room(w, h):
 				full += 1
-	var couples := {"fertile": 0, "no_bed": 0, "low_food": 0, "recent_child": 0, "could": 0}
+	var couples := {"fertile": 0, "full_house": 0, "low_food": 0, "recent_child": 0, "could": 0}
 	var single := {"female": 0, "male": 0, "female_room": 0, "male_room": 0}
 	for n: NPC in w.npcs:
 		if not n.alive or n.role != "adult":
@@ -570,8 +569,8 @@ func _growth() -> Dictionary:
 			if k != null and Life.age_years(k.born, w.minutes) < float(c.birth_min_gap_years):
 				recent = true
 		if not Life.has_room(w, n.household):
-			couples.no_bed += 1
-		elif w.brain.household_food_days(n.household) < float(c.birth_min_food_days):
+			couples.full_house += 1                  # no longer a bar to a birth (EQ-08); counted for crowding
+		if w.brain.household_food_days(n.household) < float(c.birth_min_food_days):
 			couples.low_food += 1
 		elif recent:
 			couples.recent_child += 1
@@ -593,7 +592,8 @@ func _growth() -> Dictionary:
 			empty_houses += 1
 	return {"beds": beds, "living": living, "households_full": full, "fertile_couples": couples, "single_adults": single,
 		"crowded_households": crowded, "crowded_can_afford_home": can_split, "best_crowded_spare": best_spare if crowded > 0 else 0,
-		"new_house_cost": house_cost, "house_price": int(GameData.b("house_price")), "empty_houses_for_sale": empty_houses,
+		"house_start_cost": house_cost, "house_materials": con.estimate(con.cost_of("house")), "couples_needing_home": con.couples_needing_home().size(),
+		"courtships": int(_st("courtships")), "gifts_given": int(_st("gifts_given")), "house_price": int(GameData.b("house_price")), "empty_houses_for_sale": empty_houses,
 		"partnerships": int(_st("partnerships")), "households_founded": int(_st("households_founded"))}
 
 

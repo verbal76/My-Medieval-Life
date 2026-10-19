@@ -4669,7 +4669,7 @@
    "id": "CRT-01",
    "title": "Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "we need to add gifting to get friends and marriages going. Traditional dating gifts, like food, flowers, alcohol, clothes, those start to build attraction, attraction grows to dating, dating grows into an option to propose. the partner whether npc or other player can decline if you ask to early.",
    "description": "Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early",
    "source": "docs/directives/2026-10-19_courtship_friendship.md",
@@ -4681,8 +4681,8 @@
     "The NPC (or another player) can decline a proposal made too early",
     "Marriage uses the existing explicit partner link"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/relations.gd; game/scripts/ui/game_ui.gd::_relation_choices, show_gifts; INT-148",
+   "tests": "game/tests/relations_test.gd; aging_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -4704,6 +4704,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-19_courtship_friendship.md"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
     }
    ]
   },
@@ -4711,7 +4716,7 @@
    "id": "CRT-02",
    "title": "Friendship: a Befriend option appears after help and gifts; no proposal needed",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "friendships can be chosen as well you do not propose for friendship, but a befriend button should popup after help and gifts.",
    "description": "Friendship: a Befriend option appears after help and gifts; no proposal needed",
    "source": "docs/directives/2026-10-19_courtship_friendship.md",
@@ -4721,8 +4726,8 @@
     "Past a threshold a Befriend button appears in the conversation",
     "Choosing it makes a recorded friendship (no proposal step)"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/relations.gd; game/scripts/ui/game_ui.gd::_relation_choices, show_gifts; INT-148",
+   "tests": "game/tests/relations_test.gd; aging_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -4744,6 +4749,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-19_courtship_friendship.md"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
     }
    ]
   },
@@ -4788,6 +4798,178 @@
      "date": "2026-10-19",
      "change": "notes",
      "why": "multiplayer stays isolated"
+    }
+   ]
+  },
+  {
+   "id": "CRT-04",
+   "title": "Villagers court each other through gifts, dating and proposals by the player's rules, replacing the random pairing chance",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "Villagers too",
+   "description": "Villagers court each other through gifts, dating and proposals by the player's rules, replacing the random pairing chance",
+   "source": "docs/directives/2026-10-19_courtship_friendship.md (answers)",
+   "approval": "owner answer 2026-10-19",
+   "acceptance": [
+    "NPCs give gifts, date and propose to each other by the same rules",
+    "Life.partnering's random chance is replaced"
+   ],
+   "implementation": "game/scripts/core/relations.gd; game/scripts/ui/game_ui.gd::_relation_choices, show_gifts; INT-148",
+   "tests": "game/tests/relations_test.gd; aging_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_courtship_friendship.md (answers)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
+    }
+   ]
+  },
+  {
+   "id": "CRT-05",
+   "title": "Gift tastes follow obvious things: a villager's trade and current needs; favourite gifts speed courting, traditional gifts always work",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "personal tastes but nothing so weird we need to play guessing games. it should be based on obvious things like what they do for a living influenced, or what they need influenced. special choices speed up courting, but even if you get those choices wrong traditional gifts will still get you there",
+   "description": "Gift tastes follow obvious things: a villager's trade and current needs; favourite gifts speed courting, traditional gifts always work",
+   "source": "docs/directives/2026-10-19_courtship_friendship.md (answers)",
+   "approval": "owner answer 2026-10-19",
+   "acceptance": [
+    "Tastes derive from trade and current needs, not hidden random likes",
+    "Favourite gifts count more",
+    "Traditional gifts (food, flowers, alcohol, clothes) always build attraction"
+   ],
+   "implementation": "game/scripts/core/relations.gd; game/scripts/ui/game_ui.gd::_relation_choices, show_gifts; INT-148",
+   "tests": "game/tests/relations_test.gd; aging_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_courtship_friendship.md (answers)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
+    }
+   ]
+  },
+  {
+   "id": "CRT-06",
+   "title": "Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": "Better prices, Help and favours, Gossip and news, Back you up",
+   "description": "Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes",
+   "source": "docs/directives/2026-10-19_courtship_friendship.md (answers)",
+   "approval": "owner answer 2026-10-19",
+   "acceptance": [
+    "Friends trade at better prices",
+    "Friends help and do favours",
+    "Friends share gossip and news",
+    "Friends side with the player in disputes and votes"
+   ],
+   "implementation": "world.gd::player_quote, guard_confront; construction.gd::hire; dialogue.gd::news",
+   "tests": "game/tests/relations_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "friends vote with the player once elections exist",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_courtship_friendship.md (answers)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests; implementation; next_action",
+     "why": "better prices, unpaid help (carrying), gossip (who is courting) and backing before guards done; backing in votes waits for the politics system (WDR-019), which does not exist yet"
+    }
+   ]
+  },
+  {
+   "id": "CRT-07",
+   "title": "Courtship and marriage between any two humans, same sex included; humans only for now",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "Yeah, honestly i could care less, they have to be human for now, that's my only caveat",
+   "description": "Courtship and marriage between any two humans, same sex included; humans only for now",
+   "source": "docs/directives/2026-10-19_courtship_friendship.md (answers)",
+   "approval": "owner answer 2026-10-19",
+   "acceptance": [
+    "Same-sex couples can court and marry",
+    "Only humans court",
+    "Births still need a mother and father"
+   ],
+   "implementation": "game/scripts/core/relations.gd; game/scripts/ui/game_ui.gd::_relation_choices, show_gifts; INT-148",
+   "tests": "game/tests/relations_test.gd; aging_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-19_courtship_friendship.md (answers)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
     }
    ]
   },
@@ -5836,7 +6018,7 @@
    "id": "DVW-B1",
    "title": "Villager relationships, memory of favours/gifts/harms, gossip",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Villager relationships, memory of favours/gifts/harms, gossip",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273)",
@@ -5855,7 +6037,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "harms lower regard; gossip spreads deeds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -5865,6 +6047,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; next_action",
+     "why": "ties of regard and attraction with gifts and help now exist (Relations); memory of harms and gossip beyond courting remain"
     }
    ],
    "acceptance_derived": true

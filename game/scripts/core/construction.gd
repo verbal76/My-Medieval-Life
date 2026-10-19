@@ -277,7 +277,9 @@ func hire(employer: String, n: NPC, p: Dictionary, budget: int) -> String:
 		why = "There is no building site of yours to carry to."
 	if why != "":
 		return why
-	var wage := 0 if own else int(GameData.b("helper_wage"))
+	# a friend of the player carries as a favour, for no wage (CRT-06)
+	var favour: bool = employer == World.PLAYER and w.relations.player_friend(n)
+	var wage := 0 if own or favour else int(GameData.b("helper_wage"))
 	if not _pay(employer, n, wage):
 		why = "You need %d coins for the wage." % wage if employer == World.PLAYER else "They cannot pay the wage."
 		return why

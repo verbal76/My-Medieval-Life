@@ -149,9 +149,38 @@ static func describe(w: World, n: NPC) -> String:
 	if n.id == w.reeve_id:
 		return who + ", the reeve of the manor"
 	var what := n.role if n.role != "adult" else (_job_name(n.job) if n.job != "" else "")
-	if what == "":
-		return "%s, of the %s family, out of work" % [who, n.family]
-	return "%s, %s of the %s family" % [who, _article(what), n.family]
+	var line := ("%s, of the %s family, out of work" % [who, n.family]) if what == "" else ("%s, %s of the %s family" % [who, _article(what), n.family])
+	var bond := bond_words(w, n)
+	return line + ("  ·  " + bond if bond != "" else "")
+
+
+## How the player stands with a villager, for the talk window: partner, courting, friend, or "".
+static func bond_words(w: World, n: NPC) -> String:
+	var st := w.relations.stage(Life.PLAYER_ID, n.id)
+	if st == "partners":
+		return "your partner"
+	if st == "courting":
+		return "courting you"
+	return "your friend" if w.relations.player_friend(n) else ""
+
+
+## How a villager feels about the player, in words (the gift window): from their regard and attraction.
+static func regard_words(w: World, n: NPC) -> String:
+	var t: Dictionary = w.relations.peek(Life.PLAYER_ID, n.id)
+	var a := float(t.attraction)
+	var g := float(t.regard)
+	var c := Relations.cfg()
+	if a >= float(c.propose_at):
+		return "is plainly in love with you"
+	if a >= float(c.court_at):
+		return "is sweet on you"
+	if a > 0.0:
+		return "seems to like your company"
+	if g >= float(c.befriend_at):
+		return "thinks well of you"
+	if g > 0.0:
+		return "is warming to you"
+	return "hardly knows you"
 
 
 ## A villager is busy while walking somewhere, at work with their hands, or fighting: then they
@@ -381,6 +410,10 @@ static func news(w: World, n: NPC) -> String:
 		lines.append(_pick(w, n, ["Have you heard?", "People are talking."], 4) + " " + " ".join(about))
 	elif not other.is_empty():
 		lines.append(("Nothing about us. But they say: " if lines.is_empty() else "And they say: ") + other[0])
+	if w.relations.player_friend(n):             # a friend tells the player who is courting (CRT-06)
+		var gossip := _courting_gossip(w, n)
+		if gossip != "":
+			lines.append(gossip)
 	if lines.is_empty():
 		return "Nothing much has happened." if n.role != "child" else "Nothing happens here. It's boring!"
 	return " ".join(lines)
@@ -417,3 +450,22 @@ static func brush_off(w: World, n: NPC) -> String:
 	if n.plan[0].k == "work":
 		return _pick(w, n, ["Can't talk, I'm %s!" % _doing_words(n), "Sorry, %s, can't stop now!" % you], 6)
 	return _pick(w, n, ["Sorry, can't stop now!", "I have to be somewhere, %s!" % you, "Can't talk right now!"], 6)
+
+
+## Between friends: who in the village is courting whom (the newest courtship the villager knows of).
+static func _courting_gossip(w: World, n: NPC) -> String:
+	var best := -1
+	var pair: Array = []
+	for k in w.relations.ties:
+		var t: Dictionary = w.relations.ties[k]
+		if str(t.stage) != "courting" or int(t.since) <= best:
+			continue
+		var ids: PackedStringArray = str(k).split(":")
+		var a := w.npc(int(ids[0]))
+		var b := w.npc(int(ids[1]))
+		if a != null and b != null and a != n and b != n and a.alive and b.alive:
+			best = int(t.since)
+			pair = [a, b]
+	if pair.is_empty():
+		return ""
+	return "Between you and me, %s %s is courting %s %s." % [pair[0].name, pair[0].family, pair[1].name, pair[1].family]

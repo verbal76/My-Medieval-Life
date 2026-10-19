@@ -119,10 +119,10 @@ func test_start_population() -> void:
 		if m > 0 and f > 0:
 			unlinked_mixed += 1
 	var before := w.npcs.filter(func(n: NPC) -> bool: return n.partner >= 0).size()
-	GameData.b("life").partner_chance_per_year = 0.0
+	GameData.b("relations").npc_court_chance = 0.0                  # nobody takes an interest
 	for i in 20:
-		Life.partnering(w)
-	GameData.b("life").partner_chance_per_year = 0.5
+		w.relations.dawn()
+	GameData.b("relations").npc_court_chance = 0.15
 	check(w.npcs.filter(func(n: NPC) -> bool: return n.partner >= 0).size() == before, "adults sharing a house are not made partners by living together (%d such households)" % unlinked_mixed)
 	var w2 := new_world()
 	var same := w.npcs.size() == w2.npcs.size()
@@ -321,22 +321,30 @@ func test_partners_and_births() -> void:
 		Life.births(w2)
 	var born := w2.npcs.size() - n0
 	check(born >= 1 and born <= pairs, "two years bring births to some of the %d couples, beds or no beds (%d born, %d beds were free)" % [pairs, born, rooms])
-	# partnering: a single man and woman of 18+, a room for one of them
+	# courting (CRT-04): villagers take an interest, court with gifts and time, and propose; partners only
+	# when accepted, never kin, either sex
 	var w3 := new_world()
-	GameData.b("life").partner_chance_per_year = 8.0                     # a certain chance each day
+	GameData.b("relations").npc_court_chance = 1.0
 	var before_pairs := w3.npcs.filter(func(n: NPC) -> bool: return n.partner >= 0).size()
-	Life.partnering(w3)
-	GameData.b("life").partner_chance_per_year = 0.5
+	var first_week := 0
+	for day in 30:
+		w3.minutes += 1440.0
+		w3.relations.dawn()
+		if day == 2:
+			first_week = w3.npcs.filter(func(n: NPC) -> bool: return n.partner >= 0).size()
+	GameData.b("relations").npc_court_chance = 0.15
 	var after_pairs := w3.npcs.filter(func(n: NPC) -> bool: return n.partner >= 0).size()
-	check(after_pairs > before_pairs and after_pairs % 2 == 0, "unpartnered adults pair up (%d new people partnered)" % (after_pairs - before_pairs))
+	check(first_week == before_pairs, "nobody pairs in the first days: courting takes time (%d partnered before, %d after three days)" % [before_pairs, first_week])
+	check(after_pairs > before_pairs and after_pairs % 2 == 0, "unpartnered adults court and pair up (%d new people partnered)" % (after_pairs - before_pairs))
+	check(int(w3.stats.get("courtships", 0)) >= (after_pairs - before_pairs) / 2, "every new couple courted first (%d courtships)" % int(w3.stats.get("courtships", 0)))
 	var sound := true
 	for n: NPC in w3.npcs:
 		if n.partner >= 0:
 			var p := w3.npc(n.partner)
-			sound = sound and p.partner == n.id and p.sex != n.sex and Life.npc_age(w3, n) >= 18.0 and not Life.kin(n.id, n.mother, n.father, p.id, p.mother, p.father)
+			sound = sound and p.partner == n.id and Life.npc_age(w3, n) >= 18.0 and not Life.kin(n.id, n.mother, n.father, p.id, p.mother, p.father)
 	for hh in w3.households:
 		sound = sound and living(w3, int(hh.id)) <= maxi(w3.construction.beds_in(str(hh.home)), 6) and (hh.members as Array).size() > 0
-	check(sound, "new couples are symmetrical, of opposite sex, 18+, not kin, and nobody moved into a full house")
+	check(sound, "new couples are symmetrical, 18+, not kin, and nobody moved into a full house")
 	# the player can have a partner too (a fresh world: in w3 every single adult has just paired)
 	var w4 := new_world()
 	var p3 := w4.player
@@ -379,9 +387,11 @@ func test_couples_found_households() -> void:
 			n.partner = -5
 	var hf := f.household
 	var hm := m.household
-	GameData.b("life").partner_chance_per_year = 8.0
-	Life.partnering(w)
-	GameData.b("life").partner_chance_per_year = 0.5
+	var t := w.relations.tie(f.id, m.id)
+	t.attraction = 90.0
+	t.stage = "courting"
+	t.since = w.day() - 10
+	check(w.relations.propose(f.id, m) == "", "a proposal after courting long enough is accepted")
 	for n: NPC in w.npcs:
 		if n.partner == -5:
 			n.partner = -1

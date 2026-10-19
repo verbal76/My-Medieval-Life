@@ -78,6 +78,7 @@ var detail_radius := 34.0          # tiles: NPCs nearer the player get every-fra
 var brain
 var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
+var relations: Relations      # friendship, courting and marriage (CRT-01..07)
 
 
 func _init() -> void:
@@ -93,6 +94,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	brain = NPCBrain.new(self)
 	chests = Chests.new(self)
 	carts = Carts.new(self)
+	relations = Relations.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
@@ -626,6 +628,8 @@ func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
 	var out := []
 	var stock := n.inv.count(id)
 	var f := player_price_factor(buying)
+	if relations.player_friend(n):              # a friend's price (CRT-06)
+		f *= 1.0 - float(Relations.cfg().friend_price) if buying else 1.0 + float(Relations.cfg().friend_price)
 	var nearby := local_supply(id, n.pos, n) if buying else 0
 	for k in maxi(0, qty):
 		var base := sell_price_at(id, stock - k, nearby) if buying else buy_price_at(id, stock + k)
@@ -1714,6 +1718,18 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 		if player.get(slot) != "" and not player.inv.has(player.get(slot)):
 			player.set(slot, "")
 	var fine := theft_fine_for(taken)
+	# friends back the player up (CRT-06): a guard who is a friend lets them off with a warning; a friend
+	# among those near speaks up and halves the fine
+	var spoke: NPC = null
+	if relations.player_friend(g):
+		fine = 0
+	else:
+		for o: NPC in near(player.pos, float(GameData.b("witness_radius"))):
+			if o != g and o != owner and relations.player_friend(o):
+				spoke = o
+				break
+		if spoke != null:
+			fine = fine / 2
 	var paid := mini(fine, player.coins)
 	player.coins -= paid
 	treasury += paid
@@ -1723,7 +1739,12 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 	var text := "The guard %s stops you." % who
 	if not returned.is_empty():
 		text += " The %s goes back to %s." % [", ".join(returned), "its owner" if owner == null else owner.name]
-	text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
+	if spoke != null:
+		text += " Your friend %s speaks up for you." % spoke.name
+	if fine == 0 and relations.player_friend(g):
+		text += " \"Don't let me catch you at it again, friend.\" You are let off with a warning."
+	else:
+		text += " You pay a fine of %d coins to the manor." % paid if paid == fine else " You can pay only %d of the %d coins' fine: %s draws a weapon!" % [paid, fine, g.name]
 	if paid < fine:
 		g.target = -2
 	note("The guard %s stopped %s %s for theft%s." % [who, player.name, player.family, " and fined them %d coins" % paid if paid > 0 else ""])
@@ -2548,6 +2569,7 @@ func to_dict() -> Dictionary:
 		"vacancies": vacancies, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
+		"relations": relations.to_dict(),
 	}
 
 
@@ -2562,6 +2584,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
+	relations = Relations.new(self)
+	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)

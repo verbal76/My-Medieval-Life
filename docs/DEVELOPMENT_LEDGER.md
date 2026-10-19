@@ -10,19 +10,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 41 |
+| APPROVED — NOT STARTED | 38 |
 | ACTIVE DEVELOPMENT | 7 |
-| PARTIALLY IMPLEMENTED | 32 |
+| PARTIALLY IMPLEMENTED | 34 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 17 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 22 |
 | BLOCKED | 17 |
 | DEFERRED | 8 |
 | COMPLETE AND VERIFIED | 121 |
 | SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **271** |
-| Outstanding (not complete, superseded or canceled) | 133 |
+| **Total approved** | **275** |
+| Outstanding (not complete, superseded or canceled) | 137 |
 
 Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -52,7 +52,7 @@ Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 
-## APPROVED — NOT STARTED (41)
+## APPROVED — NOT STARTED (38)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -60,8 +60,6 @@ Automated tests do not count as device verification.
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | owner message 2026-10-19 |  |  | Generate the package with tools/assets/sheets.py contact |
-| CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | docs/directives/2026-10-19_courtship_friendship.md |  | after DVW-B1 |  |
-| CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | docs/directives/2026-10-19_courtship_friendship.md |  | after DVW-B1 |  |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
@@ -72,7 +70,6 @@ Automated tests do not count as device verification.
 | DVW-A7 | Over-production from raising skills by use (:32) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 251) |  |  |  |
 | DVW-A8 | Audit player-only perks vs same rules (:33) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 252) |  |  |  |
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
-| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  |  |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 274) |  |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 275) |  |  |  |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 276) |  |  |  |
@@ -110,7 +107,7 @@ Automated tests do not count as device verification.
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II |  |  |  |
 
-## PARTIALLY IMPLEMENTED (32)
+## PARTIALLY IMPLEMENTED (34)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -119,8 +116,10 @@ Automated tests do not count as device verification.
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
 | B7-017 | No building in a year (no births) | docs/release/BUILD_7_ISSUES.md (audit inventory row 58) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
+| CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd |  | friends vote with the player once elections exist |
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250) |  |  |  |
+| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
@@ -155,7 +154,7 @@ Automated tests do not count as device verification.
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (17)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (22)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -173,6 +172,11 @@ Automated tests do not count as device verification.
 | B7-013 | Brown glyph icons | docs/release/BUILD_7_ISSUES.md (audit inventory row 54) |  |  |  |
 | B8-018 | Roof flicker indoors | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 119) |  |  |  |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | docs/directives/2026-10-19_sword_combat.md | `3e283b6`; combat_test (41) |  |  |
+| CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | docs/directives/2026-10-19_courtship_friendship.md | game/tests/relations_test.gd; aging_test | after DVW-B1 |  |
+| CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | docs/directives/2026-10-19_courtship_friendship.md | game/tests/relations_test.gd; aging_test | after DVW-B1 |  |
+| CRT-04 | Villagers court each other through gifts, dating and proposals by the player's rules, replacing the random pairing chance | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd; aging_test |  |  |
+| CRT-05 | Gift tastes follow obvious things: a villager's trade and current needs; favourite gifts speed courting, traditional gifts always work | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd; aging_test |  |  |
+| CRT-07 | Courtship and marriage between any two humans, same sex included; humans only for now | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd; aging_test |  |  |
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
 | Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |

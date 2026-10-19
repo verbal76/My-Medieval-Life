@@ -2021,15 +2021,91 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	# ...never a child's (owner, 2026-10-18: B8-010, keep disabled)
 	if w.player.pos.distance_to(n.pos) <= PICKPOCKET_REACH and n.role != "child":
 		_talk_choice(choices, "Pick pocket — theft", func(): main.pickpocket(n))
-	if Life.partner_refusal(w, n) == "":
-		_talk_choice(choices, "Ask to be partners", func():
-			var why := Life.partner_player(w, n)
-			_talk_view(n, "I would like that." if why == "" else why))
+	_relation_choices(n, choices)
 	_talk_choice(choices, "What do you do?", func(): _talk_view(n, Dialogue.work(w, n)))
 	_talk_choice(choices, "How are things at home?", func(): _talk_view(n, Dialogue.home(w, n)))
 	_talk_choice(choices, "Any news?", func(): _talk_view(n, Dialogue.news(w, n)))
 	_talk_choice(choices, "Goodbye", hide_all)
 	_fit_talk(side, choices)
+
+
+## Gifts, friendship and courting with a villager (CRT-01/02): give a gift; Befriend once help and gifts
+## have earned it; Ask to court once they are drawn to you; Propose while courting (they may say it is too soon).
+func _relation_choices(n: NPC, choices: GridContainer) -> void:
+	var w: World = main.world
+	var r: Relations = w.relations
+	if n.role == "child":
+		return
+	if not _giftable().is_empty():
+		_talk_choice(choices, "Give a gift", func(): show_gifts(n))
+	if r.can_befriend(n):
+		_talk_choice(choices, "Befriend", func():
+			r.befriend(Life.PLAYER_ID, n.id)
+			message("You and %s are friends." % n.name)
+			_talk_view(n, "Friends, then. Come to me if you need anything."))
+	var me := Life.PLAYER_ID
+	if r.can_court(me, n.id) and Life.partner_refusal(w, n) == "":
+		var st := r.stage(me, n.id)
+		if st == "":
+			if float(r.peek(me, n.id).attraction) >= float(Relations.cfg().court_at) * 0.5:
+				_talk_choice(choices, "Ask to court", func():
+					var why := r.ask_court(me, n)
+					if why == "":
+						message("You are courting %s." % n.name)
+					_talk_view(n, "I'd like that. Come and see me." if why == "" else why))
+		elif st == "courting":
+			_talk_choice(choices, "Propose", func():
+				var why := r.propose(me, n)
+				if why == "":
+					message("%s said yes: you are partners." % n.name)
+				_talk_view(n, "Yes. Yes, I will." if why == "" else why))
+
+
+## What the player can give: food, flowers, ale, clothes, jewellery, medicine and useful things in the pack
+## (not what is worn or held when it is the last one).
+func _giftable() -> Array:
+	var w: World = main.world
+	var p := w.player
+	var out := []
+	for id in p.inv.ids():
+		if Relations.gift_kind(id) == "":
+			continue
+		var worn := 0
+		for slot in ["weapon", "armor", "tool", "head", "amulet", "ring"]:
+			if str(p.get(slot)) == id:
+				worn += 1
+		if p.inv.count(id) > worn:
+			out.append(id)
+	out.sort()
+	return out
+
+
+## The gift window: everything giftable in the pack, favourites first and marked with why (owner: no
+## guessing games), and what kind of gift each is.
+func show_gifts(n: NPC) -> void:
+	var w: World = main.world
+	var r: Relations = w.relations
+	_open("gifts", "A gift for %s" % n.name)
+	var favs := r.favourites(n)
+	var ids := _giftable()
+	ids.sort_custom(func(a, b): return (favs.has(a) and not favs.has(b)) or (favs.has(a) == favs.has(b) and a < b))
+	var t := r.peek(Life.PLAYER_ID, n.id)
+	var mood := Dialogue.regard_words(w, n)
+	_label("%s %s. Food, flowers, ale, clothes and jewellery are always welcome; a gift that suits them counts double." % [n.name, mood], 18, Color(1, 0.85, 0.5))
+	if int(t.gift_day) == w.day():
+		_label("You have already given %s something today." % n.name, 16)
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	panel_body.add_child(grid)
+	for id in ids.slice(0, 12):
+		var why := (" ★ " + r.favourite_reason(n, id)) if favs.has(id) else ""
+		var b := _button("%s (%d)%s" % [GameData.item_name(id), w.player.inv.count(id), why], func():
+			var said := r.give(Life.PLAYER_ID, n, id)
+			_talk_view(n, said if said != "" else Dialogue.opening(w, n)), true, grid)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))
 
 
 ## Hiring a helper for the day: for each of the family's sites, carry from the family chest only, or

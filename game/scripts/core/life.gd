@@ -11,7 +11,7 @@ extends RefCounted
 ##    (child covers adolescents: no full jobs; adult; elder) and is updated at dawn and on load; bandits
 ##    age but keep their role. The sage and the reeve serve for life (their role stays "adult");
 ##  - households are NOT families. Relationships are explicit links on NPC and PlayerState: mother,
-##    father, partner, children. Partners are made by `partnering` (or by the player, `partner_player`);
+##    father, partner, children. Partners are made by courting (Relations; the player's accepted proposal ends in `partner_player`);
 ##    births are only to partners; nothing is ever inferred from a shared house;
 ##  - old age: a daily chance from `mortality_from` rising to certain death at `mortality_certain_at`;
 ##  - inheritance and the player's heir follow the family graph (heir_of, player_heir_child).
@@ -309,7 +309,7 @@ static func init_player(w: World) -> void:
 static func dawn(w: World) -> void:
 	sync_roles(w)
 	_natural_deaths(w)
-	partnering(w)
+	w.relations.dawn()                 # friendship and courting; villagers court and marry (CRT-04)
 	births(w)
 	_player_dawn(w)
 
@@ -357,44 +357,9 @@ static func has_room(w: World, h: int) -> bool:
 
 
 # ---------------------------------------------------------------- partners -------------------
-## Unpartnered adults of opposite sex (18-50, `partner_chance_per_year` a year for each woman) record each
-## other as partners; one moves into the other's home if it has room (a house with a free bed; the tavern,
-## manor and hut households are not moved into). Without room they pair and live apart until a home is
-## free or they found one (Construction.couples_needing_home, EQ-07).
-static func partnering(w: World) -> void:
-	var c := cfg()
-	var chance := float(c.partner_chance_per_year) / year_days()
-	var lo := float(c.partner_min_age)
-	var hi := float(c.partner_max_age)
-	var women: Array = []
-	var men: Array = []
-	for n: NPC in w.npcs:
-		if not n.alive or n.role != "adult" or has_partner(w, n):
-			continue
-		var a := npc_age(w, n)
-		if a < lo or a > hi:
-			continue
-		(women if n.sex == "female" else men).append(n)
-	for f: NPC in women:
-		if has_partner(w, f) or w.rng.randf() >= chance:
-			continue
-		var best: NPC = null
-		var best_gap := 1e9
-		for m: NPC in men:
-			if has_partner(w, m) or kin(f.id, f.mother, f.father, m.id, m.mother, m.father):
-				continue
-			var gap := absf(npc_age(w, f) - npc_age(w, m))
-			if gap <= float(c.partner_max_gap) and gap < best_gap:
-				best_gap = gap
-				best = m
-		if best != null:
-			var together := _move_in(w, f, best)
-			_link_partners(f, best)
-			w.stat("partnerships")
-			if not together:
-				w.stat("partners_apart")
-			w.note("%s %s and %s %s become partners%s." % [f.name, f.family, best.name, best.family,
-					"" if together else ", though they have no room to live together yet"])
+## Partners are made by courting (Relations: gifts, time together, courting, a proposal; CRT-01/04). A new
+## couple moves under one roof when one home has room (_move_in), else lives apart until one has or they
+## found a household (Construction.couples_needing_home, EQ-07).
 
 
 ## Put the pair under one roof: nothing to do if they share a household; otherwise the one whose household
@@ -434,7 +399,7 @@ static func partner_refusal(w: World, n: NPC) -> String:
 		return "You already have a partner."
 	if age_years(p.born, w.minutes) < lo:
 		return "You are too young."
-	if n.role != "adult" or npc_age(w, n) < lo or n.sex == p.sex:
+	if n.role != "adult" or npc_age(w, n) < lo:
 		return "%s does not want that." % n.name
 	if has_partner(w, n):
 		return "%s is already spoken for." % n.name
@@ -443,8 +408,8 @@ static func partner_refusal(w: World, n: NPC) -> String:
 	return ""
 
 
-## The player asks an unpartnered adult to be their partner (an explicit link both ways; the partner
-## keeps their own home and household). "" if accepted, else the reason.
+## The player and an unpartnered adult become partners (an explicit link both ways; the partner keeps their
+## own home and household): the end of a proposal they accepted (Relations.propose). "" if made, else the reason.
 static func partner_player(w: World, n: NPC) -> String:
 	var why := partner_refusal(w, n)
 	if why != "":
@@ -468,11 +433,12 @@ static func births(w: World) -> void:
 		if not n.alive or n.sex != "female" or n.role != "adult" or not has_partner(w, n):
 			continue
 		var father = w.player if n.partner == PLAYER_ID else w.npc(n.partner)
-		_try_birth(w, n, n.household, father, chance)
+		if father != null and father.sex != n.sex:          # couples of one sex have no children (CRT-07)
+			_try_birth(w, n, n.household, father, chance)
 	var p := w.player
 	if p.alive and p.sex == "female" and p.partner >= 0:
 		var o := w.npc(p.partner)
-		if o != null and o.alive and o.partner == PLAYER_ID:
+		if o != null and o.alive and o.partner == PLAYER_ID and o.sex != p.sex:
 			_try_birth(w, p, o.household, o, chance)
 
 
