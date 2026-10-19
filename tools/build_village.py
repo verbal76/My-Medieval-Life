@@ -62,6 +62,7 @@ COZY_COLS = 54
 CH = 30                 # a sample map is 30 x 30 tiles
 W, H = 120, 90
 OUT = REPO / "game" / "data" / "village.json"
+SOUTH_X = 66            # where Mill Road leaves the map in the south (it jogs east below the south lane)
 
 # The civic buildings keep the places they had when the village was made of Shade's districts: a sample's
 # tile (x, y) lies at ORIGIN + (x, y), so the tavern, the manor, the smithy and their stations stay where
@@ -568,6 +569,7 @@ class Village:
                       {"id": "woods_e", "x": 66, "y": 1, "w": 24, "h": 17}]
         E["spawns"]["player"] = [44, 53]
         self.place_trees()
+        self.place_boulders()
         self.place_plants()
         self.draw_roads()
         self.containers()
@@ -583,7 +585,7 @@ class Village:
         r = set()
         for pts in (
             ((0, 57), (119, 57)),                        # Main Street: the west and east exits
-            ((62, 0), (62, 89)),                         # Mill Road: the north and south exits
+            ((62, 0), (62, 86), (SOUTH_X, 86), (SOUTH_X, 89)),   # Mill Road: the north and south exits
             ((31, 24), (31, 85)),                        # Woods Road, and the way south to the lanes
             ((2, 35), (52, 35)),                         # the north lane: hamlet, sage's hut, tavern's back door, Mine Road
             ((38, 35), (38, 37)),
@@ -869,6 +871,26 @@ class Village:
             stump, top, bottom = kinds[int(_hash(x, y, 8) * len(kinds)) % len(kinds)]
             self.ents["trees"].append({"x": x, "y": y, "trunk": stump, "top": top, "bottom": bottom})
         self.ents["trees"].sort(key=lambda t: (t["y"], t["x"]))
+
+    def place_boulders(self):
+        """Small grey boulders (the plain boulder tile in below0): solid cells the game makes minable stone
+        (B8-026), scattered on open grass round the hill, the woods and the meadows' edge; never on or beside a
+        tree, road, door, station, plant, seam or yard, and never two within four tiles."""
+        keep = set(self.keep)
+        for t in self.ents["trees"]:
+            keep |= self.rect_cells(t["x"] - 1, t["y"] - 1, 3, 3)
+        placed = []
+        cells = sorted(((x, y) for y in range(3, H - 3) for x in range(3, W - 3)), key=lambda c: _hash(c[0], c[1], 21))
+        for x, y in cells:
+            if len(placed) == 18:
+                break
+            if (x, y) in keep or any(abs(x - px) < 4 and abs(y - py) < 4 for px, py in placed):
+                continue
+            if vnoise(x, y, 9, 43) < 0.55:
+                continue
+            placed.append((x, y))
+            self.put("below", 0, x, y, tile_val(0, DEPLETED_ROCK))
+            self.keep.add((x, y))
 
     def place_plants(self):
         """Wild flowers and berry bushes in loose patches on open grass (generator v5's gatherable

@@ -83,7 +83,7 @@ class VillageTest(unittest.TestCase):
         self.assertEqual([c for c in roads if c[0] == 0], [(0, 57)])
         self.assertEqual([c for c in roads if c[0] == W - 1], [(W - 1, 57)])
         self.assertEqual([c for c in roads if c[1] == 0], [(62, 0)])
-        self.assertEqual([c for c in roads if c[1] == H - 1], [(62, H - 1)])
+        self.assertEqual([c for c in roads if c[1] == H - 1], [(build_village.SOUTH_X, H - 1)])
 
     def test_mine_deposits_and_rails(self):
         solid = solid_grid()
