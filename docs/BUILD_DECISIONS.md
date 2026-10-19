@@ -375,6 +375,48 @@ All in `game/data/balance.json` ("calendar", "life", and each animal's `juvenile
 - Not done: sprite art by season, marriage ceremonies, adolescent apprenticeships, a household for the player
   (a partner keeps their own home; the player's children are villagers of the partner's household).
 
+## Health, jobs and stations (PL1-04, PL1-09, PL1-13, PL2-010; agent proposals, provisional)
+
+Audit (PL1-04): damage comes from combat, starvation (`damage_player`) and spoiled food; healing was only the
+herbal tonic (3 flowers at the stove, 12 health, food 4) and "Rest until morning" at the family house (full
+health and stamina, saves). Nothing healed from the start, and the only tonic needed a stove, flowers and
+Cooking. Rest already restores fully, so no new rest healing was added.
+
+- Items (`items.json`, type `medicine`, heal only, no hunger): linen bandage 15 HP / 3c, herbal poultice 30 /
+  6c, healing tonic 50 / 12c, strong healing tonic 80 / 22c. `World.player_use_medicine` uses one only when
+  health is below the cap, never heals past the cap, and keeps the item otherwise. Health stays apart from
+  hunger (food still heals only through `player_eat`). The player starts with two bandages
+  (`player_start_items`, inherited by heirs).
+- Recipes at the stove: poultice (2 flowers), healing tonic (5 flowers, Cooking 2), strong healing tonic
+  (2 healing tonics + 1 ale, Cooking 3). Bandages are not craftable: no linen, flax or cloth exists yet
+  (recorded as a `start_kit_only` exception in `resources.json`).
+- Apothecary: the sage (Old Lorekeeper, at the sage's hut) is the village apothecary, an ordinary trader
+  through the existing trade window (title "Apothecary"). Starting stock `sage_start_stock`; the sage buys
+  wild flowers (cap 20, kept for brewing) and brews poultices (below 8 held) and healing tonics (below 6
+  held, 5 flowers) when a stove is free; the caravan sells the sage up to `caravan_apothecary_per_visit`
+  (4) pieces a visit towards `caravan_apothecary_stock`, at base value, paid from the sage's own coins above
+  the trader cash floor; the coins leave the village. The sage's float rose from 30 to 60 coins. No new
+  building: the stock sits with the sage, who stays at the hut. Not done: villagers do not forage flowers
+  (only the player), so the sage's own brewing depends on the player selling flowers.
+- Employer star (PL1-09): `Quests.employer(npc)`, drawn by `Main._sync_stars` (`markers/star.png`, a
+  generated 16 px gold star, see the import tool). Keyed by the giver's id in the saved quest list.
+- Stove (PL1-13): station cells unchanged; the two cells now stand on Shade's stone coal bed (tiles 3001,
+  3004) with the pot on the right fire and the left fire open (the pan lifted off). A chimney was not added:
+  the wall layer hides the row above. Prompt "Use Stove"; window "Stove - Cooking & Tonics".
+- Sawhorse (PL2-010): the plank stacks are replaced by a plank trestle bench (Shade's table tiles 2539, 2540)
+  with logs on it (1021, 1022); cells, use cell and collision unchanged. No tile of a true angled-trestle
+  sawhorse or saw exists in the purchased packs.
+
+Wiki notes (for the wiki agent):
+- Healing: "Hurt? Use a bandage, poultice or tonic from your pack (it is kept if you are unhurt). Resting at
+  home restores everything. The apothecary (the sage at the hut) sells them and buys wild flowers."
+- Apothecary: stock is limited; it refills from the caravan (every second day, a few pieces, paid from the
+  sage's coins) and from flowers you sell; strong tonics are made at the stove from two healing tonics and ale.
+- Jobs: a gold star over a villager means you took a job from them and are not yet paid; deliver the goods
+  and talk to them to clear it. Several jobs from one person keep it until all are done.
+- Stove: "Use Stove" at the tavern kitchen: pottage, ale, herbal tonic, poultice, healing tonics.
+- Sawhorse: the Sawmill's bench saws logs into planks.
+
 ## Known gaps
 
 - No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals

@@ -172,15 +172,15 @@ WORKSHOPS = {
     "carpentry": {"stations": [
         {"type": "workbench", "at": (1, 4), "use": (3, 4), "layers": WORK_LAYERS,
          "paste": (((1, 4), (79, 47)), ((2, 4), (80, 47)))},
-        {"type": "sawhorse", "at": (2, 6), "use": (3, 6), "layers": ("below0",),
-         "paste": (((1, 6), (76, 45)), ((2, 6), (77, 45)))},
+        {"type": "sawhorse", "at": (2, 6), "use": (3, 6), "layers": ("below1", "below3"),
+         "paste": (((1, 6), (65, 26)), ((2, 6), (66, 26)))},       # the sawmill's sawhorse (PL2-010), once built
         {"type": "", "layers": WORK_LAYERS, "paste": (((1, 7), (79, 45)), ((2, 7), (80, 45)))},   # grindstone
     ]},
     "bakehouse": {"stations": [
         {"type": "oven", "at": (5, 2), "use": (5, 3), "layers": WORK_LAYERS,
          "paste": (((5, 1), (54, 46)), ((6, 1), (55, 46)), ((5, 2), (54, 47)), ((6, 2), (55, 47)))},
         {"type": "stove", "at": (2, 5), "use": (3, 5), "layers": WORK_LAYERS,
-         "paste": (((1, 5), (51, 47)), ((2, 5), (52, 47)), ((1, 6), (53, 47)))},       # the pan and the pot
+         "paste": (((1, 5), (51, 47)), ((2, 5), (52, 47)), ((1, 6), (53, 47)))},       # the stone coal bed with the pot (PL1-13)
     ]},
 }
 # The sawmill is the small house fitted as the carpenter's corner but for the workbench, so the village
@@ -695,7 +695,14 @@ class Village:
         for x, y in HOUSE_CLEAR:
             for cat, i in (("below", 1), ("below", 3), ("below", 4), ("above", 0), ("above", 1)):
                 self.put(cat, i, ox + x, oy + y, -1)
-        for st in SAWMILL_STATIONS:
+        # PL2-010: Shade's sawhorse cells were two stacks of boards, which read as racks. The sawhorse is a
+        # plank trestle bench (his table tiles 2539 and 2540, on legs) with logs lying on
+        # it to be sawn (1021 and 1022, tiles of his log pile): timber on a trestle. Both cells stay
+        # solid, the use cell is unchanged.
+        for dx, base, log in ((1, 2539, 1021), (2, 2540, 1022)):
+            self.put("below", 1, ox + dx, oy + 6, tile_val(0, base))
+            self.put("below", 3, ox + dx, oy + 6, tile_val(0, log))
+        for st in SAWMILL_STATIONS[1:]:
             for (x, y), (sx, sy) in st["paste"]:
                 for name in st["layers"]:
                     key = (name[:-1], int(name[-1]))
@@ -707,6 +714,17 @@ class Village:
             self.put("below", 1, ox + dx, oy + dy, tile_val(0, t))
         return b
 
+    def restyle_stove(self):
+        """PL1-13: Shade drew the kitchen's stove as a frying pan and a pot standing on bare floor, which
+        read as pots, not a stove. Here it is a stone hearth: his stone-framed bed of glowing coals (paid
+        atlas tiles 3001 and 3004, the left and right ends of the bed) with his pot (139) hung over the
+        right-hand fire and the left fire left open for the pan, which is lifted off (361 and its
+        handle 360). The cells keep their collision and the use cell is unchanged."""
+        self.put("below", 1, 52, 47, tile_val(0, 3001))
+        self.put("below", 1, 53, 47, tile_val(0, 3004))
+        self.put("below", 3, 52, 47, -1)
+        self.put("above", 0, 51, 47, -1)
+
     def stations(self, sawmill):
         """Workstations, in a fixed order (their ids s0-s9 are quoted by tests): the tavern's, the well, the
         smithy's, the sawmill's sawhorse, the armory's counter and the mine's cart."""
@@ -715,6 +733,7 @@ class Village:
         self.station("tavern_counter", (42, 41), tav, at=(42, 40))
         self.station("oven", (53, 48), tav, at=(54, 47))
         self.station("stove", (52, 48), tav, at=(52, 47))
+        self.restyle_stove()
         self.station("well", (45, 55), None, at=(46, 55))
         self.station("forge", (77, 42), smithy, at=(77, 41))
         self.station("anvil", (78, 44), smithy, at=(77, 43))
