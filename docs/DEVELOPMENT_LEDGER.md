@@ -14,15 +14,15 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | ACTIVE DEVELOPMENT | 7 |
 | PARTIALLY IMPLEMENTED | 34 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 24 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 26 |
 | BLOCKED | 17 |
 | DEFERRED | 8 |
 | COMPLETE AND VERIFIED | 121 |
 | SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **277** |
-| Outstanding (not complete, superseded or canceled) | 139 |
+| **Total approved** | **279** |
+| Outstanding (not complete, superseded or canceled) | 141 |
 
 Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -154,7 +154,7 @@ Automated tests do not count as device verification.
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (24)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (26)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -179,6 +179,8 @@ Automated tests do not count as device verification.
 | CRT-07 | Courtship and marriage between any two humans, same sex included; humans only for now | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd; aging_test |  |  |
 | CRT-08 | Shared experiences start friendships and romances: working together and personal interactions build regard and attraction | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_villagers_court, test_shared_hours; aging_test |  |  |
 | CRT-09 | Weighting of closeness and conversation: proximity about 1 point, a conversation 0.25, later ones about 0.11, so talk spamming does little | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_shared_hours |  |  |
+| CRT-10 | Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_closeness, test_no_rushing |  |  |
+| CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_seek_company |  |  |
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
 | Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |

@@ -2763,7 +2763,10 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 	if not a.wild():
 		keeper = world.pen_keeper(world.fauna.pens[a.area])
 	var what := a.label().to_lower()
+	var beast := a.wild() and bool(a.spec().get("people", false))
 	var bag: Inventory = world.fauna.kill(a)
+	if beast:
+		world.relations.defended(a.pos)        # a wolf or a bear put down near people (CRT-10)
 	if bag.total() > 0:
 		world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": world.minutes})
 	if keeper != null:
@@ -2783,6 +2786,8 @@ func _hit(n: NPC, dmg: float) -> void:
 		n.target = -2
 	if n.hp <= 0.0:
 		world.kill(n, "slain by %s %s" % [world.player.name, world.player.family])
+		if n.role == "bandit":
+			world.relations.defended(n.pos)    # villagers who saw a bandit put down think better of you (CRT-10)
 
 
 ## A blow that landed (Build 8 report: no sign of damage): the target flashes red, the damage floats
@@ -2837,6 +2842,7 @@ func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
 ## `memory` is what the victim remembers (by default that the player attacked them).
 func _crime(victim: NPC, memory := "") -> void:
 	victim.remember(memory if memory != "" else "attacked by %s" % world.player.name)
+	world.relations.harmed(victim, float(Relations.cfg().victim_harm))
 	if victim.role == "adult":
 		victim.target = -2
 	for g: NPC in world.near(victim.pos, 15.0):

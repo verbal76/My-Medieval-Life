@@ -460,6 +460,7 @@ func _update_player(real_dt: float, gm: float) -> void:
 	if p.hunger <= 0.0:
 		damage_player(gm / 60.0 * 3.0, "hunger")
 	p.stamina = minf(p.stamina_cap(), p.stamina + real_dt * float(GameData.b("player_stamina_regen_per_second")))
+	relations.player_tick(gm)          # time spent near villagers builds ties (CRT-10)
 	p.fireball_cd = maxf(0.0, p.fireball_cd - real_dt)
 	p.attack_cd = maxf(0.0, p.attack_cd - real_dt)
 
@@ -1662,10 +1663,13 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 		if n.role != "bandit":
 			seen.append(n)
 			n.remember("saw %s %s %s" % [player.name, player.family, deed if deed != "" else "take " + what])
+			relations.harmed(n, float(Relations.cfg().witness_harm))          # a crime seen lowers the tie (CRT-10)
 			if n.job == "guard" and n.target == -1 and (guard == null or n.pos.distance_to(player.pos) < guard.pos.distance_to(player.pos)):
 				guard = n
 	if victim and not seen.has(victim) and deed == "":
 		victim.remember("found %s missing" % what)
+	if victim:
+		relations.harmed(victim, float(Relations.cfg().victim_harm))
 	var worth := goods_value(taken)
 	var count := 0
 	for id in taken:

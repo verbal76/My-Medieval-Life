@@ -9,12 +9,21 @@ extends RefCounted
 ## the receiver; nothing is made or lost. Every number is in balance.json "relations" (agent proposals,
 ## provisional).
 ##
-## Shared experiences start ties (owner, CRT-08: "working together and any personal interactions are what
-## should start the friendships and relationships"): every hour, people awake near one another gain regard
-## (and attraction, when they may court): most for working side by side at the same trade or place, then for
-## an evening's company, then simply being near (the unit, about 1 point an hour); a conversation with the
-## player shows they were together and adds a little, less each time that day (CRT-09). Villagers
-## only court someone they have come to know this way (interest_at). Gifts add to that.
+## How ties grow (owner, CRT-08..10: shared experiences start relationships; closeness over time weighs most;
+## nothing can be rushed by pressing buttons). Each channel adds regard, and attraction between people who
+## may court; every channel has its own limit a day and attraction from all of them together is capped a day
+## (attraction_daily_cap), so a relationship needs many days, not one long session:
+##   closeness   the player's minutes near a villager, measured as they play (the one whose name is up, the
+##               nearest, counts close.focus_factor); villagers' hours near each other (hour): working side
+##               by side most, then an evening's company, then simply being about the same place
+##   talk        a conversation adds a little, less each time that day (talk_first, talk_more, talk_decay)
+##   gifts       once a day; favourites count more (below)
+##   help        a request done; defending them (a bandit or a wild beast killed near them, once a day)
+##   harm        a crime they see or suffer lowers both
+## Days known (days_known: separate days with real contact) gate the stages: court_min_days to court,
+## marry_min_days (and propose_min_days of courting) to marry. Ties cool without contact. Villagers only
+## court someone they have come to know (interest_at), and a single villager with coins or goods to spare
+## seeks that person out and buys gifts (CRT-11, NPCBrain).
 ##
 ## Gift tastes (owner: "nothing so weird we need to play guessing games"): food, flowers, ale, clothes
 ## and jewellery always help; a villager's favourites are what their trade uses (FAVOURITES) and what they
@@ -49,7 +58,8 @@ static func key(a: int, b: int) -> String:
 
 static func _blank() -> Dictionary:
 	return {"regard": 0.0, "attraction": 0.0, "stage": "", "since": -1, "friends": false, "gift_day": -1, "last": -1, "recent": [],
-		"shared_day": -1, "shared_today": 0.0, "talks_today": 0, "hour_key": -1}
+		"shared_day": -1, "shared_today": 0.0, "talks_today": 0, "hour_key": -1, "days_known": 0, "contact_day": -1,
+		"att_day": -1, "att_today": 0.0, "reg_today": 0.0, "near_day": -1, "near_min": 0.0, "near_reg": 0.0, "defend_day": -1}
 
 
 ## The tie between two people (made on first use).
@@ -185,9 +195,106 @@ func helped(helper: int, n: NPC, amount := -1.0) -> void:
 	_raise(t, float(cfg().help_regard) if amount < 0.0 else amount, 0.0)
 
 
-func _raise(t: Dictionary, regard: float, attraction: float) -> void:
+## Add to a tie, within the day's limits (regard_daily_cap, attraction_daily_cap; losses are never capped).
+## Any gain is contact: the first of a day counts a day known, unless `touch` is false (a few minutes
+## nearby are not yet a day's acquaintance: _presence touches once close.known_minutes have passed).
+func _raise(t: Dictionary, regard: float, attraction: float, touch := true) -> void:
+	var c := cfg()
+	var d: int = w.day()
+	if int(t.att_day) != d:
+		t.att_day = d
+		t.att_today = 0.0
+		t.reg_today = 0.0
+	if regard > 0.0:
+		regard = minf(regard, maxf(0.0, float(c.regard_daily_cap) - float(t.reg_today)))
+		t.reg_today = float(t.reg_today) + regard
+	if attraction > 0.0:
+		attraction = minf(attraction, maxf(0.0, float(c.attraction_daily_cap) - float(t.att_today)))
+		t.att_today = float(t.att_today) + attraction
 	t.regard = clampf(float(t.regard) + regard, 0.0, 100.0)
 	t.attraction = clampf(float(t.attraction) + attraction, 0.0, 100.0)
+	if touch and (regard > 0.0 or attraction > 0.0):
+		_touch(t)
+
+
+## Real contact today: the first counts one more day known.
+func _touch(t: Dictionary) -> void:
+	var d: int = w.day()
+	t.last = d
+	if int(t.contact_day) != d:
+		t.contact_day = d
+		t.days_known = int(t.days_known) + 1
+
+
+## Harm the player did a villager or that they saw (CRT-10): regard and attraction fall.
+func harmed(n: NPC, amount: float) -> void:
+	if n == null or not n.alive or n.role == "bandit":
+		return
+	var t := tie(Life.PLAYER_ID, n.id)
+	_raise(t, -amount, -amount * 0.5, false)
+
+
+## The player killed a bandit or a dangerous beast near villagers: those within witness_radius who saw it
+## think better of them (once a day each, defend_regard).
+func defended(at: Vector2) -> void:
+	for n: NPC in w.near(at, float(GameData.b("witness_radius"))):
+		if n.role == "bandit" or w.asleep(n):
+			continue
+		var t := tie(Life.PLAYER_ID, n.id)
+		if int(t.defend_day) == w.day():
+			continue
+		t.defend_day = w.day()
+		_raise(t, float(cfg().defend_regard), float(cfg().defend_regard) * 0.3 if can_court(Life.PLAYER_ID, n.id) else 0.0)
+
+
+# ---------------------------------------------------------------- the player's closeness ------
+var _near_acc := 0.0
+
+
+## As the game runs (World._update_player): every close.sample_minutes the villagers within close.tiles of the
+## player (and in the same place) share that time with them; the nearest, whose name is up to talk to,
+## counts close.focus_factor.
+func player_tick(gm: float) -> void:
+	var cl: Dictionary = cfg().close
+	_near_acc += gm
+	if _near_acc < float(cl.sample_minutes):
+		return
+	var mins := _near_acc
+	_near_acc = 0.0
+	var p = w.player
+	if not p.alive:
+		return
+	var best: NPC = null
+	var people: Array = []
+	for n: NPC in w.near(p.pos, float(cl.tiles)):
+		if n.role == "bandit" or w.asleep(n):
+			continue
+		people.append(n)
+		if best == null or n.pos.distance_to(p.pos) < best.pos.distance_to(p.pos):
+			best = n
+	for n: NPC in people:
+		_presence(n, mins, float(cl.focus_factor) if n == best else 1.0)
+
+
+## `mins` minutes near the player (counting `weight` times: the nearest): close.regard_per_hour and attraction_per_hour, at most
+## close.daily_regard a day from closeness; after close.known_minutes in a day the day counts as known.
+func _presence(n: NPC, mins: float, weight := 1.0) -> void:
+	var cl: Dictionary = cfg().close
+	var t := tie(Life.PLAYER_ID, n.id)
+	var d: int = w.day()
+	if int(t.near_day) != d:
+		t.near_day = d
+		t.near_min = 0.0
+		t.near_reg = 0.0
+	var before := float(t.near_min)
+	t.near_min = before + mins
+	var full := float(cl.regard_per_hour) * mins * weight / 60.0
+	var reg := minf(full, maxf(0.0, float(cl.daily_regard) - float(t.near_reg)))
+	t.near_reg = float(t.near_reg) + reg
+	var att := float(cl.attraction_per_hour) * mins * weight / 60.0 * (reg / full if full > 0.0 else 0.0) if can_court(Life.PLAYER_ID, n.id) else 0.0
+	_raise(t, reg, att, false)
+	if before < float(cl.known_minutes) and float(t.near_min) >= float(cl.known_minutes):
+		_touch(t)
 
 
 # ---------------------------------------------------------------- befriending ----------------
@@ -237,13 +344,14 @@ func stage(a: int, b: int) -> String:
 	return str(peek(a, b).stage)
 
 
-## The player (or a villager) asks to court: accepted once attraction reaches court_at.
+## The player (or a villager) asks to court: accepted once attraction reaches court_at and they have known each
+## other on court_min_days separate days.
 func ask_court(a: int, n: NPC) -> String:
 	var t := tie(a, n.id)
 	if not can_court(a, n.id):
 		return "That's not for us."
-	if float(t.attraction) < float(cfg().court_at):
-		_raise(t, 0.0, -float(cfg().too_soon_penalty) * 0.5)
+	if float(t.attraction) < float(cfg().court_at) or int(t.days_known) < int(cfg().court_min_days):
+		_raise(t, 0.0, -float(cfg().too_soon_penalty) * 0.5, false)
 		return "Court me? We hardly know each other yet."
 	t.stage = "courting"
 	t.since = w.day()
@@ -252,15 +360,15 @@ func ask_court(a: int, n: NPC) -> String:
 	return ""
 
 
-## A proposal (CRT-01): accepted when courting long enough (propose_min_days) with attraction at propose_at;
-## asked too early it is declined and cools things a little.
+## A proposal (CRT-01): accepted when courting long enough (propose_min_days), known on marry_min_days separate
+## days, with attraction at propose_at; asked too early it is declined and cools things a little.
 func propose(a: int, n: NPC) -> String:
 	var t := tie(a, n.id)
 	if str(t.stage) != "courting" or not can_court(a, n.id):
 		return "We aren't courting."
 	var days: int = w.day() - int(t.since)
-	if float(t.attraction) < float(cfg().propose_at) or days < int(cfg().propose_min_days):
-		_raise(t, 0.0, -float(cfg().too_soon_penalty))
+	if float(t.attraction) < float(cfg().propose_at) or days < int(cfg().propose_min_days) or int(t.days_known) < int(cfg().marry_min_days):
+		_raise(t, 0.0, -float(cfg().too_soon_penalty), false)
 		w.stat("proposals_declined")
 		return "It's too soon. Ask me again when we know each other better."
 	t.stage = ""
@@ -281,7 +389,7 @@ func propose(a: int, n: NPC) -> String:
 # ---------------------------------------------------------------- shared experiences ---------
 ## Every hour (World._on_hour): people awake within shared.near_tiles of each other share the hour: at work
 ## (both working, the same trade or workplace) work_*, in the evening social_*, otherwise met_*; at most
-## shared.daily_cap regard a pair a day. The player shares hours with those near them the same way. Villagers
+## shared.daily_cap regard a pair a day. (The player's closeness is measured continuously: player_tick.) Villagers
 ## who come to think well enough of each other (befriend_at) become friends on their own.
 func hour(h: int) -> void:
 	var sh: Dictionary = cfg().shared
@@ -311,16 +419,6 @@ func hour(h: int) -> void:
 					elif evening:
 						kind = "social"
 					share(n.id, o.id, kind)
-	if w.player.alive:
-		for n: NPC in people:
-			if n.pos.distance_to(w.player.pos) <= r:
-				share(Life.PLAYER_ID, n.id, "work" if working and _player_working_with(n) else ("social" if evening else "met"))
-
-
-## The player works beside a villager: both at a building site, or the player on a manor job or hired work
-## while the villager works.
-func _player_working_with(n: NPC) -> bool:
-	return n.job != "" and (not w.player.quests.is_empty() or not w.manor_work.job_of("player").is_empty())
 
 
 ## One shared hour between two people (kind work, social or met), counted once per pair an hour however it
@@ -355,15 +453,11 @@ func _befriend_if_close(a: int, b: int, t: Dictionary) -> void:
 		befriend(a, b)                                  # villagers befriend each other on their own
 
 
-## The player talked with a villager (CRT-09, the owner's weights): the talk shows they were together, so
-## the hour counts as shared (about 1 point, once an hour); the conversation itself adds talk_first (0.25)
-## the first time that day and talk_more (0.11) the next, each later one talk_decay as much again, so pressing
-## A over and over adds almost nothing.
+## The player talked with a villager (CRT-09/10): closeness itself is measured as they stand there
+## (player_tick); the conversation adds talk_first the first time that day, talk_more the next and talk_decay
+## as much again each time after, so pressing the button over and over adds almost nothing.
 func talked(n: NPC) -> void:
 	var sh: Dictionary = cfg().shared
-	var h := fmod(w.minutes / 60.0, 24.0)
-	var working := h >= NPCBrain.WORK_START and h < NPCBrain.WORK_END
-	share(Life.PLAYER_ID, n.id, "work" if working and _player_working_with(n) else ("social" if h >= NPCBrain.WORK_END and h < NPCBrain.SLEEP else "met"))
 	var t := tie(Life.PLAYER_ID, n.id)
 	if int(t.get("shared_day", -1)) != w.day():
 		t.shared_day = w.day()
@@ -372,7 +466,6 @@ func talked(n: NPC) -> void:
 	var k := int(t.get("talks_today", 0))
 	var reg := float(sh.talk_first) if k == 0 else float(sh.talk_more) * pow(float(sh.talk_decay), k - 1)
 	t.talks_today = k + 1
-	t.last = w.day()
 	_raise(t, reg, reg * float(sh.talk_attraction_share) if can_court(Life.PLAYER_ID, n.id) else 0.0)
 
 
@@ -430,10 +523,7 @@ func _villagers_court() -> void:
 		var t := tie(n.id, target.id)
 		var gift := _gift_from(n, target)
 		if gift != "":
-			give(n.id, target, gift)
-		else:
-			t.last = w.day()
-			_raise(t, float(c.npc_time_regard), float(c.npc_time_attraction))
+			give(n.id, target, gift)                 # time together is counted as it happens (hour)
 		if str(t.stage) == "" and float(t.attraction) >= float(c.court_at):
 			ask_court(n.id, target)
 		elif str(t.stage) == "courting" and float(t.attraction) >= float(c.propose_at) and w.day() - int(t.since) >= int(c.propose_min_days):
@@ -482,8 +572,10 @@ func load_dict(d: Dictionary) -> void:
 		t.friends = bool(t.friends)
 		t.shared_day = int(t.shared_day)
 		t.shared_today = float(t.shared_today)
-		t.talks_today = int(t.talks_today)
-		t.hour_key = int(t.hour_key)
+		for f in ["talks_today", "hour_key", "days_known", "contact_day", "att_day", "near_day", "defend_day"]:
+			t[f] = int(t[f])
+		for f in ["att_today", "reg_today", "near_min", "near_reg"]:
+			t[f] = float(t[f])
 		ties[str(k)] = t
 	var ins: Dictionary = d.get("interests", {})
 	for k in ins:

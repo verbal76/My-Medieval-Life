@@ -5062,6 +5062,93 @@
    ]
   },
   {
+   "id": "CRT-10",
+   "title": "Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "Remember my points are just arbitrary numbers. I'm just giving you a general framework flesh that out. There's going to be many more factors ... If you're close enough to talk to him then you're close ... The character that your nearest name and how often you're around them if that keeps popping up and go from there. But if you have any other ideas to track, use those as well and figure out some kind of waiting system. I don't want this to be just keep spamming buttons and instantly get married in 10 minutes",
+   "description": "Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage",
+   "source": "owner message 2026-10-19 (chat)",
+   "approval": "owner instruction",
+   "acceptance": [
+    "Time spent near a villager is measured continuously (the nearest-name prompt counts most), capped per day",
+    "Several further factors weigh in (talks, gifts, help, shared danger, witnessed harm)",
+    "Courting and marriage need many distinct days of contact; a single long session cannot reach marriage",
+    "Spamming any button cannot speed a relationship"
+   ],
+   "implementation": "relations.gd::player_tick, _presence, _raise, _touch, defended, harmed; world.gd::_update_player, witness; main.gd::_hit, _crime",
+   "tests": "game/tests/relations_test.gd::test_closeness, test_no_rushing",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-08",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-19 (chat)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "continuous closeness (focus on the nearest), talk, gifts, help, defending, harm; daily limits; days known gate courting and marriage; ideal suitor test marries on day 13"
+    }
+   ]
+  },
+  {
+   "id": "CRT-11",
+   "title": "Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts",
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "owner_wording": "And if the single character has extra money and resources it should make them want to spend more time around other characters actively to try to encore a friendship or proposal",
+   "description": "Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts",
+   "source": "owner message 2026-10-19 (chat)",
+   "approval": "owner instruction",
+   "acceptance": [
+    "A single adult with coins and goods to spare spends leisure time seeking out the person they are interested in",
+    "They buy gifts with spare coins",
+    "Those without spare means court more slowly"
+   ],
+   "implementation": "npc_brain.gd::_plan_seek_company",
+   "tests": "game/tests/relations_test.gd::test_seek_company",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CRT-04",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-19",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-19 (chat)"
+    },
+    {
+     "date": "2026-10-19",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "single villagers with coins or a gift seek out their interest or closest friend in the evening, buying ale or bread first"
+    }
+   ]
+  },
+  {
    "id": "DGA-D1",
    "title": "Meaning of \"isometric\"",
    "kind": "proposal",

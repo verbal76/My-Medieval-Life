@@ -609,6 +609,9 @@ func _plan_evening(n: NPC, h: float) -> void:
 	var hh: Dictionary = w.households[n.household]
 	var dependants := _dependants(hh)
 	var stocked := _stocked(hh)
+	# a single villager with coins or a gift to spare seeks out the one they court, or a friend (CRT-11)
+	if h >= WORK_END and stocked >= dependants + 1 and _plan_seek_company(n):
+		return
 	# an evening at the tavern only when the household is provided for and there is coin to spare
 	if h >= WORK_END and n.coins >= int(GameData.b("tavern_spare_coins")) and stocked >= dependants + 1 and w.rng.randf() < 0.35:
 		var counter := w.station_use(w.stations_of("tavern_counter")[0])
@@ -617,6 +620,52 @@ func _plan_evening(n: NPC, h: float) -> void:
 		return
 	n.doing = "resting"
 	n.plan = [go(wander_cell(w.building_door(n.home), 4), 0.8), work(w.rng.randf_range(20, 50), "", {}, "idle")]
+
+
+## CRT-11 (owner: "if the single character has extra money and resources it should make them want to spend
+## more time around other characters"): an unpartnered adult with relations.seek.coins or a gift in hand, on
+## seek.chance of evenings, goes to spend time beside the one they are courting (or, with no interest yet, the
+## friend they think most of); with seek.gift_coins to spare and nothing to give, they first buy a gift (ale
+## from the tavern keeper, or a loaf from a food seller). Being near is what builds the tie (Relations.hour);
+## the gift is given at dawn. Villagers without the means court more slowly.
+func _plan_seek_company(n: NPC) -> bool:
+	var sk: Dictionary = Relations.cfg().seek
+	if n.role != "adult" or n.partner != -1:
+		return false
+	var has_gift := false
+	for id in ["flower", "ale", "bread", "apple", "red_berries", "blueberries"]:
+		has_gift = has_gift or n.inv.has(id)
+	if n.coins < int(sk.coins) and not has_gift:
+		return false
+	if w.rng.randf() >= float(sk.chance):
+		return false
+	var r: Relations = w.relations
+	var who: NPC = w.npc(int(r.interests.get(n.id, -1))) if r.interests.has(n.id) else null
+	if who == null:
+		var best := -1.0
+		for k in r.ties:
+			var ids: PackedStringArray = str(k).split(":")
+			if int(ids[0]) != n.id and int(ids[1]) != n.id:
+				continue
+			var o := w.npc(int(ids[1]) if int(ids[0]) == n.id else int(ids[0]))
+			var t: Dictionary = r.ties[k]
+			if o != null and o.alive and bool(t.friends) and float(t.regard) > best:
+				best = float(t.regard)
+				who = o
+	if who == null or not who.alive or w.asleep(who):
+		return false
+	n.plan = []
+	if not has_gift and n.coins >= int(sk.gift_coins):
+		for v: NPC in w.npcs:
+			if v.alive and v != n and not w.asleep(v) and ((v.job == "tavernkeeper" and v.inv.has("ale")) or (buy_role(v) == "merchant_food" and v.inv.has("bread"))):
+				n.plan.append(go(_workplace_cell(v)))
+				n.plan.append(doit("buy_from", {"vendor": v.id, "item": "ale" if v.job == "tavernkeeper" else "bread", "qty": 1}))
+				break
+	n.doing = "spending time with %s" % who.name
+	n.plan.append(go(wander_cell(who.cell(), 1), 0.8))
+	n.plan.append(work(w.rng.randf_range(40, 90), "", {}, "idle"))
+	w.stat("evenings_seeking_company")
+	return true
 
 
 func _plan_eat(n: NPC) -> bool:

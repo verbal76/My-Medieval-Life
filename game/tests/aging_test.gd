@@ -395,6 +395,7 @@ func test_couples_found_households() -> void:
 	t.attraction = 90.0
 	t.stage = "courting"
 	t.since = w.day() - 10
+	t.days_known = int(Relations.cfg().marry_min_days)
 	check(w.relations.propose(f.id, m) == "", "a proposal after courting long enough is accepted")
 	for n: NPC in w.npcs:
 		if n.partner == -5:

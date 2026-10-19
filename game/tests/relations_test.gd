@@ -30,6 +30,9 @@ func _init() -> void:
 	test_friends_benefits()
 	test_villagers_court()
 	test_shared_hours()
+	test_closeness()
+	test_no_rushing()
+	test_seek_company()
 	test_same_sex()
 	test_save()
 	print("%d checks, %d failures" % [checks, failures])
@@ -95,11 +98,14 @@ func test_befriending() -> void:
 	var r := w.relations
 	var n := single(w)
 	check(not r.can_befriend(n), "a stranger cannot be befriended at once")
+	w.player.inv.add("bread", 3)
 	r.helped(ME, n)
-	r.helped(ME, n)
-	w.player.inv.add("bread", 2)
 	r.give(ME, n, "bread")
-	check(r.can_befriend(n), "after help and a gift the Befriend choice is there (regard %.0f)" % float(r.peek(ME, n.id).regard))
+	check(not r.can_befriend(n), "a day's help and a gift are not yet a friendship (regard %.0f, the day's limit)" % float(r.peek(ME, n.id).regard))
+	next_day(w)
+	r.helped(ME, n)
+	r.give(ME, n, "bread")
+	check(r.can_befriend(n), "after help and gifts on two days the Befriend choice is there (regard %.0f)" % float(r.peek(ME, n.id).regard))
 	r.befriend(ME, n.id)
 	check(r.player_friend(n) and not r.can_befriend(n), "befriended: no proposal, and only once")
 	check(Dialogue.bond_words(w, n) == "your friend", "the talk window says so")
@@ -111,16 +117,25 @@ func test_courting() -> void:
 	var r := w.relations
 	var n := single(w)
 	check(r.ask_court(ME, n) != "" and r.stage(ME, n.id) == "", "asking to court a stranger is declined")
+	var c := Relations.cfg()
 	var t := r.tie(ME, n.id)
-	t.attraction = float(Relations.cfg().court_at)
-	check(r.ask_court(ME, n) == "" and r.stage(ME, n.id) == "courting", "drawn enough, they agree to court")
-	t.attraction = float(Relations.cfg().propose_at) + 5.0
+	t.attraction = float(c.court_at) + 10.0
+	t.days_known = int(c.court_min_days) - 1
+	check(r.ask_court(ME, n) != "", "drawn to you but known only %d days: not yet" % (int(c.court_min_days) - 1))
+	t.attraction = float(c.court_at) + 10.0
+	t.days_known = int(c.court_min_days)
+	check(r.ask_court(ME, n) == "" and r.stage(ME, n.id) == "courting", "drawn enough and known on %d separate days, they agree to court" % int(c.court_min_days))
+	t.attraction = float(c.propose_at) + 5.0
 	var before := float(t.attraction)
 	check(r.propose(ME, n) != "" and r.stage(ME, n.id) == "courting" and float(t.attraction) < before, "a proposal on the first day is too soon: declined, and things cool")
-	t.attraction = float(Relations.cfg().propose_at) + 5.0
-	for i in int(Relations.cfg().propose_min_days):
+	t.attraction = float(c.propose_at) + 5.0
+	for i in int(c.propose_min_days):
 		next_day(w)
-	check(r.propose(ME, n) == "" and w.player.partner == n.id and n.partner == ME and r.stage(ME, n.id) == "partners", "after courting long enough, yes: partners")
+	t.days_known = int(c.marry_min_days) - 1
+	check(r.propose(ME, n) != "", "courted long enough but known on too few days: still too soon")
+	t.attraction = float(c.propose_at) + 5.0
+	t.days_known = int(c.marry_min_days)
+	check(r.propose(ME, n) == "" and w.player.partner == n.id and n.partner == ME and r.stage(ME, n.id) == "partners", "after courting long enough and knowing each other many days, yes: partners")
 	var other := single(w, "", n.id)
 	check(other == null or not r.can_court(ME, other.id), "a partnered player courts nobody else")
 	# feelings fade without contact
@@ -247,31 +262,125 @@ func test_shared_hours() -> void:
 			far = o
 			break
 	check(float(r.peek(x.id, far.id).regard) == 0.0, "people far apart share nothing")
-	# the player (CRT-09): a conversation shows they were together (the hour, about 1 point, once an hour),
-	# then adds 0.25, 0.11, and less each time after, so pressing A over and over adds almost nothing
+	# the player's talk (CRT-09/10): 0.25 the first time a day, 0.11 the next, less each time after
 	var sh: Dictionary = Relations.cfg().shared
 	var n := single(w, "", x.id)
-	w.minutes = float(w.day()) * 1440.0 + 5.0 * 60.0         # before work: an hour nearby
-	n.pos = w.player.pos + Vector2(20, 20)
 	r.talked(n)
 	var g1 := float(r.peek(ME, n.id).regard)
-	check(absf(g1 - (float(sh.met_regard) + float(sh.talk_first))) < 0.001, "the first talk: the hour together (%.2f) and the talk (%.2f)" % [float(sh.met_regard), float(sh.talk_first)])
+	check(absf(g1 - float(sh.talk_first)) < 0.001, "the first talk of the day adds %.2f" % float(sh.talk_first))
 	r.talked(n)
 	var g2 := float(r.peek(ME, n.id).regard)
-	check(absf(g2 - g1 - float(sh.talk_more)) < 0.001, "a second talk the same hour adds only %.2f" % float(sh.talk_more))
+	check(absf(g2 - g1 - float(sh.talk_more)) < 0.001, "a second talk adds only %.2f" % float(sh.talk_more))
 	for i in 20:
 		r.talked(n)
-	var g3 := float(r.peek(ME, n.id).regard)
-	check(g3 - g2 < float(sh.talk_more) * 1.01, "twenty more presses of A add less than one more talk (%.3f)" % (g3 - g2))
-	w.minutes += 60.0
-	r.talked(n)
-	check(float(r.peek(ME, n.id).regard) - g3 >= float(sh.met_regard) * 0.99, "the next hour together counts again")
-	w.minutes = float(w.day()) * 1440.0 + 9.0 * 60.0         # mid-morning: talk, then the hourly pass with them beside you
-	r.talked(n)
-	n.pos = w.player.pos + Vector2(1, 0)
-	var g4 := float(r.peek(ME, n.id).regard)
-	r.hour(9)
-	check(not w.asleep(n) and float(r.peek(ME, n.id).regard) == g4, "an hour is counted once, by the talk or the hourly pass, not both")
+	check(float(r.peek(ME, n.id).regard) - g2 < float(sh.talk_more) * 1.01, "twenty more presses of the talk button add less than one more talk")
+
+
+## The player's closeness (CRT-10): minutes near a villager, the nearest counting most, within a day's limit;
+## a day counts as known after close.known_minutes near.
+func test_closeness() -> void:
+	var w := new_world()
+	var r := w.relations
+	var cl: Dictionary = Relations.cfg().close
+	var a := single(w)
+	var b := single(w, "", a.id)
+	w.minutes = float(w.day()) * 1440.0 + 10.0 * 60.0
+	a.pos = w.player.pos + Vector2(0.8, 0)
+	b.pos = w.player.pos + Vector2(2.0, 0)
+	check(not w.asleep(a) and not w.asleep(b), "two villagers awake beside the player")
+	for i in 5:                                   # ten minutes
+		r.player_tick(2.0)
+	var ra := float(r.peek(ME, a.id).regard)
+	var rb := float(r.peek(ME, b.id).regard)
+	check(ra > 0.0 and rb > 0.0 and absf(ra - rb * float(cl.focus_factor)) < 0.001, "time near counts, the nearest (whose name is up) %.0fx (%.3f, %.3f)" % [float(cl.focus_factor), ra, rb])
+	check(int(r.peek(ME, a.id).days_known) == 0, "a few minutes are not yet a day's acquaintance")
+	for i in 10:
+		r.player_tick(2.0)
+	check(int(r.peek(ME, a.id).days_known) == 1, "after %d minutes near, the day counts as known" % int(cl.known_minutes))
+	for i in 600:                                 # twenty more hours side by side
+		r.player_tick(2.0)
+	check(float(r.peek(ME, a.id).regard) <= float(cl.daily_regard) + 0.01, "a whole day side by side gives at most close.daily_regard (%.1f)" % float(r.peek(ME, a.id).regard))
+	var far: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.pos.distance_to(w.player.pos) > 10.0:
+			far = o
+			break
+	check(float(r.peek(ME, far.id).regard) == 0.0, "nobody far away gains anything")
+
+
+## No rushing (owner: "I don't want this to be just keep spamming buttons and instantly get married in 10
+## minutes"): a single day of everything at once cannot reach courting, and an ideal suitor who spends hours
+## near someone, talks, brings their favourite gift and helps every day marries only after marry_min_days.
+func test_no_rushing() -> void:
+	var w := new_world()
+	var r := w.relations
+	var c := Relations.cfg()
+	var n := single(w, "smith")
+	if n == null:
+		n = single(w)
+		n.job = "smith"
+	w.player.inv.add("coal", 40)
+	w.player.inv.add("flower", 40)
+	var married := -1
+	var court_day := -1
+	for day in 30:
+		w.minutes = float(day) * 1440.0 + 9.0 * 60.0
+		n.pos = w.player.pos + Vector2(0.8, 0)
+		for i in 180:                             # six hours beside them
+			r.player_tick(2.0)
+		for i in 50:
+			r.talked(n)
+		r.give(ME, n, "coal")
+		r.give(ME, n, "flower")
+		r.helped(ME, n)
+		if day == 0:
+			check(r.ask_court(ME, n) != "", "a whole first day of everything at once: they will not court yet")
+			check(r.propose(ME, n) != "", "and certainly not marry")
+		# they ask when the mood says so (the gift window: "sweet on you", "plainly in love"); a refusal
+		# for knowing each other too few days cools things, as it would for a player
+		var att := float(r.peek(ME, n.id).attraction)
+		if r.stage(ME, n.id) == "" and att >= float(c.court_at) and r.ask_court(ME, n) == "":
+			court_day = day
+		elif r.stage(ME, n.id) == "courting" and att >= float(c.propose_at) and r.propose(ME, n) == "":
+			married = day
+			break
+		w.relations.dawn()
+	check(court_day >= int(c.court_min_days) - 1, "courting begins no sooner than day %d (day %d)" % [int(c.court_min_days), court_day + 1])
+	check(married >= int(c.marry_min_days) - 1 and married < 30, "the ideal suitor marries on day %d, not before day %d of knowing them" % [married + 1, int(c.marry_min_days)])
+
+
+## CRT-11: a single villager with coins (or a gift) to spare seeks out the one they court in the evening,
+## buying a gift first when they can; one without the means does not.
+func test_seek_company() -> void:
+	var w := new_world()
+	var r := w.relations
+	var a := single(w)
+	var b: NPC = null
+	for o: NPC in w.npcs:
+		if o != a and o.alive and o.role == "adult" and o.partner < 0 and r.can_court(a.id, o.id):
+			b = o
+			break
+	r.interests[a.id] = b.id
+	w.minutes = float(w.day()) * 1440.0 + 19.0 * 60.0
+	GameData.b("relations").seek.chance = 1.0
+	a.coins = 0
+	for id in a.inv.ids():
+		a.inv.items.erase(id)
+	check(not w.brain._plan_seek_company(a), "with nothing to spare they do not go courting tonight")
+	a.coins = 100
+	var ok: bool = w.brain._plan_seek_company(a)
+	check(ok and a.doing == "spending time with %s" % b.name, "with coins to spare they go to spend the evening with %s" % b.name)
+	var bought := a.plan.any(func(st) -> bool: return str(st.k) == "do" and str(st.act) == "buy_from")
+	var sellers := w.npcs.any(func(v: NPC) -> bool: return v.alive and not w.asleep(v) and ((v.job == "tavernkeeper" and v.inv.has("ale")) or (w.brain.buy_role(v) == "merchant_food" and v.inv.has("bread"))))
+	check(bought == sellers, "buying a gift on the way when someone sells ale or bread (%s)" % ("buys one" if bought else "nobody sells"))
+	var walk: Dictionary = a.plan[a.plan.size() - 2]
+	var stay: Dictionary = a.plan[a.plan.size() - 1]
+	check(str(walk.k) == "go" and Vector2(walk.to).distance_to(Vector2(b.cell())) <= 2.0 and str(stay.k) == "work" and float(stay.min) >= 40.0, "then walking to %s to stay a while" % b.name)
+	# a gift already in hand is enough, coins or not
+	a.coins = 0
+	a.inv.add("flower", 1)
+	check(w.brain._plan_seek_company(a), "a flower in hand is reason enough to go")
+	GameData.b("relations").seek.chance = 0.6
 
 
 # ---------------------------------------------------------------- same sex -------------------
@@ -288,9 +397,11 @@ func test_same_sex() -> void:
 		return
 	var t := r.tie(ME, n.id)
 	t.attraction = 90.0
+	t.days_known = int(Relations.cfg().marry_min_days)
 	r.ask_court(ME, n)
 	for i in int(Relations.cfg().propose_min_days):
 		next_day(w)
+	t.attraction = 90.0
 	check(r.propose(ME, n) == "" and w.player.partner == n.id, "and marry them")
 	# two villagers of one sex as partners have no children
 	var w2 := new_world()

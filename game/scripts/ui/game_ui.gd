@@ -2093,7 +2093,9 @@ func show_gifts(n: NPC) -> void:
 	ids.sort_custom(func(a, b): return (favs.has(a) and not favs.has(b)) or (favs.has(a) == favs.has(b) and a < b))
 	var t := r.peek(Life.PLAYER_ID, n.id)
 	var mood := Dialogue.regard_words(w, n)
-	_label("%s %s. Food, flowers, ale, clothes and jewellery are always welcome; a gift that suits them counts double." % [n.name, mood], 18, Color(1, 0.85, 0.5))
+	var known := int(t.days_known)
+	_label("%s %s%s. Food, flowers, ale, clothes and jewellery are always welcome; a gift that suits them counts double." % [n.name, mood,
+			"" if known == 0 else (" (you have spent time together on %d day%s)" % [known, "" if known == 1 else "s"])], 18, Color(1, 0.85, 0.5))
 	if int(t.gift_day) == w.day():
 		_label("You have already given %s something today." % n.name, 16)
 	var grid := GridContainer.new()
