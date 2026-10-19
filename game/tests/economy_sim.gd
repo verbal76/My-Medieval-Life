@@ -8,6 +8,7 @@ extends SceneTree
 ## Diagnostics only: the only thing it changes in the world is the player's hunger, kept full so
 ## the inert player (left where it starts, as in households_sim) never starves.
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
+##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
 ## Exit code 1 if the currency or any item does not balance.
@@ -42,6 +43,12 @@ func _init() -> void:
 	var seed := int(arg.call("--seed", "1"))
 	var every := maxi(1, int(arg.call("--every", "1")))
 	var out := str(arg.call("--out", ""))
+	GameData.ensure()
+	for i in args.size():                 # comparison runs: --set key=value overrides a balance number
+		if args[i] == "--set" and i + 1 < args.size() and "=" in args[i + 1]:
+			var kv: PackedStringArray = args[i + 1].split("=", true, 1)
+			GameData.balance[kv[0]] = float(kv[1])
+			print("balance override: %s = %s" % [kv[0], kv[1]])
 	var t0 := Time.get_ticks_msec()
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
@@ -374,6 +381,13 @@ func _holders() -> Dictionary:
 	for src in [w.site_goods(), w.construction.carried()]:
 		for id in src:
 			g.sites[id] = int(g.sites.get(id, 0)) + int(src[id])
+	g["carts"] = {}
+	for c in w.carts.carts:                        # goods riding in carts (B14)
+		add.call(g.carts, c.store)
+	for s in w.business.premises():                # the player's stall and shops: sale stock and back store
+		for src in [s.get("stock", {}), s.get("store", {})]:
+			for id in src:
+				g.player[id] = int(g.player.get(id, 0)) + int(src[id])
 	for id in w.fauna.pens:
 		var tr := int(w.fauna.pens[id].trough)
 		if tr > 0:
@@ -413,19 +427,27 @@ func _ledger(start: Dictionary) -> Dictionary:
 	for id in start.goods:
 		ids[id] = true
 	for k in w.stats:
-		for p in ["made_", "mined_", "felled_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_"]:
+		for p in ["made_", "mined_", "felled_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_", "wild_eaten_", "farm_harvest_"]:
 			if str(k).begins_with(p):
 				ids[str(k).substr(p.length())] = true
 				break
 	ids.erase("food")                     # eaten_food is points, not an item
+	for id in ids.keys():
+		if not GameData.items.has(id):
+			ids.erase(id)                     # counters that are not goods, e.g. eaten_deer_by_wolf (predation)
 	var bad := {}
 	var flows := {}
 	var keys := ids.keys()
 	keys.sort()
 	for id in keys:
-		var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id)
+		var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id) + d.call("farm_harvest_" + id)
 		var consumed: int = d.call("eaten_" + id) + d.call("used_" + id) + d.call("used_building_" + id) + d.call("used_works_" + id) \
-			+ d.call("used_repairs_" + id) + d.call("feed_eaten_" + id) + d.call("burned_" + id) + d.call("broke_" + id) + d.call("poached_lost_" + id)
+			+ d.call("used_repairs_" + id) + d.call("feed_eaten_" + id) + d.call("burned_" + id) + d.call("broke_" + id) + d.call("poached_lost_" + id) \
+			+ d.call("wild_eaten_" + id)
+		if id == "wheat":                     # farmers keep seed back from the grain they cut (Farming.save_seed)
+			consumed += d.call("farm_seed_saved")
+		elif id == "wheat_seed":
+			produced += d.call("farm_seed_saved")
 		var imported: int = d.call("imported_" + id)
 		var exported: int = d.call("exported_" + id)
 		var s0 := int(start.goods.get(id, 0))
@@ -450,8 +472,12 @@ func _ledger(start: Dictionary) -> Dictionary:
 	var now_a := _animal_counts()
 	var kinds: Array = GameData.b("animals").keys().filter(func(k): return k != "_note")
 	for k in kinds:
+		var preyed := 0                       # B14 forest animals: kills by predators and the fox's raids
+		for sk in w.stats:
+			if str(sk).begins_with("eaten_%s_by_" % k):
+				preyed += d.call(str(sk))
 		var expect: int = int(start.animals.get(k, 0)) + d.call("born_" + k) - d.call("hunted_" + k) - d.call("slaughtered_" + k) \
-			- d.call("poached_" + k) - d.call("starved_" + k)
+			- d.call("poached_" + k) - d.call("starved_" + k) - preyed - d.call("fox_took_" + k) - d.call("old_age_" + k)
 		if expect != int(now_a.get(k, 0)):
 			animals[k] = {"expected": expect, "counted": int(now_a.get(k, 0))}
 	return {"items": bad, "flows": flows, "deposits": dep, "animals": animals}

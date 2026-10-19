@@ -39,6 +39,7 @@ func place(owner: String, at: Vector2) -> Dictionary:
 	next_id += 1
 	carts.append(c)
 	w.stat("carts_set_down")
+	w.stat("used_handcart")                  # the item became a cart in the world (the economy ledger)
 	return c
 
 

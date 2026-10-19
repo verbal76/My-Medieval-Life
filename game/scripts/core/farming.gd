@@ -560,6 +560,7 @@ func collect(pen: Dictionary, p: PlayerState) -> Dictionary:
 		if n > 0:
 			pen.products[id] = int(pen.products[id]) - n
 			got[id] = n
+			w.stat("made_" + id, float(n))           # a pen's products become goods when collected
 	return got
 
 

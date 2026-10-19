@@ -1512,6 +1512,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					n.inv.add(id, k)
 					pen.products[id] = 0
 					w.stat("keeper_collected_" + id, float(k))
+					w.stat("made_" + id, float(k))       # a pen's products become goods when collected
 			return true
 		"buy_food":
 			var v := w.npc(int(a.vendor))

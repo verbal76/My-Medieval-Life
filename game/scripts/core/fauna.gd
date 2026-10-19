@@ -265,7 +265,9 @@ func _forage_berries(a: Animal) -> bool:
 	for pl in w.plants:
 		if pl.state == "ripe" and str(pl.kind) in ["redberry", "blueberry"] and int(pl.x) >= int(r.x) - m and int(pl.x) < int(r.x) + int(r.w) + m \
 				and int(pl.y) >= int(r.y) - m and int(pl.y) < int(r.y) + int(r.h) + m:
-			w.pick_plant(pl)
+			var got: Dictionary = w.pick_plant(pl)
+			for id in got:
+				w.stat("wild_eaten_" + id, float(got[id]))    # eaten on the bush: no item reaches anyone (economy ledger)
 			w.stat("bear_ate_berries")
 			a.hunger = 100.0
 			return true

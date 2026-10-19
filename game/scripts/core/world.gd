@@ -756,6 +756,7 @@ func pick_fruit(t: Dictionary) -> Dictionary:
 		map.overworld.note_tree(t)
 	tree_changed.emit(t)
 	stat("picked_" + str(f.item), float(f.yield))
+	stat("made_" + str(f.item), float(f.yield))
 	return {str(f.item): int(f.yield)}
 
 
@@ -792,6 +793,8 @@ func pick_plant(pl: Dictionary) -> Dictionary:
 	else:
 		tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, -1)
 	stat("plants_picked")
+	for id in got:
+		stat("made_" + id, float(got[id]))     # the economy ledger's production count (economy_sim)
 	return got
 
 
