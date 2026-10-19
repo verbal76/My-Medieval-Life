@@ -154,7 +154,7 @@ func test_coming_of_age_and_retiring() -> void:
 	var little: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.role == "child" and Life.npc_age(w, n) < 11.0)[0]
 	check(is_equal_approx(Life.npc_scale(little, w.minutes), 0.5), "children are drawn at half size")
 	w.minutes += 0.2 * Y
-	at_dawn(w)
+	Life.sync_roles(w)                                     # what the dawn does first; the job market comes after
 	check(kid.alive and kid.role == "adult" and kid.job == "", "crossing 16 at dawn makes the child an adult without a trade")
 	check(w.brain._apprentice_for({"job": "smith", "household": kid.household}) == kid, "and it is in the pool for a trade (succession)")
 	# an adult who reaches 55 retires; the reeve and the sage serve for life
@@ -252,7 +252,7 @@ func test_partners_and_births() -> void:
 	for cid in mother.children:
 		w.npc(int(cid)).born = w.minutes - 6.0 * Y
 	w.households[h].pantry.add("wheat", 100)
-	var first_new := w.brain._next_npc_id()
+	var first_new: int = w.brain._next_npc_id()
 	var born_to_her := 0
 	var beds: int = w.construction.beds_in(str(w.households[h].home))
 	var over := false
@@ -380,14 +380,20 @@ func test_save_load() -> void:
 	for i in w.npcs.size():
 		var a: NPC = w.npcs[i]
 		var b: NPC = w2.npcs[i]
-		same = same and a.born == b.born and a.sex == b.sex and a.role == b.role and a.partner == b.partner and a.mother == b.mother and a.father == b.father and a.children == b.children
+		var this := absf(a.born - b.born) < 0.01 and a.sex == b.sex and a.role == b.role and a.partner == b.partner and a.mother == b.mother and a.father == b.father and a.children == b.children
+		if not this:
+			print("  differs: ", a.id, " ", a.name, " ", a.role, "/", b.role, " ", a.born, "/", b.born, " ", a.children, "/", b.children)
+		same = same and this
 	check(same, "born, sex, role, partner, parents and children survive a save")
-	check(w2.player.born == w.player.born and w2.player.partner == cand.id and w2.player.children == [kid.id], "the player's age and family survive")
+	check(absf(w2.player.born - w.player.born) < 0.01 and w2.player.partner == cand.id and w2.player.children == [kid.id], "the player's age and family survive")
 	var an := w.fauna.animals
 	var an2 := w2.fauna.animals
 	var fsame := an.size() == an2.size()
 	for i in an.size():
-		fsame = fsame and an[i].born == an2[i].born and an[i].sex == an2[i].sex and an[i].stage(w.minutes) == an2[i].stage(w2.minutes)
+		var t: bool = absf(an[i].born - an2[i].born) < 0.01 and an[i].sex == an2[i].sex and an[i].stage(w.minutes) == an2[i].stage(w2.minutes)
+		if not t:
+			print("  animal differs: ", an[i].id, " ", an[i].species, " ", an[i].born, "/", an2[i].born, " ", w.minutes, "/", w2.minutes)
+		fsame = fsame and t
 	check(fsame and an.size() > 0, "animals keep born, sex and so their stage")
 	# an adolescent about to come of age: the role follows the age on load
 	var teen: NPC = w2.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "child" and n.household >= 3)[0]

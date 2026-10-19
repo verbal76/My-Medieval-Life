@@ -1275,12 +1275,12 @@ func _journal_items() -> Array:
 		var close := line.find("] ")
 		var stamp: String = line.substr(1, close - 1) if line.begins_with("[") and close > 0 else ""
 		var text: String = line.substr(close + 2) if stamp != "" else line
-		var parts := stamp.split("  ")
-		var d: String = parts[0] if parts.size() == 2 else ""
+		var cut := stamp.rfind("  ")               # "Spring, Year 1  Day 3  07:24": the heading, then the time (B8-029)
+		var d: String = stamp.substr(0, cut) if cut > 0 else ""
 		if d != day:
 			day = d
 			out.append({"day": true, "text": d})
-		out.append({"day": false, "text": ("%s  %s" % [parts[1], text]) if parts.size() == 2 else text})
+		out.append({"day": false, "text": ("%s  %s" % [stamp.substr(cut + 2), text]) if cut > 0 else text})
 	return out
 
 
