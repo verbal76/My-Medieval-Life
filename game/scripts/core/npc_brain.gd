@@ -20,7 +20,7 @@ const BUYS := {
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
 		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15,
-		"red_berries": 15, "blueberries": 15},    # households' gathered berries, brought to market (B14)
+		"red_berries": 15, "blueberries": 15, "apple": 15},    # households' gathered berries and apples, brought to market (B14)
 	"merchant_goods": {"pickaxe": 4, "axe": 4, "hammer": 2, "copper_sword": 3, "iron_sword": 3,
 		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "rabbit_pelt": 6, "feather": 20, "wool": 20, "wool_cloth": 10, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
@@ -43,11 +43,11 @@ const OUTLETS := {
 	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
 	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["tanner", "merchant_goods"], "wool_cloth": ["merchant_goods"],
 	"bread": ["tavernkeeper", "merchant_food"], "linen_bandage": ["sage"],
-	"red_berries": ["merchant_food"], "blueberries": ["merchant_food"], "herbal_poultice": ["merchant_goods"],
+	"red_berries": ["merchant_food"], "blueberries": ["merchant_food"], "apple": ["merchant_food"], "herbal_poultice": ["merchant_goods"],
 	"pickaxe": ["merchant_goods"], "axe": ["merchant_goods"], "iron_sword": ["merchant_goods"], "copper_sword": ["merchant_goods"],
 	"hammer": ["merchant_goods"], "iron_bar": ["merchant_goods"], "leather_armor": ["merchant_goods"],
 }
-const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries"]
+const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple"]
 const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese and egg bread: the cook's, from the pens (Build 13)
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
@@ -317,10 +317,19 @@ func _plan_home_work(n: NPC) -> bool:
 	var want := ""
 	if pantry.count("herbal_poultice") < keep and flowers < int(brew["in"].flower):
 		want = "flower"
-	elif pantry.count("red_berries") + pantry.count("blueberries") < int(cfg.berries_keep):
+	elif pantry.count("red_berries") + pantry.count("blueberries") + pantry.count("apple") < int(cfg.berries_keep):
 		want = "berry"
 	if want == "":
 		return false
+	if want == "berry":                                  # an apple tree in fruit near home serves as well as a bush (B14)
+		var ft := _fruit_tree_near(w.building_door(n.home), float(cfg.forage_range))
+		var bush := _wild_plant_near(w.building_door(n.home), want, float(cfg.forage_range))
+		var door := Vector2(w.building_door(n.home))
+		if not ft.is_empty() and (bush.is_empty() or door.distance_to(Vector2(int(ft.x), int(ft.y))) < door.distance_to(Vector2(int(bush.x), int(bush.y)))):
+			n.doing = "picking apples"
+			n.plan = [go(beside(Vector2i(int(ft.x), int(ft.y)), n.cell())), work(15, "pick_fruit", {"x": int(ft.x), "y": int(ft.y)}, "gather"),
+					go(w.home_cell(n, "chest")), doit("store_home", {})]
+			return true
 	var pl := _wild_plant_near(w.building_door(n.home), want, float(cfg.forage_range))
 	if pl.is_empty():
 		return false
@@ -388,7 +397,7 @@ func _plan_storefront(n: NPC, house: Dictionary) -> bool:
 
 
 ## What a storefront household sells: medicine and berries beyond what the household keeps.
-const FRONT_WARES := ["herbal_poultice", "red_berries", "blueberries"]
+const FRONT_WARES := ["herbal_poultice", "red_berries", "blueberries", "apple"]
 
 
 func front_goods(h: int) -> Dictionary:
@@ -398,8 +407,8 @@ func front_goods(h: int) -> Dictionary:
 	var extra := pantry.count("herbal_poultice") - int(cfg.poultice_keep)
 	if extra > 0:
 		out["herbal_poultice"] = extra
-	var spare := pantry.count("red_berries") + pantry.count("blueberries") - int(cfg.berries_keep)     # the household keeps berries_keep of either kind
-	for id in ["red_berries", "blueberries"]:
+	var spare := pantry.count("red_berries") + pantry.count("blueberries") + pantry.count("apple") - int(cfg.berries_keep)     # the household keeps berries_keep of berries and apples
+	for id in ["apple", "red_berries", "blueberries"]:
 		var e := mini(spare, pantry.count(id))
 		if e > 0:
 			out[id] = e
@@ -550,6 +559,19 @@ func _plan_cart(n: NPC, house: Dictionary) -> bool:
 		n.plan = [go(_workplace_cell(maker) if maker.job != "smith" else maker.cell()), doit("buy_from", {"vendor": maker.id, "item": "handcart", "qty": 1})] + home
 		return true
 	return false
+
+
+## The nearest village fruit tree with ripe fruit within `r` of `at`, {} if none (B14).
+func _fruit_tree_near(at: Vector2i, r: float) -> Dictionary:
+	var best := {}
+	var bd := r
+	for t in w.trees:
+		if t.has("species") and Trees.fruit_ripe(t, w.day(), w.season()):
+			var d := Vector2(at).distance_to(Vector2(int(t.x), int(t.y)))
+			if d <= bd:
+				bd = d
+				best = t
+	return best
 
 
 ## The nearest ripe village plant of a kind ("flower", or "berry" for either bush) within `r` of `at`.
@@ -1422,13 +1444,20 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return not got.is_empty()
 		"store_home":
 			var pantry: Inventory = w.households[n.household].pantry
-			for id in ["flower", "red_berries", "blueberries"]:
+			for id in ["flower", "red_berries", "blueberries", "apple"]:
 				if n.inv.has(id):
 					w.transfer(n.inv, pantry, id, n.inv.count(id))
 			while n.inv.has("handcart"):                  # B14: a household's handcart is set down at its house
 				n.inv.remove("handcart", 1)
 				w.carts.place(World.hh_ref(n.household), Vector2(cart_spot(n.home)) + Vector2(0.5, 0.5))
 			return true
+		"pick_fruit":
+			var t := w.tree_at(Vector2i(int(a.x), int(a.y)))
+			var got := w.pick_fruit(t)
+			for id in got:
+				n.inv.add(id, int(got[id]))
+				w.stat("villager_picked_" + id, float(got[id]))
+			return not got.is_empty()
 		"cart_hitch":
 			var c: Dictionary = w.carts.by_id(int(a.cart))
 			return not c.is_empty() and w.carts.hitch(c, World.npc_ref(n.id)) == ""

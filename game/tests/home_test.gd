@@ -31,6 +31,8 @@ func _init() -> void:
 	test_household_cart()
 	test_cart_days()
 	test_local_pricing()
+	test_apple_trees()
+	test_carts_in_play()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -408,3 +410,144 @@ func test_local_pricing() -> void:
 	# the player's quote follows the same local price
 	w.player.coins = 1000
 	check(w.player_quote(c, "handcart", 1, true)[0] == maxi(1, roundi(lone * w.player_price_factor(true))), "the player is quoted the same local price")
+
+
+## B14 (asset pipeline: Craftpix fruit trees): apple trees in the cottagers' orchards bear apples in summer and
+## autumn; the player and villagers pick them; they are felled and replanted like any tree; saved.
+func test_apple_trees() -> void:
+	var w := new_world()
+	var apples: Array = w.trees.filter(func(t): return str(t.get("species", "")) == "apple_orchard")
+	check(apples.size() >= 3, "the village has apple trees by its houses (%d)" % apples.size())
+	check(apples.all(func(t): return not w._in_woods(Vector2i(int(t.x), int(t.y)))), "none in the woods")
+	check(Trees.variant("apple_orchard").has("fruit") and ResourceLoader.exists("res://assets/trees/" + str(Trees.variant("apple_orchard").fruit.file)), "the fruit-tree art is loaded (Craftpix, via fruit_trees.json)")
+	var t: Dictionary = apples[0]
+	t.state = "grown"
+	t.erase("fruit_day")
+	w.minutes = 2.0 * 1440.0 + 600.0                 # day 2: summer
+	check(w.season() == "Summer" and Trees.fruit_ripe(t, w.day(), w.season()), "a grown apple tree hangs with fruit in summer")
+	var got := w.pick_fruit(t)
+	check(int(got.get("apple", 0)) == int(GameData.b("fruit_trees").apple_orchard.yield), "picking gives %d apples" % int(got.get("apple", 0)))
+	check(not Trees.fruit_ripe(t, w.day(), w.season()) and w.pick_fruit(t).is_empty(), "then it is bare: nothing from nowhere")
+	w.minutes = float(int(t.fruit_day)) * 1440.0 + 600.0
+	check(Trees.fruit_ripe(t, w.day(), w.season()) == (w.season() in ["Summer", "Autumn"]), "it bears again after regrow_days, in a fruiting season (%s)" % w.season())
+	w.minutes = 6.0 * 1440.0 + 600.0                 # day 6: winter
+	t.fruit_day = 0
+	check(w.season() == "Winter" and not Trees.fruit_ripe(t, w.day(), w.season()), "no fruit in winter")
+	# felled like any tree; its sapling plants an apple tree
+	w.minutes = 2.0 * 1440.0 + 600.0
+	check(Trees.sapling_item(str(t.species)) == "apple_sapling" and Trees.planted_species("apple_sapling", Vector2i(5, 5)) == "apple_orchard", "its sapling is an apple sapling and grows an apple tree")
+	var logs := w.fell(t, 0)
+	check(logs >= 4 and t.state == "stump", "felled for %d logs, leaving a stump" % logs)
+	# a villager picks apples near home instead of a farther berry bush
+	var w2 := new_world()
+	w2.minutes = 2.0 * 1440.0 + 19.0 * 60.0
+	var n: NPC = null
+	var near_tree := {}
+	for o: NPC in w2.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.home != "" and o.job != "sage":
+			for at in w2.trees:
+				if str(at.get("species", "")) == "apple_orchard" and Vector2(w2.building_door(o.home)).distance_to(Vector2(int(at.x), int(at.y))) <= 18.0:
+					n = o
+					near_tree = at
+					break
+		if n != null:
+			break
+	check(n != null, "a household lives by an apple tree")
+	near_tree.state = "grown"
+	near_tree.erase("fruit_day")
+	for pl in w2.plants:
+		pl.state = "picked"                          # no bushes in fruit: the apples are the household's food
+	var pantry: Inventory = w2.households[n.household].pantry
+	pantry.add("herbal_poultice", int(NPCBrain.hp_cfg().poultice_keep))
+	for id in ["red_berries", "blueberries", "apple"]:
+		pantry.items.erase(id)
+	n.plan.clear()
+	n.hp = n.max_hp
+	n.coins = 0
+	check(w2.brain._plan_home_work(n) and n.plan.any(func(st): return st.get("act", "") == "pick_fruit"), "the villager goes to pick apples: " + n.doing)
+	var step: Dictionary = n.plan.filter(func(st): return st.get("act", "") == "pick_fruit")[0]
+	check(w2.brain.act(n, "pick_fruit", step.args) and n.inv.has("apple"), "and picks them")
+	w2.brain.act(n, "store_home", {})
+	check(pantry.count("apple") == int(GameData.b("fruit_trees").apple_orchard.yield), "the apples go into the household's store")
+	# saved
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w2.to_dict())))
+	var again := w3.tree_at(Vector2i(int(near_tree.x), int(near_tree.y)))
+	check(str(again.get("species", "")) == "apple_orchard" and int(again.get("fruit_day", 0)) == int(near_tree.fruit_day), "the apple tree and its fruit day are saved")
+
+
+## B14-06 carts in play: pulling, who may use a cart, theft from it, the cart stop delivery, a market run, saving.
+func test_carts_in_play() -> void:
+	var w := new_world()
+	var p := w.player
+	var c: Dictionary = w.carts.place(World.PLAYER, p.pos + Vector2(1, 0))
+	check(w.carts.of(World.PLAYER).size() == 1 and (c.store as Inventory).max_stacks == int(Carts.cfg().stacks), "a handcart set down is a cart in the world with %d stacks" % int(Carts.cfg().stacks))
+	check(w.carts.hitch(c, World.PLAYER) == "" and w.carts.pulled_by(World.PLAYER) == c, "the player takes hold of their own cart")
+	check(Carts.pull_speed() < 1.0, "pulling slows walking (x%.2f)" % Carts.pull_speed())
+	p.pos += Vector2(5, 0)
+	w.carts.update(0.1)
+	check(absf((c.pos as Vector2).distance_to(p.pos) - float(Carts.cfg().trail)) < 0.01, "the cart follows a step behind on its rope")
+	var stranger: NPC = w.npcs.filter(func(n): return n.alive and n.role == "adult" and not w.business.is_attendant(n))[0]
+	w.carts.park(c)
+	check(c.puller == "" and w.carts.hitch(c, World.npc_ref(stranger.id)) != "", "a villager who is not the player's hired help may not take it")
+	# a household's cart: its members may pull it; the player taking from it is theft
+	var n := _villager(w)
+	var hc: Dictionary = w.carts.place(World.hh_ref(n.household), Vector2(w.brain.cart_spot(n.home)) + Vector2(0.5, 0.5))
+	check(w.carts.hitch(hc, World.npc_ref(n.id)) == "" and w.carts.hitch(hc, World.PLAYER) != "", "a household member pulls the family cart; the player may not")
+	w.carts.park(hc)
+	(hc.store as Inventory).add("apple", 3)
+	var u: Dictionary = w.chests.unit("cart:%d" % int(hc.id))
+	check(w.chests.store(u, "apple", 1) != "", "the player cannot fill another's cart")
+	var r: Dictionary = w.chests.take(u, "apple", 1)
+	check(r.ok and r.get("theft", false) and p.inv.count("apple") >= 1, "taking from it is theft: " + str(r.text))
+	# the player's cart at a cart stop near their stall: the attendant unloads it into the stall's store
+	var b: Business = w.business
+	p.coins = 300
+	check(b.rent() == "", "the player rents a market pitch")
+	var stall := b.mine()
+	check(not stall.is_empty(), "the player has a pitch to deliver to")
+	var a: NPC = b.candidates()[0]
+	check(b.hire(stall, a) == "", "an attendant is hired")
+	var stop: Dictionary = Carts.cfg().stops[0]
+	c.pos = Vector2(float(stop.x) + 0.5, float(stop.y) + 0.5)
+	(c.store as Inventory).add("herbal_poultice", 4)
+	var near: bool = Vector2(int(stall.x), int(stall.y)).distance_to(c.pos) <= float(Carts.cfg().deliver_range)
+	var before := int((stall.get("store", {}) as Dictionary).get("herbal_poultice", 0))
+	w.carts.hour()
+	var after := int((stall.get("store", {}) as Dictionary).get("herbal_poultice", 0))
+	if near:
+		check(after == before + 4 and (c.store as Inventory).total() == 0, "parked at %s, the attendant unloads the cart into the stall's store" % stop.name)
+	else:
+		check(after == before and (c.store as Inventory).total() == 4, "a stop beyond deliver_range of the stall is not served")
+	c.pos = p.pos + Vector2(30, 30)
+	(c.store as Inventory).add("apple", 2)
+	w.carts.hour()
+	check((c.store as Inventory).count("apple") == 2, "away from a cart stop nothing is unloaded")
+	# saved and loaded whole
+	c.puller = World.PLAYER
+	var d := w.carts.to_dict()
+	var back := Carts.new(w)
+	back.load_dict(JSON.parse_string(JSON.stringify(d)))
+	var c2: Dictionary = back.by_id(int(c.id))
+	check(back.carts.size() == w.carts.carts.size() and back.next_id == w.carts.next_id and str(c2.owner) == World.PLAYER and str(c2.puller) == World.PLAYER
+			and (c2.store as Inventory).count("apple") == 2 and (c2.pos as Vector2).distance_to(c.pos) < 0.001, "carts save and load with owner, puller, position and load")
+	# a household's market run: surplus goods ride to the merchants and the cart comes home
+	var w2 := new_world()
+	w2.minutes = 2.0 * 1440.0 + 9.0 * 60.0
+	var m := _villager(w2)
+	var house: Dictionary = w2.buildings[m.home]
+	var cart: Dictionary = w2.carts.place(World.hh_ref(m.household), Vector2(w2.brain.cart_spot(m.home)) + Vector2(0.5, 0.5))
+	var pantry: Inventory = w2.households[m.household].pantry
+	pantry.add("apple", int(GameData.b("home_production").berries_keep) + int(Carts.cfg().trip_min) + 2)
+	var total := w2.total_coins()
+	check(w2.brain._plan_market_run(m, house), "with surplus apples and a parked cart the household plans a market run: " + m.doing)
+	var sold0: int = pantry.count("apple")
+	var pulled := false
+	for i in int(6.0 * 60.0 / float(GameData.b("game_minutes_per_second")) / 0.5):
+		w2.update(0.5)
+		pulled = pulled or str(cart.puller) != ""
+		if pulled and str(cart.puller) == "":
+			break
+	check(pulled, "a household member took the cart")
+	check(str(cart.puller) == "" and (cart.store as Inventory).total() == 0, "the cart came home parked and empty")
+	check(pantry.count("apple") < sold0 and w2.total_coins() == total + w2.coin_sources, "apples were sold (%d left at home), coins conserved" % pantry.count("apple"))

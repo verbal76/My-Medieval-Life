@@ -152,6 +152,9 @@ func tick(gm: float) -> void:
 		a.hunger = maxf(0.0, a.hunger - gm / 60.0 * float(a.spec().get("hunger_per_hour", per_hour)))     # a kill lasts a hunter days (B14)
 		if a.hunger < eat_below:
 			_eat(a, gm)
+		if a.hunger <= 0.0 and a.wild() and a.diet() in ["hunt", "omnivore"] and count(a.area, a.species) <= int(a.spec().keep):
+			a.hunger = float(wl().scavenge_hunger)             # the last pair scavenges carrion and scraps (B14): it lives on, lean
+			w.stat("scavenged_" + a.species)
 		if a.hunger <= 0.0:
 			a.hp -= gm / 60.0 * float(a.spec().hp) * float(GameData.b("animal_starve_hp_per_hour"))
 			if a.hp <= 0.0:
@@ -208,6 +211,14 @@ func spare(a: Animal, extra := 0) -> bool:
 		if b != a and b.alive and b.area == a.area and b.species == a.species and b.sex == a.sex and b.adult(w.minutes):
 			return true
 	return false
+
+
+## The prey animals in a hunter's wood beyond what must be spared (their kinds' keep).
+func _spare_prey(a: Animal) -> int:
+	var n := 0
+	for k in (a.spec().get("prey", []) as Array):
+		n += maxi(0, count(a.area, k) - int(GameData.b("animals")[k].keep))
+	return n
 
 
 ## A hungry hunter makes a kill in its wood at most hunt_chance_per_hour an hour, wherever the player is.
@@ -371,6 +382,8 @@ func new_day() -> void:
 		if not _has_mate(a):
 			continue
 		var s := a.spec()
+		if a.wild() and a.diet() in ["hunt", "omnivore"] and _spare_prey(a) < int(wl().prey_per_predator) * (count(a.area, a.species) + 1):
+			continue                                    # a hunter breeds only where its prey can feed one more (B14)
 		var room := cap(a.area, a.species) - count(a.area, a.species)
 		var n := mini(int(s.litter), room)
 		if n <= 0:

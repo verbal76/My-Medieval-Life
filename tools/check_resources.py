@@ -422,6 +422,9 @@ def problems(ctx):
         elif m.get("kind") == "plant":
             if m.get("plant") not in {pl["kind"] for pl in ctx["village"].get("plants", [])}:
                 out.append("%s: no plant of kind %r in village.json" % (nid, m.get("plant")))
+        elif m.get("kind") == "fruit_tree":
+            if not isinstance(bal_.get("fruit_trees", {}).get(m.get("species", "")), dict):
+                out.append("%s: no fruit_trees entry %r in balance.json" % (nid, m.get("species")))
         elif m.get("kind") not in ("tree", "field", "player_field", "player_pen"):
             out.append("%s: unknown match kind %r" % (nid, m.get("kind")))
     # every harvestable kind in the map and balance has a node, and no kind has two
@@ -613,6 +616,10 @@ def _instances(ctx, n):
         return 0, "as many cells as the player clears and tills on ground they hold (PL2-015)"
     if m["kind"] == "player_pen":
         return 0, "as many pens as the player fences on ground they hold, each with at most pen_cap animals (PL2-015)"
+    if m["kind"] == "fruit_tree":
+        f = ctx["balance"]["fruit_trees"]
+        return 0, "the village trees within %d tiles of a house door, one in %d (new worlds), and any planted from saplings; %d %s a picking" % (
+            f["orchard_house_range"], f["orchard_share"], f[m["species"]]["yield"], f[m["species"]]["item"])
     if m["kind"] == "plant":
         n_pl = sum(1 for pl in v.get("plants", []) if pl["kind"] == m["plant"])
         return n_pl, "%d plants on the map, each ripe again plant_regrow_days after it is picked" % n_pl

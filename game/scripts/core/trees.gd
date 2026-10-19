@@ -48,10 +48,15 @@ static func cfg() -> Dictionary:
 
 
 # ---------------------------------------------------------------- art ------------------------
-## res://assets/trees/trees.json (mml-trees-art/1), read once.
+## res://assets/trees/trees.json (mml-trees-art/1, Living Forest), with the fruit trees of
+## fruit_trees.json (Craftpix, B14) merged into its variants; read once.
 static func art() -> Dictionary:
 	if _art.is_empty():
 		_art = JSON.parse_string(FileAccess.get_file_as_string(ART + "trees.json"))
+		if FileAccess.file_exists(ART + "fruit_trees.json"):
+			var fruit: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ART + "fruit_trees.json"))
+			for k in fruit.variants:
+				_art.variants[k] = fruit.variants[k]
 	return _art
 
 
@@ -80,7 +85,23 @@ static func planted_species(item: String, cell: Vector2i) -> String:
 	var h := Overworld.hash32(cell.x, cell.y, 5, 17)
 	if fam == "pine":
 		return "pine_summer"
+	if fam == "apple":
+		return "apple_orchard"
 	return "oak_summer" if h % 3 != 0 else "oak_autumn"
+
+
+# ---------------------------------------------------------------- fruit (B14) ----------------
+## The fruit settings of a fruit-tree species (balance.json "fruit_trees"), {} for other trees.
+static func fruit_cfg(species: String) -> Dictionary:
+	var f: Dictionary = GameData.b("fruit_trees")
+	return f.get(species, {}) if f.has(species) and species != "_note" else {}
+
+
+## Whether a tree's fruit hangs ripe now: a grown fruit tree, past its `fruit_day` (the day it bears
+## again after picking; 0 for one never picked), in a fruiting season. Lazy like growth: nothing ticks.
+static func fruit_ripe(t: Dictionary, day: int, season: String) -> bool:
+	var f := fruit_cfg(str(t.get("species", "")))
+	return not f.is_empty() and str(t.state) == "grown" and day >= int(t.get("fruit_day", 0)) and (f.seasons as Array).has(season)
 
 
 ## The species of a generated tree from the generator's group (leafy, autumn, mixed, conifer), its cell

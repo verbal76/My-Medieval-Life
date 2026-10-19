@@ -254,3 +254,28 @@ func test_sprites() -> void:
 		var rows: Dictionary = AnimalSprite.ROWS[a.skin]
 		check(s.flip_h and s.frame / s.hframes == int(rows.walk[0]), "walking left: the walk row, flipped")
 		s.free()
+	# the Animal Farm horse sheet (B14-11): the "farm" layout, read on a stand-in animal until the horse has a species
+	var art_of: Dictionary = GameData.b("animals").cow
+	art_of["skin_art"] = {"farm_horse": {"layout": "farm", "frame": 32}}
+	var h := Animal.new()
+	h.species = "cow"
+	h.skin = "farm_horse"
+	h.born = w.minutes - 30.0 * 1440.0
+	var hs := AnimalSprite.new()
+	hs.setup(h, w.minutes)
+	check(hs.layout == "farm" and hs.hframes == 4 and hs.vframes == 4, "horse sheet: 4 x 4 frames of 32 px")
+	var want := {Vector2.LEFT: [false, [4, 5]], Vector2.RIGHT: [true, [4, 5]], Vector2.DOWN: [false, [6, 7]], Vector2.UP: [false, [8, 9]]}
+	h.moving = true
+	for v: Vector2 in want:
+		h.facing = v
+		hs.show_state(h, w.minutes, 0.1)
+		check(hs.flip_h == want[v][0] and (want[v][1] as Array).has(hs.frame), "horse walking %s: frame %d, flipped %s" % [v, hs.frame, hs.flip_h])
+	h.moving = false
+	h.facing = Vector2.UP
+	hs.show_state(h, w.minutes, 0.1)
+	check(hs.frame == 3, "horse standing facing up: frame 3")
+	h.facing = Vector2.RIGHT
+	hs.show_state(h, w.minutes, 0.1)
+	check(hs.flip_h and [10, 11, 12].has(hs.frame), "horse standing sideways grazes (frame %d)" % hs.frame)
+	art_of.erase("skin_art")
+	hs.free()

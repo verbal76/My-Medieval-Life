@@ -9,6 +9,9 @@ extends Sprite2D
 ##    animation; ROWS gives each sheet's [row, frames] for idle, walk, attack, hit and death, counted from the
 ##    sheets and the pack's page (the bunny's and the bird's rows are not named there: marked uncertain in
 ##    docs/BUILD_DECISIONS.md).
+##  - "farm" (Animal Farm, B14-11): 32 px frames read left to right (FARM): standing facing right, down, left,
+##    up; walking left, down, up (two frames each; walking right is the left walk flipped); grazing facing
+##    left (three frames, flipped for right), drawn while it stands facing sideways.
 ## Babies use the Cozy Farm baby sheet at full scale (B8-029); a species with no baby art (boar) is drawn at half scale. The node's position is the animal's feet.
 
 const ROWS := {
@@ -21,6 +24,8 @@ const ROWS := {
 	"mini_bunny": {"idle": [0, 4], "walk": [1, 4], "attack": [0, 4], "hit": [2, 2], "death": [3, 3]},
 	"mini_bird": {"idle": [0, 4], "walk": [1, 4], "attack": [0, 4], "hit": [0, 4], "death": [2, 3]},
 }
+
+const FARM := {"idle": {"r": 0, "d": 1, "l": 2, "u": 3}, "walk": {"l": [4, 5], "d": [6, 7], "u": [8, 9]}, "graze": [10, 11, 12]}
 
 var layout := "cozy"
 var t := 0.0
@@ -39,7 +44,7 @@ func setup(a: Animal, now := -1.0) -> void:
 	if layout == "puny":
 		hframes = 12
 		vframes = 8
-	elif layout == "minifolks":
+	elif layout == "minifolks" or layout == "farm":
 		hframes = texture.get_width() / int(art.frame)
 		vframes = texture.get_height() / int(art.frame)
 	else:
@@ -60,6 +65,18 @@ func show_state(a: Animal, now: float, dt: float) -> void:
 		var r: Array = rows.get(a.act, rows.walk if a.moving else rows.idle) if a.act != "" else (rows.walk if a.moving else rows.idle)
 		flip_h = a.facing.x < 0.0
 		frame = int(r[0]) * hframes + int(t / 0.15) % int(r[1])
+		return
+	if layout == "farm":
+		var side := absf(a.facing.x) > absf(a.facing.y)
+		var dir := ("r" if a.facing.x > 0.0 else "l") if side else ("d" if a.facing.y >= 0.0 else "u")
+		flip_h = side and a.facing.x > 0.0           # the sheet walks and grazes facing left only
+		if a.moving:
+			var fr: Array = FARM.walk.get(dir, FARM.walk.l)
+			frame = int(fr[int(t / 0.2) % fr.size()])
+		elif side:
+			frame = int(FARM.graze[int(t / 0.4) % FARM.graze.size()])
+		else:
+			frame = int(FARM.idle[dir])
 		return
 	var col := int(t / 0.2) % 4 if a.moving else 0
 	var row := 0

@@ -62,6 +62,8 @@ static func def_for(kind: String, key := "") -> Dictionary:
 			continue
 		if kind == "plant" and m.plant != key:
 			continue
+		if kind == "fruit_tree" and m.species != key:
+			continue
 		return defs()[id]
 	return {}
 

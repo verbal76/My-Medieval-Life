@@ -2702,6 +2702,111 @@
    "member": "(generated)",
    "transform": "tools/living_forest.py: what each imported tree file is, its size, offset and pivot",
    "sha256": "5a0f5559f5b5c9086fc354edd50965d127e8a7b9482b6cc2e40daa793f52fad4"
+  },
+  {
+   "file": "assets/trees/apple_orchard_sapling.png",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "PNG/Plants.png",
+   "transform": "crop [519, 180, 533, 202] (stage sapling, the grass half), used 1:1",
+   "sha256": "edf91b53cf3261300b9761424fce8428b1fb1cc2b210e3fa32bbf7a8e6d231c7"
+  },
+  {
+   "file": "assets/trees/apple_orchard_young.png",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "PNG/Plants.png",
+   "transform": "crop [545, 172, 573, 204] (stage young, the grass half), used 1:1",
+   "sha256": "cb2bd525de8d03b190e193840f886bd8faaeba7ad2d400490d4dbc38de2d4949"
+  },
+  {
+   "file": "assets/trees/apple_orchard_growing.png",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "PNG/Plants.png",
+   "transform": "crop [588, 162, 626, 206] (stage growing, the grass half), used 1:1",
+   "sha256": "13f1b87522b2c7a476a7edb52bfaa748f3056a800497dee0243f89984cb3f35c"
+  },
+  {
+   "file": "assets/trees/apple_orchard_mature.png",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "PNG/Plants.png",
+   "transform": "crop [647, 149, 695, 208] (stage mature, the grass half), used 1:1",
+   "sha256": "22bfbe5a11436d5e8f3400de71219cb7d04a3e07e378a69e1eb820a0448526fc"
+  },
+  {
+   "file": "assets/trees/apple_orchard_fruit.png",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "PNG/Plants.png",
+   "transform": "crop [711, 149, 759, 208] (stage fruit, the grass half), used 1:1",
+   "sha256": "c0290c56a80127d17b1fd5f291417146059948357a7ee5aeaa1da4de2e093e48"
+  },
+  {
+   "file": "assets/trees/apple_orchard_stump.png",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "PNG/Plants.png",
+   "transform": "the mature stage's lowest 10 rows, cropped to its pixels (the pack has no stump)",
+   "sha256": "401859657a35b0f285369e20c17c70e50c626c11fd16f8ee043531e7007608d4"
+  },
+  {
+   "file": "assets/trees/apple_orchard_cut_left_1.png",
+   "source": "",
+   "member": "(drawn by tools/craftpix_plants.py)",
+   "transform": "a 2 px trunk notch (the pack has no cut marks)",
+   "sha256": "a87b65c06eb8352f081be69a7be61d31ea0af1e24216da75633a71a550a5c9ed"
+  },
+  {
+   "file": "assets/trees/apple_orchard_cut_left_2.png",
+   "source": "",
+   "member": "(drawn by tools/craftpix_plants.py)",
+   "transform": "a 3 px trunk notch (the pack has no cut marks)",
+   "sha256": "127b16b99f20ddcd5dca7c1f3b042f5b1a10a351ec173c88551e4e611936fcbc"
+  },
+  {
+   "file": "assets/trees/apple_orchard_cut_left_3.png",
+   "source": "",
+   "member": "(drawn by tools/craftpix_plants.py)",
+   "transform": "a 4 px trunk notch (the pack has no cut marks)",
+   "sha256": "714dd7ede97235e40155ed952648ea5141d2433147bf9263fff99e5346b75284"
+  },
+  {
+   "file": "assets/trees/apple_orchard_cut_right_1.png",
+   "source": "",
+   "member": "(drawn by tools/craftpix_plants.py)",
+   "transform": "a 2 px trunk notch (the pack has no cut marks)",
+   "sha256": "a87b65c06eb8352f081be69a7be61d31ea0af1e24216da75633a71a550a5c9ed"
+  },
+  {
+   "file": "assets/trees/apple_orchard_cut_right_2.png",
+   "source": "",
+   "member": "(drawn by tools/craftpix_plants.py)",
+   "transform": "a 3 px trunk notch (the pack has no cut marks)",
+   "sha256": "127b16b99f20ddcd5dca7c1f3b042f5b1a10a351ec173c88551e4e611936fcbc"
+  },
+  {
+   "file": "assets/trees/apple_orchard_cut_right_3.png",
+   "source": "",
+   "member": "(drawn by tools/craftpix_plants.py)",
+   "transform": "a 4 px trunk notch (the pack has no cut marks)",
+   "sha256": "714dd7ede97235e40155ed952648ea5141d2433147bf9263fff99e5346b75284"
+  },
+  {
+   "file": "assets/trees/fruit_trees.json",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "(generated)",
+   "transform": "tools/craftpix_plants.py: what each fruit-tree file is, its size, offset and pivot",
+   "sha256": "788b2ccf811fd9dac30a0194a8d31393e162786528a95f41ad8d2d974859c188"
+  },
+  {
+   "file": "assets/icons/apple_sapling.png",
+   "source": "craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
+   "member": "PNG/Plants.png",
+   "transform": "the apple_orchard seedling, fitted into a 16 px icon cell (bottom centre)",
+   "sha256": "f8ac15b7f62b8eb691ef2e54e3c60bcc3e878c69e22a34f870dc28df46253b13"
+  },
+  {
+   "file": "assets/animals/farm_horse.png",
+   "source": "Animal_Farm_Project_Sprite_Pack_1.0",
+   "member": "Png/Horse.png",
+   "transform": "every 96 px cell reduced by 1/3 (box, alpha cut at 128) to 32 px frames",
+   "sha256": "eae23438c4138dd96f49de7717014a90c985975d47f1cdfb91d5ecf540fc72f2"
   }
  ]
 }

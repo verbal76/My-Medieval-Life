@@ -12,16 +12,21 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 | Count | Value |
 |---|---|
-| Implemented harvestable node types | 24 (18 player-harvestable) |
-| Materials the nodes produce | 25: blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool |
+| Implemented harvestable node types | 25 (19 player-harvestable) |
+| Materials the nodes produce | 27: apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool |
 | Production chains documented (node product to finished item) | 62 (62 workable, 0 blocked by gold ore) |
 | Materials with no current use | 2: feather, handcart |
 | Recipes with a missing raw-material source | 0 |
 | Finite node types with no replacement | 1: gold_seam |
 | Nodes not Gather-compatible | 6: chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen |
-| Items with no source at all | 1: apple |
+| Items with no source at all | 0: none |
 
 ## From a node: products and what they become
+
+### `apple_tree` · Apple tree (fruit) (implemented)
+
+- **apple** (4 a cycle)
+  - used as it is: bought by the merchant food; bought by the passing caravan; Eaten from the pack, or from a household's pantry (NPCBrain.FOOD); sold to the food merchant (B14).; eaten (15 food)
 
 ### `blue_berry_bush` · Blue berry bush (implemented)
 
@@ -193,6 +198,8 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 ### `tree` · Tree (implemented)
 
+- **apple_sapling** (1 a cycle)
+  - used as it is: Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into an apple tree that fruits in summer and autumn (B14).
 - **log** (4 a cycle)
   - 1 log + 1 meat → **2 roast_meat** (roast_meat, oven)
   - 1 log → **2 plank** (saw_planks, sawhorse)
@@ -426,7 +433,8 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 |---|---|---|---|
 | `ale` Ale | food | recipe `brew_ale` ×4; start_stock `start_0` | buyer `merchant_food` ×15; buyer `tavernkeeper` ×20; export `caravan`; food `ale`; recipe `brew_strong_tonic` ×1 |
 | `amulet` Copper amulet | amulet | recipe `forge_amulet` ×1 | buyer `merchant_goods` ×2; equip `amulet`; export `caravan` |
-| `apple` Apple | food | **none** | food `apple` |
+| `apple` Apple | food | node `apple_tree` ×4 | buyer `merchant_food` ×15; export `caravan`; food `apple`; food `apple` |
+| `apple_sapling` Apple sapling | resource | node `tree` ×1 | plant `apple_sapling` |
 | `axe` Axe | tool | recipe `forge_axe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; quest `a_new_axe` ×1; tool `tree` |
 | `blueberries` Blueberries | food | node `blue_berry_bush` ×2 | buyer `merchant_food` ×15; export `caravan`; food `blueberries` |
 | `bread` Loaf of bread | food | recipe `bake_egg_bread` ×2; recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | buyer `merchant_food` ×15; buyer `tavernkeeper` ×12; export `caravan`; food `bread` |
@@ -496,6 +504,8 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 | Item | Use | What | Code |
 |---|---|---|---|
+| `apple` | food | Eaten from the pack, or from a household's pantry (NPCBrain.FOOD); sold to the food merchant (B14). | `game/scripts/core/npc_brain.gd::_plan_home_work` |
+| `apple_sapling` | plant | Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into an apple tree that fruits in summer and autumn (B14). | `game/scripts/core/world.gd::plant_tree` |
 | `carrot_seed` | plant | Sown on a tilled cell of the player's field: one seed a cell (used up). | `game/scripts/core/farming.gd::sow` |
 | `hammer` | tool | The smith's tool: it wears 2 with every anvil recipe a villager smith makes (the player needs none). | `game/scripts/core/npc_brain.gd::act` |
 | `herb_seed` | plant | Sown on a tilled cell of the player's field: one seed a cell (used up). | `game/scripts/core/farming.gd::sow` |
@@ -520,7 +530,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `wheat` | start stock (source) | The granary starts with start_granary_days of the village's food in wheat. | `game/scripts/core/world.gd::setup` |
 | `coal`, `copper_ore`, `iron_ore` | import (source) | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. | `game/scripts/core/npc_brain.gd::_caravan_imports` |
 | `stone` | import (source) | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. | `game/scripts/core/npc_brain.gd::_caravan_stone` |
-| `ale`, `amulet`, `axe`, `blueberries`, `bread`, `carrot`, `cheese`, `copper_bar`, `copper_ring`, `copper_sword`, `egg`, `feather`, `gold_bar`, `gold_ring`, `hammer`, `herbal_poultice`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `meat`, `milk`, `pickaxe`, `plank`, `potato`, `pottage`, `rabbit_pelt`, `red_berries`, `roast_meat`, `wheat`, `wool`, `wool_cloth` | export | Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
+| `ale`, `amulet`, `apple`, `axe`, `blueberries`, `bread`, `carrot`, `cheese`, `copper_bar`, `copper_ring`, `copper_sword`, `egg`, `feather`, `gold_bar`, `gold_ring`, `hammer`, `herbal_poultice`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `meat`, `milk`, `pickaxe`, `plank`, `potato`, `pottage`, `rabbit_pelt`, `red_berries`, `roast_meat`, `wheat`, `wool`, `wool_cloth` | export | Every second day the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. It pays only from its purse: at most caravan_coins a visit, and over time at most caravan_float more than it has taken back from the village for ore, coal and stone, so a surplus it cannot pay for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
 
 ## Findings
 
@@ -528,11 +538,11 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`amulet`, `apple`, `axe`, `blueberries`, `bread`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `feather`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `oak_sapling`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`, `strong_healing_tonic`, `wheat_seed`
+`amulet`, `apple`, `apple_sapling`, `axe`, `blueberries`, `bread`, `carrot`, `carrot_seed`, `cheese`, `copper_ring`, `copper_sword`, `feather`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `oak_sapling`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `red_berries`, `roast_meat`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`, `stone`, `strong_healing_tonic`, `wheat_seed`
 
 ### Orphaned items
 
-Items with no source at all: `apple`. Items only in the player's start kit: `plain_clothes`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`.
+Items with no source at all: none. Items only in the player's start kit: `plain_clothes`, `rotten_apple`, `rusty_pickaxe`, `rusty_sword`.
 
 ### Recipes needing materials with no legitimate source
 
@@ -567,7 +577,6 @@ finding not recorded here.
 |---|---|---|---|
 | `feather` | no_consumer | implemented | A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them. |
 | `handcart` | no_consumer | proposed | B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; its use as pulled storage, parked at home or a cart hub, comes with the carts-in-play work (B14-6). |
-| `apple` | no_source | implemented | No tree, recipe or kit gives apples: the item is defined but never made (the start kit has a rotten apple only). |
 | `rotten_apple` | start_kit_only | implemented | Only in the player's start kit: spoiled food that harms when eaten. |
 | `rusty_sword` | start_kit_only | implemented | Only in the player's start kit; nobody buys it. |
 | `rusty_pickaxe` | start_kit_only | implemented | Only in the player's start kit; a slower pickaxe nobody buys. |

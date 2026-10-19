@@ -245,7 +245,7 @@
       "minutes_key": "chop_minutes",
       "time_note": "A villager works chop_minutes game minutes a tree. The player's takes chop_minutes / game_minutes_per_second x 0.5 real seconds, divided by the axe's speed, and 30% less from Woodcutting 3.",
       "action_cost": {"stamina": 0, "tool_wear": 3, "note": "No stamina. The axe wears 3 a tree."},
-      "yields": {"log": 4, "oak_sapling": "tree_growth.sapling_count", "pine_sapling": "tree_growth.sapling_count"},
+      "yields": {"log": 4, "oak_sapling": "tree_growth.sapling_count", "pine_sapling": "tree_growth.sapling_count", "apple_sapling": "tree_growth.sapling_count"},
       "yield_notes": "World.chop_tree takes balance.json tree_growth.chops blows; the last one calls World.fell, which gives 4 logs once; the player gets 1 more from Woodcutting 2 and (chance tree_growth.sapling_chance) a sapling item (oak_sapling or pine_sapling) to plant. Villagers always get 4 and no sapling. Only a MATURE tree can be felled: saplings, young and growing trees give nothing and say why.",
       "total": "4 logs from each mature tree: the village trees (village.json trees and the map-edge woodland), and any overworld tree, generated or planted.",
       "depletion": "regrows",
@@ -301,6 +301,41 @@
     "flower_patch": {"name": "Wild flower", "category": "forage", "origin": "natural", "match": {"kind": "plant", "plant": "flower"}, "where": "Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers)", "verb": "Picking", "action_label": "Pick wild flower", "action": "interact", "tool": "", "tool_required": false, "tool_hint": "No tool needed.", "skill": "", "level": 0, "minutes": 0, "time_note": "The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).", "action_cost": {"stamina": 0, "tool_wear": 0, "note": "No stamina, no tool."}, "yields": {"flower": 1}, "yield_notes": "1 flower a plant, all at once (World.pick_plant).", "total": "1 flower from each ripe plant of this kind: village.json plants (tiles 2656 red, 2657 purple, 2658 yellow, 2659 white) and every flower the overworld generator draws outside the village (Overworld.flower_at).", "depletion": "regrows", "regeneration": "A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. Outside the village the picked flower is saved in Overworld.plant_changes.", "owner": "Nobody: wild plants belong to no one.", "theft": "Never theft.", "npc_harvest": true, "npc_note": "Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.", "player_harvest": true, "gather": true, "range": 1, "range_note": "The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.", "icon": "flower", "sources": ["game/scripts/core/overworld.gd::flower_at", "game/scripts/core/world.gd::pick_plant", "game/scripts/core/world.gd::plant_at", "game/scripts/core/world.gd::_new_day", "game/scripts/main.gd::interact"], "status": "implemented", "risk": "Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending)."},
     "red_berry_bush": {"name": "Red berry bush", "category": "forage", "origin": "natural", "match": {"kind": "plant", "plant": "redberry"}, "where": "Meadows, verges and clearings across the map (red berries)", "verb": "Picking", "action_label": "Pick red berry bush", "action": "interact", "tool": "", "tool_required": false, "tool_hint": "No tool needed.", "skill": "", "level": 0, "minutes": 0, "time_note": "The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).", "action_cost": {"stamina": 0, "tool_wear": 0, "note": "No stamina, no tool."}, "yields": {"red_berries": 2}, "yield_notes": "2 red_berries a plant, all at once (World.pick_plant).", "total": "2 red_berries from each ripe plant of this kind in village.json plants (tile 2660).", "depletion": "regrows", "regeneration": "A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.", "owner": "Nobody: wild plants belong to no one.", "theft": "Never theft.", "npc_harvest": true, "npc_note": "Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.", "player_harvest": true, "gather": true, "range": 1, "range_note": "The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.", "icon": "red_berries", "sources": ["game/scripts/core/world.gd::pick_plant", "game/scripts/core/world.gd::plant_at", "game/scripts/core/world.gd::_new_day", "game/scripts/main.gd::interact"], "status": "implemented", "risk": "Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending)."},
     "blue_berry_bush": {"name": "Blue berry bush", "category": "forage", "origin": "natural", "match": {"kind": "plant", "plant": "blueberry"}, "where": "Meadows, verges and clearings across the map (blue berries)", "verb": "Picking", "action_label": "Pick blue berry bush", "action": "interact", "tool": "", "tool_required": false, "tool_hint": "No tool needed.", "skill": "", "level": 0, "minutes": 0, "time_note": "The player picks one in 1.2 real seconds (no game-time cost); villagers pick them in the evening for their households (B14).", "action_cost": {"stamina": 0, "tool_wear": 0, "note": "No stamina, no tool."}, "yields": {"blueberries": 2}, "yield_notes": "2 blueberries a plant, all at once (World.pick_plant).", "total": "2 blueberries from each ripe plant of this kind in village.json plants (tile 2662).", "depletion": "regrows", "regeneration": "A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.", "owner": "Nobody: wild plants belong to no one.", "theft": "Never theft.", "npc_harvest": true, "npc_note": "Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.", "player_harvest": true, "gather": true, "range": 1, "range_note": "The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.", "icon": "blueberries", "sources": ["game/scripts/core/world.gd::pick_plant", "game/scripts/core/world.gd::plant_at", "game/scripts/core/world.gd::_new_day", "game/scripts/main.gd::interact"], "status": "implemented", "risk": "Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending)."},
+    "apple_tree": {
+      "name": "Apple tree (fruit)",
+      "category": "forage",
+      "origin": "cultivated",
+      "match": {"kind": "fruit_tree", "species": "apple_orchard"},
+      "where": "The cottagers' orchards: village trees near the houses (one in fruit_trees.orchard_share), and any apple tree planted from a sapling",
+      "verb": "Picking",
+      "action_label": "Pick apples",
+      "action": "interact",
+      "tool": "",
+      "tool_required": false,
+      "tool_hint": "No tool needed.",
+      "skill": "",
+      "level": 0,
+      "minutes": 0,
+      "time_note": "The player picks in 1.5 real seconds; villagers work 15 game minutes (B14).",
+      "action_cost": {"stamina": 0, "tool_wear": 0, "note": "No stamina, no tool."},
+      "yields": {"apple": "fruit_trees.apple_orchard.yield"},
+      "yield_notes": "A grown apple tree in fruit gives fruit_trees.apple_orchard.yield apples at once (World.pick_fruit). It is felled like any tree for logs and, by chance, an apple sapling (the tree node).",
+      "total": "see Found by",
+      "depletion": "regrows",
+      "regeneration": "Picked bare, it bears again fruit_trees.apple_orchard.regrow_days later, but only in its fruiting seasons (summer and autumn): none in winter or spring (Trees.fruit_ripe).",
+      "owner": "Nobody: orchard trees near the houses are common, like the wild plants.",
+      "theft": "Never theft.",
+      "npc_harvest": true,
+      "npc_note": "Adults pick a fruiting apple tree near home instead of a berry bush when it is nearer (NPCBrain._plan_home_work, act pick_fruit); apples go into the pantry as food and their surplus to the storefront or the food merchant.",
+      "player_harvest": true,
+      "gather": true,
+      "range": 1.1,
+      "range_note": "The tree's trunk cell or the cell above it, faced from beside it (main.gd _find_target).",
+      "icon": "apple",
+      "sources": ["game/scripts/core/world.gd::pick_fruit", "game/scripts/core/trees.gd::fruit_ripe", "game/scripts/core/world.gd::_tree_species", "game/scripts/main.gd::interact", "game/scripts/core/npc_brain.gd::_fruit_tree_near"],
+      "status": "implemented",
+      "risk": "Few trees, a short fruiting window (seasons are 2 days); yields provisional."
+    },
     "wild_boar": {
       "name": "Wild boar",
       "category": "game",
@@ -784,6 +819,12 @@
     "pine_sapling": [
       {"use": "plant", "text": "Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into a mature pine by the game clock.", "source": "game/scripts/core/world.gd::plant_tree"}
     ],
+    "apple_sapling": [
+      {"use": "plant", "text": "Planted by the player on free grass in front of them (the pack window's Plant button): a sapling that grows into an apple tree that fruits in summer and autumn (B14).", "source": "game/scripts/core/world.gd::plant_tree"}
+    ],
+    "apple": [
+      {"use": "food", "text": "Eaten from the pack, or from a household's pantry (NPCBrain.FOOD); sold to the food merchant (B14).", "source": "game/scripts/core/npc_brain.gd::_plan_home_work"}
+    ],
     "lockpick": [
       {"use": "tool", "text": "Picks a locked chest: one attempt takes game time, may open the lock until dawn or snap the pick (used up); a seen attempt is a crime.", "source": "game/scripts/core/chests.gd::attempt"}
     ],
@@ -830,7 +871,6 @@
   "exceptions": [
     {"item": "feather", "finding": "no_consumer", "reason": "A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them.", "status": "implemented"},
     {"item": "handcart", "finding": "no_consumer", "reason": "B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; its use as pulled storage, parked at home or a cart hub, comes with the carts-in-play work (B14-6).", "status": "proposed"},
-    {"item": "apple", "finding": "no_source", "reason": "No tree, recipe or kit gives apples: the item is defined but never made (the start kit has a rotten apple only).", "status": "implemented"},
     {"item": "rotten_apple", "finding": "start_kit_only", "reason": "Only in the player's start kit: spoiled food that harms when eaten.", "status": "implemented"},
     {"item": "rusty_sword", "finding": "start_kit_only", "reason": "Only in the player's start kit; nobody buys it.", "status": "implemented"},
     {"item": "rusty_pickaxe", "finding": "start_kit_only", "reason": "Only in the player's start kit; a slower pickaxe nobody buys.", "status": "implemented"},

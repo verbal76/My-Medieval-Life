@@ -1869,6 +1869,10 @@ func _find_target() -> void:
 					else ("A boulder" if dep.get("boulder", false) else "%s seam" % GameData.item_name(dep.ore)) + ": requires a pickaxe (the smith sells them)"}
 			break
 		var tr := world.tree_at(cell)
+		if not tr.is_empty() and Trees.fruit_ripe(tr, world.day(), world.season()):     # B14: pick the fruit first; fell it after
+			var fit: String = str(Trees.fruit_cfg(str(tr.species)).item)
+			front = {"kind": "fruit", "tree": tr, "label": "Pick %s" % GameData.item_name(fit).to_lower() + ("s" if not GameData.item_name(fit).ends_with("s") else "")}
+			break
 		if not tr.is_empty() and tr.state != "cleared":
 			var lab: String
 			if tr.state == "grown":
@@ -2252,7 +2256,7 @@ func _target_cell(t: Dictionary) -> Vector2i:
 	match str(t.kind):
 		"deposit":
 			return Vector2i(int(t.dep.x), int(t.dep.y))
-		"tree":
+		"tree", "fruit":
 			return Vector2i(int(t.tree.x), int(t.tree.y))
 		"field":
 			return Vector2i(int(t.field.x), int(t.field.y))
@@ -2273,7 +2277,7 @@ func _gain(text: String, item := "") -> void:
 ## Do what the current target offers, once (Use; and each cycle of gathering).
 func _use() -> void:
 	var p := world.player
-	if str(target.get("kind", "")) in ["deposit", "tree", "plant", "loot"]:
+	if str(target.get("kind", "")) in ["deposit", "tree", "plant", "loot", "fruit"]:
 		var tp: Vector2 = world.loot[target.i].pos if target.kind == "loot" and target.i < world.loot.size() else Vector2(_target_cell(target)) + Vector2(0.5, 0.5)
 		if not world.reaches(p.pos, tp):
 			stop_gather("")
@@ -2388,6 +2392,19 @@ func _use() -> void:
 					_gain("+%d %s" % [got, GameData.item_name("wheat")], "wheat")
 				else:
 					ui.message("Nothing left to harvest."))
+		"fruit":
+			var ftree: Dictionary = target.tree
+			var fitem: String = str(Trees.fruit_cfg(str(ftree.species)).item)
+			if not p.inv.can_add(fitem):
+				ui.message("Your pack is full.")
+				return
+			start_action("Picking", 1.5, func():
+				var got := world.pick_fruit(ftree)
+				for id in got:
+					p.inv.add(id, int(got[id]))
+					_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
+				if got.is_empty():
+					ui.message("Nothing left to pick."))
 		"plant":
 			var pl: Dictionary = target.plant
 			var pdef := ResourceNodes.def_for("plant", str(pl.kind))

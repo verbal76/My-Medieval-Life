@@ -13,14 +13,15 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 24 (18 the player may harvest, 6 the keeper's livestock).
-- Materials they produce: 25 (blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
+- Implemented node types: 25 (19 the player may harvest, 6 the keeper's livestock).
+- Materials they produce: 27 (apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, stone, wheat, wheat_seed, wool).
 - Finite node types: 6 (boulder, coal_seam, copper_seam, gold_seam, iron_seam, stone_seam); with no replacement once worked out: 1 (gold_seam).
 - At risk of overharvesting: 4 (coal_seam, copper_seam, iron_seam, stone_seam).
 - Not Gather-compatible: 6 (chicken_pen, cow_pen, pig_pen, player_field, player_pen, sheep_pen).
 
 | Node | Category | Origin | Tool | Skill | Yields a cycle | Depletion | Player | NPCs | Gather | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
+| `apple_tree` Apple tree (fruit) | forage | cultivated | none | none | 4 apple | regrows | yes | yes | yes | implemented |
 | `blue_berry_bush` Blue berry bush | forage | natural | none | none | 2 blueberries | regrows | yes | yes | yes | implemented |
 | `boulder` Boulder | mineral | natural | pickaxe | mining | 1 stone | finite | yes | no | yes | implemented |
 | `chicken_pen` Chickens | livestock | bred | none | none | 2 feather, 1 meat | breeds | no | yes | no | implemented |
@@ -36,7 +37,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | yes | yes | implemented |
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
-| `tree` Tree | wood | natural | axe | woodcutting | 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
+| `tree` Tree | wood | natural | axe | woodcutting | 1 apple_sapling, 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
 | `wild_bear` Bear | game | natural | weapon | combat | 2 hide, 6 meat | breeds | yes | no | yes | implemented |
 | `wild_bird` Bird | game | natural | weapon | combat | 1 feather | breeds | yes | yes | yes | implemented |
@@ -47,6 +48,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `wild_wolf` Wolf | game | natural | weapon | combat | 1 hide, 2 meat | breeds | yes | no | yes | implemented |
 
 ## Nodes
+
+### `apple_tree` · Apple tree (fruit)
+
+- **Status:** implemented. **Category:** forage, cultivated. **Found by:** `{"kind": "fruit_tree", "species": "apple_orchard"}`.
+- **Where:** The cottagers' orchards: village trees near the houses (one in fruit_trees.orchard_share), and any apple tree planted from a sapling. **In the world:** the village trees within 18 tiles of a house door, one in 2 (new worlds), and any planted from saplings; 4 apple a picking.
+- **Action:** Picking (interact): "Pick apples". **Range (tiles):** 1.1. The tree's trunk cell or the cell above it, faced from beside it (main.gd _find_target).
+- **Tool:** none. No tool needed. Where to get it: none.
+- **Skill:** none.
+- **Time:** 0 game minutes. The player picks in 1.5 real seconds; villagers work 15 game minutes (B14).
+- **Cost:** stamina 0, tool wear 0. No stamina, no tool.
+- **Yields a cycle:** 4 apple. A grown apple tree in fruit gives fruit_trees.apple_orchard.yield apples at once (World.pick_fruit). It is felled like any tree for logs and, by chance, an apple sapling (the tree node).
+- **Total:** see Found by
+- **Depletion:** regrows. Picked bare, it bears again fruit_trees.apple_orchard.regrow_days later, but only in its fruiting seasons (summer and autumn): none in winter or spring (Trees.fruit_ripe).
+- **Owner:** Nobody: orchard trees near the houses are common, like the wild plants. **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers yes. Adults pick a fruiting apple tree near home instead of a berry bush when it is nearer (NPCBrain._plan_home_work, act pick_fruit); apples go into the pantry as food and their surplus to the storefront or the food merchant.
+- **Gather mode:** yes. **Icon:** `apple`.
+- **Risk:** Few trees, a short fruiting window (seasons are 2 days); yields provisional.
+- **Code:** `game/scripts/core/world.gd::pick_fruit`, `game/scripts/core/trees.gd::fruit_ripe`, `game/scripts/core/world.gd::_tree_species`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_fruit_tree_near`
 
 ### `blue_berry_bush` · Blue berry bush
 
@@ -327,7 +346,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** woodcutting, level 1.
 - **Time:** `chop_minutes` (40 game minutes). A villager works chop_minutes game minutes a tree. The player's takes chop_minutes / game_minutes_per_second x 0.5 real seconds, divided by the axe's speed, and 30% less from Woodcutting 3.
 - **Cost:** stamina 0, tool wear 3. No stamina. The axe wears 3 a tree.
-- **Yields a cycle:** 4 log, 1 oak_sapling, 1 pine_sapling. World.chop_tree takes balance.json tree_growth.chops blows; the last one calls World.fell, which gives 4 logs once; the player gets 1 more from Woodcutting 2 and (chance tree_growth.sapling_chance) a sapling item (oak_sapling or pine_sapling) to plant. Villagers always get 4 and no sapling. Only a MATURE tree can be felled: saplings, young and growing trees give nothing and say why.
+- **Yields a cycle:** 1 apple_sapling, 4 log, 1 oak_sapling, 1 pine_sapling. World.chop_tree takes balance.json tree_growth.chops blows; the last one calls World.fell, which gives 4 logs once; the player gets 1 more from Woodcutting 2 and (chance tree_growth.sapling_chance) a sapling item (oak_sapling or pine_sapling) to plant. Villagers always get 4 and no sapling. Only a MATURE tree can be felled: saplings, young and growing trees give nothing and say why.
 - **Total:** 4 logs from each mature tree: the village trees (village.json trees and the map-edge woodland), and any overworld tree, generated or planted.
 - **Depletion:** regrows. A felled tree is a stump; tree_regrow_days later (at dawn) it sprouts a sapling, which grows young, growing and mature by the game clock (balance.json tree_growth, in game days; Trees.sync, computed lazily). The player can also plant saplings (World.plant_tree). Ground bought for building is cleared and never grows again (Property.claim).
 - **Owner:** Nobody: trees belong to no one. **Theft:** Never theft.
@@ -517,6 +536,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 
 | Node | Risk |
 |---|---|
+| `apple_tree` | Few trees, a short fruiting window (seasons are 2 days); yields provisional. |
 | `blue_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `boulder` | Stone is cheap: a boulder breaks into only 3 stone. The caravan's quarry import rule counts the seams alone. |
 | `chicken_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |

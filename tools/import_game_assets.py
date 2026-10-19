@@ -49,6 +49,8 @@ import tempfile
 from assetzip import AssetZip, REPO
 import puny_chargen
 import puny_world_terrain as pwt
+import animal_farm  # noqa: E402
+import craftpix_plants  # noqa: E402
 import living_forest
 
 OUT = REPO / "game" / "assets"
@@ -611,6 +613,8 @@ def main():
         dest.write_bytes(pz.read(member))
         record(dest, PROMPT_ZIP, member, "copied unchanged")
     living_forest.import_into(prov, record)           # the trees: from the private package if it is there, else kept as they are
+    craftpix_plants.import_into(prov, record)         # fruit trees (B14): from the private Craftpix zip, else kept as they are
+    animal_farm.import_into(prov, record)             # the horse (B14-11): from the private Animal Farm pack, else kept as it is
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

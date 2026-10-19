@@ -147,6 +147,8 @@ func _dress(n: TreeNode) -> void:
 			pivot = Vector2(s.pivot[0], s.pivot[1])
 		_:
 			var s: Dictionary = v.sizes[state if state != "grown" else "mature"]
+			if state == "grown" and v.has("fruit") and world != null and Trees.fruit_ripe(rec, world.day(), world.season()):
+				s = v.fruit                    # B14: the fruit hangs on it
 			file = s.file
 			pivot = Vector2(s.pivot[0], s.pivot[1])
 	n.texture = Trees.texture(file)

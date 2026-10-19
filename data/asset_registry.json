@@ -12050,9 +12050,10 @@
     "animations"
    ],
    "status": "planned",
-   "opportunities": "The horse: a draught animal (plough, carts) and the first horse in the game. Bull, ram, rooster, sow, piglet, calf, lamb and chick: same species as Cozy Farm's in another style; not mixed in, so the pens keep one look.",
+   "opportunities": "The horse: a draught animal (the plough's deferred 'draught animal', then carts) and the first horse in the game; it needs a source (a manor stable pen in the village map, or the caravan) and the owner's choice of role. Bull, ram, rooster, sow, piglet, calf, lamb and chick: same species as Cozy Farm's in another style; not mixed in, so the pens keep one look.",
    "scale": "96 px cells, the horse about 80 px long: scale 1/3 (box) to about 27 px, against a 24 px Cozy cow and a 14 px human",
    "known_issues": "1.0 arrived as a .rar; extracted with unar into private-assets/Animal_Farm_Project_Sprite_Pack_1.0 (byte for byte).",
+   "used_for": "Imported, not yet in play: the horse sheet (game/assets/animals/farm_horse.png, tools/animal_farm.py, 1/3 box to 32 px frames, a 28 x 22 px horse) and AnimalSprite's 'farm' layout (stand, walk, graze; wildlife_test). Waiting on the owner's choice of how horses enter the village and what they do (CLAUDE.md section 11).",
    "scan": [
     {
      "source": "private-assets/Animal_Farm_Project_Sprite_Pack_1.0",
@@ -12543,7 +12544,9 @@
      ]
     }
    ],
-   "imported": []
+   "imported": [
+    "assets/animals/farm_horse.png"
+   ]
   },
   {
    "id": "craftpix_plants",
@@ -12561,9 +12564,11 @@
     "produce",
     "crates"
    ],
-   "status": "planned",
-   "opportunities": "Apple, pear-yellow and plum fruit trees in 5 stages: a source for apples (none exists) and choppable orchard trees; crop growth stages; produce crates as storefront and stall displays; produce icons.",
+   "status": "partial",
+   "opportunities": "Plum and yellow-fruit trees (new fruit items); crop growth stages for the existing crops (wheat, carrot, potato, herb) where they read better than Cozy Farm's; produce crates as storefront and stall displays (the storefront counter is a stand-in); produce icons; grapes on vines and sunflowers. Palms and pineapples do not fit an English medieval setting.",
    "scale": "Trees and crops drawn at the world's pixel density: 1:1",
+   "used_for": "Apple trees (5 growth stages and the fruiting stage; tools/craftpix_plants.py): orchard trees by the houses that bear apples, felled and replanted like any tree (INT-147).",
+   "known_issues": "The pack has no stump or cut art: the stump is the mature tree's foot and the notches are drawn by the import tool. The grass patch under each tree is a slightly different green from the village grass.",
    "scan": [
     {
      "source": "private-assets/craftpix-net-200380-free-pixel-art-plants-for-farm.zip",
@@ -12653,7 +12658,16 @@
      ]
     }
    ],
-   "imported": []
+   "imported": [
+    "assets/icons/apple_sapling.png",
+    "assets/trees/apple_orchard_fruit.png",
+    "assets/trees/apple_orchard_growing.png",
+    "assets/trees/apple_orchard_mature.png",
+    "assets/trees/apple_orchard_sapling.png",
+    "assets/trees/apple_orchard_stump.png",
+    "assets/trees/apple_orchard_young.png",
+    "assets/trees/fruit_trees.json"
+   ]
   },
   {
    "id": "character_customizer",

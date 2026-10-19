@@ -313,6 +313,7 @@
     "cart_wheel": {"name": "Cart wheel", "type": "resource", "value": 9},
     "cart_axle": {"name": "Cart axle", "type": "resource", "value": 20},
     "cart_ironwork": {"name": "Cart ironwork", "type": "resource", "value": 19},
-    "handcart": {"name": "Handcart", "type": "resource", "value": 90, "cart": true}
+    "handcart": {"name": "Handcart", "type": "resource", "value": 90, "cart": true},
+    "apple_sapling": {"name": "Apple sapling", "type": "resource", "value": 3, "plant": "apple"}
   }
 }

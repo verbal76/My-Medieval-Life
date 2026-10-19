@@ -314,6 +314,9 @@ func _new_day() -> void:
 	# a carcass nobody took spoils after ANIMAL_LOOT_DAYS: no leftover markers (PL2-004)
 	loot = loot.filter(func(l): return not (str(l.from).begins_with("the ") and l.has("t") and minutes - float(l.t) > ANIMAL_LOOT_DAYS * 1440.0))
 	var d := day()
+	for t in trees:                           # B14: fruit trees bear again (or lose their fruit with the season): redraw them
+		if t.has("species") and not Trees.fruit_cfg(str(t.species)).is_empty():
+			tree_changed.emit(t)
 	if map.overworld != null:                 # wild flowers outside the village grow back too: their tile returns
 		for c: Vector2i in map.overworld.plant_changes.keys():
 			if int(map.overworld.plant_changes[c]) <= d:
@@ -717,14 +720,43 @@ func _new_tree(t: Dictionary) -> Dictionary:
 
 
 ## The species of a village tree from the tiles the map draws it with (its group: leafy, autumn, mixed,
-## conifer) and a hash of its cell.
+## conifer) and a hash of its cell. Trees by the houses (fruit_trees.orchard_house_range of a door, not in
+## the woods) are the cottagers' orchards: one in orchard_share of them is an apple tree (B14).
 func _tree_species(t: Dictionary) -> String:
+	var ft: Dictionary = GameData.b("fruit_trees")
+	var cell := Vector2i(int(t.x), int(t.y))
+	if (Overworld.hash32(cell.x, cell.y, 11, 23) >> 5) % int(ft.orchard_share) == 0 and not _in_woods(cell):
+		for id in buildings:
+			if str(buildings[id].get("type", "")) == "house" and Vector2(building_door(id)).distance_to(Vector2(cell)) <= float(ft.orchard_house_range):
+				return "apple_orchard"
 	var group := "mixed"
 	for k in map.overworld.tiles.trees:
 		if int(k.top) == int(t.top):
 			group = str(k.group)
 			break
 	return Trees.species_for(group, int(t.x), int(t.y), false)
+
+
+func _in_woods(c: Vector2i) -> bool:
+	for wd in map.data.get("woods", []):
+		if c.x >= int(wd.x) and c.x < int(wd.x) + int(wd.w) and c.y >= int(wd.y) and c.y < int(wd.y) + int(wd.h):
+			return true
+	return false
+
+
+## Pick a fruit tree's ripe fruit (B14): returns {item: count}, {} if none hangs; it bears again
+## fruit_trees regrow_days later, in a fruiting season.
+func pick_fruit(t: Dictionary) -> Dictionary:
+	if not Trees.fruit_ripe(t, day(), season()):
+		return {}
+	var f := Trees.fruit_cfg(str(t.species))
+	var r: Array = f.regrow_days
+	t.fruit_day = day() + rng.randi_range(int(r[0]), int(r[1]))
+	if t.get("ow", false):
+		map.overworld.note_tree(t)
+	tree_changed.emit(t)
+	stat("picked_" + str(f.item), float(f.yield))
+	return {str(f.item): int(f.yield)}
 
 
 ## The map's wild plants, all ripe (their place and tile are map data; load_dict applies a save's state).
