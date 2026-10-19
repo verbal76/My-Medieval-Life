@@ -1642,6 +1642,9 @@ func _find_target() -> void:
 				cands.push_front(job)
 			else:
 				cands.append(job)
+	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
+	var lawful := cands.filter(func(c): return not str(c.get("label", "")).contains("theft"))
+	cands = lawful + cands.filter(func(c): return str(c.get("label", "")).contains("theft"))
 	target_options = cands
 	var pick := 0
 	for i in cands.size():
