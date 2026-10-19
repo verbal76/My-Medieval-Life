@@ -298,6 +298,7 @@ func _sample(start: Dictionary) -> Dictionary:
 		"open_sites": open, "finished_sites": done, "houses_built": houses, "workshops_built": workshops,
 		"households": w.households.size(), "households_split": int(_st("households_founded")), "helpers_now": w.construction.contracts.size(),
 		"helper_wages": int(_st("helper_wages")), "helper_bought": int(_st("helper_bought"))}
+	s.growth = _growth()
 	# trade
 	var exp := {}
 	var imp := {}
@@ -524,6 +525,76 @@ func _print_sample(s: Dictionary) -> void:
 		s.work.unemployed, s.money.household_cash.min, s.money.household_cash.median, s.money.household_cash.max, s.money.treasury, insolvent,
 		s.materials.deposit_left, sum.call("log"), sum.call("plank"), int(s.materials.trees.get("grown", 0)), wild, penned,
 		s.building.sites_finished, s.building.sites_started, s.building.houses_built, s.building.households, s.currency.total, s.currency.leak, (s.ledger.items as Dictionary).size()])
+	print("  growth: %s" % JSON.stringify(s.growth))
+
+
+## What holds back births, partnering and new households (EQ-07; read only): beds against people, couples
+## who could have a child and what stops them, single adults, crowded households and whether they can pay
+## for a new home, and empty houses on the market.
+func _growth() -> Dictionary:
+	var c := Life.cfg()
+	var con := w.construction
+	var fp := con.footprint("house")
+	var house_cost := w.property.land_price(fp.x, fp.y) + con.estimate(con.cost_of("house")) \
+			+ int(GameData.b("helper_wage")) * int(GameData.b("founder_build_days"))
+	var beds := 0
+	var living := 0
+	var full := 0
+	for h in w.households.size():
+		var hh: Dictionary = w.households[h]
+		if hh.get("ended", false) or w.brain._members(h).is_empty():
+			continue
+		living += Life._living_in(w, h)
+		if w.buildings.has(str(hh.home)):
+			beds += con.beds_in(str(hh.home))
+			if not Life.has_room(w, h):
+				full += 1
+	var couples := {"fertile": 0, "no_bed": 0, "low_food": 0, "recent_child": 0, "could": 0}
+	var single := {"female": 0, "male": 0, "female_room": 0, "male_room": 0}
+	for n: NPC in w.npcs:
+		if not n.alive or n.role != "adult":
+			continue
+		var a := Life.npc_age(w, n)
+		if not Life.has_partner(w, n):
+			if a >= float(c.partner_min_age) and a <= float(c.partner_max_age):
+				single[n.sex] += 1
+				if Life.has_room(w, n.household):
+					single[n.sex + "_room"] += 1
+			continue
+		if n.sex != "female" or a < float(c.birth_mother_min_age) or a > float(c.birth_mother_max_age):
+			continue
+		couples.fertile += 1
+		var recent := false
+		for cid in n.children:
+			var k := w.npc(int(cid))
+			if k != null and Life.age_years(k.born, w.minutes) < float(c.birth_min_gap_years):
+				recent = true
+		if not Life.has_room(w, n.household):
+			couples.no_bed += 1
+		elif w.brain.household_food_days(n.household) < float(c.birth_min_food_days):
+			couples.low_food += 1
+		elif recent:
+			couples.recent_child += 1
+		else:
+			couples.could += 1
+	var crowded := 0
+	var can_split := 0
+	var best_spare: int = -1000000000
+	for h in w.households.size():
+		if con.crowded(h):
+			crowded += 1
+			var spare: int = w.property.purse(World.hh_ref(h)) - con._keep(h, w.brain._members(h).size() - 1)
+			best_spare = maxi(best_spare, spare)
+			if spare >= house_cost:
+				can_split += 1
+	var empty_houses := 0
+	for r in w.property.market():
+		if w.property.is_home(r) or w.property.is_home(w.property.unit(r).back()):
+			empty_houses += 1
+	return {"beds": beds, "living": living, "households_full": full, "fertile_couples": couples, "single_adults": single,
+		"crowded_households": crowded, "crowded_can_afford_home": can_split, "best_crowded_spare": best_spare if crowded > 0 else 0,
+		"new_house_cost": house_cost, "house_price": int(GameData.b("house_price")), "empty_houses_for_sale": empty_houses,
+		"partnerships": int(_st("partnerships")), "households_founded": int(_st("households_founded"))}
 
 
 func _sumd(d: Dictionary) -> int:
@@ -545,6 +616,7 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("deposits exhausted on day: %s" % JSON.stringify(exhausted_day))
 	print("wildlife: %s" % JSON.stringify(s.wildlife))
 	print("building: %s" % JSON.stringify(s.building))
+	print("growth: %s" % JSON.stringify(s.growth))
 	print("trade: %s" % JSON.stringify(s.trade))
 	print("manor work: %s" % JSON.stringify(s.manor_work))
 	print("currency: %s" % JSON.stringify(s.currency))
