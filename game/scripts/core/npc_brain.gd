@@ -71,6 +71,32 @@ func work(minutes: float, act := "", args := {}, anim := "work", face = null) ->
 	return s
 
 
+## B8-007: how a villager at work looks: [animation, tool item]. Mining, felling, smithing, building and
+## hunting show the swing (the throw frames) with the matching tool's icon in the hand, as the player's
+## do; picking, sowing and feeding the arms-forward gather frames; anything else the old work frames.
+func work_look(n: NPC) -> Array:
+	if n.plan.is_empty() or n.plan[0].k != "work":
+		return [n.anim, ""]
+	var s: Dictionary = n.plan[0]
+	match str(s.get("act", "")):
+		"mine", "mj_mine":
+			return ["swing", "pickaxe"]
+		"chop":
+			return ["swing", "axe"]
+		"mj_step":
+			return ["swing", "hammer"]
+		"hunt", "slaughter":
+			return ["swing", "rusty_sword"]
+		"harvest", "sow", "feed_pen":
+			return ["gather", ""]
+		"craft":
+			var st: String = str(w.stations[s.args.station].type) if w.stations.has(s.args.get("station", "")) else ""
+			if st in ["anvil", "forge", "workbench", "sawhorse"]:
+				return ["swing", "hammer"]
+			return ["gather", ""]
+	return [str(s.get("anim", "work")), ""]
+
+
 func doit(act: String, args := {}) -> Dictionary:
 	return {"k": "do", "act": act, "args": args}
 
