@@ -103,6 +103,19 @@ func marker(n: NPC) -> String:
 	return ""
 
 
+## PL1-09: whether the player has taken a job from this villager and not yet been paid: any accepted
+## non-story quest or hired day's work they gave (the player's quest list keeps the giver's id, so
+## this survives a save), or, for the reeve, a manor job the player holds. Clears when the job is
+## completed and paid (complete) or dropped.
+func employer(n: NPC) -> bool:
+	if n == null or not n.alive:
+		return false
+	for q in w.player.quests:
+		if int(q.giver) == n.id and not template(q.id).get("story", false):
+			return true
+	return n.id == w.reeve_id and not w.manor_work.job_of(World.PLAYER).is_empty()
+
+
 func diamond(n: NPC) -> bool:
 	return marker(n) != ""
 

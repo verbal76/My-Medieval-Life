@@ -14,6 +14,7 @@ const BUYS := {
 	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6},
 	"carpenter": {"log": 30},
 	"tanner": {"hide": 15},
+	"sage": {"flower": 20},          # the apothecary buys wild flowers for poultices and tonics (PL1-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10},
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20},
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
@@ -25,7 +26,7 @@ const BUYS := {
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2},
 }
 # items an NPC keeps for its own work and will not sell
-const KEEPS := {"miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
+const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
 # who to sell each item to, in order of preference
 const OUTLETS := {
@@ -306,6 +307,11 @@ func _plan_job(n: NPC) -> bool:
 			n.plan = [go(wander_cell(w.building_door(_manor_id()), 5)), work(90, "", {}, "idle")]
 			return true
 		"sage":
+			# the apothecary: flowers bought from foragers become poultices and tonics at the stove
+			if n.inv.count("herbal_poultice") < 8 and n.inv.has("flower", 2) and _do_recipe(n, "brew_poultice"):
+				return true
+			if n.inv.count("healing_tonic") < 6 and n.inv.has("flower", 5) and _do_recipe(n, "brew_healing_tonic"):
+				return true
 			n.doing = "pondering lore"
 			n.plan = [go(wander_cell(w.building_door("b_hut") if w.buildings.has("b_hut") else w.building_door(n.home), 3), 0.7), work(60, "", {}, "idle")]
 			return true
@@ -2034,6 +2040,7 @@ func caravan() -> void:
 		w.caravan_purse = mini(float_coins, w.caravan_purse + roundi(float(GameData.b("caravan_allowance")) * every * room))
 	var sold := _caravan_imports()
 	var stone := _caravan_stone()
+	_caravan_apothecary()
 	var budget := mini(int(GameData.b("caravan_coins")), w.caravan_purse)
 	var bought := 0
 	# merchants do not sell the village's food away when there is less than a few days of it (the
@@ -2119,6 +2126,37 @@ func _caravan_imports() -> int:
 				w.stat("caravan_coins_out", price)
 				spent += price
 				w.stat("imported_" + id)
+	return spent
+
+
+## The caravan's medicines (PL1-04): each visit it sells the sage up to caravan_apothecary_per_visit
+## pieces, the scarcest first, towards caravan_apothecary_stock, at base value from the sage's own coins
+## (above the trader cash floor). Finite: it stops when the sage cannot pay.
+func _caravan_apothecary() -> int:
+	var sage := w.npc(w.sage_id)
+	if sage == null or not sage.alive:
+		return 0
+	var stock: Dictionary = GameData.b("caravan_apothecary_stock")
+	var spent := 0
+	for k in int(GameData.b("caravan_apothecary_per_visit")):
+		var pick := ""
+		var worst := 1.0
+		for id in stock:
+			var fill := float(sage.inv.count(id)) / float(stock[id])
+			if fill < worst and sage.coins - GameData.value(id) >= int(GameData.b("trader_cash_floor")):
+				worst = fill
+				pick = id
+		if pick == "":
+			break
+		var price := GameData.value(pick)
+		sage.coins -= price
+		sage.spent += price
+		sage.inv.add(pick)
+		w.coin_sources -= price
+		w.caravan_purse += price
+		w.stat("caravan_coins_out", price)
+		w.stat("imported_" + pick)
+		spent += price
 	return spent
 
 

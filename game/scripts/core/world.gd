@@ -1903,6 +1903,20 @@ func player_eat(id: String) -> bool:
 	return true
 
 
+## Use a medicine (items.json type "medicine": it heals `heal` health and feeds nobody). Consumed only
+## when it heals: at full health nothing is used up. Never above the health cap (PL1-04).
+func player_use_medicine(id: String) -> bool:
+	var it: Dictionary = GameData.item(id)
+	if not it.has("heal") or it.has("food") or not player.alive or player.hp >= player.hp_cap() - 0.001:
+		return false
+	if not player.inv.remove(id):
+		return false
+	player.hp = minf(player.hp_cap(), player.hp + float(it.heal))
+	stat("used_medicine")
+	stat("used_" + id)
+	return true
+
+
 ## Hold a weapon, wear armour, a cap or helmet, an amulet or a ring, or take a tool in hand: the
 ## item goes in the slot its type names (PlayerState.GEAR); "" in a slot means nothing there.
 func player_equip(id: String) -> bool:

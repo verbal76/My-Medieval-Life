@@ -22,7 +22,7 @@ const JOB_WORDS := {
 	"tavernkeeper": "I keep the tavern and serve pottage, roast meat and ale.",
 	"guard": "I keep watch over the village for the manor, against the bandits in the woods.",
 	"reeve": "I keep the manor: it pays the guards and its hands, and feeds households that run short.",
-	"sage": "I study lore, and I teach the rules of fire to those who can pay.",
+	"sage": "I study lore, and I teach the rules of fire to those who can pay. I am the village apothecary too: bandages, poultices and tonics, and I buy wild flowers for them.",
 	"manor_hand": "I work for the manor, for a day's wage.",
 }
 const STALL_WORDS := {"raw": "ore, stone, logs and planks", "food": "food: grain, meat, pottage and ale",

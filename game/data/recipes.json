@@ -22,6 +22,9 @@
     "cook_pottage":  {"station": "stove",     "in": {"wheat": 2},                  "out": {"pottage": 6},   "minutes": 30, "skill": "cooking", "xp": 5, "level": 1},
     "roast_meat":    {"station": "oven",      "in": {"meat": 1, "log": 1},         "out": {"roast_meat": 2}, "minutes": 40, "skill": "cooking", "xp": 7, "level": 1},
     "brew_ale":      {"station": "stove",     "in": {"wheat": 3},                  "out": {"ale": 4},       "minutes": 60, "skill": "cooking", "xp": 6, "level": 2},
-    "brew_tonic":    {"station": "stove",     "in": {"flower": 3},                "out": {"herbal_tonic": 1}, "minutes": 30, "skill": "cooking", "xp": 4, "level": 1}
+    "brew_tonic":    {"station": "stove",     "in": {"flower": 3},                "out": {"herbal_tonic": 1}, "minutes": 30, "skill": "cooking", "xp": 4, "level": 1},
+    "brew_poultice": {"station": "stove",     "in": {"flower": 2},                "out": {"herbal_poultice": 1}, "minutes": 20, "skill": "cooking", "xp": 4, "level": 1},
+    "brew_healing_tonic": {"station": "stove", "in": {"flower": 5},               "out": {"healing_tonic": 1}, "minutes": 40, "skill": "cooking", "xp": 8, "level": 2},
+    "brew_strong_tonic": {"station": "stove", "in": {"healing_tonic": 2, "ale": 1}, "out": {"strong_healing_tonic": 1}, "minutes": 50, "skill": "cooking", "xp": 14, "level": 3}
   }
 }

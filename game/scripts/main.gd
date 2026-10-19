@@ -88,6 +88,7 @@ var dying := {}                # npc id -> seconds left of the death flicker
 var fading: Array = []         # [sprite, seconds left]: killed animals flickering out
 var bubble_layer: CanvasLayer  # speech bubbles over villagers' heads, in screen space
 var bubbles := {}              # npc id -> SpeechBubble (at most one each)
+var stars := {}                # npc id -> the gold star over the employer the player has taken a job from and is owed pay by (PL1-09)
 var diamonds := {}             # npc id -> the quest marker sprite over a quest giver
 var placing := {}              # choosing where to build: {kind, at: the footprint's top-left cell}
 var ghost: PlacementGhost      # the footprint shown while placing
@@ -158,6 +159,23 @@ func _ready() -> void:
 				ui.gain("+1 Iron ore", "iron_ore")
 				ui.gain("Tool worn")
 				(func(): for tw in get_tree().get_processed_tweens(): tw.kill()).call_deferred()    # keep the lines up for the picture
+			"apothecary":
+				# PL1-04: the sage's shop (the normal trade window)
+				var sage := world.npc(world.sage_id)
+				ui.show_trade(sage)
+			"employer_star":
+				# PL1-09: the smith who set the player a job wears the star, wherever the smith walks
+				for n: NPC in world.npcs:
+					if n.job == "smith" and n.alive:
+						n.inv.remove("iron_ore", n.inv.count("iron_ore"))
+						n.coins = 200
+						world.quests.offers[n.id] = "ore_for_the_forge"
+						world.quests.accept(n)
+						world.player.pos = n.pos + Vector2(2, 2)
+						follow_at = _in_view(world.player.pos * T)
+						break
+			"stove_window":
+				ui.show_craft(world.stations_of("stove")[0])
 			"hud_low", "prompt":
 				# B8-013/019: a low-food, low-health HUD, with the contextual prompt and a hint toast
 				world.player.hunger = 12.0
@@ -681,6 +699,7 @@ func _clear_world() -> void:
 	reach_to = Vector2.INF
 	placing = {}
 	diamonds.clear()                # their nodes go with the scene
+	stars.clear()
 	site_bars.clear()
 	move_to = Vector2.INF
 	walk_goal = Vector2i(-1, -1)
@@ -1101,6 +1120,7 @@ func _sync_sprites() -> void:
 	_sync_loot()
 	_sync_bubbles()
 	_sync_diamonds()
+	_sync_stars()
 	_sync_sites()
 
 
@@ -1143,6 +1163,42 @@ func _sync_diamonds() -> void:
 		if not shown.has(id):
 			diamonds[id].queue_free()
 			diamonds.erase(id)
+
+
+## PL1-09: a bright gold star over each employer the player has taken a job from and not yet been
+## paid by (World.quests.employer). It follows them, hangs over the door when they are indoors under a
+## roof, and goes only when the job is completed and paid.
+func _sync_stars() -> void:
+	var cam := camera.get_screen_center_position() / T
+	var bob := sin(Time.get_ticks_msec() / 260.0) * 1.5
+	var shown := {}
+	for n: NPC in world.npcs:
+		if not world.quests.employer(n):
+			continue
+		var covered := _covered(n)
+		var inside := world.place_of(n.pos)
+		var at := Vector2(world.building_door(inside)) if covered else n.pos
+		if at.distance_to(cam) > 30.0:
+			continue
+		shown[n.id] = true
+		var s: Sprite2D = stars.get(n.id)
+		if s == null:
+			s = Sprite2D.new()
+			s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			s.z_index = MARKER_Z + 1
+			s.texture = load("res://assets/markers/star.png")
+			s.name = "EmployerStar"
+			above.add_child(s)
+			stars[n.id] = s
+		var raised: float = 16.0 if world.quests.marker(n) != "" else 0.0
+		if covered:
+			s.position = (Vector2(world.building_door(inside)) + Vector2(0.5, 0.0)) * T + Vector2(0, -26 + bob - raised)
+		else:
+			s.position = n.pos * T + Vector2(0, -48 + bob - raised)
+	for id in stars.keys():
+		if not shown.has(id):
+			stars[id].queue_free()
+			stars.erase(id)
 
 
 ## A progress bar over each unfinished building frame (owner rule: a frame site with a progress bar).
@@ -1615,7 +1671,7 @@ func _find_target() -> void:
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
 		if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
 			var no := world.station_refusal(id)
-			here.append({"kind": "station", "id": id, "label": ("Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]})
+			here.append({"kind": "station", "id": id, "label": ("Use Stove" if st.type == "stove" else "Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]})
 	for pl in world.plots:
 		var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
 		if r.has_point(p.pos) and cands.is_empty() and here.is_empty() and world.place_of(p.pos) == "":

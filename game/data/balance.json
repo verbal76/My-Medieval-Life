@@ -129,6 +129,10 @@
   "public_works_seller_keeps": {"plank": 6, "iron_bar": 4, "stone": 6},
   "caravan_import_stock": {"iron_ore": 12, "coal": 8, "copper_ore": 6},
   "caravan_import_when_left": 10,
+  "caravan_apothecary_stock": {"linen_bandage": 8, "herbal_poultice": 6, "healing_tonic": 4, "strong_healing_tonic": 2},
+  "caravan_apothecary_per_visit": 4,
+  "_apothecary_note": "PL1-04 (agent proposal, provisional): the sage keeps the village apothecary. Starting stock, flowers the sage buys (BUYS sage) and brews into poultices and tonics at the stove, and the caravan's finite resupply: on each visit it sells the sage up to caravan_apothecary_per_visit pieces towards caravan_apothecary_stock, at the item's base value, paid from the sage's own coins above the trader cash floor (coins leave the village, like the ore imports).",
+  "sage_start_stock": {"linen_bandage": 6, "herbal_poultice": 4, "healing_tonic": 3, "strong_healing_tonic": 2},
   "caravan_import_markup": 1.0,
   "caravan_stone": {"load": 20, "markup": 2.0},
   "manor_jobs": {"haul_max": 10, "haul_wage": 2, "quarry_qty": 10, "quarry_wage": 6, "mend_load": 4, "mend_minutes": 180, "mend_wage": 4, "works_stock_max": 40, "days": 1, "latest_start": 15},
@@ -360,6 +364,7 @@
     "rusty_pickaxe": 1,
     "bread": 1,
     "rotten_apple": 1,
+    "linen_bandage": 2,
     "plain_clothes": 1
   },
   "player_start_armor": "plain_clothes",

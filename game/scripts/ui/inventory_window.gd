@@ -23,7 +23,7 @@ const BODY_TOP := 33                # where the panel's body (below the tabs) st
 # id, caption, icon, item types shown ("skills" and "journal" open those windows instead)
 const TABS := [
 	["all", "All", "res://assets/ui/tab_all.png", []],
-	["food", "Food", "res://assets/icons/bread.png", ["food"]],
+	["food", "Food", "res://assets/icons/bread.png", ["food", "medicine"]],
 	["materials", "Materials", "res://assets/icons/log.png", ["resource"]],
 	["tools", "Tools", "res://assets/icons/pickaxe.png", ["tool"]],
 	["weapons", "Weapons", "res://assets/icons/iron_sword.png", ["weapon"]],
@@ -43,7 +43,7 @@ const GEAR_NAMES := {"weapon": "In hand", "tool": "Tool", "armor": "Body", "head
 const GEAR_HINT := {"weapon": "Nothing in hand. Wield a sword here.", "tool": "No tool in hand. Pickaxes and axes go here.",
 	"armor": "Nothing worn. Clothes and armour go here.", "head": "Nothing worn. Caps and helmets go here.",
 	"amulet": "Nothing worn. An amulet goes here.", "ring": "Nothing worn. A ring goes here."}
-const KINDS := {"food": "Food", "resource": "Material", "tool": "Tool", "weapon": "Weapon", "armor": "Body armour",
+const KINDS := {"food": "Food", "medicine": "Medicine", "resource": "Material", "tool": "Tool", "weapon": "Weapon", "armor": "Body armour",
 	"head": "Headgear", "amulet": "Amulet", "ring": "Ring"}
 const PORTRAIT := Rect2(36, 55, 24, 48)    # inside the portrait frame
 const FIGURE := Rect2(8, 4, 16, 20)        # the figure within the sprite sheet's first 32 px frame
@@ -284,6 +284,13 @@ func _build_details() -> void:
 			var hp0 := p.hp
 			w.player_eat(iid)
 			ui.message("You eat the %s.%s" % [GameData.item_name(iid).to_lower(), "  It makes you sick." if p.hp < hp0 else ""])
+			_after())
+	elif it.has("heal"):
+		_action("Use", func():
+			if w.player_use_medicine(iid):
+				ui.message("You use the %s and feel better (health %d)." % [GameData.item_name(iid).to_lower(), int(p.hp)])
+			else:
+				ui.message("You are not hurt: the %s is kept." % GameData.item_name(iid).to_lower())
 			_after())
 	elif t in PlayerState.GEAR:
 		if worn != "":

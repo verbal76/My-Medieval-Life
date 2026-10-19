@@ -667,6 +667,20 @@
    "sha256": "5e88cf198939525537962ad9f558bd7eb880331a415764e9b925f26cb2108c9e"
   },
   {
+   "file": "assets/icons/healing_tonic.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Liquid/Small-Potion-05.png",
+   "transform": "copied unchanged",
+   "sha256": "aadcbfe2fc0aa49b417a5585e8d4daad66814100f0ced4baae25596fc3f29587"
+  },
+  {
+   "file": "assets/icons/herbal_poultice.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Plants & Alchemy/Leaf-11.png",
+   "transform": "copied unchanged",
+   "sha256": "f68210c52f52257619137fe4073881262550f56f40f18d1bb708322ec26a1adc"
+  },
+  {
    "file": "assets/icons/herbal_tonic.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Plants & Alchemy/Herbal-Potion-01.png",
@@ -737,6 +751,13 @@
    "sha256": "b0187dd20285134ef0ba727ef06645f2beae54cf908c28ef3d43092cd8e43d33"
   },
   {
+   "file": "assets/icons/linen_bandage.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Textile/Silk-Fabric-04.png",
+   "transform": "copied unchanged",
+   "sha256": "f3ef865b8102133a4b71ba6cdbe1039bd439bbd494686c9dc40cff7fabc0341c"
+  },
+  {
    "file": "assets/icons/log.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Wood/Wood-Log-01.png",
@@ -791,6 +812,13 @@
    "member": "16x16 Survival RPG Icons/Stone/Rock-Chunk-01.png",
    "transform": "copied unchanged",
    "sha256": "ddcb7087d10dc4bd39e6be2138f4d46694c58e267a69b0034714fa6eba4327d5"
+  },
+  {
+   "file": "assets/icons/strong_healing_tonic.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Liquid/Large-Potion-05.png",
+   "transform": "copied unchanged",
+   "sha256": "fb811d75ea147c20c54f1b73f6876e7f4ea521d22f69fe237aaf5dda62d5ad88"
   },
   {
    "file": "assets/icons/wheat.png",
@@ -1400,6 +1428,13 @@
    "member": "",
    "transform": "generated: a green swallow-tailed pennant with a gold rim on a pole (story quests), 1 px outline",
    "sha256": "60f78a2eb792b686228be6ca466418271f130c7eb658274e1c11ce3bed74152e"
+  },
+  {
+   "file": "assets/markers/star.png",
+   "source": "",
+   "member": "",
+   "transform": "generated: a bright five-point gold star over the employer who is owed payment (PL1-09), 1 px outline",
+   "sha256": "b7e46b2a5047e4af48895e1df5e0631c81f6ad6e3c1cbcde3c57d2209fdb5602"
   },
   {
    "file": "assets/ui/inventory_panel.png",
