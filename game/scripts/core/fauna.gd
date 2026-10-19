@@ -9,7 +9,9 @@ extends RefCounted
 ##    overcrowded), and at zero hunger it loses health until it dies;
 ##  - a well-fed adult female gives birth when a well-fed adult male of her kind shares her pen or
 ##    woods, then not again for breed_days; a litter never takes the area over its cap;
-##  - babies are drawn at half scale until grow_days old, then at full scale;
+##  - babies are drawn with the baby sheet (half scale of the adult sheet where there is none) until grow_days
+##    old; B8-029 adds the stages newborn / juvenile / adult / elderly, the elderly move slower, do not breed and
+##    die naturally within death_days;
 ##  - every animal becomes meat (and hide, if its kind has one) when it is killed; babies give half.
 
 var w
@@ -92,7 +94,13 @@ func _start(area: String, species: String) -> void:
 	var start: Array = s.start
 	for i in int(start[0]) + int(start[1]):
 		var a := spawn(area, species, "m" if i < int(start[0]) else "f", null)
-		a.born = w.minutes - (float(s.grow_days) + w.rng.randf_range(0.0, 3.0)) * 1440.0
+		var age: float = float(s.grow_days) + w.rng.randf_range(0.0, 3.0)        # a breeding adult
+		var n_start := int(start[0]) + int(start[1])
+		if i == 1:                                                         # a juvenile among them (B8-029)
+			age = w.rng.randf_range(float(s.juvenile_days), float(s.grow_days) * 0.9)
+		elif i == n_start - 1 and n_start >= 4:                            # and, in the larger groups, an elderly one
+			age = float(s.elder_days) + w.rng.randf_range(0.0, (float(s.death_days[0]) - float(s.elder_days)) * 0.5)
+		a.born = w.minutes - age * 1440.0
 		a.next_birth = w.minutes + w.rng.randf_range(0.0, float(s.breed_days)) * 1440.0
 
 
@@ -174,9 +182,10 @@ func well_fed(a: Animal) -> bool:
 ## Morning: births.
 func new_day() -> void:
 	var now: float = w.minutes
+	_old_age(now)
 	var born := {}
 	for a: Animal in animals.duplicate():
-		if not a.alive or a.sex != "f" or not well_fed(a) or not a.adult(now) or now < a.next_birth:
+		if not a.alive or a.sex != "f" or not well_fed(a) or not a.breeds(now) or now < a.next_birth:
 			continue
 		if not _has_mate(a):
 			continue
@@ -184,6 +193,11 @@ func new_day() -> void:
 		var room := cap(a.area, a.species) - count(a.area, a.species)
 		var n := mini(int(s.litter), room)
 		if n <= 0:
+			continue
+		# breeding slows as the area fills (B8-029): full chance up to `animal_breed_slow_from` of the cap, then
+		# falling to nothing at the cap (a day's chance; the female tries again tomorrow)
+		var chance := breed_chance(a.area, a.species)
+		if chance < 1.0 and w.rng.randf() >= chance:
 			continue
 		for i in n:
 			spawn(a.area, a.species, "m" if w.rng.randf() < 0.5 else "f", a)
@@ -195,9 +209,34 @@ func new_day() -> void:
 		w.note("%d new %s born in the pens." % [born[k], k.to_lower()])
 
 
+## Natural death of the elderly (B8-029): no chance before the species' death_days[0]; after it a daily chance
+## of 1 in the days left to death_days[1] (so the age at death is spread evenly over the range), certain at the end.
+func _old_age(now: float) -> void:
+	for a: Animal in animals.duplicate():
+		if not a.alive or not a.elderly(now):
+			continue
+		var dd: Array = a.spec().death_days
+		var age: float = a.age_days(now)
+		if age < float(dd[0]):
+			continue
+		var left := float(dd[1]) - age
+		if left <= 1.0 or w.rng.randf() < 1.0 / left:
+			w.stat("old_age_" + a.species)
+			if not a.wild():
+				w.note("An old %s died in the pens." % a.label())
+			remove(a)
+
+
+## The chance a ready female breeds on a day: 1 while the area holds less than `animal_breed_slow_from` of its cap,
+## then falling in a line to 0 at the cap (B8-029).
+func breed_chance(area: String, species: String) -> float:
+	var frac := float(count(area, species)) / float(cap(area, species))
+	return clampf((1.0 - frac) / (1.0 - float(GameData.b("animal_breed_slow_from"))), 0.0, 1.0)
+
+
 func _has_mate(f: Animal) -> bool:
 	for m: Animal in animals:
-		if m.alive and m.sex == "m" and m.area == f.area and m.species == f.species and well_fed(m) and m.adult(w.minutes):
+		if m.alive and m.sex == "m" and m.area == f.area and m.species == f.species and well_fed(m) and m.breeds(w.minutes):
 			return true
 	return false
 
@@ -357,7 +396,7 @@ func _move(a: Animal, dt: float) -> void:
 			c = Vector2i((Vector2(c) - a.pos).limit_length(5.0) + a.pos)
 		a.goal = Vector2(c) + Vector2(0.5, 0.5)
 	var d: Vector2 = a.goal - a.pos
-	var speed := float(s.speed) * (2.2 if flee > 0.0 and w.player.pos.distance_to(a.pos) < flee else 1.0)
+	var speed := float(s.speed) * (float(GameData.b("animal_elder_speed")) if a.elderly(w.minutes) else 1.0) * (2.2 if flee > 0.0 and w.player.pos.distance_to(a.pos) < flee else 1.0)
 	var step := speed * dt
 	if d.length() <= step:
 		a.goal = Vector2.INF
