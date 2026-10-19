@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2           # the requirements check compares the register with the previous commit
 
       - name: Cache Godot
         id: godot
@@ -55,6 +57,7 @@ jobs:
         run: |
           python3 -m unittest discover -s tests
           python3 tools/check_interactions.py
+          python3 tools/check_requirements.py --against HEAD~1   # no approved requirement lost or closed without a record
           python3 tools/check_resources.py
 
       - name: Game tests (headless)

@@ -1,0 +1,406 @@
+# Development ledger: the requirements register
+
+Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`; do not edit
+this file. Every owner-approved requirement stays here until it is COMPLETE AND VERIFIED, SUPERSEDED by a named
+requirement, or CANCELED BY OWNER (CLAUDE.md, requirements register). Proposals, open owner decisions and design
+rules are listed separately and are not counted as approved work. The order of work is `docs/DEVELOPMENT_QUEUE.md`;
+the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_2026-10-19.md`.
+
+## Counts (approved requirements; each counted once, by lifecycle status)
+
+| Status | Count |
+|---|---|
+| APPROVED — NOT STARTED | 33 |
+| ACTIVE DEVELOPMENT | 10 |
+| PARTIALLY IMPLEMENTED | 20 |
+| IMPLEMENTED — TESTING REQUIRED | 2 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 17 |
+| BLOCKED | 15 |
+| DEFERRED | 5 |
+| COMPLETE AND VERIFIED | 110 |
+| SUPERSEDED | 12 |
+| CANCELED BY OWNER | 0 |
+| UNKNOWN — INVESTIGATION REQUIRED | 1 |
+| **Total approved** | **225** |
+| Outstanding (not complete, superseded or canceled) | 103 |
+
+Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
+
+## Real-device verification queue
+
+Automated tests do not count as device verification.
+
+| ID | Requirement | Needs | Status |
+|---|---|---|---|
+| B13-12 | B closes only quantity selector | controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B13-13 | Touch sprint | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B14-06 | Carts in play: pulled storage, parking, cart stops, deliveries, household market runs | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B14-13 | A controller connected to a phone or tablet hides the touch buttons and uses the pad controls | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B7-001 | Starting coins | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B7-005 | Earning money discoverable; "Trade with" | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B7-010 | HUD anchoring on Android | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B7-011 | Tapping trees/ore does nothing | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B7-012 | Gather mode | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B7-013 | Brown glyph icons | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| B8-018 | Roof flicker indoors | windows | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | two-device LAN, phone | ACTIVE DEVELOPMENT |
+| PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| PL1-05 | current/max inside bars | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| Q-04 | Resources & Gathering journal page | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+
+## APPROVED — NOT STARTED (33)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
+| B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
+| B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | Plough horse from the caravan: purchase, keeping (pen), tilling faster with the hand plough |
+| B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | owner message 2026-10-19 |  |  | Generate the package with tools/assets/sheets.py contact |
+| B14R-04 | Build 14 tester notes | same directive s.4 |  |  |  |
+| B14R-05 | Identify the Build 14 candidate commit and ask the owner for build approval | same directive s.5 |  | after B14R-01; after B14R-04; after B14R-12 |  |
+| B14R-09 | Stable Android test-signing procedure documented (credentials, secrets, setup, key preservation, risks, install and update test) | same directive s.28 |  | after B13-15 |  |
+| DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
+| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
+| DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  |  |
+| DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246) |  |  |  |
+| DVW-A4 | Faucet and drain ledger for coins and each item (:29) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248) |  |  |  |
+| DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 249) |  |  |  |
+| DVW-A7 | Over-production from raising skills by use (:32) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 251) |  |  |  |
+| DVW-A8 | Audit player-only perks vs same rules (:33) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 252) |  |  |  |
+| DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
+| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  |  |
+| DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 274) |  |  |  |
+| DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 275) |  |  |  |
+| DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 276) |  |  |  |
+| DVW-B5 | Predictable taxes with hysteresis, announced | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 277) |  |  |  |
+| DVW-B6 | Wildlife wandering in from the overworld | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 278) |  |  |  |
+| DVW-B7 | Life chronicle, titles, memorial | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 279) |  |  |  |
+| DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 281) |  |  |  |
+| FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
+| FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
+| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
+| FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit |  |  |  |
+| GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
+| REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership | owner: World Design Rule 16 topic; directive 2026-10-19 (requirements preservation) s.26 |  |  |  |
+| REQ-GRAVE | Graveyards, ancestry and NPC legacy | owner: World Design Rule 14 topic; directive 2026-10-19 (requirements preservation) s.26 |  | after GM-01 |  |
+| VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
+| WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II |  |  |  |
+
+## ACTIVE DEVELOPMENT (10)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| B14R-01 | Record completed 100-day economy simulations (start, seeds, currency, wealth, jobs, trade, resources, food, population, shortages, regressions) | docs/directives/2026-10-19_build14_readiness_requirements_preservation.md s.1 |  |  |  |
+| B14R-02 | Compare the manor reserve and the caravan money limit (four configurations) and recommend | same directive s.2 |  | after B7-009; after B7-014 |  |
+| B14R-03 | Investigate iron and coal running out by day 10; document sustainable alternatives without changing the resource model | same directive s.3 |  | after OD-01 |  |
+| B14R-06 | Permanent requirements register, lifecycle, validation, silent-deletion detection, startup and handoff rules | same directive Parts II, V, VI |  |  |  |
+| B14R-07 | Second historical requirements recovery pass and coverage report | same directive Part III |  |  |  |
+| B14R-10 | Separate real-device verification queue (phone, controller, Windows, cross-platform and two-device LAN) | same directive s.29 |  |  |  |
+| B14R-11 | Review draft PR #1 for unique content before recommending closure | same directive s.30 |  |  |  |
+| B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1) |  |  |  |
+| DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  |  |
+| MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
+
+## PARTIALLY IMPLEMENTED (20)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | docs/release/AUDIT_REMEDIATION.md (audit inventory row 368) |  |  |  |
+| B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | owner message 2026-10-19 | `f9fb853` |  |  |
+| B14R-08 | Reconcile the original 16 World Design Rules (restore text if the source is found) | same directive Part IV |  | original rule text not found in any accessible source |  |
+| B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
+| B7-017 | No building in a year (no births) | docs/release/BUILD_7_ISSUES.md (audit inventory row 58) |  |  |  |
+| B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
+| DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
+| DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250) |  |  |  |
+| FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
+| OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
+| OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | docs/DECISIONS.md (audit inventory row 344) |  | after MP-01; after DGA-D1; after DGA-D9 |  |
+| PL1-07 | NPCs sunk into beds/chairs | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 144) |  |  |  |
+| PL1-10 | Player businesses, staged (1-4) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 147) |  |  |  |
+| PL1-12 | Red flowering plant not pickable | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 149) |  |  | Add tile 2656 to overworld flowers with the next overworld generator version (with B14-09) |
+| PL1-13 | Recognisable stove | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 150) |  |  |  |
+| PL2-008 | Expandable property | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 163) |  |  |  |
+| PL2-010 | Recognisable sawhorse | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 165) |  |  |  |
+| PL2-013 | Usable furniture | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 168) |  |  |  |
+| PL2-014 | Modular house/workshop expansion | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 169) |  |  |  |
+| PL2-015 | Farming, livestock, hand plough | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 170) |  |  |  |
+
+## IMPLEMENTED — TESTING REQUIRED (2)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
+| B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
+
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (17)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| B12A-10 | None done | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 360) |  |  |  |
+| B13-12 | B closes only quantity selector | docs/DEVELOPMENT_LEDGER.md (audit inventory row 187) |  |  |  |
+| B13-13 | Touch sprint | docs/DEVELOPMENT_LEDGER.md (audit inventory row 188) |  |  |  |
+| B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | docs/DECISIONS.md (owner, Build 13 playtest) | `60a365b`; start_test |  |  |
+| B14-06 | Carts in play: pulled storage, parking, cart stops, deliveries, household market runs | docs/DECISIONS.md (owner, Build 14) | `512f1bc`, `f9fb853`, `8ae29c2`; home_test::test_carts_in_play |  |  |
+| B14-13 | A controller connected to a phone or tablet hides the touch buttons and uses the pad controls | docs/directives/2026-10-19_android_controller.md | `1458da8`, `c984b4f`; start_test |  |  |
+| B7-001 | Starting coins | docs/release/BUILD_7_ISSUES.md (audit inventory row 42) |  |  |  |
+| B7-005 | Earning money discoverable; "Trade with" | docs/release/BUILD_7_ISSUES.md (audit inventory row 46) |  |  |  |
+| B7-010 | HUD anchoring on Android | docs/release/BUILD_7_ISSUES.md (audit inventory row 51) |  |  |  |
+| B7-011 | Tapping trees/ore does nothing | docs/release/BUILD_7_ISSUES.md (audit inventory row 52) |  |  |  |
+| B7-012 | Gather mode | docs/release/BUILD_7_ISSUES.md (audit inventory row 53) |  |  |  |
+| B7-013 | Brown glyph icons | docs/release/BUILD_7_ISSUES.md (audit inventory row 54) |  |  |  |
+| B8-018 | Roof flicker indoors | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 119) |  |  |  |
+| CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | docs/directives/2026-10-19_sword_combat.md | `3e283b6`; combat_test (41) |  |  |
+| PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
+| PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
+| Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |
+
+## BLOCKED (15)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| AR-OWNER | No completion recorded | docs/release/AUDIT_REMEDIATION.md (audit inventory row 372) |  |  |  |
+| AR-P0-3 | Owner must delete `inventory/registry` by hand | docs/release/AUDIT_REMEDIATION.md (audit inventory row 371) |  |  |  |
+| B12A-07 | Open; Craftpix crops could supply crop art (B14-10) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 357) |  |  |  |
+| B12A-09 | Owner action | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 359) |  |  |  |
+| B13-15 | Android signing stability | docs/DEVELOPMENT_LEDGER.md (audit inventory row 190) |  |  |  |
+| B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | docs/release/BUILD_7_ISSUES.md (audit inventory row 47) |  |  |  |
+| B7-008 | Player can drain buyers to 0, kill all wildlife | docs/release/BUILD_7_ISSUES.md (audit inventory row 49) |  |  |  |
+| B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) |  |  |  |
+| B7-016 | Tanners/goods merchants end at 0 coins | docs/release/BUILD_7_ISSUES.md (audit inventory row 57) |  |  |  |
+| ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner request 2026-10-19 (DEVELOPMENT_LEDGER ENV-RTK) |  | owner: environment setup script |  |
+| FR-01 | Lizards and spiders as enemies | owner 2026-10-18 ('good enemies'; docs/DECISIONS.md) |  | no lizard or spider pack supplied |  |
+| FR-08 | Music and sound | BUILD_7_ISSUES F-3 |  | no audio supplied |  |
+| PL1-11 | Google Drive cloud saves (staged) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 148) |  |  |  |
+| Q-08 | Resource depletion and wildlife sustainability | docs/DEVELOPMENT_QUEUE.md (audit inventory row 224) |  | owner decision OD-01 |  |
+| Q-10 | Hot Attic Games read-only registry | docs/DEVELOPMENT_QUEUE.md (audit inventory row 226) |  |  |  |
+
+## DEFERRED (5)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| B12A-08 | Open | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 358) |  |  |  |
+| F-1 | NPC workshop construction | docs/release/BUILD_7_ISSUES.md (audit inventory row 62) |  |  |  |
+| F-3 | Music and sound | docs/release/BUILD_7_ISSUES.md (audit inventory row 64) |  |  |  |
+| FR-09 | Crime from desperation | owner design intent 2026-10-17, deferred by the owner ('no desperation crime yet') |  |  |  |
+| FR-10 | Archery | docs/directives/2026-10-19_sword_combat.md (future, not authorised) |  |  |  |
+
+## COMPLETE AND VERIFIED (110)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| AR-P0-1 | Fixed `21647e2` | docs/release/AUDIT_REMEDIATION.md (audit inventory row 367) |  |  |  |
+| AR-P0-2 | Assessed; remediation needs owner | docs/release/AUDIT_REMEDIATION.md (audit inventory row 370) |  |  |  |
+| B12A-01 | 1-11 fixed (B13-01..10); 12 → B13-14 | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 351) |  |  |  |
+| B12A-02 | Fixed (WHAT_WAS_DONE:135) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 352) |  |  |  |
+| B12A-03 | Fixed / one withdrawn (addendum :1631) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 353) |  |  |  |
+| B13-01 | Retirement opens no post | docs/DEVELOPMENT_LEDGER.md (audit inventory row 176) |  |  |  |
+| B13-02 | Gold ore has no source | docs/DEVELOPMENT_LEDGER.md (audit inventory row 177) |  |  |  |
+| B13-03 | Medicine effect text | docs/DEVELOPMENT_LEDGER.md (audit inventory row 178) |  |  |  |
+| B13-04 | Attendant hired as carrier | docs/DEVELOPMENT_LEDGER.md (audit inventory row 179) |  |  |  |
+| B13-05 | health_jobs_test in CI; always-true checks | docs/DEVELOPMENT_LEDGER.md (audit inventory row 180) |  |  |  |
+| B13-06 | Rule 1: no purchase without money | docs/DEVELOPMENT_LEDGER.md (audit inventory row 181) |  |  |  |
+| B13-07 | Rule 2: bulk prices per unit | docs/DEVELOPMENT_LEDGER.md (audit inventory row 182) |  |  |  |
+| B13-08 | Rule 3: seed from real stock | docs/DEVELOPMENT_LEDGER.md (audit inventory row 183) |  |  |  |
+| B13-09 | Rule 4: theft by items/value | docs/DEVELOPMENT_LEDGER.md (audit inventory row 184) |  |  |  |
+| B13-10 | Stale text and documents | docs/DEVELOPMENT_LEDGER.md (audit inventory row 185) |  |  |  |
+| B13-11 | Livestock production chain | docs/DEVELOPMENT_LEDGER.md (audit inventory row 186) |  |  |  |
+| B13-14 | Station occupancy | docs/DEVELOPMENT_LEDGER.md (audit inventory row 189) |  |  |  |
+| B14-02 | Villagers' home production: forage, brew poultices, treat their own wounds | docs/DECISIONS.md (owner, Build 14) | `b94dc22`; home_test |  |  |
+| B14-03 | House storefronts (player and villager households) | docs/DECISIONS.md (owner, Build 14) | `a9c6db0`, `d01376c`; home_test |  |  |
+| B14-04 | Cart parts and handcarts | docs/DECISIONS.md (owner, Build 14) | `d01376c`; home_test |  |  |
+| B14-05 | Local-availability pricing | docs/DECISIONS.md (owner, Build 14) | `75093bf`; home_test, business_test |  |  |
+| B14-08 | Forest animals (MiniFolks): grazers, predators, fox raids, fights | docs/DECISIONS.md (owner, Build 14) | `2caca5a`, `f9fb853`; wildlife_test |  |  |
+| B7-002 | Quest rewards reserved | docs/release/BUILD_7_ISSUES.md (audit inventory row 43) |  |  |  |
+| B7-003 | Jewellery/helmets have buyers | docs/release/BUILD_7_ISSUES.md (audit inventory row 44) |  |  |  |
+| B7-004 | Harvest-work wheat theft | docs/release/BUILD_7_ISSUES.md (audit inventory row 45) |  |  |  |
+| B8-001 | (earlier fix) | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 102) |  |  |  |
+| B8-002 | Village pasted over terrain | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 103) |  |  |  |
+| B8-003 | Floating/partial trees | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 104) |  |  |  |
+| B8-004 | Broken mining area | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 105) |  |  |  |
+| B8-005 | Tree collision/transparency | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 106) |  |  |  |
+| B8-006 | Harvest animation never stops | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 107) |  |  |  |
+| B8-008 | Deposits misidentified | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 109) |  |  |  |
+| B8-009 | Collection notices need icons | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 110) |  |  |  |
+| B8-010 | Inventory blocked during harvest | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 111) |  |  |  |
+| B8-011 | No cancel | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 112) |  |  |  |
+| B8-012 | Oversized inventory highlights | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 113) |  |  |  |
+| B8-013 | Oversized prompts | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 114) |  |  |  |
+| B8-014 | NPC blocks a workstation | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 115) |  |  |  |
+| B8-015 | Weapon racks | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 116) |  |  |  |
+| B8-016 | Essential trade succession | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 117) |  |  |  |
+| B8-017 | Personal chests in public rows | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 118) |  |  |  |
+| B8-019 | Unclear HUD | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 120) |  |  |  |
+| B8-020 | Death cause | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 121) |  |  |  |
+| B8-025 | Player clipped behind tabletops | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 123) |  |  |  |
+| B8-026 | Grey boulders not minable | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 124) |  |  |  |
+| B8-027 | Sprint | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 125) |  |  |  |
+| B8-028 | Sawmill | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 126) |  |  |  |
+| B8-029 | Calendar, aging, families, animal life cycles | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 127) |  |  |  |
+| B8R-001 | Pad cannot reach Wear/Drop | docs/release/BUILD_8_ISSUES.md (audit inventory row 74) |  |  |  |
+| B8R-002 | Trapped inside a door | docs/release/BUILD_8_ISSUES.md (audit inventory row 75) |  |  |  |
+| B8R-003 | Trapped between trees | docs/release/BUILD_8_ISSUES.md (audit inventory row 76) |  |  |  |
+| B8R-004 | Sage's hut door off by one | docs/release/BUILD_8_ISSUES.md (audit inventory row 77) |  |  |  |
+| B8R-007 | Overlapping house edges | docs/release/BUILD_8_ISSUES.md (audit inventory row 80) |  |  |  |
+| B8R-008 | Family name signs at houses | docs/release/BUILD_8_ISSUES.md (audit inventory row 81) |  |  |  |
+| B8R-009 | Trading skill never gains XP | docs/release/BUILD_8_ISSUES.md (audit inventory row 82) |  |  |  |
+| B8R-010 | Pickpocketing children allowed | docs/release/BUILD_8_ISSUES.md (audit inventory row 83) | code: world.gd pickpocket refuses role child |  |  |
+| B8R-011 | Map border; large world | docs/release/BUILD_8_ISSUES.md (audit inventory row 84) |  |  |  |
+| B8R-012 | Hit feedback | docs/release/BUILD_8_ISSUES.md (audit inventory row 85) |  |  |  |
+| B8R-013 | Cow attack shows no damage | docs/release/BUILD_8_ISSUES.md (audit inventory row 86) |  |  |  |
+| B8R-014 | Pad cycles all buttons | docs/release/BUILD_8_ISSUES.md (audit inventory row 87) |  |  |  |
+| B8R-015 | Flowers pickable/walkable | docs/release/BUILD_8_ISSUES.md (audit inventory row 88) |  |  |  |
+| B8R-016 | Berry bushes pickable | docs/release/BUILD_8_ISSUES.md (audit inventory row 89) |  |  |  |
+| B8R-017 | Field half-plants at edges | docs/release/BUILD_8_ISSUES.md (audit inventory row 90) |  |  |  |
+| B8R-018 | Villagers swing tools idly | docs/release/BUILD_8_ISSUES.md (audit inventory row 91) |  |  |  |
+| B8R-019 | Building collision, interior nav, roof flicker | docs/release/BUILD_8_ISSUES.md (audit inventory row 92) |  |  |  |
+| B8R-020 | Gathering banners fill phone screen | docs/release/BUILD_8_ISSUES.md (audit inventory row 93) |  |  |  |
+| DVW-A1 | Stale heir comment (:26) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 245) |  |  |  |
+| DVW-A11 | Threats never scale to player (:36) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 255) |  |  |  |
+| FR-05 | Title window opens scrolled into the controls list | docs/release/BUILD_13_PACKET.md | `ec3bd0e`; start_test |  |  |
+| K-1 | 5 coins vs land 60+ | docs/release/BUILD_7_ISSUES.md (audit inventory row 59) |  |  |  |
+| K-2 | Tavern child and sage on pallets; no lying frame | docs/release/BUILD_7_ISSUES.md (audit inventory row 60) |  |  |  |
+| OWN-01 | Asset integration pipeline (skill, policy, registry, scaling standard, tools) | docs/DECISIONS.md (audit inventory row 317) |  |  |  |
+| OWN-03 | Calendar (8-day year), human aging, explicit family links, heirs from family graph, animal life stages | docs/DECISIONS.md (audit inventory row 319) |  |  |  |
+| OWN-04 | Village generator v6, fixed village, save v13 refusal | docs/DECISIONS.md (audit inventory row 320) |  |  |  |
+| OWN-05 | Overworld (B8-011) | docs/DECISIONS.md (audit inventory row 321) |  |  |  |
+| OWN-06 | Living Forest tree lifecycle | docs/DECISIONS.md (audit inventory row 322) |  |  |  |
+| OWN-07 | Flowers/berries walkable and gatherable | docs/DECISIONS.md (audit inventory row 323) |  |  |  |
+| OWN-10 | Queue + parallel agents; resource manifest, Gather mode, journal page | docs/DECISIONS.md (audit inventory row 326) |  |  |  |
+| OWN-11 | Continuous development; reeve employment | docs/DECISIONS.md (audit inventory row 327) |  |  |  |
+| OWN-13 | Windows exe icon | docs/DECISIONS.md (audit inventory row 329) |  |  |  |
+| OWN-14 | Interiors roof fade, sleepers reachable | docs/DECISIONS.md (audit inventory row 330) |  |  |  |
+| OWN-15 | Property phases 1-2, construction, helpers, households split | docs/DECISIONS.md (audit inventory row 331) |  |  |  |
+| OWN-16 | GitHub workflow; work preservation; off-machine copies; backup branch | docs/DECISIONS.md (audit inventory row 332) |  |  |  |
+| OWN-18 | Inventory tabs, six gear slots, tavern food theft, stealing, pickpocketing, buttons sized, camera dead zone | docs/DECISIONS.md (audit inventory row 334) |  |  |  |
+| OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  |  |
+| OWN-20 | Trees walk-under; heir kit; journal book | docs/DECISIONS.md (audit inventory row 336) |  |  |  |
+| OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  |  |  |
+| OWN-23 | UI recolour brown; flat UI pack buttons; Kenney prompts | docs/DECISIONS.md (audit inventory row 339) |  |  |  |
+| OWN-25 | Attack mode; blood splats; readable phone text | docs/DECISIONS.md (audit inventory row 341) |  |  |  |
+| OWN-26 | Animal breeding, hunger, livestock as meat, wild animals hunted | docs/DECISIONS.md (audit inventory row 342) |  |  |  |
+| OWN-27 | Manor government B3 | docs/DECISIONS.md (audit inventory row 343) |  |  |  |
+| PL1-01 | Settings > Controls exit freezes game | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 138) |  |  |  |
+| PL1-02 | One tabbed Settings with Back | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 139) |  |  |  |
+| PL1-04 | Health recovery + Apothecary | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 141) |  |  |  |
+| PL1-06 | Every stone minable, size-based | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 143) |  |  |  |
+| PL1-08 | Consumable effects shown everywhere | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 145) |  |  |  |
+| PL1-09 | Gold star over employer | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 146) |  |  |  |
+| PL2-001 | Forge occupancy wrongly blocks | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 156) |  |  |  |
+| PL2-002 | Chests, locks, lockpicking | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 157) |  |  |  |
+| PL2-003 | Dialogue text | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 158) |  |  |  |
+| PL2-004 | Animal loot, leather | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 159) |  |  |  |
+| PL2-005 | Longer skill trees | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 160) |  |  |  |
+| PL2-006 | Harvest everywhere | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 161) |  |  |  |
+| PL2-007 | Fields grow, ripen, regrow | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 162) |  |  |  |
+| PL2-009 | In-game wiki | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 164) |  |  |  |
+| PL2-011 | No interactions through walls | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 166) |  |  |  |
+| PL2-012 | Storage UI quantities, focus | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 167) |  |  |  |
+| Q-03 | Resource manifest and registry (INT-067) | docs/DEVELOPMENT_QUEUE.md (audit inventory row 219) |  |  |  |
+| Q-05 | Reeve employment, real jobs, NPCs same rules (INT-066) | docs/DEVELOPMENT_QUEUE.md (audit inventory row 221) |  |  |  |
+| Q-06 | Long-duration simulations 10/30/100/365 | docs/DEVELOPMENT_QUEUE.md (audit inventory row 222) |  |  |  |
+
+## SUPERSEDED (12)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| AR-P1-1 | Prepared; owner must create key | docs/release/AUDIT_REMEDIATION.md (audit inventory row 369) |  | superseded by B13-15 |  |
+| B12A-04 | Not recorded as done | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 354) |  | superseded by FR-04 |  |
+| B12A-06 | Sword page added by CQ-01 (`3e283b6`); others not recorded | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 356) |  | superseded by FR-06 |  |
+| B12A-11 | "Not investigated further" | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 361) |  | superseded by FR-05 |  |
+| B8R-005 | Hunger icon looked like coin bag | docs/release/BUILD_8_ISSUES.md (audit inventory row 78) |  | superseded by B8-019 |  |
+| B8R-006 | Where to cook raw meat | docs/release/BUILD_8_ISSUES.md (audit inventory row 79) |  | superseded by FR-03 |  |
+| F-2 | Births, children, aging, family growth | docs/release/BUILD_7_ISSUES.md (audit inventory row 63) |  | superseded by B8-029 |  |
+| K-3 | Every provisional number awaits the owner's balance review | docs/release/BUILD_7_ISSUES.md (audit inventory row 61) |  | superseded by OD-02 |  |
+| OWN-12 | Build 7 corrections; "Not approved yet (investigate first)": mining wage 15+, 15-coin reserve on player sales, deposit regeneration, wildlife respawn, broad changes | docs/DECISIONS.md (audit inventory row 328) |  | superseded by OD-01 |  |
+| OWN-17 | Provisional numbers await a separate balance review | docs/DECISIONS.md (audit inventory row 333) |  | superseded by OD-02 |  |
+| OWN-21 | Every build published under GitHub Releases | docs/DECISIONS.md (audit inventory row 337) |  | superseded by OWN-09 |  |
+| OWN-24 | Lizards and spiders as enemies | docs/DECISIONS.md (audit inventory row 340) |  | superseded by FR-01 |  |
+
+## UNKNOWN — INVESTIGATION REQUIRED (1)
+
+| ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
+|---|---|---|---|---|---|
+| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | owner message 2026-10-17 |  |  |  |
+
+## Open owner decision (10)
+
+| ID | Item | Status | Source |
+|---|---|---|---|
+| OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md |
+| OD-02 | Owner decision: balance review of every provisional number | BLOCKED | docs/DECISIONS.md |
+| OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md |
+| OD-04 | Owner decisions: chest and lock questions | BLOCKED | docs/BUILD_DECISIONS.md |
+| OD-05 | Owner decisions: inner doorways, relaying survey plots | BLOCKED | docs/BUILD_DECISIONS.md |
+| OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | BLOCKED | docs/BUILD_DECISIONS.md |
+| OD-07 | Owner decision: hunting in Gather mode | BLOCKED | docs/HANDOFF.md |
+| OD-08 | Owner decision: is honest arbitrage intended? | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md A5 |
+| OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | BLOCKED | docs/GAME_DESIGN.md |
+| OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
+
+## World design rule (19)
+
+| ID | Item | Status | Source |
+|---|---|---|---|
+| WDR-001 | World Design Rule 1: Material Interdependency | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-002 | World Design Rule 2: Professional Interdependency | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-003 | World Design Rule 3: Meaningful Recipes | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-004 | World Design Rule 4: Economic Consequences | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-005 | World Design Rule 5: Living World Independence | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-006 | World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-007 | World Design Rule 7: Automated Compliance | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-008 | World Design Rule 8: Player Knowledge and Wiki | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-009 | World Design Rule 9: Emergent Gameplay | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-010 | World Design Rule 10: Depth Without Obscurity | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-011 | World Design Rule 11: NPC Self-Improvement and Prosperity | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-012 | World Design Rule 12: NPC Competition and Economic Rivalry | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-013 | World Design Rule 13: Finite Resources and Actual Consumption | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-014 | World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-015 | World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-016 | World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | BLOCKED | owner directive 2026-10-19 (requirements preservation) Part IV: topic list; original text in My_Medieval_Life_World_Design_Rules_v1 (pdf/docx), not found |
+| WDR-017 | World Design Rule 17: Generational Memory and Living History | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
+| WDR-018 | World Design Rule 18: Protected Ecological Continuity | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
+| WDR-019 | World Design Rule 19: Living Political Agency and Democratic Consequences | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
+
+## Proposal awaiting an owner decision (not approved) (29)
+
+| ID | Item | Status | Source |
+|---|---|---|---|
+| DGA-D1 | Meaning of "isometric" | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 378) |
+| DGA-D10 | Formal platform/engine approval (U1, U2) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 387) |
+| DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 388) |
+| DGA-D12 | Approval to start phase 1 | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 389) |
+| DGA-D2 | Isometric art source (J-G4) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 379) |
+| DGA-D3 | Connectivity with no server | PARTIALLY IMPLEMENTED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 380) |
+| DGA-D4 | Shared-world rules (pause, characters, heir) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 381) |
+| DGA-D5 | Reputation/ownership/PvP (J-S3, U21) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 382) |
+| DGA-D6 | Combat model and latency (U7) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 383) |
+| DGA-D7 | Visible gear | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 384) |
+| DGA-D8 | Era, county, political status, map scale | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 385) |
+| DGA-D9 | Magic (J-M1..4) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 386) |
+| DGA-R | Refactors (coordinates, players collection, command layer, fixed step + state hash, save split, appearance data, magic schema) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 390) |
+| DGA-S | Isometric look spike; network feasibility spike | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md (audit inventory row 391) |
+| DVW-B10 | Onboarding, first ten minutes | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 282) |
+| DVW-B11 | No instant fast travel (rule) | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 283) |
+| DVW-B12 | Ethics/lore: thralldom, Church, content note | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 284) |
+| DVW-B13 | Story kept as sparks; audit `story: true` quests | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 285) |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 280) |
+| ECON-P1.1 | Demand-driven mining (:71) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 298) |
+| ECON-P1.2 | Manor mining rights, royalty, quota, stone reserve (:72) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 299) |
+| ECON-P1.3 | Caravan as finite regional market (:73) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 300) |
+| ECON-P1.4 | Prospecting new seams (:74) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 301) |
+| ECON-P1.5 | Distant quarry (:75) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 302) |
+| ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 303) |
+| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 304) |
+| OWN-02 | Wildlife balance follow-up; horse imported, use pending | BLOCKED | docs/DECISIONS.md (audit inventory row 318) |
+| OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | BLOCKED | docs/DECISIONS.md (audit inventory row 345) |
+| Q-11 | Design gap assessment, phased sequence | BLOCKED | docs/DEVELOPMENT_QUEUE.md (audit inventory row 227) |
+
+## Unapproved idea (1)
+
+| ID | Item | Status | Source |
+|---|---|---|---|
+| B12A-05 | Not added | APPROVED — NOT STARTED | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 355) |
+

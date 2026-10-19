@@ -1,4 +1,7 @@
-# Development ledger (run of 2026-10-19)
+# Development ledger before the requirements register (archived 2026-10-19)
+
+Archived: every row here was migrated into `docs/requirements/requirements.json` (tools/requirements_migrate.py); the
+current ledger is `docs/DEVELOPMENT_LEDGER.md`, generated from that register. Kept unchanged below as history.
 
 The owner's master development execution directive (2026-10-19) authorises an autonomous run through
 Build 11 punch lists 1 and 2 and approved work, ending in a private Android, Windows and Linux build

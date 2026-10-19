@@ -10,5 +10,13 @@ while read local_ref local_sha remote_ref remote_sha; do
   if [ "$remote_sha" != "$zero" ] && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
     echo "pre-push: refusing a non-fast-forward (force) push to staging/my-medieval-life" >&2; exit 1
   fi
+  # no approved requirement may disappear or close without a record (owner, 2026-10-19)
+  if [ -f tools/check_requirements.py ]; then
+    against=$remote_sha
+    [ "$remote_sha" = "$zero" ] && against=$local_sha
+    if ! python3 tools/check_requirements.py --against "$against" >&2; then
+      echo "pre-push: the requirements register check failed (tools/check_requirements.py)" >&2; exit 1
+    fi
+  fi
 done
 exit 0
