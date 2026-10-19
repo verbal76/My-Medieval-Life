@@ -77,6 +77,7 @@ var reeve_id := -1
 var detail_radius := 34.0          # tiles: NPCs nearer the player get every-frame updates
 var brain
 var chests: Chests            # PL2-002: storage units, locks and lockpicking
+var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 
 
 func _init() -> void:
@@ -91,6 +92,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	m.overworld = Overworld.create(world_seed, m)
 	brain = NPCBrain.new(self)
 	chests = Chests.new(self)
+	carts = Carts.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
@@ -253,6 +255,7 @@ func update(real_dt: float) -> void:
 				_update_npc(n, n.tick_acc)
 				n.tick_acc = 0.0
 	fauna.update(real_dt)
+	carts.update(real_dt)
 	_update_player(real_dt, gm)
 
 
@@ -288,6 +291,7 @@ func _on_hour(h: int) -> void:
 	_update_food_days()
 	serve_tables()
 	business.hour()                    # villagers walk to the player's open stall (PL1-10)
+	carts.hour()                       # B14: the attendant unloads the player's cart at a cart stop
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
 		if f.state == "growing" and minutes >= f.ready:
 			f.state = "ripe"
@@ -2508,7 +2512,7 @@ func to_dict() -> Dictionary:
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"vacancies": vacancies, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
-		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(),
+		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 	}
 
 
@@ -2521,6 +2525,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	m.overworld.load_dict(ow)
 	brain = NPCBrain.new(self)
 	chests = Chests.new(self)
+	carts = Carts.new(self)
+	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)

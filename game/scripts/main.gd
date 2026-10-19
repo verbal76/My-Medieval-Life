@@ -21,6 +21,7 @@ var camera: Camera2D
 var ui: GameUI
 var sprites := {}              # npc id -> ActorSprite
 var animal_sprites := {}       # animal id -> AnimalSprite
+var cart_sprites := {}         # cart id -> Sprite2D (B14: the mine cart stands in for the handcart)
 var player_sprite: ActorSprite
 var loot_nodes: Array = []
 var projectiles: Array = []    # {node, pos, dir, left}
@@ -1248,6 +1249,7 @@ func _sync_sprites() -> void:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
 		target_marker.position = chase.pos * T + Vector2(0, -42 + bob)
 	_sync_animals()
+	_sync_carts()
 	_sync_loot()
 	_sync_bubbles()
 	_sync_diamonds()
@@ -1401,6 +1403,39 @@ func approach(n: NPC) -> void:
 		ui.show_talk(n)
 
 
+## B14: each cart drawn with the mine cart tile (a stand-in until the owner's own art).
+func _sync_carts() -> void:
+	var seen := {}
+	for c in world.carts.carts:
+		seen[int(c.id)] = true
+		var s: Sprite2D = cart_sprites.get(int(c.id))
+		if s == null:
+			s = Sprite2D.new()
+			s.texture = _tile_texture(CART_TILE)
+			s.offset = Vector2(0, -T / 2.0 + 2.0)
+			actors.add_child(s)
+			cart_sprites[int(c.id)] = s
+		s.position = (c.pos as Vector2) * T
+		s.flip_h = (c.facing as Vector2).x < 0.0
+	for id in cart_sprites.keys():
+		if not seen.has(id):
+			cart_sprites[id].queue_free()
+			cart_sprites.erase(id)
+
+
+const CART_TILE := 3009          # the mine cart on its rail (tools/build_village.py MINE_CART, atlas 0)
+
+
+## One tile of the map's atlases as a texture (tile = atlas * 100000 + index).
+func _tile_texture(tile: int) -> Texture2D:
+	var a := tile / 100000
+	var t := tile % 100000
+	var tex := AtlasTexture.new()
+	tex.atlas = view.sources[a].texture
+	tex.region = Rect2(Vector2(t % view.columns[a], t / view.columns[a]) * T, Vector2(T, T))
+	return tex
+
+
 func _sync_animals() -> void:
 	var cam := camera.get_screen_center_position() / T
 	var seen := {}
@@ -1523,7 +1558,8 @@ func _player_step(delta: float) -> void:
 		v = _route_step(delta)
 	walking = v.length() > 0.1
 	if v.length() > 0.1:
-		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta)
+		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta) \
+				* (Carts.pull_speed() if not world.carts.pulled_by(World.PLAYER).is_empty() else 1.0)     # B14: a cart is slower going
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
 		var before := p.pos
 		var moved_x := _try_move(Vector2(step.x, 0))
@@ -1862,6 +1898,18 @@ func _find_target() -> void:
 	# at the player's feet (the last of these was the only one offered before B8-014: it comes first)
 	var here: Array = []
 	here.append_array(_fit_targets(world.place_of(p.pos)))
+	# B14 carts: the one you pull can be let go anywhere; a cart beside you can be pulled (yours) or opened
+	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
+	if not pulling.is_empty():
+		here.append({"kind": "cart_park", "id": int(pulling.id), "label": "Let go of your cart"})
+		if (pulling.pos as Vector2).distance_to(p.pos) < 1.6:
+			here.append({"kind": "chest", "id": "cart:%d" % int(pulling.id), "label": "Open your cart: store things"})
+	else:
+		var cart: Dictionary = world.carts.near(p.pos, 1.3)
+		if not cart.is_empty():
+			if world.carts.may_use(cart, World.PLAYER):
+				here.append({"kind": "cart_pull", "id": int(cart.id), "label": "Pull your cart"})
+			here.append(_chest_target(world.chests.unit("cart:%d" % int(cart.id))))
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
@@ -2244,6 +2292,12 @@ func _use() -> void:
 		"front_open":
 			var why := world.business.open_front(world.buildings[str(target.id)])
 			ui.message(why if why != "" else "Your storefront is open.")
+		"cart_pull":
+			var why := world.carts.hitch(world.carts.by_id(int(target.id)), World.PLAYER)
+			ui.message(why if why != "" else "You take hold of the cart. It follows you, slower going.")
+		"cart_park":
+			world.carts.park(world.carts.by_id(int(target.id)))
+			ui.message("You let go of the cart." + (" It stands at %s." % world.carts.stop_at(p.pos).name if not world.carts.stop_at(p.pos).is_empty() else ""))
 		"fitout":
 			ui.show_fitout(str(target.id))
 		"info":
@@ -2438,6 +2492,19 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.
+## B14: set the handcart from the pack down in front of you; it becomes a cart in the world.
+func set_down_cart() -> void:
+	var p := world.player
+	if not p.inv.has("handcart"):
+		return
+	var at := p.pos + facing_vec()
+	if map.is_solid_world(Vector2i(floori(at.x), floori(at.y))):
+		at = p.pos
+	p.inv.remove("handcart", 1)
+	world.carts.place(World.PLAYER, at)
+	ui.message("You set the handcart down. Use it to pull it, or open it to load it.")
+
+
 func plant_sapling(item: String) -> void:
 	var p := world.player
 	var cell := Vector2i((p.pos + facing_vec() * 1.0).floor())

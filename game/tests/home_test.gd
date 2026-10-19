@@ -332,11 +332,13 @@ func test_household_cart() -> void:
 	for st: Dictionary in n.plan:
 		if st.get("act", "") in ["buy_from", "craft", "store_home"]:
 			w.brain.act(n, st.act, st.args)
-	check(w.households[n.household].pantry.has("handcart") and w.brain.household_cart(n.household) and w.total_coins() == total, "assembled from bought parts; the cart is in the household's store")
+	var parked: Array = w.carts.of(World.hh_ref(n.household))
+	check(parked.size() == 1 and w.brain.household_cart(n.household) and w.total_coins() == total, "assembled from bought parts; the cart is set down at the house")
+	check(Vector2i(parked[0].pos) == w.brain.cart_spot(n.home) and not w.households[n.household].pantry.has("handcart"), "parked by the door")
 	n.plan.clear()
 	check(not w.brain._plan_cart(n, house), "a household with a cart wants no other")
 	# a finished cart for sale and no parts: they buy it
-	w.households[n.household].pantry.items.erase("handcart")
+	w.carts.carts.clear()
 	c.inv.items.erase("cart_wheel")
 	c.inv.items["handcart"] = 1
 	n.coins = 400
@@ -346,9 +348,9 @@ func test_household_cart() -> void:
 	for st: Dictionary in n.plan:
 		if st.get("act", "") in ["buy_from", "store_home"]:
 			w.brain.act(n, st.act, st.args)
-	check(w.households[n.household].pantry.has("handcart") and c0 - n.coins >= int(GameData.item("handcart").value) / 2, "bought for %d coins" % (c0 - n.coins))
+	check(w.carts.of(World.hh_ref(n.household)).size() == 1 and c0 - n.coins >= int(GameData.item("handcart").value) / 2, "bought for %d coins" % (c0 - n.coins))
 	n.coins = int(GameData.b("carts").cart_coins) - 1
-	w.households[n.household].pantry.items.erase("handcart")
+	w.carts.carts.clear()
 	n.plan.clear()
 	check(not w.brain._plan_cart(n, house), "below cart_coins they wait")
 

@@ -19,12 +19,14 @@ const BUYS := {
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
 	"merchant_food": {"pottage": 20, "roast_meat": 10, "ale": 15, "wheat": 20, "meat": 10,
-		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15},
+		"egg": 20, "milk": 10, "cheese": 10, "carrot": 20, "potato": 20, "bread": 15,
+		"red_berries": 15, "blueberries": 15},    # households' gathered berries, brought to market (B14)
 	"merchant_goods": {"pickaxe": 4, "axe": 4, "hammer": 2, "copper_sword": 3, "iron_sword": 3,
 		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "rabbit_pelt": 6, "feather": 20, "wool": 20, "wool_cloth": 10, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
 		# like the other made goods, and the caravan carries the surplus away
-		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2},
+		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2,
+		"herbal_poultice": 8},                     # households' home-brewed poultices, brought to market (B14)
 }
 # items an NPC keeps for its own work and will not sell
 const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
@@ -41,6 +43,7 @@ const OUTLETS := {
 	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
 	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["tanner", "merchant_goods"], "wool_cloth": ["merchant_goods"],
 	"bread": ["tavernkeeper", "merchant_food"], "linen_bandage": ["sage"],
+	"red_berries": ["merchant_food"], "blueberries": ["merchant_food"], "herbal_poultice": ["merchant_goods"],
 	"pickaxe": ["merchant_goods"], "axe": ["merchant_goods"], "iron_sword": ["merchant_goods"], "copper_sword": ["merchant_goods"],
 	"hammer": ["merchant_goods"], "iron_bar": ["merchant_goods"], "leather_armor": ["merchant_goods"],
 }
@@ -302,7 +305,7 @@ func _plan_home_work(n: NPC) -> bool:
 	var cfg := hp_cfg()
 	var pantry: Inventory = w.households[n.household].pantry
 	var house: Dictionary = w.buildings.get(n.home, {})
-	if _plan_storefront(n, house) or _plan_cart(n, house):
+	if _plan_market_run(n, house) or _plan_storefront(n, house) or _plan_cart(n, house):
 		return true
 	var keep := int(cfg.poultice_keep) + (int(cfg.storefront_stock) if house.has("front") else 0)     # a storefront household makes some to sell
 	var flowers := pantry.count("flower") + n.inv.count("flower")
@@ -412,6 +415,49 @@ func _bar_seller(n: NPC) -> NPC:
 	return null
 
 
+## Where a household parks its cart: the first open cell beside the house door's step (B14).
+func cart_spot(home: String) -> Vector2i:
+	var door := w.building_door(home)
+	for off in [Vector2i(1, 1), Vector2i(-1, 1), Vector2i(2, 1), Vector2i(-2, 1), Vector2i(0, 2)]:
+		var c: Vector2i = door + off
+		if not w.map.is_solid(c):
+			return c
+	return door + Vector2i(0, 1)
+
+
+## A market run (B14, owner: "this is how they move house made goods to a market"): an adult of a household
+## with a parked cart and carts.trip_min or more surplus goods in store (front_goods) takes the cart, loads the
+## surplus, pulls it to the merchants who buy each good, sells, and brings the cart home; whatever is not sold
+## goes back into the store. Only the household's own members use its cart.
+func _plan_market_run(n: NPC, house: Dictionary) -> bool:
+	if house.is_empty() or w.hour() >= float(hp_cfg().storefront_close_hour) - 2.0:
+		return false
+	var cart := {}
+	for c in w.carts.of(World.hh_ref(n.household)):
+		if str(c.puller) == "":
+			cart = c
+	if cart.is_empty():
+		return false
+	var goods := front_goods(n.household)
+	var total := 0
+	var stops := []
+	for id in goods:
+		total += int(goods[id])
+		var b := _buyer_for(n, id)
+		if b != null:
+			stops.append([b, id])
+	if total < int(Carts.cfg().trip_min) or stops.is_empty():
+		return false
+	var plan := [go(Vector2i(cart.pos)), doit("cart_hitch", {"cart": int(cart.id)}), work(float(Carts.cfg().load_minutes), "cart_load", {}, "work")]
+	for st in stops:
+		plan.append_array([go(_workplace_cell(st[0])), doit("cart_sell", {"buyer": st[0].id, "item": st[1]})])
+	plan.append_array([go(cart_spot(n.home)), doit("cart_park", {})])
+	n.doing = "taking the household's goods to market by cart"
+	n.plan = plan
+	w.stat("cart_market_runs")
+	return true
+
+
 ## Carts (B14, owner: "a recipe for carts using the materials we have ... a smithy, a carpenter"). The
 ## carpenter saws cart wheels from its planks and assembles handcarts for sale at a workbench, buying the
 ## axle and the ironwork from the smith with its own coins; the smith forges those (NPCBrain._smith).
@@ -463,9 +509,9 @@ func _parts_trip(n: NPC, need: Dictionary, floor := 0) -> Array:
 	return plan
 
 
-## Whether a household has a handcart: in its store or carried by a member.
+## Whether a household has a handcart: set down (Carts), in its store or carried by a member.
 func household_cart(h: int) -> bool:
-	if w.households[h].pantry.has("handcart"):
+	if w.households[h].pantry.has("handcart") or not w.carts.of(World.hh_ref(h)).is_empty():
 		return true
 	for m in w.households[h].members:
 		var o := w.npc(m)
@@ -1376,9 +1422,41 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return not got.is_empty()
 		"store_home":
 			var pantry: Inventory = w.households[n.household].pantry
-			for id in ["flower", "red_berries", "blueberries", "handcart"]:
+			for id in ["flower", "red_berries", "blueberries"]:
 				if n.inv.has(id):
 					w.transfer(n.inv, pantry, id, n.inv.count(id))
+			while n.inv.has("handcart"):                  # B14: a household's handcart is set down at its house
+				n.inv.remove("handcart", 1)
+				w.carts.place(World.hh_ref(n.household), Vector2(cart_spot(n.home)) + Vector2(0.5, 0.5))
+			return true
+		"cart_hitch":
+			var c: Dictionary = w.carts.by_id(int(a.cart))
+			return not c.is_empty() and w.carts.hitch(c, World.npc_ref(n.id)) == ""
+		"cart_load":
+			var c: Dictionary = w.carts.pulled_by(World.npc_ref(n.id))
+			if c.is_empty():
+				return false
+			var goods := front_goods(n.household)
+			for id in goods:
+				w.transfer(w.households[n.household].pantry, c.store, id, int(goods[id]))
+			return true
+		"cart_sell":
+			var c: Dictionary = w.carts.pulled_by(World.npc_ref(n.id))
+			if c.is_empty() or not (c.store as Inventory).has(a.item):
+				return false
+			w.transfer(c.store, n.inv, a.item, (c.store as Inventory).count(a.item))
+			act(n, "sell_to", {"buyer": a.buyer, "item": a.item})
+			if n.inv.has(a.item):                         # what the buyer would not take goes back in the cart
+				w.transfer(n.inv, c.store, a.item, n.inv.count(a.item))
+			return true
+		"cart_park":
+			var c: Dictionary = w.carts.pulled_by(World.npc_ref(n.id))
+			if c.is_empty():
+				return false
+			if (c.store as Inventory).total() > 0:       # unsold goods go back into the household's store
+				for id in (c.store as Inventory).ids():
+					w.transfer(c.store, w.households[n.household].pantry, id, (c.store as Inventory).count(id))
+			w.carts.park(c)
 			return true
 		"home_brew":
 			var pantry: Inventory = w.households[n.household].pantry
