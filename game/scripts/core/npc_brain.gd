@@ -269,13 +269,26 @@ func _plan_heal(n: NPC) -> bool:
 				n.doing = "going home to dress a wound"
 				n.plan = [go(w.home_cell(n, "chest")), work(10, "use_medicine", {"pantry": true}, "idle")]
 				return true
-	var sage := w.npc(w.sage_id)
-	if sage != null and sage.alive and not w.asleep(sage) and sage != n:
+	var sellers: Array = [w.npc(w.sage_id)]
+	for hid in w.front_keepers:                       # a household's storefront keeper sells its poultices (B14)
+		var k := w.npc(int(w.front_keepers[hid]))
+		if k != null and w.at_post(k):
+			sellers.append(k)
+	var best: NPC = null
+	var item := ""
+	for o: NPC in sellers:
+		if o == null or not o.alive or w.asleep(o) or o == n:
+			continue
 		for m in MEDICINES:
-			if sage.inv.has(m) and n.coins >= w.sell_price(sage, m):
-				n.doing = "buying medicine"
-				n.plan = [go(_workplace_cell(sage)), doit("buy_from", {"vendor": sage.id, "item": m, "qty": 1}), work(10, "use_medicine", {}, "idle")]
-				return true
+			if o.inv.has(m) and n.coins >= w.sell_price(o, m) and (best == null or n.pos.distance_to(o.pos) < n.pos.distance_to(best.pos)):
+				best = o
+				item = m
+				break
+	if best != null:
+		n.doing = "buying medicine"
+		var at := _workplace_cell(best) if best.id == w.sage_id else Vector2i(best.pos)
+		n.plan = [go(at), doit("buy_from", {"vendor": best.id, "item": item, "qty": 1}), work(10, "use_medicine", {}, "idle")]
+		return true
 	return false
 
 
@@ -288,14 +301,18 @@ func _plan_home_work(n: NPC) -> bool:
 		return false
 	var cfg := hp_cfg()
 	var pantry: Inventory = w.households[n.household].pantry
+	var house: Dictionary = w.buildings.get(n.home, {})
+	if _plan_storefront(n, house):
+		return true
+	var keep := int(cfg.poultice_keep) + (int(cfg.storefront_stock) if house.has("front") else 0)     # a storefront household makes some to sell
 	var flowers := pantry.count("flower") + n.inv.count("flower")
 	var brew: Dictionary = GameData.recipes["brew_poultice"]
-	if pantry.count("herbal_poultice") < int(cfg.poultice_keep) and flowers >= int(brew["in"].flower):
+	if pantry.count("herbal_poultice") < keep and flowers >= int(brew["in"].flower):
 		n.doing = "brewing a poultice at home"
 		n.plan = [go(w.home_cell(n, "hearth")), work(float(brew.minutes), "home_brew", {}, "work")]
 		return true
 	var want := ""
-	if pantry.count("herbal_poultice") < int(cfg.poultice_keep) and flowers < int(brew["in"].flower):
+	if pantry.count("herbal_poultice") < keep and flowers < int(brew["in"].flower):
 		want = "flower"
 	elif pantry.count("red_berries") + pantry.count("blueberries") < int(cfg.berries_keep):
 		want = "berry"
@@ -318,6 +335,81 @@ func _forage_cell(pl: Dictionary) -> Vector2i:
 	if not w.map.is_solid(c + Vector2i(0, 1)):
 		return c + Vector2i(0, 1)
 	return Vector2i(-1, -1)
+
+
+## A household's storefront (B14, owner: villagers bring home-made goods to a counter at their house).
+## With a counter: an adult takes the household's surplus (poultices and berries beyond what it keeps)
+## to it and keeps it for the evening, selling to the player and to villagers like any shopkeeper.
+## Without one: an industrious adult (coins of their own above storefront_coins, the household's medicine
+## already in store, room by the door) buys the materials from the carpenter or the timber stall and the
+## smith or the goods stall with their own coins, and builds it.
+func _plan_storefront(n: NPC, house: Dictionary) -> bool:
+	if house.is_empty() or not w.holds(World.hh_ref(n.household), house):
+		return false
+	var cfg := hp_cfg()
+	var pantry: Inventory = w.households[n.household].pantry
+	if house.has("front"):
+		var keeper := w.npc(int(w.front_keepers.get(str(house.id), -1)))
+		if keeper != null and keeper != n and keeper.alive and w.at_post(keeper):
+			return false
+		var stock := 0
+		for id in front_goods(n.household):
+			stock += int(front_goods(n.household)[id])
+		for id in FRONT_WARES:
+			stock += n.inv.count(id)
+		if stock <= 0 or w.hour() >= float(cfg.storefront_close_hour):
+			return false
+		for id in front_goods(n.household):
+			w.transfer(pantry, n.inv, id, int(front_goods(n.household)[id]))
+		w.front_keepers[str(house.id)] = n.id
+		var f: Dictionary = house.front
+		n.doing = "keeping the %s storefront" % n.family
+		n.plan = [go(Vector2i(int(f.use[0]), int(f.use[1]))), work(float(cfg.storefront_minutes), "", {}, "idle", Vector2i(int(f.x), int(f.y)))]
+		return true
+	if n.coins < int(cfg.storefront_coins) or pantry.count("herbal_poultice") < int(cfg.poultice_keep) or w.business.front_place(house).is_empty():
+		return false
+	var plan := []
+	var cost := Business.storefront_cost()
+	for id in cost:
+		var short := int(cost[id]) - n.inv.count(id)
+		if short <= 0:
+			continue
+		var seller := _seller_of(id, n) if id != "iron_bar" else _bar_seller(n)
+		if seller == null or seller.inv.count(id) < short:
+			return false
+		plan.append_array([go(_workplace_cell(seller) if seller.job != "smith" else seller.cell()), doit("buy_from", {"vendor": seller.id, "item": id, "qty": short})])
+	plan.append_array([go(w.building_door(n.home) + Vector2i(0, 1)), work(60, "build_front", {}, "work")])
+	n.doing = "building a storefront"
+	n.plan = plan
+	return true
+
+
+## What a storefront household sells: medicine and berries beyond what the household keeps.
+const FRONT_WARES := ["herbal_poultice", "red_berries", "blueberries"]
+
+
+func front_goods(h: int) -> Dictionary:
+	var cfg := hp_cfg()
+	var pantry: Inventory = w.households[h].pantry
+	var out := {}
+	var extra := pantry.count("herbal_poultice") - int(cfg.poultice_keep)
+	if extra > 0:
+		out["herbal_poultice"] = extra
+	var spare := pantry.count("red_berries") + pantry.count("blueberries") - int(cfg.berries_keep)     # the household keeps berries_keep of either kind
+	for id in ["red_berries", "blueberries"]:
+		var e := mini(spare, pantry.count(id))
+		if e > 0:
+			out[id] = e
+			spare -= e
+	return out
+
+
+## Who sells iron bars: the smith or the goods stall, with one to spare.
+func _bar_seller(n: NPC) -> NPC:
+	for o: NPC in w.npcs:
+		if o.alive and o != n and not w.asleep(o) and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.count("iron_bar") > 1:
+			return o
+	return null
 
 
 ## The nearest ripe village plant of a kind ("flower", or "berry" for either bush) within `r` of `at`.
@@ -1165,6 +1257,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 						w.stat("eaten_food", float(GameData.item(plate).food))
 						w.stat("eaten_" + plate)
 			return true
+		"build_front":
+			return w.business.build_npc_front(w.buildings.get(n.home, {}), n)
 		"use_medicine":
 			var from: Inventory = w.households[n.household].pantry if a.get("pantry", false) and n.household >= 0 else n.inv
 			for m in MEDICINES:

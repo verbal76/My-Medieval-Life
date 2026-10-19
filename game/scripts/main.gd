@@ -1901,6 +1901,26 @@ func _find_target() -> void:
 		if mine or world.property.for_sale(b):
 			here.append({"kind": "property", "thing": b, "label": ("%s, yours: make it your home" % World.cap(world.property.describe(b))) if mine
 					else ("%s, empty, the manor's: buy (%d) or lease (%d a week)" % [World.cap(world.property.describe(b)), world.property.price_of(b), world.property.rent_of(b)])})
+	# B14: a house the player holds: build a storefront by its door, or manage / reopen the one it has
+	# (offered after the door's own choices: the house's own use stays the default)
+	var fronts: Array = []
+	for id in world.buildings:
+		var b: Dictionary = world.buildings[id]
+		if not world.holds(World.PLAYER, b) or not str(b.get("type", "")) in ["house", "player_house"]:
+			continue
+		if b.has("front"):
+			var f: Dictionary = b.front
+			var near_front := false
+			for at in [Vector2(int(f.x) + 0.5, int(f.y) + 0.5), Vector2(int(f.x) + 1.5, int(f.y) + 0.5), Vector2(int(f.use[0]) + 0.5, int(f.use[1]) + 0.5)]:
+				if at.distance_to(p.pos) < 1.3:
+					near_front = true
+			if near_front:
+				fronts.append({"kind": "stall", "id": str(id), "label": "Manage your storefront"} if b.has("shop")
+						else {"kind": "front_open", "id": str(id), "label": "Open your storefront"})
+		elif (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
+			var why := world.business.storefront_refusal(b)
+			var cost := Business.storefront_cost()
+			fronts.append({"kind": "front_build", "id": str(id), "label": ("Build a storefront by the door (%s)" % ", ".join(cost.keys().map(func(k): return "%d %s" % [int(cost[k]), GameData.item_name(k).to_lower()]))) if why == "" else "A storefront here: " + why.trim_suffix(".")})
 	# a workshop's door: whose it is, and (its holder) who else may use it
 	for id in world.buildings:
 		var b: Dictionary = world.buildings[id]
@@ -1926,6 +1946,7 @@ func _find_target() -> void:
 				here.append(_chest_target(cu))
 	# the player's own furniture by spot kind (Furniture.options): chairs to sit on, the home oven, the food table
 	here.append_array(Furniture.options(world, world.place_of(p.pos), probe))
+	here = fronts + here
 	here.reverse()
 	cands.append_array(here)
 	if not farm_low.is_empty():                          # tilling: the plough in hand makes it the first choice, else the last
@@ -2215,6 +2236,12 @@ func _use() -> void:
 			ui.show_trade(target.npc)
 		"stall":
 			ui.show_stall(str(target.id))
+		"front_build":
+			var why := world.business.build_storefront(world.buildings[str(target.id)])
+			ui.message(why if why != "" else "Your storefront stands by the door. List goods at its counter.")
+		"front_open":
+			var why := world.business.open_front(world.buildings[str(target.id)])
+			ui.message(why if why != "" else "Your storefront is open.")
 		"fitout":
 			ui.show_fitout(str(target.id))
 		"info":

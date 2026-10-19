@@ -66,6 +66,131 @@ static func add_pitches(world: World, m: VillageMap) -> void:
 				lay.data[int(p.y) * m.w + int(p.x) + k] = AWNING[k]
 		for k in 2:
 			m.set_solid(Vector2i(int(p.x) + k, int(p.y)), true)
+	var ids: Array = world.buildings.keys()
+	ids.sort()
+	for id in ids:
+		if world.buildings[id].has("front"):
+			_draw_front(world, m, world.buildings[id].front, lay)
+
+
+# ---------------------------------------------------------------- storefronts (B14) ---------
+## A storefront (owner, Build 14: "house should be able to progress to adding a storefront"): a counter
+## built from materials against the front wall of a house its holder owns, beside the door. It is the
+## house's own (b.front, saved with the building) and opens as a shop (b.shop with "front": true): the
+## same listings, prices, villager demand, attendant and books as a shop. It stands on the household's own
+## ground, so no rent or licence is due (villagers' storefronts the same). Closing keeps the counter.
+static func _draw_front(world: World, m: VillageMap, f: Dictionary, lay: Dictionary) -> void:
+	for k in 2:
+		var c := Vector2i(int(f.x) + k, int(f.y))
+		if not lay.is_empty():
+			lay.data[c.y * m.w + c.x] = AWNING[k]
+		m.set_solid(c, true)
+		world.tile_changed.emit(c, "below0", AWNING[k])
+
+
+## Where a storefront would stand for house `b`: two open cells in the yard just outside the front wall, at
+## least two from the door, off the road (the counter never blocks a road), with an open cell below to
+## serve from (the road in front will do). {} if the yard has no room.
+func front_place(b: Dictionary) -> Dictionary:
+	var door := w.building_door(str(b.id))
+	var road := {}
+	for c in w.map.data.get("road", []):
+		road[Vector2i(int(c[0]), int(c[1]))] = true
+	for off in [Vector2i(2, 1), Vector2i(-3, 1), Vector2i(3, 1), Vector2i(-4, 1), Vector2i(4, 1), Vector2i(-5, 1),
+			Vector2i(2, 2), Vector2i(-3, 2), Vector2i(3, 2), Vector2i(-4, 2)]:
+		var c0: Vector2i = door + off
+		var cells := [c0, c0 + Vector2i(1, 0)]
+		var use := c0 + Vector2i(0, 1)
+		var ok := true
+		for c: Vector2i in cells + [use]:
+			if not w.map.in_village(c) or w.map.is_solid(c) or not w.plant_at(c).is_empty() or not w.tree_at(c).is_empty() or w.place_of(Vector2(c) + Vector2(0.5, 0.5)) != "":
+				ok = false
+			if c != use and road.has(c):
+				ok = false
+		for st in w.stalls.values():
+			if Vector2i(int(st.x), int(st.y)).distance_to(c0) < 3.0:
+				ok = false
+		if ok:
+			return {"x": c0.x, "y": c0.y, "use": [use.x, use.y]}
+	return {}
+
+
+static func storefront_cost() -> Dictionary:
+	return GameData.b("storefront_cost")
+
+
+func storefront_refusal(b: Dictionary) -> String:
+	if b.is_empty() or not str(b.get("type", "")) in ["house", "player_house"] or not w.holds(World.PLAYER, b):
+		return "Only a house you hold can have a storefront."
+	if b.has("front"):
+		return "This house has its storefront already."
+	if front_place(b).is_empty():
+		return "There is no room beside the door for a counter."
+	var c := storefront_cost()
+	for id in c:
+		if w.player.inv.count(id) < int(c[id]):
+			return "A storefront takes %s." % ", ".join(c.keys().map(func(k): return "%d %s" % [int(c[k]), GameData.item_name(k).to_lower()]))
+	return ""
+
+
+## Build the counter (the materials come from the pack), then open it as a shop. "" when done, else why not.
+func build_storefront(b: Dictionary) -> String:
+	var why := storefront_refusal(b)
+	if why != "":
+		return why
+	var f := front_place(b)
+	var c := storefront_cost()
+	w.player.inv.remove_all(c)
+	for id in c:
+		w.stat("used_" + id, float(c[id]))
+	b["front"] = f
+	var lay: Dictionary = {}
+	for l in w.map.data.layers:
+		if str(l.name) == "below0":
+			lay = l
+	_draw_front(w, w.map, f, lay)
+	w.stat("storefront_built")
+	w.note("%s %s built a storefront at %s." % [w.player.name, w.player.family, w.property.describe(b)])
+	return open_front(b)
+
+
+## A villager builds their household's storefront from the materials they carry (bought with their own
+## coins, NPCBrain._plan_storefront). True when built.
+func build_npc_front(b: Dictionary, n: NPC) -> bool:
+	if b.is_empty() or b.has("front") or n.household < 0 or not w.holds(World.hh_ref(n.household), b):
+		return false
+	var f := front_place(b)
+	var c := storefront_cost()
+	if f.is_empty() or not n.inv.has_all(c):
+		return false
+	n.inv.remove_all(c)
+	for id in c:
+		w.stat("used_" + id, float(c[id]))
+	b["front"] = f
+	var lay: Dictionary = {}
+	for l in w.map.data.layers:
+		if str(l.name) == "below0":
+			lay = l
+	_draw_front(w, w.map, f, lay)
+	w.stat("storefront_built_villager")
+	w.note("%s %s built a storefront at the %s family's house." % [n.name, n.family, n.family])
+	return true
+
+
+## Open the storefront's shop (no licence: the household's own ground).
+func open_front(b: Dictionary) -> String:
+	if not b.has("front"):
+		return "There is no storefront here."
+	if b.has("shop"):
+		return "The storefront is open already."
+	if not w.holds(World.PLAYER, b):
+		return "It is not your house."
+	var f: Dictionary = b.front
+	b.shop = {"shop": true, "front": true, "id": str(b.id), "building": str(b.id), "x": int(f.x), "y": int(f.y), "use": [int(f.use[0]), int(f.use[1])],
+		"stock": {}, "prices": {}, "sales": [], "store": {}, "till": 0, "earned": 0, "paid_day": w.day(), "missed": 0,
+		"costs": {}, "attendant": -1, "wage_day": -1}
+	w.stat("shop_opened")
+	return ""
 
 
 static func is_pitch(s: Dictionary) -> bool:
@@ -128,6 +253,8 @@ func is_mine(s: Dictionary) -> bool:
 
 ## The day's rent of a stall (more for a larger one) or licence of a shop.
 func rent_of(s: Dictionary) -> int:
+	if bool(s.get("front", false)):
+		return 0                          # a storefront: the household's own ground
 	if is_shop(s):
 		return int(GameData.b("shop_licence_day"))
 	return int(GameData.b("stall_large_rent_day")) if bool(s.get("large", false)) else rent_day()

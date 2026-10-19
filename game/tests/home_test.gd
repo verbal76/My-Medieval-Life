@@ -25,6 +25,8 @@ func _init() -> void:
 	test_healing()
 	test_foraging_and_brewing()
 	test_village_days()
+	test_player_storefront()
+	test_villager_storefront()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -113,6 +115,7 @@ func test_foraging_and_brewing() -> void:
 	pantry.add("herbal_poultice", int(NPCBrain.hp_cfg().poultice_keep))
 	pantry.add("red_berries", int(NPCBrain.hp_cfg().berries_keep))
 	n.plan.clear()
+	n.coins = 0                                     # too poor to build a storefront
 	check(not w.brain._plan_home_work(n), "a household with its poultices and berries in store does no more")
 
 
@@ -135,3 +138,119 @@ func test_village_days() -> void:
 	check(int(st.get("villager_foraged_flower", 0)) > 0 and int(st.get("home_brewed", 0)) > 0, "over 8 days villagers gather flowers and brew poultices at home")
 	check(used > 0, "and hurt villagers use medicine")
 	check(w.total_coins() == start + w.coin_sources, "coins conserved (%d + sources %d = %d)" % [start, w.coin_sources, w.total_coins()])
+
+
+## B14: the player builds a storefront by the door of a house they hold, from real materials; it opens as a
+## shop (listings, villager demand, books), survives save and load, and closing it keeps the counter.
+func test_player_storefront() -> void:
+	var w := new_world()
+	var p := w.player
+	var biz: Business = w.business
+	var b: Dictionary = {}
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		var x: Dictionary = w.buildings[id]
+		if str(x.get("type", "")) == "house" and w.owner_of(x) != World.PLAYER and biz.front_place(x).size() > 0:
+			b = x
+			break
+	check(not b.is_empty(), "a village house with room for a counter by its door (%s)" % b.get("id", "?"))
+	check(biz.storefront_refusal(b) != "", "a house the player does not hold cannot have one")
+	w.set_owner(b, World.PLAYER)
+	p.inv.items.clear()
+	p.coins = 100
+	check(biz.storefront_refusal(b).contains("takes"), "without the materials: " + biz.storefront_refusal(b))
+	for id in Business.storefront_cost():
+		p.inv.add(id, int(Business.storefront_cost()[id]))
+	var f := biz.front_place(b)
+	var c0 := Vector2i(int(f.x), int(f.y))
+	check(not w.map.is_solid(c0) and not w.map.is_solid(c0 + Vector2i(1, 0)), "the counter's two cells are open ground before")
+	var t0 := w.treasury
+	check(biz.build_storefront(b) == "" and b.has("front") and b.has("shop") and bool(b.shop.get("front", false)), "built and opened as a shop")
+	check(p.inv.total() == 0, "the materials were used up")
+	check(w.map.is_solid(c0) and w.map.is_solid(c0 + Vector2i(1, 0)) and not w.map.is_solid(Vector2i(int(f.use[0]), int(f.use[1]))), "the counter is solid; the serving cell stays open")
+	var door := w.building_door(str(b.id))
+	check(not w.map.is_solid(door), "the door is not blocked")
+	check(w.treasury == t0 and p.coins == 100 and biz.rent_of(b.shop) == 0, "no rent or licence: the household's own ground")
+	check(biz.premises().has(b.shop) and biz.is_mine(b.shop), "it is one of the player's premises")
+	p.inv.add("herbal_poultice", 4)
+	check(biz.list_item(b.shop, "herbal_poultice", 4) == "" and int(b.shop.stock.herbal_poultice) == 4, "goods are listed at the storefront")
+	check(biz.build_storefront(b) != "", "a second storefront cannot be built")
+	# save and load
+	var d := w.to_dict()
+	var w2 := World.new()
+	var m2 := VillageMap.load_default()
+	w2.load_dict(m2, JSON.parse_string(JSON.stringify(d)))
+	var b2: Dictionary = w2.buildings[str(b.id)]
+	check(b2.has("front") and b2.has("shop") and int(b2.shop.stock.herbal_poultice) == 4 and m2.is_solid(c0), "after loading: the counter, the shop and its stock")
+	# closing keeps the counter; it opens again for the licence only
+	biz.close(b.shop, "Closed.")
+	check(not b.has("shop") and b.has("front") and w.map.is_solid(c0) and p.inv.count("herbal_poultice") == 4, "closing returns the goods and keeps the counter")
+	check(biz.open_front(b) == "" and b.has("shop"), "it opens again, no materials needed")
+
+
+## B14: an industrious villager buys the materials with their own coins and builds a storefront at their
+## house; a keeper takes the household's surplus to it; a hurt neighbour buys medicine there.
+func test_villager_storefront() -> void:
+	var w := new_world()
+	_evening(w)
+	var n: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.home != "" and o.job != "sage" and w.buildings.has(o.home) \
+				and w.holds(World.hh_ref(o.household), w.buildings[o.home]) and w.business.front_place(w.buildings[o.home]).size() > 0:
+			n = o
+			break
+	check(n != null, "a villager whose household holds a house with room for a counter")
+	var house: Dictionary = w.buildings[n.home]
+	var pantry: Inventory = w.households[n.household].pantry
+	n.plan.clear()
+	n.hunger = 100.0
+	n.hp = n.max_hp
+	n.inv.items.clear()
+	pantry.items.erase("herbal_poultice")
+	pantry.add("herbal_poultice", int(NPCBrain.hp_cfg().poultice_keep))
+	n.coins = int(NPCBrain.hp_cfg().storefront_coins) - 1
+	check(not w.brain._plan_storefront(n, house), "below storefront_coins of their own they do not build")
+	n.coins = 200
+	check(w.brain._plan_storefront(n, house) and n.plan[-1].get("act", "") == "build_front", "with coins and medicine in store they set out to build: " + n.doing)
+	var total := w.total_coins()
+	var c0 := n.coins
+	for st: Dictionary in n.plan:
+		if st.get("act", "") == "buy_from":
+			check(w.brain.act(n, "buy_from", st.args), "bought %d %s from %s" % [int(st.args.qty), st.args.item, w.npc(int(st.args.vendor)).name])
+	check(n.inv.has_all(Business.storefront_cost()) and n.coins < c0 and w.total_coins() == total, "the materials were bought with their own coins (%d), none from nowhere" % (c0 - n.coins))
+	check(w.brain.act(n, "build_front", {}) and house.has("front") and n.inv.total() == 0, "built: the materials are used up")
+	var f: Dictionary = house.front
+	check(w.map.is_solid(Vector2i(int(f.x), int(f.y))), "the counter stands by the door")
+	check(not w.brain.act(n, "build_front", {}), "a second storefront is not built")
+	# keeping it: the household's surplus goes to the counter
+	pantry.add("herbal_poultice", 3)
+	pantry.add("red_berries", int(NPCBrain.hp_cfg().berries_keep) + 2)
+	n.plan.clear()
+	check(w.brain._plan_storefront(n, house) and n.doing.contains("storefront"), "an adult goes to keep it: " + n.doing)
+	check(n.inv.count("herbal_poultice") == 3 and n.inv.count("red_berries") == 2 and pantry.count("herbal_poultice") == int(NPCBrain.hp_cfg().poultice_keep) \
+			and pantry.count("red_berries") == int(NPCBrain.hp_cfg().berries_keep), "only the surplus goes; the household keeps its own")
+	n.pos = Vector2(int(f.use[0]) + 0.5, int(f.use[1]) + 0.5)
+	n.plan.clear()
+	n.target = -1
+	check(w.at_post(n) and w.shop_name(n).contains("storefront"), "at the counter they serve as a shop: " + w.shop_name(n))
+	check(w.brain.for_sale(n).has("herbal_poultice"), "poultices are for sale")
+	var other: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.household != n.household and o.job != "sage":
+			other = o
+			break
+	check(not w.brain._plan_storefront(other, house), "another household's adult does not keep it")
+	other.plan.clear()
+	other.hp = other.max_hp * 0.3
+	other.coins = 50
+	other.pos = n.pos + Vector2(1, 2)
+	for m in NPCBrain.MEDICINES:
+		other.inv.items.erase(m)
+		if other.household >= 0:
+			w.households[other.household].pantry.items.erase(m)
+	check(w.brain._plan_heal(other) and other.plan.any(func(s): return s.get("act", "") == "buy_from" and int(s.args.vendor) == n.id), "a hurt neighbour buys medicine at the storefront")
+	var buy: Dictionary = other.plan.filter(func(s): return s.get("act", "") == "buy_from")[0]
+	total = w.total_coins()
+	var k0 := n.coins
+	check(w.brain.act(other, "buy_from", buy.args) and n.coins > k0 and w.total_coins() == total, "the keeper is paid (%d coins), coins conserved" % (n.coins - k0))

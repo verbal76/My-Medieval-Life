@@ -51,6 +51,7 @@ var fields: Array = []             # {id, x, y, w, h, state, ready, owner, tenan
 var plots: Array = []              # the land registry's parcels: {id, x, y, w, h, door, price, owner, tenant, rent,
                                    # due_day, arrears, missed, site, building} (scripts/core/property.gd)
 var property: Property             # the manor's land office: sales, leases, rent, the land registry
+var front_keepers := {}            # B14: house id -> the villager keeping its storefront now (not saved: a new evening picks again)
 var business: Business             # the player's market stall and the villagers who buy from it (PL1-10)
 var fitting: Fitting               # equipment the player places in their rooms: counters, shelves, stations (PL1-10 stage 3)
 var construction: Construction     # building kinds, placement, hired helpers, households that split
@@ -1902,6 +1903,9 @@ func table_food(id: String) -> int:
 
 ## Where a shopkeeper serves: the tavern counter or their stall (tile centre), INF for anyone else.
 func shop_post(n: NPC) -> Vector2:
+	if n.home != "" and int(front_keepers.get(n.home, -1)) == n.id and buildings.get(n.home, {}).has("front"):
+		var f: Dictionary = buildings[n.home].front               # keeping the household's storefront (B14)
+		return Vector2(int(f.use[0]) + 0.5, int(f.use[1]) + 0.5)
 	if n.job == "tavernkeeper" and stations.has(n.workplace):
 		return Vector2(station_use(n.workplace)) + Vector2(0.5, 0.5)
 	if n.job == "merchant" and stalls.has(n.workplace) and tenant_of(stalls[n.workplace]) == npc_ref(n.id):
@@ -1927,6 +1931,8 @@ func shopkeeper_at(post: String) -> NPC:
 
 ## "tavern", "food stall": the shop's name in prompts.
 func shop_name(n: NPC) -> String:
+	if n.home != "" and int(front_keepers.get(n.home, -1)) == n.id and at_post(n):
+		return "the %s family's storefront" % n.family
 	if n.job == "tavernkeeper":
 		return "tavern"
 	return {"raw": "ore and timber stall", "food": "food stall", "goods": "tools and arms stall"}.get(stalls[n.workplace].kind, "stall")
