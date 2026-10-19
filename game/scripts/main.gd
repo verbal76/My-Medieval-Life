@@ -1757,6 +1757,12 @@ func _find_target() -> void:
 					here.append({"kind": "rest", "label": "Your bed: rest until morning"})
 				elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
 					here.append({"kind": "home", "label": "Your chest: store things, rest"})
+	# PL2-002: other chests in the building the player stands in (the family chest is handled above)
+	var inside := world.place_of(p.pos)
+	if inside != "" and inside != p.home:
+		for cu in world.chests.units_in(inside):
+			if cu.at.distance_to(probe) < 0.9:
+				here.append(_chest_target(cu))
 	here.reverse()
 	cands.append_array(here)
 	# the next step of the player's work for the manor, where it is done
@@ -1873,11 +1879,45 @@ func _shop_target(post: Dictionary) -> Dictionary:
 
 ## What using a container does, said in its prompt: "Take pottage (the tavern's) — theft".
 func _container_target(c: Dictionary) -> Dictionary:
+	if c.kind == "crate" or c.kind == "barrel":
+		var cu := world.chests.unit_of_container(c)
+		if world.chests.info(cu).access != "decor":
+			return _chest_target(cu)
 	var id := world.container_pick(c)
 	var whose := world.container_whose(c)
 	if id == "":
 		return {"kind": "info", "label": "Empty %s (%s)" % [c.kind, whose], "text": "There is nothing in the %s." % c.kind}
 	return {"kind": "container", "c": c, "label": "Take %s (%s) — theft" % [GameData.item_name(id).to_lower(), whose]}
+
+
+## A chest, crate or barrel (PL2-002): yours to fill, or someone else's (theft, perhaps locked).
+func _chest_target(u: Dictionary) -> Dictionary:
+	var i: Dictionary = world.chests.info(u)
+	if i.access == "decor":
+		return {"kind": "info", "label": "A chest for show", "text": world.chests.cannot_open(u)}
+	var what := "%s %s" % [i.whose, u.kind]
+	if i.access == "own":
+		return {"kind": "chest", "id": u.id, "label": "Open %s: store things" % what}
+	if world.chests.is_locked(u):
+		return {"kind": "chest", "id": u.id, "label": "Locked %s: pick the lock (theft)" % what}
+	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what}
+
+
+## Pick a locked chest's lock (PL2-002): takes game time, may snap the pick, and may be seen.
+func pick_lock(uid: String) -> void:
+	var u := world.chests.unit(uid)
+	var why := world.chests.cannot_pick(u)
+	if why != "":
+		ui.message(why)
+		return
+	var secs := world.chests.pick_minutes(u) / float(GameData.b("game_minutes_per_second"))
+	ui.hide_all()
+	start_action("Picking the lock", secs, func():
+		var r: Dictionary = world.chests.attempt(u)
+		_xp("stealth", 4 if r.result == "open" else 1)
+		ui.message(r.text, 6.0)
+		if r.result == "open":
+			ui.show_chest(uid))
 
 
 ## The centre of the counter, stall or container at a map position, or INF.
@@ -1894,6 +1934,9 @@ func _usable_at(wpos: Vector2) -> Vector2:
 	var at := Vector2(cell) + Vector2(0.5, 0.5)
 	for c in world.containers:
 		if int(c.x) == cell.x and int(c.y) == cell.y:
+			return at
+	for cu in world.chests.units_in(world.place_of(wpos)):
+		if Vector2i(cu.at) == cell:
 			return at
 	for post in _shop_posts():
 		for a: Vector2 in post.cells:
@@ -2083,6 +2126,8 @@ func _use() -> void:
 			ui.show_deal(target.thing)
 		"home":
 			ui.show_home()
+		"chest":
+			ui.show_chest(target.id)
 		"rest":
 			rest()
 		"manor_job":

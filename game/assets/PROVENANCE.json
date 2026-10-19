@@ -765,6 +765,13 @@
    "sha256": "f3ef865b8102133a4b71ba6cdbe1039bd439bbd494686c9dc40cff7fabc0341c"
   },
   {
+   "file": "assets/icons/lockpick.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Arrow-05.png",
+   "transform": "copied unchanged",
+   "sha256": "245b90b33d091a8c169765a0043b0b9c92df1f0f76ded5227d350f67fff834e2"
+  },
+  {
    "file": "assets/icons/log.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Wood/Wood-Log-01.png",
@@ -777,6 +784,13 @@
    "member": "16x16 Survival RPG Icons/Food/Meat-01.png",
    "transform": "copied unchanged",
    "sha256": "754f265a96b315852e964ed7569c0a868f6e58f5acdf29bbafa73a6b4d654508"
+  },
+  {
+   "file": "assets/icons/padlock.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Metal/Metal-Nugget-02.png",
+   "transform": "copied unchanged",
+   "sha256": "2ed2af738ccd60299ad4c15ef7294fbaf8884dfd0e3adda192f008c5561fe3f2"
   },
   {
    "file": "assets/icons/pickaxe.png",

@@ -334,7 +334,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 
 | Object | Kinds | Why it is not a node | Code |
 |---|---|---|---|
-| Crates, barrels and the tavern's tables (village.json containers) | crate, barrel, table | Their owners' stock, not a node: nothing grows or is made there. Taking from one is theft; a tavern table holds a keeper's dish while the tavern is open. | `game/scripts/core/world.gd::player_take` |
+| Crates, barrels and the tavern's tables (village.json containers), and the chests inside buildings | crate, barrel, table | Their owners' stock, not a node: nothing grows or is made there. Taking from one is theft; a tavern table holds a keeper's dish while the tavern is open. | `game/scripts/core/world.gd::player_take` |
 | The market stalls | - | A merchant's shop: goods are bought, or the stall's stock is stolen while its merchant is away. | `game/scripts/core/world.gd::shop_post` |
 | The well (a station) | - | A works site the manor's mend jobs repair and where elders take the air. It gives nothing: the game has no water item. | `game/scripts/core/manor_work.gd::_find_sites` |
 | Crafting stations | forge, anvil, workbench, sawhorse, stove, oven | They turn materials into goods by recipes.json; they yield nothing themselves. | `game/scripts/main.gd::craft` |

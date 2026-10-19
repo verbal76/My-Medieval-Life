@@ -72,6 +72,7 @@ var sage_id := -1
 var reeve_id := -1
 var detail_radius := 34.0          # tiles: NPCs nearer the player get every-frame updates
 var brain
+var chests: Chests            # PL2-002: storage units, locks and lockpicking
 
 
 func _init() -> void:
@@ -85,6 +86,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	rng.seed = world_seed
 	m.overworld = Overworld.create(world_seed, m)
 	brain = NPCBrain.new(self)
+	chests = Chests.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
 	for b in m.data.buildings:
@@ -1500,11 +1502,11 @@ func player_harvest(f: Dictionary) -> int:
 ## and so does the victim. A guard among them stops the player (guard_confront): `taken` (item ->
 ## count) goes back into `back`, or to the victim. `deed` is what they saw, "take <what>" by default.
 ## Returns how many saw it; what a guard said is in last_guard.
-func witness(kind: String, what: String, victim: NPC, taken := {}, back: Inventory = null, deed := "") -> int:
+func witness(kind: String, what: String, victim: NPC, taken := {}, back: Inventory = null, deed := "", radius := -1.0) -> int:
 	var seen := []
 	var guard: NPC = null
 	last_guard = ""
-	for n: NPC in near(player.pos, float(GameData.b("witness_radius"))):
+	for n: NPC in near(player.pos, radius if radius >= 0.0 else float(GameData.b("witness_radius"))):
 		if n.role != "bandit":
 			seen.append(n)
 			n.remember("saw %s %s %s" % [player.name, player.family, deed if deed != "" else "take " + what])
@@ -2343,7 +2345,7 @@ func to_dict() -> Dictionary:
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"vacancies": vacancies, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
 		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
-		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(),
+		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(),
 	}
 
 
@@ -2355,6 +2357,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	m.overworld = Overworld.create(int(ow.get("seed", seed)), m)
 	m.overworld.load_dict(ow)
 	brain = NPCBrain.new(self)
+	chests = Chests.new(self)
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
@@ -2457,6 +2460,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	# the tables' dishes are saved; a save from before containers gets its tables set from the
 	# keepers' stock (the crates, barrels and stalls are their owners' stock, so they need nothing)
 	_load_containers(m, d.get("containers", []))
+	chests.load_dict(d.get("chests", {}))
 	if not d.has("containers"):
 		serve_tables()
 	brain.dawn(false)

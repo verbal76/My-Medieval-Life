@@ -148,6 +148,8 @@ ICONS = {
     # and the large red potion for the two tonics
     "linen_bandage": "Textile/Silk-Fabric-04", "herbal_poultice": "Plants & Alchemy/Leaf-11",
     "healing_tonic": "Liquid/Small-Potion-05", "strong_healing_tonic": "Liquid/Large-Potion-05",
+    # locks and picks (PL2-002): a thin iron arrow-shaft as the lockpick, a lump of iron as the padlock
+    "lockpick": "Tools/Arrow-05", "padlock": "Metal/Metal-Nugget-02",
 }
 JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
 # item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)

@@ -2543,6 +2543,9 @@ func show_home(pick := {}, focus := {}) -> void:
 	_button("Rest until morning (saves the game)", func():
 		hide_all()
 		main.rest())
+	var fu: Array = w.chests.units_in(p.home)
+	if not fu.is_empty():
+		ChestWindow.new(self).lock_button(fu[0], func(): show_home())      # PL2-002: padlock / key
 	if not pick.is_empty():
 		_home_picker(pick)
 	var rows := {}                                  # "chest:id" / "pack:id" / "@take_all" / "@store_all" -> Button
@@ -2562,6 +2565,11 @@ func show_home(pick := {}, focus := {}) -> void:
 			show_home({"id": iid, "from": "pack"}))
 	if not focus.is_empty() and scheme != "touch":
 		_home_focus(rows, focus)
+
+
+## PL2-002: the storage window for a chest, crate or barrel (see ChestWindow).
+func show_chest(uid: String, pick := {}, focus := {}) -> void:
+	ChestWindow.new(self).show(uid, pick, focus)
 
 
 ## What Store All moves: the pack except what is worn or held (gear slots).

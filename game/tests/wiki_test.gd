@@ -91,7 +91,7 @@ func _data_tests() -> void:
 		check(not r.is_empty(), "search finds '%s' (%d)" % [q, r.size()])
 	check(w.search("pickaxe")[0].begins_with("item:") and "item:pickaxe" in w.search("pickaxe"), "the pickaxe item is among the pickaxe results")
 	check("item:iron_ore" in w.search("iron ore"), "'iron ore' finds the iron ore item")
-	check("todo:lockpicking" in w.search("lockpick") and w.pages["todo:lockpicking"].blocks[0].t == "note", "unbuilt ideas are marked 'Not in the game yet'")
+	check("todo:player_shops" in w.search("player shops") and w.pages["todo:player_shops"].blocks[0].t == "note" and not w.pages.has("todo:lockpicking") and "sys:chests" in w.search("lockpick"), "unbuilt ideas are marked Not in the game yet; lockpicking is built")
 	check(w.search("zzzz").is_empty(), "nonsense finds nothing")
 	check(w.pages["item:iron_bar"].text.contains("pickaxe"), "an item page links to what it makes (iron bar -> pickaxe)")
 	check(w.chain_lines("pickaxe").size() >= 3, "the pickaxe has a production chain down to ore")

@@ -499,9 +499,9 @@ func _smith(n: NPC) -> bool:
 			return _plan_sell(n, id)
 	# forge whatever is scarcest
 	var wants := []
-	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor"]:
+	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor", "forge_lockpicks", "forge_padlock"]:
 		var out: String = GameData.recipes[r].out.keys()[0]
-		var cap := 1 if out in ["hammer", "iron_armor"] else 3
+		var cap := 1 if out in ["hammer", "iron_armor", "padlock"] else 3
 		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in):
 			wants.append([inv.count(out), r])
 	wants.sort()
