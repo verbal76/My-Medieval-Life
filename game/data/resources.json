@@ -8,6 +8,13 @@
     "status": ["implemented", "defect", "proposed"],
     "action": ["interact", "attack"]
   },
+  "deposit_tiles": {
+    "note": "Each kind of rock deposit, the paid-atlas tile it is drawn with (village.json layers; tile = atlas 0 + id) and what it gives (B8-008, owner Build 8 playtest). One sprite is one product: an ore-flecked sprite is always a seam of that ore, and a plain grey boulder (tile 1964) is stone. VillageMap.normalise_rocks applies it when the map loads: a seam is drawn with its ore's tile whatever the map data says, a flecked rock with no seam behind it is drawn as a plain boulder, and a worked-out seam is drawn with the hollow tile.",
+    "ore": {"stone": 1964, "iron_ore": 1966, "copper_ore": 1744, "coal": 1746, "gold_ore": 1965},
+    "boulder": 1964,
+    "worked_out": 1963,
+    "flecked": [1743, 1744, 1745, 1746, 1965, 1966]
+  },
   "nodes": {
     "iron_seam": {
       "name": "Iron seam",
@@ -113,6 +120,42 @@
       "sources": ["game/scripts/core/world.gd::mine_unit", "game/scripts/main.gd::interact", "game/scripts/core/npc_brain.gd::_miner", "game/scripts/core/manor_work.gd::mine_into", "game/scripts/core/manor_work.gd::post_quarry"],
       "status": "implemented",
       "risk": "Overharvested: worked out on day 10 (seed 1), 79% of it exported raw by the caravan, ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1."
+    },
+    "boulder": {
+      "name": "Boulder",
+      "category": "mineral",
+      "origin": "natural",
+      "match": {"kind": "boulder", "ore": "stone"},
+      "where": "Small grey boulders standing alone: in the mine's highland and across the map outside the village",
+      "verb": "Mining",
+      "action_label": "Mine stone",
+      "action": "interact",
+      "tool": "pickaxe",
+      "tool_required": true,
+      "tool_hint": "You need a pickaxe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank).",
+      "skill": "mining",
+      "level": 1,
+      "uses": 3,
+      "minutes_key": "mine_minutes",
+      "time_note": "As for every seam: mine_minutes game minutes a unit for a villager; the player's swing is shorter, divided by the pickaxe's speed.",
+      "action_cost": {"stamina": 0, "tool_wear": 1, "note": "No stamina. The pickaxe wears 1 a swing."},
+      "yields": {"stone": 1},
+      "yield_notes": "Player only: from Mining 2, a 25% chance of a second unit from the same boulder.",
+      "total": "uses (3) stone a boulder; the village's boulders are not counted among the seams (the caravan's stone rule and the miners look at the seams only).",
+      "depletion": "finite",
+      "regeneration": "None: a boulder broken up is gone for good and its cell is open ground. The change is saved (the village's with the world, the overworld's with Overworld.rock_changes).",
+      "owner": "Nobody.",
+      "theft": "Never theft.",
+      "npc_harvest": false,
+      "npc_note": "Villagers mine the seams, not the boulders.",
+      "player_harvest": true,
+      "gather": true,
+      "range": 1,
+      "range_note": "The cell 0.9 tiles in front of the player, or one of its four neighbours (main.gd _find_target).",
+      "icon": "stone",
+      "sources": ["game/scripts/core/world.gd::mine_unit", "game/scripts/core/world.gd::deposit_at", "game/scripts/core/overworld.gd::boulder_at", "game/scripts/main.gd::interact"],
+      "status": "implemented",
+      "risk": "Stone is cheap: a boulder breaks into only 3 stone. The caravan's quarry import rule counts the seams alone."
     },
     "copper_seam": {
       "name": "Copper seam",
@@ -482,7 +525,7 @@
     {"id": "counter", "kinds": ["tavern_counter", "armory_counter", "mine_cart"], "what": "The tavern counter, the armoury counter and the mine cart", "reason": "Map stations with no recipe and no harvest: the tavern counter is where the tavernkeeper serves and villagers drink; the others are decorative.", "source": "game/scripts/core/npc_brain.gd::_plan_evening"},
     {"id": "pen", "what": "The pens' troughs", "reason": "Where livestock is fed (wheat in, nothing out); the animals in a pen are livestock nodes, the keeper's.", "source": "game/scripts/core/fauna.gd::feed"},
     {"id": "loot", "what": "Bags on the ground", "reason": "What the dead or a kill left: taken once, not a node.", "source": "game/scripts/main.gd::interact"},
-    {"id": "decor", "what": "Decorative map tiles (flowers, rocks, depleted rock, stumps' surroundings)", "reason": "Map art with no game object behind it.", "source": "tools/build_village.py"}
+    {"id": "decor", "what": "Decorative map tiles (flowers, cliffs and rock faces, worked-out seams, stumps' surroundings)", "reason": "Map art with no game object behind it.", "source": "tools/build_village.py"}
   ],
   "exceptions": [
     {"item": "gold_ore", "finding": "no_source", "reason": "Defect: gold ore is an item, the smith buys it, smelt_gold uses it and the mine code gates it at Mining 3, but no deposit in village.json holds it, no start stock has it and no caravan brings it. So smelt_gold, gold_bar, forge_gold_ring and gold_ring cannot be made. Whether to add gold seams is an owner decision.", "status": "defect"},

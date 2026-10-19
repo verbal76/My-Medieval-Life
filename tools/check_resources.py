@@ -405,8 +405,10 @@ def problems(ctx):
         for ref in n.get("sources", []):
             ref_ok(nid, ref)
         m = n.get("match", {})
-        if m.get("kind") == "deposit":
+        if m.get("kind") in ("deposit", "boulder"):
             item_ok(nid + " match", m.get("ore", ""))
+            if m.get("kind") == "boulder" and (not isinstance(n.get("uses"), int) or n["uses"] < 1):
+                out.append("%s: a boulder needs uses (a whole number of units it gives)" % nid)
         elif m.get("kind") == "animal":
             sp = bal_["animals"].get(m.get("species", ""))
             if not isinstance(sp, dict):
@@ -425,6 +427,26 @@ def problems(ctx):
     for ore in sorted({d["ore"] for d in ctx["village"]["deposits"]}):
         if ("deposit", ore) not in keys:
             out.append("deposit ore %r in village.json has no node" % ore)
+    # one sprite, one product (B8-008): every ore has its own tile, only stone's is plain
+    dt = res.get("deposit_tiles", {})
+    for ore in sorted({k[1] for k in keys if k[0] == "deposit"} | set(dt.get("ore", {}))):
+        if ore not in dt.get("ore", {}):
+            out.append("deposit ore %r has no tile in deposit_tiles" % ore)
+        item_ok("deposit_tiles", ore)
+    tiles = dt.get("ore", {})
+    flecked = set(dt.get("flecked", []))
+    for ore, t in sorted(tiles.items()):
+        if (ore == "stone") == (t in flecked):
+            out.append("deposit_tiles: %s's tile %s must %sbe a flecked (ore) sprite" % (ore, t, "not " if ore == "stone" else ""))
+    ore_tiles = [t for o, t in tiles.items() if o != "stone"]
+    if len(set(ore_tiles)) != len(ore_tiles):
+        out.append("deposit_tiles: two ores share a tile")
+    if dt.get("boulder") != tiles.get("stone"):
+        out.append("deposit_tiles: the boulder is the plain stone sprite")
+    if dt.get("worked_out") in flecked or dt.get("worked_out") == dt.get("boulder"):
+        out.append("deposit_tiles: worked_out must differ from the boulder and the flecked sprites")
+    if ("boulder", "stone") not in keys:
+        out.append("no boulder node (small grey boulders give stone)")
     for sp, spec in sorted(bal_["animals"].items()):
         if isinstance(spec, dict) and ("animal", sp) not in keys:
             out.append("%s species %r has no node" % (spec["kind"], sp))
@@ -565,6 +587,19 @@ def _instances(ctx, n):
     if m["kind"] == "deposit":
         ds = [d for d in v["deposits"] if d["ore"] == m["ore"]]
         return len(ds), "%d %s in %d seams" % (sum(d["amount"] for d in ds), m["ore"], len(ds))
+    if m["kind"] == "boulder":
+        w = v["w"]
+        t = ctx["res"]["deposit_tiles"]
+        seams = {(d["x"], d["y"]) for d in v["deposits"]}
+        look = set(t["flecked"]) | {t["boulder"]}
+        cells = set()
+        for lay in v["layers"]:
+            if lay["name"].startswith("below"):
+                for i, tv in enumerate(lay["data"]):
+                    c = (i % w, i // w)
+                    if tv in look and c not in seams and v["solid"][c[1]][c[0]] == "1":
+                        cells.add(c)
+        return len(cells), "%d in the village (%d stone each), and the overworld's solid rocks" % (len(cells), n["uses"])
     if m["kind"] == "tree":
         return len(v["trees"]), "%d trees, %d logs while all are grown" % (len(v["trees"]), len(v["trees"]) * products(ctx, n)["log"])
     if m["kind"] == "field":

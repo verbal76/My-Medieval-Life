@@ -743,7 +743,7 @@ func _build_scene() -> void:
 	ghost.visible = false
 	ghost.z_index = MARKER_Z
 	above.add_child(ghost)
-	view.build(map, above)
+	view.build(map, above, actors)             # overlay tiles of solid cells are drawn among the characters (B8-025)
 	_draw_village_exits()
 	tree_view.setup(world)
 	_replace_tree_tiles()
@@ -874,6 +874,7 @@ func _apply_world_changes() -> void:
 	for d in world.deposits:
 		if int(d.amount) <= 0:
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
+	world.sync_boulders()                    # boulders already broken up (B8-026)
 	for f in world.fields:
 		world._field_tiles(f)
 	for pl in world.plants:
@@ -1014,7 +1015,12 @@ func _show_sleeper(n: NPC, s: ActorSprite) -> bool:
 func _sync_sprites() -> void:
 	var cam := camera.get_screen_center_position() / T
 	for n: NPC in world.npcs:
-		var s: ActorSprite = sprites[n.id]
+		var s: ActorSprite = sprites.get(n.id)
+		if s == null:                               # a newcomer (NPCBrain succession) gets a sprite when first seen
+			s = ActorSprite.new()
+			s.setup(n.sprite)
+			actors.add_child(s)
+			sprites[n.id] = s
 		var near := n.pos.distance_to(cam) < 30.0
 		if not n.alive:
 			# the body falls, flickers and is gone
@@ -1045,22 +1051,9 @@ func _sync_sprites() -> void:
 	canopy.update(p.pos, get_process_delta_time())
 	tree_view.update(p.pos, get_process_delta_time())
 	ow_view.follow(camera.get_screen_center_position() / T, p.pos, get_process_delta_time())
-	var inside := world.place_of(p.pos)
-	if inside != "" and (world.interiors[inside].roof as Array).is_empty():
-		inside = ""
-	# still inside while within the building's outline, on a cell its interior missed (a back room,
-	# a courtyard cell): otherwise the roof flicks between lifted and eaves-faded (Build 8 report)
-	if inside == "" and inside_hold != "" and world.buildings.has(inside_hold):
-		var hb: Dictionary = world.buildings[inside_hold]
-		if Rect2(float(hb.x), float(hb.y), float(hb.w), float(hb.h)).has_point(p.pos):
-			inside = inside_hold
-	inside_hold = inside
-	# behind the eaves a roof fades only when it would hide the player: over their feet and head both
-	var under := world.roof_over(p.pos)
-	if under != "" and world.roof_over(p.pos + Vector2(0, -1)) != under:
-		under = ""
-	roofs.follow(inside, world.interiors[inside].roof if inside != "" else [], under,
-			world.interiors[under].roof if under != "" else [], get_process_delta_time())
+	var rf := RoofFade.probe(world, p.pos, inside_hold)         # which roof lifts (B8-018: roofs never return indoors)
+	inside_hold = rf.inside
+	roofs.follow(rf.inside, rf.inside_roof, rf.under, rf.under_roof, get_process_delta_time())
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
@@ -1552,7 +1545,7 @@ func _find_target() -> void:
 		var dep := world.deposit_at(cell)
 		if not dep.is_empty() and int(dep.amount) > 0:
 			front = {"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
-					else "%s seam: requires a pickaxe (the smith sells them)" % GameData.item_name(dep.ore)}
+					else ("A boulder" if dep.get("boulder", false) else "%s seam" % GameData.item_name(dep.ore)) + ": requires a pickaxe (the smith sells them)"}
 			break
 		var tr := world.tree_at(cell)
 		if not tr.is_empty() and tr.state != "cleared":

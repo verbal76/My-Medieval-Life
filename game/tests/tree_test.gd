@@ -189,5 +189,109 @@ func _run() -> void:
 		if Trees.variant(str(t.get("species", ""))).is_empty():
 			bad += 1
 	check(bad == 0 and species.size() >= 3, "every village tree has a Living Forest species (%s)" % [species.keys()])
+	_overworld_trees(w2)
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+## Living Forest trees in the overworld (B8-005, B8-003): no tree tiles in the overworld's layers, one
+## sprite per tree after crossing chunks back and forth, trunks collide and canopies do not, a canopy
+## fades over the player behind it and the tree can still be harvested, drawn in the characters' order.
+func _overworld_trees(w: World) -> void:
+	var o: Overworld = w.map.overworld
+	var tv: TreeView = main.tree_view
+	var east: Vector2i = w.map.exits()[1].out
+	var start := Vector2(east) + Vector2(0.5, 0.5)
+	# the tiles drawn: no trunk, canopy or bottom tile of any tree kind in any chunk layer
+	var tree_tiles := {}
+	for k in o.tiles.trees:
+		tree_tiles[int(k.trunk)] = true
+		tree_tiles[int(k.top)] = true
+		tree_tiles[int(k.bottom)] = true
+	w.player.pos = start
+	main.camera.position = start * 16.0
+	main.ow_view.follow(start, start, 0.1, -1)
+	var drawn := 0
+	var stray := 0
+	for cc in main.ow_view.chunks:
+		var layers: Dictionary = main.ow_view.chunks[cc]
+		for key in ["ground", "path", "objects", "tops"]:
+			var l: TileMapLayer = layers[key]
+			for cell in l.get_used_cells():
+				drawn += 1
+				if tree_tiles.has(main.ow_view.tile_value(l, cell) % 100000):
+					stray += 1
+	check(drawn > 1000 and stray == 0, "no tree tile is drawn in the overworld's layers (%d tiles looked at)" % drawn)
+	var tops := 0
+	for cc in main.ow_view.chunks:
+		tops += (main.ow_view.chunks[cc].tops as TileMapLayer).get_used_cells().size()
+	check(tops == 0, "and nothing stands in the canopy layers (%d)" % tops)
+	# cross several chunks and come back: one sprite per tree, none for an unloaded chunk, none half drawn
+	var bad_dup := 0
+	var bad_orphan := 0
+	var bad_tex := 0
+	var seen := 0
+	for step in [0, 1, 2, 3, 4, 3, 2, 1, 0, -1, 0]:
+		var at := start + Vector2(step * 33.0, step * 11.0)
+		main.camera.position = at * 16.0
+		w.player.pos = at
+		main.ow_view.follow(at, at, 0.1, -1)
+		tv.update(at, 0.05)
+		var want := {}
+		for cc in main.ow_view.chunks:
+			for t in o.chunk_trees(cc):
+				want[Vector2i(int(t.x), int(t.y))] = true
+		var kids := 0
+		for c in tv.get_children():
+			if c is TreeView.TreeNode and not c.is_queued_for_deletion():
+				kids += 1
+		for cell in want:
+			var n: TreeView.TreeNode = tv.node_at(cell)
+			if n == null:
+				bad_orphan += 1
+			elif n.texture == null or n.position != TreeView.base_of(n.rec):
+				bad_tex += 1
+		for cell in tv.nodes:
+			if not want.has(cell) and not w.trees.any(func(t): return Vector2i(int(t.x), int(t.y)) == cell):
+				bad_orphan += 1
+		if kids != tv.nodes.size():
+			bad_dup += 1
+		seen += want.size()
+	check(seen > 500 and bad_dup == 0 and bad_orphan == 0 and bad_tex == 0,
+			"after crossing chunks there is one whole sprite per tree and none left behind (%d trees seen; duplicates %d, missing or stale %d, unfinished %d)" % [seen, bad_dup, bad_orphan, bad_tex])
+	# a mature overworld tree: trunk solid, canopy cell open, canopy fades over the player behind it,
+	# the tree still harvestable and drawn after the player when they stand south of it
+	main.camera.position = start * 16.0
+	w.player.pos = start
+	main.ow_view.follow(start, start, 0.1, -1)
+	var tree := {}
+	for cc in main.ow_view.chunks:
+		for t in o.chunk_trees(cc):
+			var c := Vector2i(int(t.x), int(t.y))
+			if tree.is_empty() and t.state == "grown" and not o.is_solid(c + Vector2i(0, -1)) and not o.is_solid(c + Vector2i(0, 1)) \
+					and not o.is_solid(c + Vector2i(0, -2)) and not o.is_road(c) and o.chunk_in_village(cc) == false:
+				tree = t
+	check(not tree.is_empty(), "a mature tree outside the village with open ground north and south of it")
+	var cell := Vector2i(int(tree.x), int(tree.y))
+	var n: TreeView.TreeNode = tv.node_at(cell)
+	check(o.is_solid(cell) and not o.is_solid(cell + Vector2i(0, -1)), "its trunk blocks and its canopy cell does not")
+	w.player.inv.add("axe")
+	var behind := Vector2(cell) + Vector2(0.5, -0.4)              # north of the trunk, under the canopy
+	w.player.pos = behind
+	for k in 12:
+		tv.update(behind, 0.1)
+	check(n.alpha_to < 1.0 and n.modulate.a <= TreeView.FADE_ALPHA + 0.01, "the canopy fades while the player is behind it (alpha %.2f)" % n.modulate.a)
+	var found := ResourceNodes.node_at(w, cell, true)
+	check(not found.is_empty() and found.def.id == "tree" and ResourceNodes.can_harvest(w, found.def, found.ref) == "" and w.tree_at(cell + Vector2i(0, -1)).get("x", -1) == cell.x,
+			"the faded tree is still harvestable, trunk and canopy cell alike")
+	var logs := 0
+	for k in int(Trees.cfg().chops):
+		logs += int(w.chop_tree(w.tree_at(cell), 1, 0).logs)
+	check(logs >= 4, "and gives its logs through the fade (%d)" % logs)
+	for k in 12:
+		tv.update(Vector2(cell) + Vector2(4.5, 3.5), 0.1)
+	check(n.modulate.a >= 0.99, "the canopy is back to full when the player leaves")
+	check(main.actors.y_sort_enabled and tv.get_parent() == main.actors and tv.y_sort_enabled, "trees sit in the characters' y-sorted layer")
+	var south := Vector2(cell) + Vector2(0.5, 1.6)
+	check(south.y * 16.0 > n.position.y and Vector2(cell).y * 16.0 + 14.0 == n.position.y, "a player south of the trunk sorts after it (in front), north before it (behind)")
+
