@@ -85,14 +85,14 @@ Rules:
 - **Trigger:** The player interacts with a deposit holding a pickaxe; or a miner works one.
 - **Source:** `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::mine_unit`, `game/scripts/core/npc_brain.gd::_miner`, `game/scripts/core/inventory.gd::wear`
 - **Affects:** Resources, Inventory, Player state
-- **Expected:** The deposit loses what is mined and the ore goes to the pack. The pick's speed sets the time; the pick wears and can break, emptying the tool slot. Mining XP is gained. Gold needs Mining 3.
+- **Expected:** The deposit loses what is mined and the ore goes to the pack. The pick's speed sets the time; the pick wears and can break, emptying the tool slot. Mining XP is gained. Gold needs Mining 3. One Use is one cycle (B8-006): the pickaxe's icon is held in the hand through the swing, the ore is awarded with a "+1 Iron ore" gain line (item id passed to the interface) when the swing ends, and the player returns to idle; only Gather mode repeats. B, Esc, a right-click or a tap stops it with nothing awarded or worn, and so does opening the Pack or any window (B8-010, B8-011).
 - **Tests:** `game/tests/start_test.gd`, `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_simulation`
 
 ### INT-006 · Felling a tree
 - **Trigger:** The player interacts with a tree holding an axe; or a woodcutter works.
 - **Source:** `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::fell`, `game/scripts/core/npc_brain.gd::_woodcutter`
 - **Affects:** Resources, Inventory, Player state
-- **Expected:** The tree becomes a stump and gives logs. The axe wears. Its whole canopy (both tiles) goes and the trunk cell becomes walkable; a sapling and then the full tree, with its solid trunk, come back on regrowth (INT-040).
+- **Expected:** The tree becomes a stump and gives logs ("+3 Logs", and a sapling when one drops, as gain lines with the item ids). The axe is held in the hand through each blow and the player is idle when the tree falls; cancelling (B, Esc, a right-click, a tap, a window) stops the blows with nothing awarded. The axe wears. Its whole canopy (both tiles) goes and the trunk cell becomes walkable; a sapling and then the full tree, with its solid trunk, come back on regrowth (INT-040).
 - **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_tree_canopy`
 
 ### INT-007 · Harvesting a field (player)
@@ -286,6 +286,9 @@ Rules:
   - Striking a villager is a crime (INT-013).
   - Looking around: a two-finger drag (its midpoint; the spread still zooms), a middle-button drag or the right stick moves the camera off the player; it stays there, kept over the map, until Recenter, C, a right-stick click, or walking with keys or the left stick. Lifting two fingers never walks. Recenter shows only while looking around.
   - Following the player, the camera has a dead zone: it moves only when the player walks out of a box 40% x 35% of the view in the middle of the screen, then keeps them at its edge. Recenter puts the player in the middle.
+  - While the player works (mining, felling, picking, harvesting, mending, crafting): B, Esc, a right-click or a tap stops it at once (B8-011), and the Pack, Skills, Journal or any window stops it (B8-010); nothing is awarded and nothing resumes on closing. Esc with nothing under way is still the menu.
+  - Several things to use at once (a person beside a forge, a container, a seam, a bed) are all offered, nearest first (B8-014): Q or Tab (D-pad left and right) choose, Use does the chosen one, the prompt shows the next choice on a second line. B stays Cancel, LB and RB Map and Skills.
+  - Sprint (B8-027): Shift held (or toggled with the balance's `sprint_toggle`) or L3 toggled gives `sprint_speed` times the walking speed for `sprint_stamina_per_sec` stamina a second; it ends when stamina runs out and never starts during work or an attack.
   - The village map (Map button, M, pad LB; closed the same way, the X, Esc, B or Android's Back) pauses the game and draws the map data with the player, the player's home and the named places; a tap on it looks there.
 - **Tests:** `game/tests/start_test.gd`
 

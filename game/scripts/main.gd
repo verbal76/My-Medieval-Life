@@ -25,7 +25,13 @@ var player_sprite: ActorSprite
 var loot_nodes: Array = []
 var projectiles: Array = []    # {node, pos, dir, left}
 var target := {}               # current interaction target
-var action := {}               # {label, left, total, done: Callable}
+var action := {}               # {label, left, total, done: Callable, anim, tool}
+var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain)
+var sprinting := false         # B8-027: running (L3 toggles on a pad; Shift held, or toggled, on a keyboard)
+var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
+var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
+var sprint_spent := false      # stamina ran out while Shift was held: release it to sprint again
+var target_pref := ""          # the key (_target_key) of the option the player cycled to
 var paused := true             # the title screen starts paused
 var running := false
 var move_to: Vector2 = Vector2.INF   # tap-to-move destination (tiles)
@@ -148,7 +154,22 @@ func _ready() -> void:
 		camera.position_smoothing_enabled = false
 		match shot_panel:
 			"gain":
-				ui.gain("+2 red berries")
+				_gain("+2 red berries", "red_berries")
+			"choice":
+				# a villager standing by a workstation: the prompt offers both
+				for id in world.stations:
+					if world.stations[id].type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+						var st: Dictionary = world.stations[id]
+						world.player.pos = Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
+						player_sprite.face(Vector2(0, 1))
+						follow_at = _in_view(world.player.pos * T)
+						world.npcs[2].pos = world.player.pos + facing_vec() * 0.9
+						world.npcs[2].anim = "idle"
+						break
+				_find_target()
+			"mine_swing_0","mine_swing_1", "mine_swing_2", "chop_swing_0", "chop_swing_1", "chop_swing_2":
+				# mid-swing, frozen at one frame of the swing, with the pickaxe or the axe in hand
+				_swing_panel(shot_panel.begins_with("mine"), int(shot_panel.right(1)))
 			"skills":
 				ui.show_skills()
 			"inventory":
@@ -481,10 +502,13 @@ func _setup_input() -> void:
 		"fireball": [KEY_F, KEY_K], "inventory": [KEY_I, KEY_TAB], "skills": [KEY_L], "journal": [KEY_B], "pause": [KEY_ESCAPE, KEY_P],
 		"zoom_in": [KEY_EQUAL, KEY_KP_ADD], "zoom_out": [KEY_MINUS, KEY_KP_SUBTRACT],
 		"map": [KEY_M], "recenter": [KEY_C], "build": [KEY_H], "gather": [KEY_G],
+		"sprint": [KEY_SHIFT], "sprint_pad": [], "cancel": [], "next_target": [KEY_Q], "prev_target": [],
 	}
 	var pads := {"interact": JOY_BUTTON_A, "attack": JOY_BUTTON_X, "fireball": JOY_BUTTON_Y,
 		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER,
-		"map": JOY_BUTTON_LEFT_SHOULDER, "recenter": JOY_BUTTON_RIGHT_STICK, "gather": JOY_BUTTON_DPAD_DOWN}
+		"map": JOY_BUTTON_LEFT_SHOULDER, "recenter": JOY_BUTTON_RIGHT_STICK, "gather": JOY_BUTTON_DPAD_DOWN,
+		"next_target": JOY_BUTTON_DPAD_RIGHT, "prev_target": JOY_BUTTON_DPAD_LEFT, "sprint_pad": JOY_BUTTON_LEFT_STICK,
+		"cancel": JOY_BUTTON_B}
 	for a in keys:
 		if not InputMap.has_action(a):
 			InputMap.add_action(a)
@@ -613,6 +637,10 @@ func _clear_world() -> void:
 	move_to = Vector2.INF
 	walk_goal = Vector2i(-1, -1)
 	strike_pending = false
+	action = {}
+	sprinting = false
+	target_options = []
+	target_pref = ""
 	gather = {}
 	gather_warned = null
 	gather_mark = null              # its node goes with the scene
@@ -913,6 +941,8 @@ func _process(delta: float) -> void:
 		_screenshot_step(delta)
 	if not placing.is_empty():
 		_placing_step(delta)
+	if not action.is_empty() and (ui.modal() or not world.player.alive):
+		cancel_action("")          # a window opened (the Pack, a menu) or the player fell: the work stops, nothing is awarded
 	if not paused and world.player.alive:
 		world.update(delta)
 		_player_step(delta)
@@ -1200,12 +1230,21 @@ func _sync_loot() -> void:
 func _player_step(delta: float) -> void:
 	var p := world.player
 	if not action.is_empty():
+		_menu_keys()                      # the Pack and the other windows open mid-action: that stops it (B8-010)
+		if ui.modal():
+			cancel_action("")
+			return
+		if Input.is_action_just_pressed("cancel"):
+			cancel_action("You stop.")   # B (and Esc, right-click, a tap) stop the work at once (B8-011)
+			return
+		sprinting = false
 		action.left -= delta
-		player_sprite.play("work")
 		if action.left <= 0.0:
 			var done: Callable = action.done
 			action = {}
-			done.call()
+			done.call()                  # may begin the next blow of a felling
+			if action.is_empty():
+				_rest_anim()             # one cycle: collected, then back to idle (B8-006)
 		return
 	if ui.modal():
 		player_sprite.play("idle")
@@ -1229,7 +1268,7 @@ func _player_step(delta: float) -> void:
 		v = _route_step(delta)
 	walking = v.length() > 0.1
 	if v.length() > 0.1:
-		var speed := float(GameData.b("player_tiles_per_second"))
+		var speed := float(GameData.b("player_tiles_per_second")) * _sprint_step(delta)
 		var step := v.normalized() * minf(v.length(), 1.0) * speed * delta
 		var before := p.pos
 		var moved_x := _try_move(Vector2(step.x, 0))
@@ -1241,8 +1280,11 @@ func _player_step(delta: float) -> void:
 		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < step.length() * 0.3 else 0.0
 		player_sprite.face(v)
 		player_sprite.play("walk")
-	elif player_sprite.anim == "walk":
-		player_sprite.play("idle")
+		player_sprite.speed_scale = _sprint_scale()
+	else:
+		sprinting = false
+		if player_sprite.anim in ["walk", "swing", "gather", "work"]:
+			_rest_anim()
 	_find_target()
 	if Input.is_action_just_pressed("interact"):
 		interact()
@@ -1250,7 +1292,14 @@ func _player_step(delta: float) -> void:
 		attack()
 	if Input.is_action_just_pressed("fireball"):
 		fireball()
-	if Input.is_action_just_pressed("inventory"):
+	_menu_keys()
+	if Input.is_action_just_pressed("gather"):
+		gather_button()
+
+
+## The window keys (Pack, Skills, Journal, Build): they work while walking and while working.
+func _menu_keys() -> void:
+	if Input.is_action_just_pressed("inventory") and tab_cycled != Engine.get_process_frames():
 		ui.toggle_inventory()
 	if Input.is_action_just_pressed("skills"):
 		ui.toggle_skills()
@@ -1258,8 +1307,62 @@ func _player_step(delta: float) -> void:
 		ui.show_journal(-1)
 	if Input.is_action_just_pressed("build"):
 		ui.show_build_menu()
-	if Input.is_action_just_pressed("gather"):
-		gather_button()
+
+
+## Back to standing: the swing or gathering animation ends and the held tool is put away.
+func _rest_anim() -> void:
+	player_sprite.hold("")
+	player_sprite.speed_scale = 1.0
+	player_sprite.play("idle")
+
+
+## Stop the work now (B, Esc, a tap, a window opening): the action's result is dropped, so nothing is
+## awarded, the swing ends, Gather mode's walk to the resource is given up and movement is the player's again.
+func cancel_action(why := "") -> void:
+	var had := not action.is_empty() or not gather.is_empty()
+	action = {}
+	stop_gather("")
+	chase = null
+	strike_pending = false
+	move_to = Vector2.INF
+	_rest_anim()
+	if had and why != "":
+		ui.message(why)
+
+
+## Sprint (B8-027): on a pad L3 toggles it (toggle_sprint), on a keyboard Shift held sprints, or toggles
+## when the balance's sprint_toggle is on. It needs stamina and ends when that is gone; the speed
+## multiplier is returned and the cost taken (net of the regeneration the world just added).
+func _sprint_step(delta: float) -> float:
+	var p := world.player
+	if not bool(GameData.b("sprint_toggle")):
+		if Input.is_action_pressed("sprint"):
+			if not sprinting and not sprint_spent and p.stamina >= float(GameData.b("sprint_min_stamina")):
+				sprinting = true
+		else:
+			sprint_spent = false
+			if Input.is_action_just_released("sprint"):
+				sprinting = false
+	if not sprinting:
+		return 1.0
+	p.stamina = maxf(0.0, p.stamina - (float(GameData.b("sprint_stamina_per_sec")) + float(GameData.b("player_stamina_regen_per_second"))) * delta)
+	if p.stamina <= 0.0:
+		sprinting = false            # out of breath: back to walking until Shift is let go and pressed again
+		sprint_spent = true
+		return 1.0
+	return float(GameData.b("sprint_speed"))
+
+
+## Sprint on or off (L3; Shift when sprint_toggle is on). It cannot start without some stamina.
+func toggle_sprint() -> void:
+	if sprinting:
+		sprinting = false
+	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")) and action.is_empty():
+		sprinting = true
+
+
+func _sprint_scale() -> float:
+	return float(GameData.b("sprint_speed")) if sprinting else 1.0
 
 
 ## The direction to walk this frame towards move_to, around walls and trees: the route comes
@@ -1382,144 +1485,201 @@ func facing_vec() -> Vector2:
 	return Vector2(sin(a), cos(a))
 
 
+## Everything the player could use from here goes in `target_options` (B8-014): the people, containers,
+## counters, loot and animals nearest the probe first, then the seam, tree, plant or field in front, then
+## the station, plot, pen, door, bed or manor step at their feet. `target` is the one the player chose
+## with cycle_target (else the first), and the prompt names it, and the next, when there are several.
 func _find_target() -> void:
 	var p := world.player
 	var probe := p.pos + facing_vec() * 0.9
-	var best := {}
-	var bd := 1.5
+	var near: Array = []        # [distance to the probe, order, target]
 	for n: NPC in world.present(p.pos, 2.5):
 		var d := n.pos.distance_to(probe)
-		if d < bd:
-			bd = d
+		if d < 1.5:
 			if world.asleep(n):
-				best = {"kind": "npc", "npc": n, "label": "%s is asleep" % _who(n)}
+				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "%s is asleep" % _who(n)}])
 			elif world.at_post(n):
-				best = {"kind": "shop", "npc": n, "label": "Trade with %s (%s)" % [n.name, world.shop_name(n)]}
+				near.append([d, near.size(), {"kind": "shop", "npc": n, "label": "Trade with %s (%s)" % [n.name, world.shop_name(n)]}])
 			else:
-				best = {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}
+				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
 	for c in world.containers:
 		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
 		if at.distance_to(p.pos) > 2.2:
 			continue
 		var d := at.distance_to(probe)
-		if d < bd:
-			bd = d
-			best = _container_target(c)
+		if d < 1.5:
+			near.append([d, near.size(), _container_target(c)])
 	for post in _shop_posts():
 		for at: Vector2 in post.cells:
 			if at.distance_to(p.pos) > 2.2:
 				continue
 			var d := at.distance_to(probe)
-			if d < bd:
-				bd = d
-				best = _shop_target(post)
+			if d < 1.5:
+				near.append([d, near.size(), _shop_target(post)])
 	for i in world.loot.size():
 		var d: float = world.loot[i].pos.distance_to(probe)
-		if d < bd:
-			bd = d
+		if d < 1.5:
 			var from: String = world.loot[i].from
-			best = {"kind": "loot", "i": i, "label": ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}
+			near.append([d, near.size(), {"kind": "loot", "i": i, "label": ("Take what is left of %s" % from) if from.begins_with("the ") else ("Search %s's belongings" % from)}])
 	for a: Animal in world.fauna.near(probe, 1.2):
 		var d := a.pos.distance_to(probe)
-		if d < bd:
-			bd = d
+		if d < 1.5:
 			var what := "%s (%s%s)" % [a.label().to_lower(), "young, " if not a.adult(world.minutes) else "", "male" if a.sex == "m" else "female"]
-			best = {"kind": "animal", "animal": a, "label": ("A " if a.wild() else "The keeper's ") + what + (": attack to hunt it" if a.wild() else "")}
+			near.append([d, near.size(), {"kind": "animal", "animal": a, "label": ("A " if a.wild() else "The keeper's ") + what + (": attack to hunt it" if a.wild() else "")}])
+	near.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
+	var cands: Array = near.map(func(x): return x[2])
 	var c := Vector2i(floori(probe.x), floori(probe.y))
-	if best.is_empty():
-		for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
-			var cell: Vector2i = c + dc
-			var dep := world.deposit_at(cell)
-			if not dep.is_empty() and int(dep.amount) > 0:
-				best = {"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
-						else "%s seam: requires a pickaxe (the smith sells them)" % GameData.item_name(dep.ore)}
-				break
-			var tr := world.tree_at(cell)
-			if not tr.is_empty() and tr.state != "cleared":
-				var lab: String
-				if tr.state == "grown":
-					lab = "Fell this tree" if p.tool_of("axe") != "" else "A tree: requires an axe (the smith sells them)"
-				else:
-					lab = "%s: %s" % [Trees.describe(str(tr.state)), Trees.hint(str(tr.state))]
-				best = {"kind": "tree", "tree": tr, "label": lab}
-				break
-			var pl := world.plant_at(cell)
-			if not pl.is_empty() and pl.state == "ripe":
-				var pdef := ResourceNodes.def_for("plant", str(pl.kind))
-				best = {"kind": "plant", "plant": pl, "label": "Pick " + ", ".join(ResourceNodes.products(pdef).keys().map(func(k): return GameData.item_name(k).to_lower()))}
-				break
-			for f in world.fields:
-				if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
-					var whose := ""
-					for fo: NPC in world.field_workers(f):
-						whose = "%s %s's" % [fo.name, fo.family]
-						break
-					best = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
+	var front := {}
+	for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+		var cell: Vector2i = c + dc
+		var dep := world.deposit_at(cell)
+		if not dep.is_empty() and int(dep.amount) > 0:
+			front = {"kind": "deposit", "dep": dep, "label": ("Mine %s (%d left)" % [GameData.item_name(dep.ore).to_lower(), int(dep.amount)]) if p.tool_of("pickaxe") != ""
+					else "%s seam: requires a pickaxe (the smith sells them)" % GameData.item_name(dep.ore)}
+			break
+		var tr := world.tree_at(cell)
+		if not tr.is_empty() and tr.state != "cleared":
+			var lab: String
+			if tr.state == "grown":
+				lab = "Fell this tree" if p.tool_of("axe") != "" else "A tree: requires an axe (the smith sells them)"
+			else:
+				lab = "%s: %s" % [Trees.describe(str(tr.state)), Trees.hint(str(tr.state))]
+			front = {"kind": "tree", "tree": tr, "label": lab}
+			break
+		var pl := world.plant_at(cell)
+		if not pl.is_empty() and pl.state == "ripe":
+			var pdef := ResourceNodes.def_for("plant", str(pl.kind))
+			front = {"kind": "plant", "plant": pl, "label": "Pick " + ", ".join(ResourceNodes.products(pdef).keys().map(func(k): return GameData.item_name(k).to_lower()))}
+			break
+		for f in world.fields:
+			if f.state == "ripe" and Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).has_point(cell):
+				var whose := ""
+				for fo: NPC in world.field_workers(f):
+					whose = "%s %s's" % [fo.name, fo.family]
 					break
-			if not best.is_empty():
+				front = {"kind": "field", "field": f, "label": "Harvest wheat (%d left)%s" % [int(f.get("crop", 0)), ("  —  " + whose + " field: taking it is theft") if whose != "" else ""]}
 				break
-	if best.is_empty():
-		for id in world.stations:
-			var st: Dictionary = world.stations[id]
-			var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
-			if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
-				var no := world.station_refusal(id)
-				best = {"kind": "station", "id": id, "label": ("Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]}
-		for pl in world.plots:
-			var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
-			if r.has_point(p.pos) and best.is_empty() and world.place_of(p.pos) == "":
-				var lab := "%s, for sale (%d coins, or %d a week)" % [World.cap(world.property.describe(pl)), world.property.price_of(pl), world.property.rent_of(pl)]
-				if world.holds(World.PLAYER, pl):
-					var site: Dictionary = pl.site
-					lab = "Your ground: build here" if site.is_empty() else ("Your building site: %s, %d%% done" % [Construction.kind_name(str(site.get("kind", "house"))), roundi(world.site_progress(pl) * 100.0)] if not site.get("done", false) else World.cap(world.property.describe(pl)))
-				elif not world.property.for_sale(pl):
-					lab = World.cap(world.property.describe(pl))
-				best = {"kind": "plot", "plot": pl, "label": lab}
-		for id in world.fauna.pens:
-			var pen: Dictionary = world.fauna.pens[id]
-			var fa := Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
-			if fa.distance_to(p.pos) < 1.3:
-				best = {"kind": "pen", "pen": pen, "label": "%s pen: %d hungry, trough %d wheat (they eat about %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, world.fauna.hungry(pen), int(pen.trough), world.fauna.daily_need(pen)]}
-		# a house the family holds but does not live in, or one the manor offers: its door
-		for id in world.buildings:
-			var b: Dictionary = world.buildings[id]
-			if str(id) == p.home or not world.property.is_home(b) or (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= 1.3:
-				continue
-			var mine := world.holds(World.PLAYER, b)
-			if mine or world.property.for_sale(b):
-				best = {"kind": "property", "thing": b, "label": ("%s, yours: make it your home" % World.cap(world.property.describe(b))) if mine
-						else ("%s, empty, the manor's: buy (%d) or lease (%d a week)" % [World.cap(world.property.describe(b)), world.property.price_of(b), world.property.rent_of(b)])}
-		# a workshop's door: whose it is, and (its holder) who else may use it
-		for id in world.buildings:
-			var b: Dictionary = world.buildings[id]
-			if str(b.type) == "workshop" and (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
-				best = {"kind": "workshop", "thing": b, "label": World.cap(world.property.describe(b)) + (": who may use it" if world.holds(World.PLAYER, b) else "")}
-		if p.home != "" and world.buildings.has(p.home):
-			var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
-			if door.distance_to(p.pos) < 1.3:
-				best = {"kind": "home", "label": "Your house: rest, store things"}
-			elif world.place_of(p.pos) == p.home:
-				# inside: the bed rests, the chest is the family's store
-				for sp in world.interiors[p.home].spots:
-					var at := Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)
-					if at.distance_to(probe) < 0.9 and sp.kind == "bed":
-						best = {"kind": "rest", "label": "Your bed: rest until morning"}
-					elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
-						best = {"kind": "home", "label": "Your chest: store things, rest"}
+		if not front.is_empty():
+			break
+	if not front.is_empty():
+		cands.append(front)
+	# at the player's feet (the last of these was the only one offered before B8-014: it comes first)
+	var here: Array = []
+	for id in world.stations:
+		var st: Dictionary = world.stations[id]
+		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
+		if u.distance_to(p.pos) < 1.2 and st.type in ["forge", "anvil", "workbench", "sawhorse", "stove", "oven"]:
+			var no := world.station_refusal(id)
+			here.append({"kind": "station", "id": id, "label": ("Use the %s" % st.type) if no == "" else "The %s: %s" % [st.type, no]})
+	for pl in world.plots:
+		var r := Rect2(Vector2(pl.x, pl.y), Vector2(pl.w, pl.h + 1))
+		if r.has_point(p.pos) and cands.is_empty() and here.is_empty() and world.place_of(p.pos) == "":
+			var lab := "%s, for sale (%d coins, or %d a week)" % [World.cap(world.property.describe(pl)), world.property.price_of(pl), world.property.rent_of(pl)]
+			if world.holds(World.PLAYER, pl):
+				var site: Dictionary = pl.site
+				lab = "Your ground: build here" if site.is_empty() else ("Your building site: %s, %d%% done" % [Construction.kind_name(str(site.get("kind", "house"))), roundi(world.site_progress(pl) * 100.0)] if not site.get("done", false) else World.cap(world.property.describe(pl)))
+			elif not world.property.for_sale(pl):
+				lab = World.cap(world.property.describe(pl))
+			here.append({"kind": "plot", "plot": pl, "label": lab})
+	for id in world.fauna.pens:
+		var pen: Dictionary = world.fauna.pens[id]
+		var fa := Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
+		if fa.distance_to(p.pos) < 1.3:
+			here.append({"kind": "pen", "pen": pen, "label": "%s pen: %d hungry, trough %d wheat (they eat about %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, world.fauna.hungry(pen), int(pen.trough), world.fauna.daily_need(pen)]})
+	# a house the family holds but does not live in, or one the manor offers: its door
+	for id in world.buildings:
+		var b: Dictionary = world.buildings[id]
+		if str(id) == p.home or not world.property.is_home(b) or (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= 1.3:
+			continue
+		var mine := world.holds(World.PLAYER, b)
+		if mine or world.property.for_sale(b):
+			here.append({"kind": "property", "thing": b, "label": ("%s, yours: make it your home" % World.cap(world.property.describe(b))) if mine
+					else ("%s, empty, the manor's: buy (%d) or lease (%d a week)" % [World.cap(world.property.describe(b)), world.property.price_of(b), world.property.rent_of(b)])})
+	# a workshop's door: whose it is, and (its holder) who else may use it
+	for id in world.buildings:
+		var b: Dictionary = world.buildings[id]
+		if str(b.type) == "workshop" and (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
+			here.append({"kind": "workshop", "thing": b, "label": World.cap(world.property.describe(b)) + (": who may use it" if world.holds(World.PLAYER, b) else "")})
+	if p.home != "" and world.buildings.has(p.home):
+		var door := Vector2(world.building_door(p.home)) + Vector2(0.5, 0.5)
+		if door.distance_to(p.pos) < 1.3:
+			here.append({"kind": "home", "label": "Your house: rest, store things"})
+		elif world.place_of(p.pos) == p.home:
+			# inside: the bed rests, the chest is the family's store
+			for sp in world.interiors[p.home].spots:
+				var at := Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)
+				if at.distance_to(probe) < 0.9 and sp.kind == "bed":
+					here.append({"kind": "rest", "label": "Your bed: rest until morning"})
+				elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
+					here.append({"kind": "home", "label": "Your chest: store things, rest"})
+	here.reverse()
+	cands.append_array(here)
 	# the next step of the player's work for the manor, where it is done
 	var mw: ManorWork = world.manor_work
 	var mj := mw.job_of("player")
-	if not mj.is_empty() and (best.is_empty() or not best.kind in ["npc", "shop"]):
+	if not mj.is_empty():
 		var at := Vector2(mw.step_cell(mj)) + Vector2(0.5, 0.5)
 		if at.distance_to(p.pos) < 1.6:
-			best = {"kind": "manor_job", "label": _manor_label(mj)}
-	target = best
+			var job := {"kind": "manor_job", "label": _manor_label(mj)}
+			if cands.is_empty() or not str(cands[0].kind) in ["npc", "shop"]:
+				cands.push_front(job)
+			else:
+				cands.append(job)
+	target_options = cands
+	var pick := 0
+	for i in cands.size():
+		if _target_key(cands[i]) == target_pref:
+			pick = i
+			break
+	if target_pref != "" and (cands.is_empty() or _target_key(cands[pick]) != target_pref):
+		target_pref = ""
+	target = cands[pick] if not cands.is_empty() else {}
 	# a seam, tree, field or animal is offered when the player stops by it, not flashed while walking past
 	var passing: bool = walking and target.get("kind", "") in ["deposit", "tree", "field", "plant", "animal"]
 	if not gather.is_empty():
 		ui.prompt("")     # gathering: the outline and the progress bar show it; the middle stays clear
 	else:
-		ui.prompt("" if passing else target.get("label", ""))
+		var text: String = "" if passing else target.get("label", "")
+		if text != "" and cands.size() > 1:
+			text += "\n" + _next_hint(cands[(pick + 1) % cands.size()], pick)
+		ui.prompt(text)
+
+
+## Which thing a target is, stable from frame to frame (what the labels' counts change is not part of it).
+func _target_key(t: Dictionary) -> String:
+	var k := str(t.get("kind", ""))
+	for f in ["npc", "animal", "id", "i", "c", "dep", "tree", "plant", "field", "plot", "pen", "thing"]:
+		if t.has(f):
+			var v = t[f]
+			if v is Object:
+				k += ":" + str(v.get_instance_id())
+			elif v is Dictionary:
+				k += ":%s,%s,%s" % [v.get("x", v.get("id", "")), v.get("y", ""), v.get("name", "")]
+			else:
+				k += ":" + str(v)
+	return k
+
+
+## The prompt's second line: what the next choice is and how to reach it.
+func _next_hint(next: Dictionary, at: int) -> String:
+	var keys := {"kbm": "Q / Tab", "gamepad": "D-pad left / right", "touch": "tap it"}
+	var l: String = next.get("label", "")
+	return "%s: next - %s (%d of %d)" % [keys.get(scheme, "Q / Tab"), l.get_slice(":", 0).get_slice(" (", 0), at + 1, target_options.size()]
+
+
+## Choose the next (1) or previous (-1) of the things on offer (Q or Tab, the D-pad: LB and RB keep the
+## map and skills). Use (A, E, a tap) always does the chosen one; B stays Cancel.
+func cycle_target(dir: int) -> void:
+	if target_options.size() < 2:
+		return
+	var at := 0
+	for i in target_options.size():
+		if _target_key(target_options[i]) == _target_key(target):
+			at = i
+	at = posmod(at + dir, target_options.size())
+	target_pref = _target_key(target_options[at])
+	target = target_options[at]
+	_find_target()
 
 
 ## What the next step of a manor job says at its place.
@@ -1628,6 +1788,15 @@ func _target_cell(t: Dictionary) -> Vector2i:
 	return Vector2i.ZERO
 
 
+## A gain line in the corner with the item's icon (the pack's item id): the one place gains go through.
+## The last few are kept in gain_log (item id, text) for the tests.
+func _gain(text: String, item := "") -> void:
+	gain_log.append([item, text])
+	if gain_log.size() > 40:
+		gain_log.pop_front()
+	ui.gain(text, item)
+
+
 ## Do what the current target offers, once (Use; and each cycle of gathering).
 func _use() -> void:
 	var p := world.player
@@ -1655,14 +1824,18 @@ func _use() -> void:
 				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""))
 		"loot":
 			var l: Dictionary = world.loot[target.i]
-			var taken: int = l.inv.total()
+			var taken := 0
 			for id in l.inv.ids():
 				var n: int = l.inv.count(id)
 				if p.inv.add(id, n):
 					l.inv.remove(id, n)
-			taken -= l.inv.total()
+					taken += n
+					_gain("+%d %s" % [n, GameData.item_name(id)], id)
+			if int(l.coins) > 0:
+				_gain("+%d coins" % int(l.coins), "coins")
+			elif taken == 0:
+				ui.message("Your pack is full." if l.inv.total() > 0 else "There is nothing left.")
 			p.coins += int(l.coins)
-			ui.message("You take %d coins and %d items." % [int(l.coins), taken])
 			l.coins = 0
 			if l.inv.total() == 0:
 				world.loot.remove_at(target.i)
@@ -1686,14 +1859,15 @@ func _use() -> void:
 					var extra := world.mine_unit(dep)
 					if extra != "":
 						n += 1
-				if not p.inv.add(ore, n):
+				if p.inv.add(ore, n):
+					_gain("+%d %s" % [n, GameData.item_name(ore)], ore)
+				else:
 					ui.message("Your pack is full.")
 				if p.inv.wear(pick, 1 if p.level("mining") < 4 or world.rng.randf() < 0.5 else 0):
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
 					if p.tool == pick:
 						p.tool = ""
-				ui.message("Mined %d %s." % [n, GameData.item_name(ore).to_lower()])
-				_xp("mining", 8 * n))
+				_xp("mining", 8 * n), "swing", pick)
 		"tree":
 			var axe := p.tool_of("axe")
 			if axe == "":
@@ -1715,7 +1889,7 @@ func _use() -> void:
 			start_action("Harvesting", 2.5, func():
 				var got := world.player_harvest(f)
 				if got > 0:
-					ui.gain("+%d wheat" % got)
+					_gain("+%d %s" % [got, GameData.item_name("wheat")], "wheat")
 				else:
 					ui.message("Nothing left to harvest."))
 		"plant":
@@ -1732,7 +1906,7 @@ func _use() -> void:
 				if got.is_empty():
 					ui.message("Nothing left to pick.")
 				for k in got:
-					ui.gain("+%d %s" % [int(got[k]), GameData.item_name(k).to_lower()]))
+					_gain("+%d %s" % [int(got[k]), GameData.item_name(k)], k))
 		"pen":
 			var put := world.fauna.feed(target.pen, p.inv, 5)
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
@@ -1763,7 +1937,7 @@ func _use() -> void:
 					ui.message("You take the manor's goods. %s" % ui._manor_next(mj))
 			if mw.step(mj) == "mend":
 				var secs := float(ManorWork.cfg("mend_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
-				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)))
+				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			else:
 				finish.call(mw.do_step(mj, "player", p.inv))
 
@@ -1784,15 +1958,15 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 			_chop(tr, axe, secs)
 			return
 		if p.inv.add("log", int(r.logs)):
-			ui.gain("+%d logs" % int(r.logs))           # a short line in the corner, not a banner
+			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
 		else:
 			ui.message("Your pack is full.")
 		var saplings := world.sapling_drop(tr)
 		for id in saplings:
 			if p.inv.add(id, int(saplings[id])):
-				ui.gain("+%d %s" % [int(saplings[id]), GameData.item_name(id).to_lower()])
+				_gain("+%d %s" % [int(saplings[id]), GameData.item_name(id)], id)
 		p.inv.wear(axe, 3)
-		_xp("woodcutting", 12))
+		_xp("woodcutting", 12), "swing", axe)
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.
@@ -1816,9 +1990,15 @@ func plant_sapling(item: String) -> void:
 	)
 
 
-func start_action(label: String, secs: float, done: Callable) -> void:
-	action = {"label": label, "left": secs, "total": secs, "done": done}
+## Begin a timed piece of work: `anim` is "swing" (with `tool`, the item held in the hand: the pickaxe
+## for mining, the axe for felling) or "gather" (picking, harvesting, planting); it plays until the work ends
+## or is cancelled (cancel_action), then the player is back to idle.
+func start_action(label: String, secs: float, done: Callable, anim := "gather", tool := "") -> void:
+	action = {"label": label, "left": secs, "total": secs, "done": done, "anim": anim, "tool": tool}
 	move_to = Vector2.INF
+	sprinting = false
+	player_sprite.hold(tool)
+	player_sprite.play(anim)
 
 
 func _xp(skill: String, n: int) -> void:
@@ -1861,7 +2041,8 @@ func craft(recipe: String, station := "") -> void:
 		for id in r.out:
 			p.inv.add(id, int(r.out[id]))
 		_xp(r.skill, int(r.xp))
-		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))))
+		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))),
+			"swing" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "gather", "hammer" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "")
 
 
 # ---------------------------------------------------------------- combat ---------------------
@@ -1871,6 +2052,7 @@ func attack(only: Object = null) -> void:
 	if p.attack_cd > 0.0 or not action.is_empty():
 		return
 	p.attack_cd = 0.6
+	sprinting = false                  # no sprint while attacking
 	player_sprite.play("sword", true)
 	var probe := p.pos + facing_vec() * 0.8
 	for n: NPC in world.present(probe, 1.1):
@@ -2225,6 +2407,23 @@ func _unhandled_input(e: InputEvent) -> void:
 		return
 	if _placing_input(e):
 		return
+	# B8-011: B (pad), Esc (keyboard) and a right-click (mouse) stop harvesting at once; a tap does (touch, in _tap)
+	if running and not ui.modal() and (not action.is_empty() or not gather.is_empty()):
+		if e.is_action_pressed("cancel") or e.is_action_pressed("pause") \
+				or (e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT):
+			cancel_action("You stop.")
+			get_viewport().set_input_as_handled()
+			return
+	if not ui.modal() and running and action.is_empty():
+		if e.is_action_pressed("next_target"):
+			cycle_target(1)
+		elif e.is_action_pressed("prev_target"):
+			cycle_target(-1)
+		elif e is InputEventKey and e.pressed and not e.echo and e.physical_keycode == KEY_TAB and target_options.size() > 1:
+			tab_cycled = Engine.get_process_frames()       # Tab is the Pack's key too: with a choice to make it chooses
+			cycle_target(1)
+		elif e.is_action_pressed("sprint_pad") or (e.is_action_pressed("sprint") and bool(GameData.b("sprint_toggle"))):
+			toggle_sprint()
 	if e is InputEventScreenTouch:
 		if e.pressed:
 			touch_points[e.index] = e.position
@@ -2379,11 +2578,14 @@ func _tap(screen_pos: Vector2) -> void:
 		return
 	if ui.blocks(screen_pos):
 		return
+	if not action.is_empty():
+		cancel_action("You stop.")     # a tap while working stops it (B8-011)
+		return
 	var wpos := (get_canvas_transform().affine_inverse() * screen_pos) / T
 	if gather_mode:
 		var hit := _resource_tap(wpos)
 		if hit.is_empty():
-			ui.gain("Nothing to gather there")
+			_gain("Nothing to gather there")
 		else:
 			select_resource(hit, true)
 		return
@@ -2509,6 +2711,30 @@ func _press(root: Node, caption: String) -> bool:
 			(c as Button).pressed.emit()
 			return true
 	return false
+
+
+## Screenshot helper: the player beside a seam (or a mature tree), the tool in hand, the work begun,
+## the swing held at `frame` (0-2).
+func _swing_panel(mining: bool, frame: int) -> void:
+	var p := world.player
+	var dep := world.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	var cell := Vector2i(int(dep.x), int(dep.y)) if mining else Vector2i.ZERO
+	if not mining:
+		for tr in world.trees:
+			if tr.state == "grown":
+				cell = Vector2i(int(tr.x), int(tr.y))
+				break
+	var tool_id := "rusty_pickaxe" if mining else "axe"
+	p.inv.add(tool_id, 1)
+	p.tool = tool_id
+	var c: Vector2i = world.brain.beside(cell, cell + Vector2i(0, 1))
+	p.pos = Vector2(c) + Vector2(0.5, 0.5)
+	follow_at = _in_view(p.pos * T)
+	player_sprite.face(Vector2(cell) + Vector2(0.5, 0.5) - p.pos)
+	_find_target()
+	_use()
+	player_sprite.speed_scale = 0.0
+	player_sprite.t = float(frame) * 0.16 + 0.01
 
 
 func _screenshot_step(_delta: float) -> void:

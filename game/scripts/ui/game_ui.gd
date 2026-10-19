@@ -86,12 +86,16 @@ const CONTROLS := {
 		[["mouse_right"], "Attack whoever you click"], [["keyboard_f"], "Fireball (once learned)"],
 		[["keyboard_i"], "Pack"], [["keyboard_l"], "Skills"], [["keyboard_b"], "Journal"], [["keyboard_escape"], "Menu"],
 		[["mouse_scroll"], "Zoom"], [["mouse_scroll", "mouse_move"], "Hold the wheel and drag to look around"],
-		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"]],
+		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"],
+		[["keyboard_shift"], "Hold to sprint (it uses stamina)"], [["keyboard_q", "keyboard_tab"], "Next choice, when more than one thing can be used here"],
+		[["keyboard_escape", "mouse_right"], "While working: stop at once"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
 		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned)"],
 		[["xbox_button_view"], "Pack"], [["xbox_rb"], "Skills"], [["xbox_button_menu"], "Menu (the journal is there)"],
 		[["xbox_button_b"], "Close a window"],
-		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"], [["xbox_lt", "xbox_rt"], "In a window: step through its buttons"]],
+		[["xbox_stick_r"], "Look around"], [["xbox_stick_r_press"], "Recenter the view on you"], [["xbox_lb"], "Village map"], [["xbox_lt", "xbox_rt"], "In a window: step through its buttons"],
+		[["xbox_stick_l_press"], "Sprint on or off (it uses stamina)"], [["xbox_dpad_left", "xbox_dpad_right"], "Next choice, when more than one thing can be used here"],
+		[["xbox_button_b"], "While working: stop at once"]],
 }
 # On a phone the interface keeps at least this far from the screen edges (interface units; the layout
 # is 450 high): rounded corners on common phones cut off less than this.
@@ -669,7 +673,7 @@ func message(text: String, seconds := 4.0) -> void:
 
 ## Something gained or a quick hint ("+2 red berries"): a short line in the top-right corner that
 ## fades quickly, keeping the middle of the screen clear for play (owner, 2026-10-18).
-func gain(text: String) -> void:
+func gain(text: String, _item := "") -> void:
 	log_line(text, GAIN_SECONDS)
 	var l: Label = log_box.get_child(log_box.get_child_count() - 1)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF

@@ -91,7 +91,7 @@ func _run() -> void:
 	check(got >= 4 and tree.state == "stump" and felled.size() == 1, "after %d blows it falls: %d logs, a stump" % [chops, got])
 	check(tn.drawn == "stump" and tn.cuts == null and not m.is_solid(cell), "drawn as a stump, which is not solid")
 	var gains: Array = main.ui.log_box.get_children().map(func(c): return c.text)
-	check(gains.has("+%d logs" % got) and not main.ui.toast.text.contains("logs"), "the wood is a short line in the corner: %s" % [gains])
+	check(gains.has("+%d %s" % [got, GameData.item_name("log")]) and not main.ui.toast.text.contains("log"), "the wood is a short line in the corner: %s" % [gains])
 	# no second harvest
 	check(w.fell(tree, 0) == 0 and w.chop_tree(tree, 1, 0).logs == 0, "a stump gives no more wood")
 	main._find_target()

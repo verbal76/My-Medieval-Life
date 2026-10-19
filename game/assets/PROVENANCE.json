@@ -1633,6 +1633,48 @@
    "sha256": "f0e502e4868f6d21b4bfb03e544696bbc534649db8be808259096ceefb3968ee"
   },
   {
+   "file": "assets/prompts/keyboard_q.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_q.png",
+   "transform": "copied unchanged",
+   "sha256": "0cb36d9a91c4d894c6390c6b330eb9dadee2b95db333fb51024939c637e1e59a"
+  },
+  {
+   "file": "assets/prompts/keyboard_shift.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_shift.png",
+   "transform": "copied unchanged",
+   "sha256": "047712e52aede18f73523cb7b7df2f28e51d07370977491a994bc9a21f129e8e"
+  },
+  {
+   "file": "assets/prompts/keyboard_tab.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_tab.png",
+   "transform": "copied unchanged",
+   "sha256": "b9d41ddb968a48702663e4b13bb5a047c8349ed5708897027d4de794dc35f43c"
+  },
+  {
+   "file": "assets/prompts/xbox_dpad_left.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_dpad_left.png",
+   "transform": "copied unchanged",
+   "sha256": "606e97e9eb4f89d1dadd50fb3e9df32e36346bbccbf1c31f880475d8b3686ee3"
+  },
+  {
+   "file": "assets/prompts/xbox_dpad_right.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_dpad_right.png",
+   "transform": "copied unchanged",
+   "sha256": "280db7d24c98edc833d6bb520ddf4e8b3a989a90f4bda1b3b2908d2d8af58060"
+  },
+  {
+   "file": "assets/prompts/xbox_stick_l_press.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_stick_l_press.png",
+   "transform": "copied unchanged",
+   "sha256": "8c772ed1203af9c4923dd1bb5a67f96814a08d9569130ae8435a49fc3b33ab4e"
+  },
+  {
    "file": "assets/trees/oak_summer_young.png",
    "source": "LivingForest_v1.3.2.unitypackage",
    "member": "Assets/LivingForest/Art/Trees/Oak/Summer/SmallHealthy/T_tree.png",
