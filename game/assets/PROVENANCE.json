@@ -1430,6 +1430,13 @@
    "sha256": "60f78a2eb792b686228be6ca466418271f130c7eb658274e1c11ce3bed74152e"
   },
   {
+   "file": "assets/markers/star.png",
+   "source": "",
+   "member": "",
+   "transform": "generated: a bright five-point gold star over the employer who is owed payment (PL1-09), 1 px outline",
+   "sha256": "b7e46b2a5047e4af48895e1df5e0631c81f6ad6e3c1cbcde3c57d2209fdb5602"
+  },
+  {
    "file": "assets/ui/inventory_panel.png",
    "source": "CozyFarm_full_version.zip",
    "member": "full version/ui/inventory.png",

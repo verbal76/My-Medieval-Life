@@ -241,6 +241,31 @@ def _pennant():
     return img
 
 
+def _star():
+    """The employer marker (PL1-09): a bright five-point gold star with a pale highlight, drawn in the
+    16 px style; outlined like the other markers."""
+    from PIL import Image
+    img = Image.new("RGBA", (16, 16))
+    px = img.load()
+    gold, light, deep = (255, 214, 56, 255), (255, 244, 170, 255), (222, 160, 24, 255)
+    rows = {1: (7, 8), 2: (7, 8), 3: (6, 9), 4: (6, 9), 5: (0, 15), 6: (1, 14), 7: (3, 12), 8: (4, 11),
+            9: (4, 11), 10: (3, 12), 11: (3, 12), 12: (2, 6), 13: (2, 5)}
+    for y, (a, b) in rows.items():
+        for x in range(a, b + 1):
+            px[x, y] = gold
+    for y in (11, 12, 13):                                   # the two feet, apart
+        for x in range(7, 9):
+            px[x, y] = (0, 0, 0, 0)
+    for y, (a, b) in {12: (9, 13), 13: (10, 13)}.items():
+        for x in range(a, b + 1):
+            px[x, y] = gold
+    for x, y in ((7, 3), (7, 4), (6, 5), (7, 6), (5, 6), (4, 7)):
+        px[x, y] = light                                     # the light catching the upper left
+    for x, y in ((8, 7), (9, 8), (10, 9), (11, 10), (4, 11), (3, 12)):
+        px[x, y] = deep
+    return img
+
+
 def _import_markers(record, survival):
     import io
     from PIL import Image, ImageOps
@@ -265,6 +290,9 @@ def _import_markers(record, survival):
     _outlined(_pennant()).save(dest)
     prov_note = "generated: a green swallow-tailed pennant with a gold rim on a pole (story quests), 1 px outline"
     record(dest, "", "", prov_note)
+    dest = out / "star.png"
+    _outlined(_star()).save(dest)
+    record(dest, "", "", "generated: a bright five-point gold star over the employer who is owed payment (PL1-09), 1 px outline")
 
 
 def _import_ui(record):
