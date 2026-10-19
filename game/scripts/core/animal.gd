@@ -18,6 +18,9 @@ var hunger := 100.0          # 100 = full, like the villagers
 var next_birth := 0.0        # game minutes: a female can give birth again from then
 var next_product := 0.0      # game minutes: a pen animal of the player makes its next egg, milk or wool then (0: not set yet; PL2-015)
 var moving := false
+var dest := Vector2.INF      # WR-01: a young animal out of a refuge walks to this settling point (INF: settled)
+var settle_by := 0.0         # game minutes: it settles where it is by then
+var origin := ""             # the refuge it came from ("" for none)
 # B14 wildlife (not saved: a chase or a fight is picked up again after loading)
 var hunt := -1               # the prey animal a hunter is chasing, -1 for none
 var anger := ""              # who it is fighting: "player" or "npc:<id>", "" for nobody
@@ -95,8 +98,14 @@ func label() -> String:
 
 
 func to_dict() -> Dictionary:
-	return {"id": id, "species": species, "skin": skin, "sex": sex, "born": born, "area": area, "alive": alive,
+	var d := {"id": id, "species": species, "skin": skin, "sex": sex, "born": born, "area": area, "alive": alive,
 		"hp": hp, "pos": [pos.x, pos.y], "hunger": hunger, "next_birth": next_birth, "next_product": next_product}
+	if dest != Vector2.INF:                      # WR-01: dispersing from a refuge (older saves have none)
+		d["dest"] = [dest.x, dest.y]
+		d["settle_by"] = settle_by
+	if origin != "":
+		d["origin"] = origin
+	return d
 
 
 static func from_dict(d: Dictionary) -> Animal:
@@ -113,4 +122,8 @@ static func from_dict(d: Dictionary) -> Animal:
 	a.hunger = float(d.get("hunger", 100.0))
 	a.next_birth = float(d.next_birth)
 	a.next_product = float(d.get("next_product", 0.0))
+	if d.has("dest"):
+		a.dest = Vector2(d.dest[0], d.dest[1])
+		a.settle_by = float(d.get("settle_by", 0.0))
+	a.origin = str(d.get("origin", ""))
 	return a

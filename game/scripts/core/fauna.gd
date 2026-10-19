@@ -12,7 +12,9 @@ extends RefCounted
 ##  - babies are drawn with the baby sheet (half scale of the adult sheet where there is none) until grow_days
 ##    old; B8-029 adds the stages newborn / juvenile / adult / elderly, the elderly move slower, do not breed and
 ##    die naturally within death_days;
-##  - every animal becomes meat (and hide, if its kind has one) when it is killed; babies give half.
+##  - every animal becomes meat (and hide, if its kind has one) when it is killed; babies give half;
+##  - WR-01: each wood keeps a hidden breeding refuge per wild species (Refuges, balance.json "refuges"), out of
+##    everyone's reach, whose young leave in season into woods below their capacity and disperse to settle.
 
 var w
 var animals: Array = []      # Animal, ordered by id
@@ -21,6 +23,7 @@ var pens := {}               # id -> {kind, x, y, w, h, gate, feed_at, trough, o
 var woods := {}              # id -> {x, y, w, h}
 var next_id := 1
 var seeded: Array = []       # wild species that have been started in the woods (saved; B14 adds species to old saves)
+var refuges: Refuges         # WR-01: the woods' protected breeding refuges (saved)
 var claims := {}             # animal id -> npc id hunting it (not saved; hunters re-plan after loading)
 var _cells := {}             # area id -> Array[Vector2i] of cells an animal may stand on
 
@@ -35,6 +38,7 @@ func _init(world) -> void:
 		pens[pd.id] = pd
 	for wd in w.map.data.get("woods", []):
 		woods[wd.id] = wd.duplicate(true)
+	refuges = Refuges.new(self)
 
 
 # ---------------------------------------------------------------- areas ----------------------
@@ -91,6 +95,7 @@ func populate() -> void:
 				continue
 			_start(id, k)
 	seeded = wild_species()
+	refuges.ensure()
 
 
 func wild_species() -> Array:
@@ -403,6 +408,7 @@ func new_day() -> void:
 			born[a.spec().name] = int(born.get(a.spec().name, 0)) + n
 	for k in born:
 		w.note("%d new %s born in the pens." % [born[k], k.to_lower()])
+	refuges.new_day()                                   # WR-01: the refuges' young, in season, where there is room
 
 
 ## Natural death of the elderly (B8-029): no chance before the species' death_days[0]; after it a daily chance
@@ -567,6 +573,7 @@ func surplus(pen: Dictionary, short_of_feed := false) -> Animal:
 ## sees them move, and births, feeding and hunting do not depend on where they stand.
 func update(dt: float) -> void:
 	tick(dt * float(GameData.b("game_minutes_per_second")))
+	refuges.update(dt)                                  # WR-01: young from the refuges disperse and settle
 	for a: Animal in animals.duplicate():
 		if not a.alive:
 			continue
@@ -619,6 +626,8 @@ func _move(a: Animal, dt: float) -> void:
 		if cs.is_empty():
 			return
 		var c: Vector2i = cs[w.rng.randi() % cs.size()]
+		if a.dest != Vector2.INF and w.rng.randf() >= float(Refuges.cfg().wander_share):
+			c = Vector2i((a.dest - a.pos).limit_length(5.0) + a.pos)       # WR-01: dispersing, it heads for its settling point
 		if not a.wild() and a.hunger < float(GameData.b("animal_eat_below")) + 10.0:
 			var pen: Dictionary = pens[a.area]
 			c = Vector2i(int(pen.gate[0]), int(pen.gate[1]) + 1)          # the trough is by the gate
@@ -636,7 +645,7 @@ func _move(a: Animal, dt: float) -> void:
 		return
 	var nxt: Vector2 = a.pos + d / d.length() * step
 	var nc := Vector2i(floori(nxt.x), floori(nxt.y))
-	if w.map.is_solid(nc) or not cells(a.area).has(nc):
+	if w.map.is_solid(nc) or (not cells(a.area).has(nc) and cells(a.area).has(a.cell())):
 		a.goal = Vector2.INF
 		a.wait = w.rng.randf_range(0.5, 2.0)
 		a.moving = false
@@ -657,12 +666,14 @@ func to_dict() -> Dictionary:
 		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner, "tenant": pens[id].tenant, "products": pens[id].get("products", {}).duplicate()}
 		if pens[id].get("player", false):
 			mine.append(pens[id])
-	return {"next_id": next_id, "animals": as_, "pens": ps, "player_pens": mine, "seeded": seeded.duplicate()}
+	return {"next_id": next_id, "animals": as_, "pens": ps, "player_pens": mine, "seeded": seeded.duplicate(),
+		"refuges": refuges.to_dict()}
 
 
 func load_dict(d: Dictionary) -> void:
 	next_id = int(d.next_id)
 	seeded = (d.get("seeded", ["boar", "rabbit"]) as Array).duplicate()     # saves before B14 had the boar and the rabbit
+	refuges.load_dict(d.get("refuges", {}))     # saves before WR-01 have none: seed_new_species gives them their refuges once
 	for rec in d.get("player_pens", []):
 		pens[str(rec.id)] = rec.duplicate(true)
 	for ad in d.animals:
@@ -695,3 +706,4 @@ func seed_new_species() -> void:
 				_start(id, k)
 		seeded.append(k)
 	seeded.sort()
+	refuges.ensure()                            # WR-01: any wood and species without a refuge gets one (once: it is saved)

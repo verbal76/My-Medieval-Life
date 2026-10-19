@@ -60,6 +60,13 @@ static func p(text: String) -> Dictionary:
 	return {"t": "p", "text": text}
 
 
+## "a", "a and b", "a, b and c".
+static func _and_list(words: Array) -> String:
+	if words.size() <= 1:
+		return "".join(words)
+	return ", ".join(words.slice(0, words.size() - 1)) + " and " + str(words[-1])
+
+
 static func bullets(rows: Array) -> Dictionary:
 	return {"t": "bullets", "rows": rows}
 
@@ -447,6 +454,18 @@ func _animals() -> void:
 			diet += " Struck, it fights back (%d a bite), and a starving one goes for a person alone in its wood." % int(a.bite)
 		blocks.append(p("Animals get hungry and die unfed like villagers; a well-fed male and female breed, and young are half size until grown." if not wild
 				else "Wild animals feed and breed in the woods. " + diet + " Hunting them takes a weapon."))
+		var rs := Refuges.spec(id)
+		if wild and not rs.is_empty():             # WR-01: the breeding refuges, as Refuges implements them
+			var rc := Refuges.cfg()
+			blocks.append(p(("Breeding refuge: each wood they live in hides a %s with a breeding pair that nobody can see, hunt or strike "
+				+ "and no predator reaches. In %s, at most once every %d days, it raises a litter of %d that comes out as juveniles a "
+				+ "little later, but only while that wood or another holds fewer than %d (%d%% of the %d it can carry) and can feed them; "
+				+ "otherwise the young stay hidden. They head off %d to %d tiles from the refuge, each to a spot away from others of their kind, "
+				+ "and settle there; when their own wood is fuller, some cross unseen to another wood, and a few are lost on the way. "
+				+ "A wood hunted empty stays empty until they come, and fills again only slowly.")
+				% [str(rs.site), _and_list((rs.seasons as Array).map(func(s): return str(s).to_lower())), int(rs.interval_days),
+				int(a.get("litter", 1)) * maxi(1, int(rs.stock) / 2), floori(float(a.get("woods_cap", 0)) * float(rc.release_below)),
+				roundi(float(rc.release_below) * 100.0), int(a.get("woods_cap", 0)), int(rs.disperse[0]), int(rs.disperse[1])]))
 		add_page("animal:" + id, str(a.name), "animals", blocks, icon_path(str(GameData.resources.nodes.get(node.trim_prefix("node:"), {}).get("icon", ""))), id)
 
 
