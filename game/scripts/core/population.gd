@@ -170,6 +170,7 @@ static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall
 			n.workplace = w.stations_of("workbench")[0]
 		"farmer":
 			inv.add("wheat", 4)
+			_give(inv, GameData.b("farming").seed_stock.farmer)          # seed for sale (Build 13)
 			var f: Dictionary = fields[idx % fields.size()]
 			n.workplace = f.id              # its workers are those whose workplace it is (World.field_workers)
 		"cook":
@@ -195,6 +196,7 @@ static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall
 					_give(inv, {"iron_ore": 4, "coal": 4, "stone": 12, "log": 6, "plank": 6})
 				"food":
 					_give(inv, {"pottage": 6, "wheat": 6, "ale": 4})
+					_give(inv, GameData.b("farming").seed_stock.food_merchant)    # seed for sale (Build 13)
 				"goods":
 					_give(inv, {"pickaxe": 1, "axe": 1, "leather": 2, "copper_sword": 1})
 		"guard":

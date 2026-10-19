@@ -2248,70 +2248,94 @@ func _pl_trade_ui_tests() -> void:
 	var w: World = main.world
 	var p := w.player
 	ui.set_scheme("kbm")
-	# -- the limits (17 coins, an item at 2 each -> 8)
-	check(QuantityPicker.buy_max(30, 17, 2) == 8, "17 coins at 2 each buys at most 8")
-	check(QuantityPicker.buy_max(5, 17, 2) == 5 and QuantityPicker.buy_max(30, 1, 2) == 0 and QuantityPicker.buy_max(30, 17, 2, false) == 0,
-		"buy max is also bounded by stock, by affording one, and by pack room")
-	check(QuantityPicker.sell_max(9, 4, 100, 2) == 4 and QuantityPicker.sell_max(9, 20, 7, 2) == 3 and QuantityPicker.sell_max(2, 20, 100, 2) == 2,
-		"sell max is bounded by what you carry, what they want and what their purse covers")
-	# -- buying through the real window
+	# -- the limits: each unit has its own price (Build 13), units count while the coins last
+	check(QuantityPicker.buy_max_priced([2, 2, 3, 3, 4], 9) == 3 and QuantityPicker.buy_max_priced([2, 2, 3], 100) == 3, "buy max counts units while the coins cover them, up to the stock")
+	check(QuantityPicker.buy_max_priced([5], 4) == 0 and QuantityPicker.buy_max_priced([1, 1], 9, false) == 0, "and is 0 without the coins for one or room in the pack")
+	check(QuantityPicker.sell_max_priced([10, 10, 9, 9], 29) == 3 and QuantityPicker.sell_max_priced([], 100) == 0, "sell max stops where the buyer's own coins run out")
+	# -- prices follow supply: a seller's price rises as stock runs down, a buyer's falls as they fill up
+	var goods: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.job == "merchant" and w.brain.buy_role(n) == "merchant_goods")[0]
+	goods.inv.items.erase("iron_sword")
+	goods.inv.add("iron_sword", 3)
+	var up: Array = w.player_quote(goods, "iron_sword", 3, true)
+	check(up[0] < up[1] and up[1] < up[2], "buying swords one by one, each costs more as the stock runs down (%s)" % [up])
+	goods.inv.items.erase("iron_bar")
+	var down: Array = w.player_quote(goods, "iron_bar", 6, false)
+	check(down[0] > down[-1] and range(5).all(func(i): return down[i] >= down[i + 1]), "selling bars, each fetches the same or less as the buyer fills up (%s)" % [down])
+	# -- buying through the real window: the bill is the sum of the unit prices
 	var keeper: NPC = w.tavern_keeper()
 	keeper.inv.items.erase("ale")
 	keeper.inv.add("ale", 30)
 	p.coins = 17
 	var ale0 := p.inv.count("ale")
 	var all0 := p.coins + keeper.coins
-	ui.show_trade(keeper, {"id": "ale", "mode": "buy", "price": 2})
+	var aq: Array = w.player_quote(keeper, "ale", 30, true)
+	var amax := QuantityPicker.buy_max_priced(aq, 17)
+	ui.show_trade(keeper, {"id": "ale", "mode": "buy"})
 	var qp: QuantityPicker = ui.panel_body.get_node_or_null("QuantityPicker")
-	check(qp != null and qp.max_qty == 8 and qp.qty == 1, "the buy control opens at 1 with max 8")
+	check(qp != null and amax > 3 and qp.max_qty == amax and qp.qty == 1, "the buy control opens at 1 with max %d" % amax)
 	qp.set_qty(99)
-	check(qp.qty == 8 and qp.total() == 16 and qp.total_label.text.contains("16"), "the quantity clamps to the max and the total is live (%s)" % qp.total_label.text)
+	var amax_bill := 0
+	for i in amax:
+		amax_bill += int(aq[i])
+	check(qp.qty == amax and qp.total() == amax_bill and qp.total_label.text.contains(str(amax_bill)), "the quantity clamps to the max and the total is live (%s)" % qp.total_label.text)
 	qp.slider.value = 3
-	check(qp.qty == 3 and qp.total() == 6, "the slider sets the quantity")
+	check(qp.qty == 3 and qp.total() == int(aq[0]) + int(aq[1]) + int(aq[2]), "the slider sets the quantity and the total sums the unit prices")
 	qp.cancel()
 	check(ui.panel_body.get_node_or_null("QuantityPicker") == null and p.coins == 17 and p.inv.count("ale") == ale0 and keeper.inv.count("ale") == 30,
 		"Cancel changes nothing")
-	ui.show_trade(keeper, {"id": "ale", "mode": "buy", "price": 2})
+	ui.show_trade(keeper, {"id": "ale", "mode": "buy"})
 	qp = ui.panel_body.get_node_or_null("QuantityPicker")
-	qp.set_qty(5)
+	qp.set_qty(3)
+	var bill3 := qp.total()
 	var keeper_coins0 := keeper.coins
 	qp.confirm()
-	check(p.coins == 7 and p.inv.count("ale") == ale0 + 5 and keeper.inv.count("ale") == 25 and keeper.coins == keeper_coins0 + 10,
-		"Buy moves coins and goods together")
+	check(p.coins == 17 - bill3 and p.inv.count("ale") == ale0 + 3 and keeper.inv.count("ale") == 27 and keeper.coins == keeper_coins0 + bill3,
+		"Buy moves coins and goods together, at the summed price")
 	check(p.coins + keeper.coins == all0, "no coins appear or vanish")
-	p.coins = 1
-	ui.show_trade(keeper, {"id": "ale", "mode": "buy", "price": 2})
+	p.coins = 0
+	ui.show_trade(keeper, {"id": "ale", "mode": "buy"})
 	qp = ui.panel_body.get_node_or_null("QuantityPicker")
 	check(qp.max_qty == 0 and qp.confirm_btn.disabled, "with too few coins nothing can be confirmed")
 	qp.confirm()
-	check(p.coins == 1 and keeper.inv.count("ale") == 25, "a refused buy moves nothing")
-	# -- selling
-	var smith: NPC = null
-	for n: NPC in w.npcs:
-		if n.job == "smith":
-			smith = n
-			break
-	smith.inv.items.erase("coal")
-	smith.coins = 100
-	p.inv.items.erase("coal")
-	p.inv.add("coal", 6)
+	check(p.coins == 0 and keeper.inv.count("ale") == 27, "a refused buy moves nothing")
+	p.coins = 50
+	check(w.player_buy_many(keeper, "ale", 3).result == "bought" and w.player_buy_many(keeper, "ale", 99).bought == 0, "player_buy_many refuses more than the stock, whole")
+	# -- selling: the buyer pays each unit's falling price from their own coins
+	p.inv.items.erase("iron_bar")
+	p.inv.add("iron_bar", 6)
+	goods.inv.items.erase("iron_bar")
+	goods.coins = 1000
 	p.coins = 10
-	var tot := p.coins + smith.coins
-	ui.show_trade(smith, {"id": "coal", "mode": "sell", "price": 3})
+	var tot := p.coins + goods.coins
+	var sq: Array = w.player_quote(goods, "iron_bar", 6, false)
+	var sbill := 0
+	for c in sq:
+		sbill += int(c)
+	ui.show_trade(goods, {"id": "iron_bar", "mode": "sell"})
 	qp = ui.panel_body.get_node_or_null("QuantityPicker")
-	check(qp != null and qp.max_qty == 6, "sell max is what you carry (6)")
+	check(qp != null and qp.max_qty == 6 and qp.total_for(6) == sbill, "sell max is what you carry (6), totalled unit by unit (%d)" % sbill)
 	qp.cancel()
-	check(p.inv.count("coal") == 6 and p.coins == 10, "Cancel on a sale changes nothing")
-	ui.show_trade(smith, {"id": "coal", "mode": "sell", "price": 3})
+	check(p.inv.count("iron_bar") == 6 and p.coins == 10, "Cancel on a sale changes nothing")
+	ui.show_trade(goods, {"id": "iron_bar", "mode": "sell"})
 	qp = ui.panel_body.get_node_or_null("QuantityPicker")
-	qp.set_qty(4)
+	qp.set_qty(6)
 	qp.confirm()
-	check(p.inv.count("coal") == 2 and smith.inv.count("coal") == 4 and p.coins == 22 and p.coins + smith.coins == tot, "Sell moves goods and coins together")
-	smith.coins = 5
-	ui.show_trade(smith, {"id": "coal", "mode": "sell", "price": 3})
+	check(p.inv.count("iron_bar") == 0 and goods.inv.count("iron_bar") == 6 and p.coins == 10 + sbill and p.coins + goods.coins == tot, "Sell moves goods and coins together")
+	check(sbill < 6 * int(sq[0]), "six bars fetch less than six at the opening price (%d < %d)" % [sbill, 6 * int(sq[0])])
+	# a buyer without the money cannot buy (Build 13 economy rule 1)
+	p.inv.add("iron_bar", 4)
+	goods.inv.items.erase("iron_bar")
+	var q4: Array = w.player_quote(goods, "iron_bar", 4, false)
+	goods.coins = int(q4[0]) + int(q4[1]) + 1
+	ui.show_trade(goods, {"id": "iron_bar", "mode": "sell"})
 	qp = ui.panel_body.get_node_or_null("QuantityPicker")
-	check(qp.max_qty == 1, "a poor buyer limits the sale (5 coins at 3 -> 1)")
-	check(w.player_sell_many(smith, "coal", 3, 2).sold == 0 and p.inv.count("coal") == 2, "selling more than the buyer can pay for is refused whole")
+	check(qp.max_qty == 2, "a poor buyer limits the sale to what their coins pay for (2)")
+	var gc := goods.coins
+	check(w.player_sell_many(goods, "iron_bar", 3).sold == 0 and p.inv.count("iron_bar") == 4 and goods.coins == gc, "selling more than the buyer can pay for is refused whole")
+	goods.coins = 0
+	check(w.player_sell_many(goods, "iron_bar", 1).sold == 0 and goods.coins == 0, "a buyer with no coins buys nothing")
+	p.inv.items.erase("iron_bar")
+	ui.hide_all()
 	# -- storage
 	ui.hide_all()
 	p.chest.items.clear()

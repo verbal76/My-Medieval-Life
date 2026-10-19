@@ -524,8 +524,9 @@ var trade_hook := Callable()
 
 
 ## Atomic sale: either goods and coins both move or nothing does. Parties are NPC or PlayerState.
-func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int) -> bool:
-	var total := qty * price_each
+## `total_price` (optional) is the whole bill when the units are priced one by one (player_buy_many).
+func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1) -> bool:
+	var total := qty * price_each if total_price < 0 else total_price
 	if qty <= 0 or price_each < 0 or buyer == seller:
 		return false
 	if int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id):
@@ -553,15 +554,53 @@ func transfer(from: Inventory, to: Inventory, id: String, qty: int) -> bool:
 
 
 func sell_price(vendor: NPC, id: String) -> int:
-	var stock := vendor.inv.count(id)
+	return sell_price_at(id, vendor.inv.count(id))
+
+
+func buy_price(vendor: NPC, id: String) -> int:
+	return buy_price_at(id, vendor.inv.count(id))
+
+
+## What a seller holding `stock` asks for one: dearer as stock runs low.
+static func sell_price_at(id: String, stock: int) -> int:
 	var m := clampf(1.5 - 0.05 * stock, float(GameData.b("price_min")) + 0.2, float(GameData.b("price_max")))
 	return maxi(1, roundi(GameData.value(id) * m))
 
 
-func buy_price(vendor: NPC, id: String) -> int:
-	var stock := vendor.inv.count(id)
+## What a buyer holding `stock` pays for one: less as they fill up.
+static func buy_price_at(id: String, stock: int) -> int:
 	var m := clampf(1.2 - 0.04 * stock, 0.4, 1.2) * float(GameData.b("sell_ratio"))
 	return maxi(1, roundi(GameData.value(id) * m))
+
+
+## The player's price for each of `qty` units of `id` bought from (`buying`) or sold to `n`, unit by unit
+## at the stock each one leaves: buying runs the seller's stock down so each unit costs the same or more,
+## selling fills the buyer up so each unit fetches the same or less (Build 13 economy rule 2: a bulk deal
+## never pays the opening price for every unit). The player's Trading factor applies to each unit.
+func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
+	var out := []
+	var stock := n.inv.count(id)
+	var f := player_price_factor(buying)
+	for k in maxi(0, qty):
+		var base := sell_price_at(id, stock - k) if buying else buy_price_at(id, stock + k)
+		out.append(maxi(1, roundi(base * f)))
+	return out
+
+
+## Buy `qty` of `id` from `vendor` at player_quote prices, all or nothing: the vendor must hold them, the
+## pack must have room and the player's own coins must cover the whole bill. Returns {result, text, bought, paid}.
+func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
+	var prices := player_quote(vendor, id, qty, true)
+	var bill := 0
+	for c in prices:
+		bill += int(c)
+	if qty < 1 or not vendor.inv.has(id, qty) or not player.inv.can_add(id):
+		return {"result": "failed", "text": "They do not have that many, or your pack is full.", "bought": 0, "paid": 0}
+	if player.coins < bill:
+		return {"result": "failed", "text": "You cannot afford that (%d coins)." % bill, "bought": 0, "paid": 0}
+	if not trade(player, vendor, id, qty, 0, bill):
+		return {"result": "failed", "text": "The trade fell through.", "bought": 0, "paid": 0}
+	return {"result": "bought", "text": "", "bought": qty, "paid": bill}
 
 
 func player_price_factor(buying: bool) -> float:
@@ -1544,7 +1583,14 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 				guard = n
 	if victim and not seen.has(victim) and deed == "":
 		victim.remember("found %s missing" % what)
-	player.crimes.append({"day": day(), "kind": kind, "what": what, "victim": victim.id if victim else -1, "witnesses": seen.size()})
+	var worth := goods_value(taken)
+	var count := 0
+	for id in taken:
+		count += int(taken[id])
+	player.crimes.append({"day": day(), "kind": kind, "what": what, "victim": victim.id if victim else -1, "witnesses": seen.size(),
+			"items": taken.duplicate(), "qty": count, "value": worth})
+	if worth > 0:
+		stat("player_stolen_value", worth)
 	if seen.size() > 0:
 		note("%s %s was seen %s%s." % [player.name, player.family, ("taking " + what) if deed == "" else deed.replace("try to", "trying to"),
 				(" (" + victim.name + " " + victim.family + "'s)") if victim and deed == "" else ""])
@@ -1559,9 +1605,22 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 var last_guard := ""
 
 
+## The base value of goods {id: qty} (what a theft is counted by, Build 13).
+static func goods_value(goods: Dictionary) -> int:
+	var v := 0
+	for id in goods:
+		v += GameData.value(str(id)) * int(goods[id])
+	return v
+
+
+## A guard's fine for a crime over `goods`: theft_fine, plus theft_fine_share of what they are worth.
+static func theft_fine_for(goods: Dictionary) -> int:
+	return int(GameData.b("theft_fine")) + roundi(float(goods_value(goods)) * float(GameData.b("theft_fine_share")))
+
+
 ## A guard stops the player (theft seen, a pocket picked, stolen goods offered for sale; agent
 ## proposal): what was taken goes back where it came from (`back`) or to its owner, and the player
-## pays `theft_fine` to the manor's treasury. One who cannot pay it all pays what they have and the
+## pays theft_fine_for(taken) (a base fine plus a share of the goods' value) to the manor's treasury. One who cannot pay it all pays what they have and the
 ## guard comes after them, as for an attack (main.gd::_crime). Coins and goods only move.
 func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> String:
 	var returned := []
@@ -1576,7 +1635,7 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 	for slot in ["weapon", "armor", "tool"]:
 		if player.get(slot) != "" and not player.inv.has(player.get(slot)):
 			player.set(slot, "")
-	var fine := int(GameData.b("theft_fine"))
+	var fine := theft_fine_for(taken)
 	var paid := mini(fine, player.coins)
 	player.coins -= paid
 	treasury += paid
@@ -1885,11 +1944,14 @@ func pickpocket(n: NPC) -> Dictionary:
 	last_guard = ""
 	if rng.randf() < chance:
 		var what := ""
+		var got := {}
+		var worth := 0
 		if n.coins > 0:
 			var k := mini(n.coins, rng.randi_range(1, int(GameData.b("pickpocket_coins_max"))))
 			n.coins -= k
 			player.coins += k
 			what = "%d coin%s" % [k, "" if k == 1 else "s"]
+			worth = k
 		else:
 			var ids := []
 			for id in n.inv.ids():
@@ -1902,8 +1964,11 @@ func pickpocket(n: NPC) -> Dictionary:
 			player.inv.add(id)
 			player.mark_stolen(id, n.id, 1)
 			what = "1 " + GameData.item_name(id).to_lower()
+			got = {id: 1}
+			worth = goods_value(got)
 		n.remember("found %s missing" % what)
-		player.crimes.append({"day": day(), "kind": "pickpocket", "what": "%s from %s" % [what, who], "victim": n.id, "witnesses": 0})
+		player.crimes.append({"day": day(), "kind": "pickpocket", "what": "%s from %s" % [what, who], "victim": n.id, "witnesses": 0,
+				"items": got, "qty": maxi(1, got.size()), "value": worth})
 		stat("player_pickpocket")
 		return {"ok": true, "what": what, "text": "You lift %s from %s unseen." % [what, who]}
 	wake(n)                             # a fumble wakes a sleeper: now they know
@@ -1961,21 +2026,31 @@ func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 	return {"result": "sold", "text": ""}
 
 
-## Sell `qty` of `id` at `price` each (the quantity control, PL1-03). Checked first: you carry them, the
-## buyer still wants that many and can pay all of it, so nothing is half-sold for those reasons. Each unit
-## goes through player_sell (marked goods first, recognition, guard questions), so a stolen piece being
-## recognised stops the sale at that unit; `sold` says how many went. Returns {result, text, sold}.
-func player_sell_many(buyer: NPC, id: String, price: int, qty: int) -> Dictionary:
-	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or buyer.coins < qty * price:
-		return {"result": "failed", "text": "They cannot take that many, or cannot afford it right now.", "sold": 0}
+## Sell `qty` of `id` (the quantity control, PL1-03), each unit at its player_quote price, so the buyer's
+## offer falls as they fill up (Build 13 economy rule 2). Checked first: you carry them, the buyer still
+## wants that many and their own coins cover the whole bill (rule 1: no buying without the money), so
+## nothing is half-sold for those reasons. Each unit goes through player_sell (marked goods first,
+## recognition, guard questions), so a stolen piece being recognised stops the sale at that unit; `sold`
+## says how many went and `paid` what they fetched. Returns {result, text, sold, paid}.
+func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
+	var prices := player_quote(buyer, id, qty, false)
+	var bill := 0
+	for c in prices:
+		bill += int(c)
+	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or buyer.coins < bill:
+		return {"result": "failed", "text": "They cannot take that many, or cannot afford it right now.", "sold": 0, "paid": 0}
 	var sold := 0
+	var paid := 0
 	for i in qty:
+		var price: int = player_quote(buyer, id, 1, false)[0]      # the live price: the buyer's stock has grown by `sold`
 		var r: Dictionary = player_sell(buyer, id, price)
 		if r.result != "sold":
 			r["sold"] = sold
+			r["paid"] = paid
 			return r
 		sold += 1
-	return {"result": "sold", "text": "", "sold": sold}
+		paid += price
+	return {"result": "sold", "text": "", "sold": sold, "paid": paid}
 
 
 func player_eat(id: String) -> bool:

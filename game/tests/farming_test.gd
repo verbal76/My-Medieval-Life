@@ -180,13 +180,45 @@ func test_crops() -> void:
 	check(farmer != null and w.farm.seed_offers(farmer).has("wheat"), "a farmer sells seed")
 	var coins0 := p.coins
 	var fc0 := farmer.coins
+	var fs0 := farmer.inv.count("wheat_seed")
+	check(fs0 == int(Farming.seed_cfg().seed_stock.farmer.wheat_seed), "a farmer starts with seed stock of their own (%d)" % fs0)
+	check(not w.brain.for_sale(farmer).has("wheat_seed"), "seed is not sold as ordinary goods, only through the seed offer")
 	check(w.farm.buy_seed(farmer, "wheat", 5, p) == "" and p.inv.count("wheat_seed") == 5 and p.coins == coins0 - 5 * w.farm.seed_price("wheat") and farmer.coins == fc0 + 5 * w.farm.seed_price("wheat"), "five seeds bought from the farmer with real coins")
+	# Build 13 economy rule 3: seed comes out of the seller's stock, never from nowhere
+	check(farmer.inv.count("wheat_seed") == fs0 - 5, "the farmer's seed stock fell by the five sold")
+	var p_seed := p.inv.count("wheat_seed")
+	var pc := p.coins
+	check(w.farm.buy_seed(farmer, "wheat", fs0, p) != "" and p.inv.count("wheat_seed") == p_seed and p.coins == pc, "buying more than the farmer holds is refused whole")
+	farmer.inv.remove("wheat_seed", farmer.inv.count("wheat_seed"))
+	check(not w.farm.seed_offers(farmer).has("wheat") and w.farm.buy_seed(farmer, "wheat", 1, p) != "" and p.coins == pc, "a farmer with no seed left offers none")
+	# farmers save seed from their harvest: taken from the crop, up to the cap
+	var cut: int = w.farm.save_seed(farmer, 10)
+	check(cut == 10 - int(Farming.seed_cfg().seed_keep) and farmer.inv.count("wheat_seed") == int(Farming.seed_cfg().seed_keep), "a farmer cutting 10 wheat keeps %d back as seed" % int(Farming.seed_cfg().seed_keep))
+	farmer.inv.add("wheat_seed", int(Farming.seed_cfg().seed_cap))
+	var held := farmer.inv.count("wheat_seed")
+	check(w.farm.save_seed(farmer, 10) == 10 and farmer.inv.count("wheat_seed") == held, "with a full seed store the whole crop stays grain")
+	farmer.inv.remove("wheat_seed", held - fs0)
 	var merchant: NPC = null
 	for n: NPC in w.npcs:
 		if n.job == "merchant" and w.stalls.get(n.workplace, {}).get("kind", "") == "food":
 			merchant = n
 			break
 	check(merchant != null and w.farm.seed_offers(merchant).has("carrot"), "the food stall's merchant sells seed too")
+	# the caravan resupplies the food merchant's seed from the merchant's own coins (coins leave the village)
+	var cs0 := merchant.inv.count("carrot_seed")
+	merchant.inv.remove("carrot_seed", cs0)
+	merchant.coins = 200
+	for o: NPC in w.npcs:                         # only this merchant can pay, so the sums are theirs
+		if o != merchant and o.job == "merchant" and w.farm.sells_seed(o):
+			o.coins = int(GameData.b("trader_cash_floor"))
+	var src0 := w.coin_sources
+	var tot0 := w.total_coins()
+	var spent: int = w.brain._caravan_seeds()
+	check(spent > 0 and merchant.inv.count("carrot_seed") > 0 and merchant.coins == 200 - spent and w.coin_sources == src0 - spent and w.total_coins() == tot0 - spent, "the caravan sells the merchant seed for %d coins of their own" % spent)
+	merchant.coins = int(GameData.b("trader_cash_floor"))
+	var mseed := merchant.inv.total()
+	check(w.brain._caravan_seeds() == 0 and merchant.inv.total() == mseed, "a merchant without spare coins gets no seed: never from nowhere")
+	merchant.coins = 200
 	check(w.farm.sow(c, "wheat", p) == "" and w.farm.cells[c].state == "growing" and p.inv.count("wheat_seed") == 4, "the cell is sown: one seed used")
 	var days := float(Farming.crops().wheat.days)
 	grow_hours(w, int(days * 24.0) - 2)
@@ -384,11 +416,12 @@ func test_market() -> void:
 	food.coins = 500
 	goods.coins = 500
 	check(w.brain.wants(cook, "egg") > 0 and w.brain.wants(food, "milk") > 0 and w.brain.wants(goods, "wool") > 0 and w.brain.wants(cook, "carrot") > 0, "the cook and the merchants buy eggs, milk, carrots and wool")
-	var price := w.buy_price(cook, "egg")
+	var quote: Array = w.player_quote(cook, "egg", 3, false)
+	var bill: int = quote.reduce(func(a, x): return a + int(x), 0)
 	var c0 := p.coins
-	var res: Dictionary = w.player_sell_many(cook, "egg", price, 3)
-	check(res.result == "sold" and p.coins == c0 + 3 * price and p.inv.count("egg") == 0, "three eggs sold to the cook for %d each" % price)
-	check(w.player_sell_many(goods, "wool", w.buy_price(goods, "wool"), 3).result == "sold", "wool sold to the goods merchant")
+	var res: Dictionary = w.player_sell_many(cook, "egg", 3)
+	check(res.result == "sold" and p.coins == c0 + bill and int(res.paid) == bill and p.inv.count("egg") == 0, "three eggs sold to the cook for %d coins (%s)" % [bill, quote])
+	check(w.player_sell_many(goods, "wool", 3).result == "sold", "wool sold to the goods merchant")
 	# through the player's own stall (PL1-10): a villager who needs it buys
 	var b: Business = w.business
 	check(b.listable("egg") >= 0 and GameData.items.has("egg"), "eggs can be listed at the stall")

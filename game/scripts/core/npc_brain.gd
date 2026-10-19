@@ -28,6 +28,8 @@ const BUYS := {
 }
 # items an NPC keeps for its own work and will not sell
 const KEEPS := {"sage": ["flower"], "miner": ["pickaxe"], "laborer": ["pickaxe"], "woodcutter": ["axe"], "smith": ["hammer"],
+	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
+	"farmer": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"], "merchant": ["wheat_seed", "carrot_seed", "potato_seed", "herb_seed"],
 	"guard": ["iron_sword", "leather_armor"], "bandit": ["copper_sword"]}
 # who to sell each item to, in order of preference
 const OUTLETS := {
@@ -1092,7 +1094,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var f := _field(a.field)
 			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():
 				return false                                       # (left to the player hired to cut it)
-			n.inv.add("wheat", w.take_crop(f, 1 << 30))          # whatever is left on the field
+			n.inv.add("wheat", w.farm.save_seed(n, w.take_crop(f, 1 << 30)))   # whatever is left on the field, less the seed kept back
 			# the farm's livestock is fed from the farm's crop: feed goes to the pen of any keeper
 			# who shares this field before anything is sold
 			for pid in w.fauna.pens:
@@ -2092,6 +2094,7 @@ func caravan() -> void:
 	var sold := _caravan_imports()
 	var stone := _caravan_stone()
 	_caravan_apothecary()
+	_caravan_seeds()
 	var budget := mini(int(GameData.b("caravan_coins")), w.caravan_purse)
 	var bought := 0
 	# merchants do not sell the village's food away when there is less than a few days of it (the
@@ -2208,6 +2211,38 @@ func _caravan_apothecary() -> int:
 		w.stat("caravan_coins_out", price)
 		w.stat("imported_" + pick)
 		spent += price
+	return spent
+
+
+## The caravan's seed (Build 13 economy rule 3): each visit it sells the food merchant up to
+## caravan_seed_per_visit seeds, the scarcest first, towards caravan_seed_stock, at seed value from the
+## merchant's own coins above the trader cash floor. Finite like the apothecary's resupply.
+func _caravan_seeds() -> int:
+	var cfg: Dictionary = GameData.b("farming")
+	var stock: Dictionary = cfg.caravan_seed_stock
+	var spent := 0
+	for o: NPC in w.npcs:
+		if not o.alive or o.job != "merchant" or not w.farm.sells_seed(o):
+			continue
+		for k in int(cfg.caravan_seed_per_visit):
+			var pick := ""
+			var worst := 1.0
+			for id in stock:
+				var fill := float(o.inv.count(id)) / float(stock[id])
+				if fill < worst and o.coins - GameData.value(id) >= int(GameData.b("trader_cash_floor")) and o.inv.can_add(id):
+					worst = fill
+					pick = id
+			if pick == "":
+				break
+			var price := GameData.value(pick)
+			o.coins -= price
+			o.spent += price
+			o.inv.add(pick)
+			w.coin_sources -= price
+			w.caravan_purse += price
+			w.stat("caravan_coins_out", price)
+			w.stat("imported_" + pick)
+			spent += price
 	return spent
 
 

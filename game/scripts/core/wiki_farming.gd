@@ -26,7 +26,7 @@ static func add_pages(w: Wiki) -> void:
 	w.add_page("guide:farm_start", "How do I start a farm?", "guides", [
 		Wiki.p("You need no coins to begin the work, only ground. Buy or lease a plot from the manor (the reeve's land office, or walk onto a plot and Use), then clear it: Use on a tree felled with an axe, then on its stump, on saplings, wild plants and boulders."),
 		Wiki.p("Till the soil by hand, which is slow and tiring, or make a hand plough at the workbench (%s) and carry it: tilling is then about three times quicker and far easier. Put the plough in your hand from the pack to make Use till the soil in front of you straight away." % ", ".join((GameData.recipes["craft_plough"].in as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.recipes["craft_plough"].in[k]), GameData.item_name(str(k)).to_lower()]))),
-		Wiki.p("Buy a few seeds from a farmer or at the food stall (Trade), face a tilled cell and Use to sow. Come back when it is ripe and Use to harvest. Keep some seed back for the next sowing, sell the rest, or bake and cook it. In winter nothing can be sown, so clear and till then."),
+		Wiki.p("Buy a few seeds from a farmer or at the food stall (Trade): they sell from their own stock, so a seller can run out. Farmers keep seed back from each harvest, and the caravan brings the food stall more, so try again later. Face a tilled cell and Use to sow. Come back when it is ripe and Use to harvest. Keep some seed back for the next sowing, sell the rest, or bake and cook it. In winter nothing can be sown, so clear and till then."),
 		Wiki.links(["sys:farming", "guide:animals", "recipe:craft_plough", "item:plough"])])
 	var pens := []
 	for kind in f.pens:

@@ -12,6 +12,7 @@ signal cancelled
 var qty := 1
 var max_qty := 0
 var unit_price := -1            # coins each; -1 = no money involved (storage)
+var prices: Array = []          # coins for each unit in turn when they differ (World.player_quote); overrides unit_price
 var verb := "Buy"
 var coins_after := Callable()   # optional: qty -> text for the live total line
 var slider: HSlider
@@ -24,19 +25,24 @@ var plus_btn: Button
 var max_btn: Button
 
 
-## Most you can buy: what the seller has, what your coins cover, and whether the pack has room.
-## (The pack limits kinds, not counts, so room is yes or no.)
-static func buy_max(stock: int, coins: int, price: int, room := true) -> int:
-	if not room or price <= 0:
+## Most you can buy when each unit has its own price (`prices`, in order): units while the coins last.
+static func buy_max_priced(prices: Array, coins: int, room := true) -> int:
+	if not room:
 		return 0
-	return maxi(0, mini(stock, coins / price))
+	var n := 0
+	var spent := 0
+	for c in prices:
+		if spent + int(c) > coins:
+			break
+		spent += int(c)
+		n += 1
+	return n
 
 
-## Most you can sell: what you carry, what the buyer still wants, and what their purse covers.
-static func sell_max(owned: int, wanted: int, merchant_coins: int, price: int) -> int:
-	if price <= 0:
-		return maxi(0, mini(owned, wanted))
-	return maxi(0, mini(owned, mini(wanted, merchant_coins / price)))
+## Most you can sell when each unit has its own price: what you carry and the buyer wants (the length of
+## `prices`), and as many as the buyer's own coins pay for.
+static func sell_max_priced(prices: Array, merchant_coins: int) -> int:
+	return buy_max_priced(prices, merchant_coins)
 
 
 ## `info` is the line under the name ("2 coins each · 8 in stock"); `why_not` is shown instead of the
@@ -105,7 +111,17 @@ func setup(title: String, info: String, max_n: int, p_verb: String, p_unit_price
 
 
 func total() -> int:
-	return qty * unit_price if unit_price >= 0 else 0
+	return total_for(qty)
+
+
+## Coins for `n` units: the sum of the first `n` unit prices, or n x the single price.
+func total_for(n: int) -> int:
+	if not prices.is_empty():
+		var t := 0
+		for i in mini(n, prices.size()):
+			t += int(prices[i])
+		return t
+	return n * unit_price if unit_price >= 0 else 0
 
 
 func set_qty(n: int) -> void:

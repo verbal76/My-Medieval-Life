@@ -106,10 +106,10 @@ Rules:
 
 ### INT-008 · Theft is witnessed
 - **Trigger:** The player takes something that belongs to someone: wheat from a farmed field, anything from a container or an unattended stall (INT-043), or a pocket picked or tried (INT-044).
-- **Source:** `game/scripts/core/world.gd::witness`, `game/scripts/core/world.gd::guard_confront`, `game/scripts/core/world.gd::near`
+- **Source:** `game/scripts/core/world.gd::witness`, `game/scripts/core/world.gd::guard_confront`, `game/scripts/core/world.gd::theft_fine_for`, `game/scripts/core/world.gd::goods_value`, `game/scripts/core/world.gd::pickpocket`, `game/scripts/core/chests.gd::take`, `game/scripts/core/world.gd::near`
 - **Affects:** Crime, Ledger, Coins, Treasury, Inventory, Interiors
-- **Expected:** Villagers within `witness_radius` (not bandits) who are awake and in the same place as the player (inside the same building, or both outdoors: INT-048) remember it ("saw <player> take <what>"), the victim notices the loss, the player's crime record gains an entry, and the log says so if anyone saw. The goods are marked as stolen from the victim (INT-045). A guard among those who saw it stops the player (agent proposal): what was taken goes back where it came from (the field's farmer, the container), the player pays `theft_fine` to the treasury, and a player who cannot pay it all pays what they have and is fought, as for an attack (INT-013). Only goods and coins move.
-- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
+- **Expected:** Villagers within `witness_radius` (not bandits) who are awake and in the same place as the player (inside the same building, or both outdoors: INT-048) remember it ("saw <player> take <what>"), the victim notices the loss, the player's crime record gains an entry, and the log says so if anyone saw. The goods are marked as stolen from the victim (INT-045). A guard among those who saw it stops the player (agent proposal): what was taken goes back where it came from (the field's farmer, the container), the player pays `World.theft_fine_for(taken)` to the treasury: `theft_fine` plus `theft_fine_share` of the goods' base value (Build 13 owner economy rule 4, so emptying a chest costs more than taking one loaf); a player who cannot pay it all pays what they have and is fought, as for an attack (INT-013). Every crime record carries what was taken (`items`), how many (`qty`) and their base value (`value`, coins for a lifted purse), and `player_stolen_value` counts the total. Only goods and coins move.
+- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`, `game/tests/chests_test.gd::test_household_chest`, `game/tests/chests_test.gd::test_witnessed`
 
 ### INT-009 · Harvesting a field (farmers)
 - **Trigger:** A farmer's plan reaches a ripe field.
@@ -183,10 +183,10 @@ Rules:
 
 ### INT-019 · Trade
 - **Trigger:** The player or a villager buys or sells.
-- **Source:** `game/scripts/core/world.gd::trade`, `game/scripts/core/world.gd::sell_price`, `game/scripts/core/world.gd::buy_price`, `game/scripts/core/npc_brain.gd::_plan_sell`
+- **Source:** `game/scripts/core/world.gd::trade`, `game/scripts/core/world.gd::sell_price`, `game/scripts/core/world.gd::buy_price`, `game/scripts/core/world.gd::player_quote`, `game/scripts/core/world.gd::player_buy_many`, `game/scripts/core/world.gd::player_sell_many`, `game/scripts/ui/quantity_picker.gd::buy_max_priced`, `game/scripts/core/npc_brain.gd::_plan_sell`
 - **Affects:** Market, Coins, Inventory, Ledger
-- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock. The player sells through `World.player_sell`, which handles stolen goods first (INT-045). What each trade buys, and its stock cap, is `NPCBrain.BUYS`: the goods merchant also takes made rings, amulets and helmets (B7-003, owner 2026-10-18), within its coins and caps. The player's Buy and Sell open the shared quantity control (`game/scripts/ui/quantity_picker.gd`, PL1-03): buy max is min(stock, coins // price, pack room), sell max is min(carried, what the buyer still wants, buyer coins // price); Confirm calls `World.trade` (buy) or `World.player_sell_many` (sell, a quantity through `player_sell`), Cancel changes nothing. The same control moves stacks to and from the home chest (`World.transfer`; stolen marks move with the quantity, stolen first, PL2-012).
-- **Tests:** `game/tests/start_test.gd::_pl_trade_ui_tests`, `game/tests/run_tests.gd::test_trade_is_atomic`, `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_build7_economy`
+- **Expected:** Atomic: the goods and coins both move, or neither does. Traders keep their cash floor. Prices follow stock. The player sells through `World.player_sell`, which handles stolen goods first (INT-045). What each trade buys, and its stock cap, is `NPCBrain.BUYS`: the goods merchant also takes made rings, amulets and helmets (B7-003, owner 2026-10-18), within its coins and caps. The player's Buy and Sell open the shared quantity control (`game/scripts/ui/quantity_picker.gd`, PL1-03). (Build 13, owner economy rules 1 and 2) Each unit of a bulk deal is priced at the stock it leaves (`World.player_quote`): buying runs the seller's stock down, so each unit costs the same or more; selling fills the buyer up, so each unit fetches the same or less; the total is the sum of the unit prices, never the opening price times the quantity. Buy max is the units the player's coins cover in turn (and pack room); sell max is the units the buyer still wants and their own coins cover in turn. Confirm calls `World.player_buy_many` (all or nothing, the bill from the player's own coins) or `World.player_sell_many` (refused whole unless the buyer's own coins cover the whole bill; then a unit at a time through `player_sell` at the live price); a merchant never buys without the coins. Cancel changes nothing. The same control moves stacks to and from the home chest (`World.transfer`; stolen marks move with the quantity, stolen first, PL2-012).
+- **Tests:** `game/tests/start_test.gd::_pl_trade_ui_tests`, `game/tests/run_tests.gd::test_trade_is_atomic`, `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_build7_economy`, `game/tests/farming_test.gd::test_market`
 
 ### INT-020 · The caravan
 - **Trigger:** Noon on caravan days.
@@ -1047,12 +1047,12 @@ Rules:
 - **Expected:** (PL2-015) The cell gives the crop's yield (wheat, carrots, potatoes, or the herb crop's wild flowers) and `seeds_back` seed of the same crop, and is tilled, empty soil again; it is refused while the pack cannot hold the goods. The crops are the player's alone (no theft rule applies).
 - **Tests:** `game/tests/farming_test.gd::test_crops`
 
-### INT-125 · Seed is bought from the farmers and the food merchant with real coins
-- **Trigger:** The player buys seed in the trade window of a farmer or the food stall's merchant.
-- **Source:** `game/scripts/core/farming.gd::buy_seed`, `game/scripts/core/farming.gd::seed_offers`, `game/scripts/ui/game_ui.gd::show_trade`
-- **Affects:** Coins, Market, Inventory
-- **Expected:** (PL2-015) A standing offer at `farming.crops` `seed_price` (adjusted by the Trading skill): the coins move from the player's purse to the seller's, the seed is made for the player (it is not taken from anyone's stock). The seeds are the only way to start a field apart from seed saved from a harvest.
-- **Tests:** `game/tests/farming_test.gd::test_crops`
+### INT-125 · Seed is bought from the farmers' and the food merchant's own stock with real coins
+- **Trigger:** The player buys seed in the trade window of a farmer or the food stall's merchant; a farmer cuts a field; the caravan visits.
+- **Source:** `game/scripts/core/farming.gd::buy_seed`, `game/scripts/core/farming.gd::seed_offers`, `game/scripts/core/farming.gd::save_seed`, `game/scripts/core/npc_brain.gd::_caravan_seeds`, `game/scripts/core/npc_brain.gd::act`, `game/scripts/core/population.gd::_equip`, `game/scripts/ui/game_ui.gd::show_trade`
+- **Affects:** Coins, Market, Inventory, Fields, Ledger
+- **Expected:** (PL2-015; Build 13 owner economy rule 3: seed never appears from nowhere) Seed is stock in real inventories. Farmers start with `farming.seed_stock.farmer`, the food merchant with `seed_stock.food_merchant`. A seller offers only the crops they hold seed of, and a sale moves that many seeds out of their inventory into the pack through `World.trade` at `seed_price` (adjusted by the Trading skill), all or nothing; more than they hold is refused. A farmer cutting a village field keeps `seed_keep` of the grain back as wheat seed, up to `seed_cap` (the rest stays grain; counted in `farm_seed_saved`, so the grain ledger balances). Each caravan visit sells the food merchant up to `caravan_seed_per_visit` seeds towards `caravan_seed_stock`, at seed value from the merchant's own coins above the trader cash floor; those coins leave the village. Seed is never offered as ordinary goods (`NPCBrain.KEEPS`). The player also saves seed from their own harvests (INT-124). A save from before Build 13 has no seed stock: the sellers' stock rebuilds from harvests and caravans.
+- **Tests:** `game/tests/farming_test.gd::test_crops`, `game/tests/run_tests.gd::test_simulation`
 
 ### INT-126 · A fenced pen on held ground is a pen of the village's livestock model
 - **Trigger:** The player fences a pen from the plot window on ground they hold, with planks.
@@ -1146,7 +1146,7 @@ Rules:
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117 |
-| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-130 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133 |
 | Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136 |
@@ -1163,7 +1163,7 @@ Rules:
 | Bandits | INT-012, INT-014, INT-050 |
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125 |
 | Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134 |
 | Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104 |

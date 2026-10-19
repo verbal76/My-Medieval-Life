@@ -118,6 +118,13 @@ func test_household_chest() -> void:
 	check(not w.player.crimes.is_empty() and w.player.crimes[-1].kind == "theft", "the theft is on the record")
 	check(w.player.stolen.get("wheat", {}).has(str(i.owner.id)), "the wheat is marked as stolen from its owner")
 	check(w.chests.store(u, "coal", 1) != "", "still cannot store")
+	# Build 13 economy rule 4: a theft is counted by what was taken, not as one deed per chest
+	var rec: Dictionary = w.player.crimes[-1]
+	check(int(rec.qty) == 2 and int(rec.items.wheat) == 2 and int(rec.value) == 2 * GameData.value("wheat") and str(rec.what).begins_with("2 wheat"), "the record names the goods, the quantity and their value (%s)" % [rec])
+	i.store.add("bread", 12)
+	var r12 := w.chests.take(u, "bread", 12)
+	check(r12.ok and int(w.player.crimes[-1].qty) == 12 and int(w.player.crimes[-1].value) == 12 * GameData.value("bread"), "emptying twelve loaves is recorded as twelve, worth %d" % (12 * GameData.value("bread")))
+	check(World.theft_fine_for({"bread": 12}) > World.theft_fine_for({"bread": 1}) and World.theft_fine_for({}) == int(GameData.b("theft_fine")), "the fine grows with the value taken")
 
 
 func test_locked_refuses() -> void:
@@ -256,6 +263,16 @@ func test_witnessed() -> void:
 	var r2 := w.chests.attempt(u, 0.99, 0.99)
 	check(w.last_guard != "" and w.player.coins == coins - int(GameData.b("theft_fine")) and w.treasury == t + int(GameData.b("theft_fine")), "a guard who sees it fines the player")
 	check(r2.text.contains("guard") or r2.text.contains("Guard"), "the guard's words are in the message")
+	# a guard who sees goods taken fines by their value and returns them all
+	i.store.add("bread", 10)
+	w.chests.locks[u.id] = {"level": 1, "locked": false}
+	w.player.coins = 100
+	var c2 := w.player.coins
+	var t2 := w.treasury
+	var b0: int = i.store.count("bread")
+	var rt := w.chests.take(u, "bread", 10)
+	var due := World.theft_fine_for({"bread": 10})
+	check(rt.ok and w.player.coins == c2 - due and w.treasury == t2 + due and i.store.count("bread") == b0, "ten loaves seen taken: all go back and the fine is %d (base %d)" % [due, int(GameData.b("theft_fine"))])
 	# the radius matters: someone 2.5 tiles away sees a loud try but not a quiet success
 	bystander.job = "farmer"
 	bystander.pos = w.player.pos + Vector2(1.5, 0)

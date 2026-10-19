@@ -1559,7 +1559,8 @@ func test_theft_and_shops() -> void:
 	var inv0 := p.inv.count(item)
 	held = w.tavern_keeper().inv.count(item)
 	w.player_take(crate)
-	var fine := int(GameData.b("theft_fine"))
+	var fine := World.theft_fine_for({item: 1})            # Build 13: the base fine plus a share of what it is worth
+	check(fine >= int(GameData.b("theft_fine")) and p.crimes[-1].get("value", -1) == GameData.value(item) and int(p.crimes[-1].qty) == 1, "the record counts one %s worth %d" % [item, GameData.value(item)])
 	check(p.inv.count(item) == inv0 and w.tavern_keeper().inv.count(item) == held, "the guard gives the %s back to the tavern" % item)
 	check(p.coins == 40 - fine and w.treasury == t0 + fine and w.total_coins() == coins0 and guard.target == -1, "the player pays the %d coin fine to the treasury" % fine)
 	check(w.last_guard.contains(guard.name), "the guard's words are reported: %s" % w.last_guard)
@@ -1664,7 +1665,7 @@ func test_theft_and_shops() -> void:
 	GameData.balance.pickpocket_chance_max = saved_pp[2]
 	GameData.balance.pickpocket_chance_per_level = saved_pp[1]
 	check(not r.ok and victim.memory.has("caught %s %s picking my pocket" % [p.name, p.family]), "a failed try is noticed: %s" % r.text)
-	check(p.coins == 40 - fine and w.total_coins() == coins0 and guard.memory.any(func(m): return str(m).begins_with("caught ")), "the guard stops the pickpocket and fines them")
+	check(p.coins == 40 - int(GameData.b("theft_fine")) and w.total_coins() == coins0 and guard.memory.any(func(m): return str(m).begins_with("caught ")), "the guard stops the pickpocket and fines them (a failed try takes nothing: the base fine)")
 	check(Dialogue.caught(w, victim) and (Dialogue.opening(w, victim).contains("caught") or Dialogue.opening(w, victim).contains("saw you")), "the victim is cold to the thief: %s" % Dialogue.opening(w, victim))
 	# saved: the tables' dishes and the stolen marks
 	p.inv.add("ale", 2)
@@ -2176,8 +2177,8 @@ func test_simulation(days: int) -> void:
 	check(w.total_coins() == coins0 + w.coin_sources, "coins conserved: %d + sources %d = %d" % [coins0, w.coin_sources, w.total_coins()])
 	var st: Dictionary = w.stats
 	var expect := wheat0 + int(st.get("made_wheat", 0)) - int(st.get("used_wheat", 0)) - int(st.get("feed_eaten_wheat", 0)) \
-		- int(st.get("eaten_wheat", 0)) - int(st.get("exported_wheat", 0))
-	check(_wheat_held(w) == expect, "grain conserved: held %d, expected %d (harvest - cooked - fed - eaten - exported)" % [_wheat_held(w), expect])
+		- int(st.get("eaten_wheat", 0)) - int(st.get("exported_wheat", 0)) - int(st.get("farm_seed_saved", 0))
+	check(_wheat_held(w) == expect, "grain conserved: held %d, expected %d (harvest - cooked - fed - eaten - exported - kept as seed)" % [_wheat_held(w), expect])
 	var c := _census(w)
 	check(c.alive_villagers >= 90, "most villagers alive after %d days (%d)" % [days, c.alive_villagers])
 	check(int(c.made.get("iron_bar", 0)) + int(c.made.get("pickaxe", 0)) + int(c.made.get("axe", 0)) > 0, "smith produced something")
@@ -3354,7 +3355,7 @@ func test_resource_registry() -> void:
 	check(not planks.is_empty() and planks[0].then[0].item == "plank" and planks[0].then[0].becomes.any(func(s): return s.recipe == "forge_pickaxe"),
 		"a real chain: tree -> log -> plank (sawhorse) -> pickaxe (anvil)")
 	check(ResourceNodes.sources_of("log").any(func(s): return s.kind == "node" and s.id == "tree"), "logs come from trees")
-	check(ResourceNodes.sources_of("gold_ore").is_empty(), "gold ore has no source (a recorded exception)")
+	check(ResourceNodes.sources_of("gold_ore").any(func(s): return s.kind == "node" and s.id == "gold_seam"), "gold ore comes from the gold seam (Build 13)")
 	check(ResourceNodes.sources_of("bread").any(func(s): return s.kind == "recipe") and ResourceNodes.sources_of("bread").any(func(s): return s.kind == "start_kit"), "bread: the home food table makes it (PL2-013), and the start kit has it")
 	check(ResourceNodes.uses_of("iron_ore").any(func(u): return u.kind == "buyer" and u.id == "smith" and int(u.qty) == int(NPCBrain.BUYS.smith.iron_ore)), "buyers come from NPCBrain.BUYS")
 	check(ResourceNodes.uses_of("stone").any(func(u): return u.kind == "building" and u.id == "house") and ResourceNodes.uses_of("log").any(func(u): return u.kind == "fuel"), "building costs and fuel are uses")

@@ -493,7 +493,7 @@ func _guides() -> void:
 		p("The manor sells and lets empty houses and plots of ground. A plot costs about %d coins, a house with its ground about %d; renting costs about %d%% of the price a week, and two missed weeks end a lease. Walk to the door of an empty house to see the offer." % [plot, house, rent_pct]),
 		links(["sys:property", "sys:saving"])])
 	guide.call("theft", "Avoid trouble with theft", [
-		p("Taking or selling goods marked as stolen, or being seen picking a pocket, brings the guards: they return the goods and fine you %d coins. Witnesses within %d tiles count. Pick pockets only when nobody is looking, ideally asleep victims, and do not sell stolen goods to anyone nearby." % [int(GameData.b("theft_fine")), int(GameData.b("witness_radius"))]),
+		p("Taking or selling goods marked as stolen, or being seen picking a pocket, brings the guards: they return the goods and fine you %d coins plus %d%% of what the goods are worth, so taking a whole chest costs far more than one loaf. Witnesses within %d tiles count. Pick pockets only when nobody is looking, ideally asleep victims, and do not sell stolen goods to anyone nearby." % [int(GameData.b("theft_fine")), roundi(float(GameData.b("theft_fine_share")) * 100.0), int(GameData.b("witness_radius"))]),
 		links(["sys:theft", "skill:stealth", "job:guard"])])
 	guide.call("sprint", "Sprint", [
 		p("Hold Shift (keyboard) or press LT (gamepad) to sprint; it uses stamina and ends when you run out."),
@@ -522,10 +522,10 @@ func _systems() -> void:
 		p("Several things may be usable at once: Q or Tab (D-pad left or right) chooses the next one."),
 		links(["guide:mine", "node:tree", "node:flower_patch", "controls:kbm"])])
 	sys.call("trading", "Trading", [
-		p("Talk to a merchant or villager to buy and sell. Prices depend on each item's base value; merchants have limited coins and stock, and a trade either completes or does not happen. Villagers buy what their work needs."),
+		p("Talk to a merchant or villager to buy and sell. Prices depend on each item's base value and on supply: a seller asks more as their stock runs low, and a buyer offers less as they fill up. In a bulk deal every unit is priced in turn, so buying a seller's last few costs more each and selling a buyer a big stack fetches less each; the quantity control shows the real total. Merchants have limited coins and stock: they never buy what they cannot pay for, and a trade either completes or does not happen. Villagers buy what their work needs."),
 		links(["guide:money", "job:merchant", "sys:theft"])])
 	sys.call("theft", "Theft and guards", [
-		p("Pickpocketing needs Stealth; sleeping victims are easier. Goods you steal are marked as theirs. A guard who sees a theft, hears the victim within %d tiles, or questions you about a stolen item returns the goods and fines you %d coins." % [int(GameData.b("guard_call_radius")), int(GameData.b("theft_fine"))]),
+		p("Pickpocketing needs Stealth; sleeping victims are easier. Goods you steal are marked as theirs. A guard who sees a theft, hears the victim within %d tiles, or questions you about a stolen item returns the goods and fines you %d coins plus %d%% of their value. Every theft is on your record with what was taken, how many and what it was worth." % [int(GameData.b("guard_call_radius")), int(GameData.b("theft_fine")), roundi(float(GameData.b("theft_fine_share")) * 100.0)]),
 		links(["skill:stealth", "job:guard", "guide:theft"])])
 	sys.call("property", "Land, houses, workshops and rent", [
 		p("The manor sells and lets ground and empty houses; rent is weekly. You can build on ground you hold from the Build menu, with materials and hired helpers. A new property starts with a house, and rooms and workshops (a smithy, a carpenter's shop, a kitchen, living quarters and more) can be added to it later without pulling anything down. A rented home you cannot pay for is lost after missed weeks."),

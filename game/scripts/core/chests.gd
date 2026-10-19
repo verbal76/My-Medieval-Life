@@ -208,7 +208,7 @@ func take(u: Dictionary, id: String, qty: int) -> Dictionary:
 	var victim: NPC = i.owner
 	if victim:
 		p.mark_stolen(id, victim.id, qty)
-	var seen := w.witness("theft", "%s from %s" % [GameData.item_name(id).to_lower(), place(u)], victim, {id: qty}, i.store)
+	var seen := w.witness("theft", "%d %s from %s" % [qty, GameData.item_name(id).to_lower(), place(u)], victim, {id: qty}, i.store)
 	return {"ok": true, "theft": true, "seen": seen, "text": "You take %d %s from %s. %s" % [qty, GameData.item_name(id).to_lower(), place(u),
 		"Nobody saw." if seen == 0 else "%d %s saw you!" % [seen, "person" if seen == 1 else "people"]]}
 

@@ -556,29 +556,60 @@ func collect(pen: Dictionary, p: PlayerState) -> Dictionary:
 
 
 # ---------------------------------------------------------------- seeds ----------------------
-## The crops a villager sells seed for: the farmers, and the food stall's merchant.
+## Whether `n` deals in seed: the farmers, and the food stall's merchant.
+func sells_seed(n: NPC) -> bool:
+	return n.alive and (n.job == "farmer" or (n.job == "merchant" and str(w.stalls.get(n.workplace, {}).get("kind", "")) == "food"))
+
+
+static func is_seed(id: String) -> bool:
+	for c in crops().values():
+		if str(c.seed) == id:
+			return true
+	return false
+
+
+static func seed_cfg() -> Dictionary:
+	return GameData.b("farming")
+
+
+## The crops a villager sells seed for: those they hold seed of (Build 13: seed is real stock).
 func seed_offers(n: NPC) -> Array:
-	var sells: bool = n.alive and (n.job == "farmer" or (n.job == "merchant" and str(w.stalls.get(n.workplace, {}).get("kind", "")) == "food"))
-	return crops().keys() if sells else []
+	if not sells_seed(n):
+		return []
+	return crops().keys().filter(func(c): return n.inv.has(str(crops()[c].seed)))
+
+
+## A farmer cutting a field keeps seed_keep of the crop back as wheat seed, up to seed_cap (seed saving);
+## the rest of `wheat` is theirs as grain. Returns the grain left to add.
+func save_seed(n: NPC, wheat: int) -> int:
+	if n.job != "farmer" or wheat <= 0:
+		return wheat
+	var room := maxi(0, int(seed_cfg().seed_cap) - n.inv.count("wheat_seed"))
+	var keep := mini(mini(int(seed_cfg().seed_keep), room), wheat)
+	if keep > 0:
+		n.inv.add("wheat_seed", keep)
+		w.stat("farm_seed_saved", float(keep))
+	return wheat - keep
 
 
 func seed_price(crop: String) -> int:
 	return maxi(1, roundi(float(crops()[crop].seed_price) * w.player_price_factor(true)))
 
 
-## Buy `qty` seeds of a crop from a villager who sells them; the coins are the villager's. "" when done.
+## Buy `qty` seeds of a crop from a villager's own stock; the coins are the villager's. "" when done.
 func buy_seed(n: NPC, crop: String, qty: int, p: PlayerState) -> String:
 	if not seed_offers(n).has(crop) or qty < 1:
-		return "They do not sell that."
+		return "They have no seed of that."
 	var seed := str(crops()[crop].seed)
+	if not n.inv.has(seed, qty):
+		return "They have only %d." % n.inv.count(seed)
 	var cost := seed_price(crop) * qty
 	if p.coins < cost:
 		return "You need %d coins." % cost
-	if not p.inv.add(seed, qty):
+	if not p.inv.can_add(seed):
 		return "Your pack is full."
-	p.coins -= cost
-	n.coins += cost
-	n.earned += cost
+	if not w.trade(p, n, seed, qty, seed_price(crop)):
+		return "The trade fell through."
 	w.stat("farm_seed_bought", float(qty))
 	return ""
 

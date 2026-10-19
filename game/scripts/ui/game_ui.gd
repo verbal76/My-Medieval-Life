@@ -2126,39 +2126,46 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 	var w: World = main.world
 	var p := w.player
 	var id: String = pick.id
-	var price: int = pick.price
 	var buying: bool = pick.mode == "buy"
 	var nm := GameData.item_name(id)
 	var mx := 0
 	var info := ""
 	var why := ""
+	# Build 13: each unit is priced at the stock it leaves (World.player_quote), so a bulk deal follows supply
+	var prices: Array = w.player_quote(n, id, n.inv.count(id) if buying else mini(p.inv.count(id), w.brain.wants(n, id)), buying)
+	var first: int = prices[0] if not prices.is_empty() else 0
+	var last: int = prices[-1] if not prices.is_empty() else 0
+	var each := ("%d coins each" % first) if first == last else ("%d coins for the first, %s" % [first, "rising as their stock runs down" if buying else "falling as they fill up"])
 	if buying:
 		var stock := n.inv.count(id)
-		mx = QuantityPicker.buy_max(stock, p.coins, price, p.inv.can_add(id))
-		info = "%d coins each  ·  %d in stock  ·  you have %d coins%s" % [price, stock, p.coins, effect_suffix(id)]
-		why = "Your pack is full." if not p.inv.can_add(id) else "You cannot afford one."
+		mx = QuantityPicker.buy_max_priced(prices, p.coins, p.inv.can_add(id))
+		info = "%s  ·  %d in stock  ·  you have %d coins%s" % [each, stock, p.coins, effect_suffix(id)]
+		why = "Your pack is full." if not p.inv.can_add(id) else ("They have none." if stock == 0 else "You cannot afford one.")
 	else:
 		var owned := p.inv.count(id)
-		mx = QuantityPicker.sell_max(owned, w.brain.wants(n, id), n.coins, price)
-		info = "%d coins each  ·  you have %d  ·  %s wants %d, has %d coins" % [price, owned, n.name, w.brain.wants(n, id), n.coins]
-		why = "They cannot afford one right now." if n.coins < price else "They want no more of these."
-	var qp := QuantityPicker.new().setup(("Buy " if buying else "Sell ") + nm, info, mx, "Buy" if buying else "Sell", price, why)
+		mx = QuantityPicker.sell_max_priced(prices, n.coins)
+		info = "%s  ·  you have %d  ·  %s wants %d, has %d coins" % [each, owned, n.name, w.brain.wants(n, id), n.coins]
+		why = "They want no more of these." if prices.is_empty() else "They cannot afford one right now."
+	var qp := QuantityPicker.new()
+	qp.prices = prices
+	qp.setup(("Buy " if buying else "Sell ") + nm, info, mx, "Buy" if buying else "Sell", first, why)
 	qp.coins_after = func(q: int) -> String:
-		return "(you will have %d coins)" % (p.coins + (-q if buying else q) * price)
+		return "(you will have %d coins)" % (p.coins + (-1 if buying else 1) * qp.total_for(q))
 	qp.cancelled.connect(func(): show_trade(n))
 	qp.confirmed.connect(func(q: int):
 		if buying:
-			if w.trade(p, n, id, q, price):
-				main._xp("trading", Skills.trade_xp(q * price))
-				message("You buy %d %s for %d coins." % [q, nm.to_lower(), q * price])
+			var b: Dictionary = w.player_buy_many(n, id, q)
+			if b.result == "bought":
+				main._xp("trading", Skills.trade_xp(int(b.paid)))
+				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)])
 			else:
-				message("You cannot afford that, or your pack is full.")
+				message(b.text)
 			show_trade(n)
 			return
-		var r: Dictionary = w.player_sell_many(n, id, price, q)
+		var r: Dictionary = w.player_sell_many(n, id, q)
 		if r.sold > 0:
-			main._xp("trading", Skills.trade_xp(r.sold * price))
-			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), r.sold * price])
+			main._xp("trading", Skills.trade_xp(int(r.paid)))
+			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)])
 		if r.result == "sold":
 			show_trade(n)
 		elif r.result == "failed":
