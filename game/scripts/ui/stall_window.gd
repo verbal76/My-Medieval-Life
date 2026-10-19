@@ -103,29 +103,52 @@ class PriceEditor extends PanelContainer:
 static func show(ui: GameUI, id: String, pick := {}) -> void:
 	var w: World = ui.main.world
 	var biz: Business = w.business
-	var s: Dictionary = w.stalls[id]
+	var s: Dictionary = biz.record(id)
 	var p := w.player
-	if w.tenant_of(s) != World.PLAYER:
+	if s.is_empty():
+		if w.buildings.has(id):                  # a room with a counter and no shop open yet
+			FitWindow.show(ui, id)
+			return
+		return
+	if not biz.is_mine(s):
 		_rent_view(ui, w, s)
 		return
-	var rent := Business.rent_day()
-	ui._open("stall", "Your market stall  ·  you have %d coins" % p.coins)
+	var shop := Business.is_shop(s)
+	var rent := biz.rent_of(s)
+	var b: Dictionary = biz.building_of(s)
+	var what := "shop" if shop else "stall"
+	ui._open("stall", ("Your shop  ·  a %s  ·  " % w.fitting.trade(b) if shop else ("Your larger market stall  ·  " if bool(s.get("large", false)) else "Your market stall  ·  ")) + "you have %d coins" % p.coins)
 	if not pick.is_empty():
 		_picker(ui, w, s, pick)
 	var owing := int(s.get("missed", 0)) > 0
 	var here := biz.attended(s)
 	if owing:
-		ui._label("Rent owing: sales are stopped. Pay %d coins to open again; the manor takes the pitch back if it stays unpaid." % (rent * maxi(1, w.day() - int(s.paid_day))), 17, COLD)
-		ui._button("Pay the rent", func():
+		ui._label("%s owing: sales are stopped. Pay %d coins to open again; the manor takes it back if it stays unpaid." % ["Licence" if shop else "Rent", rent * maxi(1, w.day() - int(s.paid_day))], 17, COLD)
+		ui._button("Pay the %s" % ("licence" if shop else "rent"), func():
 			var why := biz.pay_arrears(s)
-			ui.message(why if why != "" else "Rent paid.")
+			ui.message(why if why != "" else "Paid.")
 			show(ui, id), p.coins >= rent)
 	else:
-		ui._label("Rent %d coins a day, paid through day %d. %s" % [rent, int(s.paid_day) + 1,
-			"You are at the stall: villagers who need these goods will come." if here else
-			"Sales happen only while you stand at the stall (within %d tiles)." % int(GameData.b("stall_range"))], 16, GOLD if here else COLD)
+		var att := biz.attendant_of(s)
+		var line := "%s %d coins a day, paid through day %d. " % ["Licence" if shop else "Rent", rent, int(s.paid_day) + 1]
+		if att != null and biz.attendant_present(s):
+			line += "%s %s is at the counter: villagers who need these goods will come, whether or not you are here." % [att.name, att.family]
+		elif here:
+			line += "You are at the %s: villagers who need these goods will come." % what
+		elif att != null:
+			line += "%s %s minds it in the working day; nobody sells before they are at the counter." % [att.name, att.family]
+		else:
+			line += "Sales happen only while you stand at the %s (within %d tiles) or an attendant is at it." % [what, int(GameData.b("stall_range"))]
+		ui._label(line, 16, GOLD if here or (att != null and biz.attendant_present(s)) else COLD)
 	var till := int(s.till)
 	ui._label("Till: %d coins  ·  taken so far: %d coins" % [till, int(s.earned)], 18)
+	var costs: Dictionary = s.get("costs", {})
+	var parts := []
+	for k in costs:
+		parts.append("%s %d" % [k, int(costs[k])])
+	ui._label("Revenue %d  ·  expenses %d (%s)  ·  profit %s%d coins" % [int(s.earned), biz.expenses(s), ", ".join(parts) if not parts.is_empty() else "none yet",
+		"+" if biz.profit(s) >= 0 else "", biz.profit(s)], 16, GOLD if biz.profit(s) >= 0 else COLD)
+	ui._label("Goods are not costed; expenses are rent or licence, upgrades and wages.", 13)
 	var acts := HBoxContainer.new()
 	acts.add_theme_constant_override("separation", 8)
 	ui.panel_body.add_child(acts)
@@ -133,40 +156,79 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 		ui._button("Collect %d coins" % till, func():
 			ui.message("You collect %d coins from the till." % biz.collect(s))
 			show(ui, id), true, acts)
-	ui._button("Close the stall", func():
+	ui._button("Close the %s" % what, func():
 		ui.message(biz.close(s))
 		ui.hide_all(), true, acts)
-	ui._label("Closing returns every item and the till to you.", 14)
-	ui._label("For sale:", 20, Color(1, 0.85, 0.5))
+	if shop:
+		ui._button("Fit out the room", func(): FitWindow.show(ui, id), true, acts)
+		ui._label(w.fitting.summary(b), 14)
+	elif not bool(s.get("large", false)):
+		var why := biz.upgrade_refusal(s)
+		ui._button("Larger stall: %d coins, then %d a day" % [int(GameData.b("stall_large_cost")), int(GameData.b("stall_large_rent_day"))], func():
+			var r := biz.upgrade(s)
+			ui.message(r if r != "" else "Your stall is larger now: more goods, a display, a wider reach.")
+			show(ui, id), why == "", acts)
+		ui._label("A larger stall holds %d kinds of goods (now %d) and has a display that draws buyers from %.1f times as far." % [int(GameData.b("stall_large_listings")), biz.listing_cap(s), float(GameData.b("stall_large_reach"))], 14)
+	ui._label("Closing returns every item and the till to you." + (" The counter and shelves stay in the room." if shop else ""), 14)
+	_attendant_section(ui, w, s, id)
+	ui._label("For sale (%d of %d kinds):" % [s.stock.size(), biz.listing_cap(s)], 20, Color(1, 0.85, 0.5))
 	var stock: Dictionary = s.stock
 	if stock.is_empty():
 		ui._label("Nothing yet. Put goods up from your pack below.", 15)
 	var ids := stock.keys()
 	ids.sort()
+	var large := bool(s.get("large", false))
 	for item in ids:
 		var it: String = item
 		var h := HBoxContainer.new()
 		h.add_child(ui._icon(it))
 		var l := Label.new()
-		l.text = "%s x%d   %d coins each  (market %d)" % [GameData.item_name(it), int(stock[it]), biz.price_of(s, it), GameData.value(it)]
+		l.text = "%s x%d   %d coins each  (market %d)%s" % [GameData.item_name(it), int(stock[it]), biz.price_of(s, it), GameData.value(it), "  [on display]" if str(s.get("display", "")) == it else ""]
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(l)
-		for spec in [["Price", "price"], ["Take back", "back"]]:
-			var b := Button.new()
-			b.text = spec[0]
-			b.custom_minimum_size = Vector2(104, 48)
+		var specs := [["Price", "price"], ["Take back", "back"]]
+		for spec in specs:
+			var bt := Button.new()
+			bt.text = spec[0]
+			bt.custom_minimum_size = Vector2(104, 48)
 			var mode: String = spec[1]
-			b.pressed.connect(func(): show(ui, id, {"id": it, "mode": mode}))
-			h.add_child(b)
+			bt.pressed.connect(func(): show(ui, id, {"id": it, "mode": mode}))
+			h.add_child(bt)
+		if large:
+			var db := Button.new()
+			db.text = "Undisplay" if str(s.get("display", "")) == it else "Display"
+			db.custom_minimum_size = Vector2(104, 48)
+			db.pressed.connect(func():
+				var r := biz.set_display(s, "" if str(s.get("display", "")) == it else it)
+				ui.message(r if r != "" else "Display set.")
+				show(ui, id))
+			h.add_child(db)
 		ui.panel_body.add_child(h)
+	if shop and biz.store_cap(s) > 0:
+		ui._label("Back room (%d of %d pieces; refills a shelf that sells out):" % [biz.store_total(s), biz.store_cap(s)], 20, Color(1, 0.85, 0.5))
+		if s.store.is_empty():
+			ui._label("Empty. Store spare goods from your pack below.", 15)
+		var sids: Array = s.store.keys()
+		sids.sort()
+		for item in sids:
+			var it: String = item
+			ui._item_row(it, int(s.store[it]), "in the back room", "Bring out", func(): show(ui, id, {"id": it, "mode": "fetch"}))
+	elif shop:
+		ui._label("Stock chests (in Fit out) give the shop a back room for spare stock.", 14)
 	ui._label("In your pack:", 20, Color(1, 0.85, 0.5))
 	var any := false
 	for item in p.inv.ids():
 		var it: String = item
 		if biz.can_list(it) and biz.listable(it) > 0:
 			any = true
-			ui._item_row(it, p.inv.count(it), "market value %d coins" % GameData.value(it), "Put up", func(): show(ui, id, {"id": it, "mode": "put"}))
+			var row := ui._item_row(it, p.inv.count(it), "market value %d coins" % GameData.value(it), "Put up", func(): show(ui, id, {"id": it, "mode": "put"}))
+			if shop and biz.store_cap(s) > 0 and row != null:
+				var sb := Button.new()
+				sb.text = "Store"
+				sb.custom_minimum_size = Vector2(90, 48)
+				sb.pressed.connect(func(): show(ui, id, {"id": it, "mode": "store"}))
+				row.get_parent().add_child(sb)
 	if not any:
 		ui._label("Nothing in your pack to sell.", 15)
 	ui._label("Sales:", 20, Color(1, 0.85, 0.5))
@@ -175,8 +237,49 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 		ui._label("No sales yet.", 15)
 	for i in range(sales.size() - 1, maxi(-1, sales.size() - 9), -1):
 		var e: Dictionary = sales[i]
-		ui._label("Day %d, %02d:00  %s bought %d %s for %d coins" % [int(e.day) + 1, int(e.hour), e.who, int(e.qty), GameData.item_name(e.item).to_lower(), int(e.qty) * int(e.price)], 15)
+		ui._label("Day %d, %02d:00  %s bought %d %s for %d coins%s" % [int(e.day) + 1, int(e.hour), e.who, int(e.qty), GameData.item_name(e.item).to_lower(), int(e.qty) * int(e.price),
+			"  (sold by your attendant)" if str(e.get("by", "")) == "attendant" else ""], 15)
 	_to_top.call_deferred(ui)          # after the focus has been given: a rebuilt window reads from its top
+
+
+## Hiring, paying and letting go of the person who minds the counter (PL1-10 stage 4).
+static func _attendant_section(ui: GameUI, w: World, s: Dictionary, id: String) -> void:
+	var biz: Business = w.business
+	var att := biz.attendant_of(s)
+	ui._label("Attendant:", 20, Color(1, 0.85, 0.5))
+	if att != null:
+		ui._label("%s %s, %d coins a day from the till or your purse. They stand at the counter in the working day (7 to 18), sleep at night, and sell only what villagers really need." % [att.name, att.family, biz.wage()], 15)
+		ui._button("Let %s go" % att.name, func():
+			biz.dismiss(s)
+			ui.message("%s no longer works for you." % att.name)
+			show(ui, id))
+		return
+	var cands := biz.candidates()
+	if cands.is_empty():
+		ui._label("Nobody is free to hire: attendants are adults without a trade of their own (out of work, manor hands or labourers).", 15)
+		return
+	ui._label("Hire an adult without a trade, %d coins a day (today's wage now):" % biz.wage(), 15)
+	var shown := 0
+	for n: NPC in cands:
+		if shown >= 5:
+			break
+		shown += 1
+		var who := n
+		var h := HBoxContainer.new()
+		var l := Label.new()
+		l.text = "%s %s%s" % [who.name, who.family, {"manor_hand": "  (manor hand)", "laborer": "  (labourer)"}.get(who.job, "")]
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(l)
+		var hb := Button.new()
+		hb.text = "Hire"
+		hb.disabled = w.player.coins + int(s.till) < biz.wage()
+		hb.custom_minimum_size = Vector2(110, 48)
+		hb.pressed.connect(func():
+			var r := biz.hire(s, who)
+			ui.message(r if r != "" else "%s will mind the counter." % who.name)
+			show(ui, id))
+		h.add_child(hb)
+		ui.panel_body.add_child(h)
 
 
 static func _to_top(ui: GameUI) -> void:
@@ -218,16 +321,39 @@ static func _picker(ui: GameUI, w: World, s: Dictionary, pick: Dictionary) -> vo
 		if ui.scheme != "touch":
 			pe.focus_default.call_deferred()
 		return
-	var put: bool = pick.mode == "put"
-	var mx := biz.listable(id) if put else int(s.stock.get(id, 0))
-	var info := ("You carry %d. They go up at %d coins each (change it after)." % [w.player.inv.count(id), biz.price_of(s, id)]) if put else \
-		"The stall holds %d. They come back to your pack." % mx
-	var qp := QuantityPicker.new().setup(("Put up " if put else "Take back ") + nm, info, mx, "Put up" if put else "Take back", -1,
-		"Nothing to move." if put else "Your pack is full." if not w.player.inv.can_add(id) else "Nothing to move.")
+	var mode: String = pick.mode
+	var up := mode == "put" or mode == "store"
+	var mx := 0
+	var info := ""
+	match mode:
+		"put":
+			mx = biz.listable(id)
+			info = "You carry %d. They go up at %d coins each (change it after)." % [w.player.inv.count(id), biz.price_of(s, id)]
+		"store":
+			mx = mini(biz.listable(id), biz.store_cap(s) - biz.store_total(s))
+			info = "You carry %d. The back room has room for %d more; it refills the shelf when this sells out." % [w.player.inv.count(id), biz.store_cap(s) - biz.store_total(s)]
+		"fetch":
+			mx = int(s.get("store", {}).get(id, 0))
+			info = "The back room holds %d. They come back to your pack." % mx
+		_:
+			mx = int(s.stock.get(id, 0))
+			info = "It holds %d. They come back to your pack." % mx
+	var verb := {"put": "Put up", "store": "Store", "fetch": "Bring out"}.get(mode, "Take back") as String
+	var qp := QuantityPicker.new().setup(verb + " " + nm, info, mx, verb, -1,
+		"Nothing to move." if up else "Your pack is full." if not w.player.inv.can_add(id) else "Nothing to move.")
 	qp.cancelled.connect(func(): show(ui, sid))
 	qp.confirmed.connect(func(q: int):
-		var why := biz.list_item(s, id, q) if put else biz.unlist(s, id, q)
-		ui.message(why if why != "" else ("%d %s %s." % [q, nm.to_lower(), "put up for sale" if put else "back in your pack"])))
+		var why := ""
+		match mode:
+			"put":
+				why = biz.list_item(s, id, q)
+			"store":
+				why = biz.store_item(s, id, q)
+			"fetch":
+				why = biz.fetch(s, id, q)
+			_:
+				why = biz.unlist(s, id, q)
+		ui.message(why if why != "" else ("%d %s %s." % [q, nm.to_lower(), {"put": "put up for sale", "store": "stored in the back room"}.get(mode, "back in your pack")])))
 	qp.confirmed.connect(func(_q: int): show(ui, sid))
 	ui.panel_body.add_child(qp)
 	ui.panel_body.move_child(qp, 0)

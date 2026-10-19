@@ -451,6 +451,8 @@ func _ready() -> void:
 				smith.coins = 200
 				world.business.sell(st, smith, "iron_ore", 2, GameData.value("iron_ore"))
 				ui.show_stall(str(st.id), {"id": "plank", "mode": "price"} if shot_panel == "stall_pick" else {})
+			"bizshop", "bizshop_window", "bizfit", "bizplace", "bizlarge":
+				_business_scene(shot_panel)
 			"shop", "counter":
 				# a tavern keeper at the counter: the shop window, or (counter) the prompt in front of it
 				var k := world.tavern_keeper()
@@ -1104,6 +1106,10 @@ func _on_building_added(b: Dictionary) -> void:
 				var v := int(cells[j * int(stamp.w) + i])
 				if v >= 0:
 					view.set_tile(layer, Vector2i(int(b.x) + i, int(b.y) + j), v)
+	var fit_layer := view.layer(Fitting.LAYER)       # the equipment the player placed in the room (PL1-10 stage 3)
+	if fit_layer != null:
+		for e in world.fitting.list(b):
+			view.set_tile(fit_layer, world.fitting.cell_of(e), int(Fitting.ART[str(e.kind)]))
 
 
 # ---------------------------------------------------------------- frame ----------------------
@@ -1828,6 +1834,7 @@ func _find_target() -> void:
 		cands.append_array(farm_more)
 	# at the player's feet (the last of these was the only one offered before B8-014: it comes first)
 	var here: Array = []
+	here.append_array(_fit_targets(world.place_of(p.pos)))
 	for id in world.stations:
 		var st: Dictionary = world.stations[id]
 		var u := Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5)
@@ -2018,6 +2025,19 @@ func _shop_target(post: Dictionary) -> Dictionary:
 	return {"kind": "info", "label": "The tavern counter: nobody is serving", "text": "Nobody is serving at the counter now."}
 
 
+## In a room of the player's: its shop counter (open or manage the shop) and fitting the room out (PL1-10 stage 3).
+func _fit_targets(place: String) -> Array:
+	var out := []
+	var b: Dictionary = world.buildings.get(place, {})
+	if b.is_empty() or world.fitting.fit_refusal(b) != "":
+		return out
+	out.append({"kind": "fitout", "id": place, "label": "Fit out this room (counter, shelves, equipment)"})
+	var e := world.fitting.entry(b, "counter")
+	if not e.is_empty() and Vector2(int(e.use[0]) + 0.5, int(e.use[1]) + 0.5).distance_to(world.player.pos) < 1.4:
+		out.append({"kind": "stall", "id": place, "label": "Manage your shop" if b.has("shop") else "Open a shop here (%d coins a day)" % int(GameData.b("shop_licence_day"))})
+	return out
+
+
 ## What using a container does, said in its prompt: "Take pottage (the tavern's) — theft".
 func _container_target(c: Dictionary) -> Dictionary:
 	if c.kind == "crate" or c.kind == "barrel":
@@ -2153,6 +2173,8 @@ func _use() -> void:
 			ui.show_trade(target.npc)
 		"stall":
 			ui.show_stall(str(target.id))
+		"fitout":
+			ui.show_fitout(str(target.id))
 		"info":
 			ui.message(target.text)
 		"container":
@@ -2675,6 +2697,96 @@ func begin_placement(kind: String, anchor := "") -> void:
 	_update_ghost()
 
 
+## Screenshot scene for PL1-10 stages 3-4: a house of the player's fitted out as a bakery shop, stocked, with an
+## attendant at the counter (bizshop), the shop window (bizshop_window), the fit-out window (bizfit), the placing bar
+## (bizplace), or the larger stall's window (bizlarge).
+func _business_scene(mode: String) -> void:
+	if mode == "bizlarge":
+		world.player.coins = 200
+		world.player.inv.add("plank", 8)
+		world.business.rent()
+		var st: Dictionary = world.business.mine()
+		world.business.upgrade(st)
+		world.business.list_item(st, "plank", 6)
+		world.business.set_display(st, "plank")
+		world.player.pos = world.business.use_cell(st) + Vector2(0, 1)
+		ui.show_stall(str(st.id))
+		return
+	var house: Dictionary = world.plots[0]
+	world.player.coins = 600
+	world.buy_plot(house)
+	world.start_site(house)
+	for id in GameData.b("house_cost"):
+		world.player.inv.add(id, int(GameData.b("house_cost")[id]))
+	world.deliver(house, world.player.inv)
+	var near := Rect2i(int(house.x) - 14, int(house.y) - 14, int(house.w) + 28, int(house.h) + 28)
+	for t in world.trees:
+		if t.state == "grown" and near.has_point(Vector2i(int(t.x), int(t.y))):
+			world.fell(t, 0)
+	var c0: Construction = world.construction
+	var room: Dictionary = c0.place("storage", c0.find_module_slot("storage", house, World.PLAYER), World.PLAYER, false, house)
+	for id in room.site.need.duplicate():
+		world.player.inv.add(id, int(room.site.need[id]))
+	world.deliver(room, world.player.inv)
+	var b: Dictionary = world.property.building_on(room)
+	var f: Fitting = world.fitting
+	var cells: Array = f.floor_set(b).keys()
+	cells.sort_custom(func(m: Vector2i, n: Vector2i): return m.y > n.y or (m.y == n.y and m.x < n.x))
+	for kind in ["counter", "shelves", "shelves", "stock_chest", "oven"]:
+		var c := Fitting.cost(kind)
+		for id in c:
+			world.player.inv.add(id, int(c[id]))
+		for cell: Vector2i in cells:
+			if f.why_not(b, kind, cell) == "":
+				f.place(b, kind, cell)
+				break
+	world.business.open_shop(b)
+	var sh: Dictionary = b.shop
+	world.player.inv.add("bread", 6)
+	world.player.inv.add("plank", 8)
+	world.player.inv.add("iron_ore", 5)
+	world.business.list_item(sh, "bread", 4)
+	world.business.list_item(sh, "plank", 8)
+	world.business.store_item(sh, "iron_ore", 5)
+	var att: NPC = world.business.candidates()[0]
+	world.business.hire(sh, att)
+	att.pos = world.business.use_cell(sh)
+	att.anim = "idle"
+	att.plan = [world.brain.work(600, "", {}, "idle")]
+	var door := Vector2(int(b.door[0]) + 0.5, int(b.door[1]) - 0.5)
+	world.player.pos = door
+	follow_at = _in_view(world.player.pos * T)
+	if mode == "bizshop_window":
+		ui.show_stall(str(b.id))
+	elif mode == "bizfit":
+		ui.show_fitout(str(b.id))
+	elif mode == "bizplace":
+		for id in Fitting.cost("workbench"):
+			world.player.inv.add(id, int(Fitting.cost("workbench")[id]))
+		begin_fit(str(b.id), "workbench")
+
+
+## Choose where a piece of equipment goes in a room of the player's (PL1-10 stage 3): the same ghost, bar and
+## controls as placing a building, one tile big. Starts on the free cell in front of the player.
+func begin_fit(bid: String, kind: String) -> void:
+	ui.hide_all()
+	var b: Dictionary = world.buildings.get(bid, {})
+	var front := world.player.pos + facing_vec()
+	var at := Vector2i(floori(front.x), floori(front.y))
+	if b.is_empty() or world.fitting.why_not(b, kind, at) != "":
+		var cells: Array = world.fitting.floor_set(b).keys()
+		cells.sort_custom(func(m: Vector2i, n: Vector2i): return m.y < n.y or (m.y == n.y and m.x < n.x))
+		for c: Vector2i in cells:
+			if world.fitting.why_not(b, kind, c) == "":
+				at = c
+				break
+	placing = {"fit": kind, "building": bid, "at": at}
+	paused = true
+	move_to = Vector2.INF
+	ui.show_placing(true)
+	_update_ghost()
+
+
 ## Back to choosing after the deal window (Choose another place).
 func resume_placement() -> void:
 	ui.hide_all()
@@ -2693,17 +2805,27 @@ func end_placement() -> void:
 
 
 func place_rect() -> Rect2i:
+	if placing.has("fit"):
+		return Rect2i(placing.at, Vector2i.ONE)
 	return Rect2i(placing.at, world.construction.footprint(placing.kind))
 
 
 ## Why the footprint cannot go where it is, "" if it can.
 func place_refusal() -> String:
+	if placing.has("fit"):
+		return world.fitting.why_not(world.buildings.get(str(placing.building), {}), str(placing.fit), placing.at)
 	return world.construction.can_place(placing.kind, place_rect(), World.PLAYER, world.plot(str(placing.get("anchor", ""))))
 
 
 func _update_ghost() -> void:
 	var r := place_rect()
 	var why := place_refusal()
+	if placing.has("fit"):
+		ghost.show_at(r, Vector2i(-1, -1), why == "")
+		var nm: String = Fitting.NAMES[placing.fit]
+		ui.placing_text(("A %s here (%s)." % [nm, Fitting.cost_text(str(placing.fit))]) if why == "" else "A %s cannot go here: %s." % [nm, why], why == "")
+		look_at_tile(Vector2(r.position) + Vector2(0.5, 0.5))
+		return
 	ghost.show_at(r, world.construction.door_step(placing.kind, r) - Vector2i(0, 1), why == "")
 	var t: Dictionary = world.construction.ground_terms(r)
 	var name := Construction.kind_name(placing.kind)
@@ -2716,7 +2838,7 @@ func _update_ghost() -> void:
 
 ## Put the footprint's middle on a cell.
 func move_ghost_to(cell: Vector2i) -> void:
-	var size := world.construction.footprint(placing.kind)
+	var size := Vector2i.ONE if placing.has("fit") else world.construction.footprint(placing.kind)
 	var at := cell - size / 2
 	at.x = clampi(at.x, 0, map.w - size.x)
 	at.y = clampi(at.y, 0, map.h - size.y)
@@ -2726,12 +2848,23 @@ func move_ghost_to(cell: Vector2i) -> void:
 
 
 func move_ghost(d: Vector2i) -> void:
-	var size := world.construction.footprint(placing.kind)
+	var size := Vector2i.ONE if placing.has("fit") else world.construction.footprint(placing.kind)
 	move_ghost_to(Vector2i(placing.at) + d + size / 2)
 
 
 ## Place: the deal for the ground, when the footprint may go there.
 func confirm_placement() -> void:
+	if placing.has("fit"):
+		var bid: String = placing.building
+		var fwhy: String = world.fitting.place(world.buildings.get(bid, {}), str(placing.fit), placing.at)
+		if fwhy != "":
+			ui.message("You cannot put it here: %s." % fwhy)
+			_update_ghost()
+			return
+		ui.message("%s fitted." % World.cap(Fitting.NAMES[placing.fit]))
+		end_placement()
+		ui.show_fitout(bid)
+		return
 	var why := place_refusal()
 	if why != "":
 		ui.message("You cannot build here: %s." % why)

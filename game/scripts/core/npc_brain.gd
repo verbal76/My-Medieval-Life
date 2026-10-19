@@ -171,6 +171,9 @@ func decide(n: NPC) -> void:
 	# hired to carry building materials (or carrying for their own new house): the day's work
 	if h >= WORK_START and h < WORK_END and w.construction.plan_helper(n):
 		return
+	# minding the player's stall or shop (PL1-10 stage 4)
+	if h >= WORK_START and h < WORK_END and w.business.plan_attendant(n):
+		return
 	# a job taken for the manor is carried on to the end (ManorWork)
 	if h >= WORK_START and h < WORK_END and w.manor_work.plan(n):
 		return
