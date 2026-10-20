@@ -108,3 +108,17 @@ The owner asked that nothing be built until this has been weighed.
 2. Baseline fingerprints at 10 and 30 days (PERF-03).
 3. Parallel against sequential for two seeds, each in its own save, temp and output paths (PERF-05).
 4. Only then, optimizations, one at a time, each through the determinism gate.
+
+## 6. Long-run reliability (INFRA-01, owner 2026-10-20)
+
+**The problem (measured):** two container restarts on 2026-10-20, both while the session sat idle waiting for an answer, killed the long runs. A long run on the session's own container survives only while the session stays active.
+
+**Options:**
+
+| Option | Results identical to an unbroken run? | Effort | Risk |
+|---|---|---|---|
+| **A. Run long simulations on GitHub Actions:** a manual-only workflow (`workflow_dispatch`), one job per seed and length, uploading the JSON and log as artifacts | Yes: the same code and the same headless harness. To confirm on day one: a 10-day run on CI must give the same fingerprint as locally | Small: CI already installs Godot 4.7.2 (`tests.yml`) | Free for a public repository; jobs are limited to 6 hours (a 365-day run needs about 1 hour); it publishes nothing and runs only by hand |
+| **B. Keep the session active:** a harness-tracked background wait on the runs (in use since 03:05) | Yes: nothing in the run changes | None | Unproven: whether an active background wait prevents reclamation is not documented; the 03:05 runs will tell |
+| **C. Checkpoint and resume** (PERF-06) | Only if the RNG state (not saved today: loading reseeds it), transient brain state and the harness's accumulators are all saved, proved by a broken-at-day-15 30-day run matching an unbroken one | Medium | A missed piece of state silently changes results; must be gated |
+
+**Recommendation:** **A** for every run longer than about 30 minutes, with **B** as a fallback while a run is local. Keep **C** for later, behind its determinism gate. A needs the owner's approval: it adds a workflow and uses GitHub's runners.

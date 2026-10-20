@@ -11,19 +11,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 82 |
-| ACTIVE DEVELOPMENT | 7 |
-| PARTIALLY IMPLEMENTED | 39 |
+| APPROVED — NOT STARTED | 83 |
+| ACTIVE DEVELOPMENT | 8 |
+| PARTIALLY IMPLEMENTED | 38 |
 | IMPLEMENTED — TESTING REQUIRED | 9 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
 | BLOCKED | 16 |
-| DEFERRED | 8 |
+| DEFERRED | 9 |
 | COMPLETE AND VERIFIED | 125 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **350** |
-| Outstanding (not complete, superseded or canceled) | 206 |
+| **Total approved** | **352** |
+| Outstanding (not complete, superseded or canceled) | 208 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 31 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 23 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,18 +39,18 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 78 | 76 |
+| Build 15: simulation stabilization | 79 | 77 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
-| Build 20 or later (outside the five builds) | 42 | 40 |
+| Build 20 or later (outside the five builds) | 43 | 41 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **262** | **206** |
+| **Total open** | **264** | **208** |
 
-### Build 15: simulation stabilization (78)
+### Build 15: simulation stabilization (79)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -104,7 +104,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | HOUSE-08 | Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 root cause 1 (owner answer OD-13) |
 | HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | approved | PARTIALLY IMPLEMENTED |  | EQ-07 root cause 1 (owner answer OD-13) |
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | APPROVED — NOT STARTED |  | OD-14 Phase 1, Build 15 stabilization |
-| HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | PARTIALLY IMPLEMENTED |  | OD-14 Phase 1 alternatives |
+| HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | APPROVED — NOT STARTED |  | OD-14 follow-up, owner's preferred direction |
+| INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | ACTIVE DEVELOPMENT |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | APPROVED — NOT STARTED |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | APPROVED — NOT STARTED |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
@@ -252,7 +253,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED |  | emergent gameplay is the judgment system's purpose |
 
-### Build 20 or later (outside the five builds) (42)
+### Build 20 or later (outside the five builds) (43)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -272,6 +273,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FR-03 | A campfire for cooking raw meat outside the village | approved | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
 | FR-08 | Music and sound | approved | BLOCKED | owner assets | enemies and sound need asset uploads from the owner |
 | FR-10 | Archery | approved | DEFERRED |  | archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner |
+| HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | DEFERRED |  | OD-14 Phase 1 alternatives |
 | MIN-L5 | Mining capability level 5 (integrated industrial mining) | proposal | APPROVED — NOT STARTED |  | mining level 5 is a proposal pending later confirmation |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | approved | PARTIALLY IMPLEMENTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
 | OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | approved | PARTIALLY IMPLEMENTED |  | living-world umbrella: isometric and magic remain open |
@@ -405,7 +407,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (82)
+## APPROVED — NOT STARTED (83)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -451,7 +453,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit |  |  |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
-| HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 |  | after HOUSE-09 | unbuilt by the owner's choice; take up when the owner asks or with the upper-floor decision |
+| HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 |  | after HOUSE-09 | build the 5x6 room module after the loft investigation; it serves b23, b24 and b_v1_house |
+| HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md |  |  | owner approval of docs/design/SLEEPING_LOFT.md, then implement and test |
 | MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  |  |  |
 | MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A |  |
 | MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-B |  |
@@ -492,7 +495,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 |  |  |  |
 
-## ACTIVE DEVELOPMENT (7)
+## ACTIVE DEVELOPMENT (8)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -500,11 +503,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | game/tests/housing_test.gd test_tool_less_worker; branch staging/my-medieval-life | after B14R-12 | read the fix12 365-day runs (all three corrections) against fix9; OD-13 for crowded families that cannot split |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | HOUSE-07 | EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code | docs/directives/2026-10-20_housing_succession_adoption.md Part 2, Part 6 | game/tests/housing_test.gd |  |  |
+| INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md |  |  |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold |
 
-## PARTIALLY IMPLEMENTED (39)
+## PARTIALLY IMPLEMENTED (38)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -522,7 +526,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | HOUSE-04 | Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.5 | game/tests/housing_test.gd |  | gathering and trading by households: decide scope after the fix10 runs; may move to Build 16 |
 | HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.7 | game/tests/housing_test.gd | after HOUSE-08; after HOUSE-09 | HOUSE-08 and HOUSE-09 |
 | HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13) | game/tests/housing_test.gd test_quarters_on_an_original_house | after OD-14 | wait for OD-14 |
-| HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 item 6 |  | after HOUSE-10 | owner: choose a later build for a multi-level system, the cheaper sleeping-loft option, or neither (docs/design/UPPER_FLOORS_SCOPE.md) |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |
@@ -625,7 +628,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | Game Designer ('Bob') spec, owner interview answers: /root/.claude/uploads/754052d8-fb21-5c64-b3f9-641f462e2c23/23b72163-The_Well_corrected_two_documents.zip CLAUDE.md Part A s.A0 and A2 (lines 55-62, 149-151) and MASTER_PROMPT.md line 42; owner message #27 2026-10-17T18:46Z |  | owner input (see notes) | The owner's original answers were a chat upload that is not in the repository; ask the owner to restate them or supply the document when this item is taken up |
 | REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | owner message #109 2026-10-18T06:00Z; AskUserQuestion round 2026-10-18T06:46Z (wear model, staff fallback, manor hands on the job board, board wage basis) left unanswered; docs/HANDOFF.md and docs/DEVELOPMENT_QUEUE.md 'Waiting on the owner: A need-based maintenance model' |  | owner input (see notes) |  |
 
-## DEFERRED (8)
+## DEFERRED (9)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -633,6 +636,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | F-1 | NPC workshop construction | docs/release/BUILD_7_ISSUES.md (audit inventory row 62) |  |  |  |
 | FR-09 | Crime from desperation | owner design intent 2026-10-17, deferred by the owner ('no desperation crime yet') |  |  |  |
 | FR-10 | Archery | docs/directives/2026-10-19_sword_combat.md (future, not authorised) |  |  |  |
+| HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 item 6 |  | after HOUSE-10 | future design consideration; not scheduled |
 | REC-006 | Castles, dungeons and caves in the world | Game Designer spec Part A s.A1/A2 (bob/CLAUDE.md lines 67, 76, 90), the owner's interview in their own words |  |  |  |
 | REC-007 | Several settlements (villages, towns, cities) with their own economies; NPC migration and regional jobs between them | owner message #47 2026-10-17T23:35Z sections 6, 13 (regional job opportunity) and 14; #144 2026-10-18T18:20Z s.10H lists additional villages and towns as future, not authorised now |  |  |  |
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |

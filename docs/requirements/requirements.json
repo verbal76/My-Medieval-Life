@@ -10323,7 +10323,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "unbuilt by the owner's choice; take up when the owner asks or with the upper-floor decision",
+   "next_action": "build the 5x6 room module after the loft investigation; it serves b23, b24 and b_v1_house",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10348,6 +10348,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "owner's answer 2026-10-20: scope upper floors rather than build the 5x6 room now; the room stays open, unbuilt"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "owner 2026-10-20 (docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md): retain the 5x6 attached room for houses with legitimate ground"
     }
    ],
    "target_build": "15",
@@ -10357,7 +10362,7 @@
    "id": "HOUSE-11",
    "title": "Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "DEFERRED",
    "owner_wording": null,
    "description": "Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry",
    "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 item 6",
@@ -10379,7 +10384,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "owner: choose a later build for a multi-level system, the cheaper sleeping-loft option, or neither (docs/design/UPPER_FLOORS_SCOPE.md)",
+   "next_action": "future design consideration; not scheduled",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10404,10 +10409,113 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "owner chose (2026-10-20) to have upper floors scoped for a later build, not started: docs/design/UPPER_FLOORS_SCOPE.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> DEFERRED; target_build; next_action",
+     "why": "owner 2026-10-20 (docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md): do not implement full multi-level architecture in Build 15; kept as a future design consideration (docs/design/UPPER_FLOORS_SCOPE.md)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_reason": "OD-14 Phase 1 alternatives"
+  },
+  {
+   "id": "HOUSE-12",
+   "title": "Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "My preferred direction is to investigate a lightweight sleeping loft rather than implementing a complete multi-level building system during Build 15.",
+   "description": "Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor",
+   "source": "docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Before implementation: a report on whether it fits the existing house and bed systems without substantial changes to pathfinding, rendering or save compatibility, with its construction requirements and how NPCs use it",
+    "Built through the existing construction system; capacity only after completion",
+    "Sleeping, occupancy (beds_in, crowding) and household behaviour work with it; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "owner approval of docs/design/SLEEPING_LOFT.md, then implement and test",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "integration report written (docs/design/SLEEPING_LOFT.md): fits with no pathfinding or save changes and one hide-while-asleep drawing rule; construction 12 planks + 6 logs for 2 sleeping places (agent proposal); awaiting the owner"
     }
    ],
    "target_build": "15",
-   "roadmap_reason": "OD-14 Phase 1 alternatives"
+   "roadmap_reason": "OD-14 follow-up, owner's preferred direction"
+  },
+  {
+   "id": "INFRA-01",
+   "title": "Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The repeated container restarts are now a serious testing reliability issue. Investigate a safe way to preserve long-running test progress or prevent session-idle termination without altering simulation results.",
+   "description": "Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results",
+   "source": "docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "The cause and the options investigated and reported",
+    "Whatever is adopted leaves results identical to an unbroken run (or labels them)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead agent, staging",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
+     "why": "owner asked for it now"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "note",
+     "why": "options investigated (SIMULATION_PERFORMANCE.md section 6); recommend a manual GitHub Actions long-run workflow; awaiting the owner"
+    }
+   ],
+   "target_build": "15"
   },
   {
    "id": "K-1",

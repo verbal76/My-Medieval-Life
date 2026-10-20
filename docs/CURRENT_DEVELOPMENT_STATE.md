@@ -21,7 +21,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-Eight entries, all named here (the validator checks). The ledger's count of seven is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
+Nine entries, all named here (the validator checks). The ledger's count of eight is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
 
 - **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
   - Done so far:
@@ -36,6 +36,7 @@ Eight entries, all named here (the validator checks). The ledger's count of seve
     - crowded families nobody can leave: OD-13 answered by the owner; implemented by HOUSE-08 and HOUSE-09;
     - the fix10 runs (corrected code) to read;
     - unemployment climbs after day 40.
+- **INFRA-01:** long-run reliability after two idle-time container restarts. Options in `docs/release/SIMULATION_PERFORMANCE.md` section 6; the recommendation (long runs on a manual GitHub Actions workflow) waits on the owner.
 - **PERF-01:** the measured answer to the owner's runtime questions, in `docs/release/SIMULATION_PERFORMANCE.md`. PERF-02..06 (profiling, the determinism gate, optimizations, parallel seeds, a checkpoint evaluation) follow the housing work, without disturbing running simulations.
 - **HOUSE-07:** the EQ-07 investigation, tests (`game/tests/housing_test.gd`) and re-runs. Done: the trace, the root causes, the tests. Remaining: the fix10 100-day results.
 - **EQ-16:** world equilibrium, the Build 16 objective. It closes on the multi-seed 100- and 365-day acceptance runs (EQ-06).
