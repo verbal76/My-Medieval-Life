@@ -27,9 +27,9 @@ Every open register entry carries `target_build` (15–19, `20+`, `multiplayer`,
 The mining specification itself proposes "a dedicated Build 17 or 18". The owner's roadmap (ROAD-01) settled it as Build 17.
 
 **Dependencies that touch the order (none forces a change):**
-- **SET-A in Build 17.** Mining capability levels (MIN-D, Build 17) are settlements' first industry capability. The settlement capability schema (SET-A, Build 18's design phase) should be designed during Build 17 so MIN-D builds on it. This is design only; Build 18 still implements the model.
+- **SET-A in Build 17.** Mining capability levels (MIN-D, Build 17) are settlements' first industry capability. The settlement capability schema (SET-A, Build 18's design phase) should be designed during Build 17 so MIN-D builds on it. This is design only, and part of Build 17: it starts only when the owner authorizes Build 17. Build 18 still implements the model.
 - **MIN-E and MIN-F.** Open-pit and underground mining depend on MIN-A's finding about layered terrain. If the terrain cannot carry depth, these slip to Build 20 or later, and Build 17 ships phases A–D and G.
-- **EQ-09, stone.** Stone runs out by about day 60. If the world has no lasting stone source without the quarry chain (MIN-B, Build 17), the Build 16 baseline must either accept caravan stone imports as the stand-in or move MIN-B earlier. This will be decided from the Build 15 runs and brought to the owner before any change.
+- **EQ-09, stone, and owner decision OD-10.** In the Build 15 runs stone reaches 0 by about day 160–190 (56 and 115 of 240 were left at day 100), and house sites then stall. Iron, coal, copper and gold run out by about day 20. With no lasting stone source before the quarry chain (MIN-B, Build 17), the Build 16 baseline must either accept caravan stone imports as the stand-in or move MIN-B earlier. That choice is OD-10, the owner's; EQ-09 is BLOCKED on it.
 - **Build 19 needs the owner's answers.** Its 14 open design questions (SJD-Q01..Q14) stay unanswered until the owner answers them. The design audit and isolated prototype can proceed; live integration cannot.
 - **VP-01, generational memory and legacy.** Village politics (VP-01), generational memory (GM-01) and legacy (WDR-014) are approved but named in none of the five builds. GM-01 is placed in 19 as the closest fit, to confirm. Politics follows 19, because voting weighs judgment.
 
@@ -57,7 +57,7 @@ Phases E and F (open pit, underground) depend on what MIN-A finds about layered 
 **B depends on:**
 - a settlement capability schema (SET-A, SET-B). A's capability levels (MIN-D) are the first industry to use it, so SET-A's schema design should come before MIN-D. The capability model itself stays part of B;
 - the caravan placeholder (CARAVAN-TMP), which it replaces in SET-C;
-- several settlements (SET-E), which need a larger map; REC-007 is related.
+- several settlements (SET-E), which need a larger map; REC-007 is related. SET-E is therefore targeted at Build 20 or later, so Build 18 holds SET-A..D.
 
 **C depends on:**
 - the Build 16 baseline (SJD-A);
@@ -73,7 +73,7 @@ C replaces today's fixed thresholds, CRT-12's notoriety refusal and the single r
 1. **Now, Builds 15–16:** equilibrium (EQ-01..08, WR-01, CRT-*), save continuity, the caravan as a labelled 30-coin placeholder. Then the 100- and 365-day multi-seed acceptance runs (EQ-06).
 2. **First after Build 16: Expansion A, phases MIN-A to MIN-D.**
    - Audit, quarry stone after ore, prospecting and assay, finite hidden deposits, capability levels 1–2.
-   - It answers the most pressing problem the runs show: iron and coal run out by day 10, and stone by about day 60.
+   - It answers the most pressing problem the runs show: iron and coal run out by about day 10–20, and stone by day 160–190 (Build 15 runs).
    - SET-A (the capability schema design) runs alongside so MIN-D builds on it rather than on something mining-only.
    - Open-pit and underground mining (MIN-E, MIN-F) follow as their own milestone once MIN-A has settled the terrain question.
 3. **Expansion C, gates B to D:** the audit and an isolated prototype with no effect on live behaviour. These can run in parallel with A, since they change nothing in play. Live integration (gate E onward) waits until A's simulations are stable, so changes in behaviour can be traced to one cause.
