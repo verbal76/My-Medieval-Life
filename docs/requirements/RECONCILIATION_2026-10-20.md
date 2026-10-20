@@ -7,17 +7,18 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 226 still open, 5 closed since |
+| Open entries (rules excluded) | 231 | 225 still open, 6 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
 | Entries added since | | 48 (32 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **258** = 226 still open from the baseline + 32 added and open |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **257** = 225 still open from the baseline + 32 added and open |
 | Open entries moved to another build | | 0 |
 
-## Closed since the baseline (5)
+## Closed since the baseline (6)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
+| B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: docs/assets/SPRITE_NEEDS.md lists 53 missing or weak sprites found in the code (3 characters, 10 animals, 18 items and icons, 10 buildings and stations, 5 terrain and props, 2 effects, 5 UI), each with where it is used, what stands in now, why it is weak and the size needed; tools/assets/sprite_package.py builds a pixel-grid copy and a real-size Aseprite file for each into out/sprite_package.zip (107 files); grid copies looked at |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Actions run 39368663150 on 0ee0218: 365 days, seeds 1 and 2, LEAKS currency 0, items {} (axe, hammer, pickaxe, herbal_poultice all balance) |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: six pages added (game/scripts/core/wiki_topics.gd): Magic: the Fireball; the gold star over an employer; the Journal and the village map; causes of death; the merchant caravan; bandits. Every fact cites code, numbers come from balance data where the code reads them, links from the related pages; wiki_test passes (every link resolves) |

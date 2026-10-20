@@ -1844,7 +1844,7 @@
    "id": "B14-12",
    "title": "Sprite list with pixel-grid copies for Aseprite (missing and weak sprites)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Sprite list with pixel-grid copies for Aseprite (missing and weak sprites)",
    "source": "owner message 2026-10-19",
@@ -1853,7 +1853,7 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "tools/assets/check_assets.py 0 problems; grid copies inspected",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -1878,6 +1878,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "docs/assets/SPRITE_NEEDS.md lists 53 missing or weak sprites found in the code (3 characters, 10 animals, 18 items and icons, 10 buildings and stations, 5 terrain and props, 2 effects, 5 UI), each with where it is used, what stands in now, why it is weak and the size needed; tools/assets/sprite_package.py builds a pixel-grid copy and a real-size Aseprite file for each into out/sprite_package.zip (107 files); grid copies looked at"
     }
    ],
    "acceptance_derived": true,

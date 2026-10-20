@@ -11,19 +11,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 68 |
+| APPROVED — NOT STARTED | 67 |
 | ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 35 |
 | IMPLEMENTED — TESTING REQUIRED | 18 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 38 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 137 |
+| COMPLETE AND VERIFIED | 138 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
 | **Total approved** | **356** |
-| Outstanding (not complete, superseded or canceled) | 200 |
+| Outstanding (not complete, superseded or canceled) | 199 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 33 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 73 | 69 |
+| Build 15: simulation stabilization | 72 | 68 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **258** | **200** |
+| **Total open** | **257** | **199** |
 
-### Build 15: simulation stabilization (73)
+### Build 15: simulation stabilization (72)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -58,7 +58,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | B13-13 | Touch sprint | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | B14-06 | Carts in play: pulled storage, parking, cart stops, deliveries, household market runs | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
-| B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | approved | APPROVED — NOT STARTED |  | the owner-requested sprite list for Aseprite (no game change) |
 | B14-13 | A controller connected to a phone or tablet hides the touch buttons and uses the pad controls | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | approved | PARTIALLY IMPLEMENTED |  | the 365-day failures (housing, births, population) under correction now |
 | B7-001 | Starting coins | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
@@ -402,14 +401,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (68)
+## APPROVED — NOT STARTED (67)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
-| B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | owner message 2026-10-19 |  |  | Generate the package with tools/assets/sheets.py contact |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
@@ -629,7 +627,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (137)
+## COMPLETE AND VERIFIED (138)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -655,6 +653,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B14-04 | Cart parts and handcarts | docs/DECISIONS.md (owner, Build 14) | `d01376c`; home_test |  |  |
 | B14-05 | Local-availability pricing | docs/DECISIONS.md (owner, Build 14) | `75093bf`; home_test, business_test |  |  |
 | B14-08 | Forest animals (MiniFolks): grazers, predators, fox raids, fights | docs/DECISIONS.md (owner, Build 14) | `2caca5a`, `f9fb853`; wildlife_test |  |  |
+| B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | owner message 2026-10-19 | tools/assets/check_assets.py 0 problems; grid copies inspected |  | Generate the package with tools/assets/sheets.py contact |
 | B14R-01 | Record completed 100-day economy simulations (start, seeds, currency, wealth, jobs, trade, resources, food, population, shortages, regressions) | docs/directives/2026-10-19_build14_readiness_requirements_preservation.md s.1 | `a5cf3e8`; game/tests/economy_sim.gd (seeds 1, 2; 100 and 365 days) |  |  |
 | B14R-02 | Compare the manor reserve and the caravan money limit (four configurations) and recommend | same directive s.2 | economy_sim.gd --set overrides, seed 1, 100 days | after B7-009; after B7-014 |  |
 | B14R-03 | Investigate iron and coal running out by day 10; document sustainable alternatives without changing the resource model | same directive s.3 | economy_sim.gd seeds 1, 2 | after OD-01 |  |
