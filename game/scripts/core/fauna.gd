@@ -8,10 +8,10 @@ extends RefCounted
 ##    (livestock `feed` wheat from its pen's trough, wild animals by grazing while the wood is not
 ##    overcrowded), and at zero hunger it loses health until it dies;
 ##  - a well-fed adult female gives birth when a well-fed adult male of her kind shares her pen or
-##    woods, then not again for breed_days; a litter never takes the area over its cap;
-##  - babies are drawn with the baby sheet (half scale of the adult sheet where there is none) until grow_days
+##    woods, then not again for breed_years; a litter never takes the area over its cap;
+##  - babies are drawn with the baby sheet (half scale of the adult sheet where there is none) until grow_years
 ##    old; B8-029 adds the stages newborn / juvenile / adult / elderly, the elderly move slower, do not breed and
-##    die naturally within death_days;
+##    die naturally within death_years;
 ##  - every animal becomes meat (and hide, if its kind has one) when it is killed; babies give half;
 ##  - WR-01: each wood keeps a hidden breeding refuge per wild species (Refuges, balance.json "refuges"), out of
 ##    everyone's reach, whose young leave in season into woods below their capacity and disperse to settle.
@@ -124,14 +124,14 @@ func _start(area: String, species: String) -> void:
 	var start: Array = s.start
 	for i in int(start[0]) + int(start[1]):
 		var a := spawn(area, species, "m" if i < int(start[0]) else "f", null)
-		var age: float = float(s.grow_days) + w.rng.randf_range(0.0, 3.0)        # a breeding adult
+		var age: float = Animal.stage_days(s, "grow") + w.rng.randf_range(0.0, 3.0)        # a breeding adult
 		var n_start := int(start[0]) + int(start[1])
 		if i == 1:                                                         # a juvenile among them (B8-029)
-			age = w.rng.randf_range(float(s.juvenile_days), float(s.grow_days) * 0.9)
+			age = w.rng.randf_range(Animal.stage_days(s, "juvenile"), Animal.stage_days(s, "grow") * 0.9)
 		elif i == n_start - 1 and n_start >= 4:                            # and, in the larger groups, an elderly one
-			age = float(s.elder_days) + w.rng.randf_range(0.0, (float(s.death_days[0]) - float(s.elder_days)) * 0.5)
+			age = Animal.stage_days(s, "elder") + w.rng.randf_range(0.0, (float(Animal.death_days(s)[0]) - Animal.stage_days(s, "elder")) * 0.5)
 		a.born = w.minutes - age * 1440.0
-		a.next_birth = w.minutes + w.rng.randf_range(0.0, float(s.breed_days)) * 1440.0
+		a.next_birth = w.minutes + w.rng.randf_range(0.0, Animal.stage_days(s, "breed")) * 1440.0
 
 
 ## A new animal on a free cell of its area (next to `mother` for a birth).
@@ -439,7 +439,7 @@ func new_day() -> void:
 		for i in n:
 			spawn(a.area, a.species, "m" if w.rng.randf() < 0.5 else "f", a)
 		w.stat("born_" + a.species, n)
-		a.next_birth = now + float(s.breed_days) * 1440.0
+		a.next_birth = now + Animal.stage_days(s, "breed") * 1440.0
 		if not a.wild():
 			born[a.spec().name] = int(born.get(a.spec().name, 0)) + n
 	for k in born:
@@ -447,13 +447,13 @@ func new_day() -> void:
 	refuges.new_day()                                   # WR-01: the refuges' young, in season, where there is room
 
 
-## Natural death of the elderly (B8-029): no chance before the species' death_days[0]; after it a daily chance
-## of 1 in the days left to death_days[1] (so the age at death is spread evenly over the range), certain at the end.
+## Natural death of the elderly (B8-029): no chance before the species' death_years[0]; after it a daily chance
+## of 1 in the days left to death_years[1] (so the age at death is spread evenly over the range), certain at the end.
 func _old_age(now: float) -> void:
 	for a: Animal in animals.duplicate():
 		if not a.alive or not a.elderly(now):
 			continue
-		var dd: Array = a.spec().death_days
+		var dd: Array = Animal.death_days(a.spec())
 		var age: float = a.age_days(now)
 		if age < float(dd[0]):
 			continue

@@ -925,7 +925,7 @@ func _pl2_007() -> void:
 			after = true
 	check(ripe_samples >= 6, "PL2-007: a field stood ripe for %d game hours (from day 1) where the player can harvest it" % ripe_samples)
 	check(after, "PL2-007: and the farmers then cut it and sowed it again")
-	check(is_equal_approx(w.field_grow_days(f), float(GameData.b("field_grow_days"))), "PL2-007: the season hook (field_grow_days) gives the base grow time")
+	check(is_equal_approx(w.field_grow_days(f), Life.seasons_to_days(float(GameData.b("field_grow_seasons")))), "PL2-007: the season hook (field_grow_days) gives the base grow time (field_grow_seasons)")
 
 
 # ---------------------------------------------------------------- Build 13: station occupancy --

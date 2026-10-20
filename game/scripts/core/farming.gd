@@ -40,6 +40,11 @@ static func crops() -> Dictionary:
 	return cfg().crops
 
 
+## Game days of full-rate growth a crop needs: its `seasons` (calendar seasons) through Life (TIME-02).
+static func crop_days(crop: String) -> float:
+	return Life.seasons_to_days(float(crops()[crop].seasons))
+
+
 ## The crop a seed item sows, or "".
 static func crop_of_seed(item: String) -> String:
 	for id in crops():
@@ -224,7 +229,7 @@ func sow(c: Vector2i, crop: String, p: PlayerState) -> String:
 	return ""
 
 
-## Every game hour: sown cells grow by 1 / (days * 24) of their crop, times the season's rate.
+## Every game hour: sown cells grow by 1 / (crop_days * 24) of their crop, times the season's rate.
 func hour() -> void:
 	if cells.is_empty():
 		return
@@ -235,7 +240,7 @@ func hour() -> void:
 		var cell: Dictionary = cells[c]
 		if cell.state != "growing":
 			continue
-		cell.progress = float(cell.progress) + rate / (float(crops()[cell.crop].days) * 24.0)
+		cell.progress = float(cell.progress) + rate / (crop_days(str(cell.crop)) * 24.0)
 		if float(cell.progress) >= 0.999999:
 			cell.progress = 1.0
 			cell.state = "ripe"
@@ -275,7 +280,7 @@ func days_left(c: Vector2i) -> float:
 	var rate := season_rate()
 	if rate <= 0.0:
 		return INF
-	return (1.0 - float(cell.progress)) * float(crops()[cell.crop].days) / rate
+	return (1.0 - float(cell.progress)) * crop_days(str(cell.crop)) / rate
 
 
 ## A building is marked out on the parcel: the field on it is ploughed under (crops and tilled soil are lost).

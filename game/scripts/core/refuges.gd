@@ -13,7 +13,7 @@ extends RefCounted
 ##    feed: grazers while the wood's grass is not overgrazed (Fauna.graze_capacity), hunters while the wood holds
 ##    `wildlife.prey_per_predator` spare prey for each of their kind and one more; otherwise it waits (the timer is
 ##    not reset);
-##  - the cohort stays in the refuge as newborns until `juvenile_days` old, then leaves at dawn as juveniles into
+##  - the cohort stays in the refuge as newborns until `juvenile_years` old, then leaves at dawn as juveniles into
 ##    the ordinary simulation (Fauna.animals: hunger, predators, hunters, breeding when grown). If there is no room
 ##    by the time they would be grown, they stay hidden (counted refuge_held_<kind>) and never enter the woods;
 ##  - each young picks where to settle: the wood with the lowest share of its cap (another wood only if its own is
@@ -62,7 +62,7 @@ func ensure() -> void:
 			var at := _site(area, k)
 			list.append({"id": id, "species": k, "area": area, "site": str(spec(k).site), "x": at.x, "y": at.y,
 				"stock": int(spec(k).stock), "cohort": {},
-				"next_birth": w.minutes + w.rng.randf_range(0.0, float(spec(k).interval_days)) * World.DAY})
+				"next_birth": w.minutes + w.rng.randf_range(0.0, Life.years_to_days(float(spec(k).interval_years))) * World.DAY})
 	list.sort_custom(func(a, b): return str(a.id) < str(b.id))
 
 
@@ -118,7 +118,7 @@ func _breed(r: Dictionary, now: float) -> void:
 	if n <= 0:
 		return
 	r.cohort = {"n": n, "born": now}
-	r.next_birth = now + float(s.interval_days) * World.DAY
+	r.next_birth = now + Life.years_to_days(float(s.interval_years)) * World.DAY
 	w.stat("refuge_born_" + r.species, n)
 
 
@@ -127,7 +127,7 @@ func _breed(r: Dictionary, now: float) -> void:
 func _release(r: Dictionary, now: float) -> void:
 	var a_spec: Dictionary = GameData.b("animals")[r.species]
 	var age := (now - float(r.cohort.born)) / World.DAY
-	if age < float(a_spec.juvenile_days):
+	if age < Animal.stage_days(a_spec, "juvenile"):
 		return
 	var taken := []
 	while int(r.cohort.n) > 0:
@@ -150,7 +150,7 @@ func _release(r: Dictionary, now: float) -> void:
 			w.stat("migrating_" + r.species)
 	if int(r.cohort.n) <= 0:
 		r.cohort = {}
-	elif age >= float(a_spec.grow_days):
+	elif age >= Animal.stage_days(a_spec, "grow"):
 		w.stat("refuge_held_" + r.species, int(r.cohort.n))
 		r.cohort = {}
 

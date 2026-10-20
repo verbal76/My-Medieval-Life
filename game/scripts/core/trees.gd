@@ -158,17 +158,19 @@ static func solid(state: String) -> bool:
 
 
 static var _lens_speed := -1.0
+static var _lens_year := -1
 static var _lens := {}
 
 
 ## Game minutes a stage lasts (before the development speed-up).
 static func stage_minutes(stage: String) -> float:
 	var sp := speed()
-	if sp != _lens_speed:
+	if sp != _lens_speed or Life.year_days() != _lens_year:
 		_lens_speed = sp
+		_lens_year = Life.year_days()
 		var c := cfg()
-		for k in ["sapling", "young", "growing"]:
-			_lens[k] = float(c.get(k + "_days", 1.0)) * DAY / sp
+		for k in ["sapling", "young", "growing"]:          # tree_growth.<stage>_seasons, calendar seasons (TIME-02)
+			_lens[k] = Life.seasons_to_days(float(c.get(k + "_seasons", 0.5))) * DAY / sp
 	return _lens.get(stage, 0.0)
 
 
@@ -220,7 +222,7 @@ static func sync(t: Dictionary, now: float, hold := false) -> bool:
 
 
 ## The day (a number, the fraction is the time of day) a tree felled at game minute `now` sprouts again:
-## tree_regrow_days later at dawn, quicker when growth is sped up for development.
+## tree_regrow_seasons (in whole days) later at dawn, quicker when growth is sped up for development.
 static func regrow_day(now: float, days: int) -> float:
 	return floorf(now / DAY) + (float(days) + DAWN) / speed()
 

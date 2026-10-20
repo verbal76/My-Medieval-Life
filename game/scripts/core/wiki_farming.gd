@@ -13,7 +13,7 @@ static func add_pages(w: Wiki) -> void:
 	for id in ids:
 		var c: Dictionary = crops[id]
 		crop_lines.append("%s: ripe in %s game days of spring or summer growth, %d %s a cell and %d seed back; seed costs %d coins." % [
-				c.name, str(c.days), int(c.yield), GameData.item_name(str(c.item)).to_lower(), int(c.seeds_back), int(c.seed_price)])
+				c.name, str(Farming.crop_days(str(id))), int(c.yield), GameData.item_name(str(c.item)).to_lower(), int(c.seeds_back), int(c.seed_price)])
 	var rates: Dictionary = f.season_rate
 	w.add_page("sys:farming", "Farming: your own field", "systems", [
 		Wiki.p("On ground you own or lease from the manor you can farm. Fell the trees (an axe), dig out the stumps (an axe), pull up saplings and grub up wild plants by hand, and mine boulders away (a pickaxe). Then face a cleared cell and Use to till it. Each tilled cell joins your field, so a field can be any shape."),

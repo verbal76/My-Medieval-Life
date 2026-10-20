@@ -144,7 +144,7 @@ func test_season_and_capacity() -> void:
 	rf.new_day()
 	var litter := int(GameData.b("animals").boar.litter)
 	check(int(r.cohort.get("n", 0)) == litter, "in season, below capacity: a litter of %d in the refuge" % litter)
-	check(float(r.next_birth) == w.minutes + float(Refuges.spec("boar").interval_days) * World.DAY, "the next litter waits the reproductive interval")
+	check(float(r.next_birth) == w.minutes + Life.years_to_days(float(Refuges.spec("boar").interval_years)) * World.DAY, "the next litter waits the reproductive interval")
 	check(_of(w, "boar", "woods_e").is_empty(), "newborns stay in the refuge")
 	_clear(w, "woods_w", ["boar"])
 	var born_before := int(w.stats.get("born_boar", 0))

@@ -430,7 +430,7 @@ func test_apple_trees() -> void:
 	check(int(got.get("apple", 0)) == int(GameData.b("fruit_trees").apple_orchard.yield), "picking gives %d apples" % int(got.get("apple", 0)))
 	check(not Trees.fruit_ripe(t, w.day(), w.season()) and w.pick_fruit(t).is_empty(), "then it is bare: nothing from nowhere")
 	w.minutes = float(int(t.fruit_day)) * 1440.0 + 600.0
-	check(Trees.fruit_ripe(t, w.day(), w.season()) == (w.season() in ["Summer", "Autumn"]), "it bears again after regrow_days, in a fruiting season (%s)" % w.season())
+	check(Trees.fruit_ripe(t, w.day(), w.season()) == (w.season() in ["Summer", "Autumn"]), "it bears again after regrow_seasons, in a fruiting season (%s)" % w.season())
 	w.minutes = 6.0 * 1440.0 + 600.0                 # day 6: winter
 	t.fruit_day = 0
 	check(w.season() == "Winter" and not Trees.fruit_ripe(t, w.day(), w.season()), "no fruit in winter")

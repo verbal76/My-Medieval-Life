@@ -60,7 +60,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 4 apple. A grown apple tree in fruit gives fruit_trees.apple_orchard.yield apples at once (World.pick_fruit). It is felled like any tree for logs and, by chance, an apple sapling (the tree node).
 - **Total:** see Found by
-- **Depletion:** regrows. Picked bare, it bears again fruit_trees.apple_orchard.regrow_days later, but only in its fruiting seasons (summer and autumn): none in winter or spring (Trees.fruit_ripe).
+- **Depletion:** regrows. Picked bare, it bears again fruit_trees.apple_orchard.regrow_seasons later, but only in its fruiting seasons (summer and autumn): none in winter or spring (Trees.fruit_ripe).
 - **Owner:** Nobody: orchard trees near the houses are common, like the wild plants. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Adults pick a fruiting apple tree near home instead of a berry bush when it is nearer (NPCBrain._plan_home_work, act pick_fruit); apples go into the pantry as food and their surplus to the storefront or the food merchant.
 - **Gather mode:** yes. **Icon:** `apple`.
@@ -70,7 +70,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `blue_berry_bush` · Blue berry bush
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "blueberry"}`.
-- **Where:** Meadows, verges and clearings across the map (blue berries). **In the world:** 32 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map (blue berries). **In the world:** 32 plants on the map, each ripe again plant_regrow_seasons after it is picked.
 - **Action:** Picking (interact): "Pick blue berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -78,7 +78,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 2 blueberries. 2 blueberries a plant, all at once (World.pick_plant).
 - **Total:** 2 blueberries from each ripe plant of this kind in village.json plants (tile 2662).
-- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
 - **Gather mode:** yes. **Icon:** `blueberries`.
@@ -178,7 +178,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `flower_patch` · Wild flower
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "flower"}`.
-- **Where:** Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers). **In the world:** 151 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map, in the village and outside it (red, purple, yellow and white flowers). **In the world:** 151 plants on the map, each ripe again plant_regrow_seasons after it is picked.
 - **Action:** Picking (interact): "Pick wild flower". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -186,7 +186,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 1 flower. 1 flower a plant, all at once (World.pick_plant).
 - **Total:** 1 flower from each ripe plant of this kind: village.json plants (tiles 2656 red, 2657 purple, 2658 yellow, 2659 white) and every flower the overworld generator draws outside the village (Overworld.flower_at).
-- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. Outside the village the picked flower is saved in Overworld.plant_changes.
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way. Outside the village the picked flower is saved in Overworld.plant_changes.
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
 - **Gather mode:** yes. **Icon:** `flower`.
@@ -286,7 +286,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ### `red_berry_bush` · Red berry bush
 
 - **Status:** implemented. **Category:** forage, natural. **Found by:** `{"kind": "plant", "plant": "redberry"}`.
-- **Where:** Meadows, verges and clearings across the map (red berries). **In the world:** 20 plants on the map, each ripe again plant_regrow_days after it is picked.
+- **Where:** Meadows, verges and clearings across the map (red berries). **In the world:** 20 plants on the map, each ripe again plant_regrow_seasons after it is picked.
 - **Action:** Picking (interact): "Pick red berry bush". **Range (tiles):** 1. The plant's own cell or one of its four neighbours (ResourceNodes.node_at); the cell can be walked on.
 - **Tool:** none. No tool needed. Where to get it: none.
 - **Skill:** none.
@@ -294,7 +294,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 2 red_berries. 2 red_berries a plant, all at once (World.pick_plant).
 - **Total:** 2 red_berries from each ripe plant of this kind in village.json plants (tile 2660).
-- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_days later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
+- **Depletion:** regrows. A picked plant is bare; at the dawn plant_regrow_seasons later (provisional) it is ripe again (World._new_day). Plants stay walkable either way.
 - **Owner:** Nobody: wild plants belong to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Adults pick ripe plants within home_production.forage_range of home in the evening (B14, NPCBrain._plan_home_work): flowers until the household can brew poultices at its hearth, berries up to berries_keep for the pantry.
 - **Gather mode:** yes. **Icon:** `red_berries`.
@@ -348,7 +348,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 3. No stamina. The axe wears 3 a tree.
 - **Yields a cycle:** 1 apple_sapling, 4 log, 1 oak_sapling, 1 pine_sapling. World.chop_tree takes balance.json tree_growth.chops blows; the last one calls World.fell, which gives 4 logs once; the player gets 1 more from Woodcutting 2 and (chance tree_growth.sapling_chance) a sapling item (oak_sapling or pine_sapling) to plant. Villagers always get 4 and no sapling. Only a MATURE tree can be felled: saplings, young and growing trees give nothing and say why.
 - **Total:** 4 logs from each mature tree: the village trees (village.json trees and the map-edge woodland), and any overworld tree, generated or planted.
-- **Depletion:** regrows. A felled tree is a stump; tree_regrow_days later (at dawn) it sprouts a sapling, which grows young, growing and mature by the game clock (balance.json tree_growth, in game days; Trees.sync, computed lazily). The player can also plant saplings (World.plant_tree). Ground bought for building is cleared and never grows again (Property.claim).
+- **Depletion:** regrows. A felled tree is a stump; tree_regrow_seasons later (at dawn) it sprouts a sapling, which grows young, growing and mature by the game clock (balance.json tree_growth, in game days; Trees.sync, computed lazily). The player can also plant saplings (World.plant_tree). Ground bought for building is cleared and never grows again (Property.claim).
 - **Owner:** Nobody: trees belong to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Woodcutters (NPCBrain._woodcutter, act "chop"): the nearest mature tree within 70 tiles nobody has claimed; they fell it in one go and do not replant.
 - **Gather mode:** yes. **Icon:** `log`.
@@ -366,7 +366,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 0. No stamina, no tool.
 - **Yields a cycle:** 6 wheat. The player takes harvest_handful a cycle (less if less is left); a farmer takes the whole crop.
 - **Total:** field_yield wheat on each ripe field in village.json fields.
-- **Depletion:** ripens. An emptied field is tilled; its farmer sows it (45 minutes) and it ripens field_grow_days later with field_yield wheat (World._on_hour). Only a farmer sows: a field nobody works stays tilled until a manor hand takes it over.
+- **Depletion:** ripens. An emptied field is tilled; its farmer sows it (45 minutes) and it ripens field_grow_seasons later with field_yield wheat (World._on_hour). Only a farmer sows: a field nobody works stays tilled until a manor hand takes it over.
 - **Owner:** The manor's field; its crop belongs to the farmers who work it (World.field_workers). **Theft:** Harvesting a worked field is theft from its farmer, seen by anyone in sight, except the wheat a farmer hired the player to cut (quest work_the_harvest, Quests.hired_harvest).
 - **Harvested by:** the player yes; villagers yes. Farmers (NPCBrain._farmer, acts "harvest" and "sow").
 - **Gather mode:** yes. **Icon:** `wheat`.
@@ -420,7 +420,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
 - **Yields a cycle:** 1 hide, 4 meat. A young animal gives half the meat (at least 1) and no hide (Fauna.kill). The player's kill is left as a bag where it fell.
 - **Total:** animals.boar.start (males, females) in each wood, at most animals.boar.woods_cap a wood.
-- **Depletion:** breeds. A well-fed adult female with a well-fed adult male in her wood gives a litter every breed_days while the wood is under its cap (Fauna.new_day). Nothing migrates in: a group of one sex never breeds again.
+- **Depletion:** breeds. A well-fed adult female with a well-fed adult male in her wood gives a litter every breed_years while the wood is under its cap (Fauna.new_day). Nothing migrates in: a group of one sex never breeds again.
 - **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
 - **Harvested by:** the player yes; villagers yes. Hunters (NPCBrain._hunter, act "hunt") leave animals.boar.keep adults a wood; bandits poach (act "poach").
 - **Gather mode:** yes. **Icon:** `meat`.

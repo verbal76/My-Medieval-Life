@@ -1897,7 +1897,7 @@ func _animal_size_tests() -> void:
 	var s: Node2D = main.animal_sprites.get(a.id)
 	var has_baby: bool = a.baby_skin() != ""
 	check(s != null and is_equal_approx(s.scale.x, 1.0 if has_baby else 0.5) and s.baby == has_baby, "a young animal draws its baby sheet at full size, or half size with no baby art (%s)" % a.species)
-	a.born = w.minutes - 1440.0 * (float(a.spec().grow_days) + 1.0)   # grown
+	a.born = w.minutes - 1440.0 * (Animal.stage_days(a.spec(), "grow") + 1.0)   # grown
 	main._sync_animals()
 	check(s != null and is_equal_approx(s.scale.x, 1.0) and not s.baby, "grown, full size on the adult sheet")
 	var boar := w.fauna.spawn("woods_w", "boar", "f", null)

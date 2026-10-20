@@ -43,19 +43,31 @@ func age_days(now: float) -> float:
 
 
 func adult(now: float) -> bool:
-	return age_days(now) >= float(spec().grow_days)
+	return age_days(now) >= stage_days(spec(), "grow")
 
 
-## newborn -> juvenile -> adult -> elderly by age in game days (balance.json "animals": juvenile_days,
-## grow_days, elder_days). The stage is a pure function of `born` and the clock (B8-029).
+## Game days of a species' calendar age `key` ("juvenile", "grow", "elder", "breed"): balance.json
+## "animals" keeps them in calendar years (`<key>_years`), converted by Life (TIME-02).
+static func stage_days(sp: Dictionary, key: String) -> float:
+	return Life.years_to_days(float(sp[key + "_years"]))
+
+
+## A species' natural-death age range (death_years) in game days, as [from, to].
+static func death_days(sp: Dictionary) -> Array:
+	var dy: Array = sp.death_years
+	return [Life.years_to_days(float(dy[0])), Life.years_to_days(float(dy[1]))]
+
+
+## newborn -> juvenile -> adult -> elderly by age (balance.json "animals": juvenile_years, grow_years,
+## elder_years, in calendar years). The stage is a pure function of `born` and the clock (B8-029).
 func stage(now: float) -> String:
 	var d := age_days(now)
 	var sp := spec()
-	if d < float(sp.juvenile_days):
+	if d < stage_days(sp, "juvenile"):
 		return "newborn"
-	if d < float(sp.grow_days):
+	if d < stage_days(sp, "grow"):
 		return "juvenile"
-	if d < float(sp.elder_days):
+	if d < stage_days(sp, "elder"):
 		return "adult"
 	return "elderly"
 

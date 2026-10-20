@@ -24,6 +24,7 @@ func new_world(seed := 1) -> World:
 
 func _init() -> void:
 	test_calendar()
+	test_time_units()
 	test_start_population()
 	test_coming_of_age_and_retiring()
 	test_old_age_and_inheritance()
@@ -50,6 +51,57 @@ func living(w: World, h: int) -> int:
 		if w.npc(int(m)).alive:
 			c += 1
 	return c
+
+
+# ---------------------------------------------------------------- time units (TIME-02) ------
+## TIME-02 (OD-21, docs/design/TIME_MODEL.md): calendar values are written in years or seasons and read
+## through Life's conversions, so they scale with calendar.year_days; operational values (hours, day
+## counts of work, food-days, wages) do not. At 8 days a year the results are the old day counts exactly.
+func _operational() -> Dictionary:
+	return {"hunger": GameData.b("hunger_per_hour"), "reserve": GameData.b("reserve_days"), "court": Relations.cfg().court_min_days,
+		"settle": Refuges.cfg().settle_days, "week": Property.WEEK, "day": World.DAY, "egg": GameData.b("farming").products.chicken.days}
+
+
+func test_time_units() -> void:
+	var cal: Dictionary = GameData.b("calendar")
+	var yd0 = cal.year_days
+	var sd0: Array = (cal.season_days as Array).duplicate()
+	var w := new_world()
+	var cow: Dictionary = GameData.b("animals").cow
+	var tree: Array = GameData.b("tree_regrow_seasons")
+	var op := _operational()
+	# at 8 days a year: exactly the day counts the game used before TIME-02 (the determinism gate is unchanged)
+	check(Life.years_to_days(1.0) == 8.0 and Life.seasons_to_days(1.0) == 2.0 and Life.days_to_years(4.0) == 0.5
+			and Life.years_to_minutes(0.25) == 2.0 * World.DAY and Life.seasons_to_minutes(0.5) == World.DAY, "TIME-02: at 8 days a year, 1 year = 8 days, 1 season = 2 days")
+	check(Animal.stage_days(cow, "juvenile") == 2.0 and Animal.stage_days(cow, "grow") == 6.0 and Animal.stage_days(cow, "elder") == 96.0
+			and Animal.stage_days(cow, "breed") == 6.0 and Animal.death_days(cow) == [120.0, 160.0], "TIME-02: a cow's stages in years give the old 2/6/96 days, breeding 6, death 120-160")
+	check(w.field_grow_days({}) == 2.0 and Farming.crop_days("wheat") == 2.0 and Life.season_range_days(tree) == Vector2i(3, 6)
+			and Life.season_range_days(GameData.b("plant_regrow_seasons")) == Vector2i(2, 4), "TIME-02: fields 2 days, wheat 2 days, stumps 3-6 days, plants 2-4 days")
+	check(Trees.stage_minutes("sapling") * Trees.speed() == 0.75 * World.DAY and Life.per_year_to_per_day(float(Life.cfg().mortality_yearly_max)) == 0.1,
+			"TIME-02: a sapling stage lasts 0.75 days; the old-age hazard at its cap is 0.1 a day")
+	var hazard8 := Life.death_chance(70.0) * Life.year_days()
+	# a calendar of 16 days (four 4-day seasons): calendar values double in days and keep their meaning in years
+	cal.year_days = 16
+	cal.season_days = [4, 4, 4, 4]
+	check(Life.years_to_days(1.0) == 16.0 and Life.seasons_to_days(1.0) == 4.0 and Life.days_to_years(4.0) == 0.25, "TIME-02: at 16 days a year, 1 year = 16 days, 1 season = 4 days")
+	check(Animal.stage_days(cow, "grow") == 12.0 and Animal.death_days(cow) == [240.0, 320.0] and Animal.stage_days(cow, "breed") == 12.0,
+			"TIME-02: calendar values scale: a cow grows up at 12 days and dies at 240-320")
+	check(w.field_grow_days({}) == 4.0 and Farming.crop_days("wheat") == 4.0 and Life.season_range_days(tree) == Vector2i(6, 12)
+			and Trees.stage_minutes("sapling") * Trees.speed() == 1.5 * World.DAY, "TIME-02: fields, crops, stumps and tree stages keep their length in seasons")
+	check(is_equal_approx(Life.death_chance(70.0) * Life.year_days(), hazard8), "TIME-02: the old-age hazard per year is the same (%.3f)" % hazard8)
+	var a := w.fauna.spawn(str(w.fauna.pen_of("cow").id), "cow", "f", null)
+	a.born = w.minutes - Life.years_to_minutes(0.7)
+	var young := not a.adult(w.minutes)
+	a.born = w.minutes - Life.years_to_minutes(0.8)
+	check(young and a.adult(w.minutes) and a.stage(w.minutes) == "adult", "TIME-02: a cow comes of age at 0.75 years on any calendar")
+	cal.year_days = 4
+	cal.season_days = [1, 1, 1, 1]
+	check(Animal.stage_days(cow, "grow") == 3.0 and w.field_grow_days({}) == 1.0 and Life.seasons_to_days(1.0) == 1.0, "TIME-02: at 4 days a year they halve")
+	check(_operational() == op, "TIME-02: operational values (hunger an hour, reserve and courting days, refuge settling, the rent week, product days) do not scale")
+	cal.year_days = yd0
+	cal.season_days = sd0
+	w.fauna.remove(a)
+	check(Life.years_to_days(1.0) == 8.0 and Trees.stage_minutes("sapling") * Trees.speed() == 0.75 * World.DAY, "TIME-02: the calendar is restored")
 
 
 # ---------------------------------------------------------------- calendar -------------------
@@ -610,7 +662,7 @@ func test_animals() -> void:
 	var f := w.fauna
 	var day := 1440.0
 	var specs: Dictionary = GameData.b("animals")
-	check(float(specs.rabbit.grow_days) < float(specs.cow.grow_days) and float(specs.rabbit.elder_days) < float(specs.cow.elder_days), "a rabbit matures and ages faster than a cow")
+	check(float(specs.rabbit.grow_years) < float(specs.cow.grow_years) and float(specs.rabbit.elder_years) < float(specs.cow.elder_years), "a rabbit matures and ages faster than a cow")
 	for sp in ["rabbit", "chicken", "pig", "boar", "sheep", "cow"]:
 		var s: Dictionary = specs[sp]
 		f.animals.clear()
@@ -619,14 +671,14 @@ func test_animals() -> void:
 		var now: float = w.minutes
 		a.born = now
 		var ok := a.stage(now) == "newborn"
-		a.born = now - (float(s.juvenile_days) + 0.01) * day
+		a.born = now - (Animal.stage_days(s, "juvenile") + 0.01) * day
 		ok = ok and a.stage(now) == "juvenile" and not a.adult(now)
-		a.born = now - (float(s.grow_days) + 0.01) * day
+		a.born = now - (Animal.stage_days(s, "grow") + 0.01) * day
 		ok = ok and a.stage(now) == "adult" and a.adult(now) and a.breeds(now)
-		a.born = now - (float(s.elder_days) + 0.01) * day
+		a.born = now - (Animal.stage_days(s, "elder") + 0.01) * day
 		ok = ok and a.stage(now) == "elderly" and a.adult(now) and not a.breeds(now)
 		check(ok, "%s: newborn -> juvenile -> adult -> elderly by age" % sp)
-		a.born = w.minutes - float(s.elder_days) * day
+		a.born = w.minutes - Animal.stage_days(s, "elder") * day
 		var died_at := -1.0
 		for i in 400:
 			w.minutes += day
@@ -634,19 +686,20 @@ func test_animals() -> void:
 			if not a.alive:
 				died_at = a.age_days(w.minutes)
 				break
-		check(died_at >= float(s.death_days[0]) and died_at <= float(s.death_days[1]), "%s: dies of old age at %.1f days, within %s" % [sp, died_at, str(s.death_days)])
+		var dd := Animal.death_days(s)
+		check(died_at >= float(dd[0]) and died_at <= float(dd[1]), "%s: dies of old age at %.1f days, within %s" % [sp, died_at, str(dd)])
 		check(f.by_id(a.id) == null, "%s: the dead animal leaves the pen or wood" % sp)
 	# elderly do not breed
 	f.animals.clear()
 	var pen: Dictionary = f.pen_of("pig")
 	var sow := f.spawn(pen.id, "pig", "f", null)
 	var boar := f.spawn(pen.id, "pig", "m", null)
-	sow.born = w.minutes - float(specs.pig.elder_days) * day - 1.0
-	boar.born = w.minutes - float(specs.pig.grow_days) * day - 1.0
+	sow.born = w.minutes - Animal.stage_days(specs.pig, "elder") * day - 1.0
+	boar.born = w.minutes - Animal.stage_days(specs.pig, "grow") * day - 1.0
 	sow.next_birth = 0.0
 	f.new_day()
 	check(f.count(pen.id, "pig") == 2, "an elderly sow does not breed")
-	sow.born = w.minutes - float(specs.pig.grow_days) * day - 1.0
+	sow.born = w.minutes - Animal.stage_days(specs.pig, "grow") * day - 1.0
 	var n0 := f.count(pen.id, "pig")
 	f.new_day()
 	check(f.count(pen.id, "pig") > n0, "the same sow in her prime breeds (existing rules kept)")
@@ -672,7 +725,7 @@ func test_animals() -> void:
 		var cp := f.cap(pn.id, sp)
 		for i in cp - 2:
 			var an := f.spawn(pn.id, sp, "m" if i % 3 == 0 else "f", null)
-			an.born = w.minutes - float(specs[sp].grow_days) * day - 1.0
+			an.born = w.minutes - Animal.stage_days(specs[sp], "grow") * day - 1.0
 			an.next_birth = 0.0
 		var most := 0
 		for d in 8:

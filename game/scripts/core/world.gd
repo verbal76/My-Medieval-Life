@@ -962,13 +962,13 @@ func _in_woods(c: Vector2i) -> bool:
 
 
 ## Pick a fruit tree's ripe fruit (B14): returns {item: count}, {} if none hangs; it bears again
-## fruit_trees regrow_days later, in a fruiting season.
+## fruit_trees regrow_seasons later (whole days), in a fruiting season.
 func pick_fruit(t: Dictionary) -> Dictionary:
 	if not Trees.fruit_ripe(t, day(), season()):
 		return {}
 	var f := Trees.fruit_cfg(str(t.species))
-	var r: Array = f.regrow_days
-	t.fruit_day = day() + rng.randi_range(int(r[0]), int(r[1]))
+	var r := Life.season_range_days(f.regrow_seasons)
+	t.fruit_day = day() + rng.randi_range(r.x, r.y)
 	if t.get("ow", false):
 		map.overworld.note_tree(t)
 	tree_changed.emit(t)
@@ -996,14 +996,14 @@ func plant_at(c: Vector2i) -> Dictionary:
 
 
 ## Pick a ripe plant: returns what it gave (item id -> count, from its resources.json node), {} if it
-## is not ripe. The plant is bare until plant_regrow_days (provisional) later, at dawn.
+## is not ripe. The plant is bare until plant_regrow_seasons (provisional; whole days) later, at dawn.
 func pick_plant(pl: Dictionary) -> Dictionary:
 	if pl.is_empty() or pl.state != "ripe":
 		return {}
 	var got := ResourceNodes.products(ResourceNodes.def_for("plant", str(pl.kind)))
 	pl.state = "picked"
-	var r: Array = GameData.b("plant_regrow_days")
-	pl.regrow = day() + rng.randi_range(int(r[0]), int(r[1]))
+	var r := Life.season_range_days(GameData.b("plant_regrow_seasons"))
+	pl.regrow = day() + rng.randi_range(r.x, r.y)
 	if pl.get("ow", false):
 		map.overworld.note_flower(Vector2i(pl.x, pl.y), int(pl.regrow))
 		tile_changed.emit(Vector2i(pl.x, pl.y), "below", -1)
@@ -1136,14 +1136,14 @@ func _remove_boulder(b: Dictionary) -> void:
 
 ## Fell a mature tree: returns the number of logs (0 if it is not mature: only a mature tree can be
 ## felled). It leaves a stump, falling to `side` (-1 left, 1 right: the side the blows came from); the
-## stump sprouts tree_regrow_days later (Trees.sync) and grows through the stages again.
+## stump sprouts tree_regrow_seasons later (whole days; Trees.sync) and grows through the stages again.
 func fell(t: Dictionary, bonus: int, side := 1) -> int:
 	if t.is_empty() or t.state != "grown":
 		return 0
 	var cell := Vector2i(int(t.x), int(t.y))
 	t.state = "stump"
-	var r: Array = GameData.b("tree_regrow_days")
-	t.regrow = Trees.regrow_day(minutes, rng.randi_range(int(r[0]), int(r[1])))
+	var r := Life.season_range_days(GameData.b("tree_regrow_seasons"))
+	t.regrow = Trees.regrow_day(minutes, rng.randi_range(r.x, r.y))
 	t.erase("born")
 	tree_damage.erase(cell)
 	if t.get("ow", false):
@@ -1356,10 +1356,10 @@ static func field_cell_tile(base: int, w: int, h: int, i: int, j: int, cols: int
 	return base + row * cols + col
 
 
-## Days a sown field takes to ripen. The one place to make it depend on the season (B8-029's calendar
-## arrives with seasons later: a hook, not a mechanic yet).
+## Days a sown field takes to ripen: field_grow_seasons calendar seasons (TIME-02). The one place to make it
+## depend on the season (B8-029's calendar arrives with seasons later: a hook, not a mechanic yet).
 func field_grow_days(_f: Dictionary) -> float:
-	return float(GameData.b("field_grow_days"))
+	return Life.seasons_to_days(float(GameData.b("field_grow_seasons")))
 
 
 ## Whether the farmers may cut this ripe field: it has stood ripe for field_ripe_wait_hours (PL2-007: they

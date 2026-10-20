@@ -119,7 +119,7 @@ func test_population() -> void:
 
 
 ## The owner's animal rules, checked in a pen on its own: a well-fed pair breeds, a hungry one does
-## not, one sex alone does not, babies grow up after grow_days, a pen never passes its cap, and
+## not, one sex alone does not, babies grow up after grow_years, a pen never passes its cap, and
 ## animals get hungry, eat and starve like the villagers.
 func test_animals() -> void:
 	var w := new_world()
@@ -144,11 +144,11 @@ func test_animals() -> void:
 	check(piglets == int(s.litter), "a fed male and female breed (%d young)" % piglets)
 	var baby: Animal = f.animals.back()
 	check(not baby.adult(w.minutes), "the young start as babies (half scale)")
-	# no second litter before breed_days
+	# no second litter before breed_years
 	f.new_day()
 	check(f.count(pen.id, "pig") - 2 == piglets, "no second litter before it is due")
-	w.minutes += float(s.grow_days) * day
-	check(baby.adult(w.minutes), "babies grow up after %d days" % int(s.grow_days))
+	w.minutes += Animal.stage_days(s, "grow") * day
+	check(baby.adult(w.minutes), "babies grow up after %d days" % int(Animal.stage_days(s, "grow")))
 	# hungry: no births; an animal eats from the trough when hungry; with nothing to eat it starves
 	for a: Animal in f.animals.duplicate():
 		if a.area == pen.id:
@@ -3214,9 +3214,9 @@ func test_wild_plants() -> void:
 	check(p.inv.count("flower") == n0 + 1 and changes.size() == 1 and changes[0][1] == "below1" and changes[0][2] == -1, "the plant's tile is removed")
 	check(w.pick_plant(fl).is_empty() and ResourceNodes.can_harvest(w, d_flower, fl).contains("picked") and ResourceNodes.remaining(w, d_flower, fl) == 0, "a picked plant gives nothing and says why")
 	check(w.plant_at(cell) == fl and not w.map.is_solid(cell), "a picked plant's cell is still walkable")
-	# it regrows at dawn, after plant_regrow_days
-	var days: Array = GameData.b("plant_regrow_days")
-	check(int(fl.regrow) - w.day() >= int(days[0]) and int(fl.regrow) - w.day() <= int(days[1]), "regrows %d to %d days later (balance.json)" % [int(days[0]), int(days[1])])
+	# it regrows at dawn, after plant_regrow_seasons (whole days)
+	var days := Life.season_range_days(GameData.b("plant_regrow_seasons"))
+	check(int(fl.regrow) - w.day() >= days.x and int(fl.regrow) - w.day() <= days.y, "regrows %d to %d days later (balance.json)" % [days.x, days.y])
 	fl.regrow = w.day() + 1
 	w._new_day()
 	check(fl.state == "picked", "not before its day")
