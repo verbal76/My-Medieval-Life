@@ -58,13 +58,12 @@ Closed on 2026-10-20, with evidence in the register:
 
 Implemented and tested ahead of Build 16 (kept in Build 16): FAM-02..06 (orphans taken in by kin or another household), WR-02 (grazers over capacity). FAM-07 (the bandit-clan fallback) is now built, interim (camp dependants).
 
-## Last test results (2026-10-20 about 10:00 UTC)
+## Last test results (2026-10-20, late, on `d6d80a4`)
 
-- **Godot suites:** all 24 in `.github/workflows/tests.yml` pass locally (`housing_test.gd` with 107 checks, `family_test.gd` 22).
-- **Python:** `python3 -m unittest discover -s tests` OK (92). `tools/check_requirements.py`, `tools/check_interactions.py`, `tools/check_resources.py`, `tools/assets/check_assets.py`: 0 problems.
-- **CI:** green on every checked staging commit; check the latest run for the head commit.
-- **Determinism gate** (`python3 tools/sim_gate.py`): PASS, identical to `docs/release/sim_baseline.json`, with the small room in.
-- **Year-long runs** (GitHub Actions; the record is `docs/release/LONG_RUN_SIMULATION.md`): run 39385942656 on `59057ac`: both seeds, 0 script errors, ledger balanced, 8 and 2 houses built, seed 1 no starvation, seed 2 four starvation deaths.
+- **Godot suites:** all 27 in `.github/workflows/tests.yml` pass locally.
+- **Python:** `python3 -m unittest discover -s tests` OK. `tools/check_requirements.py`, `check_interactions.py`, `check_resources.py`, `tools/assets/check_assets.py`: 0 problems.
+- **Determinism gate:** re-baselined on `d6d80a4` after FSE-B06/B12 and the whole-pot grain rule (TIME-02 left it identical); no coin or item leaks.
+- **Year-long runs** (`docs/release/LONG_RUN_SIMULATION.md`): the family chest (`61750f1`): starvation 1 / 1 / 2 / 7 on seeds 1-4; seed 4 with the firewood fix (`1c7b9f4`, local): 1 death, a relief-grain defect, fixed in `d6d80a4`. A four-seed Actions run on `d6d80a4` is under way.
 - **Known failures:** none in the tests.
 
 ## Known defects (open)
@@ -92,7 +91,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
 1. **Build 15: complete** (released 2026-10-20, `docs/release/BUILD_15_PACKET.md`).
-2. **Build 16, now:** EQ-01..06, EQ-09, DVW-A3/A5/A7/A8/A12, DVW-B6, B7-015/016, WDR-005-C and the rest of the ledger's Build 16 list; then Build 17 and Build 18, in order.
+2. **Build 16, now** (plan: `docs/BUILD_16_STATUS.md` section E): read the four-seed run on `d6d80a4`, classify any death, close FSE-16/17/18, B7-015, FSE-B06/B11/B12 on it; then ARM-01 with CTR-01..03; then, as the owner answers section C, FARM-06, FARM-01..05, STALL-01..06, SEED/MERCH, CTR/SHOP/TRADE, FSE-13/12/15; the verification items EQ-01..06, EQ-09, DVW-A3/A5, WDR-005-C; then Build 17 and Build 18, in order.
 3. Open Build 15 entries that are not code: DVW-A14 (the whole-life play-through, item 8 of the testing checklist), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 
 Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_ITEMS.md`): carts have no collision, so no route is ever blocked.
@@ -116,7 +115,7 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 
 ## Interrupted or fragile processes
 
-- **Running (2026-10-20, late):** a watched local 365-day seed 4 run on `1c7b9f4` (`out/room/seed4_1c7b9f4.log`, the WATCH DEATH lines classify seed 4's starvation deaths); it dies with the container: re-run it if lost. On Actions: `long-sims.yml`, seeds 1-4, 365 days, on `1c7b9f4` (the firewood fix).
+- **Running (2026-10-20, late):** on Actions, `long-sims.yml`, seeds 1-4, 365 days, on `d6d80a4` (every fix so far; the run on `1c7b9f4` was cancelled as superseded). Read its jobs' log tails (the deaths block is about 150 lines from the end). Nothing running locally.
 - Runs 39385942656 (`59057ac`) and 39430585149 (`8d3f623`, the pre-parity baseline) are finished and recorded.
 - **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
 - **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.

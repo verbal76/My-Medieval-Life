@@ -6,7 +6,7 @@ where Build 16 stands, what is finished, what is left, what blocks completion, a
 hand-edited); the sections around them are kept by hand and updated as work completes. A status is taken from the
 register only: nothing is called complete because code was written or a design approved.
 
-*Last updated: 2026-10-20, staging `7e0d9c6`.*
+*Last updated: 2026-10-20 (late), staging `d6d80a4`.*
 
 ## F. Executive summary
 
@@ -15,19 +15,19 @@ register only: nothing is called complete because code was written or a design a
 | Build 16 work items | **96** (98 register entries, 2 of them the standing rules AGENT-01 and MILE-01) |
 | Scope growth | 30 items when Build 16 began (the Build 15 release, `a8760be`); **66 work items added** during Build 16 by owner directives (food security FSE 26, parity PAR 10, family farms FARM 7, stalls STALL 6, seeds and merchants SEED/MERCH 5, counters and trade CTR/SHOP/TRADE 6, time TIME 4, armorer ARM 1, the audit 1) |
 | Complete and verified | **27** |
-| In progress | **12** |
-| Awaiting testing (implemented) | **11** |
-| Not started | **42** |
+| In progress | **13** |
+| Awaiting testing (implemented) | **15** |
+| Not started | **37** |
 | Blocked | **2** (B7-016 pending a re-measure; OD-17, an owner decision) |
 | Superseded | 2 (FSE-11 by FARM-06; OD-10) |
 | Proposed for deferral (owner's approval needed) | **2** (DVW-A12, DVW-B6) |
-| Release blockers (defects) | **4** (ARM-01, FSE-B06, FSE-B11, FSE-B12) |
+| Release blockers (defects) | **4**: ARM-01 not fixed; FSE-B06, FSE-B11, FSE-B12 implemented and tested (`6ab7d50`), awaiting the four-seed runs |
 | Outstanding owner decisions affecting Build 16 | **8**, plus **2** proposed deferrals (section C) |
-| Branch and latest verified commit | `staging/my-medieval-life`, `7e0d9c6` (pushed, remote hash checked) |
-| Test suites | All 27 Godot suites pass on `1c7b9f4` (the last code change); Python tests OK; register, interactions, resources, materials: 0 problems |
-| Determinism | The gate passes, identical to its baseline (re-baselined on `1c7b9f4`, no coin or goods leaks) |
-| Simulations | Family chest (`61750f1`), 365 days: starvation deaths by seed 1 / 2 / 3 / 4 = **1 / 1 / 2 / 7** (11 in all, against 31 after parity); 0 script errors and balanced ledgers on every seed. Seed 2's one death was a firewood defect, fixed in `1c7b9f4`; seed 4's seven are being classified (a watched local run on `1c7b9f4`), and a four-seed Actions run on `1c7b9f4` measures the fix. Nights without firewood: 3,185 / 2,776 / 2,399 / 2,303. Seed 4 ended with 21 unemployed |
-| Next three actions | 1. Finish the family-chest comparison (seeds 3-4, the one death classified) and close FSE-16/17/18 and B7-015 on it. 2. The four release blockers, starting with the armorer (ARM-01). 3. The owner's open farm and stall questions (section C), then FARM-01 and STALL-01 onwards. |
+| Branch and latest verified commit | `staging/my-medieval-life`, `d6d80a4` (pushed, remote hash checked) |
+| Test suites | All 27 Godot suites pass on `d6d80a4` (the last code change); Python tests OK; register, interactions, resources, materials: 0 problems |
+| Determinism | The gate passes, identical to its baseline (re-baselined on `d6d80a4`, no coin or goods leaks) |
+| Simulations | Family chest (`61750f1`), 365 days: starvation deaths by seed 1 / 2 / 3 / 4 = 1 / 1 / 2 / 7 (11 in all, against 31 after parity); 0 script errors and balanced ledgers on every seed. With the firewood fix (`1c7b9f4`), seed 4 (watched, local): **1** death (7 before), nights without firewood 1,722 (2,303); the death was a relief-grain defect, fixed in `d6d80a4`. A four-seed Actions run on `d6d80a4` (every fix so far) is under way |
+| Next three actions | 1. Read the four-seed run on `d6d80a4`; classify any death; close FSE-16/17/18, B7-015 and the three fixed blockers on it. 2. The armorer (ARM-01), with the counters (CTR-01..03). 3. The owner's open questions (section C), then FARM-06, FARM-01..05 and STALL-01 onwards |
 
 **Completion percentage.** By count, 27 of 96 work items are complete and verified: **28 %**. That figure treats every
 item as equal, which they are not: the size column (S = small, M = medium, L = large, XL = very large) is a judgement of
@@ -329,11 +329,11 @@ Stabilization first: the family-chest baseline is closed before any change that 
 
 | Order | Work | Size | Depends on | Changes the baseline? | Parallel? |
 |---|---|---|---|---|---|
-| 1 | Close the family-chest comparison: seeds 3-4, the one death classified; close FSE-16..18, B7-015 | S | runs in hand | no | lead only (simulations) |
+| 1 | Close the family-chest comparison on `d6d80a4`'s four-seed run; close FSE-16..18, B7-015 (seeds 3-4 and the seed 2 and 4 deaths done) | S | the run under way | no | lead only (simulations) |
 | 2 | ARM-01 armorer: verdict, then fix | M | the check now running | yes (who serves, sells) | a worker can implement once the verdict is in |
-| 3 | FSE-B11 hearth recipes, FSE-B12 hunting experience | S each | - | slightly | with 2, different files |
-| 4 | FSE-B06 bandits' food from real game and stores | M | - | yes | lead |
-| 5 | TIME-02 time units through one layer (no behaviour change: the gate must stay identical) | M | - | no | a worker, in parallel with 2-4 |
+| 3 | FSE-B11 hearth recipes, FSE-B12 hunting experience: **done** (`6ab7d50`), awaiting the runs | S each | - | slightly | - |
+| 4 | FSE-B06 bandits' food from real game and stores: **done** (`6ab7d50`); the camp fire's fuel is an owner question (C) | M | - | yes | - |
+| 5 | TIME-02 time units through one layer: **done** by a worker (`99e7448`), the gate identical | M | - | no | - |
 | 6 | Re-baseline: four seeds, 365 days (Actions); close the verification items EQ-01/02/04/09, FAM-02..07, WR-02, B7-016, DVW-A3 | M | 2-5 | is the new baseline | lead |
 | 7 | DVW-A5 exploit-player test (a harness scenario) | M | 6 | no | a worker |
 | 8 | FARM-06 manor fields take seed; then FARM-01..05 family plots (property, construction, farming) and FARM-07 | L | owner answers (C) | yes | one worker on farms |
@@ -351,8 +351,6 @@ the baseline only through the lead, who runs the simulations and re-baselines.
 - **Before the owner's agent directive (this session):** read-only audit workers, one task each, reports reused: the
   agriculture audit (about 143,000 tokens), hunting and husbandry (191,000), the time-system inventory (180,000), the
   OD-22..24 code survey (211,000). These counts are the tool's own reports; no other cost figure is available.
-- **Since the directive (AGENT-01):** one worker: the armorer and counters check (read-only, bounded; done, about 149,000
-  tokens by the tool's report). No
-  duplicate work: each worker had separate files and questions, and the lead did not repeat their reading.
+- **Since the directive (AGENT-01):** two workers in all, one at a time, each bounded with its own files: the armorer and counters check (read-only; about 149,000 tokens by the tool's report) and TIME-02 (implementation in its own worktree, merged by the lead after the lead's suites and gate; about 171,000 tokens by the tool's report). No duplicate work and no conflicts: the worker's fauna.gd edits (aging) and the lead's (hunting) merged cleanly.
 - **Is parallel work saving time?** Yes for the audits, which ran while the long simulations ran (only the lead runs
   simulations). Implementation workers will be used only on tasks with separate files.
