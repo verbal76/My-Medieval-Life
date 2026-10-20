@@ -1139,7 +1139,24 @@ time. An isolated run with that floor at relief's 3-day fill is being made to me
 | Unemployed at the end | 0 | 1 | 0 |
 
 (Missed meals for want of money now include the trips the 2-coin family-tab test used to hide; the two figures are not
-comparable.) Seeds 3 and 4 are on Actions.
+comparable.)
+
+Seeds 3 and 4 on the same Actions run (`61750f1`). They are compared with the last four-seed run, after parity
+(`c57b134`, above); no seed 3 or 4 run exists on the `5625505` baseline.
+
+| Measure | Seed 3 (`c57b134` -> `61750f1`) | Seed 4 (`c57b134` -> `61750f1`) |
+|---|---|---|
+| Starved | 3 -> **2** | 5 -> **7** |
+| Alive at the end | 169 -> 154 | 126 -> 151 |
+| Script errors / currency leak / item leaks | 0 / 0 / none | 0 / 0 / none |
+| Households / houses built | 35 / 8 -> 37 / 8 | 45 / 12 -> 40 / 11 |
+| Unemployed at the end | 8 -> 5 | 0 -> 21 |
+| Nights without firewood | 1,566 -> 2,399 | 2,856 -> 2,303 |
+| Wheat / meat held at the end | 3,157 / 1,661 -> 1,933 / 1,909 | 3,507 / 2,469 -> 3,459 / 2,417 |
+
+Across the four seeds: 11 starvation deaths on `61750f1` (1, 1, 2, 7), against 31 after parity. The seed 4 deaths have
+not yet been classified one by one; a watched local run of seed 4 on `1c7b9f4` (the firewood fix) lists them, and a new
+four-seed Actions run on `1c7b9f4` measures the fix.
 
 **The one death (FSE-16 method, a watched exact reproduction):** Simon Brook starved on day 189 in a household whose pantry
 held 5 raw meat while another member, an elder with no trade, carried 7 logs: the household's reckoning counted the meat as
