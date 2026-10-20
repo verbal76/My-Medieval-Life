@@ -39,8 +39,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 54 | 51 |
-| Build 16: long-term equilibrium and validation | 28 | 26 |
+| Build 15: simulation stabilization | 55 | 51 |
+| Build 16: long-term equilibrium and validation | 27 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -50,7 +50,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Owner or external action (not development work) | 6 | 6 |
 | **Total open** | **241** | **182** |
 
-### Build 15: simulation stabilization (54)
+### Build 15: simulation stabilization (55)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -87,6 +87,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED |  | OD-14 follow-up, owner's preferred direction |
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | decision | BLOCKED | owner decision first | whether player sales keep a trader's floor is a game rule |
+| OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | decision | BLOCKED | owner decision first | blocks Build 15: tool recovery fails on money once the mechanics are fixed (EQ-18) |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PL1-03 | Merchant quantity control | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
@@ -109,7 +110,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (28)
+### Build 16: long-term equilibrium and validation (27)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -135,7 +136,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FAM-05 | Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically | approved | IMPLEMENTED — TESTING REQUIRED |  | with FAM-02; uses the HOUSE-* goal |
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | approved | IMPLEMENTED — TESTING REQUIRED |  | with FAM-02..05 |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | approved | APPROVED — NOT STARTED |  | with FAM-02/03 (Build 16); full integration with bandit factions follows WDR-016-C (Build 20+) |
-| OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | decision | BLOCKED | owner decision first | the economic paralysis EQ-06 and EQ-01 must rule out; the first question of Build 16 |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
@@ -506,7 +506,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
-| EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | Build 15 release-candidate run (Actions 39396414426 on af60f94), 2026-10-20; OVN-01 section 3 Build 15 scope 'Economic recovery from missing work tools' | housing_test.gd test_axe_bought_to_take_up_woodcutting, test_left_trade_post_opens |  | 365-day Actions run on both seeds |
+| EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | Build 15 release-candidate run (Actions 39396414426 on af60f94), 2026-10-20; OVN-01 section 3 Build 15 scope 'Economic recovery from missing work tools' | housing_test.gd test_axe_bought_to_take_up_woodcutting, test_left_trade_post_opens |  | re-run after OD-16 is implemented |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3 | game/tests/family_test.gd |  |  |
 | FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.1-4.2 | game/tests/family_test.gd | after FAM-02 |  |

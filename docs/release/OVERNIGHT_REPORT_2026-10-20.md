@@ -7,8 +7,8 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 | | |
 |---|---|
 | Highest build fully completed | **Build 14** (a private draft release, earlier) |
-| In development | **Build 15**, simulation stabilization: every core item implemented and tested; houses are finished on both seeds; the release gates are being checked for a private draft |
-| Builds published tonight | None yet. Build 15 is next once a year-long run on the release candidate and the readiness packet are done |
+| In development | **Build 15**, simulation stabilization: **BLOCKED on OD-16**. Everything else in its scope is implemented and tested. The release-candidate run found two tool-recovery defects (EQ-18), which are fixed. The rest of the failure is money: the producing trades go broke, so no axes are made and timber and building stall |
+| Builds published tonight | None. Build 15 does not meet section 4 while its tool recovery fails on money (OD-16) |
 | Builds 16-18 | Not started. The roadmap is strictly sequential (section 3) |
 
 ## Development results
@@ -62,7 +62,7 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 ## Outstanding
 
 **Owner decisions:**
-- **OD-16 (Build 16's first question; no longer blocks Build 15):** how money should flow back to the essential trades. Options and a recommendation are in the register: the manor supports the smithy and woodlands, and bandits' hoards and loot return to circulation.
+- **OD-16 (blocks Build 15):** how money should flow back to the essential trades. Options and a recommendation are in the register: the manor supports the smithy and woodlands, and bandits' hoards and loot return to circulation.
 - **OD-15:** the player and the traders' 15-coin floor.
 - OD-14's upper floors (HOUSE-10, HOUSE-11).
 - The others listed in `docs/CURRENT_DEVELOPMENT_STATE.md`.
@@ -74,4 +74,4 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 - REC-004 (the Game Designer spec: its source files must be found first);
 - device checks for the items marked playtest (yours, on the installed build).
 
-**Next steps:** release Build 15 privately when its gates hold, then begin Build 16 (equilibrium, with OD-16 first).
+**Next steps:** your answer to OD-16; implement it, re-run a year on both seeds, then release Build 15 privately and begin Build 16.

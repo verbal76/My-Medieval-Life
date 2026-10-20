@@ -5,9 +5,11 @@ conditions in OVN-01 section 4 (`docs/directives/2026-10-20_master_overnight_dev
 authorization: OVN-01 section 9 and REL-15-18. A build that meets every condition is released as a **private draft**.
 "You do not need to wake me up merely to publish a build that meets these conditions."
 
-> **Status: not yet qualified.** The release-candidate run on `af60f94` exposed two tool-recovery defects that are
-> Build 15 scope (EQ-18): no smith on seed 2 from day 240, and woodcutters dying out because job seekers could not buy
-> an axe. They are fixed; the figures below are from `af60f94` and are updated after the year-long run on the fix.
+> **Status: not qualified; blocked on owner decision OD-16.** The release-candidate run on `af60f94` exposed two
+> tool-recovery defects (EQ-18). They are fixed and verified on `248e383`: smiths are kept all year, and job seekers
+> can buy tools. But the producing trades still run out of coins, so no axes are made for months and timber and
+> building stall. That is OD-16, an economy fundamental for the owner. The figures below are from `af60f94` and will be
+> redone after OD-16 is implemented.
 
 ## Candidate
 

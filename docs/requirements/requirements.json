@@ -8728,7 +8728,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "365-day Actions run on both seeds",
+   "next_action": "re-run after OD-16 is implemented",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -8743,6 +8743,11 @@
      "date": "2026-10-20",
      "change": "tests; target_build; next_action",
      "why": "fixed in npc_brain.gd seek_work and _post_left; housing_test 115 checks pass"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "both seeds keep 2 smiths all year (seed 2 had none from day 240 before); job seekers can buy tools; woodcutting still falls to 1 for months because no axe is made while the smith has no coins (OD-16)"
     }
    ],
    "target_build": "15"
@@ -12384,11 +12389,16 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "moved to Build 16: with the housing corrections both seeds finish houses (EQ-07 closed), so the trade stall no longer blocks Build 15; it is the economic paralysis EQ-06 must rule out, and the first question of Build 16's equilibrium work. Still open for the owner"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "the EQ-18 year runs (Actions 39403998697) show Build 15's 'economic recovery from missing work tools' now fails only on money: the smith and carpenter hold almost no coins, so no ore, no axes, no woodcutters and stalled building. The earlier move to Build 16 was the agent's call and is reversed: OD-16 blocks Build 15"
     }
    ],
-   "target_build": "16",
+   "target_build": "15",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "the economic paralysis EQ-06 and EQ-01 must rule out; the first question of Build 16"
+   "roadmap_reason": "blocks Build 15: tool recovery fails on money once the mechanics are fixed (EQ-18)"
   },
   {
    "id": "OD-17",

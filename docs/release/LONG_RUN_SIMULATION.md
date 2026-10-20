@@ -783,3 +783,37 @@ the ledger: currency leak 0, no item residuals.
   started (1 and 3) wait for planks like the houses.
 - **Timber and firewood** are both short. That is the timber-supply side of the economy's long-term equilibrium:
   Build 16, with OD-16 first.
+
+## 365 days with the tool-recovery fix (staging `248e383`, EQ-18, 2026-10-20)
+
+Actions run 39403998697, and local re-runs with the same fingerprints (seed 1 `9708e06087c100c4a19f5e08aee5c2a3`,
+seed 2 `e1277ce22f0c7acd9154df745148b933`). Both passed the script-error gate and the ledger.
+
+| Day 365 | Seed 1 | Seed 2 |
+|---|---|---|
+| Alive (from 100) | 98 (peak 125 at day 90) | 142 |
+| Deaths | 69 old age, 1 starvation | 71 old age |
+| Smiths | 2 (all year) | 2 (all year; none from day 240 before the fix) |
+| Woodcutters | 2 (1 from day 180 to 300) | 2 (1 from day 180 to 300) |
+| Unemployed adults | 4 (31 at day 210) | 21 |
+| Sites finished / started | 2 / 8 | 6 / 8 |
+| Houses built | 2 | 5 |
+| Wild animals | bear 2, bird 16, boar 26, deer 10, fox 6, rabbit 24, wolf 6 | bear 2, bird 15, boar 28, deer 8, fox 4, rabbit 31, wolf 8 |
+
+**What the fix settles:**
+- The forge is never left empty: when a smith leaves, the post is taken up again.
+- A job seeker can buy an axe where tools are sold.
+
+**What it does not:** for months there is no axe to buy.
+- The producing trades run out of coins. At day 180 on seed 1:
+  - the two smiths hold 4 coins between them, the carpenters 6, the raw-goods merchant 28 and the tavernkeepers 0;
+  - households hold 3,588;
+  - the manor has taken 19,619 in tax and paid 14,048 in wages.
+- The smith cannot buy ore, so iron bars run out, then axes. Woodcutting stays at one worker while 20-31 adults look
+  for work, and timber, then building, stalls.
+- Seed 1's population falls after day 240 as the founding generation dies of old age (42 deaths in 90 days) while
+  births slow.
+
+**Conclusion:** "economic recovery from missing work tools" (Build 15 scope) now fails on money, not mechanics.
+That is owner decision **OD-16** (how money flows back to the essential trades), an economy fundamental the agent may
+not decide (OVN-01 section 2). Build 15 is blocked on it.
