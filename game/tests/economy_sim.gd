@@ -177,7 +177,7 @@ func _watch(d: int, hr: int) -> void:
 	var rc: Dictionary = w._reserve_cache.duplicate()
 	for n: NPC in w.npcs:
 		if watch_alive.get(n.id, true) and not n.alive and n.role != "bandit":
-			print("WATCH DEATH d%d h%d %s %s id=%d job=%s role=%s hh=%d hunger=%.0f starved=%s" % [d, hr, n.name, n.family, n.id, n.job, n.role, n.household, n.hunger, str(n.hunger <= 0.0)])
+			print("WATCH DEATH d%d h%d %s %s id=%d job=%s role=%s hh=%d hunger=%.0f starved=%s" % [w.day(), int(w.hour()), n.name, n.family, n.id, n.job, n.role, n.household, n.hunger, str(n.hunger <= 0.0)])
 			if n.hunger <= 0.0:
 				watch_lost[n.household] = true
 		watch_alive[n.id] = n.alive
@@ -197,11 +197,12 @@ func _watch(d: int, hr: int) -> void:
 					carry[id] = m.inv.items[id]
 			ms.append("%s(%s,%s,hu%.0f,hp%.0f,c%d,%s,'%s')" % [m.name, m.job if m.job != "" else m.role, "sleep" if w.asleep(m) else "up", m.hunger, m.hp, m.coins, str(carry), m.doing])
 		var fd: float = w.brain.household_food_days(h)
-		print("WATCH HH d%d h%d hh%d %s pantry=%s fd=%.2f trig=%s pend=%d relief_days=%s unit=%s granary=%d treas=%d mkt=%.0f | %s" % [d, hr, h, str(hh.get("family", "")),
+		print("WATCH HH d%d h%d hh%d %s pantry=%s fd=%.2f trig=%s pend=%d relief_days=%s unit=%s granary=%d treas=%d mkt=%.0f | %s" % [w.day(), int(w.hour()), h, str(hh.get("family", "")),
 			str((hh.pantry as Inventory).items), fd, str(fd < float(GameData.b("relief_trigger_days"))), w.manor_work.pending_for(h), str(hh.get("relief_days", [])),
 			str(w.cheapest_food_unit()), w.granary.count("wheat"), w.treasury, w.brain.market_food_points, " ".join(ms)])
-	if hr == 16 or hr == 17:
-		_watch_relief(d, hr)
+	var clock := int(w.hour())                 # the game's clock hour (the loop's day starts at the world's start hour)
+	if clock == 16 or clock == 17:
+		_watch_relief(w.day(), clock)
 	w._price_cache = pc
 	w._reserve_cache = rc
 
