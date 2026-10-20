@@ -239,7 +239,19 @@ func test_nobody_can_take() -> void:
 	kid.hunger = 10.0
 	w.brain.decide(kid)
 	check(str(kid.doing).contains("bandits' camp"), "a hungry clan child eats at the camp (%s)" % kid.doing)
-	check(w.brain.act(kid, "camp_meal", {}) and kid.hunger == 100.0, "with the band")
+	# FSE-B06: from the band's stores, never from nothing
+	var feeder: NPC = w.npcs.filter(func(o): return o.alive and o.role == "bandit")[0]
+	feeder.inv.add("bread", 2)
+	var bread0 := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "bandit":
+			bread0 += o.inv.count("bread")
+	w.brain.act(kid, "camp_meal", {})
+	var bread1 := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "bandit":
+			bread1 += o.inv.count("bread")
+	check(kid.hunger > 10.0 and bread1 < bread0, "with the band: fed from the band's stores (hunger %.0f, bread %d -> %d)" % [kid.hunger, bread0, bread1])
 	kid.coins = 50
 	kid.pos = Vector2(w.bandit_camp) + Vector2(2, 0)
 	for o: NPC in w.npcs:
