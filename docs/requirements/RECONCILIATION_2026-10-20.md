@@ -46,9 +46,9 @@ None.
 |---|---|---|---|---|
 | EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | COMPLETE AND VERIFIED | 15 |
 | EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
-| EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | approved | ACTIVE DEVELOPMENT | 15 |
-| EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | approved | ACTIVE DEVELOPMENT | 15 |
-| EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | approved | ACTIVE DEVELOPMENT | 15 |
+| EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
+| EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
+| EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | approved | IMPLEMENTED — TESTING REQUIRED | 16 |

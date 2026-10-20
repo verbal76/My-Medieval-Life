@@ -8756,7 +8756,7 @@
    "id": "EQ-19",
    "title": "The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "The manor uses its treasury to keep the smithy and woodlands working: it buys iron and tools for the village's workers, or lends to the smith against future output.",
    "description": "The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output",
    "source": "owner answer to OD-16, 2026-10-20",
@@ -8768,7 +8768,7 @@
     "Tests, and a 365-day run on both seeds keeping the smith working and woodcutting staffed"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/od16_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8793,6 +8793,11 @@
      "date": "2026-10-20",
      "change": "target_build; workstream",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "implemented in npc_brain.gd (INT-154); od16_test.gd 23 checks pass; the determinism gate changes as intended (no leaks); a 365-day run on both seeds is next"
     }
    ],
    "target_build": "15"
@@ -8801,7 +8806,7 @@
    "id": "EQ-20",
    "title": "Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Bandits spend their hoards at the market, and guards recover loot to the treasury, so the ~45% of coins now out of circulation return.",
    "description": "Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury",
    "source": "owner answer to OD-16, 2026-10-20",
@@ -8812,7 +8817,7 @@
     "Coins only move (ledger balanced); tests; the share of coins held by bandits and lying as loot falls in the year runs"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/od16_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8837,6 +8842,11 @@
      "date": "2026-10-20",
      "change": "target_build; workstream",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "implemented in npc_brain.gd (INT-154); od16_test.gd 23 checks pass; the determinism gate changes as intended (no leaks); a 365-day run on both seeds is next"
     }
    ],
    "target_build": "15"
@@ -8845,7 +8855,7 @@
    "id": "EQ-21",
    "title": "The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "The caravan buys more of what the village over-produces (meat, hides), bringing more coins in from outside.",
    "description": "The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods",
    "source": "owner answer to OD-16, 2026-10-20",
@@ -8856,7 +8866,7 @@
     "Tests; the year runs show the sales"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/od16_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8881,6 +8891,11 @@
      "date": "2026-10-20",
      "change": "target_build; workstream",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "implemented in npc_brain.gd (INT-154); od16_test.gd 23 checks pass; the determinism gate changes as intended (no leaks); a 365-day run on both seeds is next"
     }
    ],
    "target_build": "15"

@@ -936,6 +936,12 @@ func _smith(n: NPC) -> bool:
 	for id in ["pickaxe", "axe", "iron_sword", "copper_sword"]:
 		if inv.count(id) > 1 and _buyer_for(n, id) != null:
 			return _plan_sell(n, id)
+	# the manor's orders first (EQ-19): the tools it paid for in advance
+	for x in w.manor_orders:
+		if int(x.smith) == n.id and inv.count(str(x.tool)) == 0:
+			var r := "forge_" + str(x.tool)
+			if GameData.recipes.has(r) and inv.has_all(GameData.recipes[r].in):
+				return _do_recipe(n, r)
 	# forge whatever is scarcest
 	var wants := []
 	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor", "forge_lockpicks", "forge_padlock", "forge_cart_axle", "forge_cart_ironwork"]:
@@ -1136,9 +1142,33 @@ func _guard(n: NPC, h: float) -> void:
 		return
 	if shops_open and _plan_provision(n):          # on the rounds: a trip to the market for the household
 		return
+	var lost := _loot_to_recover(n)
+	if not lost.is_empty():
+		n.doing = "recovering what was left lying"
+		n.plan = [go(Vector2i(floori(lost.pos.x), floori(lost.pos.y))), doit("recover_loot")]
+		return
 	var post: Vector2i = w.guard_posts[w.rng.randi() % w.guard_posts.size()]
 	n.doing = "on patrol"
 	n.plan = [go(post), doit("look_out")]
+
+
+## OD-16 (a), EQ-20 (owner 2026-10-20: "guards recover loot to the treasury"): the nearest loot holding coins that has
+## lain `loot_recover_hours` within `guard_loot_range` tiles of a guard on duty, or {}. Loot is stamped when first seen.
+func _loot_to_recover(n: NPC) -> Dictionary:
+	var best: Dictionary = {}
+	var bd := float(GameData.b("guard_loot_range"))
+	for l in w.loot:
+		if int(l.coins) <= 0:
+			continue
+		if not l.has("t"):
+			l.t = w.minutes
+		if w.minutes - float(l.t) < float(GameData.b("loot_recover_hours")) * 60.0:
+			continue
+		var d: float = n.pos.distance_to(l.pos)
+		if d < bd and _bandit_near(l.pos, 8.0) == null:
+			bd = d
+			best = l
+	return best
 
 
 func _bandit(n: NPC, h: float) -> void:
@@ -1149,8 +1179,32 @@ func _bandit(n: NPC, h: float) -> void:
 			n.target = prey.id if prey is NPC else -2
 			n.doing = "stalking"
 			return
+	if not night and h >= WORK_START and h < WORK_END and _bandit_market(n):
+		return
 	n.doing = "lurking at the camp"
 	n.plan = [go(wander_cell(w.bandit_camp, 3)), work(w.rng.randf_range(30, 90), "poach", {}, "idle")]
+
+
+## OD-16 (a), EQ-20 (owner 2026-10-20: "bandits spend their hoards at the market"): by day a bandit holding
+## `bandit_spend_min` coins slips into the market and buys up to `bandit_spend_units` of food from a seller no
+## guard stands near (within 10 tiles), so stolen coins return to the village's traders.
+func _bandit_market(n: NPC) -> bool:
+	if n.coins < int(GameData.b("bandit_spend_min")) or n.hp < n.max_hp * 0.6:
+		return false
+	for v: NPC in w.npcs:
+		if not v.alive or v.role == "bandit" or not (buy_role(v) == "merchant_food" or v.job == "cook") or w.asleep(v):
+			continue
+		var at := _workplace_cell(v)
+		if _guard_near(Vector2(at), 10.0):
+			continue
+		for f in FOOD:
+			if v.inv.has(f) and w.sell_price(v, f) <= n.coins:
+				var qty := mini(int(GameData.b("bandit_spend_units")), n.coins / maxi(1, w.sell_price(v, f)))
+				n.doing = "slipping into the market"
+				n.plan = [go(at), doit("buy_from", {"vendor": v.id, "item": f, "qty": qty})]
+				w.stat("bandit_market_trips")
+				return true
+	return false
 
 
 func _prey_for(n: NPC):
@@ -1231,6 +1285,8 @@ func buy_role(o: NPC) -> String:
 func keeps(o: NPC, id: String) -> bool:
 	if KEEPS.get(o.job, []).has(id):
 		return true
+	if o.job == "smith" and w.manor_orders.any(func(x): return int(x.smith) == o.id and str(x.tool) == id):
+		return true                                   # forged for the manor's order (EQ-19)
 	return id == "axe" and o.household >= 0 and o.household < w.households.size() \
 			and str(w.households[o.household].get("build", "")) != "" and w.construction.responsible_adult(o.household) == o
 
@@ -1371,8 +1427,8 @@ func tool_price(n: NPC, tool: String) -> int:
 ## and never got either back).
 func tool_short(n: NPC) -> bool:
 	var tool: String = JOB_TOOL.get(n.job, "")
-	if tool == "" or n.inv.has(tool):
-		return false
+	if tool == "" or n.inv.has(tool) or not _order_for(n).is_empty():
+		return false                                  # (a tool the manor ordered for them is being forged, EQ-19)
 	var p := tool_price(n, tool)
 	return p < 0 or n.coins < p
 
@@ -1799,6 +1855,18 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 						for id in eaten.ids():
 							w.stat("poached_lost_" + id, eaten.count(id))
 			return true
+		"recover_loot":
+			for l in w.loot:
+				if int(l.coins) > 0 and n.pos.distance_to(l.pos) < 1.6:
+					var c := int(l.coins)
+					l.coins = 0
+					w.treasury += c                  # the manor's, for the village (EQ-20)
+					w.stat("gov_loot_recovered", c)
+					if (l.inv as Inventory).total() == 0:
+						w.loot.erase(l)
+					w.note("%s %s brings %d coins left lying to the manor." % [n.name, n.family, c])
+					return true
+			return false
 		"look_out":
 			var foe := _bandit_near(n.pos, 10.0)
 			if foe:
@@ -1924,6 +1992,7 @@ func reeve_day() -> void:
 				w.stat("gov_tax", take)
 	# relief first (it is bought before anything optional), then repairs and the granary
 	var relief := _relief(obligations, reserve)
+	var tools := _support_trades(obligations)        # tools for the essential trades come before optional spending (EQ-19)
 	var budget := int(maxf(0.0, w.treasury - 3.0 * obligations) * float(GameData.b("repairs_budget_share")))
 	var bought := 0
 	# stone for the works from the village's own seams, when the yard lacks it (a job for the reeve's list)
@@ -1968,11 +2037,120 @@ func reeve_day() -> void:
 				grain += 1
 				w.stat("gov_procurement", price)
 				w.stat("gov_granary_in", 1)
+	if tools > 0:
+		w.note("The manor spent %d coins keeping the village's workers in tools." % tools)
 	if taxed + bought + grain + relief > 0:
 		w.note("The manor took %d coins in tax, bought %d loads for repairs and %d grain for the granary, and gave %d households food." % [taxed, bought, grain, relief])
 	if works > 0:
 		w.note("The manor bought %d loads of planks, iron and stone for its public works." % works)
 	w.manor_work.refresh()
+
+
+## OD-16 (b), EQ-19 (owner 2026-10-20: "the manor uses its treasury to keep the smithy and woodlands working: it buys
+## iron and tools for the village's workers, or lends to the smith against future output"). Each evening, for every
+## worker short of their trade's tool (tool_needers: a woodcutter without an axe, a miner without a pickaxe, a builder of
+## the household's own home without an axe), in id order: a tool on sale at the goods merchant's or the smith's is
+## bought from the treasury and handed to them; with none on sale, a smith is paid its worth in advance
+## (World.manor_orders, at most `manor_orders_per_smith` open each), which buys the forge's ore and coal, and the tool
+## goes to the worker when it is forged (_deliver_orders). The treasury keeps `manor_support_floor_days` of its
+## obligations. Coins and tools only move. Returns the coins spent.
+func _support_trades(obligations: float) -> int:
+	_deliver_orders()
+	var floor_coins := obligations * float(GameData.b("manor_support_floor_days"))
+	var spent := 0
+	for pair in tool_needers():
+		var o: NPC = pair[0]
+		var tool: String = pair[1]
+		if not _order_for(o).is_empty():
+			continue
+		var seller: NPC = null
+		for role in ["merchant_goods", "smith"]:
+			for v: NPC in w.npcs:
+				if seller == null and v.alive and ((v.job == "smith") if role == "smith" else (buy_role(v) == role)) and v.inv.has(tool) and not keeps(v, tool):
+					seller = v
+		if seller != null:
+			var price := w.sell_price(seller, tool)
+			if w.treasury - price < floor_coins:
+				break
+			seller.inv.remove(tool)
+			o.inv.add(tool)
+			seller.coins += price
+			seller.earned += price
+			w.treasury -= price
+			spent += price
+			w.stat("gov_tools", price)
+			w.stat("gov_tool_given_" + tool)
+			continue
+		var smith: NPC = null
+		for v: NPC in w.npcs:
+			if v.alive and v.job == "smith" and w.manor_orders.filter(func(x): return int(x.smith) == v.id).size() < int(GameData.b("manor_orders_per_smith")) \
+					and (smith == null or v.coins < smith.coins):
+				smith = v
+		if smith == null:
+			continue
+		var advance := int(ceil(GameData.value(tool)))
+		if w.treasury - advance < floor_coins:
+			break
+		smith.coins += advance
+		smith.earned += advance
+		w.treasury -= advance
+		spent += advance
+		w.manor_orders.append({"smith": smith.id, "tool": tool, "for": o.id, "paid": advance, "day": w.day()})
+		w.stat("gov_tools", advance)
+		w.stat("gov_tool_advance_" + tool)
+	return spent
+
+
+## The workers short of a work tool, in id order: [worker, tool] (local_tool_need's people).
+func tool_needers() -> Array:
+	var out := []
+	for o: NPC in w.npcs:
+		if not o.alive or o.role != "adult":
+			continue
+		var tool: String = JOB_TOOL.get(o.job, "")
+		if tool != "" and not o.inv.has(tool):
+			out.append([o, tool])
+		elif tool != "axe" and not o.inv.has("axe") and o.household >= 0 and str(w.households[o.household].get("build", "")) != "" \
+				and w.construction.responsible_adult(o.household) == o:
+			out.append([o, "axe"])
+	return out
+
+
+## The manor's open order for this worker's tool, or {}.
+func _order_for(o: NPC) -> Dictionary:
+	for x in w.manor_orders:
+		if int(x["for"]) == o.id:
+			return x
+	return {}
+
+
+## Tools forged on the manor's orders go to the worker they were paid for (or, if that worker no longer needs one,
+## to the next worker short of that tool); an order whose smith has died or left the trade lapses.
+func _deliver_orders() -> void:
+	for x in w.manor_orders.duplicate():
+		var smith := w.npc(int(x.smith))
+		if smith == null or not smith.alive or smith.job != "smith":
+			w.manor_orders.erase(x)
+			w.stat("gov_tool_order_lapsed")
+			continue
+		var tool := str(x.tool)
+		if not smith.inv.has(tool):
+			continue
+		var to: NPC = null
+		var first := w.npc(int(x["for"]))
+		if first != null and first.alive and not first.inv.has(tool):
+			to = first
+		else:
+			for pair in tool_needers():
+				if pair[1] == tool and _order_for(pair[0]).is_empty():
+					to = pair[0]
+					break
+		if to == null:
+			continue                                  # kept at the forge until a worker needs it
+		smith.inv.remove(tool)
+		to.inv.add(tool)
+		w.manor_orders.erase(x)
+		w.stat("gov_tool_delivered_" + tool)
 
 
 ## Public works: money the treasury holds beyond its tax-holiday level (30 days of wages) is not
@@ -2794,6 +2972,18 @@ func caravan() -> void:
 				if not keeps(o, t):
 					tool_stock[t] = int(tool_stock.get(t, 0)) + o.inv.count(t)
 	var lines := []                # [seller, item, units for sale]
+	# OD-16 (c), EQ-21 (owner 2026-10-20: "the caravan buys more of what the village over-produces (meat, hides)"): from
+	# the producers too, what they hold beyond `caravan_producer_keep` (hunters' meat, hides and pelts, tanners' leather)
+	var keep_of: Dictionary = GameData.b("caravan_producer_keep")
+	for o: NPC in w.npcs:
+		if not o.alive or not o.job in ["hunter", "tanner"]:
+			continue
+		for id in keep_of:
+			if (o.job == "tanner" and id != "leather") or (keep_food and id == "meat"):
+				continue
+			var extra := o.inv.count(id) - int(keep_of[id])
+			if extra > 0:
+				lines.append([o, id, extra])
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
 			continue
@@ -2835,7 +3025,7 @@ func caravan() -> void:
 				w.caravan_purse -= price
 				w.coin_sources += price
 				w.stat("caravan_coins_in", price)
-				w.stat("caravan_in_" + buy_role(o), price)
+				w.stat("caravan_in_" + (buy_role(o) if buy_role(o) != "" else o.job), price)
 				bought += price
 				moved = true
 	w.note("A merchant caravan passes through, buys %d coins' worth from the market%s%s." % [bought,
