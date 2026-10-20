@@ -11118,6 +11118,54 @@
    "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
   },
   {
+   "id": "FSE-17",
+   "title": "Manor relief checks and draws on every food store (amends the B3 relief rule)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Relief should check all possible food stores. (Answers: all food sellers, all foods; other households' surplus; the granary and manor stores first; raw food it can cook. A household's own reckoning counts all its stores, yes.)",
+   "description": "Manor relief checks and draws on every food store (amends the B3 relief rule)",
+   "source": "owner message 2026-10-20 ('Relief should check all possible food stores') and the owner's answers to the agent's two clarifying questions the same day",
+   "approval": "owner instruction 2026-10-20",
+   "acceptance": [
+    "Relief takes granary and manor-bound grain first, then buys any edible food from any seller (tavern, cook, food merchant, farmers, storefronts), then other households' surplus above their own necessity (World.necessity), and raw food the receiving household can cook (hearth and fuel)",
+    "A household's food reckoning (household_food_days) counts food in every member's pockets as well as the pantry, and raw meat once the household can roast it",
+    "Food is moved and paid for, never created; coins conserved; regression tests; the seed-2 baseline compared before and after"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "FSE-16"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-20 ('Relief should check all possible food stores') and the owner's answers to the agent's two clarifying questions the same day"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner instruction"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner instruction 2026-10-20, after the seed-2 starvation findings"
+  },
+  {
    "id": "GM-01",
    "title": "Generational memory and historical consequences (the 30-planks chain)",
    "kind": "approved",
