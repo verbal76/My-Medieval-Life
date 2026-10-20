@@ -21,7 +21,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-Seven entries, all named here (the validator checks). The ledger's count of six is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
+Six entries, all named here (the validator checks). The ledger's count of five is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
 
 - **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
   - Done so far:
@@ -36,22 +36,15 @@ Seven entries, all named here (the validator checks). The ledger's count of six 
     - unemployment climbs after day 40.
 - **EQ-16:** world equilibrium, the Build 16 objective. It closes on the multi-seed 100- and 365-day acceptance runs (EQ-06).
 - **DVW-A3:** re-measure money supply over 100 and 365 days on 2–3 seeds with no player. It shares the EQ runs.
-- **MEM-02:** the owner's second, wider memory directive (`docs/directives/2026-10-20_permanent_project_memory_hardening.md`).
-  - Done:
-    - the index covers every source the directive lists;
-    - the eight startup steps are in CLAUDE.md section 0;
-    - the frozen baseline of the 231 open and 142 closed approved entries is checked by the validator;
-    - the reconciliation report is generated.
-  - Remaining: the nine-question recovery test from a fresh clone, repeated until clean.
 - **REL-14-16:** release Builds 15 and 16 as private drafts when the conditions hold. Build 14 is done.
 - **ROAD-01:** the owner's five-build roadmap. Every open item carries a `target_build` (the ledger's Roadmap section).
 - **MP-01:** multiplayer on `wip/multiplayer` only, isolated. Nothing is to be done on it without the owner.
 
-Also: **MEM-01** (the first memory directive) is complete: see "Recovery test" below. Keep this file and the index current.
+Also: **MEM-01** and **MEM-02** (the two memory directives) are complete: see "Recovery test" below. Keep this file and the index current.
 
 ## Last test results
 
-**Suites.** The Python suites and the register validator pass at every commit of 2026-10-20 (run before each push). CI (`.github/workflows/tests.yml`) runs the Godot suites on each staging push; earlier runs are cancelled when a newer push arrives, so check the latest run's result for the head commit. The Godot suites last passed locally at `a203c0b`:
+**Suites.** The Python suites and the register validator pass at every commit of 2026-10-20 (run before each push). CI (`.github/workflows/tests.yml`) runs the Godot suites on each staging push; earlier runs are cancelled when a newer push arrives, so check the latest run's result for the head commit. The Godot suites last passed locally at `a203c0b`; nothing under `game/` has changed since (`git diff --stat a203c0b HEAD -- game` is empty), so that result stands until the game code changes:
 - Python: `python3 -m unittest discover -s tests`;
 - the Godot suites in `.github/workflows/tests.yml`, among them `relations_test.gd`, `save_transfer_test.gd`, `refuge_test.gd`, `aging_test.gd` and `start_test.gd`.
 
@@ -61,7 +54,7 @@ Also: **MEM-01** (the first memory directive) is complete: see "Recovery test" b
 |---|---|
 | 100 days, seed 1 | **Finished.** 118 alive (start 100), no starvation, 16 other deaths. Wildlife 81 (54 at the start). Currency leak 0, item leaks 0. Iron, coal, copper and gold gone by day 20; stone 56 of 240 left. 12 courtships. 1 house built. 16 unemployed. |
 | 100 days, seed 2 | **Finished.** 133 alive, no starvation, wildlife 74, leak 0, but only 1 house built, although 3 crowded households could afford one. |
-| 365 days, seeds 1 and 2 | **In progress** (interim figures recorded in `docs/release/LONG_RUN_SIMULATION.md`). Started 2026-10-20 at about 00:30 UTC in `/home/user/My-Medieval-Life/game` on the cloud container of that session; expected to end by about 03:30 UTC. **If a later session finds no day-365 result recorded in `docs/release/LONG_RUN_SIMULATION.md` and it is past that time, the run was lost: run it again.** writing to `out/eq/fix9_d365_s1` and `fix9_d365_s2` (not committed). Seed 1 at day 190: 125 alive, no starvation, 26 unemployed, **stone 0**, 7 house sites started and 1 finished. Seed 2 at day 160: 137 alive, stone 1, 8 sites started and 1 finished. See "Interrupted or fragile processes" for how to tell whether they are still alive. |
+| 365 days, seeds 1 and 2 | **In progress** (interim figures recorded in `docs/release/LONG_RUN_SIMULATION.md`). Started 2026-10-20 at about 00:30 UTC in `/home/user/My-Medieval-Life/game` on that session's cloud container, writing to `out/eq/fix9_d365_s1` and `fix9_d365_s2` (not committed). Seed 1 at day 190: 125 alive, no starvation, 26 unemployed, **stone 0**, 7 house sites started and 1 finished. Seed 2 at day 160: 137 alive, stone 1, 8 sites started and 1 finished. Expected to end by about 03:30 UTC. **If a later session finds no day-365 result recorded and it is past that time, the run was lost: run it again** ("Interrupted or fragile processes", below). |
 
 **Limits of these results:**
 - The runs have no player.
@@ -71,7 +64,7 @@ Also: **MEM-01** (the first memory directive) is complete: see "Recovery test" b
 ## Known defects (open)
 
 - **EQ-09, stone (Build 16; BLOCKED on owner decision OD-10):** stone has no lasting source. At day 100, 56 (seed 1) and 115 (seed 2) of the 240 were left. It reaches 0 by about day 160–190 in the 365-day runs. **Houses need 20 stone each, so this is now what stalls housing (EQ-07):** 7–8 sites started, 1 finished. The owner's decision (OD-10) is needed: caravan stone as the stand-in, or MIN-B earlier. Iron, coal, copper and gold run out by day 10–20.
-- **EQ-10, ledger residuals:** the economy simulation shows axe and hammer ledger residuals of 1–3 from day 12.
+- **EQ-10, ledger residuals:** the economy simulation shows axe and hammer ledger residuals of 1–3 from about day 120 in 365-day runs.
 - **WR-02, grazers (Build 16):** grazers starve together.
 - **Housing growth (EQ-07):** one house in 100 days in both seeds. Most of this is stone (EQ-09, above). In seed 1, crowded households also could not pay; that part does not depend on stone. Unemployment climbs after day 40.
 - **B14R-12, long-run regression:** partly addressed. Wildlife no longer collapses at 100 days; it is still to be confirmed at 365.
@@ -160,7 +153,12 @@ Each pass used a new agent with no conversation context, working only from a fre
 - Two gaps were blocking, and the commit after `6a56b9e` fixed both:
   - stone was not registered as an owner decision; it is now OD-10, and EQ-09 is BLOCKED on it;
   - the unfinished 365-day runs had no rule for a later session; they now have an expected end time and a re-run rule.
-- Ten minor gaps were fixed at the same time: stale stone figures, SET-E's placement, whether SET-A needs authorization, PR #1's final state, numbering and counts.
+- Minor gaps fixed at the same time: stale stone figures, SET-E's placement, whether SET-A needs authorization, PR #1's final state, numbering and counts.
+
+**Re-check of pass 2, at `9a01e88`:**
+- Both blocking gaps were confirmed fixed.
+- The remaining minor wording (the titles and next actions of EQ-07, EQ-09 and EQ-10, and this section) was fixed in the commit after `9a01e88`.
+- EQ-07's title is kept on purpose: it names the Build 14 failures the entry was opened for.
 
 **Known limits that remain:**
 - `wip/multiplayer` is not in a staging clone.

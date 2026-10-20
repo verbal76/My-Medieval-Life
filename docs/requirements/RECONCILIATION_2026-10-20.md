@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 231 still open, 0 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 3 (2 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **233** = 231 still open from the baseline + 2 added and open |
+| Entries added since | | 3 (1 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **232** = 231 still open from the baseline + 1 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (0)
@@ -31,7 +31,7 @@ None.
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | COMPLETE AND VERIFIED | 15 |
-| MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | ACTIVE DEVELOPMENT | 15 |
+| MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | BLOCKED | 16 |
 
 The full, current list of open entries by build is the Roadmap section of `docs/DEVELOPMENT_LEDGER.md`.

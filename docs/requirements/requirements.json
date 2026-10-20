@@ -8294,7 +8294,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "separate what does not depend on stone (site budgets, crowded households unable to pay in seed 1, unemployment after day 40); housing growth itself waits on the owner's EQ-09 decision",
+   "next_action": "separate what does not depend on stone (site budgets, crowded households unable to pay in seed 1, unemployment after day 40); housing growth itself waits on the owner's stone decision OD-10. The title describes the Build 14 failures this entry was opened for; the Build 15 runs no longer show the population fall or wildlife collapse",
    "priority": "build 15",
    "workstream": "world equilibrium",
    "superseded_by": null,
@@ -8319,6 +8319,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "the housing stall traced to stone running out (EQ-09)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "next action names OD-10"
     }
    ],
    "target_build": "15",
@@ -8378,12 +8383,12 @@
   },
   {
    "id": "EQ-09",
-   "title": "Local stone runs out by about game day 60, slowing house building",
+   "title": "Local stone has no lasting source: it runs out by about day 160-190 (Build 15 runs; day 60 in the earlier fix2 run) and house sites stall",
    "kind": "approved",
    "status": "BLOCKED",
    "owner_wording": null,
    "description": "Local stone runs out by about game day 60, slowing house building",
-   "source": "Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60)",
+   "source": "Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) and 2026-10-20 (fix9: stone 0 by day 160-190, docs/release/LONG_RUN_SIMULATION.md)",
    "approval": "within the owner's Build 15-16 resource sustainability scope (EQ-16)",
    "acceptance": [
     "Construction does not stall for want of stone without a real cause the world can answer",
@@ -8428,6 +8433,11 @@
      "who": "agent",
      "change": "depends_on",
      "why": "depends on OD-10 (the owner's stone decision)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "title; source",
+     "why": "title and source brought up to the Build 15 runs (recovery pass 2 re-check); the fix2 figure was the earlier run's"
     }
    ],
    "target_build": "16",
@@ -9592,7 +9602,7 @@
    "id": "MEM-02",
    "title": "Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "If your entire conversation context disappears tomorrow, a new development session must be able to recover the project's approved design, outstanding requirements, current progress, and next authorized tasks from GitHub alone.",
    "description": "Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test",
    "source": "docs/directives/2026-10-20_permanent_project_memory_hardening.md",
@@ -9607,10 +9617,14 @@
     "Completion report with the eight listed items"
    ],
    "implementation": "CLAUDE.md section 0; docs/PROJECT_MEMORY.md; docs/CURRENT_DEVELOPMENT_STATE.md; docs/requirements/baseline_2026-10-20.json; tools/check_requirements.py (baseline_errors, render_reconciliation)",
-   "tests": "",
+   "tests": "tests/test_requirements.py RoadmapAndMemoryTest",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "d672353",
+    "6a56b9e",
+    "9a01e88"
+   ],
    "parent": "MEM-01",
    "depends_on": [
     "MEM-01"
@@ -9619,7 +9633,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "a final re-check of pass 2's blocking gaps; then close",
+   "next_action": "",
    "priority": "",
    "workstream": "lead agent, staging",
    "superseded_by": null,
@@ -9644,6 +9658,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "recovery passes 1 and 2 run; their gaps fixed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit d672353; commit 6a56b9e; commit 9a01e88; tests; next_action",
+     "why": "all acceptance criteria met: index, eight-step session start, handoff, baseline of the 231 open and 142 closed entries enforced by the validator, status mapping, and three context-free recovery passes (two full, one re-check) with every blocking gap fixed"
     }
    ],
    "target_build": "15"
