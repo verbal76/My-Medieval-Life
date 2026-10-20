@@ -8961,6 +8961,48 @@
    "target_build": "15"
   },
   {
+   "id": "EQ-22",
+   "title": "Caravan buying order: smiths first starves the hide and leather chain after parity",
+   "kind": "proposal",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Agent finding 2026-10-20: the caravan's finite budget serves the smiths' lines first (agent rule); with PAR-01 skills the smiths' metal goods take most of it, and tanners' leather and hunters' hides go unsold. Proposal: serve all sellers in turn. A balance change: owner decision.",
+   "description": "Caravan buying order: smiths first starves the hide and leather chain after parity",
+   "source": "docs/release/LONG_RUN_SIMULATION.md",
+   "approval": "",
+   "acceptance": [
+    "Owner decides; if approved, the caravan serves sellers in turn and the 100-day comparison is re-run"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/release/LONG_RUN_SIMULATION.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target: owner decision"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "EXP-A",
    "title": "Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification)",
    "kind": "approved",

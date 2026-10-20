@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 94 (49 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **263** = 214 still open from the baseline + 49 added and open |
+| Entries added since | | 95 (50 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **264** = 214 still open from the baseline + 50 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,7 +44,7 @@ None.
 
 None.
 
-## Added since the baseline (94)
+## Added since the baseline (95)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -53,6 +53,7 @@ None.
 | EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | approved | COMPLETE AND VERIFIED | 15 |
 | EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | approved | COMPLETE AND VERIFIED | 15 |
 | EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | approved | COMPLETE AND VERIFIED | 15 |
+| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | proposal | APPROVED — NOT STARTED | owner decision |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | approved | APPROVED — NOT STARTED | owner decision |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | IMPLEMENTED — TESTING REQUIRED | 16 |

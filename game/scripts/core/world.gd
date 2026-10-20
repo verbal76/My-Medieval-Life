@@ -755,12 +755,16 @@ static func is_necessity(id: String) -> bool:
 
 ## Whether `buyer` will pay `price` (OD-19 section 3, PAR-02A): a necessity for their own household (`for_need`: food,
 ## firewood, medicine to use) out of any of their coins, reserved ones included; anything else (stock for their trade,
-## materials, goods for resale) only with what is left above their reserve (reserve_of). The one rule for every
-## purchase, whoever sells, the player or a villager (PAR-02).
-func can_afford(buyer: NPC, price: int, for_need := false) -> bool:
+## materials, goods for resale) with what is left above their reserve (reserve_of). One exception, the decision's
+## "business purchases may still be economically justified when necessary to generate income": a trader holding none
+## of `id`, an input of their own trade (NPCBrain.BUYS), may buy one unit with reserved coins to keep earning; with any
+## in hand they work it first. The one rule for every purchase, whoever sells, the player or a villager (PAR-02).
+func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
 	if for_need:
 		return buyer.coins >= price
-	return buyer.coins - price >= reserve_of(buyer)
+	if buyer.coins - price >= reserve_of(buyer):
+		return true
+	return id != "" and buyer.inv.count(id) == 0 and NPCBrain.BUYS.get(brain.buy_role(buyer), {}).has(id) and buyer.coins >= price
 
 
 func buy_price(vendor: NPC, id: String) -> int:
@@ -2534,7 +2538,7 @@ func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 			g.remember("questioned %s %s about stolen %s" % [player.name, player.family, GameData.item_name(id).to_lower()])
 			last_guard = guard_confront(g, {id: 1}, null, owner)
 			return {"result": "questioned", "text": "The guard %s asks where you got that %s. %s" % [g.name, GameData.item_name(id).to_lower(), last_guard]}
-	if not can_afford(buyer, price) or not trade(buyer, player, id, 1, price):
+	if not can_afford(buyer, price, false, id) or not trade(buyer, player, id, 1, price):
 		return {"result": "failed", "text": "They cannot afford it right now."}
 	if not owners.is_empty():
 		player.unmark(id, int(owners[0]), 1)
@@ -2553,7 +2557,7 @@ func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
 	var bill := 0
 	for c in prices:
 		bill += int(c)
-	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or not can_afford(buyer, bill):
+	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or buyer.coins < bill or not can_afford(buyer, int(prices[0]), false, id):
 		return {"result": "failed", "text": "They cannot take that many, or cannot afford it right now.", "sold": 0, "paid": 0}
 	var sold := 0
 	var paid := 0

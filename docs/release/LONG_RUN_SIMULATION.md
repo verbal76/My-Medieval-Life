@@ -986,8 +986,24 @@ eleven recipes) and PAR-05 (sight and reports).
     - income: 791 coins for 11 hunters, against 859 for 13 before;
     - spending: 799 coins, against 813;
     - crime reports: only 13 were made in 50 days, and nobody was hungry while carrying one.
-  - The cause is not yet established. It is recorded as **under investigation** with B7-015 and the hunters' income
-    (EQ-01). Nobody starved.
+  - **The cause, found the same day** with a day-45 probe of seed 2: the goods chain from hunter to tanner to the
+    caravan runs out of cash.
+    - The tanners hold 27 leather and 1 coin, so nobody buys pelts or hides, and the hunters hold them unsold.
+    - The caravan bought 2 leather in 100 days, against 113 before parity.
+    - Its budget is finite, and the smiths' lines are served first (an earlier agent rule: they pay for ore with metal
+      goods). Skilled smiths (PAR-01) now make more metal goods: 66 copper bars sold to the caravan, against 26. They
+      take most of the budget.
+    - The caravan also brought in fewer coins (6,260 against 8,928). With OD-19's reserves, villagers buy fewer
+      imports, and the caravan's purse refills partly from what it sells.
+  - **Defect found and fixed on the way** (OD-19, section 3: "business purchases may still be economically justified
+    when necessary to generate income"): stock purchases had been barred outright below the reserve. A trader holding
+    none of an input of their own trade may now buy one unit with reserved coins to keep earning (`World.can_afford`;
+    `reserve_test.gd` 6b). Re-run: seed 1 unchanged (938), seed 2 at 4,378 money-short meals. The tanners now spend
+    their last coins on pelts, and some go hungry themselves: the trader's own risk, with real consequences.
+  - **Classification:** a legitimate outcome of the owner's rules (skills, reserves) meeting a finite outside demand
+    and an agent-written priority order. Nobody starved; the ledger balances. **Future improvement, for the owner:**
+    whether the caravan should serve its sellers in turn rather than smiths first. That is a balance change, so it is
+    not made without the owner (recorded as EQ-22).
 - **With both smiths killed,** two other villagers took the trade, as before. Under parity they start with whatever
   Smithing they had learned, often none.
 - **A wheat corner or a gift of coins removed almost all the money-short meals:** coins from outside reach the

@@ -1397,7 +1397,7 @@ func _plan_sell(n: NPC, id: String) -> bool:
 func _buyer_for(n: NPC, id: String) -> NPC:
 	for outlet in OUTLETS.get(id, []):
 		for b in _with_buy_role(outlet):
-			if b != n and b.alive and wants(b, id) > 0 and w.can_afford(b, w.buy_price(b, id)):
+			if b != n and b.alive and wants(b, id) > 0 and w.can_afford(b, w.buy_price(b, id), false, id):
 				return b
 	return null
 
@@ -1927,7 +1927,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var qty := mini(n.inv.count(a.item) - reserve(n, a.item), wants(b, a.item))
 			var sold := 0
 			var paid := 0
-			while qty > 0 and w.can_afford(b, w.deal_price(w.buy_price(b, a.item), b, n)):
+			while qty > 0 and w.can_afford(b, w.deal_price(w.buy_price(b, a.item), b, n), false, a.item):
 				var price := w.deal_price(w.buy_price(b, a.item), b, n)
 				if w.trade(b, n, a.item, 1, price):
 					sold += 1
@@ -3239,7 +3239,7 @@ func _caravan_imports() -> int:
 			if int(left.get(id, 0)) > int(GameData.b("caravan_import_when_left")):
 				continue
 			var price := maxi(1, roundi(GameData.value(id) * float(GameData.b("caravan_import_markup"))))
-			while o.inv.count(id) < int(stock[id]) and w.can_afford(o, price):
+			while o.inv.count(id) < int(stock[id]) and w.can_afford(o, price, false, id):
 				o.coins -= price
 				o.spent += price
 				o.inv.add(id)
@@ -3334,7 +3334,7 @@ func _caravan_stone() -> int:
 	for o: NPC in w.npcs:
 		if not o.alive or buy_role(o) != "merchant_raw":
 			continue
-		while cart > 0 and wants(o, "stone") > 0 and w.can_afford(o, price):
+		while cart > 0 and wants(o, "stone") > 0 and w.can_afford(o, price, false, "stone"):
 			o.coins -= price
 			o.spent += price
 			o.inv.add("stone")

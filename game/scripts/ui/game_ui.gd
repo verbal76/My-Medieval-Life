@@ -2291,7 +2291,7 @@ func show_trade(n: NPC, pick := {}) -> void:
 			var sid: String = id
 			var hot := p.stolen_count(id)
 			_item_row(id, p.inv.count(id), "%d coins each%s%s" % [price, effect_suffix(id), ("  ·  %d stolen" % hot) if hot > 0 else ""], "Sell", func():
-				show_trade(nn, {"id": sid, "mode": "sell", "price": price}), w.can_afford(n, price))
+				show_trade(nn, {"id": sid, "mode": "sell", "price": price}), w.can_afford(n, price, false, sid))
 	if not any:
 		_label("Nothing you carry (they want: %s)." % ", ".join(buys.keys().map(func(k): return GameData.item_name(k))) if not buys.is_empty() else "They are not buying.", 15)
 	if n.role != "bandit":
@@ -2337,7 +2337,10 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 		why = "Your pack is full." if not p.inv.can_add(id) else ("They have none." if stock == 0 else "You cannot afford one.")
 	else:
 		var owned := p.inv.count(id)
-		mx = QuantityPicker.sell_max_priced(prices, maxi(0, n.coins - w.reserve_of(n)))     # a trader buying stock keeps their reserve (OD-19)
+		var spare := maxi(0, n.coins - w.reserve_of(n))      # a trader buying stock keeps their reserve (OD-19) ...
+		if not prices.is_empty() and spare < int(prices[0]) and w.can_afford(n, int(prices[0]), false, id):
+			spare = int(prices[0])                               # ... but takes one to keep working when out of it
+		mx = QuantityPicker.sell_max_priced(prices, spare)
 		info = "%s  ·  you have %d  ·  %s wants %d, has %d coins" % [each, owned, n.name, w.brain.wants(n, id), n.coins]
 		why = "They want no more of these." if prices.is_empty() else "They cannot afford one right now."
 	var qp := QuantityPicker.new()

@@ -109,6 +109,23 @@ func scenarios(w: World) -> void:
 	check(not w.can_afford(fam, 3), "6. but not on goods or stock that would eat into it")
 	fam.coins = res + 10
 	check(w.can_afford(fam, 10) and not w.can_afford(fam, 11), "   above the reserve they may, and only so far")
+	# 6b. a business purchase needed to keep earning: a trader out of an input of their trade may buy one unit with
+	# reserved coins; with one in hand they work it before buying more (OD-19 section 3)
+	var tanner: NPC = w.npcs.filter(func(o): return o.alive and o.job == "tanner")[0]
+	bare(w, tanner)
+	tanner.inv.items.erase("rabbit_pelt")
+	for m: NPC in members(w, tanner):
+		if m != tanner:
+			m.coins = 0
+	w._reserve_cache.clear()
+	var tres := w.reserve_of(tanner)
+	var pp := w.buy_price(tanner, "rabbit_pelt")
+	tanner.coins = maxi(pp, tres - 1)
+	check(tres > 0 and tanner.coins - pp < tres and w.can_afford(tanner, pp, false, "rabbit_pelt"), "6b. a tanner with no pelts buys one into their reserve, to keep earning (reserve %d)" % tres)
+	tanner.inv.add("rabbit_pelt", 1)
+	check(not w.can_afford(tanner, pp, false, "rabbit_pelt"), "   with one in hand, no more until it is worked")
+	check(not w.can_afford(tanner, pp, false, "iron_ore"), "   and nothing outside their trade")
+	tanner.inv.items.erase("rabbit_pelt")
 	# 7. expected income that fails to arrive
 	var guard: NPC = w.npcs.filter(func(o): return o.alive and o.job == "guard" and o.household >= 0)[0]
 	bare(w, guard)
