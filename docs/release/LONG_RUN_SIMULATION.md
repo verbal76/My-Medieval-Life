@@ -724,3 +724,29 @@ fundamental the overnight directive reserves to the owner. Candidate mechanisms 
 - woodcutting jobs that do not depend on a market axe.
 
 This is owner decision OD-16, with a recommendation in the register.
+
+## 365 days with the housing corrections (staging `59057ac`, 2026-10-20)
+
+Actions run 39385942656 (about 20 minutes a seed, against 38-42 before the PERF-04 optimizations) and local
+re-runs of the same code. The local runs give the same fingerprints: seed 1 `f1a34dd03596b035a06957b6b9cb2ca5`, so
+the record below holds for both. Both passed the script-error gate and the ledger: currency leak 0, no item
+residuals.
+
+| Day | Seed 1: alive / households / sites started, finished / houses / unemployed / woodcutters | Seed 2: the same |
+|---|---|---|
+| 90 | 116 / 24 / 0, 0 / 0 / 17 / 4 | 130 / 24 / 1, 1 / 0 / 2 / 6 |
+| 180 | 128 / 30 / 6, 0 / 0 / 23 / 1 | 133 / 28 / 5, 3 / 2 / 27 / 0 |
+| 270 | 123 / 31 / 7, 0 / 0 / 12 / 1 | 138 / 31 / 6, 3 / 2 / 31 / 1 |
+| 365 | **111 / 40 / 13, 9 / 8** / 24 / 1 | **128 / 40 / 9, 3 / 2** / 39 / 4 |
+
+- Starvation: seed 1 none; seed 2 four deaths in the year.
+- Nights without firewood: 5,916 and 6,449 (7,172 on seed 1 before).
+- Timber made: 10,308 logs and 5,202 planks on seed 1, against 6,496 and 3,364 before.
+
+**What this settles (EQ-07):** both seeds now finish houses (8 and 2), where seed 1 finished none. The population
+holds above its start, and wildlife lives all year.
+
+**What it does not:** the trade economy still stalls for long stretches. The smith is near 0 coins from about
+day 120, unemployment reaches 24-39, firewood is short, and seed 2 lost four villagers to hunger. That is the
+long-term equilibrium Build 16 is for: EQ-06's acceptance is "no consistent spiral into extinction, starvation,
+permanent unemployment or economic paralysis". Owner decision OD-16 is the first question there.

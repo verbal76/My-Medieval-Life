@@ -8292,7 +8292,7 @@
    "id": "EQ-07",
    "title": "Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Correct underlying causes rather than introducing artificial population or resource injections that conceal broken mechanics.",
    "description": "Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8303,7 +8303,7 @@
     "Re-run on several seeds"
    ],
    "implementation": "game/scripts/core/construction.gd (housing goals, responsible_adult, _enlarge, sex-neutral couples), npc_brain.gd (_plan_seek_company saving)",
-   "tests": "game/tests/housing_test.gd test_tool_less_worker",
+   "tests": "long-sims run 39385942656; local 365-day runs seeds 1 and 2 (fingerprint f1a34dd0 matches)",
    "playtest": [],
    "branch": "staging/my-medieval-life",
    "commits": [],
@@ -8374,6 +8374,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "2026-10-20 overnight: population and wildlife failures fixed (365-day Actions run on 0ee0218: 101 alive, every wild species present, ledger balanced); houses: family help, own timber and tool retention added; seed 2 finishes 3 sites in 200 days; seed 1 finishes none because the trade economy stops around day 120-140, raised as OD-16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests",
+     "why": "acceptance met: causes determined and recorded (LONG_RUN_SIMULATION.md: housing deadlock, goals and saving, couples, the forge, founders, tools, family help, timber, the trade stall); corrected not concealed: population 111 and 128 at day 365 (from 100), every wild species alive, houses finished on both seeds (8 and 2; 0 on seed 1 before); re-run on two seeds for 365 days (Actions run 39385942656 and local runs, identical fingerprints). The remaining economic stall and seed 2's 4 starvation deaths are EQ-01/EQ-06 (Build 16), with OD-16"
     }
    ],
    "target_build": "15",
@@ -10287,7 +10292,7 @@
    "id": "HOUSE-07",
    "title": "EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 2, Part 6",
@@ -10298,7 +10303,7 @@
     "100-day runs on the corrected code, labelled as such beside the old results"
    ],
    "implementation": "",
-   "tests": "game/tests/housing_test.gd",
+   "tests": "housing_test.gd; long-run records",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -10328,6 +10333,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; tests; workstream",
      "why": "trace done and root causes named; tests written; fix10 runs under way"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests",
+     "why": "the trace, root causes and the directive's questions are answered in LONG_RUN_SIMULATION.md (EQ-07 investigation and the later sections); the seven housing scenarios have tests in housing_test.gd (95 checks); corrected-code runs are labelled beside the old ones (fix10 100-day, 0ee0218 and 59057ac 365-day)"
     }
    ],
    "target_build": "15",
@@ -12236,11 +12246,16 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason; notes",
      "why": "options and recommendation recorded"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "moved to Build 16: with the housing corrections both seeds finish houses (EQ-07 closed), so the trade stall no longer blocks Build 15; it is the economic paralysis EQ-06 must rule out, and the first question of Build 16's equilibrium work. Still open for the owner"
     }
    ],
-   "target_build": "15",
+   "target_build": "16",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "blocks Build 15 housing completion on seed 1 (EQ-07); it is the equilibrium question of EQ-01/EQ-16"
+   "roadmap_reason": "the economic paralysis EQ-06 and EQ-01 must rule out; the first question of Build 16"
   },
   {
    "id": "OPS-01",
