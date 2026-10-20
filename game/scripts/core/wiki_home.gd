@@ -15,10 +15,10 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.p("Use your bed inside your own house and you lie down in it for the night (or two hours by day) and wake standing beside it. It restores full health and stamina and saves. B, Esc or a tap wakes you early: you get up beside the bed and the night is not slept."),
 		Wiki.p("Your family sleeps in their beds the same way: lying on the bed, not standing in it. Guards and cooks lodge on the straw pallets."),
 		Wiki.links(["sys:resting", "sys:sitting", "guide:rent"])], "bed lie wake sleep rest pallet")
-	sys.call("home_oven", "The home oven", [
-		Wiki.p("The oven or hearth in your own house cooks like the village ovens: it uses the Oven recipes (roasting meat with a log) and nothing else. It does not smelt: ore is smelted at the Forge."),
-		Wiki.h("Recipes")] + GameData.recipes_at("oven").map(func(r): return {"t": "recipe", "id": r}) + [
-		Wiki.links(["sys:food_table", "station:oven", "station:forge"])], "oven hearth cook roast bake home")
+	sys.call("home_oven", "The home hearth", [
+		Wiki.p("The hearth (or oven) in your own house cooks like the village oven and stove together: roasting meat with a log, pottage from grain, ale and the herbal brews. Your family uses the same hearth and the same recipes: they cook pottage and roast meat there, and brew poultices from flowers. It does not smelt: ore is smelted at the Forge."),
+		Wiki.h("Recipes")] + Furniture.home_recipes("hearth").map(func(r): return {"t": "recipe", "id": r}) + [
+		Wiki.links(["sys:food_table", "station:oven", "station:stove", "station:forge"])], "oven hearth cook roast bake pottage brew home")
 	sys.call("food_table", "The food table", [
 		Wiki.p("A table in your own house is a food-preparation station: work that needs no heat, done by hand from what you already have. It is separate from cooking, which needs the oven or the stove."),
 		Wiki.h("Recipes")] + GameData.recipes_at("prep").map(func(r): return {"t": "recipe", "id": r}) + [

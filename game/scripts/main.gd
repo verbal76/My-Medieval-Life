@@ -2772,10 +2772,10 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 	var before := a.hp
 	a.hp -= dmg
 	_hit_fx(animal_sprites.get(a.id), before, a.hp, dmg)
-	_xp("combat", 2)
 	if a.hp > 0.0:
 		world.fauna.provoke(a, "player")            # a wolf or a bear fights back (B14)
 		return
+	_xp("combat", Skills.kill_xp(a.species, world.player.damage()))     # per kill, as a villager's (FSE-B12)
 	var keeper: NPC = null
 	if not a.wild():
 		keeper = world.pen_keeper(world.fauna.pens[a.area])

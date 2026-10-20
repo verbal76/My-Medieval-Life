@@ -181,6 +181,11 @@ func _run() -> void:
 	p.home = home
 	var oven_rs := GameData.recipes_at("oven")
 	check(oven_rs.has("roast_meat") and not oven_rs.any(func(r): return str(r).begins_with("smelt")), "the oven cooks and does not smelt")
+	# FSE-B11: one recipe list for the hearth, the player's and the villagers': what a household cooks and brews there
+	var hearth_rs := Furniture.home_recipes("hearth")
+	check(["roast_meat", "cook_pottage", "brew_poultice"].all(func(r): return hearth_rs.has(r)) and not hearth_rs.any(func(r): return str(r).begins_with("smelt")),
+			"the hearth offers the player the recipes villagers use there (roast meat, pottage, poultices) and never smelting")
+	check(Furniture.home_recipes("table") == GameData.recipes_at("prep"), "the home table offers the prep recipes")
 	check(GameData.recipes_at("prep") == ["bake_egg_bread", "knead_flatbread", "press_cheese"], "the food table has its own preparation recipes (flatbread, and PL2-015: cheese and egg bread)")
 	var ex := Furniture.options(w, home, _centre(hearth.at))
 	check(ex.any(func(o): return o.kind == "station" and o.id == oven_id), "facing the hearth offers the oven")

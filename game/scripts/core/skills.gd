@@ -90,6 +90,14 @@ static func level(who, skill: String) -> int:
 	return level_of(int(who.skills.get(skill, 0)))
 
 
+## Combat xp for killing an animal (hunting or slaughter), one rule for the player and villagers (FSE-B12): 2 xp for
+## each blow the kill takes at the killer's damage (`damage`, before chance doubling): the player's old 2 xp a blow, given
+## once at the kill so a villager's single hunting act earns the same as the player's chase.
+static func kill_xp(species: String, damage: float) -> int:
+	var hp := float(GameData.b("animals")[species].hp)
+	return 2 * int(ceil(hp / maxf(damage, 0.5)))
+
+
 ## Adds xp to `who`; returns the new level if it went up, else 0.
 static func gain(who, skill: String, xp: int) -> int:
 	if xp <= 0:

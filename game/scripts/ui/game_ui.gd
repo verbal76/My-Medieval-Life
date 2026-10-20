@@ -2382,11 +2382,11 @@ func show_craft(station_id: String) -> void:
 	var w: World = main.world
 	var st: Dictionary = Furniture.station_def(station_id) if Furniture.is_home_station(station_id) else w.stations[station_id]
 	var p := w.player
-	_open("craft", "Stove — Cooking & Tonics" if st.type == "stove" else ("Your oven" if st.type == "oven" and st.has("home") else ("Food table — Preparing food" if st.type == "prep" else "The %s" % st.type)))
+	_open("craft", "Stove — Cooking & Tonics" if st.type == "stove" else ("Your hearth" if st.type == "oven" and st.has("home") else ("Food table — Preparing food" if st.type == "prep" else "The %s" % st.type)))
 	var no := w.station_refusal(station_id)
 	if no != "":
 		_label(no, 18, Color(1, 0.7, 0.55))
-	for r in GameData.recipes_at(st.type):
+	for r in (Furniture.home_recipes(str(st.kind)) if st.has("home") else GameData.recipes_at(st.type)):
 		var rec: Dictionary = GameData.recipes[r]
 		var ins := ", ".join(rec.in.keys().map(func(k): return "%d %s (%d)" % [int(rec.in[k]), GameData.item_name(k), p.inv.count(k)]))
 		var outs := ", ".join(rec.out.keys().map(func(k): return "%d %s" % [int(rec.out[k]), GameData.item_name(k)]))

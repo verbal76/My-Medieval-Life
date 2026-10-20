@@ -1017,8 +1017,24 @@ func _fse_defects() -> void:
 			break
 	var key := "hunted_" + prey.species
 	var s0 := float(w.stats.get(key, 0.0))
+	var xp0 := int(p.skills.get("combat", 0))
 	main._hit_animal(prey, 100000.0)
 	check(not prey.alive and float(w.stats.get(key, 0.0)) == s0 + 1.0, "FSE-B10: an animal the player kills is counted as hunted (%s)" % key)
+	check(int(p.skills.get("combat", 0)) - xp0 == Skills.kill_xp(prey.species, p.damage()), "FSE-B12: the player's kill earns the per-kill xp (%d)" % Skills.kill_xp(prey.species, p.damage()))
+	# FSE-B12: a villager's hunt earns the same, by the same rule and their own damage
+	var hunter0: NPC = w.npcs.filter(func(o): return o.alive and o.job == "hunter")[0]
+	var game2: Animal = null
+	for a: Animal in w.fauna.animals:
+		if a.alive and a.wild() and a.species == prey.species:
+			game2 = a
+			break
+	if game2 != null:
+		hunter0.pos = game2.pos
+		var hx0 := int(hunter0.skills.get("combat", 0))
+		w.brain.act(hunter0, "hunt", {"animal": game2.id})
+		check(not game2.alive and int(hunter0.skills.get("combat", 0)) - hx0 == Skills.kill_xp(prey.species, hunter0.damage * Skills.value(hunter0, "combat", "damage_mult", 1.0)),
+				"FSE-B12: a villager's kill of a %s earns xp by the player's rule" % prey.species)
+	check(Skills.kill_xp("deer", 2.0) == 2 * int(ceil(float(GameData.b("animals").deer.hp) / 2.0)), "FSE-B12: 2 xp for each blow the kill takes")
 	# FSE-B05: a pen without a keeper is let again at dawn
 	var pen: Dictionary = {}
 	for id in w.fauna.pens:
@@ -1046,6 +1062,26 @@ func _fse_defects() -> void:
 		if a.alive and a.wild() and a.adult(w.minutes):
 			all_wild += 1
 	check(w.fauna.takeable_game() < all_wild, "FSE-B09: game hunters may take (%d) is fewer than every wild adult (%d): not wolves, foxes, bears or the floors" % [w.fauna.takeable_game(), all_wild])
+	# FSE-B06: the band eats only real food from its own packs; meat is roasted at the camp; with nothing it goes hungry
+	var band: Array = w.npcs.filter(func(o): return o.alive and o.role == "bandit")
+	if band.size() > 0:
+		var b0: NPC = band[0]
+		for o: NPC in band:
+			for id in o.inv.ids():
+				o.inv.remove(id, o.inv.count(id))
+		b0.hunger = 30.0
+		check(not w.brain.band_eat(b0) and is_equal_approx(b0.hunger, 30.0), "FSE-B06: with nothing in the band's packs a bandit stays hungry (no meal from nothing)")
+		b0.inv.add("meat", 1)
+		var rm0 := float(w.stats.get("made_roast_meat", 0.0))
+		check(w.brain.band_eat(b0) and b0.hunger > 30.0 and not b0.inv.has("meat") and float(w.stats.get("made_roast_meat", 0.0)) == rm0 + 2.0,
+				"FSE-B06: a poached carcass's meat is roasted at the camp and eaten (hunger %.0f)" % b0.hunger)
+		if band.size() > 1:
+			var b1: NPC = band[1]
+			b0.hunger = 30.0
+			for id in b0.inv.ids():
+				b0.inv.remove(id, b0.inv.count(id))
+			b1.inv.add("bread", 1)
+			check(w.brain.band_eat(b0) and not b1.inv.has("bread"), "FSE-B06: the band's stores are shared: a bandit eats a comrade's bread")
 	# FSE-B07: the Apothecary is an outlet for flowers
 	check(NPCBrain.OUTLETS.get("flower", []).has("sage"), "FSE-B07: villagers can sell flowers to the Apothecary")
 

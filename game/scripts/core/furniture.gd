@@ -6,7 +6,8 @@ extends RefCounted
 ##
 ##   bed     lie in it (people sleep in it; the player rests in it and wakes beside it)
 ##   chair   sit on it (people eat seated; the player sits, and stands up with any input)
-##   hearth  a home oven: the "oven" station's recipes (roasting), never the forge's smelting
+##   hearth  a home hearth: the "oven" and "stove" stations' recipes (roasting, pottage, brewing), never the
+##           forge's smelting; the same list for the player and villagers (FSE-B11, home_recipes)
 ##   table   a food table: the "prep" station's recipes (cold preparation, no heat)
 ##
 ## The chairs are not in the map's spot lists (the generator emits beds, tables, hearths and chests); they
@@ -16,6 +17,7 @@ extends RefCounted
 const CHAIR_TILES := [1003]                               # Shade's wooden stool (paid atlas tile ids)
 const LAYERS := ["below0", "below1", "below2"]            # the layers furniture is drawn in
 const STATION_OF := {"hearth": "oven", "table": "prep"}   # a home's spot kind -> the crafting station it is
+const HOME_STATIONS := {"hearth": ["oven", "stove"], "table": ["prep"]}   # whose recipes a home spot offers (FSE-B11)
 const HOME_PREFIX := "home:"                              # a home station's id: home:<building>:<kind>:<x>,<y>
 const FACES := {"S": 0, "E": 2, "N": 4, "W": 6}           # ActorSprite DIRS indices
 
@@ -87,6 +89,16 @@ static func station_kind(kind: String) -> String:
 	return str(STATION_OF.get(kind, ""))
 
 
+## The recipes a home spot of a kind offers: one list for the player's craft window and the villagers' home cooking
+## and brewing (FSE-B11: villagers cooked stove recipes at the hearth, the player only oven ones).
+static func home_recipes(kind: String) -> Array:
+	var out := []
+	for st in HOME_STATIONS.get(kind, []):
+		out += GameData.recipes_at(str(st))
+	out.sort()
+	return out
+
+
 # ---------------------------------------------------------------- home stations ----------------
 ## The station id of a home's spot, for the craft window and the recipes (not a World.stations entry: the
 ## villagers' own work never uses them).
@@ -103,7 +115,7 @@ static func station_def(id: String) -> Dictionary:
 	var parts := id.trim_prefix(HOME_PREFIX).split(":")
 	if parts.size() < 3:
 		return {}
-	return {"id": id, "type": station_kind(parts[1]), "building": parts[0], "home": true}
+	return {"id": id, "type": station_kind(parts[1]), "kind": parts[1], "building": parts[0], "home": true}
 
 
 ## Why the player may not use a home's furniture ("" = may): it is their own home, or one they hold.
@@ -116,12 +128,12 @@ static func home_refusal(w, id: String) -> String:
 		return "That is not something to cook or prepare at."
 	if str(w.player.home) == str(d.building) or w.holds(World.PLAYER, b):
 		return ""
-	return "This is not your house; you need leave to use its %s." % ("oven" if d.type == "oven" else "table")
+	return "This is not your house; you need leave to use its %s." % ("hearth" if d.type == "oven" else "table")
 
 
 ## The label a home station offers.
 static func station_label(type: String) -> String:
-	return "Use the oven" if type == "oven" else "Prepare food at the table"
+	return "Cook at the hearth" if type == "oven" else "Prepare food at the table"
 
 
 ## Spots of a player's own place to use, near `probe` (the point in front of the player): the player is

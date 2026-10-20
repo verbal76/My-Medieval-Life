@@ -1393,6 +1393,42 @@ func _bandit_market(n: NPC) -> bool:
 	return false
 
 
+## FSE-B06: a bandit or a clan child eats only real food, from the band's stores: the packs of the living bandits, the
+## eater's own first (food bought at the market or stolen, game they poached). Raw meat is roasted at the camp fire, the
+## oven's recipe (1 meat -> 2 roast meat) on deadwood from the wood, as no log is carried there (an explicit difference
+## from the village recipe, put to the owner). Eats until no longer hungry; true if anything was eaten. With nothing in the
+## stores the band goes hungry (WDR-022: a band may go hungry).
+func band_eat(n: NPC) -> bool:
+	var band: Array = [n] + w.npcs.filter(func(o: NPC) -> bool: return o != n and o.alive and o.role == "bandit")
+	var ate := false
+	var roast: Dictionary = GameData.recipes["roast_meat"]
+	while n.hunger < 90.0:
+		var got := ""
+		for o: NPC in band:
+			for f in EDIBLE:
+				if o.inv.has(f):
+					got = f
+					o.inv.remove(f)
+					break
+			if got == "" and o.inv.count("meat") >= int(roast.in.meat):
+				o.inv.remove("meat", int(roast.in.meat))
+				w.stat("used_meat", float(roast.in.meat))
+				o.inv.add("roast_meat", int(roast.out.roast_meat))
+				w.stat("made_roast_meat", float(roast.out.roast_meat))
+				w.stat("camp_roasted")
+				got = "roast_meat"
+				o.inv.remove(got)
+			if got != "":
+				break
+		if got == "":
+			break
+		n.hunger = minf(100.0, n.hunger + float(GameData.item(got).food))
+		w.stat("eaten_food", float(GameData.item(got).food))
+		w.stat("eaten_" + got)
+		ate = true
+	return ate
+
+
 ## A child of the bandit clan (FAM-07): eats with the band at the camp when hungry (the camp's meal, as the bandits'
 ## own poaching), sleeps there at night and plays about it by day; never goes stalking.
 func _clan_child(n: NPC, h: float) -> void:
@@ -2108,7 +2144,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if prey == null or prey.pos.distance_to(n.pos) > 3.0:
 				return true            # it got away; the hunter picks another
 			w.stat("hunted_" + prey.species)
-			Skills.gain(n, "combat", 2)                    # a blow at game: the player's 2 xp (PAR-01)
+			Skills.gain(n, "combat", Skills.kill_xp(prey.species, n.damage * Skills.value(n, "combat", "damage_mult", 1.0)))     # per kill, the player's rule (FSE-B12)
 			var bag: Inventory = w.fauna.kill(prey)
 			for id in bag.ids():
 				n.inv.add(id, bag.count(id))
@@ -2138,24 +2174,24 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				return true
 			once("slaughter_%d_%d" % [n.id, w.day()], "%s %s slaughtered a %s." % [n.name, n.family, beast.label()])
 			w.stat("slaughtered_" + beast.species)
+			Skills.gain(n, "combat", Skills.kill_xp(beast.species, n.damage * Skills.value(n, "combat", "damage_mult", 1.0)))     # as the player's kill (FSE-B12)
 			var meat: Inventory = w.fauna.kill(beast)
 			for id in meat.ids():
 				n.inv.add(id, meat.count(id))
 			return true
-		"camp_meal":                          # a clan child eats with the band (FAM-07)
-			n.hunger = 100.0
-			w.stat("clan_child_meals")
+		"camp_meal":                          # a clan child eats with the band (FAM-07), from the band's stores
+			if band_eat(n):
+				w.stat("clan_child_meals")
 			return true
 		"poach":
-			if n.hunger < 60.0:
-				n.hunger = 100.0
-				if w.rng.randf() < 0.25:
-					var game: Animal = w.fauna.nearest_game(Vector2(w.bandit_camp), 30.0)
-					if game != null:
-						w.stat("poached_" + game.species)
-						var eaten: Inventory = w.fauna.kill(game)          # eaten at the camp
-						for id in eaten.ids():
-							w.stat("poached_lost_" + id, eaten.count(id))
+			if n.hunger < 60.0 and not band_eat(n) and w.rng.randf() < 0.25:
+				var game: Animal = w.fauna.nearest_game(Vector2(w.bandit_camp), 30.0)
+				if game != null:
+					w.stat("poached_" + game.species)
+					var bag: Inventory = w.fauna.kill(game)          # carried to the camp, then cooked and eaten
+					for id in bag.ids():
+						n.inv.add(id, bag.count(id))
+					band_eat(n)
 			return true
 		"recover_loot":
 			for l in w.loot:
