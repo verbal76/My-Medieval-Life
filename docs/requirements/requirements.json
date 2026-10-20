@@ -13179,6 +13179,96 @@
    "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od18_player_villager_parity.md): THE PLAYER IS A VILLAGER. 18.1 villagers develop skills exactly as the player; 18.2 one trade reserve rule for everyone; 18.3 villagers recover by the player's rest model; 18.4 villagers can craft every recipe under the same requirements; 18.5 crime awareness by legitimate means only. Register PAR-00..PAR-05."
   },
   {
+   "id": "OD-19",
+   "title": "PAR-02: the universal coin-reserve threshold",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Parity alone does not specify whether the universal minimum reserve should be zero or 15 coins. Review the purpose of the existing reserve and recommend one universal rule before finalizing that threshold.",
+   "description": "PAR-02: the universal coin-reserve threshold",
+   "source": "docs/directives/2026-10-20_par_final_consolidated_directive.md",
+   "approval": "",
+   "acceptance": [
+    "The owner chooses; PAR-02's buyer_reserve is set to the choice"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_par_final_consolidated_directive.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target: owner decision"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "Answered by the owner 2026-10-20 (docs/directives/2026-10-20_od19_dynamic_reserves.md): no fixed reserve; a dynamic assessment of foreseeable necessities (PAR-02A)"
+    }
+   ],
+   "target_build": "owner decision",
+   "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od19_dynamic_reserves.md): rejects fixed 15/2-coin reserves; every villager evaluates the money needed for foreseeable necessities (food needs less stored food, dependants, fuel, medicine, real obligations, expected income) with local knowledge only; the reserve guides NPC spending and never prevents spending on the necessities it protects; the player gets the same calculation as information and stays free; no hidden rescue."
+  },
+  {
+   "id": "OD-20",
+   "title": "PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's?",
+   "kind": "decision",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Asked 2026-10-20 with OD-19; not yet answered. Theft keeps its 2026-10-18 cry for now.",
+   "description": "PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's?",
+   "source": "docs/directives/2026-10-20_par_final_consolidated_directive.md",
+   "approval": "",
+   "acceptance": [
+    "The owner answers; theft follows the answer"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_par_final_consolidated_directive.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target: owner decision"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
    "id": "OD-LE-01",
    "title": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
    "kind": "decision",
@@ -15197,7 +15287,7 @@
    "id": "PAR-01",
    "title": "OD-18.1: villagers develop skills exactly as the player does",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "All villagers must develop skills exactly as the player does. Same skill definitions, experience, progression and thresholds; skill requirements apply equally (no gold without Mining 3); proficiency develops naturally through activity; persists and is deterministic; a careful migration for existing villagers and saves. Do not secretly grant unlimited skills or create exceptions.",
    "description": "OD-18.1: villagers develop skills exactly as the player does",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15210,51 +15300,7 @@
     "Determinism gate re-baselined; 100- and 365-day runs re-recorded"
    ],
    "implementation": "",
-   "tests": "",
-   "playtest": [],
-   "branch": "",
-   "commits": [],
-   "parent": "PAR-00",
-   "depends_on": [],
-   "blockers": [],
-   "rules": [],
-   "interactions": [],
-   "wiki": [],
-   "next_action": "",
-   "priority": "",
-   "workstream": "",
-   "superseded_by": null,
-   "notes": "",
-   "history": [
-    {
-     "date": "2026-10-20",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
-    },
-    {
-     "date": "2026-10-20",
-     "change": "target_build",
-     "why": "Roadmap target Build 16"
-    }
-   ],
-   "target_build": "16"
-  },
-  {
-   "id": "PAR-02",
-   "title": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
-   "kind": "approved",
-   "status": "COMPLETE AND VERIFIED",
-   "owner_wording": "One economic rule for everyone. We are villagers too. Traders must not keep one reserve for NPC transactions and another for the player; resolve OD-15 consistently. A trader may refuse for a legitimate in-world reason, not because the buyer is an NPC rather than the player.",
-   "description": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
-   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
-   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
-   "acceptance": [
-    "The player's sales keep the same buyer reserve as villagers' sales (one shared function)",
-    "OD-15 resolved; B7-008's buyer half closed",
-    "Test: a buyer at the reserve refuses the player as it refuses a villager"
-   ],
-   "implementation": "",
-   "tests": "world_test.gd _par02_reserve; start_test.gd",
+   "tests": "parity_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15283,12 +15329,260 @@
     {
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "Villagers carry skills (NPC.skills, saved, save_version 15) on the player's curve; one core function each for mining, felling and crafting (World.work_mine, work_felled, work_craft) used by the player and every villager, with the same gates (gold at Mining 3, recipe levels), tier effects and xp; combat (npc_blow, harm_npc) and trading (deal_factor, deal_xp) by the same rules; grown villagers bring xp_per_year of their trade (Skills.start_xp), a 14 save's villagers are given it on load. parity_test 30 checks; gate re-baselined; four tests' setups updated (skill effects, timing)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Shared skills for the player and villagers; clarified by the final directive (PAR-01A..C); parity_test 42 checks; 26 suites pass; gate re-baselined"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-01A",
+   "title": "Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "During initial world generation, established villagers may receive starting skill experience representing their lives and occupations before the simulation began. This happens only during initial world generation. Starting experience should reflect a plausible occupational history, not age alone. Do not grant every villager maximum proficiency. Do not automatically make every occupation holder capable of performing every advanced task. Older saves: a documented, deterministic, one-time migration; preserve recorded experience; never repeatedly regenerate.",
+   "description": "Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves",
+   "source": "docs/directives/2026-10-20_par_final_consolidated_directive.md",
+   "approval": "Owner, 2026-10-20: final consolidated directive, 'Owner-approved design requirements'",
+   "acceptance": [
+    "Only Skills.seed_villagers at World.setup and at loading a save_version < 15 give starting experience; newcomers and children coming of age start with none",
+    "Experience follows a deterministic per-person tenure in their trade (not age alone), spread across levels: apprentices low, few masters",
+    "A migrated save re-saved and reloaded is unchanged (no regeneration); recorded experience is never replaced"
+   ],
+   "implementation": "",
+   "tests": "parity_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_par_final_consolidated_directive.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented with PAR-01; parity_test checks it; 26 suites pass"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-01B",
+   "title": "Career changes neither grant nor reset experience",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "When a villager changes professions, they do not receive free experience in their new occupation. They also do not automatically lose experience they have already earned. A villager enters a new career with exactly the experience already recorded in the relevant skills.",
+   "description": "Career changes neither grant nor reset experience",
+   "source": "docs/directives/2026-10-20_par_final_consolidated_directive.md",
+   "approval": "Owner, 2026-10-20: final consolidated directive, 'Owner-approved design requirements'",
+   "acceptance": [
+    "Tests: a job change leaves skills unchanged; a smith turned farmer and back keeps Smithing; a farmer turned smith starts at 0 Smithing"
+   ],
+   "implementation": "",
+   "tests": "parity_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_par_final_consolidated_directive.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented with PAR-01; parity_test checks it; 26 suites pass"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-01C",
+   "title": "Experience comes from activities, whatever the occupation",
+   "kind": "approved",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Villagers earn experience from what they actually do, not merely from their assigned profession ... Do not require an NPC to formally hold an occupation before they can earn experience in its associated skills. Do not award experience merely for holding an occupational title.",
+   "description": "Experience comes from activities, whatever the occupation",
+   "source": "docs/directives/2026-10-20_par_final_consolidated_directive.md",
+   "approval": "Owner, 2026-10-20: final consolidated directive, 'Owner-approved design requirements'",
+   "acceptance": [
+    "Every eligible activity awards xp through the shared functions regardless of job (household felling, home cooking and brewing, manor quarrying, self-defence, trading)",
+    "Tests: a farmer who fells a tree gains Woodcutting; a household cook gains Cooking"
+   ],
+   "implementation": "",
+   "tests": "parity_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_par_final_consolidated_directive.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "Implemented with PAR-01; parity_test checks it; 26 suites pass"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-02",
+   "title": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": "One economic rule for everyone. We are villagers too. Traders must not keep one reserve for NPC transactions and another for the player; resolve OD-15 consistently. A trader may refuse for a legitimate in-world reason, not because the buyer is an NPC rather than the player.",
+   "description": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
+   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
+   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
+   "acceptance": [
+    "The player's sales keep the same buyer reserve as villagers' sales (one shared function)",
+    "OD-15 resolved; B7-008's buyer half closed",
+    "Test: a buyer at the reserve refuses the player as it refuses a villager"
+   ],
+   "implementation": "",
+   "tests": "world_test.gd _par02_reserve; start_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Owner answers OD-19; set buyer_reserve accordingly",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "World.buyer_reserve and World.can_afford: one reserve rule for every purchase (player sales, villager sales, caravan restocking, the trade window); test world_test _par02_reserve; full suites and gate next"
     },
     {
      "date": "2026-10-20",
      "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
      "why": "25 Godot suites pass with it (start_test's sale test updated to the buyer's reserve); gate unchanged by it"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "COMPLETE AND VERIFIED -> IMPLEMENTED — TESTING REQUIRED; next_action",
+     "why": "One rule is in place (the buyer's reserve: traders 15, others 2, for every seller); the final directive (section 6) asks for a recommendation on the universal threshold first: OD-19"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-02A",
+   "title": "OD-19: a dynamic, necessity-based reserve in place of fixed coin floors",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Replace arbitrary fixed reserves with dynamic, needs-based financial planning. Every villager ... should evaluate the money required to meet their foreseeable necessities ... The reserve is intended to protect essential needs, not prevent the household from satisfying them ... The reserve is part of an agent's financial judgment, not a magical restriction imposed by the game world ... Use the same underlying financial information and calculations for the player and NPC villagers.",
+   "description": "OD-19: a dynamic, necessity-based reserve in place of fixed coin floors",
+   "source": "docs/directives/2026-10-20_od19_dynamic_reserves.md",
+   "approval": "Owner, 2026-10-20 (OD-19 decision)",
+   "acceptance": [
+    "One shared calculation (World.necessity_reserve) from data the agent can know; no fixed 15 or 2 coin floor remains",
+    "Necessity purchases (food, fuel, medicine, due obligations) may spend reserved coins; stock, resale and discretionary buys are weighed against coins above the reserve",
+    "The nine test scenarios of the decision, section 7",
+    "Deterministic; coins conserved; saves load"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od19_dynamic_reserves.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
     }
    ],
    "target_build": "16"
@@ -15392,7 +15686,7 @@
    "id": "PAR-05",
    "title": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
    "kind": "approved",
-   "status": "COMPLETE AND VERIFIED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Guards must not possess unexplained knowledge of an assault. Remove the fixed 15-tile awareness; apply consistent witnessing to assault and theft (direct witness, an audible disturbance where supported, a report, credible evidence). Separate detection from alarm propagation and guard response. Apply the rules whether the offender is the player or another NPC. Do not invent unsupported sensing mechanics.",
    "description": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15413,7 +15707,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Replace the cry with reports by witnesses and the victim; tests",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -15433,6 +15727,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
      "why": "World.aware_of_attack (sight, the victim's cry) and World.raise_alarm, the same for the player and bandits; the fixed 15-tile alert removed; guards see bandits only in the same place within witness_radius; killing livestock is a theft known as a theft is. 25 suites pass; gate re-baselined"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "COMPLETE AND VERIFIED -> IMPLEMENTED — TESTING REQUIRED; next_action",
+     "why": "Reopened by the final directive (section 9): the victim's-cry channel counts as a hearing mechanic, which is not to be invented; replaced by witness and victim reports to a guard (see the directive)"
     }
    ],
    "target_build": "16"

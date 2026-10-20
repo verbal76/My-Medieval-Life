@@ -115,6 +115,7 @@ func test_foraging_and_brewing() -> void:
 	n.plan.clear()
 	check(w.brain._plan_home_work(n) and n.plan[-1].get("act", "") == "home_brew", "with flowers enough they brew at home: " + n.doing)
 	var f0 := pantry.count("flower")
+	n.skills = {}                            # a novice: the recipe's own conversion (PAR-01 skill effects aside)
 	check(w.brain.act(n, "home_brew", {}) and pantry.count("herbal_poultice") == 1 and pantry.count("flower") == f0 - int(GameData.recipes.brew_poultice["in"].flower), "two flowers became a poultice at the hearth")
 	pantry.items.erase("flower")
 	check(not w.brain.act(n, "home_brew", {}), "no flowers, no poultice")

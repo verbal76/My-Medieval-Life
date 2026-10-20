@@ -56,7 +56,7 @@ func _init() -> void:
 
 
 func level(skill: String) -> int:
-	return Skills.level_of(int(skills.get(skill, 0)))
+	return Skills.level(self, skill)
 
 
 ## (xp into the level, xp the level needs; 0 at the top level).
@@ -66,10 +66,7 @@ func xp_into_level(skill: String) -> Vector2i:
 
 ## Adds xp; returns the new level if it went up, else 0.
 func gain(skill: String, xp: int) -> int:
-	var before := level(skill)
-	skills[skill] = int(skills.get(skill, 0)) + xp
-	var after := level(skill)
-	return after if after > before else 0
+	return Skills.gain(self, skill, xp)
 
 
 ## Being taught (a quest's "teach"): the skill goes up to the start of level `lv` if it is below

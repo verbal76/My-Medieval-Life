@@ -578,6 +578,9 @@ func _run() -> void:
 	var sid: String = w.stalls.keys()[0]
 	var merchant: NPC = w.party(w.tenant_of(w.stalls[sid]))
 	merchant.pos = Vector2(int(w.stalls[sid].use[0]) + 0.5, int(w.stalls[sid].use[1]) + 6.5)
+	for o: NPC in w.npcs:                    # nobody else at the stall either: it is left alone
+		if o != merchant and o.pos.distance_to(Vector2(int(w.stalls[sid].x), int(w.stalls[sid].y))) < 4.0:
+			o.pos = merchant.pos + Vector2(1.0, 0.0)
 	stand_by(Vector2i(int(w.stalls[sid].x), int(w.stalls[sid].y)))
 	check(str(main.target.get("label", "")).ends_with("(%s %s's) — theft" % [merchant.name, merchant.family]) or str(main.target.get("label", "")).begins_with("Empty"), "a stall left alone: \"%s\"" % main.target.get("label", ""))
 	merchant.pos = w.shop_post(merchant)

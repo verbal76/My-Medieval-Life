@@ -366,7 +366,7 @@ func _bite(a: Animal, foe: Vector2) -> void:
 		var n: NPC = w.npc(int(a.anger.trim_prefix("npc:")))
 		if n == null:
 			return
-		n.hp -= maxf(0.5, dmg - n.armor * 0.5)
+		w.harm_npc(n, dmg)                       # their Combat damage_taken and armour (PAR-01)
 		if n.hp <= 0.0:
 			w.kill(n, "killed by a %s" % a.label())
 			a.anger = ""

@@ -9,17 +9,17 @@ extends RefCounted
 ## less (1 - x as a percentage), mult (x as "1.5"), int, sec (seconds), flag (the text alone).
 ## tests/skills_test.gd checks every key in skills.json is here and that the file named reads it.
 const EFFECTS := {
-	"ore_extra_chance": {"fmt": "%s chance of an extra ore a swing", "mode": "pct", "code": "scripts/main.gd"},
-	"tool_wear_save": {"fmt": "%s chance a swing does not wear the pickaxe", "mode": "pct", "code": "scripts/main.gd"},
+	"ore_extra_chance": {"fmt": "%s chance of an extra ore a swing", "mode": "pct", "code": "scripts/core/world.gd"},
+	"tool_wear_save": {"fmt": "%s chance a swing does not wear the pickaxe", "mode": "pct", "code": "scripts/core/world.gd"},
 	"mine_time": {"fmt": "swings take %s less time", "mode": "less", "code": "scripts/main.gd"},
-	"gold": {"fmt": "Mine gold ore", "mode": "flag", "code": "scripts/main.gd"},
+	"gold": {"fmt": "Mine gold ore", "mode": "flag", "code": "scripts/core/world.gd"},
 	"log_bonus": {"fmt": "extra logs from each tree: %s", "mode": "int", "code": "scripts/main.gd"},
 	"chop_time": {"fmt": "chopping takes %s less time", "mode": "less", "code": "scripts/main.gd"},
-	"axe_wear_save": {"fmt": "%s chance a blow does not wear the axe", "mode": "pct", "code": "scripts/main.gd"},
+	"axe_wear_save": {"fmt": "%s chance a blow does not wear the axe", "mode": "pct", "code": "scripts/core/world.gd"},
 	"sapling_bonus": {"fmt": "%s chance of a second sapling from a felled tree", "mode": "pct", "code": "scripts/main.gd"},
 	"craft_time": {"fmt": "work at the station takes %s less time", "mode": "less", "code": "scripts/main.gd"},
-	"save_chance": {"fmt": "%s chance the materials are not used up", "mode": "pct", "code": "scripts/main.gd"},
-	"bonus_chance": {"fmt": "%s chance of one extra unit when the product is not gear", "mode": "pct", "code": "scripts/main.gd"},
+	"save_chance": {"fmt": "%s chance the materials are not used up", "mode": "pct", "code": "scripts/core/world.gd"},
+	"bonus_chance": {"fmt": "%s chance of one extra unit when the product is not gear", "mode": "pct", "code": "scripts/core/world.gd"},
 	"damage_mult": {"fmt": "damage x%s", "mode": "mult", "code": "scripts/core/player_state.gd"},
 	"attack_time": {"fmt": "swings come %s sooner", "mode": "less", "code": "scripts/main.gd"},
 	"damage_taken": {"fmt": "%s less damage taken", "mode": "less", "code": "scripts/core/world.gd"},
@@ -84,10 +84,54 @@ static func tier_levels(skill: String) -> Array:
 	return ls
 
 
-## The value of a tier effect for a player: the highest tier at or below their level that defines the
-## key, else `default`.
-static func value(p: PlayerState, skill: String, key: String, default := 0.0) -> float:
-	return value_at(p.level(skill), skill, key, default)
+## PAR-01 (owner OD-18.1): the player and every villager keep their skills the same way (`skills`: skill -> xp) and
+## climb the same curve. `who` is a PlayerState or an NPC.
+static func level(who, skill: String) -> int:
+	return level_of(int(who.skills.get(skill, 0)))
+
+
+## Adds xp to `who`; returns the new level if it went up, else 0.
+static func gain(who, skill: String, xp: int) -> int:
+	if xp <= 0:
+		return 0
+	var before := level(who, skill)
+	who.skills[skill] = int(who.skills.get(skill, 0)) + xp
+	var after := level(who, skill)
+	return after if after > before else 0
+
+
+## PAR-01A (owner's final directive, section 2): the presumed history of an established villager before the world
+## begins, {skill: xp}: a tenure in `job` of a fixed share (`share`, 0..1, the person's own) of the working years their
+## age allows, from skill_start.tenure_min of them up to all, capped at max_tenure_years, at xp_per_year, in that
+## trade's skills only. Used only by seed_villagers.
+static func start_xp(job: String, age_years: float, share: float) -> Dictionary:
+	var c: Dictionary = GameData.b("skill_start")
+	var working := maxf(0.0, age_years - float(c.from_age))
+	var tenure := minf(working * lerpf(float(c.tenure_min), 1.0, clampf(share, 0.0, 1.0)), float(c.max_tenure_years))
+	var out := {}
+	for sk in c.job_skills.get(job, []):
+		out[str(sk)] = roundi(tenure * float(c.xp_per_year))
+	return out
+
+
+## A person's fixed share of their working years spent in their trade (start_xp): from their id and the world seed.
+static func tenure_share(w: World, n: NPC) -> float:
+	return float(posmod(n.id * 7919 + int(w.seed) * 104729, 1000)) / 999.0
+
+
+## The one-time starting allocation (PAR-01A): only at World.setup (a new world's settlers) and when a save from
+## before skills existed (save_version < 15) is loaded. Experience already recorded is never replaced. Deterministic.
+static func seed_villagers(w: World) -> void:
+	for n: NPC in w.npcs:
+		if n.alive and n.skills.is_empty() and n.role in ["adult", "elder", "bandit"]:
+			var job := n.job if n.role != "bandit" else "guard"
+			n.skills = start_xp(job, Life.npc_age(w, n), tenure_share(w, n))
+
+
+## The value of a tier effect for the player or a villager: the highest tier at or below their level that defines
+## the key, else `default`.
+static func value(who, skill: String, key: String, default := 0.0) -> float:
+	return value_at(level(who, skill), skill, key, default)
 
 
 static func value_at(lv: int, skill: String, key: String, default := 0.0) -> float:
@@ -103,8 +147,8 @@ static func value_at(lv: int, skill: String, key: String, default := 0.0) -> flo
 	return out
 
 
-static func has(p: PlayerState, skill: String, key: String) -> bool:
-	return value(p, skill, key) > 0.0
+static func has(who, skill: String, key: String) -> bool:
+	return value(who, skill, key) > 0.0
 
 
 ## Items that are gear (never doubled by a bonus roll).

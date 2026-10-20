@@ -432,7 +432,7 @@ func _make_timber(n: NPC, c: Dictionary, need: Dictionary) -> bool:
 		t.claimed = n.id
 		var at := Vector2i(t.x, t.y)
 		n.doing = "felling a tree for the building site"
-		n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("chop_minutes")), "chop", {"x": t.x, "y": t.y}, "work", at)]
+		n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0), "chop", {"x": t.x, "y": t.y}, "work", at)]
 		return true
 	var price := b.tool_price(n, "axe")
 	if price > 0 and n.coins >= price and w.property.purse(str(c.employer)) - price >= estimate(need) / 2:

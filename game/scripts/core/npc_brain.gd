@@ -864,28 +864,33 @@ func _miner(n: NPC) -> bool:
 		carried += n.inv.count(o)
 	if carried >= int(GameData.b("carry_ore")):
 		return _plan_sell_all(n)       # sells whatever has a buyer first
-	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null)
+	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null and _can_mine(n, o))
 	var d: Dictionary = w.nearest_deposit(n.cell(), ores) if not ores.is_empty() else {}
 	if d.is_empty():
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
 		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
-			if _buyer_for(n, o) != null:
+			if _buyer_for(n, o) != null and _can_mine(n, o):
 				sellable.append(o)
 		if not sellable.is_empty():
 			d = w.nearest_deposit(n.cell(), sellable)
 	if d.is_empty():
 		if carried > 0:
 			return _plan_sell_all(n)
-		if w.nearest_deposit(n.cell(), ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]).is_empty():
+		if w.nearest_deposit(n.cell(), ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"].filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
 			# the mine is worked out: the manor takes on those who lose their living
 			_change_job(n, "manor_hand", "the mine is worked out")
 			return false
 		return _idle_at_work(n, "waiting for ore buyers")
 	var at := Vector2i(d.x, d.y)
 	n.doing = "mining %s" % GameData.item_name(d.ore).to_lower()
-	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("mine_minutes")), "mine", {"x": d.x, "y": d.y}, "work", at)]
+	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), "mine", {"x": d.x, "y": d.y}, "work", at)]
 	return true
+
+
+## PAR-01: whether `n` may work a seam of `ore` (gold ore needs Mining level 3, as for the player).
+func _can_mine(n: NPC, ore: String) -> bool:
+	return ore != "gold_ore" or Skills.has(n, "mining", "gold")
 
 
 func _wanted_ores() -> Array:
@@ -917,8 +922,14 @@ func _woodcutter(n: NPC) -> bool:
 	t.claimed = n.id
 	var at := Vector2i(t.x, t.y)
 	n.doing = "felling a tree"
-	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("chop_minutes")), "chop", {"x": t.x, "y": t.y}, "work", at)]
+	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0), "chop", {"x": t.x, "y": t.y}, "work", at)]
 	return true
+
+
+## PAR-01: whether `n` has the skill level recipe `r` needs (the player's requirement).
+func _can_make(n: NPC, r: String) -> bool:
+	var rec: Dictionary = GameData.recipes[r]
+	return n.level(str(rec.skill)) >= int(rec.level)
 
 
 func _crafter(n: NPC, recipes: Array) -> bool:
@@ -1399,11 +1410,7 @@ func _cook_at_home(n: NPC, pantry: Inventory) -> void:
 	var need := int(rec.in.wheat)
 	if pantry.count("wheat") < need and n.inv.has("wheat"):
 		w.transfer(n.inv, pantry, "wheat", mini(need - pantry.count("wheat"), n.inv.count("wheat")))
-	if pantry.count("wheat") >= need:
-		pantry.remove("wheat", need)
-		pantry.add("pottage", int(rec.out.pottage))
-		w.stat("made_pottage", float(rec.out.pottage))
-		w.stat("used_wheat", float(need))
+	if pantry.count("wheat") >= need and w.work_craft(n, "cook_pottage", pantry).result == "ok":
 		w.stat("home_cooked")
 
 
@@ -1539,6 +1546,9 @@ func _get_tool(n: NPC, tool: String) -> bool:
 
 func _do_recipe(n: NPC, r: String) -> bool:
 	var rec: Dictionary = GameData.recipes[r]
+	if n.level(str(rec.skill)) < int(rec.level):        # PAR-01: the player's requirement
+		w.stat("skill_short_" + r)
+		return false
 	var st := _station_for(n, rec.station)
 	if st == "":
 		w.stat("station_busy_" + str(rec.station))
@@ -1546,7 +1556,8 @@ func _do_recipe(n: NPC, r: String) -> bool:
 	# the station is reserved for the walk there and the work, plus an hour's slack
 	w.stations[st].users[n.id] = w.minutes + w.map.data.w + float(rec.minutes) + 60.0
 	n.doing = "%s" % r.replace("_", " ")
-	n.plan = [go(w.station_use(st)), work(float(rec.minutes), "craft", {"recipe": r, "station": st}, "work", _station_at(st))]
+	var mins := float(rec.minutes) * Skills.value(n, str(rec.skill), "craft_time", 1.0)
+	n.plan = [go(w.station_use(st)), work(mins, "craft", {"recipe": r, "station": st}, "work", _station_at(st))]
 	return true
 
 
@@ -1673,7 +1684,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"drink":
 			var keeper := _first_with_job("tavernkeeper")
 			if keeper and keeper.inv.has("ale"):
-				if w.trade(n, keeper, "ale", 1, w.sell_price(keeper, "ale")):
+				var ale := w.deal_price(w.sell_price(keeper, "ale"), n, keeper)
+				if w.trade(n, keeper, "ale", 1, ale):
+					w.deal_xp(n, keeper, ale)
 					n.inv.remove("ale")
 					n.hunger = minf(100.0, n.hunger + float(GameData.item("ale").food))
 					w.stat("eaten_food", float(GameData.item("ale").food))
@@ -1682,7 +1695,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				# plate for the coin (cheese as a treat), out of the keeper's own stock
 				if n.hunger < float(GameData.b("tavern_supper_hunger")):
 					var plate := _meal_choice(n, keeper, ["bread", "cheese"])
-					if plate != "" and w.trade(n, keeper, plate, 1, w.sell_price(keeper, plate)):
+					var pp := w.deal_price(w.sell_price(keeper, plate), n, keeper) if plate != "" else 0
+					if plate != "" and w.trade(n, keeper, plate, 1, pp):
+						w.deal_xp(n, keeper, pp)
 						n.inv.remove(plate)
 						n.hunger = minf(100.0, n.hunger + float(GameData.item(plate).food))
 						w.stat("eaten_food", float(GameData.item(plate).food))
@@ -1760,14 +1775,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var rec: Dictionary = GameData.recipes["brew_poultice"]
 			if n.inv.has("flower"):
 				w.transfer(n.inv, pantry, "flower", n.inv.count("flower"))
-			if not pantry.has_all(rec["in"]):
+			if not pantry.has_all(rec["in"]) or w.work_craft(n, "brew_poultice", pantry).result != "ok":
 				return false
-			pantry.remove_all(rec["in"])
-			for id in rec.out:
-				pantry.add(id, int(rec.out[id]))
-				w.stat("made_" + id, float(rec.out[id]))
-			for id in rec["in"]:
-				w.stat("used_" + id, float(rec["in"][id]))
 			w.stat("home_brewed")
 			return true
 		"collect_pen":
@@ -1790,7 +1799,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if payer == null or not payer.alive:
 				payer = n
 			var f := _meal_choice(payer, v)
-			if f != "" and w.trade(payer, v, f, 1, w.sell_price(v, f)):
+			var fp := w.deal_price(w.sell_price(v, f), payer, v) if f != "" else 0
+			if f != "" and w.trade(payer, v, f, 1, fp):
+				w.deal_xp(payer, v, fp)
 				if payer != n:
 					w.transfer(payer.inv, n.inv, f, 1)
 				if a.pantry:
@@ -1805,8 +1816,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if buyer == null or not buyer.alive:
 				buyer = n
 			var qty := mini(int(a.qty), v.inv.count(a.item))
-			while qty > 0 and not w.trade(buyer, v, a.item, qty, w.sell_price(v, a.item)):
+			var up := w.deal_price(w.sell_price(v, a.item), buyer, v)
+			while qty > 0 and not w.trade(buyer, v, a.item, qty, up):
 				qty -= 1
+			if qty > 0:
+				w.deal_xp(buyer, v, up * qty)
 			if qty > 0 and buyer != n:
 				w.transfer(buyer.inv, n.inv, a.item, qty)
 			if qty > 0 and a.get("pantry", false):
@@ -1820,51 +1834,38 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				return false
 			var qty := mini(n.inv.count(a.item) - reserve(n, a.item), wants(b, a.item))
 			var sold := 0
-			while qty > 0 and w.can_afford(b, w.buy_price(b, a.item)):
-				if w.trade(b, n, a.item, 1, w.buy_price(b, a.item)):
+			var paid := 0
+			while qty > 0 and w.can_afford(b, w.deal_price(w.buy_price(b, a.item), b, n)):
+				var price := w.deal_price(w.buy_price(b, a.item), b, n)
+				if w.trade(b, n, a.item, 1, price):
 					sold += 1
+					paid += price
 					qty -= 1
 				else:
 					break
+			if sold > 0:
+				w.deal_xp(b, n, paid)
 			return sold > 0
 		"mine":
 			var d := w.deposit_at(Vector2i(int(a.x), int(a.y)))
-			var ore := w.mine_unit(d)
-			if ore == "":
+			var r := w.work_mine(n, d, n.inv)                   # the player's swing (PAR-01)
+			if r.result != "ok":
 				return false
-			n.inv.add(ore)
-			w.stat("mined_" + ore)
-			if n.inv.wear("pickaxe", 1):
-				w.stat("broke_pickaxe")
+			if r.broke:
 				w.note("%s %s's pickaxe broke." % [n.name, n.family])
 			return true
 		"chop":
 			var t := w.tree_at(Vector2i(int(a.x), int(a.y)))
 			t.erase("claimed")
-			var logs := w.fell(t, 0)
+			var logs := w.fell(t, int(Skills.value(n, "woodcutting", "log_bonus")))
 			if logs <= 0:
 				return false
-			n.inv.add("log", logs)
-			w.stat("trees_felled")
-			w.stat("felled_log", logs)
-			if n.inv.wear("axe", 3):
-				w.stat("broke_axe")
+			if w.work_felled(n, logs, n.inv).broke:           # the player's felling (PAR-01)
 				w.note("%s %s's axe broke." % [n.name, n.family])
 			return true
 		"craft":
-			var rec: Dictionary = GameData.recipes[a.recipe]
 			release_station(n, a.get("station", ""))
-			if not n.inv.remove_all(rec.in):
-				return false
-			for id in rec.out:
-				n.inv.add(id, int(rec.out[id]))
-				w.stat("made_" + id, float(rec.out[id]))
-			for id in rec.in:
-				w.stat("used_" + id, float(rec.in[id]))
-			if rec.station == "anvil":
-				if n.inv.wear("hammer", 2):
-					w.stat("broke_hammer")
-			return true
+			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
 		"harvest":
 			var f := _field(a.field)
 			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():
@@ -1897,6 +1898,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if prey == null or prey.pos.distance_to(n.pos) > 3.0:
 				return true            # it got away; the hunter picks another
 			w.stat("hunted_" + prey.species)
+			Skills.gain(n, "combat", 2)                    # a blow at game: the player's 2 xp (PAR-01)
 			var bag: Inventory = w.fauna.kill(prey)
 			for id in bag.ids():
 				n.inv.add(id, bag.count(id))
@@ -2003,7 +2005,7 @@ func fight(n: NPC, dt: float) -> void:
 		return
 	if n.attack_cd > 0.0:
 		return
-	n.attack_cd = 1.0
+	n.attack_cd = 1.0 * Skills.value(n, "combat", "attack_time", 1.0)     # the player's Combat rule (PAR-01)
 	n.anim = "sword"
 	n.plan = []
 	# a bandit robs ordinary villagers rather than killing them
@@ -2025,12 +2027,14 @@ func fight(n: NPC, dt: float) -> void:
 		n.target = -1
 		n.plan = [go(w.bandit_camp, 1.2)]
 		return
+	var dmg := w.npc_blow(n)
+	Skills.gain(n, "combat", 4)                        # a blow at a person: the player's 4 xp (PAR-01)
 	if n.target == -2:
 		# the death screen names who struck: "Wat the guard", "Rob the bandit", or just the name
 		var who := n.job if n.job != "" else ("bandit" if n.role == "bandit" else "")
-		w.damage_player(n.damage, n.name + (" the " + who if who != "" else ""))
+		w.damage_player(dmg, n.name + (" the " + who if who != "" else ""))
 	else:
-		tnpc.hp -= maxf(0.5, n.damage - tnpc.armor * 0.5)
+		w.harm_npc(tnpc, dmg)
 		w.wake_near(tnpc.pos, float(GameData.b("sleep_wake_radius")))    # the blow wakes them, and the noise others
 		if tnpc.target == -1:
 			tnpc.target = n.id

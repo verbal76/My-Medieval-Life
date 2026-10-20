@@ -159,6 +159,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	player.pos = Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
 	give_start_kit(player)
 	Life.init_player(self)             # B8-029
+	Skills.seed_villagers(self)        # PAR-01A: the settlers' history at their trades (only here and in an old save's migration)
 	for n: NPC in npcs:
 		by_id[n.id] = n
 	index_interiors()
@@ -687,7 +688,7 @@ static func buy_price_at(id: String, stock: int) -> int:
 func player_quote(n: NPC, id: String, qty: int, buying: bool) -> Array:
 	var out := []
 	var stock := n.inv.count(id)
-	var f := player_price_factor(buying)
+	var f := deal_factor(player, n) if buying else deal_factor(n, player)     # both sides' Trading (PAR-01)
 	if relations.player_friend(n):              # a friend's price (CRT-06)
 		f *= 1.0 - float(Relations.cfg().friend_price) if buying else 1.0 + float(Relations.cfg().friend_price)
 	var nearby := local_supply(id, n.pos, n) if buying else 0
@@ -710,12 +711,35 @@ func player_buy_many(vendor: NPC, id: String, qty: int) -> Dictionary:
 		return {"result": "failed", "text": "You cannot afford that (%d coins)." % bill, "bought": 0, "paid": 0}
 	if not trade(player, vendor, id, qty, 0, bill):
 		return {"result": "failed", "text": "The trade fell through.", "bought": 0, "paid": 0}
+	deal_xp(player, vendor, bill)
 	return {"result": "bought", "text": "", "bought": qty, "paid": bill}
 
 
 func player_price_factor(buying: bool) -> float:
 	var f := Skills.value(player, "trading", "price_bonus")
 	return 1.0 - f if buying else 1.0 + f
+
+
+## PAR-01 (owner OD-18.1): the price factor of a deal between `buyer` and `seller`, the player or villagers alike:
+## each side's Trading price_bonus pulls the price their way (1 + the seller's - the buyer's). `null` is a party with
+## no skills (the caravan, the manor).
+func deal_factor(buyer, seller) -> float:
+	var up := Skills.value(seller, "trading", "price_bonus") if seller != null else 0.0
+	var down := Skills.value(buyer, "trading", "price_bonus") if buyer != null else 0.0
+	return 1.0 + up - down
+
+
+## A unit price `base` between `buyer` and `seller` after their Trading (deal_factor).
+func deal_price(base: int, buyer, seller) -> int:
+	return maxi(1, roundi(float(base) * deal_factor(buyer, seller)))
+
+
+## The Trading experience of a deal worth `coins`, the player's rule (Skills.trade_xp), for each villager in it (the
+## player's own comes through the trade window, which shows the new level).
+func deal_xp(buyer, seller, coins: int) -> void:
+	for who in [buyer, seller]:
+		if who is NPC:
+			Skills.gain(who, "trading", Skills.trade_xp(coins))
 
 
 func total_coins() -> int:
@@ -860,6 +884,95 @@ func pick_plant(pl: Dictionary) -> Dictionary:
 	for id in got:
 		stat("made_" + id, float(got[id]))     # the economy ledger's production count (economy_sim)
 	return got
+
+
+## PAR-01 (owner OD-18.1): the goods `who` makes go to `into`: the player's pack through player_gain (counted, a
+## full pack sets it down), anyone else's inventory with the same ledger count (`kind` + id).
+func _work_goods(who, into: Inventory, id: String, n: int, kind: String) -> void:
+	if n <= 0:
+		return
+	if who is PlayerState and into == player.inv:
+		player_gain(id, n, kind)
+		return
+	into.add(id, n)
+	stat(kind + id, float(n))
+
+
+## Wear `tool` by `amount` unless the skill's `save_key` spares it; a break is counted. True if it broke.
+func _work_wear(who, tool: String, amount: int, skill: String, save_key: String) -> bool:
+	if tool == "" or not who.inv.has(tool):
+		return false
+	if who.inv.wear(tool, 0 if rng.randf() < Skills.value(who, skill, save_key) else amount):
+		stat("broke_" + tool)
+		return true
+	return false
+
+
+## PAR-01: one swing at a seam, for the player, a miner or a manor hand alike: the same gate (gold ore needs Mining
+## level 3), the same tier effects (an extra ore, a pickaxe spared wear) and the same experience (8 xp an ore).
+## The ore goes to `into`. Returns {result: "ok" | "gold" | "out", ore, n, broke, up} (up: a new Mining level, or 0).
+func work_mine(who, d: Dictionary, into: Inventory, tool := "pickaxe") -> Dictionary:
+	if str(d.get("ore", "")) == "gold_ore" and not Skills.has(who, "mining", "gold"):
+		return {"result": "gold"}
+	var ore := mine_unit(d)
+	if ore == "":
+		return {"result": "out"}
+	var k := 1
+	if rng.randf() < Skills.value(who, "mining", "ore_extra_chance") and mine_unit(d) != "":
+		k += 1
+	_work_goods(who, into, ore, k, "mined_")
+	var broke := _work_wear(who, tool, 1, "mining", "tool_wear_save")
+	return {"result": "ok", "ore": ore, "n": k, "broke": broke, "up": Skills.gain(who, "mining", 8 * k)}
+
+
+## PAR-01: a tree has fallen to `who`'s axe: `logs` (fell's count, with the Woodcutting log_bonus) go to `into`, the axe
+## wears (3) unless spared, and the work earns 12 Woodcutting xp, the same for everyone. Returns {broke, up}.
+func work_felled(who, logs: int, into: Inventory, tool := "axe") -> Dictionary:
+	_work_goods(who, into, "log", logs, "felled_")
+	stat("trees_felled")
+	var broke := _work_wear(who, tool, 3, "woodcutting", "axe_wear_save")
+	return {"broke": broke, "up": Skills.gain(who, "woodcutting", 12)}
+
+
+## PAR-01 and PAR-04 (owner OD-18.1, 18.4): one way to make a recipe, for the player and every villager: the recipe's
+## skill level is needed, the inputs come out of `inv` (the crafter's pack, or a household's pantry) unless a practised
+## hand saves them (save_chance), a bonus unit may come (bonus_chance, never gear), outputs go back to `inv`, anvil work
+## wears the crafter's hammer if they have one, and the recipe's xp is earned. Every unit is counted for the ledger.
+## Returns {result: "ok" | "level" | "materials", up}.
+func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
+	var r: Dictionary = GameData.recipes[recipe]
+	if Skills.level(who, str(r.skill)) < int(r.level):
+		return {"result": "level"}
+	if not inv.remove_all(r["in"]):
+		return {"result": "materials"}
+	if rng.randf() < Skills.value(who, str(r.skill), "save_chance"):
+		for id in r["in"]:
+			inv.add(id, int(r["in"][id]))                  # a practised hand wastes nothing
+	else:
+		for id in r["in"]:
+			stat("used_" + id, float(r["in"][id]))
+	var bonus := rng.randf() < Skills.value(who, str(r.skill), "bonus_chance")
+	for id in r.out:
+		_work_goods(who, inv, id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0), "made_")
+	if str(r.station) == "anvil":
+		_work_wear(who, "hammer", 2, str(r.skill), "")
+	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
+
+
+## PAR-01: a blow of `dmg` (the attacker's, after their own Combat effects) landing on villager `n`: their Combat
+## damage_taken, then half their armour, as the player's damage_player applies the player's. Returns what it took.
+func harm_npc(n: NPC, dmg: float) -> float:
+	var dealt := maxf(0.5, dmg * Skills.value(n, "combat", "damage_taken", 1.0) - n.armor * 0.5)
+	n.hp -= dealt
+	return dealt
+
+
+## PAR-01: a villager's blow, by the player's Combat rules: damage_mult, a crit_chance double blow.
+func npc_blow(n: NPC) -> float:
+	var dmg := n.damage * Skills.value(n, "combat", "damage_mult", 1.0)
+	if rng.randf() < Skills.value(n, "combat", "crit_chance"):
+		dmg *= 2.0
+	return dmg
 
 
 ## Take one unit from a deposit. Returns the ore id or "" if it is exhausted.
@@ -2319,6 +2432,7 @@ func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
 			return r
 		sold += 1
 		paid += price
+	deal_xp(buyer, player, paid)
 	return {"result": "sold", "text": "", "sold": sold, "paid": paid}
 
 
@@ -2419,7 +2533,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 14          # 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 15          # 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -2848,6 +2962,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		npcs.append(n)
 		by_id[n.id] = n
 	player = PlayerState.from_dict(d.player)
+	if int(d.get("save_version", 0)) < 15:
+		Skills.seed_villagers(self)    # PAR-01: an older save's villagers had no skills
 	_migrate_property(d)
 	if d.has("treasury"):
 		treasury = int(d.treasury)

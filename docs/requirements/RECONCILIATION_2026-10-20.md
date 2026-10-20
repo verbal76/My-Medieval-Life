@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 88 (50 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **264** = 214 still open from the baseline + 50 added and open |
+| Entries added since | | 94 (53 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **267** = 214 still open from the baseline + 53 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,7 +44,7 @@ None.
 
 None.
 
-## Added since the baseline (88)
+## Added since the baseline (94)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -95,6 +95,8 @@ None.
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | decision | COMPLETE AND VERIFIED | 15 |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | 16 |
 | OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | decision | COMPLETE AND VERIFIED | owner decision |
+| OD-19 | PAR-02: the universal coin-reserve threshold | decision | COMPLETE AND VERIFIED | owner decision |
+| OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | decision | APPROVED — NOT STARTED | owner decision |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |
@@ -113,11 +115,15 @@ None.
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT | 15 |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED | 16 |
-| PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | APPROVED — NOT STARTED | 16 |
-| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | COMPLETE AND VERIFIED | 16 |
+| PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | COMPLETE AND VERIFIED | 16 |
+| PAR-01A | Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves | approved | COMPLETE AND VERIFIED | 16 |
+| PAR-01B | Career changes neither grant nor reset experience | approved | COMPLETE AND VERIFIED | 16 |
+| PAR-01C | Experience comes from activities, whatever the occupation | approved | COMPLETE AND VERIFIED | 16 |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | APPROVED — NOT STARTED | 16 |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | APPROVED — NOT STARTED | 16 |
-| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | COMPLETE AND VERIFIED | 16 |
+| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | COMPLETE AND VERIFIED | 15 |

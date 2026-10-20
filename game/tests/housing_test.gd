@@ -192,7 +192,8 @@ func test_mother_builds_with_own_and_bought_materials() -> void:
 	hh.build = str(p.id)
 	for o: NPC in w.brain._members(h):
 		o.coins = 0
-	mom.coins = 200
+	# enough to buy what the site needs, not to pay a helper as well: the founder carries (Construction._keep_building)
+	mom.coins = 10 + c._tool_reserve(h) + c.estimate(p.site.need) + int(GameData.b("helper_wage")) - 1
 	var need0: Dictionary = p.site.need.duplicate()
 	var bought0 := {}
 	var held0 := {}

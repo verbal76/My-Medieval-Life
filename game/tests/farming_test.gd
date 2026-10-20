@@ -573,6 +573,7 @@ func test_village_chain() -> void:
 	var sage := w.npc(w.sage_id)
 	check(w.brain.wants(tanner, "wool") > 0 and w.brain.wants(sage, "linen_bandage") > 0, "the tanner buys wool, the sage buys bandages")
 	tanner.inv.items.clear()
+	tanner.skills = {}                       # a novice: the recipe's own conversion (PAR-01 skill effects aside)
 	tanner.inv.add("wool", 2)
 	var bench: String = w.stations_of("workbench")[0]
 	check(w.brain.act(tanner, "craft", {"recipe": "weave_cloth", "station": bench}) and tanner.inv.count("wool_cloth") == 1 and not tanner.inv.has("wool"), "2 wool woven into cloth")

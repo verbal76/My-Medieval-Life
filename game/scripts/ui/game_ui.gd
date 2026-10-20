@@ -2259,7 +2259,7 @@ func show_trade(n: NPC, pick := {}) -> void:
 	if sale.is_empty():
 		_label("Nothing right now.", 15)
 	for id in sale:
-		var price := maxi(1, roundi(w.sell_price(n, id) * w.player_price_factor(true)))
+		var price := w.deal_price(w.sell_price(n, id), w.player, n)
 		var nn := n
 		var bid: String = id
 		_item_row(id, n.inv.count(id), "%d coins each%s" % [price, effect_suffix(id)], "Buy", func():
@@ -2283,7 +2283,7 @@ func show_trade(n: NPC, pick := {}) -> void:
 	for id in p.inv.ids():
 		if w.brain.wants(n, id) > 0:
 			any = true
-			var price := maxi(1, roundi(w.buy_price(n, id) * w.player_price_factor(false)))
+			var price := w.deal_price(w.buy_price(n, id), n, w.player)
 			var nn := n
 			var sid: String = id
 			var hot := p.stolen_count(id)

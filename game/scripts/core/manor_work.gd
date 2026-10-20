@@ -476,13 +476,10 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 
 ## A villager quarrying: one unit from the nearest stone seam into the job's load.
 func mine_into(j: Dictionary, n: NPC, dep: Dictionary) -> bool:
-	var ore := w.mine_unit(dep)
-	if ore == "":
+	var r := w.work_mine(n, dep, j.load)                    # the player's swing (PAR-01)
+	if r.result != "ok":
 		return false
-	j.load.add(ore)
-	w.stat("mined_" + ore)
-	if n.inv.wear("pickaxe", 1):
-		w.stat("broke_pickaxe")
+	if r.broke:
 		w.note("%s %s's pickaxe broke." % [n.name, n.family])
 	return true
 
@@ -548,7 +545,7 @@ func plan(n: NPC) -> bool:
 				release(j)
 				return false
 			var at := Vector2i(d.x, d.y)
-			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("mine_minutes")), "mj_mine", {"job": int(j.id), "x": d.x, "y": d.y}, "work", at)]
+			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), "mj_mine", {"job": int(j.id), "x": d.x, "y": d.y}, "work", at)]
 		"mend":
 			var at := step_cell(j)
 			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(cfg("mend_minutes")), "mj_step", {"job": int(j.id)}, "work", at)]

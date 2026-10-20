@@ -43,6 +43,7 @@ var facing := Vector2.DOWN
 var attack_cd := 0.0
 var target := -1             # npc id being fought (-1 none, -2 the player)
 var memory: Array = []       # notable events this NPC knows about
+var skills := {}             # skill -> xp, as the player's (PAR-01: the same curve, gates and effects; Skills)
 var earned := 0
 var spent := 0
 var tick_acc := 0.0          # for abstract (distant) simulation
@@ -82,6 +83,14 @@ func hp_cap() -> float:
 	return max_hp
 
 
+func level(skill: String) -> int:
+	return Skills.level(self, skill)
+
+
+func gain(skill: String, xp: int) -> int:
+	return Skills.gain(self, skill, xp)
+
+
 func remember(text: String) -> void:
 	memory.append(text)
 	if memory.size() > 8:
@@ -102,6 +111,7 @@ func to_dict() -> Dictionary:
 		"born": born, "sex": sex, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(),
 		"birth_family": birth_family,
 		"clan": clan,
+		"skills": skills.duplicate(),
 	}
 
 
@@ -128,4 +138,6 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.children = (d.get("children", []) as Array).map(func(c): return int(c))
 	n.birth_family = str(d.get("birth_family", ""))          # older saves: none changed
 	n.clan = str(d.get("clan", ""))                           # older saves: none
+	for k in d.get("skills", {}):                             # older saves (< 15): World.load_dict seeds them (Skills.seed_villagers)
+		n.skills[str(k)] = int(d.skills[k])
 	return n

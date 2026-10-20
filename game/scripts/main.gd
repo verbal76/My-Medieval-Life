@@ -2374,25 +2374,23 @@ func _use() -> void:
 				return
 			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0)) * Skills.value(p, "mining", "mine_time", 1.0)
 			start_action("Mining", secs, func():
-				var ore := world.mine_unit(dep)
-				if ore == "":
+				var full := not p.inv.can_add(str(dep.get("ore", "stone")))
+				var r := world.work_mine(p, dep, p.inv, pick)          # the same swing as a miner's (PAR-01)
+				if r.result == "out":
 					ui.message("The seam is worked out.")
 					return
-				var n := 1
-				if world.rng.randf() < Skills.value(p, "mining", "ore_extra_chance"):
-					var extra := world.mine_unit(dep)
-					if extra != "":
-						n += 1
-				if world.player_gain(ore, n, "mined_") == n:
-					_gain("+%d %s" % [n, GameData.item_name(ore)], ore)
-				else:
+				if r.result == "gold":
+					ui.message("Gold needs Mining level 3.")
+					return
+				if full:
 					ui.message("Your pack is full: the ore is left at your feet.")
-				if p.inv.wear(pick, 0 if world.rng.randf() < Skills.value(p, "mining", "tool_wear_save") else 1):
-					world.stat("broke_" + pick)
+				else:
+					_gain("+%d %s" % [int(r.n), GameData.item_name(str(r.ore))], str(r.ore))
+				if r.broke:
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
 					if p.tool == pick:
 						p.tool = ""
-				_xp("mining", 8 * n), "swing", pick)
+				_level_up("mining", int(r.up)), "swing", pick)
 		"tree":
 			var axe := p.tool_of("axe")
 			if axe == "":
@@ -2520,17 +2518,21 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 		if int(r.logs) <= 0:
 			_chop(tr, axe, secs)
 			return
-		if world.player_gain("log", int(r.logs), "felled_") == int(r.logs):
-			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
-		else:
+		var full := not p.inv.can_add("log")
+		var f := world.work_felled(p, int(r.logs), p.inv, axe)     # the same as a woodcutter's (PAR-01)
+		if full:
 			ui.message("Your pack is full: the logs are left at your feet.")
+		else:
+			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
 		var saplings := world.sapling_drop(tr, Skills.value(p, "woodcutting", "sapling_bonus"))
 		for id in saplings:
 			if world.player_gain(id, int(saplings[id])) == int(saplings[id]):
 				_gain("+%d %s" % [int(saplings[id]), GameData.item_name(id)], id)
-		if p.inv.wear(axe, 0 if world.rng.randf() < Skills.value(p, "woodcutting", "axe_wear_save") else 3):
-			world.stat("broke_" + axe)
-		_xp("woodcutting", 12), "swing", axe)
+		if f.broke:
+			ui.message("Your %s broke." % GameData.item_name(axe).to_lower())
+			if p.tool == axe:
+				p.tool = ""
+		_level_up("woodcutting", int(f.up)), "swing", axe)
 
 
 ## Plant a sapling from the pack (the pack window's Plant button) on the free grass in front of the player.
@@ -2579,7 +2581,11 @@ func start_action(label: String, secs: float, done: Callable, anim := "gather", 
 
 
 func _xp(skill: String, n: int) -> void:
-	var up := world.player.gain(skill, n)
+	_level_up(skill, world.player.gain(skill, n))
+
+
+## The banner for a new level (`up` 0: none).
+func _level_up(skill: String, up: int) -> void:
 	if up > 0:
 		var s: Dictionary = GameData.skills[skill]
 		var unlock := Skills.tier_text(skill, up)
@@ -2613,19 +2619,10 @@ func craft(recipe: String, station := "") -> void:
 		world.reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
 	ui.hide_all()
 	start_action("Crafting", secs, func():
-		if not p.inv.remove_all(r.in):
+		var res := world.work_craft(p, recipe, p.inv)           # the same as a villager's (PAR-01, PAR-04)
+		if res.result != "ok":
 			return
-		var saved := world.rng.randf() < Skills.value(p, str(r.skill), "save_chance")
-		if saved:                                       # a practised hand wastes nothing
-			for id in r.in:
-				p.inv.add(id, int(r.in[id]))
-		else:
-			for id in r.in:
-				world.stat("used_" + id, float(r.in[id]))
-		var bonus := world.rng.randf() < Skills.value(p, str(r.skill), "bonus_chance")
-		for id in r.out:
-			world.player_gain(id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0))
-		_xp(r.skill, int(r.xp))
+		_level_up(str(r.skill), int(res.up))
 		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))),
 			"swing" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "gather", "hammer" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "")
 	if station != "" and not action.is_empty():
@@ -2801,8 +2798,7 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 
 
 func _hit(n: NPC, dmg: float) -> void:
-	var dealt := maxf(0.5, dmg - n.armor * 0.5)
-	n.hp -= dealt
+	var dealt := world.harm_npc(n, dmg)          # their Combat damage_taken and armour, as the player's (PAR-01)
 	_hit_fx(sprites.get(n.id), n.max_hp, n.hp, dealt)
 	# the blow wakes a sleeper and the noise wakes those near, who then see it (owner rule)
 	world.wake_near(n.pos, float(GameData.b("sleep_wake_radius")))

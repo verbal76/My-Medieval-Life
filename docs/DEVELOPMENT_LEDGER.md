@@ -14,18 +14,18 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 69 |
 | ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 12 |
+| IMPLEMENTED — TESTING REQUIRED | 14 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 15 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 166 |
+| COMPLETE AND VERIFIED | 168 |
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **378** |
-| Outstanding (not complete, superseded or canceled) | 192 |
+| **Total approved** | **382** |
+| Outstanding (not complete, superseded or canceled) | 194 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 50 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 52 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -40,15 +40,15 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 28 | 27 |
+| Build 16: long-term equilibrium and validation | 30 | 29 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 58 | 16 |
+| Waiting on an owner decision | 59 | 16 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **264** | **192** |
+| **Total open** | **267** | **194** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,7 +107,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (28)
+### Build 16: long-term equilibrium and validation (30)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -133,8 +133,10 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | approved | IMPLEMENTED — TESTING REQUIRED |  | with FAM-02/03 (Build 16); full integration with bandit factions follows WDR-016-C (Build 20+) |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED |  |  |
-| PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | APPROVED — NOT STARTED |  |  |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
+| PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | APPROVED — NOT STARTED |  |  |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | APPROVED — NOT STARTED |  |  |
+| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
@@ -285,7 +287,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (58)
+### Waiting on an owner decision (59)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -323,6 +325,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OD-04 | Owner decisions: chest and lock questions | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-07 | Owner decision: hunting in Gather mode | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | decision | APPROVED — NOT STARTED |  |  |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
@@ -454,7 +457,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-E |  |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
-| PAR-01 | OD-18.1: villagers develop skills exactly as the player does | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
+| PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | docs/directives/2026-10-20_od19_dynamic_reserves.md |  |  |  |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | docs/directives/2026-10-20_od18_player_villager_parity.md |  | after PAR-01 |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -533,7 +536,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (12)
+## IMPLEMENTED — TESTING REQUIRED (14)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -548,6 +551,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | docs/directives/2026-10-20_housing_succession_adoption.md Part 6 | game/tests/family_test.gd; game/tests/housing_test.gd | after FAM-02 |  |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | suites; then COMPLETE once a long run has exercised it or tests suffice |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md | world_test.gd _par02_reserve; start_test.gd |  | Owner answers OD-19; set buyer_reserve accordingly |
+| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | docs/directives/2026-10-20_od18_player_villager_parity.md | world_test.gd _par05_awareness; start_test.gd; play_test.gd |  | Replace the cry with reports by witnesses and the victim; tests |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 
 ## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (39)
@@ -628,7 +633,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (166)
+## COMPLETE AND VERIFIED (168)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -765,9 +770,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OWN-25 | Attack mode; blood splats; readable phone text | docs/DECISIONS.md (audit inventory row 341) |  |  |  |
 | OWN-26 | Animal breeding, hunger, livestock as meat, wild animals hunted | docs/DECISIONS.md (audit inventory row 342) |  |  |  |
 | OWN-27 | Manor government B3 | docs/DECISIONS.md (audit inventory row 343) |  |  |  |
-| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md | world_test.gd _par02_reserve; start_test.gd |  |  |
+| PAR-01 | OD-18.1: villagers develop skills exactly as the player does | docs/directives/2026-10-20_od18_player_villager_parity.md | parity_test.gd |  |  |
+| PAR-01A | Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves | docs/directives/2026-10-20_par_final_consolidated_directive.md | parity_test.gd |  |  |
+| PAR-01B | Career changes neither grant nor reset experience | docs/directives/2026-10-20_par_final_consolidated_directive.md | parity_test.gd |  |  |
+| PAR-01C | Experience comes from activities, whatever the occupation | docs/directives/2026-10-20_par_final_consolidated_directive.md | parity_test.gd |  |  |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | docs/directives/2026-10-20_od18_player_villager_parity.md | world_test.gd _par03_rest |  |  |
-| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | docs/directives/2026-10-20_od18_player_villager_parity.md | world_test.gd _par05_awareness; start_test.gd; play_test.gd |  |  |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | economy_sim.gd --profile; 10-day fingerprint eeabb2a8 with profiling on | after PERF-01 |  |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py (PASS for both PERF-04 changes) | after PERF-02 |  |
 | PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py PASS after each change; economy_sim --profile before and after | after PERF-03 |  |
@@ -836,7 +843,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (50)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (52)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -859,6 +866,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | COMPLETE AND VERIFIED | agent, 2026-10-20, docs/release/LONG_RUN_SIMULATION.md 'Why seed 1 builds no house' |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | BLOCKED | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 | OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | COMPLETE AND VERIFIED | docs/release/BUILD_16_AUDITS.md |
+| OD-19 | PAR-02: the universal coin-reserve threshold | COMPLETE AND VERIFIED | docs/directives/2026-10-20_par_final_consolidated_directive.md |
+| OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | APPROVED — NOT STARTED | docs/directives/2026-10-20_par_final_consolidated_directive.md |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
