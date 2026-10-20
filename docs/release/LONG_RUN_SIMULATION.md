@@ -1158,6 +1158,20 @@ Across the four seeds: 11 starvation deaths on `61750f1` (1, 1, 2, 7), against 3
 not yet been classified one by one; a watched local run of seed 4 on `1c7b9f4` (the firewood fix) lists them, and a new
 four-seed Actions run on `1c7b9f4` measures the fix.
 
+**Seed 4, 365 days, locally on `1c7b9f4` (the firewood fix), watched:** **1 starvation death** (7 on `61750f1`), 127
+alive, 0 script errors, ledgers balanced (fingerprint `4bef774fd01b89eeb2c837faf5496b58`), nights without firewood
+1,722 (2,303), unemployed 15 (21), 9 houses.
+
+**The one death (FSE-16 method):** Robert Hayward, an elder living alone (hh31), starved on day 355. His pantry held 121
+raw meat and no log, and he had 2 coins: the meat counted for nothing (it cannot be roasted without a log), so relief
+reached him every day from day 339, but gave **one** grain a day, because a grain was valued as cooked pottage (120
+points) and one grain topped him up to the fill line. Pottage takes two grains, so the one grain could only be eaten raw
+(20 points): his hunger stood at 0 each morning until his health ran out. **A defect** (the valuation counted food that
+could not be cooked, against the owner's rule that relief counts "raw food the household can cook"), fixed in the next
+commit: grain counts as pottage only in whole pots, across the household's stores, and relief gives or buys grain in
+whole pots. Not a defect, and left as it is: an elder with no trade holding 121 meat he neither sells nor cooks (selling
+surplus to buy firewood is a decision for the living-economy work, FSE-10, MILE-01).
+
 **The one death (FSE-16 method, a watched exact reproduction):** Simon Brook starved on day 189 in a household whose pantry
 held 5 raw meat while another member, an elder with no trade, carried 7 logs: the household's reckoning counted the meat as
 roastable (2.5 days), so relief did not come, but the logs were in a pocket, not the family chest, and the elder's logs

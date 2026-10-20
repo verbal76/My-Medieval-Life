@@ -121,6 +121,23 @@ func relief_sources(w: World, fam: NPC) -> void:
 	w.brain._relief(obl, 0.0)
 	check(a < b and da > db and db < 1.0 and w.households[b].pantry.count("wheat") == 1 and w.households[a].pantry.count("wheat") == 0 and w.manor_work.pending_for(a) == 0,
 		"relief: with one unit for sale, the household with nothing (hh%d, %.2f days) gets it before hh%d (%.2f days)" % [b, db, a, da])
+	# B7-015 (seed 4): grain counts as pottage only in whole pots, and relief gives grain to make them
+	var one := Inventory.new()
+	one.add("wheat", 1)
+	var two := Inventory.new()
+	two.add("wheat", 2)
+	check(is_equal_approx(NPCBrain.store_points([one]), float(GameData.item("wheat").food)) and is_equal_approx(NPCBrain.store_points([one, one]), 2.0 * NPCBrain.food_points("wheat")),
+			"B7-015: one grain is worth its raw food (no pot from it); two make a pot, in one store or across the household's")
+	strip_village(w, [b])
+	w.households[b].pantry.add("wheat", 1)
+	w.granary.add("wheat", 50)
+	w.brain._relief(obl, 0.0)
+	var grain := 0
+	for inv: Inventory in w.brain.household_stores(b):
+		grain += inv.count("wheat")
+	grain += w.manor_work.pending_for(b)
+	check(grain > 1 and grain % NPCBrain.pottage_batch() == 0, "B7-015: relief tops a household's odd grain up to whole pots (%d)" % grain)
+	w.granary.remove("wheat", w.granary.count("wheat"))
 	# any food from any seller: only bread at the tavern
 	strip_village(w, [b])
 	var keeper: NPC = w.npcs.filter(func(o): return o.alive and o.job == "tavernkeeper")[0]

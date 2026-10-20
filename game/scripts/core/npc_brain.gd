@@ -2556,11 +2556,17 @@ func _relief(obligations: float, reserve: float) -> int:
 		var urgent := days < 1.0
 		var pantry: Inventory = w.households[h].pantry
 		var need := (float(GameData.b("relief_fill_days")) - days) * household_day_food(h)
-		var wheat := mini(ceili(need / food_points("wheat")), w.granary.count("wheat"))
-		if urgent and wheat < ceili(need / food_points("wheat")):
+		var want := ceili(need / food_points("wheat"))
+		var held := 0
+		for inv: Inventory in household_stores(h):
+			held += inv.count("wheat")
+		want += (held + want) % pottage_batch()          # whole pots: with what the household holds, grain to cook
+		var wheat := mini(want, w.granary.count("wheat"))
+		if urgent and wheat < want:
 			# the manor's grain still at the farmers' for the granary goes straight to them
-			var sent := w.manor_work.take_bound("granary", "wheat", ceili(need / food_points("wheat")) - wheat, pantry)
+			var sent := w.manor_work.take_bound("granary", "wheat", want - wheat, pantry)
 			need -= sent * food_points("wheat")
+			held += sent
 			w.stat("gov_relief_grain", sent)
 		if wheat > 0:
 			if urgent:
@@ -2568,6 +2574,7 @@ func _relief(obligations: float, reserve: float) -> int:
 			else:
 				w.manor_work.consign(w.granary, w.manor_work.yard_cell(), "wheat", wheat, {"kind": "pantry", "hh": h}, "relief", "the manor's granary")
 			need -= wheat * food_points("wheat")
+			held += wheat
 			w.stat("gov_relief_grain", wheat)
 		# what the granary cannot give, the manor buys for the household: an emergency (under a day of
 		# food) may spend down to one day of wages, otherwise only money above the reserve
@@ -2580,21 +2587,26 @@ func _relief(obligations: float, reserve: float) -> int:
 			if int(o.left) <= 0 or not src.has(o.item):
 				k += 1
 				continue
-			var price: int = w.sell_price(o.payee, o.item) if bool(o.trader) else int(o.price)
+			var qty := 1
+			if o.item == "wheat":                # grain in whole pots, with what the household holds (store_points)
+				qty = mini(pottage_batch() - held % pottage_batch(), mini(int(o.left), src.count("wheat")))
+			var price: int = (w.sell_price(o.payee, o.item) if bool(o.trader) else int(o.price)) * qty
 			if w.treasury - price < floor_coins:
 				break
 			if urgent:
-				w.transfer(src, pantry, o.item, 1)
+				w.transfer(src, pantry, o.item, qty)
 			else:
-				w.manor_work.consign(src, o.cell, o.item, 1, {"kind": "pantry", "hh": h}, "relief", o.words)
+				w.manor_work.consign(src, o.cell, o.item, qty, {"kind": "pantry", "hh": h}, "relief", o.words)
 			var payee: NPC = o.payee
 			payee.coins += price
 			payee.earned += price
 			w.treasury -= price
-			o.left = int(o.left) - 1
-			need -= float(o.pts)
+			o.left = int(o.left) - qty
+			need -= float(o.pts) * qty
+			if o.item == "wheat":
+				held += qty
 			w.stat("gov_relief_bought", price)
-			w.stat("gov_relief_bought_" + str(o.item), 1)
+			w.stat("gov_relief_bought_" + str(o.item), qty)
 		if need < (float(GameData.b("relief_fill_days")) - days) * household_day_food(h):
 			helped += 1
 			_note_relief(h)
@@ -2733,12 +2745,24 @@ static func store_points(stores: Array) -> float:
 	var pts := 0.0
 	var meat := 0
 	var logs := 0
+	var wheat := 0
 	for inv: Inventory in stores:
 		for f in EDIBLE:
-			pts += float(inv.count(f)) * food_points(f)
+			if f != "wheat":
+				pts += float(inv.count(f)) * food_points(f)
 		meat += inv.count("meat")
 		logs += inv.count("log")
-	return pts + float(mini(meat, logs)) * food_points("meat")
+		wheat += inv.count("wheat")
+	# grain is worth its pottage only in whole pots (2 wheat); an odd grain is eaten raw (B7-015, seed 4: a lone
+	# elder starved on one relief grain a day, valued as cooked, which no pot could be made from)
+	var odd := wheat % pottage_batch()
+	return pts + float(wheat - odd) * food_points("wheat") + float(odd) * float(GameData.item("wheat").food) \
+		+ float(mini(meat, logs)) * food_points("meat")
+
+
+## The wheat one pot of pottage takes (the hearth's cook_pottage).
+static func pottage_batch() -> int:
+	return int(GameData.recipes["cook_pottage"]["in"].wheat)
 
 
 ## A household's stores: its pantry and what each member carries.
