@@ -9586,7 +9586,7 @@
    "id": "FAM-07",
    "title": "Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "If no suitable household can take the child, the child joins the bandit clan. This is the intended fallback, not an indefinite temporary-care state and not a formal orphanage or adoption process.",
    "description": "Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat)",
    "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11)",
@@ -9598,7 +9598,7 @@
     "Tests: the order is followed; the fallback happens only when no household qualifies; genealogy survives"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/family_test.gd test_nobody_can_take",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9612,7 +9612,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "implement the interim camp dependant (child keeps role, age, genealogy; fed and kept from fights); then tests",
+   "next_action": "gate and suites; coming-of-age as a bandit is the agent's reading of 'joins the bandit clan', reported to the owner",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -9638,6 +9638,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "not built yet: an unplaced child stays in place and is counted (orphans_unplaced, tested); the interim bandit-camp dependant needs the camp child's food, safety from the camp's fights and a home-less child path in NPCBrain.decide"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; next_action",
+     "why": "interim per OD-11 and the entry's acceptance: Guardianship.join_clan (NPC.clan, saved); the child keeps name, age, role and genealogy, eats with the band at the camp, is never a bandit's prey, and comes of age as a bandit with no item made for them; family_test 32 checks"
     }
    ],
    "target_build": "16",
@@ -16779,7 +16784,7 @@
    "id": "REL-14-16",
    "title": "Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "SUPERSEDED",
    "owner_wording": "You have my standing authorization to generate and publish the three platform build packages for Builds 14, 15, and 16 without requesting separate approval for each release, provided all release conditions are satisfied.",
    "description": "Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold",
    "source": "docs/directives/2026-10-19_builds_14_16_release_authorization.md",
@@ -16811,7 +16816,7 @@
    "next_action": "Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold",
    "priority": "",
    "workstream": "releases",
-   "superseded_by": null,
+   "superseded_by": "REL-15-18",
    "notes": "Visibility: private drafts (owner, 2026-10-19: 'Keep them private drafts for now'). Public needs a new owner instruction.",
    "history": [
     {
@@ -16843,6 +16848,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "next action refreshed (recovery test, MEM-01): WR-01 code is done, only its device check remains"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> SUPERSEDED; superseded_by",
+     "why": "Builds 14 and 15 released; Builds 15-18 are under REL-15-18 and OVN-02"
     }
    ],
    "target_build": "15",
@@ -16853,7 +16863,7 @@
    "id": "REL-15-18",
    "title": "Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": "I explicitly authorize you to create and publish the approved game builds overnight when all applicable release gates pass. ... Do not publicly distribute private test builds.",
    "description": "Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private",
    "source": "docs/directives/2026-10-20_master_overnight_development_directive.md section 9",
@@ -16875,7 +16885,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Build 16 when it meets OVN-01 section 4 and OVN-02 section 5",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -16890,6 +16900,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; next_action",
+     "why": "Build 15 released as a private draft (release run 39422414211 from a8760be; artifacts downloaded, checksums matched, Linux run and looked at, Windows icon and APK signature checked; docs/release/BUILD_15_PACKET.md); Builds 16-18 follow"
     }
    ],
    "target_build": "15",

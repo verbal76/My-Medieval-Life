@@ -4,8 +4,9 @@ extends SceneTree
 ## parent elsewhere, then grandparents, then the nearest eligible blood relative, then another villager's
 ## household with room; equally close relatives are chosen by ability, capacity, food, relationship and
 ## proximity; genealogy and the birth surname survive the move; children never found households or build;
-## the receiving household's occupancy and housing need are its own and no house is built for it. The bandit
-## fallback (FAM-07) is not built: a child no household can take stays put, counted. Run:
+## the receiving household's occupancy and housing need are its own and no house is built for it. A child no
+## household can take joins the bandit clan (FAM-07, OD-11): identity, age and genealogy kept, fed and safe at the camp,
+## a bandit at coming of age. Run:
 ##   godot --headless --path game --script res://tests/family_test.gd
 
 var failures := 0
@@ -218,11 +219,38 @@ func test_nobody_can_take() -> void:
 	if f.is_empty():
 		return
 	var kid: NPC = f[3]
+	var mom: NPC = f[1]
+	var name0 := kid.name
+	var family0 := kid.family
+	var age0 := Life.npc_age(w, kid)
 	orphan(w, f[0])
 	for hh in w.households:                     # no household with a home anywhere
 		if int(hh.id) != f[0]:
 			hh.home = ""
-	var before := int(w.stats.get("orphans_unplaced", 0))
+	var before := int(w.stats.get("orphans_to_clan", 0))
 	var tier := Guardianship.place(w, kid)
-	check(tier == "" and kid.household == f[0] and kid.alive, "with no household able, the child stays where they are, alive (FAM-07's fallback is not built)")
-	check(int(w.stats.get("orphans_unplaced", 0)) == before + 1, "and the case is counted")
+	check(tier == "clan" and kid.clan == "bandit" and kid.household == -1, "with no household able, the child joins the bandit clan (FAM-07, OD-11) (%s)" % tier)
+	check(int(w.stats.get("orphans_to_clan", 0)) == before + 1, "and the case is counted")
+	check(kid.alive and kid.role == "child" and kid.name == name0 and kid.family == family0 and absf(Life.npc_age(w, kid) - age0) < 0.01, "the child keeps name, age and role: still a child")
+	check(kid.mother == mom.id and mom.children.has(kid.id), "and the family tree")
+	check(kid.damage <= 3.0 and not kid.inv.has("copper_sword"), "no adult combat ability")
+	check(not w.households[f[0]].members.has(kid.id), "no limbo: the child left the empty household")
+	# fed and safe at the camp
+	kid.hunger = 10.0
+	w.brain.decide(kid)
+	check(str(kid.doing).contains("bandits' camp"), "a hungry clan child eats at the camp (%s)" % kid.doing)
+	check(w.brain.act(kid, "camp_meal", {}) and kid.hunger == 100.0, "with the band")
+	kid.coins = 50
+	kid.pos = Vector2(w.bandit_camp) + Vector2(2, 0)
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "bandit":
+			check(w.brain._prey_for(o) != kid, "never a bandit's prey")
+			break
+	# saved
+	var back := NPC.from_dict(JSON.parse_string(JSON.stringify(kid.to_dict())))
+	check(back.clan == "bandit" and back.mother == mom.id, "the clan survives saving and loading")
+	# coming of age in the band: a bandit's health and blow, no sword made from nothing
+	var items0: int = kid.inv.total()
+	Life._set_role(w, kid, "adult")
+	check(kid.role == "bandit" and kid.max_hp == 25.0 and kid.inv.total() == items0, "at coming of age the clan child joins the band (nothing made for them)")
+	check(kid.mother == mom.id and kid.name == name0, "still who they were")

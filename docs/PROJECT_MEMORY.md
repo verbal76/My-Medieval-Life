@@ -76,8 +76,8 @@ Every open entry also carries `target_build` (15–19, `20+`, `multiplayer`, `ow
 | Build | Content | Status |
 |---|---|---|
 | 14 | Released as a private draft from `7dbae4f` | The current test build |
-| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships | In development; **BLOCKED** on owner decision OD-16 (money for the essential trades: without it no axes are made and timber and building stall); everything else implemented |
-| 16 | Long-term equilibrium and validation: the baseline before the expansions | Planned |
+| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships | **Complete**: released 2026-10-20 as a private draft from `a8760be` (`docs/release/BUILD_15_PACKET.md`) |
+| 16 | Long-term equilibrium and validation: the baseline before the expansions | **In development** (from 2026-10-20). Equilibrium means mechanical consistency and meaningful adaptation, not guaranteed success (OVN-02 section 8, WDR-022) |
 | 17 | Mining & Industrial Development (EXP-A) | Approved objective; **not started**. Authorized by OVN-01 to begin only after Builds 15 and 16 meet section 4 |
 | 18 | Settlement Advancement & Regional Economy (EXP-B) | Approved objective; **not started**. Authorized by OVN-01 after Build 17 |
 | 19 | NPC Judgment System (EXP-C) | Approved objective; **not started**; 14 open design questions (SJD-Q01..Q14) unanswered |

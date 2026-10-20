@@ -158,6 +158,9 @@ func decide(n: NPC) -> void:
 	if n.role == "bandit":
 		_bandit(n, h)
 		return
+	if n.clan == "bandit":
+		_clan_child(n, h)
+		return
 	if n.hunger < float(GameData.b("eat_below")) and _plan_eat(n):
 		return
 	if n.job == "guard":
@@ -1241,13 +1244,28 @@ func _bandit_market(n: NPC) -> bool:
 	return false
 
 
+## A child of the bandit clan (FAM-07): eats with the band at the camp when hungry (the camp's meal, as the bandits'
+## own poaching), sleeps there at night and plays about it by day; never goes stalking.
+func _clan_child(n: NPC, h: float) -> void:
+	if n.hunger < float(GameData.b("eat_below")):
+		n.doing = "eating at the bandits' camp"
+		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(15, "camp_meal", {}, "idle")]
+		return
+	if h >= SLEEP or h < WAKE:
+		n.doing = "sleeping at the bandits' camp"
+		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(120, "", {}, "sleep")]
+		return
+	n.doing = "playing about the bandits' camp"
+	n.plan = [go(wander_cell(w.bandit_camp, 4), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
+
+
 func _prey_for(n: NPC):
 	if w.player.alive and w.player.pos.distance_to(n.pos) < 18.0:
 		return w.player
 	var best = null
 	var bd := 40.0
 	for o: NPC in w.npcs:
-		if not o.alive or w.place_of(o.pos) != "" or o.role == "bandit" or o.job == "guard" or o.coins < 3:
+		if not o.alive or w.place_of(o.pos) != "" or o.role == "bandit" or o.clan != "" or o.job == "guard" or o.coins < 3:
 			continue
 		if _guard_near(o.pos, 14.0):
 			continue
@@ -1877,6 +1895,10 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var meat: Inventory = w.fauna.kill(beast)
 			for id in meat.ids():
 				n.inv.add(id, meat.count(id))
+			return true
+		"camp_meal":                          # a clan child eats with the band (FAM-07)
+			n.hunger = 100.0
+			w.stat("clan_child_meals")
 			return true
 		"poach":
 			if n.hunger < 60.0:

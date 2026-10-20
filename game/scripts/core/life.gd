@@ -164,6 +164,16 @@ static func _set_role(w: World, n: NPC, r: String) -> void:
 		n.plan.clear()
 		w.note("%s grows old and retires." % who)
 		w.stat("retired")
+	elif r == "adult" and n.clan == "bandit":
+		# FAM-07: a child of the bandit clan comes of age in the band, with a bandit's health and blow; no sword is made
+		# for them (nothing comes from nothing): they carry only what they have
+		n.role = "bandit"
+		n.max_hp = 25.0
+		n.hp = n.max_hp
+		n.damage = 4.0
+		n.plan.clear()
+		w.note("%s comes of age among the bandits." % who)
+		w.stat("came_of_age_in_clan")
 	elif r == "adult":
 		n.role = "adult"
 		n.max_hp = 30.0

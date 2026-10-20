@@ -13,9 +13,9 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 | Last verified remote commit | The head of `origin/staging/my-medieval-life` (`git log origin/staging/my-medieval-life -1`). This file was last brought up to date in the commit `git log -1 -- docs/CURRENT_DEVELOPMENT_STATE.md` shows; anything newer on staging is described in that commit's successors. |
 | `main` | Changes only when the owner merges. |
 | Multiplayer | `wip/multiplayer` (MP-01), isolated. It must not be merged into staging without the owner's explicit approval. |
-| Active build | **Build 15**, simulation stabilization (ROAD-01): its gates are met under the owner's closure standard (OVN-02 section 5; `docs/release/BUILD_15_READINESS.md`); next, `release.yml` as a private draft, then Build 16 |
+| Active build | **Build 16**, long-term equilibrium and adaptation (ROAD-01; OVN-02 section 8: mechanical consistency and meaningful adaptation, not guaranteed success) |
 | Directive in force | OVN-02, `docs/directives/2026-10-20_final_development_mandate.md` (final mandate: Build 15 closes on mechanics and integrity, not prosperity; then Builds 16 → 17 → 18 in order), with OVN-01 (`docs/directives/2026-10-20_master_overnight_development_directive.md`) and `docs/directives/2026-10-20_compaction_readiness.md`. The design principle WDR-022: "A village is allowed to fail. The simulation is not." |
-| Last released build | **Build 14**, a private draft from `7dbae4f` (`docs/release/BUILD_14_PACKET.md`) |
+| Last released build | **Build 15**, a private draft from `a8760be` (`docs/release/BUILD_15_PACKET.md`), released 2026-10-20 |
 | Release authorization | OVN-01 section 9 and REL-15-18: Builds 15 to 18 may be released as **private drafts**, in order, each only when every condition of OVN-01 section 4 holds (REL-14-16 before it). No placeholder builds. Public visibility needs new owner approval. |
 
 Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) hold work that has been merged. They are history. Only `wip/multiplayer` is live.
@@ -26,7 +26,7 @@ The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 202
 
 - **EQ-18 (Build 15):** tool recovery fixed and verified; what remained was OD-16.
 - **EQ-18..21 (Build 15):** complete and verified (EQ-19's earmarked advances are a recorded future improvement).
-- **Build 15 release gates:** the record of each OVN-01 section 4 condition goes in the Build 15 readiness packet (`docs/release/`), then `release.yml` runs as a private draft (REL-15-18). A 365-day Actions run on the release candidate checks the simulation before it.
+- **Build 16:** FAM-07 (unplaced orphans join the bandit clan, interim camp dependants) is implemented and tested; next the rest of the Build 16 entries (the ledger's Roadmap), each finding classified under WDR-022.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
 - **OVN-02** (the final mandate) and **OVN-01:** the directives in force. **WDR-022-C:** classify every finding as defect, legitimate outcome or future improvement. **ROAD-01:** the roadmap.
 - **REL-14-16:** superseded in practice by REL-15-18 for Builds 15-18. Build 14 is done.
@@ -40,7 +40,7 @@ Closed on 2026-10-20, with evidence in the register:
 - FR-07 (CI run 39368652711), DVW-A4, FR-06, PERF-02..05, B14-12 (sprite list), REC-017;
 - B7-008 verified, with its buyer half waiting on OD-15.
 
-Implemented and tested ahead of Build 16 (kept in Build 16): FAM-02..06 (orphans taken in by kin or another household), WR-02 (grazers over capacity). FAM-07 (the bandit-clan fallback) is not built.
+Implemented and tested ahead of Build 16 (kept in Build 16): FAM-02..06 (orphans taken in by kin or another household), WR-02 (grazers over capacity). FAM-07 (the bandit-clan fallback) is now built, interim (camp dependants).
 
 ## Last test results (2026-10-20 about 10:00 UTC)
 
@@ -75,8 +75,8 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
-1. **Build 15 release:** the readiness record is complete (`docs/release/BUILD_15_READINESS.md`; findings classified under WDR-022, no open defects). Next: the suites on the head commit, push, CI green, then `release.yml` (private draft, build 15), artifacts downloaded and checked, `BUILD_15_PACKET.md` written, CLAUDE.md and PROJECT_MEMORY marked, Build 15 COMPLETE. Then Build 16 at once (OVN-02 section 7).
-2. **Then Build 16** (EQ-01..06, FAM-07, EQ-09, OD-16 once answered, and the rest), Build 17 and Build 18, in order.
+1. **Build 15: complete** (released 2026-10-20, `docs/release/BUILD_15_PACKET.md`).
+2. **Build 16, now:** EQ-01..06, EQ-09, DVW-A3/A5/A7/A8/A12, DVW-B6, B7-015/016, WDR-005-C and the rest of the ledger's Build 16 list; then Build 17 and Build 18, in order.
 3. Open Build 15 entries that are not code: DVW-A14 (the whole-life play-through, item 8 of the testing checklist), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 
 Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_ITEMS.md`): carts have no collision, so no route is ever blocked.
@@ -86,7 +86,7 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 - **OD-14:** answered (smaller attached rooms; the small room is built, HOUSE-10). Upper floors stay a future design consideration (HOUSE-11, deferred by the owner).
 - OD-11, OD-12 and OD-13 were answered by the owner on 2026-10-20 (`docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md`). Their implementation is open:
   - HOUSE-08 (bed sharing) and HOUSE-09 (now done through the small room), Build 15;
-  - FAM-03 is implemented; FAM-07 (the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+) is not, Build 16.
+  - FAM-03 and FAM-07 (the bandit-clan fallback, interim until bandit factions, WDR-016-C, Build 20+) are implemented.
 - **OD-16: answered 2026-10-20** ((a), (b), (c); see the register). Formerly: the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
 - **OD-17 (new, 2026-10-20):** the Game Designer spec's open calls (the hero, the view, Steam Deck labelling), from `docs/game-designer/SPEC_RECONCILIATION.md` section 4 (REC-004, done).
 - **OD-15 (new, 2026-10-20):** should the player's sales stop at a trader's 15-coin floor, as villagers' do? It came up while verifying B7-008; options and a recommendation are in the entry. B7-008 stays BLOCKED on it (its wildlife half is verified).

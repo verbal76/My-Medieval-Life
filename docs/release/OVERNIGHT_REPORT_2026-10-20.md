@@ -6,9 +6,9 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 
 | | |
 |---|---|
-| Highest build fully completed | **Build 14** (a private draft release, earlier) |
-| In development | **Build 15**, simulation stabilization: **BLOCKED on OD-16**. Everything else in its scope is implemented and tested. The release-candidate run found two tool-recovery defects (EQ-18), which are fixed. The rest of the failure is money: the producing trades go broke, so no axes are made and timber and building stall |
-| Builds published tonight | None. Build 15 does not meet section 4 while its tool recovery fails on money (OD-16) |
+| Highest build fully completed | **Build 15** (2026-10-20) |
+| In development | **Build 16**, long-term equilibrium and adaptation |
+| Builds published | **Build 15**: RELEASED as a private draft from `a8760be` (`docs/release/BUILD_15_PACKET.md`), artifacts downloaded and checked |
 | Builds 16-18 | Not started. The roadmap is strictly sequential (section 3) |
 
 ## Development results

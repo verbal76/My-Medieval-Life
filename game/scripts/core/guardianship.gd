@@ -15,8 +15,8 @@ extends RefCounted
 ## its house. Genealogy (mother, father, children) is never changed; when the child takes the receiving
 ## family's surname, the birth surname is kept in `birth_family`. Occupancy changes with the household's
 ## members, so any housing need is the receiving household's own (crowding, HOUSE-01); no house is built.
-## With no household able to take a child, the owner's fallback is the bandit clan (FAM-07, not yet built):
-## the child then stays where they are, and the case is noted and counted.
+## With no household able to take a child, the owner's fallback is the bandit clan (FAM-07, OD-11): the child joins
+## the bandit camp as a dependant (join_clan).
 
 
 static func dawn(w: World) -> void:
@@ -43,7 +43,7 @@ static func orphans(w: World, h: int) -> Array:
 
 
 ## Find the child a home and move them there. Returns the tier that took them ("parent", "grandparent",
-## "relative", "villager") or "" when no household can (FAM-07's fallback, not yet built).
+## "relative", "villager"), or "clan" when no household can and the child joins the bandit clan (FAM-07).
 static func place(w: World, k: NPC) -> String:
 	var tiers := candidates(w, k)
 	for tier in ["parent", "grandparent", "relative", "villager"]:
@@ -52,9 +52,8 @@ static func place(w: World, k: NPC) -> String:
 			continue
 		move(w, k, int(hs[0]), tier)
 		return tier
-	w.stat("orphans_unplaced")
-	w.brain.once("orphan_%d" % k.id, "No household can take in %s %s yet." % [k.name, k.family])
-	return ""
+	join_clan(w, k)
+	return "clan"
 
 
 ## Households that could take the child in, by tier, each list best first. Relatives are kept to the
@@ -157,6 +156,28 @@ static func _ranked(w: World, k: NPC, hs: Array) -> Array:
 				return a[i] > b[i]
 		return false)
 	return keyed.map(func(x: Array) -> int: return int(x[6]))
+
+
+## FAM-07 (owner, OD-11, 2026-10-20: "If no suitable household can take the child, the child joins the bandit clan ...
+## Preserve the child's identity, age, genealogy, and existing relationships. Joining the bandit clan does not instantly
+## make a child an adult or grant adult combat abilities."). Interim handling until bandit factions (WDR-016-C): the
+## child leaves the household (NPC.clan = "bandit", saved), lives and sleeps at the camp, eats with the band (the camp's
+## meal, as the bandits' own), and is never a bandit's prey or in a fight. The child's name, age, role, parents,
+## children and relationships are untouched; at coming of age the clan child joins the band (Life, the change of role).
+static func join_clan(w: World, k: NPC) -> void:
+	var old := k.household
+	if old >= 0:
+		(w.households[old].members as Array).erase(k.id)
+	k.household = -1
+	k.home = ""
+	k.workplace = ""
+	k.clan = "bandit"
+	k.plan.clear()
+	k.pos = Vector2(w.bandit_camp) + Vector2(0.5, 1.5)
+	w.stat("orphans_to_clan")
+	w.note("No household can take in %s %s: the child goes to the bandits' camp." % [k.name, k.family])
+	if old >= 0 and not w.property._anyone_alive(old):
+		w.property.household_ended(old)
 
 
 ## The child joins household `h` as a dependant (the brain's _lodge: household, surname, home). The birth

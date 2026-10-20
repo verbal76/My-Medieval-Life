@@ -1247,14 +1247,14 @@ Rules:
 
 ### INT-153 · Orphaned children are taken in by kin or another household
 - **Trigger:** Each dawn (Life.dawn), for a household whose living members are all children.
-- **Source:** `game/scripts/core/guardianship.gd::dawn`, `game/scripts/core/guardianship.gd::place`, `game/scripts/core/guardianship.gd::candidates`, `game/scripts/core/guardianship.gd::kin_distances`, `game/scripts/core/guardianship.gd::move`, `game/scripts/core/life.gd::dawn`, `game/scripts/core/npc_brain.gd::_lodge`, `game/scripts/core/property.gd::household_ended`, `game/scripts/core/construction.gd::_may_found`
-- **Affects:** Family, Households, Building, Property, Save
+- **Source:** `game/scripts/core/guardianship.gd::dawn`, `game/scripts/core/guardianship.gd::place`, `game/scripts/core/guardianship.gd::candidates`, `game/scripts/core/guardianship.gd::kin_distances`, `game/scripts/core/guardianship.gd::move`, `game/scripts/core/life.gd::dawn`, `game/scripts/core/npc_brain.gd::_lodge`, `game/scripts/core/property.gd::household_ended`, `game/scripts/core/construction.gd::_may_found`, `game/scripts/core/guardianship.gd::join_clan`, `game/scripts/core/npc_brain.gd::_clan_child`, `game/scripts/core/npc_brain.gd::_prey_for`, `game/scripts/core/life.gd::_set_role`
+- **Affects:** Family, Households, Building, Property, Bandits, Save
 - **Expected:** (owner directive 2026-10-20, housing, succession and adoption, Parts 3-4; OD-11, OD-12; FAM-02..05) When both parents are dead and only children are left, each child is taken in, in order, by:
   1. a surviving parent living elsewhere;
   2. living grandparents (either side);
   3. the nearest eligible blood relative by genealogical distance through parent and child links;
   4. another household with a home, a responsible adult and room for the child.
-  Equally close candidates are ranked by ability to provide care, capacity, food, relationship and proximity, then the lower household id. The child becomes a member and lodges in that house. Mother, father and children links are unchanged, and a changed surname keeps the birth surname (`NPC.birth_family`, saved). The emptied household ends as any household whose members are gone. Children never found households (`_may_found`), and the receiving household's crowding is its own, so no house is built for it. With no household able, the child stays and `orphans_unplaced` counts it: the owner's bandit-clan fallback (FAM-07) is not built yet.
+  Equally close candidates are ranked by ability to provide care, capacity, food, relationship and proximity, then the lower household id. The child becomes a member and lodges in that house. Mother, father and children links are unchanged, and a changed surname keeps the birth surname (`NPC.birth_family`, saved). The emptied household ends as any household whose members are gone. Children never found households (`_may_found`), and the receiving household's crowding is its own, so no house is built for it. With no household able, the child joins the bandit clan (FAM-07, owner OD-11), an interim handling until bandit factions (WDR-016-C): `Guardianship.join_clan` leaves the household (`NPC.clan` = "bandit", saved), and the child lives, sleeps and eats with the band at the camp (`NPCBrain._clan_child`, the camp's meal as the bandits' own). It is never a bandit's prey, and keeps its name, age, role, parents and relationships. At coming of age it joins the band (`Life._set_role`: a bandit's health and blow, no item made for it). `orphans_to_clan` counts the cases.
 - **Tests:** `game/tests/family_test.gd`
 
 ### INT-154 · Money flows back to the essential trades: the manor's tools, bandits at the market, loot recovered, the caravan buys producers' surplus
@@ -1297,7 +1297,7 @@ Rules:
 | Inheritance | INT-017, INT-062, INT-075, INT-080, INT-151 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137, INT-145 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127, INT-149 |
-| Bandits | INT-012, INT-014, INT-050, INT-149, INT-154 |
+| Bandits | INT-012, INT-014, INT-050, INT-149, INT-153, INT-154 |
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148, INT-151, INT-152, INT-153 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
 | Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154 |
