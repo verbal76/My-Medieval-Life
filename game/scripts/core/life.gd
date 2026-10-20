@@ -38,6 +38,54 @@ static func year_minutes() -> float:
 	return World.DAY * year_days()
 
 
+# ---------------------------------------------------------------- time units (TIME-02) -------
+## The one conversion layer between calendar time and the world clock (OD-21, docs/design/TIME_MODEL.md).
+## Calendar values (ages, lifespans, breeding, growth, seasonal regrowth) are written in balance.json in
+## years (`_years`) or seasons (`_seasons`) and read through these functions, so they keep their meaning
+## in years if `calendar.year_days` changes. Operational values (hours, days of work, food-days, wages)
+## are read as they are and never pass through here. No second clock: everything is World.minutes.
+## At 8 days a year every conversion is exact (a power of two), so the results are the old day counts.
+
+## Number of seasons in a year.
+static func season_count() -> int:
+	return maxi(1, (GameData.b("calendar").seasons as Array).size())
+
+
+## Game days in `years` calendar years.
+static func years_to_days(years: float) -> float:
+	return years * year_days()
+
+
+## Game days in `seasons` calendar seasons (a season is year_days / season_count days).
+static func seasons_to_days(seasons: float) -> float:
+	return seasons * year_days() / float(season_count())
+
+
+## Calendar years in `days` game days.
+static func days_to_years(days: float) -> float:
+	return days / year_days()
+
+
+## Game minutes in `years` calendar years.
+static func years_to_minutes(years: float) -> float:
+	return years_to_days(years) * World.DAY
+
+
+## Game minutes in `seasons` calendar seasons.
+static func seasons_to_minutes(seasons: float) -> float:
+	return seasons_to_days(seasons) * World.DAY
+
+
+## A yearly rate (expected events per calendar year, as a hazard) as the daily rate a dawn roll uses.
+static func per_year_to_per_day(per_year: float) -> float:
+	return per_year / year_days()
+
+
+## A [low, high] range in calendar seasons as whole game days (the regrowth draws are of whole days).
+static func season_range_days(r: Array) -> Vector2i:
+	return Vector2i(roundi(seasons_to_days(float(r[0]))), roundi(seasons_to_days(float(r[1]))))
+
+
 ## Age in years of someone born at game minute `born`, at game minute `now`.
 static func age_years(born: float, now: float) -> float:
 	return (now - born) / year_minutes()
@@ -135,7 +183,7 @@ static func death_chance(age: float) -> float:
 		return 0.0
 	if age >= at:
 		return 1.0
-	return minf(1.0, float(c.mortality_daily_max) * pow((age - from) / (at - from), float(c.mortality_curve)))
+	return minf(1.0, per_year_to_per_day(float(c.mortality_yearly_max)) * pow((age - from) / (at - from), float(c.mortality_curve)))
 
 
 ## Update every villager's role from their age (dawn and load). A worker who turns elder retires: the

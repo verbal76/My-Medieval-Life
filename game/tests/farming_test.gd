@@ -221,7 +221,7 @@ func test_crops() -> void:
 	check(w.brain._caravan_seeds() == 0 and merchant.inv.total() == mseed, "a merchant without spare coins gets no seed: never from nowhere")
 	merchant.coins = 200
 	check(w.farm.sow(c, "wheat", p) == "" and w.farm.cells[c].state == "growing" and p.inv.count("wheat_seed") == 4, "the cell is sown: one seed used")
-	var days := float(Farming.crops().wheat.days)
+	var days := Farming.crop_days("wheat")
 	grow_hours(w, int(days * 24.0) - 2)
 	check(w.farm.cells[c].state == "growing" and float(w.farm.cells[c].progress) < 1.0, "still growing two hours short of %.0f days in spring" % days)
 	grow_hours(w, 3)
@@ -268,7 +268,7 @@ func test_crops() -> void:
 		w.minutes += 60.0
 		w.farm.hour()
 		weeks += 1
-	check(w.farm.cells[c3].state == "ripe" and weeks > int(float(Farming.crops().herb.days) * 24.0), "it ripens later than a spring sowing (%d hours: winter paused it)" % weeks)
+	check(w.farm.cells[c3].state == "ripe" and weeks > int(Farming.crop_days("herb") * 24.0), "it ripens later than a spring sowing (%d hours: winter paused it)" % weeks)
 	var flower0 := p.inv.count("flower")
 	check(w.farm.harvest(c3, p).has("flower") and p.inv.count("flower") > flower0, "the herb harvest is the flower the sage uses")
 	# the one seed in the pack of each crop is offered by the targets; a ripe cell offers a harvest

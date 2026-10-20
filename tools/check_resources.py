@@ -628,7 +628,7 @@ def _instances(ctx, n):
             f["orchard_house_range"], f["orchard_share"], f[m["species"]]["yield"], f[m["species"]]["item"])
     if m["kind"] == "plant":
         n_pl = sum(1 for pl in v.get("plants", []) if pl["kind"] == m["plant"])
-        return n_pl, "%d plants on the map, each ripe again plant_regrow_days after it is picked" % n_pl
+        return n_pl, "%d plants on the map, each ripe again plant_regrow_seasons after it is picked" % n_pl
     sp = ctx["balance"]["animals"][m["species"]]
     start = sum(sp["start"])
     if sp["kind"] == "wild":

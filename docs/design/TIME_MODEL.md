@@ -21,7 +21,7 @@ numbers are those of the audited commit (2026-10-20, `58f049c`); `bal` is `game/
 reading the code (an agent's read-only inventory, its defect claims spot-checked: the player's starvation literal at
 `world.gd:507`, the daily mortality chance at `life.gd:130-138`, `Property.WEEK` at `property.gd:18`).
 
-**Status: TIME-01 complete as an inventory.** TIME-02 and TIME-03 are open.
+**Status: TIME-01 complete as an inventory.** TIME-02 implemented (section 8; the register entry is the lead's to close). TIME-03 is open.
 
 ## Inventory
 
@@ -183,3 +183,34 @@ Call sites that would read through it:
 - **Calendar values**: animal.gd:42-60; fauna.gd:127-134, 442, 450-461; refuges.gd:65, 121, 129, 153, 237; trees.gd:23, 165-171, 224; world.gd:1143-1144 (stumps), 1003-1004 (plants), 968-969 (fruit), 1359-1372 (fields); farming.gd:238, 278 (crops); life.gd:130-138 (mortality).
 - **Operational days via `World.DAY`**: farming.gd:526, 530; world.gd:347, 2749; property.gd:18, 421; npc_brain.gd:1971, 2186, 2461-2466, 3094; the player starvation literal at world.gd:507.
 - **Display**: wiki.gd:576-607 and wiki_topics.gd:102-117 should print the units from the same layer.
+
+## 8. Implementation (TIME-02)
+
+The conversion layer is `Life` (game/scripts/core/life.gd, "time units (TIME-02)"); there is still one clock,
+`World.minutes`. Functions: `season_count()`, `years_to_days(y)`, `seasons_to_days(s)` (a season is
+`year_days / season_count` days), `days_to_years(d)`, `years_to_minutes(y)`, `seasons_to_minutes(s)`,
+`per_year_to_per_day(r)` (a yearly hazard as the daily rate a dawn roll uses; linear, like the birth chance) and
+`season_range_days([lo, hi])` (a season range as whole days for the regrowth draws). Helpers on top of it:
+`Animal.stage_days(spec, "juvenile"|"grow"|"elder"|"breed")`, `Animal.death_days(spec)`, `Farming.crop_days(crop)`,
+`World.field_grow_days(f)`, `Trees.stage_minutes(stage)` (its cache now also keys on `year_days`).
+
+Calendar values renamed in balance.json with their unit, every reader changed with them (values divided by 8 or by 2,
+so the results at 8 days a year are the old day counts exactly: those divisions are powers of two):
+
+| Old key (days) | New key | Read by |
+|---|---|---|
+| `life.mortality_daily_max` 0.1 | `life.mortality_yearly_max` 0.8 (per year, D2) | `Life.death_chance` |
+| `animals.*.juvenile/grow/elder/breed_days`, `death_days` | `*_years`, `death_years` | animal.gd, fauna.gd (spawn ages, breeding, old age), refuges.gd, wiki.gd |
+| `refuges.species.*.interval_days` | `interval_years` | refuges.gd, wiki.gd |
+| `tree_growth.sapling/young/growing_days` | `*_seasons` | `Trees.stage_minutes` |
+| `tree_regrow_days`, `plant_regrow_days`, `fruit_trees.*.regrow_days` | `*_seasons` | `World.fell`, `pick_plant`, `pick_fruit` |
+| `field_grow_days` | `field_grow_seasons` | `World.field_grow_days` |
+| `farming.crops.*.days` | `seasons` | `Farming.crop_days` (hour, days_left), wiki_farming.gd |
+
+Player-facing text is unchanged: resources.json now names the new keys and `GameUI._res_plain` shows `_seasons` and
+`_years` keys in game days through the same functions. Unchanged on purpose (operational or economic, section 1 and
+5): hunger, rest, work minutes, wages, rent (`Property.WEEK`), reserves, relief, courtship and notoriety days,
+`refuges.settle_days`, pen products, caravan days, and the literals of section 2.8 (among them the 3-day spread of
+starting animal ages, fauna.gd:127). Verified: `python3 tools/sim_gate.py` identical to its baseline before and after;
+`aging_test.gd` `test_time_units` checks that the calendar values double at 16 days a year and halve at 4 while the
+operational ones stay put.

@@ -433,10 +433,10 @@ func _animals() -> void:
 			["Meat", str(int(a.get("meat", 0)))], ["Hides", str(int(a.get("hide", 0)))]]
 		if a.has("feed"):
 			rows.append(["Feed", "%d wheat a meal" % int(a.feed)])
-		rows.append(["Newborn until", "%s days old (juvenile)" % str(a.get("juvenile_days", "?"))])
-		rows.append(["Adult from", "%s days old; only adults breed" % str(a.get("grow_days", "?"))])
-		rows.append(["Elderly from", "%s days old (slower)" % str(a.get("elder_days", "?"))])
-		var dd: Array = a.get("death_days", [])
+		rows.append(["Newborn until", "%s days old (juvenile)" % (str(Animal.stage_days(a, "juvenile")) if a.has("juvenile_years") else "?")])
+		rows.append(["Adult from", "%s days old; only adults breed" % (str(Animal.stage_days(a, "grow")) if a.has("grow_years") else "?")])
+		rows.append(["Elderly from", "%s days old (slower)" % (str(Animal.stage_days(a, "elder")) if a.has("elder_years") else "?")])
+		var dd: Array = Animal.death_days(a) if (a.get("death_years", []) as Array).size() == 2 else []
 		if dd.size() == 2:
 			rows.append(["Dies of old age", "between %d and %d days old" % [int(dd[0]), int(dd[1])]])
 		rows.append(["Young per litter", str(int(a.get("litter", 1)))])
@@ -464,7 +464,7 @@ func _animals() -> void:
 				+ "otherwise the young stay hidden. They head off %d to %d tiles from the refuge, each to a spot away from others of their kind, "
 				+ "and settle there; when their own wood is fuller, some cross unseen to another wood, and a few are lost on the way. "
 				+ "A wood hunted empty stays empty until they come, and fills again only slowly.")
-				% [str(rs.site), _and_list((rs.seasons as Array).map(func(s): return str(s).to_lower())), int(rs.interval_days),
+				% [str(rs.site), _and_list((rs.seasons as Array).map(func(s): return str(s).to_lower())), int(Life.years_to_days(float(rs.interval_years))),
 				int(a.get("litter", 1)) * maxi(1, int(rs.stock) / 2), Refuges.release_limit(int(a.get("woods_cap", 0))),
 				roundi(float(rc.release_below) * 100.0), int(a.get("woods_cap", 0)), int(rs.disperse[0]), int(rs.disperse[1])]))
 		add_page("animal:" + id, str(a.name), "animals", blocks, icon_path(str(GameData.resources.nodes.get(node.trim_prefix("node:"), {}).get("icon", ""))), id)

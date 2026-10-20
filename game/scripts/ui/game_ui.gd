@@ -1800,7 +1800,8 @@ func _res_word(parent: Control, text: String, color := INK) -> Label:
 
 ## A registry text in the player's words: notes for developers in brackets ("(World._new_day)",
 ## "(main.gd _hit_animal)") and code names ("World.mine_unit") left out; balance keys
-## ("tree_regrow_days") as their numbers, looked up under `scope` first ("animals.boar.").
+## ("tree_regrow_seasons") as their numbers, looked up under `scope` first ("animals.boar."); calendar keys
+## (`_seasons`, `_years`) are shown in game days through Life's conversions (TIME-02).
 func _res_plain(text: String, scope := "") -> String:
 	var code := RegEx.create_from_string("[A-Za-z]\\w*\\.[A-Za-z_]\\w*|\\w+_\\w+|\\bP\\d")
 	for m in RegEx.create_from_string("\\s*\\(([^()]*)\\)").search_all(text):
@@ -1815,13 +1816,18 @@ func _res_plain(text: String, scope := "") -> String:
 			var at = GameData.balance
 			for part in str(path).split("."):
 				at = at.get(part) if at is Dictionary else null
+			var unit := Callable(Life, "seasons_to_days") if key.ends_with("_seasons") else (Callable(Life, "years_to_days") if key.ends_with("_years") else Callable())
+			if unit.is_valid() and at is Array:
+				at = (at as Array).map(func(v): return unit.call(float(v)))
+			elif unit.is_valid() and (at is float or at is int):
+				at = unit.call(float(at))
 			if at is float or at is int:
 				n = "%d" % int(at)
 			elif at is Array and not (at as Array).is_empty():
 				n = "–".join((at as Array).map(func(v): return "%d" % int(v)))
 			if n != words:
 				break
-		if n != words and key.ends_with("_days"):
+		if n != words and (key.ends_with("_days") or key.ends_with("_seasons") or key.ends_with("_years")):
 			n += " days"
 		text = text.replace(key, n)
 	return text.replace("  ", " ").replace(" .", ".").replace(" ,", ",").strip_edges()
