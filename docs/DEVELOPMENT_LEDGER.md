@@ -11,10 +11,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 81 |
+| APPROVED — NOT STARTED | 80 |
 | ACTIVE DEVELOPMENT | 9 |
 | PARTIALLY IMPLEMENTED | 38 |
-| IMPLEMENTED — TESTING REQUIRED | 12 |
+| IMPLEMENTED — TESTING REQUIRED | 13 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
@@ -84,7 +84,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
 | CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
 | DVW-A14 | Play one whole life before each release (:39) | approved | APPROVED — NOT STARTED |  | release practice: play one whole life before each release, starting with Build 15 |
-| DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED |  | dated save backups complete the save-continuity work |
+| DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | IMPLEMENTED — TESTING REQUIRED |  | dated save backups complete the save-continuity work |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED |  | simulation harness and conservation checks the stabilization work depends on |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED |  | simulation harness and conservation checks the stabilization work depends on |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | approved | ACTIVE DEVELOPMENT |  | the 365-day failures (housing, births, population) under correction now |
@@ -409,7 +409,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (81)
+## APPROVED — NOT STARTED (80)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -421,7 +421,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  |  |
-| DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246) |  |  |  |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248) |  |  |  |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 249) |  |  |  |
 | DVW-A7 | Over-production from raising skills by use (:32) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 251) |  |  |  |
@@ -552,12 +551,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (12)
+## IMPLEMENTED — TESTING REQUIRED (13)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
+| DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246) | run_tests.gd test_dated_backups; start_test.gd save safety case 4b |  |  |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | WR-01 agent report 2026-10-19 (also in the unchanged baseline) | world_test.gd: hammer count unchanged through a succession |  |  |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |

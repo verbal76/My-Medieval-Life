@@ -768,6 +768,12 @@ func continue_game() -> void:
 		return
 	if b.state != "missing" and SaveStore.preserve(bak_path, b.state) == "":
 		save_blocked = "the backup save could not be read or moved aside, so saving is off this session to protect it"
+	for dated in SaveStore.dated_backups(save_path):          # an earlier day's save (DVW-A2), newest first
+		var o := SaveStore.inspect(dated, World.SAVE_VERSION)
+		if o.state == "ok":
+			_load_save(o.data)
+			ui.message((note + " " if note != "" else "") + "The save of %s was loaded instead." % str(dated).get_file().get_basename().get_slice(SaveStore.DATED, 1), 12.0)
+			return
 	new_game()
 	ui.message((note if note != "" else "No save could be loaded.") + " A new game was started.", 12.0)
 
@@ -3445,7 +3451,7 @@ func save_game(show := true) -> bool:
 	for k in save_extra:
 		if not d.has(k):
 			d[k] = save_extra[k]
-	var r := SaveStore.write_text(save_path, JSON.stringify(d, "", true, true))          # full precision: times and positions reload exactly
+	var r := SaveStore.write_text(save_path, JSON.stringify(d, "", true, true), true)          # full precision: times and positions reload exactly
 	if not r.ok:
 		if show or not save_failing:
 			ui.message("Could not save: %s. Your last save is unchanged." % r.reason, 8.0)

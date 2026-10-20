@@ -1643,6 +1643,19 @@ func _save_safety_tests() -> void:
 	check(main.can_continue(), "with only the backup left, the title still offers Continue")
 	main.continue_game()
 	check(main.world.player.coins == 333 and ui.toast.text.contains("backup"), "and Continue loads it, saying so")
+	# 4b. DVW-A2: the save and its backup both damaged: an earlier day's dated backup is loaded
+	_clear_saves()
+	main.new_game()
+	main.world.player.coins = 444
+	SaveStore.today = "2026-10-01"
+	main.save_game(false)
+	main.save_game(false)                                # the 444-coin save is kept under 2026-10-01
+	SaveStore.today = ""
+	check(SaveStore.dated_backups(TEST_SAVE).size() == 1, "the game's save keeps a dated backup")
+	_put(TEST_SAVE, "garbage")
+	_put(TEST_SAVE + SaveStore.BAK, "garbage too")
+	main.continue_game()
+	check(main.world.player.coins == 444 and ui.toast.text.contains("2026-10-01") and ui.toast.text.contains("loaded instead"), "with save and backup damaged, the dated backup is loaded, saying which day: %s" % ui.toast.text)
 	# 5. a failed write: the last save stays exactly as it was, and the player is told
 	_clear_saves()
 	main.new_game()

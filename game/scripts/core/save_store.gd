@@ -11,9 +11,16 @@ extends RefCounted
 ## "newer" (written by a later version than this build reads) or "older" (written before MIN_VERSION:
 ## by a version whose world this build cannot place it in). A save that is not "ok" is never
 ## written over: `preserve` renames it, bytes unchanged, to "<name>.<state>-<time>.json" first.
+##
+## Dated backups (DVW-A2): the game's own save also keeps up to DATED_KEEP copies of earlier days'
+## saves, "<name>.backup-YYYY-MM-DD.json": the first save of a day copies the backup (the previous
+## save) under that day's date, and the oldest beyond DATED_KEEP is removed. A slip noticed days later
+## (a bad trade, a lost house) can still be undone. Failing to make one never fails the save.
 
 const TMP := ".tmp"
 const BAK := ".bak"
+const DATED := ".backup-"
+const DATED_KEEP := 3
 ## The oldest save version this build reads. Build 8 laid the village out anew (tools/build_village.py
 ## generator v6: every building, road, tree and deposit has a new place; owner decision 2026-10-19, older
 ## saves are disposable): saves from before it are refused and kept on disk, never migrated.
@@ -22,6 +29,8 @@ const MIN_VERSION := 14
 ## Test hook: the step at which the file system pretends to fail ("open", "write", "verify",
 ## "backup", "replace" in `write_text`; "preserve"); "" in the game.
 static var fail_at := ""
+## Test hook: the date dated backups are named after ("YYYY-MM-DD"); "" uses the system clock.
+static var today := ""
 
 
 ## What is at `path`: {state, data (the parsed save when "ok"), version, reason (plain words)}.
@@ -51,9 +60,10 @@ static func inspect_text(text: String, max_version: int, min_version := MIN_VERS
 	return {"state": "ok", "data": d, "version": v}
 
 
-## Write `text` as the save at `path`, keeping the previous good save as "<path>.bak".
+## Write `text` as the save at `path`, keeping the previous good save as "<path>.bak" and, with
+## `dated`, a dated copy of it once a day (the game's own save; not imports or set-aside copies).
 ## Returns {ok: bool, reason: String}; on failure the files at `path` and "<path>.bak" are as before.
-static func write_text(path: String, text: String) -> Dictionary:
+static func write_text(path: String, text: String, dated := false) -> Dictionary:
 	var tmp := path + TMP
 	var dir := path.get_base_dir()
 	if not DirAccess.dir_exists_absolute(dir):
@@ -88,7 +98,38 @@ static func write_text(path: String, text: String) -> Dictionary:
 		return _fail("the new save could not be put in place", tmp)
 	if FileAccess.file_exists(old_bak):
 		DirAccess.remove_absolute(_abs(old_bak))
+	if dated:
+		_keep_dated(path)
 	return {"ok": true, "reason": ""}
+
+
+## The dated backups of `path`, newest first (their names sort by date).
+static func dated_backups(path: String) -> Array:
+	var dir := path.get_base_dir()
+	var prefix := path.get_basename().get_file() + DATED
+	var out := []
+	for f in DirAccess.get_files_at(dir):
+		if f.begins_with(prefix) and f.ends_with(".json"):
+			out.append(dir.path_join(f))
+	out.sort()
+	out.reverse()
+	return out
+
+
+static func _keep_dated(path: String) -> void:
+	var day := today if today != "" else Time.get_date_string_from_system()
+	var copy := "%s%s%s.json" % [path.get_basename(), DATED, day]
+	if not FileAccess.file_exists(copy) and FileAccess.file_exists(path + BAK):
+		var text := FileAccess.get_file_as_string(path + BAK)
+		var f := FileAccess.open(copy, FileAccess.WRITE)
+		if f != null:
+			f.store_string(text)
+			f.close()
+			if FileAccess.get_file_as_string(copy) != text:
+				DirAccess.remove_absolute(_abs(copy))     # never keep a damaged copy
+	var all := dated_backups(path)
+	for i in range(DATED_KEEP, all.size()):
+		DirAccess.remove_absolute(_abs(all[i]))
 
 
 ## Move a save that cannot be used out of the way, unchanged, so nothing writes over it.
@@ -109,7 +150,7 @@ static func preserve(path: String, state: String) -> String:
 
 ## A save or a backup a player could continue from (the title screen's Continue).
 static func any_exists(path: String) -> bool:
-	return FileAccess.file_exists(path) or FileAccess.file_exists(path + BAK)
+	return FileAccess.file_exists(path) or FileAccess.file_exists(path + BAK) or not dated_backups(path).is_empty()
 
 
 ## Undo a half-done swap: the backup goes back to being the save, the set-aside backup to the backup.

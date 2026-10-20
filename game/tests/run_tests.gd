@@ -53,6 +53,7 @@ func _init() -> void:
 	test_resource_registry()
 	test_wild_plants()
 	test_save_store()
+	test_dated_backups()
 	test_doorways()
 	test_village_layout()
 	test_polish_work_looks()
@@ -3363,6 +3364,31 @@ func test_resource_registry() -> void:
 	check(ResourceNodes.uses_of("pickaxe").any(func(u): return u.kind == "tool" and u.id == "iron_seam"), "a pickaxe is the tool for the seams")
 	check(ResourceNodes.sources_of("stone").any(func(s): return s.kind == "import") and ResourceNodes.sources_of("iron_ore").any(func(s): return s.kind == "import"), "caravan imports are sources")
 	w.dispose()
+
+
+## DVW-A2: the game's save keeps a dated copy of the previous save once a day, at most three, oldest
+## dropped; other writes (imports, set-aside copies) make none; a failed copy never fails the save.
+func test_dated_backups() -> void:
+	var dir := "user://test_saves/dated"
+	DirAccess.make_dir_recursive_absolute(dir)
+	for f in DirAccess.get_files_at(dir):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir.path_join(f)))
+	var path := dir.path_join("save1.json")
+	var save := func(n: int, day: String, dated := true) -> bool:
+		SaveStore.today = day
+		return SaveStore.write_text(path, '{"save_version": 8, "n": %d}' % n, dated).ok
+	check(save.call(1, "2026-10-01") and SaveStore.dated_backups(path).is_empty(), "the first save has nothing earlier to keep")
+	check(save.call(2, "2026-10-01") and SaveStore.dated_backups(path).size() == 1, "the next save keeps the previous one under its day")
+	var first: String = SaveStore.dated_backups(path)[0]
+	check(first.get_file() == "save1.backup-2026-10-01.json" and int(JSON.parse_string(FileAccess.get_file_as_string(first)).n) == 1, "named by date, holding the previous save (%s)" % first.get_file())
+	check(save.call(3, "2026-10-01") and SaveStore.dated_backups(path).size() == 1 and int(JSON.parse_string(FileAccess.get_file_as_string(first)).n) == 1, "later saves the same day leave the day's copy alone")
+	for d in ["2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05"]:
+		save.call(4, d)
+	var kept: Array = SaveStore.dated_backups(path).map(func(p: String) -> String: return p.get_file())
+	check(kept == ["save1.backup-2026-10-05.json", "save1.backup-2026-10-04.json", "save1.backup-2026-10-03.json"], "at most three, newest first, the oldest dropped (%s)" % str(kept))
+	check(save.call(5, "2026-10-06", false) and SaveStore.dated_backups(path).size() == 3 and not FileAccess.file_exists(dir.path_join("save1.backup-2026-10-06.json")), "a write that is not the game's save keeps no dated copy")
+	check(SaveStore.any_exists(path), "a dated backup counts as something to continue from")
+	SaveStore.today = ""
 
 
 ## SaveStore (owner, 2026-10-18: protect player data): atomic, verified writes with a backup;

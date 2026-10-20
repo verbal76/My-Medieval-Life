@@ -6597,7 +6597,7 @@
    "id": "DVW-A2",
    "title": "Rotate several dated save backups, not one `.bak` (:27)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Rotate several dated save backups, not one `.bak` (:27)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246)",
@@ -6606,7 +6606,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "Plan: agent rotate 3 backups; \"after carts\" (:87) | `save_store.gd:16,49-85` still keeps one `.bak` (plus a transient `.bak.old` during the write) | NOT-STARTED",
-   "tests": "",
+   "tests": "run_tests.gd test_dated_backups; start_test.gd save safety case 4b",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -6631,6 +6631,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "SaveStore keeps the previous save under each day's date (three days, oldest dropped) besides .bak; Continue falls back to the newest readable one; verified when CI passes on staging"
     }
    ],
    "acceptance_derived": true,
