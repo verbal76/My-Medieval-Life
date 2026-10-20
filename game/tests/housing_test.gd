@@ -30,6 +30,7 @@ func _init() -> void:
 	test_hunger_before_carrying()
 	test_couples_of_either_sex()
 	test_forge_buys_imported_ore()
+	test_founder_who_pairs_keeps_building()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -320,3 +321,39 @@ func test_forge_buys_imported_ore() -> void:
 	check(smith.inv.count("coal") == 2 and smith.inv.count("iron_ore") == 4 and raw.inv.count("coal") == coal0 - 2, "and the iron ore after it, paid for, from the merchant's stock")
 	w.brain._smith(smith)
 	check(str(smith.doing).contains("smelt") or JSON.stringify(smith.plan).contains("smelt_iron"), "then smelts (doing: %s)" % smith.doing)
+
+
+## EQ-07: a founder building their house who then pairs is not pulled into the partner's home; the partner
+## joins the founding household and the site goes on (it was abandoned for good before).
+func test_founder_who_pairs_keeps_building() -> void:
+	var w := new_world()
+	var c := w.construction
+	var Y := float(GameData.b("calendar").year_days) * 1440.0
+	var kid: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "child" and n.household >= 3 and c._grown_child(n):
+			n.born = w.minutes - 20.0 * Y
+			n.role = "adult"
+			if c._may_found(n):
+				kid = n
+				break
+	var h := kid.household
+	var mom: NPC = w.npc(kid.mother) if kid.mother >= 0 else w.npc(kid.father)
+	while not c.crowded(h):
+		Life.birth(w, mom, w.npc(mom.partner) if mom.partner >= 0 else null, h)
+	kid.coins = 400
+	c.daily()
+	var nh := kid.household
+	check(nh != h and str(w.households[nh].get("build", "")) != "", "a grown child founds a household and starts a house")
+	var site := str(w.households[nh].build)
+	var mate: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.partner < 0 and n.household >= 3 and n.household != h and Life._may_move(w, n) and Life.has_room(w, n.household) \
+				and not Life.kin(kid.id, kid.mother, kid.father, n.id, n.mother, n.father):
+			mate = n
+			break
+	check(mate != null, "a partner with room at home")
+	Life._link_partners(kid, mate)
+	check(Life._move_in(w, kid, mate), "they move in together")
+	check(kid.household == nh and mate.household == nh, "the partner joins the founding household, not the other way round")
+	check(str(w.households[nh].get("build", "")) == site, "and the house goes on being built")

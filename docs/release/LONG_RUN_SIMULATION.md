@@ -555,4 +555,10 @@ These runs write only to `out/eq/`, which is not committed. Each result is recor
 **Reading:**
 - More households now start a home: the goals, the saving and the couples of either sex take effect.
 - Started sites still do not finish within 100 days, while timber is still plentiful (about 120 planks in villagers' hands). What they wait on is being traced (`housing_trace.gd` on the corrected code).
-- The forge fix matters after about day 120, so the corrected code's 365-day runs (fix11, both fixes) measure it.
+- The forge fix matters after about day 120.
+
+**Third root cause (trace on the corrected code, seed 1):** a single founder put all their coins into the first day's materials. A couple of days later they paired with someone whose house had a free bed, and moved in there. Their own founding household ended and the half-built house was abandoned for good; the partner's house was crowded again. **Corrected (`Life._move_in`):** a partner whose household is building its own home stays with it, and the other partner joins them, lodging where they lodge until the house stands. Two partners each building stay apart until one finishes. Test: `housing_test.gd::test_founder_who_pairs_keeps_building`.
+
+### 365 days on the fully corrected code (fix12: housing goals, forge supply, founders keep building)
+
+Started 2026-10-20 at 01:31 UTC; recorded here when they finish.

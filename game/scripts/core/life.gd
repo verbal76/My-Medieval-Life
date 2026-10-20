@@ -367,19 +367,30 @@ static func has_room(w: World, h: int) -> bool:
 static func _move_in(w: World, a: NPC, b: NPC) -> bool:
 	if a.household == b.household and a.household >= 0:
 		return true
+	# a partner whose household is building its own home stays with it and the other joins them, lodging
+	# where they lodge until the house stands (EQ-07: a founder who paired moved into the partner's house
+	# and the half-built house was abandoned for good); two partners each building stay apart for now
+	var a_builds := _building(w, a)
+	var b_builds := _building(w, b)
+	if a_builds and b_builds:
+		return false
+	if a_builds != b_builds:
+		var host: NPC = a if a_builds else b
+		var mover: NPC = b if a_builds else a
+		if not _may_move(w, mover):
+			return false
+		var was := mover.household
+		(w.households[was].members as Array).erase(mover.id)
+		w.brain._lodge(mover, host.household)
+		mover.home = host.home
+		mover.plan.clear()
+		if was >= 0 and not w.property._anyone_alive(was):
+			w.property.household_ended(was)
+		return true
 	for pair in [[a, b], [b, a]]:                              # [mover, host]
 		var mover: NPC = pair[0]
 		var host: NPC = pair[1]
-		if mover.household < 3 or host.household < 3 or not has_room(w, host.household):
-			continue
-		if mover.id == w.reeve_id or mover.id == w.sage_id or mover.job == "guard":
-			continue
-		var minors := false
-		for cid in mover.children:
-			var k := w.npc(int(cid))
-			if k != null and k.alive and k.role == "child" and k.household == mover.household:
-				minors = true
-		if minors:
+		if host.household < 3 or not has_room(w, host.household) or not _may_move(w, mover):
 			continue
 		var old := mover.household
 		(w.households[old].members as Array).erase(mover.id)
@@ -389,6 +400,23 @@ static func _move_in(w: World, a: NPC, b: NPC) -> bool:
 			w.property.household_ended(old)
 		return true
 	return false
+
+
+## Whether `n`'s household is building its own home.
+static func _building(w: World, n: NPC) -> bool:
+	return n.household >= 0 and n.household < w.households.size() and str(w.households[n.household].get("build", "")) != ""
+
+
+## Whether `n` may leave their household to live with a partner: not from the founding households, not the
+## reeve, the sage or a guard (their posts come with a house), not a parent with young children at home.
+static func _may_move(w: World, n: NPC) -> bool:
+	if n.household < 3 or n.id == w.reeve_id or n.id == w.sage_id or n.job == "guard":
+		return false
+	for cid in n.children:
+		var k := w.npc(int(cid))
+		if k != null and k.alive and k.role == "child" and k.household == n.household:
+			return false
+	return true
 
 
 ## Why the player cannot be partners with this villager ("" if they can).

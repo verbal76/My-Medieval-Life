@@ -762,6 +762,8 @@ func couples_needing_home() -> Array:
 			continue
 		if (f.sex == m.sex and f.id > m.id) or (f.sex != m.sex and f.sex != "female"):
 			continue
+		if Life._building(w, f) and Life._building(w, m):
+			continue                       # each finishes the house they started (Life._move_in)
 		if f.household != m.household:
 			out.append([f, m])
 		elif not Life.has_room(w, f.household) and (_grown_child(f) or _grown_child(m)):
