@@ -8,6 +8,7 @@ extends SceneTree
 ## Diagnostics only: the only thing it changes in the world is the player's hunger, kept full so
 ## the inert player (left where it starts, as in households_sim) never starves.
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
+##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
@@ -37,6 +38,9 @@ var flows := {}                # "buyer_role>seller_role" -> {n, coins, items}: 
 var scenario := ""             # EQ-06 intervention scenario (see _intervene); "" = the player stays inactive
 var scenario_day := 20
 var scenario_log := {}
+var watch_from := -1           # B7-015, FSE-16: from this day, log every hour the households with someone near starving
+var watch_alive := {}          # npc id -> alive, for --watch-from's death lines
+var watch_lost := {}           # households that lost someone to hunger while watched
 
 
 func _init() -> void:
@@ -49,6 +53,7 @@ func _init() -> void:
 	var out := str(arg.call("--out", ""))
 	scenario = str(arg.call("--scenario", ""))   # EQ-06, EQ-05: a player intervention on day --at (default 20)
 	scenario_day = int(arg.call("--at", "20"))
+	watch_from = int(arg.call("--watch-from", "-1"))
 	GameData.ensure()
 	for i in args.size():                 # comparison runs: --set key=value overrides a balance number
 		if args[i] == "--set" and i + 1 < args.size() and "=" in args[i + 1]:
@@ -91,6 +96,8 @@ func _init() -> void:
 			if i % 60 == 59:
 				var th := Time.get_ticks_usec()
 				_hourly()
+				if watch_from >= 0 and d >= watch_from:
+					_watch(d, i / 60)
 				harness_us += Time.get_ticks_usec() - th
 				if w.player.hp < hp_before:
 					player_attacked += 1
@@ -105,6 +112,10 @@ func _init() -> void:
 	var secs := (Time.get_ticks_msec() - t0) / 1000.0
 	if profile:
 		_print_profile(update_us, harness_us, secs, days)
+	if watch_from >= 0:
+		for e in w.brain.miss_log:
+			if watch_lost.has(int(e[5])) and int(e[0]) >= watch_from - 2:
+				print("WATCH MISS ", str(e))
 	var final: Dictionary = samples[-1]
 	_print_final(final, start, seed, days, secs)
 	if out != "":
@@ -155,6 +166,42 @@ func _on_event(t: String) -> void:
 		events.caravans += 1
 	elif t.ends_with(" broke."):
 		events.tools_broke += 1
+
+
+## --watch-from (B7-015, FSE-16): each game hour, every household with a member under 25 hunger: its pantry, members
+## (job, hunger, health, coins, food carried, what they are doing), its food days and relief standing, and the market;
+## and each death as it happens. Diagnostics only: the world's hourly caches are restored after reading, so watching
+## leaves the run exactly as it would be without it.
+func _watch(d: int, hr: int) -> void:
+	var pc: Dictionary = w._price_cache.duplicate()
+	var rc: Dictionary = w._reserve_cache.duplicate()
+	for n: NPC in w.npcs:
+		if watch_alive.get(n.id, true) and not n.alive and n.role != "bandit":
+			print("WATCH DEATH d%d h%d %s %s id=%d job=%s role=%s hh=%d hunger=%.0f starved=%s" % [d, hr, n.name, n.family, n.id, n.job, n.role, n.household, n.hunger, str(n.hunger <= 0.0)])
+			if n.hunger <= 0.0:
+				watch_lost[n.household] = true
+		watch_alive[n.id] = n.alive
+	for h in w.households.size():
+		var mem: Array = w.brain._members(h)
+		var low := false
+		for m: NPC in mem:
+			low = low or m.hunger < 25.0
+		if not low:
+			continue
+		var hh: Dictionary = w.households[h]
+		var ms := []
+		for m: NPC in mem:
+			var carry := {}
+			for id in m.inv.items:
+				if id in NPCBrain.FOOD or id in ["meat", "log", "wheat_seed", "egg", "milk", "carrot", "potato"]:
+					carry[id] = m.inv.items[id]
+			ms.append("%s(%s,%s,hu%.0f,hp%.0f,c%d,%s,'%s')" % [m.name, m.job if m.job != "" else m.role, "sleep" if w.asleep(m) else "up", m.hunger, m.hp, m.coins, str(carry), m.doing])
+		var fd: float = w.brain.household_food_days(h)
+		print("WATCH HH d%d h%d hh%d %s pantry=%s fd=%.2f trig=%s pend=%d relief_days=%s unit=%s granary=%d treas=%d mkt=%.0f | %s" % [d, hr, h, str(hh.get("family", "")),
+			str((hh.pantry as Inventory).items), fd, str(fd < float(GameData.b("relief_trigger_days"))), w.manor_work.pending_for(h), str(hh.get("relief_days", [])),
+			str(w.cheapest_food_unit()), w.granary.count("wheat"), w.treasury, w.brain.market_food_points, " ".join(ms)])
+	w._price_cache = pc
+	w._reserve_cache = rc
 
 
 func _on_died(n: NPC) -> void:
