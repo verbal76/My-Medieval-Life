@@ -1,0 +1,60 @@
+# Future expansions: dependencies and proposed sequence
+
+**Owner directive:** 2026-10-20 (`docs/directives/2026-10-20_two_decisions_three_expansions.md`). The three supporting documents in `docs/directives/` are the primary specifications.
+
+These are three independent expansions:
+
+| | Register | Specification |
+|---|---|---|
+| A | Mining & Industrial Development: EXP-A, phases MIN-A..G | `My_Medieval_Life_Mining_Industry_Expansion.pdf` |
+| B | Settlement Advancement & Regional Economy: EXP-B, phases SET-A..E | `My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf` |
+| C | NPC Judgment System: EXP-C, gates SJD-A..H, open decisions SJD-Q01..Q14 | `My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf` |
+
+Each has its own phases, tests, integration review and build decision. None is started; none interrupts the Build 15–16 equilibrium work (EQ-16). No build numbers are assigned here.
+
+## World Design Rules each one serves
+
+| Expansion | Rules (register `rules` field) |
+|---|---|
+| A Mining | 001 material interdependency, 002 professional interdependency, 003 meaningful recipes, 004 economic consequences, 005 living-world independence, 007 automated compliance, 013 finite resources |
+| B Settlements | 001, 002, 004, 005, 009 emergent gameplay, 011 NPC self-improvement, 012 competition, 013, 015 political authority and civic employment |
+| C Judgment | 005, 009, 010 depth without obscurity, 012, 015, 016 bandit factions, 017 generational memory, 019 political agency |
+
+## Dependencies
+
+**Shared foundations, before any of the three:**
+- Build 16 equilibrium (EQ-16): a stable, measured baseline. All three documents require it, and C names it as Gate A.
+- Save continuity (SAVE-00, done for PC; phone check pending). All three add saved state, and migrations go through `SaveTransfer.MIGRATIONS` with fixture tests.
+- The long-run harness (`economy_sim.gd`) with exact conservation of coins, goods, animals and deposits. All three use it as their acceptance gate.
+
+**A depends on:**
+- the terrain, elevation and navigation audit (MIN-A), which also bears on B14-07 cliff steps;
+- the deposit model, resources.json, recipes and professions.
+
+Phases E and F (open pit, underground) depend on what MIN-A finds about layered terrain. The document itself says not to assume it.
+
+**B depends on:**
+- a settlement capability schema (SET-A, SET-B). A's capability levels (MIN-D) are the first industry to use it, so SET-A's schema design should come before MIN-D. The capability model itself stays part of B;
+- the caravan placeholder (CARAVAN-TMP), which it replaces in SET-C;
+- several settlements (SET-E), which need a larger map; REC-007 is related.
+
+**C depends on:**
+- the Build 16 baseline (SJD-A);
+- an audit of every decision point (SJD-B);
+- an event record of what happened: theft, help, harm, trade. This exists partly today in `World.witness`, `player.crimes`, `Relations.harmed` and NPC memories.
+
+C replaces today's fixed thresholds, CRT-12's notoriety refusal and the single regard score, with weighed judgment. That conflict is recorded on CRT-12 and EXP-C.
+
+## Proposed sequence (for owner approval)
+
+1. **Now, Builds 15–16:** equilibrium (EQ-01..08, WR-01, CRT-*), save continuity, the caravan as a labelled 30-coin placeholder. Then the 100- and 365-day multi-seed acceptance runs (EQ-06).
+2. **First after Build 16: Expansion A, phases MIN-A to MIN-D.**
+   - Audit, quarry stone after ore, prospecting and assay, finite hidden deposits, capability levels 1–2.
+   - It answers the most pressing problem the runs show: iron and coal run out by day 10, and stone by about day 60.
+   - SET-A (the capability schema design) runs alongside so MIN-D builds on it rather than on something mining-only.
+   - Open-pit and underground mining (MIN-E, MIN-F) follow as their own milestone once MIN-A has settled the terrain question.
+3. **Expansion C, gates B to D:** the audit and an isolated prototype with no effect on live behaviour. These can run in parallel with A, since they change nothing in play. Live integration (gate E onward) waits until A's simulations are stable, so changes in behaviour can be traced to one cause.
+4. **Expansion B, phases SET-B to SET-E:** the capability model, the abstract regional economy replacing the caravan allowance, and settlement growth. It goes after A because mining is its first industry, and before or alongside C's later gates. The full inter-settlement network (SET-E) needs the larger map.
+5. **Expansion A, phases MIN-E to MIN-G,** and C's gates F to H, as their prerequisites allow.
+
+Each step ends with its own multi-seed 100- and 365-day runs, save-migration tests and a build decision under the release rules then in force.

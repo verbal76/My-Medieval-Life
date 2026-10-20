@@ -7581,7 +7581,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline",
    "priority": "future (after Build 16)",
    "workstream": "expansion A",
    "superseded_by": null,
@@ -7591,6 +7591,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "dependencies and proposed sequence written for owner approval (docs/EXPANSION_ROADMAP.md); not started"
     }
    ]
   },
@@ -7636,7 +7641,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline",
    "priority": "future (unscheduled)",
    "workstream": "expansion B",
    "superseded_by": null,
@@ -7646,6 +7651,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "dependencies and proposed sequence written for owner approval (docs/EXPANSION_ROADMAP.md); not started"
     }
    ]
   },
@@ -7693,7 +7703,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline",
    "priority": "future (after Build 16)",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -7703,6 +7713,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "dependencies and proposed sequence written for owner approval (docs/EXPANSION_ROADMAP.md); not started"
     }
    ]
   },
