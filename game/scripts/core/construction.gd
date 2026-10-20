@@ -1038,7 +1038,7 @@ func _keep_building(h: int) -> void:
 		if str(c.site) == str(p.id):
 			return
 	var wage := int(GameData.b("helper_wage"))
-	var reserve := 10
+	var reserve := 10 + _tool_reserve(h)
 	var budget: int = w.property.purse(ref) - reserve
 	var helper: NPC = null
 	if budget - wage >= estimate(p.site.need):
@@ -1063,6 +1063,18 @@ func _keep_building(h: int) -> void:
 	var founder: NPC = responsible_adult(h)
 	if founder != null:
 		hire(ref, founder, p, budget)
+
+
+## What a household keeps back from its building for its workers' missing tools (EQ-07): the price of
+## each tool a member's trade needs and they have not got, so a house never takes the means of earning.
+func _tool_reserve(h: int) -> int:
+	var keep := 0
+	for o: NPC in w.brain._members(h):
+		var tool: String = NPCBrain.JOB_TOOL.get(o.job, "")
+		if o.role == "adult" and tool != "" and not o.inv.has(tool):
+			var p: int = w.brain.tool_price(o, tool)
+			keep += p if p > 0 else ceili(GameData.value(tool) * 1.5)
+	return keep
 
 
 ## The house is built (World._finish_site): a household that was founding moves in.

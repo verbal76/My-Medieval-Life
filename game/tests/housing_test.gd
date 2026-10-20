@@ -31,6 +31,7 @@ func _init() -> void:
 	test_couples_of_either_sex()
 	test_forge_buys_imported_ore()
 	test_founder_who_pairs_keeps_building()
+	test_tool_less_worker()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -357,3 +358,27 @@ func test_founder_who_pairs_keeps_building() -> void:
 	check(Life._move_in(w, kid, mate), "they move in together")
 	check(kid.household == nh and mate.household == nh, "the partner joins the founding household, not the other way round")
 	check(str(w.households[nh].get("build", "")) == site, "and the house goes on being built")
+
+
+## EQ-07: a woodcutter whose axe broke after their coins went into the house is out of work in all but name.
+## The house budget keeps back the price of the missing tool, and the job market treats them as out of work.
+func test_tool_less_worker() -> void:
+	var w := new_world()
+	var c := w.construction
+	var cutter: NPC = w.brain._first_with_job("woodcutter")
+	check(cutter != null and cutter.inv.has("axe"), "a woodcutter with an axe")
+	check(not w.brain.tool_short(cutter), "is not short of a tool")
+	cutter.inv.remove("axe", cutter.inv.count("axe"))
+	cutter.coins = 0
+	check(w.brain.tool_short(cutter), "the axe gone and no coins for one: short of the tool")
+	check(c._tool_reserve(cutter.household) > 0, "a household building keeps back the price of the missing axe")
+	var price: int = w.brain.tool_price(cutter, "axe")
+	if price > 0:
+		cutter.coins = price
+		check(not w.brain.tool_short(cutter), "with the coins for an axe on sale, not short: they go and buy one")
+		cutter.coins = 0
+	w.treasury = 5000                              # the manor can hire
+	var hh: Dictionary = w.households[cutter.household]
+	hh.econ = {"cost": 10.0, "adults": 1, "streak": 0}
+	w.brain.seek_work()
+	check(cutter.job != "woodcutter", "the job market moves a woodcutter with no axe and no coins into paying work (now %s)" % cutter.job)

@@ -559,6 +559,13 @@ These runs write only to `out/eq/`, which is not committed. Each result is recor
 
 **Third root cause (trace on the corrected code, seed 1):** a single founder put all their coins into the first day's materials. A couple of days later they paired with someone whose house had a free bed, and moved in there. Their own founding household ended and the half-built house was abandoned for good; the partner's house was crowded again. **Corrected (`Life._move_in`):** a partner whose household is building its own home stays with it, and the other partner joins them, lodging where they lodge until the house stands. Two partners each building stay apart until one finishes. Test: `housing_test.gd::test_founder_who_pairs_keeps_building`.
 
-### 365 days on the fully corrected code (fix12: housing goals, forge supply, founders keep building)
+**Fourth root cause (trace on the fix12 code, seed 2):** with the first three fixed, sites still started and stalled (by day 120–150: 7 and 9 started, 1 finished each) while planks were plentiful (108–173). A founder, Matilda, a woodcutter, put her savings into the first day's materials on day 10. Her axe then broke. From day 22 her coins stayed between 0 and 6: she spent her days "out of work: needs an axe", earning about a coin a day, so she could buy neither an axe nor materials. The job market never moved her, because she still held a woodcutter's job.
+
+**Corrected:**
+- The money a household keeps back from its building includes the price of a member's missing work tool (`Construction._tool_reserve`).
+- A worker whose trade needs a tool they have not got and cannot pay for counts as out of work, so the existing job-change rules move them into paying work (`NPCBrain.tool_short`, in `seek_work`).
+- Test: `housing_test.gd::test_tool_less_worker`.
+
+### 365 days on the corrected code (fix12: housing goals, forge supply, founders keep building; before the tool fix)
 
 Started 2026-10-20 at 01:31 UTC; recorded here when they finish.

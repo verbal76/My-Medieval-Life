@@ -1331,6 +1331,32 @@ func _seller_of(id: String, buyer: NPC) -> NPC:
 	return null
 
 
+## The tool a trade cannot work without (the woodcutter's axe, the miner's pickaxe).
+const JOB_TOOL := {"woodcutter": "axe", "miner": "pickaxe"}
+
+
+## What a tool costs `n` to replace now: the cheapest seller's price (the goods merchant, the smith), or -1
+## when nobody has one for sale.
+func tool_price(n: NPC, tool: String) -> int:
+	var best := -1
+	for o: NPC in w.npcs:
+		if o.alive and o != n and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.has(tool) and not KEEPS.get(o.job, []).has(tool):
+			var p := w.sell_price(o, tool)
+			best = p if best < 0 else mini(best, p)
+	return best
+
+
+## A worker whose trade needs a tool they have not got and cannot pay for: out of work in all but name
+## (EQ-07: a woodcutter whose axe broke after she put her coins into her house earned a coin or two a day
+## and never got either back).
+func tool_short(n: NPC) -> bool:
+	var tool: String = JOB_TOOL.get(n.job, "")
+	if tool == "" or n.inv.has(tool):
+		return false
+	var p := tool_price(n, tool)
+	return p < 0 or n.coins < p
+
+
 func _get_tool(n: NPC, tool: String) -> bool:
 	# the goods merchant retails tools (the smith's wholesale buyer, B7-016); the smith sells what the merchant lacks
 	for role in ["merchant_goods", "smith"]:
@@ -2307,7 +2333,7 @@ func seek_work() -> void:
 		for n: NPC in members:
 			if n.role != "adult" or n.job in ["guard", "reeve", "sage"]:
 				continue
-			var unemployed := n.job == ""
+			var unemployed := n.job == "" or tool_short(n)
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
 			if not unemployed:
 				var settling := n.left_job != "" and w.day() - n.job_since < cooldown     # just changed jobs: give it time

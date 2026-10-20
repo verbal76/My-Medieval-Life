@@ -8278,7 +8278,7 @@
     "Re-run on several seeds"
    ],
    "implementation": "game/scripts/core/construction.gd (housing goals, responsible_adult, _enlarge, sex-neutral couples), npc_brain.gd (_plan_seek_company saving)",
-   "tests": "game/tests/housing_test.gd",
+   "tests": "game/tests/housing_test.gd test_tool_less_worker",
    "playtest": [],
    "branch": "staging/my-medieval-life",
    "commits": [],
@@ -8339,6 +8339,11 @@
      "date": "2026-10-20",
      "change": "tests; next_action",
      "why": "third root cause: a founder who paired moved into the partner's house and abandoned the half-built one; Life._move_in now keeps a builder with their site"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "tests",
+     "why": "fourth root cause: a founder whose work tool broke after spending on the house earned almost nothing and never recovered; the house budget now keeps a missing tool's price, and tool-less workers count as out of work in the job market"
     }
    ],
    "target_build": "15",
@@ -12846,6 +12851,282 @@
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "waiting on an owner decision, not development work"
+  },
+  {
+   "id": "PERF-01",
+   "title": "Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates)",
+   "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
+   "approval": "owner directive 2026-10-20, relayed and confirmed by the owner (docs/directives/2026-10-20_build15_followup_performance_clarification.md)",
+   "acceptance": [
+    "Measured seconds per day for current runs, with concurrency recorded; verified vs estimated vs hypothesis kept apart",
+    "Answers to the owner's ten runtime questions in docs/release/SIMULATION_PERFORMANCE.md"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead agent, staging",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
+     "why": "owner asked for the measured runtime answer now; measurement only, no interference with running simulations"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5)"
+  },
+  {
+   "id": "PERF-02",
+   "title": "Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization",
+   "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
+   "approval": "owner directive 2026-10-20, relayed and confirmed by the owner (docs/directives/2026-10-20_build15_followup_performance_clarification.md)",
+   "acceptance": [
+    "Wall-clock, CPU, population, animals and time per subsystem recorded",
+    "Bottlenecks ranked by measured cost"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "PERF-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5)"
+  },
+  {
+   "id": "PERF-03",
+   "title": "Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change",
+   "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
+   "approval": "owner directive 2026-10-20, relayed and confirmed by the owner (docs/directives/2026-10-20_build15_followup_performance_clarification.md)",
+   "acceptance": [
+    "Baseline fingerprints committed",
+    "Every optimization compared: identical fingerprints, population, households, inventories, animals, deposits, treasury and currency; zero unexplained leaks"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "PERF-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5)"
+  },
+  {
+   "id": "PERF-04",
+   "title": "Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts",
+   "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
+   "approval": "owner directive 2026-10-20, relayed and confirmed by the owner (docs/directives/2026-10-20_build15_followup_performance_clarification.md)",
+   "acceptance": [
+    "Before and after runtimes; each change passes PERF-03"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "PERF-03"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5)"
+  },
+  {
+   "id": "PERF-05",
+   "title": "Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially",
+   "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
+   "approval": "owner directive 2026-10-20, relayed and confirmed by the owner (docs/directives/2026-10-20_build15_followup_performance_clarification.md)",
+   "acceptance": [
+    "Parallel vs sequential wall-clock and identical outcomes recorded",
+    "No shared save or temp paths between processes"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "PERF-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5)"
+  },
+  {
+   "id": "PERF-06",
+   "title": "Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated)",
+   "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
+   "approval": "owner directive 2026-10-20, relayed and confirmed by the owner (docs/directives/2026-10-20_build15_followup_performance_clarification.md)",
+   "acceptance": [
+    "A written evaluation of what a resumed run would need to reproduce exactly (world state, RNG state, transient brain state) and its risks",
+    "No implementation before the owner sees the evaluation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5)"
   },
   {
    "id": "PL1-01",
