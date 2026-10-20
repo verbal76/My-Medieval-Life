@@ -6,3 +6,6 @@ game/.godot/
 
 # Restricted source packages, kept out of the public repository (CLAUDE.md section 3: private asset workflow)
 private-assets/
+
+# temporary diagnostic scripts run with Godot (never committed)
+game/tests/_probe*
