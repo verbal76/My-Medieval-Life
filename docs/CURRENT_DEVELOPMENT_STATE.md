@@ -22,11 +22,16 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 about 10:00 UTC.
+The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 in the afternoon (UTC).
 
 - **EQ-18 (Build 15):** tool recovery fixed and verified; what remained was OD-16.
 - **EQ-18..21 (Build 15):** complete and verified (EQ-19's earmarked advances are a recorded future improvement).
-- **Build 16:** FAM-07 (unplaced orphans join the bandit clan, interim camp dependants) is implemented and tested; next the rest of the Build 16 entries (the ledger's Roadmap), each finding classified under WDR-022.
+- **Build 16:**
+  - FAM-07 is implemented and tested, with the owner's clarification of 2026-10-20 (`docs/directives/2026-10-20_fam07_clarification_living_economy.md`): an orphan no household takes lives with the bandit clan. At coming of age they leave for a household that can take them, and stay with the band only with nowhere to go. The fuller adult judgement is FAM-08, future work.
+  - The audits DVW-A7, A8 and A12 are done (`docs/release/BUILD_16_AUDITS.md`). The player's own production is now counted in the ledger (`World.player_gain`). The audits' owner questions are OD-18; A12's moves into core remain.
+  - **EQ-06** (the acceptance harness): `economy_sim.gd --scenario kill_smiths|corner_wheat|gift_coins|hunt_out --at DAY`. A carcass left to spoil is now counted (`spoiled_`). The 100-day comparisons are running locally, and the four-seed 365-day runs on Actions (`8d3f623`). Their results go in `docs/release/LONG_RUN_SIMULATION.md`.
+  - Then the rest of the Build 16 entries (the ledger's Roadmap), each finding classified under WDR-022.
+- **Living Economy (EXP-D):** the owner's standalone build design, kept as a separate major build (OD-LE-01..15 open). It does not delay Build 16.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
 - **OVN-02** (the final mandate) and **OVN-01:** the directives in force. **WDR-022-C:** classify every finding as defect, legitimate outcome or future improvement. **ROAD-01:** the roadmap.
 - **REL-14-16:** superseded in practice by REL-15-18 for Builds 15-18. Build 14 is done.
@@ -88,6 +93,7 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
   - HOUSE-08 (bed sharing) and HOUSE-09 (now done through the small room), Build 15;
   - FAM-03 and FAM-07 (the bandit-clan fallback, interim until bandit factions, WDR-016-C, Build 20+) are implemented.
 - **OD-16: answered 2026-10-20** ((a), (b), (c); see the register). Formerly: the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
+- **OD-18 (new, 2026-10-20):** the player-only perks and rules the DVW-A8 and A12 audits found: NPC skills, the cash floor (with OD-15), rest healing, eleven player-only recipes, and the assault witness radius. The evidence is in `docs/release/BUILD_16_AUDITS.md`.
 - **OD-17 (new, 2026-10-20):** the Game Designer spec's open calls (the hero, the view, Steam Deck labelling), from `docs/game-designer/SPEC_RECONCILIATION.md` section 4 (REC-004, done).
 - **OD-15 (new, 2026-10-20):** should the player's sales stop at a trader's 15-coin floor, as villagers' do? It came up while verifying B7-008; options and a recommendation are in the entry. B7-008 stays BLOCKED on it (its wildlife half is verified).
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
@@ -98,7 +104,10 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 
 ## Interrupted or fragile processes
 
-- **Nothing is running now** unless a newer line here says so. Run 39385942656 (`59057ac`) is finished and recorded.
+- **Running (2026-10-20 afternoon):**
+  - the `long-sims.yml` dispatch on `8d3f623`, seeds 1-4, 365 days (EQ-06), on Actions: check its state before dispatching again;
+  - the local 100-day scenario comparisons (`out/room/s100_*.log`; they die with the container, so re-run them if they are lost).
+- Run 39385942656 (`59057ac`) is finished and recorded.
 - **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
 - **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.
 - **Never restart a run because context was compacted:** check Actions (or `ps -eo pid,args | grep godot` locally) first.
