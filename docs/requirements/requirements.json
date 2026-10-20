@@ -11202,7 +11202,7 @@
    "id": "FSE-B05",
    "title": "A pen whose keeper is gone is let again (its animals starved untended)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "A pen whose keeper is gone is let again (its animals starved untended)",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -11210,11 +11210,13 @@
    "acceptance": [
     "When a keeper dies or leaves farming, the pen goes to the next farmer without one, including farmers who take the job later; a test"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "a946ba1",
+   "tests": "world_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a946ba1"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
@@ -11236,6 +11238,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit a946ba1; tests; implementation",
+     "why": "Fixed with a regression test in world_test.gd::_fse_defects; all 27 suites pass; gate re-baselined with no leaks"
     }
    ],
    "target_build": "16",
@@ -11290,7 +11297,7 @@
    "id": "FSE-B07",
    "title": "Villagers can sell flowers to the Apothecary",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Villagers can sell flowers to the Apothecary",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -11298,11 +11305,13 @@
    "acceptance": [
     "flower has an outlet (the sage), so foragers sell surplus flowers as the comment at the sage's job says; a test"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "a946ba1",
+   "tests": "world_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a946ba1"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
@@ -11324,6 +11333,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit a946ba1; tests; implementation",
+     "why": "Fixed with a regression test in world_test.gd::_fse_defects; all 27 suites pass; gate re-baselined with no leaks"
     }
    ],
    "target_build": "16",
@@ -11334,7 +11348,7 @@
    "id": "FSE-B08",
    "title": "A hunt cut short releases its claim on the animal",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "A hunt cut short releases its claim on the animal",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -11342,11 +11356,13 @@
    "acceptance": [
     "Claims are cleared when a hunter's plan ends without the hunt act (path lost, fight, job change, death); a test"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "a946ba1",
+   "tests": "world_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a946ba1"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
@@ -11368,6 +11384,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit a946ba1; tests; implementation",
+     "why": "Fixed with a regression test in world_test.gd::_fse_defects; all 27 suites pass; gate re-baselined with no leaks"
     }
    ],
    "target_build": "16",
@@ -11378,7 +11399,7 @@
    "id": "FSE-B09",
    "title": "Hunter job openings count only game hunters may take",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Hunter job openings count only game hunters may take",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -11386,11 +11407,13 @@
    "acceptance": [
     "market[hunter] counts game kinds above the keep floors, as nearest_game does; a test"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "a946ba1",
+   "tests": "world_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a946ba1"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
@@ -11412,6 +11435,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit a946ba1; tests; implementation",
+     "why": "Fixed with a regression test in world_test.gd::_fse_defects; all 27 suites pass; gate re-baselined with no leaks"
     }
    ],
    "target_build": "16",
@@ -11422,7 +11450,7 @@
    "id": "FSE-B10",
    "title": "The player's kills enter the wildlife ledger",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The player's kills enter the wildlife ledger",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -11430,11 +11458,13 @@
    "acceptance": [
     "_hit_animal records hunted_/slaughtered_ like the villagers' paths, so the animal-count identity balances when the player hunts; a test"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "a946ba1",
+   "tests": "world_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a946ba1"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
@@ -11456,6 +11486,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit a946ba1; tests; implementation",
+     "why": "Fixed with a regression test in world_test.gd::_fse_defects; all 27 suites pass; gate re-baselined with no leaks"
     }
    ],
    "target_build": "16",
@@ -22363,7 +22398,7 @@
    "id": "TIME-04",
    "title": "Player starvation damage follows the villagers' rule (time-audit defect D4)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Player starvation damage follows the villagers' rule (time-audit defect D4)",
    "source": "docs/design/TIME_MODEL.md section 3 (D4), under docs/directives/2026-10-20_food_security_goal_driven_economy.md section 1 (same rules for food consumption)",
@@ -22371,11 +22406,13 @@
    "acceptance": [
     "The player's damage at zero food reads starve_damage_per_hour as villagers' does (no literal 3.0); a test; the wiki updated"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "a946ba1",
+   "tests": "world_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a946ba1"
+   ],
    "parent": "OD-21",
    "depends_on": [],
    "blockers": [],
@@ -22397,6 +22434,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit a946ba1; tests; implementation",
+     "why": "Fixed with a regression test in world_test.gd::_fse_defects; all 27 suites pass; gate re-baselined with no leaks"
     }
    ],
    "target_build": "16",

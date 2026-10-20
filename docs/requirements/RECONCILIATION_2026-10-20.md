@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 129 (82 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **296** = 214 still open from the baseline + 82 added and open |
+| Entries added since | | 129 (76 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **290** = 214 still open from the baseline + 76 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -81,12 +81,12 @@ None.
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | 16 |
 | FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | approved | APPROVED — NOT STARTED | 16 |
+| FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | APPROVED — NOT STARTED | 16 |
-| FSE-B07 | Villagers can sell flowers to the Apothecary | approved | APPROVED — NOT STARTED | 16 |
-| FSE-B08 | A hunt cut short releases its claim on the animal | approved | APPROVED — NOT STARTED | 16 |
-| FSE-B09 | Hunter job openings count only game hunters may take | approved | APPROVED — NOT STARTED | 16 |
-| FSE-B10 | The player's kills enter the wildlife ledger | approved | APPROVED — NOT STARTED | 16 |
+| FSE-B07 | Villagers can sell flowers to the Apothecary | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-B08 | A hunt cut short releases its claim on the animal | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-B09 | Hunter job openings count only game hunters may take | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-B10 | The player's kills enter the wildlife ledger | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | APPROVED — NOT STARTED | 16 |
 | FSE-B12 | Hunting experience by one rule for the player and villagers | approved | APPROVED — NOT STARTED | 16 |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | COMPLETE AND VERIFIED | 15 |
@@ -172,7 +172,7 @@ None.
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | APPROVED — NOT STARTED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | APPROVED — NOT STARTED | 16 |
-| TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | APPROVED — NOT STARTED | 16 |
+| TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | COMPLETE AND VERIFIED | 16 |
 | WDR-020 | World Design Rule 20: Autonomous Housing | rule | COMPLETE AND VERIFIED |  |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |
