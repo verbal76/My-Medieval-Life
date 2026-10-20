@@ -98,7 +98,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Next approved tasks, in order
 
-Updated 2026-10-20 about 07:40 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order.
+Updated 2026-10-20 about 07:40 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
 1. **EQ-07, the Build 15 blocker:** housing corrections are in (`59057ac`):
    - family help;
