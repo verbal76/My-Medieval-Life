@@ -7,14 +7,14 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 217 still open, 14 closed since |
+| Open entries (rules excluded) | 231 | 215 still open, 16 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 81 (48 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 217 still open from the baseline + 48 added and open |
+| Entries added since | | 82 (49 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **264** = 215 still open from the baseline + 49 added and open |
 | Open entries moved to another build | | 0 |
 
-## Closed since the baseline (14)
+## Closed since the baseline (16)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
@@ -23,6 +23,8 @@ entry leaves the register or changes without a history entry.
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: three dated backups and the Continue fallback are in save_store.gd and main.gd; tests pass at af60f94 |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: conservation_test.gd checks coins, goods, deposits, animals and villagers across a save round trip on both simulation tiers; passes at af60f94; a Build 14 save also loads, plays, re-saves and reloads with coins unchanged |
+| DVW-A7 | Over-production from raising skills by use (:32) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-20: Audit docs/release/BUILD_16_AUDITS.md: skill over-production is a legitimate outcome (finite inputs, purses cap sales); the one defect, player production missing from the ledger, fixed via World.player_gain; the invariant comment names the approved skill effects |
+| DVW-A8 | Audit player-only perks vs same rules (:33) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-20: Audit docs/release/BUILD_16_AUDITS.md lists 16 player-only perks with their recorded reasons; no code defect; the gaps needing a ruling are OD-18 |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | approved | ACTIVE DEVELOPMENT | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: acceptance met: causes determined and recorded (LONG_RUN_SIMULATION.md: housing deadlock, goals and saving, couples, the forge, founders, tools, family help, timber, the trade stall); corrected not concealed: population 111 and 128 at day 365 (from 100), every wild species alive, houses finished on both seeds (8 and 2; 0 on seed 1 before); re-run on two seeds for 365 days (Actions run 39385942656 and local runs, identical fingerprints). The remaining economic stall and seed 2's 4 starvation deaths are EQ-01/EQ-06 (Build 16), with OD-16 |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | approved | IMPLEMENTED — TESTING REQUIRED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced) |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Actions run 39368663150 on 0ee0218: 365 days, seeds 1 and 2, LEAKS currency 0, items {} (axe, hammer, pickaxe, herbal_poultice all balance) |
@@ -41,7 +43,7 @@ None.
 
 None.
 
-## Added since the baseline (81)
+## Added since the baseline (82)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -91,6 +93,7 @@ None.
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | decision | BLOCKED | 15 |
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | decision | COMPLETE AND VERIFIED | 15 |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | 16 |
+| OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | decision | APPROVED — NOT STARTED | owner decision |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |
