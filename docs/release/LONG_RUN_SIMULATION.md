@@ -1053,3 +1053,29 @@ one-unit rule for a trader's input. Compared with the pre-parity baseline, Actio
   and no rescue was added.
 - **Under investigation:** whether the starvation deaths are the relief rule working as written (a legitimate
   outcome) or missing someone it should reach (a defect).
+
+### Seed 2, 365 days, after the relief valuation fix (`5625505`): the baseline for FSE-16 and FSE-17 (2026-10-20)
+
+A local run (`economy_sim.gd --days 365 --seed 2 --every 30`) after the relief rule stopped valuing coins at a fixed
+60 points (`5625505`). Kept as the baseline that the fixes since are compared with (owner, 2026-10-20: "Preserve the
+existing seed-2 annual baseline").
+
+| Measure | Seed 2, 365 days, `5625505` |
+|---|---|
+| Alive at the end | 130 (from 100) |
+| Starved | 11 (Ivo Ford; Alice, Matilda and Ivo Lambert; Ivo, Thomas, Edith and Gilbert Fairweather and Joan Fairweather; Lettice and Sabina Dale), days 216-236 |
+| Other deaths | 67 |
+| Village food at the end | 11.8 days |
+| Missed meals | 1,337 for want of money, 565 with nothing for sale |
+| Relief | 3,218 coins spent buying food, 3,216 wheat given from the granary |
+| Treasury at the end | 1,967 |
+| Houses built | 8 (11 sites started, 11 finished) |
+| Ledgers | coins leak 0, item leaks 0 |
+
+**Classification:** every death is analysed in `docs/design/FOOD_SECURITY_AUDIT.md` section 2 (FSE-16). In short: all 11
+qualified for relief; relief had nothing it was allowed to buy on 15 of the 36 evenings around them, and on the others
+it served households in the order of their number and ran out first; the 2-coin family tab test sent people with 2
+coins to vendors they could not pay while relatives held 40 or more; and villagers could not eat their own eggs or cook
+their own meat, which the player can. **Defects** (fixed: the tab and the order, `9db091b`; next: the relief sources,
+FSE-17, and the eating and cooking parity). **Legitimate outcomes:** the poverty of the Lambert and Dale households, the
+saturated meat market, and an empty granary while the treasury sat at its reserve.

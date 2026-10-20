@@ -135,7 +135,45 @@ lived the 45 years.
 
 ## 2. The seed-2 starvation deaths (FSE-16)
 
-*Being written from the watched reproduction of the baseline run.*
+**Method.** The baseline (seed 2, 365 days, `5625505`) was reproduced exactly with `economy_sim.gd --watch-from 200`,
+which logs every game hour the households with someone under 25 hunger, each death, and each evening's relief (who
+qualified at 16:00, the granary, the treasury, the sellers relief could buy from; whom the 17:00 relief helped and what
+it spent). The watch restores the world's hourly caches after reading, so the run is the baseline run: the same 11
+people starve, on the same days (the year log's day numbers are one higher, counted from 1). An earlier outside probe
+that read those caches changed the run and was discarded. Day and hour below are the game's.
+
+**The village around them (days 200-236).** Village food stood at 5.3-6.2 days, but it was held by farmers (their
+keep: the household's days, four days of pen feed and a buffer of 10) and by vendors. Every evening 15 to 25 of the 32
+households qualified for relief (under 2 days of food, counting what their coins could buy). The granary was empty
+from day 208: it buys only with treasury money above its 10-day reserve, and the treasury (1,100-1,560) sat at that
+reserve (1,240-1,480). Relief could buy only farmers' surplus wheat or pottage (the approved B3 rule): on **15 of the 36
+evenings neither was on sale and relief helped nobody**, while bread, roast meat and other food were for sale (700-1,260
+points in the evening). On the other evenings the food ran out part-way down the households **in the order of their
+number**, so the high-numbered households (20, 21, 27) were repeatedly passed over at 0 days of food.
+
+| Death (day) | Household, food and coins | Relief | Alternatives, and were they tried | Verdict |
+|---|---|---|---|---|
+| Ivo Ford, farmer, lived alone (215) | Pantry empty; 2 coins against meals at 3-5; he carried **318 eggs** (3,180 points, 44 days of his food) and **49 raw meat** | Qualified at 0.00-0.64 days from day 202. Helped on days 202, 204, 205 (granary). Then passed over: day 209 (granary ran out at hh21), 212 (food ran out at hh9), 214 (ran out at hh18); no sellers on 213, 215 | Eggs: villagers cannot eat them, though the player can (parity defect). Meat: households cannot roast at the hearth, though the player can (parity defect). He spent his last day "buying a meal" he could not pay for (the fixed 2-coin test) | **Broken mechanics:** relief order, inedible own food, the 2-coin tab test |
+| Alice Lambert, hunter (218) | Her own 2 coins; the household's elders held **47 and 44 coins**; 6 raw meat | hh21 qualified on days 209-217; helped on 209, 211 and 217 (too late) | The family tab would have paid, but with exactly 2 coins she counted as her own payer and walked to the vendor and back until she died | **Broken mechanic:** the 2-coin tab test |
+| Matilda Lambert, elder (223) | The elders' coins spent by day 222; three adults left, 0 coins, no income | Missed on 218, 219, 221, 222 (no sellers) and 220 (the food ran out at hh19); helped on 223, the day she died | Ivo carried Alice's 6 raw meat: not cookable at home | **Household poverty is a legitimate outcome; the death is a broken mechanic:** relief passed over a household at zero (order), and could not buy the food on sale (approved source rule, since amended, FSE-17) |
+| Ivo Lambert, elder (234) | As above | Missed on 228, 230-234 (no sellers, or the food ran out before hh21); helped 229 and 235 | As above | As for Matilda |
+| Ivo, Thomas, Edith and Gilbert Fairweather, children, and Joan Fairweather, elder (223) | A hunters' household: 0-3 coins; **13-17 raw meat** no buyer would take (the cook and merchants were full) | Qualified at 0.00-0.13 days every evening from 208; helped on 209 and 217, then on 223, the day they died; missed on 213, 215, 216, 221, 222 (no sellers), 214 and 220 (the food ran out at hh18 and hh19) | The meat could not be cooked at home (parity defect); members went "eating on the family's tab" with 2-3 coins against meals at 3-5 (the 2-coin test); children play when nobody can feed them | **Broken mechanics:** relief order, uncookable own meat, the 2-coin tab test. The unsold meat (a saturated market) is legitimate |
+| Lettice and Sabina Dale, elders, no income (234, 235) | 0-1 coins, no earner | A low number, so often helped (days 200-229, ten times); on day 232 the food ran out at hh5 while hh9 stood at 0.00; no sellers on 233 and 234 | None in their reach | **Their poverty is legitimate; their deaths came from relief failing a qualifying household:** the order (day 232) and the source rule (233-234) |
+
+**Answers to the owner's questions, in short.** Every one of the 11 qualified for relief; relief was requested by the
+rule every evening; it was available on about half the evenings and was not delivered to them on most of those because
+of the order of service. Alternatives existed for 9 of the 11 (their own eggs or meat, or a relative's coins) and the
+simulation did not let them use them. **No death was a pure legitimate outcome.** The underlying poverty of the
+Lambert and Dale households, the unsold meat and the empty granary (the treasury at its reserve) are legitimate
+outcomes of the rules.
+
+**Fixed (Build 16, `9db091b`, on staging with `722abe1`):** the family tab now decides who pays at the price asked; relief
+serves the hungriest household first. Each has a regression test that fails on the old code (`reserve_test.gd`), all 27
+suites pass, and the determinism gate was re-baselined with no coin or goods leaks.
+
+**Ordered by the owner, next (FSE-17):** relief buys from every food store, and a household's food is reckoned from all
+it holds. **Parity defects, next:** households roast their own meat at the hearth and eat eggs and milk, as the player
+can. The seed-2 year is then rerun and compared with this baseline.
 
 ## 3. Food sustainability calculation (deliverable 2, FSE-02)
 

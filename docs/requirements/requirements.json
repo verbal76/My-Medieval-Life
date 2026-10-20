@@ -3180,7 +3180,9 @@
    "tests": "reserve_test.gd (relief)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "9db091b"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -3207,6 +3209,11 @@
      "date": "2026-10-20",
      "change": "BLOCKED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "Defect found 2026-10-20 in the relief reckoning: household_food_days valued each coin at a fixed 60 food points, so a household with 2 coins when a meal cost 3 counted as fed (1.67 days), relief went only as a carried job, and its people starved (seed 2, days 227-262). Coins now count only for whole units of the cheapest food on sale (World.cheapest_food_unit); reserve_test checks it (fails on the old code). Full suites and a seed 2 year run in progress"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "commit 9db091b",
+     "why": "The seed-2 deaths after parity were analysed one by one (FSE-16): broken mechanics, two fixed in 9db091b, the rest in FSE-17 and the parity work"
     }
    ],
    "acceptance_derived": true,
@@ -11074,7 +11081,7 @@
    "id": "FSE-16",
    "title": "Seed-2 starvation: root cause of each of the 11 deaths",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Finish the seed-2 investigation into the 11 starvation deaths before materially changing agricultural production.",
    "description": "Seed-2 starvation: root cause of each of the 11 deaths",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -11084,10 +11091,12 @@
     "Defects fixed with regression tests; the existing seed-2 annual baseline preserved"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "reserve_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "9db091b"
+   ],
    "parent": "FSE-00",
    "depends_on": [
     "B7-015"
@@ -11096,7 +11105,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "FSE-17 (relief sources) and the eating and cooking parity, then rerun seed 2 for 365 days and compare with the 5625505 baseline",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -11111,6 +11120,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: owner follow-up 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 9db091b; tests; next_action",
+     "why": "Every death analysed from an exact reproduction of the baseline (docs/design/FOOD_SECURITY_AUDIT.md section 2); two defects fixed (9db091b, tests in reserve_test.gd that fail on the old code); the relief-source and eating/cooking-parity defects remain (FSE-17 and the parity work); closes when the seed-2 year rerun is compared with the baseline"
     }
    ],
    "target_build": "16",
