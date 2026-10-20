@@ -116,7 +116,7 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 
 ## Interrupted or fragile processes
 
-- **Running (2026-10-20 night):** the local relief probe (`game/tests/_probe_relief.gd` to `out/room/relief_probe.log`, seed 2 to day 224, about 13 minutes); it dies with the container: re-run it if lost. Nothing on Actions.
+- **Running (2026-10-20, late):** a watched local 365-day seed 4 run on `1c7b9f4` (`out/room/seed4_1c7b9f4.log`, the WATCH DEATH lines classify seed 4's starvation deaths); it dies with the container: re-run it if lost. On Actions: `long-sims.yml`, seeds 1-4, 365 days, on `1c7b9f4` (the firewood fix).
 - Runs 39385942656 (`59057ac`) and 39430585149 (`8d3f623`, the pre-parity baseline) are finished and recorded.
 - **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
 - **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.
