@@ -8223,7 +8223,7 @@
    "id": "EQ-05",
    "title": "The player is the disruptive variable: no hidden protection of the world from player consequences",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "Do not secretly protect the world from legitimate player consequences.",
    "description": "The player is the disruptive variable: no hidden protection of the world from player consequences",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8262,6 +8262,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "EQ-06 scenarios show the player's disruptions have real consequences (dearer food after a wheat corner, timber short after the smiths die) and the village adapts without hidden protection; DVW-A5's profit measurement remains"
     }
    ],
    "target_build": "16",
@@ -8272,7 +8277,7 @@
    "id": "EQ-06",
    "title": "Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "Use multiple seeds so one unusually successful simulation cannot conceal a systemic problem.",
    "description": "Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8284,7 +8289,7 @@
     "Separate intervention scenarios change the results"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "economy_sim.gd scenarios; world_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8317,6 +8322,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests",
+     "why": "Harness built (economy_sim --scenario/--at); four intervention scenarios x seeds 1-2 x 100 days recorded in LONG_RUN_SIMULATION.md, all balanced, 0 script errors; the four-seed 365-day inactive runs on Actions remain"
     }
    ],
    "target_build": "16",

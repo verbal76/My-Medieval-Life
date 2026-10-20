@@ -869,3 +869,54 @@ The manor's advances to smiths (6) delivered no axe. A probe at days 141-161 sho
   - an advance earmarked for materials, so a household does not spend it on food;
   - coal for an ordered tool bought through the manor;
   - Build 17's mining work on fuel.
+
+## EQ-06: intervention scenarios, 100 days (2026-10-20)
+
+**How it was run:** `economy_sim.gd -- --days 100 --seed S --scenario X --at 20` locally, on `8d3f623`'s code, on seeds 1
+and 2, each against a baseline run of the same seed. No player plays. The scenario acts once, at the start of day 20.
+
+| Scenario | What it does on day 20 |
+|---|---|
+| `kill_smiths` | The player kills every smith (`World.kill`, as a sword blow does): 2 on each seed |
+| `corner_wheat` | A player with 3,000 coins from outside buys every sack of wheat on sale: 181 (seed 1), 367 (seed 2) |
+| `gift_coins` | A player with 2,000 coins from outside gives 100 coins to the provider of each of the 10 poorest households |
+| `hunt_out` | The player kills every wild deer and boar (`Fauna.kill`); the game is left lying: 19 and 20 animals |
+
+**Integrity:** all 10 runs had 0 script errors and a currency leak of 0, with no item, deposit or animal residuals.
+
+**Day 100:**
+
+| Seed / run | Alive | Starved | Unemployed | Smiths | Missed meals: no money / nothing for sale | Coins in the village |
+|---|---|---|---|---|---|---|
+| 1 base | 120 | 0 | 11 | 2 | 208 / 137 | 6,043 |
+| 1 kill_smiths | 111 | 0 | 7 | 2 (replaced) | | 5,958 |
+| 1 corner_wheat | 113 | 0 | 11 | | 1,415 / 108 | 8,407 |
+| 1 gift_coins | 121 | 0 | 14 | | 9 / 110 | 7,679 |
+| 1 hunt_out | 118 | 0 | 13 | | | 6,011 |
+| 2 base | 126 | 0 | 6 | 2 | 280 / 45 | 6,050 |
+| 2 kill_smiths | 121 | 0 | 4 | 2 (replaced) | | 6,011 |
+| 2 corner_wheat | 126 | 0 | 4 | | 190 / 32 | 8,515 |
+| 2 gift_coins | 121 | 0 | 3 | | 7 / 32 | 7,644 |
+| 2 hunt_out | 126 | 0 | 3 | | | 6,050 |
+
+**What the village did:**
+- **Killed smiths:** two other villagers took up the trade (job changes 33 and 30, against 28 at baseline). Seed 1 had
+  only 28 logs at day 100 against 215 at baseline, and no house was finished.
+- **Cornered wheat:** on seed 1, missed meals for want of money rose from 208 to 1,415: the wheat went to the player, and
+  what was left cost more. Nobody starved. Seed 2's farms had more stock, and the effect was small.
+- **Gifted coins:** missed meals for want of money fell from 208 to 9 and from 280 to 7. On seed 1 a second building
+  site was finished.
+- **Hunted out:** wild deer and boar were back by day 100 (seed 1: 9 deer and 13 boar, against 9 and 27 at baseline).
+  The carcasses left lying spoiled, and are now counted (`spoiled_`).
+
+**Classification (World Design Rule 022):**
+- **Defects, fixed:**
+  - a carcass left to spoil vanished uncounted (`World._new_day`, `world_test.gd`);
+  - the player's own production was missing from the ledger, and a full pack lost it (`World.player_gain`,
+    `world_test.gd`; the DVW-A7 audit).
+- **Legitimate outcomes, recorded:**
+  - the player's disruption has real consequences: dearer food after a corner, a timber shortage after the smiths
+    die;
+  - the village replaces lost trades and its wildlife recovers. No hidden protection was added (EQ-05).
+- **Future improvements:** none new. Measuring a playing player's profit (DVW-A5) can use these scenarios, now that the
+  player's production is counted.

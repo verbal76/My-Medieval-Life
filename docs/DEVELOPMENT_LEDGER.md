@@ -11,9 +11,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 68 |
+| APPROVED — NOT STARTED | 66 |
 | ACTIVE DEVELOPMENT | 8 |
-| PARTIALLY IMPLEMENTED | 31 |
+| PARTIALLY IMPLEMENTED | 33 |
 | IMPLEMENTED — TESTING REQUIRED | 12 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 16 |
@@ -123,8 +123,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | approved | PARTIALLY IMPLEMENTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | EQ-03 | Humans and nature affect each other through real NPC decisions | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
-| EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
-| EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | approved | PARTIALLY IMPLEMENTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | approved | PARTIALLY IMPLEMENTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | EQ-09 | Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied | approved | APPROVED — NOT STARTED |  | a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17) |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | approved | ACTIVE DEVELOPMENT |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | IMPLEMENTED — TESTING REQUIRED |  | a new mechanic; Build 16 is long-term equilibrium across generations, and Build 15 must not be delayed |
@@ -408,7 +408,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (68)
+## APPROVED — NOT STARTED (66)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -429,8 +429,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-01 | Human civilization sustains itself without the player | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after B14R-12 |  |
 | EQ-03 | Humans and nature affect each other through real NPC decisions | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
-| EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
-| EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
 | EQ-09 | Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied | Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) and 2026-10-20 (fix9: stone 0 by day 160-190, docs/release/LONG_RUN_SIMULATION.md) |  |  | confirm with seed 2's day-365 figures, then close |
 | EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
@@ -494,7 +492,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (31)
+## PARTIALLY IMPLEMENTED (33)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -507,6 +505,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md | `b15208a` | after WR-01 |  |
+| EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
+| EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md | economy_sim.gd scenarios; world_test.gd | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |
