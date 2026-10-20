@@ -35,6 +35,8 @@ The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 202
     - PAR-02A, OD-19's dynamic reserve (`docs/directives/2026-10-20_od19_dynamic_reserves.md`), is implemented (`World.necessity`, `reserve_test.gd`) and was being tested with the full suites; commit it once they pass.
     - OD-20 (the pickpocket's cry) is open; theft keeps its 2026-10-18 cry until the owner answers.
   - **Next:** re-run the EQ-06 scenarios (100 days, seeds 1-2) and the 365-day runs (seeds 1-4, Actions) on the parity code; compare with the baseline; investigate seed 3's starvation (B7-015); classify under WDR-022.
+  - **Starvation after parity (B7-015), being investigated:** after the relief valuation fix (`5625505`), seed 2's year still lost 11 villagers to hunger, with village food at 5.3 days. The whole Fairweather household (a hunting family, hh 20) starved on days 220-224 holding 12 raw meat. Found so far: the family tab plans a meal at a fixed 2 coins although the cheapest meal cost 4 (`NPCBrain._plan_eat`), so they walk to the vendor and fail, again and again, uncounted; villager households never roast their own meat at their hearth, which the player can (`_cook_at_home` cooks only pottage); relief reached them late or not at all (a probe, `game/tests/_probe_relief.gd`, gitignored, is tracing why).
+- **FSE-00 (owner's food-security and goal-driven economy directive, 2026-10-20,** `docs/directives/2026-10-20_food_security_goal_driven_economy.md`**):** audit first (FSE-01..07, deliverables in `docs/design/FOOD_SECURITY_AUDIT.md`), then only defects and small foundations in Build 16 (FSE-09); gardens, rented land and pens, side hunting, household stalls, multiple incomes and goal-driven individual choices go with the Living Economy build (FSE-10, with EXP-D).
   - Then the rest of the Build 16 entries (the ledger's Roadmap), each finding classified under WDR-022.
 - **Living Economy (EXP-D):** the owner's standalone build design, kept as a separate major build (OD-LE-01..15 open). It does not delay Build 16.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
@@ -110,7 +112,7 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 
 ## Interrupted or fragile processes
 
-- **Running (2026-10-20 evening):** the local full suites on PAR-02A (`out/room/suites15.log`; they die with the container: re-run `game/tests` suites if lost). Nothing on Actions.
+- **Running (2026-10-20 night):** the local relief probe (`game/tests/_probe_relief.gd` to `out/room/relief_probe.log`, seed 2 to day 224, about 13 minutes); it dies with the container: re-run it if lost. Nothing on Actions.
 - Runs 39385942656 (`59057ac`) and 39430585149 (`8d3f623`, the pre-parity baseline) are finished and recorded.
 - **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
 - **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.

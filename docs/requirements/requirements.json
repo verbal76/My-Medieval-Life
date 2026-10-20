@@ -10345,6 +10345,499 @@
    "roadmap_reason": "personality and decision weights are part of the judgment design (spec section 10); migration part goes with 18"
   },
   {
+   "id": "FSE-00",
+   "title": "Food security, household production, land use, markets and goal-driven economic behavior (final master directive)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The objective is to create people who pursue their own goals within a functioning, interconnected economy. Their economic activities should emerge from their needs, resources, opportunities, experience, relationships, priorities, and personal circumstances.",
+   "description": "Food security, household production, land use, markets and goal-driven economic behavior (final master directive)",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Deliverables 1-7 of section 19 delivered (FSE-01..07)",
+    "Findings classified A existing / B defects / C Build 16 foundations / D future living-economy features (section 18)",
+    "Section 17's 25 tests planned, and those for implemented systems run (FSE-08)",
+    "Goal-driven, individually varied economic behavior implemented in the living-economy build (FSE-10), with parity (PAR-00..05) and WDR-022"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "PAR-00",
+    "OD-19",
+    "PAR-02A"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-01",
+   "title": "Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "For each answer, identify the relevant code or data, current behavior, limitations, and missing functionality. Distinguish verified implementation from planned features.",
+   "description": "Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Every section 2 question answered with code references and run evidence in docs/design/FOOD_SECURITY_AUDIT.md"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-02",
+   "title": "Food sustainability calculation: food and productive land per villager, household and village",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Show the formulas and assumptions. ... Also estimate the effect of poor harvests, insufficient labor, and seasonal shortages.",
+   "description": "Food sustainability calculation: food and productive land per villager, household and village",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Formulas in game units, with seed, spoilage, labor and seasons; poor-harvest and labor-shortage estimates"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-03",
+   "title": "Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Each gap named with what exists and what is missing"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-04",
+   "title": "Cross-system dependency map for the food and living economy",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Cross-system dependency map for the food and living economy",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Connections to skills, inventory, land, households, markets, labor, wildlife and financial planning mapped to existing INT entries or proposed ones"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-05",
+   "title": "Implementation roadmap: Build 16 foundations vs the living-economy build",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Do not disguise new feature development as a bug fix. Do not rush a complete agriculture, husbandry, land-rental, or market-stall system into Build 16",
+   "description": "Implementation roadmap: Build 16 foundations vs the living-economy build",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Every finding classified A/B/C/D; C items small and safe; D planned as a coherent subsequent build in docs/EXPANSION_ROADMAP.md"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-06",
+   "title": "Testing strategy for the food and living economy",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Testing strategy for the food and living economy",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "How mechanics are proven correct and economic consequences shown to emerge (WDR-022: outcomes measured, not pass/fail)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-07",
+   "title": "Unresolved owner questions arising from the food-security directive",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Unresolved owner questions arising from the food-security directive",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Only questions the directive does not answer, each with options and a recommendation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-08",
+   "title": "The directive's 25 deterministic tests (section 17)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "The directive's 25 deterministic tests (section 17)",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Each of the 25 mapped to an existing test, a new test for an implemented system, or the build whose feature it needs"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-09",
+   "title": "Build 16 food-security defects and foundations (classes B and C)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Build 16 food-security defects and foundations (classes B and C)",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Each defect fixed with a regression test; each foundation small, tested, baselined before and after"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+  },
+  {
+   "id": "FSE-10",
+   "title": "Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "We are creating people who have needs, ambitions, responsibilities, preferences, opportunities, and limited resources.",
+   "description": "Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D)",
+   "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
+   "approval": "owner directive 2026-10-20 (Owner-approved design direction)",
+   "acceptance": [
+    "Planned as its own build in docs/EXPANSION_ROADMAP.md; implemented only in that build's order (OVN-01)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "EXP-D"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_food_security_goal_driven_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason; depends_on",
+     "why": "Roadmap target: the dedicated living-economy build, with EXP-D (section 18)"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "part of the standalone Living Economy build EXP-D, whose number and placement the owner decides (OD-LE-01)"
+  },
+  {
    "id": "GM-01",
    "title": "Generational memory and historical consequences (the 30-planks chain)",
    "kind": "approved",

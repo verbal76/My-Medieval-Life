@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 95 (50 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **264** = 214 still open from the baseline + 50 added and open |
+| Entries added since | | 106 (61 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **275** = 214 still open from the baseline + 61 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,7 +44,7 @@ None.
 
 None.
 
-## Added since the baseline (95)
+## Added since the baseline (106)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -63,6 +63,17 @@ None.
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | approved | APPROVED — NOT STARTED | 20+ |
+| FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
+| FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | APPROVED — NOT STARTED | 16 |
+| FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | APPROVED — NOT STARTED | 16 |
+| FSE-03 | Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior | approved | APPROVED — NOT STARTED | 16 |
+| FSE-04 | Cross-system dependency map for the food and living economy | approved | APPROVED — NOT STARTED | 16 |
+| FSE-05 | Implementation roadmap: Build 16 foundations vs the living-economy build | approved | APPROVED — NOT STARTED | 16 |
+| FSE-06 | Testing strategy for the food and living economy | approved | APPROVED — NOT STARTED | 16 |
+| FSE-07 | Unresolved owner questions arising from the food-security directive | approved | APPROVED — NOT STARTED | 16 |
+| FSE-08 | The directive's 25 deterministic tests (section 17) | approved | APPROVED — NOT STARTED | 16 |
+| FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | APPROVED — NOT STARTED | 16 |
+| FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | COMPLETE AND VERIFIED | 15 |
