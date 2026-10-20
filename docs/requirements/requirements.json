@@ -8389,7 +8389,7 @@
    "id": "EQ-08",
    "title": "Births do not require a free bed; the crowding a birth causes is what drives a household to split and move",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Births shouldn't require a free bed first, the lack of a free bed probably made the baby. It will require a bed after, that's the impetus to move",
    "description": "Births do not require a free bed; the crowding a birth causes is what drives a household to split and move",
    "source": "owner message 2026-10-19 (chat)",
@@ -8403,7 +8403,9 @@
    "tests": "game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "af60f94"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -8430,6 +8432,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit af60f94",
+     "why": "acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced)"
     }
    ],
    "target_build": "15",
@@ -9962,7 +9969,7 @@
    "id": "HOUSE-01",
    "title": "Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.2",
@@ -9976,7 +9983,9 @@
    "tests": "game/tests/housing_test.gd",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "af60f94"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -10003,6 +10012,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit af60f94",
+     "why": "acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced)"
     }
    ],
    "target_build": "15",
@@ -10013,7 +10027,7 @@
    "id": "HOUSE-02",
    "title": "The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too)",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.3",
@@ -10027,7 +10041,9 @@
    "tests": "game/tests/housing_test.gd",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "af60f94"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -10054,6 +10070,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit af60f94",
+     "why": "acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced)"
     }
    ],
    "target_build": "15",
@@ -10064,7 +10085,7 @@
    "id": "HOUSE-03",
    "title": "A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.4",
@@ -10078,7 +10099,9 @@
    "tests": "game/tests/housing_test.gd",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "af60f94"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -10105,6 +10128,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit af60f94",
+     "why": "acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced)"
     }
    ],
    "target_build": "15",
@@ -10115,7 +10143,7 @@
    "id": "HOUSE-04",
    "title": "Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.5",
@@ -10129,7 +10157,9 @@
    "tests": "housing_test.gd test_family_helps_builder, test_builder_makes_timber, test_caravan_keeps_needed_tools",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "af60f94"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -10166,6 +10196,11 @@
      "date": "2026-10-20",
      "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED",
      "why": "approved routes all implemented (money, own materials, gathering, crafting, relatives); long-run proof waits on OD-16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit af60f94",
+     "why": "acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced)"
     }
    ],
    "target_build": "15",
@@ -10176,7 +10211,7 @@
    "id": "HOUSE-05",
    "title": "Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.6",
@@ -10190,7 +10225,9 @@
    "tests": "game/tests/housing_test.gd",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "af60f94"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -10217,6 +10254,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit af60f94",
+     "why": "acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced)"
     }
    ],
    "target_build": "15",
@@ -10353,7 +10395,7 @@
    "id": "HOUSE-08",
    "title": "Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Young children may share beds, with reasonable age-based limits. Couples may share beds.",
    "description": "Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people",
    "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)",
@@ -10369,7 +10411,9 @@
    "tests": "game/tests/housing_test.gd test_bed_sharing; aging_test; run_tests test_households_split",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "af60f94"
+   ],
    "parent": "EQ-07",
    "depends_on": [],
    "blockers": [],
@@ -10396,6 +10440,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "Construction.beds_needed: a couple shares a bed, children below life.child_until (12) share two to a bed (bed_share.children_per_bed, agent proposal), others a bed each; crowded() and Life.has_room use it; tests pass; long-run effect still to be measured"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; commit af60f94",
+     "why": "acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced)"
     }
    ],
    "target_build": "15",
