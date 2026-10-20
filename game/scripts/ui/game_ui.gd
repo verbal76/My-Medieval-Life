@@ -1152,7 +1152,7 @@ func show_pause() -> void:
 		show_title(true))
 
 
-const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["wiki", "Wiki"]]
+const SETTINGS_TABS := [["audio", "Audio"], ["display", "Display"], ["interface", "Interface"], ["controls", "Controls"], ["saves", "Saves"], ["wiki", "Wiki"]]
 
 
 ## Settings: one screen with tabs (Audio, Display, Interface, Controls, Wiki) and a Back button. Each
@@ -1198,6 +1198,8 @@ func _settings_page() -> void:
 			_settings_interface()
 		"controls":
 			_controls_tab()
+		"saves":
+			_settings_saves()
 		"wiki":
 			var wk := WikiWindow.new()
 			wk.open(self, panel_body)
@@ -1208,6 +1210,73 @@ func _settings_page() -> void:
 		var tb: Button = tabs.get_node_or_null("Tab_" + settings_tab)
 		if tb:
 			(func(): if is_instance_valid(tb) and tb.is_inside_tree(): tb.grab_focus()).call_deferred()
+
+
+## Saves (SAVE-05, owner 2026-10-20): copy the save to a file the player chooses, keep that copy up to date
+## after every save, and import a copied save after reinstalling or moving to a new test build. The file
+## is chosen with the system's own file picker (Android's Storage Access Framework; the PC's file dialog).
+func _settings_saves() -> void:
+	var st: GameSettings = main.settings
+	var save := SaveTransfer.read_save(main.save_path)
+	_label("Your game is saved inside the app. Uninstalling it, or installing a test build that cannot update the old one, deletes that save, so keep a copy outside the game and import it into the new build.", 16)
+	_label(("Your save: " + SaveTransfer.describe(save.data)) if save.ok else "No save yet.", 16, Color(1, 0.85, 0.5))
+	var suggested: String = SaveTransfer.suggested_name(save.data) if save.ok else "MyMedievalLife.json"
+	_button("Copy my save to a file...", func():
+		_pick_file(FileDialog.FILE_MODE_SAVE_FILE, "Copy the save to", suggested, func(target: String):
+			var r: Dictionary = main.export_save_to(target)
+			message(("Copied: %s." % r.info) if r.ok else ("Not copied: %s." % r.reason), 8.0)), save.ok)
+	_button("Import a save file...", func():
+		_pick_file(FileDialog.FILE_MODE_OPEN_FILE, "Choose a save to import", "", func(source: String):
+			var r: Dictionary = main.import_save_from(source)
+			if r.ok:
+				message("Imported %s. Your earlier save, if any, is kept in the game's save backups." % r.info, 10.0)
+			else:
+				message("Not imported: %s" % r.reason, 12.0)
+				_settings_page.call_deferred()))
+	_label(("Kept up to date after every save: %s" % _short_path(st.save_copy)) if st.save_copy != "" else "No copy is kept up to date.", 16)
+	_button("Keep a copy up to date...", func():
+		_pick_file(FileDialog.FILE_MODE_SAVE_FILE, "Keep this copy up to date", suggested, func(target: String):
+			var r: Dictionary = main.export_save_to(target)
+			if r.ok:
+				st.save_copy = target
+				st.save_file()
+				message("The copy will be updated every time the game saves.", 8.0)
+			else:
+				message("That file could not be written: %s." % r.reason, 8.0)
+			_settings_page.call_deferred()), save.ok)
+	if st.save_copy != "":
+		_button("Stop keeping a copy", func():
+			st.save_copy = ""
+			st.save_file()
+			_settings_page.call_deferred())
+	_label("After reinstalling: open Settings, Saves, Import a save file, and choose your copy. The game checks it, keeps a backup, updates it to this build and continues your world. On Android you choose the file again after every reinstall: the system does not let a new install reach the old one's files on its own.", 14)
+
+
+## The system's file picker (native where the platform has one): `cb` gets the chosen path or Android URI.
+func _pick_file(mode: int, title: String, file_name: String, cb: Callable) -> void:
+	var fd := FileDialog.new()
+	fd.use_native_dialog = true
+	fd.access = FileDialog.ACCESS_FILESYSTEM
+	fd.file_mode = mode
+	fd.title = title
+	fd.filters = PackedStringArray([SaveTransfer.FILE_FILTER])
+	if file_name != "":
+		fd.current_file = file_name
+	if mode == FileDialog.FILE_MODE_SAVE_FILE or mode == FileDialog.FILE_MODE_OPEN_FILE:
+		var docs := OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS)
+		if docs != "" and not OS.has_feature("android"):
+			fd.current_dir = docs
+	root.add_child(fd)
+	fd.file_selected.connect(func(path: String):
+		fd.queue_free()
+		cb.call(path))
+	fd.canceled.connect(fd.queue_free)
+	fd.popup_centered_ratio(0.8)
+
+
+## A chosen file's name for display (an Android URI shows its last part).
+func _short_path(p: String) -> String:
+	return p.uri_decode().get_file() if p != "" else ""
 
 
 func _settings_audio() -> void:

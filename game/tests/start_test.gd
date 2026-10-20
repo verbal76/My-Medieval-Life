@@ -1566,6 +1566,30 @@ func _save_meta_tests() -> void:
 	main.new_game()
 	main.save_game(false)
 	check(read.call().get("save_id") != m1.save_id, "a new game is a new world id")
+	# SAVE-02/08 (owner 2026-10-20): the builds a world was played in, and sections this build does not know
+	check(read.call().get("builds", []).size() >= 1 and str(read.call().get("build", "")) != "", "a save records the build that wrote it and the builds it has passed through")
+	var d: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(main.save_path))
+	d["future_section"] = {"kept": [1, 2, 3]}
+	_put(main.save_path, JSON.stringify(d, "", true, true))
+	main.continue_game()
+	main.save_game(false)
+	var after: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(main.save_path))
+	check(after.get("future_section", {}) == {"kept": [1.0, 2.0, 3.0]}, "a section this build does not know survives loading and saving unchanged")
+	# the Saves tab: copy, import and keep a copy up to date
+	main.ui.show_settings(Callable(), "saves")
+	var labels := []
+	for b: Button in _buttons(main.ui.panel_body, []):
+		labels.append(b.text)
+	check(labels.has("Copy my save to a file...") and labels.has("Import a save file...") and labels.has("Keep a copy up to date..."), "Settings has a Saves tab to copy, import and keep a copy (%s)" % [labels])
+	main.ui.hide_all()
+	var copy := TEST_SAVE.get_base_dir().path_join("outside/copy.json")
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(copy.get_base_dir()))
+	main.settings.save_copy = copy
+	main.save_game(false)
+	check(FileAccess.get_file_as_string(copy) == FileAccess.get_file_as_string(main.save_path), "a linked copy is updated every time the game saves")
+	main.settings.save_copy = ""
+	var r: Dictionary = main.import_save_from(copy)
+	check(r.ok and main.running and main.world != null, "importing a copy continues that world (%s)" % r.get("reason", ""))
 
 
 func _save_safety_tests() -> void:

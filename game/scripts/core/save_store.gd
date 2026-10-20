@@ -32,6 +32,11 @@ static func inspect(path: String, max_version: int, min_version := MIN_VERSION) 
 	var text := FileAccess.get_file_as_string(path)
 	if text == "" and FileAccess.get_open_error() != OK:
 		return {"state": "unreadable", "reason": "the file could not be opened (%s)" % error_string(FileAccess.get_open_error())}
+	return inspect_text(text, max_version, min_version)
+
+
+## The same for save data already read (an imported file, SaveTransfer).
+static func inspect_text(text: String, max_version: int, min_version := MIN_VERSION) -> Dictionary:
 	var json := JSON.new()
 	if json.parse(text) != OK or not json.data is Dictionary:
 		return {"state": "unreadable", "reason": "the file is damaged or incomplete (not valid save data)"}

@@ -152,6 +152,9 @@ jobs:
           # Android needs a rising version code to update an install; Windows shows the file version
           sed -i -E "s/^version\/code=.*/version\/code=${n}/; s/^version\/name=.*/version\/name=\"0.1.${n}-test\"/; s/^application\/file_version=.*/application\/file_version=\"0.1.${n}.0\"/; s/^application\/product_version=.*/application\/product_version=\"0.1.${n}.0\"/" game/export_presets.cfg
           grep -E '^(version/code|version/name|application/file_version|application/product_version)=' game/export_presets.cfg
+          # the build the game reports at run time (saves record the builds they passed through: SAVE-02)
+          sed -i "/^\[application\]/a config/version=\"0.1.${n}-test\"" game/project.godot
+          grep -E '^config/version=' game/project.godot
 
       - name: Export Android, Windows and Linux
         env:

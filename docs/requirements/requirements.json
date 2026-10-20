@@ -224,6 +224,11 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "note",
+     "why": "PR #1 closed 2026-10-20 (OPS-01); its branch's push-triggered workflow no longer matters for an open PR"
     }
    ],
    "acceptance_derived": true
@@ -9150,7 +9155,7 @@
    "id": "OPS-01",
    "title": "Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "You are authorized to resolve PR #1 as routine repository maintenance.",
    "description": "Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -9162,8 +9167,8 @@
     "Closed with a concise explanatory comment if redundant",
     "Disposition reported"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "https://github.com/verbal76/My-Medieval-Life/pull/1#issuecomment-6280226984",
+   "tests": "git merge-base --is-ancestor; git rev-list staging..head = 0; git cherry = 0",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9183,6 +9188,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "PR #1 head 3d7bbce is an ancestor of staging: all 83 commits already in staging, no unique work; closed with an explanatory comment 2026-10-20; branch claude/charming-albattani-8jjfya left on GitHub"
     }
    ]
   },
@@ -12428,7 +12438,7 @@
    "id": "SAVE-00",
    "title": "Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": "Instead, proceed with a save-continuity architecture that allows separate private testing builds to access and upgrade existing game saves.",
    "description": "Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12470,6 +12480,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+     "why": "all nine parts implemented and tested on PC; Android device check (export, uninstall, reinstall, import) required"
     }
    ]
   },
@@ -12477,7 +12492,7 @@
    "id": "SAVE-01",
    "title": "Inspect and document the current save architecture before modifying it (requirement 1)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Inspect and document the current save architecture before modifying it (requirement 1)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12485,8 +12500,8 @@
    "acceptance": [
     "Architecture documented in docs/release/SAVE_CONTINUITY.md"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "docs/release/SAVE_CONTINUITY.md section 1",
+   "tests": "n/a (document)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12506,6 +12521,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests; implementation",
+     "why": "architecture inspected and documented before changes"
     }
    ]
   },
@@ -12513,7 +12533,7 @@
    "id": "SAVE-02",
    "title": "A stable save identity independent of build numbers (requirement 2)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "A stable save identity independent of build numbers (requirement 2)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12521,8 +12541,8 @@
    "acceptance": [
     "Each world has a persistent id kept across builds and copies"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/save_transfer.gd; main.gd::export_save_to, import_save_from, _update_linked_copy, _save_meta, save_extra; docs/release/SAVE_CONTINUITY.md",
+   "tests": "game/tests/save_transfer_test.gd; start_test::_save_meta_tests",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12542,6 +12562,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
     }
    ]
   },
@@ -12549,7 +12574,7 @@
    "id": "SAVE-03",
    "title": "Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12558,8 +12583,8 @@
     "Schema version recorded",
     "Migrations from each supported older version, tested"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/save_transfer.gd; main.gd::export_save_to, import_save_from, _update_linked_copy, _save_meta, save_extra; docs/release/SAVE_CONTINUITY.md",
+   "tests": "game/tests/save_transfer_test.gd; start_test::_save_meta_tests",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12579,6 +12604,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
     }
    ]
   },
@@ -12586,7 +12616,7 @@
    "id": "SAVE-04",
    "title": "Back up the original before migrating, validate the migrated save before adopting it, preserve the original on failure, never leave a partial conversion, never destroy the only usable save (requirements 5-8, 15)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Back up the original before migrating, validate the migrated save before adopting it, preserve the original on failure, never leave a partial conversion, never destroy the only usable save (requirements 5-8, 15)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12597,8 +12627,8 @@
     "Original kept on failure",
     "Atomic replace: an interrupted write cannot leave a half-converted save"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/save_transfer.gd; main.gd::export_save_to, import_save_from, _update_linked_copy, _save_meta, save_extra; docs/release/SAVE_CONTINUITY.md",
+   "tests": "game/tests/save_transfer_test.gd; start_test::_save_meta_tests",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12618,6 +12648,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
     }
    ]
   },
@@ -12625,7 +12660,7 @@
    "id": "SAVE-05",
    "title": "A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12635,8 +12670,8 @@
     "Steps explained in game and in docs",
     "Real-device check (playtest)"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game_ui.gd::_settings_saves, _pick_file; save_transfer.gd",
+   "tests": "save_transfer_test; start_test",
    "playtest": [
     "Android phone: export, uninstall, install a new build, import, continue the same world"
    ],
@@ -12658,6 +12693,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "Settings > Saves: copy, keep a copy up to date, import, via the native picker (Android SAF built into Godot 4.7); tested on PC paths; screenshot looked at; the phone check is pending"
     }
    ]
   },
@@ -12665,7 +12705,7 @@
    "id": "SAVE-06",
    "title": "The same versioning and migration principles on Windows and Linux (requirement 11)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "The same versioning and migration principles on Windows and Linux (requirement 11)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12673,8 +12713,8 @@
    "acceptance": [
     "Same export/import, versioning and migration on PC"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/save_transfer.gd; main.gd::export_save_to, import_save_from, _update_linked_copy, _save_meta, save_extra; docs/release/SAVE_CONTINUITY.md",
+   "tests": "game/tests/save_transfer_test.gd; start_test::_save_meta_tests",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12694,6 +12734,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
     }
    ]
   },
@@ -12701,7 +12746,7 @@
    "id": "SAVE-07",
    "title": "Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12709,8 +12754,8 @@
    "acceptance": [
     "Fixture saves migrate and round-trip with these sections intact"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/save_transfer.gd; main.gd::export_save_to, import_save_from, _update_linked_copy, _save_meta, save_extra; docs/release/SAVE_CONTINUITY.md",
+   "tests": "game/tests/save_transfer_test.gd; start_test::_save_meta_tests",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12730,6 +12775,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
     }
    ]
   },
@@ -12737,7 +12787,7 @@
    "id": "SAVE-08",
    "title": "Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12746,8 +12796,8 @@
     "Unknown top-level sections survive load and save",
     "Backward compatibility stated only where tested"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/save_transfer.gd; main.gd::export_save_to, import_save_from, _update_linked_copy, _save_meta, save_extra; docs/release/SAVE_CONTINUITY.md",
+   "tests": "game/tests/save_transfer_test.gd; start_test::_save_meta_tests",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12767,6 +12817,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
     }
    ]
   },
@@ -12774,7 +12829,7 @@
    "id": "SAVE-09",
    "title": "An independently recoverable backup and documented recovery instructions (requirement 14)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "An independently recoverable backup and documented recovery instructions (requirement 14)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -12783,8 +12838,8 @@
     "Backups kept apart from the live save",
     "Recovery instructions written"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/save_transfer.gd; main.gd::export_save_to, import_save_from, _update_linked_copy, _save_meta, save_extra; docs/release/SAVE_CONTINUITY.md",
+   "tests": "game/tests/save_transfer_test.gd; start_test::_save_meta_tests",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -12804,6 +12859,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
+     "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
     }
    ]
   },

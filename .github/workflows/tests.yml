@@ -84,3 +84,4 @@ jobs:
           $godot --headless --path game --script res://tests/refuge_test.gd
           $godot --headless --path game --script res://tests/combat_test.gd
           $godot --headless --path game --script res://tests/relations_test.gd
+          $godot --headless --path game --script res://tests/save_transfer_test.gd

@@ -31,6 +31,7 @@ var furn := {}                 # PL2-013: the player on furniture: {kind: "sit" 
 var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain)
 var sprinting := false         # B8-027: running (LT toggles on a pad; Shift held, or toggled, on a keyboard)
 var save_meta := {}            # PL1-11: the save's identity for portable and cloud saves (_save_meta)
+var save_extra := {}           # sections of a loaded save this build does not know, written back unchanged (SAVE-08)
 var talk_alt := {}             # a villager beside the resource the player faces: Y (pad), T (keys) or a tap talks to them while A works the resource
 var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
 var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
@@ -777,6 +778,11 @@ func _load_save(d: Dictionary) -> void:
 	map = VillageMap.load_default()
 	world = World.new()
 	world.load_dict(map, d)
+	save_extra = {}
+	var known := world.to_dict()
+	for k in d:
+		if k != "meta" and not known.has(k):
+			save_extra[k] = d[k]
 	_build_scene()
 	_apply_world_changes()
 	_start()
@@ -3436,6 +3442,9 @@ func save_game(show := true) -> bool:
 		return false
 	var d := world.to_dict()
 	d["meta"] = _save_meta()
+	for k in save_extra:
+		if not d.has(k):
+			d[k] = save_extra[k]
 	var r := SaveStore.write_text(save_path, JSON.stringify(d, "", true, true))          # full precision: times and positions reload exactly
 	if not r.ok:
 		if show or not save_failing:
@@ -3443,14 +3452,50 @@ func save_game(show := true) -> bool:
 		save_failing = true
 		return false
 	save_failing = false
+	_update_linked_copy()
 	if show:
 		ui.message("Saved.")
 	return true
 
 
-## What identifies a save apart from the world (PL1-11, portable saves): a world id made once per new
-## game and kept through every save of it, when it was made and last saved, play time, and the device
-## that saved it. A cloud copy is compared by these (same world? which is newer? longer played?) and
+## Export a copy of the save to `target` (a file the player chose; SAVE-05). A running game saves first.
+func export_save_to(target: String) -> Dictionary:
+	if running and world != null:
+		save_game(false)
+	return SaveTransfer.export_save(save_path, target)
+
+
+## Import the save file at `source` as this game's save (SaveTransfer.import_save: backed up, migrated,
+## validated, then swapped in atomically; the save it replaces is kept in user://save_backups/), then
+## continue it. Nothing changes on failure.
+func import_save_from(source: String) -> Dictionary:
+	if running and world != null:
+		save_game(false)
+	var r := SaveTransfer.import_save(source, save_path, VillageMap.load_default())
+	if r.ok:
+		save_blocked = ""
+		running = false
+		continue_game()
+	return r
+
+
+## The copy of the save kept up to date outside the game (SAVE-05): a file the player chose once with the
+## file picker; every save also writes it. A failure says so once and leaves the save itself as it is.
+var linked_copy_failed := false
+
+
+func _update_linked_copy() -> void:
+	if settings.save_copy == "":
+		return
+	var r := SaveTransfer.export_save(save_path, settings.save_copy)
+	if not r.ok and not linked_copy_failed:
+		ui.message("Your save is fine, but its copy outside the game could not be updated: %s. Choose the copy again in Settings, Saves." % r.reason, 10.0)
+	linked_copy_failed = not r.ok
+
+
+## What identifies a save apart from the world (PL1-11, portable saves; SAVE-02): a world id made once per
+## new game and kept through every save of it, copy and import, independent of build numbers; when it was
+## made and last saved, play time, the device that saved it, and the builds it has been played in. A cloud copy is compared by these (same world? which is newer? longer played?) and
 ## nothing in the save depends on the device: paths are user:// and the world regenerates from its seed.
 func _save_meta() -> Dictionary:
 	if not save_meta.has("save_id"):
@@ -3459,6 +3504,14 @@ func _save_meta() -> Dictionary:
 	save_meta["saved_at"] = int(Time.get_unix_time_from_system())
 	save_meta["play_seconds"] = int(float(save_meta.get("play_seconds", 0.0)))
 	save_meta["platform"] = OS.get_name()
+	var build := str(ProjectSettings.get_setting("application/config/version", ""))
+	if build == "":
+		build = "dev"                                 # a development run (release.yml stamps the build number)
+	save_meta["build"] = build
+	var builds: Array = save_meta.get("builds", [])
+	if builds.is_empty() or str(builds[-1]) != build:
+		builds.append(build)                          # the builds this world has been played in (SAVE-02)
+	save_meta["builds"] = builds.slice(maxi(0, builds.size() - 20))
 	save_meta["character"] = world.player.name
 	return save_meta.duplicate()
 

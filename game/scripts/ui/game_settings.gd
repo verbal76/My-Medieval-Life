@@ -21,6 +21,7 @@ var max_fps := 0                   # 0 = no cap
 var ui_size := "normal"            # small | normal | large
 var touch_buttons := "auto"        # auto (when touch is in use) | always | never
 var phone := false                 # a phone or tablet: no windows, a larger interface
+var save_copy := ""                # SAVE-05: a file outside the game kept up to date with the save ("" none)
 
 
 func _init() -> void:
@@ -43,6 +44,7 @@ func load_file(path := PATH) -> void:
 	ui_size = u if UI_SIZES.has(u) else "normal"
 	var t: String = str(cf.get_value("interface", "touch_buttons", touch_buttons))
 	touch_buttons = t if t in ["auto", "always", "never"] else "auto"
+	save_copy = str(cf.get_value("saves", "copy", save_copy))
 
 
 func save_file(path := PATH) -> void:
@@ -56,6 +58,7 @@ func save_file(path := PATH) -> void:
 	cf.set_value("display", "max_fps", max_fps)
 	cf.set_value("interface", "size", ui_size)
 	cf.set_value("interface", "touch_buttons", touch_buttons)
+	cf.set_value("saves", "copy", save_copy)
 	cf.save(path)
 
 
