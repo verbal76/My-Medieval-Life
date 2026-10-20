@@ -6,6 +6,7 @@ marked *Proposed* until the owner approves it.
 
 | Date | Decision | By | Notes |
 |---|---|---|---|
+| 2026-10-20 | One commit to `main` adding only `.github/workflows/long-sims.yml`, so the manual long-simulation workflow can be started (GitHub only dispatches workflows present on the default branch). Runs use `ref=staging/my-medieval-life`, so they run staging code. No other change to `main`. | **Owner** (answer in session, "Add file to main") | INFRA-02 |
 | 2026-10-20 | **OD-13**: both bed sharing and house expansion. Young children may share beds within reasonable age limits, and couples share a bed. Existing village houses are eligible for living-quarters expansions though generated without parcels. Expansions consume real resources, labour and time; no free beds or houses. Implemented by HOUSE-08 and HOUSE-09. | **Owner** | `docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md` |
 | 2026-10-20 | **OD-11**: unplaced orphans join the bandit clan, after surviving parent, grandparents, nearest eligible blood relative and a willing villager household. The child keeps identity, age, genealogy and relationships, and stays a child. With bandit factions not yet built (WDR-016-C, Build 20+), Build 16 gives the interim handling. Implemented by FAM-07. | **Owner** | same |
 | 2026-10-20 | **OD-12**: among equally close relatives, choose the best-suited: care, capacity, food and necessities, existing relationship, proximity, then a deterministic tie-breaker. Part of FAM-03. | **Owner** | same |

@@ -10573,6 +10573,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
      "why": "approved; started"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "note",
+     "why": "workflow on staging (9ec6b40); dispatch needs the file on main (404 otherwise); owner permitted (2026-10-20, answer in session: 'Add file to main') one commit to main adding only .github/workflows/long-sims.yml"
     }
    ],
    "target_build": "15"
