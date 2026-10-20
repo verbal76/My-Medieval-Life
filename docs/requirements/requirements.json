@@ -268,6 +268,52 @@
    "roadmap_reason": "only the owner (or the environment's settings) can do this"
   },
   {
+   "id": "ARM-01",
+   "title": "Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available)",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Report fixed, still present or not verified, with evidence; fix if still present; a regression test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "blocker",
+   "complexity": "M"
+  },
+  {
    "id": "B12A-01",
    "title": "1-11 fixed (B13-01..10); 12 → B13-14",
    "kind": "approved",
@@ -5795,6 +5841,196 @@
    "target_build": "15",
    "roadmap_gate": "device check",
    "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
+  },
+  {
+   "id": "CTR-01",
+   "title": "Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer counter",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "A counter per business, reachable, with a prompt in the conversation style; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "L"
+  },
+  {
+   "id": "CTR-02",
+   "title": "At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Normal navigation (no teleport); the player need not search the village; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "CTR-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "M"
+  },
+  {
+   "id": "CTR-03",
+   "title": "Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Unavailable reasons shown; one service task at a time; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "CTR-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "M"
+  },
+  {
+   "id": "CTR-04",
+   "title": "Permanent counters are not market stalls: no stall commission on counters without an approved rule",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Permanent counters are not market stalls: no stall commission on counters without an approved rule",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "OD-24's 5% applies to stalls only; counters keep their existing terms; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "CTR-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "DGA-D1",
@@ -13674,6 +13910,54 @@
    "target_build": "15"
   },
   {
+   "id": "MERCH-01",
+   "title": "A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Player and villagers buy from it; stock is finite and restocked legitimately (the caravan or harvest-saved material); no free goods; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SEED-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "M"
+  },
+  {
    "id": "MIN-A",
    "title": "Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests",
    "kind": "approved",
@@ -21474,6 +21758,196 @@
    "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
+   "id": "SEED-01",
+   "title": "Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest)",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Written audit of what exists, with code references"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "S"
+  },
+  {
+   "id": "SEED-02",
+   "title": "Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Crops, fruit trees (seed or sapling), berry bushes (cuttings), flowers (seed): planting removes inventory; harvest gives recovery by seeded chance; conservation; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SEED-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "L"
+  },
+  {
+   "id": "SEED-03",
+   "title": "Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Perennials stay after picking and fruit again in their seasons; growth in calendar time (OD-21); tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SEED-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "M"
+  },
+  {
+   "id": "SEED-04",
+   "title": "Households save planting material from their own harvests",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Households save planting material from their own harvests",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Seed kept back from a harvest into the household's store, by the same rule for player and villagers; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SEED-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "S"
+  },
+  {
    "id": "SET-A",
    "title": "Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit",
    "kind": "approved",
@@ -21750,6 +22224,52 @@
    "target_build": "20+",
    "roadmap_gate": "",
    "roadmap_reason": "real separate settlements and near/far simulation tiers need a larger world map"
+  },
+  {
+   "id": "SHOP-01",
+   "title": "Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Skilled businesses sell what they produce or stock and buy useful goods by real need and funds (a carpenter buys timber, an armorer materials), the same mechanics for player and villagers",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Buying interest from inventory, production needs, coins and market; no infinite funds or duplicated goods; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "SJD-A",
@@ -23360,6 +23880,54 @@
    "roadmap_reason": "a parity defect found by the OD-21 audit",
    "b16_class": "done",
    "complexity": ""
+  },
+  {
+   "id": "TRADE-01",
+   "title": "Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02)",
+   "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
+   "approval": "owner directive 2026-10-20 (Build 16 sections 1-8)",
+   "acceptance": [
+    "Player and villager sales to a business use one rule; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SHOP-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner directive 2026-10-20, Build 16 sections 1-8",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "VP-01",
