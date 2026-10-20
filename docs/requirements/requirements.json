@@ -12050,6 +12050,11 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "Implemented (stock_family_chest, _sale_stock; the player's chest in World.necessity); tests in reserve_test.gd; all 27 suites pass; closes after the 365-day comparison"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "tests",
+     "why": "Seed 2 (local) and seed 1 (Actions) on 61750f1: 1 starvation death each (baseline 11), 0 script errors, ledgers balanced; the one death was a defect of the chest's first version (firewood left in a member's pocket; an elder's logs counted as trade stock), fixed with a regression test"
     }
    ],
    "target_build": "16",

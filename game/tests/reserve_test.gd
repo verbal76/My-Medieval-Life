@@ -214,6 +214,28 @@ func relief_sources(w: World, fam: NPC) -> void:
 	w.brain.stock_family_chest(tk)
 	check(NPCBrain.store_points([tp]) >= horizon and NPCBrain.store_points([tp]) < horizon + 40.0 and tk.inv.count("pottage") > 0,
 		"FSE-18: a food vendor stocks the family chest to its reserve horizon (%d of %d points) and keeps the rest to sell (%d)" % [int(NPCBrain.store_points([tp])), int(horizon), tk.inv.count("pottage")])
+	# the family chest takes firewood too, and an elder's logs are not trade stock: a household with raw meat in the pantry
+	# and logs in a member's pocket could not roast it (Simon Brook starved so, seed 2, day 189)
+	strip_village(w, [b])
+	var elder_m: NPC = null
+	for m: NPC in mb:
+		if m.job == "" or m.role == "elder":
+			elder_m = m
+	if elder_m == null:
+		elder_m = mb[0]
+	var pbf: Inventory = w.households[b].pantry
+	pbf.items.erase("log")
+	pbf.add("meat", 2)
+	elder_m.inv.add("log", 7)
+	w.brain.stock_family_chest(elder_m)
+	check(pbf.count("log") == 7 and elder_m.inv.count("log") == 0, "FSE-18: home, a member's firewood goes in the family chest (%d logs)" % pbf.count("log"))
+	w.brain._cook_at_home(mb[mb.size() - 1], pbf)
+	check(pbf.count("roast_meat") >= 2, "FSE-18: so the household can roast its meat at the hearth")
+	var cw: NPC = w.npcs.filter(func(o): return o.alive and o.job == "carpenter")[0]
+	cw.inv.add("log", 5)
+	var cwl: int = cw.inv.count("log")
+	w.brain.stock_family_chest(cw)
+	check(cw.inv.count("log") == cwl, "FSE-18: a carpenter keeps the logs their trade works (inputs are not the family's)")
 	# FSE-18: the player's family chest counts in the player's reserve, by the households' rule
 	var pl := w.player
 	var home0: String = pl.home

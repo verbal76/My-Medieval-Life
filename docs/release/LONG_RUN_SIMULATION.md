@@ -1124,3 +1124,27 @@ time. An isolated run with that floor at relief's 3-day fill is being made to me
 - **Legitimate outcome:** a village that outgrows fixed land and then starves. It strengthens the case for land
   planning (FSE-14) and the shared farming model (OD-22); it is not answered by a rescue.
 - **Under investigation:** the relief churn between households (a possible defect of the implementation's donor floor).
+
+### Family chest (FSE-18, `61750f1`): seed 2 locally, seed 1 on Actions, against the baseline (2026-10-20)
+
+| Measure | Baseline seed 2 (`5625505`) | Seed 2 (`61750f1`) | Seed 1 (`61750f1`, Actions 39507421234) |
+|---|---|---|---|
+| Starved | 11 | **1** (Simon Brook, an elder, day 189) | **1** |
+| Alive at the end | 130 | 132 | 130 |
+| Script errors | 0 | 0 | 0 |
+| Ledgers | balanced | balanced | balanced |
+| Missed meals: no money / nothing for sale | 1,337 / 565 | 3,448 / 157 | |
+| Relief: coins spent / granary wheat | 3,218 / 5,066 | 0 / 2,024 | |
+| Nights without firewood | 1,784 | 2,776 | 3,185 |
+| Unemployed at the end | 0 | 1 | 0 |
+
+(Missed meals for want of money now include the trips the 2-coin family-tab test used to hide; the two figures are not
+comparable.) Seeds 3 and 4 are on Actions.
+
+**The one death (FSE-16 method, a watched exact reproduction):** Simon Brook starved on day 189 in a household whose pantry
+held 5 raw meat while another member, an elder with no trade, carried 7 logs: the household's reckoning counted the meat as
+roastable (2.5 days), so relief did not come, but the logs were in a pocket, not the family chest, and the elder's logs
+counted as stock for sale because buyers exist for logs. **A defect of the family chest's first version**, fixed in the
+next commit: the chest takes the household's firewood, and goods count as trade stock only for the trade that makes,
+sells or uses them. The rise in nights without firewood is the same cause in part (logs in pockets warm nobody) and in
+part households now roasting their own meat (a log a roast); the next year runs measure it.

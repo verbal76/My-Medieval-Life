@@ -1544,17 +1544,24 @@ func _cook_at_home(n: NPC, pantry: Inventory) -> void:
 ## vendor's stock; a producer's goods as far as buyers will take them, _sale_stock), the rest goes in; and a trader stocks
 ## the chest up to the household's reserve horizon (OD-19's reserve_days) before keeping the rest to sell. (B7-015 after
 ## FSE-17: elders starved while a member carried 79 milk no buyer would take.)
+## What each producing trade makes to sell, so keeps back from the family chest as far as buyers take it (_sale_stock).
+const TRADE_GOODS := {"woodcutter": ["log"], "hunter": ["meat"], "farmer": ["wheat", "egg", "milk", "meat"], "laborer": ["log"]}
+
+
 func stock_family_chest(n: NPC) -> void:
 	if n.household < 0 or n.household >= w.households.size() or w.households[n.household].get("ended", false):
 		return
 	var pantry: Inventory = w.households[n.household].pantry
 	var short := household_day_food(n.household) * float(GameData.b("reserve_days")) - store_points([pantry])
-	for f in EDIBLE + ["meat"]:
+	var carrying_for_work := not w.construction.contract_of(n).is_empty()     # a helper's loads are the site's
+	for f in EDIBLE + ["meat", "log"]:
+		if f == "log" and carrying_for_work:
+			continue
 		var c := n.inv.count(f)
 		if c <= 0:
 			continue
 		var put := c - mini(c, _sale_stock(n, f))
-		if short > 0.0 and put < c:
+		if short > 0.0 and put < c and food_points(f) > 0.0:     # the top-up is food; firewood is not
 			put = maxi(put, mini(c, ceili(short / maxf(1.0, food_points(f)))))
 		if put > 0 and w.transfer(n.inv, pantry, f, put):
 			short -= float(put) * food_points(f)
@@ -1562,11 +1569,14 @@ func stock_family_chest(n: NPC) -> void:
 
 
 ## How many of `f` that `n` carries are trade stock: all of a food vendor's (the tavern, the cook, the food merchant sell
-## from what they carry); for anyone else what their trade keeps back (a keeper's pen feed) and what buyers will take now
-## (the outlets' wants); food nobody buys from them is the family's.
+## from what they carry) and all of a trade's inputs (BUYS: a carpenter's logs); of what a producer's trade makes
+## (TRADE_GOODS), what it keeps back (a keeper's pen feed) and what buyers will take now (the outlets' wants). Anything else
+## is the family's (B7-015 after FSE-18: an elder carried 7 logs as if for sale while another starved beside raw meat).
 func _sale_stock(n: NPC, f: String) -> int:
-	if n.job in ["tavernkeeper", "cook"] or buy_role(n) == "merchant_food":
+	if n.job in ["tavernkeeper", "cook"] or buy_role(n) == "merchant_food" or BUYS.get(buy_role(n), {}).has(f):
 		return n.inv.count(f)
+	if not TRADE_GOODS.get(n.job, []).has(f):
+		return 0
 	var k := reserve(n, f)
 	for o: NPC in w.npcs:
 		if o.alive and o != n and o.household != n.household and OUTLETS.get(f, []).any(func(r): return o.job == r or buy_role(o) == r):
