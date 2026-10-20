@@ -817,3 +817,10 @@ seed 2 `e1277ce22f0c7acd9154df745148b933`). Both passed the script-error gate an
 **Conclusion:** "economic recovery from missing work tools" (Build 15 scope) now fails on money, not mechanics.
 That is owner decision **OD-16** (how money flows back to the essential trades), an economy fundamental the agent may
 not decide (OVN-01 section 2). Build 15 is blocked on it.
+
+### The determinism baseline after OD-16 (2026-10-20)
+
+The OD-16 changes (EQ-19..21) change the village's behaviour, so `docs/release/sim_baseline.json` was re-recorded with
+`tools/sim_gate.py --write` from `a6c7699`. Two runs gave the same fingerprints. Neither seed leaks coins or items at
+day 10 or 30. This is a recorded behaviour change, not an optimization: the gate checks optimizations against it from
+here on.

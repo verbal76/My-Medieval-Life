@@ -196,9 +196,11 @@ func test_mother_builds_with_own_and_bought_materials() -> void:
 	var need0: Dictionary = p.site.need.duplicate()
 	var bought0 := {}
 	var held0 := {}
+	var made0 := {}
 	for id in need0:
 		bought0[id] = int(w.stats.get("helper_bought_" + str(id), 0))
 		held0[id] = int(w.stats.get("helper_took_" + str(id), 0))
+		made0[id] = int(w.stats.get("builder_own_" + str(id), 0))
 	var carriers := {}
 	for d in 20:
 		for m in 1440:
@@ -216,9 +218,10 @@ func test_mother_builds_with_own_and_bought_materials() -> void:
 	for id in need0:
 		var bought := int(w.stats.get("helper_bought_" + str(id), 0)) - int(bought0[id])
 		var own := int(w.stats.get("helper_took_" + str(id), 0)) - int(held0[id])
-		if bought + own < int(need0[id]):           # what was carried back unused may make it more, never less
-			free.append("%s: %d delivered, %d taken from the store, %d bought" % [id, int(need0[id]), own, bought])
-	check(free.is_empty(), "every material delivered was taken from the household's store or bought, none from nothing %s" % [free])
+		var made := int(w.stats.get("builder_own_" + str(id), 0)) - int(made0[id])    # felled and sawn by the builder (HOUSE-04)
+		if bought + own + made < int(need0[id]):    # what was carried back unused may make it more, never less
+			free.append("%s: %d delivered, %d taken from the store, %d bought, %d the builder's own" % [id, int(need0[id]), own, bought, made])
+	check(free.is_empty(), "every material delivered was taken from the household's store, bought or made by the builder, none from nothing %s" % [free])
 	check(str(hh.home) == "house_" + str(p.id) or str(hh.home) == home, "the household has its house")
 
 
