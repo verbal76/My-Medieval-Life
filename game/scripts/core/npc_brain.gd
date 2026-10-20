@@ -2541,7 +2541,7 @@ func _relief_offers(h: int) -> Array:
 				n = o.inv.count(f)
 			if n > 0:
 				out.append({"inv": o.inv, "item": f, "left": n, "pts": food_points(f), "price": w.sell_price(o, f), "trader": true,
-					"payee": o, "cell": _workplace_cell(o) if o.workplace != "" else w.building_door(o.home), "words": _seller_words(o)})
+					"payee": o, "cell": _workplace_cell(o) if o.workplace != "" else _store_cell(o.home, o), "words": _seller_words(o)})
 	for h2 in w.households.size():
 		var mem := _members(h2)
 		if h2 == h or mem.is_empty():
@@ -2555,10 +2555,17 @@ func _relief_offers(h: int) -> Array:
 			var n := mini(c, floori(spare / maxf(1.0, food_points(f))))
 			if n > 0:
 				out.append({"inv": w.households[h2].pantry, "item": f, "left": n, "pts": food_points(f), "price": GameData.value(f), "trader": false,
-					"payee": head, "cell": w.building_door(w.households[h2].home), "words": "the %s household's" % str(w.households[h2].get("family", ""))})
+					"payee": head, "cell": _store_cell(str(w.households[h2].home), head), "words": "the %s household's" % str(w.households[h2].get("family", ""))})
 				spare -= float(n) * food_points(f)
 	out.sort_custom(func(x, y): return float(x.price) / float(x.pts) < float(y.price) / float(y.pts))
 	return out
+
+
+## Where relief's carriers collect from a store kept at `home`: its door, or where `o` stands when the home is not one of
+## the village's buildings (a household between homes; 634 script errors in a year run before, each one ending that
+## evening's relief).
+func _store_cell(home: String, o: NPC) -> Vector2i:
+	return w.building_door(home) if w.buildings.has(home) else o.cell()
 
 
 ## Where a seller's goods wait for the manor's carriers, in words: "Clement Ward the smith's".

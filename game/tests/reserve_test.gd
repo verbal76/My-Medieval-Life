@@ -138,6 +138,21 @@ func relief_sources(w: World, fam: NPC) -> void:
 	var cleft: float = NPCBrain.store_points([w.households[c].pantry])
 	check(w.households[b].pantry.count("pottage") > 0 and cleft >= cneed and head.coins > 0,
 		"FSE-17: relief buys another household's spare food, leaving it its own %d points (%d left), and pays it %d coins" % [int(cneed), int(cleft), head.coins])
+	# a household whose home is not one of the buildings: relief's carriers collect its spare food where its head stands
+	# (before: a script error, and the pickup placed at cell 0,0, so the relief could wait there for good)
+	strip_village(w, [b])
+	w.households[b].pantry.add("pottage", ceili(1.5 * w.brain.household_day_food(b) / 40.0))     # not urgent: carried
+	var home_c: String = str(w.households[c].home)
+	w.households[c].home = "no-such-building"
+	w.households[c].pantry.add("pottage", 5)
+	var c_head: NPC = w.brain._richest_in_household(w.brain._members(c)[0])
+	w.brain._relief(obl, 0.0)
+	w.households[c].home = home_c
+	var at_head := false
+	for l in w.manor_work.lots:
+		if str(l.to.get("kind", "")) == "pantry" and int(l.to.get("hh", -1)) == b and Vector2i(int(l.at[0]), int(l.at[1])) == c_head.cell():
+			at_head = true
+	check(at_head and c_head.cell() != Vector2i.ZERO, "FSE-17: a seller household with no building for a home: relief collects its food where its head stands")
 	# raw meat only for a household with logs to roast it, as many as its logs
 	strip_village(w, [b])
 	var hunter: NPC = w.npcs.filter(func(o): return o.alive and o.job == "hunter" and o.household != b)[0]
