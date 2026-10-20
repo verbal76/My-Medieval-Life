@@ -11,9 +11,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 100 |
+| APPROVED — NOT STARTED | 99 |
 | ACTIVE DEVELOPMENT | 10 |
-| PARTIALLY IMPLEMENTED | 36 |
+| PARTIALLY IMPLEMENTED | 37 |
 | IMPLEMENTED — TESTING REQUIRED | 16 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 14 |
@@ -111,7 +111,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
-| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
+| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner directive 2026-10-20, Build 16 sections 1-8 |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | owner instruction 2026-10-20 |
 | B7-015 | Missed meals while food piles up | approved | IMPLEMENTED — TESTING REQUIRED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | B7-016 | Tanners/goods merchants end at 0 coins | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
@@ -450,11 +450,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (100)
+## APPROVED — NOT STARTED (99)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  |  |  |
 | B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | owner message and answers 2026-10-19 (DEVELOPMENT_LEDGER B14-07) |  |  | Start next (owner order) |
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | owner answers 2026-10-19 |  |  | After B14-07 |
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
@@ -570,11 +569,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (36)
+## PARTIALLY IMPLEMENTED (37)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | docs/release/AUDIT_REMEDIATION.md (audit inventory row 368) |  |  | PR #1 was closed unmerged on 2026-10-20 after its work was verified in staging (OPS-01). Its branch claude/charming-albattani-8jjfya still carries a push-triggered workflow; nothing pushes to it. Deleting or editing that branch is the owner's call (repository change). |
+| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md |  |  | Fix within CTR-01..03: a counter at s8 served by the smith on summons; the at-post and shop-name checks extended; the second smith's fallthrough; iron armour's outlet; a regression test |
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | owner message 2026-10-19 | `f9fb853` |  |  |
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |

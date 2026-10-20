@@ -22,7 +22,7 @@ register only: nothing is called complete because code was written or a design a
 | Superseded | 2 (FSE-11 by FARM-06; OD-10) |
 | Proposed for deferral (owner's approval needed) | **2** (DVW-A12, DVW-B6) |
 | Release blockers (defects) | **4** (ARM-01, FSE-B06, FSE-B11, FSE-B12) |
-| Outstanding owner decisions affecting Build 16 | **8** (section C) |
+| Outstanding owner decisions affecting Build 16 | **8**, plus **2** proposed deferrals (section C) |
 | Branch and latest verified commit | `staging/my-medieval-life`, `7e0d9c6` (pushed, remote hash checked) |
 | Test suites | All 27 Godot suites pass on `61750f1` (the last code change); Python tests OK; register, interactions, resources, materials: 0 problems |
 | Determinism | The gate passes, identical to its baseline (re-baselined on `61750f1`, no coin or goods leaks) |
@@ -57,9 +57,9 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 | Status | Items |
 |---|---|
 | Complete | 29 |
-| In progress | 12 |
+| In progress | 13 |
 | Pending testing | 11 |
-| Not started | 42 |
+| Not started | 41 |
 | Blocked | 2 |
 | Deferred | 0 |
 | Superseded | 2 |
@@ -82,7 +82,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead  | Complete | docs/directives/2026-10-20_controlled_parallel_development.md |  | `7e0d9c6` |  |  | Done |  |
-| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: | Not started |  | Report fixed, still present or not verified, with evidence; fix if still present; a regression test |  |  |  | Release blocker | M |
+| ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: | In progress | Verified from the code (not yet seen in play): STILL PRESENT. No armorer occupation exists; the armoury counter s8 in b4 is decorative (no keeper, no prompt); the smith is never 'at a post' (World at-post check covers th | Fix within CTR-01..03: a counter at s8 served by the smith on summons; the at-post and shop-name checks extended; the second smith's fallthrough; iron armour's outlet; a regression test |  |  |  | Release blocker | M |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer  | Not started |  | A counter per business, reachable, with a prompt in the conversation style; tests |  |  |  | Required feature | L |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | Not started |  | Normal navigation (no teleport); the player need not search the village; tests |  | after CTR-01 |  | Required feature | M |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees | Not started |  | Unavailable reasons shown; one service task at a time; tests |  | after CTR-02 |  | Required feature | M |
@@ -262,10 +262,25 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE
   propagated or planted** (no cuttings, no flower seed from wild flowers). Villagers never plant anything.
 - **Seed merchant (MERCH-01):** the food merchant and farmers sell crop seed to the **player only**, from finite stock the
   caravan restocks; no seller of berry cuttings, flower seed or saplings; no villager buys seed.
-- **Armorer (ARM-01):** *verdict being established (a read-only check of the code; this section is updated with it).*
-  The register's record calls the armoury counter decorative: nobody serves there, and there is no armorer occupation.
-- **Counters, shopkeepers, trade (CTR-01..04, SHOP-01, TRADE-01):** not started; the existing parts (the tavern counter,
-  merchant stalls, the player's shop counter, storefronts) are mapped in the check above.
+- **Armorer (ARM-01): STILL PRESENT** (established from the code; not yet observed in play). There is no armorer
+  occupation. The "Smithy and Armory" (b4) has an armoury counter (`s8`) that is decorative: no keeper, no prompt. The
+  smith is never counted as "at a post" (`World`'s at-post check covers only the tavernkeeper, stall merchants and
+  storefront keepers), so the player can buy from the smith only by talking to them, which fails with "Can't talk, I'm..."
+  whenever they are forging (25-150 minutes a job) or walking; they work 7:00-18:00. The second smith probably goes home
+  in the day when the forge and anvil are both taken (inferred). Iron armour has no market outlet and the smith keeps at
+  most one. Partial workaround today: the goods merchant's tools-and-arms stalls (7:00-18:00) sell swords, tools and
+  helmets, never armour. No fix was ever claimed and no test covers buying from the smith.
+- **Counters, shopkeepers, trade (CTR-01..04, SHOP-01, TRADE-01): not started.** Working counters today: the tavern
+  (keeper there 7:00-18:00 although it opens to 22:00), the six market stalls, the player's own stall and shops (with an
+  attendant), villager storefronts. No counter: the smith and tanner (b4), the carpenter (b25), the sage (b3). Nothing
+  summons a keeper; a counter works only when its keeper happens to stand by it. Businesses already buy from the player
+  and villagers through one shared trade rule with real coins and the household reserve, but their demand is a fixed
+  stock cap per trade, not real production need (the smith buys gold ore below the level to smelt it). Reusable: the
+  prompts and A button, the at-post checks, the trade window, the attendants' walk-to-the-counter pattern, counter `s8`.
+  To build: counters for the smithy (reuse `s8`), sawmill, sage and built workshops (a village-generator change: a
+  generator version bump and save handling); one summon-and-serve task with a clear "nobody can come" message, which
+  releases a station without losing materials; the at-post and shop-name checks extended (the shop-name lookup would
+  fail for a smith as written); demand from real need; whether iron armour reaches the market.
 
 ## C. Outstanding owner decisions affecting Build 16
 
@@ -335,7 +350,8 @@ the baseline only through the lead, who runs the simulations and re-baselines.
 - **Before the owner's agent directive (this session):** read-only audit workers, one task each, reports reused: the
   agriculture audit (about 143,000 tokens), hunting and husbandry (191,000), the time-system inventory (180,000), the
   OD-22..24 code survey (211,000). These counts are the tool's own reports; no other cost figure is available.
-- **Since the directive (AGENT-01):** one worker: the armorer and counters check (read-only, bounded; running). No
+- **Since the directive (AGENT-01):** one worker: the armorer and counters check (read-only, bounded; done, about 149,000
+  tokens by the tool's report). No
   duplicate work: each worker had separate files and questions, and the lead did not repeat their reading.
 - **Is parallel work saving time?** Yes for the audits, which ran while the long simulations ran (only the lead runs
   simulations). Implementation workers will be used only on tasks with separate files.

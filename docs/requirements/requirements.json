@@ -323,7 +323,7 @@
    "id": "ARM-01",
    "title": "Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available)",
    "source": "docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md",
@@ -342,7 +342,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Fix within CTR-01..03: a counter at s8 served by the smith on summons; the at-post and shop-name checks extended; the second smith's fallthrough; iron armour's outlet; a regression test",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -357,6 +357,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; next_action",
+     "why": "Verified from the code (not yet seen in play): STILL PRESENT. No armorer occupation exists; the armoury counter s8 in b4 is decorative (no keeper, no prompt); the smith is never 'at a post' (World at-post check covers the tavernkeeper, stall merchants and storefront keepers only), so the player can buy from the smith only by talking, which fails while they forge or walk; the second smith likely goes home when forge and anvil are taken; iron armour has no market outlet. The goods merchant's tools-and-arms stalls sell swords, tools and helmets but never armour"
     }
    ],
    "target_build": "16",
