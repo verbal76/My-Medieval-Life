@@ -2383,11 +2383,12 @@ func _use() -> void:
 					var extra := world.mine_unit(dep)
 					if extra != "":
 						n += 1
-				if p.inv.add(ore, n):
+				if world.player_gain(ore, n, "mined_") == n:
 					_gain("+%d %s" % [n, GameData.item_name(ore)], ore)
 				else:
-					ui.message("Your pack is full.")
+					ui.message("Your pack is full: the ore is left at your feet.")
 				if p.inv.wear(pick, 0 if world.rng.randf() < Skills.value(p, "mining", "tool_wear_save") else 1):
+					world.stat("broke_" + pick)
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
 					if p.tool == pick:
 						p.tool = ""
@@ -2519,15 +2520,16 @@ func _chop(tr: Dictionary, axe: String, secs: float) -> void:
 		if int(r.logs) <= 0:
 			_chop(tr, axe, secs)
 			return
-		if p.inv.add("log", int(r.logs)):
+		if world.player_gain("log", int(r.logs), "felled_") == int(r.logs):
 			_gain("+%d %s" % [int(r.logs), GameData.item_name("log")], "log")      # a short line in the corner, not a banner
 		else:
-			ui.message("Your pack is full.")
+			ui.message("Your pack is full: the logs are left at your feet.")
 		var saplings := world.sapling_drop(tr, Skills.value(p, "woodcutting", "sapling_bonus"))
 		for id in saplings:
-			if p.inv.add(id, int(saplings[id])):
+			if world.player_gain(id, int(saplings[id])) == int(saplings[id]):
 				_gain("+%d %s" % [int(saplings[id]), GameData.item_name(id)], id)
-		p.inv.wear(axe, 0 if world.rng.randf() < Skills.value(p, "woodcutting", "axe_wear_save") else 3)
+		if p.inv.wear(axe, 0 if world.rng.randf() < Skills.value(p, "woodcutting", "axe_wear_save") else 3):
+			world.stat("broke_" + axe)
 		_xp("woodcutting", 12), "swing", axe)
 
 
@@ -2617,9 +2619,12 @@ func craft(recipe: String, station := "") -> void:
 		if saved:                                       # a practised hand wastes nothing
 			for id in r.in:
 				p.inv.add(id, int(r.in[id]))
+		else:
+			for id in r.in:
+				world.stat("used_" + id, float(r.in[id]))
 		var bonus := world.rng.randf() < Skills.value(p, str(r.skill), "bonus_chance")
 		for id in r.out:
-			p.inv.add(id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0))
+			world.player_gain(id, int(r.out[id]) + (1 if bonus and not Skills.is_gear(str(id)) else 0))
 		_xp(r.skill, int(r.xp))
 		ui.message("Made %s." % ", ".join(r.out.keys().map(func(k): return GameData.item_name(k)))),
 			"swing" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "gather", "hammer" if str(r.station) in ["forge", "anvil", "workbench", "sawhorse"] else "")

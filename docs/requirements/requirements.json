@@ -6477,7 +6477,7 @@
    "id": "DVW-A12",
    "title": "Keep rules in `core/`, not UI; audit list (:37)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Keep rules in `core/`, not UI; audit list (:37)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256)",
@@ -6511,6 +6511,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "Audit list done (BUILD_16_AUDITS.md, R1-R22, with a move order); the moves into core are not started; player production accounting already in core (World.player_gain)"
     }
    ],
    "acceptance_derived": true,
@@ -6877,7 +6882,7 @@
    "id": "DVW-A7",
    "title": "Over-production from raising skills by use (:32)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Over-production from raising skills by use (:32)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 251)",
@@ -6886,7 +6891,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "NOT VERIFIED | none | NOT-STARTED",
-   "tests": "",
+   "tests": "world_test.gd _player_gain",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -6911,6 +6916,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "Audit docs/release/BUILD_16_AUDITS.md: skill over-production is a legitimate outcome (finite inputs, purses cap sales); the one defect, player production missing from the ledger, fixed via World.player_gain; the invariant comment names the approved skill effects"
     }
    ],
    "acceptance_derived": true,
@@ -6922,7 +6932,7 @@
    "id": "DVW-A8",
    "title": "Audit player-only perks vs same rules (:33)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Audit player-only perks vs same rules (:33)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 252)",
@@ -6956,6 +6966,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED",
+     "why": "Audit docs/release/BUILD_16_AUDITS.md lists 16 player-only perks with their recorded reasons; no code defect; the gaps needing a ruling are OD-18"
     }
    ],
    "acceptance_derived": true,
@@ -13078,6 +13093,48 @@
    "target_build": "16",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "design wording only; nothing in Build 15 depends on it"
+  },
+  {
+   "id": "OD-18",
+   "title": "Player-only perks and rules found by the DVW-A8 and DVW-A12 audits",
+   "kind": "decision",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Owner to rule on: P1 NPCs have no skills (NPC miners take gold without Mining 3); P8 the player can sell a buyer to 0 coins while NPC sellers stop at 15 (with OD-15); P10 resting heals the player fully, villagers do not otherwise heal; P15 eleven recipes no NPC makes; R9 assault alerts every guard within a fixed 15 tiles while theft uses World.witness (sight and witness_radius).",
+   "description": "Player-only perks and rules found by the DVW-A8 and DVW-A12 audits",
+   "source": "docs/release/BUILD_16_AUDITS.md",
+   "approval": "",
+   "acceptance": [
+    "The owner rules on each item; the ruling is recorded and implemented or the item is closed"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/release/BUILD_16_AUDITS.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target: owner decision"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "OD-LE-01",

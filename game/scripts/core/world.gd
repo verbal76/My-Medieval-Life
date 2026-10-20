@@ -9,8 +9,9 @@ extends RefCounted
 ##  - grain only enters by harvest and only leaves by being eaten, cooked, fed to animals or sold
 ##    to the caravan; the manor granary holds what the treasury bought;
 ##  - items only appear through extraction (mining, felling, hunting, slaughter, harvest) or recipes that
-##    consume their inputs, and only vanish by being eaten, used up in a recipe or a building,
-##    or worn out;
+##    consume their inputs (the player's approved skill effects, PL2-005, are the one exception: a saved
+##    input and a bonus unit, counted as made_ like any recipe output), and only vanish by being eaten,
+##    used up in a recipe or a building, worn out or left to spoil (a carcass, spoiled_);
 ##  - a deposit never yields more than its amount; dead people stay dead.
 
 const PLANT_LAYER := "below1"      # the layer Shade drew the flowers and berry bushes in (village.json plants)
@@ -2323,6 +2324,21 @@ func player_drop(id: String, qty: int) -> bool:
 	bag.add(id, qty)
 	loot.append({"pos": player.pos + Vector2(0, 0.4), "inv": bag, "coins": 0, "from": "dropped by %s" % player.name})
 	return true
+
+
+## What the player's own work makes (mining, felling, crafting): counted for the goods ledger as `kind` + id
+## (made_, mined_, felled_), as the villagers' work is, and put in the pack; what the pack cannot hold is set
+## down where the player stands, never lost (DVW-A7). Returns how many went into the pack.
+func player_gain(id: String, n: int, kind := "made_") -> int:
+	if n <= 0:
+		return 0
+	stat(kind + id, float(n))
+	if player.inv.add(id, n):
+		return n
+	var bag := Inventory.new()
+	bag.add(id, n)
+	loot.append({"pos": player.pos + Vector2(0, 0.4), "inv": bag, "coins": 0, "from": "dropped by %s" % player.name})
+	return 0
 
 
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).

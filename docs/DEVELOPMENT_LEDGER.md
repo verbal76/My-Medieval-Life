@@ -11,21 +11,21 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 71 |
+| APPROVED — NOT STARTED | 68 |
 | ACTIVE DEVELOPMENT | 8 |
-| PARTIALLY IMPLEMENTED | 30 |
+| PARTIALLY IMPLEMENTED | 31 |
 | IMPLEMENTED — TESTING REQUIRED | 12 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 160 |
+| COMPLETE AND VERIFIED | 162 |
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **372** |
-| Outstanding (not complete, superseded or canceled) | 192 |
+| Outstanding (not complete, superseded or canceled) | 190 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 49 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 40 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 50 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 40 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -40,15 +40,15 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 54 | 51 |
-| Build 16: long-term equilibrium and validation | 27 | 26 |
+| Build 16: long-term equilibrium and validation | 25 | 24 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 58 | 16 |
+| Waiting on an owner decision | 59 | 16 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **265** | **192** |
+| **Total open** | **264** | **190** |
 
 ### Build 15: simulation stabilization (54)
 
@@ -109,17 +109,15 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (27)
+### Build 16: long-term equilibrium and validation (25)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B7-015 | Missed meals while food piles up | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | B7-016 | Tanners/goods merchants end at 0 coins | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
-| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED |  | rules in core/, not UI: a code audit before the expansions build on it |
+| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | PARTIALLY IMPLEMENTED |  | rules in core/, not UI: a code audit before the expansions build on it |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | approved | ACTIVE DEVELOPMENT |  | money supply re-measured over 100/365 days on several seeds (EQ-06) |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | approved | APPROVED — NOT STARTED |  | player-disruption tests: exploits and no player-only perks (EQ-05) |
-| DVW-A7 | Over-production from raising skills by use (:32) | approved | APPROVED — NOT STARTED |  | over-production from skill gains: an equilibrium risk to measure |
-| DVW-A8 | Audit player-only perks vs same rules (:33) | approved | APPROVED — NOT STARTED |  | player-disruption tests: exploits and no player-only perks (EQ-05) |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
 | EQ-01 | Human civilization sustains itself without the player | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | approved | PARTIALLY IMPLEMENTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
@@ -286,7 +284,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (58)
+### Waiting on an owner decision (59)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -324,6 +322,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OD-04 | Owner decisions: chest and lock questions | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-07 | Owner decision: hunting in Gather mode | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | decision | APPROVED — NOT STARTED |  |  |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
@@ -409,7 +408,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (71)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -418,10 +417,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B14-11 | Animal Farm pack: the horse and farm animals | owner message 2026-10-19; horse role decided by the owner 2026-10-19: a plough horse bought from the visiting caravan | `a91b8f1`, `f9fb853` |  | implement the caravan's plough horse |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | docs/directives/2026-10-19_courtship_friendship.md |  | after CRT-01; after MP-01 |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
-| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 249) |  |  |  |
-| DVW-A7 | Over-production from raising skills by use (:32) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 251) |  |  |  |
-| DVW-A8 | Audit player-only perks vs same rules (:33) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 252) |  |  |  |
 | DVW-A9 | Player can always escape predators/bandits (:34) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 253) |  |  |  |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 274) |  |  |  |
 | DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 275) |  |  |  |
@@ -498,7 +494,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (30)
+## PARTIALLY IMPLEMENTED (31)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -507,6 +503,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
 | CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd |  | friends vote with the player once elections exist |
+| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md | `b15208a` | after WR-01 |  |
@@ -629,7 +626,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (160)
+## COMPLETE AND VERIFIED (162)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -717,6 +714,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246) | run_tests.gd test_dated_backups; start_test.gd save safety case 4b |  |  |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248) | economy_sim.gd 3-day seed 1 output |  |  |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250) | game/tests/conservation_test.gd (8 checks); economy_sim 10-day seed 1 fingerprint eeabb2a8 unchanged after the census refactor |  |  |
+| DVW-A7 | Over-production from raising skills by use (:32) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 251) | world_test.gd _player_gain |  |  |
+| DVW-A8 | Audit player-only perks vs same rules (:33) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 252) |  |  |  |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | long-sims run 39385942656; local 365-day runs seeds 1 and 2 (fingerprint f1a34dd0 matches); branch staging/my-medieval-life | after B14R-12 | owner answer to OD-16; then 365-day Actions runs on both seeds |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | `af60f94`; game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | WR-01 agent report 2026-10-19 (also in the unchanged baseline) | long-sims run 39368663150; world_test.gd hammer conservation |  |  |
@@ -831,7 +830,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 40, status BLOCKED) (49)
+## Owner decisions, open and answered (open: 40, status BLOCKED) (50)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -853,6 +852,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | BLOCKED | agent, 2026-10-20, verifying B7-008 (docs/release/BUILD_7_ISSUES.md B7-008; World.player_sell) |
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | COMPLETE AND VERIFIED | agent, 2026-10-20, docs/release/LONG_RUN_SIMULATION.md 'Why seed 1 builds no house' |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | BLOCKED | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
+| OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | APPROVED — NOT STARTED | docs/release/BUILD_16_AUDITS.md |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |

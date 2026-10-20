@@ -489,6 +489,7 @@ func _pl_gameplay() -> void:
 	_pl2_001()
 	_pl2_004()
 	_pl2_011()
+	_player_gain()
 	_pl2_006()
 	_pl2_007()
 
@@ -581,6 +582,23 @@ func _pl2_004() -> void:
 	check(w.loot.size() == n0 - 1, "PL2-004: a carcass spoils after %d days, a dead person's belongings stay" % int(World.ANIMAL_LOOT_DAYS))
 	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
 	w.loot.clear()
+	main._sync_loot()
+
+
+## DVW-A7: the player's own work is counted for the goods ledger, and a full pack sets it down, never loses it.
+func _player_gain() -> void:
+	var w: World = main.world
+	var p := w.player
+	var inv0 := p.inv
+	var mined0 := float(w.stats.get("mined_iron_ore", 0.0))
+	p.inv = Inventory.new()
+	check(w.player_gain("iron_ore", 2, "mined_") == 2 and p.inv.count("iron_ore") == 2, "DVW-A7: mined ore goes into the pack")
+	check(float(w.stats.get("mined_iron_ore", 0.0)) - mined0 == 2.0, "DVW-A7: the player's mining is counted (mined_)")
+	p.inv.max_stacks = 1
+	var loot0 := w.loot.size()
+	check(w.player_gain("log", 3, "felled_") == 0 and w.loot.size() == loot0 + 1 and (w.loot[-1].inv as Inventory).count("log") == 3, "DVW-A7: what a full pack cannot hold is set down, not lost")
+	w.loot.remove_at(w.loot.size() - 1)
+	p.inv = inv0
 	main._sync_loot()
 
 
