@@ -2507,6 +2507,52 @@
    "roadmap_reason": "the 365-day failures (housing, births, population) under correction now"
   },
   {
+   "id": "B16-AUDIT",
+   "title": "Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "I want to know exactly where Build 16 stands, what's finished, what's left, what's blocking completion, and how much work we've added to its original scope.",
+   "description": "Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md)",
+   "source": "owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work)",
+   "approval": "owner instruction 2026-10-20",
+   "acceptance": [
+    "docs/BUILD_16_STATUS.md: every Build 16 item with status, implementation, remaining work, evidence, blockers, owner input, and whether it blocks completion; open owner decisions; completion criteria; execution plan; executive summary; kept current as work completes"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner instruction 2026-10-20",
+   "b16_class": "required",
+   "complexity": "S"
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
@@ -3219,7 +3265,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner)"
+   "roadmap_reason": "missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner)",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "B7-016",
@@ -3264,7 +3312,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner)"
+   "roadmap_reason": "missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner)",
+   "b16_class": "verify",
+   "complexity": "M"
   },
   {
    "id": "B7-017",
@@ -6543,7 +6593,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "rules in core/, not UI: a code audit before the expansions build on it"
+   "roadmap_reason": "rules in core/, not UI: a code audit before the expansions build on it",
+   "b16_class": "deferral",
+   "complexity": "L"
   },
   {
    "id": "DVW-A13",
@@ -6748,7 +6800,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "money supply re-measured over 100/365 days on several seeds (EQ-06)"
+   "roadmap_reason": "money supply re-measured over 100/365 days on several seeds (EQ-06)",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "DVW-A4",
@@ -6843,7 +6897,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "player-disruption tests: exploits and no player-only perks (EQ-05)"
+   "roadmap_reason": "player-disruption tests: exploits and no player-only perks (EQ-05)",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "DVW-A6",
@@ -6948,7 +7004,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "over-production from skill gains: an equilibrium risk to measure"
+   "roadmap_reason": "over-production from skill gains: an equilibrium risk to measure",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "DVW-A8",
@@ -6998,7 +7056,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "player-disruption tests: exploits and no player-only perks (EQ-05)"
+   "roadmap_reason": "player-disruption tests: exploits and no player-only perks (EQ-05)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "DVW-A9",
@@ -7503,7 +7563,9 @@
    "acceptance_derived": true,
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "wildlife wandering in from the overworld: recolonization (EQ-02)"
+   "roadmap_reason": "wildlife wandering in from the overworld: recolonization (EQ-02)",
+   "b16_class": "deferral",
+   "complexity": "L"
   },
   {
    "id": "DVW-B7",
@@ -8077,7 +8139,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs",
+   "b16_class": "verify",
+   "complexity": "L"
   },
   {
    "id": "EQ-02",
@@ -8135,7 +8199,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs",
+   "b16_class": "verify",
+   "complexity": "M"
   },
   {
    "id": "EQ-03",
@@ -8185,7 +8251,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "EQ-04",
@@ -8239,7 +8307,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs",
+   "b16_class": "verify",
+   "complexity": "M"
   },
   {
    "id": "EQ-05",
@@ -8293,7 +8363,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "EQ-06",
@@ -8353,7 +8425,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "EQ-07",
@@ -8585,7 +8659,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17)"
+   "roadmap_reason": "a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17)",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "EQ-10",
@@ -8699,7 +8775,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs",
+   "b16_class": "required",
+   "complexity": "L"
   },
   {
    "id": "EQ-17",
@@ -9499,7 +9577,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "a new mechanic; Build 16 is long-term equilibrium across generations, and Build 15 must not be delayed"
+   "roadmap_reason": "a new mechanic; Build 16 is long-term equilibrium across generations, and Build 15 must not be delayed",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FAM-03",
@@ -9558,7 +9638,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "needs a kinship-distance function (today Life.kin covers parents and siblings only)"
+   "roadmap_reason": "needs a kinship-distance function (today Life.kin covers parents and siblings only)",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FAM-04",
@@ -9610,7 +9692,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "with FAM-02"
+   "roadmap_reason": "with FAM-02",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FAM-05",
@@ -9662,7 +9746,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "with FAM-02; uses the HOUSE-* goal"
+   "roadmap_reason": "with FAM-02; uses the HOUSE-* goal",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FAM-06",
@@ -9713,7 +9799,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "with FAM-02..05"
+   "roadmap_reason": "with FAM-02..05",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FAM-07",
@@ -9789,7 +9877,9 @@
     }
    ],
    "target_build": "16",
-   "roadmap_reason": "with FAM-02/03 (Build 16); full integration with bandit factions follows WDR-016-C (Build 20+)"
+   "roadmap_reason": "with FAM-02/03 (Build 16); full integration with bandit factions follows WDR-016-C (Build 20+)",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FAM-08",
@@ -9878,7 +9968,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "FARM-02",
@@ -9922,7 +10014,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "L"
   },
   {
    "id": "FARM-03",
@@ -9966,7 +10060,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "L"
   },
   {
    "id": "FARM-04",
@@ -10010,7 +10106,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "FARM-05",
@@ -10054,7 +10152,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "L"
   },
   {
    "id": "FARM-06",
@@ -10098,7 +10198,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "FARM-07",
@@ -10142,7 +10244,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "FR-01",
@@ -10708,13 +10812,15 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "required",
+   "complexity": "XL"
   },
   {
    "id": "FSE-01",
    "title": "Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "For each answer, identify the relevant code or data, current behavior, limitations, and missing functionality. Distinguish verified implementation from planned features.",
    "description": "Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -10722,11 +10828,13 @@
    "acceptance": [
     "Every section 2 question answered with code references and run evidence in docs/design/FOOD_SECURITY_AUDIT.md"
    ],
-   "implementation": "",
+   "implementation": "docs/design/FOOD_SECURITY_AUDIT.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "ee589c7"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -10748,17 +10856,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit ee589c7; implementation",
+     "why": "Delivered in docs/design/FOOD_SECURITY_AUDIT.md (sections 1-8); FSE-07's questions were answered by the owner as OD-22..24"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-02",
    "title": "Food sustainability calculation: food and productive land per villager, household and village",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Show the formulas and assumptions. ... Also estimate the effect of poor harvests, insufficient labor, and seasonal shortages.",
    "description": "Food sustainability calculation: food and productive land per villager, household and village",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -10766,11 +10881,13 @@
    "acceptance": [
     "Formulas in game units, with seed, spoilage, labor and seasons; poor-harvest and labor-shortage estimates"
    ],
-   "implementation": "",
+   "implementation": "docs/design/FOOD_SECURITY_AUDIT.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "ee589c7"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -10792,17 +10909,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit ee589c7; implementation",
+     "why": "Delivered in docs/design/FOOD_SECURITY_AUDIT.md (sections 1-8); FSE-07's questions were answered by the owner as OD-22..24"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-03",
    "title": "Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -10810,11 +10934,13 @@
    "acceptance": [
     "Each gap named with what exists and what is missing"
    ],
-   "implementation": "",
+   "implementation": "docs/design/FOOD_SECURITY_AUDIT.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "ee589c7"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -10836,17 +10962,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit ee589c7; implementation",
+     "why": "Delivered in docs/design/FOOD_SECURITY_AUDIT.md (sections 1-8); FSE-07's questions were answered by the owner as OD-22..24"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-04",
    "title": "Cross-system dependency map for the food and living economy",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Cross-system dependency map for the food and living economy",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -10854,11 +10987,13 @@
    "acceptance": [
     "Connections to skills, inventory, land, households, markets, labor, wildlife and financial planning mapped to existing INT entries or proposed ones"
    ],
-   "implementation": "",
+   "implementation": "docs/design/FOOD_SECURITY_AUDIT.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "ee589c7"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -10880,17 +11015,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit ee589c7; implementation",
+     "why": "Delivered in docs/design/FOOD_SECURITY_AUDIT.md (sections 1-8); FSE-07's questions were answered by the owner as OD-22..24"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-05",
    "title": "Implementation roadmap: Build 16 foundations vs the living-economy build",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Do not disguise new feature development as a bug fix. Do not rush a complete agriculture, husbandry, land-rental, or market-stall system into Build 16",
    "description": "Implementation roadmap: Build 16 foundations vs the living-economy build",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -10898,11 +11040,13 @@
    "acceptance": [
     "Every finding classified A/B/C/D; C items small and safe; D planned as a coherent subsequent build in docs/EXPANSION_ROADMAP.md"
    ],
-   "implementation": "",
+   "implementation": "docs/design/FOOD_SECURITY_AUDIT.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "ee589c7"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -10924,17 +11068,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit ee589c7; implementation",
+     "why": "Delivered in docs/design/FOOD_SECURITY_AUDIT.md (sections 1-8); FSE-07's questions were answered by the owner as OD-22..24"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-06",
    "title": "Testing strategy for the food and living economy",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Testing strategy for the food and living economy",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -10942,11 +11093,13 @@
    "acceptance": [
     "How mechanics are proven correct and economic consequences shown to emerge (WDR-022: outcomes measured, not pass/fail)"
    ],
-   "implementation": "",
+   "implementation": "docs/design/FOOD_SECURITY_AUDIT.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "ee589c7"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -10968,17 +11121,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit ee589c7; implementation",
+     "why": "Delivered in docs/design/FOOD_SECURITY_AUDIT.md (sections 1-8); FSE-07's questions were answered by the owner as OD-22..24"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-07",
    "title": "Unresolved owner questions arising from the food-security directive",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Unresolved owner questions arising from the food-security directive",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -10986,11 +11146,13 @@
    "acceptance": [
     "Only questions the directive does not answer, each with options and a recommendation"
    ],
-   "implementation": "",
+   "implementation": "docs/design/FOOD_SECURITY_AUDIT.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "ee589c7"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -11012,17 +11174,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit ee589c7; implementation",
+     "why": "Delivered in docs/design/FOOD_SECURITY_AUDIT.md (sections 1-8); FSE-07's questions were answered by the owner as OD-22..24"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-08",
    "title": "The directive's 25 deterministic tests (section 17)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "The directive's 25 deterministic tests (section 17)",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -11056,17 +11225,24 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "The 25 tests are mapped (docs/design/FOOD_SECURITY_AUDIT.md section 7); the tests for implemented systems exist in part (reserve_test, world_test::_fse_defects); the rest follow their features"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "FSE-09",
    "title": "Build 16 food-security defects and foundations (classes B and C)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Build 16 food-security defects and foundations (classes B and C)",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -11100,11 +11276,18 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: the directive's audit and Build 16 foundations (section 18)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "Defects fixed: tab, relief order, relief sources, food valuation, eating and cooking parity, B05, B07-B10, TIME-04; open: B06, B11, B12"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16"
+   "roadmap_reason": "section 18: audit first, then only defects and small foundations in Build 16",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "FSE-10",
@@ -11156,7 +11339,7 @@
    "id": "FSE-11",
    "title": "Village sowing consumes seed (seed consumption correction)",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "SUPERSEDED",
    "owner_wording": "Seeds must have a legitimate source and be consumed during planting. Farmers must not sow without sufficient seed. Seed reserves for future planting should influence household and farm decisions.",
    "description": "Village sowing consumes seed (seed consumption correction)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -11181,7 +11364,7 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "FARM-06",
    "notes": "",
    "history": [
     {
@@ -11198,17 +11381,24 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> BLOCKED; blockers",
      "why": "Seed per sowing depends on the shared model (OD-22): per cell or per field"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> SUPERSEDED; superseded_by",
+     "why": "Covered by FARM-06 (OD-23: manor farms get no free seed; village sowing takes real seed), the owner's later decision"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task",
+   "b16_class": "superseded",
+   "complexity": ""
   },
   {
    "id": "FSE-12",
    "title": "One agricultural model for player and village farming (parity)",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": "Establish a shared underlying agricultural model for player and NPC farming. Do not arbitrarily increase village yields or decrease player yields just to make the numbers match.",
    "description": "One agricultural model for player and village farming (parity)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -11250,11 +11440,18 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> BLOCKED; blockers",
      "why": "Investigated: the difference is the land abstraction (a flat 60 a field against 3 a cell), not labour or seed; the shared model waits on OD-22"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> APPROVED — NOT STARTED; blockers",
+     "why": "OD-22 settles family farms on the established (player's per-cell) mechanics (FARM-03); whether the manor's six fields also move to the per-cell model is reported to the owner as a remaining question"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task",
+   "b16_class": "required",
+   "complexity": "L"
   },
   {
    "id": "FSE-13",
@@ -11301,7 +11498,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "FSE-14",
@@ -11345,7 +11544,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "FSE-15",
@@ -11393,7 +11594,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "FSE-16",
@@ -11447,7 +11650,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FSE-17",
@@ -11500,7 +11705,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner instruction 2026-10-20, after the seed-2 starvation findings"
+   "roadmap_reason": "owner instruction 2026-10-20, after the seed-2 starvation findings",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FSE-18",
@@ -11554,7 +11761,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner instruction 2026-10-20"
+   "roadmap_reason": "owner instruction 2026-10-20",
+   "b16_class": "verify",
+   "complexity": "S"
   },
   {
    "id": "FSE-B05",
@@ -11605,7 +11814,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-B06",
@@ -11649,7 +11860,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "blocker",
+   "complexity": "M"
   },
   {
    "id": "FSE-B07",
@@ -11700,7 +11913,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-B08",
@@ -11751,7 +11966,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-B09",
@@ -11802,7 +12019,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-B10",
@@ -11853,7 +12072,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "FSE-B11",
@@ -11897,7 +12118,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "blocker",
+   "complexity": "S"
   },
   {
    "id": "FSE-B12",
@@ -11941,7 +12164,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)",
+   "b16_class": "blocker",
+   "complexity": "S"
   },
   {
    "id": "GM-01",
@@ -14405,7 +14630,9 @@
    "target_build": "16",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "Build 16 equilibrium needs houses to keep being built; the run evidence shows stone is the limit",
-   "owner_answer": "Owner, 2026-10-18 (docs/DECISIONS.md, Build 7 economy corrections approved): 'stone added to the caravan from a defined outside source at real prices and quantities.'"
+   "owner_answer": "Owner, 2026-10-18 (docs/DECISIONS.md, Build 7 economy corrections approved): 'stone added to the caravan from a defined outside source at real prices and quantities.'",
+   "b16_class": "superseded",
+   "complexity": ""
   },
   {
    "id": "OD-11",
@@ -14455,7 +14682,9 @@
    "target_build": "16",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "FAM-02 edge case; the directive asks for an explicit decision rather than a guess",
-   "owner_answer": "OD-11 — APPROVED: Unplaced orphans join the bandit clan. Guardianship order: 1. Surviving parent. 2. Living grandparents. 3. Nearest eligible blood relative. 4. Another villager's household willing and able to take the child. If no suitable household can take the child, the child joins the bandit clan. This is the intended fallback, not an indefinite temporary-care state and not a formal orphanage or adoption process. Preserve the child's identity, age, genealogy, and existing relationships. Joining the bandit clan does not instantly make a child an adult or grant adult combat abilities. Integrate this with the planned bandit-faction system. If bandit clans are not yet implemented, document the dependency and create a safe interim handling mechanism without inventing a fully functioning bandit system inside Build 15. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
+   "owner_answer": "OD-11 — APPROVED: Unplaced orphans join the bandit clan. Guardianship order: 1. Surviving parent. 2. Living grandparents. 3. Nearest eligible blood relative. 4. Another villager's household willing and able to take the child. If no suitable household can take the child, the child joins the bandit clan. This is the intended fallback, not an indefinite temporary-care state and not a formal orphanage or adoption process. Preserve the child's identity, age, genealogy, and existing relationships. Joining the bandit clan does not instantly make a child an adult or grant adult combat abilities. Integrate this with the planned bandit-faction system. If bandit clans are not yet implemented, document the dependency and create a safe interim handling mechanism without inventing a fully functioning bandit system inside Build 15. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "OD-12",
@@ -14505,7 +14734,9 @@
    "target_build": "16",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "FAM-03 tie-break; the directive asks that it be preserved as an open question",
-   "owner_answer": "OD-12 — APPROVED: Choose the best-suited equally close relative. When multiple eligible blood relatives are equally close, prioritize: 1. Ability to provide care. 2. Available household capacity. 3. Access to food and necessities. 4. Existing relationship with the child. 5. Geographic proximity. Use a deterministic tie-breaker when candidates remain equal. Blood relationship determines the order of consideration. Practical suitability determines the preferred guardian among equally close relatives. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
+   "owner_answer": "OD-12 — APPROVED: Choose the best-suited equally close relative. When multiple eligible blood relatives are equally close, prioritize: 1. Ability to provide care. 2. Available household capacity. 3. Access to food and necessities. 4. Existing relationship with the child. 5. Geographic proximity. Use a deterministic tie-breaker when candidates remain equal. Blood relationship determines the order of consideration. Practical suitability determines the preferred guardian among equally close relatives. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "OD-13",
@@ -14769,7 +15000,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "design wording only; nothing in Build 15 depends on it"
+   "roadmap_reason": "design wording only; nothing in Build 15 depends on it",
+   "b16_class": "owner",
+   "complexity": ""
   },
   {
    "id": "OD-18",
@@ -17085,7 +17318,7 @@
    "id": "PAR-00",
    "title": "The player is a villager: one set of world rules for player and villagers",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "THE PLAYER IS A VILLAGER. The player is not a special entity operating under different economic, crafting, skill, health, or world-awareness rules. The only fundamental difference is decision-making control. Implement these decisions through shared underlying systems wherever practical.",
    "description": "The player is a villager: one set of world rules for player and villagers",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -17120,9 +17353,16 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "PAR-01..05 complete; parity gaps since found are open: the hearth's recipes (FSE-B11), hunting experience (FSE-B12), farming (FARM-03), stalls (STALL-06)"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "PAR-01",
@@ -17178,7 +17418,9 @@
      "why": "Shared skills for the player and villagers; clarified by the final directive (PAR-01A..C); parity_test 42 checks; 26 suites pass; gate re-baselined"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-01A",
@@ -17227,7 +17469,9 @@
      "why": "Implemented with PAR-01; parity_test checks it; 26 suites pass"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-01B",
@@ -17274,7 +17518,9 @@
      "why": "Implemented with PAR-01; parity_test checks it; 26 suites pass"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-01C",
@@ -17322,7 +17568,9 @@
      "why": "Implemented with PAR-01; parity_test checks it; 26 suites pass"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-02",
@@ -17386,7 +17634,9 @@
      "why": "One rule for every purchase, now OD-19's dynamic reserve (PAR-02A)"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-02A",
@@ -17441,7 +17691,9 @@
      "why": "All 27 Godot suites pass with it (out of the 27a3560 tree); reserve_test's nine scenarios pass"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-03",
@@ -17490,7 +17742,9 @@
      "why": "World.rest_recover, the player's model, used by the player's rest and every villager rest step (rest_end); a hurt villager rests by day; 25 suites pass; gate unchanged"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-04",
@@ -17541,7 +17795,9 @@
      "why": "The eleven recipes have makers through World.work_craft, for a buyer only (INT-157); check_materials shows no player-only recipe; parity_test test_eleven_recipes; all 26 suites passed on this code with PAR-05's rework in the project copy; affected suites rerun here"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PAR-05",
@@ -17600,7 +17856,9 @@
      "why": "Reworked per the final directive: no hearing; guards learn of an attack by sight or by a report from the victim or a witness (World.report_crime, NPCBrain._report), the same for the player and bandits; all 26 suites passed on this exact code (project copy); theft's 2026-10-18 cry stays pending OD-20"
     }
    ],
-   "target_build": "16"
+   "target_build": "16",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "PERF-01",
@@ -19705,7 +19963,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "orphans and adoption: households surviving the loss of a provider (EQ-04)"
+   "roadmap_reason": "orphans and adoption: households surviving the loss of a provider (EQ-04)",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "REC-002",
@@ -21542,7 +21802,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "the judgment system's Gate A is the Build 16 baseline itself"
+   "roadmap_reason": "the judgment system's Gate A is the Build 16 baseline itself",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "SJD-B",
@@ -22657,7 +22919,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "L"
   },
   {
    "id": "STALL-02",
@@ -22701,7 +22965,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "STALL-03",
@@ -22745,7 +23011,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "STALL-04",
@@ -22789,7 +23057,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "STALL-05",
@@ -22833,7 +23103,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "STALL-06",
@@ -22877,7 +23149,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20",
+   "b16_class": "required",
+   "complexity": "L"
   },
   {
    "id": "TIME-01",
@@ -22934,7 +23208,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review"
+   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "TIME-02",
@@ -22980,7 +23256,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review"
+   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "TIME-03",
@@ -23026,7 +23304,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review"
+   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review",
+   "b16_class": "optional",
+   "complexity": "S"
   },
   {
    "id": "TIME-04",
@@ -23077,7 +23357,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
-   "roadmap_reason": "a parity defect found by the OD-21 audit"
+   "roadmap_reason": "a parity defect found by the OD-21 audit",
+   "b16_class": "done",
+   "complexity": ""
   },
   {
    "id": "VP-01",
@@ -23578,7 +23860,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "living-world independence is the Build 16 objective"
+   "roadmap_reason": "living-world independence is the Build 16 objective",
+   "b16_class": "verify",
+   "complexity": "M"
   },
   {
    "id": "WDR-006",
@@ -24933,7 +25217,9 @@
    ],
    "target_build": "16",
    "roadmap_gate": "",
-   "roadmap_reason": "nature sustainability (EQ-02)"
+   "roadmap_reason": "nature sustainability (EQ-02)",
+   "b16_class": "verify",
+   "complexity": "S"
   }
  ]
 }

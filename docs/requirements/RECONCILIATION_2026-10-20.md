@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 143 (87 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **301** = 214 still open from the baseline + 87 added and open |
+| Entries added since | | 144 (80 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **294** = 214 still open from the baseline + 80 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,10 +44,11 @@ None.
 
 None.
 
-## Added since the baseline (143)
+## Added since the baseline (144)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
+| B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | 16 |
 | EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | COMPLETE AND VERIFIED | 15 |
 | EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | approved | COMPLETE AND VERIFIED | 15 |
 | EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | approved | COMPLETE AND VERIFIED | 15 |
@@ -71,18 +72,18 @@ None.
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | APPROVED — NOT STARTED | 16 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | APPROVED — NOT STARTED | 16 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
-| FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | APPROVED — NOT STARTED | 16 |
-| FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | APPROVED — NOT STARTED | 16 |
-| FSE-03 | Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior | approved | APPROVED — NOT STARTED | 16 |
-| FSE-04 | Cross-system dependency map for the food and living economy | approved | APPROVED — NOT STARTED | 16 |
-| FSE-05 | Implementation roadmap: Build 16 foundations vs the living-economy build | approved | APPROVED — NOT STARTED | 16 |
-| FSE-06 | Testing strategy for the food and living economy | approved | APPROVED — NOT STARTED | 16 |
-| FSE-07 | Unresolved owner questions arising from the food-security directive | approved | APPROVED — NOT STARTED | 16 |
-| FSE-08 | The directive's 25 deterministic tests (section 17) | approved | APPROVED — NOT STARTED | 16 |
-| FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | APPROVED — NOT STARTED | 16 |
+| FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-03 | Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-04 | Cross-system dependency map for the food and living economy | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-05 | Implementation roadmap: Build 16 foundations vs the living-economy build | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-06 | Testing strategy for the food and living economy | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-07 | Unresolved owner questions arising from the food-security directive | approved | COMPLETE AND VERIFIED | 16 |
+| FSE-08 | The directive's 25 deterministic tests (section 17) | approved | PARTIALLY IMPLEMENTED | 16 |
+| FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision |
-| FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | BLOCKED | 16 |
-| FSE-12 | One agricultural model for player and village farming (parity) | approved | BLOCKED | 16 |
+| FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | SUPERSEDED | 16 |
+| FSE-12 | One agricultural model for player and village farming (parity) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | 16 |
@@ -153,7 +154,7 @@ None.
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | decision | BLOCKED | owner decision |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT | 15 |
-| PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED | 16 |
+| PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | PARTIALLY IMPLEMENTED | 16 |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-01A | Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-01B | Career changes neither grant nor reset experience | approved | COMPLETE AND VERIFIED | 16 |

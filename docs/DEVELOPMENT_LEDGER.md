@@ -11,19 +11,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 97 |
-| ACTIVE DEVELOPMENT | 9 |
-| PARTIALLY IMPLEMENTED | 33 |
+| APPROVED — NOT STARTED | 88 |
+| ACTIVE DEVELOPMENT | 10 |
+| PARTIALLY IMPLEMENTED | 36 |
 | IMPLEMENTED — TESTING REQUIRED | 16 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
-| BLOCKED | 16 |
+| BLOCKED | 14 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 179 |
-| SUPERSEDED | 20 |
+| COMPLETE AND VERIFIED | 186 |
+| SUPERSEDED | 21 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **425** |
-| Outstanding (not complete, superseded or canceled) | 226 |
+| **Total approved** | **426** |
+| Outstanding (not complete, superseded or canceled) | 219 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 56 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 62 | 60 |
+| Build 16: long-term equilibrium and validation | 55 | 53 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 61 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **301** | **226** |
+| **Total open** | **294** | **219** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,10 +107,11 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (62)
+### Build 16: long-term equilibrium and validation (55)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
+| B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | owner instruction 2026-10-20 |
 | B7-015 | Missed meals while food piles up | approved | IMPLEMENTED — TESTING REQUIRED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | B7-016 | Tanners/goods merchants end at 0 coins | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | PARTIALLY IMPLEMENTED |  | rules in core/, not UI: a code audit before the expansions build on it |
@@ -139,17 +140,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-03 | Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-04 | Cross-system dependency map for the food and living economy | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-05 | Implementation roadmap: Build 16 foundations vs the living-economy build | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-06 | Testing strategy for the food and living economy | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-07 | Unresolved owner questions arising from the food-security directive | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-08 | The directive's 25 deterministic tests (section 17) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | BLOCKED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
-| FSE-12 | One agricultural model for player and village farming (parity) | approved | BLOCKED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-08 | The directive's 25 deterministic tests (section 17) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
+| FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
+| FSE-12 | One agricultural model for player and village farming (parity) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
@@ -160,7 +153,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
 | FSE-B12 | Hunting experience by one rule for the player and villagers | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
-| PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED |  |  |
+| PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | PARTIALLY IMPLEMENTED |  |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
@@ -445,7 +438,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (97)
+## APPROVED — NOT STARTED (88)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -481,16 +474,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  |  |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
-| FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-03 | Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-04 | Cross-system dependency map for the food and living economy | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-05 | Implementation roadmap: Build 16 foundations vs the living-economy build | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-06 | Testing strategy for the food and living economy | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-07 | Unresolved owner questions arising from the food-security directive | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-08 | The directive's 25 deterministic tests (section 17) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
-| FSE-09 | Build 16 food-security defects and foundations (classes B and C) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
+| FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-16 |  |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-12 |  |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | docs/directives/2026-10-20_agricultural_findings_followup.md |  |  |  |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-11; after FSE-12; after FSE-13 |  |
@@ -513,7 +498,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-D |  |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-E |  |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
-| PAR-00 | The player is a villager: one set of world rules for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -547,10 +531,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (9)
+## ACTIVE DEVELOPMENT (10)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
+| B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work) |  |  |  |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
@@ -561,7 +546,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (33)
+## PARTIALLY IMPLEMENTED (36)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -576,10 +561,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md | `b15208a` | after WR-01 |  |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md | economy_sim.gd scenarios; world_test.gd | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
+| FSE-08 | The directive's 25 deterministic tests (section 17) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
+| FSE-09 | Build 16 food-security defects and foundations (classes B and C) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |
 | OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | docs/DECISIONS.md (audit inventory row 344) |  | after MP-01; after DGA-D1; after DGA-D9 |  |
+| PAR-00 | The player is a villager: one set of world rules for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
 | PL1-07 | NPCs sunk into beds/chairs | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 144) |  |  |  |
 | PL1-10 | Player businesses, staged (1-4) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 147) |  |  |  |
 | PL1-12 | Red flowering plant not pickable | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 149) |  |  | Add tile 2656 to overworld flowers with the next overworld generator version (with B14-09) |
@@ -664,7 +652,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | device check of wiki navigation on touch and controller |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
 
-## BLOCKED (16)
+## BLOCKED (14)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -677,8 +665,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner request 2026-10-19 (DEVELOPMENT_LEDGER ENV-RTK) |  | owner: environment setup script |  |
 | FR-01 | Lizards and spiders as enemies | owner 2026-10-18 ('good enemies'; docs/DECISIONS.md) |  | no lizard or spider pack supplied |  |
 | FR-08 | Music and sound | BUILD_7_ISSUES F-3 |  | no audio supplied |  |
-| FSE-11 | Village sowing consumes seed (seed consumption correction) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-16 |  |
-| FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-16 |  |
 | PL1-11 | Google Drive cloud saves (staged) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 148) |  |  |  |
 | Q-08 | Resource depletion and wildlife sustainability | docs/DEVELOPMENT_QUEUE.md (audit inventory row 224) |  | owner decision OD-01 |  |
 | Q-10 | Hot Attic Games read-only registry | docs/DEVELOPMENT_QUEUE.md (audit inventory row 226) |  |  |  |
@@ -699,7 +685,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (179)
+## COMPLETE AND VERIFIED (186)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -801,6 +787,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FR-05 | Title window opens scrolled into the controls list | docs/release/BUILD_13_PACKET.md | `ec3bd0e`; start_test |  |  |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md | wiki_test.gd; run_tests.gd 3535 checks |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit | tests.yml 'Short economy simulation (FR-07)', run 39368652711 |  |  |
+| FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
+| FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
+| FSE-03 | Gap analysis: agriculture, husbandry, hunting, rental, commerce and AI behavior | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
+| FSE-04 | Cross-system dependency map for the food and living economy | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
+| FSE-05 | Implementation roadmap: Build 16 foundations vs the living-economy build | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
+| FSE-06 | Testing strategy for the food and living economy | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
+| FSE-07 | Unresolved owner questions arising from the food-security directive | docs/directives/2026-10-20_food_security_goal_driven_economy.md | `ee589c7` |  |  |
 | FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
 | FSE-B07 | Villagers can sell flowers to the Apothecary | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
 | FSE-B08 | A hunt cut short releases its claim on the animal | docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B) | `a946ba1`; world_test |  |  |
@@ -883,7 +876,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-006-C | Comply with World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | check_interactions (CI) |  |  |
 | WDR-007-C | Comply with World Design Rule 7: Automated Compliance | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | `fdc30a5`; tests/test_check_materials.py |  |  |
 
-## SUPERSEDED (20)
+## SUPERSEDED (21)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -897,6 +890,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B8R-006 | Where to cook raw meat | docs/release/BUILD_8_ISSUES.md (audit inventory row 79) |  | superseded by FR-03 |  |
 | F-2 | Births, children, aging, family growth | docs/release/BUILD_7_ISSUES.md (audit inventory row 63) |  | superseded by B8-029 |  |
 | F-3 | Music and sound | docs/release/BUILD_7_ISSUES.md (audit inventory row 64) |  | superseded by FR-08 |  |
+| FSE-11 | Village sowing consumes seed (seed consumption correction) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-16; superseded by FARM-06 |  |
 | K-3 | Every provisional number awaits the owner's balance review | docs/release/BUILD_7_ISSUES.md (audit inventory row 61) |  | superseded by OD-02 |  |
 | OWN-12 | Build 7 corrections; "Not approved yet (investigate first)": mining wage 15+, 15-coin reserve on player sales, deposit regeneration, wildlife respawn, broad changes | docs/DECISIONS.md (audit inventory row 328) |  | superseded by OD-01 |  |
 | OWN-17 | Provisional numbers await a separate balance review | docs/DECISIONS.md (audit inventory row 333) |  | superseded by OD-02 |  |
