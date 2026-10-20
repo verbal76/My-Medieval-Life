@@ -11,8 +11,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 82 |
-| ACTIVE DEVELOPMENT | 10 |
+| APPROVED — NOT STARTED | 83 |
+| ACTIVE DEVELOPMENT | 11 |
 | PARTIALLY IMPLEMENTED | 33 |
 | IMPLEMENTED — TESTING REQUIRED | 13 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **399** |
-| Outstanding (not complete, superseded or canceled) | 207 |
+| **Total approved** | **401** |
+| Outstanding (not complete, superseded or canceled) | 209 |
 
-Also in the register: 31 proposal awaiting an owner decision (not approved), 52 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 53 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 42 | 41 |
+| Build 16: long-term equilibrium and validation | 45 | 43 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 61 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **281** | **207** |
+| **Total open** | **284** | **209** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,7 +107,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (42)
+### Build 16: long-term equilibrium and validation (45)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -151,6 +151,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED |  |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
+| TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
+| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
+| TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | IMPLEMENTED — TESTING REQUIRED |  | nature sustainability (EQ-02) |
 
@@ -425,7 +428,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (82)
+## APPROVED — NOT STARTED (83)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -507,12 +510,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-E |  |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-F |  |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-G |  |
+| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | docs/directives/2026-10-20_od21_time_model.md |  | after TIME-01 |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (10)
+## ACTIVE DEVELOPMENT (11)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -525,6 +529,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
+| TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | docs/directives/2026-10-20_od21_time_model.md |  |  |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
 ## PARTIALLY IMPLEMENTED (33)
@@ -874,7 +879,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (52)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (53)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -899,6 +904,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | COMPLETE AND VERIFIED | docs/release/BUILD_16_AUDITS.md |
 | OD-19 | PAR-02: the universal coin-reserve threshold | COMPLETE AND VERIFIED | docs/directives/2026-10-20_par_final_consolidated_directive.md |
 | OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | APPROVED — NOT STARTED | docs/directives/2026-10-20_par_final_consolidated_directive.md |
+| OD-21 | Explicit time model and calendar consistency (approved architectural decision) | COMPLETE AND VERIFIED | docs/directives/2026-10-20_od21_time_model.md |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
@@ -958,7 +964,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | COMPLETE AND VERIFIED | docs/directives/2026-10-20_final_development_mandate.md sections 1-4, 11, 12 (text in docs/WORLD_DESIGN_RULES.md) |
 
-## Proposal awaiting an owner decision (not approved) (31)
+## Proposal awaiting an owner decision (not approved) (32)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -993,6 +999,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | BLOCKED | docs/DECISIONS.md (audit inventory row 318) |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | BLOCKED | docs/DECISIONS.md (audit inventory row 345) |
 | Q-11 | Design gap assessment, phased sequence | BLOCKED | docs/DEVELOPMENT_QUEUE.md (audit inventory row 227) |
+| TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | APPROVED — NOT STARTED | docs/directives/2026-10-20_od21_time_model.md |
 
 ## Unapproved idea (1)
 

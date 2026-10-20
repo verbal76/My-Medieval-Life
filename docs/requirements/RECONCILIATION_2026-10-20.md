@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 112 (67 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **281** = 214 still open from the baseline + 67 added and open |
+| Entries added since | | 116 (70 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **284** = 214 still open from the baseline + 70 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,7 +44,7 @@ None.
 
 None.
 
-## Added since the baseline (112)
+## Added since the baseline (116)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -115,6 +115,7 @@ None.
 | OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-19 | PAR-02: the universal coin-reserve threshold | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | decision | APPROVED — NOT STARTED | owner decision |
+| OD-21 | Explicit time model and calendar consistency (approved architectural decision) | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |
@@ -156,6 +157,9 @@ None.
 | PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | approved | APPROVED — NOT STARTED | 20+ |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | ACTIVE DEVELOPMENT | 15 |
+| TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | ACTIVE DEVELOPMENT | 16 |
+| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | APPROVED — NOT STARTED | 16 |
+| TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | APPROVED — NOT STARTED | 16 |
 | WDR-020 | World Design Rule 20: Autonomous Housing | rule | COMPLETE AND VERIFIED |  |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |

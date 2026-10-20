@@ -14089,6 +14089,51 @@
    "target_build": "owner decision"
   },
   {
+   "id": "OD-21",
+   "title": "Explicit time model and calendar consistency (approved architectural decision)",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Keep the existing eight-game-day year and four two-day seasons. ... The game may compress years into days, but every system must know which kind of time it is measuring.",
+   "description": "Explicit time model and calendar consistency (approved architectural decision)",
+   "source": "docs/directives/2026-10-20_od21_time_model.md",
+   "approval": "owner decision 2026-10-20: Option A approved with clarification",
+   "acceptance": [
+    "The owner chose Option A (keep the 8-day year; make each timed value's meaning explicit; retune only with owner review)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od21_time_model.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "owner_answer; target_build; roadmap_gate; roadmap_reason",
+     "why": "owner answer recorded"
+    }
+   ],
+   "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od21_time_model.md): Option A. Keep 24 h days, 8-day years, four 2-day seasons; classify every timed system as operational, economic or calendar time (classifications, not clocks); express calendar values in years or seasons through a shared conversion layer; no third clock; no retuning that materially affects the village without owner review.",
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "answered by the owner 2026-10-20"
+  },
+  {
    "id": "OD-LE-01",
    "title": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
    "kind": "decision",
@@ -21593,6 +21638,143 @@
    "target_build": "19",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+  },
+  {
+   "id": "TIME-01",
+   "title": "Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity",
+   "source": "docs/directives/2026-10-20_od21_time_model.md",
+   "approval": "owner decision 2026-10-20: Option A approved with clarification",
+   "acceptance": [
+    "docs/design/TIME_MODEL.md lists every timed value with the seven fields of OD-21 section 3",
+    "Findings grouped as section 8 asks: consistent, ambiguous, genuine defects, balance concerns, recommended retuning with consequences, dependencies"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-21",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od21_time_model.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: OD-21"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review"
+  },
+  {
+   "id": "TIME-02",
+   "title": "Explicit time units in configuration and code; one shared conversion layer (no third clock)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Explicit time units in configuration and code; one shared conversion layer (no third clock)",
+   "source": "docs/directives/2026-10-20_od21_time_model.md",
+   "approval": "owner decision 2026-10-20: Option A approved with clarification",
+   "acceptance": [
+    "Calendar-dependent values read through shared conversion functions (Life) in years or seasons; operational values stay in hours or days; behaviour identical at year_days 8 (the determinism gate unchanged); a test that calendar values scale with year_days and operational ones do not"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-21",
+   "depends_on": [
+    "TIME-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od21_time_model.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: OD-21"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review"
+  },
+  {
+   "id": "TIME-03",
+   "title": "Recommended time retuning (outliers): proposals only, owner review before any change",
+   "kind": "proposal",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Recommended time retuning (outliers): proposals only, owner review before any change",
+   "source": "docs/directives/2026-10-20_od21_time_model.md",
+   "approval": "owner decision 2026-10-20: Option A approved with clarification",
+   "acceptance": [
+    "Each outlier of OD-21 section 4 with a recommendation and its expected consequences; nothing changed without the owner"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-21",
+   "depends_on": [
+    "TIME-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od21_time_model.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: OD-21"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review"
   },
   {
    "id": "VP-01",
