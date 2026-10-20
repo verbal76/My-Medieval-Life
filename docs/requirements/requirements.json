@@ -6562,7 +6562,7 @@
    "id": "DVW-A14",
    "title": "Play one whole life before each release (:39)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Play one whole life before each release (:39)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258)",
@@ -6570,7 +6570,7 @@
    "acceptance": [
     "As recorded in the source document; evidence named in implementation and tests"
    ],
-   "implementation": "Owner/tester checklist line | Not in TESTING_CHECKLIST.md | NOT-STARTED",
+   "implementation": "docs/release/TESTING_CHECKLIST.md item 8; BUILD_15_TESTER_NOTES.md",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -6581,7 +6581,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "the owner's or a tester's play-through on Build 15",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -6596,6 +6596,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; implementation; next_action",
+     "why": "the whole-life play-through is item 8 of docs/release/TESTING_CHECKLIST.md and in the Build 15 tester notes; done by the owner or a tester on each release"
     }
    ],
    "acceptance_derived": true,
@@ -6607,7 +6612,7 @@
    "id": "DVW-A2",
    "title": "Rotate several dated save backups, not one `.bak` (:27)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Rotate several dated save backups, not one `.bak` (:27)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246)",
@@ -6615,7 +6620,7 @@
    "acceptance": [
     "As recorded in the source document; evidence named in implementation and tests"
    ],
-   "implementation": "Plan: agent rotate 3 backups; \"after carts\" (:87) | `save_store.gd:16,49-85` still keeps one `.bak` (plus a transient `.bak.old` during the write) | NOT-STARTED",
+   "implementation": "game/scripts/core/save_store.gd DATED_KEEP, dated_backups, _keep_dated; main.gd Continue falls back to them",
    "tests": "run_tests.gd test_dated_backups; start_test.gd save safety case 4b",
    "playtest": [],
    "branch": "",
@@ -6646,6 +6651,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "SaveStore keeps the previous save under each day's date (three days, oldest dropped) besides .bak; Continue falls back to the newest readable one; verified when CI passes on staging"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; implementation",
+     "why": "three dated backups and the Continue fallback are in save_store.gd and main.gd; tests pass at af60f94"
     }
    ],
    "acceptance_derived": true,
@@ -6807,7 +6817,7 @@
    "id": "DVW-A6",
    "title": "Coins and goods conserved across save/load and tier transitions (:31)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Coins and goods conserved across save/load and tier transitions (:31)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250)",
@@ -6815,7 +6825,7 @@
    "acceptance": [
     "As recorded in the source document; evidence named in implementation and tests"
    ],
-   "implementation": "\"save round trips are not\" tested | Partial: `run_tests.gd:2547,2644,2689,3127`, `start_test.gd:1355` check `total_coins` across load; no goods-across-load or tier-transition test found | PARTIAL (undocumented)",
+   "implementation": "game/tests/conservation_test.gd",
    "tests": "game/tests/conservation_test.gd (8 checks); economy_sim 10-day seed 1 fingerprint eeabb2a8 unchanged after the census refactor",
    "playtest": [],
    "branch": "",
@@ -6846,6 +6856,11 @@
      "date": "2026-10-20",
      "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "conservation_test.gd: after two days on both tiers, a JSON save round trip keeps every coin, good (the economy_sim census, now shared in census.gd), deposit, animal and villager; a day after loading the currency balances. Verified when CI passes on staging"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; implementation",
+     "why": "conservation_test.gd checks coins, goods, deposits, animals and villagers across a save round trip on both simulation tiers; passes at af60f94; a Build 14 save also loads, plays, re-saves and reloads with coins unchanged"
     }
    ],
    "acceptance_derived": true,
@@ -13900,7 +13915,7 @@
    "id": "PERF-06",
    "title": "Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated)",
    "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
@@ -13909,7 +13924,7 @@
     "A written evaluation of what a resumed run would need to reproduce exactly (world state, RNG state, transient brain state) and its risks",
     "No implementation before the owner sees the evaluation"
    ],
-   "implementation": "",
+   "implementation": "docs/release/SIMULATION_PERFORMANCE.md section 4",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -13920,7 +13935,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "implementation only if the owner asks after reading the evaluation",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -13935,6 +13950,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; implementation; next_action",
+     "why": "the evaluation the owner asked for is written (docs/release/SIMULATION_PERFORMANCE.md section 4); nothing implemented, as directed"
     }
    ],
    "target_build": "15",
@@ -19337,7 +19357,7 @@
    "id": "WDR-008-C",
    "title": "Comply with World Design Rule 8: Player Knowledge and Wiki",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
    "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
@@ -19361,7 +19381,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "FR-06 pages; device checks",
+   "next_action": "device check of wiki navigation on touch and controller",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -19376,6 +19396,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; next_action",
+     "why": "FR-06's six pages added; the wiki is generated from game data with search and categories (PL2-009) and its tests pass; touch and controller navigation remain for the device check"
     }
    ],
    "target_build": "15",
@@ -19540,7 +19565,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Device playtest; cart route feedback",
+   "next_action": "device playtest (phone, controller); cart-route feedback when carts gain collision (SKIPPED_ITEMS, Build 16)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -19555,6 +19580,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "the cart-route feedback part is deferred in docs/SKIPPED_ITEMS.md (carts have no collision, so no route is ever obstructed); device playtests remain"
     }
    ],
    "target_build": "15",

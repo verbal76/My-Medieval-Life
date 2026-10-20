@@ -13,3 +13,4 @@ Every entry keeps its register id (`docs/requirements/requirements.json`); the r
 
 | Build | Id | Description | Severity | Reason for deferral | Affected functionality | Workaround | Recommended correction | Reconsider at | Resolution |
 |---|---|---|---|---|---|---|---|---|---|
+| 15 | WDR-010-C | Rule 010's example "obstructed cart routes should show useful feedback": no feedback exists | Low (presentation) | A pulled cart follows its puller at a fixed trail distance without collision (`Carts.update`), so a cart route is never obstructed and there is nothing yet to explain; giving carts collision is a gameplay change that needs its own design. The rule's other parts are met (sword reach and timing readable, CQ-01; wiki guides). The device playtests stay open as `playtest` | Cart handling only | None needed: carts never stick | When carts gain collision or route planning, show why a route is blocked and where | Build 16 (or when carts are next changed) | Open |

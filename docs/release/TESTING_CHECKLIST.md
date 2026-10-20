@@ -31,6 +31,9 @@ goods with **Trade with …**. The journal's Quests page says who buys what.
 7. **Inventory.** **Pack** (or **I**): tabs for food, materials, tools, weapons and armour, plus
    Skills and Journal; six gear slots (head, amulet, body, hand, tool, ring). Pick an item to eat,
    wear, take off or drop. Helmets, rings and an amulet are made at the workbench and anvil.
+8. **A whole life** (before each release, DVW-A14). Play one character from the start: find work,
+   befriend and court someone, marry, set up a household and a home, and carry on as their heir.
+   Note where the life stalled or felt empty.
 
 **Please report:** anything cut off on your screen, controls that do nothing, prices that feel
 wrong (all are provisional), and where you got stuck.

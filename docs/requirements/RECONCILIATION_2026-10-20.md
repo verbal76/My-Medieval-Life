@@ -7,19 +7,21 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 222 still open, 9 closed since |
+| Open entries (rules excluded) | 231 | 220 still open, 11 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 49 (23 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **245** = 222 still open from the baseline + 23 added and open |
+| Entries added since | | 49 (22 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **242** = 220 still open from the baseline + 22 added and open |
 | Open entries moved to another build | | 0 |
 
-## Closed since the baseline (9)
+## Closed since the baseline (11)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
 | B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: docs/assets/SPRITE_NEEDS.md lists 53 missing or weak sprites found in the code (3 characters, 10 animals, 18 items and icons, 10 buildings and stations, 5 terrain and props, 2 effects, 5 UI), each with where it is used, what stands in now, why it is weak and the size needed; tools/assets/sprite_package.py builds a pixel-grid copy and a real-size Aseprite file for each into out/sprite_package.zip (107 files); grid copies looked at |
+| DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: three dated backups and the Continue fallback are in save_store.gd and main.gd; tests pass at af60f94 |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
+| DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: conservation_test.gd checks coins, goods, deposits, animals and villagers across a save round trip on both simulation tiers; passes at af60f94; a Build 14 save also loads, plays, re-saves and reloads with coins unchanged |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | approved | ACTIVE DEVELOPMENT | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: acceptance met: causes determined and recorded (LONG_RUN_SIMULATION.md: housing deadlock, goals and saving, couples, the forge, founders, tools, family help, timber, the trade stall); corrected not concealed: population 111 and 128 at day 365 (from 100), every wild species alive, houses finished on both seeds (8 and 2; 0 on seed 1 before); re-run on two seeds for 365 days (Actions run 39385942656 and local runs, identical fingerprints). The remaining economic stall and seed 2's 4 starvation deaths are EQ-01/EQ-06 (Build 16), with OD-16 |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | approved | IMPLEMENTED — TESTING REQUIRED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: acceptance met by the named tests (all 24 suites pass at af60f94) and the 365-day runs on 59057ac (Actions 39385942656: houses built on both seeds, 0 script errors, ledger balanced) |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Actions run 39368663150 on 0ee0218: 365 days, seeds 1 and 2, LEAKS currency 0, items {} (axe, hammer, pickaxe, herbal_poultice all balance) |
@@ -78,7 +80,7 @@ None.
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-05 | Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially | approved | COMPLETE AND VERIFIED | 15 |
-| PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | approved | APPROVED — NOT STARTED | 15 |
+| PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | approved | COMPLETE AND VERIFIED | 15 |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | approved | APPROVED — NOT STARTED | 20+ |
