@@ -184,7 +184,7 @@ func _eat(a: Animal, gm := 60.0) -> void:
 	if a.wild():
 		match a.diet():
 			"graze":
-				if grazers(a.area) <= graze_capacity(a.area):
+				if _may_graze(a):
 					a.hunger = 100.0
 			"seeds":
 				a.hunger = 100.0                       # birds pick seeds anywhere in the wood
@@ -375,6 +375,30 @@ func _bite(a: Animal, foe: Vector2) -> void:
 ## Wild animals a wood can feed: one per `graze_cells_per_animal` open cells.
 func graze_capacity(area: String) -> int:
 	return cells(area).size() / int(GameData.b("graze_cells_per_animal"))
+
+
+## Whether a grazer finds grass (WR-02): all do while the wood is within its capacity; over it, only as many
+## as the wood can feed, the strongest and best fed first, so the weakest and hungriest go short rather than
+## the whole herd at once (ties by id, deterministic).
+func _may_graze(a: Animal) -> bool:
+	var cap := graze_capacity(a.area)
+	var herd := []
+	for b: Animal in animals:
+		if b.alive and b.area == a.area and b.diet() == "graze":
+			herd.append(b)
+	if herd.size() <= cap:
+		return true
+	var ahead := 0
+	var mine := [a.hp / maxf(1.0, float(a.spec().hp)), a.hunger, -a.id]
+	for b: Animal in herd:
+		if b == a:
+			continue
+		var theirs := [b.hp / maxf(1.0, float(b.spec().hp)), b.hunger, -b.id]
+		if theirs > mine:
+			ahead += 1
+			if ahead >= cap:
+				return false
+	return true
 
 
 func grazers(area: String) -> int:

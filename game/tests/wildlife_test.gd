@@ -32,6 +32,7 @@ func _init() -> void:
 	test_save()
 	test_days()
 	test_sprites()
+	test_grazing_over_capacity()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -279,3 +280,34 @@ func test_sprites() -> void:
 	check(hs.flip_h and [10, 11, 12].has(hs.frame), "horse standing sideways grazes (frame %d)" % hs.frame)
 	art_of.erase("skin_art")
 	hs.free()
+
+
+## WR-02: a wood over its grass capacity feeds as many grazers as it can, the strongest and best fed
+## first; the weakest and hungriest go short, not the whole herd at once.
+func test_grazing_over_capacity() -> void:
+	var w := new_world()
+	var f := w.fauna
+	var cap := f.graze_capacity("woods_w")
+	var herd: Array = f.animals.filter(func(a): return a.alive and a.area == "woods_w" and a.diet() == "graze")
+	var proto: Animal = herd[0]
+	while herd.size() < cap + 3:                     # three more than the grass can feed
+		herd.append(f.spawn("woods_w", proto.species, "f", null))
+	herd = f.animals.filter(func(a): return a.alive and a.area == "woods_w" and a.diet() == "graze")
+	for a: Animal in herd:
+		a.hp = float(a.spec().hp)
+		a.hunger = 20.0
+	var weak: Animal = herd[0]
+	weak.hp = 1.0
+	var ate := 0
+	for a: Animal in herd:
+		if f._may_graze(a):
+			ate += 1
+	check(ate == cap, "over capacity, exactly as many graze as the wood feeds (%d of %d, capacity %d)" % [ate, herd.size(), cap])
+	check(not f._may_graze(weak), "the weakest is among those who go short")
+	var strong: Animal = herd[1]
+	strong.hunger = 90.0
+	check(f._may_graze(strong), "a strong, well-fed grazer still finds grass")
+	for i in 3:                                      # back within capacity: all graze
+		f.remove(herd[herd.size() - 1 - i])
+	herd = f.animals.filter(func(a): return a.alive and a.area == "woods_w" and a.diet() == "graze")
+	check(herd.size() <= cap and herd.all(func(a): return f._may_graze(a)), "within capacity every grazer finds grass")

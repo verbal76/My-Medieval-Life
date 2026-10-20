@@ -20213,7 +20213,7 @@
    "id": "WR-02",
    "title": "Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together",
    "source": "WR-01 agent report 2026-10-19",
@@ -20222,7 +20222,7 @@
     "Over capacity, the weakest or hungriest suffer first rather than the whole herd at once"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/wildlife_test.gd test_grazing_over_capacity",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -20234,7 +20234,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "lead",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -20242,6 +20242,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "WR-01 agent report 2026-10-19"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; workstream",
+     "why": "Fauna._may_graze: over a wood's grass capacity only as many grazers eat as it feeds, ranked strongest (health share), then best fed, then id; the weakest and hungriest go short. wildlife_test test_grazing_over_capacity; a long run to confirm no herd-wide starvation"
     }
    ],
    "target_build": "16",
