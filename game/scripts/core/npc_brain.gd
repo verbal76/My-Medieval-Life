@@ -739,25 +739,33 @@ func _plan_eat(n: NPC) -> bool:
 		n.doing = "eating"
 		n.plan = [work(10, "eat", {}, "idle")]
 		return true
-	var payer := n
-	if n.coins < 2 and n.household >= 0:
-		payer = _richest_in_household(n)     # the family's tab at the tavern, for anyone without coin
-	if payer != null and payer.coins >= 2:
-		var v := _vendor_with_food(n)
-		if v:
+	# who pays is decided at the price asked (B7-015: a fixed 2-coin test sent people with 2 coins to a vendor whose
+	# cheapest meal cost 3 to 5, again and again until they starved, while the household's tab could have paid)
+	var payer: NPC = null
+	var priced := false                    # food was on sale to someone
+	var v := _vendor_with_food(n)
+	if v:
+		priced = true
+		payer = _payer_for(n, _cheapest_meal(v))      # the family's tab at the tavern, for anyone without the coin
+		if payer != null:
 			n.doing = "buying a meal" if payer == n else "eating on the family's tab"
 			n.plan = [go(_workplace_cell(v)), doit("buy_food", {"vendor": v.id, "pantry": false, "payer": payer.id}), work(10, "eat", {}, "idle")]
 			return true
-	if payer != null and payer.coins >= 3:
-		for o: NPC in w.npcs:
-			if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
+	for o: NPC in w.npcs:
+		if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
+			priced = true
+			payer = _payer_for(n, w.sell_price(o, "wheat") * 2)
+			if payer != null:
 				n.doing = "buying grain for porridge"
 				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": 2, "payer": payer.id}),
 						] + _home_meal(n)
 				return true
-	w.stat("missed_meal_" + ("no_money" if payer == null or payer.coins < 2 else "no_food_for_sale"))
+			break
+	var why := "no_money" if priced else "no_food_for_sale"
+	w.stat("missed_meal_" + why)
 	if track_misses:
-		miss_log.append([w.day(), snappedf(w.hour(), 0.1), n.job if n.job != "" else n.role, "no_money" if payer == null or payer.coins < 2 else "no_food_for_sale", payer.coins if payer else 0, n.household, n.coins, n.hunger, w.households[n.household].pantry.items.duplicate() if n.household >= 0 else {}, n.doing])
+		var best := _richest_in_household(n) if n.household >= 0 else n
+		miss_log.append([w.day(), snappedf(w.hour(), 0.1), n.job if n.job != "" else n.role, why, best.coins if best else n.coins, n.household, n.coins, n.hunger, w.households[n.household].pantry.items.duplicate() if n.household >= 0 else {}, n.doing])
 	once("hungry_%d_%d" % [n.id, w.day()], "%s %s is hungry and cannot get food." % [n.name, n.family])
 	return false
 
@@ -863,6 +871,26 @@ func _manor_id() -> String:
 
 ## Who pays on the family tab: the member with the most coins who can buy, an elder as well as an
 ## adult (a household's cash feeds all of it, as the manor's relief assumes).
+## Who pays `price` for `n`'s food: `n` when they have it, else the household member with the most coins when they have
+## it (the family's tab), else nobody.
+func _payer_for(n: NPC, price: int) -> NPC:
+	if n.coins >= price:
+		return n
+	if n.household < 0:
+		return null
+	var best := _richest_in_household(n)
+	return best if best != null and best.coins >= price else null
+
+
+## The cheapest cooked meal `v` has on sale, at its asking price (what _meal_choice can buy at the least).
+func _cheapest_meal(v: NPC) -> int:
+	var low := 1 << 30
+	for f in COOKED:
+		if v.inv.has(f):
+			low = mini(low, w.sell_price(v, f))
+	return low
+
+
 func _richest_in_household(n: NPC) -> NPC:
 	var best: NPC = null
 	for m in w.households[n.household].members:
@@ -2379,13 +2407,18 @@ func _public_works(obligations: float) -> int:
 ## Food relief into household pantries. Returns how many households were helped.
 func _relief(obligations: float, reserve: float) -> int:
 	var helped := 0
+	# the hungriest first (B7-015: helped in the order of their number, a household with no food at all waited behind
+	# others still holding most of two days, and went without when the food for sale ran out before its turn)
+	var order := []
 	for h in w.households.size():
-		var members := _members(h)
-		if members.is_empty():
-			continue
-		var days := household_food_days(h)
-		if days >= float(GameData.b("relief_trigger_days")):
-			continue
+		if not _members(h).is_empty():
+			var d := household_food_days(h)
+			if d < float(GameData.b("relief_trigger_days")):
+				order.append([d, h])
+	order.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))
+	for e in order:
+		var h: int = e[1]
+		var days: float = e[0]
 		# relief already on its way is awaited; under a day of food it is brought at once
 		if w.manor_work.pending_for(h) > 0:
 			if days < 1.0:

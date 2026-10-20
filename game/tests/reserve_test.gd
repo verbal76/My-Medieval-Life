@@ -40,6 +40,75 @@ func bare(w: World, n: NPC) -> void:
 			inv.items.erase(id)
 
 
+## B7-015 (the seed-2 starvation, FSE-16): who pays for a hungry villager's meal is decided at the price asked, and the
+## manor's relief reaches the hungriest household first.
+func tab_and_relief(w: World, fam: NPC) -> void:
+	var rich: NPC = null
+	for m: NPC in members(w, fam):
+		if m != fam and m.role in ["adult", "elder"]:
+			rich = m
+	var v: NPC = w.brain._vendor_with_food(fam)
+	check(rich != null and v != null, "tab: a household member to pay, and food on sale")
+	if rich == null or v == null:
+		return
+	bare(w, fam)
+	for m: NPC in members(w, fam):
+		m.coins = 0
+	# the vendor's cheap food gone: its cheapest meal costs more than 2 coins (the old fixed test's figure)
+	for id in ["pottage", "ale", "bread", "cheese"]:
+		v.inv.items.erase(id)
+	v.inv.add("roast_meat", 3)
+	var meal := 1 << 30
+	for f in NPCBrain.COOKED:
+		if v.inv.has(f):
+			meal = mini(meal, w.sell_price(v, f))
+	fam.coins = 2
+	rich.coins = meal * 10
+	fam.hunger = 10.0
+	var planned: bool = w.brain._plan_eat(fam)
+	check(meal > 2 and planned and fam.doing == "eating on the family's tab", "tab: with %d coins for a %d-coin meal, the family's tab pays (%s)" % [fam.coins, meal, fam.doing])
+	rich.coins = 0
+	for o: NPC in w.npcs:
+		if o.alive and (o.job == "farmer" or w.brain.buy_role(o) == "merchant_food"):
+			o.inv.items.erase("wheat")
+	var missed0: float = w.stats.get("missed_meal_no_money", 0.0)
+	fam.plan = []
+	check(not w.brain._plan_eat(fam) and float(w.stats.get("missed_meal_no_money", 0.0)) == missed0 + 1.0,
+		"tab: with 2 coins and nobody to pay the rest: no trip to the vendor, a meal missed for want of money")
+	# relief: two households under the trigger and food for only one; the one with nothing gets it
+	var a: int = -1
+	var b: int = -1
+	for h in w.households.size():
+		if h != fam.household and not w.brain._members(h).is_empty():
+			if a == -1:
+				a = h
+			elif b == -1 and h > a:
+				b = h
+	for h in w.households.size():
+		for m: NPC in w.brain._members(h):
+			m.coins = 0
+			for id in NPCBrain.FOOD:
+				m.inv.items.erase(id)
+		var p: Inventory = w.households[h].pantry
+		for id in NPCBrain.FOOD:
+			p.items.erase(id)
+		if h != a and h != b:
+			p.add("pottage", 200)
+	w.households[a].pantry.add("pottage", ceili(1.5 * w.brain.household_day_food(a) / 40.0))
+	w.granary.items.erase("wheat")
+	for o: NPC in w.npcs:
+		for id in ["wheat", "pottage"]:
+			o.inv.items.erase(id)
+	var farmer: NPC = w.npcs.filter(func(o): return o.alive and o.job == "farmer")[0]
+	farmer.inv.add("wheat", w.brain.keep_wheat(farmer) + 1)
+	var da: float = w.brain.household_food_days(a)
+	var db: float = w.brain.household_food_days(b)
+	w.treasury = 100000
+	w.brain._relief(w.brain.daily_obligations(), 0.0)
+	check(a < b and da > db and db < 1.0 and w.households[b].pantry.count("wheat") == 1 and w.households[a].pantry.count("wheat") == 0 and w.manor_work.pending_for(a) == 0,
+		"relief: with one unit for sale, the household with nothing (hh%d, %.2f days) gets it before hh%d (%.2f days)" % [b, db, a, da])
+
+
 func scenarios(w: World) -> void:
 	var fam: NPC = null
 	for n: NPC in w.npcs:
@@ -168,6 +237,7 @@ func scenarios(w: World) -> void:
 	var days3: float = w.brain.household_food_days(fam.household)
 	check(days3 > 0.0 and days3 <= 3.0 * float(unit[1]) / maxf(1.0, w.brain.household_day_food(fam.household)) + 0.001, "relief: coins count for the food they can buy (%.2f days)" % days3)
 	fam.coins = 0
+	tab_and_relief(w, fam)
 	# determinism: the same world, the same reserves
 	var w2 := World.new()
 	w2.setup(VillageMap.load_default(), 1)

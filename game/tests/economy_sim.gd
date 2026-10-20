@@ -200,8 +200,49 @@ func _watch(d: int, hr: int) -> void:
 		print("WATCH HH d%d h%d hh%d %s pantry=%s fd=%.2f trig=%s pend=%d relief_days=%s unit=%s granary=%d treas=%d mkt=%.0f | %s" % [d, hr, h, str(hh.get("family", "")),
 			str((hh.pantry as Inventory).items), fd, str(fd < float(GameData.b("relief_trigger_days"))), w.manor_work.pending_for(h), str(hh.get("relief_days", [])),
 			str(w.cheapest_food_unit()), w.granary.count("wheat"), w.treasury, w.brain.market_food_points, " ".join(ms)])
+	if hr == 16 or hr == 17:
+		_watch_relief(d, hr)
 	w._price_cache = pc
 	w._reserve_cache = rc
+
+
+var watch_relief_before := {}      # hh -> relief_days size at 16:00, to see whom the 17:00 relief helped
+
+
+## --watch-from: the manor's evening relief (World runs reeve_day at 17:00). At 16:00: the households under the relief
+## trigger, the granary, the treasury, and every seller relief could buy from (wheat surplus or pottage); at 17:00: the
+## households it helped, in order, and what it spent.
+func _watch_relief(d: int, hr: int) -> void:
+	if hr == 16:
+		var qual := []
+		for h in w.households.size():
+			watch_relief_before[h] = (w.households[h].get("relief_days", []) as Array).size()
+			if not w.brain._members(h).is_empty():
+				var fd: float = w.brain.household_food_days(h)
+				if fd < float(GameData.b("relief_trigger_days")):
+					qual.append("hh%d:%.2f" % [h, fd])
+		var sellers := []
+		for o: NPC in w.npcs:
+			if o.alive and (o.job == "farmer" or w.brain.buy_role(o) == "merchant_food") and w.brain.surplus_wheat(o) > 0:
+				sellers.append("%s(%s) wheat+%d" % [o.name, o.job, w.brain.surplus_wheat(o)])
+			elif o.alive and (o.job == "tavernkeeper" or w.brain.buy_role(o) == "merchant_food") and o.inv.has("pottage"):
+				sellers.append("%s(%s) pottage %d" % [o.name, o.job, o.inv.count("pottage")])
+		print("WATCH RELIEF-PRE d%d qualifying=%s granary=%d treasury=%d obligations=%.0f sellers=%s" % [d, " ".join(qual), w.granary.count("wheat"),
+			w.treasury, w.brain.daily_obligations(), str(sellers)])
+		watch_relief_spent = float(w.stats.get("gov_relief_bought", 0.0))
+		watch_relief_grain = float(w.stats.get("gov_relief_grain", 0.0))
+	else:
+		var helped := []
+		for h in w.households.size():
+			if (w.households[h].get("relief_days", []) as Array).size() > int(watch_relief_before.get(h, 0)) or \
+					(not (w.households[h].get("relief_days", []) as Array).is_empty() and int((w.households[h].relief_days as Array)[-1]) == w.day()):
+				helped.append("hh%d" % h)
+		print("WATCH RELIEF-POST d%d helped=%s bought=%.0f grain=%.0f" % [d, " ".join(helped), float(w.stats.get("gov_relief_bought", 0.0)) - watch_relief_spent,
+			float(w.stats.get("gov_relief_grain", 0.0)) - watch_relief_grain])
+
+
+var watch_relief_spent := 0.0
+var watch_relief_grain := 0.0
 
 
 func _on_died(n: NPC) -> void:
