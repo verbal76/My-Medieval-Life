@@ -7,18 +7,19 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 228 still open, 3 closed since |
+| Open entries (rules excluded) | 231 | 227 still open, 4 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 48 (33 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **261** = 228 still open from the baseline + 33 added and open |
+| Entries added since | | 48 (32 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **259** = 227 still open from the baseline + 32 added and open |
 | Open entries moved to another build | | 0 |
 
-## Closed since the baseline (3)
+## Closed since the baseline (4)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
+| EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Actions run 39368663150 on 0ee0218: 365 days, seeds 1 and 2, LEAKS currency 0, items {} (axe, hammer, pickaxe, herbal_poultice all balance) |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: six pages added (game/scripts/core/wiki_topics.gd): Magic: the Fireball; the gold star over an employer; the Journal and the village map; causes of death; the merchant caravan; bandits. Every fact cites code, numbers come from balance data where the code reads them, links from the related pages; wiki_test passes (every link resolves) |
 | FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: CI run 39368652711 on 0ee0218 passed the new step: a 10-day seed-1 simulation with no leak and no script error |
 
@@ -34,7 +35,7 @@ None.
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
-| EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | ACTIVE DEVELOPMENT | 15 |
+| EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | COMPLETE AND VERIFIED | 15 |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | APPROVED — NOT STARTED | 16 |
 | FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | approved | APPROVED — NOT STARTED | 16 |

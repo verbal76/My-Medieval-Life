@@ -25,9 +25,17 @@ are. No file is read automatically because it exists: do these steps, in order, 
 7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
    statuses and evidence and the state file's next tasks; never from memory of a conversation.
 8. **Resume approved development** from the next approved task, without asking the owner to repeat anything
-   already recorded in the register, the decision log or the directives. Never start Builds 17-19, answer an
+   already recorded in the register, the decision log or the directives. Never start Build 19, or Build 17 or 18
+   before the build before it meets every condition of OVN-01 section 4; never answer an
    open owner decision, merge into `main` or `wip/multiplayer` into staging, or publish outside the release
    authorization in force.
+
+**After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
+- Do steps 1-8 before any further decision.
+- The directive in force and its authority are named at the top of `docs/CURRENT_DEVELOPMENT_STATE.md` (now OVN-01: Builds 15 → 16 → 17 → 18 in order, autonomous engineering, private releases as builds qualify).
+- What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
+- Do not repeat completed work, and never restart a simulation or test before checking whether it is still running ("Interrupted or fragile processes" in the state file: GitHub Actions runs, local processes).
+- Compaction is not a reason to stop: continue the next approved task.
 
 At each meaningful checkpoint, and before a session ends, a context handoff or a build: update
 `docs/CURRENT_DEVELOPMENT_STATE.md` and every touched register entry, run

@@ -13,74 +13,53 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 | Last verified remote commit | The head of `origin/staging/my-medieval-life` (`git log origin/staging/my-medieval-life -1`). This file was last brought up to date in the commit `git log -1 -- docs/CURRENT_DEVELOPMENT_STATE.md` shows; anything newer on staging is described in that commit's successors. |
 | `main` | Changes only when the owner merges. |
 | Multiplayer | `wip/multiplayer` (MP-01), isolated. It must not be merged into staging without the owner's explicit approval. |
-| Active build | **Build 15**, simulation stabilization (ROAD-01) |
+| Active build | **Build 15**, simulation stabilization (ROAD-01). **BLOCKED** on owner decision OD-16 (house completion on seed 1); all other Build 15 work continues |
+| Directive in force | OVN-01, `docs/directives/2026-10-20_master_overnight_development_directive.md` (autonomous engineering; Builds 15 → 16 → 17 → 18 strictly in order), with `docs/directives/2026-10-20_compaction_readiness.md` |
 | Last released build | **Build 14**, a private draft from `7dbae4f` (`docs/release/BUILD_14_PACKET.md`) |
-| Release authorization | REL-14-16: Builds 15 and 16 may be released as **private drafts** when the eight conditions hold. No placeholder builds. Public visibility needs new owner approval. |
+| Release authorization | OVN-01 section 9 and REL-15-18: Builds 15 to 18 may be released as **private drafts**, in order, each only when every condition of OVN-01 section 4 holds (REL-14-16 before it). No placeholder builds. Public visibility needs new owner approval. |
 
 Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) hold work that has been merged. They are history. Only `wip/multiplayer` is live.
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-Eleven entries, all named here (the validator checks). The ledger's count of ten is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
+The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 about 08:00 UTC.
 
-- **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
-  - Done so far:
-    - the housing deadlock: households split only when they had more members than beds;
-    - births without a free bed (EQ-08);
-    - founding couples;
-    - start cost (`found_start_share`);
-    - wildlife refuges (WR-01);
-    - courtship pacing (CRT-01..12).
-    - 2026-10-20, under the owner's housing directive (`docs/directives/2026-10-20_housing_succession_adoption.md`): persistent housing goals, a responsible adult per household, saving, living quarters for crowded families, couples of either sex (HOUSE-01..06, FAM-01; investigation in `docs/release/LONG_RUN_SIMULATION.md`, "EQ-07 investigation").
-  - Still open:
-    - crowded families nobody can leave: OD-13 answered by the owner; implemented by HOUSE-08 and HOUSE-09;
-    - the fix10 runs (corrected code) to read;
-    - unemployment climbs after day 40.
-- **EQ-17 (found 2026-10-20, not deferrable):** every long run since the early fixes logged thousands of `SCRIPT ERROR`s from day 90-190 (`World.building_door` on a missing building): a household that loses its house (`Construction._rehouse`) is left with an empty home, and its newborns and members then fail. The harness never failed on them, so earlier "no leak" results did not show it. CI and `long-sims.yml` now fail on any script error. A diagnostic run identifies the exact path; the fix and a 365-day re-run follow. Build 15 cannot complete before this.
-- **EQ-10:** fixed in code (a successor's tools came from nothing; villagers' medicine use was not counted), testing required: a 365-day run must balance.
-- **HOUSE-12:** the sleeping loft, approved by the owner (`docs/directives/2026-10-20_loft_and_actions_approval.md`). Implemented and tested per `docs/design/SLEEPING_LOFT.md` (`housing_test.gd`, 76 checks); its long-run effect is still to be measured.
-- **INFRA-02:** the manual GitHub Actions long-simulation workflow, approved; validated against a local 10-day run before it is relied on.
-- **OVN-01:** the owner's master overnight directive: autonomous engineering, Builds 15 to 18 in order, the build-completion definition (section 4), skipped items in `docs/SKIPPED_ITEMS.md`, and private releases as builds qualify (REL-15-18).
-- **INFRA-01:** long-run reliability after container restarts: answered by INFRA-02 (long runs on GitHub Actions, owner-approved and validated).
-- **PERF-01:** the measured answer to the owner's runtime questions, in `docs/release/SIMULATION_PERFORMANCE.md`. PERF-02..06 (profiling, the determinism gate, optimizations, parallel seeds, a checkpoint evaluation) follow the housing work, without disturbing running simulations.
-- **HOUSE-07:** the EQ-07 investigation, tests (`game/tests/housing_test.gd`) and re-runs. Done: the trace, the root causes, the tests. Remaining: the fix10 100-day results.
-- **EQ-16:** world equilibrium, the Build 16 objective. It closes on the multi-seed 100- and 365-day acceptance runs (EQ-06).
-- **DVW-A3:** re-measure money supply over 100 and 365 days on 2–3 seeds with no player. It shares the EQ runs.
-- **REL-14-16:** release Builds 15 and 16 as private drafts when the conditions hold. Build 14 is done.
-- **ROAD-01:** the owner's five-build roadmap. Every open item carries a `target_build` (the ledger's Roadmap section).
-- **MP-01:** multiplayer on `wip/multiplayer` only, isolated. Nothing is to be done on it without the owner.
+- **EQ-07 / HOUSE-07 (Build 15's blocker):**
+  - Done: population (101 alive at day 365, seed 1) and wildlife (every species alive at day 365) are fixed.
+  - Done: the housing routes of the owner's directive (HOUSE-04: family help, builders' own timber, tools kept from the caravan).
+  - Open: houses. Seed 2 finishes 3 sites in 200 days; seed 1 none, because the village's trade economy stops around day 120-140. The diagnosis is in `docs/release/LONG_RUN_SIMULATION.md`, "Why seed 1 builds no house". Waits on **OD-16**.
+- **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
+- **OVN-01:** the overnight directive in force. **ROAD-01:** the roadmap.
+- **REL-14-16:** superseded in practice by REL-15-18 for Builds 15-18. Build 14 is done.
+- **PERF-01:** the runtime answer. PERF-02..05 are complete (the simulation is about twice as fast, and every change passes the gate). PERF-06 (checkpoint and resume) is evaluation only, done in `docs/release/SIMULATION_PERFORMANCE.md` section 4.
+- **MP-01:** multiplayer on `wip/multiplayer` only. Nothing to do without the owner.
 
-Also: **MEM-01** and **MEM-02** (the two memory directives) are complete: see "Recovery test" below. Keep this file and the index current.
+Closed tonight (2026-10-20), with evidence in the register:
+- EQ-17 and EQ-10, both verified by 365-day Actions runs;
+- FR-07 (CI run 39368652711);
+- DVW-A4, FR-06, PERF-02..05;
+- B7-008 verified, with its buyer half waiting on OD-15.
 
-## Last test results
+Implemented and tested, waiting on a device or a long run: DVW-A2, DVW-A6, FR-04 (a controller), HOUSE-04 (OD-16).
 
-**Suites.** The Python suites and the register validator pass at every commit of 2026-10-20 (run before each push). CI (`.github/workflows/tests.yml`) runs the Godot suites on each staging push; earlier runs are cancelled when a newer push arrives, so check the latest run's result for the head commit. The Godot suites last passed locally at `a203c0b`; the game code has changed since (the EQ-07 housing work), and the full Godot list (22 suites, `housing_test.gd` included) passed locally on 2026-10-20 before the push that carries it:
-- Python: `python3 -m unittest discover -s tests`;
-- the Godot suites in `.github/workflows/tests.yml`, among them `relations_test.gd`, `save_transfer_test.gd`, `refuge_test.gd`, `aging_test.gd` and `start_test.gd`.
+## Last test results (2026-10-20 about 07:50 UTC, staging `d4e2dc4` and later)
 
-**Long runs.** These use `game/tests/economy_sim.gd`; results go in `docs/release/LONG_RUN_SIMULATION.md`. The "fix9" set is the current code with the caravan at 30 coins a day:
-
-| Run | Result |
-|---|---|
-| 100 days, seed 1 | **Finished.** 118 alive (start 100), no starvation, 16 other deaths. Wildlife 81 (54 at the start). Currency leak 0, item leaks 0. Iron, coal, copper and gold gone by day 20; stone 56 of 240 left. 12 courtships. 1 house built. 16 unemployed. |
-| 100 days, seed 2 | **Finished.** 133 alive, no starvation, wildlife 74, leak 0, but only 1 house built, although 3 crowded households could afford one. |
-| 100 days, seeds 1 and 2, fix10 (housing goals only) | **Finished**, recorded in `docs/release/LONG_RUN_SIMULATION.md`: more homes started, still few finished. |
-| 365 days, seeds 1 and 2, fix12 (before bed sharing and the tool fix) | Killed twice by container restarts while the session was idle: at days 120/150 and at days 320/350 (03:03:26). Timing recorded in `docs/release/SIMULATION_PERFORMANCE.md`. |
-| 365 days, seeds 1 and 2, **fix13** | Stopped at day 320/310 on 2026-10-20 03:45: both logs full of script errors from day 140/170 (EQ-17). Not a valid result. Long runs now go to GitHub Actions (INFRA-02); Actions run 39365673620 on `71f0b62` has the same defect. |
-| 365 days, seeds 1 and 2 (fix9, old code) | **Finished** (see the report). Before that: **In progress** (interim figures recorded in `docs/release/LONG_RUN_SIMULATION.md`). Started 2026-10-20 at about 00:30 UTC in `/home/user/My-Medieval-Life/game` on that session's cloud container, writing to `out/eq/fix9_d365_s1` and `fix9_d365_s2` (not committed). Seed 1 at day 190: 125 alive, no starvation, 26 unemployed, **stone 0**, 7 house sites started and 1 finished. Seed 2 at day 160: 137 alive, stone 1, 8 sites started and 1 finished. Expected to end by about 03:30 UTC. **If a later session finds no day-365 result recorded and it is past that time, the run was lost: run it again** ("Interrupted or fragile processes", below). |
-
-**Limits of these results:**
-- The runs have no player.
-- They run headless on a cloud container, not a phone.
-- The scratch outputs in `out/` are not committed. Only the written report in `docs/release/LONG_RUN_SIMULATION.md` is the record.
+- **Godot suites:** all 23 in `.github/workflows/tests.yml` pass locally (`conservation_test.gd` and `housing_test.gd` included, the latter with 95 checks).
+- **Python:** `python3 -m unittest discover -s tests` OK. `tools/check_requirements.py` and `tools/check_interactions.py`: 0 problems.
+- **CI:** green on 0ee0218, e0c6ca7 and 2ef31bd (runs 39368652711, 39370974090, 39372860024). It runs again on each push; check the latest run for the head commit.
+- **Determinism gate** (`python3 tools/sim_gate.py`): PASS against `docs/release/sim_baseline.json` at `59057ac`.
+- **Year-long runs** (GitHub Actions, the record is `docs/release/LONG_RUN_SIMULATION.md`):
+  - run 39368663150 on `0ee0218`: both seeds, 0 script errors, ledger balanced; seed 1 builds no house;
+  - run 39385942656 on `59057ac` (the housing corrections): **in progress** at 08:00 UTC, see below.
+- **Known failures:** none in the tests. The open behaviour defect is EQ-07's seed 1 housing (OD-16).
 
 ## Known defects (open)
 
-- **EQ-09, stone (Build 16):** the mine deposits run out by about day 160–190. The owner's rule of 2026-10-18 (B7-007) brings caravan stone once deposits are low, and it is implemented. The open question is whether that supply keeps pace, which the 365-day results answer. At day 100 the merchants held 80 stone, so stone was not what stalled housing. (OD-10, raised on a misreading of the deposit figure, is withdrawn.) Iron, coal, copper and gold run out by day 10–20.
-- **EQ-10, ledger residuals:** the economy simulation shows axe and hammer ledger residuals of 1–3 from about day 120 in 365-day runs.
+- **EQ-07, seed 1 builds no house:** the trade economy stops around day 120-140. The smith runs out of coins and can no longer buy imported iron, so no axes are made, woodcutters fall from 6 to 1, and there is no timber. About 45 % of coins sit with bandits or as loot nobody picks up. Waits on OD-16.
+- **Hunters' income:** most meat finds no buyer (seed 1: 3,957 made in a year, about 600 sold), and hunters miss most meals for lack of money. Build 16 equilibrium (EQ-01); part of OD-16's question.
+- **Firewood:** households went without firewood on about 63 % of nights in the 0ee0218 run. Same cause.
+- **EQ-09, stone (Build 16):** deposits run out; caravan stone (B7-007) supplies it. Seed 1 ran out of stone for sale by day 195 in the 200-day trace.
 - **WR-02, grazers (Build 16):** grazers starve together.
-- **Housing growth (EQ-07):** one house in 100 days in both seeds on the old code. Root causes are in `docs/release/LONG_RUN_SIMULATION.md` ("EQ-07 investigation"): crowded families nobody can leave (no parcel for quarters, OD-13); no goal or saving; same-sex couples excluded. Corrected except OD-13; the fix10 runs measure it. Unemployment climbs after day 40.
-- **B14R-12, long-run regression:** partly addressed. Wildlife no longer collapses at 100 days; it is still to be confirmed at 365.
 
 ## Hardware checks still required (done, not verified on a device)
 
@@ -117,6 +96,8 @@ Updated 2026-10-20 about 07:40 UTC under the overnight directive (OVN-01): Build
 4. **Build 15 release:** only when every condition of OVN-01 section 4 holds. Seed 1's housing (OD-16) is a non-deferrable core-construction item, so Build 15 is BLOCKED until it is answered and verified. Release as a private draft (REL-15-18) with a readiness packet.
 5. **Then Build 16** (EQ-01..06, FAM-02..07, WR-02, EQ-09 and the rest), Build 17 and Build 18, in order.
 
+Skipped (deferred) items: none. `docs/SKIPPED_ITEMS.md` is empty; nothing was deferred to advance a build.
+
 Done on 2026-10-20 (overnight):
 - EQ-17 fix and the script-error gate;
 - EQ-10 fixes (verified by the 365-day Actions runs);
@@ -141,16 +122,13 @@ Done on 2026-10-20 (overnight):
 
 ## Interrupted or fragile processes
 
-- **Long simulations die on a container restart.** They run only on the machine that started them, and write to that checkout's `out/eq/`. A fresh clone or another machine has no `out/`, so a new session on another machine cannot see them. It treats every run with no result in `docs/release/LONG_RUN_SIMULATION.md` as not done, and runs it again.
-  On the same machine, check with:
-  `ps -eo pid,args | awk '$2=="/opt/godot/godot"'`
-  Then check each process's working directory (`readlink /proc/PID/cwd`) and the last line of its `out/eq/NAME.log`.
-  Restart a run with:
-  `cd game && nohup /opt/godot/godot --headless --script res://tests/economy_sim.gd -- --days N --seed S --every 10 --out ../out/eq/NAME.json > ../out/eq/NAME.log 2>&1 &`
-  100 days take about 30–40 minutes; 365 days take about 2–3 hours.
-- **Never kill with `pkill -f` and a pattern that appears in your own command.** It kills the shell. Match on the process arguments with `awk` as above.
-- **After adding a GDScript `class_name`,** run `godot --headless --path game --import` before the tests.
-- **The off-machine backup** (CLAUDE.md section 5) is occasional. GitHub staging is the day-to-day record, so push completed work.
+- **Running now:** GitHub Actions run 39385942656 (`long-sims.yml`, 365 days, seeds 1 and 2, staging `59057ac`, started 07:21 UTC, about 40 minutes).
+  - It runs on GitHub's runners, so a container restart cannot kill it. Each seed's job uploads `sim.json`, `sim.log` and `summary.json` as an artifact; the proxy blocks artifact downloads, so read the end of each job's log instead.
+  - A self check-in is scheduled for 08:01 UTC to record it.
+  - **If this file still says "in progress" and the run has finished:** record both seeds in `docs/release/LONG_RUN_SIMULATION.md` and the overnight report. Read script errors, LEAKS, alive, houses built and sites finished, woodcutters, unemployed and the fingerprint, then update EQ-07 and HOUSE-04. Do not dispatch it again.
+- **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
+- **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.
+- **Never restart a run because context was compacted:** check Actions (or `ps -eo pid,args | grep godot` locally) first.
 
 ## Recovery test (MEM-01, 2026-10-20)
 

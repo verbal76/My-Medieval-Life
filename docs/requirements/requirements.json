@@ -8507,7 +8507,7 @@
    "id": "EQ-10",
    "title": "Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs",
    "source": "WR-01 agent report 2026-10-19 (also in the unchanged baseline)",
@@ -8516,7 +8516,7 @@
     "Every item balances exactly over 365 days, or the residual is traced to a real cause"
    ],
    "implementation": "",
-   "tests": "world_test.gd: hammer count unchanged through a succession",
+   "tests": "long-sims run 39368663150; world_test.gd hammer conservation",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8541,6 +8541,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; workstream",
      "why": "root causes found: a successor got the trade's tools from nothing (now taken from the heir, or counted as a newcomer's import); villagers' medicine use was not counted as consumption (now used_<id>). A 365-day run must show the ledger balanced"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Actions run 39368663150 on 0ee0218: 365 days, seeds 1 and 2, LEAKS currency 0, items {} (axe, hammer, pickaxe, herbal_poultice all balance)"
     }
    ],
    "target_build": "15",
@@ -8616,7 +8621,7 @@
    "id": "EQ-17",
    "title": "Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors",
    "source": "agent finding 2026-10-20: SCRIPT ERROR counts in out/eq logs (fix2 to fix13), building_door on a missing building",
@@ -8627,7 +8632,7 @@
     "CI and the long-simulation workflow fail on any script error"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "long-sims run 39368663150; housing_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -8652,6 +8657,11 @@
      "date": "2026-10-20",
      "change": "target_build; workstream",
      "why": "target build"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; tests",
+     "why": "Actions run 39368663150 on 0ee0218: 365 days, seeds 1 and 2, 0 script errors (the workflow now fails on any); housing_test test_baby_while_lodging; CI and long-sims gate on script errors"
     }
    ],
    "target_build": "15"

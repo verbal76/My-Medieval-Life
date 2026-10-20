@@ -34,7 +34,10 @@ The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is c
 | Design scopes for later work (upper floors and attics) | `docs/design/UPPER_FLOORS_SCOPE.md` |
 | Simulation performance (runtime, timing, restarts, checkpoint evaluation) | `docs/release/SIMULATION_PERFORMANCE.md` |
 | Skipped (deferred) noncritical items, with severity and reasons | `docs/SKIPPED_ITEMS.md` |
-| The owner's authority split (engineering vs design) and build-completion rules | `docs/directives/2026-10-20_master_overnight_development_directive.md` (sections 2 and 4) |
+| **The directive in force (OVN-01):** autonomous engineering authority, Builds 15 → 16 → 17 → 18 strictly in order, the build-completion definition (section 4), the deferral policy (section 5), private releases as builds qualify (section 9, REL-15-18), the morning report (section 13) | `docs/directives/2026-10-20_master_overnight_development_directive.md`; supplemented by `docs/directives/2026-10-20_compaction_readiness.md` (keep developing through compaction; recover from the repository) |
+| The overnight report to the owner (what was done, verified, blocked) | `docs/release/OVERNIGHT_REPORT_2026-10-20.md` |
+| Simulation determinism gate and baseline (every optimization must pass it) | `tools/sim_gate.py`, `docs/release/sim_baseline.json` |
+| Long simulations on GitHub Actions (owner-approved, manual): dispatch with `ref=staging/my-medieval-life`, read results from the job logs | `.github/workflows/long-sims.yml` |
 | Architecture | `docs/ARCHITECTURE.md`; rules and open questions of the prototype in `docs/BUILD_DECISIONS.md` |
 | Saves: format, safety, migration, carrying a save between builds, recovery | `docs/release/SAVE_CONTINUITY.md`; code in `game/scripts/core/save_store.gd` and `game/scripts/core/save_transfer.gd` |
 | Long-run simulations and their results | `docs/release/LONG_RUN_SIMULATION.md`; harness `game/tests/economy_sim.gd` |
@@ -71,10 +74,10 @@ Every open entry also carries `target_build` (15–19, `20+`, `multiplayer`, `ow
 | Build | Content | Status |
 |---|---|---|
 | 14 | Released as a private draft from `7dbae4f` | The current test build |
-| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships | In development |
+| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships | In development; **BLOCKED** on OD-16 (house completion on seed 1) |
 | 16 | Long-term equilibrium and validation: the baseline before the expansions | Planned |
-| 17 | Mining & Industrial Development (EXP-A) | Approved objective; **not started**, needs authorization to begin |
-| 18 | Settlement Advancement & Regional Economy (EXP-B) | Approved objective; **not started** |
+| 17 | Mining & Industrial Development (EXP-A) | Approved objective; **not started**. Authorized by OVN-01 to begin only after Builds 15 and 16 meet section 4 |
+| 18 | Settlement Advancement & Regional Economy (EXP-B) | Approved objective; **not started**. Authorized by OVN-01 after Build 17 |
 | 19 | NPC Judgment System (EXP-C) | Approved objective; **not started**; 14 open design questions (SJD-Q01..Q14) unanswered |
 
 Every open register entry has a `target_build`. The dependencies that touch the order are in `docs/EXPANSION_ROADMAP.md`. If work must span more builds, keep the approved objective, flag the scheduling issue to the owner, and never silently change the roadmap.
@@ -102,8 +105,8 @@ A few early register entries cite chat messages or uploads that were never commi
 
 ## What must not begin without further authorization
 
-- Builds 17, 18 and 19: approved objectives only.
-- Any release, upload or publication: only under the release authorization in force (REL-14-16 covers Builds 14–16 as private drafts) and its eight conditions. Public visibility needs its own approval.
+- Builds 17 and 18: authorized by OVN-01, but only in order, after the build before meets every condition of its section 4. Build 19: approved objective only.
+- Any release, upload or publication: only under the release authorization in force (OVN-01 section 9 and REL-15-18: Builds 15–18 as private drafts when every section 4 condition holds; REL-14-16 before it). Public visibility needs its own approval.
 - Merging into `main`; force-pushing or deleting `staging/my-medieval-life`.
 - Merging multiplayer (`wip/multiplayer`) into staging.
 - Answering the judgment system's 14 questions, or any open owner decision.

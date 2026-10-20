@@ -12,18 +12,18 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 74 |
-| ACTIVE DEVELOPMENT | 9 |
+| ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 35 |
-| IMPLEMENTED — TESTING REQUIRED | 14 |
+| IMPLEMENTED — TESTING REQUIRED | 13 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 38 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 134 |
+| COMPLETE AND VERIFIED | 136 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
 | **Total approved** | **356** |
-| Outstanding (not complete, superseded or canceled) | 203 |
+| Outstanding (not complete, superseded or canceled) | 201 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 33 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 76 | 72 |
+| Build 15: simulation stabilization | 74 | 70 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **261** | **203** |
+| **Total open** | **259** | **201** |
 
-### Build 15: simulation stabilization (76)
+### Build 15: simulation stabilization (74)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -88,8 +88,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | IMPLEMENTED — TESTING REQUIRED |  | simulation harness and conservation checks the stabilization work depends on |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | approved | ACTIVE DEVELOPMENT |  | the 365-day failures (housing, births, population) under correction now |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | approved | IMPLEMENTED — TESTING REQUIRED |  | the 365-day failures (housing, births, population) under correction now |
-| EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | IMPLEMENTED — TESTING REQUIRED |  | harness correctness needed before the acceptance runs |
-| EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | ACTIVE DEVELOPMENT |  |  |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED |  | the responsible-adult choice is needed by the housing fix (HOUSE-02); the rest exists (inheritance, work, purse) |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 correction, Build 15 priority |
@@ -484,14 +482,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 |  |  |  |
 
-## ACTIVE DEVELOPMENT (9)
+## ACTIVE DEVELOPMENT (8)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | game/tests/housing_test.gd test_tool_less_worker; branch staging/my-medieval-life | after B14R-12 | owner answer to OD-16; then 365-day Actions runs on both seeds |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
-| EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | agent finding 2026-10-20: SCRIPT ERROR counts in out/eq logs (fix2 to fix13), building_door on a missing building |  |  |  |
 | HOUSE-07 | EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code | docs/directives/2026-10-20_housing_succession_adoption.md Part 2, Part 6 | game/tests/housing_test.gd |  |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
@@ -538,7 +535,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (14)
+## IMPLEMENTED — TESTING REQUIRED (13)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -547,7 +544,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 246) | run_tests.gd test_dated_backups; start_test.gd save safety case 4b |  |  |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250) | game/tests/conservation_test.gd (8 checks); economy_sim 10-day seed 1 fingerprint eeabb2a8 unchanged after the census refactor |  |  |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
-| EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | WR-01 agent report 2026-10-19 (also in the unchanged baseline) | world_test.gd: hammer count unchanged through a succession |  |  |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.2 | game/tests/housing_test.gd |  |  |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.3 | game/tests/housing_test.gd |  |  |
@@ -635,7 +631,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (134)
+## COMPLETE AND VERIFIED (136)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -719,6 +715,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A1 | Stale heir comment (:26) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 245) |  |  |  |
 | DVW-A11 | Threats never scale to player (:36) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 255) |  |  |  |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248) | economy_sim.gd 3-day seed 1 output |  |  |
+| EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | WR-01 agent report 2026-10-19 (also in the unchanged baseline) | long-sims run 39368663150; world_test.gd hammer conservation |  |  |
+| EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | agent finding 2026-10-20: SCRIPT ERROR counts in out/eq logs (fix2 to fix13), building_door on a missing building | long-sims run 39368663150; housing_test.gd |  |  |
 | FR-05 | Title window opens scrolled into the controls list | docs/release/BUILD_13_PACKET.md | `ec3bd0e`; start_test |  |  |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md | wiki_test.gd; run_tests.gd 3535 checks |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit | tests.yml 'Short economy simulation (FR-07)', run 39368652711 |  |  |
