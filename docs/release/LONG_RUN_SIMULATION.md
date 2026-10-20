@@ -952,3 +952,49 @@ Actions run 39430585149 on `8d3f623`, the code before the owner's OD-18 decision
   those who starved had no money (a legitimate outcome) or food could not reach people able to pay (a defect) is
   checked on the parity code, which changes the rules this depends on (trade reserves, rest). Seed 4's 3 deaths are
   checked the same way.
+
+## EQ-06 after player-villager parity: intervention scenarios, 100 days (2026-10-20)
+
+**How it was run:** the same as the pre-parity scenarios above (`--days 100 --scenario X --at 20`, seeds 1 and 2), on
+`c57b134`. That code includes PAR-01 (villager skills), PAR-02A (the dynamic reserve), PAR-03 (rest), PAR-04 (the
+eleven recipes) and PAR-05 (sight and reports).
+
+**Integrity:** all 10 runs had 0 script errors and a currency leak of 0, with no item, deposit or animal residuals.
+
+**Day 100, against the pre-parity baseline (before -> after):**
+
+| Seed / run | Alive | Starved | Unemployed | Missed meals: no money | Missed meals: nothing for sale |
+|---|---|---|---|---|---|
+| 1 base | 120 -> 123 | 0 -> 0 | 11 -> 17 | 208 -> 938 | 137 -> 62 |
+| 1 kill_smiths | 111 -> 123 | 0 -> 0 | 7 -> 15 | -> 273 | -> 92 |
+| 1 corner_wheat | 113 -> 111 | 0 -> 0 | 11 -> 16 | 1,415 -> 18 | 108 -> 86 |
+| 1 gift_coins | 121 -> 115 | 0 -> 0 | 14 -> 11 | 9 -> 23 | 110 -> 105 |
+| 1 hunt_out | 118 -> 119 | 0 -> 0 | 13 -> 16 | -> 1,178 | -> 93 |
+| 2 base | 126 -> 133 | 0 -> 0 | 6 -> 5 | 280 -> 1,563 | 45 -> 7 |
+| 2 kill_smiths | 121 -> 124 | 0 -> 0 | 4 -> 7 | -> 264 | -> 28 |
+| 2 corner_wheat | 126 -> 120 | 0 -> 0 | 4 -> 6 | 190 -> 431 | 32 -> 45 |
+| 2 gift_coins | 121 -> 128 | 0 -> 0 | 3 -> 0 | 7 -> 5 | 32 -> 48 |
+| 2 hunt_out | 126 -> 126 | 0 -> 0 | 3 -> 4 | -> 1,362 | -> 46 |
+
+(Blank "before" cells were not extracted from the baseline logs.)
+
+**What changed:**
+- **Meals missed for want of money rose about fivefold in the base runs** (seed 1: 208 to 938; seed 2: 280 to 1,563),
+  while meals missed because nothing was on sale fell. On seed 1 the hunters account for most of it (151 to 886).
+  - Checked and ruled out:
+    - prices: hunters paid 2.0 to 2.5 coins a unit for food, against 2.0 to 3.0 before;
+    - income: 791 coins for 11 hunters, against 859 for 13 before;
+    - spending: 799 coins, against 813;
+    - crime reports: only 13 were made in 50 days, and nobody was hungry while carrying one.
+  - The cause is not yet established. It is recorded as **under investigation** with B7-015 and the hunters' income
+    (EQ-01). Nobody starved.
+- **With both smiths killed,** two other villagers took the trade, as before. Under parity they start with whatever
+  Smithing they had learned, often none.
+- **A wheat corner or a gift of coins removed almost all the money-short meals:** coins from outside reach the
+  households. This is the money supply question (DVW-A3) in a sharper form.
+
+**Classification (World Design Rule 022):**
+- **Integrity:** held in every run.
+- **Legitimate outcomes:** the village's course differs from the baseline under the owner's parity rules, and no
+  rescue was added.
+- **Under investigation:** the rise in money-short meals, above.
