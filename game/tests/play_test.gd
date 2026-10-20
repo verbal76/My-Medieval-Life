@@ -259,13 +259,16 @@ func _run() -> void:
 			sheep = a
 	var keeper := w.pen_keeper(pen)
 	keeper.target = -1
+	keeper.plan.clear()
+	keeper.anim = "idle"
+	keeper.pos = sheep.pos + Vector2(2.5, 0)      # the keeper is by the pen and sees it (PAR-05: only a witness knows)
 	for i in 20:
 		if not sheep.alive:
 			break
 		p.pos = sheep.pos + Vector2(-0.9, 0)
 		main.player_sprite.face(Vector2(1, 0))
 		swing_once()
-	check(not sheep.alive and keeper.target == -2, "killing the keeper's sheep is a crime: %s comes after you" % keeper.name)
+	check(not sheep.alive and keeper.target == -2, "killing the keeper's sheep in their sight is a crime: %s comes after you" % keeper.name)
 	keeper.target = -1
 	for g: NPC in w.npcs:
 		if g.target == -2:

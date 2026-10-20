@@ -1172,7 +1172,7 @@ func _guard(n: NPC, h: float) -> void:
 		n.doing = "off duty"
 		_plan_bed(n, mins)
 		return
-	var foe := _bandit_near(n.pos, 10.0)
+	var foe := _bandit_seen(n)
 	if foe:
 		n.target = foe.id
 		n.doing = "fighting %s" % foe.name
@@ -1600,6 +1600,15 @@ func _guard_near(p: Vector2, r: float) -> bool:
 	return false
 
 
+## A bandit `n` can see (PAR-05: within witness_radius and in the same place, the sight anyone has), or null.
+func _bandit_seen(n: NPC) -> NPC:
+	var here := w.place_of(n.pos)
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "bandit" and o.pos.distance_to(n.pos) <= float(GameData.b("witness_radius")) and w.place_of(o.pos) == here:
+			return o
+	return null
+
+
 func _bandit_near(p: Vector2, r: float) -> NPC:
 	for o: NPC in w.npcs:
 		if o.alive and o.role == "bandit" and o.pos.distance_to(p) <= r:
@@ -1924,7 +1933,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					return true
 			return false
 		"look_out":
-			var foe := _bandit_near(n.pos, 10.0)
+			var foe := _bandit_seen(n)
 			if foe:
 				n.target = foe.id
 			return true
@@ -1985,6 +1994,7 @@ func fight(n: NPC, dt: float) -> void:
 				stolen = id
 				break
 		tnpc.remember("robbed by %s" % n.name)
+		w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)       # who sees it or hears the cry (PAR-05)
 		w.note("%s robbed %s %s of %d coins%s." % [n.name, tnpc.name, tnpc.family, take,
 			(" and a " + GameData.item_name(stolen).to_lower()) if stolen != "" else ""])
 		n.target = -1
@@ -1999,6 +2009,8 @@ func fight(n: NPC, dt: float) -> void:
 		w.wake_near(tnpc.pos, float(GameData.b("sleep_wake_radius")))    # the blow wakes them, and the noise others
 		if tnpc.target == -1:
 			tnpc.target = n.id
+		if n.role == "bandit":
+			w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)   # who sees it or hears the cry (PAR-05)
 		if tnpc.hp <= 0.0:
 			w.kill(tnpc, "slain by %s" % n.name)
 			n.target = -1

@@ -943,8 +943,28 @@ func _run() -> void:
 			break
 	var keeper: NPC = w2.pen_keeper(w2.fauna.pens[beast.area])
 	var kind := beast.label().to_lower()
+	var kp0 := keeper.pos
+	keeper.pos = w2.player.pos + Vector2(40, 0)      # out of sight: PAR-05, the keeper cannot know who did it
+	keeper.anim = "idle"
 	main._hit_animal(beast, 9999.0)
-	check(not Dialogue.attacked(w2, keeper) and Dialogue.animal_killed(w2, keeper) == kind, "the keeper remembers that the player killed their %s" % kind)
+	check(Dialogue.animal_killed(w2, keeper) == "" and keeper.memory.has("found my %s dead" % kind), "PAR-05: a keeper who did not see it finds their %s dead, and does not know who killed it" % kind)
+	beast = null
+	for a: Animal in w2.fauna.animals:
+		if a.alive and not a.wild() and w2.pen_keeper(w2.fauna.pens[a.area]) == keeper:
+			beast = a
+			break
+	if beast == null:
+		for a: Animal in w2.fauna.animals:
+			if a.alive and not a.wild() and w2.pen_keeper(w2.fauna.pens[a.area]) != null:
+				beast = a
+				break
+	keeper = w2.pen_keeper(w2.fauna.pens[beast.area])
+	kind = beast.label().to_lower()
+	keeper.pos = w2.player.pos + Vector2(1.5, 0)     # in sight
+	keeper.anim = "idle"
+	main._hit_animal(beast, 9999.0)
+	keeper.pos = kp0
+	check(not Dialogue.attacked(w2, keeper) and Dialogue.animal_killed(w2, keeper) == kind, "the keeper who saw it remembers that the player killed their %s" % kind)
 	check(Dialogue.opening(w2, keeper).contains(kind), "and says so: \"%s\"" % Dialogue.opening(w2, keeper))
 
 	# 23. inside a building its roof fades, and only its roof; who is inside shows to the player inside
@@ -2483,7 +2503,7 @@ func _pl_trade_ui_tests() -> void:
 	p.inv.add("iron_bar", 4)
 	goods.inv.items.erase("iron_bar")
 	var q4: Array = w.player_quote(goods, "iron_bar", 4, false)
-	goods.coins = int(q4[0]) + int(q4[1]) + 1
+	goods.coins = w.buyer_reserve(goods) + int(q4[0]) + int(q4[1]) + 1     # PAR-02: the buyer keeps their reserve
 	ui.show_trade(goods, {"id": "iron_bar", "mode": "sell"})
 	qp = ui.panel_body.get_node_or_null("QuantityPicker")
 	check(qp.max_qty == 2, "a poor buyer limits the sale to what their coins pay for (2)")

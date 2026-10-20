@@ -7,19 +7,20 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 215 still open, 16 closed since |
+| Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 88 (53 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **268** = 215 still open from the baseline + 53 added and open |
+| Entries added since | | 88 (51 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 214 still open from the baseline + 51 added and open |
 | Open entries moved to another build | | 0 |
 
-## Closed since the baseline (16)
+## Closed since the baseline (17)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
 | B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: docs/assets/SPRITE_NEEDS.md lists 53 missing or weak sprites found in the code (3 characters, 10 animals, 18 items and icons, 10 buildings and stations, 5 terrain and props, 2 effects, 5 UI), each with where it is used, what stands in now, why it is weak and the size needed; tools/assets/sprite_package.py builds a pixel-grid copy and a real-size Aseprite file for each into out/sprite_package.zip (107 files); grid copies looked at |
 | B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: 365-day runs on af60f94 (Actions 39396414426, local re-runs with the same fingerprints): every wild species alive at day 365 on both seeds, and the population grows from 100 to 115 and 122 |
+| B7-008 | Player can drain buyers to 0, kill all wildlife | approved | BLOCKED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Both halves done: wildlife verified earlier; the buyer half answered by the owner (OD-18.2) and implemented as PAR-02 |
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: three dated backups and the Continue fallback are in save_store.gd and main.gd; tests pass at af60f94 |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: conservation_test.gd checks coins, goods, deposits, animals and villagers across a save round trip on both simulation tiers; passes at af60f94; a Build 14 save also loads, plays, re-saves and reloads with coins unchanged |
@@ -113,10 +114,10 @@ None.
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT | 15 |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED | 16 |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | APPROVED — NOT STARTED | 16 |
-| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | approved | APPROVED — NOT STARTED | 16 |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | APPROVED — NOT STARTED | 16 |
-| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | APPROVED — NOT STARTED | 16 |
+| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | COMPLETE AND VERIFIED | 16 |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | COMPLETE AND VERIFIED | 15 |

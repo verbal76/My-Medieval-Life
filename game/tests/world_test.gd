@@ -491,6 +491,7 @@ func _pl_gameplay() -> void:
 	_pl2_011()
 	_player_gain()
 	_par02_reserve()
+	_par05_awareness()
 	_pl2_006()
 	_pl2_007()
 
@@ -584,6 +585,92 @@ func _pl2_004() -> void:
 	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
 	w.loot.clear()
 	main._sync_loot()
+
+
+## PAR-05 (OD-18.5): an attack is known only by those who see it or hear the victim cry out, for the player and a
+## bandit alike; a wall stops both; nobody else is told.
+func _par05_awareness() -> void:
+	var w: World = main.world
+	var p := w.player
+	var keep := {}
+	for n: NPC in w.npcs:
+		keep[n.id] = [n.pos, n.target, n.hp, n.anim]
+	var p0 := p.pos
+	var at := Vector2(w.bandit_camp) + Vector2(0.5, 8.5)
+	var guard: NPC = null
+	var victim: NPC = null
+	for n: NPC in w.npcs:
+		n.plan.clear()
+		n.target = -1
+		n.pos = Vector2(116.5, 86.5)                 # everyone far away
+		if n.alive and n.job == "guard" and guard == null:
+			guard = n
+		elif n.alive and n.role == "adult" and n.job != "guard" and victim == null:
+			victim = n
+	guard.anim = "idle"
+	victim.anim = "idle"
+	check(w.place_of(at) == "" and w.place_of(at + Vector2(12, 0)) == "", "PAR-05: the test ground is outdoors")
+	p.pos = at
+	victim.pos = at + Vector2(0.8, 0)
+	guard.pos = at + Vector2(25, 0)
+	main._crime(victim)
+	check(guard.target == -1, "PAR-05: a guard who neither sees the attack nor hears the cry knows nothing of it")
+	victim.target = -1
+	guard.pos = at + Vector2(6, 0)
+	main._crime(victim)
+	check(guard.target == -2, "PAR-05: a guard who sees the attack answers it")
+	guard.target = -1
+	victim.target = -1
+	guard.pos = victim.pos + Vector2(float(GameData.b("guard_call_radius")) - 1.0, 0)
+	check(guard.pos.distance_to(p.pos) > float(GameData.b("witness_radius")), "PAR-05: the guard is out of sight")
+	main._crime(victim)
+	check(guard.target == -2, "PAR-05: a guard who hears the victim cry out answers it")
+	guard.target = -1
+	victim.target = -1
+	victim.hp = 0.0                               # struck down: no cry
+	main._crime(victim)
+	check(guard.target == -1, "PAR-05: a victim who cannot cry out brings nobody out of sight")
+	victim.hp = victim.max_hp
+	var inside := ""
+	var cell := Vector2.ZERO
+	for id in w.interiors:
+		var fl: Array = w.interiors[id].floor
+		if not fl.is_empty():
+			inside = id
+			cell = Vector2(int(fl[0][0]), int(fl[0][1])) + Vector2(0.5, 0.5)
+			break
+	guard.pos = cell
+	p.pos = cell + Vector2(0, 3.0) if w.place_of(cell + Vector2(0, 3.0)) == "" else cell + Vector2(0, 5.0)
+	victim.pos = p.pos + Vector2(0.5, 0)
+	if w.place_of(p.pos) == "" and inside != "":
+		main._crime(victim)
+		check(guard.target == -1, "PAR-05: a guard indoors neither sees nor hears an attack outside")
+	guard.target = -1
+	var bandit: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "bandit":
+			bandit = n
+			break
+	if bandit:
+		bandit.pos = at
+		victim.pos = at + Vector2(0.8, 0)
+		guard.pos = at + Vector2(25, 0)
+		w.raise_alarm(w.aware_of_attack(bandit.pos, victim), bandit.id)
+		check(guard.target == -1, "PAR-05: nor does an unseen bandit's attack reach a guard")
+		guard.pos = at + Vector2(6, 0)
+		w.raise_alarm(w.aware_of_attack(bandit.pos, victim), bandit.id)
+		check(guard.target == bandit.id, "PAR-05: a guard who sees a bandit's attack takes on the bandit, by the same rule")
+		guard.target = -1
+		guard.pos = cell
+		bandit.pos = cell + Vector2(0, 3.0) if w.place_of(cell + Vector2(0, 3.0)) == "" else cell + Vector2(0, 5.0)
+		check(w.brain._bandit_seen(guard) == null, "PAR-05: a guard does not see a bandit through a wall")
+	for n: NPC in w.npcs:
+		var k: Array = keep[n.id]
+		n.pos = k[0]
+		n.target = k[1]
+		n.hp = k[2]
+		n.anim = k[3]
+	p.pos = p0
 
 
 ## PAR-02 (OD-18.2): one reserve rule. A trader near its reserve refuses the player's sale exactly as it refuses a

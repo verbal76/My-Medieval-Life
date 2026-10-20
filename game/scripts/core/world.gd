@@ -1873,6 +1873,35 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 
 
 ## The nearest guard on duty (out and not fighting) within `r` tiles of a point, or null.
+## PAR-05 (OD-18.5): who learns of an attack, for any attacker, the player or a villager. Two channels the world
+## supports, nothing else: `seen`, the people who see it (near the blow, witness_radius: awake and in the same place,
+## the rule a theft is seen by); and `heard`, while the victim lives and is awake, the people who hear them cry out
+## (guard_call_radius, the shout a caught pickpocket's victim gives). Detection only: the response is raise_alarm.
+func aware_of_attack(at: Vector2, victim: NPC) -> Dictionary:
+	var seen := near(at, float(GameData.b("witness_radius")))
+	var heard := []
+	if victim != null and victim.alive and victim.hp > 0.0 and not asleep(victim):
+		for n: NPC in near(victim.pos, float(GameData.b("guard_call_radius"))):
+			if not seen.has(n):
+				heard.append(n)
+	seen.erase(victim)
+	heard.erase(victim)
+	return {"seen": seen, "heard": heard}
+
+
+## The response to an attack someone knows of (aware_of_attack): every free guard among them takes on the attacker
+## (`attacker` an NPC id, or -2 for the player). Returns how many guards answered.
+func raise_alarm(aware: Dictionary, attacker: int) -> int:
+	var k := 0
+	for n: NPC in (aware.seen as Array) + (aware.heard as Array):
+		if n.job == "guard" and n.target == -1 and n.id != attacker:
+			n.target = attacker
+			k += 1
+	if k > 0:
+		stat("guards_alarmed", k)
+	return k
+
+
 func guard_near(at: Vector2, r: float) -> NPC:
 	var best: NPC = null
 	for n: NPC in near(at, r):

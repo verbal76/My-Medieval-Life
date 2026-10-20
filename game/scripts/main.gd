@@ -2789,8 +2789,14 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 		world.relations.defended(a.pos)        # a wolf or a bear put down near people (CRT-10)
 	if bag.total() > 0:
 		world.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + what, "t": world.minutes})
-	if keeper != null:
-		_crime(keeper, "%s killed my %s" % [world.player.name, what])
+	if keeper != null:                         # theft from the keeper, known the way a theft is (World.witness, PAR-05)
+		var saw := world.near(world.player.pos, float(GameData.b("witness_radius"))).has(keeper)
+		world.witness("livestock", "%s's %s" % [keeper.name, what], keeper, {}, null, "kill %s %s's %s" % [keeper.name, keeper.family, what])
+		keeper.remember(("%s killed my %s" % [world.player.name, what]) if saw else ("found my %s dead" % what))
+		if saw and keeper.role == "adult" and keeper.target == -1:
+			keeper.target = -2                # a keeper who sees it comes after the player
+		if world.last_guard != "":
+			ui.message(world.last_guard)
 		world.note("%s %s killed one of %s %s's animals." % [world.player.name, world.player.family, keeper.name, keeper.family])
 
 
@@ -2858,17 +2864,23 @@ func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
 			bar.visible = false)
 
 
-## Attacking a villager is a crime: guards who see it and adults who are hit fight back.
-## `memory` is what the victim remembers (by default that the player attacked them).
-func _crime(victim: NPC, memory := "") -> void:
-	victim.remember(memory if memory != "" else "attacked by %s" % world.player.name)
+## Attacking a villager is a crime: adults who are hit fight back, and those who learn of it the way anyone learns of
+## an attack (World.aware_of_attack: seeing it, or hearing the victim cry out; PAR-05) remember it, and the guards
+## among them answer (World.raise_alarm). Nobody else knows.
+func _crime(victim: NPC) -> void:
+	var p := world.player
+	victim.remember("attacked by %s" % p.name)
 	world.relations.harmed(victim, float(Relations.cfg().victim_harm))
 	if victim.role == "adult":
 		victim.target = -2
-	for g: NPC in world.near(victim.pos, 15.0):
-		if g.job == "guard":
-			g.target = -2
-	world.note("%s %s attacked %s %s." % [world.player.name, world.player.family, victim.name, victim.family])
+	var aware := world.aware_of_attack(p.pos, victim)
+	for n: NPC in aware.seen:
+		if n.role != "bandit":
+			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
+			world.relations.harmed(n, float(Relations.cfg().witness_harm))
+	world.raise_alarm(aware, -2)
+	world.stat("player_assault")
+	world.note("%s %s attacked %s %s." % [p.name, p.family, victim.name, victim.family])
 
 
 func fireball() -> void:

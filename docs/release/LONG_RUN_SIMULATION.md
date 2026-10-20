@@ -920,3 +920,35 @@ and 2, each against a baseline run of the same seed. No player plays. The scenar
   - the village replaces lost trades and its wildlife recovers. No hidden protection was added (EQ-05).
 - **Future improvements:** none new. Measuring a playing player's profit (DVW-A5) can use these scenarios, now that the
   player's production is counted.
+
+## EQ-06: 365 days, seeds 1-4, no player (2026-10-20, before OD-18 parity)
+
+Actions run 39430585149 on `8d3f623`, the code before the owner's OD-18 decisions. It is the baseline the parity work
+(PAR-01..05) is compared against. Results are from the job logs: the artifacts cannot be downloaded from this workspace.
+
+| Day 365 | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| Script errors / currency leak / item leaks | 0 / 0 / none | 0 / 0 / none | 0 / 0 / none | 0 / 0 / none |
+| Alive (from 100) | 106 | 146 | 125 | 160 |
+| Births / deaths of old age | 76 / 70 | 118 / 72 | 104 / 56 | 131 / 68 |
+| Starvation deaths | 0 | 0 | **23** | 3 |
+| Households | 37 | 38 | 39 | 49 |
+| Sites finished / started; houses | 5 / 8; 5 | 9 / 11; 9 | 13 / 13; 10 | 26 / 26; 19 |
+| Adults / unemployed / manor hands | 67 / 0 / 29 | 86 / 5 / 39 | 67 / 0 / 28 | 94 / 20 / 31 |
+| Woodcutters / smiths | 1 / 2 | 1 / 2 | 4 / 2 | 3 / 2 |
+| Nights without firewood (household-nights) | 6,852 | 6,982 | 2,962 | 5,910 |
+| Treasury | 2,444 | 2,514 | 1,882 | 1,955 |
+| Coins in the world (from about 2,900) | 8,778 | 9,227 | 8,987 | 9,354 |
+| Wheat / meat held at the end | 2,788 / 1,693 | 7,259 / 1,559 | 2,734 / 1,938 | 1,549 / 1,902 |
+
+**Classification (World Design Rule 022):**
+- **Integrity:** every seed balanced, with 0 script errors. The simulation held on all four seeds.
+- **Legitimate outcomes:**
+  - each seed develops differently (5 to 19 houses);
+  - firewood runs short;
+  - a third of adults become manor hands once the seams are worked out;
+  - seed 4 ends with 20 unemployed.
+- **Under investigation (B7-015):** seed 3's 23 starvation deaths came while wheat and meat were held in stock. Whether
+  those who starved had no money (a legitimate outcome) or food could not reach people able to pay (a defect) is
+  checked on the parity code, which changes the rules this depends on (trade reserves, rest). Seed 4's 3 deaths are
+  checked the same way.

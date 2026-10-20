@@ -2810,7 +2810,7 @@
    "id": "B7-008",
    "title": "Player can drain buyers to 0, kill all wildlife",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Player can drain buyers to 0, kill all wildlife",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 49)",
@@ -2854,6 +2854,11 @@
      "date": "2026-10-20",
      "change": "BLOCKED -> IMPLEMENTED — TESTING REQUIRED; next_action",
      "why": "OD-15 answered through OD-18.2; the player's sales now keep the buyer's reserve (PAR-02); its wildlife half was verified earlier"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED",
+     "why": "Both halves done: wildlife verified earlier; the buyer half answered by the owner (OD-18.2) and implemented as PAR-02"
     }
    ],
    "acceptance_derived": true,
@@ -15238,7 +15243,7 @@
    "id": "PAR-02",
    "title": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "One economic rule for everyone. We are villagers too. Traders must not keep one reserve for NPC transactions and another for the player; resolve OD-15 consistently. A trader may refuse for a legitimate in-world reason, not because the buyer is an NPC rather than the player.",
    "description": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15249,7 +15254,7 @@
     "Test: a buyer at the reserve refuses the player as it refuses a villager"
    ],
    "implementation": "",
-   "tests": "world_test.gd _par02_reserve",
+   "tests": "world_test.gd _par02_reserve; start_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15279,6 +15284,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "World.buyer_reserve and World.can_afford: one reserve rule for every purchase (player sales, villager sales, caravan restocking, the trade window); test world_test _par02_reserve; full suites and gate next"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "25 Godot suites pass with it (start_test's sale test updated to the buyer's reserve); gate unchanged by it"
     }
    ],
    "target_build": "16"
@@ -15377,7 +15387,7 @@
    "id": "PAR-05",
    "title": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Guards must not possess unexplained knowledge of an assault. Remove the fixed 15-tile awareness; apply consistent witnessing to assault and theft (direct witness, an audible disturbance where supported, a report, credible evidence). Separate detection from alarm propagation and guard response. Apply the rules whether the offender is the player or another NPC. Do not invent unsupported sensing mechanics.",
    "description": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15388,7 +15398,7 @@
     "Tests: an unseen assault alerts no guard; a seen one does; the same for an NPC offender where the code has one"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test.gd _par05_awareness; start_test.gd; play_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15413,6 +15423,11 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "World.aware_of_attack (sight, the victim's cry) and World.raise_alarm, the same for the player and bandits; the fixed 15-tile alert removed; guards see bandits only in the same place within witness_radius; killing livestock is a theft known as a theft is. 25 suites pass; gate re-baselined"
     }
    ],
    "target_build": "16"
