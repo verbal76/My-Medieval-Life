@@ -423,3 +423,43 @@ Two moderate caravan settings (limit on, seed 1, 100 days) were also run:
 - Raising the per-head ceiling instead did not help.
 - Both are owner decisions (B7-009 and B7-014 in the register).
 
+
+## Build 15 (staging `a203c0b` and later, 2026-10-20): interim
+
+**Code under test:** the Build 15 corrections:
+- housing (households split on crowding);
+- founding couples;
+- births without a free bed (EQ-08);
+- courtship (CRT-01..12);
+- wildlife refuges (WR-01);
+- the caravan allowance at 30 coins a day, a temporary placeholder (CARAVAN-TMP).
+
+**Command:** `economy_sim.gd -- --days N --seed S --every 10`, with no player.
+
+### 100 days, seed 1 (finished)
+
+| | Day 0 | Day 50 | Day 100 |
+|---|---|---|---|
+| Alive | 100 | 121 | 118 |
+| Starved / other deaths (cumulative) | 0 / 0 | 0 / 7 | 0 / 16 |
+| Food in store (days) | 3.0 | 5.7 | 6.7 |
+| Unemployed | 0 | 8 | 16 |
+| Households / houses built | 24 / 0 | 27 / 1 | 28 / 1 |
+| Wild / penned animals | 54 / 13 | 38 / 31 | 81 / 33 |
+| Stone left (of 240) | 240 | 81 | 56 |
+| Coins in the world (leak) | 2927 (0) | 5265 (0) | 6062 (0) |
+
+**Other measurements:**
+- Iron, coal, copper and gold were exhausted by day 20.
+- Currency balances exactly (leak 0, holders mismatch 0), and item leaks are 0.
+- Courtships reached 12. Gifts given: 96.
+
+**At day 100:**
+- 5 households were crowded and 2 couples needed a home, but no crowded household could afford one (`crowded_can_afford_home` 0). This is the open housing-growth defect under EQ-07.
+- Unemployment had risen from day 40.
+
+### Still to record
+
+The 100-day seed 2 run and the 365-day runs for seeds 1 and 2. At day 80 seed 2 had 128 alive, no starvation and leak 0.
+
+These runs write only to `out/eq/`, which is not committed. Each result is recorded here when its run finishes. A run that a container restart killed is started again: see `docs/CURRENT_DEVELOPMENT_STATE.md`, "Fragile processes".

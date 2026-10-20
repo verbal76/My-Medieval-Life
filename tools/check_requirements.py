@@ -212,7 +212,8 @@ def render(d):
              "Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`; do not edit",
              "this file. Every owner-approved requirement stays here until it is COMPLETE AND VERIFIED, SUPERSEDED by a named",
              "requirement, or CANCELED BY OWNER (CLAUDE.md, requirements register). Proposals, open owner decisions and design",
-             "rules are listed separately and are not counted as approved work. The order of work is `docs/DEVELOPMENT_QUEUE.md`;",
+             "rules are listed separately and are not counted as approved work. The order of work is in",
+             "`docs/CURRENT_DEVELOPMENT_STATE.md` (start from `docs/PROJECT_MEMORY.md`);",
              "the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_2026-10-19.md`.", "",
              "## Counts (approved requirements; each counted once, by lifecycle status)", "",
              "| Status | Count |", "|---|---|"]
@@ -222,11 +223,13 @@ def render(d):
     other = Counter(r["kind"] for r in reqs if r["kind"] != "approved")
     lines += ["Also in the register: " + ", ".join("%d %s" % (other[k], KINDS[k].lower()) for k in KINDS if other.get(k)) + ".", ""]
     lines += _roadmap(reqs)
-    dev = [r for r in approved if r.get("playtest") and not r.get("playtest_done")]
-    lines += ["## Real-device verification queue", "", "Automated tests do not count as device verification.", "",
+    dev = [r for r in approved if r["status"] not in CLOSED and not r.get("playtest_done") and (
+        r.get("playtest") or r["status"] == "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED")]
+    lines += ["## Real-device verification queue", "", "Every open entry with a device check outstanding (a `playtest` need, or the status AUTOMATED TESTS PASSED —",
+              "PLAYTEST REQUIRED). Automated tests do not count as device verification.", "",
               "| ID | Requirement | Needs | Status |", "|---|---|---|---|"]
     for r in sorted(dev, key=lambda r: r["id"]):
-        lines.append("| %s | %s | %s | %s |" % (r["id"], _cell(r["title"]), ", ".join(r["playtest"]), r["status"]))
+        lines.append("| %s | %s | %s | %s |" % (r["id"], _cell(r["title"]), ", ".join(r.get("playtest") or []) or "a device check", r["status"]))
     lines.append("")
     for s in LIFECYCLE:
         rows = [r for r in approved if r["status"] == s]
@@ -244,7 +247,9 @@ def render(d):
     for k in ("decision", "rule", "proposal", "idea", "rejected"):
         rows = [r for r in reqs if r["kind"] == k]
         if rows:
-            lines += ["## %s (%d)" % (KINDS[k], len(rows)), "", "| ID | Item | Status | Source |", "|---|---|---|---|"]
+            title = KINDS[k] if k != "decision" else "Owner decisions, open and answered (open: %d, status BLOCKED)" % sum(
+                1 for r in rows if r["status"] == "BLOCKED")
+            lines += ["## %s (%d)" % (title, len(rows)), "", "| ID | Item | Status | Source |", "|---|---|---|---|"]
             for r in sorted(rows, key=lambda r: r["id"]):
                 lines.append("| %s | %s | %s | %s |" % (r["id"], _cell(r["title"]), r["status"], _cell(r["source"])))
             lines.append("")
@@ -257,7 +262,10 @@ def _roadmap(reqs):
     by_t = Counter(r.get("target_build") for r in open_all)
     lines = ["## Roadmap (owner, 2026-10-20: ROAD-01)", "",
              "Every open entry (approved work, proposals, decisions; rules excluded) with the build it belongs to. A gate says what",
-             "must happen first (a device check, an owner decision, art). Completed entries are not counted here.", "",
+             "must happen first (a device check, an owner decision, art). Completed entries are not counted here.",
+             "Open owner decisions that belong to a build's design (OD-*, SJD-Q*) are listed under that build with the gate",
+             "\"owner decision first\"; \"Waiting on an owner decision\" holds the rest. Every open owner decision is",
+             "status BLOCKED (the ledger's owner-decisions section lists them all).", "",
              "| Target | Open entries | of which approved work |", "|---|---|---|"]
     for t in TARGETS:
         lines.append("| %s | %d | %d |" % (TARGET_NAMES[t], by_t.get(t, 0), sum(1 for r in open_all if r.get("target_build") == t and r["kind"] == "approved")))

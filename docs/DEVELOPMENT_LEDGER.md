@@ -3,7 +3,8 @@
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`; do not edit
 this file. Every owner-approved requirement stays here until it is COMPLETE AND VERIFIED, SUPERSEDED by a named
 requirement, or CANCELED BY OWNER (CLAUDE.md, requirements register). Proposals, open owner decisions and design
-rules are listed separately and are not counted as approved work. The order of work is `docs/DEVELOPMENT_QUEUE.md`;
+rules are listed separately and are not counted as approved work. The order of work is in
+`docs/CURRENT_DEVELOPMENT_STATE.md` (start from `docs/PROJECT_MEMORY.md`);
 the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_2026-10-19.md`.
 
 ## Counts (approved requirements; each counted once, by lifecycle status)
@@ -30,6 +31,9 @@ Also in the register: 30 proposal awaiting an owner decision (not approved), 26 
 
 Every open entry (approved work, proposals, decisions; rules excluded) with the build it belongs to. A gate says what
 must happen first (a device check, an owner decision, art). Completed entries are not counted here.
+Open owner decisions that belong to a build's design (OD-*, SJD-Q*) are listed under that build with the gate
+"owner decision first"; "Waiting on an owner decision" holds the rest. Every open owner decision is
+status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
@@ -323,10 +327,12 @@ must happen first (a device check, an owner decision, art). Completed entries ar
 
 ## Real-device verification queue
 
-Automated tests do not count as device verification.
+Every open entry with a device check outstanding (a `playtest` need, or the status AUTOMATED TESTS PASSED —
+PLAYTEST REQUIRED). Automated tests do not count as device verification.
 
 | ID | Requirement | Needs | Status |
 |---|---|---|---|
+| B12A-10 | Hardware verification of everything on real devices (umbrella of the device queue) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B13-12 | B closes only quantity selector | controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B13-13 | Touch sprint | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -340,13 +346,32 @@ Automated tests do not count as device verification.
 | B7-013 | Brown glyph icons | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | B8-018 | Roof flicker indoors | windows | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | phone, controller | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-04 | Villagers court each other through gifts, dating and proposals by the player's rules, replacing the random pairing chance | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-05 | Gift tastes follow obvious things: a villager's trade and current needs; favourite gifts speed courting, traditional gifts always work | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-07 | Courtship and marriage between any two humans, same sex included; humans only for now | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-08 | Shared experiences start friendships and romances: working together and personal interactions build regard and attraction | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-09 | Weighting of closeness and conversation: proximity about 1 point, a conversation 0.25, later ones about 0.11, so talk spamming does little | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-10 | Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | two-device LAN, phone | ACTIVE DEVELOPMENT |
 | PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | PL1-05 | current/max inside bars | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | Q-04 | Resources & Gathering journal page | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-02 | A stable save identity independent of build numbers (requirement 2) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-03 | Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-04 | Back up the original before migrating, validate the migrated save before adopting it, preserve the original on failure, never leave a partial conversion, never destroy the only usable save (requirements 5-8, 15) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | SAVE-05 | A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10) | Android phone: export, uninstall, install a new build, import, continue the same world | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-06 | The same versioning and migration principles on Windows and Linux (requirement 11) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
+| WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
 ## APPROVED — NOT STARTED (63)
 
@@ -425,7 +450,7 @@ Automated tests do not count as device verification.
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | docs/directives/2026-10-20_project_memory_hardening.md | tests/test_requirements.py RoadmapAndMemoryTest |  | fresh-session recovery test from a fresh clone of staging; fix gaps; then close |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
-| REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold |
+| REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold |
 
 ## PARTIALLY IMPLEMENTED (35)
 
@@ -535,7 +560,7 @@ Automated tests do not count as device verification.
 | PL1-11 | Google Drive cloud saves (staged) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 148) |  |  |  |
 | Q-08 | Resource depletion and wildlife sustainability | docs/DEVELOPMENT_QUEUE.md (audit inventory row 224) |  | owner decision OD-01 |  |
 | Q-10 | Hot Attic Games read-only registry | docs/DEVELOPMENT_QUEUE.md (audit inventory row 226) |  |  |  |
-| REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | Game Designer ('Bob') spec, owner interview answers: /root/.claude/uploads/754052d8-fb21-5c64-b3f9-641f462e2c23/23b72163-The_Well_corrected_two_documents.zip CLAUDE.md Part A s.A0 and A2 (lines 55-62, 149-151) and MASTER_PROMPT.md line 42; owner message #27 2026-10-17T18:46Z |  | owner input (see notes) |  |
+| REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | Game Designer ('Bob') spec, owner interview answers: /root/.claude/uploads/754052d8-fb21-5c64-b3f9-641f462e2c23/23b72163-The_Well_corrected_two_documents.zip CLAUDE.md Part A s.A0 and A2 (lines 55-62, 149-151) and MASTER_PROMPT.md line 42; owner message #27 2026-10-17T18:46Z |  | owner input (see notes) | The owner's original answers were a chat upload that is not in the repository; ask the owner to restate them or supply the document when this item is taken up |
 | REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | owner message #109 2026-10-18T06:00Z; AskUserQuestion round 2026-10-18T06:46Z (wear model, staff fallback, manor hands on the job board, board wage basis) left unanswered; docs/HANDOFF.md and docs/DEVELOPMENT_QUEUE.md 'Waiting on the owner: A need-based maintenance model' |  | owner input (see notes) |  |
 
 ## DEFERRED (8)
@@ -716,7 +741,7 @@ Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Open owner decision (26)
+## Owner decisions, open and answered (open: 23, status BLOCKED) (26)
 
 | ID | Item | Status | Source |
 |---|---|---|---|

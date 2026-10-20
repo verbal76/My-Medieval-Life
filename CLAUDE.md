@@ -41,7 +41,7 @@ Status (keep current):
 | Engine | Godot 4.7 prototype in `game/`, built at the owner's request; the formal engine entry in `docs/DECISIONS.md` is still *Proposed* |
 | Platforms | Android APK first, then PC (Windows, Linux), as the owner directed; touch, gamepad, and keyboard and mouse |
 | Gameplay code | Playable prototype in `game/` (village simulation, player, economy); rules and open questions in `docs/BUILD_DECISIONS.md` |
-| Builds | Linux, Windows and Android from one revision with one build number, by `.github/workflows/release.yml`, run by hand only after the owner approves a coordinated release (section 5). Build 7 (`6799071`) is the last public test release; its issues are in `docs/release/BUILD_7_ISSUES.md`. Build 8 (`cd35b54`) was a private testing build; Build 12 (`f8b4a98`) was a private testing build; Build 13 (`4e76f72`) was a private testing build; Build 14 (`7dbae4f`, packet `docs/release/BUILD_14_PACKET.md`) is the current private testing build (a draft release, visible only to collaborators; Builds 14-16 are authorized when the owner's release conditions hold, REL-14-16); the workflow makes drafts unless `visibility: public` is chosen with the owner's approval (and confirmed, behind the `public-release` environment). Android test builds are meant to be signed with the owner's stable test key from secrets (`docs/release/ANDROID_SIGNING.md`); those secrets do not exist yet (checked for Build 14), so builds so far use a throwaway key that cannot update an earlier install. `.github/workflows/tests.yml` runs the tests on staging pushes and publishes nothing |
+| Builds | Linux, Windows and Android from one revision with one build number, by `.github/workflows/release.yml`, run by hand only after the owner approves a coordinated release (section 5). Build 7 (`6799071`) is the last public test release; its issues are in `docs/release/BUILD_7_ISSUES.md`. Build 8 (`cd35b54`) was a private testing build; Build 12 (`f8b4a98`) was a private testing build; Build 13 (`4e76f72`) was a private testing build; Build 14 (`7dbae4f`, packet `docs/release/BUILD_14_PACKET.md`) is the current private testing build and Build 15 (simulation stabilization) is in development (a draft release, visible only to collaborators; Builds 14-16 are authorized when the owner's release conditions hold, REL-14-16); the workflow makes drafts unless `visibility: public` is chosen with the owner's approval (and confirmed, behind the `public-release` environment). Android test builds are meant to be signed with the owner's stable test key from secrets (`docs/release/ANDROID_SIGNING.md`); those secrets do not exist yet (checked for Build 14), so builds so far use a throwaway key that cannot update an earlier install. `.github/workflows/tests.yml` runs the tests on staging pushes and publishes nothing |
 
 ## 2. Repository layout
 
@@ -190,7 +190,7 @@ generated data. One implementation per concern.
   development. Build authorization is separate from development authorization: "do not build"
   means no distributable release, never stop working. When one task is blocked on an owner decision,
   ask, and continue with other approved tasks; when an approved task is done, take the next from
-  `docs/DEVELOPMENT_PLAN.md` without waiting to be told. Scheduled check-ins only preserve work; they
+  `docs/CURRENT_DEVELOPMENT_STATE.md` ("Next approved tasks") without waiting to be told. Scheduled check-ins only preserve work; they
   neither start nor end development. Only an explicit owner instruction to pause stops approved work.
   If a session must end, update and push `docs/CURRENT_DEVELOPMENT_STATE.md` naming the next approved task.
 - Commits: one logical change each, imperative subject (e.g. "Add rivers and roads to the Puny World
@@ -267,8 +267,8 @@ generated data. One implementation per concern.
 
 ## 8. Performance and platforms
 
-- No platform is approved yet. Until one is, keep code platform-neutral and assume a mid-range phone
-  is the slowest target that might matter.
+- The owner directed Android first, then Windows and Linux (section 1). Keep code platform-neutral and
+  treat a mid-range phone as the slowest target.
 - Pixel art renders with nearest-neighbour filtering at integer scale. Batch tiles; never draw one
   sprite per tile per frame without culling.
 - Budgets get written here once the engine and platform are approved (target fps, memory, load

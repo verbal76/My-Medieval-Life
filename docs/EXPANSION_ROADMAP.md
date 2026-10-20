@@ -10,7 +10,7 @@ These are three independent expansions:
 | B | Settlement Advancement & Regional Economy: EXP-B, phases SET-A..E | `My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf` |
 | C | NPC Judgment System: EXP-C, gates SJD-A..H, open decisions SJD-Q01..Q14 | `My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf` |
 
-Each has its own phases, tests, integration review and build decision. None is started; none interrupts the Build 15–16 equilibrium work (EQ-16). No build numbers are assigned here.
+Each has its own phases, tests, integration review and build decision. None is started; none interrupts the Build 15–16 equilibrium work (EQ-16). The directive assigned no build numbers; the owner's roadmap below (ROAD-01, the same day) did.
 
 ## The owner's five-build roadmap (2026-10-20, register ROAD-01)
 
@@ -64,7 +64,9 @@ Phases E and F (open pit, underground) depend on what MIN-A finds about layered 
 
 C replaces today's fixed thresholds, CRT-12's notoriety refusal and the single regard score, with weighed judgment. That conflict is recorded on CRT-12 and EXP-C.
 
-## Proposed sequence (for owner approval)
+## Proposed sequence (agent proposal, before ROAD-01; superseded where it differs)
+
+> The owner's roadmap (ROAD-01, above) fixes the order: A in Build 17, B in Build 18, C in Build 19. Where this earlier proposal differs (running C's audit and prototype alongside A, B after C's first gates), the roadmap wins; those ideas would need the owner's approval to change the order. SET-A's design during Build 17 is the one dependency the roadmap records.
 
 1. **Now, Builds 15–16:** equilibrium (EQ-01..08, WR-01, CRT-*), save continuity, the caravan as a labelled 30-coin placeholder. Then the 100- and 365-day multi-seed acceptance runs (EQ-06).
 2. **First after Build 16: Expansion A, phases MIN-A to MIN-D.**

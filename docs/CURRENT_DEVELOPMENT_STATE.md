@@ -10,7 +10,7 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 |---|---|
 | Repository | `verbal76/My-Medieval-Life` |
 | Development branch | `staging/my-medieval-life` (push here; standing authorization) |
-| Last verified remote commit before this file | `a203c0b` (Reconcile every open item against the owner's five-build roadmap). The commit that adds this file is the next one; check `git log origin/staging/my-medieval-life -1`. |
+| Last verified remote commit | The head of `origin/staging/my-medieval-life` (`git log origin/staging/my-medieval-life -1`). This file was last brought up to date in the commit `git log -1 -- docs/CURRENT_DEVELOPMENT_STATE.md` shows; anything newer on staging is described in that commit's successors. |
 | `main` | Changes only when the owner merges. |
 | Multiplayer | `wip/multiplayer` (MP-01), isolated. It must not be merged into staging without the owner's explicit approval. |
 | Active build | **Build 15**, simulation stabilization (ROAD-01) |
@@ -20,6 +20,8 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) hold work that has been merged. They are history. Only `wip/multiplayer` is live.
 
 ## In progress (ACTIVE DEVELOPMENT)
+
+Seven entries, all named here (the validator checks). The ledger's count of six is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
 
 - **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
   - Done so far:
@@ -50,7 +52,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 | Run | Result |
 |---|---|
 | 100 days, seed 1 | **Finished.** 118 alive (start 100), no starvation, 16 other deaths. Wildlife 81 (54 at the start). Currency leak 0, item leaks 0. Iron, coal, copper and gold gone by day 20; stone 56 of 240 left. 12 courtships. 1 house built. 16 unemployed. |
-| 100 days, seed 2; 365 days, seeds 1 and 2 | Running, outside the repository (`out/eq/`). At day 80: 128 alive, no starvation, leak 0. |
+| 100 days, seed 2; 365 days, seeds 1 and 2 | Running when this was written, outside the repository (`out/eq/`, not committed). At day 80: 128 alive, no starvation, leak 0. A new session cannot see them: if `docs/release/LONG_RUN_SIMULATION.md` has no result for a run, and no Godot process is running (Fragile processes, below), start it again. |
 
 **Limits of these results:**
 - The runs have no player.
@@ -61,21 +63,21 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 - **EQ-09, stone (Build 16; may depend on MIN-B):** stone runs out by about day 60–100 with no lasting source. Iron, coal, copper and gold run out by day 10–20.
 - **EQ-10, ledger residuals:** the economy simulation shows axe and hammer ledger residuals of 1–3 from day 12.
-- **WR-02, grazers:** grazers starve together.
+- **WR-02, grazers (Build 16):** grazers starve together.
 - **Housing growth (EQ-07):** the 100-day seed 1 run ends with 5 crowded households and 2 couples needing a home, none of which can afford one. Only 1 house was built.
 - **B14R-12, long-run regression:** partly addressed. Wildlife no longer collapses at 100 days; it is still to be confirmed at 365.
 
 ## Done but not verified on a device
 
 The device queue is entries with status AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (the ledger lists them). Among them:
-- SAVE-00..09: export and import a save on an Android phone, through the system picker (SAVE-05);
-- CRT-01..12: courtship and friendship;
+- SAVE-00 and SAVE-02..09 (SAVE-01 is complete): export and import a save on an Android phone, through the system picker (SAVE-05);
+- CRT-01, CRT-02, CRT-04, CRT-05 and CRT-07..12 (CRT-03 and CRT-06 are not device items): courtship and friendship;
 - WR-01: the refuges;
 - CQ-01, B13-12, B13-13, B14-01, B14-06 and B14-13;
 - B7-001, B7-005 and B7-010..013;
 - B8-018, PL1-03, PL1-05 and Q-04.
 
-None of these can be closed until a real device check is recorded.
+The complete list is the ledger's "Real-device verification queue". None of these can be closed until a real device check is recorded.
 
 ## Next approved tasks, in order
 
@@ -83,15 +85,16 @@ None of these can be closed until a real device check is recorded.
 2. **When the fix9 runs end:** record the Build 15 results in `docs/release/LONG_RUN_SIMULATION.md` and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a run was killed by a container restart, restart it (below).
 3. **EQ-07, housing growth:** find why crowded households cannot afford a home. Then re-run.
 4. **EQ-10:** fix the axe and hammer ledger residuals.
-5. **WR-02:** grazers starving together.
-6. **EQ-09, stone:** measure and bring the options to the owner before any change. The options are caravan stone as a stand-in, or MIN-B earlier (`docs/EXPANSION_ROADMAP.md`).
+5. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
+6. **EQ-09, stone (target Build 16):** measure and bring the options to the owner before any change. The options are caravan stone as a stand-in, or MIN-B earlier (`docs/EXPANSION_ROADMAP.md`).
 7. **The other Build 15 items:** from the ledger's Roadmap section. Examples: DVW-A2 (rotated save backups), DVW-A4 (faucet and drain ledger), FR-07 (short simulations in CI), REC-017 (stale documents) and FR-06 (wiki pages).
 8. **Build 15 release:** when REL-14-16's conditions hold, a private draft with a readiness packet like `docs/release/BUILD_14_READINESS.md`.
 
 ## Waiting on the owner
 
-- **OD-01..09:** open owner decisions.
-- **SJD-Q01..Q14:** the judgment system's 14 questions. Never answer them on the owner's behalf.
+- **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
+- **SJD-Q01..Q14:** the judgment system's 14 questions. They are items 25–38 of section 19, "Owner decisions still open", in `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.txt`. The spec also names open points inside its sections, such as the rumour and credibility questions in its evidence section. Those belong to the same gates and are unanswered too. Never answer any of them on the owner's behalf.
+- **GM-01, generational memory:** placed in Build 19 as the closest fit. The owner has not confirmed this (gate "fit to confirm"). **VP-01, village politics:** approved, but in none of the five builds (target `20+`, after Build 19's judgment).
 - Entries with `target_build` `owner decision` or `owner action`, such as the permanent Android signing key, deferred by the owner.
 - **Builds 17–19 (EXP-A, EXP-B, EXP-C):** approved objectives that have not been started. They need the owner's authorization to begin.
 
@@ -105,3 +108,23 @@ None of these can be closed until a real device check is recorded.
 - **Never kill with `pkill -f` and a pattern that appears in your own command.** It kills the shell. Match on the process arguments with `awk` as above.
 - **After adding a GDScript `class_name`,** run `godot --headless --path game --import` before the tests.
 - **The off-machine backup** (CLAUDE.md section 5) is occasional. GitHub staging is the day-to-day record, so push completed work.
+
+## Recovery test (MEM-01, 2026-10-20)
+
+**How it was run:** an agent with no conversation context, working from a fresh clone of `staging/my-medieval-life` at `3814618`.
+
+**Result:** it answered all seven questions of the directive from the committed files. It needed four core files (CLAUDE.md, this index, this file, the ledger) and about 13 files in all.
+
+**Gaps it found, each fixed in the commit after `3814618`:**
+- stale pointers to the old plan and queue (CLAUDE.md section 5, the ledger header, `docs/DEVELOPMENT_PLAN.md`);
+- a device queue missing the status-only playtest items;
+- the decision lists' counts;
+- the expansion roadmap's superseded sequence;
+- CLAUDE.md's platform line;
+- the Build 15 run results kept only outside the repository;
+- the SJD question mapping;
+- GM-01 and VP-01 placement;
+- REL-14-16's next action;
+- REC-002's off-repository source.
+
+Repeat this test after any large change to the memory files.

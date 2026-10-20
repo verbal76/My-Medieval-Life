@@ -13177,7 +13177,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "The owner's original answers were a chat upload that is not in the repository; ask the owner to restate them or supply the document when this item is taken up",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -13192,6 +13192,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 20+ (owner/external)",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "recovery test (MEM-01): the cited upload is outside the repository; recorded so a new session knows"
     }
    ],
    "target_build": "20+",
@@ -13899,7 +13904,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold",
+   "next_action": "Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold",
    "priority": "",
    "workstream": "releases",
    "superseded_by": null,
@@ -13929,6 +13934,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "next action refreshed (recovery test, MEM-01): WR-01 code is done, only its device check remains"
     }
    ],
    "target_build": "15",
