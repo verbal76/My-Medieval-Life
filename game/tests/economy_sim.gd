@@ -183,7 +183,7 @@ func _st(k: String) -> float:
 
 
 func _sample(start: Dictionary) -> Dictionary:
-	var s := {"day": w.day(), "clock": w.clock_text()}
+	var s := {"day": w.day(), "clock": w.clock_text(), "fingerprint": _fingerprint()}       # the determinism gate compares these (PERF-03)
 	# people
 	var by_role := {}
 	var by_job := {}
