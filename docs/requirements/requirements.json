@@ -15691,7 +15691,7 @@
    "id": "PAR-05",
    "title": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Guards must not possess unexplained knowledge of an assault. Remove the fixed 15-tile awareness; apply consistent witnessing to assault and theft (direct witness, an audible disturbance where supported, a report, credible evidence). Separate detection from alarm propagation and guard response. Apply the rules whether the offender is the player or another NPC. Do not invent unsupported sensing mechanics.",
    "description": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15702,7 +15702,7 @@
     "Tests: an unseen assault alerts no guard; a seen one does; the same for an NPC offender where the code has one"
    ],
    "implementation": "",
-   "tests": "world_test.gd _par05_awareness; start_test.gd; play_test.gd",
+   "tests": "world_test.gd _par05_awareness",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15737,6 +15737,11 @@
      "date": "2026-10-20",
      "change": "COMPLETE AND VERIFIED -> IMPLEMENTED — TESTING REQUIRED; next_action",
      "why": "Reopened by the final directive (section 9): the victim's-cry channel counts as a hearing mechanic, which is not to be invented; replaced by witness and victim reports to a guard (see the directive)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "Reworked per the final directive: no hearing; guards learn of an attack by sight or by a report from the victim or a witness (World.report_crime, NPCBrain._report), the same for the player and bandits; all 26 suites passed on this exact code (project copy); theft's 2026-10-18 cry stays pending OD-20"
     }
    ],
    "target_build": "16"

@@ -2860,9 +2860,9 @@ func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
 			bar.visible = false)
 
 
-## Attacking a villager is a crime: adults who are hit fight back, and those who learn of it the way anyone learns of
-## an attack (World.aware_of_attack: seeing it, or hearing the victim cry out; PAR-05) remember it, and the guards
-## among them answer (World.raise_alarm). Nobody else knows.
+## Attacking a villager is a crime: adults who are hit fight back, and those who see it (World.aware_of_attack, PAR-05)
+## remember it; the guards among them answer, and the victim and the other witnesses carry word to a guard
+## (World.raise_alarm, report_crime). Nobody else knows.
 func _crime(victim: NPC) -> void:
 	var p := world.player
 	victim.remember("attacked by %s" % p.name)

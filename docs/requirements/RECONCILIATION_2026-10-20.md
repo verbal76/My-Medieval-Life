@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 94 (52 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **266** = 214 still open from the baseline + 52 added and open |
+| Entries added since | | 94 (51 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 214 still open from the baseline + 51 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -123,7 +123,7 @@ None.
 | PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | APPROVED — NOT STARTED | 16 |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | COMPLETE AND VERIFIED | 16 |
-| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | COMPLETE AND VERIFIED | 16 |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | COMPLETE AND VERIFIED | 15 |

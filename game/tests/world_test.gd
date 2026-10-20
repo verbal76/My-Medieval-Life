@@ -643,8 +643,8 @@ func _par03_rest() -> void:
 	p.hp = keep[5]
 
 
-## PAR-05 (OD-18.5): an attack is known only by those who see it or hear the victim cry out, for the player and a
-## bandit alike; a wall stops both; nobody else is told.
+## PAR-05 (OD-18.5, final directive section 9): an attack is known only by those who see it, and by the victim; they
+## carry word to a guard; the same for the player and a bandit; a wall stops sight; nobody hears anything.
 func _par05_awareness() -> void:
 	var w: World = main.world
 	var p := w.player
@@ -670,23 +670,45 @@ func _par05_awareness() -> void:
 	victim.pos = at + Vector2(0.8, 0)
 	guard.pos = at + Vector2(25, 0)
 	main._crime(victim)
-	check(guard.target == -1, "PAR-05: a guard who neither sees the attack nor hears the cry knows nothing of it")
+	check(guard.target == -1, "PAR-05: a guard who does not see the attack knows nothing of it")
 	victim.target = -1
 	guard.pos = at + Vector2(6, 0)
 	main._crime(victim)
 	check(guard.target == -2, "PAR-05: a guard who sees the attack answers it")
 	guard.target = -1
 	victim.target = -1
-	guard.pos = victim.pos + Vector2(float(GameData.b("guard_call_radius")) - 1.0, 0)
-	check(guard.pos.distance_to(p.pos) > float(GameData.b("witness_radius")), "PAR-05: the guard is out of sight")
+	guard.pos = victim.pos + Vector2(float(GameData.b("witness_radius")) + 4.0, 0)
+	victim.report = {}
 	main._crime(victim)
-	check(guard.target == -2, "PAR-05: a guard who hears the victim cry out answers it")
-	guard.target = -1
+	check(guard.target == -1, "PAR-05: a guard out of sight does not hear an attack (there is no hearing)")
+	check(int(victim.report.get("offender", 0)) == -2, "PAR-05: the victim will report it")
 	victim.target = -1
-	victim.hp = 0.0                               # struck down: no cry
+	victim.plan.clear()
+	check(w.brain._report(victim) and str(victim.plan[-1].get("act", "")) == "report", "PAR-05: the victim goes to tell the guard (%s)" % victim.doing)
+	victim.pos = guard.pos + Vector2(1.5, 0)
+	w.brain.act(victim, "report", {"guard": guard.id})
+	check(guard.target == -2 and victim.report.is_empty(), "PAR-05: told by the victim, the guard answers it")
+	guard.target = -1
+	var wit: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job != "guard" and o != victim:
+			wit = o
+			break
+	wit.anim = "idle"
+	wit.pos = at + Vector2(0, 2.0)
+	wit.report = {}
+	victim.pos = at + Vector2(0.8, 0)
 	main._crime(victim)
-	check(guard.target == -1, "PAR-05: a victim who cannot cry out brings nobody out of sight")
-	victim.hp = victim.max_hp
+	check(int(wit.report.get("offender", 0)) == -2, "PAR-05: a witness will report it too")
+	wit.pos = guard.pos + Vector2(0, 1.5)
+	w.brain._report(wit)
+	check(guard.target == -2 and wit.report.is_empty(), "PAR-05: a witness in sight of a guard tells them at once")
+	guard.target = -1
+	wit.report = {"offender": -2, "t": w.minutes - float(GameData.b("report").hours) * 60.0 - 1.0, "how": "saw"}
+	w.brain._report(wit)
+	check(guard.target == -1 and wit.report.is_empty(), "PAR-05: an old report lapses")
+	victim.report = {}
+	wit.pos = Vector2(116.5, 86.5)
 	var inside := ""
 	var cell := Vector2.ZERO
 	for id in w.interiors:
@@ -712,7 +734,8 @@ func _par05_awareness() -> void:
 		victim.pos = at + Vector2(0.8, 0)
 		guard.pos = at + Vector2(25, 0)
 		w.raise_alarm(w.aware_of_attack(bandit.pos, victim), bandit.id)
-		check(guard.target == -1, "PAR-05: nor does an unseen bandit's attack reach a guard")
+		check(guard.target == -1 and int(victim.report.get("offender", -9)) == bandit.id, "PAR-05: nor does an unseen bandit's attack reach a guard, but its victim will report it")
+		victim.report = {}
 		guard.pos = at + Vector2(6, 0)
 		w.raise_alarm(w.aware_of_attack(bandit.pos, victim), bandit.id)
 		check(guard.target == bandit.id, "PAR-05: a guard who sees a bandit's attack takes on the bandit, by the same rule")

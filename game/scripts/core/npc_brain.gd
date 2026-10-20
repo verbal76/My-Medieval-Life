@@ -164,6 +164,8 @@ func decide(n: NPC) -> void:
 	if n.clan == "bandit":
 		_clan_child(n, h)
 		return
+	if not n.report.is_empty() and _report(n):
+		return
 	if n.hunger < float(GameData.b("eat_below")) and _plan_eat(n):
 		return
 	if (h >= WAKE and h < SLEEP) and _plan_rest_hurt(n):
@@ -1700,6 +1702,29 @@ func _bandit_seen(n: NPC) -> NPC:
 	return null
 
 
+## PAR-05: a villager who knows of an attack tells a guard. One in sight hears it at once (World.deliver_report);
+## otherwise they go to the nearest awake guard within report.range tiles (the walk and a "report" step), and
+## failing that keep it until they meet one. The report lapses after report.hours. True when a walk is planned.
+func _report(n: NPC) -> bool:
+	var cfg: Dictionary = GameData.b("report")
+	if w.minutes - float(n.report.t) > float(cfg.hours) * 60.0 or not w.offender_alive(int(n.report.offender)):
+		n.report = {}
+		return false
+	var best: NPC = null
+	for g: NPC in w.npcs:
+		if g.alive and g.job == "guard" and g != n and not w.asleep(g) and g.pos.distance_to(n.pos) <= float(cfg.range) \
+				and (best == null or g.pos.distance_to(n.pos) < best.pos.distance_to(n.pos)):
+			best = g
+	if best == null:
+		return false
+	if w.near(n.pos, float(GameData.b("witness_radius"))).has(best):
+		w.deliver_report(n, best)
+		return false
+	n.doing = "going to tell a guard"
+	n.plan = [go(best.cell()), doit("report", {"guard": best.id})]
+	return true
+
+
 func _bandit_near(p: Vector2, r: float) -> NPC:
 	for o: NPC in w.npcs:
 		if o.alive and o.role == "bandit" and o.pos.distance_to(p) <= r:
@@ -1715,6 +1740,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"leave":
 			n.anim = "idle"
+			return true
+		"report":                             # PAR-05: at the guard (if they are still within sight)
+			var g := w.npc(int(a.guard))
+			if not n.report.is_empty() and g != null and g.alive and w.near(n.pos, float(GameData.b("witness_radius"))).has(g):
+				w.deliver_report(n, g)
 			return true
 		"rest_end":                           # a rest that ran its course (PAR-03)
 			n.anim = "idle"
@@ -2080,7 +2110,7 @@ func fight(n: NPC, dt: float) -> void:
 				stolen = id
 				break
 		tnpc.remember("robbed by %s" % n.name)
-		w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)       # who sees it or hears the cry (PAR-05)
+		w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)       # who sees it; the victim reports it (PAR-05)
 		w.note("%s robbed %s %s of %d coins%s." % [n.name, tnpc.name, tnpc.family, take,
 			(" and a " + GameData.item_name(stolen).to_lower()) if stolen != "" else ""])
 		n.target = -1
@@ -2098,7 +2128,7 @@ func fight(n: NPC, dt: float) -> void:
 		if tnpc.target == -1:
 			tnpc.target = n.id
 		if n.role == "bandit":
-			w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)   # who sees it or hears the cry (PAR-05)
+			w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)   # who sees it; the victim reports it (PAR-05)
 		if tnpc.hp <= 0.0:
 			w.kill(tnpc, "slain by %s" % n.name)
 			n.target = -1

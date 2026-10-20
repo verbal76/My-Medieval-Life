@@ -2000,33 +2000,67 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC) -> S
 
 
 ## The nearest guard on duty (out and not fighting) within `r` tiles of a point, or null.
-## PAR-05 (OD-18.5): who learns of an attack, for any attacker, the player or a villager. Two channels the world
-## supports, nothing else: `seen`, the people who see it (near the blow, witness_radius: awake and in the same place,
-## the rule a theft is seen by); and `heard`, while the victim lives and is awake, the people who hear them cry out
-## (guard_call_radius, the shout a caught pickpocket's victim gives). Detection only: the response is raise_alarm.
+## PAR-05 (owner OD-18.5 and the final directive, section 9): who learns of an attack, for any attacker, the player
+## or a villager, by the one channel the world has for seeing: `seen`, the people who see it (near the blow,
+## witness_radius: awake and in the same place, the rule a theft is seen by). The victim knows too. There is no
+## hearing. Detection only: the response is raise_alarm, and word passes on by report (report_crime).
 func aware_of_attack(at: Vector2, victim: NPC) -> Dictionary:
 	var seen := near(at, float(GameData.b("witness_radius")))
-	var heard := []
-	if victim != null and victim.alive and victim.hp > 0.0 and not asleep(victim):
-		for n: NPC in near(victim.pos, float(GameData.b("guard_call_radius"))):
-			if not seen.has(n):
-				heard.append(n)
 	seen.erase(victim)
-	heard.erase(victim)
-	return {"seen": seen, "heard": heard}
+	return {"seen": seen, "victim": victim}
 
 
-## The response to an attack someone knows of (aware_of_attack): every free guard among them takes on the attacker
-## (`attacker` an NPC id, or -2 for the player). Returns how many guards answered.
+## The response to an attack (aware_of_attack): every free guard who saw it takes on the attacker (`attacker` an NPC
+## id, or -2 for the player); the victim and the others who saw it carry a report to a guard (report_crime). Returns
+## how many guards answered at once.
 func raise_alarm(aware: Dictionary, attacker: int) -> int:
 	var k := 0
-	for n: NPC in (aware.seen as Array) + (aware.heard as Array):
-		if n.job == "guard" and n.target == -1 and n.id != attacker:
-			n.target = attacker
-			k += 1
+	for n: NPC in aware.seen:
+		if n.job == "guard":
+			if n.target == -1 and n.id != attacker:
+				n.target = attacker
+				k += 1
+		elif n.role != "bandit" and n.id != attacker:
+			report_crime(n, attacker, "saw")
+	var v: NPC = aware.get("victim", null)
+	if v != null and v.alive and v.role != "bandit" and v.id != attacker:
+		if v.job == "guard":
+			if v.target == -1:
+				v.target = attacker
+		else:
+			report_crime(v, attacker, "victim")
 	if k > 0:
 		stat("guards_alarmed", k)
 	return k
+
+
+## PAR-05: `n` knows of an attack by `offender` (an NPC id, -2 the player) and will tell a guard: when one is in sight
+## they report it (NPCBrain._report), and seek one out within report.range tiles. The report lapses after
+## report.hours. `how`: "saw" or "victim". Saved with the villager.
+func report_crime(n: NPC, offender: int, how: String) -> void:
+	n.report = {"offender": offender, "t": minutes, "how": how}
+	stat("crime_reports_made")
+
+
+## Whether the offender of a report can still be pursued: alive (the player alive, or the villager).
+func offender_alive(offender: int) -> bool:
+	if offender == -2:
+		return player.alive
+	var o := npc(offender)
+	return o != null and o.alive
+
+
+## The guard a report reaches: `g` takes on the offender when free (PAR-05's response). True when delivered.
+func deliver_report(n: NPC, g: NPC) -> bool:
+	var off := int(n.report.offender)
+	n.report = {}
+	if not offender_alive(off):
+		return true
+	g.remember("told by %s %s of an attack" % [n.name, n.family])
+	stat("crime_reports_delivered")
+	if g.target == -1 and g.id != off:
+		g.target = off
+	return true
 
 
 func guard_near(at: Vector2, r: float) -> NPC:

@@ -44,6 +44,7 @@ var attack_cd := 0.0
 var target := -1             # npc id being fought (-1 none, -2 the player)
 var memory: Array = []       # notable events this NPC knows about
 var skills := {}             # skill -> xp, as the player's (PAR-01: the same curve, gates and effects; Skills)
+var report := {}             # an attack this villager knows of and will tell a guard: {offender, t, how} (PAR-05)
 var earned := 0
 var spent := 0
 var tick_acc := 0.0          # for abstract (distant) simulation
@@ -112,6 +113,7 @@ func to_dict() -> Dictionary:
 		"birth_family": birth_family,
 		"clan": clan,
 		"skills": skills.duplicate(),
+		"report": report.duplicate(),
 	}
 
 
@@ -138,6 +140,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.children = (d.get("children", []) as Array).map(func(c): return int(c))
 	n.birth_family = str(d.get("birth_family", ""))          # older saves: none changed
 	n.clan = str(d.get("clan", ""))                           # older saves: none
+	n.report = (d.get("report", {}) as Dictionary).duplicate()        # older saves: none
 	for k in d.get("skills", {}):                             # older saves (< 15): World.load_dict seeds them (Skills.seed_villagers)
 		n.skills[str(k)] = int(d.skills[k])
 	return n
