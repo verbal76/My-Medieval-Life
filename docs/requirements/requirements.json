@@ -5,7 +5,7 @@
    "id": "AGENT-01",
    "title": "Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports",
    "kind": "rule",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "You are authorized to use up to two additional subagents, for a maximum of three active agents including yourself. This is a ceiling, not a target.",
    "description": "Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports",
    "source": "docs/directives/2026-10-20_controlled_parallel_development.md",
@@ -13,11 +13,13 @@
    "acceptance": [
     "Followed in every session: the ten controls; one worker first; the summary in progress reports"
    ],
-   "implementation": "",
+   "implementation": "docs/directives/2026-10-20_controlled_parallel_development.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "7e0d9c6"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -39,11 +41,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 7e0d9c6; implementation; b16_class",
+     "why": "A standing rule, recorded (as the World Design Rules are); followed in every session"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "standing rule",
-   "roadmap_reason": "owner directive 2026-10-20"
+   "roadmap_reason": "owner directive 2026-10-20",
+   "b16_class": "done"
   },
   {
    "id": "AR-OWNER",
@@ -14005,7 +14013,7 @@
    "id": "MILE-01",
    "title": "Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner",
    "kind": "rule",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Do not silently move future expansion features into Build 16.",
    "description": "Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner",
    "source": "docs/directives/2026-10-20_controlled_parallel_development.md",
@@ -14013,11 +14021,13 @@
    "acceptance": [
     "The Build 16 audit separates stabilization-essential work from items a later milestone could take, and proposes any move to the owner"
    ],
-   "implementation": "",
+   "implementation": "docs/directives/2026-10-20_controlled_parallel_development.md",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "7e0d9c6"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -14039,11 +14049,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 7e0d9c6; implementation; b16_class",
+     "why": "A standing rule, recorded (as the World Design Rules are); followed in every session"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "standing rule",
-   "roadmap_reason": "owner directive 2026-10-20"
+   "roadmap_reason": "owner directive 2026-10-20",
+   "b16_class": "done"
   },
   {
    "id": "MIN-A",

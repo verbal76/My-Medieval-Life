@@ -1,12 +1,52 @@
 # Build 16 status audit
 
-The owner's request of 2026-10-20 (register B16-AUDIT): where Build 16 stands, what is finished, what is left, what blocks
-completion, and how much work has been added to its scope. The tables between the markers are generated from the
-requirements register by `python3 tools/build_status.py --write` and are never hand-edited; the sections around them are
-kept by hand and updated as work completes.
+The owner's request of 2026-10-20 (register B16-AUDIT, `docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md`):
+where Build 16 stands, what is finished, what is left, what blocks completion, and how much has been added to its scope.
+**The inventory tables are generated from the requirements register** (`python3 tools/build_status.py --write`; never
+hand-edited); the sections around them are kept by hand and updated as work completes. A status is taken from the
+register only: nothing is called complete because code was written or a design approved.
 
-**Status: being written.** The executive summary, owner decisions, completion criteria and plan follow the family-chest
-comparison runs now finishing.
+*Last updated: 2026-10-20, staging `7e0d9c6`.*
+
+## F. Executive summary
+
+| | |
+|---|---|
+| Build 16 work items | **96** (98 register entries, 2 of them the standing rules AGENT-01 and MILE-01) |
+| Scope growth | 30 items when Build 16 began (the Build 15 release, `a8760be`); **66 work items added** during Build 16 by owner directives (food security FSE 26, parity PAR 10, family farms FARM 7, stalls STALL 6, seeds and merchants SEED/MERCH 5, counters and trade CTR/SHOP/TRADE 6, time TIME 4, armorer ARM 1, the audit 1) |
+| Complete and verified | **27** |
+| In progress | **12** |
+| Awaiting testing (implemented) | **11** |
+| Not started | **42** |
+| Blocked | **2** (B7-016 pending a re-measure; OD-17, an owner decision) |
+| Superseded | 2 (FSE-11 by FARM-06; OD-10) |
+| Proposed for deferral (owner's approval needed) | **2** (DVW-A12, DVW-B6) |
+| Release blockers (defects) | **4** (ARM-01, FSE-B06, FSE-B11, FSE-B12) |
+| Outstanding owner decisions affecting Build 16 | **8** (section C) |
+| Branch and latest verified commit | `staging/my-medieval-life`, `7e0d9c6` (pushed, remote hash checked) |
+| Test suites | All 27 Godot suites pass on `61750f1` (the last code change); Python tests OK; register, interactions, resources, materials: 0 problems |
+| Determinism | The gate passes, identical to its baseline (re-baselined on `61750f1`, no coin or goods leaks) |
+| Simulations | Family chest, seed 2, 365 days: **1 starvation death** (baseline 11), 0 script errors, ledgers balanced; seed 1 (Actions): 1. Seeds 3-4: *running on Actions*. Nights without firewood rose (seed 2: 2,776 against 1,784) |
+| Next three actions | 1. Finish the family-chest comparison (seeds 3-4, the one death classified) and close FSE-16/17/18 and B7-015 on it. 2. The four release blockers, starting with the armorer (ARM-01). 3. The owner's open farm and stall questions (section C), then FARM-01 and STALL-01 onwards. |
+
+**Completion percentage.** By count, 27 of 96 work items are complete and verified: **28 %**. That figure treats every
+item as equal, which they are not: the size column (S = small, M = medium, L = large, XL = very large) is a judgement of
+effort, not a measurement. Weighting the open items S = 1, M = 3, L = 8, XL = 20 gives about 225 points of open work,
+of which the four release blockers are 8 points and the 41 required features about 165; most of the remaining effort is
+in a few large new systems (family farms, stalls, counters, seed propagation, the shared farming model).
+
+### Essential for stabilization versus a later milestone (no deferral without the owner)
+
+- **Stabilization-essential** (the village must hold up on its own; these protect the baseline): the release blockers;
+  the pending-testing items (relief, the family chest, families and orphans, grazing); the equilibrium acceptance runs
+  (EQ-01..06, EQ-16, WDR-005-C, SJD-A Gate A); the remaining food-security defects; TIME-02 (no behaviour change).
+- **New features the owner placed in Build 16 that a later milestone could take, if the owner chooses** (each is a
+  substantial system): family farms (FARM-01..07), market stalls (STALL-01..06), skilled-trade counters and shopkeepers
+  (CTR-01..04, SHOP-01, TRADE-01), seed propagation and the seed merchant (SEED-02..04, MERCH-01), seasonal village
+  farming (FSE-13) and the shared farming model (FSE-12). They are approved for Build 16 and **are not deferred**; the
+  owner may choose to move some to their own milestone so the next playable build is not held back.
+- **Already outside Build 16, and kept there** (MILE-01): the goal-driven living economy (FSE-10, with EXP-D, the
+  standalone Living Economy build) and the NPC Judgment system (Build 19).
 
 ## Inventory (generated)
 
@@ -16,8 +56,8 @@ comparison runs now finishing.
 
 | Status | Items |
 |---|---|
-| Complete | 27 |
-| In progress | 14 |
+| Complete | 29 |
+| In progress | 12 |
 | Pending testing | 11 |
 | Not started | 42 |
 | Blocked | 2 |
@@ -32,9 +72,8 @@ comparison runs now finishing.
 | Optional | 1 |
 | Proposed deferral (owner) | 2 |
 | Owner decision | 1 |
-| Done | 27 |
+| Done | 29 |
 | Superseded | 2 |
-| Unclassified | 2 |
 
 Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE 26, MERCH 1, MILE 1, PAR 10, SEED 4, SHOP 1, STALL 6, TIME 4, TRADE 1.
 
@@ -42,14 +81,14 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE
 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
-| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead  | In progress | Roadmap target | Followed in every session: the ten controls; one worker first; the summary in progress reports |  |  |  |  |  |
+| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead  | Complete | docs/directives/2026-10-20_controlled_parallel_development.md |  | `7e0d9c6` |  |  | Done |  |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: | Not started |  | Report fixed, still present or not verified, with evidence; fix if still present; a regression test |  |  |  | Release blocker | M |
 | CTR-01 | Skilled-trade sales counters: every established skilled business (armorer, smith, carpenter, others as they develop) has a working customer  | Not started |  | A counter per business, reachable, with a prompt in the conversation style; tests |  |  |  | Required feature | L |
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | Not started |  | Normal navigation (no teleport); the player need not search the village; tests |  | after CTR-01 |  | Required feature | M |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees | Not started |  | Unavailable reasons shown; one service task at a time; tests |  | after CTR-02 |  | Required feature | M |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | Not started |  | OD-24's 5% applies to stalls only; counters keep their existing terms; tests |  | after CTR-01 |  | Required feature | S |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and re | Not started |  | Player and villagers buy from it; stock is finite and restocked legitimately (the caravan or harvest-saved material); no free goods; tests |  | after SEED-02 |  | Required feature | M |
-| MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) wit | In progress | Roadmap target | The Build 16 audit separates stabilization-essential work from items a later milestone could take, and proposes any move to the owner |  |  |  |  |  |
+| MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) wit | Complete | docs/directives/2026-10-20_controlled_parallel_development.md |  | `7e0d9c6` |  |  | Done |  |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | Not started |  | Written audit of what exists, with code references |  |  |  | Required feature | S |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | Not started |  | Crops, fruit trees (seed or sapling), berry bushes (cuttings), flowers (seed): planting removes inventory; harvest gives recovery by seeded chance; conservation; tests |  | after SEED-01 |  | Required feature | L |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | Not started |  | Perennials stay after picking and fruit again in their seasons; growth in calendar time (OD-21); tests |  | after SEED-01 |  | Required feature | M |
@@ -212,3 +251,91 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | Pending testing | Fauna._may_graze: over a wood's grass capacity only as many grazers eat as it feeds, ranked strongest (health share), then best fed, then id; the weakest and hungriest go short. wildlife_test test_grazing_over_capacity;  | Over capacity, the weakest or hungriest suffer first rather than the whole herd at once | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  | Testing and verification | S |
 
 <!-- b16:end -->
+
+## Findings for the owner's sections 1-8 (current state, before any change)
+
+- **Seeds and propagation (SEED-01, audited):** crops (wheat, carrot, potato, herb) are planted by the player cell by cell
+  and **consume one real seed** a cell; a harvest returns a fixed one seed (no chance); seasons apply. The manor's fields
+  sow **without seed** (FARM-06). Fruit trees: apple, oak and pine saplings exist; the player can plant a sapling
+  (`main.gd::plant_sapling`, consumes it); felling drops saplings by a seeded chance; apple trees are perennial and bear
+  in Summer and Autumn. Berry bushes and wild flowers regrow after picking (perennial) but are **not seasonal and cannot be
+  propagated or planted** (no cuttings, no flower seed from wild flowers). Villagers never plant anything.
+- **Seed merchant (MERCH-01):** the food merchant and farmers sell crop seed to the **player only**, from finite stock the
+  caravan restocks; no seller of berry cuttings, flower seed or saplings; no villager buys seed.
+- **Armorer (ARM-01):** *verdict being established (a read-only check of the code; this section is updated with it).*
+  The register's record calls the armoury counter decorative: nobody serves there, and there is no armorer occupation.
+- **Counters, shopkeepers, trade (CTR-01..04, SHOP-01, TRADE-01):** not started; the existing parts (the tavern counter,
+  merchant stalls, the player's shop counter, storefronts) are mapped in the check above.
+
+## C. Outstanding owner decisions affecting Build 16
+
+OD-22, OD-23 and OD-24 are **answered and approved** (2026-10-20). Settled decisions are not reopened. Open:
+
+| ID | Decision | Options and implications | Recommendation |
+|---|---|---|---|
+| FARM-07 | When the 2-coin farmland lease is paid | (a) 2 coins a week, the first week at once (the existing lease framework; a plot of 16-30 cells already prices at 2) (b) a one-off 2 coins (a new kind of lease) | (a): no new interval, as OD-23 asks |
+| FARM-01/02 | Plot size; fence and gate materials | Size: fixed (5x6) or free within limits. Fence: logs and stone in what amounts; gate place | A fixed 5x6 plot; 1 log per 3 fence cells (the pens' rate today, in planks) and 2 stone for the gate posts; one construction site |
+| STALL-01/05 | Stall terms | Ground rent besides the 5%? Does the 5% replace the 5-coin daily pitch rent and the merchants' free stalls? Rounding; when taken; stall materials | The 5% is the whole lease; it replaces the pitch rent and the free merchant stalls; permanent shops keep their terms (section 7); rounded down, taken from the till when the session closes; materials as `storefront_cost` (6 planks, 1 iron bar) |
+| FSE-12 | Do the manor's six fields move to the per-cell model? | (a) yes, with yields compared before activation (b) keep the field model as an explicit, modelled difference | (a), behind a switch, compared first |
+| FSE-13 | Activate seasonal village farming | After the isolated comparison | Decided on the comparison (not yet run) |
+| OD-20 | A caught pickpocket's cry: keep it, or make it a report like assault's | (a) a report (parity with PAR-05) (b) keep the cry | (a) |
+| EQ-22 | The caravan's buying order (smiths are served first and take most of its budget) | (a) by need (lowest stock against wants) (b) rotate (c) keep | (a) |
+| OD-17 | The Game Designer spec's open calls (the hero, the view, Steam Deck labelling) | As in the entry | As in the entry |
+| DVW-A12 | **Proposed deferral:** moving rules out of the UI into `core/` (a refactor, no gameplay change) | To Build 17's start | Defer |
+| DVW-B6 | **Proposed deferral:** wildlife wandering in from the overworld (a regional feature) | To Build 18 (settlement and regional economy) | Defer |
+
+Not affecting Build 16 and not reopened: the Living Economy decisions (OD-LE-01..15), the Judgment questions
+(SJD-Q01..Q14, Build 19), OD-01..09 (later builds or general balance review).
+
+## D. What remains before Build 16 is complete
+
+Build 16 is complete when every non-deferred item is complete and verified, and the acceptance runs (EQ-06: four seeds,
+365 days, player inactive) show 0 script errors, balanced ledgers and no consistent collapse, with the suites green and
+the determinism gate passing. Outcomes are measured, not required to be favourable (WDR-022).
+
+- **Release blockers (4):** ARM-01 (the armorer, the owner's playtest); FSE-B06 (bandits fed from nothing); FSE-B11 (the
+  hearth's recipes differ for player and villagers); FSE-B12 (hunting experience differs). Any script error in a long
+  run is also a blocker.
+- **Required features not finished (41):** family farms (FARM-01..07); stalls (STALL-01..06); counters, shopkeepers and
+  trade (CTR-01..04, SHOP-01, TRADE-01); seeds (SEED-02..04, MERCH-01); the farming model and seasons (FSE-12..15); the
+  time-unit layer (TIME-02); the food-security umbrella and its tests (FSE-00, FSE-08, FSE-09); parity's umbrella
+  (PAR-00); the exploit-player test (DVW-A5); equilibrium objectives EQ-03, EQ-05, EQ-06, EQ-16; REC-001 (the player's
+  adoption is not yet confirmed); SJD-A (Gate A, the Build 16 baseline); this audit.
+- **Testing and verification (18):** relief, the family chest and the death analysis (FSE-16..18, B7-015, now measured:
+  close on seeds 3-4); families and orphans (FAM-02..07); grazing (WR-02); B7-016 (traders at 0 coins: re-measure); EQ-09
+  (stone); DVW-A3 (money supply); EQ-01, EQ-02, EQ-04, WDR-005-C (measured on the acceptance runs).
+- **Optional (1):** TIME-03 (the retuning proposals; owner review).
+- **Future-build candidates:** the two proposed deferrals above, for the owner's approval. Nothing else is moved.
+
+## E. Recommended execution plan
+
+Stabilization first: the family-chest baseline is closed before any change that would invalidate it.
+
+| Order | Work | Size | Depends on | Changes the baseline? | Parallel? |
+|---|---|---|---|---|---|
+| 1 | Close the family-chest comparison: seeds 3-4, the one death classified; close FSE-16..18, B7-015 | S | runs in hand | no | lead only (simulations) |
+| 2 | ARM-01 armorer: verdict, then fix | M | the check now running | yes (who serves, sells) | a worker can implement once the verdict is in |
+| 3 | FSE-B11 hearth recipes, FSE-B12 hunting experience | S each | - | slightly | with 2, different files |
+| 4 | FSE-B06 bandits' food from real game and stores | M | - | yes | lead |
+| 5 | TIME-02 time units through one layer (no behaviour change: the gate must stay identical) | M | - | no | a worker, in parallel with 2-4 |
+| 6 | Re-baseline: four seeds, 365 days (Actions); close the verification items EQ-01/02/04/09, FAM-02..07, WR-02, B7-016, DVW-A3 | M | 2-5 | is the new baseline | lead |
+| 7 | DVW-A5 exploit-player test (a harness scenario) | M | 6 | no | a worker |
+| 8 | FARM-06 manor fields take seed; then FARM-01..05 family plots (property, construction, farming) and FARM-07 | L | owner answers (C) | yes | one worker on farms |
+| 9 | SEED-02..04 and MERCH-01 (the same farming and plant files as 8) | L | 8 | yes | after 8, same worker |
+| 10 | STALL-01..06 (business, construction placement) | L | owner answers (C) | yes | a worker, in parallel with 8 (shared file construction.gd: coordinated by the lead) |
+| 11 | CTR-01..04, SHOP-01, TRADE-01 (business, the brain, the interaction UI) | L | 2 and 10 (the same business code) | yes | after 10 |
+| 12 | FSE-13 seasonal village fields behind a switch; FSE-12 the shared field model; FSE-15 recalculation | M-L | 8 | only when activated (owner review) | lead |
+| 13 | Final acceptance: four seeds, 365 days; the suites; the gate; the report | M | all | is the release baseline | lead |
+
+At most two workers at once (AGENT-01): for example TIME-02 and the armorer fix now, then farms and stalls. Each changes
+the baseline only through the lead, who runs the simulations and re-baselines.
+
+## G. Agent summary
+
+- **Before the owner's agent directive (this session):** read-only audit workers, one task each, reports reused: the
+  agriculture audit (about 143,000 tokens), hunting and husbandry (191,000), the time-system inventory (180,000), the
+  OD-22..24 code survey (211,000). These counts are the tool's own reports; no other cost figure is available.
+- **Since the directive (AGENT-01):** one worker: the armorer and counters check (read-only, bounded; running). No
+  duplicate work: each worker had separate files and questions, and the lead did not repeat their reading.
+- **Is parallel work saving time?** Yes for the audits, which ran while the long simulations ran (only the lead runs
+  simulations). Implementation workers will be used only on tasks with separate files.

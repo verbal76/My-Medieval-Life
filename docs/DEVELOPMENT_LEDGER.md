@@ -1003,8 +1003,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 
 | ID | Item | Status | Source |
 |---|---|---|---|
-| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | ACTIVE DEVELOPMENT | docs/directives/2026-10-20_controlled_parallel_development.md |
-| MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | ACTIVE DEVELOPMENT | docs/directives/2026-10-20_controlled_parallel_development.md |
+| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
+| MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
 | WDR-001 | World Design Rule 1: Material Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
 | WDR-002 | World Design Rule 2: Professional Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
 | WDR-003 | World Design Rule 3: Meaningful Recipes | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
