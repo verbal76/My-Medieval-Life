@@ -6,7 +6,7 @@ name: Long simulations
 # runner, with its own Godot user data, output and temporary paths. It runs the same harness as locally
 # (game/tests/economy_sim.gd, unchanged rules and step), uploads the JSON, the log and a summary (commit,
 # seed, days, runtime, fingerprint, currency and item ledgers) as an artifact, and fails when the
-# simulation or its ledger checks fail. It builds and publishes nothing.
+# simulation or its ledger checks fail, or when the log has any script error. It builds and publishes nothing.
 
 on:
   workflow_dispatch:
@@ -103,11 +103,12 @@ jobs:
           code=$?
           set -e
           end=$(date +%s)
-          python3 - "$out" "$code" "$((end - start))" <<'PY'
+          errors=$(grep -c "SCRIPT ERROR" "$out/sim.log" || true)    # Godot reports script errors and carries on: count them
+          python3 - "$out" "$code" "$((end - start))" "$errors" <<'PY'
           import json, os, sys
-          out, code, secs = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+          out, code, secs, errors = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
           summary = {"commit": os.environ["GITHUB_SHA"], "seed": int(os.environ["SEED"]), "days": int(os.environ["DAYS"]),
-                     "runtime_seconds": secs, "exit_code": code, "runner": os.environ.get("RUNNER_NAME", ""), "cpus": os.cpu_count()}
+                     "runtime_seconds": secs, "exit_code": code, "script_errors": errors, "runner": os.environ.get("RUNNER_NAME", ""), "cpus": os.cpu_count()}
           try:
               d = json.load(open(os.path.join(out, "sim.json")))
               last = d["samples"][-1]
@@ -124,6 +125,11 @@ jobs:
           if [ "$code" -ne 0 ]; then
             echo "::error::the simulation or its ledger checks failed (exit $code); see sim.log"
             exit "$code"
+          fi
+          if [ "$errors" -ne 0 ]; then
+            echo "::error::$errors script errors in the simulation; see sim.log"
+            grep -m1 -A12 "SCRIPT ERROR" "$out/sim.log"
+            exit 1
           fi
 
       - name: Keep the results

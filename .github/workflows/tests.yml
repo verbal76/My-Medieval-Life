@@ -25,7 +25,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -86,3 +86,20 @@ jobs:
           $godot --headless --path game --script res://tests/relations_test.gd
           $godot --headless --path game --script res://tests/save_transfer_test.gd
           $godot --headless --path game --script res://tests/housing_test.gd
+
+      - name: Short economy simulation (FR-07)
+        run: |
+          # 10 game days, seed 1: fails on a currency or item leak (economy_sim's own exit code) and on any
+          # script error in the log, which Godot reports without stopping. Year-long runs: long-sims.yml.
+          godot=~/godot-bin/godot
+          set +e
+          $godot --headless --path game --script res://tests/economy_sim.gd -- --days 10 --seed 1 --every 5 --out "$RUNNER_TEMP/sim.json" > "$RUNNER_TEMP/sim.log" 2>&1
+          code=$?
+          set -e
+          tail -n 12 "$RUNNER_TEMP/sim.log"
+          errors=$(grep -c "SCRIPT ERROR" "$RUNNER_TEMP/sim.log" || true)
+          if [ "$code" -ne 0 ] || [ "$errors" -ne 0 ]; then
+            grep -m1 -A12 "SCRIPT ERROR" "$RUNNER_TEMP/sim.log" || true
+            echo "::error::economy simulation failed (exit $code, $errors script errors)"
+            exit 1
+          fi

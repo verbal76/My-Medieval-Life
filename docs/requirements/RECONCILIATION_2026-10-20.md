@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 231 still open, 0 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 45 (34 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 231 still open from the baseline + 34 added and open |
+| Entries added since | | 46 (35 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **266** = 231 still open from the baseline + 35 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (0)
@@ -26,10 +26,11 @@ None.
 
 None.
 
-## Added since the baseline (45)
+## Added since the baseline (46)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
+| EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | ACTIVE DEVELOPMENT | 15 |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | APPROVED — NOT STARTED | 16 |
 | FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | approved | APPROVED — NOT STARTED | 16 |
