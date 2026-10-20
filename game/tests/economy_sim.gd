@@ -408,6 +408,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 			ids.erase(id)                     # counters that are not goods, e.g. eaten_deer_by_wolf (predation)
 	var bad := {}
 	var flows := {}
+	var table := {}                       # DVW-A4: every good's faucets (produced, imported) and drains (consumed, exported)
 	var keys := ids.keys()
 	keys.sort()
 	for id in keys:
@@ -425,6 +426,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 		var s1 := int(now.get(id, 0))
 		var residual := s1 - (s0 + produced + imported - consumed - exported)
 		var row := {"start": s0, "produced": produced, "imported": imported, "consumed": consumed, "exported": exported, "end": s1}
+		table[id] = row
 		if id in MATERIALS or residual != 0:
 			flows[id] = row
 		if residual != 0:
@@ -451,7 +453,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 			- d.call("poached_" + k) - d.call("starved_" + k) - preyed - d.call("fox_took_" + k) - d.call("old_age_" + k)
 		if expect != int(now_a.get(k, 0)):
 			animals[k] = {"expected": expect, "counted": int(now_a.get(k, 0))}
-	return {"items": bad, "flows": flows, "deposits": dep, "animals": animals}
+	return {"items": bad, "flows": flows, "table": table, "deposits": dep, "animals": animals}
 
 
 ## A digest of the world's state: equal digests mean the same run (used to check that the ledger
@@ -598,7 +600,27 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("trade flows (buyer>seller): %s" % JSON.stringify(flows))
 	print("missed meals: %s" % JSON.stringify(_miss_summary()))
 	print("deaths: %s" % JSON.stringify(death_log))
+	_print_faucets(s)
 	print("fingerprint %s" % _fingerprint())
+
+
+## DVW-A4: what entered and left the village over the run, kept apart from trade inside it. Coins: the
+## caravan's purchases and newcomers' purses in, the caravan's sales out. Goods: made, mined, felled and
+## harvested, and imported, in; eaten, used, built with, burned, broken and lost, and exported, out.
+func _print_faucets(s: Dictionary) -> void:
+	var c: Dictionary = s.currency
+	print("FAUCETS AND DRAINS (whole run)")
+	print("  coins: in %d (caravan buys %d, newcomers %d), out %d (caravan sells); held %d -> %d" % [int(c.external_in),
+		int(_st("caravan_coins_in")), int(_st("newcomer_coins_in")), int(c.external_out), int(c.start_total), int(c.total)])
+	print("  %-22s %7s %8s %8s %8s %8s %7s" % ["good", "start", "made", "imported", "used", "exported", "end"])
+	var t: Dictionary = s.ledger.table
+	var ids := t.keys()
+	ids.sort()
+	for id in ids:
+		var r: Dictionary = t[id]
+		if int(r.produced) + int(r.imported) + int(r.consumed) + int(r.exported) == 0:
+			continue                          # held, never made or used: nothing flowed
+		print("  %-22s %7d %8d %8d %8d %8d %7d" % [id, int(r.start), int(r.produced), int(r.imported), int(r.consumed), int(r.exported), int(r.end)])
 
 
 ## Missed meals (NPCBrain.miss_log): counts by job, by hour of day, by cause, and the first day.

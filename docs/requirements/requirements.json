@@ -6702,7 +6702,7 @@
    "id": "DVW-A4",
    "title": "Faucet and drain ledger for coins and each item (:29)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Faucet and drain ledger for coins and each item (:29)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248)",
@@ -6711,7 +6711,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "Plan | `coin_sources` exists; no generated breakdown table found | NOT-STARTED",
-   "tests": "",
+   "tests": "economy_sim.gd 3-day seed 1 output",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -6736,6 +6736,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed)"
     }
    ],
    "acceptance_derived": true,

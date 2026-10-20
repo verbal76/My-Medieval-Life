@@ -7,16 +7,18 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 231 still open, 0 closed since |
+| Open entries (rules excluded) | 231 | 230 still open, 1 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
 | Entries added since | | 46 (35 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **266** = 231 still open from the baseline + 35 added and open |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 230 still open from the baseline + 35 added and open |
 | Open entries moved to another build | | 0 |
 
-## Closed since the baseline (0)
+## Closed since the baseline (1)
 
-None.
+| ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
+|---|---|---|---|---|---|---|---|
+| DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
 
 ## Moved to another build since the baseline (0)
 

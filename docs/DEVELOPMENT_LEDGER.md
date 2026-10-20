@@ -11,19 +11,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 80 |
+| APPROVED — NOT STARTED | 79 |
 | ACTIVE DEVELOPMENT | 9 |
 | PARTIALLY IMPLEMENTED | 37 |
 | IMPLEMENTED — TESTING REQUIRED | 14 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 127 |
+| COMPLETE AND VERIFIED | 128 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
 | **Total approved** | **356** |
-| Outstanding (not complete, superseded or canceled) | 210 |
+| Outstanding (not complete, superseded or canceled) | 209 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 31 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 23 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 81 | 79 |
+| Build 15: simulation stabilization | 80 | 78 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **266** | **210** |
+| **Total open** | **265** | **209** |
 
-### Build 15: simulation stabilization (81)
+### Build 15: simulation stabilization (80)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -85,7 +85,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
 | DVW-A14 | Play one whole life before each release (:39) | approved | APPROVED — NOT STARTED |  | release practice: play one whole life before each release, starting with Build 15 |
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | IMPLEMENTED — TESTING REQUIRED |  | dated save backups complete the save-continuity work |
-| DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED |  | simulation harness and conservation checks the stabilization work depends on |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | IMPLEMENTED — TESTING REQUIRED |  | simulation harness and conservation checks the stabilization work depends on |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | approved | ACTIVE DEVELOPMENT |  | the 365-day failures (housing, births, population) under correction now |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | approved | IMPLEMENTED — TESTING REQUIRED |  | the 365-day failures (housing, births, population) under correction now |
@@ -409,7 +408,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (80)
+## APPROVED — NOT STARTED (79)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -421,7 +420,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) |  |  |  |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) |  |  |  |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  |  |
-| DVW-A4 | Faucet and drain ledger for coins and each item (:29) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248) |  |  |  |
 | DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 249) |  |  |  |
 | DVW-A7 | Over-production from raising skills by use (:32) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 251) |  |  |  |
 | DVW-A8 | Audit player-only perks vs same rules (:33) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 252) |  |  |  |
@@ -646,7 +644,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (127)
+## COMPLETE AND VERIFIED (128)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -729,6 +727,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B8R-020 | Gathering banners fill phone screen | docs/release/BUILD_8_ISSUES.md (audit inventory row 93) |  |  |  |
 | DVW-A1 | Stale heir comment (:26) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 245) |  |  |  |
 | DVW-A11 | Threats never scale to player (:36) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 255) |  |  |  |
+| DVW-A4 | Faucet and drain ledger for coins and each item (:29) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248) | economy_sim.gd 3-day seed 1 output |  |  |
 | FR-05 | Title window opens scrolled into the controls list | docs/release/BUILD_13_PACKET.md | `ec3bd0e`; start_test |  |  |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | `9ec6b40`; INFRA-02 validation |  |  |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | docs/directives/2026-10-20_loft_and_actions_approval.md section 2 | `9ec6b40`, `de76782`; .github/workflows/long-sims.yml run 39365379504 |  |  |
