@@ -1014,3 +1014,42 @@ eleven recipes) and PAR-05 (sight and reports).
 - **Legitimate outcomes:** the village's course differs from the baseline under the owner's parity rules, and no
   rescue was added.
 - **Under investigation:** the rise in money-short meals, above.
+
+## EQ-06 after player-villager parity: 365 days, seeds 1-4, no player (2026-10-20)
+
+Actions run 39453456640 on `c57b134`: the parity code (PAR-01..05, PAR-02A). It predates `d18dcc1`, the
+one-unit rule for a trader's input. Compared with the pre-parity baseline, Actions 39430585149 on `8d3f623`.
+
+| Day 365 (before -> after) | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| Script errors / currency leak / item leaks | 0 / 0 / none | 0 / 0 / none | 0 / 0 / none | 0 / 0 / none |
+| Alive | 106 -> 105 | 146 -> 167 | 125 -> 169 | 160 -> 126 |
+| Starvation deaths | 0 -> 6 | 0 -> 17 | 23 -> 3 | 3 -> 5 |
+| Households | 37 -> 40 | 38 -> 50 | 39 -> 35 | 49 -> 45 |
+| Sites finished / started | 5/8 -> 11/11 | 9/11 -> 13/13 | 13/13 -> 14/14 | 26/26 -> 17/17 |
+| Houses built | 5 -> 9 | 9 -> 10 | 10 -> 8 | 19 -> 12 |
+| Unemployed / manor hands | 0/29 -> 0/25 | 5/39 -> 9/39 | 0/28 -> 8/33 | 20/31 -> 0/30 |
+| Woodcutters | 1 -> 1 | 1 -> 5 | 4 -> 4 | 3 -> 4 |
+| Nights without firewood | 6,852 -> 3,627 | 6,982 -> 3,388 | 2,962 -> 1,566 | 5,910 -> 2,856 |
+| Treasury | 2,444 -> 2,130 | 2,514 -> 2,465 | 1,882 -> 2,136 | 1,955 -> 1,927 |
+| Coins in the world | 8,778 -> 8,781 | 9,227 -> 9,649 | 8,987 -> 9,477 | 9,354 -> 8,898 |
+| Wheat / meat held at the end | 2,788/1,693 -> 2,545/1,966 | 7,259/1,559 -> 1,974/2,030 | 2,734/1,938 -> 3,157/1,661 | 1,549/1,902 -> 3,507/2,469 |
+
+**What changed:**
+- **Firewood:** nights without firewood roughly halved on every seed. Skilled woodcutters fell more logs a tree
+  (Woodcutting log_bonus) and spend less time chopping.
+- **Building:** every site started was finished on every seed (one was left open before parity).
+- **New goods:** villagers made the eleven formerly player-only goods and sold them on (seed 1: 84 leather caps,
+  21 leather armour, 14 ploughs).
+- **Starvation:** 31 deaths across the four seeds, against 26 before parity. Seed 3 fell from 23 to 3, and seed 2 rose
+  from 0 to 17. As before, wheat and meat were held in the village at the time. Pattern B7-015: the hungry could not
+  pay, and the goods chain ran short of cash (see the 100-day analysis above).
+  - The relief rule is per household, by its food in store. Whether those who starved were outside it (no household)
+    or reached it too late is being checked with a local 365-day run of seed 2, which lists the deaths.
+
+**Classification (World Design Rule 022):**
+- **Integrity:** held on every seed.
+- **Legitimate outcomes:** the village under the owner's parity rules develops differently. Each seed's course differs,
+  and no rescue was added.
+- **Under investigation:** whether the starvation deaths are the relief rule working as written (a legitimate
+  outcome) or missing someone it should reach (a defect).
