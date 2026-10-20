@@ -1033,6 +1033,8 @@ func test_child_food() -> void:
 	check(weight < members.size() and is_equal_approx(b.household_day_food(h), weight * 72.0), "a household's daily need weights its children (%.1f for %d members)" % [b.household_day_food(h), members.size()])
 	for o: NPC in members:
 		o.coins = 0
+		for f in NPCBrain.EDIBLE + ["meat", "log"]:
+			o.inv.remove(f, o.inv.count(f))          # FSE-17: what members carry counts as the household's food
 	w.households[h].pantry.items.clear()
 	w.households[h].pantry.add("wheat", 3)
 	check(is_equal_approx(b.household_food_days(h), 360.0 / (weight * 72.0)), "days of food are counted against the weighted need (%.2f)" % b.household_food_days(h))
@@ -1067,7 +1069,7 @@ func test_child_food() -> void:
 	w.granary.add("wheat", 500)
 	w.households[h].pantry.items.clear()
 	for o: NPC in members:
-		for f in NPCBrain.FOOD:
+		for f in NPCBrain.EDIBLE + ["meat", "log"]:
 			o.inv.remove(f, o.inv.count(f))
 	b.market_food_points = 0.0
 	b._relief(10.0, 100.0)
@@ -1088,17 +1090,25 @@ func test_child_food() -> void:
 	check(granary_wheat == int(b.village_day_food() * float(GameData.b("granary_target_days")) / 120.0) and b.village_day_food() < (w.alive_count() - w.alive_count("bandit")) * 72.0,"the granary's target is 7 days of the weighted need, with what is on its way (%d)" % granary_wheat)
 	# the village's days of food
 	w._update_food_days()
+	# one valuation (FSE-17): every edible thing as eaten, grain as cooked (120 a wheat), raw meat as roasted for the
+	# logs held; counted here item by item, independently of NPCBrain.store_points
 	var pts := 0.0
+	var meat := 0
+	var logs := 0
+	var invs: Array = [w.granary]
 	for o: NPC in w.npcs:
 		if o.alive and o.role != "bandit":
-			for f in NPCBrain.FOOD:
-				pts += o.inv.count(f) * float(GameData.item(f).food)
+			invs.append(o.inv)
 	for hh in w.households:
-		for f in NPCBrain.FOOD:
-			pts += hh.pantry.count(f) * float(GameData.item(f).food)
+		invs.append(hh.pantry)
+	for inv: Inventory in invs:
+		for f in NPCBrain.EDIBLE:
+			pts += inv.count(f) * (120.0 if f == "wheat" else float(GameData.item(f).food))
+		meat += inv.count("meat")
+		logs += inv.count("log")
+	pts += mini(meat, logs) * 120.0
 	for f in NPCBrain.FOOD:
-		pts += w.table_food(f) * float(GameData.item(f).food)
-	pts += w.granary.count("wheat") * float(GameData.item("wheat").food)
+		pts += w.table_food(f) * (120.0 if f == "wheat" else float(GameData.item(f).food))
 	pts += w.manor_work.food_points()
 	check(is_equal_approx(w.food_days, pts / b.village_day_food()), "the village's food days use the weighted need (%.2f)" % w.food_days)
 	# the caravan: food between the weighted and the unweighted 3-day reserve is not held back
@@ -2898,8 +2908,8 @@ func test_manor_work() -> void:
 	w.granary.add("wheat", 200)
 	for o: NPC in b._members(h):
 		o.coins = 0
-		for f in NPCBrain.FOOD:
-			o.inv.remove(f, o.inv.count(f))
+		for f in NPCBrain.EDIBLE + ["meat", "log"]:
+			o.inv.remove(f, o.inv.count(f))          # FSE-17: members' pockets count as the household's food
 	var pantry: Inventory = w.households[h].pantry
 	pantry.items.clear()
 	pantry.add("wheat", ceili(1.5 * b.household_day_food(h) / 120.0))

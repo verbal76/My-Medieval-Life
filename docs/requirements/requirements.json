@@ -11135,7 +11135,7 @@
    "id": "FSE-17",
    "title": "Manor relief checks and draws on every food store (amends the B3 relief rule)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Relief should check all possible food stores. (Answers: all food sellers, all foods; other households' surplus; the granary and manor stores first; raw food it can cook. A household's own reckoning counts all its stores, yes.)",
    "description": "Manor relief checks and draws on every food store (amends the B3 relief rule)",
    "source": "owner message 2026-10-20 ('Relief should check all possible food stores') and the owner's answers to the agent's two clarifying questions the same day",
@@ -11146,7 +11146,7 @@
     "Food is moved and paid for, never created; coins conserved; regression tests; the seed-2 baseline compared before and after"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "reserve_test",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -11158,7 +11158,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Compare the 365-day runs (Actions, seeds 1-4) with the baselines; record in LONG_RUN_SIMULATION.md",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -11173,6 +11173,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: owner instruction"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; next_action",
+     "why": "Relief takes the granary first, then any edible food from any seller cheapest point first, raw meat for the logs to roast it, and other households' food beyond their reserve horizon; a household's food counts all it holds; one food valuation everywhere; tests in reserve_test.gd::relief_sources; all 27 suites pass; closes after the 365-day comparison with the 5625505 baseline"
     }
    ],
    "target_build": "16",

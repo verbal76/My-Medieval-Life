@@ -75,38 +75,106 @@ func tab_and_relief(w: World, fam: NPC) -> void:
 	fam.plan = []
 	check(not w.brain._plan_eat(fam) and float(w.stats.get("missed_meal_no_money", 0.0)) == missed0 + 1.0,
 		"tab: with 2 coins and nobody to pay the rest: no trip to the vendor, a meal missed for want of money")
-	# relief: two households under the trigger and food for only one; the one with nothing gets it
-	var a: int = -1
-	var b: int = -1
+	relief_sources(w, fam)
+
+
+## Every household's food and coins taken away except `keep`'s, the others left exactly the reserve horizon of pottage
+## (OD-19's reserve_days: they neither qualify for relief nor have food to spare); the granary and all sellers emptied.
+func strip_village(w: World, keep: Array) -> void:
 	for h in w.households.size():
-		if h != fam.household and not w.brain._members(h).is_empty():
-			if a == -1:
-				a = h
-			elif b == -1 and h > a:
-				b = h
-	for h in w.households.size():
-		for m: NPC in w.brain._members(h):
+		var mem: Array = w.brain._members(h)
+		for m: NPC in mem:
 			m.coins = 0
-			for id in NPCBrain.FOOD:
+			for id in NPCBrain.EDIBLE + ["meat", "log"]:
 				m.inv.items.erase(id)
 		var p: Inventory = w.households[h].pantry
-		for id in NPCBrain.FOOD:
+		for id in NPCBrain.EDIBLE + ["meat", "log"]:
 			p.items.erase(id)
-		if h != a and h != b:
-			p.add("pottage", 200)
-	w.households[a].pantry.add("pottage", ceili(1.5 * w.brain.household_day_food(a) / 40.0))
+		if not keep.has(h) and not mem.is_empty():
+			p.add("pottage", ceili(float(GameData.b("reserve_days")) * w.brain.household_day_food(h) / NPCBrain.food_points("pottage")))
 	w.granary.items.erase("wheat")
 	for o: NPC in w.npcs:
-		for id in ["wheat", "pottage"]:
+		for id in NPCBrain.EDIBLE + ["meat"]:
 			o.inv.items.erase(id)
-	var farmer: NPC = w.npcs.filter(func(o): return o.alive and o.job == "farmer")[0]
+	w._price_cache.clear()
+	w._reserve_cache.clear()
+
+
+## FSE-17 (owner, 2026-10-20: relief checks every food store) and the order of service (B7-015).
+func relief_sources(w: World, fam: NPC) -> void:
+	var hs := []
+	for h in w.households.size():
+		if h != fam.household and not w.brain._members(h).is_empty():
+			hs.append(h)
+	var a: int = hs[0]
+	var b: int = hs[1]
+	var c: int = hs[2]
+	var obl: float = w.brain.daily_obligations()
+	w.treasury = 100000
+	# the hungriest first: one unit for sale, two households under the trigger
+	strip_village(w, [a, b])
+	w.households[a].pantry.add("pottage", ceili(1.5 * w.brain.household_day_food(a) / 40.0))
+	var farmer: NPC = w.npcs.filter(func(o): return o.alive and o.job == "farmer" and o.household != a and o.household != b)[0]
 	farmer.inv.add("wheat", w.brain.keep_wheat(farmer) + 1)
 	var da: float = w.brain.household_food_days(a)
 	var db: float = w.brain.household_food_days(b)
-	w.treasury = 100000
-	w.brain._relief(w.brain.daily_obligations(), 0.0)
+	w.brain._relief(obl, 0.0)
 	check(a < b and da > db and db < 1.0 and w.households[b].pantry.count("wheat") == 1 and w.households[a].pantry.count("wheat") == 0 and w.manor_work.pending_for(a) == 0,
 		"relief: with one unit for sale, the household with nothing (hh%d, %.2f days) gets it before hh%d (%.2f days)" % [b, db, a, da])
+	# any food from any seller: only bread at the tavern
+	strip_village(w, [b])
+	var keeper: NPC = w.npcs.filter(func(o): return o.alive and o.job == "tavernkeeper")[0]
+	keeper.inv.add("bread", 3)
+	var kc: int = keeper.coins
+	w.brain._relief(obl, 0.0)
+	check(w.households[b].pantry.count("bread") > 0 and keeper.coins > kc, "FSE-17: relief buys the tavern's bread when there is no grain or pottage (%d bread)" % w.households[b].pantry.count("bread"))
+	# other households' food beyond their own reserve horizon, never below it, paid to them
+	strip_village(w, [b])
+	var extra := 5
+	w.households[c].pantry.add("pottage", extra)
+	var cneed: float = w.brain.household_day_food(c) * float(GameData.b("reserve_days"))
+	var head: NPC = w.brain._richest_in_household(w.brain._members(c)[0])
+	w.brain._relief(obl, 0.0)
+	var cleft: float = NPCBrain.store_points([w.households[c].pantry])
+	check(w.households[b].pantry.count("pottage") > 0 and cleft >= cneed and head.coins > 0,
+		"FSE-17: relief buys another household's spare food, leaving it its own %d points (%d left), and pays it %d coins" % [int(cneed), int(cleft), head.coins])
+	# raw meat only for a household with logs to roast it, as many as its logs
+	strip_village(w, [b])
+	var hunter: NPC = w.npcs.filter(func(o): return o.alive and o.job == "hunter" and o.household != b)[0]
+	hunter.inv.add("meat", 3)
+	w.brain._relief(obl, 0.0)
+	var no_logs: bool = w.households[b].pantry.count("meat") == 0
+	strip_village(w, [b])
+	hunter.inv.add("meat", 3)
+	w.households[b].pantry.add("log", 2)
+	w.brain._relief(obl, 0.0)
+	check(no_logs and w.households[b].pantry.count("meat") == 2, "FSE-17: relief buys raw meat only for logs to roast it (none without logs, %d for 2 logs)" % w.households[b].pantry.count("meat"))
+	# a household's own food is reckoned from all it holds: members' pockets, and meat it can roast
+	strip_village(w, [b])
+	var mb: Array = w.brain._members(b)
+	var need: float = w.brain.household_day_food(b)
+	(mb[0] as NPC).inv.add("pottage", 3)
+	w.households[b].pantry.add("meat", 2)
+	w.households[b].pantry.add("log", 1)
+	var want: float = (3.0 * 40.0 + 1.0 * NPCBrain.food_points("meat")) / need
+	check(absf(w.brain.household_food_days(b) - want) < 0.001, "FSE-17: a household's food counts what members carry and the meat its logs can roast (%.2f days)" % want)
+	check(NPCBrain.food_points("wheat") == 120.0 and NPCBrain.food_points("meat") == 120.0 and NPCBrain.food_points("egg") == 10.0,
+		"one valuation of food: wheat as cooked (120), meat as roasted (120), the rest as eaten")
+	# parity: villagers eat what the player can eat, and roast meat at their hearth
+	strip_village(w, [b])
+	var eater: NPC = mb[0]
+	eater.inv.add("egg", 5)
+	eater.hunger = 10.0
+	eater.plan = []
+	var ate: bool = w.brain._plan_eat(eater)
+	check(ate and str(eater.plan[0].get("act", "")) == "eat" and str(eater.plan[0].get("args", {}).get("item", "")) == "egg",
+		"parity: a villager with eggs in hand and nothing else eats an egg, as the player can (%s)" % eater.doing)
+	strip_village(w, [b])
+	var pb: Inventory = w.households[b].pantry
+	pb.add("meat", 1)
+	pb.add("log", 1)
+	w.brain._cook_at_home(eater, pb)
+	check(pb.count("roast_meat") >= 2 and not pb.has("meat"), "parity: a household roasts its own meat at the hearth with a log (%d roast meat)" % pb.count("roast_meat"))
 
 
 func scenarios(w: World) -> void:

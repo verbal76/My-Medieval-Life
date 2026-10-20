@@ -108,7 +108,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `leather_cap` | workbench | 2 leather | 1 leather_cap | tanner |
 | `make_cart_wheel` | sawhorse | 3 plank | 1 cart_wheel | carpenter |
 | `press_cheese` | prep | 3 milk | 1 cheese | cook |
-| `roast_meat` | oven | 1 log, 1 meat | 2 roast_meat | cook |
+| `roast_meat` | oven | 1 log, 1 meat | 2 roast_meat | cook, households |
 | `saw_planks` | sawhorse | 1 log | 2 plank | carpenter, households |
 | `sew_bandages` | workbench | 1 wool_cloth | 3 linen_bandage | tanner |
 | `smelt_copper` | forge | 1 coal, 2 copper_ore | 1 copper_bar | smith |

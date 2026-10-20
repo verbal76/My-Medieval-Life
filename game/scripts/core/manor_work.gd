@@ -594,8 +594,8 @@ func goods() -> Dictionary:
 func food_points() -> float:
 	var p := 0.0
 	var g := goods()
-	for f in NPCBrain.FOOD:
-		p += int(g.get(f, 0)) * float(GameData.item(f).food)
+	for f in NPCBrain.EDIBLE:
+		p += int(g.get(f, 0)) * NPCBrain.food_points(f)     # the one valuation (FSE-17)
 	return p
 
 

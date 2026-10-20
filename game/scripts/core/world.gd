@@ -293,17 +293,18 @@ var food_days := 99.0
 
 func _update_food_days() -> void:
 	var points := 0.0
+	# one valuation of food (NPCBrain.food_points: grain as cooked, raw meat as roasted for the logs held), so the
+	# village's food days and famine read as a household's do (FSE-17; wheat counted at 20 here and 120 there before)
+	var stores: Array = []
 	for n: NPC in npcs:
 		if n.alive and n.role != "bandit":
-			for f in NPCBrain.FOOD:
-				points += n.inv.count(f) * float(GameData.item(f).food)
+			stores.append(n.inv)
 	for hh in households:
-		for f in NPCBrain.FOOD:
-			points += hh.pantry.count(f) * float(GameData.item(f).food)
+		stores.append(hh.pantry)
+	stores.append(granary)                                              # wheat, and stores of a house fallen to the manor
+	points += NPCBrain.store_points(stores)
 	for f in NPCBrain.FOOD:
-		points += table_food(f) * float(GameData.item(f).food)
-	for f in NPCBrain.FOOD:
-		points += granary.count(f) * float(GameData.item(f).food)      # wheat, and stores of a house fallen to the manor
+		points += table_food(f) * NPCBrain.food_points(f)
 	if manor_work:
 		points += manor_work.food_points()                              # grain the manor has bought or sent, on its way
 	food_days = points / maxf(1.0, brain.village_day_food())          # children weighted by age
@@ -675,12 +676,10 @@ func necessity(who) -> Dictionary:
 	var need_pts := 0.0
 	for p in people:
 		need_pts += (NPCBrain.food_factor(p) if p is NPC else 1.0) * 24.0 * float(GameData.b("hunger_per_hour")) * days
-	var have_pts := 0.0
+	var have_pts := NPCBrain.store_points(stores)       # all it holds, by the one valuation (FSE-17)
 	var logs := 0
 	var meds := 0
 	for inv: Inventory in stores:
-		for f in NPCBrain.FOOD:
-			have_pts += float(inv.count(f)) * float(GameData.item(f).get("food", 0))
 		logs += inv.count("log")
 		for m in NPCBrain.MEDICINES:
 			meds += inv.count(m)
@@ -736,7 +735,7 @@ func _market_price(kind: String) -> float:
 	var ids: Array = NPCBrain.FOOD if kind == "food" else (NPCBrain.MEDICINES if kind == "medicine" else ["log"])
 	var best := INF
 	for id in ids:
-		var per := float(GameData.item(id).get("food", 1)) if kind == "food" else 1.0
+		var per := NPCBrain.food_points(id) if kind == "food" else 1.0
 		if per <= 0.0:
 			continue
 		var p := float(GameData.value(id))
@@ -762,7 +761,7 @@ func cheapest_food_unit() -> Array:
 		for id in NPCBrain.FOOD:
 			if o.inv.count(id) - brain.reserve(o, id) <= 0:
 				continue
-			var pts := float(GameData.item(id).get("food", 0))
+			var pts := NPCBrain.food_points(id)
 			var price := sell_price(o, id)
 			if pts > 0.0 and price > 0 and float(price) / pts < per:
 				per = float(price) / pts
