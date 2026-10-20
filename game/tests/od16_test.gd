@@ -78,6 +78,15 @@ func test_manor_pays_the_smith_in_advance() -> void:
 	check(w.treasury == 2000 - int(order.paid) and int(order.paid) > 0, "paid in advance from the treasury (%d coins)" % int(order.paid))
 	check(w.total_coins() == coins0, "coins only moved")
 	check(not w.brain.tool_short(n), "the woodcutter, an axe coming, is not counted out of work")
+	smith.inv.remove("plank", smith.inv.count("plank"))
+	for id in ["iron_ore", "copper_ore", "coal"]:
+		smith.inv.remove(id, smith.inv.count(id))
+	smith.inv.remove("iron_bar", smith.inv.count("iron_bar"))
+	smith.inv.add("iron_bar", 4)                  # bars for the axe and more, but no plank
+	smith.coins = 50
+	w.brain._smith(smith)
+	check(str(smith.doing).contains("plank for the manor"), "short of a plank, the smith fetches one for the order rather than working the bars into something else (%s)" % smith.doing)
+	check(smith.inv.count("iron_bar") == 4, "the bars are kept for the order")
 	for id in ["iron_ore", "copper_ore", "coal"]:   # nothing to smelt: the forge goes straight to the order
 		smith.inv.remove(id, smith.inv.count(id))
 	for id in GameData.recipes["forge_axe"].in:

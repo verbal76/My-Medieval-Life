@@ -274,7 +274,12 @@ func _sample(start: Dictionary) -> Dictionary:
 			merchants += n.coins
 	s.money = {"household_cash": {"n": cash.size(), "min": cash[0] if not cash.is_empty() else 0, "median": cash[cash.size() / 2] if not cash.is_empty() else 0,
 		"max": cash[-1] if not cash.is_empty() else 0, "total": cash_total}, "traders": trade, "treasury": w.treasury, "merchant_funds": merchants,
-		"gov": _keys_with("gov_", ["tax", "wages", "rent", "land_sales", "repairs", "public_works", "procurement", "relief_bought", "fines"])}
+		"gov": _keys_with("gov_", ["tax", "wages", "rent", "land_sales", "repairs", "public_works", "procurement", "relief_bought", "fines", "tools", "loot_recovered"]),
+		"od16": {"manor_tool_coins": int(_st("gov_tools")), "axes_given": int(_st("gov_tool_given_axe")), "axe_advances": int(_st("gov_tool_advance_axe")),
+			"axes_delivered": int(_st("gov_tool_delivered_axe")), "pickaxes_given": int(_st("gov_tool_given_pickaxe")), "pickaxe_advances": int(_st("gov_tool_advance_pickaxe")),
+			"loot_coins_recovered": int(_st("gov_loot_recovered")), "bandit_market_trips": int(_st("bandit_market_trips")),
+			"bandit_coins": w.npcs.filter(func(o: NPC) -> bool: return o.alive and o.role == "bandit").reduce(func(acc: int, o: NPC) -> int: return acc + o.coins, 0),
+			"loot_coins": w.loot.reduce(func(acc: int, l) -> int: return acc + int(l.coins), 0)}}
 	# materials
 	var held := {}
 	for g in groups:

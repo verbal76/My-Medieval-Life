@@ -936,15 +936,25 @@ func _smith(n: NPC) -> bool:
 	for id in ["pickaxe", "axe", "iron_sword", "copper_sword"]:
 		if inv.count(id) > 1 and _buyer_for(n, id) != null:
 			return _plan_sell(n, id)
-	# the manor's orders first (EQ-19): the tools it paid for in advance
+	# the manor's orders first (EQ-19): the tools it paid for in advance. While one is open the forge keeps its iron
+	# for it and fetches what the tool still lacks (the plank from the carpenter, ore and coal from the raw-goods
+	# merchant), instead of working the bars into something else
 	for x in w.manor_orders:
-		if int(x.smith) == n.id and inv.count(str(x.tool)) == 0:
-			var r := "forge_" + str(x.tool)
-			if GameData.recipes.has(r) and inv.has_all(GameData.recipes[r].in):
-				return _do_recipe(n, r)
-	# forge whatever is scarcest
+		if int(x.smith) != n.id or inv.count(str(x.tool)) > 0:
+			continue
+		var r := "forge_" + str(x.tool)
+		if not GameData.recipes.has(r):
+			continue
+		if inv.has_all(GameData.recipes[r].in):
+			return _do_recipe(n, r)
+		if _fetch_for_order(n, GameData.recipes[r].in):
+			return true
+	# forge whatever is scarcest (not with the iron an open order of the manor's is waiting for)
+	var ordered := w.manor_orders.any(func(x): return int(x.smith) == n.id and inv.count(str(x.tool)) == 0)
 	var wants := []
 	for r in ["forge_pickaxe", "forge_axe", "forge_iron_sword", "forge_hammer", "forge_copper_sword", "forge_iron_armor", "forge_lockpicks", "forge_padlock", "forge_cart_axle", "forge_cart_ironwork"]:
+		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
+			continue
 		var out: String = GameData.recipes[r].out.keys()[0]
 		var cap := 1 if out in ["hammer", "iron_armor", "padlock", "cart_axle", "cart_ironwork"] else 3
 		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in):
@@ -978,6 +988,30 @@ func _smith(n: NPC) -> bool:
 	n.doing = "tending the forge, waiting for ore"
 	n.plan = [go(_workplace_cell(n)), work(30, "", {}, "idle")]
 	return true
+
+
+## What a smith still lacks for a tool the manor ordered (EQ-19): a plank from the carpenter, or the ore and coal
+## for the bars from the raw-goods merchant. True when a trip is planned.
+func _fetch_for_order(n: NPC, need: Dictionary) -> bool:
+	var inv := n.inv
+	if inv.count("plank") < int(need.get("plank", 0)):
+		var c := _first_with_job("carpenter")
+		if c != null and c.inv.has("plank") and n.coins >= w.sell_price(c, "plank") and not w.asleep(c):
+			n.doing = "fetching a plank for the manor's order"
+			n.plan = [go(_workplace_cell(c)), doit("buy_from", {"vendor": c.id, "item": "plank", "qty": 1})]
+			return true
+	var bars_short := int(need.get("iron_bar", 0)) - inv.count("iron_bar")
+	if bars_short > 0:
+		for id in ["coal", "iron_ore"]:
+			var short := bars_short * (1 if id == "coal" else 2) - inv.count(id)
+			if short <= 0:
+				continue
+			for v: NPC in w.npcs:
+				if v.alive and v != n and buy_role(v) == "merchant_raw" and v.inv.count(id) > 0 and not w.asleep(v) and n.coins >= w.sell_price(v, id):
+					n.doing = "buying %s for the manor's order" % GameData.item_name(id).to_lower()
+					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": short})]
+					return true
+	return false
 
 
 func _cook(n: NPC) -> bool:
