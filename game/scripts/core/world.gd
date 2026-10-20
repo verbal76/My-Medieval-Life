@@ -748,6 +748,29 @@ func _market_price(kind: String) -> float:
 	return float(_price_cache[key])
 
 
+## The cheapest food unit on sale now, [price, food points] ([0, 0] when none is): what a coin can really buy, by the
+## asking prices of the villagers selling cooked food or grain (the relief reckoning, NPCBrain.household_food_days).
+func cheapest_food_unit() -> Array:
+	var key := "unit@" + str(int(minutes / 60.0))
+	if _price_cache.has(key):
+		return _price_cache[key]
+	var best := [0, 0]
+	var per := INF
+	for o: NPC in npcs:
+		if not o.alive or not (o.job in ["tavernkeeper", "farmer"] or brain.buy_role(o) == "merchant_food"):
+			continue
+		for id in NPCBrain.FOOD:
+			if o.inv.count(id) - brain.reserve(o, id) <= 0:
+				continue
+			var pts := float(GameData.item(id).get("food", 0))
+			var price := sell_price(o, id)
+			if pts > 0.0 and price > 0 and float(price) / pts < per:
+				per = float(price) / pts
+				best = [price, int(pts)]
+	_price_cache[key] = best
+	return best
+
+
 ## Whether an item is a necessity a reserve is kept for (OD-19 section 3): food, fuel, medicine.
 static func is_necessity(id: String) -> bool:
 	return id in NPCBrain.FOOD or id in NPCBrain.MEDICINES or id == "log"

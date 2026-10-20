@@ -3168,7 +3168,7 @@
    "id": "B7-015",
    "title": "Missed meals while food piles up",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Missed meals while food piles up",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 56)",
@@ -3177,7 +3177,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "(B7_ISSUES:58) | \"Diagnosed; needs a design decision\" | AWAIT-OWNER (recorded) | Partial code: guards provision households (INT-072), `87b3663` | Owner decision | Register not updated with INT-072",
-   "tests": "",
+   "tests": "reserve_test.gd (relief)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -3202,6 +3202,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "Defect found 2026-10-20 in the relief reckoning: household_food_days valued each coin at a fixed 60 food points, so a household with 2 coins when a meal cost 3 counted as fed (1.67 days), relief went only as a carried job, and its people starved (seed 2, days 227-262). Coins now count only for whole units of the cheapest food on sale (World.cheapest_food_unit); reserve_test checks it (fails on the old code). Full suites and a seed 2 year run in progress"
     }
    ],
    "acceptance_derived": true,

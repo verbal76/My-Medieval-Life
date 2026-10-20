@@ -2548,7 +2548,12 @@ func household_food_days(h: int) -> float:
 		cash += o.coins
 	var need := household_day_food(h)
 	var share := market_food_points * need / maxf(1.0, village_day_food())
-	pts += minf(cash * 60.0, share)
+	# coins count only for the food they can buy now: whole units of the cheapest food on sale (a household with 2
+	# coins when a meal costs 3 can buy nothing; valuing a coin at a fixed 60 points let such households starve
+	# while the relief rule saw days of food)
+	var unit: Array = w.cheapest_food_unit()
+	if int(unit[0]) > 0:
+		pts += minf(float(cash / int(unit[0])) * float(unit[1]), share)
 	return pts / maxf(1.0, need)
 
 

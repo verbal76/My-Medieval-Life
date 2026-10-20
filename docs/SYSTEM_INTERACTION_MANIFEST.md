@@ -222,9 +222,9 @@ Rules:
 
 ### INT-024 · Relief
 - **Trigger:** A household can cover under 2 days of food.
-- **Source:** `game/scripts/core/npc_brain.gd::_relief`, `game/scripts/core/npc_brain.gd::household_food_days`, `game/scripts/core/npc_brain.gd::_note_relief`
+- **Source:** `game/scripts/core/npc_brain.gd::_relief`, `game/scripts/core/npc_brain.gd::household_food_days`, `game/scripts/core/npc_brain.gd::_note_relief`, `game/scripts/core/world.gd::cheapest_food_unit`
 - **Affects:** Relief, Treasury, Granary, Households, Market
-- **Expected:** Food goes to the pantry up to 3 days, from the granary first, then bought: carried there as a manor job (INT-066), or at once when the household has under 1 day of food (then also from grain still at the farmers' for the granary); a household with relief on its way waits for it. Under 1 day of food it is paid below the reserve, down to one day of wages. Cash counts as food only up to the market's share. Chronic relief is named in the log. Days and the fill are measured against the household's age-weighted need (INT-047).
+- **Expected:** Food goes to the pantry up to 3 days, from the granary first, then bought: carried there as a manor job (INT-066), or at once when the household has under 1 day of food (then also from grain still at the farmers' for the granary); a household with relief on its way waits for it. Under 1 day of food it is paid below the reserve, down to one day of wages. Cash counts as food only up to the market's share. Chronic relief is named in the log. Days and the fill are measured against the household's age-weighted need (INT-047). Cash counts as food only for what it can buy now: whole units of the cheapest food on sale (`World.cheapest_food_unit`), not a fixed rate a coin (a defect found 2026-10-20: households with 2 coins when a meal cost 3 counted as fed and starved).
 - **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_child_food`
 
 ### INT-025 · Granary purchases

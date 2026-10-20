@@ -14,9 +14,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 67 |
 | ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 12 |
+| IMPLEMENTED — TESTING REQUIRED | 13 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
-| BLOCKED | 15 |
+| BLOCKED | 14 |
 | DEFERRED | 9 |
 | COMPLETE AND VERIFIED | 172 |
 | SUPERSEDED | 20 |
@@ -111,7 +111,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
-| B7-015 | Missed meals while food piles up | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
+| B7-015 | Missed meals while food piles up | approved | IMPLEMENTED — TESTING REQUIRED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | B7-016 | Tanners/goods merchants end at 0 coins | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | PARTIALLY IMPLEMENTED |  | rules in core/, not UI: a code audit before the expansions build on it |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | approved | ACTIVE DEVELOPMENT |  | money supply re-measured over 100/365 days on several seeds (EQ-06) |
@@ -531,12 +531,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (12)
+## IMPLEMENTED — TESTING REQUIRED (13)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
+| B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) | reserve_test.gd (relief) |  |  |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3 | game/tests/family_test.gd |  |  |
@@ -592,7 +593,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | device check of wiki navigation on touch and controller |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
 
-## BLOCKED (15)
+## BLOCKED (14)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -601,7 +602,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 357) |  |  |  |
 | B13-15 | Android signing stability | docs/DEVELOPMENT_LEDGER.md (audit inventory row 190) |  |  |  |
 | B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | docs/release/BUILD_7_ISSUES.md (audit inventory row 47) |  |  |  |
-| B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) |  |  |  |
 | B7-016 | Tanners/goods merchants end at 0 coins | docs/release/BUILD_7_ISSUES.md (audit inventory row 57) |  |  |  |
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner request 2026-10-19 (DEVELOPMENT_LEDGER ENV-RTK) |  | owner: environment setup script |  |
 | FR-01 | Lizards and spiders as enemies | owner 2026-10-18 ('good enemies'; docs/DECISIONS.md) |  | no lizard or spider pack supplied |  |

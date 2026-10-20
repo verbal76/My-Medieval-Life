@@ -155,6 +155,19 @@ func scenarios(w: World) -> void:
 	var c := int(w.necessity(fam).need)
 	fam.hp = fam.max_hp
 	check(b < a and c > b, "9. food in store lowers the reserve, an injury with no medicine raises it (%d, %d, %d)" % [a, b, c])
+	# the relief reckoning counts coins only for food they can buy now (a defect found 2026-10-20: a household with
+	# 2 coins when a meal cost 3 counted as having 1.67 days of food, so relief never came urgently and its people starved)
+	bare(w, fam)
+	var unit: Array = w.cheapest_food_unit()
+	check(int(unit[0]) > 0 and int(unit[1]) > 0, "relief: the cheapest food on sale is known (%s)" % str(unit))
+	for m: NPC in members(w, fam):
+		m.coins = 0
+	fam.coins = int(unit[0]) - 1
+	check(w.brain.household_food_days(fam.household) == 0.0, "relief: coins that cannot buy a meal are no food (%d coins, food at %d)" % [fam.coins, int(unit[0])])
+	fam.coins = int(unit[0]) * 3
+	var days3: float = w.brain.household_food_days(fam.household)
+	check(days3 > 0.0 and days3 <= 3.0 * float(unit[1]) / maxf(1.0, w.brain.household_day_food(fam.household)) + 0.001, "relief: coins count for the food they can buy (%.2f days)" % days3)
+	fam.coins = 0
 	# determinism: the same world, the same reserves
 	var w2 := World.new()
 	w2.setup(VillageMap.load_default(), 1)
