@@ -47,7 +47,7 @@ Also: **MEM-01** and **MEM-02** (the two memory directives) are complete: see "R
 
 ## Last test results
 
-**Suites.** The Python suites and the register validator pass at every commit of 2026-10-20 (run before each push). CI (`.github/workflows/tests.yml`) runs the Godot suites on each staging push; earlier runs are cancelled when a newer push arrives, so check the latest run's result for the head commit. The Godot suites last passed locally at `a203c0b`; the game code has changed since (the EQ-07 housing work), and the full Godot list was re-run locally on 2026-10-20 before the push that carries it (see the commit message):
+**Suites.** The Python suites and the register validator pass at every commit of 2026-10-20 (run before each push). CI (`.github/workflows/tests.yml`) runs the Godot suites on each staging push; earlier runs are cancelled when a newer push arrives, so check the latest run's result for the head commit. The Godot suites last passed locally at `a203c0b`; the game code has changed since (the EQ-07 housing work), and the full Godot list (22 suites, `housing_test.gd` included) passed locally on 2026-10-20 before the push that carries it:
 - Python: `python3 -m unittest discover -s tests`;
 - the Godot suites in `.github/workflows/tests.yml`, among them `relations_test.gd`, `save_transfer_test.gd`, `refuge_test.gd`, `aging_test.gd` and `start_test.gd`.
 
