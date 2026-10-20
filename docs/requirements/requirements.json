@@ -8410,7 +8410,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "read the 365-day results: merchants' stone stock and imported_stone after the deposits run out; report whether sites ever wait on stone",
+   "next_action": "confirm with seed 2's day-365 figures, then close",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -8452,6 +8452,11 @@
      "who": "agent",
      "change": "depends_on",
      "why": "OD-10 removed (superseded by B7-007)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "365-day seed 1 (old code): merchants held 97 stone at day 365 after the deposits ran out; caravan stone keeps pace; stone did not stop building"
     }
    ],
    "target_build": "16",

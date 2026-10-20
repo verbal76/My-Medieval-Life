@@ -489,7 +489,16 @@ At day 100, 6 households were crowded, and 3 of them could afford a home (`crowd
 - Wildlife holds (WR-01).
 - The one item leak is the known EQ-10 residual.
 
-The final day-365 figures are recorded when the runs end.
+**Seed 1, day 365 (finished, old code):**
+- 116 alive (100 at the start); 3 starved and 68 other deaths over the year.
+- Food in store 11.2 days.
+- Wildlife 91. Coin leak 0; 4 item-ledger residuals (EQ-10).
+- 10 house sites started, 1 finished; 38 households.
+- Stone did not stop building. The deposits were gone, yet the merchants held 97 stone at day 365, through the owner's caravan stone rule, and the open sites held 101.
+- Planks did: none on the market from about day 180 to day 240, and 16 at most after that. The open sites held only 37 of the 300 they needed.
+- Started houses stay unfinished. This is the second half of EQ-07, now under investigation.
+
+Seed 2's day-365 figures are recorded when it ends.
 
 These runs write only to `out/eq/`, which is not committed. Each result is recorded here when its run finishes. A run that a container restart killed is started again: see `docs/CURRENT_DEVELOPMENT_STATE.md`, "Fragile processes".
 

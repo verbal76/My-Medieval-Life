@@ -90,7 +90,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 ## Next approved tasks, in order
 
 1. **When the 365-day fix9 runs end:** record the Build 15 results in `docs/release/LONG_RUN_SIMULATION.md` and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a run was killed by a container restart, restart it (below).
-2. **EQ-07 / HOUSE-07:** read the fix10 100-day runs against fix9, record them labelled as corrected code; put OD-13 to the owner with the evidence.
+2. **EQ-07 / HOUSE-07:** started houses are not finished (the 365-day seed 1 run: 10 started, 1 finished; the fix10 seed 1 run: 4 started, 0 finished by day 60). Trace why: plank supply after day 180, and the money a household has after its start. Then read the fix10 100-day runs against fix9 and record them, labelled as corrected code.
 3. **EQ-09:** from the 365-day results, check whether caravan stone keeps house sites supplied once the deposits are gone.
 4. **EQ-10:** fix the axe and hammer ledger residuals.
 5. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
