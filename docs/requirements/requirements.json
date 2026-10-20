@@ -12688,6 +12688,49 @@
    "target_build": "15"
   },
   {
+   "id": "OVN-02",
+   "title": "Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Finish Build 15 and move forward. You have my authorization to proceed.",
+   "description": "Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering",
+   "source": "docs/directives/2026-10-20_final_development_mandate.md",
+   "approval": "owner directive 2026-10-20; supersedes previous Build 15 closure instructions where they conflict",
+   "acceptance": [
+    "Build 15 released as a private draft when its mandatory gates pass (OVN-01 section 4 plus this directive's section 5)",
+    "Builds 16, 17, 18 completed in order under the same standard"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_final_development_mandate.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; workstream",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15"
+  },
+  {
    "id": "OWN-01",
    "title": "Asset integration pipeline (skill, policy, registry, scaling standard, tools)",
    "kind": "approved",
@@ -20536,6 +20579,86 @@
      "why": "docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md)"
     }
    ]
+  },
+  {
+   "id": "WDR-022",
+   "title": "World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not",
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "A VILLAGE IS ALLOWED TO FAIL. THE SIMULATION IS NOT. The game must simulate a functioning world, not guarantee a successful world.",
+   "description": "World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not",
+   "source": "docs/directives/2026-10-20_final_development_mandate.md sections 1-4, 11, 12 (text in docs/WORLD_DESIGN_RULES.md)",
+   "approval": "owner's final development mandate, 2026-10-20",
+   "acceptance": [
+    "Recorded in docs/WORLD_DESIGN_RULES.md, PROJECT_MEMORY and CLAUDE.md"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_final_development_mandate.md sections 1-4, 11, 12 (text in docs/WORLD_DESIGN_RULES.md)"
+    }
+   ]
+  },
+  {
+   "id": "WDR-022-C",
+   "title": "Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity",
+   "source": "docs/directives/2026-10-20_final_development_mandate.md",
+   "approval": "owner's final development mandate, 2026-10-20",
+   "acceptance": [
+    "Every long-run report classifies its findings in the three categories",
+    "No test requires prosperity, growth or a house count unless an approved requirement does",
+    "No subsidy, free item or invisible rescue is added to force outcomes"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_final_development_mandate.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; workstream",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15"
   },
   {
    "id": "WR-01",

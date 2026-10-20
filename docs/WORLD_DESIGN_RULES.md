@@ -262,6 +262,32 @@ Parts 3 and 4 of the same directive are the full rule. Adoption is informal, wit
 - **Unplaced orphans (OD-11).** The guardianship order is the surviving parent, then living grandparents, then the nearest eligible blood relative, then another villager's household willing and able to take the child. If no suitable household can take the child, the child joins the bandit clan. That is the intended fallback: there is no temporary care and no orphanage. The child keeps their identity, age, genealogy and relationships, and stays a child, without adult combat abilities.
 - **Equally close relatives (OD-12).** Blood relationship sets the order of consideration. Among equally close relatives, the best-suited is chosen: ability to provide care, then household capacity, then access to food and necessities, then the existing relationship with the child, then geographic proximity, then a deterministic tie-breaker.
 
+### 022 A Village Is Allowed to Fail; the Simulation Is Not
+
+Owner's final development mandate, 2026-10-20 (`docs/directives/2026-10-20_final_development_mandate.md`), sections 1-4,
+11 and 12. Its own words: "A VILLAGE IS ALLOWED TO FAIL. THE SIMULATION IS NOT." and "The game must simulate a
+functioning world, not guarantee a successful world."
+
+- **Outcomes may be unfavourable.** A village may prosper, stagnate, decline, lose its trades or collapse. Unfavourable
+  statistics are not proof of defective code, and two seeds may develop differently.
+- **Three categories, kept apart, for every finding:**
+  1. a **defect**: a mechanic fails to perform its approved function (logic that never runs, a tool that cannot be
+     obtained though one is available, a lost goal, script errors, coins or items without a valid transaction, an
+     invalid loop, a save that loses state). Fix it with a regression test, if it blocks the current release.
+  2. a **legitimate outcome**: functioning mechanics meeting finite resources and autonomous decisions (bankruptcy, an
+     unaffordable tool, a refused deal, unemployment, decline). Record it and proceed.
+  3. a **future improvement**: an opportunity for better adaptation or new NPC behaviour. Classify it under its
+     approved requirement, or ask the owner when its design is not approved.
+- **No hidden rescue.** No hidden subsidies, free tools, fabricated materials, guaranteed buyers, artificial
+  employment, automatic wealth redistribution or invisible central authority to force convergence. Institutions act
+  only through approved rules (the manor may commission tools, lend, buy or decline).
+- **Mandatory, always:** mechanical correctness and simulation integrity (state, resources, ownership, accounting,
+  saves); every coin and item with a legitimate history; deterministic reproduction for a seed and revision.
+- **Tests:** never require arbitrary prosperity, identical growth or a fixed number of houses unless an approved
+  requirement says so. Economic outcomes are measured and analysed, not pass/fail thresholds.
+- **Builds:** do not rerun year-long simulations in pursuit of favourable statistics, nor retune earlier systems to
+  preserve a predetermined outcome when new systems arrive (Builds 17, 18).
+
 ## Related, not numbered as rules
 
 - The living-world document's nine guiding principles (`docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` section 1).

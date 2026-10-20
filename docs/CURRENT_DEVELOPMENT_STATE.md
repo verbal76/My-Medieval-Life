@@ -14,7 +14,7 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 | `main` | Changes only when the owner merges. |
 | Multiplayer | `wip/multiplayer` (MP-01), isolated. It must not be merged into staging without the owner's explicit approval. |
 | Active build | **Build 15**, simulation stabilization (ROAD-01): OD-16 answered by the owner 2026-10-20 ((a), (b), (c)); implementing it as EQ-19..21, then a 365-day run and the release gates |
-| Directive in force | OVN-01, `docs/directives/2026-10-20_master_overnight_development_directive.md` (autonomous engineering; Builds 15 → 16 → 17 → 18 strictly in order), with `docs/directives/2026-10-20_compaction_readiness.md` |
+| Directive in force | OVN-02, `docs/directives/2026-10-20_final_development_mandate.md` (final mandate: Build 15 closes on mechanics and integrity, not prosperity; then Builds 16 → 17 → 18 in order), with OVN-01 (`docs/directives/2026-10-20_master_overnight_development_directive.md`) and `docs/directives/2026-10-20_compaction_readiness.md`. The design principle WDR-022: "A village is allowed to fail. The simulation is not." |
 | Last released build | **Build 14**, a private draft from `7dbae4f` (`docs/release/BUILD_14_PACKET.md`) |
 | Release authorization | OVN-01 section 9 and REL-15-18: Builds 15 to 18 may be released as **private drafts**, in order, each only when every condition of OVN-01 section 4 holds (REL-14-16 before it). No placeholder builds. Public visibility needs new owner approval. |
 
@@ -28,7 +28,7 @@ The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 202
 - **EQ-19, EQ-20, EQ-21 (Build 15, ACTIVE):** the owner's answer to OD-16 (2026-10-20): the manor supports the essential trades from its treasury (b), bandit coins recirculate (a), the caravan buys more surplus (c). Next: implement, test, a 365-day run on both seeds, then the Build 15 release.
 - **Build 15 release gates:** the record of each OVN-01 section 4 condition goes in the Build 15 readiness packet (`docs/release/`), then `release.yml` runs as a private draft (REL-15-18). A 365-day Actions run on the release candidate checks the simulation before it.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
-- **OVN-01:** the overnight directive in force. **ROAD-01:** the roadmap.
+- **OVN-02** (the final mandate) and **OVN-01:** the directives in force. **WDR-022-C:** classify every finding as defect, legitimate outcome or future improvement. **ROAD-01:** the roadmap.
 - **REL-14-16:** superseded in practice by REL-15-18 for Builds 15-18. Build 14 is done.
 - **PERF-01:** the runtime answer. PERF-02..05 are complete (the simulation is about twice as fast, and every change passes the gate). PERF-06 (checkpoint and resume) is evaluation only, done in `docs/release/SIMULATION_PERFORMANCE.md` section 4.
 - **MP-01:** multiplayer on `wip/multiplayer` only. Nothing to do without the owner.

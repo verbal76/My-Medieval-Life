@@ -12,7 +12,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 63 |
-| ACTIVE DEVELOPMENT | 6 |
+| ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 30 |
 | IMPLEMENTED — TESTING REQUIRED | 15 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **360** |
-| Outstanding (not complete, superseded or canceled) | 185 |
+| **Total approved** | **362** |
+| Outstanding (not complete, superseded or canceled) | 187 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 34 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 34 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 57 | 54 |
+| Build 15: simulation stabilization | 59 | 56 |
 | Build 16: long-term equilibrium and validation | 27 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **243** | **185** |
+| **Total open** | **245** | **187** |
 
-### Build 15: simulation stabilization (57)
+### Build 15: simulation stabilization (59)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -91,6 +91,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED |  | OD-14 follow-up, owner's preferred direction |
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | decision | BLOCKED | owner decision first | whether player sales keep a trader's floor is a game rule |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT |  |  |
+| OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PL1-03 | Merchant quantity control | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | PL1-05 | current/max inside bars | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
@@ -110,6 +111,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
+| WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
 ### Build 16: long-term equilibrium and validation (27)
@@ -455,7 +457,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (6)
+## ACTIVE DEVELOPMENT (8)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -463,8 +465,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
+| OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold |
+| WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
 ## PARTIALLY IMPLEMENTED (30)
 
@@ -836,7 +840,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 
-## World design rule (21)
+## World design rule (22)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -861,6 +865,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-019 | World Design Rule 19: Living Political Agency and Democratic Consequences | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-020 | World Design Rule 20: Autonomous Housing | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md) |
+| WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | COMPLETE AND VERIFIED | docs/directives/2026-10-20_final_development_mandate.md sections 1-4, 11, 12 (text in docs/WORLD_DESIGN_RULES.md) |
 
 ## Proposal awaiting an owner decision (not approved) (30)
 

@@ -32,7 +32,7 @@ are. No file is read automatically because it exists: do these steps, in order, 
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- The directive in force and its authority are named at the top of `docs/CURRENT_DEVELOPMENT_STATE.md` (now OVN-01: Builds 15 → 16 → 17 → 18 in order, autonomous engineering, private releases as builds qualify).
+- The directive in force and its authority are named at the top of `docs/CURRENT_DEVELOPMENT_STATE.md` (now OVN-02, the final mandate, with OVN-01: Builds 15 → 16 → 17 → 18 in order, autonomous engineering, private releases as builds qualify; design principle WDR-022, "a village is allowed to fail, the simulation is not").
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running ("Interrupted or fragile processes" in the state file: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
@@ -46,7 +46,10 @@ At each meaningful checkpoint, and before a session ends, a context handoff or a
 My Medieval Life is a 2D medieval game built from 16x16 pixel-art packs (mostly by Shade). The
 GitHub repo describes it as a "Mini RPG". Its direction is set by the owner's directives (`docs/directives/`) and
 World Design Rules (`docs/WORLD_DESIGN_RULES.md`): a living medieval village that sustains itself without the player,
-summarised in `docs/PROJECT_MEMORY.md`. Item by item, the design is still being decided: `docs/GAME_DESIGN.md`
+summarised in `docs/PROJECT_MEMORY.md`. **Its founding principle (owner, 2026-10-20, World Design Rule 022): "A village is allowed to fail. The simulation
+is not."** The game simulates a functioning world; it never guarantees a successful one. Fix what is broken (a mechanic
+failing its approved function, script errors, coins or items without a valid transaction, lost state); preserve
+legitimate outcomes (bankruptcy, shortage, decline) even when the statistics are unfavourable; add no hidden rescue. Item by item, the design is still being decided: `docs/GAME_DESIGN.md`
 separates Confirmed, Proposed and Undecided items, and only the owner confirms one.
 
 Status (keep current):
@@ -228,6 +231,9 @@ generated data. One implementation per concern.
   git status   # regenerated data must show no diff unless the change was intended
   ```
   A failing test is fixed, never skipped, disabled or weakened to pass.
+- **Testing philosophy (owner, 2026-10-20, WDR-022):** mechanical correctness and simulation integrity are mandatory;
+  economic outcomes are measured and analysed, never pass/fail thresholds unless an approved requirement sets one. Do not
+  rerun year-long simulations in pursuit of favourable statistics.
 - Visual output must actually be looked at before it is reported as verified.
 - **Release policy (owner, 2026-10-18; supersedes earlier release rules).** Never build a release,
   upload, publish, deploy or distribute without the owner's explicit approval for that occasion: not
