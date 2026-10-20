@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 229 still open, 2 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 47 (35 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **264** = 229 still open from the baseline + 35 added and open |
+| Entries added since | | 47 (33 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **262** = 229 still open from the baseline + 33 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (2)
@@ -66,9 +66,9 @@ None.
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | COMPLETE AND VERIFIED | 15 |
-| PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | APPROVED — NOT STARTED | 15 |
-| PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | approved | APPROVED — NOT STARTED | 15 |
-| PERF-05 | Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially | approved | APPROVED — NOT STARTED | 15 |
+| PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | COMPLETE AND VERIFIED | 15 |
+| PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
+| PERF-05 | Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | approved | APPROVED — NOT STARTED | 15 |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | approved | APPROVED — NOT STARTED | 20+ |

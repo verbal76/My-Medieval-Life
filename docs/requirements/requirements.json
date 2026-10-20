@@ -13504,7 +13504,7 @@
    "id": "PERF-03",
    "title": "Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change",
    "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
@@ -13514,7 +13514,7 @@
     "Every optimization compared: identical fingerprints, population, households, inventories, animals, deposits, treasury and currency; zero unexplained leaks"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "tools/sim_gate.py (PASS for both PERF-04 changes)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -13541,6 +13541,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "tools/sim_gate.py and the committed baseline docs/release/sim_baseline.json (seeds 1, 2; days 10, 30); every optimization compared through it"
     }
    ],
    "target_build": "15",
@@ -13550,7 +13555,7 @@
    "id": "PERF-04",
    "title": "Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts",
    "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
@@ -13559,7 +13564,7 @@
     "Before and after runtimes; each change passes PERF-03"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "tools/sim_gate.py PASS after each change",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -13586,6 +13591,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "two optimizations through the determinism gate: the trading-role cache and the wildlife cell set and prey-scan order; 10 days 44.0 s to 25.5 s, 30 days 127/142 s to 68/73 s. Further candidates follow the next profile"
     }
    ],
    "target_build": "15",
@@ -13595,7 +13605,7 @@
    "id": "PERF-05",
    "title": "Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially",
    "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
@@ -13605,7 +13615,7 @@
     "No shared save or temp paths between processes"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "tools/sim_gate.py --write (parallel) then --sequential (PASS)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -13632,6 +13642,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "two seeds as separate processes with isolated user data, temp and output: 142.3 s side by side against 262.7 s in sequence, identical outcomes (SIMULATION_PERFORMANCE.md 5b)"
     }
    ],
    "target_build": "15",

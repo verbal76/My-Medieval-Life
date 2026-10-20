@@ -150,6 +150,40 @@ The owner asked that nothing be built until this has been weighed.
 the year. The 365-day profiles on Actions will show whether a cost grows with time (population, households,
 built sites).
 
+## 5b. Determinism gate, optimizations and parallel seeds (PERF-03..05, 2026-10-20)
+
+**The gate (PERF-03):** `python3 tools/sim_gate.py` runs seeds 1 and 2 for 30 days, each in its own process with
+its own Godot user data, temp directory and output. It compares days 10 and 30 with
+`docs/release/sim_baseline.json` (from `efe7ca7`): fingerprint (every villager's position, coins, hunger, job and
+goods; every animal; the RNG state; deposits; pantries), villagers alive, households, currency, treasury, the item
+ledger table, deposits and animals. `--write` records a new baseline, only when gameplay is meant to change.
+
+| Seed | Day 10 fingerprint | Day 30 fingerprint | Alive at 30 | Currency at 30 |
+|---|---|---|---|---|
+| 1 | `eeabb2a8ce8d6ed8e9691867869bc6ee` | `90a6967fc06e4d19b137298722bb66aa` | 106 | 4,919 |
+| 2 | `bf1218e07854eec59d7f01910f2d1041` | `ffe3508e40304a79ffb2df491777006e` | 119 | 4,918 |
+
+**Parallel seeds (PERF-05):**
+
+| Mode | Seed 1 | Seed 2 | Wall-clock |
+|---|---|---|---|
+| Side by side | 127.1 s | 142.3 s | 142.3 s |
+| One after the other | 122.2 s | 140.5 s | 262.7 s |
+
+Each seed costs the same either way (two real cores), so running seeds side by side nearly halves the wall-clock.
+The outcomes are identical: the sequential run passes the gate against the parallel baseline. No paths are shared.
+
+**Optimizations (PERF-04), each through the gate:**
+
+| Change | 10 days, seed 1 | 30 days, seeds 1 / 2 | Gate |
+|---|---|---|---|
+| Before | 44.0 s | 127 s / 142 s | baseline |
+| Trading roles kept between buyer searches (`NPCBrain._with_buy_role`, rebuilt when a job, workplace, life, villager or stall changes) | 28.4 s | 84 s / 90 s | PASS |
+| Wildlife: cell membership through a set (`Fauna.in_area`); prey scan cheapest test first | 25.5 s | 68 s / 73 s | PASS |
+
+A decision went from 433 us to 152 us, and wildlife from 7.3 s to 3.9 s per 10 days. Nothing changed in the
+rules, the step size or the systems that run.
+
 ## 6. Long-run reliability (INFRA-01, owner 2026-10-20)
 
 **The problem (measured):** two container restarts on 2026-10-20, both while the session sat idle waiting for an answer, killed the long runs. A long run on the session's own container survives only while the session stays active.
