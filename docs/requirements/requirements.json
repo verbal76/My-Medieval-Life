@@ -2845,6 +2845,11 @@
      "date": "2026-10-19",
      "change": "BLOCKED -> IMPLEMENTED — TESTING REQUIRED",
      "why": "a finite caravan purse is in the code without a recorded owner decision; owner asked for a comparison (2026-10-19)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "note",
+     "why": "owner 2026-10-20: the caravan allowance is a labelled temporary placeholder at 30 coins a day (CARAVAN-TMP), replaced by demand-driven trade in EXP-B"
     }
    ],
    "acceptance_derived": true
@@ -4646,7 +4651,7 @@
    "id": "CARAVAN-TMP",
    "title": "The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day)",
    "kind": "decision",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "The existing 30-coin daily caravan mechanism is a temporary placeholder representing outside settlements that are not yet simulated.",
    "description": "The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day)",
    "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
@@ -4656,7 +4661,7 @@
     "Its effects (coin flows, imports, exports) reported by the simulations",
     "Replaced by demand-driven trade in EXP-B"
    ],
-   "implementation": "",
+   "implementation": "game/data/balance.json caravan_allowance, _caravan_note",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -4677,6 +4682,11 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; implementation",
+     "why": "caravan_allowance set to 30 and labelled a temporary placeholder in balance.json; long runs restarted with it"
     }
    ]
   },

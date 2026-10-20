@@ -421,7 +421,7 @@ Automated tests do not count as device verification.
 
 | ID | Item | Status | Source |
 |---|---|---|---|
-| CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | ACTIVE DEVELOPMENT | docs/directives/2026-10-20_two_decisions_three_expansions.md |
+| CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md |
 | OD-02 | Owner decision: balance review of every provisional number | BLOCKED | docs/DECISIONS.md |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md |
