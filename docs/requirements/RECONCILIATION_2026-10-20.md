@@ -10,7 +10,7 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 231 still open, 0 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 21 (16 of them still open) |
+| Entries added since | | 24 (16 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **247** = 231 still open from the baseline + 16 added and open |
 | Open entries moved to another build | | 0 |
 
@@ -26,7 +26,7 @@ None.
 
 None.
 
-## Added since the baseline (21)
+## Added since the baseline (24)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -36,6 +36,7 @@ None.
 | FAM-04 | Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree | approved | APPROVED — NOT STARTED | 16 |
 | FAM-05 | Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically | approved | APPROVED — NOT STARTED | 16 |
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | approved | APPROVED — NOT STARTED | 16 |
+| FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | approved | APPROVED — NOT STARTED | 16 |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
@@ -43,12 +44,14 @@ None.
 | HOUSE-05 | Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | approved | PARTIALLY IMPLEMENTED | 15 |
 | HOUSE-07 | EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code | approved | ACTIVE DEVELOPMENT | 15 |
+| HOUSE-08 | Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people | approved | APPROVED — NOT STARTED | 15 |
+| HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | approved | APPROVED — NOT STARTED | 15 |
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
-| OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | BLOCKED | 16 |
-| OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | BLOCKED | 16 |
-| OD-13 | Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither? | decision | BLOCKED | 15 |
+| OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |
+| OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | COMPLETE AND VERIFIED | 16 |
+| OD-13 | Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither? | decision | COMPLETE AND VERIFIED | 15 |
 | WDR-020 | World Design Rule 20: Autonomous Housing | rule | COMPLETE AND VERIFIED |  |
 | WDR-021 | World Design Rule 21: Household Succession and Family Care | rule | COMPLETE AND VERIFIED |  |
 

@@ -237,7 +237,12 @@ Owner directive 2026-10-20 (`docs/directives/2026-10-20_housing_succession_adopt
 > A villager who needs a house should recognize that need, decide to do something about it, and work toward making it
 > happen."
 
-Part 1 of the same directive is the full rule. A household's responsible adult, of either sex, recognizes a real housing need. They keep it as a goal before the household can afford it, and work toward it through real work, saving, buying, gathering and help. The construction consumes real materials and takes real time; it yields to survival needs and resumes after shortages. There are no quotas, no free supplies and no new building types to force success. Register: HOUSE-01..07 under EQ-07.
+Part 1 of the same directive is the full rule. A household's responsible adult, of either sex, recognizes a real housing need. They keep it as a goal before the household can afford it, and work toward it through real work, saving, buying, gathering and help. The construction consumes real materials and takes real time; it yields to survival needs and resumes after shortages. There are no quotas, no free supplies and no new building types to force success. Register: HOUSE-01..09 under EQ-07.
+
+**Owner answer of 2026-10-20 (OD-13), part of this rule:**
+- Young children may share beds, within reasonable age limits, and couples share a bed.
+- Existing village houses can take living-quarters expansions even though they were generated without land parcels.
+- Expansions consume real resources, labour and construction time; no bed or house is ever generated free.
 
 ### 021 Household Succession and Family Care
 
@@ -251,7 +256,11 @@ Same directive, final governing principle, verbatim:
 > These are connected consequences of the same living world, but housing construction and family succession must
 > remain separately tracked development responsibilities."
 
-Parts 3 and 4 of the same directive are the full rule. Adoption is informal, with no authority. Genealogy is never overwritten, and a surname may change without corrupting the tree. Orphaned children never found households or build. A housing need that taking in children creates belongs to the receiving household's responsible adult. Register: FAM-01..06; owner decisions OD-11 (no eligible household) and OD-12 (equally close relatives) are open.
+Parts 3 and 4 of the same directive are the full rule. Adoption is informal, with no authority. Genealogy is never overwritten, and a surname may change without corrupting the tree. Orphaned children never found households or build. A housing need that taking in children creates belongs to the receiving household's responsible adult. Register: FAM-01..07.
+
+**Owner answers of 2026-10-20 (`docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md`), part of this rule:**
+- **Unplaced orphans (OD-11).** The guardianship order is the surviving parent, then living grandparents, then the nearest eligible blood relative, then another villager's household willing and able to take the child. If no suitable household can take the child, the child joins the bandit clan. That is the intended fallback: there is no temporary care and no orphanage. The child keeps their identity, age, genealogy and relationships, and stays a child, without adult combat abilities.
+- **Equally close relatives (OD-12).** Blood relationship sets the order of consideration. Among equally close relatives, the best-suited is chosen: ability to provide care, then household capacity, then access to food and necessities, then the existing relationship with the child, then geographic proximity, then a deterministic tie-breaker.
 
 ## Related, not numbered as rules
 

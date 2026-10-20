@@ -8974,7 +8974,8 @@
    "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
    "acceptance": [
     "No child founds a household, hires, buys or builds",
-    "Orphaned children move into a receiving household as dependants"
+    "Orphaned children move into a receiving household as dependants",
+    "Guardianship order (OD-11, owner 2026-10-20): surviving parent, living grandparents, nearest eligible blood relative, another villager's household willing and able; with none, the bandit clan (FAM-07)"
    ],
    "implementation": "",
    "tests": "",
@@ -9002,6 +9003,12 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "who": "agent",
+     "change": "acceptance",
+     "why": "owner answer OD-11 (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
     }
    ],
    "target_build": "16",
@@ -9019,7 +9026,8 @@
    "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
    "acceptance": [
     "Grandparents first; a closer eligible relative always before a more distant one; then any suitable household",
-    "Tests for each tier"
+    "Tests for each tier",
+    "Among equally close eligible relatives (OD-12, owner 2026-10-20): prefer ability to provide care, then household capacity, then access to food and necessities, then the existing relationship with the child, then geographic proximity; a deterministic tie-breaker when still equal"
    ],
    "implementation": "",
    "tests": "",
@@ -9049,6 +9057,12 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "who": "agent",
+     "change": "acceptance",
+     "why": "owner answer OD-12 (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
     }
    ],
    "target_build": "16",
@@ -9194,6 +9208,62 @@
    "target_build": "16",
    "roadmap_gate": "",
    "roadmap_reason": "with FAM-02..05"
+  },
+  {
+   "id": "FAM-07",
+   "title": "Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "If no suitable household can take the child, the child joins the bandit clan. This is the intended fallback, not an indefinite temporary-care state and not a formal orphanage or adoption process.",
+   "description": "Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat)",
+   "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11)",
+   "approval": "owner answer 2026-10-20 (OD-11)",
+   "acceptance": [
+    "With no suitable household the child joins the bandit clan, never a temporary-care limbo",
+    "Identity, age, genealogy and relationships are unchanged; the child stays a child and gains no adult combat ability",
+    "Interim (bandit factions, WDR-016-C, are Build 20+): the child belongs to the existing bandit camp as a dependant, safe from the camp's raids and fights, recorded so the faction system can take it over",
+    "Tests: the order is followed; the fallback happens only when no household qualifies; genealogy survives"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "FAM-02",
+    "FAM-03",
+    "WDR-016-C"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "who": "agent",
+     "change": "depends_on",
+     "why": "full integration waits on the bandit-faction system (WDR-016-C, Build 20+); the interim handling does not"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_reason": "with FAM-02/03 (Build 16); full integration with bandit factions follows WDR-016-C (Build 20+)"
   },
   {
    "id": "FR-01",
@@ -10012,12 +10082,15 @@
    "branch": "",
    "commits": [],
    "parent": "EQ-07",
-   "depends_on": [],
+   "depends_on": [
+    "HOUSE-08",
+    "HOUSE-09"
+   ],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "wait for OD-13",
+   "next_action": "HOUSE-08 and HOUSE-09",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10037,6 +10110,17 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests; next_action",
      "why": "crowded families nobody can leave add living quarters (an existing module), but only to a house on a parcel; every original village house is on none"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "OD-13 answered: unblocked by HOUSE-08 and HOUSE-09"
+    },
+    {
+     "date": "2026-10-20",
+     "who": "agent",
+     "change": "depends_on",
+     "why": "OD-13 answered: HOUSE-08 and HOUSE-09 implement it"
     }
    ],
    "target_build": "15",
@@ -10093,6 +10177,99 @@
    "target_build": "15",
    "roadmap_gate": "",
    "roadmap_reason": "Build 15 acceptance for EQ-07"
+  },
+  {
+   "id": "HOUSE-08",
+   "title": "Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Young children may share beds, with reasonable age-based limits. Couples may share beds.",
+   "description": "Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people",
+   "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)",
+   "approval": "owner answer 2026-10-20 (OD-13)",
+   "acceptance": [
+    "A partnered couple at home needs one bed",
+    "Young children below an age limit (balance.json, an agent proposal until reviewed) share a bed two to a bed",
+    "Older children, single adults and elders need a bed each",
+    "No bed is created: only the count of people a bed holds changes",
+    "Tests: a family of two parents and three young children in five beds is not crowded; older children make it crowded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "EQ-07 root cause 1 (owner answer OD-13)"
+  },
+  {
+   "id": "HOUSE-09",
+   "title": "Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Existing village houses must be eligible for living-quarters expansions even if they were generated without land parcels. Expansions must consume actual resources, labor, and construction time. Do not solve the problem by generating free beds or houses.",
+   "description": "Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time",
+   "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)",
+   "approval": "owner answer 2026-10-20 (OD-13)",
+   "acceptance": [
+    "A generated house held by a household can take living quarters through the normal module rules (ground beside it, materials, delivery)",
+    "Nothing changes hands for the house's own ground; saves made before keep loading",
+    "The quarters are built by the household's own work and purchases; no free bed or building",
+    "Test: a crowded family in an original house adds quarters and its beds increase only when the last load is delivered"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "EQ-07 root cause 1 (owner answer OD-13)"
   },
   {
    "id": "K-1",
@@ -11299,7 +11476,7 @@
    "id": "OD-11",
    "title": "Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other)",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5",
@@ -11333,17 +11510,23 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "answered by the owner 2026-10-20 (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md); implementation is FAM-07"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "FAM-02 edge case; the directive asks for an explicit decision rather than a guess"
+   "roadmap_reason": "FAM-02 edge case; the directive asks for an explicit decision rather than a guess",
+   "owner_answer": "OD-11 — APPROVED: Unplaced orphans join the bandit clan. Guardianship order: 1. Surviving parent. 2. Living grandparents. 3. Nearest eligible blood relative. 4. Another villager's household willing and able to take the child. If no suitable household can take the child, the child joins the bandit clan. This is the intended fallback, not an indefinite temporary-care state and not a formal orphanage or adoption process. Preserve the child's identity, age, genealogy, and existing relationships. Joining the bandit clan does not instantly make a child an adult or grant adult combat abilities. Integrate this with the planned bandit-faction system. If bandit clans are not yet implemented, document the dependency and create a safe interim handling mechanism without inventing a fully functioning bandit system inside Build 15. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
   },
   {
    "id": "OD-12",
    "title": "Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle)",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5",
@@ -11377,17 +11560,23 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "answered by the owner 2026-10-20 (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md); implementation is part of FAM-03"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "FAM-03 tie-break; the directive asks that it be preserved as an open question"
+   "roadmap_reason": "FAM-03 tie-break; the directive asks that it be preserved as an open question",
+   "owner_answer": "OD-12 — APPROVED: Choose the best-suited equally close relative. When multiple eligible blood relatives are equally close, prioritize: 1. Ability to provide care. 2. Available household capacity. 3. Access to food and necessities. 4. Existing relationship with the child. 5. Geographic proximity. Use a deterministic tie-breaker when candidates remain equal. Blood relationship determines the order of consideration. Practical suitability determines the preferred guardian among equally close relatives. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
   },
   {
    "id": "OD-13",
    "title": "Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither?",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 2 (EQ-07 trace, seed 2: five crowded households, all of this shape)",
@@ -11421,11 +11610,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "answered by the owner 2026-10-20 (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md); implementation is HOUSE-08 and HOUSE-09"
     }
    ],
    "target_build": "15",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "the largest remaining cause of EQ-07; every original village house stands on no parcel, so the living-quarters route cannot reach them"
+   "roadmap_reason": "the largest remaining cause of EQ-07; every original village house stands on no parcel, so the living-quarters route cannot reach them",
+   "owner_answer": "OD-13 — APPROVED: Both bed sharing and house expansion. Young children may share beds, with reasonable age-based limits. Couples may share beds. Existing village houses must be eligible for living-quarters expansions even if they were generated without land parcels. Expansions must consume actual resources, labor, and construction time. Do not solve the problem by generating free beds or houses. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
   },
   {
    "id": "OPS-01",

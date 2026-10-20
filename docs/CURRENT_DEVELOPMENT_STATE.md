@@ -33,7 +33,7 @@ Seven entries, all named here (the validator checks). The ledger's count of six 
     - courtship pacing (CRT-01..12).
     - 2026-10-20, under the owner's housing directive (`docs/directives/2026-10-20_housing_succession_adoption.md`): persistent housing goals, a responsible adult per household, saving, living quarters for crowded families, couples of either sex (HOUSE-01..06, FAM-01; investigation in `docs/release/LONG_RUN_SIMULATION.md`, "EQ-07 investigation").
   - Still open:
-    - crowded families nobody can leave, in original houses (no parcel for quarters): owner decision OD-13;
+    - crowded families nobody can leave: OD-13 answered by the owner; implemented by HOUSE-08 and HOUSE-09;
     - the fix10 runs (corrected code) to read;
     - unemployment climbs after day 40.
 - **HOUSE-07:** the EQ-07 investigation, tests (`game/tests/housing_test.gd`) and re-runs. Done: the trace, the root causes, the tests. Remaining: the fix10 100-day results.
@@ -90,18 +90,20 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Next approved tasks, in order
 
-1. **When the 365-day fix9 runs end:** record the Build 15 results in `docs/release/LONG_RUN_SIMULATION.md` and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a run was killed by a container restart, restart it (below).
+1. **When the fix12 365-day runs end (about 04:30 UTC):** record them against fix9 (old code) in `docs/release/LONG_RUN_SIMULATION.md`, and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a container restart killed them, run them again (below).
 2. **EQ-07 / HOUSE-07:** started houses are not finished (the 365-day seed 1 run: 10 started, 1 finished; the fix10 seed 1 run: 4 started, 0 finished by day 60). Trace why: plank supply after day 180, and the money a household has after its start. Then read the fix10 100-day runs against fix9 and record them, labelled as corrected code.
-3. **EQ-09:** from the 365-day results, check whether caravan stone keeps house sites supplied once the deposits are gone.
-4. **EQ-10:** fix the axe and hammer ledger residuals.
-5. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
-6. **The other Build 15 items:** from the ledger's Roadmap section. Examples: DVW-A2 (rotated save backups), DVW-A4 (faucet and drain ledger), FR-07 (short simulations in CI), REC-017 (stale documents) and FR-06 (wiki pages).
-7. **Build 15 release:** when REL-14-16's conditions hold, a private draft with a readiness packet like `docs/release/BUILD_14_READINESS.md`.
+3. **HOUSE-08 and HOUSE-09 (owner answer OD-13):** bed sharing in the crowding rule, and living quarters on the original houses, with real materials and work. These come after the start-but-not-finish investigation; the owner asked that it not be interrupted.
+4. **EQ-09:** from the 365-day results, check whether caravan stone keeps house sites supplied once the deposits are gone.
+5. **EQ-10:** fix the axe and hammer ledger residuals.
+6. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
+7. **The other Build 15 items:** from the ledger's Roadmap section. Examples: DVW-A2 (rotated save backups), DVW-A4 (faucet and drain ledger), FR-07 (short simulations in CI), REC-017 (stale documents) and FR-06 (wiki pages).
+8. **Build 15 release:** when REL-14-16's conditions hold, a private draft with a readiness packet like `docs/release/BUILD_14_READINESS.md`.
 
 ## Waiting on the owner
 
-- **OD-13, crowded families (new, 2026-10-20):** should young children share beds, should the original village houses take living quarters, or both? It decides the largest remaining cause of EQ-07.
-- **OD-11 and OD-12 (new, 2026-10-20, Build 16):** temporary care for an orphan no household can take, and choosing between equally close relatives (FAM-02..06, the family system, is planned for Build 16).
+- OD-11, OD-12 and OD-13 were answered by the owner on 2026-10-20 (`docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md`). Their implementation is open:
+  - HOUSE-08 (bed sharing) and HOUSE-09 (quarters on original houses), Build 15;
+  - FAM-03 and FAM-07 (orphans: the best-suited equal relative; the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+), Build 16.
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
 - **SJD-Q01..Q14:** the judgment system's 14 questions. They are items 25–38 under the heading "Owner decisions still open" (line 584 of `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.txt`; the spec numbers two headings 19, and this is the second). The spec also names open points inside its sections, such as the rumour and credibility questions in its evidence section. Those belong to the same gates and are unanswered too. Never answer any of them on the owner's behalf.
 - **GM-01, generational memory:** placed in Build 19 as the closest fit. The owner has not confirmed this (gate "fit to confirm"). **VP-01, village politics:** approved, but in none of the five builds (target `20+`, after Build 19's judgment).
