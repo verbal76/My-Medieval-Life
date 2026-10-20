@@ -26,6 +26,7 @@ var seeded: Array = []       # wild species that have been started in the woods 
 var refuges: Refuges         # WR-01: the woods' protected breeding refuges (saved)
 var claims := {}             # animal id -> npc id hunting it (not saved; hunters re-plan after loading)
 var _cells := {}             # area id -> Array[Vector2i] of cells an animal may stand on
+var _cell_set := {}          # area id -> {Vector2i: true}, the same cells for membership tests (PERF-04)
 
 
 func _init(world) -> void:
@@ -53,7 +54,18 @@ func cells(area: String) -> Array:
 			if not w.map.is_solid(Vector2i(x, y)):
 				out.append(Vector2i(x, y))
 	_cells[area] = out
+	var members := {}
+	for c in out:
+		members[c] = true
+	_cell_set[area] = members
 	return out
+
+
+## Whether `c` is one of the cells of `area` (cells(area).has(c), without searching the list).
+func in_area(area: String, c: Vector2i) -> bool:
+	if not _cell_set.has(area):
+		cells(area)
+	return _cell_set[area].has(c)
 
 
 func count(area: String, species: String, adults_only := false) -> int:
@@ -327,7 +339,7 @@ func _hunt_people(a: Animal) -> void:
 			people.append(["npc:%d" % n.id, n.pos])
 	for p in people:
 		var at: Vector2 = p[1]
-		if not cells(a.area).has(Vector2i(floori(at.x), floori(at.y))) or at.distance_to(a.pos) > 8.0:
+		if not in_area(a.area, Vector2i(floori(at.x), floori(at.y))) or at.distance_to(a.pos) > 8.0:
 			continue
 		var alone := true
 		for q in people:
@@ -610,9 +622,10 @@ func _move(a: Animal, dt: float) -> void:
 		a.wait = 0.0
 	else:
 		var threat: Vector2 = w.player.pos if w.player.alive and w.player.pos.distance_to(a.pos) < flee else Vector2.INF
-		for b: Animal in animals:                           # prey run from a hunter that could take them
-			if flee > 0.0 and b.alive and b.area == a.area and (b.spec().get("prey", []) as Array).has(a.species) and b.pos.distance_to(a.pos) < flee:
-				threat = b.pos
+		if flee > 0.0:
+			for b: Animal in animals:                       # prey run from a hunter that could take them (the last one found)
+				if b.alive and b.area == a.area and b.pos.distance_to(a.pos) < flee and (b.spec().get("prey", []) as Array).has(a.species):
+					threat = b.pos
 		if threat != Vector2.INF:
 			a.goal = a.pos + (a.pos - threat).normalized() * 3.0
 			a.wait = 0.0
@@ -645,7 +658,7 @@ func _move(a: Animal, dt: float) -> void:
 		return
 	var nxt: Vector2 = a.pos + d / d.length() * step
 	var nc := Vector2i(floori(nxt.x), floori(nxt.y))
-	if w.map.is_solid(nc) or (not cells(a.area).has(nc) and cells(a.area).has(a.cell())):
+	if w.map.is_solid(nc) or (not in_area(a.area, nc) and in_area(a.area, a.cell())):
 		a.goal = Vector2.INF
 		a.wait = w.rng.randf_range(0.5, 2.0)
 		a.moving = false
