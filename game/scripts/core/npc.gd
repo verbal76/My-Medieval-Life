@@ -53,6 +53,7 @@ var left_job := ""           # the job given up at the last change (not taken up
 var born := 0.0              # game minutes (negative: older than the game); age in years is Life.age_years
 var sex := "male"            # male | female
 var mother := -1             # npc id; Life.PLAYER_ID (-2) is the player; -1 unknown
+var birth_family := ""       # the surname born with, kept when a child taken in takes another (FAM-04); "" unchanged
 var father := -1
 var partner := -1            # npc id, Life.PLAYER_ID for the player, -1 none
 var children: Array = []     # npc ids
@@ -93,6 +94,7 @@ func to_dict() -> Dictionary:
 		"pos": [pos.x, pos.y], "doing": doing, "memory": memory.duplicate(),
 		"earned": earned, "spent": spent, "income_days": income_days.duplicate(), "job_since": job_since, "left_job": left_job,
 		"born": born, "sex": sex, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(),
+		"birth_family": birth_family,
 	}
 
 
@@ -117,4 +119,5 @@ static func from_dict(d: Dictionary) -> NPC:
 	for k in ["mother", "father", "partner"]:
 		n.set(k, int(d.get(k, -1)))
 	n.children = (d.get("children", []) as Array).map(func(c): return int(c))
+	n.birth_family = str(d.get("birth_family", ""))          # older saves: none changed
 	return n

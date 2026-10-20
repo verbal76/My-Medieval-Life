@@ -311,6 +311,7 @@ static func dawn(w: World) -> void:
 	_natural_deaths(w)
 	w.relations.dawn()                 # friendship and courting; villagers court and marry (CRT-04)
 	births(w)
+	Guardianship.dawn(w)               # FAM-02..05: orphaned children are taken in by kin or a villager household
 	_player_dawn(w)
 
 
