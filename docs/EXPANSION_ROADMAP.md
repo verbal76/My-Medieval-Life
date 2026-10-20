@@ -24,6 +24,8 @@ Each has its own phases, tests, integration review and build decision. None is s
 
 Every open register entry carries `target_build` (15–19, `20+`, `multiplayer`, `owner decision` or `owner action`) with a gate and a reason. `tools/check_requirements.py` refuses an open entry without one. The item-by-item table is the "Roadmap" section of `docs/DEVELOPMENT_LEDGER.md`, generated from the register.
 
+The mining specification itself proposes "a dedicated Build 17 or 18". The owner's roadmap (ROAD-01) settled it as Build 17.
+
 **Dependencies that touch the order (none forces a change):**
 - **SET-A in Build 17.** Mining capability levels (MIN-D, Build 17) are settlements' first industry capability. The settlement capability schema (SET-A, Build 18's design phase) should be designed during Build 17 so MIN-D builds on it. This is design only; Build 18 still implements the model.
 - **MIN-E and MIN-F.** Open-pit and underground mining depend on MIN-A's finding about layered terrain. If the terrain cannot carry depth, these slip to Build 20 or later, and Build 17 ships phases A–D and G.

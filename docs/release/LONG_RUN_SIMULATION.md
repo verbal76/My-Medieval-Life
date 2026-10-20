@@ -473,8 +473,22 @@ Two moderate caravan settings (limit on, seed 1, 100 days) were also run:
 
 At day 100, 6 households were crowded, and 3 of them could afford a home (`crowded_can_afford_home` 3). Even so, only one house had been finished, with a second site open. In seed 1 crowded households could not pay; here they can, but building is slow. Both point to house construction under EQ-07.
 
-### Still to record
+### 365 days, seeds 1 and 2 (interim; started 2026-10-20 about 00:30 UTC)
 
-The 365-day runs for seeds 1 and 2.
+| | Seed 1, day 190 | Seed 2, day 160 |
+|---|---|---|
+| Alive / starved / other deaths | 125 / 0 / 22 | 137 / 0 / 18 |
+| Unemployed | 26 | 16 |
+| Stone left (of 240) | **0** | **1** |
+| House sites started / finished | 7 / 1 | 8 / 1 |
+| Wild / penned animals | 85 / 26 | 92 / 32 |
+| Coins (leak) / item leaks | 7332 (0) / 1 | 7075 (0) / 1 |
+
+**Findings:**
+- Stone runs out between day 100 and day 190. A house needs 20 stone, so house sites open but are never finished. This is EQ-09 blocking EQ-07.
+- Wildlife holds (WR-01).
+- The one item leak is the known EQ-10 residual.
+
+The final day-365 figures are recorded when the runs end.
 
 These runs write only to `out/eq/`, which is not committed. Each result is recorded here when its run finishes. A run that a container restart killed is started again: see `docs/CURRENT_DEVELOPMENT_STATE.md`, "Fragile processes".

@@ -572,7 +572,7 @@
  "commit": "a203c0b",
  "date": "2026-10-20",
  "format": "mml-requirements-baseline/1",
- "note": "Frozen snapshot of the Builds 15-19 reconciliation (owner directive 2026-10-20, MEM-02): every open entry (rules excluded) and every closed approved entry in the register at this commit. Never edited; tools/check_requirements.py proves each is still in the register and that any change since was recorded.",
+ "note": "Frozen snapshot of the Builds 15-19 reconciliation (owner directive 2026-10-20, MEM-02): every entry: the 231 open entries (rules excluded), the 142 closed approved entries, and under 'other' the rules and closed decisions and proposals in the register at this commit. Never edited; tools/check_requirements.py proves each is still in the register and that any change since was recorded.",
  "open": {
   "AR-OWNER": {
    "history": 3,
@@ -1959,6 +1959,108 @@
    "kind": "approved",
    "status": "APPROVED — NOT STARTED",
    "target_build": "16"
+  }
+ },
+ "other": {
+  "OWN-09": {
+   "history": 2,
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-001": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-002": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-003": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-004": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-005": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-006": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-007": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-008": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-009": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-010": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-011": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-012": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-013": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-014": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-015": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-016": {
+   "history": 2,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-017": {
+   "history": 1,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-018": {
+   "history": 1,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-019": {
+   "history": 1,
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED"
   }
  }
 }

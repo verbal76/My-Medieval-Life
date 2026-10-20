@@ -25,7 +25,7 @@ The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is c
 | Project rules, workflow, release policy, the session-start procedure | `CLAUDE.md` |
 | Every owner requirement, proposal, open decision and rule, with id, source, approval, build, dependencies, status, acceptance, evidence and history | `docs/requirements/requirements.json` (the one register; validated by `tools/check_requirements.py`) |
 | The same register for reading: counts, the Roadmap (every open item by build), the real-device queue, items by status | `docs/DEVELOPMENT_LEDGER.md` (generated; never edited by hand) |
-| The owner's directives, verbatim, with the documents supplied | `docs/directives/` |
+| The owner's directives, verbatim, with the documents supplied | `docs/directives/`. The two memory directives: `2026-10-20_project_memory_hardening.md` (MEM-01) and `2026-10-20_permanent_project_memory_hardening.md` (MEM-02, wider) |
 | Decisions with date and who decided (owner or agent proposal) | `docs/DECISIONS.md` |
 | The five-build roadmap, the three expansions and their dependencies | `docs/EXPANSION_ROADMAP.md` |
 | Expansion specifications (primary): Mining & Industrial (Build 17); Settlement Advancement & Regional Economy (Build 18); NPC Judgment System (Build 19) | `docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf`, `docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf`, `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf` (text copies beside each) |
@@ -85,6 +85,10 @@ In the register:
 The ledger's Roadmap section lists them under "Waiting on an owner decision" and "Owner or external action". A decision is resolved only by the owner's words (`owner_answer`), and the validator refuses anything else.
 
 Never answer an open decision on the owner's behalf, and never treat a proposal as approved.
+
+## Sources that cannot be checked from the repository
+
+A few early register entries cite chat messages or uploads that were never committed (for example REC-002, REC-007 and REC-013). Their wording is copied into the entry itself, under `owner_wording`. Treat that copy as the record, and ask the owner only if it is not enough to act on.
 
 ## How to find the next approved task
 
