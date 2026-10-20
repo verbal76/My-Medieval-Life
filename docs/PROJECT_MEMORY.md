@@ -81,6 +81,7 @@ Every open entry also carries `target_build` (15–19, `20+`, `multiplayer`, `ow
 | 17 | Mining & Industrial Development (EXP-A) | Approved objective; **not started**. Authorized by OVN-01 to begin only after Builds 15 and 16 meet section 4 |
 | 18 | Settlement Advancement & Regional Economy (EXP-B) | Approved objective; **not started**. Authorized by OVN-01 after Build 17 |
 | 19 | NPC Judgment System (EXP-C) | Approved objective; **not started**; 14 open design questions (SJD-Q01..Q14) unanswered |
+| Standalone (number TBD, OD-LE-01; proposed 20) | **Living Economy Expansion** (EXP-D): needs-driven economy across every system; its own build, never folded into 16-18 | Approved design; not started; 15 owner decisions open (OD-LE-01..15) |
 
 Every open register entry has a `target_build`. The dependencies that touch the order are in `docs/EXPANSION_ROADMAP.md`. If work must span more builds, keep the approved objective, flag the scheduling issue to the owner, and never silently change the roadmap.
 

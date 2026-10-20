@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 61 |
+| APPROVED — NOT STARTED | 71 |
 | ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 30 |
 | IMPLEMENTED — TESTING REQUIRED | 12 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **362** |
-| Outstanding (not complete, superseded or canceled) | 182 |
+| **Total approved** | **372** |
+| Outstanding (not complete, superseded or canceled) | 192 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 34 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 49 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 40 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -44,11 +44,11 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
-| Build 20 or later (outside the five builds) | 43 | 41 |
+| Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 34 | 7 |
+| Waiting on an owner decision | 58 | 16 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **240** | **182** |
+| **Total open** | **265** | **192** |
 
 ### Build 15: simulation stabilization (54)
 
@@ -229,7 +229,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED |  | emergent gameplay is the judgment system's purpose |
 
-### Build 20 or later (outside the five builds) (43)
+### Build 20 or later (outside the five builds) (44)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -244,6 +244,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-A9 | Player can always escape predators/bandits (:34) | approved | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
 | DVW-B7 | Life chronicle, titles, memorial | approved | APPROVED — NOT STARTED |  | graveyards, legacy, life chronicle: approved, in none of the five builds |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | approved | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
+| FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | approved | APPROVED — NOT STARTED |  | needs NPC Judgment (Build 19) and bandit factions (WDR-016-C, 20+) |
 | FR-01 | Lizards and spiders as enemies | approved | BLOCKED | owner assets | enemies and sound need asset uploads from the owner |
 | FR-02 | Forgotten Memories waterfalls, fences and props | approved | APPROVED — NOT STARTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
 | FR-03 | A campfire for cooking raw meat outside the village | approved | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
@@ -285,7 +286,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (34)
+### Waiting on an owner decision (58)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -309,11 +310,35 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DVW-B13 | Story kept as sparks; audit `story: true` quests | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | APPROVED — NOT STARTED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | OD-02 | Owner decision: balance review of every provisional number | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-04 | Owner decisions: chest and lock questions | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-07 | Owner decision: hunting in Gather mode | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-09 | Owner decision (Living Economy): Bandit market participation and regional trading limits | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
+| OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | decision | BLOCKED | owner decision first | a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18 |
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
@@ -384,7 +409,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (61)
+## APPROVED — NOT STARTED (71)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -414,9 +439,19 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
+| EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx; docs/directives/2026-10-20_fam07_clarification_living_economy.md |  |  |  |
+| FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | docs/directives/2026-10-20_fam07_clarification_living_economy.md |  | after WDR-016-C |  |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
+| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
+| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
+| LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
+| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
+| LE-07 | Living Economy stage LE-07: Release readiness and platform builds | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  |  |  |
 | MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A |  |
 | MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-B |  |
@@ -511,7 +546,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-04 | Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.3 | game/tests/family_test.gd | after FAM-02 |  |
 | FAM-05 | Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.4 | game/tests/family_test.gd | after FAM-02; after HOUSE-03 |  |
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | docs/directives/2026-10-20_housing_succession_adoption.md Part 6 | game/tests/family_test.gd; game/tests/housing_test.gd | after FAM-02 |  |
-| FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | gate and suites; coming-of-age as a bandit is the agent's reading of 'joins the bandit clan', reported to the owner |
+| FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | coming of age: the young adult goes to kin or a household with room if one can take them (the guardianship order), else stays with the band |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 
@@ -796,7 +831,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 25, status BLOCKED) (34)
+## Owner decisions, open and answered (open: 40, status BLOCKED) (49)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -818,6 +853,21 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | BLOCKED | agent, 2026-10-20, verifying B7-008 (docs/release/BUILD_7_ISSUES.md B7-008; World.player_sell) |
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | COMPLETE AND VERIFIED | agent, 2026-10-20, docs/release/LONG_RUN_SIMULATION.md 'Why seed 1 builds no house' |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | BLOCKED | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
+| OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-09 | Owner decision (Living Economy): Bandit market participation and regional trading limits | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat), restated in docs/directives/2026-10-20_project_memory_hardening.md and docs/directives/2026-10-20_permanent_project_memory_hardening.md; recorded in docs/EXPANSION_ROADMAP.md |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |

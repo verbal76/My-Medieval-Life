@@ -1,0 +1,256 @@
+Text of My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx (owner, 2026-10-20), extracted paragraph by paragraph for search; the .docx beside it is the original. Paragraph styles in [brackets]; table cells appear one per line.
+
+[Title] MY MEDIEVAL LIFE
+[Heading1] Living Economy Expansion
+Fully detailed standalone build design | Needs, incentives, adaptive markets, connected systems and organic recovery
+Owner-directed design | 20 October 2026 | Status: design specification, not implemented | Build number: TBD; must be its OWN build
+[Heading1] Executive mandate
+A VILLAGE IS ALLOWED TO FAIL. THE SIMULATION IS NOT. Rules define what is possible; actors’ needs, information, incentives, resources and choices determine what happens. This is a cross-system economic architecture, not a blacksmith patch or a hidden Build 16 feature.
+[Heading1] 1. Vision and non-negotiable principles
+[ListBullet] Needs drive behavior; no universal job-specific action order
+[ListBullet] Prices are offers reflecting scarcity, urgency, opportunity cost and affordability
+[ListBullet] Every actor has bounded knowledge and imperfect judgment
+[ListBullet] Money, goods, labor, travel, land and time remain finite and accountable
+[ListBullet] NPCs may succeed, fail, hoard, default, adapt or leave
+[ListBullet] Organic safety levers require in-world decisions, costs, risks and possible failure
+[ListBullet] Never force prosperity or identical seed outcomes
+[ListBullet] Integrate existing systems instead of inventing parallel inventories or ledgers
+[Heading1] 2. Standalone build and roadmap contract
+This expansion receives its own named build and release gates. Do not fold the entire overhaul into Build 16 or interrupt Build 15. Builds 15, 16, 17 and 18 proceed in approved order. Build 19 is already designated for NPC Judgment, so a build number and placement for this expansion require an explicit owner decision. Earlier builds may expose compatible interfaces without implementing this expansion prematurely.
+[Heading1] 3. Economic actor and need model
+Economic actors include individuals, households, workshops, employers, merchants, manor, bandit groups and regional institutions. Each has identity, ownership authority, location, money, inventories, obligations, tools, skills, knowledge, preferences, goals and plans. Households and workshops may share a person but cannot silently share funds without ownership rules.
+Record
+Required content
+Need
+Actor, desired outcome, quantity, shortfall, target reserve, urgency, deadline, consequences, substitutes, strategy
+Actor
+Identity, location, controller, household, cash, credit, inventory, skills, risk preference, obligations
+Knowledge
+Known supplier/offer, source, age, confidence, travel feasibility
+Offer
+Buyer/seller, item, quantity, price/terms, location, expiration, visibility
+Contract
+Parties, quantity, price, delivery, deadline, deposit, obligations, renegotiation and breach
+Reservation
+Owned stock, quantity, purpose, expiry and release policy
+Credit
+Lender, borrower, principal, interest/fee, repayment, security and default
+Event
+Type, actor, location, timestamp, deterministic ordering
+Ledger
+Cash, goods, custody, ownership, debt, production, consumption, loss and imports
+[Heading1] 4. Need formation and changing priorities
+Needs arise from food, shelter, fuel, health, family care, tools, maintenance, production inputs, contracts, wages, debt, investment, status and institutional responsibilities. They have changing urgency, not a universal fixed rank. An overdue contract may raise the value of coal to a smith; a starving child may raise the household value of food; plentiful planks lower the marginal value of additional planks. Evaluate competing uses of money and time. Persist goals through saves and temporary failures. Allow goals to be deferred, abandoned or renegotiated for intelligible reasons.
+[Heading1] 5. Adaptive pricing and local markets
+Separate reference price, advertised bid, advertised ask, negotiated price and settled transaction. Buyers assess maximum willingness to pay from expected benefit, urgency, alternative suppliers, cash, credit, contract penalties, travel and risk. Sellers assess minimum acceptable terms from labor, material cost, household needs, other bids, stock and opportunity cost. A trade occurs only if parties agree and can perform. An unmet bid may rise when worthwhile; it may also stay unchanged or be withdrawn. Prices may fall as needs diminish. Never raise a price indefinitely or summon supply automatically.
+[ListBullet] Support offer expiry, partial fills, counteroffers, minimum lots and delivery terms
+[ListBullet] Track actual transactions separately from offers and commitments
+[ListBullet] Prevent double-spending and duplicate fills with atomic settlement
+[ListBullet] Keep local knowledge bounded: market notices, prior dealings, merchants, direct negotiation
+[ListBullet] Avoid oscillation using offer lifetimes, switching costs and meaningful reevaluation triggers
+[Heading1] 6. Production, inventory and accepted obligations
+Producers compare contract value, expected sales, material requirements, tool wear, labor, available stock and opportunity cost. An accepted order creates a real obligation, not a magic command. Explicitly reserve or earmark material while retaining physical ownership and location. The smith may seek planks, coal, credit or renegotiation, but cannot silently divert committed stock to unrelated products. When fulfillment becomes impossible, use general expiration, breach, release and worker-reassignment rules rather than axe-specific patches.
+[Heading1] 7. Labor, skills and occupational response
+Higher plank bids may attract woodcutters, carpenters, merchants or households. Each independently evaluates net return, skills, tool access, travel, family care, job security, time, risk and startup cost. A worker may remain in their trade, take side work, retrain, borrow a tool, or leave. No NPC is automatically ordered to produce a scarce good. Missing tools and expired orders must not trap workers indefinitely.
+[Heading1] 8. Household and property integration
+Household needs affect individual economic choices: food, dependents, rent, taxes, fuel, medicine, housing, savings and emergencies. Business loans and family spending must obey actual loan terms and ownership. The smith spending an unrestricted advance on family food may be a legitimate choice with consequences; a restricted advance requires an explicitly agreed restriction. Housing goals generate demand for real labor and materials. Existing bed sharing, loft, land parcel and expansion mechanics remain physical constraints.
+[Heading1] 9. Cross-system integration matrix
+System
+Signals into economy
+Actions and consequences
+NPC brain
+Goals, hunger, plans, knowledge, risk
+Choose supplier, bid, work, travel, defer, default
+Households
+Food, children, savings, shelter, debt
+Budget, borrow, sell assets, build, move
+Employment
+Wages, vacancies, tools, skill fit
+Switch work, hire, train, negotiate
+Production
+Recipes, orders, tools, input stock
+Reserve, procure, craft, fulfill, breach
+Inventory / ledger
+Stock, custody, ownership, currency
+Reserve, transfer, consume, audit
+Construction
+Bills of materials, sites, labor
+Bid for materials, hire, pause, finish
+Manor
+Treasury, tax base, security, obligations
+Loan, procure, commission, refuse
+Caravans
+Local bids, external supply, freight
+Import, export, trade, decline
+Bandits / guards
+Loot, food, danger, recovery
+Trade, hoard, seize, return, confiscate
+Forestry
+Trees, regrowth, tools, hauling
+Harvest or conserve based on value
+Mining
+Finite seams, ore, coal, safety
+Prospect, extract, import, stop
+Agriculture / wildlife
+Seasons, food, animal stocks
+Produce, hunt, trade, conserve
+Population / migration
+Wages, homes, kinship, opportunity
+Arrive, leave, form business
+Relationships / Judgment
+Trust, history, debt, reputation
+Choose partners, price risk, lend
+Regional settlements
+Distance, comparative scarcity, roads
+Specialize, compete, trade, migrate
+Save / time / pathfinding
+World time, routes, persistent state
+Schedule actions, move goods, replay
+[Heading1] 10. Organic safety levers, never hidden rescue
+Mechanism
+Actor’s reason
+Real cost and failure
+Manor commissions tools
+Protect future tax receipts and production
+Treasury expense; smith may fail
+Manor loan
+Preserve enterprise, earn repayment
+Default, collateral, opportunity cost
+Supplier credit
+Secure future sales
+Nonpayment and delayed cash
+Caravan import
+Profit from shortage
+Freight, capital, loss, competition
+Tool rental / repair
+Earn rent or preserve productive asset
+Wear, transport, repair materials
+Family assistance
+Kinship and reciprocal trust
+Donor loses savings or goods
+Bandit market participation
+Buy supplies or sell loot
+Exposure, seizure, social risk
+Guard recovery
+Protect property and public order
+Guard wages, travel, danger
+Migration / new enterprise
+Pursue wages and opportunity
+Moving cost, startup funds, housing
+Barter
+Exchange when cash is scarce
+Negotiation and ownership constraints
+Every intervention must answer: who noticed the problem, what did they know, why act, what was spent, who bears risk, and what happens if it fails? The solution to one need may create a new shortage elsewhere.
+[Heading1] 11. Finite ecology and supply chains
+Prices cannot create exhausted ore seams, new trees or free tools. Mining, forestry, farming, wildlife and freight impose real geographic, seasonal and technical constraints. Higher prices may motivate prospecting, importing, substitution where approved, conservation, investment, or migration. Circular dependencies (woodcutter needs axe; smith needs plank) can be resolved through existing tools, trade, loans, imports or cooperation, but may also remain unresolved. No automatic rescue.
+[Heading1] 12. Manor, caravans, bandits and politics
+The manor is a constrained economic actor, not an omniscient economy controller. It may invest, tax, lend, commission or refuse. Caravans buy or sell when expected margin covers acquisition, transport and risk; they do not restock every shortage. Bandits may hoard, spend, fence or lose loot, and recovered goods follow lawful custody and ownership. Later political and NPC Judgment systems can influence trust and policy, without universal morality scores.
+[Heading1] 13. Economic memory and imperfect information
+NPCs remember relevant offers, prices, deliveries, defaults, known suppliers and personal experiences. Knowledge has source, age and reliability. Villagers can miss profitable opportunities, overestimate demand or distrust suppliers. Social information may spread through conversations and relationships when those mechanics exist. Never grant every NPC global market knowledge.
+[Heading1] 14. Event-driven architecture and performance
+Prefer meaningful events plus bounded periodic reevaluation over population-wide scans every game minute. Candidate triggers: stock below target, offer posted, contract accepted, tool breaks, caravan arrives, debt due, family change, mine depletion, road blocked. Preserve stable ordering, deterministic RNG use, bounded queues, explicit timeouts, and local supplier indexes. Profile Godot/GDScript hotspots and do not optimize away movement, hauling or behavior that can reveal real bugs.
+[Heading1] 15. Detailed end-to-end scenarios
+[Heading2] Smith short of planks
+The smith has an axe contract, iron and coal but lacks planks. Initial bid fails. If projected value and cash justify it, the smith raises the offer. Woodcutter evaluates tools, timber, time and family needs. The woodcutter may supply, decline, or seek credit. If delivered, smith pays, stocks update, bid changes and contract proceeds. Otherwise the order can lapse or be renegotiated.
+[Heading2] Coal exhaustion
+The local coal seam is worked out. Smith has iron and planks but cannot afford imported coal. Merchant may import, manor may lend or commission, household may choose food first. If no feasible offer emerges, forging stops without script errors or magic coal.
+[Heading2] Housing demand shock
+Several families start houses. Plank bids rise. Some workers change output, carpenter sells surplus, merchant imports, forest declines. Scarcity may shift to axes, labor or fuel. No fixed housing-completion target.
+[Heading2] Tool chain deadlock
+Woodcutter needs axe; smith needs planks. An existing axe may be rented, an imported tool purchased, or a third party may intervene. Without available funds and resources, both may fail.
+[Heading2] Manor insolvency
+Manor spends on guards and smith credit while tax revenue falls. It can cut spending, alter lawful tax policy, borrow or accept security risk. Treasury cannot go negative without explicit credit.
+[Heading2] Bandit hoard
+Bandits control much of local cash. They may buy food, hoard or lose it to guards. Reduced village liquidity can cause business failures; no hidden redistribution.
+[Heading2] Regional arbitrage
+Merchant observes cheap hides in one settlement and strong demand elsewhere. Freight, risk, route access, capital and competing traders determine whether shipment is worthwhile.
+[Heading2] Family workshop conflict
+Smith receives advance, but household needs medicine. Spending choices depend on legal ownership and loan restrictions; a default may be legitimate, not a ledger bug.
+[Heading2] Mine closure and migration
+Coal extraction ceases. Miners evaluate new deposits, alternative jobs, travel and family ties. Some move, some remain unemployed; nearby settlements may attract workers.
+[Heading2] Cascading crisis
+Coal shortage stops axes, timber declines, construction stalls, wages drop, taxes fall. Independent actors may adapt, recover partially, or collapse. Test integrity, not guaranteed rescue.
+[Heading1] 16. Test strategy and release acceptance
+Test level
+Required evidence
+Unit
+Needs, offers, budgets, reservations, contracts, credit, price revisions
+Interaction
+At least three actor types respond to the same shortage through actual trades
+Negative
+No funds, no seller, no coal, no transport, default, expiration
+Accounting
+No untracked coins, goods, imports, destruction or ownership
+Persistence
+Save/load commitments, offers, debt, knowledge, RNG state
+Determinism
+Matching fingerprints on same seed and code at agreed checkpoints
+Performance
+No runaway global scans; measurable budgets under population growth
+Emergence
+Different seeds may prosper, stagnate or collapse legitimately
+Compatibility
+All relevant housing, work, market, world and wildlife suites pass
+Release
+CI, platform artifacts, release packet and all approved gates pass
+[Heading1] 17. Standalone build milestones
+Stage
+Scope
+Gate
+LE-00
+Repository audit and cross-system dependencies
+Owner decisions registered; no guessed policy
+LE-01
+Shared actor, need, offer, knowledge and contract model
+Unit tests and persistence
+LE-02
+Adaptive bids, asks, negotiation and settlement
+Ledger-safe multi-actor trades
+LE-03
+Production, job choice and household budgets
+No tool-order traps; real opportunity response
+LE-04
+Organic finance, merchants and manor behavior
+Costs, default and refusal paths
+LE-05
+Construction, ecology, mining, bandits and regional links
+Integration matrix covered
+LE-06
+Multi-seed long-run, determinism and profiling
+No errors/leaks; legitimate failure allowed
+LE-07
+Release readiness and platform builds
+All mandatory release gates green
+[Heading1] 18. Owner decisions to resolve
+OD-LE-01: Standalone build number and placement without displacing existing Build 19 Judgment
+OD-LE-02: Market board, direct negotiation or hybrid and visibility rules
+OD-LE-03: Wages, rents and service contracts in first release
+OD-LE-04: Business founding, partnerships, ownership and inheritance
+OD-LE-05: Loan interest, collateral, default and collection rules
+OD-LE-06: Permissible manor interventions and political authority
+OD-LE-07: Restricted-use advances and business/household account separation
+OD-LE-08: Barter, rental, repair and resource substitution
+OD-LE-09: Bandit market participation and regional trading limits
+OD-LE-10: Economic rumor, memory persistence and reliability
+OD-LE-11: Speculation, hoarding and deliberate market manipulation
+OD-LE-12: Charity, kinship support and communal relief
+OD-LE-13: Contract cancellation, penalties and death of a party
+OD-LE-14: Player intervention and visibility of market decisions
+OD-LE-15: Performance and population acceptance targets
+[Heading1] 19. Explicit anti-patterns
+[ListBullet] Hard-code “make axes first” as the economic solution rather than honoring general contracts
+[ListBullet] Increase every bid by a fixed percentage until supply appears
+[ListBullet] Make all NPCs switch jobs based on globally known scarcity
+[ListBullet] Create cash, coal, food, planks or tools to keep a village alive
+[ListBullet] Auto-recycle bandit hoards to hit a liquidity target
+[ListBullet] Treat bids as completed sales or reservations as consumption
+[ListBullet] Merge workshop and household funds without ownership
+[ListBullet] Require all seeds to grow, maintain employment or complete fixed houses
+[ListBullet] Build a second authoritative ledger or inventory service
+[ListBullet] Treat valid poverty, unemployment, bankruptcy or collapse as release-blocking bugs
+[Heading1] 20. Definition of done
+The standalone expansion is complete only when connected needs can cause offers, offers can change independent NPC decisions, and those choices can alter supply, jobs, household budgets, production and institutions without hard-coded rescue. Multiple systems use one coherent transaction and commitment model. Goods and money remain accounted for, actors have bounded knowledge, failure remains possible, saves and replay work, and all release gates pass.
+[Heading1] 21. Exact handoff to main development session
+MAIN DEVELOPMENT SESSION: This is an owner-directed design for a NEW STANDALONE BUILD. Do not treat it as a minor Build 16 balancing item. Preserve this document in the repository, register all cross-system dependencies and open decisions, and propose a build number that does not silently displace the existing Build 19 NPC Judgment milestone. Finish Build 15 and continue Builds 16–18 as already approved. Conduct a read-only architecture audit first. Do not rewrite the economy until the standalone build placement and material gameplay-policy questions are approved. The expansion must integrate NPC brains, households, jobs, inventory, contracts, construction, manor, caravans, bandits, mining, forestry, agriculture, wildlife, settlements, persistence and later judgment hooks. Make routine engineering choices autonomously. Never force economic success.
+[Heading1] Final owner statement
+I want a medieval society in which individuals and institutions respond to their own needs and to one another. A smith short of planks can offer more, a villager can decide whether that opportunity is worthwhile, and new shortages can shift the incentives again. Safety levers may exist, but only organically through actors with real resources, motives and consequences. I do not want a scripted economy that pretends to be alive. A village is allowed to fail. The simulation is not.

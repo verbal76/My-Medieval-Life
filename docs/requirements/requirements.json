@@ -9132,6 +9132,50 @@
    "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
+   "id": "EXP-D",
+   "title": "Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "This expansion receives its own named build and release gates. Do not fold the entire overhaul into Build 16 or interrupt Build 15.",
+   "description": "Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx; docs/directives/2026-10-20_fam07_clarification_living_economy.md",
+   "approval": "owner 2026-10-20: 'preserve the Living Economy Expansion as a separate major build ... Do not delay Build 16 for that overhaul.'",
+   "acceptance": [
+    "Section 20 of the design: connected needs cause offers, offers change independent decisions, choices alter supply, jobs, budgets, production and institutions without hard-coded rescue; one transaction and commitment model; goods and money accounted; bounded knowledge; failure possible; saves and replay work; all release gates pass"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx; docs/directives/2026-10-20_fam07_clarification_living_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
    "id": "F-1",
    "title": "NPC workshop construction",
    "kind": "approved",
@@ -9587,7 +9631,7 @@
    "title": "Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat)",
    "kind": "approved",
    "status": "IMPLEMENTED — TESTING REQUIRED",
-   "owner_wording": "If no suitable household can take the child, the child joins the bandit clan. This is the intended fallback, not an indefinite temporary-care state and not a formal orphanage or adoption process.",
+   "owner_wording": "If no suitable household can take the child, the child joins the bandit clan. ... (clarified 2026-10-20) An orphan joining the bandit clan does not automatically mean that child must become a bandit upon reaching adulthood. The clan becomes their household and social environment. ... Remaining with the bandits is one possible outcome, not a mandatory one. For now, implement the simplest compatible behavior without prematurely building the full NPC Judgment or bandit-faction systems.",
    "description": "Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat)",
    "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11)",
    "approval": "owner answer 2026-10-20 (OD-11)",
@@ -9612,7 +9656,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "gate and suites; coming-of-age as a bandit is the agent's reading of 'joins the bandit clan', reported to the owner",
+   "next_action": "coming of age: the young adult goes to kin or a household with room if one can take them (the guardianship order), else stays with the band",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -9643,10 +9687,60 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; next_action",
      "why": "interim per OD-11 and the entry's acceptance: Guardianship.join_clan (NPC.clan, saved); the child keeps name, age, role and genealogy, eats with the band at the camp, is never a bandit's prey, and comes of age as a bandit with no item made for them; family_test 32 checks"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "owner_wording; next_action",
+     "why": "owner clarification 2026-10-20: joining the clan does not make the child a bandit at adulthood; circumstances, relationships, opportunities and needs decide, and staying with the band is one possible outcome; the simplest compatible behavior now, advanced behavior recorded as FAM-08"
     }
    ],
    "target_build": "16",
    "roadmap_reason": "with FAM-02/03 (Build 16); full integration with bandit factions follows WDR-016-C (Build 20+)"
+  },
+  {
+   "id": "FAM-08",
+   "title": "Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "When they reach adulthood, their circumstances, relationships, opportunities, needs, and personal decisions should determine their future. Remaining with the bandits is one possible outcome, not a mandatory one.",
+   "description": "Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07",
+   "source": "docs/directives/2026-10-20_fam07_clarification_living_economy.md",
+   "approval": "owner 2026-10-20: 'Record any advanced behavior as a future requirement.'",
+   "acceptance": [
+    "Adulthood choices weigh relationships, opportunities and needs through the NPC Judgment System and bandit factions"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "WDR-016-C"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_fam07_clarification_living_economy.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_reason": "needs NPC Judgment (Build 19) and bandit factions (WDR-016-C, 20+)"
   },
   {
    "id": "FR-01",
@@ -11191,6 +11285,358 @@
    "acceptance_derived": true
   },
   {
+   "id": "LE-00",
+   "title": "Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first)",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "Owner decisions registered; no guessed policy"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LE-01",
+   "title": "Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "Unit tests and persistence"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LE-02",
+   "title": "Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "Ledger-safe multi-actor trades"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LE-03",
+   "title": "Living Economy stage LE-03: Production, job choice and household budgets",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-03: Production, job choice and household budgets",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "No tool-order traps; real opportunity response"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LE-04",
+   "title": "Living Economy stage LE-04: Organic finance, merchants and manor behavior",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-04: Organic finance, merchants and manor behavior",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "Costs, default and refusal paths"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LE-05",
+   "title": "Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "Integration matrix covered"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LE-06",
+   "title": "Living Economy stage LE-06: Multi-seed long-run, determinism and profiling",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-06: Multi-seed long-run, determinism and profiling",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "No errors/leaks; legitimate failure allowed"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "LE-07",
+   "title": "Living Economy stage LE-07: Release readiness and platform builds",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-07: Release readiness and platform builds",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "All mandatory release gates green"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
    "id": "MEM-01",
    "title": "Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test",
    "kind": "approved",
@@ -12627,6 +13073,666 @@
    "target_build": "16",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "design wording only; nothing in Build 15 depends on it"
+  },
+  {
+   "id": "OD-LE-01",
+   "title": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-02",
+   "title": "Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-03",
+   "title": "Owner decision (Living Economy): Wages, rents and service contracts in first release",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Wages, rents and service contracts in first release",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-04",
+   "title": "Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-05",
+   "title": "Owner decision (Living Economy): Loan interest, collateral, default and collection rules",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Loan interest, collateral, default and collection rules",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-06",
+   "title": "Owner decision (Living Economy): Permissible manor interventions and political authority",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Permissible manor interventions and political authority",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-07",
+   "title": "Owner decision (Living Economy): Restricted-use advances and business/household account separation",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Restricted-use advances and business/household account separation",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-08",
+   "title": "Owner decision (Living Economy): Barter, rental, repair and resource substitution",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Barter, rental, repair and resource substitution",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-09",
+   "title": "Owner decision (Living Economy): Bandit market participation and regional trading limits",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Bandit market participation and regional trading limits",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-10",
+   "title": "Owner decision (Living Economy): Economic rumor, memory persistence and reliability",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Economic rumor, memory persistence and reliability",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-11",
+   "title": "Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-12",
+   "title": "Owner decision (Living Economy): Charity, kinship support and communal relief",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Charity, kinship support and communal relief",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-13",
+   "title": "Owner decision (Living Economy): Contract cancellation, penalties and death of a party",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Contract cancellation, penalties and death of a party",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-14",
+   "title": "Owner decision (Living Economy): Player intervention and visibility of market decisions",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Player intervention and visibility of market decisions",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
+  },
+  {
+   "id": "OD-LE-15",
+   "title": "Owner decision (Living Economy): Performance and population acceptance targets",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision (Living Economy): Performance and population acceptance targets",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before EXP-D builds on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18"
   },
   {
    "id": "OPS-01",

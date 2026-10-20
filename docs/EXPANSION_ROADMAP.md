@@ -33,6 +33,26 @@ The mining specification itself proposes "a dedicated Build 17 or 18". The owner
 - **Build 19 needs the owner's answers.** Its 14 open design questions (SJD-Q01..Q14) stay unanswered until the owner answers them. The design audit and isolated prototype can proceed; live integration cannot.
 - **VP-01, generational memory and legacy.** Village politics (VP-01), generational memory (GM-01) and legacy (WDR-014) are approved but named in none of the five builds. GM-01 is placed in 19 as the closest fit, to confirm. Politics follows 19, because voting weighs judgment.
 
+## The Living Economy Expansion: a standalone build (owner, 2026-10-20; register EXP-D)
+
+The owner's design, `docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx` (text beside it), is
+**its own major build**, not a Build 16 item:
+- needs drive behaviour;
+- prices are offers;
+- accepted orders are real obligations, with reservations, credit and contracts;
+- knowledge is bounded;
+- safety levers are organic, never hidden rescue.
+
+It must integrate the NPC brain, households, employment, production, construction, markets, caravans, mining, the
+manor, bandits and the NPC Judgment hooks. Builds 16-18 go ahead as approved, and are not delayed for it.
+
+| | |
+|---|---|
+| Stages | LE-00 (a read-only architecture audit) to LE-07 (release), the register's children of EXP-D |
+| Open owner decisions | OD-LE-01..OD-LE-15. OD-LE-01 is its build number and placement |
+| Placement | **Proposed** (agent, for OD-LE-01): Build 20, right after Build 19's NPC Judgment, whose trust and reputation it uses. The 20+ items that depend on markets and contracts (village politics' economic levers, bandit factions' trade) would follow it. Build 19 is not displaced. Not decided |
+| Earlier builds | May expose compatible interfaces (one ledger, one inventory, events), never implement it early |
+
 ## World Design Rules each one serves
 
 | Expansion | Rules (register `rules` field) |
