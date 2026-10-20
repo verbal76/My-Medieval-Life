@@ -21,7 +21,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-Six entries, all named here (the validator checks). The ledger's count of five is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
+Seven entries, all named here (the validator checks). The ledger's count of six is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
 
 - **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
   - Done so far:
@@ -31,9 +31,12 @@ Six entries, all named here (the validator checks). The ledger's count of five i
     - start cost (`found_start_share`);
     - wildlife refuges (WR-01);
     - courtship pacing (CRT-01..12).
+    - 2026-10-20, under the owner's housing directive (`docs/directives/2026-10-20_housing_succession_adoption.md`): persistent housing goals, a responsible adult per household, saving, living quarters for crowded families, couples of either sex (HOUSE-01..06, FAM-01; investigation in `docs/release/LONG_RUN_SIMULATION.md`, "EQ-07 investigation").
   - Still open:
-    - few new houses get built (see the known defects);
+    - crowded families nobody can leave, in original houses (no parcel for quarters): owner decision OD-13;
+    - the fix10 runs (corrected code) to read;
     - unemployment climbs after day 40.
+- **HOUSE-07:** the EQ-07 investigation, tests (`game/tests/housing_test.gd`) and re-runs. Done: the trace, the root causes, the tests. Remaining: the fix10 100-day results.
 - **EQ-16:** world equilibrium, the Build 16 objective. It closes on the multi-seed 100- and 365-day acceptance runs (EQ-06).
 - **DVW-A3:** re-measure money supply over 100 and 365 days on 2–3 seeds with no player. It shares the EQ runs.
 - **REL-14-16:** release Builds 15 and 16 as private drafts when the conditions hold. Build 14 is done.
@@ -44,7 +47,7 @@ Also: **MEM-01** and **MEM-02** (the two memory directives) are complete: see "R
 
 ## Last test results
 
-**Suites.** The Python suites and the register validator pass at every commit of 2026-10-20 (run before each push). CI (`.github/workflows/tests.yml`) runs the Godot suites on each staging push; earlier runs are cancelled when a newer push arrives, so check the latest run's result for the head commit. The Godot suites last passed locally at `a203c0b`; nothing under `game/` has changed since (`git diff --stat a203c0b HEAD -- game` is empty), so that result stands until the game code changes:
+**Suites.** The Python suites and the register validator pass at every commit of 2026-10-20 (run before each push). CI (`.github/workflows/tests.yml`) runs the Godot suites on each staging push; earlier runs are cancelled when a newer push arrives, so check the latest run's result for the head commit. The Godot suites last passed locally at `a203c0b`; the game code has changed since (the EQ-07 housing work), and the full Godot list was re-run locally on 2026-10-20 before the push that carries it (see the commit message):
 - Python: `python3 -m unittest discover -s tests`;
 - the Godot suites in `.github/workflows/tests.yml`, among them `relations_test.gd`, `save_transfer_test.gd`, `refuge_test.gd`, `aging_test.gd` and `start_test.gd`.
 
@@ -54,7 +57,8 @@ Also: **MEM-01** and **MEM-02** (the two memory directives) are complete: see "R
 |---|---|
 | 100 days, seed 1 | **Finished.** 118 alive (start 100), no starvation, 16 other deaths. Wildlife 81 (54 at the start). Currency leak 0, item leaks 0. Iron, coal, copper and gold gone by day 20; stone 56 of 240 left. 12 courtships. 1 house built. 16 unemployed. |
 | 100 days, seed 2 | **Finished.** 133 alive, no starvation, wildlife 74, leak 0, but only 1 house built, although 3 crowded households could afford one. |
-| 365 days, seeds 1 and 2 | **In progress** (interim figures recorded in `docs/release/LONG_RUN_SIMULATION.md`). Started 2026-10-20 at about 00:30 UTC in `/home/user/My-Medieval-Life/game` on that session's cloud container, writing to `out/eq/fix9_d365_s1` and `fix9_d365_s2` (not committed). Seed 1 at day 190: 125 alive, no starvation, 26 unemployed, **stone 0**, 7 house sites started and 1 finished. Seed 2 at day 160: 137 alive, stone 1, 8 sites started and 1 finished. Expected to end by about 03:30 UTC. **If a later session finds no day-365 result recorded and it is past that time, the run was lost: run it again** ("Interrupted or fragile processes", below). |
+| 100 days, seeds 1 and 2, **fix10 (corrected housing code)** | Started 2026-10-20 about 01:20 UTC on that session's container (`out/eq/fix10_d100_s1`, `_s2`); expected by about 02:10 UTC. Same re-run rule as below. |
+| 365 days, seeds 1 and 2 (fix9, old code) | **In progress** (interim figures recorded in `docs/release/LONG_RUN_SIMULATION.md`). Started 2026-10-20 at about 00:30 UTC in `/home/user/My-Medieval-Life/game` on that session's cloud container, writing to `out/eq/fix9_d365_s1` and `fix9_d365_s2` (not committed). Seed 1 at day 190: 125 alive, no starvation, 26 unemployed, **stone 0**, 7 house sites started and 1 finished. Seed 2 at day 160: 137 alive, stone 1, 8 sites started and 1 finished. Expected to end by about 03:30 UTC. **If a later session finds no day-365 result recorded and it is past that time, the run was lost: run it again** ("Interrupted or fragile processes", below). |
 
 **Limits of these results:**
 - The runs have no player.
@@ -63,10 +67,10 @@ Also: **MEM-01** and **MEM-02** (the two memory directives) are complete: see "R
 
 ## Known defects (open)
 
-- **EQ-09, stone (Build 16; BLOCKED on owner decision OD-10):** stone has no lasting source. At day 100, 56 (seed 1) and 115 (seed 2) of the 240 were left. It reaches 0 by about day 160–190 in the 365-day runs. **Houses need 20 stone each, so this is now what stalls housing (EQ-07):** 7–8 sites started, 1 finished. The owner's decision (OD-10) is needed: caravan stone as the stand-in, or MIN-B earlier. Iron, coal, copper and gold run out by day 10–20.
+- **EQ-09, stone (Build 16):** the mine deposits run out by about day 160–190. The owner's rule of 2026-10-18 (B7-007) brings caravan stone once deposits are low, and it is implemented. The open question is whether that supply keeps pace, which the 365-day results answer. At day 100 the merchants held 80 stone, so stone was not what stalled housing. (OD-10, raised on a misreading of the deposit figure, is withdrawn.) Iron, coal, copper and gold run out by day 10–20.
 - **EQ-10, ledger residuals:** the economy simulation shows axe and hammer ledger residuals of 1–3 from about day 120 in 365-day runs.
 - **WR-02, grazers (Build 16):** grazers starve together.
-- **Housing growth (EQ-07):** one house in 100 days in both seeds. Most of this is stone (EQ-09, above). In seed 1, crowded households also could not pay; that part does not depend on stone. Unemployment climbs after day 40.
+- **Housing growth (EQ-07):** one house in 100 days in both seeds on the old code. Root causes are in `docs/release/LONG_RUN_SIMULATION.md` ("EQ-07 investigation"): crowded families nobody can leave (no parcel for quarters, OD-13); no goal or saving; same-sex couples excluded. Corrected except OD-13; the fix10 runs measure it. Unemployment climbs after day 40.
 - **B14R-12, long-run regression:** partly addressed. Wildlife no longer collapses at 100 days; it is still to be confirmed at 365.
 
 ## Hardware checks still required (done, not verified on a device)
@@ -86,8 +90,8 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 ## Next approved tasks, in order
 
 1. **When the 365-day fix9 runs end:** record the Build 15 results in `docs/release/LONG_RUN_SIMULATION.md` and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a run was killed by a container restart, restart it (below).
-2. **OD-10 to the owner (stone):** stone runs out and stalls housing. Give the options with the 365-day evidence. EQ-09 is BLOCKED until the owner answers; no change before then.
-3. **EQ-07, the part that does not depend on stone:** why crowded households in seed 1 could not pay; site budgets and helper hiring; unemployment after day 40. Then re-run.
+2. **EQ-07 / HOUSE-07:** read the fix10 100-day runs against fix9, record them labelled as corrected code; put OD-13 to the owner with the evidence.
+3. **EQ-09:** from the 365-day results, check whether caravan stone keeps house sites supplied once the deposits are gone.
 4. **EQ-10:** fix the axe and hammer ledger residuals.
 5. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
 6. **The other Build 15 items:** from the ledger's Roadmap section. Examples: DVW-A2 (rotated save backups), DVW-A4 (faucet and drain ledger), FR-07 (short simulations in CI), REC-017 (stale documents) and FR-06 (wiki pages).
@@ -95,7 +99,8 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Waiting on the owner
 
-- **OD-10, stone (new, 2026-10-20):** a lasting stone source before Build 17. It blocks EQ-09 and most of EQ-07's housing growth.
+- **OD-13, crowded families (new, 2026-10-20):** should young children share beds, should the original village houses take living quarters, or both? It decides the largest remaining cause of EQ-07.
+- **OD-11 and OD-12 (new, 2026-10-20, Build 16):** temporary care for an orphan no household can take, and choosing between equally close relatives (FAM-02..06, the family system, is planned for Build 16).
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
 - **SJD-Q01..Q14:** the judgment system's 14 questions. They are items 25–38 under the heading "Owner decisions still open" (line 584 of `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.txt`; the spec numbers two headings 19, and this is the second). The spec also names open points inside its sections, such as the rumour and credibility questions in its evidence section. Those belong to the same gates and are unanswered too. Never answer any of them on the owner's behalf.
 - **GM-01, generational memory:** placed in Build 19 as the closest fit. The owner has not confirmed this (gate "fit to confirm"). **VP-01, village politics:** approved, but in none of the five builds (target `20+`, after Build 19's judgment).

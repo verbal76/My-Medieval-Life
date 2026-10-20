@@ -440,6 +440,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				return false
 			store.remove(id, k)
 			load.add(id, k)
+			w.stat("helper_took_" + id, k)
 			if c.employer == World.PLAYER:
 				w.player.trim_stolen()
 			return true
@@ -578,12 +579,16 @@ func _keep(h: int, staying: int) -> int:
 	return int(GameData.b("split_keep_base")) + int(GameData.b("split_keep_per_member")) * staying
 
 
-## Each dawn: helpers' contracts from yesterday end; households building a house carry on (hire a
-## helper, or carry themselves); then at most one crowded household that can afford it splits.
+## Each dawn: helpers' contracts from yesterday end; households building carry on (hire a helper, or
+## carry themselves); every household with a housing need works toward it (HOUSE-01..06): a crowded
+## household splits when a grown member can leave (at most one a day), else enlarges its own house with
+## living quarters; couples who need a home of their own found one. A need that cannot be met yet stays
+## as the household's housing goal with its plan and the reason it waits (housing_goals).
 func daily() -> void:
 	for c in contracts.duplicate():
 		if int(c.day) < w.day():
 			end_contract(c, "the day's work is over")
+	var needs := {}                    # household -> goal keys still true today
 	for h in w.households.size():
 		var hh: Dictionary = w.households[h]
 		if hh.get("ended", false) or w.brain._members(h).is_empty():
@@ -593,29 +598,169 @@ func daily() -> void:
 			_keep_building(h)
 		elif str(hh.home) == "":
 			_find_home(h)                  # lodging: a house of its own when it can pay for one
+			if str(hh.home) == "":
+				_note_need(needs, h, "no home")
+	var split := false
 	for h in w.households.size():
-		if crowded(h) and _found(h):
-			break
+		if not crowded(h):
+			continue
+		_note_need(needs, h, "crowded")
+		if str(w.households[h].get("build", "")) != "":
+			continue                       # already building toward it
+		if founder_of(h) != null:
+			if not split and _found(h):
+				split = true
+		else:
+			_enlarge(h)
+	var founded := false
 	for pair in couples_needing_home():
 		var f: NPC = pair[0]
 		var m: NPC = pair[1]
 		if f.household != m.household and Life._move_in(w, f, m):
 			w.note("%s %s and %s %s now live under one roof." % [f.name, f.family, m.name, m.family])
 			continue
-		if _found_couple(f, m):
-			break
+		_note_need(needs, f.household, "couple:%d:%d" % [f.id, m.id])
+		if not founded and _found_couple(f, m):
+			founded = true
+	for h in w.households.size():         # a need that has gone takes its goal with it
+		var goals: Dictionary = w.households[h].get("housing", {})
+		for k in goals.keys():
+			if not (needs.get(h, []) as Array).has(k):
+				goals.erase(k)
+		if goals.is_empty():
+			w.households[h].erase("housing")
+
+
+# ---------------------------------------------------------------- housing goals (HOUSE-01..06) -
+## The household's housing goals (owner directive 2026-10-20): need -> {need, since (day), by (the
+## responsible adult's id), plan ("split", "quarters", "home", "couple"), cost (coins the next step
+## needs), short (coins still to put by), why (what it waits on, "" while it is being built)}. Saved with
+## the household. Need keys: "crowded", "no home", "couple:<id>:<id>".
+func housing_goals(h: int) -> Dictionary:
+	return w.households[h].get("housing", {}) if h >= 0 and h < w.households.size() else {}
+
+
+func _note_need(needs: Dictionary, h: int, key: String) -> void:
+	if h < 0:
+		return
+	if not needs.has(h):
+		needs[h] = []
+	(needs[h] as Array).append(key)
+
+
+## Record or refresh a goal; a new need starts its `since` day, and keeps it while it lasts.
+func _goal(h: int, key: String, plan: String, cost: int, short: int, why: String) -> void:
+	var hh: Dictionary = w.households[h]
+	if not hh.has("housing"):
+		hh.housing = {}
+	var g: Dictionary = hh.housing.get(key, {"need": key.get_slice(":", 0), "since": w.day()})
+	var by := responsible_adult(h)
+	g.by = by.id if by != null else -1
+	g.plan = plan
+	g.cost = cost
+	g.short = maxi(0, short)
+	g.why = why
+	hh.housing[key] = g
+
+
+## Whether `n`'s household is putting money by for a home (HOUSE-04): a goal that waits on coins, or a
+## house being built and bought for. Lower-priority purchases (courting gifts) wait.
+func saving_for_home(n: NPC) -> bool:
+	if n.household < 0 or n.household >= w.households.size():
+		return false
+	if str(w.households[n.household].get("build", "")) != "":
+		return true
+	for g in housing_goals(n.household).values():
+		if int(g.get("short", 0)) > 0:
+			return true
+	return false
+
+
+## The adult who decides for a household (HOUSE-02, FAM-01): of its living adults (elders when it has
+## none, never a child), a parent of someone living in it first, then the eldest; the lowest id on a tie.
+## When one parent dies the other is the parent left, so they decide; sex plays no part.
+func responsible_adult(h: int) -> NPC:
+	var members: Array = w.brain._members(h)
+	var grown: Array = members.filter(func(o: NPC) -> bool: return o.role == "adult")
+	if grown.is_empty():
+		grown = members.filter(func(o: NPC) -> bool: return o.role == "elder")
+	if grown.is_empty():
+		return null
+	grown.sort_custom(func(a: NPC, b: NPC) -> bool:
+		var pa := _parent_here(a)
+		var pb := _parent_here(b)
+		if pa != pb:
+			return pa
+		if a.born != b.born:
+			return a.born < b.born
+		return a.id < b.id)
+	return grown[0]
+
+
+func _parent_here(o: NPC) -> bool:
+	for cid in o.children:
+		var k := w.npc(int(cid))
+		if k != null and k.alive and k.household == o.household:
+			return true
+	return false
+
+
+## What starting a building of this kind on ground of this size takes in hand (EQ-07): the ground and
+## found_start_share of the materials at today's prices; the rest is bought as the household earns.
+func start_cost(kind: String, size: Vector2i) -> int:
+	return w.property.land_price(size.x, size.y) + ceili(estimate(cost_of(kind)) * float(GameData.b("found_start_share")))
+
+
+## A crowded household that nobody can leave (the parents of young children, HOUSE-06) enlarges its own
+## house with living quarters, the existing module that adds beds, started and built as a house is
+## (start_cost, then _keep_building). What the household keeps to live on (_keep) is never spent on it.
+## When it cannot start yet, its goal says why: coins to put by, no ground, or quarters already built.
+func _enlarge(h: int) -> void:
+	var hh: Dictionary = w.households[h]
+	var ref := World.hh_ref(h)
+	var house: Dictionary = w.buildings[str(hh.home)]
+	if w.property.anchor_of(house).is_empty():
+		_goal(h, "crowded", "quarters", 0, 0, "the house stands on no parcel that can be added to")
+		return
+	if w.property.has_module(house, "quarters"):
+		_goal(h, "crowded", "quarters", 0, 0, "the house has its living quarters already; it waits until a grown child can leave")
+		return
+	var rect := find_module_slot("quarters", house, ref)
+	var no := "no ground beside the house for living quarters" if rect.size == Vector2i.ZERO else can_place("quarters", rect, ref, house)
+	if no != "":
+		_goal(h, "crowded", "quarters", 0, 0, no)
+		return
+	var cost := start_cost("quarters", rect.size)
+	var spare: int = w.property.purse(ref) - _keep(h, w.brain._members(h).size())
+	if spare < cost:
+		_goal(h, "crowded", "quarters", cost, cost - spare, "saving for living quarters")
+		return
+	var p := place("quarters", rect, ref, false, house)
+	if p.is_empty():
+		_goal(h, "crowded", "quarters", cost, 0, why)
+		return
+	hh.build = str(p.id)
+	_goal(h, "crowded", "quarters", cost, 0, "")
+	var by := responsible_adult(h)
+	w.note("The %s house is crowded: %s sets about adding living quarters to it." % [hh.family, by.name if by != null else "the family"])
+	w.stat("quarters_started")
+	_keep_building(h)
 
 
 ## Couples who want a home of their own (EQ-07): partners who live in different households, or a grown
 ## child and their partner in their parents' full house. Never the reeve, the sage or a guard (their posts
-## come with a house), nor anyone with young children at home. In id order of the woman.
+## come with a house), nor anyone with young children at home. Any two partners (HOUSE-02: sex decides
+## nothing); each pair once, led by the woman of a man and a woman (whose family name the household
+## takes, as before), else by the lower id. In id order of the one who leads.
 func couples_needing_home() -> Array:
 	var out := []
 	for f: NPC in w.npcs:
-		if not f.alive or f.sex != "female" or f.role != "adult" or f.partner < 0:
+		if not f.alive or f.role != "adult" or f.partner < 0:
 			continue
 		var m := w.npc(f.partner)
 		if m == null or not m.alive or m.partner != f.id or not (_may_found(f) and _may_found(m)):
+			continue
+		if (f.sex == m.sex and f.id > m.id) or (f.sex != m.sex and f.sex != "female"):
 			continue
 		if f.household != m.household:
 			out.append([f, m])
@@ -661,6 +806,8 @@ func _found_couple(f: NPC, m: NPC) -> bool:
 	var nid := w.households.size()
 	var plan := _home_plan(spare, w.building_door(str(w.households[homes[0]].home)), World.hh_ref(nid))
 	if plan.is_empty():
+		var need := start_cost("house", footprint("house"))
+		_goal(f.household, "couple:%d:%d" % [f.id, m.id], "couple", need, need - spare, "saving to found a household of their own")
 		return false
 	# the families make up what the couple's own coins do not cover, richest members first
 	var short := int(plan.cost) - f.coins - m.coins
@@ -728,6 +875,8 @@ func _found(h: int) -> bool:
 	var spare: int = w.property.purse(World.hh_ref(h)) - _keep(h, w.brain._members(h).size() - leaving.size())
 	var plan := _home_plan(spare, w.building_door(str(hh.home)), World.hh_ref(h))
 	if plan.is_empty():
+		var need := start_cost("house", footprint("house"))
+		_goal(h, "crowded", "split", need, need - spare, "saving so %s can found a household of their own" % founder.name)
 		return false
 	# the family (the founder among them) puts together what the new home costs and gives it to the
 	# founder, who leaves with it (and with their partner) to found a household of their own
@@ -789,6 +938,8 @@ func _find_home(h: int) -> void:
 	var near := w.building_door(w.party(ref).home) if w.party(ref) != null and w.buildings.has(w.party(ref).home) else Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])
 	var plan := _home_plan(w.property.purse(ref), near, ref)
 	if plan.is_empty():
+		var need := start_cost("house", footprint("house"))
+		_goal(h, "no home", "home", need, need - w.property.purse(ref), "saving for a home of its own")
 		return
 	if plan.has("house"):
 		var r: Dictionary = plan.house
@@ -907,7 +1058,7 @@ func _keep_building(h: int) -> void:
 		stocked = stocked or pantry.count(id) > 0
 	if budget < cheapest and not stocked:
 		return
-	var founder: NPC = w.party(ref)
+	var founder: NPC = responsible_adult(h)
 	if founder != null:
 		hire(ref, founder, p, budget)
 

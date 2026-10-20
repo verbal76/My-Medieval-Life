@@ -492,3 +492,39 @@ At day 100, 6 households were crowded, and 3 of them could afford a home (`crowd
 The final day-365 figures are recorded when the runs end.
 
 These runs write only to `out/eq/`, which is not committed. Each result is recorded here when its run finishes. A run that a container restart killed is started again: see `docs/CURRENT_DEVELOPMENT_STATE.md`, "Fragile processes".
+
+## EQ-07 investigation: why one house in 100 days (2026-10-20)
+
+**Method:** `game/tests/housing_trace.gd` steps the real world (seed 2, no player) and prints every crowded, building or homeless household twice a day, with its purse, its site's remaining need, who carries for it and what is for sale. The questions are the owner's (directive 2026-10-20, Part 2).
+
+| # | Question | Finding on the code before the fix (fix9) |
+|---|---|---|
+| 1 | Does the household recognize the need? | Partly. Crowding (more people than beds, two adults or more) and couples apart were checked each dawn, but nothing was kept between days. |
+| 2 | Is there a decision-maker? | No explicit one. The household's first adult in member order acted. Couples were led only from the woman, so two partners of the same sex never founded a home. |
+| 3 | Is a persistent goal created? | No. Each dawn started from nothing; between dawns nothing worked toward a home. |
+| 4 | Is it blocked by a full-payment rule? | Not the full price. A start needed the ground and a quarter of the materials (about 82–85 coins), on top of what the family staying behind keeps (40 + 20 a member). Founders who could not meet that did nothing different, saved nothing and still bought gifts. |
+| 5 | Are materials acquired? | Yes, when building runs. Materials were on sale throughout: 75–91 stone, 22–101 planks and 66–89 logs on days 0–25. The day-100 stocks were 80 stone and about 60 planks. **Stone was not the cause at 100 days.** |
+| 6 | Is labour scheduled? | Yes. A helper is hired when the purse covers the rest; otherwise the founder carries. |
+| 7 | Are construction tasks reachable and executable? | Yes. The one house in seed 2 was started on day 10 by a single adult with 115 coins, and bought and delivered in a day. |
+| 8 | Do competing priorities prevent progress? | No evidence. Hunger and sleep come first, as they should. |
+| 9 | Does construction pause and resume? | Yes. Delivered materials stay on the site. |
+| 10 | Are houses completed and occupied? | Yes. The household moves in when the last load arrives. |
+
+**Root causes:**
+1. **Crowded families that no one can leave.** By day 25 of seed 2, all five crowded households had the same shape: two parents, three young children and a grandparent in 5 beds. The rules rightly never send a parent of young children away, and a grandparent does not found a household. A whole family's only way to more beds is the existing living-quarters module, which attaches only to a house on a parcel. Every original village house stands on no parcel. These families therefore never act, although some had the coins (the Mercers had 309). The diagnostic `crowded_can_afford_home` counted them as able to afford a home, which they could not use.
+2. **No goal, no saving.** A grown child or couple who could not yet pay for a start changed nothing in their behaviour.
+3. **Same-sex couples** never found a home (the woman-led couple loop).
+
+**Corrections, Build 15 (agent, under the owner directive; register HOUSE-01..06, FAM-01):**
+- A persistent housing goal on each household (`housing`: need, since, who decides, plan, cost, what is still to save, what it waits on). It is saved, lasts while the need lasts, and goes when the need goes.
+- A responsible adult per household: a parent of someone at home first, then the eldest, of either sex. When a parent dies, the survivor decides.
+- A household saving for a home buys no courting gifts.
+- A crowded family nobody can leave adds living quarters to its house when the house stands on a parcel. Otherwise its goal says why it waits. Whether original houses should take quarters, or children should share beds, is the owner's decision **OD-13**.
+- Couples of either sex found homes.
+- No speed change, no injected coins or materials, no new building type.
+
+**Correction to an earlier report:** the 365-day log's "stone 0" is the mine deposits, not the market. The owner's 2026-10-18 rule already brings caravan stone once deposits are low (B7-007). OD-10, raised on that misreading, is withdrawn (superseded by B7-007).
+
+### 100 days on the corrected code (fix10): to be recorded
+
+Seeds 1 and 2 run on the corrected code; their results are recorded here when they finish, beside the fix9 results above (old code).

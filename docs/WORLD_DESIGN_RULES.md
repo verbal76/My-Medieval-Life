@@ -228,6 +228,31 @@ Same directive, section 40, verbatim:
 
 It adds individual voting and democratic consequence to rule 015 (offices, treasury, succession) without duplicating it.
 
+### 020 Autonomous Housing
+
+Owner directive 2026-10-20 (`docs/directives/2026-10-20_housing_succession_adoption.md`), final governing principle, verbatim:
+
+> "My Medieval Life is about people living autonomous lives.
+>
+> A villager who needs a house should recognize that need, decide to do something about it, and work toward making it
+> happen."
+
+Part 1 of the same directive is the full rule. A household's responsible adult, of either sex, recognizes a real housing need. They keep it as a goal before the household can afford it, and work toward it through real work, saving, buying, gathering and help. The construction consumes real materials and takes real time; it yields to survival needs and resumes after shortages. There are no quotas, no free supplies and no new building types to force success. Register: HOUSE-01..07 under EQ-07.
+
+### 021 Household Succession and Family Care
+
+Same directive, final governing principle, verbatim:
+
+> "A family that loses a parent should continue under the surviving parent.
+>
+> Children who lose both parents should first go to grandparents, then the nearest eligible blood relative, and
+> finally another villager's household.
+>
+> These are connected consequences of the same living world, but housing construction and family succession must
+> remain separately tracked development responsibilities."
+
+Parts 3 and 4 of the same directive are the full rule. Adoption is informal, with no authority. Genealogy is never overwritten, and a surname may change without corrupting the tree. Orphaned children never found households or build. A housing need that taking in children creates belongs to the receiving household's responsible adult. Register: FAM-01..06; owner decisions OD-11 (no eligible household) and OD-12 (equally close relatives) are open.
+
 ## Related, not numbered as rules
 
 - The living-world document's nine guiding principles (`docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` section 1).

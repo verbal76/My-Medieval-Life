@@ -627,7 +627,8 @@ func _plan_evening(n: NPC, h: float) -> void:
 ## seek.chance of evenings (without the means, seek.poor_chance), goes to spend time beside the one they are courting (or, with no interest yet, the
 ## friend they think most of); with seek.gift_coins to spare and nothing to give, they first buy a gift (ale
 ## from the tavern keeper, or a loaf from a food seller). Being near is what builds the tie (Relations.hour);
-## the gift is given at dawn. Villagers without the means court more slowly.
+## the gift is given at dawn. Villagers without the means court more slowly. A household putting money by for
+## a home (Construction.saving_for_home, HOUSE-04) buys no gifts: the evening is still spent together.
 func _plan_seek_company(n: NPC) -> bool:
 	var sk: Dictionary = Relations.cfg().seek
 	if n.role != "adult" or n.partner != -1:
@@ -654,7 +655,7 @@ func _plan_seek_company(n: NPC) -> bool:
 	if who == null or not who.alive or w.asleep(who):
 		return false
 	n.plan = []
-	if not has_gift and n.coins >= int(sk.gift_coins):
+	if not has_gift and n.coins >= int(sk.gift_coins) and not w.construction.saving_for_home(n):
 		for v: NPC in w.npcs:
 			if v.alive and v != n and not w.asleep(v) and ((v.job == "tavernkeeper" and v.inv.has("ale")) or (buy_role(v) == "merchant_food" and v.inv.has("bread"))):
 				n.plan.append(go(_workplace_cell(v)))

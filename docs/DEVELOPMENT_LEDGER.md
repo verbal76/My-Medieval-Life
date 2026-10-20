@@ -11,21 +11,21 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 62 |
-| ACTIVE DEVELOPMENT | 5 |
-| PARTIALLY IMPLEMENTED | 35 |
-| IMPLEMENTED — TESTING REQUIRED | 3 |
+| APPROVED — NOT STARTED | 68 |
+| ACTIVE DEVELOPMENT | 6 |
+| PARTIALLY IMPLEMENTED | 37 |
+| IMPLEMENTED — TESTING REQUIRED | 8 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
-| BLOCKED | 17 |
+| BLOCKED | 16 |
 | DEFERRED | 8 |
 | COMPLETE AND VERIFIED | 125 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **319** |
-| Outstanding (not complete, superseded or canceled) | 175 |
+| **Total approved** | **332** |
+| Outstanding (not complete, superseded or canceled) | 188 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 27 owner decision (open or answered), 19 world design rule, 1 unapproved idea; of the owner decisions, 24 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 30 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 26 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -39,8 +39,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 60 | 58 |
-| Build 16: long-term equilibrium and validation | 21 | 20 |
+| Build 15: simulation stabilization | 69 | 66 |
+| Build 16: long-term equilibrium and validation | 27 | 25 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **232** | **175** |
+| **Total open** | **247** | **188** |
 
-### Build 15: simulation stabilization (60)
+### Build 15: simulation stabilization (69)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -90,9 +90,18 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | approved | ACTIVE DEVELOPMENT |  | the 365-day failures (housing, births, population) under correction now |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | approved | IMPLEMENTED — TESTING REQUIRED |  | the 365-day failures (housing, births, population) under correction now |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | APPROVED — NOT STARTED |  | harness correctness needed before the acceptance runs |
+| FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED |  | the responsible-adult choice is needed by the housing fix (HOUSE-02); the rest exists (inheritance, work, purse) |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | APPROVED — NOT STARTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED |  | simulation harness and conservation checks the stabilization work depends on |
+| HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 correction, Build 15 priority |
+| HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 correction; removes the woman-anchored couple rule |
+| HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 root cause: today nothing happens until land and a first share of materials can be paid at once |
+| HOUSE-04 | Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies | approved | PARTIALLY IMPLEMENTED |  | EQ-07 correction for saving, buying, own stock and family help; gathering and trade by households may need a later build |
+| HOUSE-05 | Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 correction |
+| HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | approved | PARTIALLY IMPLEMENTED |  | EQ-07 root cause: crowded families with young children have no way forward today |
+| HOUSE-07 | EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code | approved | ACTIVE DEVELOPMENT |  | Build 15 acceptance for EQ-07 |
+| OD-13 | Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither? | decision | BLOCKED | owner decision first | the largest remaining cause of EQ-07; every original village house stands on no parcel, so the living-quarters route cannot reach them |
 | PL1-03 | Merchant quantity control | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | PL1-05 | current/max inside bars | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | Q-04 | Resources & Gathering journal page | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
@@ -115,7 +124,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (21)
+### Build 16: long-term equilibrium and validation (27)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -133,9 +142,15 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
-| EQ-09 | Local stone has no lasting source: it runs out by about day 160-190 (Build 15 runs; day 60 in the earlier fix2 run) and house sites stall | approved | BLOCKED | owner decision first | a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17) |
+| EQ-09 | Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied | approved | APPROVED — NOT STARTED |  | a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17) |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | approved | ACTIVE DEVELOPMENT |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
-| OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | BLOCKED | owner decision first | Build 16 equilibrium needs houses to keep being built; the run evidence shows stone is the limit |
+| FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | APPROVED — NOT STARTED |  | a new mechanic; Build 16 is long-term equilibrium across generations, and Build 15 must not be delayed |
+| FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | approved | APPROVED — NOT STARTED |  | needs a kinship-distance function (today Life.kin covers parents and siblings only) |
+| FAM-04 | Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree | approved | APPROVED — NOT STARTED |  | with FAM-02 |
+| FAM-05 | Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically | approved | APPROVED — NOT STARTED |  | with FAM-02; uses the HOUSE-* goal |
+| FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | approved | APPROVED — NOT STARTED |  | with FAM-02..05 |
+| OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | BLOCKED | owner decision first | FAM-02 edge case; the directive asks for an explicit decision rather than a guess |
+| OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | BLOCKED | owner decision first | FAM-03 tie-break; the directive asks that it be preserved as an open question |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
@@ -375,7 +390,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (62)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -405,10 +420,16 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
+| EQ-09 | Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied | Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) and 2026-10-20 (fix9: stone 0 by day 160-190, docs/release/LONG_RUN_SIMULATION.md) |  |  | read the 365-day results: merchants' stone stock and imported_stone after the deposits run out; report whether sites ever wait on stone |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | WR-01 agent report 2026-10-19 (also in the unchanged baseline) |  |  |  |
 | EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
+| FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3 |  |  |  |
+| FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.1-4.2 |  | after FAM-02 |  |
+| FAM-04 | Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.3 |  | after FAM-02 |  |
+| FAM-05 | Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.4 |  | after FAM-02; after HOUSE-03 |  |
+| FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | docs/directives/2026-10-20_housing_succession_adoption.md Part 6 |  | after FAM-02 |  |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
@@ -442,17 +463,18 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 |  |  |  |
 
-## ACTIVE DEVELOPMENT (5)
+## ACTIVE DEVELOPMENT (6)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
-| EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | branch staging/my-medieval-life | after B14R-12 | separate what does not depend on stone (site budgets, crowded households unable to pay in seed 1, unemployment after day 40); housing growth itself waits on the owner's stone decision OD-10. The title describes the Build 14 failures this entry was opened for; the Build 15 runs no longer show the population fall or wildlife collapse |
+| EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | game/tests/housing_test.gd; branch staging/my-medieval-life | after B14R-12 | read the fix10 100-day runs (corrected code) against fix9; OD-13 decides the crowded families that cannot split |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
+| HOUSE-07 | EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code | docs/directives/2026-10-20_housing_succession_adoption.md Part 2, Part 6 | game/tests/housing_test.gd |  |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold |
 
-## PARTIALLY IMPLEMENTED (35)
+## PARTIALLY IMPLEMENTED (37)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -467,6 +489,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md | `b15208a` | after WR-01 |  |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
+| HOUSE-04 | Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.5 | game/tests/housing_test.gd |  | gathering and trading by households: decide scope after the fix10 runs; may move to Build 16 |
+| HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.7 | game/tests/housing_test.gd |  | wait for OD-13 |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |
@@ -492,13 +516,18 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (3)
+## IMPLEMENTED — TESTING REQUIRED (8)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
+| FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |
+| HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.2 | game/tests/housing_test.gd |  |  |
+| HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.3 | game/tests/housing_test.gd |  |  |
+| HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.4 | game/tests/housing_test.gd |  |  |
+| HOUSE-05 | Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.6 | game/tests/housing_test.gd |  |  |
 
 ## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (37)
 
@@ -542,7 +571,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
 
-## BLOCKED (17)
+## BLOCKED (16)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -555,7 +584,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) |  |  |  |
 | B7-016 | Tanners/goods merchants end at 0 coins | docs/release/BUILD_7_ISSUES.md (audit inventory row 57) |  |  |  |
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner request 2026-10-19 (DEVELOPMENT_LEDGER ENV-RTK) |  | owner: environment setup script |  |
-| EQ-09 | Local stone has no lasting source: it runs out by about day 160-190 (Build 15 runs; day 60 in the earlier fix2 run) and house sites stall | Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) and 2026-10-20 (fix9: stone 0 by day 160-190, docs/release/LONG_RUN_SIMULATION.md) |  | after OD-10 | wait for OD-10; then implement the chosen stone source and re-run 365 days |
 | FR-01 | Lizards and spiders as enemies | owner 2026-10-18 ('good enemies'; docs/DECISIONS.md) |  | no lizard or spider pack supplied |  |
 | FR-08 | Music and sound | BUILD_7_ISSUES F-3 |  | no audio supplied |  |
 | PL1-11 | Google Drive cloud saves (staged) | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 148) |  |  |  |
@@ -744,7 +772,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 24, status BLOCKED) (27)
+## Owner decisions, open and answered (open: 26, status BLOCKED) (30)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -758,7 +786,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-07 | Owner decision: hunting in Gather mode | BLOCKED | docs/HANDOFF.md |
 | OD-08 | Owner decision: is honest arbitrage intended? | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md A5 |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | BLOCKED | docs/GAME_DESIGN.md |
-| OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | BLOCKED | docs/release/LONG_RUN_SIMULATION.md (Build 15 interim 365-day runs); docs/EXPANSION_ROADMAP.md (EQ-09 dependency) |
+| OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | SUPERSEDED | docs/release/LONG_RUN_SIMULATION.md (Build 15 interim 365-day runs); docs/EXPANSION_ROADMAP.md (EQ-09 dependency) |
+| OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | BLOCKED | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5 |
+| OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | BLOCKED | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5 |
+| OD-13 | Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither? | BLOCKED | docs/directives/2026-10-20_housing_succession_adoption.md Part 2 (EQ-07 trace, seed 2: five crowded households, all of this shape) |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat), restated in docs/directives/2026-10-20_project_memory_hardening.md and docs/directives/2026-10-20_permanent_project_memory_hardening.md; recorded in docs/EXPANSION_ROADMAP.md |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
@@ -776,7 +807,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 
-## World design rule (19)
+## World design rule (21)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -799,6 +830,8 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-017 | World Design Rule 17: Generational Memory and Living History | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-018 | World Design Rule 18: Protected Ecological Continuity | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-019 | World Design Rule 19: Living Political Agency and Democratic Consequences | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
+| WDR-020 | World Design Rule 20: Autonomous Housing | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md) |
+| WDR-021 | World Design Rule 21: Household Succession and Family Care | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md) |
 
 ## Proposal awaiting an owner decision (not approved) (30)
 

@@ -8277,8 +8277,8 @@
     "Underlying causes corrected, not concealed",
     "Re-run on several seeds"
    ],
-   "implementation": "",
-   "tests": "",
+   "implementation": "game/scripts/core/construction.gd (housing goals, responsible_adult, _enlarge, sex-neutral couples), npc_brain.gd (_plan_seek_company saving)",
+   "tests": "game/tests/housing_test.gd",
    "playtest": [],
    "branch": "staging/my-medieval-life",
    "commits": [],
@@ -8294,7 +8294,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "separate what does not depend on stone (site budgets, crowded households unable to pay in seed 1, unemployment after day 40); housing growth itself waits on the owner's stone decision OD-10. The title describes the Build 14 failures this entry was opened for; the Build 15 runs no longer show the population fall or wildlife collapse",
+   "next_action": "read the fix10 100-day runs (corrected code) against fix9; OD-13 decides the crowded families that cannot split",
    "priority": "build 15",
    "workstream": "world equilibrium",
    "superseded_by": null,
@@ -8324,6 +8324,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "next action names OD-10"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "tests; implementation; next_action",
+     "why": "root causes traced (housing_trace, seed 2) and the first corrections made (HOUSE-01..06, FAM-01)"
     }
    ],
    "target_build": "15",
@@ -8383,9 +8388,9 @@
   },
   {
    "id": "EQ-09",
-   "title": "Local stone has no lasting source: it runs out by about day 160-190 (Build 15 runs; day 60 in the earlier fix2 run) and house sites stall",
+   "title": "Local stone deposits run out (day 160-190 in the Build 15 runs); verify that the owner-approved caravan stone (20 a visit once 10 or less remain) keeps house building supplied",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "APPROVED — NOT STARTED",
    "owner_wording": null,
    "description": "Local stone runs out by about game day 60, slowing house building",
    "source": "Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) and 2026-10-20 (fix9: stone 0 by day 160-190, docs/release/LONG_RUN_SIMULATION.md)",
@@ -8400,14 +8405,12 @@
    "branch": "",
    "commits": [],
    "parent": "EQ-16",
-   "depends_on": [
-    "OD-10"
-   ],
+   "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "wait for OD-10; then implement the chosen stone source and re-run 365 days",
+   "next_action": "read the 365-day results: merchants' stone stock and imported_stone after the deposits run out; report whether sites ever wait on stone",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -8438,10 +8441,21 @@
      "date": "2026-10-20",
      "change": "title; source",
      "why": "title and source brought up to the Build 15 runs (recovery pass 2 re-check); the fix2 figure was the earlier run's"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> APPROVED — NOT STARTED; roadmap_gate; title; next_action",
+     "why": "unblocked: OD-10 was already answered by the owner's 2026-10-18 rule (caravan stone, implemented); what remains is to measure whether that supply keeps pace"
+    },
+    {
+     "date": "2026-10-20",
+     "who": "agent",
+     "change": "depends_on",
+     "why": "OD-10 removed (superseded by B7-007)"
     }
    ],
    "target_build": "16",
-   "roadmap_gate": "owner decision first",
+   "roadmap_gate": "",
    "roadmap_reason": "a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17)"
   },
   {
@@ -8882,6 +8896,289 @@
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "FAM-01",
+   "title": "Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": null,
+   "description": "Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "Father dies: the mother is the responsible adult; mother dies: the father is",
+    "The survivor manages money, food, housing decisions and building",
+    "Tests for both cases"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd test_responsible_adult_after_a_death",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "confirm over a long run that a widowed parent's household keeps feeding itself and building",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; next_action",
+     "why": "Construction.responsible_adult: the surviving parent of either sex decides; tested both ways; the rest of a household's functioning (purse, food, work, inheritance) existed already"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "the responsible-adult choice is needed by the housing fix (HOUSE-02); the rest exists (inheritance, work, purse)"
+  },
+  {
+   "id": "FAM-02",
+   "title": "Both parents dead: dependent children never found households or start construction; an existing household takes them in",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Both parents dead: dependent children never found households or start construction; an existing household takes them in",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "No child founds a household, hires, buys or builds",
+    "Orphaned children move into a receiving household as dependants"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "a new mechanic; Build 16 is long-term equilibrium across generations, and Build 15 must not be delayed"
+  },
+  {
+   "id": "FAM-03",
+   "title": "Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.1-4.2",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "Grandparents first; a closer eligible relative always before a more distant one; then any suitable household",
+    "Tests for each tier"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "FAM-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.1-4.2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "needs a kinship-distance function (today Life.kin covers parents and siblings only)"
+  },
+  {
+   "id": "FAM-04",
+   "title": "Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.3",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "Birth parents and birth surname stay recorded after a move and a surname change",
+    "Test: genealogy survives transfer and surname change"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "FAM-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.3"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "with FAM-02"
+  },
+  {
+   "id": "FAM-05",
+   "title": "Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.4",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "Test: the receiving household's crowding and housing need update; no automatic house"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "FAM-02",
+    "HOUSE-03"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.4"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "with FAM-02; uses the HOUSE-* goal"
+  },
+  {
+   "id": "FAM-06",
+   "title": "Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 6",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "Each of the eight scenarios has a passing test before FAM-02..05 close"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "FAM-02"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 6"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "with FAM-02..05"
   },
   {
    "id": "FR-01",
@@ -9424,6 +9721,363 @@
    "target_build": "19",
    "roadmap_gate": "fit to confirm",
    "roadmap_reason": "generational memory is the judgment system's event and belief record; not named in any build, closest fit"
+  },
+  {
+   "id": "HOUSE-01",
+   "title": "Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": null,
+   "description": "Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.2",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "A household recognizes each listed circumstance from its real state",
+    "Extended families may share a house: a need is judged, never a quota",
+    "Test: a household recognizes overcrowding"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "EQ-07 correction, Build 15 priority"
+  },
+  {
+   "id": "HOUSE-02",
+   "title": "The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too)",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": null,
+   "description": "The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too)",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.3",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "One function names a household's responsible adult (a living parent or partner first, never a child)",
+    "No housing decision or construction step checks sex",
+    "Test: a mother alone initiates and completes construction"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.3"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "EQ-07 correction; removes the woman-anchored couple rule"
+  },
+  {
+   "id": "HOUSE-03",
+   "title": "A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": null,
+   "description": "A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.4",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "Recognizing a need stores a goal on the household that survives days, saves and shortages",
+    "The goal records the plan and why it is not yet possible",
+    "Test: a household begins saving for a house without the full price"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.4"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "EQ-07 root cause: today nothing happens until land and a first share of materials can be paid at once"
+  },
+  {
+   "id": "HOUSE-04",
+   "title": "Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.5",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "Saving: a household with a goal holds money back from lower-priority purchases",
+    "Materials it owns are used first; the rest are bought from sellers",
+    "Test: a household gathers or holds some materials and buys others; no material appears from nothing"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "gathering and trading by households: decide scope after the fix10 runs; may move to Build 16",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.5"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests; next_action",
+     "why": "saving (no courting gifts while saving), the household's own stock and buying are in place and tested; households gathering or trading for materials themselves are not"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "EQ-07 correction for saving, buying, own stock and family help; gathering and trade by households may need a later build"
+  },
+  {
+   "id": "HOUSE-05",
+   "title": "Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": null,
+   "description": "Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.6",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "A site's delivered materials persist across days and saves",
+    "Hunger and sleep come before carrying; work income is not abandoned every day for the site",
+    "Tests: construction resumes after a temporary shortage; survival needs interrupt construction"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.6"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "implemented and covered by game/tests/housing_test.gd; long-run behaviour still to be measured (fix10 runs)"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "EQ-07 correction"
+  },
+  {
+   "id": "HOUSE-06",
+   "title": "No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.7",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "A crowded household that cannot split can enlarge its own house with the existing quarters module or move as a whole",
+    "A stalled goal records the blocking reason",
+    "No new building type and no free material"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "wait for OD-13",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.7"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests; next_action",
+     "why": "crowded families nobody can leave add living quarters (an existing module), but only to a house on a parcel; every original village house is on none"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "EQ-07 root cause: crowded families with young children have no way forward today"
+  },
+  {
+   "id": "HOUSE-07",
+   "title": "EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 2, Part 6",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "The ten questions are answered in docs/release/LONG_RUN_SIMULATION.md or the EQ-07 entry",
+    "The seven housing scenarios each have a test",
+    "100-day runs on the corrected code, labelled as such beside the old results"
+   ],
+   "implementation": "",
+   "tests": "game/tests/housing_test.gd",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead agent, staging",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 2, Part 6"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; tests; workstream",
+     "why": "trace done and root causes named; tests written; fix10 runs under way"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "Build 15 acceptance for EQ-07"
   },
   {
    "id": "K-1",
@@ -10574,7 +11228,7 @@
    "id": "OD-10",
    "title": "Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "SUPERSEDED",
    "owner_wording": null,
    "description": "Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building)",
    "source": "docs/release/LONG_RUN_SIMULATION.md (Build 15 interim 365-day runs); docs/EXPANSION_ROADMAP.md (EQ-09 dependency)",
@@ -10596,7 +11250,7 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "B7-007",
    "notes": "",
    "history": [
     {
@@ -10614,11 +11268,149 @@
      "who": "agent",
      "change": "depends_on",
      "why": "dependency direction corrected: EQ-09 waits on this decision"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> SUPERSEDED; superseded by B7-007; owner_answer",
+     "why": "raised in error: the owner already decided this on 2026-10-18 (docs/DECISIONS.md, Build 7 economy corrections) and it is implemented (NPCBrain._caravan_stone); the stall at day 100 was not stone either (merchants held 80 stone)"
     }
    ],
    "target_build": "16",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "Build 16 equilibrium needs houses to keep being built; the run evidence shows stone is the limit"
+   "roadmap_reason": "Build 16 equilibrium needs houses to keep being built; the run evidence shows stone is the limit",
+   "owner_answer": "Owner, 2026-10-18 (docs/DECISIONS.md, Build 7 economy corrections approved): 'stone added to the caravan from a defined outside source at real prices and quantities.'"
+  },
+  {
+   "id": "OD-11",
+   "title": "Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other)",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5",
+   "approval": "",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before FAM-02 implements the case"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "FAM-02 edge case; the directive asks for an explicit decision rather than a guess"
+  },
+  {
+   "id": "OD-12",
+   "title": "Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle)",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5",
+   "approval": "",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before FAM-03 implements the tie-break"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "FAM-03 tie-break; the directive asks that it be preserved as an open question"
+  },
+  {
+   "id": "OD-13",
+   "title": "Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither?",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 2 (EQ-07 trace, seed 2: five crowded households, all of this shape)",
+   "approval": "",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before HOUSE-06 changes what crowding means or the property model"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md Part 2 (EQ-07 trace, seed 2: five crowded households, all of this shape)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed on the roadmap"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "the largest remaining cause of EQ-07; every original village house stands on no parcel, so the living-quarters route cannot reach them"
   },
   {
    "id": "OPS-01",
@@ -17735,6 +18527,78 @@
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "WDR-020",
+   "title": "World Design Rule 20: Autonomous Housing",
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "World Design Rule 20: Autonomous Housing",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md)",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "As recorded in the source"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md)"
+    }
+   ]
+  },
+  {
+   "id": "WDR-021",
+   "title": "World Design Rule 21: Household Succession and Family Care",
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "World Design Rule 21: Household Succession and Family Care",
+   "source": "docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md)",
+   "approval": "owner directive 2026-10-20 (housing, succession and adoption)",
+   "acceptance": [
+    "As recorded in the source"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_housing_succession_adoption.md (final governing principle; text recorded in docs/WORLD_DESIGN_RULES.md)"
+    }
+   ]
   },
   {
    "id": "WR-01",
