@@ -113,6 +113,9 @@ def validate(d, check_docs=True):
         if r.get("kind") == "decision" and r.get("status") != "BLOCKED" and not (
                 str(r.get("owner_wording") or "").strip() or str(r.get("owner_answer") or "").strip()):
             errors.append("%s: an open owner decision cannot leave BLOCKED without the owner's answer (owner_answer)" % rid)
+        if (r.get("kind") == "decision" and r.get("status") == "BLOCKED" and r.get("target_build") in TARGETS[:6]
+                and r.get("roadmap_gate") != "owner decision first"):
+            errors.append("%s: an open owner decision placed in a build needs the gate 'owner decision first'" % rid)
         if r.get("status") == "CANCELED BY OWNER" and not str(r.get("canceled_by_owner") or "").strip():
             errors.append("%s: CANCELED BY OWNER must cite the owner's cancellation (canceled_by_owner)" % rid)
         if r.get("status") == "COMPLETE AND VERIFIED" and r.get("kind") == "approved":

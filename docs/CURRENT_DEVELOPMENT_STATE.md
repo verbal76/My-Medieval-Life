@@ -21,7 +21,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-Seven entries, all named here (the validator checks). The ledger's count of six is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
+Six entries, all named here (the validator checks). The ledger's count of five is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
 
 - **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
   - Done so far:
@@ -36,7 +36,7 @@ Seven entries, all named here (the validator checks). The ledger's count of six 
     - unemployment climbs after day 40.
 - **EQ-16:** world equilibrium, the Build 16 objective. It closes on the multi-seed 100- and 365-day acceptance runs (EQ-06).
 - **DVW-A3:** re-measure money supply over 100 and 365 days on 2–3 seeds with no player. It shares the EQ runs.
-- **MEM-01:** this project memory: `docs/PROJECT_MEMORY.md`, this file, the session-start procedure in `CLAUDE.md`, the validator checks and the fresh-session recovery test.
+- **MEM-01** (project memory) is complete: see "Recovery test" below. Keep this file and the index current.
 - **REL-14-16:** release Builds 15 and 16 as private drafts when the conditions hold. Build 14 is done.
 - **ROAD-01:** the owner's five-build roadmap. Every open item carries a `target_build` (the ledger's Roadmap section).
 - **MP-01:** multiplayer on `wip/multiplayer` only, isolated. Nothing is to be done on it without the owner.
@@ -81,14 +81,13 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Next approved tasks, in order
 
-1. **MEM-01:** finish. Run the fresh-session recovery test and fix the gaps it finds.
-2. **When the fix9 runs end:** record the Build 15 results in `docs/release/LONG_RUN_SIMULATION.md` and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a run was killed by a container restart, restart it (below).
-3. **EQ-07, housing growth:** find why crowded households cannot afford a home. Then re-run.
-4. **EQ-10:** fix the axe and hammer ledger residuals.
-5. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
-6. **EQ-09, stone (target Build 16):** measure and bring the options to the owner before any change. The options are caravan stone as a stand-in, or MIN-B earlier (`docs/EXPANSION_ROADMAP.md`).
-7. **The other Build 15 items:** from the ledger's Roadmap section. Examples: DVW-A2 (rotated save backups), DVW-A4 (faucet and drain ledger), FR-07 (short simulations in CI), REC-017 (stale documents) and FR-06 (wiki pages).
-8. **Build 15 release:** when REL-14-16's conditions hold, a private draft with a readiness packet like `docs/release/BUILD_14_READINESS.md`.
+1. **When the 365-day fix9 runs end:** record the Build 15 results in `docs/release/LONG_RUN_SIMULATION.md` and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a run was killed by a container restart, restart it (below).
+2. **EQ-07, housing growth:** both 100-day runs built one house. In seed 1 crowded households could not pay; in seed 2 three could, yet one site stayed open for 50 days. Find out why: house materials (stone 20, planks 30, logs 10 a house) and who sells stone (`Construction.SELLERS`), helper hiring, budgets. Then re-run.
+3. **EQ-10:** fix the axe and hammer ledger residuals.
+4. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
+5. **EQ-09, stone (target Build 16):** measure and bring the options to the owner before any change. The options are caravan stone as a stand-in, or MIN-B earlier (`docs/EXPANSION_ROADMAP.md`).
+6. **The other Build 15 items:** from the ledger's Roadmap section. Examples: DVW-A2 (rotated save backups), DVW-A4 (faucet and drain ledger), FR-07 (short simulations in CI), REC-017 (stale documents) and FR-06 (wiki pages).
+7. **Build 15 release:** when REL-14-16's conditions hold, a private draft with a readiness packet like `docs/release/BUILD_14_READINESS.md`.
 
 ## Waiting on the owner
 
@@ -115,7 +114,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 **Result:** it answered all seven questions of the directive from the committed files. It needed four core files (CLAUDE.md, this index, this file, the ledger) and about 13 files in all.
 
-**Gaps it found, each fixed in the commit after `3814618`:**
+**Gaps it found, fixed in `c2ed962` and the commit after it (a re-check by the same agent confirmed them):**
 - stale pointers to the old plan and queue (CLAUDE.md section 5, the ledger header, `docs/DEVELOPMENT_PLAN.md`);
 - a device queue missing the status-only playtest items;
 - the decision lists' counts;
@@ -127,4 +126,4 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 - REL-14-16's next action;
 - REC-002's off-repository source.
 
-Repeat this test after any large change to the memory files.
+Some register sources cite `docs/HANDOFF.md`, `docs/DEVELOPMENT_QUEUE.md` or `docs/DEVELOPMENT_PLAN.md`. Those are where the item was first recorded; the files are kept, marked historical, so the citations stay valid. Repeat this test after any large change to the memory files.

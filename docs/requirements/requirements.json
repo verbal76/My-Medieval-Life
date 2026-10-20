@@ -9497,7 +9497,7 @@
    "id": "MEM-01",
    "title": "Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "The GitHub repository must be capable of restoring the complete development state without relying on previous conversation history.",
    "description": "Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test",
    "source": "docs/directives/2026-10-20_project_memory_hardening.md",
@@ -9514,14 +9514,17 @@
    "tests": "tests/test_requirements.py RoadmapAndMemoryTest",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3814618",
+    "c2ed962"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "fresh-session recovery test from a fresh clone of staging; fix gaps; then close",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -9536,6 +9539,11 @@
      "date": "2026-10-20",
      "change": "tests; implementation; next_action",
      "why": "index, handoff, CLAUDE.md section 0 and validator safeguards written; the fresh-session recovery test is next"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 3814618; commit c2ed962; next_action",
+     "why": "all six acceptance criteria met: index and state file written, CLAUDE.md section 0, validator safeguards with tests, and a fresh-session recovery test from a fresh clone of staging answered the seven questions; its gaps were fixed and re-checked"
     }
    ],
    "target_build": "15",
@@ -10057,11 +10065,16 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap_gate",
+     "why": "gate made explicit (recovery test, MEM-01): an open owner decision placed in a build waits on the owner first"
     }
    ],
    "acceptance_derived": true,
    "target_build": "17",
-   "roadmap_gate": "",
+   "roadmap_gate": "owner decision first",
    "roadmap_reason": "deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits)"
   },
   {

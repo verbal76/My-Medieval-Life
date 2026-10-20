@@ -110,6 +110,11 @@ class RoadmapAndMemoryTest(unittest.TestCase):
         q["approval"] = "agent"
         self.assertTrue(any("SJD-Q01" in e and "owner decision became" in e for e in cr.compare(REGISTER, new)))
 
+    def test_decision_in_a_build_waits_on_the_owner(self):
+        new = copy.deepcopy(REGISTER)
+        self._by(new, "SJD-Q02")["roadmap_gate"] = ""
+        self.assertTrue(any("SJD-Q02" in e and "owner decision first" in e for e in cr.validate(new, check_docs=False)))
+
     def test_moving_build_without_history_is_detected(self):
         new = copy.deepcopy(REGISTER)
         r = next(x for x in new["requirements"] if x.get("target_build") == "17")

@@ -458,8 +458,23 @@ Two moderate caravan settings (limit on, seed 1, 100 days) were also run:
 - 5 households were crowded and 2 couples needed a home, but no crowded household could afford one (`crowded_can_afford_home` 0). This is the open housing-growth defect under EQ-07.
 - Unemployment had risen from day 40.
 
+### 100 days, seed 2 (finished)
+
+| | Day 0 | Day 50 | Day 100 |
+|---|---|---|---|
+| Alive | 100 | 122 | 133 |
+| Starved / other deaths (cumulative) | 0 / 0 | 0 / 7 | 0 / 13 |
+| Food in store (days) | 3.0 | 5.7 | 6.0 |
+| Unemployed | 0 | 0 | 7 |
+| Households / houses built | 24 / 0 | 25 / 1 | 26 / 1 |
+| Wild / penned animals | 54 / 13 | 69 / 29 | 74 / 31 |
+| Stone left (of 240) | 240 | 115 | 115 |
+| Coins in the world (leak) | 2903 (0) | 5254 (0) | 6086 (0) |
+
+At day 100, 6 households were crowded, and 3 of them could afford a home (`crowded_can_afford_home` 3). Even so, only one house had been finished, with a second site open. In seed 1 crowded households could not pay; here they can, but building is slow. Both point to house construction under EQ-07.
+
 ### Still to record
 
-The 100-day seed 2 run and the 365-day runs for seeds 1 and 2. At day 80 seed 2 had 128 alive, no starvation and leak 0.
+The 365-day runs for seeds 1 and 2.
 
 These runs write only to `out/eq/`, which is not committed. Each result is recorded here when its run finishes. A run that a container restart killed is started again: see `docs/CURRENT_DEVELOPMENT_STATE.md`, "Fragile processes".
