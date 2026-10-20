@@ -1079,3 +1079,42 @@ coins to vendors they could not pay while relatives held 40 or more; and village
 their own meat, which the player can. **Defects** (fixed: the tab and the order, `9db091b`; next: the relief sources,
 FSE-17, and the eating and cooking parity). **Legitimate outcomes:** the poverty of the Lambert and Dale households, the
 saturated meat market, and an empty granary while the treasury sat at its reserve.
+
+### Seed 2, 365 days, with FSE-17 and the eating and cooking parity (`69a8e14`), against the baseline (2026-10-20)
+
+Local run, same command. The relief order and family-tab fixes (`9db091b`), relief over every food store with one food
+valuation, and villagers eating eggs and milk and roasting their own meat. **A material change; for the owner's review
+before it is relied on** (owner follow-up 2026-10-20, section 4's rule applied to any change that materially affects
+food).
+
+| Measure | Baseline `5625505` | `69a8e14` |
+|---|---|---|
+| Alive at the end (peak) | 130 (133 at day 210) | 167 (170 at day 300) |
+| Starved | 11 (days 216-236) | **23**: 2 elders on days 144-147, 2 on day 260, then 19 on days 306-320, 13 of them children |
+| First starvation | day 216 | day 144 |
+| Starving villager-hours | 535 | 5,817 |
+| Missed meals: no money / nothing for sale | 1,337 / 565 | 31,418 / 42,030 |
+| Food eaten (points) | 2.92 million | 3.35 million (+15 %) |
+| Relief: coins spent / granary wheat given | 3,218 / 5,066 | 25,482 / 2,180 |
+| Food held by villagers at the end (points) | 54,930 | 5,852 |
+| Wheat made / held at the end | 43,920 / 2,332 | 43,920 / 884 |
+| Eggs and milk eaten | 57 and 24 (they piled up: 1,636 and 1,413 at the end) | 1,630 and 1,241 |
+| Roast meat made | 5,126 | 9,071 (households roast their own) |
+| Unemployed at the end | 0 | 37 |
+| Ledgers | balanced | balanced (coins leak 0, item leaks 0) |
+
+(The village's "food days" are not comparable between the two: the baseline valued wheat at 20 points there, this run
+at 120, the one valuation.)
+
+**What happened.** Fed better early, the village grew about 30 % larger on the same six fields making the same 43,920
+wheat (births need the household to have food in hand, and households now count everything they hold), until food per
+head ran out around day 300. Relief spent eight times as much: it now buys from every store, including other
+households' food above their 2-day reserve horizon. Since relief helps households under 2 days, a household that sells
+down to 2 days qualifies itself as soon as it eats, so food circulates between households with the treasury paying each
+time. An isolated run with that floor at relief's 3-day fill is being made to measure how much of the change this is.
+
+**Classification (WDR-022), provisional until the comparison:**
+- **Integrity:** held (both ledgers balanced; no food or coins from nothing).
+- **Legitimate outcome:** a village that outgrows fixed land and then starves. It strengthens the case for land
+  planning (FSE-14) and the shared farming model (OD-22); it is not answered by a rescue.
+- **Under investigation:** the relief churn between households (a possible defect of the implementation's donor floor).
