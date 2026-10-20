@@ -5,6 +5,10 @@ conditions in OVN-01 section 4 (`docs/directives/2026-10-20_master_overnight_dev
 authorization: OVN-01 section 9 and REL-15-18. A build that meets every condition is released as a **private draft**.
 "You do not need to wake me up merely to publish a build that meets these conditions."
 
+> **Status: not yet qualified.** The release-candidate run on `af60f94` exposed two tool-recovery defects that are
+> Build 15 scope (EQ-18): no smith on seed 2 from day 240, and woodcutters dying out because job seekers could not buy
+> an axe. They are fixed; the figures below are from `af60f94` and are updated after the year-long run on the fix.
+
 ## Candidate
 
 - **Game code:** `af60f94` on `staging/my-medieval-life`. Later commits change only documents, the register and
@@ -24,7 +28,7 @@ OVN-01 section 3 lists Build 15's scope. Each item and its register evidence:
 | Persistent housing goals | HOUSE-01, HOUSE-03 | Complete and verified |
 | Economic recovery from missing work tools | EQ-07 (tool reserve, tool-less workers count as out of work, the smith buys imported ore, the caravan keeps needed tools) | Complete and verified |
 | Bed sharing | HOUSE-08 | Complete and verified |
-| Sleeping lofts | HOUSE-12 | Built in the year-long runs (see condition 4) |
+| Sleeping lofts | HOUSE-12 | Implemented and tested: a loft is built, used and saved (`housing_test.gd`). Households start lofts in the year-long runs (1 and 3); none is finished there, because timber runs short (condition 4) |
 | Existing-house expansion | HOUSE-06, HOUSE-09, HOUSE-10 | Complete and verified (the small room, the loft and the quarters) |
 | Household ownership and occupancy integrity | HOUSE-02, FAM-01, EQ-08, EQ-17 | Implemented and tested |
 | Required regression tests | FR-07 (a 10-day simulation in CI; CI fails on script errors) | Complete and verified |
@@ -78,7 +82,15 @@ All on `af60f94`:
 | Nights without firewood | 6,917 | 6,633 |
 | Fingerprint | `b21ba717e772664848724d5001a4028c` | `0647d6bf82c1f58ad21f95e5aeaca583` |
 
-**Wildlife at day 365:** pending the local re-run of the same commit (the Actions log does not print it).
+**Wildlife at day 365:** every wild species is alive on both seeds (local re-runs of `af60f94` with the same
+fingerprints):
+- seed 1: bear 2, bird 14, boar 22, deer 14, fox 6, rabbit 19, wolf 6;
+- seed 2: bear 2, bird 18, boar 20, deer 9, fox 8, rabbit 23, wolf 7.
+
+**Construction over the year:**
+- Every site that got its materials was finished. No site was given up, and no script error or deadlock occurred.
+- Seed 1's other five sites, and every loft started (1 and 3), wait for planks and logs from about day 270 to the
+  year's end: timber runs short.
 
 ### 5. No known game-breaking defects
 
@@ -135,8 +147,8 @@ Recorded in `BUILD_15_PACKET.md` once `release.yml` has run.
 - That is Build 16's work.
 
 **Housing:**
-- Houses are finished on both seeds, but fewer on seed 1 than in the `59057ac` runs (3 against 8). At day 365 five
-  sites are still open.
+- Houses are finished on both seeds, but fewer on seed 1 than in the `59057ac` runs (3 against 8). Seed 1's five other
+  sites, and the lofts started, wait for timber from about day 270.
 
 **Other:**
 - The small room fits beside only three original houses.

@@ -750,3 +750,36 @@ holds above its start, and wildlife lives all year.
 day 120, unemployment reaches 24-39, firewood is short, and seed 2 lost four villagers to hunger. That is the
 long-term equilibrium Build 16 is for: EQ-06's acceptance is "no consistent spiral into extinction, starvation,
 permanent unemployment or economic paralysis". Owner decision OD-16 is the first question there.
+
+## 365 days on the Build 15 release candidate (staging `af60f94`, 2026-10-20)
+
+Actions run 39396414426, and local re-runs of the same code with the same fingerprints (seed 1
+`b21ba717e772664848724d5001a4028c`, seed 2 `0647d6bf82c1f58ad21f95e5aeaca583`). Both passed the script-error gate and
+the ledger: currency leak 0, no item residuals.
+
+| | Seed 1 | Seed 2 |
+|---|---|---|
+| Alive at day 365 (from 100) | 115 | 122 |
+| Births / deaths | 84 / 69 (old age) | 92 / 70 (66 old age, 4 starvation) |
+| Households | 33 | 34 |
+| Sites started / finished / open | 8 / 3 / 5 | 9 / 3 / 6 |
+| Houses built | 3 | 2 |
+| Lofts started | 1 | 3 |
+| Unemployed adults | 17 of 72 | 17 of 79 |
+| Nights without firewood | 6,917 | 6,633 |
+| Wild animals at day 365 | bear 2, bird 14, boar 22, deer 14, fox 6, rabbit 19, wolf 6 | bear 2, bird 18, boar 20, deer 9, fox 8, rabbit 23, wolf 7 |
+
+**What it shows:**
+- Every wild species lives the whole year on both seeds (B14R-12).
+- Houses are finished on both seeds (EQ-07).
+- Unemployment is lower than on `59057ac` (17 against 24 and 39).
+
+**What stays open:**
+- **Seed 1's sites stall:** its three houses were finished by about day 270, and its five other sites make no
+  progress after that. Timber runs out: the logs villagers hold fall from 99 at day 90 to 14 at day 365, and planks
+  from 58 to 14. No site is given up; they wait for materials. The `59057ac` run finished 9 of 13 sites; the code
+  between (the guardianship, grazing and small-room changes) moves the run onto a different path.
+- **No loft is finished in the year** on either seed: the beds rise only by the new houses' five each. The lofts
+  started (1 and 3) wait for planks like the houses.
+- **Timber and firewood** are both short. That is the timber-supply side of the economy's long-term equilibrium:
+  Build 16, with OD-16 first.

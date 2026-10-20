@@ -2390,10 +2390,10 @@ func seek_work() -> void:
 					continue
 				var setup := 0.0
 				if opt.tool != "" and not n.inv.has(opt.tool):
-					var seller := _seller_of(opt.tool, n)
-					if seller == null or n.coins < w.sell_price(seller, opt.tool):
+					var price := tool_price(n, opt.tool)     # the smith or the goods merchant sells tools (not the timber sellers)
+					if price < 0 or n.coins < price:
 						continue
-					setup = w.sell_price(seller, opt.tool) / 10.0
+					setup = price / 10.0
 				var score: float = float(opt.pay) - setup - Vector2(home).distance_to(Vector2(opt.at)) / 60.0
 				if score > best_score:
 					best_score = score
@@ -2406,7 +2406,10 @@ func seek_work() -> void:
 				continue
 			market[best].open = int(market[best].open) - 1
 			var why := "out of work" if unemployed else "%s did not keep the household fed" % (n.job.replace("_", " ") + " work")
+			var left := n.job
+			var left_place := n.workplace
 			_change_job(n, best, why)
+			_post_left(n, left, left_place)
 
 
 ## A merchant's stall falls vacant when they die or change work.
@@ -2513,6 +2516,17 @@ func _open_vacancy(n: NPC) -> void:
 	w.note("The post of %s, left by %s, is open: an apprentice or a newcomer will take it." % [n.job.replace("_", " "), "%s %s" % [n.name, n.family]])
 
 
+## An essential trade left for other work (seek_work) is handed on as after a death: its post opens when
+## the trade falls below strength, so the forge or the woodland is not left empty for good (EQ-07).
+func _post_left(n: NPC, job: String, place: String) -> void:
+	if job == "" or not is_essential(job) or living_in(job) + open_posts(job) >= staff_target(job):
+		return
+	w.vacancies.append({"job": job, "workplace": place, "home": n.home, "household": n.household,
+			"day": w.day(), "who": "%s %s" % [n.name, n.family], "heir": n.id, "left_by": n.id})
+	w.stat("posts_left_" + job)
+	w.note("%s %s leaves the post of %s: an apprentice or a newcomer will take it." % [n.name, n.family, job.replace("_", " ")])
+
+
 ## Every morning: posts open for succession_days are filled by an apprentice; one nobody can fill waits
 ## for the caravan, and after newcomer_max_days a newcomer comes without it.
 func succession_dawn() -> void:
@@ -2558,8 +2572,8 @@ func _apprentice_for(v: Dictionary) -> NPC:
 	var best: NPC = null
 	var best_key := 1 << 30
 	for o: NPC in w.npcs:
-		if not o.alive or o.role != "adult" or not APPRENTICE_FROM.has(o.job):
-			continue
+		if not o.alive or o.role != "adult" or not APPRENTICE_FROM.has(o.job) or o.id == int(v.get("left_by", -1)):
+			continue                                   # (not the worker who just left the trade)
 		if v.job == "merchant" and o.coins < int(GameData.b("stall_min_coins")):
 			continue
 		var key := APPRENTICE_FROM.find(o.job) * 100000 + (0 if (int(v.household) >= 0 and o.household == int(v.household)) else 50000) + o.id

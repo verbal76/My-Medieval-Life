@@ -31,7 +31,7 @@ Tested.
 - Builders saw planks and fell timber themselves when nobody sells them.
 - Every house goes up with real materials and work over time.
 
-Tested. In year-long simulations, 8 and 2 new houses were finished on the two test worlds.
+Tested. In a year-long simulation of this build, new houses were finished on both test worlds (3 and 2).
 
 **Orphaned children are taken in**, in this order:
 1. a surviving parent;
@@ -79,7 +79,10 @@ The same as Build 14, plus the shortcuts above. The full lists are in the game (
 **Economy**
 - **Trade slows down after a few game months.** The smith runs short of money, so tools are scarce. Many grown
   villagers find no paid work, and houses often go without firewood. In one simulated year on one world, four
-  villagers died of hunger. Making the village's economy hold together over many years is Build 16's work.
+  villagers died of hunger.
+- **Timber runs short later in the year.** Building sites and sleeping lofts then wait for planks and logs, sometimes
+  for months.
+- Making the village's economy hold together over many years is Build 16's work.
 - The caravan brings a fixed 30 coins a day into the village. This is a labelled stand-in for neighbouring
   settlements, which are not simulated yet.
 - Iron, coal and copper seams run out after about 2 hours of play. After that, the caravan sells ore.

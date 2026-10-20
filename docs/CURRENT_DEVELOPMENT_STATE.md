@@ -24,6 +24,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 about 10:00 UTC.
 
+- **EQ-18 (Build 15):** tool recovery fixed, waiting on its year-long run.
 - **Build 15 release gates:** the record of each OVN-01 section 4 condition goes in the Build 15 readiness packet (`docs/release/`), then `release.yml` runs as a private draft (REL-15-18). A 365-day Actions run on the release candidate checks the simulation before it.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
 - **OVN-01:** the overnight directive in force. **ROAD-01:** the roadmap.
@@ -73,11 +74,11 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
-1. **Build 15 release:** a 365-day Actions run (seeds 1 and 2) on the release-candidate commit; then the readiness packet with each OVN-01 section 4 condition and its evidence; then `release.yml` as a private draft (REL-15-18), artifacts checked. Known issues are stated plainly: the economy stall (Build 16), seed 2's starvation, and the device checks still to do.
+1. **Build 15 release:** the release-candidate run on `af60f94` (Actions 39396414426) found two Build 15 defects in tool recovery, now **EQ-18** and fixed: job seekers could not buy an axe, so woodcutters died out, and a smith who left the trade left the forge empty for good. Next: run the suites, push, and do a 365-day Actions run on the fix. If it keeps a smith and woodcutters on both seeds, update `docs/release/BUILD_15_READINESS.md` (still a draft) and run `release.yml` as a private draft (REL-15-18). Known issues are stated plainly: the economy and timber stall (Build 16), seed 2's starvation, and the device checks still to do.
 2. **Then Build 16** (EQ-01..06, FAM-07, EQ-09, OD-16 once answered, and the rest), Build 17 and Build 18, in order.
-3. Open Build 15 entries that are not code: DVW-A14 (a line in the release checklist for the owner), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
+3. Open Build 15 entries that are not code: DVW-A14 (the whole-life play-through, item 8 of the testing checklist), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 
-Skipped (deferred) items: none. `docs/SKIPPED_ITEMS.md` is empty; nothing was deferred to advance a build.
+Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_ITEMS.md`): carts have no collision, so no route is ever blocked.
 
 ## Waiting on the owner
 

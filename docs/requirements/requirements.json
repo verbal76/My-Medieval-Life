@@ -2436,7 +2436,7 @@
    "id": "B14R-12",
    "title": "Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run",
    "source": "Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1)",
@@ -2494,6 +2494,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "WR-01 is done; the 365-day re-run is under way"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED",
+     "why": "365-day runs on af60f94 (Actions 39396414426, local re-runs with the same fingerprints): every wild species alive at day 365 on both seeds, and the population grows from 100 to 115 and 122"
     }
    ],
    "acceptance_derived": true,
@@ -8699,6 +8704,50 @@
    "target_build": "15"
   },
   {
+   "id": "EQ-18",
+   "title": "Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240)",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": null,
+   "description": "Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240)",
+   "source": "Build 15 release-candidate run (Actions 39396414426 on af60f94), 2026-10-20; OVN-01 section 3 Build 15 scope 'Economic recovery from missing work tools'",
+   "approval": "within OVN-01's Build 15 scope (economic recovery from missing work tools); engineering defect fixes under the owner's succession rule B8-016 ('Apprentice, then newcomer')",
+   "acceptance": [
+    "A job seeker with the coins for a tool on sale can take up woodcutting or mining (test)",
+    "An essential trade left through the job market opens its post, at the workstation left, and the leaver is not the apprentice (test)",
+    "A year-long run on both seeds keeps a smith and more than one woodcutter, with no script errors or leaks"
+   ],
+   "implementation": "",
+   "tests": "housing_test.gd test_axe_bought_to_take_up_woodcutting, test_left_trade_post_opens",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "365-day Actions run on both seeds",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "Build 15 release-candidate run (Actions 39396414426 on af60f94), 2026-10-20; OVN-01 section 3 Build 15 scope 'Economic recovery from missing work tools'"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "tests; target_build; next_action",
+     "why": "fixed in npc_brain.gd seek_work and _post_left; housing_test 115 checks pass"
+    }
+   ],
+   "target_build": "15"
+  },
+  {
    "id": "EXP-A",
    "title": "Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification)",
    "kind": "approved",
@@ -10684,7 +10733,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "long-run measurement on GitHub Actions once validated; then close",
+   "next_action": "a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16)",
    "priority": "",
    "workstream": "lead agent, staging",
    "superseded_by": null,
@@ -10714,6 +10763,11 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests; next_action",
      "why": "implemented as approved (balance.json loft: 12 planks, 6 logs, 2 beds, one per house; built by the site and delivery path; beds only when finished; ladder cell; hidden while asleep; saves unchanged; options weighed by circumstances); housing_test.gd 76 checks pass; long-run effect still to be measured"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "year-long runs on af60f94: lofts started (1 and 3) but none finished, waiting for planks as timber runs short; the unit tests show a loft built, used and saved"
     }
    ],
    "target_build": "15",

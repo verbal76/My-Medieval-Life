@@ -32,6 +32,8 @@ func _init() -> void:
 	test_forge_buys_imported_ore()
 	test_founder_who_pairs_keeps_building()
 	test_tool_less_worker()
+	test_axe_bought_to_take_up_woodcutting()
+	test_left_trade_post_opens()
 	test_bed_sharing()
 	test_quarters_on_an_original_house()
 	test_sleeping_loft()
@@ -391,6 +393,74 @@ func test_tool_less_worker() -> void:
 	hh.econ = {"cost": 10.0, "adults": 1, "streak": 0}
 	w.brain.seek_work()
 	check(cutter.job != "woodcutter", "the job market moves a woodcutter with no axe and no coins into paying work (now %s)" % cutter.job)
+
+
+## EQ-07, tool recovery: someone out of work with the coins for an axe on sale (the smith's or the goods merchant's)
+## can take up woodcutting while there are trees for more woodcutters; the job market used to look for axes among
+## the timber sellers only, so nobody without an axe could ever become a woodcutter and the trade died out.
+func test_axe_bought_to_take_up_woodcutting() -> void:
+	var w := new_world()
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.inv.add("axe", 2)                           # a spare axe on sale at the forge
+	var seeker: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job in ["manor_hand", "farmer", "hunter"] and o.household >= 3:
+			seeker = o
+			break
+	check(seeker != null, "a villager to look for work")
+	if seeker == null:
+		return
+	var kept := false
+	for o: NPC in w.npcs:                             # one woodcutter stays (the trade's wage is known); room for more
+		if o.alive and o.job == "woodcutter":
+			if kept:
+				o.job = "farmer"
+			kept = true
+	var keep_fields = GameData.balance["field_workers_max"]
+	var keep_game = GameData.balance["game_per_hunter"]
+	var keep_ore = GameData.balance["ore_per_miner"]
+	GameData.balance["field_workers_max"] = 0         # no field, game or mine openings: woodcutting is the work on offer
+	GameData.balance["game_per_hunter"] = 100000
+	GameData.balance["ore_per_miner"] = 100000
+	seeker.job = ""
+	seeker.inv.remove("axe", seeker.inv.count("axe"))
+	var price: int = w.brain.tool_price(seeker, "axe")
+	check(price > 0, "an axe is on sale (%d coins)" % price)
+	seeker.coins = price + 50
+	w.treasury = 0                                    # the manor cannot hire: woodcutting is the work there is
+	w.households[seeker.household].econ = {"cost": 10.0, "adults": 1, "streak": 0}
+	w.brain.seek_work()
+	GameData.balance["field_workers_max"] = keep_fields
+	GameData.balance["game_per_hunter"] = keep_game
+	GameData.balance["ore_per_miner"] = keep_ore
+	check(seeker.job == "woodcutter", "out of work with the coins for an axe on sale, they take up woodcutting (now %s)" % seeker.job)
+
+
+## EQ-07: an essential trade left for other work is handed on as after a death: when the last smith leaves the forge,
+## the smith's post opens for an apprentice or a newcomer, and the smith who left is not taken back as the apprentice.
+func test_left_trade_post_opens() -> void:
+	var w := new_world()
+	var smiths: Array = w.npcs.filter(func(o: NPC) -> bool: return o.alive and o.job == "smith")
+	check(smiths.size() >= 1, "the village has a smith")
+	for o: NPC in smiths.slice(1):
+		o.job = "manor_hand"
+	var smith: NPC = smiths[0]
+	var place := smith.workplace
+	var posts: int = w.brain.open_posts("smith")
+	smith.coins = 0
+	smith.income_days = [0, 0, 0, 0, 0, 0]
+	w.treasury = 5000
+	w.households[smith.household].econ = {"cost": 50.0, "adults": 1, "streak": 99}
+	w.brain.seek_work()
+	check(smith.job != "smith", "a smith whose work does not keep the household fed takes other work (now %s)" % smith.job)
+	check(w.brain.open_posts("smith") == posts + 1, "the smith's post opens (%d open)" % w.brain.open_posts("smith"))
+	var v: Dictionary = {}
+	for x in w.vacancies:
+		if x.job == "smith":
+			v = x
+	check(str(v.get("workplace", "")) == place, "at the forge the smith left (%s)" % v.get("workplace", ""))
+	var a: NPC = w.brain._apprentice_for(v)
+	check(a == null or a != smith, "the smith who left is not taken back as the apprentice")
 
 
 ## HOUSE-08 (owner, OD-13): a couple shares a bed and young children share beds (two to a bed, below
