@@ -1,0 +1,295 @@
+# Text of My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf (extracted with pdftotext -layout for searching; the PDF beside it is authoritative)
+
+Settlement Advancement & Regional
+Economy
+MY MEDIEVAL LIFE | STANDALONE EXPANSION DESIGN SPECIFICATION
+
+Status: owner-directed concept approved in principle • Implementation build: to be scheduled after
+current stabilization • Companion: Mining & Industrial Development Expansion
+
+
+1. Executive design decision
+Separate the progression of villages into towns and major settlements, and the regional trade system
+that results, from the dedicated Mining & Industrial Development Expansion. Mining develops what
+an industry can do; this expansion develops what a settlement collectively knows, produces, needs,
+trades, and becomes.
+
+Permanent design rule: a caravan is not an automatic daily income source. The quantity of money
+and goods arriving depends on whether another settlement needs what is offered, can afford it, and
+finds the trade worthwhile. A settlement with no competitive or useful export may receive little or
+no outside money.
+
+For Builds 15–16, the current 30-coin daily caravan allowance may remain an explicitly labeled,
+adjustable temporary simulation stand-in. It is not an approved permanent economic rule. Do not
+disrupt ongoing equilibrium validation to implement this expansion.
+
+
+2. Two independent but connected expansions
+    Expansion                       Primary responsibility           Examples
+
+    Mining & Industrial             Expand mining-related            Surface ore, prospectors,
+    Development                     careers, recipes, equipment      assayers, quarries, open pits,
+                                    and extraction techniques        underground workings, carts
+                                                                     and track
+    Settlement Advancement &        Advance settlement               Village skills, town growth,
+    Regional Economy (this          capabilities and link their      specializations, regional
+    document)                       supply/demand to other           inventories, trade demand,
+                                    settlements                      merchant budgets,
+                                                                     competition
+
+Dependency: mining levels provide one example of settlement capability. The settlement
+progression framework must be generic enough to support farming, forestry, masonry, smithing,
+trade and future industries without requiring all of them to be implemented at once.
+
+
+3. Settlement growth is emergent, not an upgrade button
+Settlements may grow from hamlets/villages to towns and major settlements through sustained
+population, homes, civic capacity, economic output, services and trade connections. These labels
+describe development, not universal tech tiers. Growth is not guaranteed or permanent: shortages,
+migration, disasters, poor governance and failed industries can cause stagnation or decline.
+
+     No automatic technology unlock merely because a population threshold is crossed.
+     No universal ladder where every town has the same industries. A small mining village can
+      outclass a larger farming town in mining.
+        MY MEDIEVAL LIFE • SETTLEMENT ADVANCEMENT & REGIONAL ECONOMY • DESIGN
+                                     SPECIFICATION
+     Buildings, tools, trained residents, accessible resources and knowledge transmission must
+      underpin real capabilities.
+     Villagers remain autonomous. The player may accelerate, disrupt, fund or exploit growth, but
+      must not be necessary for it.
+
+
+4. Industry capability levels belong to settlements
+Each settlement maintains an industry capability profile, derived from the actual capabilities of its
+residents and infrastructure. Individual NPC skills remain distinct; settlement proficiency does not
+magically grant expertise to every villager.
+
+    Mining example                    Settlement capability            Required real-world support
+
+    Level 1                           Surface deposit extraction       Exposed ore, basic miners,
+                                                                       picks, hauling
+    Level 2                           Prospecting and assaying         Trained prospectors/assayers,
+                                                                       forged kits, geological clues,
+                                                                       sample testing
+    Level 3                           Open-pit excavation and          Earth removal, stone
+                                      quarrying                        processing, ramps, hauling,
+                                                                       carpentry and forge capacity
+    Level 4                           Underground excavation           Tunnel engineering, supports,
+                                                                       tracks, minecarts,
+                                                                       underground navigation and
+                                                                       safety
+
+These are approved mining progression concepts; specific thresholds and cross-industry
+prerequisites are to be designed and tested, not assumed fixed. An advanced mining operation may
+depend on capable smiths, carpenters, haulers and builders.
+
+Capability progression mechanics
+     Experience: successful work, practice, apprenticeships and problem-solving produce knowledge
+      and competence.
+     Specialists: qualified NPCs enable advanced activities; recruiting or training them takes time
+      and resources.
+     Infrastructure: appropriate workshops, storage, transport, tools and construction must exist and
+      remain functional.
+     Knowledge continuity: instruction, apprenticeship and records preserve skills across
+      generations; population loss can erode capacity.
+     Industry interdependence: advanced operations require actual outputs of supporting
+      professions, not abstract research points.
+     Settlement specialization: local geology, land, labor, demand and investment encourage
+      distinctive economies.
+
+
+5. Regional economy replaces the caravan quota
+A caravan represents an originating settlement or trade network. Ultimately it carries actual goods
+and finite purchasing power based on external inventories, needs and means. It must not buy every
+available product by default.
+
+
+
+
+        MY MEDIEVAL LIFE • SETTLEMENT ADVANCEMENT & REGIONAL ECONOMY • DESIGN
+                                     SPECIFICATION
+A viable trade transaction requires
+     Demand: a destination settlement has a meaningful unmet need or profitable resale
+      opportunity.
+     Supply: the source settlement has real goods available after its own competing uses and
+      commitments.
+     Purchasing power: the buyer has money or acceptable barter/credit terms; need alone does not
+      create wealth.
+     Price and competition: total cost, quality, distance, risks and alternative suppliers make the
+      trade worthwhile.
+     Logistics: cart capacity, roads, travel time, losses, security and storage constrain quantity.
+     Accounting: physical inventory and currency move between actual owners. No hidden
+      duplication or infinite cash.
+
+
+6. Illustrative economic interactions
+    Settlement A                      Settlement B                       Outcome
+
+    Agricultural village: grain       Mining town: food deficit and      Merchant buys grain if price
+    surplus                           money                              and transport work
+    Mining town: ore surplus          Farming village: needs metal       Ore or tools flow outward;
+                                      tools                              food may flow back
+    Timber village: lumber            Masonry town: no lumber            No guaranteed sale despite
+    surplus                           demand                             surplus
+    Starving town: high food          Food-producing town: surplus       Trade may fail without barter,
+    need, low cash                                                       credit or another income
+                                                                         source
+    Two towns selling identical       Third town seeking supplies        Competition, price and
+    goods                                                                distance influence which
+                                                                         exporter earns the sale
+
+Demand is not an automatic entitlement to imports. A settlement can need goods it cannot afford,
+and another settlement can produce goods that no one wants.
+
+
+7. Caravans: transition from placeholder to simulated merchant
+
+Current phase: Builds 15–16
+     Retain the provisional 30-coin/day mechanism only as needed for baseline stability; label it
+      clearly as an abstract external-market budget.
+     Measure net coin inflow/outflow, import/export quantities, inventory conservation and
+      dependence on imported ore/coal.
+     Keep the budget configurable and expose its effects in simulation reports; do not silently treat it
+      as real demand.
+
+Intermediate phase: regional-market abstraction
+     Create abstract off-map settlements with distinct finite stocks, needs, productive strengths and
+      budgets.
+     Generate caravan orders from modeled demand and purchasing power rather than a fixed daily
+      purchasing obligation.
+
+
+        MY MEDIEVAL LIFE • SETTLEMENT ADVANCEMENT & REGIONAL ECONOMY • DESIGN
+                                     SPECIFICATION
+     Use explicit restocking and settlement-accounting rules; avoid unexplained daily currency
+      creation.
+     Support variable arrivals and empty trips when no worthwhile trade exists.
+
+Mature phase: fully simulated regional settlements
+     Trade routes link actual settlements with persistent populations, production, consumption,
+      inventories and treasuries.
+     Merchants select profitable or necessary routes subject to competition and transport capacity.
+     Regional supply disruptions and new industrial skills change prices, routes and settlement
+      fortunes.
+     The player can participate in or disrupt these relationships without becoming the central
+      economic engine.
+
+
+8. Settlement growth systems and their interlocks
+     Population and housing: births, partnerships, households, migration, jobs, construction
+      materials and capacity must agree.
+     Industry: training and specialist availability determine what can be made and exported.
+     Infrastructure: roads, bridges, warehouses, marketplaces, workshops and carts affect costs and
+      throughput.
+     Civic systems: leadership, budgets, public works and security may enable or hinder growth,
+      using finite funds.
+     Ecology and land: farming, forests, mines, quarries and wildlife remain finite and affected by
+      local activity.
+     Knowledge and generations: experience can be taught, recorded or lost; no omniscient
+      settlement skill bonus.
+     Reputation and diplomacy: reliability, conflict and trade history may affect partners, subject to
+      knowledge provenance.
+
+
+9. Failure modes and economic safeguards
+     Do not equate settlement tier with every industry level; avoid uniform cookie-cutter cities.
+     Do not award skills solely by time elapsed or abstract points disconnected from work.
+     Do not grant free imports, money, ore, food, tools or building materials to keep an economy
+      looking healthy.
+     Avoid permanent guaranteed export demand; settlements can lose customers and decline.
+     Prevent circular money printing via merchant budgets, resale, taxes or trade accounting.
+     Allow local setbacks without declaring the entire world failed; test adaptation and long-term
+      survival.
+     Keep mining deposits finite. Continued mining employment depends on discovery, new
+      workings, trade and real labor.
+
+
+10. Suggested implementation phases (not assigned build numbers)
+    Phase                            Scope                             Release evidence
+
+    A — Design and ledger            Requirements IDs, cross-          Validated register, design docs,
+                                     industry skill schema, save       explicit assumptions
+                                     compatibility, dependency
+                                     audit
+
+        MY MEDIEVAL LIFE • SETTLEMENT ADVANCEMENT & REGIONAL ECONOMY • DESIGN
+                                     SPECIFICATION
+    B — Settlement capability        Per-industry capabilities, NPC    Unit tests for unlocks, loss of
+    model                            knowledge, workshops,             specialists, generational
+                                     prerequisites, decay/continuity   continuity
+    C — Abstract regional            Off-map settlements, finite       Accounting and 100/365-day
+    economy                          demand/supply/budgets,            multi-seed tests
+                                     variable caravan trade
+    D — Settlement development       Growth/decline, specialization,   Multi-generation simulations
+                                     housing, infrastructure,          across settlement types
+                                     population and employment
+    E — Actual intersettlement       Persistent multiple               No duplicated
+    network                          settlements, routes, logistics,   inventory/currency, trade
+                                     competition, merchant AI          route and disruption tests
+
+The mining expansion may proceed as a separate build, tentatively Build 17 or 18; the schedule for
+this settlement/regional economy expansion is intentionally unassigned. Avoid scope creep into
+Build 15–16.
+
+
+11. Acceptance criteria and simulation gates
+     A village can prosper or decline without direct player intervention, with causes traceable to real
+      inputs.
+     At least two settlements can develop different industry profiles despite different population
+      sizes.
+     A settlement cannot perform advanced work without appropriate people, knowledge, tools and
+      infrastructure.
+     A caravan may arrive with substantial buying power when real demand and funds exist, or buy
+      nothing when demand is absent.
+     Imported and exported goods and money reconcile exactly across merchant and settlement
+      inventories.
+     A starving but cash-poor town does not conjure purchasing power; trade failure is observable.
+     No fixed 30-coin quota remains in the final demand-driven implementation.
+     Multi-seed 100-day, 365-day and multi-generation tests examine production, food, housing,
+      population, industry employment, prices, trade and resilience.
+     Existing save games and established gameplay systems continue to work; migration is
+      documented.
+
+
+12. Decisions settled and questions deferred
+
+Approved direction
+     Mining/industrial extraction is its own expansion, not an emergency patch to Builds 15–16.
+     Settlement advancement and regional economy is a separate, connected expansion.
+     Settlement capabilities are industry-specific and earned through people, skills and
+      infrastructure.
+     Caravan buying power ultimately comes from other settlements’ actual needs and means, not a
+      permanent allowance.
+     Current 30-coin daily mechanism is a temporary placeholder only.
+
+To be designed during expansion planning
+     Exact settlement classifications and thresholds, if any.
+
+        MY MEDIEVAL LIFE • SETTLEMENT ADVANCEMENT & REGIONAL ECONOMY • DESIGN
+                                     SPECIFICATION
+   Detailed skill progression rates, knowledge transfer, decay and specialist certification.
+   Off-map market model and how money/production are accounted for before full map
+    expansion.
+   Trade route scheduling, credit/barter rules, taxation and merchant ownership.
+   Which cross-industry prerequisites are mandatory versus optional improvements.
+
+
+13. Claude handoff and change-control directive
+Register this expansion as a distinct major initiative in the permanent requirements ledger and
+Interlocking Systems Manifest. Cross-reference, but do not merge it into, the Mining & Industrial
+Development Expansion. Preserve the owner’s decisions verbatim in decision records. First audit
+existing economy, professions, caravan code, settlement representation, persistence and simulation
+harness. Then propose phased implementation with testable requirements, dependencies and
+migration plans. Continue currently approved Build 15–16 stabilization and simulations without
+introducing this large feature prematurely.
+
+Design principle: a settlement becomes economically important because of what its people can
+sustainably produce and what other settlements genuinely need—not because a game system grants
+it a daily customer.
+
+
+
+
+      MY MEDIEVAL LIFE • SETTLEMENT ADVANCEMENT & REGIONAL ECONOMY • DESIGN
+                                   SPECIFICATION
+

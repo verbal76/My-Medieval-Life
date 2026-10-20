@@ -1,0 +1,282 @@
+# Text of My_Medieval_Life_Mining_Industry_Expansion.pdf (extracted with pdftotext -layout for searching; the PDF beside it is authoritative)
+
+MY MEDIEVAL LIFE
+
+Mining & Industrial Development Expansion
+Owner-approved design specification | Proposed dedicated Build 17 or 18 |
+19 October 2026
+DESIGN STATUS: Approved direction and scope. Exact mechanics, costs, balancing values,
+map technology and build number remain to be designed and validated.
+
+
+
+1. Vision and purpose
+This is not simply a mining update. It is a village-wide industrial development expansion.
+Mining drives demand for carpenters, forges, haulers, builders, quarry workers and new
+specialists. As settlements acquire skills, tools, infrastructure and institutional knowledge,
+villages can develop into towns and eventually major settlements. The player is not
+required for this progression: capable NPC communities should pursue it autonomously
+when circumstances support it.
+
+Core principle: a particular mineral deposit is finite, but the mining industry can continue
+through prospecting, investment, excavation, transport, trade and specialization. Never
+create ore or wealth from nothing merely to preserve the economy.
+
+
+
+2. Five-stage mining development pathway
+Stage 1 — Surface deposits
+The existing mineral-bearing rock is the visible top deposit. Colored ore indicators mark
+extractable mineral. When the colored indicators are depleted, the remaining gray rock
+can still be mined for ordinary stone. Depleted ore does not automatically replenish. Stone
+is moved into a quarry/stone-handling production chain.
+
+Stage 2 — Prospecting and assay
+Prospectors interpret subtle natural clues, investigate nearby terrain with specialized
+equipment, collect samples and have findings evaluated by an assayer or equivalent
+specialist. A clue indicates a search area, not a guaranteed deposit or its exact location.
+Newly located deposits remain finite.
+
+Stage 3 — Open-pit / strip mining
+Workers remove topsoil, dirt and rock to excavate a roughly square pit with terraced sides
+and a descending spiral ramp or switchback access. Deeper strata may reveal new finite
+deposits. Excavation creates real spoil, access, hauling and safety requirements.
+
+
+
+
+MY MEDIEVAL LIFE • MINING & INDUSTRIAL DEVELOPMENT • DESIGN SPECIFICATION
+Stage 4 — Underground mines and caves
+Suitable rock faces and underground formations may support shafts, galleries, chambers
+and enterable caves. In isometric view, roofs/overhead terrain hide or become
+transparent so the player can see characters inside. Supports, lighting, ventilation, access,
+navigation and hauling are genuine dependencies.
+
+Stage 5 — Mature mining and industrial networks
+Advanced settlements develop dedicated quarry and mining operations, minecarts, track
+laying, track fabrication, cart assembly, repair, hauling logistics, storage, assay services
+and trade links. Expansion is supported by an actual workforce and resource economy
+rather than a simple unlock button.
+
+
+
+3. Settlement capability levels and growth
+Mining capability is a property of the settlement as a functioning community, not just the
+skill of one NPC. A village can learn to prospect, build specialized infrastructure and train
+workers; that capability enables greater economic complexity and contributes to its
+evolution into a town or major settlement.
+
+ Level                           Capability                      Evidence required in
+                                                                 world
+ 1                               Surface extraction              Access to exposed deposits,
+                                                                 miners, tools and working
+                                                                 transport
+ 2                               Prospecting and assay           Trained prospectors,
+                                                                 toolkit, samples, assaying
+                                                                 capability and recorded
+                                                                 discoveries
+ 3                               Open-pit excavation             Earthmoving crews,
+                                                                 excavation plans, ramps,
+                                                                 spoil handling, carts and
+                                                                 ongoing maintenance
+ 4                               Underground mining              Shaft/tunnel access, timber
+                                                                 supports, lighting, specialist
+                                                                 crews and safe transport
+ 5 (proposed)                    Integrated industrial           Minecart/track industry,
+                                 mining                          specialists, repair,
+                                                                 distribution, trade and
+                                                                 coordinated operations
+Levels 1–4 are the owner’s stated progression. Level 5 is a proposed mature-industry
+extension for later confirmation. Settlement size (village, town, major settlement) and
+mining capability should be related but not identical: a large trading town may lack
+mines, while a small specialist village may be skilled at prospecting. Advancement
+requires real prerequisites and can regress if workers, equipment or knowledge
+disappear.
+
+MY MEDIEVAL LIFE • MINING & INDUSTRIAL DEVELOPMENT • DESIGN SPECIFICATION
+4. Prospecting: reading the land
+Geological hints should be natural and discoverable: faintly stained or discolored soil,
+mineral flecks, exposed veins, unusual rock fragments or changes in nearby outcrops. The
+owner specifically proposes a ground stain of a different color as an initial example. These
+are hints, not an X marking a guaranteed deposit.
+
+   The terrain generator places finite deposits and plausible surface evidence in
+    proximity, with uncertainty and occasional misleading clues.
+   Prospectors examine terrain, choose search locations, use a prospecting toolkit, collect
+    physical samples and carry them to an assayer.
+   An assay can estimate mineral type and quality with uncertainty; better tools and
+    experience improve reliability, not omniscience.
+   Discoveries are recorded and become actionable knowledge only for people or
+    institutions that receive the information.
+   The future large map must provide further geological opportunity without assuming
+    the current map is already large.
+
+
+
+5. New careers and the industrial supply chain
+Specialist professions
+   Prospector: surveys terrain, recognizes clues, samples, marks probable sites and
+    reports discoveries.
+   Assayer: tests samples and evaluates mineral composition or quality using tools, fuel
+    and materials as appropriate.
+   Miner and excavation crew: extract surface ore, stone, earth and deeper deposits.
+   Quarry worker / stonecutter: extracts, sorts and prepares usable stone.
+   Mine engineer or foreman (proposed role): plans safe ramps, shafts, supports and
+    excavation work.
+   Track layer: installs and maintains mine tracks and associated earthworks.
+   Minecart builder / repairer: assembles carts from actual timber and forged
+    components.
+   Haulers, carpenters, blacksmiths and builders: supply and maintain every stage of the
+    operation.
+
+Equipment, workshops and recipes
+A prospecting toolkit should be forge-produced, drawing on existing crafting rules and
+physical inventories. New equipment may include picks, hammers, sample bags, sieves,
+assay instruments, timber supports, shovels, wheelbarrows, minecarts, axles, wheels, rail
+sections, track fasteners, lamps and repair parts. These are candidate recipes, not final
+approved quantities or metallurgy.
+
+For each item, Claude must define realistic inputs, manufacturing workstation, labor,
+wear, repair, storage, transport and consumers. Do not allow one new tool to bypass
+existing carpentry, forging or hauling systems.
+
+
+MY MEDIEVAL LIFE • MINING & INDUSTRIAL DEVELOPMENT • DESIGN SPECIFICATION
+6. Stone, spoil and dirt are real resources
+After surface ore is exhausted, the gray host rock is still useful stone. Quarrying must
+integrate with the existing construction economy, including roads, foundations, walls and
+masonry where supported. Excavated dirt and topsoil are separately tracked materials
+rather than deleted terrain.
+
+Candidate uses for earth include grading building plots, road embankments, backfilling,
+defensive earthworks and landscaping. Agricultural use must distinguish suitable topsoil
+from poor subsoil. Storage and disposal have labor and space costs. All uses require
+recipes and world-system integration before implementation.
+
+
+
+7. Mine geometry, caves and presentation
+Open pits should visibly deepen through excavation, with terraced walls and a navigable
+spiral or switchback ramp around the perimeter. Underground workings should be
+enterable, not merely decorative. In the isometric presentation, overhead terrain becomes
+transparent, hidden or cut away when needed to keep player and NPCs visible.
+
+Before promising terrain excavation, inspect whether the existing map, collision and
+navigation systems support layered elevations, altered ground, interior spaces and
+persistence. Hidden animal breeding refuges do not by themselves establish enterable
+cave support. Assess pathfinding, rendering, camera, lighting, stability, save migration and
+eventual multiplayer replication.
+
+
+
+8. Autonomous settlement development
+NPC settlements should evaluate resource scarcity, local geology, workforce, tools,
+available funds, trade opportunities and construction demand. A village with sufficient
+capability may train a prospector, commission equipment, investigate clues, open a
+quarry or expand a mine without a player issuing orders. A failed prospecting venture
+costs time and resources; a successful one can create new jobs and attract families,
+merchants and craftspeople.
+
+Settlement advancement must emerge from demonstrated capability and sustained
+institutions. Track mining technology/capability, industrial workforce, infrastructure and
+productive capacity independently of population and political status. Skills may be
+retained through apprenticeships, records and living practitioners; loss of all expertise
+can constrain future development.
+
+
+
+9. Economy, scarcity and balancing safeguards
+   Ore bodies and stone layers remain finite. No automatic replenishment of depleted
+    veins.
+   Prospecting does not guarantee success; expansion needs time, labor, materials and
+    investment.
+
+
+MY MEDIEVAL LIFE • MINING & INDUSTRIAL DEVELOPMENT • DESIGN SPECIFICATION
+   Caravans and external trade remain legitimate alternative supply paths but should not
+    hide broken local production.
+   Mine development should increase demand for timber, forge products, food, transport
+    and construction.
+   Check that extraction, waste and resource transportation conserve inventory and
+    money.
+   Track effects on housing, tools, employment, wages/prices, population, wildlife habitat
+    and the environment.
+   A settlement may fail or decline; the broader world should have credible recovery
+    paths.
+
+
+
+10. Release and implementation boundaries
+Reserve this as a dedicated industry-development expansion, tentatively Build 17 or 18.
+The exact number is not locked. Do not derail or silently incorporate the full expansion
+into the Build 15/16 equilibrium work. Capture requirements now, conduct architecture
+review, and plan staged development on the normal remote GitHub staging workflow.
+Keep current authorized release/test gates intact.
+
+Suggested implementation phases within the dedicated build
+1. A. Audit terrain, mining, inventory, recipes, AI, pathfinding, saves and map
+    generation; establish architecture and measurable acceptance tests.
+2. B. Preserve exhausted ore outcrops as quarryable stone; add quarry chain and stone
+    logistics.
+3. C. Add natural prospecting clues, specialist profession, forge-produced toolkit, samples
+    and assay workflow.
+4. D. Add new finite deposit discovery and settlement capability levels with autonomous
+    NPC adoption.
+5. E. Add open-pit excavation, spoil handling, ramps, hauling and geological layers where
+    architecture supports them.
+6. F. Add underground/cave mining, cutaway presentation, minecarts, track construction
+    and full industrial dependencies.
+7. G. Run 100-/365-day multi-seed simulations and gameplay tests, validate saves,
+    economic conservation and no resource spawning.
+
+
+
+11. Acceptance criteria
+   A depleted colored ore deposit remains mineable for ordinary stone without
+    regenerating ore.
+   At least one prospecting clue leads to a search area, not a guaranteed exact ore
+    location; failures are possible.
+   Prospectors and assayers use actual produced equipment and consume actual time
+    and resources.
+
+
+
+MY MEDIEVAL LIFE • MINING & INDUSTRIAL DEVELOPMENT • DESIGN SPECIFICATION
+   The settlement can advance from surface extraction to prospecting through real
+    prerequisites and NPC agency.
+   Open-pit excavation, if implemented, removes and accounts for dirt/stone and exposes
+    finite layers.
+   Underground workings, if implemented, are enterable, readable in isometric view and
+    navigable by NPCs.
+   Minecarts, track, timber supports and tools connect to existing workshops and
+    transport rather than appearing for free.
+   Simulations demonstrate that mining employment and related industries can adapt
+    after initial ore depletion without artificial replenishment.
+   Every approved requirement is entered in requirements.json / the development ledger
+    and cross-referenced to the Interlocking Systems Manifest.
+
+
+
+12. Open technical decisions, not blockers for design registration
+   Can the current terrain support true destructible depth, or is a staged representation
+    required first?
+   How are subsurface deposits generated, bounded, revealed and persisted across
+    saves?
+   How do settlement-level skills accumulate, spread, decay and interact with
+    town/settlement classification?
+   What exact crafting recipes, tool durability, mine hazards, construction costs and
+    labor rates are balanced?
+   What is the distinction between ordinary quarry stone, usable building blocks, spoil
+    and topsoil?
+   Which parts fit into the first dedicated expansion build versus follow-on milestones?
+
+Directive to Claude: preserve this as the owner-approved industry direction; label the
+explicit candidate mechanics and level 5 as proposals pending validation. Produce an
+architecture assessment and implementation plan before invasive terrain changes.
+Continue the current Build 15/16 simulation work independently.
+
+
+
+
+MY MEDIEVAL LIFE • MINING & INDUSTRIAL DEVELOPMENT • DESIGN SPECIFICATION
+

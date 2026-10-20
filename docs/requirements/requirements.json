@@ -1199,12 +1199,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner 2026-10-20: permanent signing key deferred; see SAVE-00.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "deferred note",
+     "why": "owner 2026-10-20: the permanent signing-key decision is deferred; save continuity (SAVE-00) is the approach instead"
     }
    ],
    "acceptance_derived": true
@@ -2542,12 +2547,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "See EXP-A.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-A",
+     "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
     }
    ],
    "acceptance_derived": true
@@ -4628,6 +4638,44 @@
    "acceptance_derived": true
   },
   {
+   "id": "CARAVAN-TMP",
+   "title": "The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day)",
+   "kind": "decision",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The existing 30-coin daily caravan mechanism is a temporary placeholder representing outside settlements that are not yet simulated.",
+   "description": "The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Allowance configurable and labelled temporary in balance.json and the docs",
+    "Its effects (coin flows, imports, exports) reported by the simulations",
+    "Replaced by demand-driven trade in EXP-B"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-B",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "economy",
+   "superseded_by": null,
+   "notes": "Conflict noted 2026-10-20: the directive calls the existing mechanism 30 coins; balance.json had caravan_allowance 15 (30 was the agent's recommendation). Set to 30 as the labelled placeholder once the running 100/365-day comparison finishes.",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
    "id": "CQ-01",
    "title": "Sword responsiveness and hit detection (buffer, reach, phases, walls)",
    "kind": "approved",
@@ -5193,7 +5241,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Conflict with EXP-C noted 2026-10-20: notoriety is a fixed threshold today.",
    "history": [
     {
      "date": "2026-10-19",
@@ -5204,6 +5252,11 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "refusals for unwillingness, rivals, killings, notoriety and low regard; harm spreads to kin and friends; tested"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "conflict noted",
+     "why": "EXP-C forbids a simple reputation threshold; the notoriety refusal becomes a weighed judgment input when EXP-C lands"
     }
    ]
   },
@@ -6275,7 +6328,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Remaining parts belong to EXP-C.",
    "history": [
     {
      "date": "2026-10-19",
@@ -6286,6 +6339,11 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; next_action",
      "why": "ties of regard and attraction with gifts and help now exist (Relations); memory of harms and gossip beyond courting remain"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-C",
+     "why": "memory of harms and gossip belong to the judgment expansion"
     }
    ],
    "acceptance_derived": true
@@ -6761,12 +6819,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "See EXP-A.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-A",
+     "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
     }
    ],
    "acceptance_derived": true
@@ -6798,12 +6861,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "See EXP-A.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-A",
+     "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
     }
    ],
    "acceptance_derived": true
@@ -6835,12 +6903,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "See EXP-B.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-B",
+     "why": "owner directive 2026-10-20 registers Settlement Advancement & Regional Economy"
     }
    ],
    "acceptance_derived": true
@@ -6872,12 +6945,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "See EXP-A.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-A",
+     "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
     }
    ],
    "acceptance_derived": true
@@ -7453,6 +7531,173 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Build 15 foundations under way (EQ-07, WR-01)"
+    }
+   ]
+  },
+  {
+   "id": "EXP-A",
+   "title": "Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Purpose: Expand how settlements discover, extract, process, transport, and use finite natural resources.",
+   "description": "Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification)",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Every acceptance criterion in the supporting document section 11",
+    "Own phases, automated and 100/365-day multi-seed tests, integration review and build decision",
+    "Minerals stay finite; excavation has real material and labour costs; extracted materials enter the economy",
+    "Player uses the same systems as NPCs where the design calls for it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "MIN-A",
+    "MIN-B",
+    "MIN-C",
+    "MIN-D",
+    "MIN-E",
+    "MIN-F",
+    "MIN-G"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future (after Build 16)",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "Tentatively Build 17 or 18 per the document; no build number assigned until dependencies are reviewed. Supersedes nothing yet: relates to B7-007, OD-01 and ECON-P1.1-P1.4 (deposit sustainability proposals).",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "EXP-B",
+   "title": "Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Purpose: Allow villages, towns, and larger settlements to develop distinct industrial capabilities and participate in an interconnected economy based on actual production, demand, and purchasing power.",
+   "description": "Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification)",
+   "source": "docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Every acceptance criterion in the supporting document section 11",
+    "Settlement capability per industry, not population",
+    "Caravans trade from real demand and purchasing power; no fixed 30-coin quota in the final implementation",
+    "Exact reconciliation of goods and money across settlements"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SET-A",
+    "SET-B",
+    "SET-C",
+    "SET-D",
+    "SET-E"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-004",
+    "WDR-005",
+    "WDR-009",
+    "WDR-011",
+    "WDR-012",
+    "WDR-013",
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future (unscheduled)",
+   "workstream": "expansion B",
+   "superseded_by": null,
+   "notes": "Integrates with EXP-A but is separate. Supersedes nothing yet: relates to REC-007 (several settlements), ECON-P1.3 and B7-014.",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "EXP-C",
+   "title": "Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "An NPC's judgment of another NPC is one factor influencing a decision, not an absolute permission or prohibition.",
+   "description": "Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline)",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Every item of the supporting document's acceptance checklist (section 20)",
+    "Judgment is one factor among need, alternatives and risk; never a universal threshold",
+    "No omniscience: beliefs come from witnessing, testimony and rumour",
+    "Deterministic, saveable, performant; feature-flagged rollout with matched-seed comparisons"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SJD-A",
+    "SJD-B",
+    "SJD-C",
+    "SJD-D",
+    "SJD-E",
+    "SJD-F",
+    "SJD-G",
+    "SJD-H"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future (after Build 16)",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "Not to be implemented during Build 15-16 equilibrium testing. Known conflict to resolve at Gate B: CRT-12's notoriety refusal is a fixed reputation threshold and harmed() is a single regard score; the judgment design forbids a simple reputation threshold, so these become judgment inputs weighed in decisions when EXP-C lands. DVW-B1 (memory of favours and harms, gossip) is subsumed into this expansion.",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
     }
    ]
   },
@@ -8148,6 +8393,362 @@
    "acceptance_derived": true
   },
   {
+   "id": "MIN-A",
+   "title": "Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "MIN-B",
+   "title": "Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [
+    "MIN-A"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "MIN-C",
+   "title": "Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [
+    "MIN-B"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "MIN-D",
+   "title": "Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [
+    "MIN-C"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "MIN-E",
+   "title": "Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them)",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [
+    "MIN-D"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "MIN-F",
+   "title": "Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [
+    "MIN-E"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "MIN-G",
+   "title": "Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [
+    "MIN-F"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-003",
+    "WDR-004",
+    "WDR-005",
+    "WDR-007",
+    "WDR-013"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "MIN-L5",
+   "title": "Mining capability level 5 (integrated industrial mining)",
+   "kind": "proposal",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Mining capability level 5 (integrated industrial mining)",
+   "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
+   "approval": "proposed in the document; for later owner confirmation",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-A",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion A",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
    "id": "MP-01",
    "title": "Player-hosted multiplayer: two-player LAN milestone, host-authoritative",
    "kind": "approved",
@@ -8218,12 +8819,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "See EXP-A.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-A",
+     "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
     }
    ],
    "acceptance_derived": true
@@ -8539,6 +9145,46 @@
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "OPS-01",
+   "title": "Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "You are authorized to resolve PR #1 as routine repository maintenance.",
+   "description": "Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Every change in PR #1 identified",
+    "Compared with the current remote staging and development branches",
+    "Unique useful work preserved on a remote branch before closing",
+    "Closed with a concise explanatory comment if redundant",
+    "Disposition reported"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "repository",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
   },
   {
    "id": "OWN-01",
@@ -11231,12 +11877,17 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Related: FR-11, B8-011, OWN-05",
+   "notes": "Related: FR-11, B8-011, OWN-05 See EXP-B.",
    "history": [
     {
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "related to EXP-B",
+     "why": "owner directive 2026-10-20 registers Settlement Advancement & Regional Economy"
     }
    ]
   },
@@ -11772,6 +12423,1505 @@
     }
    ],
    "acceptance_derived": true
+  },
+  {
+   "id": "SAVE-00",
+   "title": "Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Instead, proceed with a save-continuity architecture that allows separate private testing builds to access and upgrade existing game saves.",
+   "description": "Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Owner can uninstall an old test build, install a new one, reconnect to the existing save and continue the same world",
+    "All 15 mandatory requirements met (SAVE-01..SAVE-09)",
+    "Re-selecting a file after reinstall is acceptable and clearly explained",
+    "No promise of seamless automatic reconnection the platform does not allow"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "SAVE-01",
+    "SAVE-02",
+    "SAVE-03",
+    "SAVE-04",
+    "SAVE-05",
+    "SAVE-06",
+    "SAVE-07",
+    "SAVE-08",
+    "SAVE-09"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "Permanent Android signing key deferred by the owner (B13-15 stays deferred).",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-01",
+   "title": "Inspect and document the current save architecture before modifying it (requirement 1)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Inspect and document the current save architecture before modifying it (requirement 1)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Architecture documented in docs/release/SAVE_CONTINUITY.md"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-02",
+   "title": "A stable save identity independent of build numbers (requirement 2)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "A stable save identity independent of build numbers (requirement 2)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Each world has a persistent id kept across builds and copies"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-03",
+   "title": "Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Schema version recorded",
+    "Migrations from each supported older version, tested"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-04",
+   "title": "Back up the original before migrating, validate the migrated save before adopting it, preserve the original on failure, never leave a partial conversion, never destroy the only usable save (requirements 5-8, 15)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Back up the original before migrating, validate the migrated save before adopting it, preserve the original on failure, never leave a partial conversion, never destroy the only usable save (requirements 5-8, 15)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Backup before migration",
+    "Validation before adoption",
+    "Original kept on failure",
+    "Atomic replace: an interrupted write cannot leave a half-converted save"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-05",
+   "title": "A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Export to and import from a user-chosen location through the platform picker",
+    "Steps explained in game and in docs",
+    "Real-device check (playtest)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [
+    "Android phone: export, uninstall, install a new build, import, continue the same world"
+   ],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-06",
+   "title": "The same versioning and migration principles on Windows and Linux (requirement 11)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "The same versioning and migration principles on Windows and Linux (requirement 11)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Same export/import, versioning and migration on PC"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-07",
+   "title": "Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Fixture saves migrate and round-trip with these sections intact"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-08",
+   "title": "Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Unknown top-level sections survive load and save",
+    "Backward compatibility stated only where tested"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SAVE-09",
+   "title": "An independently recoverable backup and documented recovery instructions (requirement 14)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "An independently recoverable backup and documented recovery instructions (requirement 14)",
+   "source": "docs/directives/2026-10-20_two_decisions_three_expansions.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Backups kept apart from the live save",
+    "Recovery instructions written"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "SAVE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "now",
+   "workstream": "saves",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SET-A",
+   "title": "Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit",
+   "source": "docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-B",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-004",
+    "WDR-005",
+    "WDR-009",
+    "WDR-011",
+    "WDR-012",
+    "WDR-013",
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion B",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SET-B",
+   "title": "Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity",
+   "source": "docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-B",
+   "depends_on": [
+    "SET-A"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-004",
+    "WDR-005",
+    "WDR-009",
+    "WDR-011",
+    "WDR-012",
+    "WDR-013",
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion B",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SET-C",
+   "title": "Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade",
+   "source": "docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-B",
+   "depends_on": [
+    "SET-B"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-004",
+    "WDR-005",
+    "WDR-009",
+    "WDR-011",
+    "WDR-012",
+    "WDR-013",
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion B",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SET-D",
+   "title": "Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment",
+   "source": "docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-B",
+   "depends_on": [
+    "SET-C"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-004",
+    "WDR-005",
+    "WDR-009",
+    "WDR-011",
+    "WDR-012",
+    "WDR-013",
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion B",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SET-E",
+   "title": "Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI",
+   "source": "docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-B",
+   "depends_on": [
+    "SET-D"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-001",
+    "WDR-002",
+    "WDR-004",
+    "WDR-005",
+    "WDR-009",
+    "WDR-011",
+    "WDR-012",
+    "WDR-013",
+    "WDR-015"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion B",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-A",
+   "title": "Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-B",
+   "title": "Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [
+    "SJD-A"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-C",
+   "title": "Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [
+    "SJD-B"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-D",
+   "title": "Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism)",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [
+    "SJD-C"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-E",
+   "title": "Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [
+    "SJD-D"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-F",
+   "title": "Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics)",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [
+    "SJD-E"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-G",
+   "title": "Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [
+    "SJD-F"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-H",
+   "title": "Judgment expansion Gate H: owner review; release and broad enablement approved separately",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Judgment expansion Gate H: owner review; release and broad enablement approved separately",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [
+    "SJD-G"
+   ],
+   "blockers": [],
+   "rules": [
+    "WDR-005",
+    "WDR-009",
+    "WDR-010",
+    "WDR-012",
+    "WDR-015",
+    "WDR-016",
+    "WDR-017",
+    "WDR-019"
+   ],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q01",
+   "title": "Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q02",
+   "title": "Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q03",
+   "title": "Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q04",
+   "title": "Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q05",
+   "title": "Judgment open decision: How much may prior judgment bias interpretation of ambiguous events?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: How much may prior judgment bias interpretation of ambiguous events?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q06",
+   "title": "Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q07",
+   "title": "Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q08",
+   "title": "Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q09",
+   "title": "Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q10",
+   "title": "Judgment open decision: What judgment information, if any, can the player see?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: What judgment information, if any, can the player see?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q11",
+   "title": "Judgment open decision: How should memory persistence and forgiveness vary by severity?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: How should memory persistence and forgiveness vary by severity?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q12",
+   "title": "Judgment open decision: What makes an event important enough to score?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: What makes an event important enough to score?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q13",
+   "title": "Judgment open decision: How should individual decision weights be learned, configured or tuned?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: How should individual decision weights be learned, configured or tuned?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
+  },
+  {
+   "id": "SJD-Q14",
+   "title": "Judgment open decision: Which domain gets the first live integration after the prototype?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Judgment open decision: Which domain gets the first live integration after the prototype?",
+   "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
+   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "acceptance": [
+    "As stated in the source document"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EXP-C",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "priority": "future",
+   "workstream": "expansion C",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    }
+   ]
   },
   {
    "id": "VP-01",

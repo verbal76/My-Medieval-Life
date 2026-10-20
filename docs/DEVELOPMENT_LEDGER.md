@@ -10,8 +10,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 37 |
-| ACTIVE DEVELOPMENT | 5 |
+| APPROVED — NOT STARTED | 68 |
+| ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 36 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 28 |
@@ -21,10 +21,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 17 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **280** |
-| Outstanding (not complete, superseded or canceled) | 142 |
+| **Total approved** | **314** |
+| Outstanding (not complete, superseded or canceled) | 176 |
 
-Also in the register: 29 proposal awaiting an owner decision (not approved), 10 open owner decision, 19 world design rule, 1 unapproved idea.
+Also in the register: 30 proposal awaiting an owner decision (not approved), 25 open owner decision, 19 world design rule, 1 unapproved idea.
 
 ## Real-device verification queue
 
@@ -49,10 +49,11 @@ Automated tests do not count as device verification.
 | PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | PL1-05 | current/max inside bars | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | Q-04 | Resources & Gathering journal page | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| SAVE-05 | A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10) | Android phone: export, uninstall, install a new build, import, continue the same world | APPROVED — NOT STARTED |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 
-## APPROVED — NOT STARTED (37)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -82,19 +83,50 @@ Automated tests do not count as device verification.
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
+| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G |  |
+| EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E |  |
+| EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H |  |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit |  |  |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
+| MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  |  |  |
+| MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A |  |
+| MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-B |  |
+| MIN-D | Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-C |  |
+| MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-D |  |
+| MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-E |  |
+| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | owner message #46 2026-10-17T22:58Z (MASTER DEVELOPMENT PROMPT, section 10 'ADOPTION AND ORPHAN CARE', scenarios 11 and 16); reaffirmed #47 2026-10-17T23:35Z section 17.4 ('Orphaned children should have possible adoption or guardianship paths. Family members may receive priority, followed by suitable willing households') and 17.5 ('The player must be eligible for marriage, children, household formation, and adoption under the same basic systems as NPCs') |  |  |  |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id) |  |  |  |
+| SAVE-02 | A stable save identity independent of build numbers (requirement 2) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SAVE-03 | Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SAVE-04 | Back up the original before migrating, validate the migrated save before adopting it, preserve the original on failure, never leave a partial conversion, never destroy the only usable save (requirements 5-8, 15) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SAVE-05 | A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SAVE-06 | The same versioning and migration principles on Windows and Linux (requirement 11) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
+| SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  |  |  |
+| SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A |  |
+| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-B |  |
+| SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-C |  |
+| SET-E | Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-D |  |
+| SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  |  |  |
+| SJD-B | Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A |  |
+| SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-B |  |
+| SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-C |  |
+| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-D |  |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-E |  |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-F |  |
+| SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-G |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (5)
+## ACTIVE DEVELOPMENT (8)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -102,7 +134,10 @@ Automated tests do not count as device verification.
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | branch staging/my-medieval-life | after B14R-12 | verify with 100- and 365-day runs on several seeds; wildlife part via WR-01 |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
+| OPS-01 | Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold |
+| SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | docs/directives/2026-10-20_two_decisions_three_expansions.md |  | after SAVE-01; after SAVE-02; after SAVE-03; after SAVE-04; after SAVE-05; after SAVE-06; after SAVE-07; after SAVE-08; after SAVE-09 |  |
+| SAVE-01 | Inspect and document the current save architecture before modifying it (requirement 1) | docs/directives/2026-10-20_two_decisions_three_expansions.md |  |  |  |
 
 ## PARTIALLY IMPLEMENTED (36)
 
@@ -382,10 +417,11 @@ Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Open owner decision (10)
+## Open owner decision (25)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
+| CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | ACTIVE DEVELOPMENT | docs/directives/2026-10-20_two_decisions_three_expansions.md |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md |
 | OD-02 | Owner decision: balance review of every provisional number | BLOCKED | docs/DECISIONS.md |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | BLOCKED | docs/DESIGN_GAP_ASSESSMENT.md |
@@ -396,6 +432,20 @@ Automated tests do not count as device verification.
 | OD-08 | Owner decision: is honest arbitrage intended? | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md A5 |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | BLOCKED | docs/GAME_DESIGN.md |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
+| SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q04 | Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q05 | Judgment open decision: How much may prior judgment bias interpretation of ambiguous events? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q06 | Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q07 | Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q08 | Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q09 | Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q10 | Judgment open decision: What judgment information, if any, can the player see? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q11 | Judgment open decision: How should memory persistence and forgiveness vary by severity? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q12 | Judgment open decision: What makes an event important enough to score? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
+| SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 
 ## World design rule (19)
 
@@ -421,7 +471,7 @@ Automated tests do not count as device verification.
 | WDR-018 | World Design Rule 18: Protected Ecological Continuity | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
 | WDR-019 | World Design Rule 19: Living Political Agency and Democratic Consequences | COMPLETE AND VERIFIED | docs/directives/2026-10-19_memory_refuges_politics.md s.40 (text recorded in docs/WORLD_DESIGN_RULES.md) |
 
-## Proposal awaiting an owner decision (not approved) (29)
+## Proposal awaiting an owner decision (not approved) (30)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -451,6 +501,7 @@ Automated tests do not count as device verification.
 | ECON-P1.5 | Distant quarry (:75) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 302) |
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 303) |
 | ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | BLOCKED | docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md (audit inventory row 304) |
+| MIN-L5 | Mining capability level 5 (integrated industrial mining) | APPROVED — NOT STARTED | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | BLOCKED | docs/DECISIONS.md (audit inventory row 318) |
 | OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | BLOCKED | docs/DECISIONS.md (audit inventory row 345) |
 | Q-11 | Design gap assessment, phased sequence | BLOCKED | docs/DEVELOPMENT_QUEUE.md (audit inventory row 227) |
