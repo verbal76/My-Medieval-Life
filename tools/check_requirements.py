@@ -48,6 +48,15 @@ def load(text):
     return d
 
 
+## The owner's five-build roadmap (ROAD-01, 2026-10-20): every open entry names where it goes.
+TARGETS = ["15", "16", "17", "18", "19", "20+", "multiplayer", "owner decision", "owner action"]
+TARGET_NAMES = {"15": "Build 15: simulation stabilization", "16": "Build 16: long-term equilibrium and validation",
+                "17": "Build 17: Mining & Industrial Development", "18": "Build 18: Settlement Advancement & Regional Economy",
+                "19": "Build 19: NPC Judgment System", "20+": "Build 20 or later (outside the five builds)",
+                "multiplayer": "Multiplayer track (isolated branch)", "owner decision": "Waiting on an owner decision",
+                "owner action": "Owner or external action (not development work)"}
+
+
 def validate(d, check_docs=True):
     errors = []
     reqs = d.get("requirements", [])
@@ -66,6 +75,8 @@ def validate(d, check_docs=True):
             errors.append("%s: unknown kind %r" % (rid, r.get("kind")))
         if r.get("status") not in LIFECYCLE:
             errors.append("%s: unknown status %r" % (rid, r.get("status")))
+        if r.get("kind") != "rule" and r.get("status") not in CLOSED and r.get("target_build") not in TARGETS:
+            errors.append("%s: open entry without a roadmap target (target_build one of %s)" % (rid, ", ".join(TARGETS)))
         for f in ("title", "source"):
             if not str(r.get(f) or "").strip():
                 errors.append("%s: no %s" % (rid, f))
@@ -162,6 +173,7 @@ def render(d):
     lines += ["| **Total approved** | **%d** |" % len(approved), "| Outstanding (not complete, superseded or canceled) | %d |" % len(open_), ""]
     other = Counter(r["kind"] for r in reqs if r["kind"] != "approved")
     lines += ["Also in the register: " + ", ".join("%d %s" % (other[k], KINDS[k].lower()) for k in KINDS if other.get(k)) + ".", ""]
+    lines += _roadmap(reqs)
     dev = [r for r in approved if r.get("playtest") and not r.get("playtest_done")]
     lines += ["## Real-device verification queue", "", "Automated tests do not count as device verification.", "",
               "| ID | Requirement | Needs | Status |", "|---|---|---|---|"]
@@ -189,6 +201,29 @@ def render(d):
                 lines.append("| %s | %s | %s | %s |" % (r["id"], _cell(r["title"]), r["status"], _cell(r["source"])))
             lines.append("")
     return "\n".join(lines)
+
+
+## The roadmap section: open entries (every kind but rules) by target build, each with its gate and reason.
+def _roadmap(reqs):
+    open_all = [r for r in reqs if r["kind"] != "rule" and r["status"] not in CLOSED]
+    by_t = Counter(r.get("target_build") for r in open_all)
+    lines = ["## Roadmap (owner, 2026-10-20: ROAD-01)", "",
+             "Every open entry (approved work, proposals, decisions; rules excluded) with the build it belongs to. A gate says what",
+             "must happen first (a device check, an owner decision, art). Completed entries are not counted here.", "",
+             "| Target | Open entries | of which approved work |", "|---|---|---|"]
+    for t in TARGETS:
+        lines.append("| %s | %d | %d |" % (TARGET_NAMES[t], by_t.get(t, 0), sum(1 for r in open_all if r.get("target_build") == t and r["kind"] == "approved")))
+    lines += ["| **Total open** | **%d** | **%d** |" % (len(open_all), sum(1 for r in open_all if r["kind"] == "approved")), ""]
+    for t in TARGETS:
+        rows = sorted([r for r in open_all if r.get("target_build") == t], key=lambda r: r["id"])
+        if not rows:
+            continue
+        lines += ["### %s (%d)" % (TARGET_NAMES[t], len(rows)), "", "| ID | Item | Kind | Status | Gate | Why here |", "|---|---|---|---|---|---|"]
+        for r in rows:
+            lines.append("| %s | %s | %s | %s | %s | %s |" % (r["id"], _cell(r["title"]), r["kind"], r["status"],
+                                                          _cell(r.get("roadmap_gate") or ""), _cell(r.get("roadmap_reason") or "")))
+        lines.append("")
+    return lines
 
 
 def _cell(s):

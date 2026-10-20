@@ -10,21 +10,315 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 60 |
+| APPROVED — NOT STARTED | 63 |
 | ACTIVE DEVELOPMENT | 5 |
-| PARTIALLY IMPLEMENTED | 36 |
+| PARTIALLY IMPLEMENTED | 35 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
-| BLOCKED | 17 |
+| BLOCKED | 16 |
 | DEFERRED | 8 |
 | COMPLETE AND VERIFIED | 123 |
-| SUPERSEDED | 17 |
+| SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **314** |
-| Outstanding (not complete, superseded or canceled) | 174 |
+| **Total approved** | **317** |
+| Outstanding (not complete, superseded or canceled) | 175 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 25 open owner decision, 19 world design rule, 1 unapproved idea.
+Also in the register: 30 proposal awaiting an owner decision (not approved), 26 open owner decision, 19 world design rule, 1 unapproved idea.
+
+## Roadmap (owner, 2026-10-20: ROAD-01)
+
+Every open entry (approved work, proposals, decisions; rules excluded) with the build it belongs to. A gate says what
+must happen first (a device check, an owner decision, art). Completed entries are not counted here.
+
+| Target | Open entries | of which approved work |
+|---|---|---|
+| Build 15: simulation stabilization | 60 | 58 |
+| Build 16: long-term equilibrium and validation | 20 | 20 |
+| Build 17: Mining & Industrial Development | 23 | 18 |
+| Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
+| Build 19: NPC Judgment System | 28 | 14 |
+| Build 20 or later (outside the five builds) | 35 | 33 |
+| Multiplayer track (isolated branch) | 3 | 2 |
+| Waiting on an owner decision | 34 | 7 |
+| Owner or external action (not development work) | 6 | 6 |
+| **Total open** | **231** | **175** |
+
+### Build 15: simulation stabilization (60)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| B13-12 | B closes only quantity selector | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B13-13 | Touch sprint | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B14-06 | Carts in play: pulled storage, parking, cart stops, deliveries, household market runs | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B14-12 | Sprite list with pixel-grid copies for Aseprite (missing and weak sprites) | approved | APPROVED — NOT STARTED |  | the owner-requested sprite list for Aseprite (no game change) |
+| B14-13 | A controller connected to a phone or tablet hides the touch buttons and uses the pad controls | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | approved | PARTIALLY IMPLEMENTED |  | the 365-day failures (housing, births, population) under correction now |
+| B7-001 | Starting coins | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B7-005 | Earning money discoverable; "Trade with" | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B7-008 | Player can drain buyers to 0, kill all wildlife | approved | BLOCKED |  | likely complete: buyer drain fixed (B13-06) and refuges prevent wildlife extinction; verify and close |
+| B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | approved | IMPLEMENTED — TESTING REQUIRED |  | economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in) |
+| B7-010 | HUD anchoring on Android | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B7-011 | Tapping trees/ore does nothing | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B7-012 | Gather mode | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B7-013 | Brown glyph icons | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| B7-014 | Caravan grows currency ~12x a year | approved | IMPLEMENTED — TESTING REQUIRED |  | economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in) |
+| B8-018 | Roof flicker indoors | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | decision | IMPLEMENTED — TESTING REQUIRED |  | economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in) |
+| CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-04 | Villagers court each other through gifts, dating and proposals by the player's rules, replacing the random pairing chance | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-05 | Gift tastes follow obvious things: a villager's trade and current needs; favourite gifts speed courting, traditional gifts always work | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-07 | Courtship and marriage between any two humans, same sex included; humans only for now | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-08 | Shared experiences start friendships and romances: working together and personal interactions build regard and attraction | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-09 | Weighting of closeness and conversation: proximity about 1 point, a conversation 0.25, later ones about 0.11, so talk spamming does little | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-10 | Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
+| DVW-A14 | Play one whole life before each release (:39) | approved | APPROVED — NOT STARTED |  | release practice: play one whole life before each release, starting with Build 15 |
+| DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED |  | dated save backups complete the save-continuity work |
+| DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED |  | simulation harness and conservation checks the stabilization work depends on |
+| DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED |  | simulation harness and conservation checks the stabilization work depends on |
+| EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | approved | ACTIVE DEVELOPMENT |  | the 365-day failures (housing, births, population) under correction now |
+| EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | approved | IMPLEMENTED — TESTING REQUIRED |  | the 365-day failures (housing, births, population) under correction now |
+| EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | APPROVED — NOT STARTED |  | harness correctness needed before the acceptance runs |
+| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | APPROVED — NOT STARTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
+| FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
+| FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED |  | simulation harness and conservation checks the stabilization work depends on |
+| PL1-03 | Merchant quantity control | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| PL1-05 | current/max inside bars | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| Q-04 | Resources & Gathering journal page | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
+| REC-003 | Android builds target API 36 (Hot Attic Games standing platform policy) | approved | UNKNOWN — INVESTIGATION REQUIRED |  | release configuration check (target Android API) before the next package |
+| REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | approved | UNKNOWN — INVESTIGATION REQUIRED |  | documentation catch-up (designer spec merge, stale docs) so later builds start from current docs |
+| REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | approved | APPROVED — NOT STARTED |  | documentation catch-up (designer spec merge, stale docs) so later builds start from current docs |
+| REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | approved | ACTIVE DEVELOPMENT |  | the release authorization covering Builds 15 and 16 |
+| ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | decision | ACTIVE DEVELOPMENT |  | the roadmap record itself, kept current from Build 15 |
+| SAVE-00 | Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| SAVE-02 | A stable save identity independent of build numbers (requirement 2) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| SAVE-03 | Explicit save-schema versioning and forward migration from older supported formats (requirements 3, 4) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| SAVE-04 | Back up the original before migrating, validate the migrated save before adopting it, preserve the original on failure, never leave a partial conversion, never destroy the only usable save (requirements 5-8, 15) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| SAVE-05 | A clear way to reconnect to an existing save after an Android reinstall, using supported Android storage (Storage Access Framework or equivalent), no unrestricted filesystem access (requirements 9, 10) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | the Android export/uninstall/import check on a phone |
+| SAVE-06 | The same versioning and migration principles on Windows and Linux (requirement 11) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
+| WDR-007-C | Comply with World Design Rule 7: Automated Compliance | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
+| WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
+| WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
+| WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
+
+### Build 16: long-term equilibrium and validation (20)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| B7-015 | Missed meals while food piles up | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
+| B7-016 | Tanners/goods merchants end at 0 coins | approved | BLOCKED |  | missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner) |
+| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED |  | rules in core/, not UI: a code audit before the expansions build on it |
+| DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | approved | ACTIVE DEVELOPMENT |  | money supply re-measured over 100/365 days on several seeds (EQ-06) |
+| DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | approved | APPROVED — NOT STARTED |  | player-disruption tests: exploits and no player-only perks (EQ-05) |
+| DVW-A7 | Over-production from raising skills by use (:32) | approved | APPROVED — NOT STARTED |  | over-production from skill gains: an equilibrium risk to measure |
+| DVW-A8 | Audit player-only perks vs same rules (:33) | approved | APPROVED — NOT STARTED |  | player-disruption tests: exploits and no player-only perks (EQ-05) |
+| DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED |  | wildlife wandering in from the overworld: recolonization (EQ-02) |
+| EQ-01 | Human civilization sustains itself without the player | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | approved | PARTIALLY IMPLEMENTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-03 | Humans and nature affect each other through real NPC decisions | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | approved | APPROVED — NOT STARTED |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| EQ-09 | Local stone runs out by about game day 60, slowing house building | approved | APPROVED — NOT STARTED | may depend on MIN-B | a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17) |
+| EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | approved | ACTIVE DEVELOPMENT |  | the owner's Build 16 world-equilibrium objective and its acceptance runs |
+| REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
+| SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
+| WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
+| WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | APPROVED — NOT STARTED |  | nature sustainability (EQ-02) |
+
+### Build 17: Mining & Industrial Development (23)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| B14-07 | Cliff steps (pickaxe, Mining), wooden stairs and walkways (planks, nails, Carpentry, a mallet) | approved | APPROVED — NOT STARTED |  | cliff steps, stairs and walkways need the terrain/elevation audit (MIN-A) |
+| B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | approved | BLOCKED | owner decision first | the mine wage belongs with mining labour economics; still the owner's call (OD-01) |
+| B7-007 | Deposits never refill; no stone source | approved | PARTIALLY IMPLEMENTED |  | deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits) |
+| DVW-A10 | No black-hole spaces (:35) | approved | APPROVED — NOT STARTED |  | cliff steps, stairs and walkways need the terrain/elevation audit (MIN-A) |
+| DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | approved | APPROVED — NOT STARTED | owner decision first | wear and maintenance give tools, supports and carts real upkeep (industrial chains) |
+| ECON-P1.1 | Demand-driven mining (:71) | proposal | BLOCKED |  | older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D) |
+| ECON-P1.2 | Manor mining rights, royalty, quota, stone reserve (:72) | proposal | BLOCKED |  | older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D) |
+| ECON-P1.4 | Prospecting new seams (:74) | proposal | BLOCKED |  | older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D) |
+| ECON-P1.5 | Distant quarry (:75) | proposal | BLOCKED |  | older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D) |
+| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| MIN-D | Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | approved | APPROVED — NOT STARTED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
+| MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | approved | APPROVED — NOT STARTED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
+| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | decision | BLOCKED |  | deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits) |
+| PL1-12 | Red flowering plant not pickable | approved | PARTIALLY IMPLEMENTED |  | the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C) |
+| REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | approved | BLOCKED | owner decision first | wear and maintenance give tools, supports and carts real upkeep (industrial chains) |
+| WDR-001-C | Comply with World Design Rule 1: Material Interdependency | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
+| WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | approved | UNKNOWN — INVESTIGATION REQUIRED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
+| WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | approved | PARTIALLY IMPLEMENTED |  | material interdependency, meaningful recipes and finite resources are the mining expansion's rules |
+
+### Build 18: Settlement Advancement & Regional Economy (22)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| B14-11 | Animal Farm pack: the horse and farm animals | approved | APPROVED — NOT STARTED |  | the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output |
+| DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
+| DVW-B5 | Predictable taxes with hysteresis, announced | approved | APPROVED — NOT STARTED |  | coin sinks and predictable taxes are settlement finance |
+| ECON-P1.3 | Caravan as finite regional market (:73) | proposal | BLOCKED |  | caravan as a finite regional market; household versus business money |
+| ECON-P3 | Household vs business money, quotes follow money, stock days, market hire wages, `World.spendable` (:183-187) | proposal | BLOCKED |  | caravan as a finite regional market; household versus business money |
+| EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
+| F-1 | NPC workshop construction | approved | DEFERRED |  | NPCs building workshops is settlement development |
+| OD-05 | Owner decisions: inner doorways, relaying survey plots | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
+| OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
+| OD-08 | Owner decision: is honest arbitrage intended? | decision | BLOCKED | owner decision first | property, farming and arbitrage questions the settlement economy needs answered |
+| PL1-10 | Player businesses, staged (1-4) | approved | PARTIALLY IMPLEMENTED |  | production chains in player shops, coops, hired farm help, draught animals: industry and specialization |
+| PL2-008 | Expandable property | approved | PARTIALLY IMPLEMENTED | owner decision first | expandable property is settlement growth |
+| PL2-014 | Modular house/workshop expansion | approved | PARTIALLY IMPLEMENTED | owner decision first | expandable property is settlement growth |
+| PL2-015 | Farming, livestock, hand plough | approved | PARTIALLY IMPLEMENTED |  | production chains in player shops, coops, hired farm help, draught animals: industry and specialization |
+| SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | approved | APPROVED — NOT STARTED | needed during 17 | the expansion's design phase; its capability schema should be designed during Build 17 so MIN-D can use it |
+| SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
+| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
+| SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | approved | APPROVED — NOT STARTED |  | the Settlement Advancement & Regional Economy expansion |
+| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
+| WDR-004-C | Comply with World Design Rule 4: Economic Consequences | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
+| WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | approved | PARTIALLY IMPLEMENTED |  | professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules |
+
+### Build 19: NPC Judgment System (28)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | approved | PARTIALLY IMPLEMENTED |  | memory of favours and harms, crimes and their stain are judgment inputs (EXP-C) |
+| DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | approved | APPROVED — NOT STARTED |  | memory of favours and harms, crimes and their stain are judgment inputs (EXP-C) |
+| EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| FR-09 | Crime from desperation | approved | DEFERRED | owner decision first | crime from desperation is need weighed against judgment; held back by the owner until then |
+| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | approved | UNKNOWN — INVESTIGATION REQUIRED |  | personality and decision weights are part of the judgment design (spec section 10); migration part goes with 18 |
+| GM-01 | Generational memory and historical consequences (the 30-planks chain) | approved | APPROVED — NOT STARTED | fit to confirm | generational memory is the judgment system's event and belief record; not named in any build, closest fit |
+| SJD-B | Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | approved | APPROVED — NOT STARTED |  | the NPC Judgment System expansion |
+| SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q04 | Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q05 | Judgment open decision: How much may prior judgment bias interpretation of ambiguous events? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q06 | Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q07 | Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q08 | Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q09 | Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q10 | Judgment open decision: What judgment information, if any, can the player see? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q11 | Judgment open decision: How should memory persistence and forgiveness vary by severity? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q12 | Judgment open decision: What makes an event important enough to score? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
+| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED |  | emergent gameplay is the judgment system's purpose |
+
+### Build 20 or later (outside the five builds) (35)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | idea | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
+| B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | approved | BLOCKED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| B12A-08 | Deferred features from the Build 12 audit (umbrella; each child item tracked on its own) | approved | DEFERRED |  | umbrella of deferred features; each child is assigned on its own |
+| B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | approved | APPROVED — NOT STARTED |  | bandit factions, skeletons, castles, dungeons: combat content outside the five builds |
+| B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| B8-007 | Wrong tool shown | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | approved | PARTIALLY IMPLEMENTED |  | village politics (offices, voting, elections) is approved but in none of the five builds; voting weighs judgment, so after 19 |
+| DVW-A13 | Every visible object has a use (:38) | approved | PARTIALLY IMPLEMENTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
+| DVW-A9 | Player can always escape predators/bandits (:34) | approved | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
+| DVW-B7 | Life chronicle, titles, memorial | approved | APPROVED — NOT STARTED |  | graveyards, legacy, life chronicle: approved, in none of the five builds |
+| DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | approved | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
+| FR-01 | Lizards and spiders as enemies | approved | BLOCKED | owner assets | enemies and sound need asset uploads from the owner |
+| FR-02 | Forgotten Memories waterfalls, fences and props | approved | APPROVED — NOT STARTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| FR-03 | A campfire for cooking raw meat outside the village | approved | APPROVED — NOT STARTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
+| FR-08 | Music and sound | approved | BLOCKED | owner assets | enemies and sound need asset uploads from the owner |
+| FR-10 | Archery | approved | DEFERRED |  | archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner |
+| MIN-L5 | Mining capability level 5 (integrated industrial mining) | proposal | APPROVED — NOT STARTED |  | mining level 5 is a proposal pending later confirmation |
+| OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | approved | PARTIALLY IMPLEMENTED |  | accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds |
+| OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | approved | PARTIALLY IMPLEMENTED |  | living-world umbrella: isometric and magic remain open |
+| PL1-07 | NPCs sunk into beds/chairs | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| PL1-13 | Recognisable stove | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| PL2-010 | Recognisable sawhorse | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| PL2-013 | Usable furniture | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | approved | BLOCKED | owner/external | over-the-air updates need the Hot Attic Games Mote repository |
+| REC-006 | Castles, dungeons and caves in the world | approved | DEFERRED |  | bandit factions, skeletons, castles, dungeons: combat content outside the five builds |
+| REC-007 | Several settlements (villages, towns, cities) with their own economies; NPC migration and regional jobs between them | approved | DEFERRED |  | real separate settlements and near/far simulation tiers need a larger world map |
+| REC-008 | Near/far simulation tiers (detailed near the player, abstract far away, nothing duplicated on switching) | approved | UNKNOWN — INVESTIGATION REQUIRED |  | real separate settlements and near/far simulation tiers need a larger world map |
+| REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | approved | UNKNOWN — INVESTIGATION REQUIRED |  | archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner |
+| REC-011 | Main storyline after the first story quest (side quests now, story later) | approved | DEFERRED |  | archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner |
+| REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | approved | DEFERRED |  | archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner |
+| SET-E | Settlement expansion phase E: Actual inter-settlement network: persistent settlements, routes, logistics, competition, merchant AI | approved | APPROVED — NOT STARTED |  | real separate settlements and near/far simulation tiers need a larger world map |
+| VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | approved | APPROVED — NOT STARTED |  | village politics (offices, voting, elections) is approved but in none of the five builds; voting weighs judgment, so after 19 |
+| WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | approved | APPROVED — NOT STARTED |  | graveyards, legacy, life chronicle: approved, in none of the five builds |
+| WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | PARTIALLY IMPLEMENTED |  | village politics (offices, voting, elections) is approved but in none of the five builds; voting weighs judgment, so after 19 |
+| WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | APPROVED — NOT STARTED |  | bandit factions, skeletons, castles, dungeons: combat content outside the five builds |
+
+### Multiplayer track (isolated branch) (3)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | approved | APPROVED — NOT STARTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
+| DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
+| MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
+
+### Waiting on an owner decision (34)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| B13-15 | Android signing stability | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
+| DGA-D1 | Meaning of "isometric" | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D10 | Formal platform/engine approval (U1, U2) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D12 | Approval to start phase 1 | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D2 | Isometric art source (J-G4) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D4 | Shared-world rules (pause, characters, heir) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D5 | Reputation/ownership/PvP (J-S3, U21) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D6 | Combat model and latency (U7) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D7 | Visible gear | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D8 | Era, county, political status, map scale | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-D9 | Magic (J-M1..4) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-R | Refactors (coordinates, players collection, command layer, fixed step + state hash, save split, appearance data, magic schema) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DGA-S | Isometric look spike; network feasibility spike | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DVW-B10 | Onboarding, first ten minutes | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DVW-B11 | No instant fast travel (rule) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DVW-B12 | Ethics/lore: thralldom, Church, content note | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DVW-B13 | Story kept as sparks; audit `story: true` quests | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| DVW-B8 | Skills for farming, husbandry, hunting, healing | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-02 | Owner decision: balance review of every provisional number | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-04 | Owner decisions: chest and lock questions | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-07 | Owner decision: hunting in Gather mode | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | decision | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OWN-02 | Wildlife balance follow-up; horse imported, use pending | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
+| OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | approved | PARTIALLY IMPLEMENTED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
+| OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| PL1-11 | Google Drive cloud saves (staged) | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
+| Q-08 | Resource depletion and wildlife sustainability | approved | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| Q-11 | Design gap assessment, phased sequence | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
+| REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
+| REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | approved | UNKNOWN — INVESTIGATION REQUIRED | owner decision first | waiting on an owner decision, not development work |
+
+### Owner or external action (not development work) (6)
+
+| ID | Item | Kind | Status | Gate | Why here |
+|---|---|---|---|---|---|
+| AR-OWNER | Audit remediation owner checklist: public-release environment, repository visibility, private infrastructure repository | approved | BLOCKED | owner/external | only the owner (or the environment's settings) can do this |
+| AR-P0-3 | Owner must delete `inventory/registry` by hand | approved | BLOCKED | owner/external | only the owner (or the environment's settings) can do this |
+| AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | approved | PARTIALLY IMPLEMENTED | owner/external | only the owner (or the environment's settings) can do this |
+| B12A-10 | Hardware verification of everything on real devices (umbrella of the device queue) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | owner/external | only the owner (or the environment's settings) can do this |
+| ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | BLOCKED | owner/external | only the owner (or the environment's settings) can do this |
+| Q-10 | Hot Attic Games read-only registry | approved | BLOCKED | owner/external | only the owner (or the environment's settings) can do this |
 
 ## Real-device verification queue
 
@@ -53,7 +347,7 @@ Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | phone, controller | PARTIALLY IMPLEMENTED |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 
-## APPROVED — NOT STARTED (60)
+## APPROVED — NOT STARTED (63)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -83,6 +377,8 @@ Automated tests do not count as device verification.
 | EQ-04 | A functioning society survives individual losses (succession of trades, households, leadership, businesses) | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
+| EQ-09 | Local stone runs out by about game day 60, slowing house building | Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60) |  |  |  |
+| EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | WR-01 agent report 2026-10-19 (also in the unchanged baseline) |  |  |  |
 | EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
@@ -117,6 +413,7 @@ Automated tests do not count as device verification.
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
+| WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 |  |  |  |
 
 ## ACTIVE DEVELOPMENT (5)
 
@@ -128,7 +425,7 @@ Automated tests do not count as device verification.
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold |
 
-## PARTIALLY IMPLEMENTED (36)
+## PARTIALLY IMPLEMENTED (35)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -136,7 +433,6 @@ Automated tests do not count as device verification.
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | owner message 2026-10-19 | `f9fb853` |  |  |
 | B14R-12 | Long-run regression: wild animals reach 0 by day 320 and the population falls from 100 to 69 in the 365-day run | Build 14 readiness simulations 2026-10-19 (owner: investigate and correct genuine regressions, s.1) | `d598e65`, `4fe265d`, `b15208a` |  | implement WR-01, then re-run 365 days |
 | B7-007 | Deposits never refill; no stone source | docs/release/BUILD_7_ISSUES.md (audit inventory row 48) |  |  |  |
-| B7-017 | No building in a year (no births) | docs/release/BUILD_7_ISSUES.md (audit inventory row 58) |  |  |  |
 | B8-007 | Wrong tool shown | docs/release/BUILD_8_MASTER_FIXES.md (audit inventory row 108) |  |  |  |
 | CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | docs/directives/2026-10-19_courtship_friendship.md (answers) | game/tests/relations_test.gd |  | friends vote with the player once elections exist |
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
@@ -181,7 +477,7 @@ Automated tests do not count as device verification.
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| B12A-10 | None done | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 360) |  |  |  |
+| B12A-10 | Hardware verification of everything on real devices (umbrella of the device queue) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 360) |  |  |  |
 | B13-12 | B closes only quantity selector | docs/DEVELOPMENT_LEDGER.md (audit inventory row 187) |  |  |  |
 | B13-13 | Touch sprint | docs/DEVELOPMENT_LEDGER.md (audit inventory row 188) |  |  |  |
 | B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | docs/DECISIONS.md (owner, Build 13 playtest) | `60a365b`; start_test |  |  |
@@ -219,14 +515,13 @@ Automated tests do not count as device verification.
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | docs/directives/2026-10-20_two_decisions_three_expansions.md | game/tests/save_transfer_test.gd; start_test::_save_meta_tests |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
 
-## BLOCKED (17)
+## BLOCKED (16)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| AR-OWNER | No completion recorded | docs/release/AUDIT_REMEDIATION.md (audit inventory row 372) |  |  |  |
+| AR-OWNER | Audit remediation owner checklist: public-release environment, repository visibility, private infrastructure repository | docs/release/AUDIT_REMEDIATION.md (audit inventory row 372) |  |  |  |
 | AR-P0-3 | Owner must delete `inventory/registry` by hand | docs/release/AUDIT_REMEDIATION.md (audit inventory row 371) |  |  |  |
-| B12A-07 | Open; Craftpix crops could supply crop art (B14-10) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 357) |  |  |  |
-| B12A-09 | Owner action | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 359) |  |  |  |
+| B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 357) |  |  |  |
 | B13-15 | Android signing stability | docs/DEVELOPMENT_LEDGER.md (audit inventory row 190) |  |  |  |
 | B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | docs/release/BUILD_7_ISSUES.md (audit inventory row 47) |  |  |  |
 | B7-008 | Player can drain buyers to 0, kill all wildlife | docs/release/BUILD_7_ISSUES.md (audit inventory row 49) |  |  |  |
@@ -245,7 +540,7 @@ Automated tests do not count as device verification.
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
-| B12A-08 | Open | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 358) |  |  |  |
+| B12A-08 | Deferred features from the Build 12 audit (umbrella; each child item tracked on its own) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 358) |  |  |  |
 | F-1 | NPC workshop construction | docs/release/BUILD_7_ISSUES.md (audit inventory row 62) |  |  |  |
 | FR-09 | Crime from desperation | owner design intent 2026-10-17, deferred by the owner ('no desperation crime yet') |  |  |  |
 | FR-10 | Archery | docs/directives/2026-10-19_sword_combat.md (future, not authorised) |  |  |  |
@@ -382,14 +677,16 @@ Automated tests do not count as device verification.
 | SAVE-01 | Inspect and document the current save architecture before modifying it (requirement 1) | docs/directives/2026-10-20_two_decisions_three_expansions.md | n/a (document) |  |  |
 | WDR-006-C | Comply with World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | check_interactions (CI) |  |  |
 
-## SUPERSEDED (17)
+## SUPERSEDED (19)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | AR-P1-1 | Prepared; owner must create key | docs/release/AUDIT_REMEDIATION.md (audit inventory row 369) |  | superseded by B13-15 |  |
 | B12A-04 | Not recorded as done | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 354) |  | superseded by FR-04 |  |
 | B12A-06 | Sword page added by CQ-01 (`3e283b6`); others not recorded | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 356) |  | superseded by FR-06 |  |
+| B12A-09 | RTK token tool persistence in the cloud environment (owner action) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 359) |  | superseded by ENV-RTK |  |
 | B12A-11 | "Not investigated further" | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 361) |  | superseded by FR-05 |  |
+| B7-017 | No building in a year (no births) | docs/release/BUILD_7_ISSUES.md (audit inventory row 58) |  | superseded by EQ-07 |  |
 | B8R-005 | Hunger icon looked like coin bag | docs/release/BUILD_8_ISSUES.md (audit inventory row 78) |  | superseded by B8-019 |  |
 | B8R-006 | Where to cook raw meat | docs/release/BUILD_8_ISSUES.md (audit inventory row 79) |  | superseded by FR-03 |  |
 | F-2 | Births, children, aging, family growth | docs/release/BUILD_7_ISSUES.md (audit inventory row 63) |  | superseded by B8-029 |  |
@@ -417,7 +714,7 @@ Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Open owner decision (25)
+## Open owner decision (26)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -432,6 +729,7 @@ Automated tests do not count as device verification.
 | OD-08 | Owner decision: is honest arbitrage intended? | BLOCKED | docs/reference/DESIGNING_VIRTUAL_WORLDS.md A5 |
 | OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | BLOCKED | docs/GAME_DESIGN.md |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
+| ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat) |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
@@ -510,5 +808,5 @@ Automated tests do not count as device verification.
 
 | ID | Item | Status | Source |
 |---|---|---|---|
-| B12A-05 | Not added | APPROVED — NOT STARTED | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 355) |
+| B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | APPROVED — NOT STARTED | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 355) |
 

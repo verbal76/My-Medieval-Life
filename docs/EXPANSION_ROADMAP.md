@@ -1,4 +1,4 @@
-# Future expansions: dependencies and proposed sequence
+# Roadmap: Builds 15-19 and the three expansions
 
 **Owner directive:** 2026-10-20 (`docs/directives/2026-10-20_two_decisions_three_expansions.md`). The three supporting documents in `docs/directives/` are the primary specifications.
 
@@ -11,6 +11,25 @@ These are three independent expansions:
 | C | NPC Judgment System: EXP-C, gates SJD-A..H, open decisions SJD-Q01..Q14 | `My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf` |
 
 Each has its own phases, tests, integration review and build decision. None is started; none interrupts the Build 15–16 equilibrium work (EQ-16). No build numbers are assigned here.
+
+## The owner's five-build roadmap (2026-10-20, register ROAD-01)
+
+| Build | Content |
+|---|---|
+| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships |
+| 16 | Long-term equilibrium and validation: the baseline before the expansions |
+| 17 | Expansion A, Mining & Industrial Development |
+| 18 | Expansion B, Settlement Advancement & Regional Economy |
+| 19 | Expansion C, NPC Judgment System |
+
+Every open register entry carries `target_build` (15–19, `20+`, `multiplayer`, `owner decision` or `owner action`) with a gate and a reason. `tools/check_requirements.py` refuses an open entry without one. The item-by-item table is the "Roadmap" section of `docs/DEVELOPMENT_LEDGER.md`, generated from the register.
+
+**Dependencies that touch the order (none forces a change):**
+- **SET-A in Build 17.** Mining capability levels (MIN-D, Build 17) are settlements' first industry capability. The settlement capability schema (SET-A, Build 18's design phase) should be designed during Build 17 so MIN-D builds on it. This is design only; Build 18 still implements the model.
+- **MIN-E and MIN-F.** Open-pit and underground mining depend on MIN-A's finding about layered terrain. If the terrain cannot carry depth, these slip to Build 20 or later, and Build 17 ships phases A–D and G.
+- **EQ-09, stone.** Stone runs out by about day 60. If the world has no lasting stone source without the quarry chain (MIN-B, Build 17), the Build 16 baseline must either accept caravan stone imports as the stand-in or move MIN-B earlier. This will be decided from the Build 15 runs and brought to the owner before any change.
+- **Build 19 needs the owner's answers.** Its 14 open design questions (SJD-Q01..Q14) stay unanswered until the owner answers them. The design audit and isolated prototype can proceed; live integration cannot.
+- **VP-01, generational memory and legacy.** Village politics (VP-01), generational memory (GM-01) and legacy (WDR-014) are approved but named in none of the five builds. GM-01 is placed in 19 as the closest fit, to confirm. Politics follows 19, because voting weighs judgment.
 
 ## World Design Rules each one serves
 

@@ -3,11 +3,11 @@
  "requirements": [
   {
    "id": "AR-OWNER",
-   "title": "No completion recorded",
+   "title": "Audit remediation owner checklist: public-release environment, repository visibility, private infrastructure repository",
    "kind": "approved",
    "status": "BLOCKED",
    "owner_wording": null,
-   "description": "No completion recorded",
+   "description": "Audit remediation owner checklist: public-release environment, repository visibility, private infrastructure repository",
    "source": "docs/release/AUDIT_REMEDIATION.md (audit inventory row 372)",
    "approval": "recorded in docs/release/AUDIT_REMEDIATION.md",
    "acceptance": [
@@ -34,9 +34,22 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner action (owner/external)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "title restored",
+     "why": "the migration had taken a status column as the title; real subject from the Build 12 audit / remediation checklist"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner action",
+   "roadmap_gate": "owner/external",
+   "roadmap_reason": "only the owner (or the environment's settings) can do this"
   },
   {
    "id": "AR-P0-1",
@@ -145,9 +158,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner action (owner/external)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner action",
+   "roadmap_gate": "owner/external",
+   "roadmap_reason": "only the owner (or the environment's settings) can do this"
   },
   {
    "id": "AR-P1-1",
@@ -229,9 +250,17 @@
      "date": "2026-10-20",
      "change": "note",
      "why": "PR #1 closed 2026-10-20 (OPS-01); its branch's push-triggered workflow no longer matters for an open PR"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner action (owner/external)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner action",
+   "roadmap_gate": "owner/external",
+   "roadmap_reason": "only the owner (or the environment's settings) can do this"
   },
   {
    "id": "B12A-01",
@@ -388,11 +417,11 @@
   },
   {
    "id": "B12A-05",
-   "title": "Not added",
+   "title": "Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking",
    "kind": "idea",
    "status": "APPROVED — NOT STARTED",
    "owner_wording": null,
-   "description": "Not added",
+   "description": "Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking",
    "source": "docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 355)",
    "approval": "not requested by the owner (Build 12 audit suggestion)",
    "acceptance": [
@@ -419,9 +448,22 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "title restored",
+     "why": "the migration had taken a status column as the title; real subject from the Build 12 audit / remediation checklist"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds"
   },
   {
    "id": "B12A-06",
@@ -467,11 +509,11 @@
   },
   {
    "id": "B12A-07",
-   "title": "Open; Craftpix crops could supply crop art (B14-10)",
+   "title": "Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10)",
    "kind": "approved",
    "status": "BLOCKED",
    "owner_wording": null,
-   "description": "Open; Craftpix crops could supply crop art (B14-10)",
+   "description": "Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10)",
    "source": "docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 357)",
    "approval": "recorded in docs/release/BUILD_12_FULL_AUDIT.md",
    "acceptance": [
@@ -498,17 +540,30 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "title restored",
+     "why": "the migration had taken a status column as the title; real subject from the Build 12 audit / remediation checklist"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "B12A-08",
-   "title": "Open",
+   "title": "Deferred features from the Build 12 audit (umbrella; each child item tracked on its own)",
    "kind": "approved",
    "status": "DEFERRED",
    "owner_wording": null,
-   "description": "Open",
+   "description": "Deferred features from the Build 12 audit (umbrella; each child item tracked on its own)",
    "source": "docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 358)",
    "approval": "recorded in docs/release/BUILD_12_FULL_AUDIT.md",
    "acceptance": [
@@ -535,17 +590,30 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "title restored",
+     "why": "the migration had taken a status column as the title; real subject from the Build 12 audit / remediation checklist"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "umbrella of deferred features; each child is assigned on its own"
   },
   {
    "id": "B12A-09",
-   "title": "Owner action",
+   "title": "RTK token tool persistence in the cloud environment (owner action)",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "SUPERSEDED",
    "owner_wording": null,
-   "description": "Owner action",
+   "description": "RTK token tool persistence in the cloud environment (owner action)",
    "source": "docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 359)",
    "approval": "recorded in docs/release/BUILD_12_FULL_AUDIT.md",
    "acceptance": [
@@ -565,24 +633,34 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "ENV-RTK",
    "notes": "",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "title restored",
+     "why": "the migration had taken a status column as the title; real subject from the Build 12 audit / remediation checklist"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "SUPERSEDED by ENV-RTK",
+     "why": "duplicate: the same RTK persistence item"
     }
    ],
    "acceptance_derived": true
   },
   {
    "id": "B12A-10",
-   "title": "None done",
+   "title": "Hardware verification of everything on real devices (umbrella of the device queue)",
    "kind": "approved",
    "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
-   "description": "None done",
+   "description": "Hardware verification of everything on real devices (umbrella of the device queue)",
    "source": "docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 360)",
    "approval": "recorded in docs/release/BUILD_12_FULL_AUDIT.md",
    "acceptance": [
@@ -609,9 +687,22 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner action (owner/external)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "title restored",
+     "why": "the migration had taken a status column as the title; real subject from the Build 12 audit / remediation checklist"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner action",
+   "roadmap_gate": "owner/external",
+   "roadmap_reason": "only the owner (or the environment's settings) can do this"
   },
   {
    "id": "B12A-11",
@@ -1097,9 +1188,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B13-13",
@@ -1136,9 +1235,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B13-14",
@@ -1215,9 +1322,17 @@
      "date": "2026-10-20",
      "change": "deferred note",
      "why": "owner 2026-10-20: the permanent signing-key decision is deferred; save continuity (SAVE-00) is the approach instead"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "signing key deferred by the owner; cloud saves and the formal platform entry need the owner"
   },
   {
    "id": "B14-01",
@@ -1256,9 +1371,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B14-02",
@@ -1466,9 +1589,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B14-07",
@@ -1503,9 +1634,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "cliff steps, stairs and walkways need the terrain/elevation audit (MIN-A)"
   },
   {
    "id": "B14-08",
@@ -1582,9 +1721,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "bandit factions, skeletons, castles, dungeons: combat content outside the five builds"
   },
   {
    "id": "B14-10",
@@ -1623,9 +1770,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "B14-11",
@@ -1668,9 +1823,17 @@
      "date": "2026-10-19",
      "change": "owner_wording; next_action",
      "why": "owner decided the horse's role: a plough horse available for purchase from the visiting caravan; nothing else"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "the plough horse bought from the caravan fits when caravans trade real goods; draught animals change farm output"
   },
   {
    "id": "B14-12",
@@ -1705,9 +1868,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner-requested sprite list for Aseprite (no game change)"
   },
   {
    "id": "B14-13",
@@ -1748,9 +1919,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B14R-01",
@@ -2295,9 +2474,17 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> PARTIALLY IMPLEMENTED; commit d598e65; commit 4fe265d; commit b15208a",
      "why": "wildlife cause fixed (WR-01: no species reaches 0 in 365 days); housing and population cause fixed (EQ-07/08); the 365-day re-run with everything together is running"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "the 365-day failures (housing, births, population) under correction now"
   },
   {
    "id": "B7-001",
@@ -2334,9 +2521,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B7-002",
@@ -2484,9 +2679,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B7-006",
@@ -2521,9 +2724,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "the mine wage belongs with mining labour economics; still the owner's call (OD-01)"
   },
   {
    "id": "B7-007",
@@ -2563,9 +2774,17 @@
      "date": "2026-10-20",
      "change": "related to EXP-A",
      "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits)"
   },
   {
    "id": "B7-008",
@@ -2600,9 +2819,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "likely complete: buyer drain fixed (B13-06) and refuges prevent wildlife extinction; verify and close"
   },
   {
    "id": "B7-009",
@@ -2644,9 +2871,17 @@
      "date": "2026-10-19",
      "change": "BLOCKED -> IMPLEMENTED — TESTING REQUIRED",
      "why": "option (b) is in the code without a recorded owner decision; owner asked for a comparison (2026-10-19)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in)"
   },
   {
    "id": "B7-010",
@@ -2683,9 +2918,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B7-011",
@@ -2722,9 +2965,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B7-012",
@@ -2762,9 +3013,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B7-013",
@@ -2801,9 +3060,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B7-014",
@@ -2850,9 +3117,17 @@
      "date": "2026-10-20",
      "change": "note",
      "why": "owner 2026-10-20: the caravan allowance is a labelled temporary placeholder at 30 coins a day (CARAVAN-TMP), replaced by demand-driven trade in EXP-B"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in)"
   },
   {
    "id": "B7-015",
@@ -2887,9 +3162,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner)"
   },
   {
    "id": "B7-016",
@@ -2924,15 +3207,23 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "missed meals and traders at 0 coins are equilibrium failures; the Build 16 directive authorizes correcting root causes (was waiting on the owner)"
   },
   {
    "id": "B7-017",
    "title": "No building in a year (no births)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "SUPERSEDED",
    "owner_wording": null,
    "description": "No building in a year (no births)",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 58)",
@@ -2954,13 +3245,18 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "EQ-07",
    "notes": "",
    "history": [
     {
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "SUPERSEDED by EQ-07",
+     "why": "duplicate: no building and no births over a year is EQ-07, now being corrected"
     }
    ],
    "acceptance_derived": true
@@ -3220,9 +3516,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "B8-008",
@@ -3629,9 +3933,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "B8-019",
@@ -4687,8 +4999,16 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; implementation",
      "why": "caravan_allowance set to 30 and labelled a temporary placeholder in balance.json; long runs restarted with it"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in)"
   },
   {
    "id": "CQ-01",
@@ -4733,9 +5053,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "CRT-01",
@@ -4781,8 +5109,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-02",
@@ -4826,8 +5162,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-03",
@@ -4870,8 +5214,16 @@
      "date": "2026-10-19",
      "change": "notes",
      "why": "multiplayer stays isolated"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: multiplayer",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "multiplayer",
+   "roadmap_gate": "",
+   "roadmap_reason": "the multiplayer track stays isolated on its own branch until the owner authorizes integration"
   },
   {
    "id": "CRT-04",
@@ -4917,8 +5269,16 @@
      "date": "2026-10-19",
      "change": "note",
      "why": "pace tuned: chemistry per pair, courting boost, earlier interest, poorer villagers still seek company, refused suitors move on (100-day runs had shown only 5 and 3 new couples)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-05",
@@ -4960,8 +5320,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-06",
@@ -5004,8 +5372,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests; implementation; next_action",
      "why": "better prices, unpaid help (carrying), gossip (who is courting) and backing before guards done; backing in votes waits for the politics system (WDR-019), which does not exist yet"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "village politics (offices, voting, elections) is approved but in none of the five builds; voting weighs judgment, so after 19"
   },
   {
    "id": "CRT-07",
@@ -5047,8 +5423,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in Relations with the talk-window gift, befriend, court and propose choices; relations_test 35 checks; screenshots of the gift and talk windows looked at"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-08",
@@ -5091,8 +5475,16 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented: hourly shared experiences (work, evening company, time nearby), talking once a day; villagers befriend on their own and court only those they came to know"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-09",
@@ -5135,8 +5527,16 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented with the owner's weights; relations_test covers first talk, second talk, spam, hourly once"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-10",
@@ -5179,8 +5579,16 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "continuous closeness (focus on the nearest), talk, gifts, help, defending, harm; daily limits; days known gate courting and marriage; ideal suitor test marries on day 13"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-11",
@@ -5222,8 +5630,16 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "single villagers with coins or a gift seek out their interest or closest friend in the evening, buying ale or bread first"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "CRT-12",
@@ -5272,8 +5688,16 @@
      "date": "2026-10-20",
      "change": "conflict noted",
      "why": "EXP-C forbids a simple reputation threshold; the notoriety refusal becomes a weighed judgment input when EXP-C lands"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains"
   },
   {
    "id": "DGA-D1",
@@ -5308,9 +5732,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D10",
@@ -5345,9 +5777,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D11",
@@ -5382,9 +5822,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D12",
@@ -5419,9 +5867,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D2",
@@ -5456,9 +5912,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D3",
@@ -5493,9 +5957,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: multiplayer",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "multiplayer",
+   "roadmap_gate": "",
+   "roadmap_reason": "the multiplayer track stays isolated on its own branch until the owner authorizes integration"
   },
   {
    "id": "DGA-D4",
@@ -5530,9 +6002,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D5",
@@ -5567,9 +6047,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D6",
@@ -5604,9 +6092,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D7",
@@ -5641,9 +6137,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D8",
@@ -5678,9 +6182,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-D9",
@@ -5715,9 +6227,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-R",
@@ -5752,9 +6272,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DGA-S",
@@ -5789,9 +6317,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DVW-A1",
@@ -5863,9 +6399,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "cliff steps, stairs and walkways need the terrain/elevation audit (MIN-A)"
   },
   {
    "id": "DVW-A11",
@@ -5937,9 +6481,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "rules in core/, not UI: a code audit before the expansions build on it"
   },
   {
    "id": "DVW-A13",
@@ -5974,9 +6526,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds"
   },
   {
    "id": "DVW-A14",
@@ -6011,9 +6571,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "release practice: play one whole life before each release, starting with Build 15"
   },
   {
    "id": "DVW-A2",
@@ -6048,9 +6616,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "dated save backups complete the save-continuity work"
   },
   {
    "id": "DVW-A3",
@@ -6090,9 +6666,17 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "100- and 365-day runs on the current code (2026-10-19)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "money supply re-measured over 100/365 days on several seeds (EQ-06)"
   },
   {
    "id": "DVW-A4",
@@ -6127,9 +6711,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "simulation harness and conservation checks the stabilization work depends on"
   },
   {
    "id": "DVW-A5",
@@ -6164,9 +6756,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "player-disruption tests: exploits and no player-only perks (EQ-05)"
   },
   {
    "id": "DVW-A6",
@@ -6201,9 +6801,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "simulation harness and conservation checks the stabilization work depends on"
   },
   {
    "id": "DVW-A7",
@@ -6238,9 +6846,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "over-production from skill gains: an equilibrium risk to measure"
   },
   {
    "id": "DVW-A8",
@@ -6275,9 +6891,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "player-disruption tests: exploits and no player-only perks (EQ-05)"
   },
   {
    "id": "DVW-A9",
@@ -6312,9 +6936,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds"
   },
   {
    "id": "DVW-B1",
@@ -6359,9 +6991,17 @@
      "date": "2026-10-20",
      "change": "related to EXP-C",
      "why": "memory of harms and gossip belong to the judgment expansion"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "memory of favours and harms, crimes and their stain are judgment inputs (EXP-C)"
   },
   {
    "id": "DVW-B10",
@@ -6396,9 +7036,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DVW-B11",
@@ -6433,9 +7081,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DVW-B12",
@@ -6470,9 +7126,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DVW-B13",
@@ -6507,9 +7171,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DVW-B2",
@@ -6544,9 +7216,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "memory of favours and harms, crimes and their stain are judgment inputs (EXP-C)"
   },
   {
    "id": "DVW-B3",
@@ -6581,9 +7261,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "coin sinks and predictable taxes are settlement finance"
   },
   {
    "id": "DVW-B4",
@@ -6618,9 +7306,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "wear and maintenance give tools, supports and carts real upkeep (industrial chains)"
   },
   {
    "id": "DVW-B5",
@@ -6655,9 +7351,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "coin sinks and predictable taxes are settlement finance"
   },
   {
    "id": "DVW-B6",
@@ -6692,9 +7396,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "wildlife wandering in from the overworld: recolonization (EQ-02)"
   },
   {
    "id": "DVW-B7",
@@ -6729,9 +7441,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "graveyards, legacy, life chronicle: approved, in none of the five builds"
   },
   {
    "id": "DVW-B8",
@@ -6766,9 +7486,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "DVW-B9",
@@ -6803,9 +7531,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds"
   },
   {
    "id": "ECON-P1.1",
@@ -6845,9 +7581,17 @@
      "date": "2026-10-20",
      "change": "related to EXP-A",
      "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)"
   },
   {
    "id": "ECON-P1.2",
@@ -6887,9 +7631,17 @@
      "date": "2026-10-20",
      "change": "related to EXP-A",
      "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)"
   },
   {
    "id": "ECON-P1.3",
@@ -6929,9 +7681,17 @@
      "date": "2026-10-20",
      "change": "related to EXP-B",
      "why": "owner directive 2026-10-20 registers Settlement Advancement & Regional Economy"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "caravan as a finite regional market; household versus business money"
   },
   {
    "id": "ECON-P1.4",
@@ -6971,9 +7731,17 @@
      "date": "2026-10-20",
      "change": "related to EXP-A",
      "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)"
   },
   {
    "id": "ECON-P1.5",
@@ -7008,9 +7776,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D)"
   },
   {
    "id": "ECON-P2",
@@ -7045,9 +7821,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "ECON-P3",
@@ -7082,9 +7866,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "caravan as a finite regional market; household versus business money"
   },
   {
    "id": "ENV-RTK",
@@ -7121,9 +7913,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner action (owner/external)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner action",
+   "roadmap_gate": "owner/external",
+   "roadmap_reason": "only the owner (or the environment's settings) can do this"
   },
   {
    "id": "EQ-01",
@@ -7171,8 +7971,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
   },
   {
    "id": "EQ-02",
@@ -7221,8 +8029,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit b15208a",
      "why": "refuges, dispersal and recolonization in place (WR-01); grazers starve together above grass capacity (left as is); the acceptance runs (EQ-06) still to do"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
   },
   {
    "id": "EQ-03",
@@ -7263,8 +8079,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
   },
   {
    "id": "EQ-04",
@@ -7309,8 +8133,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
   },
   {
    "id": "EQ-05",
@@ -7350,8 +8182,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
   },
   {
    "id": "EQ-06",
@@ -7397,8 +8237,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's Build 16 world equilibrium directive"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
   },
   {
    "id": "EQ-07",
@@ -7446,8 +8294,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; branch; next_action",
      "why": "diagnosed no-construction and population decline: households split only when members exceed beds, which births and move-ins (both needing a free bed) make unreachable; 11 of 13 fertile couples blocked by no bed at day 30 (seed 1); a new house needed 178 coins up front against a median household purse of about 170. Fix in progress: couples found households, houses started with a first share"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "the 365-day failures (housing, births, population) under correction now"
   },
   {
    "id": "EQ-08",
@@ -7489,8 +8345,95 @@
      "date": "2026-10-19",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; implementation; tests",
      "why": "implemented: Life._try_birth no longer needs a free bed; founder_of prefers a grown child, never one partner alone; _found takes the partner along"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "the 365-day failures (housing, births, population) under correction now"
+  },
+  {
+   "id": "EQ-09",
+   "title": "Local stone runs out by about game day 60, slowing house building",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Local stone runs out by about game day 60, slowing house building",
+   "source": "Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60)",
+   "approval": "within the owner's Build 15-16 resource sustainability scope (EQ-16)",
+   "acceptance": [
+    "Construction does not stall for want of stone without a real cause the world can answer",
+    "Measured in the 100/365-day runs"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-16",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "Build 15 simulation runs 2026-10-19 (fix2: stone 0 by day 60)"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "may depend on MIN-B",
+   "roadmap_reason": "a resource-sustainability failure for Build 16; a lasting stone source may need the quarry chain (MIN-B, Build 17)"
+  },
+  {
+   "id": "EQ-10",
+   "title": "Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs",
+   "source": "WR-01 agent report 2026-10-19 (also in the unchanged baseline)",
+   "approval": "harness correctness for the Build 15-16 acceptance runs",
+   "acceptance": [
+    "Every item balances exactly over 365 days, or the residual is traced to a real cause"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-06",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "WR-01 agent report 2026-10-19 (also in the unchanged baseline)"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "harness correctness needed before the acceptance runs"
   },
   {
    "id": "EQ-16",
@@ -7546,8 +8489,16 @@
      "date": "2026-10-19",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Build 15 foundations under way (EQ-07, WR-01)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the owner's Build 16 world-equilibrium objective and its acceptance runs"
   },
   {
    "id": "EXP-A",
@@ -7606,8 +8557,16 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "dependencies and proposed sequence written for owner approval (docs/EXPANSION_ROADMAP.md); not started"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Mining & Industrial Development expansion"
   },
   {
    "id": "EXP-B",
@@ -7666,8 +8625,16 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "dependencies and proposed sequence written for owner approval (docs/EXPANSION_ROADMAP.md); not started"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Settlement Advancement & Regional Economy expansion"
   },
   {
    "id": "EXP-C",
@@ -7728,8 +8695,16 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "dependencies and proposed sequence written for owner approval (docs/EXPANSION_ROADMAP.md); not started"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "F-1",
@@ -7764,9 +8739,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "NPCs building workshops is settlement development"
   },
   {
    "id": "F-2",
@@ -7887,9 +8870,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (owner assets)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "owner assets",
+   "roadmap_reason": "enemies and sound need asset uploads from the owner"
   },
   {
    "id": "FR-02",
@@ -7924,9 +8915,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "FR-03",
@@ -7961,9 +8960,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds"
   },
   {
    "id": "FR-04",
@@ -7998,9 +9005,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "small completeness items (pad shortcuts, controls list, missing wiki pages)"
   },
   {
    "id": "FR-05",
@@ -8074,9 +9089,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "small completeness items (pad shortcuts, controls list, missing wiki pages)"
   },
   {
    "id": "FR-07",
@@ -8111,9 +9134,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "simulation harness and conservation checks the stabilization work depends on"
   },
   {
    "id": "FR-08",
@@ -8150,9 +9181,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (owner assets)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "owner assets",
+   "roadmap_reason": "enemies and sound need asset uploads from the owner"
   },
   {
    "id": "FR-09",
@@ -8187,9 +9226,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "crime from desperation is need weighed against judgment; held back by the owner until then"
   },
   {
    "id": "FR-10",
@@ -8224,9 +9271,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner"
   },
   {
    "id": "FR-11",
@@ -8261,9 +9316,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "personality and decision weights are part of the judgment design (spec section 10); migration part goes with 18"
   },
   {
    "id": "GM-01",
@@ -8302,9 +9365,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (fit to confirm)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "19",
+   "roadmap_gate": "fit to confirm",
+   "roadmap_reason": "generational memory is the judgment system's event and belief record; not named in any build, closest fit"
   },
   {
    "id": "K-1",
@@ -8463,8 +9534,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Mining & Industrial Development expansion"
   },
   {
    "id": "MIN-B",
@@ -8509,8 +9588,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Mining & Industrial Development expansion"
   },
   {
    "id": "MIN-C",
@@ -8555,8 +9642,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Mining & Industrial Development expansion"
   },
   {
    "id": "MIN-D",
@@ -8601,8 +9696,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Mining & Industrial Development expansion"
   },
   {
    "id": "MIN-E",
@@ -8647,8 +9750,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17 (depends on MIN-A)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "depends on MIN-A",
+   "roadmap_reason": "open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7)"
   },
   {
    "id": "MIN-F",
@@ -8693,8 +9804,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17 (depends on MIN-A)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "depends on MIN-A",
+   "roadmap_reason": "open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7)"
   },
   {
    "id": "MIN-G",
@@ -8739,8 +9858,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Mining & Industrial Development expansion"
   },
   {
    "id": "MIN-L5",
@@ -8775,8 +9902,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "mining level 5 is a proposal pending later confirmation"
   },
   {
    "id": "MP-01",
@@ -8816,9 +9951,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: multiplayer",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "multiplayer",
+   "roadmap_gate": "",
+   "roadmap_reason": "the multiplayer track stays isolated on its own branch until the owner authorizes integration"
   },
   {
    "id": "OD-01",
@@ -8860,9 +10003,17 @@
      "date": "2026-10-20",
      "change": "related to EXP-A",
      "why": "owner directive 2026-10-20 registers Mining & Industrial Development"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits)"
   },
   {
    "id": "OD-02",
@@ -8899,9 +10050,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "OD-03",
@@ -8938,9 +10097,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "OD-04",
@@ -8977,9 +10144,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "OD-05",
@@ -9016,9 +10191,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered"
   },
   {
    "id": "OD-06",
@@ -9055,9 +10238,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered"
   },
   {
    "id": "OD-07",
@@ -9094,9 +10285,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "OD-08",
@@ -9133,9 +10332,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "property, farming and arbitrage questions the settlement economy needs answered"
   },
   {
    "id": "OD-09",
@@ -9172,9 +10379,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "OPS-01",
@@ -9291,9 +10506,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "OWN-03",
@@ -9520,9 +10743,17 @@
      "date": "2026-10-19",
      "change": "PARTIALLY IMPLEMENTED -> PARTIALLY IMPLEMENTED",
      "why": "everything but the stable Android key is done; that remains as B13-15"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "signing key deferred by the owner; cloud saves and the formal platform entry need the owner"
   },
   {
    "id": "OWN-09",
@@ -9947,9 +11178,17 @@
      "date": "2026-10-19",
      "change": "COMPLETE AND VERIFIED -> PARTIALLY IMPLEMENTED",
      "why": "recovery pass: only 6 side-quest templates against the owner's 'a lot of these people should have basic side quests'"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "accessibility, escape safety, object uses, danger cues, campfire, more side quests: player experience outside the five builds"
   },
   {
    "id": "OWN-20",
@@ -10070,9 +11309,17 @@
      "date": "2026-10-19",
      "change": "COMPLETE AND VERIFIED -> PARTIALLY IMPLEMENTED",
      "why": "recovery pass: the music and sound sliders control nothing (no audio; FR-08)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "signing key deferred by the owner; cloud saves and the formal platform entry need the owner"
   },
   {
    "id": "OWN-23",
@@ -10306,9 +11553,17 @@
      "date": "2026-10-19",
      "change": "UNKNOWN — INVESTIGATION REQUIRED -> PARTIALLY IMPLEMENTED",
      "why": "living world built; isometric (DGA-D1/D2), magic beyond fireball (DGA-D9) and multiplayer (MP-01) open"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "living-world umbrella: isometric and magic remain open"
   },
   {
    "id": "OWN-29",
@@ -10343,9 +11598,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "PL1-01",
@@ -10456,9 +11719,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "PL1-04",
@@ -10532,9 +11803,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "PL1-06",
@@ -10606,9 +11885,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "PL1-08",
@@ -10717,9 +12004,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "production chains in player shops, coops, hired farm help, draught animals: industry and specialization"
   },
   {
    "id": "PL1-11",
@@ -10754,9 +12049,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "signing key deferred by the owner; cloud saves and the formal platform entry need the owner"
   },
   {
    "id": "PL1-12",
@@ -10796,9 +12099,17 @@
      "date": "2026-10-19",
      "change": "COMPLETE AND VERIFIED -> PARTIALLY IMPLEMENTED",
      "why": "Build 14 audit: pickable in the village; the overworld draws no red flowers"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C)"
   },
   {
    "id": "PL1-13",
@@ -10833,9 +12144,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "PL2-001",
@@ -11129,9 +12448,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "expandable property is settlement growth"
   },
   {
    "id": "PL2-009",
@@ -11203,9 +12530,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "PL2-011",
@@ -11314,9 +12649,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (art needed)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "art needed",
+   "roadmap_reason": "art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives"
   },
   {
    "id": "PL2-014",
@@ -11351,9 +12694,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "expandable property is settlement growth"
   },
   {
    "id": "PL2-015",
@@ -11388,9 +12739,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "production chains in player shops, coops, hired farm help, draught animals: industry and specialization"
   },
   {
    "id": "Q-03",
@@ -11464,9 +12823,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "code done in earlier builds; only the real-device check remains, done with the Build 15 package"
   },
   {
    "id": "Q-05",
@@ -11582,9 +12949,17 @@
      "date": "2026-10-19",
      "change": "BLOCKED -> BLOCKED",
      "why": "investigated; the decision is OD-01 (deposits) and WR-01 (wildlife, approved since)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "Q-10",
@@ -11619,9 +12994,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner action (owner/external)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner action",
+   "roadmap_gate": "owner/external",
+   "roadmap_reason": "only the owner (or the environment's settings) can do this"
   },
   {
    "id": "Q-11",
@@ -11656,9 +13039,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "REC-001",
@@ -11694,8 +13085,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "orphans and adoption: households surviving the loss of a provider (EQ-04)"
   },
   {
    "id": "REC-002",
@@ -11733,8 +13132,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+ (owner/external)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "owner/external",
+   "roadmap_reason": "over-the-air updates need the Hot Attic Games Mote repository"
   },
   {
    "id": "REC-003",
@@ -11770,8 +13177,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "release configuration check (target Android API) before the next package"
   },
   {
    "id": "REC-004",
@@ -11807,8 +13222,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "documentation catch-up (designer spec merge, stale docs) so later builds start from current docs"
   },
   {
    "id": "REC-005",
@@ -11881,8 +13304,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "bandit factions, skeletons, castles, dungeons: combat content outside the five builds"
   },
   {
    "id": "REC-007",
@@ -11923,8 +13354,16 @@
      "date": "2026-10-20",
      "change": "related to EXP-B",
      "why": "owner directive 2026-10-20 registers Settlement Advancement & Regional Economy"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "real separate settlements and near/far simulation tiers need a larger world map"
   },
   {
    "id": "REC-008",
@@ -11960,8 +13399,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "real separate settlements and near/far simulation tiers need a larger world map"
   },
   {
    "id": "REC-009",
@@ -11997,8 +13444,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner"
   },
   {
    "id": "REC-010",
@@ -12034,8 +13489,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "REC-011",
@@ -12071,8 +13534,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner"
   },
   {
    "id": "REC-012",
@@ -12108,8 +13579,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "archery, combat style, main storyline, Tiny Ranch pack: deferred or held by the owner"
   },
   {
    "id": "REC-013",
@@ -12147,8 +13626,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "wear and maintenance give tools, supports and carts real upkeep (industrial chains)"
   },
   {
    "id": "REC-014",
@@ -12184,8 +13671,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: owner decision (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "waiting on an owner decision, not development work"
   },
   {
    "id": "REC-015",
@@ -12305,8 +13800,16 @@
      "date": "2026-10-19",
      "change": "recovered and entered in the register",
      "why": "second historical recovery pass (Build 14 readiness directive Part III)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "documentation catch-up (designer spec merge, stale docs) so later builds start from current docs"
   },
   {
    "id": "REL-14-16",
@@ -12366,8 +13869,16 @@
      "date": "2026-10-19",
      "change": "commit 7dbae4f; next_action",
      "why": "Build 14 released as a private draft from 7dbae4f (run 39315420666); conditions checked in BUILD_14_PACKET.md; condition 5 gap on the release page fixed in release.yml for Builds 15-16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "the release authorization covering Builds 15 and 16"
   },
   {
    "id": "REQ-BANDIT",
@@ -12460,6 +13971,47 @@
    "acceptance_derived": true
   },
   {
+   "id": "ROAD-01",
+   "title": "Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment",
+   "kind": "decision",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "These are the intended build assignments. If a technical dependency requires changing their sequence, explain why before changing the roadmap.",
+   "description": "Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment",
+   "source": "owner messages 2026-10-20 (chat)",
+   "approval": "owner",
+   "acceptance": [
+    "Every open item carries a target build or an explicit out-of-scope, owner-decision or owner-action assignment",
+    "Sequence changes only after explaining the dependency to the owner",
+    "Builds 17-19 not started without authorization"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner messages 2026-10-20 (chat)"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "the roadmap record itself, kept current from Build 15"
+  },
+  {
    "id": "SAVE-00",
    "title": "Save continuity across separate test builds (Android reinstall): user-selected save location or Android-supported export/import; permanent signing key deferred",
    "kind": "approved",
@@ -12510,8 +14062,16 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
      "why": "all nine parts implemented and tested on PC; Android device check (export, uninstall, reinstall, import) required"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SAVE-01",
@@ -12592,8 +14152,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SAVE-03",
@@ -12634,8 +14202,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SAVE-04",
@@ -12678,8 +14254,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SAVE-05",
@@ -12723,8 +14307,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "Settings > Saves: copy, keep a copy up to date, import, via the native picker (Android SAF built into Godot 4.7); tested on PC paths; screenshot looked at; the phone check is pending"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "the Android export/uninstall/import check on a phone"
   },
   {
    "id": "SAVE-06",
@@ -12764,8 +14356,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SAVE-07",
@@ -12805,8 +14405,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SAVE-08",
@@ -12847,8 +14455,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SAVE-09",
@@ -12889,8 +14505,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; implementation",
      "why": "implemented in SaveTransfer and main.gd; save_transfer_test (21 checks) and start_test"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "save continuity is code-complete; verified with the Build 15 package"
   },
   {
    "id": "SET-A",
@@ -12935,8 +14559,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18 (needed during 17)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "needed during 17",
+   "roadmap_reason": "the expansion's design phase; its capability schema should be designed during Build 17 so MIN-D can use it"
   },
   {
    "id": "SET-B",
@@ -12983,8 +14615,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Settlement Advancement & Regional Economy expansion"
   },
   {
    "id": "SET-C",
@@ -13031,8 +14671,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Settlement Advancement & Regional Economy expansion"
   },
   {
    "id": "SET-D",
@@ -13079,8 +14727,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "the Settlement Advancement & Regional Economy expansion"
   },
   {
    "id": "SET-E",
@@ -13127,8 +14783,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "real separate settlements and near/far simulation tiers need a larger world map"
   },
   {
    "id": "SJD-A",
@@ -13172,8 +14836,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "the judgment system's Gate A is the Build 16 baseline itself"
   },
   {
    "id": "SJD-B",
@@ -13219,8 +14891,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "SJD-C",
@@ -13266,8 +14946,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "SJD-D",
@@ -13313,8 +15001,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "SJD-E",
@@ -13360,8 +15056,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "SJD-F",
@@ -13407,8 +15111,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "SJD-G",
@@ -13454,8 +15166,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "SJD-H",
@@ -13501,8 +15221,16 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "the NPC Judgment System expansion"
   },
   {
    "id": "SJD-Q01",
@@ -13512,7 +15240,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13527,7 +15255,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13537,8 +15265,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q02",
@@ -13548,7 +15289,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13563,7 +15304,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13573,8 +15314,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q03",
@@ -13584,7 +15338,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13599,7 +15353,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13609,8 +15363,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q04",
@@ -13620,7 +15387,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: Should very large GOOD and BAD totals with NET near 0 create ambivalence behaviour?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13635,7 +15402,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13645,8 +15412,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q05",
@@ -13656,7 +15436,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: How much may prior judgment bias interpretation of ambiguous events?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13671,7 +15451,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13681,8 +15461,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q06",
@@ -13692,7 +15485,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: How should confidence and rumours influence points: multiplier, threshold, or separate belief layer?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13707,7 +15500,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13717,8 +15510,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q07",
@@ -13728,7 +15534,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: How far should gossip spread; should reach depend on social proximity and personality?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13743,7 +15549,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13753,8 +15559,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q08",
@@ -13764,7 +15583,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: How should legal guilt, moral judgment and personal loyalty interact?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13779,7 +15598,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13789,8 +15608,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q09",
@@ -13800,7 +15632,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: Always highest utility, or sometimes near-optimal via seeded randomness?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13815,7 +15647,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13825,8 +15657,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q10",
@@ -13836,7 +15681,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: What judgment information, if any, can the player see?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13851,7 +15696,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13861,8 +15706,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q11",
@@ -13872,7 +15730,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: How should memory persistence and forgiveness vary by severity?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13887,7 +15745,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13897,8 +15755,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q12",
@@ -13908,7 +15779,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: What makes an event important enough to score?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13923,7 +15794,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13933,8 +15804,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q13",
@@ -13944,7 +15828,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: How should individual decision weights be learned, configured or tuned?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13959,7 +15843,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -13969,8 +15853,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "SJD-Q14",
@@ -13980,7 +15877,7 @@
    "owner_wording": null,
    "description": "Judgment open decision: Which domain gets the first live integration after the prototype?",
    "source": "docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf",
-   "approval": "open owner decision in the supporting document (section 19); defaults to be recommended at Gate B",
+   "approval": "open owner decision in the supporting document (section 19); stays unresolved until the owner answers",
    "acceptance": [
     "As stated in the source document"
    ],
@@ -13995,7 +15892,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "recommend a default at Gate B; ask the owner only for irreversible gameplay semantics",
+   "next_action": "await the owner's answer; no default is chosen on the owner's behalf (owner 2026-10-20)",
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
@@ -14005,8 +15902,21 @@
      "date": "2026-10-20",
      "change": "entered in the register",
      "why": "owner directive 2026-10-20 (two decisions, three expansions)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19 (owner decision first)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next action",
+     "why": "owner 2026-10-20: the 14 judgment questions stay unresolved until the owner answers them"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
   },
   {
    "id": "VP-01",
@@ -14047,9 +15957,17 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "requirements preservation directive (migration)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "village politics (offices, voting, elections) is approved but in none of the five builds; voting weighs judgment, so after 19"
   },
   {
    "id": "WDR-001",
@@ -14128,8 +16046,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "material interdependency, meaningful recipes and finite resources are the mining expansion's rules"
   },
   {
    "id": "WDR-002",
@@ -14208,8 +16134,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules"
   },
   {
    "id": "WDR-003",
@@ -14288,8 +16222,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "material interdependency, meaningful recipes and finite resources are the mining expansion's rules"
   },
   {
    "id": "WDR-004",
@@ -14368,8 +16310,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules"
   },
   {
    "id": "WDR-005",
@@ -14448,8 +16398,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 16",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "living-world independence is the Build 16 objective"
   },
   {
    "id": "WDR-006",
@@ -14608,8 +16566,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15"
   },
   {
    "id": "WDR-008",
@@ -14691,8 +16657,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15"
   },
   {
    "id": "WDR-009",
@@ -14771,8 +16745,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 19",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "19",
+   "roadmap_gate": "",
+   "roadmap_reason": "emergent gameplay is the judgment system's purpose"
   },
   {
    "id": "WDR-010",
@@ -14854,8 +16836,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15"
   },
   {
    "id": "WDR-011",
@@ -14934,8 +16924,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules"
   },
   {
    "id": "WDR-012",
@@ -15014,8 +17012,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 18",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "18",
+   "roadmap_gate": "",
+   "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules"
   },
   {
    "id": "WDR-013",
@@ -15094,8 +17100,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 17",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "17",
+   "roadmap_gate": "",
+   "roadmap_reason": "material interdependency, meaningful recipes and finite resources are the mining expansion's rules"
   },
   {
    "id": "WDR-014",
@@ -15174,8 +17188,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "graveyards, legacy, life chronicle: approved, in none of the five builds"
   },
   {
    "id": "WDR-015",
@@ -15254,8 +17276,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "village politics (offices, voting, elections) is approved but in none of the five builds; voting weighs judgment, so after 19"
   },
   {
    "id": "WDR-016",
@@ -15334,8 +17364,16 @@
      "date": "2026-10-19",
      "change": "entered in the register",
      "why": "owner's World Design Rules document supplied; compliance tracked separately from the rule text"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 20+",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
-   ]
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "",
+   "roadmap_reason": "bandit factions, skeletons, castles, dungeons: combat content outside the five builds"
   },
   {
    "id": "WDR-017",
@@ -15501,9 +17539,56 @@
      "date": "2026-10-19",
      "change": "notes",
      "why": "owner 2026-10-19: 'keep the defaults on all three refuge questions' (release below half capacity, seasons and intervals as proposed, refuges hidden)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap: 15 (device check)",
+     "why": "owner's five-build roadmap reconciliation 2026-10-20"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "target_build": "15",
+   "roadmap_gate": "device check",
+   "roadmap_reason": "wildlife sustainability; code and tests done, play check remains"
+  },
+  {
+   "id": "WR-02",
+   "title": "Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together",
+   "source": "WR-01 agent report 2026-10-19",
+   "approval": "within the owner's Build 16 nature-sustainability scope (EQ-02)",
+   "acceptance": [
+    "Over capacity, the weakest or hungriest suffer first rather than the whole herd at once"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "WR-01 agent report 2026-10-19"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "",
+   "roadmap_reason": "nature sustainability (EQ-02)"
   }
  ]
 }
