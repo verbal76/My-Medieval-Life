@@ -10,9 +10,14 @@ Checks (any failure exits 1):
   - parent, depends_on and superseded_by name existing ids; SUPERSEDED has a successor and nothing else does;
     CANCELED BY OWNER cites the owner's cancellation;
   - COMPLETE AND VERIFIED carries evidence (implementation, tests or commits) and has no open playtest requirement;
-  - documents named in sources exist;
+  - documents named in sources exist; the roadmap's anchor entries (ROAD-01, EQ-16, EXP-A/B/C, SJD-Q01..Q14) exist
+    and each expansion names its specification; an open entry carries a target build; an owner decision leaves
+    BLOCKED only with the owner's answer;
+  - the project memory (MEM-01): docs/PROJECT_MEMORY.md and docs/CURRENT_DEVELOPMENT_STATE.md exist, every path they
+    name exists, and the state file names every entry in ACTIVE DEVELOPMENT;
   - with --against REF: every id in the register at REF is still present (ids are never deleted or recycled), and
-    every status change since REF has a new history entry saying why. A register moved to a new path is found
+    every status change or change of target build since REF has a new history entry saying why; an owner
+    decision never turns into another kind without the owner's answer. A register moved to a new path is found
     through its "previous_paths".
 
     python3 tools/check_requirements.py                 # validate
@@ -38,7 +43,13 @@ KINDS = {"approved": "Approved requirement", "proposal": "Proposal awaiting an o
          "decision": "Open owner decision", "rule": "World design rule", "idea": "Unapproved idea",
          "rejected": "Rejected proposal"}
 ID_RE = re.compile(r"^[A-Z][A-Z0-9]*(-[A-Z0-9.]+)+$")
-DOC_RE = re.compile(r"\b((?:docs|tools|game|tests)/[\w./-]+\.(?:md|json|py|gd|cfg))")
+DOC_RE = re.compile(r"\b((?:docs|tools|game|tests)/[\w./-]+\.(?:md|json|py|gd|cfg|pdf|txt))")
+## The project memory (MEM-01, owner 2026-10-20): the entry point and the session handoff, checked with the register.
+MEMORY = REPO / "docs" / "PROJECT_MEMORY.md"
+STATE = REPO / "docs" / "CURRENT_DEVELOPMENT_STATE.md"
+## Entries the roadmap rests on: they must stay in the register, and an expansion's specification must exist.
+ANCHORS = ["ROAD-01", "EQ-16", "EXP-A", "EXP-B", "EXP-C"] + ["SJD-Q%02d" % i for i in range(1, 15)]
+LINK_RE = re.compile(r"`((?:docs|tools|game|tests|\.github|\.claude)/[^`*\s]+|CLAUDE\.md)`")
 
 
 def load(text):
@@ -98,6 +109,10 @@ def validate(d, check_docs=True):
                 errors.append("%s: SUPERSEDED needs superseded_by naming an existing requirement" % rid)
         elif sup:
             errors.append("%s: superseded_by is set but the status is %s" % (rid, r.get("status")))
+        # an owner decision is resolved only by the owner's words (MEM-01): without them it stays BLOCKED
+        if r.get("kind") == "decision" and r.get("status") != "BLOCKED" and not (
+                str(r.get("owner_wording") or "").strip() or str(r.get("owner_answer") or "").strip()):
+            errors.append("%s: an open owner decision cannot leave BLOCKED without the owner's answer (owner_answer)" % rid)
         if r.get("status") == "CANCELED BY OWNER" and not str(r.get("canceled_by_owner") or "").strip():
             errors.append("%s: CANCELED BY OWNER must cite the owner's cancellation (canceled_by_owner)" % rid)
         if r.get("status") == "COMPLETE AND VERIFIED" and r.get("kind") == "approved":
@@ -109,6 +124,13 @@ def validate(d, check_docs=True):
             for m in DOC_RE.findall(str(r.get("source") or "")):
                 if not (REPO / m).exists():
                     errors.append("%s: source names %s, which does not exist" % (rid, m))
+    for a in ANCHORS:
+        if a not in by_id:
+            errors.append("%s: the roadmap names it, but it is not in the register" % a)
+        elif a.startswith("EXP-") and not DOC_RE.search(str(by_id[a].get("source") or "")):
+            errors.append("%s: an expansion must name its specification document in its source" % a)
+    if check_docs:
+        errors += memory_errors(d)
     # parent chains must not loop
     for r in reqs:
         seen, p = set(), r.get("parent")
@@ -118,6 +140,26 @@ def validate(d, check_docs=True):
                 break
             seen.add(p)
             p = by_id.get(p, {}).get("parent")
+    return errors
+
+
+## The memory files (MEM-01): both exist; every repository path they name exists; the handoff names every
+## requirement in ACTIVE DEVELOPMENT, so a new session sees all work in progress.
+def memory_errors(d):
+    errors = []
+    for f in (MEMORY, STATE):
+        if not f.exists():
+            errors.append("%s is missing (the project memory, MEM-01)" % f.relative_to(REPO))
+            continue
+        for m in sorted(set(LINK_RE.findall(f.read_text()))):
+            path = m.rstrip("/.,;:)")
+            if not (REPO / path).exists() and not list(REPO.glob(path)):
+                errors.append("%s names %s, which does not exist" % (f.relative_to(REPO), path))
+    if STATE.exists():
+        text = STATE.read_text()
+        for r in d.get("requirements", []):
+            if r.get("status") == "ACTIVE DEVELOPMENT" and not re.search(r"\b%s\b" % re.escape(r["id"]), text):
+                errors.append("%s is in ACTIVE DEVELOPMENT but docs/CURRENT_DEVELOPMENT_STATE.md does not mention it" % r["id"])
     return errors
 
 
@@ -134,6 +176,12 @@ def compare(old, new):
         changed = o.get("status") != n.get("status") or o.get("kind") != n.get("kind")
         if changed and len(n.get("history") or []) <= len(o.get("history") or []):
             errors.append("%s: %s -> %s with no new history entry saying why" % (o["id"], o.get("status"), n.get("status")))
+        grew = len(n.get("history") or []) > len(o.get("history") or [])
+        if o.get("target_build") and o.get("target_build") != n.get("target_build") and not grew:
+            errors.append("%s: moved from build %s to %s with no new history entry saying why" % (
+                o["id"], o.get("target_build"), n.get("target_build")))
+        if o.get("kind") == "decision" and n.get("kind") != "decision" and not str(n.get("owner_answer") or "").strip():
+            errors.append("%s: an owner decision became %s without the owner's answer (owner_answer)" % (o["id"], n.get("kind")))
         if len(n.get("history") or []) < len(o.get("history") or []):
             errors.append("%s: history entries were removed" % o["id"])
     return errors

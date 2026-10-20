@@ -1,5 +1,7 @@
 # Restart handoff
 
+> **Historical (superseded 2026-10-20, MEM-01).** The current handoff and next tasks are in `docs/CURRENT_DEVELOPMENT_STATE.md`; start every session from `docs/PROJECT_MEMORY.md`. The handoff below is kept as it was for the record and is not current.
+
 For whoever resumes the work (an agent in a new session, or the owner). The queue is
 `docs/DEVELOPMENT_QUEUE.md`; the rules are in CLAUDE.md. Update this file whenever work stops.
 

@@ -88,5 +88,61 @@ class LossDetectionTest(unittest.TestCase):
         self.assertTrue(old is None or old["format"] == "mml-requirements/1")
 
 
+class RoadmapAndMemoryTest(unittest.TestCase):
+    """MEM-01 (owner 2026-10-20): the safeguards that keep the roadmap and the project memory from drifting."""
+
+    def _by(self, d, rid):
+        return next(r for r in d["requirements"] if r["id"] == rid)
+
+    def test_open_entry_needs_a_target_build(self):
+        new = copy.deepcopy(REGISTER)
+        r = _open_approved(new)
+        r["target_build"] = "21"
+        self.assertTrue(any(r["id"] in e and "roadmap target" in e for e in cr.validate(new, check_docs=False)))
+
+    def test_open_decision_is_not_silently_resolved(self):
+        new = copy.deepcopy(REGISTER)
+        q = self._by(new, "SJD-Q01")
+        q["status"] = "APPROVED — NOT STARTED"
+        q["history"].append({"date": "2026-10-20", "change": "decided", "why": "test"})
+        self.assertTrue(any("SJD-Q01" in e and "owner_answer" in e for e in cr.validate(new, check_docs=False)))
+        q["status"], q["kind"] = "BLOCKED", "approved"
+        q["approval"] = "agent"
+        self.assertTrue(any("SJD-Q01" in e and "owner decision became" in e for e in cr.compare(REGISTER, new)))
+
+    def test_moving_build_without_history_is_detected(self):
+        new = copy.deepcopy(REGISTER)
+        r = next(x for x in new["requirements"] if x.get("target_build") == "17")
+        r["target_build"] = "16"
+        self.assertTrue(any(r["id"] in e and "moved from build" in e for e in cr.compare(REGISTER, new)))
+
+    def test_roadmap_anchors_and_expansion_specs_are_required(self):
+        new = copy.deepcopy(REGISTER)
+        new["requirements"] = [r for r in new["requirements"] if r["id"] != "EXP-B"]
+        self._by(new, "EXP-A")["source"] = "chat"
+        errors = cr.validate(new, check_docs=False)
+        self.assertTrue(any(e.startswith("EXP-B") for e in errors) and any(e.startswith("EXP-A") for e in errors), errors)
+        for a in cr.ANCHORS:
+            if a.startswith("EXP-"):
+                src = self._by(REGISTER, a)["source"]
+                self.assertTrue(all((REPO / m).exists() for m in cr.DOC_RE.findall(src)), a)
+
+    def test_memory_files_cover_active_work(self):
+        self.assertTrue(cr.MEMORY.exists() and cr.STATE.exists())
+        self.assertEqual(cr.memory_errors(REGISTER), [])
+        new = copy.deepcopy(REGISTER)
+        fake = copy.deepcopy(_open_approved(new))
+        fake["id"], fake["status"] = "ZZ-999", "ACTIVE DEVELOPMENT"
+        new["requirements"].append(fake)
+        self.assertTrue(any("ZZ-999" in e for e in cr.memory_errors(new)))
+
+    def test_claude_md_starts_sessions_from_the_memory(self):
+        text = (REPO / "CLAUDE.md").read_text()
+        head = text[:text.index("## 1.")]
+        self.assertIn("Session start", head)
+        self.assertIn("docs/PROJECT_MEMORY.md", head)
+        self.assertIn("docs/CURRENT_DEVELOPMENT_STATE.md", head)
+
+
 if __name__ == "__main__":
     unittest.main()

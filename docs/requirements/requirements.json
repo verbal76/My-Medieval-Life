@@ -9494,6 +9494,55 @@
    "acceptance_derived": true
   },
   {
+   "id": "MEM-01",
+   "title": "Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The GitHub repository must be capable of restoring the complete development state without relying on previous conversation history.",
+   "description": "Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test",
+   "source": "docs/directives/2026-10-20_project_memory_hardening.md",
+   "approval": "owner directive 2026-10-20 (approved infrastructure and documentation task)",
+   "acceptance": [
+    "docs/PROJECT_MEMORY.md links every authoritative record",
+    "docs/CURRENT_DEVELOPMENT_STATE.md records the active build, branch, last verified commit, work in progress, tests, defects, next tasks, owner decisions and fragile processes",
+    "CLAUDE.md carries an explicit session-start procedure, verified discoverable",
+    "Every approved requirement carries id, source, approval, build, dependencies, status, acceptance, evidence when complete, blockers",
+    "Validation: stable ids, expansion documents exist, known build targets, evidence for completed items, open decisions not silently resolved, no disappearance",
+    "A fresh agent recovers the seven listed facts from committed contents alone"
+   ],
+   "implementation": "docs/PROJECT_MEMORY.md, docs/CURRENT_DEVELOPMENT_STATE.md, CLAUDE.md section 0, tools/check_requirements.py (memory_errors, ANCHORS, decision and target-build checks)",
+   "tests": "tests/test_requirements.py RoadmapAndMemoryTest",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "fresh-session recovery test from a fresh clone of staging; fix gaps; then close",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_project_memory_hardening.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "tests; implementation; next_action",
+     "why": "index, handoff, CLAUDE.md section 0 and validator safeguards written; the fresh-session recovery test is next"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "",
+   "roadmap_reason": "project memory infrastructure, approved alongside Build 15-16 work"
+  },
+  {
    "id": "MIN-A",
    "title": "Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests",
    "kind": "approved",
@@ -10793,9 +10842,15 @@
      "date": "2026-10-19",
      "change": "UNKNOWN — INVESTIGATION REQUIRED -> COMPLETE AND VERIFIED",
      "why": "a process decision, recorded and followed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "owner_answer cited",
+     "why": "MEM-01 check: a resolved owner decision must cite the owner's answer"
     }
    ],
-   "acceptance_derived": true
+   "acceptance_derived": true,
+   "owner_answer": "Owner decision recorded in docs/DECISIONS.md (2026-10-18): Build 8 authorized as a private testing build only; no merge into main, no public release."
   },
   {
    "id": "OWN-10",

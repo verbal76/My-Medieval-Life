@@ -11,7 +11,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 63 |
-| ACTIVE DEVELOPMENT | 5 |
+| ACTIVE DEVELOPMENT | 6 |
 | PARTIALLY IMPLEMENTED | 35 |
 | IMPLEMENTED — TESTING REQUIRED | 3 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
@@ -21,8 +21,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **317** |
-| Outstanding (not complete, superseded or canceled) | 175 |
+| **Total approved** | **318** |
+| Outstanding (not complete, superseded or canceled) | 176 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 26 open owner decision, 19 world design rule, 1 unapproved idea.
 
@@ -33,7 +33,7 @@ must happen first (a device check, an owner decision, art). Completed entries ar
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 60 | 58 |
+| Build 15: simulation stabilization | 61 | 59 |
 | Build 16: long-term equilibrium and validation | 20 | 20 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -42,9 +42,9 @@ must happen first (a device check, an owner decision, art). Completed entries ar
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **231** | **175** |
+| **Total open** | **232** | **176** |
 
-### Build 15: simulation stabilization (60)
+### Build 15: simulation stabilization (61)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -87,6 +87,7 @@ must happen first (a device check, an owner decision, art). Completed entries ar
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | APPROVED — NOT STARTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED |  | simulation harness and conservation checks the stabilization work depends on |
+| MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | ACTIVE DEVELOPMENT |  | project memory infrastructure, approved alongside Build 15-16 work |
 | PL1-03 | Merchant quantity control | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | PL1-05 | current/max inside bars | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | Q-04 | Resources & Gathering journal page | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
@@ -415,13 +416,14 @@ Automated tests do not count as device verification.
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 |  |  |  |
 
-## ACTIVE DEVELOPMENT (5)
+## ACTIVE DEVELOPMENT (6)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  |  |
 | EQ-07 | Investigate and correct the 365-day failures: population 100 to 69, wildlife to zero, no houses built | docs/directives/2026-10-19_build16_world_equilibrium.md | branch staging/my-medieval-life | after B14R-12 | verify with 100- and 365-day runs on several seeds; wildlife part via WR-01 |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
+| MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | docs/directives/2026-10-20_project_memory_hardening.md | tests/test_requirements.py RoadmapAndMemoryTest |  | fresh-session recovery test from a fresh clone of staging; fix gaps; then close |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: EQ-07 housing/population fix, WR-01 refuges; then release when the conditions hold |
 

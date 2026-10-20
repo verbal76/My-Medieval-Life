@@ -1,5 +1,7 @@
 # Development queue
 
+> **Historical (superseded 2026-10-20, MEM-01).** The current handoff and next tasks are in `docs/CURRENT_DEVELOPMENT_STATE.md`; start every session from `docs/PROJECT_MEMORY.md`. The queue below is kept as it was for the record and is not current.
+
 The prioritized queue of approved work (owner directives of 2026-10-18). Development is always
 active; only builds, releases and merges into `main` wait for the owner. When a task finishes, the
 next ready task by priority starts. Bugs from the owner's testing go into

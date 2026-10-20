@@ -4,6 +4,26 @@ Hot Attic Games. Repository `verbal76/My-Medieval-Life`. This file is the single
 rules for every agent and contributor. If another document disagrees with it, this file wins until
 the owner says otherwise. Update it in the same PR as any change to the workflow it describes.
 
+## 0. Session start (mandatory, every session; owner directive 2026-10-20, MEM-01)
+
+The repository is the project's memory; conversation memory never is. Before any new work:
+
+1. Confirm the repository (`verbal76/My-Medieval-Life`) and that you are on `staging/my-medieval-life`
+   (`git fetch origin staging/my-medieval-life && git status`), and note its head commit.
+2. Read `docs/PROJECT_MEMORY.md`, the index of where every record lives.
+3. Read `docs/CURRENT_DEVELOPMENT_STATE.md`, the handoff: active build, work in progress, last tests,
+   known defects, next approved tasks, owner decisions, fragile processes.
+4. Read the register's summary and Roadmap in `docs/DEVELOPMENT_LEDGER.md` (generated from
+   `docs/requirements/requirements.json`), `docs/WORLD_DESIGN_RULES.md` and `docs/EXPANSION_ROADMAP.md`.
+5. Run `python3 tools/check_requirements.py`: it must report 0 problems.
+6. Continue from the next approved task named in the state file. Never start Builds 17-19, answer an open
+   owner decision, merge into `main` or `wip/multiplayer` into staging, or publish outside the release
+   authorization in force.
+
+Before a session ends, a context handoff or a build: update `docs/CURRENT_DEVELOPMENT_STATE.md` and every
+touched register entry, run `python3 tools/check_requirements.py --write`, commit and push to staging, and
+confirm the remote head.
+
 ## 1. Purpose and status
 
 My Medieval Life is a 2D medieval game built from 16x16 pixel-art packs (mostly by Shade). The
@@ -172,7 +192,7 @@ generated data. One implementation per concern.
   ask, and continue with other approved tasks; when an approved task is done, take the next from
   `docs/DEVELOPMENT_PLAN.md` without waiting to be told. Scheduled check-ins only preserve work; they
   neither start nor end development. Only an explicit owner instruction to pause stops approved work.
-  If a session must end, push a handoff (`docs/HANDOFF.md`) naming the next approved task.
+  If a session must end, update and push `docs/CURRENT_DEVELOPMENT_STATE.md` naming the next approved task.
 - Commits: one logical change each, imperative subject (e.g. "Add rivers and roads to the Puny World
   generator"), and a body that says what changed and why.
 - Before every push, run:
@@ -264,7 +284,7 @@ generated data. One implementation per concern.
 ## 9a. Requirements register (owner, 2026-10-19; standing, do not remove or weaken without the owner's approval)
 
 The repository remembers what the owner asked for, not the agent. `docs/requirements/requirements.json` is the one
-register (`docs/DEVELOPMENT_LEDGER.md` is generated from it; `docs/DEVELOPMENT_QUEUE.md` only orders the work).
+register (`docs/DEVELOPMENT_LEDGER.md` is generated from it; `docs/CURRENT_DEVELOPMENT_STATE.md` orders the next tasks; `docs/DEVELOPMENT_QUEUE.md` is historical).
 
 - **Capture at once.** Whenever the owner authorizes a feature, fix, system, rule or design change (a directive, a
   message, an answer to a question), before working on it: search the register for existing coverage; add or update the
@@ -282,11 +302,11 @@ register (`docs/DEVELOPMENT_LEDGER.md` is generated from it; `docs/DEVELOPMENT_Q
 - **Enforced.** `tools/check_requirements.py --against <ref>` fails if an entry disappears or changes status without a
   history line; it runs in CI (against the previous commit), in the pre-push hook (against the remote branch) and in
   the pre-push checks below. `tests/test_requirements.py` proves it with a simulated deletion.
-- **Session start.** Before new work: read the register's open entries (the ledger's counts and queues), the queue,
+- **Session start.** Follow section 0. Before new work: read the register's open entries (the ledger's counts and queues), the queue,
   blocked and deferred items, the current build target, branches and worktrees (`git worktree list`), regressions,
   pending owner decisions, `docs/WORLD_DESIGN_RULES.md` and the manifest. Conversation memory is never the record.
 - **Handoff and build boundaries.** Before a session ends, a context handoff or a build: update every touched entry
-  (status, branch, commit, tests, known failures, next action) and push; `docs/HANDOFF.md` names the active ids, branch,
+  (status, branch, commit, tests, known failures, next action) and push; `docs/CURRENT_DEVELOPMENT_STATE.md` names the active ids, branch,
   commit, uncommitted work, failures, blockers and next actions and points to the register instead of copying it. A
   build never starts a new backlog: unfinished entries carry over with their evidence.
 - **Agents.** Every agent uses the register's ids, never makes a second list, and a completion claim needs evidence
