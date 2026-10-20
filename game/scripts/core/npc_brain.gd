@@ -749,11 +749,7 @@ func _plan_eat(n: NPC) -> bool:
 		n.doing = "eating"
 		n.plan = [work(10, "eat", {}, "idle")]
 		return true
-	# a household's food is shared (FSE-17 counts what every member holds): food a member carries feeds the hungry one
-	# (B7-015, FSE-16: elders starved while a member carried 79 milk, a farmer while another carried 109; the reckoning
-	# called the household fed and relief never came)
-	if not hh.is_empty() and _plan_share_food(n):
-		return true
+
 	# who pays is decided at the price asked (B7-015: a fixed 2-coin test sent people with 2 coins to a vendor whose
 	# cheapest meal cost 3 to 5, again and again until they starved, while the household's tab could have paid)
 	var payer: NPC = null
@@ -1543,27 +1539,39 @@ func _cook_at_home(n: NPC, pantry: Inventory) -> void:
 		w.stat("home_roasted")
 
 
-## A hungry `n` takes food a member of their household carries: cooked or raw food is eaten where it is handed over,
-## grain is taken home to be cooked. Members' pockets first by the food they hold (the most first). True when planned.
-func _plan_share_food(n: NPC) -> bool:
-	var best: NPC = null
-	var item := ""
-	for m: NPC in _members(n.household):
-		if m == n or not m.alive:
+## FSE-18 (owner, 2026-10-20: "keep the family food in a ... chest ... communal"): a villager at home puts the food they
+## carry for eating into the household's pantry, its family chest. Trade stock stays in the pack for sale (a food
+## vendor's stock; a producer's goods as far as buyers will take them, _sale_stock), the rest goes in; and a trader stocks
+## the chest up to the household's reserve horizon (OD-19's reserve_days) before keeping the rest to sell. (B7-015 after
+## FSE-17: elders starved while a member carried 79 milk no buyer would take.)
+func stock_family_chest(n: NPC) -> void:
+	if n.household < 0 or n.household >= w.households.size() or w.households[n.household].get("ended", false):
+		return
+	var pantry: Inventory = w.households[n.household].pantry
+	var short := household_day_food(n.household) * float(GameData.b("reserve_days")) - store_points([pantry])
+	for f in EDIBLE + ["meat"]:
+		var c := n.inv.count(f)
+		if c <= 0:
 			continue
-		for f in EDIBLE:
-			if m.inv.count(f) >= (2 if f == "wheat" else 1) and (best == null or m.inv.count(f) > best.inv.count(item)):
-				best = m
-				item = f
-	if best == null:
-		return false
-	n.doing = "eating from the family's stores"
-	if item == "wheat":
-		n.plan = [go(best.cell()), doit("share_food", {"from": best.id, "item": "wheat", "qty": 2})] + _home_meal(n)
-	else:
-		n.plan = [go(best.cell()), doit("share_food", {"from": best.id, "item": item, "qty": 1}), work(10, "eat", {"item": item}, "idle")]
-	w.stat("shared_food_meals")
-	return true
+		var put := c - mini(c, _sale_stock(n, f))
+		if short > 0.0 and put < c:
+			put = maxi(put, mini(c, ceili(short / maxf(1.0, food_points(f)))))
+		if put > 0 and w.transfer(n.inv, pantry, f, put):
+			short -= float(put) * food_points(f)
+			w.stat("family_chest_stocked", put)
+
+
+## How many of `f` that `n` carries are trade stock: all of a food vendor's (the tavern, the cook, the food merchant sell
+## from what they carry); for anyone else what their trade keeps back (a keeper's pen feed) and what buyers will take now
+## (the outlets' wants); food nobody buys from them is the family's.
+func _sale_stock(n: NPC, f: String) -> int:
+	if n.job in ["tavernkeeper", "cook"] or buy_role(n) == "merchant_food":
+		return n.inv.count(f)
+	var k := reserve(n, f)
+	for o: NPC in w.npcs:
+		if o.alive and o != n and o.household != n.household and OUTLETS.get(f, []).any(func(r): return o.job == r or buy_role(o) == r):
+			k += wants(o, f)
+	return k
 
 
 ## Whether `n`'s household can roast meat at home now: meat and a log between its pantry and `n`.
@@ -1834,6 +1842,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 	match what:
 		"enter":
 			n.doing = "asleep at home" if w.hour() >= SLEEP or w.hour() < WAKE else "at home"
+			if n.household >= 0 and n.home == str(w.households[n.household].home):
+				stock_family_chest(n)                # FSE-18: home, the family's food goes in the chest
 			return true
 		"leave":
 			n.anim = "idle"
@@ -1858,6 +1868,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return false
 		"eat_home":
 			var pantry: Inventory = w.households[n.household].pantry
+			stock_family_chest(n)                    # FSE-18
 			_cook_at_home(n, pantry)
 			for f in EDIBLE:
 				if pantry.has(f):
@@ -2103,11 +2114,6 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				w.stat("gov_wages", wage)
 				w.stat("gov_day_labour", wage)
 			return true
-		"share_food":                          # FSE-17: food handed over by a member of the household
-			var g := w.npc(int(a.get("from", -1)))
-			if g == null or not g.alive or g.household != n.household or g.pos.distance_to(n.pos) > 3.0:
-				return false
-			return w.transfer(g.inv, n.inv, str(a.item), mini(int(a.get("qty", 1)), g.inv.count(str(a.item))))
 		"take_pantry":
 			var pantry: Inventory = w.households[n.household].pantry
 			w.transfer(pantry, n.inv, a.item, mini(int(a.qty), pantry.count(a.item)))

@@ -14,7 +14,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 84 |
 | ACTIVE DEVELOPMENT | 9 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 15 |
+| IMPLEMENTED — TESTING REQUIRED | 16 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
@@ -22,8 +22,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **411** |
-| Outstanding (not complete, superseded or canceled) | 212 |
+| **Total approved** | **412** |
+| Outstanding (not complete, superseded or canceled) | 213 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 56 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 42 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 48 | 46 |
+| Build 16: long-term equilibrium and validation | 49 | 47 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 64 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **290** | **212** |
+| **Total open** | **291** | **213** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,7 +107,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (48)
+### Build 16: long-term equilibrium and validation (49)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -148,6 +148,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner instruction 2026-10-20, after the seed-2 starvation findings |
+| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | approved | IMPLEMENTED — TESTING REQUIRED | Build 16 in development (OVN-01) | owner instruction 2026-10-20 |
 | FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
 | FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
 | FSE-B12 | Hunting experience by one rule for the player and villagers | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | a defect found by the food-security audit (FSE-09) |
@@ -575,7 +576,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (15)
+## IMPLEMENTED — TESTING REQUIRED (16)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -592,6 +593,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | suites; then COMPLETE once a long run has exercised it or tests suffice |
 | FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | docs/directives/2026-10-20_agricultural_findings_followup.md | `9db091b`; reserve_test | after B7-015 | FSE-17 (relief sources) and the eating and cooking parity, then rerun seed 2 for 365 days and compare with the 5625505 baseline |
 | FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | owner message 2026-10-20 ('Relief should check all possible food stores') and the owner's answers to the agent's two clarifying questions the same day | reserve_test | after FSE-16 | Compare the 365-day runs (Actions, seeds 1-4) with the baselines; record in LONG_RUN_SIMULATION.md |
+| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | owner message 2026-10-20 ('cant we just keep the family food in a second chest? and have it be commuunal?') and the owner's answers to the agent's two questions the same day | reserve_test | after FSE-17 |  |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 

@@ -11199,6 +11199,60 @@
    "roadmap_reason": "owner instruction 2026-10-20, after the seed-2 starvation findings"
   },
   {
+   "id": "FSE-18",
+   "title": "The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first",
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "owner_wording": "cant we just keep the family food in a second chest? and have it be commuunal? (Answers: family food only: food kept for eating goes in, trade stock stays in the pack for sale, anything over what can be sold goes in, and the household eats from the chest before a trader sells the last of it. The player's house: yes, same rule.)",
+   "description": "The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first",
+   "source": "owner message 2026-10-20 ('cant we just keep the family food in a second chest? and have it be commuunal?') and the owner's answers to the agent's two questions the same day",
+   "approval": "owner instruction 2026-10-20",
+   "acceptance": [
+    "A villager home deposits the food they carry for eating into the household pantry; trade stock beyond what buyers will take goes in too; a trader stocks the chest to the household's reserve horizon before selling the rest",
+    "Household members eat from the chest (replacing the member-to-member taking of f8bf0bd)",
+    "The player's household chest follows the same rule; the player still chooses what to put in",
+    "Tests; conservation; the seed-2 year compared with the baseline"
+   ],
+   "implementation": "",
+   "tests": "reserve_test",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "FSE-17"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-20 ('cant we just keep the family food in a second chest? and have it be commuunal?') and the owner's answers to the agent's two questions the same day"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner instruction"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "Implemented (stock_family_chest, _sale_stock; the player's chest in World.necessity); tests in reserve_test.gd; all 27 suites pass; closes after the 365-day comparison"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner instruction 2026-10-20"
+  },
+  {
    "id": "FSE-B05",
    "title": "A pen whose keeper is gone is let again (its animals starved untended)",
    "kind": "approved",

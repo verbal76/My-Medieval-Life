@@ -184,19 +184,49 @@ func relief_sources(w: World, fam: NPC) -> void:
 	var ate: bool = w.brain._plan_eat(eater)
 	check(ate and str(eater.plan[0].get("act", "")) == "eat" and str(eater.plan[0].get("args", {}).get("item", "")) == "egg",
 		"parity: a villager with eggs in hand and nothing else eats an egg, as the player can (%s)" % eater.doing)
-	# the household's food is shared: a hungry member takes milk another member carries (B7-015 after FSE-17)
+	# FSE-18: the family chest. Home, a villager puts the food they carry for eating in the pantry; a producer keeps what
+	# buyers will take; a food vendor keeps its stock but stocks the chest to the reserve horizon first
 	strip_village(w, [b])
-	if mb.size() >= 2:
-		var giver: NPC = mb[1]
-		giver.inv.add("milk", 20)
-		eater.hunger = 10.0
-		eater.plan = []
-		var shared: bool = w.brain._plan_eat(eater)
-		var step: Dictionary = eater.plan[1] if eater.plan.size() > 1 else {}
-		check(shared and str(step.get("act", "")) == "share_food" and int(step.get("args", {}).get("from", -1)) == giver.id,
-			"FSE-17: a hungry villager eats the milk a member of the household carries (%s)" % eater.doing)
-		eater.pos = giver.pos
-		check(w.brain.act(eater, str(step.act), step.args) and eater.inv.count("milk") == 1 and giver.inv.count("milk") == 19, "FSE-17: the milk is handed over, one of it, nothing made")
+	var pb0: Inventory = w.households[b].pantry
+	for id in NPCBrain.EDIBLE:
+		pb0.items.erase(id)
+	var member: NPC = mb[0]
+	member.inv.add("apple", 6)
+	w.brain.stock_family_chest(member)
+	check(pb0.count("apple") == 6 and member.inv.count("apple") == 0, "FSE-18: home, a villager puts the apples they carry in the family chest")
+	var farmer18: NPC = w.npcs.filter(func(o): return o.alive and o.job == "farmer")[0]
+	var kp: Inventory = w.households[farmer18.household].pantry
+	for id in NPCBrain.EDIBLE:
+		kp.items.erase(id)
+	kp.add("pottage", 200)                              # the chest is full: only what buyers will not take goes in
+	farmer18.inv.add("milk", 500)
+	var sale: int = w.brain._sale_stock(farmer18, "milk")
+	w.brain.stock_family_chest(farmer18)
+	check(sale < 500 and farmer18.inv.count("milk") == sale and kp.count("milk") == 500 - sale,
+		"FSE-18: a keeper keeps the milk buyers will take (%d) and puts the rest in the family chest (%d)" % [sale, kp.count("milk")])
+	farmer18.inv.items.erase("milk")
+	var tk: NPC = w.npcs.filter(func(o): return o.alive and o.household >= 0 and (o.job in ["tavernkeeper", "cook"] or w.brain.buy_role(o) == "merchant_food"))[0]
+	var tp: Inventory = w.households[tk.household].pantry
+	for id in NPCBrain.EDIBLE:
+		tp.items.erase(id)
+	tk.inv.add("pottage", 100)
+	var horizon: float = w.brain.household_day_food(tk.household) * float(GameData.b("reserve_days"))
+	w.brain.stock_family_chest(tk)
+	check(NPCBrain.store_points([tp]) >= horizon and NPCBrain.store_points([tp]) < horizon + 40.0 and tk.inv.count("pottage") > 0,
+		"FSE-18: a food vendor stocks the family chest to its reserve horizon (%d of %d points) and keeps the rest to sell (%d)" % [int(NPCBrain.store_points([tp])), int(horizon), tk.inv.count("pottage")])
+	# FSE-18: the player's family chest counts in the player's reserve, by the households' rule
+	var pl := w.player
+	var home0: String = pl.home
+	if pl.home == "" or not w.buildings.has(pl.home):
+		pl.home = str(w.buildings.keys()[0])            # a home for the check
+	pl.inv.items.clear()
+	pl.chest.items.clear()
+	var before := int(w.necessity(pl).food)
+	pl.chest.add("pottage", 20)
+	w._reserve_cache.clear()
+	check(int(w.necessity(pl).food) < before, "FSE-18: food in the player's family chest lowers what the player keeps back for food (%d -> %d)" % [before, int(w.necessity(pl).food)])
+	pl.chest.items.clear()
+	pl.home = home0
 	strip_village(w, [b])
 	var pb: Inventory = w.households[b].pantry
 	pb.add("meat", 1)

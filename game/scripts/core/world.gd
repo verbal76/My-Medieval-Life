@@ -665,6 +665,8 @@ func necessity(who) -> Dictionary:
 	var days := float(GameData.b("reserve_days"))
 	var people: Array = [who]
 	var stores: Array = [who.inv]
+	if not (who is NPC) and player.home != "" and buildings.has(player.home):
+		stores.append(player.chest)                  # FSE-18: the player's family chest, by the households' rule
 	var ref := PLAYER
 	if who is NPC:
 		ref = World.npc_ref(who.id)

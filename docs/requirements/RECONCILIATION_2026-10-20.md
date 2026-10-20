@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 129 (76 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **290** = 214 still open from the baseline + 76 added and open |
+| Entries added since | | 130 (77 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **291** = 214 still open from the baseline + 77 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,7 +44,7 @@ None.
 
 None.
 
-## Added since the baseline (129)
+## Added since the baseline (130)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -81,6 +81,7 @@ None.
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | 16 |
 | FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | APPROVED — NOT STARTED | 16 |
 | FSE-B07 | Villagers can sell flowers to the Apothecary | approved | COMPLETE AND VERIFIED | 16 |
