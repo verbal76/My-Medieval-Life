@@ -9551,6 +9551,56 @@
    "roadmap_reason": "project memory infrastructure, approved alongside Build 15-16 work"
   },
   {
+   "id": "MEM-02",
+   "title": "Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "If your entire conversation context disappears tomorrow, a new development session must be able to recover the project's approved design, outstanding requirements, current progress, and next authorized tasks from GitHub alone.",
+   "description": "Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test",
+   "source": "docs/directives/2026-10-20_permanent_project_memory_hardening.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "docs/PROJECT_MEMORY.md links every source the directive lists, including the open-items audit and the 231-entry reconciliation, the Build 20+ backlog, architecture, save compatibility and known limitations",
+    "CLAUDE.md section 0 carries the directive's eight startup steps explicitly",
+    "docs/CURRENT_DEVELOPMENT_STATE.md carries every listed field, including hardware checks and interrupted processes",
+    "The 231 open entries and 142 closed approved entries of the reconciliation are committed as a baseline and the validator proves each is still present, and any that closed did so with history and evidence",
+    "Status categories (approved not started, in progress, implemented not verified, verified complete, blocked, deferred, proposed, awaiting owner decision, superseded with successor) are mapped in the index and enforced",
+    "A fresh agent answers the directive's nine recovery questions from committed contents alone; gaps are repaired and the check repeated",
+    "Completion report with the eight listed items"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "MEM-01",
+   "depends_on": [
+    "MEM-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead agent, staging",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_permanent_project_memory_hardening.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; workstream",
+     "why": "started on receipt"
+    }
+   ],
+   "target_build": "15"
+  },
+  {
    "id": "MIN-A",
    "title": "Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests",
    "kind": "approved",

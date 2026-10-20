@@ -1,0 +1,1964 @@
+{
+ "closed_approved": {
+  "AR-P0-1": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "AR-P0-2": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "AR-P1-1": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "B12A-01": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B12A-02": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B12A-03": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B12A-04": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "B12A-06": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "B12A-09": {
+   "history": 3,
+   "status": "SUPERSEDED"
+  },
+  "B12A-11": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "B13-01": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-02": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-03": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-04": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-05": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-06": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-07": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-08": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-09": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-10": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-11": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B13-14": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14-02": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14-03": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14-04": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14-05": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14-08": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-01": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-02": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-03": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-04": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-05": {
+   "history": 3,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-06": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-07": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-08": {
+   "history": 3,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-09": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-10": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B14R-11": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B7-002": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B7-003": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B7-004": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B7-017": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "B8-001": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-002": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-003": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-004": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-005": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-006": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-008": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-009": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-010": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-011": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-012": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-013": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-014": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-015": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-016": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-017": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-019": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-020": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-025": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-026": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-027": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-028": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8-029": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-001": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-002": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-003": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-004": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-005": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "B8R-006": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "B8R-007": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-008": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-009": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-010": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-011": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-012": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-013": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-014": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-015": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-016": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-017": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-018": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-019": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "B8R-020": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "DVW-A1": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "DVW-A11": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "F-2": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "F-3": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "FR-05": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "K-1": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "K-2": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "K-3": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "OPS-01": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-01": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-03": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-04": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-05": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-06": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-07": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-10": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-11": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-12": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "OWN-13": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-14": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-15": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-16": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-17": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "OWN-18": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-20": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-21": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "OWN-23": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-24": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "OWN-25": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-26": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "OWN-27": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL1-01": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL1-02": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL1-04": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL1-06": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL1-08": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL1-09": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-001": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-002": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-003": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-004": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-005": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-006": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-007": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-009": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-011": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "PL2-012": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "Q-03": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "Q-05": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "Q-06": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "REC-005": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "REC-015": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "REC-016": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "REQ-BANDIT": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "REQ-GRAVE": {
+   "history": 2,
+   "status": "SUPERSEDED"
+  },
+  "SAVE-01": {
+   "history": 2,
+   "status": "COMPLETE AND VERIFIED"
+  },
+  "WDR-006-C": {
+   "history": 1,
+   "status": "COMPLETE AND VERIFIED"
+  }
+ },
+ "commit": "a203c0b",
+ "date": "2026-10-20",
+ "format": "mml-requirements-baseline/1",
+ "note": "Frozen snapshot of the Builds 15-19 reconciliation (owner directive 2026-10-20, MEM-02): every open entry (rules excluded) and every closed approved entry in the register at this commit. Never edited; tools/check_requirements.py proves each is still in the register and that any change since was recorded.",
+ "open": {
+  "AR-OWNER": {
+   "history": 3,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "owner action"
+  },
+  "AR-P0-3": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "owner action"
+  },
+  "AR-P1-2": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "owner action"
+  },
+  "B12A-05": {
+   "history": 3,
+   "kind": "idea",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "B12A-07": {
+   "history": 3,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "20+"
+  },
+  "B12A-08": {
+   "history": 3,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "20+"
+  },
+  "B12A-10": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "owner action"
+  },
+  "B13-12": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B13-13": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B13-15": {
+   "history": 3,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "B14-01": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B14-06": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B14-07": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "B14-09": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "B14-10": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "B14-11": {
+   "history": 3,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "B14-12": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "B14-13": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B14R-12": {
+   "history": 5,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "15"
+  },
+  "B7-001": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B7-005": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B7-006": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "17"
+  },
+  "B7-007": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "17"
+  },
+  "B7-008": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "15"
+  },
+  "B7-009": {
+   "history": 3,
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "target_build": "15"
+  },
+  "B7-010": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B7-011": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B7-012": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B7-013": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "B7-014": {
+   "history": 4,
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "target_build": "15"
+  },
+  "B7-015": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "16"
+  },
+  "B7-016": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "16"
+  },
+  "B8-007": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "B8-018": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CARAVAN-TMP": {
+   "history": 3,
+   "kind": "decision",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "target_build": "15"
+  },
+  "CQ-01": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-01": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-02": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-03": {
+   "history": 3,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "multiplayer"
+  },
+  "CRT-04": {
+   "history": 4,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-05": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-06": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "CRT-07": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-08": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-09": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-10": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-11": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "CRT-12": {
+   "history": 4,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "DGA-D1": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D10": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D11": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D12": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D2": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D3": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "multiplayer"
+  },
+  "DGA-D4": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D5": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D6": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D7": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D8": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-D9": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-R": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DGA-S": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DVW-A10": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "DVW-A12": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "DVW-A13": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "DVW-A14": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "DVW-A2": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "DVW-A3": {
+   "history": 3,
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "target_build": "16"
+  },
+  "DVW-A4": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "DVW-A5": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "DVW-A6": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "15"
+  },
+  "DVW-A7": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "DVW-A8": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "DVW-A9": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "DVW-B1": {
+   "history": 4,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "19"
+  },
+  "DVW-B10": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DVW-B11": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DVW-B12": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DVW-B13": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DVW-B2": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "DVW-B3": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "DVW-B4": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "DVW-B5": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "DVW-B6": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "DVW-B7": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "DVW-B8": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "DVW-B9": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "ECON-P1.1": {
+   "history": 3,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "17"
+  },
+  "ECON-P1.2": {
+   "history": 3,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "17"
+  },
+  "ECON-P1.3": {
+   "history": 3,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "18"
+  },
+  "ECON-P1.4": {
+   "history": 3,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "17"
+  },
+  "ECON-P1.5": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "17"
+  },
+  "ECON-P2": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "ECON-P3": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "18"
+  },
+  "ENV-RTK": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "owner action"
+  },
+  "EQ-01": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "EQ-02": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "16"
+  },
+  "EQ-03": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "EQ-04": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "EQ-05": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "EQ-06": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "EQ-07": {
+   "history": 3,
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "target_build": "15"
+  },
+  "EQ-08": {
+   "history": 3,
+   "kind": "approved",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "target_build": "15"
+  },
+  "EQ-09": {
+   "history": 1,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "EQ-10": {
+   "history": 1,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "EQ-16": {
+   "history": 3,
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "target_build": "16"
+  },
+  "EXP-A": {
+   "history": 3,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "EXP-B": {
+   "history": 3,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "EXP-C": {
+   "history": 3,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "F-1": {
+   "history": 2,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "18"
+  },
+  "FR-01": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "20+"
+  },
+  "FR-02": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "FR-03": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "FR-04": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "FR-06": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "15"
+  },
+  "FR-07": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "FR-08": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "20+"
+  },
+  "FR-09": {
+   "history": 2,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "19"
+  },
+  "FR-10": {
+   "history": 2,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "20+"
+  },
+  "FR-11": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "19"
+  },
+  "GM-01": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "MIN-A": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "MIN-B": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "MIN-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "MIN-D": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "MIN-E": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "MIN-F": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "MIN-G": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "17"
+  },
+  "MIN-L5": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "MP-01": {
+   "history": 2,
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "target_build": "multiplayer"
+  },
+  "OD-01": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "17"
+  },
+  "OD-02": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "OD-03": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "OD-04": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "OD-05": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "18"
+  },
+  "OD-06": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "18"
+  },
+  "OD-07": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "OD-08": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "18"
+  },
+  "OD-09": {
+   "history": 2,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "OWN-02": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "OWN-08": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "owner decision"
+  },
+  "OWN-19": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "OWN-22": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "owner decision"
+  },
+  "OWN-28": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "OWN-29": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "PL1-03": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "PL1-05": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "PL1-07": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "PL1-10": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "18"
+  },
+  "PL1-11": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "PL1-12": {
+   "history": 3,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "17"
+  },
+  "PL1-13": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "PL2-008": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "18"
+  },
+  "PL2-010": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "PL2-013": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "PL2-014": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "18"
+  },
+  "PL2-015": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "18"
+  },
+  "Q-04": {
+   "history": 2,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "Q-08": {
+   "history": 3,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "Q-10": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "owner action"
+  },
+  "Q-11": {
+   "history": 2,
+   "kind": "proposal",
+   "status": "BLOCKED",
+   "target_build": "owner decision"
+  },
+  "REC-001": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "REC-002": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "20+"
+  },
+  "REC-003": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "15"
+  },
+  "REC-004": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "15"
+  },
+  "REC-006": {
+   "history": 2,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "20+"
+  },
+  "REC-007": {
+   "history": 3,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "20+"
+  },
+  "REC-008": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "20+"
+  },
+  "REC-009": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "20+"
+  },
+  "REC-010": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "owner decision"
+  },
+  "REC-011": {
+   "history": 2,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "20+"
+  },
+  "REC-012": {
+   "history": 2,
+   "kind": "approved",
+   "status": "DEFERRED",
+   "target_build": "20+"
+  },
+  "REC-013": {
+   "history": 2,
+   "kind": "approved",
+   "status": "BLOCKED",
+   "target_build": "17"
+  },
+  "REC-014": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "owner decision"
+  },
+  "REC-017": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "15"
+  },
+  "REL-14-16": {
+   "history": 5,
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "target_build": "15"
+  },
+  "ROAD-01": {
+   "history": 1,
+   "kind": "decision",
+   "status": "ACTIVE DEVELOPMENT",
+   "target_build": "15"
+  },
+  "SAVE-00": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-02": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-03": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-04": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-05": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-06": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-07": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-08": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SAVE-09": {
+   "history": 3,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "SET-A": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "SET-B": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "SET-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "SET-D": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "SET-E": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "SJD-A": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  },
+  "SJD-B": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "SJD-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "SJD-D": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "SJD-E": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "SJD-F": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "SJD-G": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "SJD-H": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "19"
+  },
+  "SJD-Q01": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q02": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q03": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q04": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q05": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q06": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q07": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q08": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q09": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q10": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q11": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q12": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q13": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "SJD-Q14": {
+   "history": 3,
+   "kind": "decision",
+   "status": "BLOCKED",
+   "target_build": "19"
+  },
+  "VP-01": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "WDR-001-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "17"
+  },
+  "WDR-002-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "18"
+  },
+  "WDR-003-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "target_build": "17"
+  },
+  "WDR-004-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "18"
+  },
+  "WDR-005-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "16"
+  },
+  "WDR-007-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "15"
+  },
+  "WDR-008-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "15"
+  },
+  "WDR-009-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "19"
+  },
+  "WDR-010-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "15"
+  },
+  "WDR-011-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "18"
+  },
+  "WDR-012-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "18"
+  },
+  "WDR-013-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "17"
+  },
+  "WDR-014-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "WDR-015-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "target_build": "20+"
+  },
+  "WDR-016-C": {
+   "history": 2,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "20+"
+  },
+  "WR-01": {
+   "history": 5,
+   "kind": "approved",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
+   "target_build": "15"
+  },
+  "WR-02": {
+   "history": 1,
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "target_build": "16"
+  }
+ }
+}

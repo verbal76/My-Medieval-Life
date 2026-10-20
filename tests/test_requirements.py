@@ -141,12 +141,35 @@ class RoadmapAndMemoryTest(unittest.TestCase):
         new["requirements"].append(fake)
         self.assertTrue(any("ZZ-999" in e for e in cr.memory_errors(new)))
 
+    def test_baseline_entries_cannot_vanish_or_change_silently(self):
+        """MEM-02: the 231 open and 142 closed approved entries of the 2026-10-20 reconciliation stay accounted for."""
+        bp = REPO / "docs" / "requirements" / "baseline_2026-10-20.json"
+        b = json.loads(bp.read_text())
+        self.assertEqual((len(b["open"]), len(b["closed_approved"])), (231, 142))
+        self.assertEqual(cr.baseline_errors(REGISTER, b), [])
+        new = copy.deepcopy(REGISTER)
+        gone = sorted(b["open"])[0]
+        new["requirements"] = [r for r in new["requirements"] if r["id"] != gone]
+        self.assertTrue(any(gone in e and "missing" in e for e in cr.baseline_errors(new, b)))
+        new = copy.deepcopy(REGISTER)
+        r = self._by(new, sorted(b["open"])[1])
+        del r["history"][b["open"][r["id"]]["history"]:]
+        r["target_build"] = "20+" if r.get("target_build") != "20+" else "16"
+        self.assertTrue(any(r["id"] in e and "no history" in e for e in cr.baseline_errors(new, b)))
+        self.assertEqual(cr.reconciliation_path(bp).read_text(), cr.render_reconciliation(REGISTER, b))
+
+    def test_document_references_in_any_field_must_exist(self):
+        new = copy.deepcopy(REGISTER)
+        _open_approved(new)["implementation"] = "see docs/NO_SUCH_FILE.md"
+        self.assertTrue(any("NO_SUCH_FILE" in e for e in cr.validate(new)))
+
     def test_claude_md_starts_sessions_from_the_memory(self):
         text = (REPO / "CLAUDE.md").read_text()
         head = text[:text.index("## 1.")]
         self.assertIn("Session start", head)
         self.assertIn("docs/PROJECT_MEMORY.md", head)
         self.assertIn("docs/CURRENT_DEVELOPMENT_STATE.md", head)
+        self.assertEqual(sum(1 for n in range(1, 9) if ("\n%d. **" % n) in head), 8, "the eight startup steps")
 
 
 if __name__ == "__main__":

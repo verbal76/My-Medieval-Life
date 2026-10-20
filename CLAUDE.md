@@ -4,25 +4,34 @@ Hot Attic Games. Repository `verbal76/My-Medieval-Life`. This file is the single
 rules for every agent and contributor. If another document disagrees with it, this file wins until
 the owner says otherwise. Update it in the same PR as any change to the workflow it describes.
 
-## 0. Session start (mandatory, every session; owner directive 2026-10-20, MEM-01)
+## 0. Session start (mandatory, every session; owner directives 2026-10-20, MEM-01 and MEM-02)
 
-The repository is the project's memory; conversation memory never is. Before any new work:
+The GitHub repository is the project's memory; conversation memory, the container and private artifacts never
+are. No file is read automatically because it exists: do these steps, in order, before any new work.
 
-1. Confirm the repository (`verbal76/My-Medieval-Life`) and that you are on `staging/my-medieval-life`
-   (`git fetch origin staging/my-medieval-life && git status`), and note its head commit.
-2. Read `docs/PROJECT_MEMORY.md`, the index of where every record lives.
-3. Read `docs/CURRENT_DEVELOPMENT_STATE.md`, the handoff: active build, work in progress, last tests,
-   known defects, next approved tasks, owner decisions, fragile processes.
-4. Read the register's summary and Roadmap in `docs/DEVELOPMENT_LEDGER.md` (generated from
-   `docs/requirements/requirements.json`), `docs/WORLD_DESIGN_RULES.md` and `docs/EXPANSION_ROADMAP.md`.
-5. Run `python3 tools/check_requirements.py`: it must report 0 problems.
-6. Continue from the next approved task named in the state file. Never start Builds 17-19, answer an open
-   owner decision, merge into `main` or `wip/multiplayer` into staging, or publish outside the release
+1. **Identify the repository, branch and latest remote commit.** Repository `verbal76/My-Medieval-Life`;
+   development branch `staging/my-medieval-life`. Run `git fetch origin staging/my-medieval-life`, check out or
+   update that branch, and note `git log origin/staging/my-medieval-life -1`.
+2. **Read `docs/PROJECT_MEMORY.md`**, the index of where every authoritative record lives.
+3. **Read `docs/CURRENT_DEVELOPMENT_STATE.md`**, the handoff: active build, work in progress, latest results,
+   defects, hardware checks, blockers, next approved tasks, interrupted processes.
+4. **Review the register, roadmap and unresolved decisions:** the Counts and Roadmap sections of
+   `docs/DEVELOPMENT_LEDGER.md` (generated from `docs/requirements/requirements.json`), the owner-decisions
+   section, `docs/EXPANSION_ROADMAP.md` and `docs/WORLD_DESIGN_RULES.md`.
+5. **Review the design specifications for the current work:** the documents the active entries cite in their
+   `source` (owner directives in `docs/directives/`, the specs the index names).
+6. **Check Git status and recent commits:** `git status`, `git log --oneline -15`, `git worktree list`, and run
+   `python3 tools/check_requirements.py` (it must report 0 problems).
+7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
+   statuses and evidence and the state file's next tasks; never from memory of a conversation.
+8. **Resume approved development** from the next approved task, without asking the owner to repeat anything
+   already recorded in the register, the decision log or the directives. Never start Builds 17-19, answer an
+   open owner decision, merge into `main` or `wip/multiplayer` into staging, or publish outside the release
    authorization in force.
 
-Before a session ends, a context handoff or a build: update `docs/CURRENT_DEVELOPMENT_STATE.md` and every
-touched register entry, run `python3 tools/check_requirements.py --write`, commit and push to staging, and
-confirm the remote head.
+At each meaningful checkpoint, and before a session ends, a context handoff or a build: update
+`docs/CURRENT_DEVELOPMENT_STATE.md` and every touched register entry, run
+`python3 tools/check_requirements.py --write`, commit and push to staging, and confirm the remote head.
 
 ## 1. Purpose and status
 

@@ -1,6 +1,6 @@
 # Project memory: start here
 
-This is the entry point for any new session (owner directive 2026-10-20, register MEM-01). The repository, not any conversation, is the record. Every file named below is authoritative for its subject. This index only says where things are and in what order to read them. It does not copy their contents.
+This is the entry point for any new session (owner directives 2026-10-20, register MEM-01 and MEM-02; the session-start steps are CLAUDE.md section 0). The repository, not any conversation, is the record. Every file named below is authoritative for its subject. This index only says where things are and in what order to read them. It does not copy their contents.
 
 ## What the project is
 
@@ -38,7 +38,29 @@ The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is c
 | Harvestable resources and their uses | `game/data/resources.json` (`tools/check_resources.py`) |
 | Assets: registry, licences, scaling, the mandatory pipeline skill | `docs/assets/ASSET_REGISTRY.md`, `docs/assets/packs.json`, `docs/assets/ASSET_SCALING_STANDARD.md`, `.claude/skills/asset-integration-pipeline/SKILL.md` |
 | The world research (Morris) | `docs/world/` |
-| Earlier audits (history; the register supersedes their counts) | `docs/release/BUILD_14_OPEN_ITEMS_AUDIT.md`, `docs/requirements/RECOVERY_2026-10-19.md` |
+| The open-items audit and the 231-entry reconciliation against the five builds (2026-10-20) | `docs/requirements/RECONCILIATION_2026-10-20.md` (generated: what has closed, moved or been added since), frozen baseline `docs/requirements/baseline_2026-10-20.json` (the 231 open and 142 closed approved entries at `a203c0b`); the audit before it: `docs/release/BUILD_14_OPEN_ITEMS_AUDIT.md` |
+| Builds 15–19, the Build 20+ backlog, multiplayer, owner decisions, owner or external actions | The Roadmap section of `docs/DEVELOPMENT_LEDGER.md`: one table per category, each entry with its gate and reason |
+| Known limitations | Defects in progress: `docs/CURRENT_DEVELOPMENT_STATE.md` ("Known defects"); save limits: `docs/release/SAVE_CONTINUITY.md` section 3; last build's known issues: `docs/release/BUILD_14_READINESS.md`; prototype rules and open questions: `docs/BUILD_DECISIONS.md`; Android signing: `docs/release/ANDROID_SIGNING.md` |
+| Older recovery records (history; the register supersedes their counts) | `docs/requirements/RECOVERY_2026-10-19.md`, `docs/HANDOFF.md`, `docs/DEVELOPMENT_QUEUE.md`, `docs/DEVELOPMENT_PLAN.md` (all marked historical) |
+
+## How the register says where an item stands
+
+Every entry has a stable id, a `kind` and a lifecycle `status` (the validator rejects anything else):
+
+| The owner's category | In the register |
+|---|---|
+| Approved but not started | kind `approved`, status APPROVED — NOT STARTED |
+| In progress | ACTIVE DEVELOPMENT, or PARTIALLY IMPLEMENTED |
+| Implemented but not verified | IMPLEMENTED — TESTING REQUIRED, or AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (waiting on a real device) |
+| Verified complete | COMPLETE AND VERIFIED, with implementation, test or commit evidence (enforced) |
+| Blocked | BLOCKED, with its blockers |
+| Deferred | DEFERRED |
+| Proposed | kind `proposal` (or `idea`): never counted as approved work |
+| Awaiting owner decision | kind `decision`, status BLOCKED, until the owner's words are recorded in `owner_answer` (enforced) |
+| Superseded | SUPERSEDED, with `superseded_by` naming the replacing entry (enforced) |
+| Unknown | UNKNOWN — INVESTIGATION REQUIRED |
+
+Every open entry also carries `target_build` (15–19, `20+`, `multiplayer`, `owner decision`, `owner action`), `roadmap_gate` and `roadmap_reason`, `acceptance` (completion criteria), `depends_on`, and a `history` line for every change.
 
 ## Roadmap (owner, 2026-10-20: ROAD-01)
 

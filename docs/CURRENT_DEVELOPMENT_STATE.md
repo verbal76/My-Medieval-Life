@@ -21,7 +21,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-Six entries, all named here (the validator checks). The ledger's count of five is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
+Seven entries, all named here (the validator checks). The ledger's count of six is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
 
 - **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
   - Done so far:
@@ -36,7 +36,14 @@ Six entries, all named here (the validator checks). The ledger's count of five i
     - unemployment climbs after day 40.
 - **EQ-16:** world equilibrium, the Build 16 objective. It closes on the multi-seed 100- and 365-day acceptance runs (EQ-06).
 - **DVW-A3:** re-measure money supply over 100 and 365 days on 2–3 seeds with no player. It shares the EQ runs.
-- **MEM-01** (project memory) is complete: see "Recovery test" below. Keep this file and the index current.
+- **MEM-02:** the owner's second, wider memory directive (`docs/directives/2026-10-20_permanent_project_memory_hardening.md`).
+  - Done:
+    - the index covers every source the directive lists;
+    - the eight startup steps are in CLAUDE.md section 0;
+    - the frozen baseline of the 231 open and 142 closed approved entries is checked by the validator;
+    - the reconciliation report is generated.
+  - Remaining: the nine-question recovery test from a fresh clone, repeated until clean.
+- **MEM-01** (the first memory directive) is complete: see "Recovery test" below. Keep this file and the index current.
 - **REL-14-16:** release Builds 15 and 16 as private drafts when the conditions hold. Build 14 is done.
 - **ROAD-01:** the owner's five-build roadmap. Every open item carries a `target_build` (the ledger's Roadmap section).
 - **MP-01:** multiplayer on `wip/multiplayer` only, isolated. Nothing is to be done on it without the owner.
@@ -52,7 +59,8 @@ Six entries, all named here (the validator checks). The ledger's count of five i
 | Run | Result |
 |---|---|
 | 100 days, seed 1 | **Finished.** 118 alive (start 100), no starvation, 16 other deaths. Wildlife 81 (54 at the start). Currency leak 0, item leaks 0. Iron, coal, copper and gold gone by day 20; stone 56 of 240 left. 12 courtships. 1 house built. 16 unemployed. |
-| 100 days, seed 2; 365 days, seeds 1 and 2 | Running when this was written, outside the repository (`out/eq/`, not committed). At day 80: 128 alive, no starvation, leak 0. A new session cannot see them: if `docs/release/LONG_RUN_SIMULATION.md` has no result for a run, and no Godot process is running (Fragile processes, below), start it again. |
+| 100 days, seed 2 | **Finished.** 133 alive, no starvation, wildlife 74, leak 0, but only 1 house built, although 3 crowded households could afford one. |
+| 365 days, seeds 1 and 2 | Running when this was written, outside the repository (`out/eq/`, not committed). Seed 1 at day 170: 125 alive, no starvation, 26 unemployed. Seed 2 at day 140: 136 alive, no starvation. A new session cannot see them: if `docs/release/LONG_RUN_SIMULATION.md` has no result for a run, and no Godot process is running (Fragile processes, below), start it again. |
 
 **Limits of these results:**
 - The runs have no player.
@@ -67,7 +75,7 @@ Six entries, all named here (the validator checks). The ledger's count of five i
 - **Housing growth (EQ-07):** the 100-day seed 1 run ends with 5 crowded households and 2 couples needing a home, none of which can afford one. Only 1 house was built.
 - **B14R-12, long-run regression:** partly addressed. Wildlife no longer collapses at 100 days; it is still to be confirmed at 365.
 
-## Done but not verified on a device
+## Hardware checks still required (done, not verified on a device)
 
 The device queue is entries with status AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (the ledger lists them). Among them:
 - SAVE-00 and SAVE-02..09 (SAVE-01 is complete): export and import a save on an Android phone, through the system picker (SAVE-05);
@@ -97,7 +105,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 - Entries with `target_build` `owner decision` or `owner action`, such as the permanent Android signing key, deferred by the owner.
 - **Builds 17–19 (EXP-A, EXP-B, EXP-C):** approved objectives that have not been started. They need the owner's authorization to begin.
 
-## Fragile processes
+## Interrupted or fragile processes
 
 - **Long simulations die on a container restart.** Check with:
   `ps -eo pid,args | awk '$2=="/opt/godot/godot"'`
