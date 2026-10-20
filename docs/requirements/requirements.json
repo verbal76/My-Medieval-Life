@@ -16260,7 +16260,7 @@
    "id": "REC-017",
    "title": "Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "If your execution session ends or you cannot continue autonomously, leave a clear, GitHub-pushed handoff identifying the next approved task so work can resume immediately.",
    "description": "Update docs/HANDOFF.md (still 2026-10-18, Build 7), DEVELOPMENT_PLAN.md, GAME_DESIGN.md (U1 'Undecided' though platforms are owner-decided), BUILD_DECISIONS.md 'Known gaps' (says no births, aging, adoption), CLAUDE.md release history (drafts 9-11), and resources.json's handcart exception still 'proposed' after B14-06.",
    "source": "owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id)",
@@ -16270,7 +16270,7 @@
    ],
    "acceptance_derived": true,
    "implementation": "docs/HANDOFF.md last changed 6aabb9f (2026-10-18). GAME_DESIGN.md line 62 U1 still open. BUILD_DECISIONS.md lines 440-455 stale. B13-10 fixed earlier stale text only. No id covers this.",
-   "tests": "",
+   "tests": "tools/check_resources.py 0 problems; GitHub release list",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -16295,6 +16295,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "brought up to date: HANDOFF.md and DEVELOPMENT_PLAN.md were already marked historical (MEM-01); GAME_DESIGN.md U1 moved to Confirmed item 13 with the owner's 2026-10-18 platform decision; BUILD_DECISIONS.md Known gaps rewritten from the code (births, ages, apprentices, player livestock, eggs/milk/wool exist; adoption is FAM-03/07, Build 16); CLAUDE.md release history lists draft Builds 9-11 (GitHub releases checked) and OVN-01's authority; resources.json's handcart exception is implemented (B14-06)"
     }
    ],
    "target_build": "15",

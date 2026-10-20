@@ -43,6 +43,9 @@ Each change is recorded in `docs/DECISIONS.md`.
     them has lasting consequences. Players may follow productive or criminal paths. The design
     reference is `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` (its §2 "established intent"), and its
     fit with the repository is reviewed in `docs/LIVING_WORLD_ALIGNMENT.md`.
+13. **Platforms and input (answers U1):** an installable Android APK first, then PC (Windows and
+    Linux), with touch, gamepad, and keyboard and mouse, switched automatically. Owner decision
+    2026-10-18 (`docs/DECISIONS.md`, "Platforms"); recorded here 2026-10-20 (REC-017).
 
 ## Proposed (agent recommendations, not approved)
 
@@ -59,9 +62,7 @@ Each change is recorded in `docs/DECISIONS.md`.
 
 ### Essential questions (in order of architectural impact)
 
-1. **U1. Primary platform and input.** Android touch first (like Climb up)? Desktop keyboard and
-   mouse first? Both from day one? *This changes UI, controls, performance budgets and the build
-   pipeline.*
+1. ~~**U1. Primary platform and input.**~~ Answered by the owner on 2026-10-18: Confirmed item 13.
 2. **U2. Engine.** Approve the recommendation in `docs/ARCHITECTURE.md` (Godot 4) or pick another.
 3. **U3. What is the player?** A single hero you control directly (Zelda / Stardew style)? A
    settlement or faction you command (RTS / colony style, which the Miniworld units and buildings

@@ -439,17 +439,25 @@ Wiki notes (for the wiki agent):
 
 ## Known gaps
 
-- No marriage, births, aging, adoption or immigration exist yet; households only shrink. Proposals
-  are waiting for the owner.
-- Children eat by role, not age: villagers have no ages yet, so every child eats `child_food_factor`
-  of an adult's food and elders eat as adults.
-- Skilled trades cannot be learned (no apprenticeship); villagers move only between general,
-  farming and resource work.
-- The player cannot own livestock. (Harvesting a field works: `World.player_harvest`, INT-007.)
-- Villagers do not build workshops, lease ground to build, or fell trees to clear ground; with no
-  births yet, a household is crowded only when people move in. From outside a workshop looks like a
-  house. A built building's floor is the ground it stands on (the house stamp has no floor layer).
-- No eggs, milk or wool (the owner asked only for meat).
+(Brought up to date 2026-10-20, REC-017. Earlier versions of this list said there were no births, ages, apprentices,
+player livestock or eggs, milk and wool; all of those now exist.)
+
+- **Adoption:** not yet. The owner answered OD-11 and OD-12 on 2026-10-20 (a best-suited equally close relative takes
+  orphans; unplaced orphans join the bandits for now). FAM-03 and FAM-07 implement it in Build 16.
+- **Since added:**
+  - partners, courtship and marriage (CRT-01..12);
+  - births to partners (Life.births);
+  - ages, ageing and old age (B8-029);
+  - newcomers who come with the caravan for posts nobody in the village can take (succession_caravan).
+- **Children's food:** children eat `child_food_factor` of an adult's food by role. The role now follows age
+  (Life.dawn), but the amount does not change with age within childhood.
+- **Trades:** skilled trades pass on by apprenticeship when a post falls open (succession_dawn). Villagers otherwise
+  change only between the open trades the job market offers (manor hand, farmer, woodcutter, hunter, miner).
+- **Livestock:** the player can keep livestock in their own pens (PL2-015), and the pens give eggs, milk and wool
+  (`Farming.daily_products`).
+- **Building:** villagers build houses, living quarters and sleeping lofts for their own households (HOUSE-01..12), but
+  never workshops: those are the player's. From outside a workshop looks like a house. A built building's floor is the
+  ground it stands on (the house stamp has no floor layer).
 - No audio yet (the volume settings are ready for it).
 - Villagers keep only their last 8 memories (having met someone is never forgotten), so older
   grudges and sightings fade.

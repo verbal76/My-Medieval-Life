@@ -576,7 +576,7 @@ finding not recorded here.
 | Item | Finding | Status | Reason |
 |---|---|---|---|
 | `feather` | no_consumer | implemented | A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them. |
-| `handcart` | no_consumer | proposed | B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; its use as pulled storage, parked at home or a cart hub, comes with the carts-in-play work (B14-6). |
+| `handcart` | no_consumer | implemented | B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; it is not consumed but used: pulled storage, parked at home or a cart hub, and households' market runs (carts in play, B14-06, game/scripts/core/carts.gd). |
 | `rotten_apple` | start_kit_only | implemented | Only in the player's start kit: spoiled food that harms when eaten. |
 | `rusty_sword` | start_kit_only | implemented | Only in the player's start kit; nobody buys it. |
 | `rusty_pickaxe` | start_kit_only | implemented | Only in the player's start kit; a slower pickaxe nobody buys. |
