@@ -29,6 +29,7 @@ func _init() -> void:
 	test_shortage_then_resume()
 	test_hunger_before_carrying()
 	test_couples_of_either_sex()
+	test_forge_buys_imported_ore()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -291,3 +292,31 @@ func test_couples_of_either_sex() -> void:
 	Life._link_partners(a, b)
 	var pairs: Array = c.couples_needing_home().filter(func(pr) -> bool: return (pr[0] == a and pr[1] == b) or (pr[0] == b and pr[1] == a))
 	check(pairs.size() == 1, "they are a couple needing a home, counted once")
+
+
+## EQ-07: building timber needs axes, axes need iron. Once the mine is worked out the caravan's ore and coal
+## go to the raw-goods merchant (B7-007); the smith buys them there, or no axe is ever made again.
+func test_forge_buys_imported_ore() -> void:
+	var w := new_world()
+	var smith: NPC = w.brain._first_with_job("smith")
+	var raw: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and w.brain.buy_role(o) == "merchant_raw":
+			raw = o
+			break
+	check(smith != null and raw != null, "the village has a smith and a raw-goods merchant")
+	for id in ["iron_ore", "coal", "iron_bar", "copper_ore"]:
+		smith.inv.remove(id, smith.inv.count(id))
+	smith.coins = 200
+	raw.inv.add("coal", 6)
+	raw.inv.add("iron_ore", 10)
+	w.minutes = float(w.day()) * 1440.0 + 10.0 * 60.0
+	var coal0 := raw.inv.count("coal")
+	w.brain._smith(smith)
+	check(JSON.stringify(smith.plan).contains("buy_from") and str(smith.doing).contains("coal"), "a smith with no ore or coal goes to buy coal from the merchant (doing: %s)" % smith.doing)
+	w.brain.act(smith, "buy_from", {"vendor": raw.id, "item": "coal", "qty": 2})
+	w.brain._smith(smith)
+	w.brain.act(smith, "buy_from", {"vendor": raw.id, "item": "iron_ore", "qty": 4})
+	check(smith.inv.count("coal") == 2 and smith.inv.count("iron_ore") == 4 and raw.inv.count("coal") == coal0 - 2, "and the iron ore after it, paid for, from the merchant's stock")
+	w.brain._smith(smith)
+	check(str(smith.doing).contains("smelt") or JSON.stringify(smith.plan).contains("smelt_iron"), "then smelts (doing: %s)" % smith.doing)

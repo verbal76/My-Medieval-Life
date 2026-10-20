@@ -8278,7 +8278,7 @@
     "Re-run on several seeds"
    ],
    "implementation": "game/scripts/core/construction.gd (housing goals, responsible_adult, _enlarge, sex-neutral couples), npc_brain.gd (_plan_seek_company saving)",
-   "tests": "game/tests/housing_test.gd",
+   "tests": "game/tests/housing_test.gd test_forge_buys_imported_ore",
    "playtest": [],
    "branch": "staging/my-medieval-life",
    "commits": [],
@@ -8294,7 +8294,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "read the fix10 100-day runs (corrected code) against fix9; OD-13 decides the crowded families that cannot split",
+   "next_action": "365-day run on the corrected code (fix11) to confirm axes, timber, planks and houses hold up; record against fix9",
    "priority": "build 15",
    "workstream": "world equilibrium",
    "superseded_by": null,
@@ -8329,6 +8329,11 @@
      "date": "2026-10-20",
      "change": "tests; implementation; next_action",
      "why": "root causes traced (housing_trace, seed 2) and the first corrections made (HOUSE-01..06, FAM-01)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "tests; next_action",
+     "why": "second root cause found in the 365-day seed 1 run: after the mines run out the smith never bought the caravan's ore and coal from the raw-goods merchant, so worn axes were never replaced, felling stopped about day 140, planks ran out and started houses never finished; the smith now buys them"
     }
    ],
    "target_build": "15",

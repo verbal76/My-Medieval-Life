@@ -944,6 +944,20 @@ func _smith(n: NPC) -> bool:
 	wants.sort()
 	if not wants.is_empty():
 		return _do_recipe(n, wants[0][1])
+	# with nothing to forge, the forge's inputs from the raw-goods merchant once the mine no longer brings them (EQ-07): the
+	# caravan's ore and coal (B7-007) sat unsold at the merchant while the axes wore out, the woodcutters
+	# stopped felling and the carpenter, and every house site, ran out of planks
+	if inv.count("iron_bar") < 2 and n.coins >= 10:
+		for id in ["coal", "iron_ore"]:
+			var short := (2 if id == "coal" else 4) - inv.count(id)
+			if short <= 0:
+				continue
+			for v: NPC in w.npcs:
+				if v.alive and v != n and buy_role(v) == "merchant_raw" and v.inv.count(id) > 0 and not w.asleep(v):
+					n.doing = "buying %s for the forge" % GameData.item_name(id).to_lower()
+					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": short})]
+					w.stat("forge_bought_" + id)
+					return true
 	if inv.count("plank") < 2 and inv.count("iron_bar") >= 2 and n.coins >= 6:
 		var c := _first_with_job("carpenter")
 		if c and c.inv.has("plank"):

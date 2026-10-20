@@ -498,7 +498,13 @@ At day 100, 6 households were crowded, and 3 of them could afford a home (`crowd
 - Planks did: none on the market from about day 180 to day 240, and 16 at most after that. The open sites held only 37 of the 300 they needed.
 - Started houses stay unfinished. This is the second half of EQ-07, now under investigation.
 
-Seed 2's day-365 figures are recorded when it ends.
+**Seed 2, day 365 (finished, old code):**
+- 138 alive; 1 starved and 71 other deaths.
+- Food in store 3.0 days; 37 unemployed; median household cash 2.
+- Wildlife 89. Coin leak 0; 3 item-ledger residuals.
+- 10 house sites started, 2 finished; 40 households.
+
+**Second root cause (found in seed 1):** from about day 120 the smith had no coal or iron and made no axes. The axes wore out (49 broken), and from day 140 no tree was felled (226 grown, no stumps). The carpenter had no logs, and planks ran out. The caravan's imported ore and coal reached the raw-goods merchant (40 of each in stock), but nothing in the code had the smith buy from the merchant; only miners ever brought ore to the forge. **Corrected:** with nothing to forge, the smith buys coal and iron ore from the merchant (`NPCBrain._smith`, test `housing_test.gd::test_forge_buys_imported_ore`).
 
 These runs write only to `out/eq/`, which is not committed. Each result is recorded here when its run finishes. A run that a container restart killed is started again: see `docs/CURRENT_DEVELOPMENT_STATE.md`, "Fragile processes".
 
@@ -534,6 +540,19 @@ These runs write only to `out/eq/`, which is not committed. Each result is recor
 
 **Correction to an earlier report:** the 365-day log's "stone 0" is the mine deposits, not the market. The owner's 2026-10-18 rule already brings caravan stone once deposits are low (B7-007). OD-10, raised on that misreading, is withdrawn (superseded by B7-007).
 
-### 100 days on the corrected code (fix10): to be recorded
+### 100 days with the housing goals (fix10: housing correction only, before the forge fix)
 
-Seeds 1 and 2 run on the corrected code; their results are recorded here when they finish, beside the fix9 results above (old code).
+| | fix9 seed 1 (old) | fix10 seed 1 | fix9 seed 2 (old) | fix10 seed 2 |
+|---|---|---|---|---|
+| Alive at day 100 | 118 | 116 | 133 | 126 |
+| Starved | 0 | 0 | 0 | 0 |
+| House sites started / finished | 4 / 1 | 5 / 0 | 2 / 1 | 4 / 1 |
+| Households | 28 | 29 | 26 | 28 |
+| Unemployed | 16 | 16 | 7 | 5 |
+| Wildlife | 81 | 75 | 74 | 76 |
+| Coin leak / item leaks | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+
+**Reading:**
+- More households now start a home: the goals, the saving and the couples of either sex take effect.
+- Started sites still do not finish within 100 days, while timber is still plentiful (about 120 planks in villagers' hands). What they wait on is being traced (`housing_trace.gd` on the corrected code).
+- The forge fix matters after about day 120, so the corrected code's 365-day runs (fix11, both fixes) measure it.
