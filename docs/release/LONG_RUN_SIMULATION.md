@@ -603,3 +603,34 @@ These are legitimate obstacles. Removing them would mean relocating buildings or
 - There are no stairs, no second level, and pathfinding is one grid.
 - An attic or upper floor would therefore be a major new system: multi-level maps, stairs, drawing and pathfinding.
 - Under the directive it is scoped to the owner, not built (HOUSE-11).
+
+## Script errors in every long run, and the item-ledger residuals (EQ-17, EQ-10; 2026-10-20)
+
+**Finding.** Godot reports a script error and carries on, and the harness did not look for them, so no run
+failed on one. Counting `SCRIPT ERROR` in the local logs shows them in nearly every long run since fix2:
+fix9 365 days seed 1 had 20 247 from day 90; fix13 had 9 543 (seed 1, from day 140) and 8 983 (seed 2, from
+day 170). Every one is `World.building_door` on a building id that does not exist. The earlier "no leak"
+results stand for money and items, but the runs also had broken villagers.
+
+**Cause** (a 160-day seed-1 run with a probe in `building_door`, first at day 142): a couple who found a
+household and are still building its house lodge with family, so the new household's `home` is empty
+(`Construction._found_couple`). `Life.birth` gave the baby the household's home, the empty one. The baby
+then failed in every decision (`NPCBrain.decide`, bed, meals) until the house was finished. The other names
+in the probe's list, the bandits, have no home by design and never reach `building_door`.
+
+**Correction.** A baby of a household with no house yet lives where its parents lodge, and moves in with them
+when the house is finished (`Construction.move_in` moves every member). Test:
+`housing_test.gd test_baby_while_lodging` (fails with the same script error without the fix).
+
+**Gate.** `.github/workflows/tests.yml` runs a 10-day simulation on every staging push (FR-07), and both it
+and `long-sims.yml` fail on any script error in the log.
+
+**EQ-10 residuals** (fix9 365 days seed 1: axe +1, hammer +2, pickaxe +1, herbal_poultice −81):
+- **Tools:** whoever took over a trade got the trade's tool out of nothing (`NPCBrain._install`), although the
+  late master's heir had inherited it. Now the tool passes from the heir (or the master's household); a
+  newcomer brings their own and it is counted as an import (`imported_<tool>`); an apprentice with none buys
+  one (`tool_short`). Test: `world_test.gd`, the village's hammers are unchanged through a succession.
+- **Poultices:** villagers' use of medicine was counted only as `npc_used_<id>`, which the ledger does not read
+  as consumption. It is now also `used_<id>`, as for the player.
+
+Both wait on a 365-day run to show the ledger balanced and no script error.

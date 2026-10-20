@@ -504,13 +504,17 @@ static func birth(w: World, mother, father, h: int) -> NPC:
 	k.family = str(hh.family)
 	k.household = h
 	k.home = str(hh.home)
+	if not w.buildings.has(k.home):          # a household still building its house lodges: the baby lives with its parents (EQ-17)
+		for p in [mother, father]:
+			if p != null and w.buildings.has(str(p.home)):
+				k.home = str(p.home)
+				break
 	k.role = "child"
 	k.born = w.minutes
 	k.hp = 15.0
 	k.max_hp = 15.0
 	k.hunger = 100.0
-	var door := w.building_door(k.home)
-	k.pos = Vector2(door) + Vector2(0.5, 0.5)
+	k.pos = Vector2(w.building_door(k.home)) + Vector2(0.5, 0.5) if w.buildings.has(k.home) else (mother.pos if mother != null else w.player.pos)
 	k.sprite = "res://assets/characters/villager_%02d.png" % (k.id % 48)
 	_link_child(k, mother, father)
 	hh.members.append(k.id)

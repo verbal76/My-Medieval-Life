@@ -36,6 +36,7 @@ func _init() -> void:
 	test_quarters_on_an_original_house()
 	test_sleeping_loft()
 	test_housing_options_weighed()
+	test_baby_while_lodging()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -590,3 +591,39 @@ func test_housing_options_weighed() -> void:
 			check(kind == "quarters", "short of %d sleeping places, more than a loft gives: living quarters beside the house (%s)" % [lacking, kind])
 		else:
 			check(kind == "loft", "short of one sleeping place: the cheaper sleeping loft (%s)" % kind)
+
+
+## EQ-17: a couple who founded a household and are still building its house lodge with family, so the
+## household has no home yet. A baby born then lives with its parents, never in no house at all (365-day
+## runs logged thousands of script errors from such babies), and moves in with them when the house is done.
+func test_baby_while_lodging() -> void:
+	var w := new_world()
+	var a: NPC = null
+	var b: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.partner < 0:
+			if a == null and n.sex == "female":
+				a = n
+			elif b == null and n.sex == "male" and a != null and n.household != a.household:
+				b = n
+	check(a != null and b != null, "a woman and a man of different households")
+	if a == null or b == null:
+		return
+	Life._link_partners(a, b)
+	var lodging := a.home
+	var nh := {"id": w.households.size(), "family": a.family, "home": "", "members": [], "pantry": Inventory.new(),
+		"founded_from": a.household, "founded_day": w.day(), "build": "plot_test"}
+	w.households.append(nh)
+	for o: NPC in [a, b]:
+		w.households[o.household].members.erase(o.id)
+		o.household = int(nh.id)
+		nh.members.append(o.id)
+	var k := Life.birth(w, a, b, int(nh.id))
+	check(k.home == lodging and w.buildings.has(k.home), "the baby lives where its mother lodges (%s), not in no house" % k.home)
+	var house := ""
+	for id in w.buildings:
+		if id != lodging and w.property.is_home(w.buildings[id]):
+			house = str(id)
+			break
+	w.construction.move_in(int(nh.id), house)
+	check(k.home == house and a.home == house and b.home == house, "when the house is done the baby moves in with its parents")
