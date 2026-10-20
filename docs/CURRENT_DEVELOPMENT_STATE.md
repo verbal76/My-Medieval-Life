@@ -98,23 +98,32 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Next approved tasks, in order
 
-Updated 2026-10-20 about 05:10 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order.
+Updated 2026-10-20 about 07:40 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order.
 
-1. **EQ-07 / HOUSE-07, the Build 15 blocker:**
-   - Actions run 39368663150 (staging `0ee0218`, 365 days, seed 1) finished with no script error and a balanced ledger.
-   - But 7 house sites were started and **none finished** (sites hold 46 planks, 117 stone, 10 logs).
-   - Also: 7,172 household-nights without firewood; 5,289 meals missed for lack of money (hunters, carpenters); the carpenter and the raw-goods merchant end the year broke.
-   - Trace why sites stall (`game/tests/housing_trace.gd -- --days 150 --seed 1`), fix the root cause, then re-run 365 days on Actions.
-   - Broken core construction may not be deferred (directive section 5).
-2. **Record Actions run 39368663150** (seed 2 still running) in `docs/release/LONG_RUN_SIMULATION.md`; update EQ-06, EQ-10, EQ-17, B14R-12 (wildlife survives all year in every species), HOUSE-07, DVW-A3 and CARAVAN-TMP.
-3. **PERF-04:** profile again after the two optimizations (`economy_sim.gd --profile`); take the next measured bottleneck through `tools/sim_gate.py`.
-4. **The other Build 15 items** (ledger Roadmap):
+1. **EQ-07, the Build 15 blocker:** housing corrections are in (`59057ac`):
+   - family help;
+   - builders' own timber (saw, fell, buy an axe);
+   - the caravan leaving tools the village needs.
+
+   Seed 2 finishes 3 sites in 200 days. Seed 1 finishes none, because the village's trade economy stops around
+   day 120-140 (`docs/release/LONG_RUN_SIMULATION.md`, "Why seed 1 builds no house"). That needs **OD-16**
+   (owner).
+   - Actions run on `59057ac` (365 days, seeds 1 and 2) dispatched about 07:40 UTC: record it when it ends.
+   - When OD-16 is answered, implement the answer and re-run 365 days on both seeds.
+2. **PERF-04:** profile again after the two optimizations (`economy_sim.gd --profile`); take the next measured bottleneck through `tools/sim_gate.py`.
+3. **The other Build 15 items** (ledger Roadmap):
    - FR-06 (wiki pages), FR-04 (pad shortcuts), B14-12 (sprite list), REC-003, REC-004 and REC-017;
    - HOUSE-10 waits on the owner's upper-floors choice.
-5. **Build 15 release:** when every condition of OVN-01 section 4 holds, a private draft (REL-15-18) with a readiness packet like `docs/release/BUILD_14_READINESS.md`, Linux, Windows and Android from one commit.
-6. **Then Build 16** (EQ-01..06, FAM-02..07, WR-02, EQ-09 and the rest of its Roadmap section), Build 17 and Build 18, in order.
+4. **Build 15 release:** only when every condition of OVN-01 section 4 holds. Seed 1's housing (OD-16) is a non-deferrable core-construction item, so Build 15 is BLOCKED until it is answered and verified. Release as a private draft (REL-15-18) with a readiness packet.
+5. **Then Build 16** (EQ-01..06, FAM-02..07, WR-02, EQ-09 and the rest), Build 17 and Build 18, in order.
 
-Done on 2026-10-20 (overnight): EQ-17 fix and gate, EQ-10 fixes, FR-07, DVW-A2, DVW-A4, DVW-A6, B7-008 verified with OD-15 raised, PERF-02, PERF-03, PERF-05, and two PERF-04 optimizations (simulation about twice as fast).
+Done on 2026-10-20 (overnight):
+- EQ-17 fix and the script-error gate;
+- EQ-10 fixes (verified by the 365-day Actions runs);
+- FR-07, DVW-A2, DVW-A4, DVW-A6;
+- B7-008 verified, with OD-15 raised;
+- PERF-02, PERF-03, PERF-05, and two PERF-04 optimizations (the simulation is about twice as fast);
+- HOUSE-04 housing routes, with OD-16 raised.
 
 ## Waiting on the owner
 
@@ -122,6 +131,7 @@ Done on 2026-10-20 (overnight): EQ-17 fix and gate, EQ-10 fixes, FR-07, DVW-A2, 
 - OD-11, OD-12 and OD-13 were answered by the owner on 2026-10-20 (`docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md`). Their implementation is open:
   - HOUSE-08 (bed sharing) and HOUSE-09 (quarters on original houses), Build 15;
   - FAM-03 and FAM-07 (orphans: the best-suited equal relative; the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+), Build 16.
+- **OD-16 (new, 2026-10-20, blocks Build 15):** the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
 - **OD-15 (new, 2026-10-20):** should the player's sales stop at a trader's 15-coin floor, as villagers' do? It came up while verifying B7-008; options and a recommendation are in the entry. B7-008 stays BLOCKED on it (its wildlife half is verified).
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
 - **SJD-Q01..Q14:** the judgment system's 14 questions. They are items 25–38 under the heading "Owner decisions still open" (line 584 of `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.txt`; the spec numbers two headings 19, and this is the second). The spec also names open points inside its sections, such as the rumour and credibility questions in its evidence section. Those belong to the same gates and are unanswered too. Never answer any of them on the owner's behalf.
