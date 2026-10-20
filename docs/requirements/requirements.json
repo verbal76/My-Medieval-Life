@@ -15297,7 +15297,7 @@
    "id": "PAR-03",
    "title": "OD-18.3: villagers recover health by the player's rest model",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Use the player's existing recovery model for both players and villagers. Equivalent actions under equivalent conditions produce equivalent recovery. NPC AI must recognize when rest is needed and seek an opportunity to rest. Preserve the distinction between access to recovery and actually being able to rest. If the player model restores full health after qualifying rest, NPCs receive the same.",
    "description": "OD-18.3: villagers recover health by the player's rest model",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15308,7 +15308,7 @@
     "Tests for both, and for a villager who cannot rest (no home) not recovering"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test.gd _par03_rest",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15333,6 +15333,11 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "World.rest_recover, the player's model, used by the player's rest and every villager rest step (rest_end); a hurt villager rests by day; 25 suites pass; gate unchanged"
     }
    ],
    "target_build": "16"

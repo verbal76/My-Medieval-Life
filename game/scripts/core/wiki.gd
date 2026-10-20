@@ -541,7 +541,8 @@ func _systems() -> void:
 		p("Time: one real second is %s game minutes, so a day lasts about %d real minutes." % [str(gmps), roundi(1440.0 / gmps / 60.0)]),
 		links(["guide:heal", "sys:resting", "sys:sprint", "sys:magic"])])
 	sys.call("resting", "Resting and sleeping", [
-		p("Your bed in your own house: rest until morning (or two hours by day). It restores full health and stamina and saves. You need a house first: see Rent or buy."),
+		p("Your bed in your own house: rest until morning (or %d minutes by day). It restores full health and stamina and saves. You need a house first: see Rent or buy." % int(GameData.b("rest").day_minutes)),
+		p("Villagers recover by the same rule: a night's sleep, or a rest of %d minutes by day that nobody wakes them from, restores their health. A villager badly hurt (below %d%% of their health) with no medicine to hand goes home to rest." % [int(GameData.b("rest").day_minutes), roundi(float(GameData.b("rest").seek_below) * 100.0)]),
 		links(["guide:rent", "sys:property", "sys:saving"])])
 	sys.call("sprint", "Sprint", [
 		p("Sprinting multiplies your speed by %s and costs %d stamina a second (less what you regenerate). It cannot start when stamina is nearly empty. Shift (hold), or LT on a pad to turn it on or off." % [str(GameData.b("sprint_speed")), int(GameData.b("sprint_stamina_per_sec"))]),

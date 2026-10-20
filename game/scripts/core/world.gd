@@ -1255,6 +1255,20 @@ func wake(n: NPC) -> bool:
 	return true
 
 
+## PAR-03 (owner OD-18.3): the one recovery model, the player's, for everyone. A rest of `minutes` that lasted to the
+## morning (`to_morning`) or at least rest.day_minutes restores health to its cap (and the player's stamina).
+## A rest cut short (a villager woken: its plan is cleared, so it never ends) restores nothing. True if it qualified.
+func rest_recover(who, minutes: float, to_morning: bool) -> bool:
+	if not to_morning and minutes < float(GameData.b("rest").day_minutes):
+		return false
+	who.hp = who.hp_cap()
+	if who is PlayerState:
+		who.stamina = who.stamina_cap()
+	else:
+		stat("rests_recovered")
+	return true
+
+
 ## A noise (a fight) wakes the sleepers within `r` tiles in the same place; they can then witness.
 func wake_near(p: Vector2, r: float) -> void:
 	for n: NPC in present(p, r):

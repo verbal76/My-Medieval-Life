@@ -3680,12 +3680,12 @@ func _rest_now() -> void:
 	var p := world.player
 	var h := world.hour()
 	var until := 6.0 if h < 6.0 else 30.0
-	var mins := (until - h) * 60.0 if h >= 18.0 or h < 6.0 else 120.0
+	var night := h >= 18.0 or h < 6.0
+	var mins := (until - h) * 60.0 if night else float(GameData.b("rest").day_minutes)
 	var steps := int(mins / float(GameData.b("game_minutes_per_second")) / 0.5)
 	for i in steps:
 		world.update(0.5)
-	p.hp = p.hp_cap()
-	p.stamina = p.stamina_cap()
+	world.rest_recover(p, mins, night)        # the one recovery model (PAR-03)
 	ui.message("You rest. It is now %s." % world.clock_text())
 	save_game(false)
 

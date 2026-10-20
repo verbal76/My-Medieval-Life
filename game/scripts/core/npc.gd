@@ -77,6 +77,11 @@ func avg_income(days := 5) -> float:
 
 ## Keep the last 8 memories, but never forget having met someone ("met <name>"): a villager who
 ## knows the player stays acquainted however busy the village gets.
+## The health a rest restores to (PlayerState.hp_cap's counterpart; villagers wear no health gear).
+func hp_cap() -> float:
+	return max_hp
+
+
 func remember(text: String) -> void:
 	memory.append(text)
 	if memory.size() > 8:

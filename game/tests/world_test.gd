@@ -492,6 +492,7 @@ func _pl_gameplay() -> void:
 	_player_gain()
 	_par02_reserve()
 	_par05_awareness()
+	_par03_rest()
 	_pl2_006()
 	_pl2_007()
 
@@ -585,6 +586,61 @@ func _pl2_004() -> void:
 	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
 	w.loot.clear()
 	main._sync_loot()
+
+
+## PAR-03 (OD-18.3): one recovery model. The same rest heals a villager as it heals the player; a rest cut short or too
+## short heals nobody; a badly hurt villager with no medicine to hand goes to rest.
+func _par03_rest() -> void:
+	var w: World = main.world
+	var p := w.player
+	var day_min := float(GameData.b("rest").day_minutes)
+	var n: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job != "guard" and o.home != "" and o.household >= 0:
+			n = o
+			break
+	var keep := [n.hp, n.plan.duplicate(true), n.anim, n.coins, n.inv.to_dict(), p.hp]
+	n.hp = n.max_hp * 0.4
+	p.hp = p.hp_cap() * 0.4
+	check(not w.rest_recover(n, day_min - 1.0, false) and not w.rest_recover(p, day_min - 1.0, false) and n.hp < n.max_hp and p.hp < p.hp_cap(), "PAR-03: a rest shorter than %d minutes heals neither the player nor a villager" % int(day_min))
+	check(w.rest_recover(n, day_min, false) and w.rest_recover(p, day_min, false) and n.hp == n.hp_cap() and p.hp == p.hp_cap(), "PAR-03: the same rest heals both to full")
+	n.hp = n.max_hp * 0.4
+	check(w.rest_recover(n, 15.0, true) and n.hp == n.max_hp, "PAR-03: a rest that lasts to the morning heals, however short, as the player's does")
+	# a hurt villager with no medicine to hand goes to rest, and the rest, run in the world, heals them
+	n.hp = n.max_hp * 0.3
+	for m in NPCBrain.MEDICINES:
+		n.inv.items.erase(m)
+	var pantry: Inventory = w.households[n.household].pantry
+	var meds := {}
+	for m in NPCBrain.MEDICINES:
+		meds[m] = pantry.count(m)
+		pantry.items.erase(m)
+	n.coins = 0
+	n.plan.clear()
+	check(w.brain._plan_rest_hurt(n) and str(n.plan[-1].get("act", "")) == "rest_end" and float(n.plan[-1].args.min) == day_min, "PAR-03: a badly hurt villager with no medicine goes to rest (%s)" % n.doing)
+	n.plan = [n.plan[-1]]                    # already at the bed: the rest itself
+	n.work_left = day_min
+	var m0 := w.minutes
+	for i in 400:
+		w.update(0.5)
+		if n.plan.is_empty() or n.hp >= n.max_hp:
+			break
+	check(n.hp == n.max_hp, "PAR-03: the rest runs its course and heals them")
+	n.hp = n.max_hp * 0.3
+	n.plan = [w.brain.work(day_min, "rest_end", {"min": day_min, "morning": false}, "sleep")]
+	n.work_left = day_min
+	w.update(0.5)
+	w.wake(n)                                 # woken: the rest is cut short
+	check(n.plan.is_empty() and n.hp < n.max_hp, "PAR-03: a rest cut short heals nothing (a fresh rest must run its course)")
+	for m in meds:
+		if int(meds[m]) > 0:
+			pantry.add(m, int(meds[m]))
+	n.hp = keep[0]
+	n.plan = keep[1]
+	n.anim = keep[2]
+	n.coins = keep[3]
+	n.inv = Inventory.from_dict(keep[4])
+	p.hp = keep[5]
 
 
 ## PAR-05 (OD-18.5): an attack is known only by those who see it or hear the victim cry out, for the player and a

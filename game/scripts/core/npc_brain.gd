@@ -163,6 +163,8 @@ func decide(n: NPC) -> void:
 		return
 	if n.hunger < float(GameData.b("eat_below")) and _plan_eat(n):
 		return
+	if (h >= WAKE and h < SLEEP) and _plan_rest_hurt(n):
+		return
 	if n.job == "guard":
 		_guard(n, h)
 		return
@@ -200,16 +202,35 @@ func _plan_sleep(n: NPC) -> void:
 	n.doing = "going home to sleep"
 	var until := WAKE + 24.0 if w.hour() >= SLEEP else WAKE
 	var mins := (until - w.hour()) * 60.0
-	_plan_bed(n, maxf(mins, 10.0))
+	_plan_bed(n, maxf(mins, 10.0), true)
 
 
-## Go home through the door to one's own bed (World.home_spot) and lie in it for `mins` game minutes.
-## A home without a bed or pallet: the door step, standing.
-func _plan_bed(n: NPC, mins: float) -> void:
-	if w.home_spot(n, "bed").is_empty():
-		n.plan = [go(w.building_door(n.home)), doit("enter"), work(mins, "leave", {}, "idle")]
+## Go home through the door to one's own bed (World.home_spot) and lie in it for `mins` game minutes. A home without a
+## bed or pallet: the door step, standing; with no home, rest where one stands. The rest ends in rest_end: a rest to the morning (`to_morning`) or of rest.day_minutes
+## restores health as the player's does (World.rest_recover, PAR-03).
+func _plan_bed(n: NPC, mins: float, to_morning := false) -> void:
+	var done := work(mins, "rest_end", {"min": mins, "morning": to_morning}, "sleep")
+	if n.home == "":
+		done.anim = "idle"
+		n.plan = [done]
 		return
-	n.plan = [go(w.home_cell(n, "bed")), doit("enter"), work(mins, "leave", {}, "sleep")]
+	if w.home_spot(n, "bed").is_empty():
+		done.anim = "idle"
+		n.plan = [go(w.building_door(n.home)), doit("enter"), done]
+		return
+	n.plan = [go(w.home_cell(n, "bed")), doit("enter"), done]
+
+
+## PAR-03: a villager badly hurt (below rest.seek_below of their health) dresses the wound if a medicine is to hand
+## (_plan_heal), else goes home to rest for rest.day_minutes, as the player rests. True when planned.
+func _plan_rest_hurt(n: NPC) -> bool:
+	if n.hp >= n.max_hp * float(GameData.b("rest").seek_below):
+		return false
+	if _plan_heal(n):
+		return true
+	n.doing = "resting a wound"
+	_plan_bed(n, float(GameData.b("rest").day_minutes))
+	return true
 
 
 ## Stock the household's pantry: firewood when it has none, grain (or cooked food) when it holds fewer
@@ -1253,7 +1274,7 @@ func _clan_child(n: NPC, h: float) -> void:
 		return
 	if h >= SLEEP or h < WAKE:
 		n.doing = "sleeping at the bandits' camp"
-		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(120, "", {}, "sleep")]
+		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(120, "rest_end", {"min": 120.0}, "sleep")]
 		return
 	n.doing = "playing about the bandits' camp"
 	n.plan = [go(wander_cell(w.bandit_camp, 4), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
@@ -1624,6 +1645,10 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"leave":
 			n.anim = "idle"
+			return true
+		"rest_end":                           # a rest that ran its course (PAR-03)
+			n.anim = "idle"
+			w.rest_recover(n, float(a.get("min", 0.0)), bool(a.get("morning", false)))
 			return true
 		"eat":
 			for f in (COOKED if a.get("cooked_only", false) else FOOD):
