@@ -21700,11 +21700,13 @@
     "docs/design/TIME_MODEL.md lists every timed value with the seven fields of OD-21 section 3",
     "Findings grouped as section 8 asks: consistent, ambiguous, genuine defects, balance concerns, recommended retuning with consequences, dependencies"
    ],
-   "implementation": "",
+   "implementation": "docs/design/TIME_MODEL.md (the audit document)",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "b388bfb"
+   ],
    "parent": "OD-21",
    "depends_on": [],
    "blockers": [],
@@ -21731,6 +21733,11 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED",
      "why": "Inventory of every timed value with OD-21 section 3's fields, grouped as section 8 asks, in docs/design/TIME_MODEL.md; defect claims spot-checked against the code"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "commit b388bfb; implementation",
+     "why": "evidence recorded"
     }
    ],
    "target_build": "16",

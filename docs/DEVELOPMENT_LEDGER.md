@@ -11,18 +11,18 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 84 |
-| ACTIVE DEVELOPMENT | 11 |
+| APPROVED — NOT STARTED | 85 |
+| ACTIVE DEVELOPMENT | 10 |
 | PARTIALLY IMPLEMENTED | 33 |
 | IMPLEMENTED — TESTING REQUIRED | 13 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 14 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 172 |
+| COMPLETE AND VERIFIED | 173 |
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **402** |
+| **Total approved** | **403** |
 | Outstanding (not complete, superseded or canceled) | 210 |
 
 Also in the register: 32 proposal awaiting an owner decision (not approved), 53 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
@@ -152,9 +152,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED |  |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
-| TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review |
+| TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | a parity defect found by the OD-21 audit |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | approved | IMPLEMENTED — TESTING REQUIRED |  | nature sustainability (EQ-02) |
 
@@ -429,7 +429,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (84)
+## APPROVED — NOT STARTED (85)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -513,12 +513,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-F |  |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-G |  |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | docs/directives/2026-10-20_od21_time_model.md |  | after TIME-01 |  |
+| TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | docs/design/TIME_MODEL.md section 3 (D4), under docs/directives/2026-10-20_food_security_goal_driven_economy.md section 1 (same rules for food consumption) |  |  |  |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | docs/directives/2026-10-19_memory_refuges_politics.md Part III |  | after GM-01; after DVW-B1 |  |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design the five aspiration domains |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (11)
+## ACTIVE DEVELOPMENT (10)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -531,7 +532,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
-| TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | docs/directives/2026-10-20_od21_time_model.md |  |  |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
 ## PARTIALLY IMPLEMENTED (33)
@@ -667,7 +667,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (172)
+## COMPLETE AND VERIFIED (173)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -841,6 +841,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-005 | Working title 'The Well'; repository, package and identifiers stay My Medieval Life | AskUserQuestion answer 2026-10-17T18:46:03Z; owner message #27 2026-10-17T18:46Z | observed in project.godot and the export package name |  |  |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id) | tools/check_resources.py 0 problems; GitHub release list |  |  |
 | SAVE-01 | Inspect and document the current save architecture before modifying it (requirement 1) | docs/directives/2026-10-20_two_decisions_three_expansions.md | n/a (document) |  |  |
+| TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | docs/directives/2026-10-20_od21_time_model.md | `b388bfb` |  |  |
 | WDR-006-C | Comply with World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | check_interactions (CI) |  |  |
 | WDR-007-C | Comply with World Design Rule 7: Automated Compliance | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | `fdc30a5`; tests/test_check_materials.py |  |  |
 
