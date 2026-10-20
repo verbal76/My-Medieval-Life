@@ -98,6 +98,20 @@ func test_manor_pays_the_smith_in_advance() -> void:
 	check(w.brain.keeps(smith, "axe"), "the ordered axe is not sold away")
 	w.brain._deliver_orders()
 	check(n.inv.has("axe") and w.brain._order_for(n).is_empty(), "it is handed to the woodcutter and the order is closed")
+	# an order the forge cannot meet (no coal to be had) lapses after manor_order_days, so its worker is not held
+	# in a trade without a tool for good
+	var n2: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "miner" and o != n:
+			n2 = o
+			break
+	if n2 != null:
+		n2.inv.remove("pickaxe", n2.inv.count("pickaxe"))
+		n2.coins = 0
+		w.manor_orders.append({"smith": smith.id, "tool": "pickaxe", "for": n2.id, "paid": 0, "day": w.day() - int(GameData.b("manor_order_days")) - 1})
+		check(not w.brain.tool_short(n2), "while the order is open the miner waits for the pickaxe")
+		w.brain._deliver_orders()
+		check(w.brain._order_for(n2).is_empty() and w.brain.tool_short(n2), "an order not met in time lapses and the miner may seek other work")
 
 
 ## EQ-20: a bandit with coins buys food at a stall no guard is near; the coins reach the seller.

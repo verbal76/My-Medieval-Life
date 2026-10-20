@@ -2086,7 +2086,7 @@ func reeve_day() -> void:
 ## the household's own home without an axe), in id order: a tool on sale at the goods merchant's or the smith's is
 ## bought from the treasury and handed to them; with none on sale, a smith is paid its worth in advance
 ## (World.manor_orders, at most `manor_orders_per_smith` open each), which buys the forge's ore and coal, and the tool
-## goes to the worker when it is forged (_deliver_orders). The treasury keeps `manor_support_floor_days` of its
+## goes to the worker when it is forged (_deliver_orders); an order not met within `manor_order_days` lapses. The treasury keeps `manor_support_floor_days` of its
 ## obligations. Coins and tools only move. Returns the coins spent.
 func _support_trades(obligations: float) -> int:
 	_deliver_orders()
@@ -2159,12 +2159,13 @@ func _order_for(o: NPC) -> Dictionary:
 
 
 ## Tools forged on the manor's orders go to the worker they were paid for (or, if that worker no longer needs one,
-## to the next worker short of that tool); an order whose smith has died or left the trade lapses.
+## to the next worker short of that tool); an order whose smith has died or left the trade, or that is older than
+## `manor_order_days`, lapses, so its worker is counted short of the tool again and may seek other work.
 func _deliver_orders() -> void:
 	for x in w.manor_orders.duplicate():
 		var smith := w.npc(int(x.smith))
-		if smith == null or not smith.alive or smith.job != "smith":
-			w.manor_orders.erase(x)
+		if smith == null or not smith.alive or smith.job != "smith" or w.day() - int(x.day) > int(GameData.b("manor_order_days")):
+			w.manor_orders.erase(x)                   # (an order not met in time lapses: its worker is free to seek other work)
 			w.stat("gov_tool_order_lapsed")
 			continue
 		var tool := str(x.tool)

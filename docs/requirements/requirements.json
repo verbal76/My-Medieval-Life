@@ -8707,7 +8707,7 @@
    "id": "EQ-18",
    "title": "Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240)",
    "source": "Build 15 release-candidate run (Actions 39396414426 on af60f94), 2026-10-20; OVN-01 section 3 Build 15 scope 'Economic recovery from missing work tools'",
@@ -8748,6 +8748,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "both seeds keep 2 smiths all year (seed 2 had none from day 240 before); job seekers can buy tools; woodcutting still falls to 1 for months because no axe is made while the smith has no coins (OD-16)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED",
+     "why": "smiths kept all year on both seeds in the 3e326fd runs; job seekers buy tools where sold; housing_test passes"
     }
    ],
    "target_build": "15"
@@ -8756,7 +8761,7 @@
    "id": "EQ-19",
    "title": "The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "The manor uses its treasury to keep the smithy and woodlands working: it buys iron and tools for the village's workers, or lends to the smith against future output.",
    "description": "The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output",
    "source": "owner answer to OD-16, 2026-10-20",
@@ -8778,7 +8783,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "future improvement: earmark advances for materials, or the manor buys the coal for an order (Build 16/17); device-free, no blocker",
    "priority": "",
    "workstream": "lead",
    "superseded_by": null,
@@ -8798,6 +8803,16 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "implemented in npc_brain.gd (INT-154); od16_test.gd 23 checks pass; the determinism gate changes as intended (no leaks); a 365-day run on both seeds is next"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "year runs on 3e326fd: the manor gives tools (9 axes, 2 pickaxes by day 200, seed 1); advances to smiths deliver nothing when coal cannot be bought (a legitimate shortage under WDR-022); defects fixed: iron kept for orders (afe087c), unmet orders lapse after manor_order_days"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED",
+     "why": "the mechanic does its approved job when its prerequisites exist (od16_test: tools bought and handed over, advances paid, ordered tools forged first and delivered, unmet orders lapse); in the year runs it gave 9 axes and 2 pickaxes by day 200; advances that meet no coal are a legitimate shortage under WDR-022, and earmarking them is recorded as a future improvement"
     }
    ],
    "target_build": "15"
@@ -8806,7 +8821,7 @@
    "id": "EQ-20",
    "title": "Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Bandits spend their hoards at the market, and guards recover loot to the treasury, so the ~45% of coins now out of circulation return.",
    "description": "Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury",
    "source": "owner answer to OD-16, 2026-10-20",
@@ -8847,6 +8862,11 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "implemented in npc_brain.gd (INT-154); od16_test.gd 23 checks pass; the determinism gate changes as intended (no leaks); a 365-day run on both seeds is next"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED",
+     "why": "year runs on 3e326fd (Actions 39408961143): bandits made 404 market trips and guards recovered 114 loot coins by day 200 (EQ-20); the caravan exported 272/433 meat, 70/143 hides and 136/165 leather from producers (EQ-21); ledger balanced; od16_test passes"
     }
    ],
    "target_build": "15"
@@ -8855,7 +8875,7 @@
    "id": "EQ-21",
    "title": "The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "The caravan buys more of what the village over-produces (meat, hides), bringing more coins in from outside.",
    "description": "The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods",
    "source": "owner answer to OD-16, 2026-10-20",
@@ -8896,6 +8916,11 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "implemented in npc_brain.gd (INT-154); od16_test.gd 23 checks pass; the determinism gate changes as intended (no leaks); a 365-day run on both seeds is next"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED",
+     "why": "year runs on 3e326fd (Actions 39408961143): bandits made 404 market trips and guards recovered 114 loot coins by day 200 (EQ-20); the caravan exported 272/433 meat, 70/143 hides and 136/165 leather from producers (EQ-21); ledger balanced; od16_test passes"
     }
    ],
    "target_build": "15"

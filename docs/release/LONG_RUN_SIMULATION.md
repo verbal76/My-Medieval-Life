@@ -824,3 +824,48 @@ The OD-16 changes (EQ-19..21) change the village's behaviour, so `docs/release/s
 `tools/sim_gate.py --write` from `a6c7699`. Two runs gave the same fingerprints. Neither seed leaks coins or items at
 day 10 or 30. This is a recorded behaviour change, not an optimization: the gate checks optimizations against it from
 here on.
+
+## 365 days on the OD-16 changes (staging `3e326fd`, 2026-10-20), classified under World Design Rule 022
+
+Actions run 39408961143 and local re-runs with the same fingerprints (seed 1 `5527092958fadf428604a63bb30f18e0`,
+seed 2 `e77ad22433b0e8ae660857dbc209212f`). Both passed the script-error gate and the ledger (currency leak 0, no item
+residuals).
+
+| Day 365 | Seed 1 | Seed 2 |
+|---|---|---|
+| Alive (from 100) | 128 | 159 |
+| Starvation deaths | 0 | 1 |
+| Sites finished / started (given up) | 9 / 14 (1) | 9 / 11 (0) |
+| Houses built | 6 | 8 |
+| Smiths / woodcutters | 2 / 1 | 2 / 1 |
+| Unemployed adults | 0 | 10 |
+| Treasury | 2,122 | 2,323 |
+| Exported meat / hides / leather (the caravan, EQ-21) | 272 / 70 / 136 | 433 / 143 / 165 |
+| Wild animals | bear 2, bird 11, boar 17, deer 11, fox 7, rabbit 25, wolf 8 | bear 1, bird 20, boar 24, deer 10, fox 6, rabbit 21, wolf 3 |
+
+A 200-day diagnostic of seed 1 (with the read-only `od16` summary) shows all three of the owner's choices at work by
+day 200:
+- the manor gave out 9 axes and 2 pickaxes;
+- bandits made 404 trips to the market;
+- guards brought 114 coins of loot to the treasury.
+
+The manor's advances to smiths (6) delivered no axe. A probe at days 141-161 shows why:
+- smith 31 holds 8 iron ore and 6 planks but no coal, and 1 coin;
+- the other smith holds one bar and 1 coin;
+- the village's coal seams are worked out, so coal comes only from the caravan, and the smiths cannot pay;
+- the advances went into their households' living costs.
+
+**Classification (World Design Rule 022):**
+- **Defects, fixed:**
+  - the smith worked the iron for an order into other goods (`afe087c`);
+  - an unmet order held its worker in the trade without a tool indefinitely, now lapsing after `manor_order_days`
+    (`od16_test.gd`).
+- **Legitimate outcomes, recorded:**
+  - a smith too poor to buy coal after the seams are worked out;
+  - one woodcutter for much of the year;
+  - nights without firewood;
+  - the difference between the seeds.
+- **Future improvements (EQ-19, Build 16 / 17):**
+  - an advance earmarked for materials, so a household does not spend it on food;
+  - coal for an ordered tool bought through the manor;
+  - Build 17's mining work on fuel.

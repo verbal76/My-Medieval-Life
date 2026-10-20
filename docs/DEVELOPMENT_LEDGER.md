@@ -14,16 +14,16 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 63 |
 | ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 30 |
-| IMPLEMENTED — TESTING REQUIRED | 15 |
+| IMPLEMENTED — TESTING REQUIRED | 11 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 156 |
+| COMPLETE AND VERIFIED | 160 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **362** |
-| Outstanding (not complete, superseded or canceled) | 187 |
+| Outstanding (not complete, superseded or canceled) | 183 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 34 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 59 | 56 |
+| Build 15: simulation stabilization | 55 | 52 |
 | Build 16: long-term equilibrium and validation | 27 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **245** | **187** |
+| **Total open** | **241** | **183** |
 
-### Build 15: simulation stabilization (59)
+### Build 15: simulation stabilization (55)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -82,10 +82,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
 | CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | relationship sustainability (owner's Build 15 scope); code and tests done, the owner's play check remains |
 | DVW-A14 | Play one whole life before each release (:39) | approved | IMPLEMENTED — TESTING REQUIRED |  | release practice: play one whole life before each release, starting with Build 15 |
-| EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
-| EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED |  | the responsible-adult choice is needed by the housing fix (HOUSE-02); the rest exists (inheritance, work, purse) |
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED |  | OD-14 follow-up, owner's preferred direction |
@@ -505,17 +501,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (15)
+## IMPLEMENTED — TESTING REQUIRED (11)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
-| EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | Build 15 release-candidate run (Actions 39396414426 on af60f94), 2026-10-20; OVN-01 section 3 Build 15 scope 'Economic recovery from missing work tools' | housing_test.gd test_axe_bought_to_take_up_woodcutting, test_left_trade_post_opens |  | re-run after OD-16 is implemented |
-| EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  |  |
-| EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  |  |
-| EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  |  |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.1 | game/tests/housing_test.gd test_responsible_adult_after_a_death |  | confirm over a long run that a widowed parent's household keeps feeding itself and building |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3 | game/tests/family_test.gd |  |  |
 | FAM-03 | Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.1-4.2 | game/tests/family_test.gd | after FAM-02 |  |
@@ -604,7 +596,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (156)
+## COMPLETE AND VERIFIED (160)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -696,6 +688,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-08 | Births do not require a free bed; the crowding a birth causes is what drives a household to split and move | owner message 2026-10-19 (chat) | `af60f94`; game/tests/aging_test.gd::test_partners_and_births, test_couples_found_households; run_tests::test_households_split |  |  |
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | WR-01 agent report 2026-10-19 (also in the unchanged baseline) | long-sims run 39368663150; world_test.gd hammer conservation |  |  |
 | EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | agent finding 2026-10-20: SCRIPT ERROR counts in out/eq logs (fix2 to fix13), building_door on a missing building | long-sims run 39368663150; housing_test.gd |  |  |
+| EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | Build 15 release-candidate run (Actions 39396414426 on af60f94), 2026-10-20; OVN-01 section 3 Build 15 scope 'Economic recovery from missing work tools' | housing_test.gd test_axe_bought_to_take_up_woodcutting, test_left_trade_post_opens |  | re-run after OD-16 is implemented |
+| EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  | future improvement: earmark advances for materials, or the manor buys the coal for an order (Build 16/17); device-free, no blocker |
+| EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  |  |
+| EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | owner answer to OD-16, 2026-10-20 | game/tests/od16_test.gd |  |  |
 | FR-05 | Title window opens scrolled into the controls list | docs/release/BUILD_13_PACKET.md | `ec3bd0e`; start_test |  |  |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md | wiki_test.gd; run_tests.gd 3535 checks |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit | tests.yml 'Short economy simulation (FR-07)', run 39368652711 |  |  |

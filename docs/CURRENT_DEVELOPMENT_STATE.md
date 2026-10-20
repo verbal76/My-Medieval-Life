@@ -13,7 +13,7 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 | Last verified remote commit | The head of `origin/staging/my-medieval-life` (`git log origin/staging/my-medieval-life -1`). This file was last brought up to date in the commit `git log -1 -- docs/CURRENT_DEVELOPMENT_STATE.md` shows; anything newer on staging is described in that commit's successors. |
 | `main` | Changes only when the owner merges. |
 | Multiplayer | `wip/multiplayer` (MP-01), isolated. It must not be merged into staging without the owner's explicit approval. |
-| Active build | **Build 15**, simulation stabilization (ROAD-01): OD-16 answered by the owner 2026-10-20 ((a), (b), (c)); implementing it as EQ-19..21, then a 365-day run and the release gates |
+| Active build | **Build 15**, simulation stabilization (ROAD-01): its gates are met under the owner's closure standard (OVN-02 section 5; `docs/release/BUILD_15_READINESS.md`); next, `release.yml` as a private draft, then Build 16 |
 | Directive in force | OVN-02, `docs/directives/2026-10-20_final_development_mandate.md` (final mandate: Build 15 closes on mechanics and integrity, not prosperity; then Builds 16 → 17 → 18 in order), with OVN-01 (`docs/directives/2026-10-20_master_overnight_development_directive.md`) and `docs/directives/2026-10-20_compaction_readiness.md`. The design principle WDR-022: "A village is allowed to fail. The simulation is not." |
 | Last released build | **Build 14**, a private draft from `7dbae4f` (`docs/release/BUILD_14_PACKET.md`) |
 | Release authorization | OVN-01 section 9 and REL-15-18: Builds 15 to 18 may be released as **private drafts**, in order, each only when every condition of OVN-01 section 4 holds (REL-14-16 before it). No placeholder builds. Public visibility needs new owner approval. |
@@ -25,7 +25,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 about 10:00 UTC.
 
 - **EQ-18 (Build 15):** tool recovery fixed and verified; what remained was OD-16.
-- **EQ-19, EQ-20, EQ-21 (Build 15, ACTIVE):** the owner's answer to OD-16 (2026-10-20): the manor supports the essential trades from its treasury (b), bandit coins recirculate (a), the caravan buys more surplus (c). Next: implement, test, a 365-day run on both seeds, then the Build 15 release.
+- **EQ-18..21 (Build 15):** complete and verified (EQ-19's earmarked advances are a recorded future improvement).
 - **Build 15 release gates:** the record of each OVN-01 section 4 condition goes in the Build 15 readiness packet (`docs/release/`), then `release.yml` runs as a private draft (REL-15-18). A 365-day Actions run on the release candidate checks the simulation before it.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
 - **OVN-02** (the final mandate) and **OVN-01:** the directives in force. **WDR-022-C:** classify every finding as defect, legitimate outcome or future improvement. **ROAD-01:** the roadmap.
@@ -75,7 +75,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
-1. **Build 15 release: OD-16 answered (EQ-19..21 in progress).** EQ-18 is fixed and verified in the year runs on `248e383` (smiths kept all year on both seeds; job seekers can buy tools). What remains is money: the producing trades go broke, so no axes are made. OD-16 asks the owner how money should flow back to them (options and a recommendation in the entry). When answered: implement it, re-run 365 days on both seeds, update `docs/release/BUILD_15_READINESS.md`, and if every OVN-01 section 4 condition holds, run `release.yml` as a private draft (REL-15-18).
+1. **Build 15 release:** the readiness record is complete (`docs/release/BUILD_15_READINESS.md`; findings classified under WDR-022, no open defects). Next: the suites on the head commit, push, CI green, then `release.yml` (private draft, build 15), artifacts downloaded and checked, `BUILD_15_PACKET.md` written, CLAUDE.md and PROJECT_MEMORY marked, Build 15 COMPLETE. Then Build 16 at once (OVN-02 section 7).
 2. **Then Build 16** (EQ-01..06, FAM-07, EQ-09, OD-16 once answered, and the rest), Build 17 and Build 18, in order.
 3. Open Build 15 entries that are not code: DVW-A14 (the whole-life play-through, item 8 of the testing checklist), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 

@@ -31,7 +31,19 @@ Tested.
 - Builders saw planks and fell timber themselves when nobody sells them.
 - Every house goes up with real materials and work over time.
 
-Tested. In a year-long simulation of this build, new houses were finished on both test worlds (3 and 2).
+Tested. In a year-long simulation of this build, new houses were finished on both test worlds (6 and 8).
+
+**Money comes back to the trades** (the owner's choices):
+- The manor keeps the village's workers in tools. It buys a woodcutter's axe or a miner's pickaxe that is on sale, or
+  pays the smith in advance for one.
+- Bandits spend their coins on food at the market, where no guard is near.
+- Guards bring coins left lying to the manor's treasury.
+- The caravan buys hunters' meat and hides and tanners' leather.
+
+Tested.
+
+**Trades are handed on.** A smith who leaves the trade opens the post for an apprentice or a newcomer, as a death
+does. Someone out of work can buy an axe to become a woodcutter. Tested.
 
 **Orphaned children are taken in**, in this order:
 1. a surviving parent;
@@ -77,12 +89,11 @@ The same as Build 14, plus the shortcuts above. The full lists are in the game (
 ## Known limitations (please do not report these as new bugs)
 
 **Economy**
-- **Trade slows down after a few game months.** The smith runs short of money, so tools are scarce. Many grown
-  villagers find no paid work, and houses often go without firewood. In one simulated year on one world, four
-  villagers died of hunger.
-- **Timber runs short later in the year.** Building sites and sleeping lofts then wait for planks and logs, sometimes
-  for months.
-- Making the village's economy hold together over many years is Build 16's work.
+- **The village can struggle, and that is intended** (the owner's rule: "A village is allowed to fail. The simulation
+  is not."). Once the coal seams are worked out the smith is often too poor to buy coal from the caravan, timber and
+  firewood run short, and building sites can wait months for planks. One villager died of hunger in a simulated year
+  on one test world.
+- Different worlds develop differently.
 - The caravan brings a fixed 30 coins a day into the village. This is a labelled stand-in for neighbouring
   settlements, which are not simulated yet.
 - Iron, coal and copper seams run out after about 2 hours of play. After that, the caravan sells ore.

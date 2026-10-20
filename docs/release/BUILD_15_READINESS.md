@@ -1,160 +1,110 @@
 # Build 15 readiness (2026-10-20)
 
-Build 15 is **simulation stabilization** (roadmap ROAD-01). This report checks it against the owner's completion
-conditions in OVN-01 section 4 (`docs/directives/2026-10-20_master_overnight_development_directive.md`). Release
-authorization: OVN-01 section 9 and REL-15-18. A build that meets every condition is released as a **private draft**.
-"You do not need to wake me up merely to publish a build that meets these conditions."
+Build 15 is **simulation stabilization** (roadmap ROAD-01). This report checks it against:
+- the ten completion conditions of OVN-01 section 4 (`docs/directives/2026-10-20_master_overnight_development_directive.md`);
+- the closure standard of the owner's final mandate, OVN-02 section 5 (`docs/directives/2026-10-20_final_development_mandate.md`).
 
-> **Status: not qualified; blocked on owner decision OD-16.** The release-candidate run on `af60f94` exposed two
-> tool-recovery defects (EQ-18). They are fixed and verified on `248e383`: smiths are kept all year, and job seekers
-> can buy tools. But the producing trades still run out of coins, so no axes are made for months and timber and
-> building stall. That is OD-16, an economy fundamental for the owner. The figures below are from `af60f94` and will be
-> redone after OD-16 is implemented.
+The mandate's founding principle (World Design Rule 022): **"A village is allowed to fail. The simulation is not."**
+Build 15 closes on mechanical correctness and simulation integrity, not prosperity. Release authorization: OVN-01
+section 9, REL-15-18 and OVN-02 section 7, as a **private draft**.
 
 ## Candidate
 
-- **Game code:** `af60f94` on `staging/my-medieval-life`. Later commits change only documents, the register and
-  Python tools. The packet (`BUILD_15_PACKET.md`) names the exact commit the release was built from.
+- **Game code:** the staging commit named in `BUILD_15_PACKET.md`, the one `release.yml` builds from. The year-long runs
+  were on `3e326fd`; the commits after it are the order fixes (`afe087c`, the order lapse), documents and tools.
 - **Contents:** single player only. Multiplayer stays on `wip/multiplayer` and is not in the build.
 - **Changes since Build 14 (`7dbae4f`):** listed for testers in `BUILD_15_TESTER_NOTES.md`.
 
-## The ten conditions
+## The owner's closure standard (OVN-02 section 5)
 
-### 1. Mandatory approved requirements are implemented
-
-OVN-01 section 3 lists Build 15's scope. Each item and its register evidence:
-
-| Scope item | Entries | State |
+| # | Question | Answer and evidence |
 |---|---|---|
-| Housing construction and completion | EQ-07, HOUSE-07, HOUSE-05 | Complete and verified. Houses are finished on both seeds in every year-long run since `59057ac` |
-| Persistent housing goals | HOUSE-01, HOUSE-03 | Complete and verified |
-| Economic recovery from missing work tools | EQ-07 (tool reserve, tool-less workers count as out of work, the smith buys imported ore, the caravan keeps needed tools) | Complete and verified |
-| Bed sharing | HOUSE-08 | Complete and verified |
-| Sleeping lofts | HOUSE-12 | Implemented and tested: a loft is built, used and saved (`housing_test.gd`). Households start lofts in the year-long runs (1 and 3); none is finished there, because timber runs short (condition 4) |
-| Existing-house expansion | HOUSE-06, HOUSE-09, HOUSE-10 | Complete and verified (the small room, the loft and the quarters) |
-| Household ownership and occupancy integrity | HOUSE-02, FAM-01, EQ-08, EQ-17 | Implemented and tested |
-| Required regression tests | FR-07 (a 10-day simulation in CI; CI fails on script errors) | Complete and verified |
-| Long-duration simulation validation | INFRA-02, B14R-12 | Year-long runs on GitHub Actions (condition 4) |
-| Save/load compatibility | DVW-A2, DVW-A6, SAVE-00..09 | Complete; the phone checks of save transfer are device items |
-| Resource and currency accounting | EQ-10, DVW-A4 | Complete and verified: no leaks in any year-long run |
+| 1 | Runs without release-blocking script errors | Yes. 0 script errors in every year-long run (the workflow fails on any). CI fails on script errors too |
+| 2 | Required systems execute their functions | Yes. 25 Godot suites pass. The year runs exercise the whole world: houses, lofts, beds, households, trades, the manor, the caravan, bandits and guards |
+| 3 | Essential NPC decisions follow approved rules | Yes. Defects found on the way were fixed with tests: EQ-17, EQ-10, EQ-18, the forge's order iron, the order lapse |
+| 4 | Currency and resource accounting valid | Yes. Currency leak 0 and no item residuals in every year-long run, on both seeds |
+| 5 | Save and load preserve essential state | Yes. A Build 14 save loads, plays, re-saves and reloads with coins unchanged. `conservation_test.gd` checks a round trip. Manor orders are saved |
+| 6 | Construction, trade, employment, tools, households work when their prerequisites hold | Yes, by test. In the year runs 9 sites are finished on each seed, the manor equips workers, and job seekers buy tools |
+| 7 | No unexplained resources or money | Yes. Ledger balanced; every coin from outside is counted in `coin_sources` |
+| 8 | Test suites and release gates pass | 25 Godot suites, the Python tests and the requirement, interaction, resource, asset and material checks pass. The determinism gate passes against its recorded baseline |
+| 9 | Noncritical issues documented | Yes: below, in `BUILD_15_TESTER_NOTES.md` and in `docs/SKIPPED_ITEMS.md` |
+| 10 | Artifacts produced and validated | Recorded in `BUILD_15_PACKET.md` after `release.yml` runs |
 
-**Other Build 15 entries:**
-- The documentation items are done: REC-004 (the Game Designer spec), REC-017, B14-12, FR-06 and PERF-06's evaluation.
-- FR-04 (controller shortcuts) is implemented and tested, and needs a real controller.
-- WDR-007-C (the material report) is covered by its own commit before the release.
-- WDR-008-C and WDR-010-C need device checks. WDR-010-C's cart-route feedback is deferred (condition 8).
-- **Waiting on the owner, not on engineering:**
-  - B7-008's buyer half (OD-15);
-  - B7-009 and B7-014 (the owner's choice among the measured settings);
-  - REC-003's API 36 policy (the builds already target it);
-  - DVW-A14 (a whole-life play-through on the installed build).
-- **Device checks:** the playtest queue in `docs/DEVELOPMENT_LEDGER.md`.
+## OVN-01 section 4
 
-### 2. Integrated into actual gameplay
+1. **Mandatory requirements implemented.** Build 15's scope (OVN-01 section 3), each item with its register entries:
+   - housing completion: EQ-07, HOUSE-05, HOUSE-07;
+   - persistent goals: HOUSE-01, HOUSE-03;
+   - tool recovery: EQ-07, EQ-18, EQ-19;
+   - bed sharing: HOUSE-08;
+   - lofts: HOUSE-12;
+   - house expansion: HOUSE-06, HOUSE-09, HOUSE-10;
+   - ownership and occupancy: HOUSE-02, FAM-01, EQ-08, EQ-17;
+   - regression tests: FR-07;
+   - long simulations: INFRA-02, B14R-12;
+   - saves: DVW-A2, DVW-A6, SAVE-00..09;
+   - accounting: EQ-10, DVW-A4;
+   - OD-16's answer: EQ-19..21.
 
-Every item above runs in the game, not only in tests. The year-long simulations run the full game world (the same
-`World` the game plays), so houses, lofts, beds, households and accounting are exercised together. The small room was
-looked at in the game, outside and inside.
+   What remains open is waiting on the owner or on a device, not on engineering:
+   - OD-15 (B7-008's buyer half);
+   - B7-009 and B7-014 (the owner's choice of settings);
+   - REC-003's policy confirmation;
+   - DVW-A14 (a whole-life play-through);
+   - the device queue.
+2. **Integrated:** every system runs in the game itself. The small room was looked at in the game.
+3. **Tests pass:** see the closure standard, row 8.
+4. **Simulation and integrity checks:** the year-long runs below.
+5. **No known game-breaking defects.**
+6. **No unexplained leaks.**
+7. **Save and load work.**
+8. **Deferrals follow the policy:** one entry in `docs/SKIPPED_ITEMS.md`. It is WDR-010-C's feedback for blocked cart
+   routes; carts have no collision, so no route is ever blocked.
+9. **Committed and pushed:** every commit is on `staging/my-medieval-life`, the remote hash checked each time.
+10. **Artifacts:** `BUILD_15_PACKET.md`.
 
-### 3. Automated tests pass
+## The year-long runs (365 days, no player)
 
-All on `af60f94`:
-- 24 Godot suites, 0 failures (`housing_test.gd` 107 checks, `run_tests.gd` 3,535);
-- Python unittest OK;
-- the asset, resource, interaction and requirements checks report 0 problems;
-- CI run 39396402372 passed.
+Actions run 39408961143 on `3e326fd`, and local re-runs with the same fingerprints. The full record is
+`LONG_RUN_SIMULATION.md`, "365 days on the OD-16 changes".
 
-### 4. Simulation and integrity checks
-
-**Determinism gate:** `tools/sim_gate.py` matches the baseline exactly.
-
-**Year-long runs:** Actions run 39396414426 on `af60f94`, 365 days, no player:
-
-| | Seed 1 | Seed 2 |
+| Day 365 | Seed 1 | Seed 2 |
 |---|---|---|
-| Script errors | 0 | 0 |
-| Currency leak / item leaks | 0 / none | 0 / none |
-| Alive at day 365 (from 100) | 115 | 122 |
-| Births / deaths | 84 / 69, all old age | 92 / 70: 66 old age, 4 starvation |
-| Households | 33 | 34 |
-| Sites started / finished | 8 / 3 | 9 / 3 |
-| Houses built | 3 | 2 |
-| Lofts started | 1 | 3 |
-| Unemployed adults | 17 of 72 | 17 of 79 |
-| Nights without firewood | 6,917 | 6,633 |
-| Fingerprint | `b21ba717e772664848724d5001a4028c` | `0647d6bf82c1f58ad21f95e5aeaca583` |
+| Script errors / currency leak / item residuals | 0 / 0 / none | 0 / 0 / none |
+| Alive (from 100) | 128 | 159 |
+| Starvation deaths | 0 | 1 |
+| Sites finished / started | 9 / 14 | 9 / 11 |
+| Houses built | 6 | 8 |
+| Smiths / woodcutters | 2 / 1 | 2 / 1 |
+| Unemployed adults | 0 | 10 |
+| Every wild species alive | yes | yes |
 
-**Wildlife at day 365:** every wild species is alive on both seeds (local re-runs of `af60f94` with the same
-fingerprints):
-- seed 1: bear 2, bird 14, boar 22, deer 14, fox 6, rabbit 19, wolf 6;
-- seed 2: bear 2, bird 18, boar 20, deer 9, fox 8, rabbit 23, wolf 7.
-
-**Construction over the year:**
-- Every site that got its materials was finished. No site was given up, and no script error or deadlock occurred.
-- Seed 1's other five sites, and every loft started (1 and 3), wait for planks and logs from about day 270 to the
-  year's end: timber runs short.
-
-### 5. No known game-breaking defects
-
-No crash, data corruption or save failure is known. The open defects are about the economy's long-term balance, not
-breakage (condition 8 and the known issues below).
-
-### 6. No unexplained leaks
-
-The currency and every item balance exactly in both year-long runs (leak 0, no item residuals).
-
-### 7. Save and load
-
-- The format is unchanged (version 14).
-- A save made by the Build 14 code (`7dbae4f`) loads in the candidate, plays a game day, saves and reloads. Its
-  coins are unchanged (2,978 before and after).
-- `conservation_test.gd` checks coins, goods, deposits, animals and villagers across a save round trip.
-- Three dated backups are kept, and Continue falls back to them.
-
-### 8. Deferrals follow the policy
-
-**`docs/SKIPPED_ITEMS.md` has one entry:** WDR-010-C's feedback for blocked cart routes.
-- Carts have no collision, so a route is never blocked and there is nothing to explain yet.
-- It is low severity and presentation only.
-
-**Not deferred, but carried to Build 16 by the roadmap:**
-- the economy's long-term equilibrium (EQ-01..06, OD-16);
-- stone (EQ-09);
-- the bandit fallback for orphans (FAM-07).
-
-Build 16 is defined as that work (ROAD-01). It is not skipped Build 15 work.
-
-**The four starvation deaths on seed 2 were weighed against the "not deferrable" list.**
-- They are 4 deaths in a year among the 192 villagers who lived in it (100 at the start, 92 born).
-- The village grows: 100 to 122.
-- Food is not short: 43,920 wheat was grown and 66,810 pottage made, and 2,931 wheat was left at the year's end. The deaths come from money, not supply.
-- That is the economic-paralysis question Build 16's EQ-06 acceptance is written for ("no consistent spiral into
-  extinction, starvation, permanent unemployment or economic paralysis"). It is not a broken survival system.
-- It is stated plainly in the tester notes.
-
-### 9. Committed and pushed
-
-`af60f94` and every later commit are on `staging/my-medieval-life`. The remote hash was checked at each push.
-
-### 10. Release artifacts produced and validated
-
-Recorded in `BUILD_15_PACKET.md` once `release.yml` has run.
+**Findings, classified under World Design Rule 022:**
+- **Defects:** none open.
+  - Fixed this cycle: EQ-17 (a baby with no home), EQ-10 (ledger residuals), EQ-18 (tools could not be bought; an
+    abandoned trade left no post), the forge's use of order iron, and an unmet order holding its worker.
+- **Legitimate outcomes,** recorded, not corrected:
+  - smiths too poor to buy coal once the seams are worked out;
+  - one woodcutter for much of the year;
+  - nights without firewood;
+  - 1 starvation death on seed 2;
+  - seeds developing differently.
+- **Future improvements:**
+  - an advance earmarked for materials, or the manor buying an order's coal (EQ-19);
+  - fuel and mining (Build 17);
+  - the economy's long-term adaptation (Build 16).
 
 ## Known issues (in the tester notes)
 
-**Economy:**
-- The trade economy stalls after a few game months: the smith runs short of coins, firewood is short, and about
-  17 adults are out of work by day 365.
-- Seed 2 lost four villagers to hunger in a year.
-- That is Build 16's work.
+**Economy:** coal, timber and firewood run short later in the year, the smith is often poor, and building can wait
+months for planks. These are outcomes of finite resources and autonomous decisions, not breakage. Build 16 (adaptation)
+and Build 17 (mining) build on them.
 
-**Housing:**
-- Houses are finished on both seeds, but fewer on seed 1 than in the `59057ac` runs (3 against 8). Seed 1's five other
-  sites, and the lofts started, wait for timber from about day 270.
+**Housing:** the small room fits beside only three original houses.
 
-**Other:**
-- The small room fits beside only three original houses.
-- No audio; some stand-in art.
+**Other:** no audio, and some stand-in art.
 
-**Not verified:** no phone, tablet, controller or Windows PC was used. The Android build is signed with a throwaway
-key (`ANDROID_SIGNING.md`), so testers must uninstall Build 14 first. Exporting the save first keeps it.
+**Not verified:**
+- No phone, tablet, controller or Windows PC was used.
+- The Android build is signed with a throwaway key (`ANDROID_SIGNING.md`), so testers must uninstall Build 14 first.
+  Exporting the save first keeps it.
