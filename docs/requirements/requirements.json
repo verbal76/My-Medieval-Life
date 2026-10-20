@@ -10838,6 +10838,286 @@
    "roadmap_reason": "part of the standalone Living Economy build EXP-D, whose number and placement the owner decides (OD-LE-01)"
   },
   {
+   "id": "FSE-11",
+   "title": "Village sowing consumes seed (seed consumption correction)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Seeds must have a legitimate source and be consumed during planting. Farmers must not sow without sufficient seed. Seed reserves for future planting should influence household and farm decisions.",
+   "description": "Village sowing consumes seed (seed consumption correction)",
+   "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
+   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "acceptance": [
+    "Sowing a village field removes seed from a real inventory; no seed, no sowing",
+    "Farmers keep seed for the next sowing before selling; conservation ledger balanced; deterministic tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "FSE-16"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_agricultural_findings_followup.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner follow-up 2026-10-20"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+  },
+  {
+   "id": "FSE-12",
+   "title": "One agricultural model for player and village farming (parity)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Establish a shared underlying agricultural model for player and NPC farming. Do not arbitrarily increase village yields or decrease player yields just to make the numbers match.",
+   "description": "One agricultural model for player and village farming (parity)",
+   "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
+   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "acceptance": [
+    "Why the yields differ explained (crop definitions, labor, land abstraction, growth rules, duplicated code)",
+    "Player and village fields use one model of land, seed, time, labor, seasons and skills; consequences tested before activation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "FSE-16"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_agricultural_findings_followup.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner follow-up 2026-10-20"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+  },
+  {
+   "id": "FSE-13",
+   "title": "Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "approved for implementation and testing, not immediate baseline activation ... Bring any major balance consequences back for owner review before activating the corrected seasonal model in the release baseline.",
+   "description": "Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review)",
+   "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
+   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "acceptance": [
+    "Village fields follow the same season rates as player crops, behind a switch that is off in the baseline",
+    "Compared with the baseline: annual production, seasonal inventories, prices, household food access, starvation, population; reported to the owner before activation"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "FSE-12"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_agricultural_findings_followup.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner follow-up 2026-10-20"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+  },
+  {
+   "id": "FSE-14",
+   "title": "Dynamic land planning: design and safe foundations (land rental for plots and pens)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "The six existing fields must not remain the permanent agricultural capacity of a growing village. However, the answer is not to automatically create another field whenever population increases.",
+   "description": "Dynamic land planning: design and safe foundations (land rental for plots and pens)",
+   "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
+   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "acceptance": [
+    "Design for land supply, rental of small and large plots and pens, legitimate rent; foundations in Build 16 only where safe; the rest scheduled with the living-economy build (FSE-10)"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_agricultural_findings_followup.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner follow-up 2026-10-20"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+  },
+  {
+   "id": "FSE-15",
+   "title": "Recalculate the land requirement after the seed, season and parity corrections",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Do not treat 1.7 field cells per adult as a permanent land requirement.",
+   "description": "Recalculate the land requirement after the seed, season and parity corrections",
+   "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
+   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "acceptance": [
+    "Productive capacity recalculated with labor availability and net edible yield after seed and losses"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "FSE-11",
+    "FSE-12",
+    "FSE-13"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_agricultural_findings_followup.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner follow-up 2026-10-20"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+  },
+  {
+   "id": "FSE-16",
+   "title": "Seed-2 starvation: root cause of each of the 11 deaths",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Finish the seed-2 investigation into the 11 starvation deaths before materially changing agricultural production.",
+   "description": "Seed-2 starvation: root cause of each of the 11 deaths",
+   "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
+   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "acceptance": [
+    "For each death: household food and access, coins and prices, relief qualification, request, availability and delivery, alternative food sources and whether attempted; classified legitimate / poor judgment / broken mechanic",
+    "Defects fixed with regression tests; the existing seed-2 annual baseline preserved"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-00",
+   "depends_on": [
+    "B7-015"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_agricultural_findings_followup.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target: owner follow-up 2026-10-20"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner follow-up 2026-10-20: a tracked Build 16 task"
+  },
+  {
    "id": "GM-01",
    "title": "Generational memory and historical consequences (the 30-planks chain)",
    "kind": "approved",

@@ -11,8 +11,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 77 |
-| ACTIVE DEVELOPMENT | 9 |
+| APPROVED — NOT STARTED | 82 |
+| ACTIVE DEVELOPMENT | 10 |
 | PARTIALLY IMPLEMENTED | 33 |
 | IMPLEMENTED — TESTING REQUIRED | 13 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
@@ -22,8 +22,8 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
-| **Total approved** | **393** |
-| Outstanding (not complete, superseded or canceled) | 201 |
+| **Total approved** | **399** |
+| Outstanding (not complete, superseded or canceled) | 207 |
 
 Also in the register: 31 proposal awaiting an owner decision (not approved), 52 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 36 | 35 |
+| Build 16: long-term equilibrium and validation | 42 | 41 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 61 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **275** | **201** |
+| **Total open** | **281** | **207** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,7 +107,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (36)
+### Build 16: long-term equilibrium and validation (42)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -141,6 +141,12 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FSE-07 | Unresolved owner questions arising from the food-security directive | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
 | FSE-08 | The directive's 25 deterministic tests (section 17) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
+| FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-12 | One agricultural model for player and village farming (parity) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED |  |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
@@ -419,7 +425,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (77)
+## APPROVED — NOT STARTED (82)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -458,6 +464,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FSE-08 | The directive's 25 deterministic tests (section 17) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
+| FSE-11 | Village sowing consumes seed (seed consumption correction) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-16 |  |
+| FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-16 |  |
+| FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-12 |  |
+| FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | docs/directives/2026-10-20_agricultural_findings_followup.md |  |  |  |
+| FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-11; after FSE-12; after FSE-13 |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
@@ -501,13 +512,14 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (9)
+## ACTIVE DEVELOPMENT (10)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | docs/directives/2026-10-19_build16_world_equilibrium.md |  | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05; after EQ-06; after EQ-07 | Build 15: diagnose and fix EQ-07; Build 16: EQ-06 acceptance |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
+| FSE-16 | Seed-2 starvation: root cause of each of the 11 deaths | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after B7-015 |  |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | docs/directives/2026-10-19_multiplayer_foundation.md | `d18d7d1`; net_test (36, separate processes); branch wip/multiplayer |  |  |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | docs/directives/2026-10-20_master_overnight_development_directive.md |  |  |  |
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
