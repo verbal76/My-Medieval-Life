@@ -15630,11 +15630,11 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "owner to confirm the policy; then record it in CLAUDE.md section 8. The builds already comply",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Related: OWN-22, B13-15, B14R-09",
+   "notes": "Evidence: ~/.local/share/godot/export_templates/4.7.2.stable/android_source.zip config.gradle lines 3-9 (targetSdk 36). A device check of the installed APK's target is not done. Related: OWN-22, B13-15, B14R-09.",
    "history": [
     {
      "date": "2026-10-19",
@@ -15645,6 +15645,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "notes; next_action",
+     "why": "investigated 2026-10-20: the Android builds already target API 36. release.yml exports with Godot 4.7.2's Android template (export-debug 'Android'), whose config.gradle sets targetSdk 36, compileSdk 36, minSdk 24; game/export_presets.cfg overrides none of them. Whether the policy is an owner-approved requirement is still unconfirmed, so the status is unchanged; nothing needs building"
     }
    ],
    "target_build": "15",
