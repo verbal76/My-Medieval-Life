@@ -10848,7 +10848,7 @@
    "id": "FSE-11",
    "title": "Village sowing consumes seed (seed consumption correction)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "BLOCKED",
    "owner_wording": "Seeds must have a legitimate source and be consumed during planting. Farmers must not sow without sufficient seed. Seed reserves for future planting should influence household and farm decisions.",
    "description": "Village sowing consumes seed (seed consumption correction)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -10866,7 +10866,9 @@
    "depends_on": [
     "FSE-16"
    ],
-   "blockers": [],
+   "blockers": [
+    "OD-22"
+   ],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10885,6 +10887,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: owner follow-up 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> BLOCKED; blockers",
+     "why": "Seed per sowing depends on the shared model (OD-22): per cell or per field"
     }
    ],
    "target_build": "16",
@@ -10895,7 +10902,7 @@
    "id": "FSE-12",
    "title": "One agricultural model for player and village farming (parity)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "BLOCKED",
    "owner_wording": "Establish a shared underlying agricultural model for player and NPC farming. Do not arbitrarily increase village yields or decrease player yields just to make the numbers match.",
    "description": "One agricultural model for player and village farming (parity)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -10913,7 +10920,9 @@
    "depends_on": [
     "FSE-16"
    ],
-   "blockers": [],
+   "blockers": [
+    "OD-22"
+   ],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10932,6 +10941,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: owner follow-up 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> BLOCKED; blockers",
+     "why": "Investigated: the difference is the land abstraction (a flat 60 a field against 3 a cell), not labour or seed; the shared model waits on OD-22"
     }
    ],
    "target_build": "16",
@@ -14199,6 +14213,144 @@
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "answered by the owner 2026-10-20"
+  },
+  {
+   "id": "OD-22",
+   "title": "Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference)",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 8",
+   "approval": "agent question under FSE-07 (owner directive 2026-10-20)",
+   "acceptance": [
+    "The owner chooses (a), (b) or (c); FSE-12 and FSE-11 proceed on it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-07",
+   "depends_on": [],
+   "blockers": [
+    "owner decision"
+   ],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 8"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason; blockers",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an owner decision raised by the food-security audit"
+  },
+  {
+   "id": "OD-23",
+   "title": "What the manor's fields cost their farmers (lease, crop share, or free to any farmer)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "What the manor's fields cost their farmers (lease, crop share, or free to any farmer)",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 8",
+   "approval": "agent question under FSE-07 (owner directive 2026-10-20)",
+   "acceptance": [
+    "The owner chooses; one rule for the player and villagers"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-07",
+   "depends_on": [],
+   "blockers": [
+    "owner decision"
+   ],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 8"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason; blockers",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an owner decision raised by the food-security audit"
+  },
+  {
+   "id": "OD-24",
+   "title": "Rent for villager merchants' stalls (pay as the player does, or the player's pitch free)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Rent for villager merchants' stalls (pay as the player does, or the player's pitch free)",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 8",
+   "approval": "agent question under FSE-07 (owner directive 2026-10-20)",
+   "acceptance": [
+    "The owner chooses; one rule for the player and villagers"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-07",
+   "depends_on": [],
+   "blockers": [
+    "owner decision"
+   ],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 8"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason; blockers",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "owner decision",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "an owner decision raised by the food-security audit"
   },
   {
    "id": "OD-LE-01",

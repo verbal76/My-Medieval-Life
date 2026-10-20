@@ -330,4 +330,30 @@ The directive's 25 tests (section 17), mapped:
 
 ## 8. Questions that need the owner (deliverable 7, FSE-07)
 
-*Settled after the starvation report and the FSE-12 investigation; only questions the directives do not answer.*
+Only questions the directives do not answer. Each is registered (OD-22..24) and blocks only its own item.
+
+**OD-22. Which definition the shared farming model starts from (FSE-12, and with it FSE-11's seed per sowing).** The
+village and player yields differ because of the land abstraction, not labour or seed: a village field is one unit worth a
+flat 60 wheat whatever its 66 cells; a player plot gives 3 wheat a cell and takes 1 seed a cell. One model must use one
+of them (the follow-up says neither may simply be raised or lowered to match).
+- (a) **Per-cell for both (recommended).** The manor fields become cells under the player's crop rules (seed a cell,
+  season, real labour a cell for villagers at the player's rates in game minutes). At today's crop figure that is 198
+  wheat a harvest a field (3.3 times today) for 66 seed, so the crop figure itself, an agent proposal from Build 13, is
+  reviewed for both at once by a comparison run before anything is activated.
+- (b) Per-field for both: player plots get a flat yield per plot; loses the per-cell farming the player has.
+- (c) Keep both, and model the difference explicitly (manor fields as large, extensive, lower-yield land; plots as
+  intensive gardens); the parity rule allows it only as a "legitimate, explicitly modeled reason".
+
+**OD-23. What the manor's fields cost their farmers.** Farmers keep the whole crop of the manor's land and pay nothing;
+the player must buy or lease land to farm. One rule for both (FSE-00 section 16): (a) farmers lease their field like any
+land (rent to the treasury); (b) a share of the crop to the manor (the medieval custom; it would stock the granary);
+(c) leave the manor's fields free to whoever farms them, the player included as a farmer. Recommendation: (b), because it
+also gives the granary a supply that does not depend on the treasury's reserve (section 2).
+
+**OD-24. Rent for villager merchants' stalls.** Villager merchants hold their stalls rent-free; the player pays 5 coins a
+day for the same pitch. (a) villagers pay the same rent; (b) the player's pitch becomes free like theirs. Recommendation:
+(a), introduced with a comparison run, since it moves coins from the food and goods merchants to the treasury every day.
+
+Not asked, because the directives settle them: who may farm, hunt or keep animals (everyone, in the living-economy
+build); individual preferences (the directive's section 10); relief's sources (the owner's FSE-17 answers); the time model
+(OD-21).

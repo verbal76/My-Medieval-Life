@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 118 (71 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **285** = 214 still open from the baseline + 71 added and open |
+| Entries added since | | 121 (74 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **288** = 214 still open from the baseline + 74 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,7 +44,7 @@ None.
 
 None.
 
-## Added since the baseline (118)
+## Added since the baseline (121)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -74,8 +74,8 @@ None.
 | FSE-08 | The directive's 25 deterministic tests (section 17) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision |
-| FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | APPROVED — NOT STARTED | 16 |
-| FSE-12 | One agricultural model for player and village farming (parity) | approved | APPROVED — NOT STARTED | 16 |
+| FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | BLOCKED | 16 |
+| FSE-12 | One agricultural model for player and village farming (parity) | approved | BLOCKED | 16 |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | 16 |
@@ -117,6 +117,9 @@ None.
 | OD-19 | PAR-02: the universal coin-reserve threshold | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | decision | APPROVED — NOT STARTED | owner decision |
 | OD-21 | Explicit time model and calendar consistency (approved architectural decision) | decision | COMPLETE AND VERIFIED | owner decision |
+| OD-22 | Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference) | decision | BLOCKED | owner decision |
+| OD-23 | What the manor's fields cost their farmers (lease, crop share, or free to any farmer) | decision | BLOCKED | owner decision |
+| OD-24 | Rent for villager merchants' stalls (pay as the player does, or the player's pitch free) | decision | BLOCKED | owner decision |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |
