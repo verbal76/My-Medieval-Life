@@ -13,7 +13,7 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 | Last verified remote commit | The head of `origin/staging/my-medieval-life` (`git log origin/staging/my-medieval-life -1`). This file was last brought up to date in the commit `git log -1 -- docs/CURRENT_DEVELOPMENT_STATE.md` shows; anything newer on staging is described in that commit's successors. |
 | `main` | Changes only when the owner merges. |
 | Multiplayer | `wip/multiplayer` (MP-01), isolated. It must not be merged into staging without the owner's explicit approval. |
-| Active build | **Build 15**, simulation stabilization (ROAD-01): **BLOCKED on owner decision OD-16**. With EQ-18 fixed, tool recovery fails only on money: the smith and carpenter run out of coins, so no axes are made and timber and building stall (`docs/release/LONG_RUN_SIMULATION.md`, "365 days with the tool-recovery fix") |
+| Active build | **Build 15**, simulation stabilization (ROAD-01): OD-16 answered by the owner 2026-10-20 ((a), (b), (c)); implementing it as EQ-19..21, then a 365-day run and the release gates |
 | Directive in force | OVN-01, `docs/directives/2026-10-20_master_overnight_development_directive.md` (autonomous engineering; Builds 15 → 16 → 17 → 18 strictly in order), with `docs/directives/2026-10-20_compaction_readiness.md` |
 | Last released build | **Build 14**, a private draft from `7dbae4f` (`docs/release/BUILD_14_PACKET.md`) |
 | Release authorization | OVN-01 section 9 and REL-15-18: Builds 15 to 18 may be released as **private drafts**, in order, each only when every condition of OVN-01 section 4 holds (REL-14-16 before it). No placeholder builds. Public visibility needs new owner approval. |
@@ -24,7 +24,8 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 about 10:00 UTC.
 
-- **EQ-18 (Build 15):** tool recovery fixed and verified; what remains is OD-16.
+- **EQ-18 (Build 15):** tool recovery fixed and verified; what remained was OD-16.
+- **EQ-19, EQ-20, EQ-21 (Build 15, ACTIVE):** the owner's answer to OD-16 (2026-10-20): the manor supports the essential trades from its treasury (b), bandit coins recirculate (a), the caravan buys more surplus (c). Next: implement, test, a 365-day run on both seeds, then the Build 15 release.
 - **Build 15 release gates:** the record of each OVN-01 section 4 condition goes in the Build 15 readiness packet (`docs/release/`), then `release.yml` runs as a private draft (REL-15-18). A 365-day Actions run on the release candidate checks the simulation before it.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
 - **OVN-01:** the overnight directive in force. **ROAD-01:** the roadmap.
@@ -74,7 +75,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
-1. **Build 15 release: blocked on OD-16.** EQ-18 is fixed and verified in the year runs on `248e383` (smiths kept all year on both seeds; job seekers can buy tools). What remains is money: the producing trades go broke, so no axes are made. OD-16 asks the owner how money should flow back to them (options and a recommendation in the entry). When answered: implement it, re-run 365 days on both seeds, update `docs/release/BUILD_15_READINESS.md`, and if every OVN-01 section 4 condition holds, run `release.yml` as a private draft (REL-15-18).
+1. **Build 15 release: OD-16 answered (EQ-19..21 in progress).** EQ-18 is fixed and verified in the year runs on `248e383` (smiths kept all year on both seeds; job seekers can buy tools). What remains is money: the producing trades go broke, so no axes are made. OD-16 asks the owner how money should flow back to them (options and a recommendation in the entry). When answered: implement it, re-run 365 days on both seeds, update `docs/release/BUILD_15_READINESS.md`, and if every OVN-01 section 4 condition holds, run `release.yml` as a private draft (REL-15-18).
 2. **Then Build 16** (EQ-01..06, FAM-07, EQ-09, OD-16 once answered, and the rest), Build 17 and Build 18, in order.
 3. Open Build 15 entries that are not code: DVW-A14 (the whole-life play-through, item 8 of the testing checklist), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 
@@ -86,7 +87,7 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 - OD-11, OD-12 and OD-13 were answered by the owner on 2026-10-20 (`docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md`). Their implementation is open:
   - HOUSE-08 (bed sharing) and HOUSE-09 (now done through the small room), Build 15;
   - FAM-03 is implemented; FAM-07 (the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+) is not, Build 16.
-- **OD-16 (2026-10-20; blocks Build 15 again, after the EQ-18 runs):** the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
+- **OD-16: answered 2026-10-20** ((a), (b), (c); see the register). Formerly: the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
 - **OD-17 (new, 2026-10-20):** the Game Designer spec's open calls (the hero, the view, Steam Deck labelling), from `docs/game-designer/SPEC_RECONCILIATION.md` section 4 (REC-004, done).
 - **OD-15 (new, 2026-10-20):** should the player's sales stop at a trader's 15-coin floor, as villagers' do? It came up while verifying B7-008; options and a recommendation are in the entry. B7-008 stays BLOCKED on it (its wildlife half is verified).
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".

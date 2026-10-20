@@ -8753,6 +8753,139 @@
    "target_build": "15"
   },
   {
+   "id": "EQ-19",
+   "title": "The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The manor uses its treasury to keep the smithy and woodlands working: it buys iron and tools for the village's workers, or lends to the smith against future output.",
+   "description": "The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output",
+   "source": "owner answer to OD-16, 2026-10-20",
+   "approval": "owner chose option (b)",
+   "acceptance": [
+    "With the smith short of coins, the manor's support lets the forge buy ore and make axes; the treasury pays, and coins only move",
+    "Woodcutters who lack an axe get one through the manor's support",
+    "The treasury keeps its reserve; support never creates coins",
+    "Tests, and a 365-day run on both seeds keeping the smith working and woodcutting staffed"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner answer to OD-16, 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; workstream",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15"
+  },
+  {
+   "id": "EQ-20",
+   "title": "Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Bandits spend their hoards at the market, and guards recover loot to the treasury, so the ~45% of coins now out of circulation return.",
+   "description": "Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury",
+   "source": "owner answer to OD-16, 2026-10-20",
+   "approval": "owner chose option (a)",
+   "acceptance": [
+    "Bandits with coins buy from the village's sellers, so their coins reach the market",
+    "Loot nobody picks up is recovered by guards to the treasury",
+    "Coins only move (ledger balanced); tests; the share of coins held by bandits and lying as loot falls in the year runs"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner answer to OD-16, 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; workstream",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15"
+  },
+  {
+   "id": "EQ-21",
+   "title": "The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The caravan buys more of what the village over-produces (meat, hides), bringing more coins in from outside.",
+   "description": "The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods",
+   "source": "owner answer to OD-16, 2026-10-20",
+   "approval": "owner chose option (c)",
+   "acceptance": [
+    "The caravan buys surplus meat and hides (and other goods the village over-produces) within its budget, counted as coins from outside",
+    "The caravan allowance stays a labelled temporary stand-in (CARAVAN-TMP)",
+    "Tests; the year runs show the sales"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "owner answer to OD-16, 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; workstream",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15"
+  },
+  {
    "id": "EXP-A",
    "title": "Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification)",
    "kind": "approved",
@@ -12350,7 +12483,7 @@
    "id": "OD-16",
    "title": "The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades?",
    "source": "agent, 2026-10-20, docs/release/LONG_RUN_SIMULATION.md 'Why seed 1 builds no house'",
@@ -12394,11 +12527,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "the EQ-18 year runs (Actions 39403998697) show Build 15's 'economic recovery from missing work tools' now fails only on money: the smith and carpenter hold almost no coins, so no ore, no axes, no woodcutters and stalled building. The earlier move to Build 16 was the agent's call and is reversed: OD-16 blocks Build 15"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "answered by the owner 2026-10-20: (b) the manor supports the essential trades, (a) bandit coins recirculate, (c) the caravan buys more surplus; (d) not chosen. Implementation: EQ-19, EQ-20, EQ-21"
     }
    ],
    "target_build": "15",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "blocks Build 15: tool recovery fails on money once the mechanics are fixed (EQ-18)"
+   "roadmap_reason": "blocks Build 15: tool recovery fails on money once the mechanics are fixed (EQ-18)",
+   "owner_answer": "Owner, 2026-10-20 (answer to the OD-16 question in session): chose (b) 'Manor supports trades' — the manor uses its treasury to keep the smithy and woodlands working: it buys iron and tools for the village's workers, or lends to the smith against future output; (a) 'Bandit coins recirculate' — bandits spend their hoards at the market, and guards recover loot to the treasury; and (c) 'Caravan buys more surplus' — the caravan buys more of what the village over-produces (meat, hides). Not chosen: (d) the manor lends axes."
   },
   {
    "id": "OD-17",
