@@ -12955,7 +12955,7 @@
    "id": "OD-15",
    "title": "Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)?",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)?",
    "source": "agent, 2026-10-20, verifying B7-008 (docs/release/BUILD_7_ISSUES.md B7-008; World.player_sell)",
@@ -12994,11 +12994,22 @@
      "date": "2026-10-20",
      "change": "roadmap_gate; roadmap_reason",
      "why": "roadmap gate"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED",
+     "why": "Answered by the owner through OD-18.2 (2026-10-20): one reserve rule for everyone; implemented as PAR-02"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "owner_answer",
+     "why": "Owner's answer recorded"
     }
    ],
    "target_build": "15",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "whether player sales keep a trader's floor is a game rule"
+   "roadmap_reason": "whether player sales keep a trader's floor is a game rule",
+   "owner_answer": "Owner, 2026-10-20 (OD-18.2, docs/directives/2026-10-20_od18_player_villager_parity.md): 'One economic rule for everyone. We are villagers too.' Traders must not keep one reserve for NPC transactions and another for the player: the player's sales stop at the same reserve. Implemented as PAR-02."
   },
   {
    "id": "OD-16",
@@ -13108,7 +13119,7 @@
    "id": "OD-18",
    "title": "Player-only perks and rules found by the DVW-A8 and DVW-A12 audits",
    "kind": "decision",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Owner to rule on: P1 NPCs have no skills (NPC miners take gold without Mining 3); P8 the player can sell a buyer to 0 coins while NPC sellers stop at 15 (with OD-15); P10 resting heals the player fully, villagers do not otherwise heal; P15 eleven recipes no NPC makes; R9 assault alerts every guard within a fixed 15 tiles while theft uses World.witness (sight and witness_radius).",
    "description": "Player-only perks and rules found by the DVW-A8 and DVW-A12 audits",
    "source": "docs/release/BUILD_16_AUDITS.md",
@@ -13142,9 +13153,20 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target: owner decision"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED",
+     "why": "Answered by the owner 2026-10-20 (docs/directives/2026-10-20_od18_player_villager_parity.md): all five resolved as PAR-01..PAR-05 under PAR-00, 'the player is a villager'"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "owner_answer",
+     "why": "Owner's answer recorded"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "owner decision",
+   "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od18_player_villager_parity.md): THE PLAYER IS A VILLAGER. 18.1 villagers develop skills exactly as the player; 18.2 one trade reserve rule for everyone; 18.3 villagers recover by the player's rest model; 18.4 villagers can craft every recipe under the same requirements; 18.5 crime awareness by legitimate means only. Register PAR-00..PAR-05."
   },
   {
    "id": "OD-LE-01",
@@ -15117,6 +15139,273 @@
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "waiting on an owner decision, not development work"
+  },
+  {
+   "id": "PAR-00",
+   "title": "The player is a villager: one set of world rules for player and villagers",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "THE PLAYER IS A VILLAGER. The player is not a special entity operating under different economic, crafting, skill, health, or world-awareness rules. The only fundamental difference is decision-making control. Implement these decisions through shared underlying systems wherever practical.",
+   "description": "The player is a villager: one set of world rules for player and villagers",
+   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
+   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
+   "acceptance": [
+    "PAR-01..PAR-05 complete and verified",
+    "No player-only rule remains in skills, trade eligibility, recovery, recipes or crime awareness without an owner-approved reason"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-01",
+   "title": "OD-18.1: villagers develop skills exactly as the player does",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "All villagers must develop skills exactly as the player does. Same skill definitions, experience, progression and thresholds; skill requirements apply equally (no gold without Mining 3); proficiency develops naturally through activity; persists and is deterministic; a careful migration for existing villagers and saves. Do not secretly grant unlimited skills or create exceptions.",
+   "description": "OD-18.1: villagers develop skills exactly as the player does",
+   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
+   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
+   "acceptance": [
+    "NPCs carry and save skills (Skills, one definition)",
+    "Every activity that gives the player xp gives a villager the same xp",
+    "Every skill gate and tier effect applies to villagers through the same code",
+    "Older saves migrate deterministically; a test loads one",
+    "Determinism gate re-baselined; 100- and 365-day runs re-recorded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-02",
+   "title": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "One economic rule for everyone. We are villagers too. Traders must not keep one reserve for NPC transactions and another for the player; resolve OD-15 consistently. A trader may refuse for a legitimate in-world reason, not because the buyer is an NPC rather than the player.",
+   "description": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
+   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
+   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
+   "acceptance": [
+    "The player's sales keep the same buyer reserve as villagers' sales (one shared function)",
+    "OD-15 resolved; B7-008's buyer half closed",
+    "Test: a buyer at the reserve refuses the player as it refuses a villager"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-03",
+   "title": "OD-18.3: villagers recover health by the player's rest model",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Use the player's existing recovery model for both players and villagers. Equivalent actions under equivalent conditions produce equivalent recovery. NPC AI must recognize when rest is needed and seek an opportunity to rest. Preserve the distinction between access to recovery and actually being able to rest. If the player model restores full health after qualifying rest, NPCs receive the same.",
+   "description": "OD-18.3: villagers recover health by the player's rest model",
+   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
+   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
+   "acceptance": [
+    "One core rest function used by the player's rest and a villager's sleep or rest",
+    "A hurt villager seeks rest; a full night's sleep or a qualifying rest restores health as the player's does",
+    "Tests for both, and for a villager who cannot rest (no home) not recovering"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-04",
+   "title": "OD-18.4: villagers can craft every recipe the player can, under the same requirements",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Villagers have access to every recipe available to the player, subject to the same skill-level requirements. One authoritative recipe catalog; identical prerequisites; no recipe permanently player-exclusive; crafting through the same inventory and accounting; contextual choices, not crafting everything because they can. Audit the eleven recipes currently unavailable to villagers and close the gap.",
+   "description": "OD-18.4: villagers can craft every recipe the player can, under the same requirements",
+   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
+   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
+   "acceptance": [
+    "One core craft function for player and villagers (inputs, outputs, skill gates, effects, xp, ledger)",
+    "Each of the eleven recipes has a villager who makes it when there is a need or buyer",
+    "check_materials reports no player-only recipe"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-00",
+   "depends_on": [
+    "PAR-01"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    }
+   ],
+   "target_build": "16"
+  },
+  {
+   "id": "PAR-05",
+   "title": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Guards must not possess unexplained knowledge of an assault. Remove the fixed 15-tile awareness; apply consistent witnessing to assault and theft (direct witness, an audible disturbance where supported, a report, credible evidence). Separate detection from alarm propagation and guard response. Apply the rules whether the offender is the player or another NPC. Do not invent unsupported sensing mechanics.",
+   "description": "OD-18.5: crime awareness by legitimate means only, the same for assault and theft",
+   "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
+   "approval": "Owner, 2026-10-20: 'All five decisions are approved design requirements.'",
+   "acceptance": [
+    "Assault uses the same witness rule as theft (World.witness: sight, witness_radius)",
+    "A guard learns of an unseen crime only through a supported channel (a report by a witness or the victim)",
+    "Tests: an unseen assault alerts no guard; a seen one does; the same for an NPC offender where the code has one"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PAR-00",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od18_player_villager_parity.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build",
+     "why": "Roadmap target Build 16"
+    }
+   ],
+   "target_build": "16"
   },
   {
    "id": "PERF-01",
