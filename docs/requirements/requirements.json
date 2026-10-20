@@ -13614,7 +13614,7 @@
    "id": "PERF-04",
    "title": "Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts",
    "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
@@ -13623,7 +13623,7 @@
     "Before and after runtimes; each change passes PERF-03"
    ],
    "implementation": "",
-   "tests": "tools/sim_gate.py PASS after each change",
+   "tests": "tools/sim_gate.py PASS after each change; economy_sim --profile before and after",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -13655,6 +13655,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "two optimizations through the determinism gate: the trading-role cache and the wildlife cell set and prey-scan order; 10 days 44.0 s to 25.5 s, 30 days 127/142 s to 68/73 s. Further candidates follow the next profile"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "two measured optimizations through the gate (trading-role cache; wildlife cell set and prey-scan order): 10 days 44.0 s to 25.5 s, 30 days 127/142 s to 68/73 s, fingerprints identical. A re-profile shows the rest spread thinly (each remaining decision branch about 1 s per 10 days); further work has small returns"
     }
    ],
    "target_build": "15",

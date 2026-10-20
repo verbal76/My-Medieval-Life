@@ -14,16 +14,16 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | APPROVED — NOT STARTED | 75 |
 | ACTIVE DEVELOPMENT | 9 |
 | PARTIALLY IMPLEMENTED | 36 |
-| IMPLEMENTED — TESTING REQUIRED | 15 |
+| IMPLEMENTED — TESTING REQUIRED | 14 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 132 |
+| COMPLETE AND VERIFIED | 133 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
 | **Total approved** | **356** |
-| Outstanding (not complete, superseded or canceled) | 205 |
+| Outstanding (not complete, superseded or canceled) | 204 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 33 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 78 | 74 |
+| Build 15: simulation stabilization | 77 | 73 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **263** | **205** |
+| **Total open** | **262** | **204** |
 
-### Build 15: simulation stabilization (78)
+### Build 15: simulation stabilization (77)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -108,7 +108,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | decision | BLOCKED | owner decision first | blocks Build 15 housing completion on seed 1 (EQ-07); it is the equilibrium question of EQ-01/EQ-16 |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
-| PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | approved | IMPLEMENTED — TESTING REQUIRED |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | approved | APPROVED — NOT STARTED |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PL1-03 | Merchant quantity control | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | PL1-05 | current/max inside bars | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
@@ -541,7 +540,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (15)
+## IMPLEMENTED — TESTING REQUIRED (14)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -559,7 +558,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | HOUSE-05 | Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.6 | game/tests/housing_test.gd |  |  |
 | HOUSE-08 | Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13) | game/tests/housing_test.gd test_bed_sharing; aging_test; run_tests test_households_split |  |  |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | long-run measurement on GitHub Actions once validated; then close |
-| PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py PASS after each change | after PERF-03 |  |
 
 ## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (37)
 
@@ -638,7 +636,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (132)
+## COMPLETE AND VERIFIED (133)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -751,6 +749,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OWN-27 | Manor government B3 | docs/DECISIONS.md (audit inventory row 343) |  |  |  |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | economy_sim.gd --profile; 10-day fingerprint eeabb2a8 with profiling on | after PERF-01 |  |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py (PASS for both PERF-04 changes) | after PERF-02 |  |
+| PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py PASS after each change; economy_sim --profile before and after | after PERF-03 |  |
 | PERF-05 | Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py --write (parallel) then --sequential (PASS) | after PERF-02 |  |
 | PL1-01 | Settings > Controls exit freezes game | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 138) |  |  |  |
 | PL1-02 | One tabbed Settings with Back | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 139) |  |  |  |
