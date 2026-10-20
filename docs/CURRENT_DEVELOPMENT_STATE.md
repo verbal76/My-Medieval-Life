@@ -98,14 +98,23 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Next approved tasks, in order
 
-1. **When the fix12 365-day runs end (about 04:30 UTC):** record them against fix9 (old code) in `docs/release/LONG_RUN_SIMULATION.md`, and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a container restart killed them, run them again (below).
-2. **EQ-07 / HOUSE-07:** started houses are not finished (the 365-day seed 1 run: 10 started, 1 finished; the fix10 seed 1 run: 4 started, 0 finished by day 60). Trace why: plank supply after day 180, and the money a household has after its start. Then read the fix10 100-day runs against fix9 and record them, labelled as corrected code.
-3. **HOUSE-08..11 (owner answers OD-13, OD-14):** HOUSE-10's small room fits only 3 of the 21 original houses. The owner chose to scope upper floors (`docs/design/UPPER_FLOORS_SCOPE.md`) rather than build the room now; HOUSE-10 and HOUSE-11 wait on the owner's choice. Earlier: bed sharing is implemented and tested. Original houses can be surveyed for quarters, but none has room on the current layout. That question is OD-14 for the owner: detached quarters, a smaller room, or no expansion.
-4. **EQ-09:** from the 365-day results, check whether caravan stone keeps house sites supplied once the deposits are gone.
-5. **EQ-10:** fix the axe and hammer ledger residuals.
-6. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
-7. **The other Build 15 items:** from the ledger's Roadmap section. Examples: DVW-A2 (rotated save backups), DVW-A4 (faucet and drain ledger), FR-07 (short simulations in CI), REC-017 (stale documents) and FR-06 (wiki pages).
-8. **Build 15 release:** when REL-14-16's conditions hold, a private draft with a readiness packet like `docs/release/BUILD_14_READINESS.md`.
+Updated 2026-10-20 about 05:10 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order.
+
+1. **EQ-07 / HOUSE-07, the Build 15 blocker:**
+   - Actions run 39368663150 (staging `0ee0218`, 365 days, seed 1) finished with no script error and a balanced ledger.
+   - But 7 house sites were started and **none finished** (sites hold 46 planks, 117 stone, 10 logs).
+   - Also: 7,172 household-nights without firewood; 5,289 meals missed for lack of money (hunters, carpenters); the carpenter and the raw-goods merchant end the year broke.
+   - Trace why sites stall (`game/tests/housing_trace.gd -- --days 150 --seed 1`), fix the root cause, then re-run 365 days on Actions.
+   - Broken core construction may not be deferred (directive section 5).
+2. **Record Actions run 39368663150** (seed 2 still running) in `docs/release/LONG_RUN_SIMULATION.md`; update EQ-06, EQ-10, EQ-17, B14R-12 (wildlife survives all year in every species), HOUSE-07, DVW-A3 and CARAVAN-TMP.
+3. **PERF-04:** profile again after the two optimizations (`economy_sim.gd --profile`); take the next measured bottleneck through `tools/sim_gate.py`.
+4. **The other Build 15 items** (ledger Roadmap):
+   - FR-06 (wiki pages), FR-04 (pad shortcuts), B14-12 (sprite list), REC-003, REC-004 and REC-017;
+   - HOUSE-10 waits on the owner's upper-floors choice.
+5. **Build 15 release:** when every condition of OVN-01 section 4 holds, a private draft (REL-15-18) with a readiness packet like `docs/release/BUILD_14_READINESS.md`, Linux, Windows and Android from one commit.
+6. **Then Build 16** (EQ-01..06, FAM-02..07, WR-02, EQ-09 and the rest of its Roadmap section), Build 17 and Build 18, in order.
+
+Done on 2026-10-20 (overnight): EQ-17 fix and gate, EQ-10 fixes, FR-07, DVW-A2, DVW-A4, DVW-A6, B7-008 verified with OD-15 raised, PERF-02, PERF-03, PERF-05, and two PERF-04 optimizations (simulation about twice as fast).
 
 ## Waiting on the owner
 
