@@ -4,7 +4,7 @@ extends RefCounted
 ## Items (items.json), recipes (recipes.json), resource nodes (resources.json), skills, animals and
 ## balance numbers (balance.json), stations (village.json), jobs (Population.JOBS, NPCBrain) and the
 ## controls (GameUI.CONTROLS) each give pages; a few hand-written pages cover mechanics that exist
-## (needs, resting, theft, trading, property, saving) and "Not in the game yet" lists what does not.
+## (needs, resting, theft, trading, property, saving; WikiTopics: magic, the caravan, bandits and more) and "Not in the game yet" lists what does not.
 ##
 ## Other systems add pages without touching this file:
 ##   Wiki.add_provider(func(w: Wiki): w.add_page("sys:fishing", "Fishing", "systems", [Wiki.p("...")]))
@@ -111,6 +111,7 @@ static func build() -> Wiki:
 	WikiChests.add_pages(w)
 	WikiProperty.add_pages(w)
 	WikiFarming.add_pages(w)
+	WikiTopics.add_pages(w)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)
@@ -497,7 +498,7 @@ func _guides() -> void:
 		add_page("guide:" + id, title, "guides", blocks, "", "how do i")
 	guide.call("money", "Earn money", [
 		p("Sell what you gather or make, and take jobs. Mine ore and sell it to the smith or the raw-goods merchant; fell trees and sell logs or planks; hunt for meat and hides; pick berries and flowers; cook at the stove. The reeve's job board and villagers who ask for work pay coins; hand in the goods to be paid."),
-		links(["guide:mine", "guide:planks", "guide:cook", "sys:trading", "job:reeve"])])
+		links(["guide:mine", "guide:planks", "guide:cook", "sys:trading", "job:reeve", "sys:employer_star", "sys:journal_map"])])
 	guide.call("pickaxe", "Get a pickaxe", [
 		p(str(pick.tool_hint)),
 		p("You start with a rusty pickaxe: it works, but more slowly and it wears out."),
@@ -538,7 +539,7 @@ func _systems() -> void:
 	sys.call("needs", "Health, food and stamina", [
 		p("Three bars top left. Health: how much you can take; at 0 you die. Food: falls %s a game hour; at 0 you starve and lose health, so eat. Stamina: spent by Fireball (%d) and sprinting; it refills by itself. A bar turns red and blinks when low." % [str(GameData.b("player_hunger_per_hour")), int(GameData.b("fireball_stamina"))]),
 		p("Time: one real second is %s game minutes, so a day lasts about %d real minutes." % [str(gmps), roundi(1440.0 / gmps / 60.0)]),
-		links(["guide:heal", "sys:resting", "sys:sprint"])])
+		links(["guide:heal", "sys:resting", "sys:sprint", "sys:magic"])])
 	sys.call("resting", "Resting and sleeping", [
 		p("Your bed in your own house: rest until morning (or two hours by day). It restores full health and stamina and saves. You need a house first: see Rent or buy."),
 		links(["guide:rent", "sys:property", "sys:saving"])])
@@ -553,10 +554,10 @@ func _systems() -> void:
 		p("A swing takes %.1f seconds (less as your Combat grows). The blow lands on the swing's slash, %.2f seconds after you press, on the nearest person or animal within %.1f tiles in front of you (or right beside you), so you need not walk into them. A wall, a fence or a tree between you stops the blow. Bandits and anyone fighting you are struck before a bystander." % [float(GameData.b("player_combat").swing_time), float(GameData.b("player_combat").windup), float(GameData.b("player_combat").reach)]),
 		p("Pressing Attack again near the end of a swing (the last %.2f seconds) is remembered and swings again at once; pressing faster than that does not swing faster. Space or J on a keyboard, X on a pad, or a right-click on the target." % float(GameData.b("player_combat").buffer)),
 		p("On a phone, the Attack button swings at a bandit, someone fighting you or game within reach; with none near it turns attack mode on, and a tap on someone walks you into sword reach and strikes. Striking a villager or a keeper's animal is a crime."),
-		links(["skill:combat", "sys:theft", "controls:touch", "controls:kbm", "controls:gamepad"])])
+		links(["skill:combat", "sys:magic", "sys:bandits", "sys:theft", "controls:touch", "controls:kbm", "controls:gamepad"])])
 	sys.call("trading", "Trading", [
 		p("Talk to a merchant or villager to buy and sell. Prices depend on each item's base value and on supply: a seller asks more as their stock runs low, and a buyer offers less as they fill up. A seller also asks less when other traders (or your own stall and shops) offer the same thing within %d tiles, and the most when nobody near sells it: so you can make a scarce thing yourself, pay the lone seller's price, or make and sell it to bring the price down. In a bulk deal every unit is priced in turn, so buying a seller's last few costs more each and selling a buyer a big stack fetches less each; the quantity control shows the real total. Merchants have limited coins and stock: they never buy what they cannot pay for, and a trade either completes or does not happen. Villagers buy what their work needs." % int(GameData.b("local_supply").radius)),
-		links(["guide:money", "job:merchant", "sys:theft"])])
+		links(["guide:money", "job:merchant", "sys:caravan", "sys:theft"])])
 	sys.call("home_work", "Villagers at home: food, medicine and wounds", [
 		p("Villagers look after their own households. In the evening an adult gathers wild flowers or berries near home (what they pick is gone until it grows back, for you as for them) and brews flowers into herbal poultices at the home's hearth, keeping %d in store. Berries go into the pantry as food." % int(GameData.b("home_production").poultice_keep)),
 		p("Villagers do not heal by themselves. One badly hurt (below %d%% of their health) uses a medicine they carry or the household keeps, or walks to the Apothecary and buys one with their own coins." % roundi(float(GameData.b("home_production").medicine_use_below) * 100.0)),
@@ -581,7 +582,7 @@ func _systems() -> void:
 	sys.call("ageing", "Ageing and life stages", [
 		p("Villagers are children until %d, adolescents until %d, adults until %d and elders after that. Children are drawn smaller (adolescents three quarters size), hold no job and are nobody's apprentice. A child who turns %d becomes an adult without a trade and takes a vacant job. An adult who turns %d retires and the post opens; elders walk slower." % [int(lf.child_until), int(lf.adolescent_until), int(lf.elder_from), int(lf.adolescent_until), int(lf.elder_from)]),
 		p("From age %d a villager (and you) can die of old age: a small daily chance that rises with age, certain at %d. The sage and the reeve keep their posts for life." % [int(lf.mortality_from), int(lf.mortality_certain_at)]),
-		links(["sys:calendar", "sys:family", "sys:inheritance", "sys:death"])])
+		links(["sys:calendar", "sys:family", "sys:inheritance", "sys:death", "sys:death_causes"])])
 	sys.call("family", "Families, partners and births", [
 		p("Households are not families: people who share a house are not automatically related. Family links are real and explicit: mother, father, partner and children. Partners come from courting (see Friendship and courting): two unmarried, unrelated adults aged %d to %d (villagers court someone at most %d years apart), of either sex. A new couple moves into one of their homes if it has a free bed; with no room they live apart for a while. Children are born only to a mother and father who are partners: a mother aged %d to %d, enough food, and no baby in the last year. A baby needs no free bed: a house that grows too full for its beds is what sends a grown son or daughter (with their partner) out to found a home of their own." % [int(lf.partner_min_age), int(lf.partner_max_age), int(lf.partner_max_gap), int(lf.birth_mother_min_age), int(lf.birth_mother_max_age)]),
 		p("A newborn joins the parents' household and grows through the stages. The player's own partner and children are made through the same links."),
@@ -609,8 +610,8 @@ func _systems() -> void:
 		p("Your save lives inside the game, and uninstalling the game deletes it, as can installing a test build that cannot update the old one. To keep your world, open Settings, Saves: Copy my save to a file puts a copy wherever you choose (Documents, Downloads, a cloud folder), and Keep a copy up to date rewrites that copy every time the game saves. After reinstalling, choose Import a save file and pick your copy: the game checks it, keeps a backup of it and of any save it replaces, brings it up to this version and continues your world. A file it cannot use (damaged, from a newer version, or from before the village was rebuilt) is refused and nothing changes. On Android you pick the file again after each reinstall. Inside the game, each save keeps the one before it as a backup, and the first save of each day keeps the previous save under that day's date, the last three days; if a save and its backup cannot be read, Continue loads the newest of those."),
 		links(["sys:inheritance", "sys:death", "guide:save"])])
 	sys.call("death", "Death", [
-		p("At 0 health, or of old age, you die. The world carries on. What you carried stays where you fell, for anyone to take, your heir too. Your heir inherits the house and chest and starts with the starting kit."),
-		links(["sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
+		p("At 0 health, or of old age, you die; Causes of death lists what can kill you and the villagers. The world carries on. What you carried stays where you fell, for anyone to take, your heir too. Your heir inherits the house and chest and starts with the starting kit."),
+		links(["sys:death_causes", "sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
 	sys.call("chains", "Production chains", [
 		p("Raw materials become goods through stations:"),
 		{"t": "chain", "id": "pickaxe"}, {"t": "chain", "id": "iron_sword"}, {"t": "chain", "id": "leather_armor"}, {"t": "chain", "id": "plank"}, {"t": "chain", "id": "roast_meat"}, {"t": "chain", "id": "ale"},

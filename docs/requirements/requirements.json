@@ -9485,7 +9485,7 @@
    "id": "FR-04",
    "title": "Pad shortcuts for the Journal and Build menus; complete on-screen controls list",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Pad shortcuts for the Journal and Build menus; complete on-screen controls list",
    "source": "docs/release/BUILD_12_FULL_AUDIT.md",
@@ -9494,8 +9494,10 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "",
-   "playtest": [],
+   "tests": "start_test.gd (498 steps); screenshot of the gamepad controls list",
+   "playtest": [
+    "a controller: D-pad up opens the Journal, left stick press opens Build"
+   ],
    "branch": "",
    "commits": [],
    "parent": null,
@@ -9519,6 +9521,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; tests; playtest",
+     "why": "the Journal is on the pad's D-pad up and Build on the left stick press; the keyboard and gamepad controls lists name them (H, Journal, Build); start_test checks every pad button is listed and both menus have one; the gamepad controls screen was looked at (out/shots/controls_pad.png). A real controller check is still needed"
     }
    ],
    "acceptance_derived": true,
@@ -9569,7 +9576,7 @@
    "id": "FR-06",
    "title": "Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits",
    "source": "docs/release/BUILD_12_FULL_AUDIT.md",
@@ -9578,7 +9585,7 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "wiki_test.gd; run_tests.gd 3535 checks",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9603,6 +9610,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests",
+     "why": "six pages added (game/scripts/core/wiki_topics.gd): Magic: the Fireball; the gold star over an employer; the Journal and the village map; causes of death; the merchant caravan; bandits. Every fact cites code, numbers come from balance data where the code reads them, links from the related pages; wiki_test passes (every link resolves)"
     }
    ],
    "acceptance_derived": true,

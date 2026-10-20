@@ -11,19 +11,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 75 |
+| APPROVED — NOT STARTED | 74 |
 | ACTIVE DEVELOPMENT | 9 |
-| PARTIALLY IMPLEMENTED | 36 |
+| PARTIALLY IMPLEMENTED | 35 |
 | IMPLEMENTED — TESTING REQUIRED | 14 |
-| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
+| AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 38 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 133 |
+| COMPLETE AND VERIFIED | 134 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
 | **Total approved** | **356** |
-| Outstanding (not complete, superseded or canceled) | 204 |
+| Outstanding (not complete, superseded or canceled) | 203 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 33 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 77 | 73 |
+| Build 15: simulation stabilization | 76 | 72 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **262** | **204** |
+| **Total open** | **261** | **203** |
 
-### Build 15: simulation stabilization (77)
+### Build 15: simulation stabilization (76)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -91,8 +91,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | IMPLEMENTED — TESTING REQUIRED |  | harness correctness needed before the acceptance runs |
 | EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | ACTIVE DEVELOPMENT |  |  |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED |  | the responsible-adult choice is needed by the housing fix (HOUSE-02); the rest exists (inheritance, work, purse) |
-| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | APPROVED — NOT STARTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
-| FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
+| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  | small completeness items (pad shortcuts, controls list, missing wiki pages) |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 correction, Build 15 priority |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 correction; removes the woman-anchored couple rule |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 root cause: today nothing happens until land and a first share of materials can be paid at once |
@@ -388,6 +387,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CRT-10 | Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
+| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | a controller: D-pad up opens the Journal, left stick press opens Build | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | two-device LAN, phone | ACTIVE DEVELOPMENT |
 | PL1-03 | Merchant quantity control | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 | PL1-05 | current/max inside bars | phone | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
@@ -405,7 +405,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (75)
+## APPROVED — NOT STARTED (74)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -445,7 +445,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) |  | after FAM-02; after FAM-03; after WDR-016-C |  |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
-| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 |  | after HOUSE-09 | build the 5x6 room module after the loft investigation; it serves b23, b24 and b_v1_house |
 | MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  |  |  |
@@ -499,7 +498,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold |
 
-## PARTIALLY IMPLEMENTED (36)
+## PARTIALLY IMPLEMENTED (35)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -512,7 +511,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md | `b15208a` | after WR-01 |  |
-| FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.7 | game/tests/housing_test.gd | after HOUSE-08; after HOUSE-09 | HOUSE-08 and HOUSE-09 |
 | HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13) | game/tests/housing_test.gd test_quarters_on_an_original_house | after OD-14 | wait for OD-14 |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
@@ -559,7 +557,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | HOUSE-08 | Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13) | game/tests/housing_test.gd test_bed_sharing; aging_test; run_tests test_households_split |  |  |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | long-run measurement on GitHub Actions once validated; then close |
 
-## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (37)
+## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (38)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -587,6 +585,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | CRT-10 | Relationship weighting system: closeness over time (the nearby-name prompt), many factors, distinct days known; no button spamming to a quick marriage | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_closeness, test_no_rushing |  |  |
 | CRT-11 | Single villagers with spare money and goods actively seek company: spend time near the one they court or befriend, and buy gifts | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_seek_company |  |  |
 | CRT-12 | Proposals can be refused: not wanting to marry, a rival suitor with a better offer, or the suitor's deeds (killing villagers, crimes, theft from their friends or family) | owner message 2026-10-19 (chat) | game/tests/relations_test.gd::test_refusals |  |  |
+| FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md | start_test.gd (498 steps); screenshot of the gamepad controls list |  |  |
 | PL1-03 | Merchant quantity control | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 140) |  |  |  |
 | PL1-05 | current/max inside bars | docs/release/BUILD_11_PUNCH_LIST_1.md (audit inventory row 142) |  |  |  |
 | Q-04 | Resources & Gathering journal page | docs/DEVELOPMENT_QUEUE.md (audit inventory row 220) |  |  |  |
@@ -636,7 +635,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (133)
+## COMPLETE AND VERIFIED (134)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -721,6 +720,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A11 | Threats never scale to player (:36) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 255) |  |  |  |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 248) | economy_sim.gd 3-day seed 1 output |  |  |
 | FR-05 | Title window opens scrolled into the controls list | docs/release/BUILD_13_PACKET.md | `ec3bd0e`; start_test |  |  |
+| FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | docs/release/BUILD_12_FULL_AUDIT.md | wiki_test.gd; run_tests.gd 3535 checks |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit | tests.yml 'Short economy simulation (FR-07)', run 39368652711 |  |  |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | `9ec6b40`; INFRA-02 validation |  |  |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | docs/directives/2026-10-20_loft_and_actions_approval.md section 2 | `9ec6b40`, `de76782`; .github/workflows/long-sims.yml run 39365379504 |  |  |
