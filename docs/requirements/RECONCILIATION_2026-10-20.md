@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 130 (77 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **291** = 214 still open from the baseline + 77 added and open |
+| Entries added since | | 143 (87 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **301** = 214 still open from the baseline + 87 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -44,7 +44,7 @@ None.
 
 None.
 
-## Added since the baseline (130)
+## Added since the baseline (143)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -63,6 +63,13 @@ None.
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | approved | APPROVED — NOT STARTED | 20+ |
+| FARM-01 | Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it | approved | APPROVED — NOT STARTED | 16 |
+| FARM-02 | Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system | approved | APPROVED — NOT STARTED | 16 |
+| FARM-03 | Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers) | approved | APPROVED — NOT STARTED | 16 |
+| FARM-04 | Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required | approved | APPROVED — NOT STARTED | 16 |
+| FARM-05 | Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming) | approved | APPROVED — NOT STARTED | 16 |
+| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | APPROVED — NOT STARTED | 16 |
+| FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | APPROVED — NOT STARTED | 16 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | APPROVED — NOT STARTED | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | APPROVED — NOT STARTED | 16 |
@@ -126,9 +133,9 @@ None.
 | OD-19 | PAR-02: the universal coin-reserve threshold | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | decision | APPROVED — NOT STARTED | owner decision |
 | OD-21 | Explicit time model and calendar consistency (approved architectural decision) | decision | COMPLETE AND VERIFIED | owner decision |
-| OD-22 | Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference) | decision | BLOCKED | owner decision |
-| OD-23 | What the manor's fields cost their farmers (lease, crop share, or free to any farmer) | decision | BLOCKED | owner decision |
-| OD-24 | Rent for villager merchants' stalls (pay as the player does, or the player's pitch free) | decision | BLOCKED | owner decision |
+| OD-22 | Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference) | decision | COMPLETE AND VERIFIED | owner decision |
+| OD-23 | What the manor's fields cost their farmers (lease, crop share, or free to any farmer) | decision | COMPLETE AND VERIFIED | owner decision |
+| OD-24 | Rent for villager merchants' stalls (pay as the player does, or the player's pitch free) | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |
@@ -170,6 +177,12 @@ None.
 | PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | approved | APPROVED — NOT STARTED | 20+ |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | ACTIVE DEVELOPMENT | 15 |
+| STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | APPROVED — NOT STARTED | 16 |
+| STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | approved | APPROVED — NOT STARTED | 16 |
+| STALL-03 | OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification | approved | APPROVED — NOT STARTED | 16 |
+| STALL-04 | CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled | approved | APPROVED — NOT STARTED | 16 |
+| STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | APPROVED — NOT STARTED | 16 |
+| STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | APPROVED — NOT STARTED | 16 |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | APPROVED — NOT STARTED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | APPROVED — NOT STARTED | 16 |

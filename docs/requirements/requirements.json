@@ -9837,6 +9837,314 @@
    "roadmap_reason": "needs NPC Judgment (Build 19) and bandit factions (WDR-016-C, 20+)"
   },
   {
+   "id": "FARM-01",
+   "title": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Lease through Property (green-square placement, the house-lease path), real coins to the treasury, the plot registered as leased; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-22",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "FARM-02",
+   "title": "Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "No farm on paying the lease; clearing and fencing are construction work with real materials and labour; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-22",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "FARM-03",
+   "title": "Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers)",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Villagers use Farming's cells, seed, seasons and labour as the player does; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-22",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "FARM-04",
+   "title": "Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Any household member able to work tends, harvests; the harvest goes to the family chest (FSE-18); tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-22",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "FARM-05",
+   "title": "Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming)",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "A household's decision weighs food security, coins, labour and land available; some do, some do not; measured on the seed runs"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-22",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "FARM-06",
+   "title": "Manor fields need seed and labour like any farm (no free seed, crops or materials)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Manor fields need seed and labour like any farm (no free seed, crops or materials)",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Sowing a manor field takes seed from a real store (FSE-11), by the shared model; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-23",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "FARM-07",
+   "title": "The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "The framework's initial-and-weekly distinction preserved; the reading reported to the owner as a remaining ambiguity before any new charge"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-23",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
    "id": "FR-01",
    "title": "Lizards and spiders as enemies",
    "kind": "approved",
@@ -10866,9 +11174,7 @@
    "depends_on": [
     "FSE-16"
    ],
-   "blockers": [
-    "OD-22"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -10920,9 +11226,7 @@
    "depends_on": [
     "FSE-16"
    ],
-   "blockers": [
-    "OD-22"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -14659,7 +14963,7 @@
    "id": "OD-22",
    "title": "Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference)",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 8",
@@ -14674,9 +14978,7 @@
    "commits": [],
    "parent": "FSE-07",
    "depends_on": [],
-   "blockers": [
-    "owner decision"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -14695,17 +14997,23 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason; blockers",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "Answered by the owner 2026-10-20 (docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md)"
     }
    ],
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an owner decision raised by the food-security audit"
+   "roadmap_reason": "an owner decision raised by the food-security audit",
+   "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md): Family farming and land development: any household leases a small plot (2 coins), clears, fences (logs and stone), ploughs and sows it"
   },
   {
    "id": "OD-23",
    "title": "What the manor's fields cost their farmers (lease, crop share, or free to any farmer)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "What the manor's fields cost their farmers (lease, crop share, or free to any farmer)",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 8",
@@ -14720,9 +15028,7 @@
    "commits": [],
    "parent": "FSE-07",
    "depends_on": [],
-   "blockers": [
-    "owner decision"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -14741,17 +15047,23 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason; blockers",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "Answered by the owner 2026-10-20 (docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md)"
     }
    ],
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an owner decision raised by the food-security audit"
+   "roadmap_reason": "an owner decision raised by the food-security audit",
+   "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md): Farmland lease economics: 2 coins through the existing lease framework, real coins to the treasury; manor farms get nothing free"
   },
   {
    "id": "OD-24",
    "title": "Rent for villager merchants' stalls (pay as the player does, or the player's pitch free)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Rent for villager merchants' stalls (pay as the player does, or the player's pitch free)",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 8",
@@ -14766,9 +15078,7 @@
    "commits": [],
    "parent": "FSE-07",
    "depends_on": [],
-   "blockers": [
-    "owner decision"
-   ],
+   "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
@@ -14787,11 +15097,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason; blockers",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "Answered by the owner 2026-10-20 (docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md)"
     }
    ],
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "an owner decision raised by the food-security audit"
+   "roadmap_reason": "an owner decision raised by the food-security audit",
+   "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md): Market stalls on a 5% sales commission, built by anyone, selling unattended, closing when sold out or by hand"
   },
   {
    "id": "OD-LE-01",
@@ -22298,6 +22614,270 @@
    "target_build": "19",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "an open design question; stays unanswered until the owner answers it (no default chosen)"
+  },
+  {
+   "id": "STALL-01",
+   "title": "Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Placement by green squares, clearing, the existing stall material definitions, construction labour; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-24",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "STALL-02",
+   "title": "A stall's own inventory: goods are moved into it for sale and are in one place only",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "A stall's own inventory: goods are moved into it for sale and are in one place only",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Goods transferred, never duplicated; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-24",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "STALL-03",
+   "title": "OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "No owner presence needed; purchases only by buyers with needs and coins; auto-close and notice; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-24",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "STALL-04",
+   "title": "CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Manual close, restock and reopen; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-24",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "STALL-05",
+   "title": "The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller)",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "Commission transferred from the proceeds to the treasury; balances in the coin ledger; replaces the 5-coin daily stall rent and villager merchants' free stalls; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-24",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
+  },
+  {
+   "id": "STALL-06",
+   "title": "Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed",
+   "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
+   "approval": "owner decisions 2026-10-20 (approved)",
+   "acceptance": [
+    "The OD-19/FSE-18 reserve is weighed, not an absolute bar; no guaranteed sales; measured on the seed runs"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-24",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions OD-22..24, 2026-10-20"
   },
   {
    "id": "TIME-01",
