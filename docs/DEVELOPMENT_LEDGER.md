@@ -11,9 +11,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 74 |
+| APPROVED — NOT STARTED | 82 |
 | ACTIVE DEVELOPMENT | 7 |
-| PARTIALLY IMPLEMENTED | 38 |
+| PARTIALLY IMPLEMENTED | 39 |
 | IMPLEMENTED — TESTING REQUIRED | 9 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 37 |
 | BLOCKED | 16 |
@@ -22,10 +22,10 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 8 |
-| **Total approved** | **341** |
-| Outstanding (not complete, superseded or canceled) | 197 |
+| **Total approved** | **350** |
+| Outstanding (not complete, superseded or canceled) | 206 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 31 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 24 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 31 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 23 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -39,18 +39,18 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 77 | 74 |
+| Build 15: simulation stabilization | 78 | 76 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
-| Build 20 or later (outside the five builds) | 35 | 33 |
+| Build 20 or later (outside the five builds) | 42 | 40 |
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **254** | **197** |
+| **Total open** | **262** | **206** |
 
-### Build 15: simulation stabilization (77)
+### Build 15: simulation stabilization (78)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -103,7 +103,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | HOUSE-07 | EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code | approved | ACTIVE DEVELOPMENT |  | Build 15 acceptance for EQ-07 |
 | HOUSE-08 | Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people | approved | IMPLEMENTED — TESTING REQUIRED |  | EQ-07 root cause 1 (owner answer OD-13) |
 | HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | approved | PARTIALLY IMPLEMENTED |  | EQ-07 root cause 1 (owner answer OD-13) |
-| OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | decision | BLOCKED | owner decision first | completes OD-13's house expansion for the original houses |
+| HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | APPROVED — NOT STARTED |  | OD-14 Phase 1, Build 15 stabilization |
+| HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | PARTIALLY IMPLEMENTED |  | OD-14 Phase 1 alternatives |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | APPROVED — NOT STARTED |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | approved | APPROVED — NOT STARTED |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
@@ -251,7 +252,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | decision | BLOCKED | owner decision first | an open design question; stays unanswered until the owner answers it (no default chosen) |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED |  | emergent gameplay is the judgment system's purpose |
 
-### Build 20 or later (outside the five builds) (35)
+### Build 20 or later (outside the five builds) (42)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -278,6 +279,13 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | PL1-13 | Recognisable stove | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
 | PL2-010 | Recognisable sawhorse | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
 | PL2-013 | Usable furniture | approved | PARTIALLY IMPLEMENTED | art needed | art and presentation (crop stages, tool swings, sitting poses, chimney, sawhorse, props); can be pulled into any build when art arrives |
+| PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | approved | APPROVED — NOT STARTED | procedural village generation not yet scheduled | with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15 |
+| PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | approved | APPROVED — NOT STARTED | procedural village generation not yet scheduled | with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15 |
+| PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | approved | APPROVED — NOT STARTED | procedural village generation not yet scheduled | with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15 |
+| PVG-04 | Procedural villages: reserve physical space for potential expansion footprints before placing neighbouring buildings and roads, without keeping it empty for ever | approved | APPROVED — NOT STARTED | procedural village generation not yet scheduled | with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15 |
+| PVG-05 | Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder | approved | APPROVED — NOT STARTED | procedural village generation not yet scheduled | with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15 |
+| PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | approved | APPROVED — NOT STARTED | procedural village generation not yet scheduled | with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15 |
+| PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | approved | APPROVED — NOT STARTED | procedural village generation not yet scheduled | with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15 |
 | REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | approved | BLOCKED | owner/external | over-the-air updates need the Hot Attic Games Mote repository |
 | REC-006 | Castles, dungeons and caves in the world | approved | DEFERRED |  | bandit factions, skeletons, castles, dungeons: combat content outside the five builds |
 | REC-007 | Several settlements (villages, towns, cities) with their own economies; NPC migration and regional jobs between them | approved | DEFERRED |  | real separate settlements and near/far simulation tiers need a larger world map |
@@ -397,7 +405,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (74)
+## APPROVED — NOT STARTED (82)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -443,6 +451,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FR-04 | Pad shortcuts for the Journal and Build menus; complete on-screen controls list | docs/release/BUILD_12_FULL_AUDIT.md |  |  |  |
 | FR-07 | Economy and household simulations in CI (short variant) | Build 14 audit |  |  |  |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | docs/directives/2026-10-19_memory_refuges_politics.md Part I |  | after DVW-B1 |  |
+| HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 |  | after HOUSE-09 | build a 5x6 two-bed room stamp from the house art (tools/build_village.py) as a module, after the owner sees that it serves 3 houses |
 | MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  |  |  |
 | MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A |  |
 | MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-B |  |
@@ -455,6 +464,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  | after PERF-03 |  |
 | PERF-05 | Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  | after PERF-02 |  |
 | PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
+| PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
+| PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
+| PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
+| PVG-04 | Procedural villages: reserve physical space for potential expansion footprints before placing neighbouring buildings and roads, without keeping it empty for ever | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
+| PVG-05 | Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
+| PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
+| PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | owner message #46 2026-10-17T22:58Z (MASTER DEVELOPMENT PROMPT, section 10 'ADOPTION AND ORPHAN CARE', scenarios 11 and 16); reaffirmed #47 2026-10-17T23:35Z section 17.4 ('Orphaned children should have possible adoption or guardianship paths. Family members may receive priority, followed by suitable willing households') and 17.5 ('The player must be eligible for marriage, children, household formation, and adoption under the same basic systems as NPCs') |  |  |  |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id) |  |  |  |
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  |  |  |
@@ -488,7 +504,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold |
 
-## PARTIALLY IMPLEMENTED (38)
+## PARTIALLY IMPLEMENTED (39)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -506,6 +522,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | HOUSE-04 | Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.5 | game/tests/housing_test.gd |  | gathering and trading by households: decide scope after the fix10 runs; may move to Build 16 |
 | HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | docs/directives/2026-10-20_housing_succession_adoption.md Part 1.7 | game/tests/housing_test.gd | after HOUSE-08; after HOUSE-09 | HOUSE-08 and HOUSE-09 |
 | HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13) | game/tests/housing_test.gd test_quarters_on_an_original_house | after OD-14 | wait for OD-14 |
+| HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 item 6 |  | after HOUSE-10 | owner: whether to scope a multi-level building system in a later build |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |
@@ -788,7 +805,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 24, status BLOCKED) (31)
+## Owner decisions, open and answered (open: 23, status BLOCKED) (31)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -806,7 +823,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5 |
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5 |
 | OD-13 | Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither? | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md Part 2 (EQ-07 trace, seed 2: five crowded households, all of this shape) |
-| OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | BLOCKED | docs/release/LONG_RUN_SIMULATION.md (EQ-07); measured with housing_test.gd::test_quarters_on_an_original_house |
+| OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | COMPLETE AND VERIFIED | docs/release/LONG_RUN_SIMULATION.md (EQ-07); measured with housing_test.gd::test_quarters_on_an_original_house |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat), restated in docs/directives/2026-10-20_project_memory_hardening.md and docs/directives/2026-10-20_permanent_project_memory_hardening.md; recorded in docs/EXPANSION_ROADMAP.md |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |

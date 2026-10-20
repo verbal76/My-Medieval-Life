@@ -10295,6 +10295,111 @@
    "roadmap_reason": "EQ-07 root cause 1 (owner answer OD-13)"
   },
   {
+   "id": "HOUSE-10",
+   "title": "Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "Implement appropriately sized additions that allow existing homes to expand when space permits.",
+   "description": "Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md)",
+   "acceptance": [
+    "Room sizes chosen after inspecting the original house footprints and the tile grid (recorded)",
+    "Eligible original houses can receive the addition; the count of the 21 that can, and those that cannot and why, is reported accurately",
+    "Construction consumes materials and labour; sleeping capacity only after completion",
+    "No roads, buildings or neighbouring parcels overwritten; ownership, membership and rent unchanged",
+    "Households recognize when expansion is possible or impossible and keep their goal without loops or deadlocks"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [
+    "HOUSE-09"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "build a 5x6 two-bed room stamp from the house art (tools/build_village.py) as a module, after the owner sees that it serves 3 houses",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "sizing measured before coding: a 4x5 to 5x6 room fits beside 3 of the 21 original houses (b23, b24, b_v1_house); 18 have no legal adjoining ground (map edge, neighbours, road, manor fields, cow pen); results in LONG_RUN_SIMULATION.md"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "OD-14 Phase 1, Build 15 stabilization"
+  },
+  {
+   "id": "HOUSE-11",
+   "title": "Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry",
+   "kind": "approved",
+   "status": "PARTIALLY IMPLEMENTED",
+   "owner_wording": null,
+   "description": "Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 item 6",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md)",
+   "acceptance": [
+    "A written evaluation of the smaller configuration and of attic/upper floors against the existing building, interior and roof systems",
+    "Any attic or upper-floor work is scoped to the owner before implementation if it needs a major new system"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "EQ-07",
+   "depends_on": [
+    "HOUSE-10"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "owner: whether to scope a multi-level building system in a later build",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1 item 6"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; next_action",
+     "why": "evaluated: the building system is single-level (no stairs, no second level, one pathfinding grid); an attic or upper floor would be a major new system, scoped to the owner, not built; the smaller configuration (4x5) fits the same 3 houses as 5x6"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "OD-14 Phase 1 alternatives"
+  },
+  {
    "id": "K-1",
    "title": "5 coins vs land 60+",
    "kind": "approved",
@@ -11649,7 +11754,7 @@
    "id": "OD-14",
    "title": "Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses.",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses.",
    "source": "docs/release/LONG_RUN_SIMULATION.md (EQ-07); measured with housing_test.gd::test_quarters_on_an_original_house",
@@ -11683,11 +11788,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> COMPLETE AND VERIFIED; owner_answer",
+     "why": "answered by the owner 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md): smaller attached rooms, real construction, no guaranteed expansion; implementation HOUSE-10, HOUSE-11"
     }
    ],
    "target_build": "15",
    "roadmap_gate": "owner decision first",
-   "roadmap_reason": "completes OD-13's house expansion for the original houses"
+   "roadmap_reason": "completes OD-13's house expansion for the original houses",
+   "owner_answer": "Phase 1 approved direction: implement appropriately sized additions that allow existing homes to expand when space permits: smaller attached rooms; actual construction (materials, money, labour, time; no free construction); existing ownership, membership and rent preserved; only legitimate buildable ground adjoining the house (no roads, occupied buildings or another household's property without a legitimate transfer); trees and removable vegetation cleared through normal gameplay first; if a ground-floor addition is impossible, evaluate a smaller configuration or an upper-floor/attic conversion, but do not invent an upper-floor system merely to bypass geometry; no guaranteed expansion; persistent goals that reconsider feasible options; HOUSE-08 bed sharing preserved. Do not automatically convert every blocked household to detached quarters. (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md)"
   },
   {
    "id": "OPS-01",
@@ -14330,6 +14441,314 @@
    "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "production chains in player shops, coops, hired farm help, draught animals: industry and specialization"
+  },
+  {
+   "id": "PVG-01",
+   "title": "Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space)",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md) (approved future design requirements, not Build 15)",
+   "acceptance": [
+    "The generator evaluates each listed factor when placing a house"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed: approved future requirement for procedural village generation, not Build 15 (owner)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "procedural village generation not yet scheduled",
+   "roadmap_reason": "with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15"
+  },
+  {
+   "id": "PVG-02",
+   "title": "Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels)",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md) (approved future design requirements, not Build 15)",
+   "acceptance": [
+    "Generated villages show the listed variation across seeds"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed: approved future requirement for procedural village generation, not Build 15 (owner)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "procedural village generation not yet scheduled",
+   "roadmap_reason": "with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15"
+  },
+  {
+   "id": "PVG-03",
+   "title": "Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md) (approved future design requirements, not Build 15)",
+   "acceptance": [
+    "Options come from the actual systems; no free capacity"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed: approved future requirement for procedural village generation, not Build 15 (owner)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "procedural village generation not yet scheduled",
+   "roadmap_reason": "with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15"
+  },
+  {
+   "id": "PVG-04",
+   "title": "Procedural villages: reserve physical space for potential expansion footprints before placing neighbouring buildings and roads, without keeping it empty for ever",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Procedural villages: reserve physical space for potential expansion footprints before placing neighbouring buildings and roads, without keeping it empty for ever",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md) (approved future design requirements, not Build 15)",
+   "acceptance": [
+    "The generator knows expansion footprints before placing neighbours; it never unknowingly removes every expansion opportunity"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed: approved future requirement for procedural village generation, not Build 15 (owner)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "procedural village generation not yet scheduled",
+   "roadmap_reason": "with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15"
+  },
+  {
+   "id": "PVG-05",
+   "title": "Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md) (approved future design requirements, not Build 15)",
+   "acceptance": [
+    "New structures arise from inhabitants' actions"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed: approved future requirement for procedural village generation, not Build 15 (owner)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "procedural village generation not yet scheduled",
+   "roadmap_reason": "with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15"
+  },
+  {
+   "id": "PVG-06",
+   "title": "Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md) (approved future design requirements, not Build 15)",
+   "acceptance": [
+    "A validator with configurable criteria; tests over several seeds, terrains and densities"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed: approved future requirement for procedural village generation, not Build 15 (owner)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "procedural village generation not yet scheduled",
+   "roadmap_reason": "with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15"
+  },
+  {
+   "id": "PVG-07",
+   "title": "Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes",
+   "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2",
+   "approval": "owner directive 2026-10-20 (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md) (approved future design requirements, not Build 15)",
+   "acceptance": [
+    "Same seed, same village; saved changes survive regeneration and loading"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed: approved future requirement for procedural village generation, not Build 15 (owner)"
+    }
+   ],
+   "target_build": "20+",
+   "roadmap_gate": "procedural village generation not yet scheduled",
+   "roadmap_reason": "with the procedural settlement work (REC-007, SET-E); the owner said not to assign it to Build 15"
   },
   {
    "id": "Q-03",

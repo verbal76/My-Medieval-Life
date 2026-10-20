@@ -569,3 +569,37 @@ These runs write only to `out/eq/`, which is not committed. Each result is recor
 ### 365 days on the corrected code (fix12: housing goals, forge supply, founders keep building; before the tool fix)
 
 Started 2026-10-20 at 01:31 UTC; recorded here when they finish.
+
+### OD-14 Phase 1: what the original houses can take (measured 2026-10-20)
+
+**Method:** a read-only probe on seed 1. The village layout is fixed, so seed 2 gives the same answer. For every original house held by a household (21), each house was surveyed; then every room position touching the house along at least 3 cells was tried, under the module rules:
+- ground the land office would sell (no road, building, other parcel, field, pen, solid terrain or map edge);
+- not covering any door step;
+- a door step that is clear and reachable from the village square.
+
+| Room size | Fits now | More once trees are felled | No legal ground |
+|---|---|---|---|
+| 4x5 | 3 | 0 | 18 |
+| 5x5 | 3 | 0 | 18 |
+| 5x6 | 3 | 0 | 18 |
+| 6x6 | 1 | 1 | 19 |
+| 6x7 | 1 | 2 | 18 |
+| 7x8 | 0 | 3 | 18 |
+| 9x10 (today's quarters) | 0 | 4, still blocked by a road | 17 |
+
+**Which houses:** the three that can take a small room are `b23`, `b24` and `b_v1_house`, the houses beside the manor house.
+
+**What blocks the other 18 (the most common obstacle around each):**
+- the edge of the village map: 6;
+- a neighbour's house and its ground: 7;
+- the road: 2;
+- the manor's fields: 2;
+- the cow pen: 1.
+
+These are legitimate obstacles. Removing them would mean relocating buildings or roads, building outside the map, or taking the manor's fields without a land-transfer process, all of which the owner ruled out.
+
+**Upper floor or attic (OD-14 item 6):**
+- The building system has a single level. A building is a stamp of ground, wall and roof tile layers with an interior on the same grid; the roof fades when someone is inside.
+- There are no stairs, no second level, and pathfinding is one grid.
+- An attic or upper floor would therefore be a major new system: multi-level maps, stairs, drawing and pathfinding.
+- Under the directive it is scoped to the owner, not built (HOUSE-11).
