@@ -53,7 +53,8 @@ func _init() -> void:
 	var t0 := Time.get_ticks_msec()
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
-	if w.brain == null:                   # a game script failed to load: stop with an error rather than wait forever
+	var parts := [w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]
+	if parts.has(null):                   # a game script failed to compile: stop with an error rather than run on broken
 		printerr("economy_sim: the world did not set up (a script failed to load); see the errors above")
 		quit(2)
 		return

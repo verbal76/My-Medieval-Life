@@ -623,6 +623,7 @@ func daily() -> void:
 			continue
 		_rehouse(h)
 		if str(hh.get("build", "")) != "":
+			_family_help(h)
 			_keep_building(h)
 		elif str(hh.home) == "":
 			_find_home(h)                  # lodging: a house of its own when it can pay for one
@@ -1183,6 +1184,50 @@ func _keep_building(h: int) -> void:
 	var founder: NPC = responsible_adult(h)
 	if founder != null:
 		hire(ref, founder, p, budget)
+
+
+## Help from relatives (owner directive 2026-10-20, housing: "Obtaining help from relatives"; HOUSE-04):
+## a household building its home receives, toward what the site still costs, what its family can spare.
+## The family is the household it was founded from and the households of the builder's parents. A
+## family gives only above what it keeps for its own people (_keep) and its own missing tools, and
+## nothing while it is building itself. Coins move from the family's purse to the builder: none is made.
+func _family_help(h: int) -> void:
+	var hh: Dictionary = w.households[h]
+	var p: Dictionary = w.plot(str(hh.get("build", "")))
+	var builder := responsible_adult(h)
+	if p.is_empty() or p.site.is_empty() or p.site.get("done", false) or builder == null:
+		return
+	var short := estimate(p.site.need) + 10 + _tool_reserve(h) - w.property.purse(World.hh_ref(h))
+	if short <= 0:
+		return
+	var family := []
+	var from := int(hh.get("founded_from", -1))
+	if from >= 0:
+		family.append(from)
+	for pid in [builder.mother, builder.father]:
+		var parent := w.npc(int(pid)) if int(pid) >= 0 else null
+		if parent != null and parent.alive and parent.household >= 0 and not family.has(parent.household):
+			family.append(parent.household)
+	family.sort()
+	for f: int in family:
+		if short <= 0:
+			break
+		if f == h or f >= w.households.size():
+			continue
+		var fh: Dictionary = w.households[f]
+		var members: Array = w.brain._members(f)
+		if fh.get("ended", false) or members.is_empty() or str(fh.get("build", "")) != "":
+			continue
+		var ref := World.hh_ref(f)
+		var give := mini(short, w.property.purse(ref) - _keep(f, members.size()) - _tool_reserve(f))
+		if give <= 0:
+			continue
+		_take(ref, give)
+		builder.coins += give
+		short -= give
+		w.stat("family_help_coins", give)
+		w.stat("family_help_gifts")
+		w.brain.once("family_help_%d_%d" % [f, h], "The %s family helps %s %s build a home (%d coins)." % [fh.family, builder.name, builder.family, give])
 
 
 ## What a household keeps back from its building for its workers' missing tools (EQ-07): the price of

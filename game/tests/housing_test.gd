@@ -37,6 +37,7 @@ func _init() -> void:
 	test_sleeping_loft()
 	test_housing_options_weighed()
 	test_baby_while_lodging()
+	test_family_helps_builder()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -627,3 +628,66 @@ func test_baby_while_lodging() -> void:
 			break
 	w.construction.move_in(int(nh.id), house)
 	check(k.home == house and a.home == house and b.home == house, "when the house is done the baby moves in with its parents")
+
+
+## HOUSE-04, the owner's housing directive ("Obtaining help from relatives"): a household building its home
+## gets, toward what its site still costs, what its family can spare above its own keep; coins only move;
+## a family that is building itself, or has nothing to spare, gives nothing.
+func test_family_helps_builder() -> void:
+	var w := new_world()
+	var c := w.construction
+	var from := crowded_family(w)
+	var child: NPC = null
+	for o: NPC in w.brain._members(from):
+		if o.role == "adult" and c._grown_child(o):
+			child = o
+	if child == null:
+		for o: NPC in w.brain._members(from):
+			if o.role == "adult" and child == null and c.responsible_adult(from) != o:
+				child = o
+	check(child != null, "a grown member to found a household")
+	if child == null:
+		return
+	var nh := {"id": w.households.size(), "family": child.family, "home": "", "members": [], "pantry": Inventory.new(),
+		"founded_from": from, "founded_day": w.day()}
+	w.households.append(nh)
+	var h := int(nh.id)
+	w.households[from].members.erase(child.id)
+	child.household = h
+	nh.members.append(child.id)
+	var ref := World.hh_ref(h)
+	var rect := c.find_ground("house", w.building_door(str(w.households[from].home)), ref)
+	check(rect.size != Vector2i.ZERO, "ground for the new house")
+	if rect.size == Vector2i.ZERO:
+		return
+	var p := c.place("house", rect, ref)
+	w.start_site(p, "house", ref)
+	nh.build = str(p.id)
+	child.coins = 5
+	var family: Array = w.brain._members(from)
+	for o: NPC in family:
+		o.coins = 0
+	family[0].coins = 400
+	var total := w.total_coins()
+	var keep := c._keep(from, family.size()) + c._tool_reserve(from)
+	var short := c.estimate(p.site.need) + 10 + c._tool_reserve(h) - w.property.purse(ref)
+	c._family_help(h)
+	var gave := child.coins - 5
+	check(gave > 0 and gave == mini(short, 400 - keep), "the family gives what the site still needs, within what it can spare (%d of %d short; it keeps %d)" % [gave, short, keep])
+	check(w.property.purse(World.hh_ref(from)) >= keep, "and keeps what its own people need (%d)" % w.property.purse(World.hh_ref(from)))
+	check(w.total_coins() == total, "coins move from the family to the builder: none is made or lost")
+	var before := child.coins
+	c._family_help(h)
+	check(child.coins == before or child.coins - before <= maxi(0, w.property.purse(World.hh_ref(from)) - keep), "a second call gives no more than is left to spare")
+	# a family that is building itself, or has nothing to spare, gives nothing
+	child.coins = 5
+	for o: NPC in family:
+		o.coins = 0
+	family[0].coins = keep
+	c._family_help(h)
+	check(child.coins == 5, "a family with nothing above its keep gives nothing")
+	family[0].coins = 400
+	w.households[from].build = "elsewhere"
+	c._family_help(h)
+	check(child.coins == 5, "nor a family building a home of its own")
+	w.households[from].erase("build")
