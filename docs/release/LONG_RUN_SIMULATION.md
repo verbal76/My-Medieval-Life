@@ -1082,6 +1082,12 @@ saturated meat market, and an empty granary while the treasury sat at its reserv
 
 ### Seed 2, 365 days, with FSE-17 and the eating and cooking parity (`69a8e14`), against the baseline (2026-10-20)
 
+**Invalid as a measure of FSE-17 (found after it was recorded):** this run logged 634 script errors, all in
+`_relief_offers` (a seller household whose home is not one of the buildings), and relief placed those pickups at cell
+0,0. Fixed in `d55b6dc`; the comparison is rerun on the corrected code (local seed 2, and seeds 1-4 on Actions). The
+figures below are kept as recorded, not as a result. The Actions run 39489427217 on the same commit failed on seed 2 for
+the same errors.
+
 Local run, same command. The relief order and family-tab fixes (`9db091b`), relief over every food store with one food
 valuation, and villagers eating eggs and milk and roasting their own meat. **A material change; for the owner's review
 before it is relied on** (owner follow-up 2026-10-20, section 4's rule applied to any change that materially affects
