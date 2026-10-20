@@ -99,7 +99,7 @@ jobs:
           $godot --headless --path game --import > "$out/import.log" 2>&1 || true
           start=$(date +%s)
           set +e
-          $godot --headless --path game --script res://tests/economy_sim.gd -- --days "$DAYS" --seed "$SEED" --every "$EVERY" --out "$out/sim.json" > "$out/sim.log" 2>&1
+          timeout 19200 $godot --headless --path game --script res://tests/economy_sim.gd -- --days "$DAYS" --seed "$SEED" --every "$EVERY" --out "$out/sim.json" > "$out/sim.log" 2>&1
           code=$?
           set -e
           end=$(date +%s)

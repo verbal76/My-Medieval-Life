@@ -94,7 +94,7 @@ jobs:
           # script error in the log, which Godot reports without stopping. Year-long runs: long-sims.yml.
           godot=~/godot-bin/godot
           set +e
-          $godot --headless --path game --script res://tests/economy_sim.gd -- --days 10 --seed 1 --every 5 --out "$RUNNER_TEMP/sim.json" > "$RUNNER_TEMP/sim.log" 2>&1
+          timeout 900 $godot --headless --path game --script res://tests/economy_sim.gd -- --days 10 --seed 1 --every 5 --out "$RUNNER_TEMP/sim.json" > "$RUNNER_TEMP/sim.log" 2>&1
           code=$?
           set -e
           tail -n 12 "$RUNNER_TEMP/sim.log"

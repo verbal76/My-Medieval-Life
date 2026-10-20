@@ -53,6 +53,10 @@ func _init() -> void:
 	var t0 := Time.get_ticks_msec()
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
+	if w.brain == null:                   # a game script failed to load: stop with an error rather than wait forever
+		printerr("economy_sim: the world did not set up (a script failed to load); see the errors above")
+		quit(2)
+		return
 	w.event.connect(_on_event)
 	w.brain.track_misses = true
 	w.trade_hook = _on_trade
@@ -65,21 +69,34 @@ func _init() -> void:
 	_print_sample(samples[0])
 	var per_day := int(1440.0 / float(GameData.b("game_minutes_per_second")) / STEP)
 	var hp_before := w.player.hp
+	var profile := "--profile" in args          # PERF-02: time per subsystem, printed at the end (changes nothing)
+	w.profiling = profile
+	w.map.profiling = profile
+	var update_us := 0
+	var harness_us := 0
 	for d in days:
 		for i in per_day:
+			var tu := Time.get_ticks_usec()
 			w.update(STEP)
+			update_us += Time.get_ticks_usec() - tu
 			w.player.hunger = 100.0            # the inert player is fed; it is not part of what is measured
 			if i % 60 == 59:
+				var th := Time.get_ticks_usec()
 				_hourly()
+				harness_us += Time.get_ticks_usec() - th
 				if w.player.hp < hp_before:
 					player_attacked += 1
 				hp_before = w.player.hp
 				player_min_hp = minf(player_min_hp, w.player.hp)
 		if (d + 1) % every == 0 or d + 1 == days:
+			var ts := Time.get_ticks_usec()
 			samples.append(_sample(start))
 			_print_sample(samples[-1])
 			min_hunger = 100.0
+			harness_us += Time.get_ticks_usec() - ts
 	var secs := (Time.get_ticks_msec() - t0) / 1000.0
+	if profile:
+		_print_profile(update_us, harness_us, secs, days)
 	var final: Dictionary = samples[-1]
 	_print_final(final, start, seed, days, secs)
 	if out != "":
@@ -91,6 +108,24 @@ func _init() -> void:
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty()
 	w.dispose()
 	quit(0 if ok else 1)
+
+
+## PERF-02: where the time went. World.update's subsystems (World.prof), path searches (VillageMap), and
+## the harness's own hourly checks and samples; shares are of the whole run's wall-clock.
+func _print_profile(update_us: int, harness_us: int, secs: float, days: int) -> void:
+	var total := secs * 1000000.0
+	var alive := _villagers().size()
+	print("PROFILE: %.1f s for %d days (%.2f s a day); %d villagers alive, %d animals alive at the end" % [secs, days, secs / days, alive,
+		w.fauna.animals.filter(func(a): return a.alive).size()])
+	var rows := []
+	for k in w.prof:
+		rows.append([k, int(w.prof[k].us), int(w.prof[k].n)])
+	rows.append(["path searches (inside villagers)", w.map.path_us, w.map.path_calls])
+	rows.append(["World.update (all)", update_us, 0])
+	rows.append(["harness: hourly checks and samples", harness_us, 0])
+	rows.sort_custom(func(a, b): return a[1] > b[1])
+	for r in rows:
+		print("  %-46s %8.1f s %5.1f%%  %s" % [r[0], r[1] / 1000000.0, 100.0 * r[1] / total, ("%d calls, %.0f us each" % [r[2], float(r[1]) / r[2]]) if r[2] > 0 else ""])
 
 
 # ---------------------------------------------------------------- listeners ------------------
