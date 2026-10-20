@@ -8314,7 +8314,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "read the fix12 365-day runs (all three corrections) against fix9; OD-13 for crowded families that cannot split",
+   "next_action": "owner answer to OD-16; then 365-day Actions runs on both seeds",
    "priority": "build 15",
    "workstream": "world equilibrium",
    "superseded_by": null,
@@ -8364,6 +8364,11 @@
      "date": "2026-10-20",
      "change": "tests",
      "why": "fourth root cause: a founder whose work tool broke after spending on the house earned almost nothing and never recovered; the house budget now keeps a missing tool's price, and tool-less workers count as out of work in the job market"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "2026-10-20 overnight: population and wildlife failures fixed (365-day Actions run on 0ee0218: 101 alive, every wild species present, ledger balanced); houses: family help, own timber and tool retention added; seed 2 finishes 3 sites in 200 days; seed 1 finishes none because the trade economy stops around day 120-140, raised as OD-16"
     }
    ],
    "target_build": "15",
@@ -10048,7 +10053,7 @@
    "id": "HOUSE-04",
    "title": "Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.5",
@@ -10059,7 +10064,7 @@
     "Test: a household gathers or holds some materials and buys others; no material appears from nothing"
    ],
    "implementation": "",
-   "tests": "game/tests/housing_test.gd",
+   "tests": "housing_test.gd test_family_helps_builder, test_builder_makes_timber, test_caravan_keeps_needed_tools",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -10089,6 +10094,16 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests; next_action",
      "why": "saving (no courting gifts while saving), the household's own stock and buying are in place and tested; households gathering or trading for materials themselves are not"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "tests; status_note",
+     "why": "family help (_family_help), builders bring their own goods and make timber (saw logs, fell with an axe, buy an axe), builders keep their axe while building (NPCBrain.keeps); tested; 200-day seed 2 finishes 3 sites, seed 1 none because the economy stops (OD-16)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED",
+     "why": "approved routes all implemented (money, own materials, gathering, crafting, relatives); long-run proof waits on OD-16"
     }
    ],
    "target_build": "15",
@@ -12125,6 +12140,50 @@
    "target_build": "15",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "whether player sales keep a trader's floor is a game rule"
+  },
+  {
+   "id": "OD-16",
+   "title": "The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades?",
+   "source": "agent, 2026-10-20, docs/release/LONG_RUN_SIMULATION.md 'Why seed 1 builds no house'",
+   "approval": "",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before any mechanism that changes how money moves is built"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Evidence: LONG_RUN_SIMULATION.md. Where the money goes: bandits 2,365 and unclaimed loot 1,521 of 8,739 coins at day 365; the traders broke. Options: (a) bandits' hoards and loot re-enter circulation (bandits spend at the market or the guards recover it to the treasury); (b) the manor supports essential trades (buys tools and iron for the village's workers from the treasury, or lends to the smith against output); (c) the caravan buys more of the village's surplus (meat, hides); (d) woodcutting that does not depend on buying a market axe (the manor lends tools). Recommendation: (b) with (a): a medieval manor keeping its smithy and woodlands working is in keeping with the world, uses the treasury that already exists, and (a) returns the 45 % of coins now out of circulation. Nothing is built until the owner answers. Meanwhile Build 15 stays open on seed 1's housing.",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "agent, 2026-10-20, docs/release/LONG_RUN_SIMULATION.md 'Why seed 1 builds no house'"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason; notes",
+     "why": "options and recommendation recorded"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "blocks Build 15 housing completion on seed 1 (EQ-07); it is the equilibrium question of EQ-01/EQ-16"
   },
   {
    "id": "OPS-01",

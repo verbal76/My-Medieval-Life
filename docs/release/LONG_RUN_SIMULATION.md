@@ -634,3 +634,93 @@ and `long-sims.yml` fail on any script error in the log.
   as consumption. It is now also `used_<id>`, as for the player.
 
 Both wait on a 365-day run to show the ledger balanced and no script error.
+
+## 365 days on GitHub Actions after the EQ-17 and EQ-10 fixes (run 39368663150, staging `0ee0218`, 2026-10-20)
+
+Run 39368663150 used the manual long-simulation workflow (INFRA-02): one runner per seed, with no player, and
+gated on script errors.
+
+| | Seed 1 | Seed 2 |
+|---|---|---|
+| Runtime | 38.4 min | 42 min |
+| Script errors | 0 | 0 |
+| Currency leak | 0 | 0 |
+| Item residuals | none | none |
+| Fingerprint | `3e57140e93322ef7bcb411724d2249ab` | `6be5302a5ffa6f0d30307e7aa8b3ef41` |
+| Villagers alive at day 365 | 101 | (in the run's artifact) |
+| Starvation deaths | 0 | 2 (a merchant, day 157; an elder, day 332) |
+| House sites started / finished | 7 / 0 | (in the artifact) |
+| Households | 32 (8 founded) | |
+| Wild animals at day 365 | every wild species present | every wild species present |
+| Nights without firewood | 7,172 | |
+| Meals missed for lack of money | 5,289 (hunters, carpenters) | 3,669 (hunters 4,466 missed meals in all) |
+
+**What this verifies:**
+- EQ-17: no script error in a year on either seed.
+- EQ-10: the item ledger balances exactly over 365 days, tools and poultices included.
+- B14R-12: wildlife no longer reaches 0; the refuges keep every species.
+- Population: holds, 100 to 101 on seed 1.
+
+**What remains (EQ-07, Build 15): house sites start but none is finished.**
+- A trace (`housing_trace.gd`, 150 days, seed 1) shows why. Founders start with the 25 % start share (22-35 coins
+  toward 100-140) and then cannot earn the rest. Most are single hunters, whose meat mostly finds no buyer (seed 1:
+  3,957 meat made in the year, about 600 sold; 2,134 held unsold at the end).
+- When four sites buy at once (day 130 on), the market's planks and logs fall to 0.
+- The correction under way uses the routes the owner's housing directive lists: help from relatives (the household
+  a founder came from, and the builder's parents' households, give what they can spare above their own keep), and
+  next producing materials through existing crafting (sawing planks from logs).
+- The hunters' income is long-term equilibrium work (Build 16, EQ-01).
+
+## Why seed 1 builds no house: the village's trade economy stops around day 120-140 (2026-10-20)
+
+**Corrections tried, with their 200-day results:**
+
+| Correction | Seed 1 sites started / finished | Seed 2 sites started / finished, houses |
+|---|---|---|
+| None (staging `0ee0218`, Actions run, 365 days) | 7 / 0 | (the artifact) |
+| Help from relatives (HOUSE-04) | 7 / 0 | 6 / 3, 2 houses |
+| Plus builders make their own timber (saw, fell, buy an axe) | 7 / 0 | 6 / 3, 2 houses |
+| Plus the caravan leaves tools the village needs | 7 / 0 | 6 / 3, 2 houses |
+
+All three are approved routes and are kept. Each is tested, conserves coins and goods, and adds no script error. But
+on seed 1 they cannot work, because by then the village's trade economy has stopped.
+
+**Evidence (seed 1, 200 days, `out/eq/tool/s1.json`):**
+
+| Day | Smith's coins | Raw-goods merchant's coins | Iron ore imported (running total) | Woodcutters | Unemployed |
+|---|---|---|---|---|---|
+| 20 | 155 | 362 | 96 | 4 | 3 |
+| 60 | 167 | 320 | 426 | 5 | — |
+| 100 | 70 | 360 | 658 | 4 | 14 |
+| 120 | 0 | 391 | 685 | 4 | 14 |
+| 140 | 0 | 181 | 685 (no more) | 4 | — |
+| 200 | 4 | 39 | 685 | 1 | 20 |
+
+From day 140, every good held in the village stays where it is (planks 89, logs 62: the stalled sites' deliveries).
+
+**The chain:**
+1. The mine is worked out by about day 20. Iron and coal then come only from the caravan.
+2. The smith pays for them from coins above the trading floor (`NPCBrain._caravan_imports`), and the smith's coins
+   run out by day 120.
+3. With no iron there are no axes (`forge_axe`: iron bars and a plank). Woodcutters' axes break (40 by day 140),
+   so woodcutters leave the trade (6 to 1) while unemployment rises to 20.
+4. With no woodcutters there are no logs, so no planks or firewood. Builders who now have the money (100-130 coins
+   with family help) find no timber to buy. They have no axe to fell their own: none is for sale.
+
+**Where the money is instead:** on seed 1 at day 365 (Actions run), out of 8,739 coins:
+- bandits held 2,365;
+- 1,521 lay as loot nobody picked up;
+- villagers held 3,685 (median household 54);
+- the treasury held 1,148.
+
+The traders ended broke: the carpenter, the tavernkeeper and one raw-goods merchant at 0, the smith at 16. The run
+that came before all of today's changes shows the same end state, so this collapse predates them.
+
+**Why this goes to the owner:** restarting the flow needs a choice about how money moves in the village, an economy
+fundamental the overnight directive reserves to the owner. Candidate mechanisms (none implemented):
+- bandits' hoards and unclaimed loot re-entering circulation;
+- the manor supporting the essential trades (buying tools for the village, credit to the smith);
+- the caravan buying more of what the village has in surplus (meat, hides);
+- woodcutting jobs that do not depend on a market axe.
+
+This is owner decision OD-16, with a recommendation in the register.
