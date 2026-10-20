@@ -1304,7 +1304,7 @@ func _plan_sell(n: NPC, id: String) -> bool:
 func _buyer_for(n: NPC, id: String) -> NPC:
 	for outlet in OUTLETS.get(id, []):
 		for b in _with_buy_role(outlet):
-			if b != n and b.alive and wants(b, id) > 0 and b.coins - w.buy_price(b, id) >= int(GameData.b("trader_cash_floor")):
+			if b != n and b.alive and wants(b, id) > 0 and w.can_afford(b, w.buy_price(b, id)):
 				return b
 	return null
 
@@ -1786,7 +1786,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				return false
 			var qty := mini(n.inv.count(a.item) - reserve(n, a.item), wants(b, a.item))
 			var sold := 0
-			while qty > 0 and b.coins - w.buy_price(b, a.item) >= int(GameData.b("trader_cash_floor")):
+			while qty > 0 and w.can_afford(b, w.buy_price(b, a.item)):
 				if w.trade(b, n, a.item, 1, w.buy_price(b, a.item)):
 					sold += 1
 					qty -= 1
@@ -3106,7 +3106,7 @@ func _caravan_imports() -> int:
 			if int(left.get(id, 0)) > int(GameData.b("caravan_import_when_left")):
 				continue
 			var price := maxi(1, roundi(GameData.value(id) * float(GameData.b("caravan_import_markup"))))
-			while o.inv.count(id) < int(stock[id]) and o.coins - price >= int(GameData.b("trader_cash_floor")):
+			while o.inv.count(id) < int(stock[id]) and w.can_afford(o, price):
 				o.coins -= price
 				o.spent += price
 				o.inv.add(id)
@@ -3132,7 +3132,7 @@ func _caravan_apothecary() -> int:
 		var worst := 1.0
 		for id in stock:
 			var fill := float(sage.inv.count(id)) / float(stock[id])
-			if fill < worst and sage.coins - GameData.value(id) >= int(GameData.b("trader_cash_floor")):
+			if fill < worst and w.can_afford(sage, GameData.value(id)):
 				worst = fill
 				pick = id
 		if pick == "":
@@ -3164,7 +3164,7 @@ func _caravan_seeds() -> int:
 			var worst := 1.0
 			for id in stock:
 				var fill := float(o.inv.count(id)) / float(stock[id])
-				if fill < worst and o.coins - GameData.value(id) >= int(GameData.b("trader_cash_floor")) and o.inv.can_add(id):
+				if fill < worst and w.can_afford(o, GameData.value(id)) and o.inv.can_add(id):
 					worst = fill
 					pick = id
 			if pick == "":
@@ -3201,7 +3201,7 @@ func _caravan_stone() -> int:
 	for o: NPC in w.npcs:
 		if not o.alive or buy_role(o) != "merchant_raw":
 			continue
-		while cart > 0 and wants(o, "stone") > 0 and o.coins - price >= int(GameData.b("trader_cash_floor")):
+		while cart > 0 and wants(o, "stone") > 0 and w.can_afford(o, price):
 			o.coins -= price
 			o.spent += price
 			o.inv.add("stone")

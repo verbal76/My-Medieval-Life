@@ -11,12 +11,12 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 72 |
+| APPROVED — NOT STARTED | 71 |
 | ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 33 |
-| IMPLEMENTED — TESTING REQUIRED | 12 |
+| IMPLEMENTED — TESTING REQUIRED | 14 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
-| BLOCKED | 16 |
+| BLOCKED | 15 |
 | DEFERRED | 9 |
 | COMPLETE AND VERIFIED | 162 |
 | SUPERSEDED | 20 |
@@ -61,7 +61,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | B14-13 | A controller connected to a phone or tablet hides the touch buttons and uses the pad controls | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | B7-001 | Starting coins | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | B7-005 | Earning money discoverable; "Trade with" | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
-| B7-008 | Player can drain buyers to 0, kill all wildlife | approved | BLOCKED |  | likely complete: buyer drain fixed (B13-06) and refuges prevent wildlife extinction; verify and close |
+| B7-008 | Player can drain buyers to 0, kill all wildlife | approved | IMPLEMENTED — TESTING REQUIRED |  | likely complete: buyer drain fixed (B13-06) and refuges prevent wildlife extinction; verify and close |
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | approved | IMPLEMENTED — TESTING REQUIRED |  | economy placeholders measured in the Build 15 runs (manor reserve, 30-coin caravan stand-in) |
 | B7-010 | HUD anchoring on Android | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | B7-011 | Tapping trees/ore does nothing | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
@@ -135,7 +135,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED |  |  |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | APPROVED — NOT STARTED |  |  |
-| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | APPROVED — NOT STARTED |  |  |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | approved | APPROVED — NOT STARTED |  |  |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | APPROVED — NOT STARTED |  |  |
 | PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | APPROVED — NOT STARTED |  |  |
@@ -412,7 +412,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (72)
+## APPROVED — NOT STARTED (71)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -459,7 +459,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
-| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | docs/directives/2026-10-20_od18_player_villager_parity.md |  | after PAR-01 |  |
 | PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
@@ -540,10 +539,11 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (12)
+## IMPLEMENTED — TESTING REQUIRED (14)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
+| B7-008 | Player can drain buyers to 0, kill all wildlife | docs/release/BUILD_7_ISSUES.md (audit inventory row 49) |  |  | Close with PAR-02 once the suites pass |
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
@@ -555,6 +555,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | docs/directives/2026-10-20_housing_succession_adoption.md Part 6 | game/tests/family_test.gd; game/tests/housing_test.gd | after FAM-02 |  |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-11) | game/tests/family_test.gd test_nobody_can_take | after FAM-02; after FAM-03; after WDR-016-C | suites; then COMPLETE once a long run has exercised it or tests suffice |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md | game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed |  | a loft finished in a year-long run, once the timber supply holds (Build 16, OD-16) |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md | world_test.gd _par02_reserve |  |  |
 | WR-02 | Grazers in a wood all stop eating while the wood is over its grass capacity, so some starve together | WR-01 agent report 2026-10-19 | game/tests/wildlife_test.gd test_grazing_over_capacity |  |  |
 
 ## AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (39)
@@ -601,7 +602,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | device check of wiki navigation on touch and controller |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | docs/directives/2026-10-19_memory_refuges_politics.md Part II | `b15208a`, `7bd1905`; game/tests/refuge_test.gd |  |  |
 
-## BLOCKED (16)
+## BLOCKED (15)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -610,7 +611,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 357) |  |  |  |
 | B13-15 | Android signing stability | docs/DEVELOPMENT_LEDGER.md (audit inventory row 190) |  |  |  |
 | B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | docs/release/BUILD_7_ISSUES.md (audit inventory row 47) |  |  |  |
-| B7-008 | Player can drain buyers to 0, kill all wildlife | docs/release/BUILD_7_ISSUES.md (audit inventory row 49) |  |  | owner answer to OD-15; then apply it or close |
 | B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) |  |  |  |
 | B7-016 | Tanners/goods merchants end at 0 coins | docs/release/BUILD_7_ISSUES.md (audit inventory row 57) |  |  |  |
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner request 2026-10-19 (DEVELOPMENT_LEDGER ENV-RTK) |  | owner: environment setup script |  |

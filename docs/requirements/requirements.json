@@ -2810,7 +2810,7 @@
    "id": "B7-008",
    "title": "Player can drain buyers to 0, kill all wildlife",
    "kind": "approved",
-   "status": "BLOCKED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Player can drain buyers to 0, kill all wildlife",
    "source": "docs/release/BUILD_7_ISSUES.md (audit inventory row 49)",
@@ -2829,7 +2829,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "owner answer to OD-15; then apply it or close",
+   "next_action": "Close with PAR-02 once the suites pass",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -2849,6 +2849,11 @@
      "date": "2026-10-20",
      "change": "next_action; notes",
      "why": "verified 2026-10-20: the wildlife half holds (refuge_test.gd: the player kills every deer in a wood; refuge stock is untouched and young recolonize it, WR-01). The buyer half does not: World.player_sell still lets the player sell a trader to 0 coins; the 15-coin floor for player sales was never approved. Kept BLOCKED on OD-15"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "BLOCKED -> IMPLEMENTED — TESTING REQUIRED; next_action",
+     "why": "OD-15 answered through OD-18.2; the player's sales now keep the buyer's reserve (PAR-02); its wildlife half was verified earlier"
     }
    ],
    "acceptance_derived": true,
@@ -15233,7 +15238,7 @@
    "id": "PAR-02",
    "title": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "One economic rule for everyone. We are villagers too. Traders must not keep one reserve for NPC transactions and another for the player; resolve OD-15 consistently. A trader may refuse for a legitimate in-world reason, not because the buyer is an NPC rather than the player.",
    "description": "OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15244,7 +15249,7 @@
     "Test: a buyer at the reserve refuses the player as it refuses a villager"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test.gd _par02_reserve",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15269,6 +15274,11 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "World.buyer_reserve and World.can_afford: one reserve rule for every purchase (player sales, villager sales, caravan restocking, the trade window); test world_test _par02_reserve; full suites and gate next"
     }
    ],
    "target_build": "16"

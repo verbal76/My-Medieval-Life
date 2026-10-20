@@ -650,6 +650,18 @@ func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) ->
 	return n
 
 
+## The coins a buyer keeps back for their own needs (OD-18.2, PAR-02: one rule for everyone, whoever sells to
+## them, the player or a villager): a trader keeps trader_cash_floor, anyone else stall_buyer_floor.
+func buyer_reserve(buyer: NPC) -> int:
+	return int(GameData.b("trader_cash_floor")) if NPCBrain.BUYS.has(brain.buy_role(buyer)) else int(GameData.b("stall_buyer_floor"))
+
+
+## Whether `buyer` will pay `price` and still keep their reserve (buyer_reserve): the one eligibility rule
+## for every purchase from a seller, player or villager.
+func can_afford(buyer: NPC, price: int) -> bool:
+	return buyer.coins - price >= buyer_reserve(buyer)
+
+
 func buy_price(vendor: NPC, id: String) -> int:
 	return buy_price_at(id, vendor.inv.count(id))
 
@@ -2232,7 +2244,7 @@ func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 			g.remember("questioned %s %s about stolen %s" % [player.name, player.family, GameData.item_name(id).to_lower()])
 			last_guard = guard_confront(g, {id: 1}, null, owner)
 			return {"result": "questioned", "text": "The guard %s asks where you got that %s. %s" % [g.name, GameData.item_name(id).to_lower(), last_guard]}
-	if not trade(buyer, player, id, 1, price):
+	if not can_afford(buyer, price) or not trade(buyer, player, id, 1, price):
 		return {"result": "failed", "text": "They cannot afford it right now."}
 	if not owners.is_empty():
 		player.unmark(id, int(owners[0]), 1)
@@ -2241,7 +2253,8 @@ func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 
 ## Sell `qty` of `id` (the quantity control, PL1-03), each unit at its player_quote price, so the buyer's
 ## offer falls as they fill up (Build 13 economy rule 2). Checked first: you carry them, the buyer still
-## wants that many and their own coins cover the whole bill (rule 1: no buying without the money), so
+## wants that many and their own coins cover the whole bill and their reserve (rule 1: no buying without the
+## money; OD-18.2: the same reserve as for a villager's sale, can_afford), so
 ## nothing is half-sold for those reasons. Each unit goes through player_sell (marked goods first,
 ## recognition, guard questions), so a stolen piece being recognised stops the sale at that unit; `sold`
 ## says how many went and `paid` what they fetched. Returns {result, text, sold, paid}.
@@ -2250,7 +2263,7 @@ func player_sell_many(buyer: NPC, id: String, qty: int) -> Dictionary:
 	var bill := 0
 	for c in prices:
 		bill += int(c)
-	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or buyer.coins < bill:
+	if qty < 1 or not player.inv.has(id, qty) or brain.wants(buyer, id) < qty or not can_afford(buyer, bill):
 		return {"result": "failed", "text": "They cannot take that many, or cannot afford it right now.", "sold": 0, "paid": 0}
 	var sold := 0
 	var paid := 0

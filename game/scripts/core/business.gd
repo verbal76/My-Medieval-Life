@@ -767,7 +767,7 @@ func ceiling(id: String, urgency: int, s := {}, buyer: NPC = null) -> int:
 
 
 func cash_floor(n: NPC) -> int:
-	return int(GameData.b("trader_cash_floor")) if NPCBrain.BUYS.has(w.brain.buy_role(n)) else int(GameData.b("stall_buyer_floor"))
+	return w.buyer_reserve(n)
 
 
 ## What an adult really needs: [{item, qty, urgency (0..2), pantry}], most urgent first. Merchants and

@@ -113,7 +113,7 @@ None.
 | OVN-02 | Final development mandate: Build 15 closure standard, living-world philosophy (WDR-022), release when functionally complete, then Builds 16, 17, 18 in order, autonomous engineering | approved | ACTIVE DEVELOPMENT | 15 |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED | 16 |
 | PAR-01 | OD-18.1: villagers develop skills exactly as the player does | approved | APPROVED — NOT STARTED | 16 |
-| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | APPROVED — NOT STARTED | 16 |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | approved | APPROVED — NOT STARTED | 16 |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | APPROVED — NOT STARTED | 16 |
 | PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | APPROVED — NOT STARTED | 16 |

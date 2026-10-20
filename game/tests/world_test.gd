@@ -490,6 +490,7 @@ func _pl_gameplay() -> void:
 	_pl2_004()
 	_pl2_011()
 	_player_gain()
+	_par02_reserve()
 	_pl2_006()
 	_pl2_007()
 
@@ -583,6 +584,41 @@ func _pl2_004() -> void:
 	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
 	w.loot.clear()
 	main._sync_loot()
+
+
+## PAR-02 (OD-18.2): one reserve rule. A trader near its reserve refuses the player's sale exactly as it refuses a
+## villager's, and accepts both once it can pay and keep it.
+func _par02_reserve() -> void:
+	var w: World = main.world
+	var p := w.player
+	var smith: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "smith" and w.brain.wants(n, "iron_ore") > 0:
+			smith = n
+			break
+	check(smith != null, "PAR-02: a smith who wants iron ore")
+	if smith == null:
+		return
+	var coins0 := smith.coins
+	var price := w.buy_price(smith, "iron_ore")
+	smith.coins = w.buyer_reserve(smith) + price - 1
+	p.inv.add("iron_ore", 1)
+	var r := w.player_sell_many(smith, "iron_ore", 1)
+	check(r.result == "failed" and p.inv.count("iron_ore") >= 1, "PAR-02: the player cannot sell into the smith's reserve")
+	var miner: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "miner":
+			miner = n
+			break
+	miner.inv.add("iron_ore", 1)
+	check(not w.can_afford(smith, price) and w.brain._buyer_for(miner, "iron_ore") != smith, "PAR-02: nor can a villager")
+	smith.coins = w.buyer_reserve(smith) + price
+	check(w.can_afford(smith, price) and w.brain._buyer_for(miner, "iron_ore") != null, "PAR-02: at reserve + price a villager can sell")
+	r = w.player_sell_many(smith, "iron_ore", 1)
+	check(r.result == "sold" and smith.coins == w.buyer_reserve(smith), "PAR-02: and so can the player, down to the reserve and no further")
+	miner.inv.remove("iron_ore", 1)
+	smith.inv.remove("iron_ore", 1)
+	smith.coins = coins0
 
 
 ## DVW-A7: the player's own work is counted for the goods ledger, and a full pack sets it down, never loses it.
