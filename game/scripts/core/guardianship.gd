@@ -163,7 +163,8 @@ static func _ranked(w: World, k: NPC, hs: Array) -> Array:
 ## make a child an adult or grant adult combat abilities."). Interim handling until bandit factions (WDR-016-C): the
 ## child leaves the household (NPC.clan = "bandit", saved), lives and sleeps at the camp, eats with the band (the camp's
 ## meal, as the bandits' own), and is never a bandit's prey or in a fight. The child's name, age, role, parents,
-## children and relationships are untouched; at coming of age the clan child joins the band (Life, the change of role).
+## children and relationships are untouched. At coming of age they leave for kin or a household with room if one can
+## take them (leave_camp), else stay with the band (Life, the change of role).
 static func join_clan(w: World, k: NPC) -> void:
 	var old := k.household
 	if old >= 0:
@@ -178,6 +179,25 @@ static func join_clan(w: World, k: NPC) -> void:
 	w.note("No household can take in %s %s: the child goes to the bandits' camp." % [k.name, k.family])
 	if old >= 0 and not w.property._anyone_alive(old):
 		w.property.household_ended(old)
+
+
+## FAM-07 (owner, clarified 2026-10-20): at coming of age a child raised in the bandit clan is not bound to it. The
+## simplest compatible rule, until NPC Judgment and bandit factions (FAM-08): the young adult goes where the guardianship
+## order finds a place (kin first, then a household with room), joins that household as an adult without a trade (the
+## job market then treats them as any other) and leaves the clan; with no place, "" and they stay with the band.
+## Their name, family tree and relationships are untouched either way. Returns the tier, or "".
+static func leave_camp(w: World, n: NPC) -> String:
+	var tiers := candidates(w, n)
+	for tier in ["parent", "grandparent", "relative", "villager"]:
+		var hs: Array = tiers.get(tier, [])
+		if hs.is_empty():
+			continue
+		n.clan = ""
+		move(w, n, int(hs[0]), tier)
+		w.stat("clan_left_at_age")
+		w.note("%s %s comes of age and leaves the bandits' camp for the village." % [n.name, n.family])
+		return tier
+	return ""
 
 
 ## The child joins household `h` as a dependant (the brain's _lodge: household, surname, home). The birth

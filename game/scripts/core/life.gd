@@ -164,15 +164,16 @@ static func _set_role(w: World, n: NPC, r: String) -> void:
 		n.plan.clear()
 		w.note("%s grows old and retires." % who)
 		w.stat("retired")
-	elif r == "adult" and n.clan == "bandit":
-		# FAM-07: a child of the bandit clan comes of age in the band, with a bandit's health and blow; no sword is made
-		# for them (nothing comes from nothing): they carry only what they have
+	elif r == "adult" and n.clan == "bandit" and Guardianship.leave_camp(w, n) == "":
+		# FAM-07 (owner, clarified 2026-10-20): staying with the band is one possible outcome, not a mandatory one. With no
+		# kin or household able to take the young adult in, they stay and run with the band: a bandit's health and blow,
+		# nothing made for them. (Their own weighing of the choice is FAM-08: NPC Judgment, bandit factions.)
 		n.role = "bandit"
 		n.max_hp = 25.0
 		n.hp = n.max_hp
 		n.damage = 4.0
 		n.plan.clear()
-		w.note("%s comes of age among the bandits." % who)
+		w.note("%s comes of age among the bandits and stays with the band." % who)
 		w.stat("came_of_age_in_clan")
 	elif r == "adult":
 		n.role = "adult"

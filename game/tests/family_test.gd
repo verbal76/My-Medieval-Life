@@ -249,8 +249,18 @@ func test_nobody_can_take() -> void:
 	# saved
 	var back := NPC.from_dict(JSON.parse_string(JSON.stringify(kid.to_dict())))
 	check(back.clan == "bandit" and back.mother == mom.id, "the clan survives saving and loading")
-	# coming of age in the band: a bandit's health and blow, no sword made from nothing
+	# coming of age with nowhere to go: they stay with the band (a bandit's health and blow, nothing made for them)
 	var items0: int = kid.inv.total()
 	Life._set_role(w, kid, "adult")
-	check(kid.role == "bandit" and kid.max_hp == 25.0 and kid.inv.total() == items0, "at coming of age the clan child joins the band (nothing made for them)")
+	check(kid.role == "bandit" and kid.max_hp == 25.0 and kid.inv.total() == items0, "with no kin or household able to take them, the young adult stays with the band")
 	check(kid.mother == mom.id and kid.name == name0, "still who they were")
+	# coming of age with a place in the village (owner, 2026-10-20: staying is one possible outcome, not a mandatory one)
+	var w3 := new_world()                        # a village with its houses and room in them; a clan child of it
+	var k3: NPC = w3.npc(kid.id)
+	k3.clan = "bandit"
+	(w3.households[k3.household].members as Array).erase(k3.id)
+	k3.household = -1
+	k3.home = ""
+	Life._set_role(w3, k3, "adult")
+	check(k3.role == "adult" and k3.clan == "" and k3.household >= 0 and w3.buildings.has(k3.home), "with a household able to take them, the young adult leaves the camp for the village (%s, household %d)" % [k3.role, k3.household])
+	check(k3.job == "" and k3.mother == kid.mother, "as an adult without a trade, family tree kept")

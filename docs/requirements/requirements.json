@@ -9656,7 +9656,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "coming of age: the young adult goes to kin or a household with room if one can take them (the guardianship order), else stays with the band",
+   "next_action": "suites; then COMPLETE once a long run has exercised it or tests suffice",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -9692,6 +9692,11 @@
      "date": "2026-10-20",
      "change": "owner_wording; next_action",
      "why": "owner clarification 2026-10-20: joining the clan does not make the child a bandit at adulthood; circumstances, relationships, opportunities and needs decide, and staying with the band is one possible outcome; the simplest compatible behavior now, advanced behavior recorded as FAM-08"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "coming of age per the owner's clarification: Guardianship.leave_camp places the young adult with kin or a household with room (as an adult without a trade), else they stay with the band; family_test 34 checks"
     }
    ],
    "target_build": "16",
