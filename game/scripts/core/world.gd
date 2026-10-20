@@ -338,8 +338,16 @@ func _on_hour(h: int) -> void:
 
 
 func _new_day() -> void:
-	# a carcass nobody took spoils after ANIMAL_LOOT_DAYS: no leftover markers (PL2-004)
-	loot = loot.filter(func(l): return not (str(l.from).begins_with("the ") and l.has("t") and minutes - float(l.t) > ANIMAL_LOOT_DAYS * 1440.0))
+	# a carcass nobody took spoils after ANIMAL_LOOT_DAYS: no leftover markers (PL2-004); what spoils is counted
+	# (spoiled_<item>), so the goods ledger accounts for it
+	var kept := []
+	for l in loot:
+		if str(l.from).begins_with("the ") and l.has("t") and minutes - float(l.t) > ANIMAL_LOOT_DAYS * 1440.0:
+			for id in (l.inv as Inventory).ids():
+				stat("spoiled_" + str(id), float((l.inv as Inventory).count(id)))
+		else:
+			kept.append(l)
+	loot = kept
 	var d := day()
 	for t in trees:                           # B14: fruit trees bear again (or lose their fruit with the season): redraw them
 		if t.has("species") and not Trees.fruit_cfg(str(t.species)).is_empty():

@@ -34,6 +34,9 @@ var min_hunger := 100.0        # lowest villager hunger since the last sample
 var player_min_hp := 0.0
 var player_attacked := 0       # hours in which the player's health fell
 var flows := {}                # "buyer_role>seller_role" -> {n, coins, items}: every sale (World.trade_hook)
+var scenario := ""             # EQ-06 intervention scenario (see _intervene); "" = the player stays inactive
+var scenario_day := 20
+var scenario_log := {}
 
 
 func _init() -> void:
@@ -44,6 +47,8 @@ func _init() -> void:
 	var seed := int(arg.call("--seed", "1"))
 	var every := maxi(1, int(arg.call("--every", "1")))
 	var out := str(arg.call("--out", ""))
+	scenario = str(arg.call("--scenario", ""))   # EQ-06, EQ-05: a player intervention on day --at (default 20)
+	scenario_day = int(arg.call("--at", "20"))
 	GameData.ensure()
 	for i in args.size():                 # comparison runs: --set key=value overrides a balance number
 		if args[i] == "--set" and i + 1 < args.size() and "=" in args[i + 1]:
@@ -76,6 +81,8 @@ func _init() -> void:
 	var update_us := 0
 	var harness_us := 0
 	for d in days:
+		if scenario != "" and d == scenario_day:
+			_intervene(scenario)
 		for i in per_day:
 			var tu := Time.get_ticks_usec()
 			w.update(STEP)
@@ -162,6 +169,63 @@ func _on_died(n: NPC) -> void:
 	death_log.append([w.day() + 1, "%s %s" % [n.name, n.family], job, cause])
 	if cause == "starvation" and first_starvation_day < 0:
 		first_starvation_day = w.day() + 1
+
+
+## EQ-06 / EQ-05 intervention scenarios: the player acts once, on day `scenario_day`, through the same calls the game
+## uses, and the run shows what the world does with it. Coins the player brings from outside are counted as coming
+## into the village (World.coin_sources), so the ledger still balances. The crime consequences of a killing (guards,
+## regard) live in main.gd and do not run headless (DVW-A12).
+##   kill_smiths  the player kills every smith (World.kill, as a sword blow does)
+##   corner_wheat a rich player (3000 coins from outside) buys every sack of wheat on sale (World.player_buy_many)
+##   gift_coins   a rich player (2000 coins from outside) gives 100 coins each to the poorest households' providers
+##   hunt_out     the player kills every wild deer and boar (Fauna.kill, as a hunt does); the game is left as loot
+func _intervene(name: String) -> void:
+	var p := w.player
+	match name:
+		"kill_smiths":
+			for n: NPC in w.npcs.duplicate():
+				if n.alive and n.job == "smith":
+					w.kill(n, "slain by %s %s" % [p.name, p.family])
+					scenario_log.killed = int(scenario_log.get("killed", 0)) + 1
+		"corner_wheat":
+			p.coins += 3000
+			w.coin_sources += 3000
+			w.stat("scenario_coins_in", 3000)       # counted as coins from outside in the ledger
+			for n: NPC in w.npcs:
+				if not n.alive or not (n.job == "farmer" or w.brain.buy_role(n) == "merchant_food"):
+					continue
+				var q := n.inv.count("wheat")
+				while q > 0:
+					var r := w.player_buy_many(n, "wheat", mini(q, 10))
+					if str(r.result) != "bought":
+						break
+					q -= int(r.bought)
+					scenario_log.wheat = int(scenario_log.get("wheat", 0)) + int(r.bought)
+		"gift_coins":
+			p.coins += 2000
+			w.coin_sources += 2000
+			w.stat("scenario_coins_in", 2000)       # counted as coins from outside in the ledger
+			var poor := []
+			for hh in w.households:
+				if hh.get("ended", false):
+					continue
+				var ra := w.construction.responsible_adult(int(hh.id))
+				if ra != null:
+					poor.append([w.property.purse(World.hh_ref(int(hh.id))), int(hh.id), ra])
+			poor.sort()
+			for row in poor.slice(0, 10):
+				var ra: NPC = row[2]
+				p.coins -= 100
+				ra.coins += 100
+				scenario_log.given = int(scenario_log.get("given", 0)) + 100
+		"hunt_out":
+			for a: Animal in w.fauna.animals.duplicate():
+				if a.alive and a.wild() and a.species in ["deer", "boar"]:
+					var bag: Inventory = w.fauna.kill(a)
+					w.stat("hunted_" + a.species)
+					w.loot.append({"pos": a.pos, "inv": bag, "coins": 0, "from": "the " + a.species, "t": w.minutes})
+					scenario_log.hunted = int(scenario_log.get("hunted", 0)) + 1
+	print("SCENARIO %s on day %d: %s" % [name, w.day(), JSON.stringify(scenario_log)])
 
 
 func _hourly() -> void:
@@ -363,9 +427,10 @@ func _sample(start: Dictionary) -> Dictionary:
 		"coins_out": int(_st("caravan_coins_out")), "coin_sources": w.coin_sources}
 	# currency and flow accounts
 	var c := _coins()
-	# coins from outside: the caravan's purchases, and newcomers' purses (they come in from outside)
+	# coins from outside: the caravan's purchases, newcomers' purses (they come in from outside), and a scenario's grant (EQ-06)
 	var c_in := int(_st("caravan_coins_in")) - int(start.stats.get("caravan_coins_in", 0)) \
-			+ int(_st("newcomer_coins_in")) - int(start.stats.get("newcomer_coins_in", 0))
+			+ int(_st("newcomer_coins_in")) - int(start.stats.get("newcomer_coins_in", 0)) \
+			+ int(_st("scenario_coins_in")) - int(start.stats.get("scenario_coins_in", 0))
 	var c_out := int(_st("caravan_coins_out")) - int(start.stats.get("caravan_coins_out", 0))
 	var src_delta := w.coin_sources - int(start.coin_sources)
 	s.currency = {"holders": c, "total": c.total, "world_total_coins": w.total_coins(), "start_total": start.coins.total,
@@ -429,7 +494,7 @@ func _animal_counts() -> Dictionary:
 ## The flow accounts since `start`. Items: held(start) + produced + imported - consumed - exported
 ## = held(now); produced = made_ (recipes, harvest, kills, home cooking) + mined_ + felled_;
 ## consumed = eaten_ + used_ (recipes, home cooking) + used_building_ + used_works_ + used_repairs_
-## + feed_eaten_ (troughs) + burned_ (firewood) + broke_ (tools) + poached_lost_ (the bandits' game).
+## + feed_eaten_ (troughs) + burned_ (firewood) + broke_ (tools) + poached_lost_ (the bandits' game) + spoiled_ (carcasses left to spoil).
 ## Only non-zero residuals are kept, with their terms.
 func _ledger(start: Dictionary) -> Dictionary:
 	var st0: Dictionary = start.stats
@@ -441,7 +506,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 	for id in start.goods:
 		ids[id] = true
 	for k in w.stats:
-		for p in ["made_", "mined_", "felled_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_", "wild_eaten_", "farm_harvest_"]:
+		for p in ["made_", "mined_", "felled_", "imported_", "exported_", "eaten_", "used_building_", "used_works_", "used_repairs_", "used_", "feed_eaten_", "burned_", "broke_", "poached_lost_", "spoiled_", "wild_eaten_", "farm_harvest_"]:
 			if str(k).begins_with(p):
 				ids[str(k).substr(p.length())] = true
 				break
@@ -457,7 +522,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 	for id in keys:
 		var produced: int = d.call("made_" + id) + d.call("mined_" + id) + d.call("felled_" + id) + d.call("farm_harvest_" + id)
 		var consumed: int = d.call("eaten_" + id) + d.call("used_" + id) + d.call("used_building_" + id) + d.call("used_works_" + id) \
-			+ d.call("used_repairs_" + id) + d.call("feed_eaten_" + id) + d.call("burned_" + id) + d.call("broke_" + id) + d.call("poached_lost_" + id) \
+			+ d.call("used_repairs_" + id) + d.call("feed_eaten_" + id) + d.call("burned_" + id) + d.call("broke_" + id) + d.call("poached_lost_" + id) + d.call("spoiled_" + id) \
 			+ d.call("wild_eaten_" + id)
 		if id == "wheat":                     # farmers keep seed back from the grain they cut (Farming.save_seed)
 			consumed += d.call("farm_seed_saved")
