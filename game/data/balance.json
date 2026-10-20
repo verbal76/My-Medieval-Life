@@ -200,6 +200,7 @@
   "module_price": {"kitchen": 100, "apothecary": 110, "storage": 80, "quarters": 110},
   "_module_note": "PL2-008/014 (agent proposals, provisional: balance review pending, docs/BUILD_DECISIONS.md 'Modular property'). module_price: what a room added to a property is worth with its ground, as workshop_price is a workshop's (kinds not listed use workshop_price); a week's rent and the manor's buy-back follow from it as for any building. workshop_cost holds every module kind's materials.",
   "helper_wage": 6,
+  "bed_share": {"_note": "HOUSE-08 (owner, OD-13, 2026-10-20: young children may share beds within reasonable age limits; couples may share beds). Partners living together share one bed; children below life.child_until share children_per_bed to a bed; adolescents, adults and elders need a bed each. children_per_bed is an agent proposal, provisional until the balance review.", "children_per_bed": 2},
   "split_keep_base": 40,
   "split_keep_per_member": 20,
   "founder_build_days": 3,

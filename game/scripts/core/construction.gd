@@ -542,9 +542,35 @@ func beds_in(home: String) -> int:
 	return n
 
 
-## A household too big for its house (owner rule; definition an agent proposal): more living members
-## than the house has beds (a birth needs no free bed, owner 2026-10-19, so babies crowd a house), in a
-## house it holds, with two grown members or more (one founds a new household and one stays with the rest).
+## Sleeping places a household needs (HOUSE-08, owner OD-13): partners living together share one bed;
+## young children (below life.child_until) share bed_share.children_per_bed to a bed; everyone else needs a
+## bed each. `extra`, someone who would join the household, is counted with it.
+func beds_needed(h: int, extra: NPC = null) -> int:
+	var people: Array = w.brain._members(h)
+	if extra != null and not people.has(extra):
+		people = people + [extra]
+	var young := 0
+	var need := 0
+	var counted := {}
+	for o: NPC in people:
+		if counted.has(o.id):
+			continue
+		counted[o.id] = true
+		if o.role == "child" and Life.npc_age(w, o) < float(Life.cfg().child_until):
+			young += 1
+			continue
+		var p := w.npc(o.partner) if o.partner >= 0 else null
+		if p != null and p.alive and people.has(p):
+			counted[p.id] = true          # a couple shares a bed
+		need += 1
+	var per := maxi(1, int(GameData.b("bed_share").children_per_bed))
+	return need + ceili(float(young) / float(per))
+
+
+## A household too big for its house (owner rule; definition an agent proposal): it needs more sleeping
+## places than the house has beds (beds_needed: couples and young children share; a birth needs no free bed,
+## owner 2026-10-19, so babies can crowd a house), in a house it holds, with two grown members or more (one
+## founds a new household and one stays with the rest).
 func crowded(h: int) -> bool:
 	var hh: Dictionary = w.households[h]
 	if hh.get("ended", false) or not w.buildings.has(str(hh.home)) or not w.property.is_home(w.buildings[hh.home]):
@@ -552,7 +578,7 @@ func crowded(h: int) -> bool:
 	if not w.holds(World.hh_ref(h), w.buildings[hh.home]):
 		return false
 	var members: Array = w.brain._members(h)
-	return members.size() > beds_in(str(hh.home)) and members.filter(func(o: NPC) -> bool: return o.role == "adult").size() >= 2
+	return beds_needed(h) > beds_in(str(hh.home)) and members.filter(func(o: NPC) -> bool: return o.role == "adult").size() >= 2
 
 
 ## Who leaves to found the new household: a grown son or daughter first, else an adult with no partner in
@@ -720,8 +746,14 @@ func _enlarge(h: int) -> void:
 	var ref := World.hh_ref(h)
 	var house: Dictionary = w.buildings[str(hh.home)]
 	if w.property.anchor_of(house).is_empty():
-		_goal(h, "crowded", "quarters", 0, 0, "the house stands on no parcel that can be added to")
-		return
+		# an original village house has no parcel yet: its ground is surveyed (nothing paid, nothing changes
+		# hands) once the household can afford to start the quarters (HOUSE-09, owner OD-13)
+		var need := start_cost("quarters", footprint("quarters"))
+		var have: int = w.property.purse(ref) - _keep(h, w.brain._members(h).size())
+		if have < need:
+			_goal(h, "crowded", "quarters", need, need - have, "saving for living quarters")
+			return
+		w.property.survey_under(house)
 	if w.property.has_module(house, "quarters"):
 		_goal(h, "crowded", "quarters", 0, 0, "the house has its living quarters already; it waits until a grown child can leave")
 		return

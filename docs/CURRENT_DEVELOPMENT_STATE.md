@@ -93,7 +93,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 1. **When the fix12 365-day runs end (about 04:30 UTC):** record them against fix9 (old code) in `docs/release/LONG_RUN_SIMULATION.md`, and update EQ-06, EQ-07, B14R-12, DVW-A3 and CARAVAN-TMP. If a container restart killed them, run them again (below).
 2. **EQ-07 / HOUSE-07:** started houses are not finished (the 365-day seed 1 run: 10 started, 1 finished; the fix10 seed 1 run: 4 started, 0 finished by day 60). Trace why: plank supply after day 180, and the money a household has after its start. Then read the fix10 100-day runs against fix9 and record them, labelled as corrected code.
-3. **HOUSE-08 and HOUSE-09 (owner answer OD-13):** bed sharing in the crowding rule, and living quarters on the original houses, with real materials and work. These come after the start-but-not-finish investigation; the owner asked that it not be interrupted.
+3. **HOUSE-08 and HOUSE-09 (owner answer OD-13):** bed sharing is implemented and tested. Original houses can be surveyed for quarters, but none has room on the current layout. That question is OD-14 for the owner: detached quarters, a smaller room, or no expansion.
 4. **EQ-09:** from the 365-day results, check whether caravan stone keeps house sites supplied once the deposits are gone.
 5. **EQ-10:** fix the axe and hammer ledger residuals.
 6. **WR-02 (target Build 16, taken early because it bears on the 365-day runs):** grazers starving together.
@@ -102,6 +102,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Waiting on the owner
 
+- **OD-14 (new):** no original house has room for living quarters on the current layout. Options: detached quarters nearby, a smaller added room, or no expansion.
 - OD-11, OD-12 and OD-13 were answered by the owner on 2026-10-20 (`docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md`). Their implementation is open:
   - HOUSE-08 (bed sharing) and HOUSE-09 (quarters on original houses), Build 15;
   - FAM-03 and FAM-07 (orphans: the best-suited equal relative; the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+), Build 16.

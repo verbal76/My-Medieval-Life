@@ -593,6 +593,29 @@ func can_claim(rect: Rect2i) -> String:
 
 ## Survey a new parcel on clear ground and buy or lease it from the manor on the spot (owner rule:
 ## "free placement anywhere legal"). Returns the parcel, or {} with the reason in `why`.
+## The ground under a building the map laid out without a parcel (the original village houses) becomes its
+## parcel, so rooms can be added to it by the usual module rules (HOUSE-09, owner OD-13: existing village
+## houses are eligible for living-quarters expansions). Nothing changes hands and nothing is paid: the
+## ground was already the holder's. The parcel takes the building's owner and tenant, and the letting's
+## terms (rent, due day, arrears) move to it, since the parcel heads the deal from now on (unit), as for a
+## house built on bought ground. Returns the parcel (the existing one if it has one).
+func survey_under(b: Dictionary) -> Dictionary:
+	if is_parcel(b) or not parcel_under(b).is_empty():
+		return parcel_under(b) if not is_parcel(b) else b
+	var p := {"id": "parcel%d" % next_parcel, "x": int(b.x), "y": int(b.y), "w": int(b.w), "h": int(b.h),
+		"door": [int(b.door[0]), int(b.door[1])], "price": land_price(int(b.w), int(b.h)),
+		"owner": w.owner_of(b), "tenant": w.tenant_of(b), "building": str(b.id),
+		"site": {"kind": "house", "cost": {}, "need": {}, "done": true, "owner": w.holder_of(b)}}
+	for k in ["rent", "due_day", "arrears", "missed"]:
+		if b.has(k):
+			p[k] = b[k]
+			b.erase(k)
+	next_parcel += 1
+	w.plots.append(p)
+	b.parcel = str(p.id)
+	return p
+
+
 func claim(rect: Rect2i, ref: String, lease_it := false) -> Dictionary:
 	why = can_claim(rect)
 	if why != "":

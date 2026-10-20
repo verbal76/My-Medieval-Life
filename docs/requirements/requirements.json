@@ -10187,7 +10187,7 @@
    "id": "HOUSE-08",
    "title": "Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Young children may share beds, with reasonable age-based limits. Couples may share beds.",
    "description": "Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people",
    "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)",
@@ -10200,7 +10200,7 @@
     "Tests: a family of two parents and three young children in five beds is not crowded; older children make it crowded"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/housing_test.gd test_bed_sharing; aging_test; run_tests test_households_split",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -10225,6 +10225,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "Construction.beds_needed: a couple shares a bed, children below life.child_until (12) share two to a bed (bed_share.children_per_bed, agent proposal), others a bed each; crowded() and Life.has_room use it; tests pass; long-run effect still to be measured"
     }
    ],
    "target_build": "15",
@@ -10234,7 +10239,7 @@
    "id": "HOUSE-09",
    "title": "Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "Existing village houses must be eligible for living-quarters expansions even if they were generated without land parcels. Expansions must consume actual resources, labor, and construction time. Do not solve the problem by generating free beds or houses.",
    "description": "Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time",
    "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)",
@@ -10246,17 +10251,19 @@
     "Test: a crowded family in an original house adds quarters and its beds increase only when the last load is delivered"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/housing_test.gd test_quarters_on_an_original_house",
    "playtest": [],
    "branch": "",
    "commits": [],
    "parent": "EQ-07",
-   "depends_on": [],
+   "depends_on": [
+    "OD-14"
+   ],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "wait for OD-14",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10271,6 +10278,17 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; tests; next_action",
+     "why": "Property.survey_under makes an original house's ground its parcel (nothing paid, nothing changes hands, letting terms move with the deal) and _enlarge uses it; but on the current layout no original house has free ground beside it for the 9x10 quarters (measured, seeds 1 and 2: 17 with no ground, 4 blocked by trees and a road); owner decision OD-14"
+    },
+    {
+     "date": "2026-10-20",
+     "who": "agent",
+     "change": "depends_on",
+     "why": "the layout question goes to the owner (OD-14)"
     }
    ],
    "target_build": "15",
@@ -11626,6 +11644,50 @@
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "the largest remaining cause of EQ-07; every original village house stands on no parcel, so the living-quarters route cannot reach them",
    "owner_answer": "OD-13 — APPROVED: Both bed sharing and house expansion. Young children may share beds, with reasonable age-based limits. Couples may share beds. Existing village houses must be eligible for living-quarters expansions even if they were generated without land parcels. Expansions must consume actual resources, labor, and construction time. Do not solve the problem by generating free beds or houses. (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
+  },
+  {
+   "id": "OD-14",
+   "title": "Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses.",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses.",
+   "source": "docs/release/LONG_RUN_SIMULATION.md (EQ-07); measured with housing_test.gd::test_quarters_on_an_original_house",
+   "approval": "",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before HOUSE-09 goes further"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/release/LONG_RUN_SIMULATION.md (EQ-07); measured with housing_test.gd::test_quarters_on_an_original_house"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "completes OD-13's house expansion for the original houses"
   },
   {
    "id": "OPS-01",

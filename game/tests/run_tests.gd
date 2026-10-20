@@ -2039,25 +2039,26 @@ func test_households_split() -> void:
 	var c := w.construction
 	var coins := func() -> int: return w.total_coins() - w.coin_sources
 	check(range(w.households.size()).all(func(h): return not c.crowded(h)), "nobody is crowded at the start (the houses have a bed each)")
-	# crowd a house: two children of another household come to live there
+	# crowd a house: grown members of another household come to live there until it needs more sleeping
+	# places than it has beds (young children share a bed and a couple shares one: HOUSE-08, owner OD-13)
 	var h := w.household_in("b5")
 	var hh: Dictionary = w.households[h]
 	var from := w.household_in("b10")
-	var moved := 0
 	for m in (w.households[from].members as Array).duplicate():
 		var o: NPC = w.npc(int(m))
-		if o.role == "child" and moved < 2:
+		if o.role != "child" and not c.crowded(h):
 			(w.households[from].members as Array).erase(o.id)
 			(hh.members as Array).append(o.id)
 			o.household = h
 			o.home = "b5"
-			moved += 1
-	check(c.crowded(h), "six people in a house with five beds is crowded")
+	check(c.crowded(h), "a house whose people need more sleeping places than it has beds is crowded")
 	var rich: NPC = w.party(World.hh_ref(h))
 	rich.coins += 600
 	var c0: int = coins.call()
 	var n0 := w.households.size()
 	var founder := c.founder_of(h)
+	founder.coins += 300                       # a founder with savings of their own buys the materials at once
+	c0 = coins.call()
 	_at_hour(w, 6.0)
 	c.daily()
 	check(w.households.size() == n0 + 1, "the crowded household splits")

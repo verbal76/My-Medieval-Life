@@ -380,7 +380,30 @@ func test_couples_found_households() -> void:
 				f = n
 			elif n.sex == "male" and m == null and (f == null or n.household != f.household):
 				m = n
-	check(f != null and m != null, "the village has single adults in full houses (%d full houses)" % full.size())
+	if f == null or m == null:                 # couples and young children share beds (HOUSE-08), so few houses start full:
+		f = null                               # take two single adults anywhere and fill their houses
+		m = null
+		for n: NPC in w.npcs:
+			if n.alive and n.role == "adult" and n.partner < 0 and n.household >= 3 and Life.npc_age(w, n) >= 18.0 and Life.npc_age(w, n) <= 40.0 and w.construction._may_found(n):
+				if n.sex == "female" and f == null:
+					f = n
+				elif n.sex == "male" and m == null and (f == null or n.household != f.household):
+					m = n
+		if f != null and m != null:
+			for target in [f.household, m.household]:
+				var guard := 0
+				while Life.has_room(w, target, f if target == m.household else m) and guard < 12:
+					var donor: NPC = null
+					for o: NPC in w.npcs:
+						if o.alive and o.role == "adult" and o.household >= 3 and o.household != f.household and o.household != m.household and o.partner < 0:
+							donor = o
+							break
+					if donor == null:
+						break
+					(w.households[donor.household].members as Array).erase(donor.id)
+					w.brain._lodge(donor, target)
+					guard += 1
+	check(f != null and m != null and not Life.has_room(w, f.household, m) and not Life.has_room(w, m.household, f), "two single adults whose houses have no room for the other")
 	if f == null or m == null or f.household == m.household:
 		return
 	if Life.kin(f.id, f.mother, f.father, m.id, m.mother, m.father):
@@ -456,7 +479,7 @@ func test_couples_found_households() -> void:
 			w3.minutes += 1440.0
 			Life._try_birth(w3, mom, couple_only, w3.npc(mom.partner), 1.0)
 		GameData.b("life").birth_interval_years = 2.0
-		check(c3.crowded(couple_only) or living(w3, couple_only) <= c3.beds_in(str(w3.households[couple_only].home)), "babies can crowd a couple's house")
+		check(c3.crowded(couple_only) or c3.beds_needed(couple_only) <= c3.beds_in(str(w3.households[couple_only].home)), "babies can crowd a couple's house (counted in sleeping places: young children share)")
 		check(c3.founder_of(couple_only) == null, "but neither partner of the couple is sent away alone")
 	var w4 := new_world()
 	var c4 := w4.construction
@@ -480,8 +503,10 @@ func test_couples_found_households() -> void:
 		Life._link_partners(kid, mate)
 		(w4.households[mate.household].members as Array).erase(mate.id)
 		w4.brain._lodge(mate, hh4)
-		while living(w4, hh4) <= c4.beds_in(str(w4.households[hh4].home)):
+		var guard := 0
+		while not c4.crowded(hh4) and guard < 40:
 			var k := Life.birth(w4, w4.npc(kid.mother) if kid.mother >= 0 else w4.npc(kid.father), null, hh4)
+			guard += 1
 		check(c4.crowded(hh4) and c4.founder_of(hh4) == kid, "in a crowded house the grown child is the one who founds")
 		kid.coins += 400
 		var n4 := w4.households.size()

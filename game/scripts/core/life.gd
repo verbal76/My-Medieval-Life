@@ -347,13 +347,18 @@ static func _living_in(w: World, h: int) -> int:
 	return c
 
 
-static func has_room(w: World, h: int) -> bool:
+## Whether a household's house has a sleeping place free (for `joining`, whether it would still fit with
+## them: a partner joining their partner shares that bed). Beds are shared as Construction.beds_needed says.
+static func has_room(w: World, h: int, joining: NPC = null) -> bool:
 	if h < 0 or h >= w.households.size():
 		return false
 	var hh: Dictionary = w.households[h]
 	if hh.get("ended", false) or not w.buildings.has(str(hh.home)):
 		return false
-	return w.construction.beds_in(str(hh.home)) > _living_in(w, h)
+	var beds: int = w.construction.beds_in(str(hh.home))
+	if joining != null:
+		return beds >= w.construction.beds_needed(h, joining)
+	return beds > w.construction.beds_needed(h)
 
 
 # ---------------------------------------------------------------- partners -------------------
@@ -390,7 +395,7 @@ static func _move_in(w: World, a: NPC, b: NPC) -> bool:
 	for pair in [[a, b], [b, a]]:                              # [mover, host]
 		var mover: NPC = pair[0]
 		var host: NPC = pair[1]
-		if host.household < 3 or not has_room(w, host.household) or not _may_move(w, mover):
+		if host.household < 3 or not has_room(w, host.household, mover) or not _may_move(w, mover):
 			continue
 		var old := mover.household
 		(w.households[old].members as Array).erase(mover.id)

@@ -32,6 +32,8 @@ func _init() -> void:
 	test_forge_buys_imported_ore()
 	test_founder_who_pairs_keeps_building()
 	test_tool_less_worker()
+	test_bed_sharing()
+	test_quarters_on_an_original_house()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -382,3 +384,95 @@ func test_tool_less_worker() -> void:
 	hh.econ = {"cost": 10.0, "adults": 1, "streak": 0}
 	w.brain.seek_work()
 	check(cutter.job != "woodcutter", "the job market moves a woodcutter with no axe and no coins into paying work (now %s)" % cutter.job)
+
+
+## HOUSE-08 (owner, OD-13): a couple shares a bed and young children share beds (two to a bed, below
+## life.child_until); adolescents, adults and elders need a bed each. No bed is made: only who shares.
+func test_bed_sharing() -> void:
+	var w := new_world()
+	var c := w.construction
+	var Y := float(GameData.b("calendar").year_days) * 1440.0
+	var h := -1
+	for hh in w.households:
+		var ad: Array = w.brain._members(int(hh.id)).filter(func(o: NPC) -> bool: return o.role == "adult")
+		if int(hh.id) >= 3 and ad.size() == 2 and ad[0].partner == ad[1].id:
+			h = int(hh.id)
+			break
+	var parents: Array = w.brain._members(h).filter(func(o: NPC) -> bool: return o.role == "adult")
+	var mom: NPC = parents[0] if parents[0].sex == "female" else parents[1]
+	for o: NPC in w.brain._members(h).filter(func(o: NPC) -> bool: return o.role != "adult"):
+		(w.households[h].members as Array).erase(o.id)
+		o.household = -1
+	var kids := []
+	for i in 3:
+		var k: NPC = Life.birth(w, mom, w.npc(mom.partner), h)
+		k.born = w.minutes - 5.0 * Y
+		kids.append(k)
+	var beds := c.beds_in(str(w.households[h].home))
+	check(c.beds_needed(h) == 1 + 2, "two parents and three young children need three sleeping places: the couple's bed and two for the children (%d)" % c.beds_needed(h))
+	check(beds >= 3 and not c.crowded(h), "so a family of five in a %d-bed house is not crowded" % beds)
+	for k: NPC in kids:
+		k.born = w.minutes - 14.0 * Y            # adolescents now (life.child_until 12)
+	check(c.beds_needed(h) == 1 + 3, "grown past the child stage, each needs a bed of their own (%d)" % c.beds_needed(h))
+	var single: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.partner < 0 and n.household != h and n.household >= 3:
+			single = n
+			break
+	check(c.beds_needed(h, single) == c.beds_needed(h) + 1, "a single adult joining needs a bed of their own")
+	var dad: NPC = w.npc(mom.partner)
+	(w.households[h].members as Array).erase(dad.id)
+	dad.household = -1
+	check(c.beds_needed(h, dad) == c.beds_needed(h), "a partner joining shares their partner's bed")
+
+
+## HOUSE-09 (owner, OD-13): an original village house (laid out with no parcel) is eligible for living
+## quarters. Surveying its ground costs nothing and changes no hands; the letting's terms move to the parcel.
+## On the current village layout no original house has ground beside it for the 9x10 quarters (roads,
+## houses and trees on every side: measured on seeds 1 and 2), so a crowded family there keeps its goal with
+## that reason and gains no bed it did not build (OD-14 asks the owner what to do about the layout).
+func test_quarters_on_an_original_house() -> void:
+	var w := new_world(2)
+	var c := w.construction
+	var h := -1
+	for hid in range(3, w.households.size()):
+		if w.buildings.has(str(w.households[hid].home)) and w.property.parcel_under(w.buildings[str(w.households[hid].home)]).is_empty():
+			h = hid
+			break
+	var hh: Dictionary = w.households[h]
+	var house: Dictionary = w.buildings[str(hh.home)]
+	var owner0 := w.owner_of(house)
+	var tenant0 := w.tenant_of(house)
+	house.rent = 7
+	house.due_day = w.day() + 3
+	var coins0: int = w.total_coins()
+	var heads0: int = w.property.heads().size()
+	var p := w.property.survey_under(house)
+	check(not p.is_empty() and w.property.parcel_under(house) == p and w.property.building_on(p) == house, "the ground under an original house becomes its parcel")
+	check(w.owner_of(p) == owner0 and w.tenant_of(p) == tenant0 and w.holds(World.hh_ref(h), p) == w.holds(World.hh_ref(h), house), "held exactly as the house is")
+	check(int(p.get("rent", 0)) == 7 and not house.has("rent"), "the letting's terms move to the parcel, which heads the deal (as for a house built on bought ground)")
+	check(w.total_coins() == coins0 and w.property.heads().size() == heads0, "nothing is paid and the deal is still one deal")
+	check(w.property.survey_under(house) == p, "surveying again changes nothing")
+	# the layout: is there ground anywhere for quarters beside an original house?
+	var w2 := new_world(2)
+	var c2 := w2.construction
+	var any_room := false
+	for hid in range(3, w2.households.size()):
+		var home := str(w2.households[hid].home)
+		if not w2.buildings.has(home):
+			continue
+		w2.property.survey_under(w2.buildings[home])
+		var r := c2.find_module_slot("quarters", w2.buildings[home], World.hh_ref(hid))
+		if r.size != Vector2i.ZERO and c2.can_place("quarters", r, World.hh_ref(hid), w2.buildings[home]) == "":
+			any_room = true
+	check(not any_room, "(measured) no original house has free ground beside it for the 9x10 quarters on this layout; OD-14")
+	# a crowded family there keeps its goal, with the reason, and no bed appears
+	var w3 := new_world(2)
+	var c3 := w3.construction
+	var h3 := crowded_family(w3)
+	var beds0 := c3.beds_in(str(w3.households[h3].home))
+	c3.responsible_adult(h3).coins += 400
+	c3.daily()
+	var g: Dictionary = c3.housing_goals(h3).get("crowded", {})
+	check(str(g.get("why", "")).contains("no ground") and c3.beds_in(str(w3.households[h3].home)) == beds0 and str(w3.households[h3].get("build", "")) == "",
+		"a crowded family there keeps its goal, saying why (%s), and gains no bed it has not built" % g.get("why", ""))
