@@ -13,17 +13,17 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 |---|---|
 | APPROVED — NOT STARTED | 63 |
 | ACTIVE DEVELOPMENT | 6 |
-| PARTIALLY IMPLEMENTED | 32 |
+| PARTIALLY IMPLEMENTED | 31 |
 | IMPLEMENTED — TESTING REQUIRED | 11 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 154 |
+| COMPLETE AND VERIFIED | 155 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **356** |
-| Outstanding (not complete, superseded or canceled) | 183 |
+| Outstanding (not complete, superseded or canceled) | 182 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 34 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 26 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 55 | 52 |
+| Build 15: simulation stabilization | 54 | 51 |
 | Build 16: long-term equilibrium and validation | 28 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **242** | **183** |
+| **Total open** | **241** | **182** |
 
-### Build 15: simulation stabilization (55)
+### Build 15: simulation stabilization (54)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -105,7 +105,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | SAVE-07 | Migration tests over persistent world data: terrain changes, resources, NPCs, households, relationships, buildings, inventories, settlements, simulation state (requirement 12) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
 | SAVE-08 | Preserve unknown or future data where practical; no claim of backward compatibility unless implemented and tested (requirement 13) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
 | SAVE-09 | An independently recoverable backup and documented recovery instructions (requirement 14) | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | save continuity is code-complete; verified with the Build 15 package |
-| WDR-007-C | Comply with World Design Rule 7: Automated Compliance | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
@@ -465,7 +464,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md |  |  |  |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | docs/directives/2026-10-19_builds_14_16_release_authorization.md | `7dbae4f` |  | Build 15: finish EQ-07 housing growth and the multi-seed long runs (docs/CURRENT_DEVELOPMENT_STATE.md); release a private draft when the eight conditions hold |
 
-## PARTIALLY IMPLEMENTED (32)
+## PARTIALLY IMPLEMENTED (31)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -491,11 +490,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PL2-013 | Usable furniture | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 168) |  |  |  |
 | PL2-014 | Modular house/workshop expansion | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 169) |  |  |  |
 | PL2-015 | Farming, livestock, hand plough | docs/release/BUILD_11_PUNCH_LIST_2.md (audit inventory row 170) |  |  |  |
-| WDR-001-C | Comply with World Design Rule 1: Material Interdependency | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Material report (WDR-007-C), then recipes or justified exceptions |
-| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Profession supply audit |
+| WDR-001-C | Comply with World Design Rule 1: Material Interdependency | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | docs/systems/MATERIAL_INTERDEPENDENCY.md lists the open violations; resolve with recipes or justified exceptions in Build 17 (mining and industry) |
+| WDR-002-C | Comply with World Design Rule 2: Professional Interdependency | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | docs/systems/MATERIAL_INTERDEPENDENCY.md professions table; the sage's supply link |
 | WDR-004-C | Comply with World Design Rule 4: Economic Consequences | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Comparison runs (B14R-02); scarcity responses audit |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Idle-player construction and housing (B7-017, B14R-12) |
-| WDR-007-C | Comply with World Design Rule 7: Automated Compliance | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Material interdependency report with positive and negative fixtures in CI |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | GM-01 |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | device playtest (phone, controller); cart-route feedback when carts gain collision (SKIPPED_ITEMS, Build 16) |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Competition audit and design |
@@ -597,7 +595,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (154)
+## COMPLETE AND VERIFIED (155)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -755,6 +753,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id) | tools/check_resources.py 0 problems; GitHub release list |  |  |
 | SAVE-01 | Inspect and document the current save architecture before modifying it (requirement 1) | docs/directives/2026-10-20_two_decisions_three_expansions.md | n/a (document) |  |  |
 | WDR-006-C | Comply with World Design Rule 6: Maintain the Existing Interlocking Systems Manifest | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | check_interactions (CI) |  |  |
+| WDR-007-C | Comply with World Design Rule 7: Automated Compliance | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) | `fdc30a5`; tests/test_check_materials.py |  |  |
 
 ## SUPERSEDED (19)
 

@@ -18770,7 +18770,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Material report (WDR-007-C), then recipes or justified exceptions",
+   "next_action": "docs/systems/MATERIAL_INTERDEPENDENCY.md lists the open violations; resolve with recipes or justified exceptions in Build 17 (mining and industry)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -18785,6 +18785,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "measured by the new report (WDR-007-C): 32 findings, 14 excepted (agent proposals pending owner review: ores, pelts, hide, cart parts), 18 open: coal, copper_bar, flower, gold_bar, gold_ore, iron_bar, leather, meat, stone, wheat, wool, wool_cloth below the thresholds; many because the second-trade recipes are player-only"
     }
    ],
    "target_build": "17",
@@ -18858,7 +18863,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Profession supply audit",
+   "next_action": "docs/systems/MATERIAL_INTERDEPENDENCY.md professions table; the sage's supply link",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -18873,6 +18878,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 18",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "the material report audits it per profession: the sage supplies no other trade"
     }
    ],
    "target_build": "18",
@@ -19269,7 +19279,7 @@
    "id": "WDR-007-C",
    "title": "Comply with World Design Rule 7: Automated Compliance",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Meet the rule's mandatory bullets and verification scenario in docs/WORLD_DESIGN_RULES.md",
    "source": "docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19)",
@@ -19277,11 +19287,13 @@
    "acceptance": [
     "Rule 007's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
-   "implementation": "check_interactions, check_resources, check_assets, check_requirements in CI; no material interdependency report with thresholds",
-   "tests": "",
+   "implementation": "tools/check_materials.py; docs/systems/MATERIAL_INTERDEPENDENCY.md; docs/systems/material_exceptions.json; tests.yml step",
+   "tests": "tests/test_check_materials.py",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "fdc30a5"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -19290,7 +19302,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Material interdependency report with positive and negative fixtures in CI",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -19305,6 +19317,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; commit fdc30a5; tests; implementation; next_action",
+     "why": "tools/check_materials.py generates docs/systems/MATERIAL_INTERDEPENDENCY.md from the recipe data (uses, consuming professions, who each trade supplies, orphaned recipes, broken references, exceptions) and runs in CI; tests/test_check_materials.py has positive and negative fixtures (13 tests)"
     }
    ],
    "target_build": "15",
