@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 94 (51 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 214 still open from the baseline + 51 added and open |
+| Entries added since | | 94 (49 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **263** = 214 still open from the baseline + 49 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (17)
@@ -119,8 +119,8 @@ None.
 | PAR-01A | Starting experience only at world creation, from a plausible occupational history; one-time migration for older saves | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-01B | Career changes neither grant nor reset experience | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-01C | Experience comes from activities, whatever the occupation | approved | COMPLETE AND VERIFIED | 16 |
-| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | COMPLETE AND VERIFIED | 16 |
+| PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | COMPLETE AND VERIFIED | 16 |
