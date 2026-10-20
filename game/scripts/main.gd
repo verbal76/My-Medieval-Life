@@ -680,6 +680,7 @@ func _setup_input() -> void:
 		"inventory": JOY_BUTTON_BACK, "pause": JOY_BUTTON_START, "skills": JOY_BUTTON_RIGHT_SHOULDER,
 		"map": JOY_BUTTON_LEFT_SHOULDER, "recenter": JOY_BUTTON_RIGHT_STICK, "gather": JOY_BUTTON_DPAD_DOWN,
 		"next_target": JOY_BUTTON_DPAD_RIGHT, "prev_target": JOY_BUTTON_DPAD_LEFT,
+		"journal": JOY_BUTTON_DPAD_UP, "build": JOY_BUTTON_LEFT_STICK,          # FR-04
 		"cancel": JOY_BUTTON_B}
 	for a in keys:
 		if not InputMap.has_action(a):

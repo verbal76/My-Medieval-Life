@@ -1724,6 +1724,13 @@
    "sha256": "b244e9a54311f6fec37d0984f76f1b2db07635fcef3f5521b0ba59657661be3d"
   },
   {
+   "file": "assets/prompts/keyboard_h.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_h.png",
+   "transform": "copied unchanged",
+   "sha256": "3f89ef4b7030006f2e6b6a0c29c7063aa2d6bbba27294c9bcf81bd8d16cdc886"
+  },
+  {
    "file": "assets/prompts/keyboard_i.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_i.png",
@@ -1911,6 +1918,13 @@
    "member": "Xbox Series/Double/xbox_dpad_right.png",
    "transform": "copied unchanged",
    "sha256": "280db7d24c98edc833d6bb520ddf4e8b3a989a90f4bda1b3b2908d2d8af58060"
+  },
+  {
+   "file": "assets/prompts/xbox_dpad_up.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Xbox Series/Double/xbox_dpad_up.png",
+   "transform": "copied unchanged",
+   "sha256": "dc9f076144d7596fd25757d16bfb7cfceb8875c8a71b585c7641a1bc27770c45"
   },
   {
    "file": "assets/prompts/xbox_lb.png",
