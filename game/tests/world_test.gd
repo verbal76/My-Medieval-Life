@@ -398,6 +398,12 @@ func _succession() -> void:
 	var smiths := _by_job(w, "smith")
 	var dead: NPC = smiths[0]
 	var forge := dead.workplace
+	var hammers := func() -> int:
+		var c := 0
+		for o: NPC in w.npcs:
+			c += o.inv.count("hammer")
+		return c
+	var hammers0: int = hammers.call()
 	check(smiths.size() == 2 and forge != "", "the village starts with two smiths at the forge (%s)" % forge)
 	w.kill(dead, "illness")
 	check(w.vacancies.size() == 1 and w.vacancies[0].job == "smith" and w.vacancies[0].workplace == forge, "a smith's death opens the post")
@@ -413,6 +419,7 @@ func _succession() -> void:
 			"%s, a labourer, works the same forge" % apprentice.name)
 	check(not dead.alive and w.npcs.filter(func(o: NPC): return o.alive and o.name == dead.name and o.family == dead.family and o.id == dead.id).is_empty(), "the dead smith stays dead")
 	check(apprentice.inv.has("hammer"), "and has the smith's hammer")
+	check(hammers.call() == hammers0, "passed on from the heir, not made from nothing (%d hammers before, %d after)" % [hammers0, hammers.call()])
 	check(w.total_coins() - w.coin_sources == coins0, "no coins appear: coins conserved")
 	# 2. a trade nobody can be apprenticed to: a newcomer arrives with the caravan
 	for o: NPC in w.npcs:

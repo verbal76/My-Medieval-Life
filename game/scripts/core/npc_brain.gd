@@ -1519,6 +1519,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					from.remove(m)
 					n.hp = minf(n.max_hp, n.hp + float(GameData.item(m).heal))
 					w.stat("npc_used_" + m)
+					w.stat("used_" + m)                   # consumed, as when the player uses one (EQ-10)
 					return true
 			return false
 		"forage":
@@ -2470,8 +2471,9 @@ func _open_vacancy(n: NPC) -> void:
 	var staying := living_in(n.job) - (1 if n.alive else 0)
 	if staying + open_posts(n.job) >= staff_target(n.job):
 		return
+	var heir := w._heir(n)                            # who inherited the master's tools (World._inherit)
 	w.vacancies.append({"job": n.job, "workplace": n.workplace, "home": n.home, "household": n.household, "day": w.day(),
-			"who": "%s %s" % [n.name, n.family]})
+			"who": "%s %s" % [n.name, n.family], "heir": heir.id if heir != null else -1})
 	w.note("The post of %s, left by %s, is open: an apprentice or a newcomer will take it." % [n.job.replace("_", " "), "%s %s" % [n.name, n.family]])
 
 
@@ -2546,10 +2548,35 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 			return
 	_change_job(n, str(v.job), why, place)
 	for tool in KEEPS.get(v.job, []):
-		if not n.inv.has(tool) and GameData.item(tool).get("tool", "") != "":
-			n.inv.add(tool)                          # the master's tools pass on
+		if n.inv.has(tool) or GameData.item(tool).get("tool", "") == "":
+			continue
+		var from := _late_masters_tool(v, tool, n)
+		if from != null:
+			from.inv.remove(tool)                    # the master's tools pass on from whoever inherited them
+			n.inv.add(tool)
+			w.stat("succession_tool_passed")
+		elif why == "a newcomer":
+			n.inv.add(tool)                          # a newcomer brings the tools of their trade (EQ-10)
+			w.stat("imported_" + tool)
+		# an apprentice with no tool to take over buys one (tool_short) or works without
 	w.stat("successions")
 	w.stat("succession_" + str(v.job))
+
+
+## Who holds the late master's tool and does not need it: the heir (World._inherit), else someone of
+## the master's household (lowest id, so the choice is deterministic). null when the tool is gone.
+func _late_masters_tool(v: Dictionary, tool: String, taker: NPC) -> NPC:
+	var spare := func(o: NPC) -> bool:
+		return o != null and o.alive and o != taker and o.inv.has(tool) and not KEEPS.get(o.job, []).has(tool)
+	var heir := w.npc(int(v.get("heir", -1)))
+	if spare.call(heir):
+		return heir
+	if int(v.get("household", -1)) < 0:
+		return null
+	for o: NPC in w.npcs:
+		if o.household == int(v.household) and spare.call(o):
+			return o
+	return null
 
 
 func _sorted_keys(d: Dictionary) -> Array:
