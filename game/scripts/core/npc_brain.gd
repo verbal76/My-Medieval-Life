@@ -59,6 +59,8 @@ var noted := {}          # one-off notes already written
 ## [day, hour, job or role, why, coins of the richest in the household]. Never read by the game.
 var track_misses := false
 var miss_log: Array = []
+var _roles := {}         # trading role -> its villagers (_with_buy_role)
+var _roles_key := []
 
 
 func _init(world: World) -> void:
@@ -1201,12 +1203,21 @@ func _buyer_for(n: NPC, id: String) -> NPC:
 	return null
 
 
+## The living villagers who hold a trading role, in villager order. Kept between calls and rebuilt when
+## anyone's job, workplace or life changes, a villager is added or removed, or a stall is added (PERF-04:
+## the buyer searches were a third of the simulation's time). Callers only read the list.
 func _with_buy_role(role: String) -> Array:
-	var out := []
-	for o: NPC in w.npcs:
-		if o.alive and buy_role(o) == role:
-			out.append(o)
-	return out
+	var key := [NPC.roles_version, w.npcs.size(), w.npcs[-1].id if not w.npcs.is_empty() else -1, w.stalls.size()]
+	if key != _roles_key:
+		_roles_key = key
+		_roles.clear()
+	if not _roles.has(role):
+		var out := []
+		for o: NPC in w.npcs:
+			if o.alive and buy_role(o) == role:
+				out.append(o)
+		_roles[role] = out
+	return _roles[role]
 
 
 func buy_role(o: NPC) -> String:

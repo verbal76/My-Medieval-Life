@@ -5,12 +5,22 @@ extends RefCounted
 var id := 0
 var name := ""
 var family := ""
+## Bumped whenever any villager's job, workplace or life changes: NPCBrain caches who holds each
+## trading role and rebuilds it when this moves (PERF-04).
+static var roles_version := 0
+
 var household := -1
 var role := "adult"          # adult | child | elder | bandit
-var job := ""                # miner, woodcutter, smith, ... ("" for children and elders)
+var job := "":               # miner, woodcutter, smith, ... ("" for children and elders)
+	set(v):
+		job = v
+		roles_version += 1
 var sprite := ""
 var home := ""               # building id
-var workplace := ""          # station, stall, field or building id
+var workplace := "":         # station, stall, field or building id
+	set(v):
+		workplace = v
+		roles_version += 1
 var inv := Inventory.new()
 var coins := 0
 var hunger := 100.0          # 100 = full
@@ -18,7 +28,10 @@ var hp := 30.0
 var max_hp := 30.0
 var damage := 3.0
 var armor := 0.0
-var alive := true
+var alive := true:
+	set(v):
+		alive = v
+		roles_version += 1
 var pos := Vector2.ZERO      # tile coordinates (float); the feet are at the centre of a tile
 var plan: Array = []         # steps: {k: go|work|do, ...}
 var path := PackedVector2Array()
