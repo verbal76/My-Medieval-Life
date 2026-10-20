@@ -21691,7 +21691,7 @@
    "id": "TIME-01",
    "title": "Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity",
    "source": "docs/directives/2026-10-20_od21_time_model.md",
@@ -21726,6 +21726,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: OD-21"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED",
+     "why": "Inventory of every timed value with OD-21 section 3's fields, grouped as section 8 asks, in docs/design/TIME_MODEL.md; defect claims spot-checked against the code"
     }
    ],
    "target_build": "16",
@@ -21823,6 +21828,50 @@
    "target_build": "16",
    "roadmap_gate": "Build 16 in development (OVN-01)",
    "roadmap_reason": "OD-21: documentation, unit clarification and safe architecture now; retuning only with owner review"
+  },
+  {
+   "id": "TIME-04",
+   "title": "Player starvation damage follows the villagers' rule (time-audit defect D4)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Player starvation damage follows the villagers' rule (time-audit defect D4)",
+   "source": "docs/design/TIME_MODEL.md section 3 (D4), under docs/directives/2026-10-20_food_security_goal_driven_economy.md section 1 (same rules for food consumption)",
+   "approval": "owner directive 2026-10-20 (FSE-00 section 1 and 16: no different rules by classification)",
+   "acceptance": [
+    "The player's damage at zero food reads starve_damage_per_hour as villagers' does (no literal 3.0); a test; the wiki updated"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "OD-21",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/TIME_MODEL.md section 3 (D4), under docs/directives/2026-10-20_food_security_goal_driven_economy.md section 1 (same rules for food consumption)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a parity defect found by the OD-21 audit"
   },
   {
    "id": "VP-01",
