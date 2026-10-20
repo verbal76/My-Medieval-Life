@@ -18,14 +18,14 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 38 |
 | BLOCKED | 16 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 150 |
+| COMPLETE AND VERIFIED | 151 |
 | SUPERSEDED | 19 |
 | CANCELED BY OWNER | 0 |
-| UNKNOWN — INVESTIGATION REQUIRED | 8 |
+| UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **356** |
-| Outstanding (not complete, superseded or canceled) | 187 |
+| Outstanding (not complete, superseded or canceled) | 186 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 33 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 25 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 34 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 26 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -39,8 +39,8 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 59 | 56 |
-| Build 16: long-term equilibrium and validation | 27 | 26 |
+| Build 15: simulation stabilization | 58 | 55 |
+| Build 16: long-term equilibrium and validation | 28 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **245** | **187** |
+| **Total open** | **245** | **186** |
 
-### Build 15: simulation stabilization (59)
+### Build 15: simulation stabilization (58)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -96,7 +96,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | PL1-05 | current/max inside bars | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | Q-04 | Resources & Gathering journal page | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | code done in earlier builds; only the real-device check remains, done with the Build 15 package |
 | REC-003 | Android builds target API 36 (Hot Attic Games standing platform policy) | approved | UNKNOWN — INVESTIGATION REQUIRED |  | release configuration check (target Android API) before the next package |
-| REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | approved | UNKNOWN — INVESTIGATION REQUIRED |  | documentation catch-up (designer spec merge, stale docs) so later builds start from current docs |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | approved | ACTIVE DEVELOPMENT |  | the release authorization covering Builds 15 and 16 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | APPROVED — NOT STARTED |  | covers the release of each build 15-18 as it qualifies |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | decision | ACTIVE DEVELOPMENT |  | the roadmap record itself, kept current from Build 15 |
@@ -114,7 +113,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | approved | PARTIALLY IMPLEMENTED |  | automated compliance, wiki coverage and clarity are kept up with every build; tracked from Build 15 |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (27)
+### Build 16: long-term equilibrium and validation (28)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -141,6 +140,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FAM-06 | Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented | approved | IMPLEMENTED — TESTING REQUIRED |  | with FAM-02..05 |
 | FAM-07 | Unplaced orphans join the bandit clan (OD-11): after surviving parent, grandparents, nearest eligible blood relative and a willing villager household; the child keeps identity, age, genealogy and relationships and stays a child (no adult combat) | approved | APPROVED — NOT STARTED |  | with FAM-02/03 (Build 16); full integration with bandit factions follows WDR-016-C (Build 20+) |
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | decision | BLOCKED | owner decision first | the economic paralysis EQ-06 and EQ-01 must rule out; the first question of Build 16 |
+| OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | owner decision first | design wording only; nothing in Build 15 depends on it |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
 | WDR-005-C | Comply with World Design Rule 5: Living World Independence | approved | PARTIALLY IMPLEMENTED |  | living-world independence is the Build 16 objective |
@@ -603,7 +603,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (150)
+## COMPLETE AND VERIFIED (151)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -753,6 +753,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | Q-03 | Resource manifest and registry (INT-067) | docs/DEVELOPMENT_QUEUE.md (audit inventory row 219) |  |  |  |
 | Q-05 | Reeve employment, real jobs, NPCs same rules (INT-066) | docs/DEVELOPMENT_QUEUE.md (audit inventory row 221) |  |  |  |
 | Q-06 | Long-duration simulations 10/30/100/365 | docs/DEVELOPMENT_QUEUE.md (audit inventory row 222) |  |  |  |
+| REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | owner message #27 2026-10-17T18:46Z; agent merge proposal (transcript -home-user-My-Medieval-Life/754052d8...jsonl, 'Merge proposal for your approval'); owner #28 18:48Z then built from 'the Game Designer documents we have just reviewed and reconciled' |  |  | the open owner calls in SPEC_RECONCILIATION.md section 4 stay with the owner |
 | REC-005 | Working title 'The Well'; repository, package and identifiers stay My Medieval Life | AskUserQuestion answer 2026-10-17T18:46:03Z; owner message #27 2026-10-17T18:46Z | observed in project.godot and the export package name |  |  |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | owner messages #111 2026-10-18T13:38Z item 10 and #116 14:03Z s.6; Build 14 audit section C 'Also found' and F (no id) | tools/check_resources.py 0 problems; GitHub release list |  |  |
 | SAVE-01 | Inspect and document the current save architecture before modifying it (requirement 1) | docs/directives/2026-10-20_two_decisions_three_expansions.md | n/a (document) |  |  |
@@ -782,20 +783,19 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership | owner: World Design Rule 16 topic; directive 2026-10-19 (requirements preservation) s.26 |  | superseded by WDR-016-C |  |
 | REQ-GRAVE | Graveyards, ancestry and NPC legacy | owner: World Design Rule 14 topic; directive 2026-10-19 (requirements preservation) s.26 |  | after GM-01; superseded by WDR-014-C |  |
 
-## UNKNOWN — INVESTIGATION REQUIRED (8)
+## UNKNOWN — INVESTIGATION REQUIRED (7)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | owner message 2026-10-17 |  |  |  |
 | REC-003 | Android builds target API 36 (Hot Attic Games standing platform policy) | Game Designer spec Part A s.A0 (bob/CLAUDE.md lines 47-53) and MASTER_PROMPT.md line 41, supplied by the owner 2026-10-17T18:44Z; the agent's merge proposal planned to add it to CLAUDE.md s.8 but never did |  |  | owner to confirm the policy; then record it in CLAUDE.md section 8. The builds already comply |
-| REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | owner message #27 2026-10-17T18:46Z; agent merge proposal (transcript -home-user-My-Medieval-Life/754052d8...jsonl, 'Merge proposal for your approval'); owner #28 18:48Z then built from 'the Game Designer documents we have just reviewed and reconciled' |  |  |  |
 | REC-008 | Near/far simulation tiers (detailed near the player, abstract far away, nothing duplicated on switching) | Game Designer spec Part A (owner's interview answer, bob/CLAUDE.md line 131); owner directive #16 2026-10-17T16:23Z s.9 ('do not assume every NPC requires full simulation at all times. Propose simulation detail appropriate to the player's location') |  |  |  |
 | REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | Game Designer spec Part A s.A2 (bob/CLAUDE.md line 119); agent merge proposal planned a DECISIONS entry 'combat style' that was never written |  |  |  |
 | REC-010 | Class progression, 'system jobs' and a tech/research tree | Game Designer spec Part A s.A1/A2 (bob/CLAUDE.md lines 67, 77, 91, 101); agent merge proposal conflict C2 ('Unresolved; your call') never answered |  |  |  |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 25, status BLOCKED) (33)
+## Owner decisions, open and answered (open: 26, status BLOCKED) (34)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -816,6 +816,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | COMPLETE AND VERIFIED | docs/release/LONG_RUN_SIMULATION.md (EQ-07); measured with housing_test.gd::test_quarters_on_an_original_house |
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | BLOCKED | agent, 2026-10-20, verifying B7-008 (docs/release/BUILD_7_ISSUES.md B7-008; World.player_sell) |
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | BLOCKED | agent, 2026-10-20, docs/release/LONG_RUN_SIMULATION.md 'Why seed 1 builds no house' |
+| OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | BLOCKED | docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20) |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat), restated in docs/directives/2026-10-20_project_memory_hardening.md and docs/directives/2026-10-20_permanent_project_memory_hardening.md; recorded in docs/EXPANSION_ROADMAP.md |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |

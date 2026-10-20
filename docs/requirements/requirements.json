@@ -12322,6 +12322,50 @@
    "roadmap_reason": "the economic paralysis EQ-06 and EQ-01 must rule out; the first question of Build 16"
   },
   {
+   "id": "OD-17",
+   "title": "Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003",
+   "source": "docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20)",
+   "approval": "open: needs the owner's answer",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before any change follows from it"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/game-designer/SPEC_RECONCILIATION.md section 4 (REC-004, 2026-10-20)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "raised from the spec reconciliation"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "design wording only; nothing in Build 15 depends on it"
+  },
+  {
    "id": "OPS-01",
    "title": "Resolve PR #1 as routine maintenance: inspect, compare with staging, preserve any unique work on a remote branch, then close with a comment",
    "kind": "approved",
@@ -15796,7 +15840,7 @@
    "id": "REC-004",
    "title": "Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers",
    "kind": "approved",
-   "status": "UNKNOWN — INVESTIGATION REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Merge the corrected documents with the existing Medieval Life project documentation, but do not begin implementing game features. ... Before modifying any files, show me exactly what you intend to merge, preserve, replace, or remove",
    "description": "Store Bob's CLAUDE.md, MASTER_PROMPT.md and CORRECTION_NOTES.md verbatim (proposed docs/game-designer/), write SPEC_RECONCILIATION.md, and add DECISIONS entries for the owner's interview answers (working title, platforms incl. Steam Deck, combat style, progression, permadeath with descendants, ~100-NPC village, OTA/Mote, test builds via GitHub pre-release, asset priority, lore source). Open owner calls from it: C1 'one hero' vs not the chosen one, C2 'class progression', C10 view.",
    "source": "owner message #27 2026-10-17T18:46Z; agent merge proposal (transcript -home-user-My-Medieval-Life/754052d8...jsonl, 'Merge proposal for your approval'); owner #28 18:48Z then built from 'the Game Designer documents we have just reviewed and reconciled'",
@@ -15805,7 +15849,7 @@
     "As described: Store Bob's CLAUDE.md, MASTER_PROMPT.md and CORRECTION_NOTES.md verbatim (proposed docs/game-designer/), write SPEC_RECONCILIATION.md, and add DECISIONS entries for the owner's interview answers (working title, platforms incl. Steam Deck, combat style, progression, permadeath with descendants, ~100-"
    ],
    "acceptance_derived": true,
-   "implementation": "Not done. No docs/game-designer/ or SPEC_RECONCILIATION.md in any branch (git log --all); the three files exist only in the uploads zip. docs/DECISIONS.md has no entry for the working title, OTA or API 36. BUILD_DECISIONS.md cites 'Bob's spec' only in passing. The owner's interview answers (several below) therefore never entered a register.",
+   "implementation": "docs/game-designer/ (README.md, THE_WELL_SPEC_v1.md, MASTER_PROMPT.md, CORRECTION_NOTES.md, SPEC_RECONCILIATION.md); docs/DECISIONS.md 2026-10-20 entry",
    "tests": "",
    "playtest": [],
    "branch": "",
@@ -15816,7 +15860,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "the open owner calls in SPEC_RECONCILIATION.md section 4 stay with the owner",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -15831,6 +15875,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "UNKNOWN — INVESTIGATION REQUIRED -> COMPLETE AND VERIFIED; implementation; next_action",
+     "why": "the three files stored byte for byte in docs/game-designer/ (sha256 checked; Bob's CLAUDE.md as THE_WELL_SPEC_v1.md so it is not loaded as agent instructions), SPEC_RECONCILIATION.md classifies 98 points (54 agree, 19 differ, 14 not in project, 11 obsolete) and lists the open owner calls, and a DECISIONS entry records the merge; no existing document or feature was changed"
     }
    ],
    "target_build": "15",

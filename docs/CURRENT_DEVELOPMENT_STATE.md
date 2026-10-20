@@ -75,7 +75,7 @@ Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Build
 
 1. **Build 15 release:** a 365-day Actions run (seeds 1 and 2) on the release-candidate commit; then the readiness packet with each OVN-01 section 4 condition and its evidence; then `release.yml` as a private draft (REL-15-18), artifacts checked. Known issues are stated plainly: the economy stall (Build 16), seed 2's starvation, and the device checks still to do.
 2. **Then Build 16** (EQ-01..06, FAM-07, EQ-09, OD-16 once answered, and the rest), Build 17 and Build 18, in order.
-3. Open Build 15 entries that are not code: REC-004 (merging the Game Designer spec: its source files must be found first), DVW-A14 (a line in the release checklist for the owner), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
+3. Open Build 15 entries that are not code: DVW-A14 (a line in the release checklist for the owner), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 
 Skipped (deferred) items: none. `docs/SKIPPED_ITEMS.md` is empty; nothing was deferred to advance a build.
 
@@ -86,6 +86,7 @@ Skipped (deferred) items: none. `docs/SKIPPED_ITEMS.md` is empty; nothing was de
   - HOUSE-08 (bed sharing) and HOUSE-09 (now done through the small room), Build 15;
   - FAM-03 is implemented; FAM-07 (the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+) is not, Build 16.
 - **OD-16 (new, 2026-10-20; Build 16's first question, it no longer blocks Build 15):** the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
+- **OD-17 (new, 2026-10-20):** the Game Designer spec's open calls (the hero, the view, Steam Deck labelling), from `docs/game-designer/SPEC_RECONCILIATION.md` section 4 (REC-004, done).
 - **OD-15 (new, 2026-10-20):** should the player's sales stop at a trader's 15-coin floor, as villagers' do? It came up while verifying B7-008; options and a recommendation are in the entry. B7-008 stays BLOCKED on it (its wildlife half is verified).
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
 - **SJD-Q01..Q14:** the judgment system's 14 questions. They are items 25–38 under the heading "Owner decisions still open" (line 584 of `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.txt`; the spec numbers two headings 19, and this is the second). The spec also names open points inside its sections, such as the rumour and credibility questions in its evidence section. Those belong to the same gates and are unanswered too. Never answer any of them on the owner's behalf.

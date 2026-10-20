@@ -7,14 +7,14 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 223 still open, 8 closed since |
+| Open entries (rules excluded) | 231 | 222 still open, 9 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 48 (22 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **245** = 223 still open from the baseline + 22 added and open |
+| Entries added since | | 49 (23 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **245** = 222 still open from the baseline + 23 added and open |
 | Open entries moved to another build | | 0 |
 
-## Closed since the baseline (8)
+## Closed since the baseline (9)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
@@ -25,6 +25,7 @@ entry leaves the register or changes without a history entry.
 | EQ-10 | Economy simulation: axe and hammer ledger residuals of 1-3 from day 120 in 365-day runs | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: Actions run 39368663150 on 0ee0218: 365 days, seeds 1 and 2, LEAKS currency 0, items {} (axe, hammer, pickaxe, herbal_poultice all balance) |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: six pages added (game/scripts/core/wiki_topics.gd): Magic: the Fireball; the gold star over an employer; the Journal and the village map; causes of death; the merchant caravan; bandits. Every fact cites code, numbers come from balance data where the code reads them, links from the related pages; wiki_test passes (every link resolves) |
 | FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: CI run 39368652711 on 0ee0218 passed the new step: a 10-day seed-1 simulation with no leak and no script error |
+| REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | approved | UNKNOWN — INVESTIGATION REQUIRED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: the three files stored byte for byte in docs/game-designer/ (sha256 checked; Bob's CLAUDE.md as THE_WELL_SPEC_v1.md so it is not loaded as agent instructions), SPEC_RECONCILIATION.md classifies 98 points (54 agree, 19 differ, 14 not in project, 11 obsolete) and lists the open owner calls, and a DECISIONS entry records the merge; no existing document or feature was changed |
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: brought up to date: HANDOFF.md and DEVELOPMENT_PLAN.md were already marked historical (MEM-01); GAME_DESIGN.md U1 moved to Confirmed item 13 with the owner's 2026-10-18 platform decision; BUILD_DECISIONS.md Known gaps rewritten from the code (births, ages, apprentices, player livestock, eggs/milk/wool exist; adoption is FAM-03/07, Build 16); CLAUDE.md release history lists draft Builds 9-11 (GitHub releases checked) and OVN-01's authority; resources.json's handcart exception is implemented (B14-06) |
 
 ## Moved to another build since the baseline (0)
@@ -35,7 +36,7 @@ None.
 
 None.
 
-## Added since the baseline (48)
+## Added since the baseline (49)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -70,6 +71,7 @@ None.
 | OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | decision | COMPLETE AND VERIFIED | 15 |
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | decision | BLOCKED | 15 |
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | decision | BLOCKED | 16 |
+| OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | 16 |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | COMPLETE AND VERIFIED | 15 |
