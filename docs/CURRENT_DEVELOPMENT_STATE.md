@@ -13,7 +13,7 @@ This is the session handoff (owner directive 2026-10-20, register MEM-01). Read 
 | Last verified remote commit | The head of `origin/staging/my-medieval-life` (`git log origin/staging/my-medieval-life -1`). This file was last brought up to date in the commit `git log -1 -- docs/CURRENT_DEVELOPMENT_STATE.md` shows; anything newer on staging is described in that commit's successors. |
 | `main` | Changes only when the owner merges. |
 | Multiplayer | `wip/multiplayer` (MP-01), isolated. It must not be merged into staging without the owner's explicit approval. |
-| Active build | **Build 15**, simulation stabilization (ROAD-01). **BLOCKED** on owner decision OD-16 (house completion on seed 1); all other Build 15 work continues |
+| Active build | **Build 15**, simulation stabilization (ROAD-01): every core item is implemented; the release gates (OVN-01 section 4) are being checked for a private draft. OD-16 moved to Build 16 (it no longer blocks Build 15) |
 | Directive in force | OVN-01, `docs/directives/2026-10-20_master_overnight_development_directive.md` (autonomous engineering; Builds 15 → 16 → 17 → 18 strictly in order), with `docs/directives/2026-10-20_compaction_readiness.md` |
 | Last released build | **Build 14**, a private draft from `7dbae4f` (`docs/release/BUILD_14_PACKET.md`) |
 | Release authorization | OVN-01 section 9 and REL-15-18: Builds 15 to 18 may be released as **private drafts**, in order, each only when every condition of OVN-01 section 4 holds (REL-14-16 before it). No placeholder builds. Public visibility needs new owner approval. |
@@ -22,44 +22,38 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 about 08:00 UTC.
+The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 about 10:00 UTC.
 
-- **EQ-07 / HOUSE-07 (Build 15's blocker):**
-  - Done: population (101 alive at day 365, seed 1) and wildlife (every species alive at day 365) are fixed.
-  - Done: the housing routes of the owner's directive (HOUSE-04: family help, builders' own timber, tools kept from the caravan).
-  - Open: houses. Seed 2 finishes 3 sites in 200 days; seed 1 none, because the village's trade economy stops around day 120-140. The diagnosis is in `docs/release/LONG_RUN_SIMULATION.md`, "Why seed 1 builds no house". Waits on **OD-16**.
+- **Build 15 release gates:** the record of each OVN-01 section 4 condition goes in the Build 15 readiness packet (`docs/release/`), then `release.yml` runs as a private draft (REL-15-18). A 365-day Actions run on the release candidate checks the simulation before it.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
 - **OVN-01:** the overnight directive in force. **ROAD-01:** the roadmap.
 - **REL-14-16:** superseded in practice by REL-15-18 for Builds 15-18. Build 14 is done.
 - **PERF-01:** the runtime answer. PERF-02..05 are complete (the simulation is about twice as fast, and every change passes the gate). PERF-06 (checkpoint and resume) is evaluation only, done in `docs/release/SIMULATION_PERFORMANCE.md` section 4.
 - **MP-01:** multiplayer on `wip/multiplayer` only. Nothing to do without the owner.
 
-Closed tonight (2026-10-20), with evidence in the register:
+Closed on 2026-10-20, with evidence in the register:
+- EQ-07 and HOUSE-07 (houses finished on both seeds in the 365-day runs on `59057ac`: 8 and 2);
+- HOUSE-10 (the small 5x6 room with two beds, for the three original houses with ground beside them), HOUSE-09 and HOUSE-06;
 - EQ-17 and EQ-10, both verified by 365-day Actions runs;
-- FR-07 (CI run 39368652711);
-- DVW-A4, FR-06, PERF-02..05;
+- FR-07 (CI run 39368652711), DVW-A4, FR-06, PERF-02..05, B14-12 (sprite list), REC-017;
 - B7-008 verified, with its buyer half waiting on OD-15.
 
-Implemented and tested, waiting on a device or a long run: DVW-A2, DVW-A6, FR-04 (a controller), HOUSE-04 (OD-16).
+Implemented and tested ahead of Build 16 (kept in Build 16): FAM-02..06 (orphans taken in by kin or another household), WR-02 (grazers over capacity). FAM-07 (the bandit-clan fallback) is not built.
 
-## Last test results (2026-10-20 about 07:50 UTC, staging `d4e2dc4` and later)
+## Last test results (2026-10-20 about 10:00 UTC)
 
-- **Godot suites:** all 23 in `.github/workflows/tests.yml` pass locally (`conservation_test.gd` and `housing_test.gd` included, the latter with 95 checks).
-- **Python:** `python3 -m unittest discover -s tests` OK. `tools/check_requirements.py` and `tools/check_interactions.py`: 0 problems.
-- **CI:** green on 0ee0218, e0c6ca7 and 2ef31bd (runs 39368652711, 39370974090, 39372860024). It runs again on each push; check the latest run for the head commit.
-- **Determinism gate** (`python3 tools/sim_gate.py`): PASS against `docs/release/sim_baseline.json` at `59057ac`.
-- **Year-long runs** (GitHub Actions, the record is `docs/release/LONG_RUN_SIMULATION.md`):
-  - run 39368663150 on `0ee0218`: both seeds, 0 script errors, ledger balanced; seed 1 builds no house;
-  - run 39385942656 on `59057ac` (the housing corrections): **in progress** at 08:00 UTC, see below.
-- **Known failures:** none in the tests. The open behaviour defect is EQ-07's seed 1 housing (OD-16).
+- **Godot suites:** all 24 in `.github/workflows/tests.yml` pass locally (`housing_test.gd` with 107 checks, `family_test.gd` 22).
+- **Python:** `python3 -m unittest discover -s tests` OK (92). `tools/check_requirements.py`, `tools/check_interactions.py`, `tools/check_resources.py`, `tools/assets/check_assets.py`: 0 problems.
+- **CI:** green on every checked staging commit; check the latest run for the head commit.
+- **Determinism gate** (`python3 tools/sim_gate.py`): PASS, identical to `docs/release/sim_baseline.json`, with the small room in.
+- **Year-long runs** (GitHub Actions; the record is `docs/release/LONG_RUN_SIMULATION.md`): run 39385942656 on `59057ac`: both seeds, 0 script errors, ledger balanced, 8 and 2 houses built, seed 1 no starvation, seed 2 four starvation deaths.
+- **Known failures:** none in the tests.
 
 ## Known defects (open)
 
-- **EQ-07, seed 1 builds no house:** the trade economy stops around day 120-140. The smith runs out of coins and can no longer buy imported iron, so no axes are made, woodcutters fall from 6 to 1, and there is no timber. About 45 % of coins sit with bandits or as loot nobody picks up. Waits on OD-16.
-- **Hunters' income:** most meat finds no buyer (seed 1: 3,957 made in a year, about 600 sold), and hunters miss most meals for lack of money. Build 16 equilibrium (EQ-01); part of OD-16's question.
-- **Firewood:** households went without firewood on about 63 % of nights in the 0ee0218 run. Same cause.
-- **EQ-09, stone (Build 16):** deposits run out; caravan stone (B7-007) supplies it. Seed 1 ran out of stone for sale by day 195 in the 200-day trace.
-- **WR-02, grazers (Build 16):** grazers starve together.
+- **The trade economy stalls (Build 16, EQ-06 and OD-16):** the smith is near 0 coins from about day 120, unemployment reaches 24-39 by day 365, and households go without firewood on most nights. Seed 2 lost four villagers to hunger in a year. About 45 % of coins sit with bandits or as loot nobody picks up.
+- **Hunters' income:** most meat finds no buyer, and hunters miss most meals for lack of money. Build 16 equilibrium (EQ-01); part of OD-16's question.
+- **EQ-09, stone (Build 16):** deposits run out; caravan stone (B7-007) supplies it.
 
 ## Hardware checks still required (done, not verified on a device)
 
@@ -77,42 +71,21 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 
 ## Next approved tasks, in order
 
-Updated 2026-10-20 about 07:40 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
+Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
-1. **EQ-07, the Build 15 blocker:** housing corrections are in (`59057ac`):
-   - family help;
-   - builders' own timber (saw, fell, buy an axe);
-   - the caravan leaving tools the village needs.
-
-   Seed 2 finishes 3 sites in 200 days. Seed 1 finishes none, because the village's trade economy stops around
-   day 120-140 (`docs/release/LONG_RUN_SIMULATION.md`, "Why seed 1 builds no house"). That needs **OD-16**
-   (owner).
-   - Actions run on `59057ac` (365 days, seeds 1 and 2) dispatched about 07:40 UTC: record it when it ends.
-   - When OD-16 is answered, implement the answer and re-run 365 days on both seeds.
-2. **PERF-04:** profile again after the two optimizations (`economy_sim.gd --profile`); take the next measured bottleneck through `tools/sim_gate.py`.
-3. **The other Build 15 items** (ledger Roadmap):
-   - FR-06 (wiki pages), FR-04 (pad shortcuts), B14-12 (sprite list), REC-003, REC-004 and REC-017;
-   - HOUSE-10 waits on the owner's upper-floors choice.
-4. **Build 15 release:** only when every condition of OVN-01 section 4 holds. Seed 1's housing (OD-16) is a non-deferrable core-construction item, so Build 15 is BLOCKED until it is answered and verified. Release as a private draft (REL-15-18) with a readiness packet.
-5. **Then Build 16** (EQ-01..06, FAM-02..07, WR-02, EQ-09 and the rest), Build 17 and Build 18, in order.
+1. **Build 15 release:** a 365-day Actions run (seeds 1 and 2) on the release-candidate commit; then the readiness packet with each OVN-01 section 4 condition and its evidence; then `release.yml` as a private draft (REL-15-18), artifacts checked. Known issues are stated plainly: the economy stall (Build 16), seed 2's starvation, and the device checks still to do.
+2. **Then Build 16** (EQ-01..06, FAM-07, EQ-09, OD-16 once answered, and the rest), Build 17 and Build 18, in order.
+3. Open Build 15 entries that are not code: REC-004 (merging the Game Designer spec: its source files must be found first), DVW-A14 (a line in the release checklist for the owner), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 
 Skipped (deferred) items: none. `docs/SKIPPED_ITEMS.md` is empty; nothing was deferred to advance a build.
 
-Done on 2026-10-20 (overnight):
-- EQ-17 fix and the script-error gate;
-- EQ-10 fixes (verified by the 365-day Actions runs);
-- FR-07, DVW-A2, DVW-A4, DVW-A6;
-- B7-008 verified, with OD-15 raised;
-- PERF-02, PERF-03, PERF-05, and two PERF-04 optimizations (the simulation is about twice as fast);
-- HOUSE-04 housing routes, with OD-16 raised.
-
 ## Waiting on the owner
 
-- **OD-14 (new):** no original house has room for living quarters on the current layout. Options: detached quarters nearby, a smaller added room, or no expansion.
+- **OD-14:** answered (smaller attached rooms; the small room is built, HOUSE-10). Upper floors stay a future design consideration (HOUSE-11, deferred by the owner).
 - OD-11, OD-12 and OD-13 were answered by the owner on 2026-10-20 (`docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md`). Their implementation is open:
-  - HOUSE-08 (bed sharing) and HOUSE-09 (quarters on original houses), Build 15;
-  - FAM-03 and FAM-07 (orphans: the best-suited equal relative; the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+), Build 16.
-- **OD-16 (new, 2026-10-20, blocks Build 15):** the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
+  - HOUSE-08 (bed sharing) and HOUSE-09 (now done through the small room), Build 15;
+  - FAM-03 is implemented; FAM-07 (the bandit-clan fallback, with interim handling until bandit factions, WDR-016-C, Build 20+) is not, Build 16.
+- **OD-16 (new, 2026-10-20; Build 16's first question, it no longer blocks Build 15):** the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
 - **OD-15 (new, 2026-10-20):** should the player's sales stop at a trader's 15-coin floor, as villagers' do? It came up while verifying B7-008; options and a recommendation are in the entry. B7-008 stays BLOCKED on it (its wildlife half is verified).
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
 - **SJD-Q01..Q14:** the judgment system's 14 questions. They are items 25–38 under the heading "Owner decisions still open" (line 584 of `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.txt`; the spec numbers two headings 19, and this is the second). The spec also names open points inside its sections, such as the rumour and credibility questions in its evidence section. Those belong to the same gates and are unanswered too. Never answer any of them on the owner's behalf.
@@ -122,10 +95,7 @@ Done on 2026-10-20 (overnight):
 
 ## Interrupted or fragile processes
 
-- **Running now:** GitHub Actions run 39385942656 (`long-sims.yml`, 365 days, seeds 1 and 2, staging `59057ac`, started 07:21 UTC, about 40 minutes).
-  - It runs on GitHub's runners, so a container restart cannot kill it. Each seed's job uploads `sim.json`, `sim.log` and `summary.json` as an artifact; the proxy blocks artifact downloads, so read the end of each job's log instead.
-  - A self check-in is scheduled for 08:01 UTC to record it.
-  - **If this file still says "in progress" and the run has finished:** record both seeds in `docs/release/LONG_RUN_SIMULATION.md` and the overnight report. Read script errors, LEAKS, alive, houses built and sites finished, woodcutters, unemployed and the fingerprint, then update EQ-07 and HOUSE-04. Do not dispatch it again.
+- **Nothing is running now** unless a newer line here says so. Run 39385942656 (`59057ac`) is finished and recorded.
 - **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
 - **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.
 - **Never restart a run because context was compacted:** check Actions (or `ps -eo pid,args | grep godot` locally) first.

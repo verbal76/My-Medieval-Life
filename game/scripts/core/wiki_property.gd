@@ -23,7 +23,7 @@ static func add_pages(w: Wiki) -> void:
 	var rent_pct := roundi(float(GameData.b("weekly_rent_share")) * 100.0)
 	w.add_page("sys:property_modules", "Growing a property: rooms and workshops", "systems", [
 		Wiki.p("A property starts with a house on ground you lease or buy from the manor. Nothing about it is final: later you can add rooms and workshops against what already stands, one at a time, without pulling anything down."),
-		Wiki.p("Open the Build menu (H) and choose Open beside your property, or walk up to your house and use the ground. Each room is Choose a place: the footprint (9 by 10 tiles) must stand against a building of the property, share at least %d tiles of wall with it, leave every door clear and have a clear way to its own door. Trees in the way must be felled first. Roads, other people's land, houses and fields are not available." % Construction.ATTACH_MIN),
+		Wiki.p("Open the Build menu (H) and choose Open beside your property, or walk up to your house and use the ground. Each room is Choose a place: the footprint (9 by 10 tiles; a small room 5 by 6) must stand against a building of the property, share at least %d tiles of wall with it, leave every door clear and have a clear way to its own door. Trees in the way must be felled first. Roads, other people's land, houses and fields are not available." % Construction.ATTACH_MIN),
 		Wiki.p("Each room is its own piece of ground, bought or leased from the manor on the spot like any ground, and its own frame: bring the materials (or hire a helper) and it stands when the last load is in. Its rent is its own, about %d%% of what it is worth a week, so a bigger property costs more rent; the house's lease is untouched. A room is worth less than a fresh building but can be sold back on its own. The first building (the house) cannot be sold or given up while rooms stand on the property." % rent_pct),
 		Wiki.bullets([
 			"One room of each kind to a property; a room being built must be finished before the next is begun.",
@@ -39,7 +39,8 @@ static func add_pages(w: Wiki) -> void:
 		"kitchen": "A stove for cooking pottage and brewing ale; a smaller room than the bakehouse.",
 		"apothecary": "A stove set apart for brewing the poultices and tonics, with a chest and tables for the herbs.",
 		"storage": "A bare room with a chest and tables. Standing at its chest opens the family chest, so what you keep is at hand from either room.",
-		"quarters": "More beds: the beds of living quarters count as the house's, so a household can grow without having to split and leave."}
+		"quarters": "More beds: the beds of living quarters count as the house's, so a household can grow without having to split and leave.",
+		"room": "Two beds in a room a third the size of living quarters, for a house with too little ground beside it for them. Its beds count as the house's, like the quarters'."}
 	var pages: Array = []
 	for kind in Construction.MODULES:
 		var st: String = stations_text.call(kind)
@@ -48,7 +49,7 @@ static func add_pages(w: Wiki) -> void:
 		w.add_page(id, World.cap(Construction.kind_name(kind)) + " (a room to add)", "systems", [
 			Wiki.p(kinds[kind]),
 			Wiki.stats([["Materials", cost_text.call(kind)], ["Worth with its ground", "%d coins" % price.call(kind)], ["Stations", st if st != "" else "none"],
-				["Ground", "9 by 10 tiles, against the property"]]),
+				["Ground", "%d by %d tiles, against the property" % [int(village.stamps.get(Construction.stamp_name(kind), {}).get("w", 9)), int(village.stamps.get(Construction.stamp_name(kind), {}).get("h", 10))]]]),
 			Wiki.links(["sys:property_modules", "guide:property_rooms"] + (["station:" + str(village.stamps.get(Construction.stamp_name(kind), {}).get("stations", [{"type": "stove"}])[0].type)] if st != "" else []))],
 			"", "room module add property " + str(kind))
 	w.add_page("guide:property_rooms", "Add a room or workshop to my house", "guides", [

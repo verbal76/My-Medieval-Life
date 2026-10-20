@@ -7,8 +7,8 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 | | |
 |---|---|
 | Highest build fully completed | **Build 14** (a private draft release, earlier) |
-| In development | **Build 15**, simulation stabilization: **BLOCKED** on one non-deferrable item, house completion on seed 1, which needs owner decision OD-16 |
-| Builds published tonight | None. Build 15 does not meet section 4: its core construction item is not verified on every seed |
+| In development | **Build 15**, simulation stabilization: every core item implemented and tested; houses are finished on both seeds; the release gates are being checked for a private draft |
+| Builds published tonight | None yet. Build 15 is next once a year-long run on the release candidate and the readiness packet are done |
 | Builds 16-18 | Not started. The roadmap is strictly sequential (section 3) |
 
 ## Development results
@@ -23,7 +23,11 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 | DVW-A4 | The simulation prints the village's faucets and drains for coins and every good | TESTED, STAGED |
 | B7-008 | Verified: wildlife recovers (refuges). The player can still sell a trader to 0 coins; whether the player keeps the traders' 15-coin floor is a game rule, raised as OD-15 | BLOCKED (OD-15) |
 | PERF-02..05 | Profiled by subsystem; determinism gate and baseline (`tools/sim_gate.py`); parallel seeds 1.85x faster; two optimizations, each identical through the gate: **the simulation runs about twice as fast** (10 days 44.0 s to 25.5 s; 30 days 127/142 s to 68/73 s) | TESTED, STAGED |
-| HOUSE-04 / EQ-07 | Housing routes from your directive: help from relatives; builders bring their own materials, saw planks, fell timber (keeping an axe); the caravan leaves tools the village needs | TESTED, STAGED. On seed 2 houses are finished; **on seed 1 none, because the village's trade economy stops (OD-16)** |
+| HOUSE-04 / EQ-07 / HOUSE-07 | Housing routes from your directive: help from relatives; builders bring their own materials, saw planks, fell timber (keeping an axe); the caravan leaves tools the village needs | TESTED, STAGED; verified over 365 days: 8 houses on seed 1, 2 on seed 2 |
+| HOUSE-10 / HOUSE-09 / HOUSE-06 | Your OD-14 answer: a small 5x6 room with two beds, made from Shade's house art, for the three original houses with ground beside them (b23, b24, b_v1_house). Built with real ground, materials and work; beds only when finished. Also fixed: rooms added by villagers were not joined to their house's property | TESTED, STAGED; looked at in the game, outside and inside |
+| FAM-02..06 (Build 16) | Orphaned children are taken in: a surviving parent, then grandparents, then the nearest relative, then another household with room; ranked by your OD-12 order; genealogy and birth surname kept. FAM-07 (bandit fallback) not built | TESTED, STAGED |
+| WR-02 (Build 16) | When a wood has more grazers than grass, the strongest feed first instead of all starving together | TESTED, STAGED |
+| B14-12, REC-017 | The sprite list with pixel-grid copies for Aseprite (`docs/assets/SPRITE_NEEDS.md`, 53 entries) | Done |
 | FR-04 | Journal (D-pad up) and Build (left stick) on the pad; controls lists complete | TESTED, STAGED; needs a real controller check |
 | FR-06 | Six missing wiki pages: magic, the employer star, journal and map, causes of death, the caravan, bandits | TESTED, STAGED |
 | REC-003 | Investigated: the Android builds already target API 36 (Godot 4.7.2's template) | Nothing to build; your confirmation of the policy is open |
@@ -41,7 +45,11 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
   3. No axes are made, so woodcutters fall from 6 to 1 (20 unemployed).
   4. There is no timber, so house sites stall, though builders now have the money.
   5. About 45 % of the village's coins sit with bandits or as loot nobody picks up.
-- A second Actions run on the housing corrections (`59057ac`) is recorded below when it ends.
+- **Second year-long run** (Actions run 39385942656 on `59057ac`, the housing corrections; local re-runs identical):
+  - seed 1: 111 alive, 13 sites started, 9 finished, **8 houses**, no starvation;
+  - seed 2: 128 alive, 9 sites started, 3 finished, **2 houses**, 4 starvation deaths;
+  - both: 0 script errors, the currency and every item balance exactly.
+- The trade economy still stalls (the smith near 0 coins from about day 120, 24-39 unemployed, firewood short). That is Build 16's equilibrium work; OD-16 moved there.
 
 ## GitHub
 
@@ -54,7 +62,7 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 ## Outstanding
 
 **Owner decisions:**
-- **OD-16 (blocks Build 15):** how money should flow back to the essential trades. Options and a recommendation are in the register: the manor supports the smithy and woodlands, and bandits' hoards and loot return to circulation.
+- **OD-16 (Build 16's first question; no longer blocks Build 15):** how money should flow back to the essential trades. Options and a recommendation are in the register: the manor supports the smithy and woodlands, and bandits' hoards and loot return to circulation.
 - **OD-15:** the player and the traders' 15-coin floor.
 - OD-14's upper floors (HOUSE-10, HOUSE-11).
 - The others listed in `docs/CURRENT_DEVELOPMENT_STATE.md`.
@@ -62,10 +70,8 @@ Status labels as the directive asks: IMPLEMENTED, TESTED, STAGED, BUILT, RELEASE
 **Skipped items:** none (`docs/SKIPPED_ITEMS.md` is empty). Nothing was deferred to advance a build.
 
 **Remaining Build 15 work:**
-- EQ-07 and HOUSE-07 after OD-16;
-- B14-12 (sprite list);
-- REC-004 and REC-017 (documents);
-- device checks for the items marked playtest;
-- then the Build 15 release gates and a private draft release.
+- a year-long run on the release candidate, the readiness packet, then the private draft release;
+- REC-004 (the Game Designer spec: its source files must be found first);
+- device checks for the items marked playtest (yours, on the installed build).
 
-**Next steps:** implement your answer to OD-16, re-run 365 days on both seeds on Actions, close EQ-07, then release Build 15 privately and begin Build 16.
+**Next steps:** release Build 15 privately when its gates hold, then begin Build 16 (equilibrium, with OD-16 first).

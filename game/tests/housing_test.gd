@@ -36,6 +36,7 @@ func _init() -> void:
 	test_quarters_on_an_original_house()
 	test_sleeping_loft()
 	test_housing_options_weighed()
+	test_small_room()
 	test_baby_while_lodging()
 	test_family_helps_builder()
 	test_builder_makes_timber()
@@ -594,6 +595,76 @@ func test_housing_options_weighed() -> void:
 			check(kind == "quarters", "short of %d sleeping places, more than a loft gives: living quarters beside the house (%s)" % [lacking, kind])
 		else:
 			check(kind == "loft", "short of one sleeping place: the cheaper sleeping loft (%s)" % kind)
+
+
+## HOUSE-10 (owner OD-14, 2026-10-20: retain the 5x6 attached room for houses with legitimate ground): a crowded
+## family in one of the three original houses with ground beside it (b23, b24, b_v1_house; measured), whose loft is
+## built, adds a small room against the house through the module rules: the ground beside it bought or leased,
+## materials taken or bought and used up, two beds only when the last load is in, the beds counted as the house's
+## and slept in, ownership and membership unchanged, one room per property, and the room kept by a save.
+func test_small_room() -> void:
+	var w := new_world(2)
+	var c := w.construction
+	var h := -1
+	for hh in w.households:
+		if str(hh.home) == "b_v1_house":
+			h = int(hh.id)
+	check(h >= 0, "a household lives in b_v1_house")
+	if h < 0:
+		return
+	var hh: Dictionary = w.households[h]
+	var ref := World.hh_ref(h)
+	var house: Dictionary = w.buildings["b_v1_house"]
+	house.loft = int(Construction.loft_cfg().beds)       # its loft is built already
+	w.index_interiors()
+	var mom: NPC = null
+	for o: NPC in w.brain._members(h):
+		if o.role == "adult" and o.sex == "female":
+			mom = o
+	while not c.crowded(h):
+		Life.birth(w, mom, w.npc(mom.partner), h)
+	var owner0 := w.owner_of(house)
+	var members0: Array = (hh.members as Array).duplicate()
+	var beds0 := c.beds_in("b_v1_house")
+	c.responsible_adult(h).coins += 1000
+	var took0 := {}
+	for id in c.cost_of("room"):
+		took0[id] = int(w.stats.get("helper_took_" + str(id), 0)) + int(w.stats.get("helper_bought_" + str(id), 0))
+	c.daily()
+	var p: Dictionary = w.plot(str(hh.get("build", "")))
+	check(not p.is_empty() and str(p.site.get("kind", "")) == "room", "with the loft built and no ground for quarters, the family sets about a small room (%s)" % [c.housing_goals(h)])
+	if p.is_empty():
+		return
+	var rect := Rect2i(int(p.x), int(p.y), int(p.w), int(p.h))
+	check(rect.size == Vector2i(5, 6) and c.attach_refusal(rect, house) == "", "5x6 ground standing against the house (%s)" % rect)
+	check(str(c.housing_goals(h).crowded.plan) == "room" and w.holds(ref, p), "its goal records the plan; the ground is the household's")
+	check(c.beds_in("b_v1_house") == beds0, "no bed before it is built")
+	for d in 20:
+		run_days(w, 1)
+		if p.site.get("done", false):
+			break
+	var room: Dictionary = w.property.building_on(p)
+	check(p.site.get("done", false) and not room.is_empty() and str(room.get("kind", "")) == "room", "the household builds the room (%s left)" % [p.site.get("need", {})])
+	if room.is_empty():
+		return
+	check(c.beds_in("b_v1_house") == beds0 + 2 and w.property.rooms_of("b_v1_house").has(str(room.id)), "two more beds, counted as the house's (%d, was %d)" % [c.beds_in("b_v1_house"), beds0])
+	var supplied := true
+	for id in c.cost_of("room"):
+		var got := int(w.stats.get("helper_took_" + str(id), 0)) + int(w.stats.get("helper_bought_" + str(id), 0)) - int(took0[id])
+		supplied = supplied and got >= int(c.cost_of("room")[id])
+	check(supplied, "every plank, stone and log was taken from the household's store or bought: none from nothing")
+	check(w.owner_of(house) == owner0 and members0.all(func(id): return (hh.members as Array).has(id) or not w.npc(int(id)).alive), "the house's ownership and the household unchanged")
+	var in_room := 0
+	for o: NPC in w.brain._members(h):
+		var spot := w.home_spot(o, "bed")
+		if w.interiors[str(room.id)].spots.has(spot):
+			in_room += 1
+	check(in_room >= 1, "members of the household sleep in the room's beds (%d)" % in_room)
+	check(c.module_refusal("room", house, ref).contains("already"), "one small room to a property")
+	var d := w.to_dict()
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
+	check(w2.buildings.has(str(room.id)) and w2.construction.beds_in("b_v1_house") == c.beds_in("b_v1_house"), "a saved game keeps the room and its beds")
 
 
 ## EQ-17: a couple who founded a household and are still building its house lodge with family, so the

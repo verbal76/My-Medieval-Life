@@ -1415,10 +1415,12 @@ func asleep(n: NPC) -> bool:
 ## shares them out by member order (beds first, then the straw pallets); {} if the home has none.
 func home_spot(n: NPC, kind: String) -> Dictionary:
 	var mine := []
-	for room in (property.rooms_of(n.home) if kind == "bed" else [n.home]):     # living quarters add beds
+	var pallets := []
+	for room in (property.rooms_of(n.home) if kind == "bed" else [n.home]):     # living quarters and small rooms add beds
 		for s in interiors.get(room, {}).get("spots", []):
 			if s.kind == kind:
-				mine.append(s)
+				(pallets if int(s.get("tile", -1)) % 100000 == 593 else mine).append(s)
+	mine.append_array(pallets)          # the beds of every room before the house's straw pallets
 	if mine.is_empty():
 		return {}
 	var i := 0

@@ -74,7 +74,7 @@ Every open entry also carries `target_build` (15–19, `20+`, `multiplayer`, `ow
 | Build | Content | Status |
 |---|---|---|
 | 14 | Released as a private draft from `7dbae4f` | The current test build |
-| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships | In development; **BLOCKED** on OD-16 (house completion on seed 1) |
+| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships | In development; every core item implemented; release gates being checked for a private draft (OD-16 moved to Build 16) |
 | 16 | Long-term equilibrium and validation: the baseline before the expansions | Planned |
 | 17 | Mining & Industrial Development (EXP-A) | Approved objective; **not started**. Authorized by OVN-01 to begin only after Builds 15 and 16 meet section 4 |
 | 18 | Settlement Advancement & Regional Economy (EXP-B) | Approved objective; **not started**. Authorized by OVN-01 after Build 17 |

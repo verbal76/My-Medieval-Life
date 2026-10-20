@@ -185,6 +185,8 @@ func _ready() -> void:
 				ui.show_trade(sage)
 			"farm_tilled", "farm_growing", "farm_pen":
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
+			"small_room", "small_room_inside":
+				_room_shot(shot_panel == "small_room_inside")   # HOUSE-10: the small room built against b_v1_house
 			"employer_star":
 				# PL1-09: the smith who set the player a job wears the star, wherever the smith walks
 				for n: NPC in world.npcs:
@@ -3703,6 +3705,36 @@ func _swing_panel(mining: bool, frame: int) -> void:
 	_use()
 	player_sprite.speed_scale = 0.0
 	player_sprite.t = float(frame) * 0.16 + 0.01
+
+
+## HOUSE-10 screenshots: the household of b_v1_house adds the small room beside its house (placed and supplied
+## with the calls the game uses); one of the family lies in its bed; the player stands at its door or inside.
+func _room_shot(inside: bool) -> void:
+	var c := world.construction
+	for hh in world.households:
+		if str(hh.home) != "b_v1_house":
+			continue
+		var ref := World.hh_ref(int(hh.id))
+		var house: Dictionary = world.buildings["b_v1_house"]
+		world.property.survey_under(house)
+		var p := c.place("room", c.find_module_slot("room", house, ref), ref, false, house)
+		if p.is_empty():
+			print("room shot: refused (%s)" % c.why)
+			return
+		var bag := Inventory.new()
+		for id in p.site.need:
+			bag.add(str(id), int(p.site.need[id]))
+		world.deliver(p, bag)
+		var room: Dictionary = world.property.building_on(p)
+		var sp: Dictionary = world.interiors[str(room.id)].spots[1]
+		var sleeper: NPC = world.npc(int(hh.members[0]))
+		sleeper.pos = Vector2(int(sp.at[0]) + int(room.x), int(sp.at[1]) + int(room.y)) + Vector2(0.5, 0.5)
+		sleeper.anim = "sleep"
+		var door := world.building_door(str(room.id))
+		world.player.pos = Vector2(door) + (Vector2(0.5, -0.5) if inside else Vector2(1.5, 1.5))
+		follow_at = _in_view(world.player.pos * T)
+		camera.position = follow_at
+		return
 
 
 ## PL2-015 screenshots: the player holds a piece of open ground near the start and has worked it with the same

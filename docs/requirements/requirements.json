@@ -10227,7 +10227,7 @@
    "id": "HOUSE-06",
    "title": "No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 1.7",
@@ -10238,7 +10238,7 @@
     "No new building type and no free material"
    ],
    "implementation": "",
-   "tests": "game/tests/housing_test.gd",
+   "tests": "housing_test.gd test_sleeping_loft, test_housing_options_weighed, test_small_room",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -10251,7 +10251,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "HOUSE-08 and HOUSE-09",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10282,6 +10282,11 @@
      "who": "agent",
      "change": "depends_on",
      "why": "OD-13 answered: HOUSE-08 and HOUSE-09 implement it"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests; next_action",
+     "why": "a crowded household that cannot split weighs a loft, the quarters and the small room by what it lacks and costs; a stalled goal records every blocking reason and nothing is retried; no new building type beyond the owner-approved room and loft, no free material"
     }
    ],
    "target_build": "15",
@@ -10400,7 +10405,7 @@
    "id": "HOUSE-09",
    "title": "Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Existing village houses must be eligible for living-quarters expansions even if they were generated without land parcels. Expansions must consume actual resources, labor, and construction time. Do not solve the problem by generating free beds or houses.",
    "description": "Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time",
    "source": "docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md (OD-13)",
@@ -10412,7 +10417,7 @@
     "Test: a crowded family in an original house adds quarters and its beds increase only when the last load is delivered"
    ],
    "implementation": "",
-   "tests": "game/tests/housing_test.gd test_quarters_on_an_original_house",
+   "tests": "housing_test.gd test_quarters_on_an_original_house, test_small_room",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -10424,7 +10429,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "wait for OD-14",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10450,6 +10455,11 @@
      "who": "agent",
      "change": "depends_on",
      "why": "the layout question goes to the owner (OD-14)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; tests; next_action",
+     "why": "an original house (b_v1_house) takes a living-space module through the normal module rules: its ground surveyed (nothing paid), the room's ground beside it bought or leased, the household's own work and purchases, beds only on the last load; the 9x10 quarters fit no original house (measured), so per the owner's OD-14 answer the smaller room is the module that does"
     }
    ],
    "target_build": "15",
@@ -10459,7 +10469,7 @@
    "id": "HOUSE-10",
    "title": "Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Implement appropriately sized additions that allow existing homes to expand when space permits.",
    "description": "Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time",
    "source": "docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 1",
@@ -10472,7 +10482,7 @@
     "Households recognize when expansion is possible or impossible and keep their goal without loops or deadlocks"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/housing_test.gd test_small_room (with test_housing_options_weighed, test_sleeping_loft); tests/test_village.py",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -10484,7 +10494,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "build the 5x6 room module after the loft investigation; it serves b23, b24 and b_v1_house",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10514,6 +10524,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "owner 2026-10-20 (docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md): retain the 5x6 attached room for houses with legitimate ground"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests; next_action",
+     "why": "built: the small room (5x6, two of Shade's beds) is a module kind cut from the house stamp (tools/build_village.py room_stamp); a crowded household weighs it beside the loft and the quarters; ground bought or leased beside the house, materials delivered and used up, beds only when finished, ownership and membership unchanged; fits 3 of the 21 original houses (b23, b24, b_v1_house), 18 have no legal ground (measured, LONG_RUN_SIMULATION.md OD-14 Phase 1); looked at in screenshots outside and inside; determinism gate identical"
     }
    ],
    "target_build": "15",

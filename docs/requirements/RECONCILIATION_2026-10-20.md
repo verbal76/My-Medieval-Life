@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 224 still open, 7 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 48 (31 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **255** = 224 still open from the baseline + 31 added and open |
+| Entries added since | | 48 (28 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **252** = 224 still open from the baseline + 28 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (7)
@@ -51,11 +51,11 @@ None.
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | HOUSE-04 | Money and materials come from real systems: work, saving, buying, materials the household owns, gathering, producing, trading, help from kin and neighbours; never free supplies | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | HOUSE-05 | Construction is real work over time: it consumes materials, progresses as they arrive, keeps unfinished progress, yields to survival needs and resumes after a shortage | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
-| HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | approved | PARTIALLY IMPLEMENTED | 15 |
+| HOUSE-06 | No construction deadlock: a household reconsiders its approach with what exists (save, buy elsewhere, another existing recipe such as added quarters) without new building types or bypassed costs | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-07 | EQ-07 investigation and tests: trace need to completion (the directive's ten questions), name the root causes, tests for the seven housing scenarios, re-run the simulations labelled old and new code | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-08 | Bed sharing in the crowding rule (OD-13): couples share a bed and young children share beds within an age limit; crowding counts sleeping places, not people | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
-| HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | approved | PARTIALLY IMPLEMENTED | 15 |
-| HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | APPROVED — NOT STARTED | 15 |
+| HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | approved | COMPLETE AND VERIFIED | 15 |
+| HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | DEFERRED | 20+ |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | COMPLETE AND VERIFIED | 15 |

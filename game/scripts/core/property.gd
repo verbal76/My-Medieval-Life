@@ -101,14 +101,14 @@ func has_module(thing: Dictionary, kind: String) -> bool:
 	return false
 
 
-## The rooms a home has: itself, and the living quarters and storerooms of its property.
+## The rooms a home has: itself, and the living quarters, small rooms and storerooms of its property.
 func rooms_of(id: String) -> Array:
 	var out := [id]
 	var b: Dictionary = w.buildings.get(id, {})
 	if b.is_empty() or parcel_under(b).is_empty():
 		return out
 	for o in estate_buildings(b):
-		if str(o.id) != id and str(o.get("kind", "")) in ["quarters", "storage"] and w.holder_of(o) == w.holder_of(b):
+		if str(o.id) != id and str(o.get("kind", "")) in ["quarters", "room", "storage"] and w.holder_of(o) == w.holder_of(b):
 			out.append(str(o.id))
 	return out
 

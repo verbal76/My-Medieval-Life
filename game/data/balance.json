@@ -194,11 +194,12 @@
     "kitchen": {"plank": 15, "stone": 20, "log": 8},
     "apothecary": {"plank": 20, "stone": 15, "log": 8},
     "storage": {"plank": 20, "stone": 10, "log": 10},
-    "quarters": {"plank": 25, "stone": 15, "log": 10}
+    "quarters": {"plank": 25, "stone": 15, "log": 10},
+    "room": {"plank": 14, "stone": 6, "log": 6}
   },
   "workshop_price": 140,
-  "module_price": {"kitchen": 100, "apothecary": 110, "storage": 80, "quarters": 110},
-  "_module_note": "PL2-008/014 (agent proposals, provisional: balance review pending, docs/BUILD_DECISIONS.md 'Modular property'). module_price: what a room added to a property is worth with its ground, as workshop_price is a workshop's (kinds not listed use workshop_price); a week's rent and the manor's buy-back follow from it as for any building. workshop_cost holds every module kind's materials.",
+  "module_price": {"kitchen": 100, "apothecary": 110, "storage": 80, "quarters": 110, "room": 60},
+  "_module_note": "PL2-008/014 (agent proposals, provisional: balance review pending, docs/BUILD_DECISIONS.md 'Modular property'). module_price: what a room added to a property is worth with its ground, as workshop_price is a workshop's (kinds not listed use workshop_price); a week's rent and the manor's buy-back follow from it as for any building. workshop_cost holds every module kind's materials. The small room (HOUSE-10, owner OD-14, 2026-10-20: a 5x6 bedroom-sized addition with two beds) costs about half the quarters for a third of the ground; its materials and price are agent proposals, provisional like the rest.",
   "helper_wage": 6,
   "loft": {"_note": "HOUSE-12 (owner-approved 2026-10-20, docs/directives/2026-10-20_loft_and_actions_approval.md): a sleeping loft under a house's roof, built like any building (materials delivered, the beds only when finished); cost its materials, beds its sleeping places (bed sharing applies), per_house the most a house can have.", "cost": {"plank": 12, "log": 6}, "beds": 2, "per_house": 1},
   "bed_share": {"_note": "HOUSE-08 (owner, OD-13, 2026-10-20: young children may share beds within reasonable age limits; couples may share beds). Partners living together share one bed; children below life.child_until share children_per_bed to a bed; adolescents, adults and elders need a bed each. children_per_bed is an agent proposal, provisional until the balance review.", "children_per_bed": 2},

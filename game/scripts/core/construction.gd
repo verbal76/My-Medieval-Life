@@ -19,16 +19,18 @@ extends RefCounted
 ## building; every other kind is a module that can be added to a property later, beside what is there
 ## and without touching it, or stand alone as a shop on its own ground (STANDALONE; the owner's rule
 ## "a house first" still holds for a new property). Storage and living quarters only make sense as
-## rooms of a property. No kind locks anybody into a trade: villagers and the player use any station.
-const KINDS := ["house", "smithy", "carpentry", "bakehouse", "kitchen", "apothecary", "storage", "quarters"]
+## rooms of a property; so does the small room (HOUSE-10, owner OD-14): two beds on 5x6 ground, for houses with no
+## room beside them for the full quarters. No kind locks anybody into a trade: villagers and the player use any station.
+const KINDS := ["house", "smithy", "carpentry", "bakehouse", "kitchen", "apothecary", "storage", "quarters", "room"]
 const STANDALONE := ["house", "smithy", "carpentry", "bakehouse", "kitchen", "apothecary"]
-const MODULES := ["smithy", "carpentry", "bakehouse", "kitchen", "apothecary", "storage", "quarters"]
+const MODULES := ["smithy", "carpentry", "bakehouse", "kitchen", "apothecary", "storage", "quarters", "room"]
 const NAMES := {"house": "house", "smithy": "smithy", "carpentry": "carpenter's shop", "bakehouse": "bakehouse",
-	"kitchen": "kitchen", "apothecary": "apothecary", "storage": "storeroom", "quarters": "living quarters", "loft": "sleeping loft"}
+	"kitchen": "kitchen", "apothecary": "apothecary", "storage": "storeroom", "quarters": "living quarters", "room": "small room", "loft": "sleeping loft"}
 ## What each module is for, in a few words (menus and the wiki).
 const PURPOSE := {"smithy": "a forge and an anvil", "carpentry": "a workbench and a sawhorse", "bakehouse": "an oven and a stove",
 	"kitchen": "a stove for cooking and brewing", "apothecary": "a stove for tonics and poultices",
-	"storage": "a room that opens the family chest from here", "quarters": "more beds for the household"}
+	"storage": "a room that opens the family chest from here", "quarters": "more beds for the household",
+	"room": "two beds on a small piece of ground"}
 const ATTACH_MIN := 3         # cells two buildings must share along a wall to count as joined
 const HIRABLE := ["", "manor_hand", "laborer"]     # out of work, or labouring: free to be hired for a day
 ## Who sells each building material (NPCBrain.buy_role), in order of preference.
@@ -54,6 +56,8 @@ static func kind_name(kind: String, article := false) -> String:
 
 
 static func stamp_name(kind: String) -> String:
+	if kind == "room":
+		return "room"
 	return "house" if kind == "house" or kind == "quarters" else "workshop_" + kind
 
 
@@ -146,7 +150,7 @@ func place(kind: String, rect: Rect2i, ref: String, lease := false, anchor := {}
 		why = w.property.why
 		return {}
 	if not anchor.is_empty():
-		p.estate = w.property.estate_id(anchor)       # the same property from now on
+		p.estate = str(w.property.anchor_of(anchor).id)   # the same property from now on (anchor: a parcel or its building)
 	w.start_site(p, kind, ref)
 	return p
 
@@ -714,7 +718,7 @@ func daily() -> void:
 
 # ---------------------------------------------------------------- housing goals (HOUSE-01..06) -
 ## The household's housing goals (owner directive 2026-10-20): need -> {need, since (day), by (the
-## responsible adult's id), plan ("split", "quarters", "home", "couple"), cost (coins the next step
+## responsible adult's id), plan ("split", "quarters", "room", "loft", "home", "couple"), cost (coins the next step
 ## needs), short (coins still to put by), why (what it waits on, "" while it is being built)}. Saved with
 ## the household. Need keys: "crowded", "no home", "couple:<id>:<id>".
 func housing_goals(h: int) -> Dictionary:
@@ -797,6 +801,7 @@ func start_cost(kind: String, size: Vector2i) -> int:
 ## goals and the ground there is; not a loft first by rule):
 ## - a sleeping loft under the roof (loft_cfg: its materials and sleeping places), if the house has none;
 ## - living quarters beside the house (an existing module), if there is legitimate ground for them.
+## - a small room beside the house (HOUSE-10: two beds on 5x6 ground), where the quarters do not fit.
 ## Each option is costed at today's prices less the materials the household already holds. An option that
 ## gives the room the household lacks comes before one that does not; then the cheaper. The chosen option
 ## starts when the household has its start in hand (start_cost's rule: the ground, and found_start_share of
@@ -817,14 +822,15 @@ func _enlarge(h: int) -> void:
 		options.append({"plan": "loft", "adds": int(loft_cfg().beds), "start": _start_of(h, cost_of("loft"), 0), "whole": _whole_of(h, cost_of("loft"), 0)})
 	else:
 		blocked.append(no_loft)
-	if w.property.has_module(house, "quarters"):
-		blocked.append("the house has its living quarters already")
-	else:
-		var rect := find_module_slot("quarters", house, ref)
-		var no := "no ground beside the house for living quarters" if rect.size == Vector2i.ZERO else can_place("quarters", rect, ref, house)
+	for kind in ["quarters", "room"]:
+		if w.property.has_module(house, kind):
+			blocked.append("the house has its %s already" % kind_name(kind))
+			continue
+		var rect := find_module_slot(kind, house, ref)
+		var no := ("no ground beside the house for %s" % kind_name(kind, kind == "room")) if rect.size == Vector2i.ZERO else can_place(kind, rect, ref, house)
 		if no == "":
 			var land: int = w.property.land_price(rect.size.x, rect.size.y)
-			options.append({"plan": "quarters", "rect": rect, "adds": _stamp_beds("quarters"), "start": _start_of(h, cost_of("quarters"), land), "whole": _whole_of(h, cost_of("quarters"), land)})
+			options.append({"plan": kind, "rect": rect, "adds": _stamp_beds(kind), "start": _start_of(h, cost_of(kind), land), "whole": _whole_of(h, cost_of(kind), land)})
 		else:
 			blocked.append(no)
 	if options.is_empty():
@@ -841,11 +847,11 @@ func _enlarge(h: int) -> void:
 	var pick: Dictionary = options[0]
 	var spare: int = w.property.purse(ref) - _keep(h, w.brain._members(h).size())
 	var need := int(pick.start)
-	var what := "a sleeping loft" if pick.plan == "loft" else "living quarters"
+	var what := kind_name(str(pick.plan), pick.plan != "quarters")
 	if spare < need:
 		_goal(h, "crowded", str(pick.plan), need, need - spare, "saving for %s" % what)
 		return
-	var p: Dictionary = start_loft(h) if pick.plan == "loft" else place("quarters", pick.rect, ref, false, house)
+	var p: Dictionary = start_loft(h) if pick.plan == "loft" else place(str(pick.plan), pick.rect, ref, false, house)
 	if p.is_empty():
 		_goal(h, "crowded", str(pick.plan), need, 0, why)
 		return
@@ -853,7 +859,7 @@ func _enlarge(h: int) -> void:
 	_goal(h, "crowded", str(pick.plan), need, 0, "")
 	var by := responsible_adult(h)
 	w.note("The %s house is crowded: %s sets about %s." % [hh.family, by.name if by != null else "the family",
-		"building a sleeping loft under its roof" if pick.plan == "loft" else "adding living quarters to it"])
+		"building a sleeping loft under its roof" if pick.plan == "loft" else "adding %s to it" % what])
 	w.stat(str(pick.plan) + "_started")
 	_keep_building(h)
 

@@ -115,7 +115,7 @@ jobs:
               summary.update({"fingerprint": d.get("fingerprint"), "currency": last.get("currency"),
                               "item_leaks": (last.get("ledger") or {}).get("items"), "alive": (last.get("people") or {}).get("alive"),
                               "people": {k: (last.get("people") or {}).get(k) for k in ("alive", "households", "births", "deaths", "by_job")},
-                              "building": {k: (last.get("building") or {}).get(k) for k in ("sites_started", "sites_finished", "houses_built", "open_sites", "households_split")},
+                              "building": {k: (last.get("building") or {}).get(k) for k in ("sites_started", "sites_finished", "houses_built", "open_sites", "households_split", "lofts_started", "quarters_started", "rooms_started", "orphans_taken_in", "orphans_unplaced")},
                               "work": last.get("work"), "events": last.get("events")})
           except Exception as e:
               summary["error"] = "no simulation result: %s" % e

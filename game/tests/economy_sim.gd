@@ -334,7 +334,9 @@ func _sample(start: Dictionary) -> Dictionary:
 	s.building = {"sites_started": events.sites_started, "sites_finished": events.sites_finished, "sites_given_up": events.sites_given_up,
 		"open_sites": open, "finished_sites": done, "houses_built": houses, "workshops_built": workshops,
 		"households": w.households.size(), "households_split": int(_st("households_founded")), "helpers_now": w.construction.contracts.size(),
-		"helper_wages": int(_st("helper_wages")), "helper_bought": int(_st("helper_bought"))}
+		"helper_wages": int(_st("helper_wages")), "helper_bought": int(_st("helper_bought")),
+		"lofts_started": int(_st("loft_started")), "quarters_started": int(_st("quarters_started")), "rooms_started": int(_st("room_started")),
+		"orphans_taken_in": int(_st("orphans_taken_in")), "orphans_unplaced": int(_st("orphans_unplaced"))}
 	s.growth = _growth()
 	# trade
 	var exp := {}

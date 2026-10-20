@@ -205,6 +205,49 @@ WORKSHOPS = {
 # keeps one workbench (the smithy's) and the sawhorse is where the planks are sawn.
 SAWMILL_STATIONS = (WORKSHOPS["carpentry"]["stations"][1], WORKSHOPS["carpentry"]["stations"][2])
 
+# --- the small room (HOUSE-10, owner OD-14, 2026-10-20: a bedroom-sized addition that fits the grid) --------
+# Shade's small house taken in to 5 x 6: its outer columns and the door's (gable, ridge, walls, door) and
+# its top and bottom rows (roof peak, back wall, the last two rows of the room, eaves, front wall, porch).
+# Inside, the furniture is cleared and two of his beds stand: one head to the west wall, one head to the
+# back wall (its headboard over the wall, as he drew that bed), leaving a floor from the door to both.
+ROOM_COLS = (0, 1, 4, 7, 8)                 # house columns kept, west to east (4 is the door's)
+ROOM_ROWS = (0, 1, 6, 7, 8, 9)              # house rows kept, north to south (8 is the front wall)
+ROOM_BEDS = (((1, 2), (2, 2), 1698, 1699, "left"), ((3, 2), (3, 1), 1477, 1257, "up"))   # body, head or post
+
+
+def room_stamp(house):
+    """The small room's stamp, cut from the house stamp (ROOM_COLS x ROOM_ROWS) with its beds
+    (ROOM_BEDS). Reads only the house stamp, draws no random numbers, draws nothing new."""
+    hw = house["w"]
+    w, h = len(ROOM_COLS), len(ROOM_ROWS)
+    cells = [(x, y, hx, hy) for y, hy in enumerate(ROOM_ROWS) for x, hx in enumerate(ROOM_COLS)]
+    layers = {}
+    for name, data in house["layers"].items():
+        layers[name] = [data[hy * hw + hx] for _, _, hx, hy in cells]
+    solid = [[house["solid"][hy][hx] for hx in ROOM_COLS] for hy in ROOM_ROWS]
+    room = [(x, y) for y in (2, 3) for x in (1, 2, 3)]            # inside, the last two rows of the house
+    for x, y in room:
+        for name in list(layers):
+            v = layers[name][y * w + x]
+            if (name != "below0" or v == tile_val(0, MAT)) and name not in ROOF_LAYERS and not name.startswith(("path", "ground")):
+                layers[name][y * w + x] = -1
+        solid[y][x] = "0"
+    spots = []
+    for (bx, by), (px, py), body, other, head in ROOM_BEDS:
+        layers["below1"][by * w + bx] = tile_val(0, body)
+        layers["below1" if head != "up" else "below3"][py * w + px] = tile_val(0, other)
+        solid[by][bx] = "1"
+        solid[py][px] = "1"
+        spots.append({"kind": "bed", "at": [bx, by], "use": [bx, 3], "head": head, "tile": body})
+    door = (ROOM_COLS.index(4), ROOM_ROWS.index(8))
+    area = sorted(room + [door])
+    floor = sorted(c for c in area if solid[c[1]][c[0]] == "0")
+    roof = [[x, y] for x in range(w) for y in range(h - 1)]
+    interior = {"doors": [list(door)], "area": [list(c) for c in area], "floor": [list(c) for c in floor],
+                "roof": roof, "spots": spots}
+    return {"w": w, "h": h, "door": [door[0], door[1] + 1], "layers": {k: layers[k] for k in sorted(layers)},
+            "interior": interior, "solid": ["".join(r) for r in solid]}
+
 CATS = ("ground", "path", "below", "above")
 TOPS = [("above", i) for i in range(6)] + [("below", 3), ("below", 4)]     # layers whose tiles cover an object
 
@@ -1384,6 +1427,7 @@ class Village:
         stamps = {"house": stamp}
         for kind in WORKSHOPS:
             stamps["workshop_" + kind] = self.workshop_stamp(kind, stamp)
+        stamps["room"] = room_stamp(stamp)
         return {
             "format": "mml-village/1", "seed": self.seed, "w": W, "h": H, "tile": 16,
             "atlases": [{"name": "paid", "image": "res://assets/tiles/punyworld-tiles.png", "columns": 220},
