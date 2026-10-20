@@ -10323,7 +10323,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "build a 5x6 two-bed room stamp from the house art (tools/build_village.py) as a module, after the owner sees that it serves 3 houses",
+   "next_action": "unbuilt by the owner's choice; take up when the owner asks or with the upper-floor decision",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10343,6 +10343,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "sizing measured before coding: a 4x5 to 5x6 room fits beside 3 of the 21 original houses (b23, b24, b_v1_house); 18 have no legal adjoining ground (map edge, neighbours, road, manor fields, cow pen); results in LONG_RUN_SIMULATION.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "owner's answer 2026-10-20: scope upper floors rather than build the 5x6 room now; the room stays open, unbuilt"
     }
    ],
    "target_build": "15",
@@ -10374,7 +10379,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "owner: whether to scope a multi-level building system in a later build",
+   "next_action": "owner: choose a later build for a multi-level system, the cheaper sleeping-loft option, or neither (docs/design/UPPER_FLOORS_SCOPE.md)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10394,6 +10399,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; next_action",
      "why": "evaluated: the building system is single-level (no stairs, no second level, one pathfinding grid); an attic or upper floor would be a major new system, scoped to the owner, not built; the smaller configuration (4x5) fits the same 3 houses as 5x6"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "owner chose (2026-10-20) to have upper floors scoped for a later build, not started: docs/design/UPPER_FLOORS_SCOPE.md"
     }
    ],
    "target_build": "15",
@@ -13069,6 +13079,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream",
      "why": "owner asked for the measured runtime answer now; measurement only, no interference with running simulations"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "note",
+     "why": "measured: 6.1-9.6 s per game day on an uncontended core (2-3 processes on 4 cores) against the 1.5-1.9 s/day benchmark: a real slowdown of 4-5x, rising gradually with population; not contention, not the environment; a second container restart at 03:03 killed the fix12 runs at days 320 and 350"
     }
    ],
    "target_build": "15",

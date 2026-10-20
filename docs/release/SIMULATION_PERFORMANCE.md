@@ -43,9 +43,25 @@ The times below come from process start times (`ps`), the end-of-run JSON file t
 
 **Answer in short:** the hours-long expectation came from **inaccurate completion estimates**, not measurements. The real runs take about 45–55 minutes for 365 days on a shared machine. Against the 9–12-minute historical benchmark there is also a **real slowdown, of about 4–5 times per day, still to be split** between contention, a larger population and new systems. That split is PERF-02's first job.
 
-## 2. Timing of the running fix12 simulations
+## 2. Timing of the fix12 simulations (measured, 02:39–03:03 UTC)
 
-`out/eq/timing_fix12.txt` (not committed): the UTC time each 10-day line appeared, with the number of Godot processes running. The results are summarized here when the runs end.
+The UTC time of each 10-day log line, with the number of Godot processes running at the time (`out/eq/timing_fix12.txt`), in seconds per game day:
+
+| Days | Seed 1 | Seed 2 |
+|---|---|---|
+| 140–200 | 9.5, 8.0, 7.6, 8.0, 7.5, 7.0 | (from day 180) 7.5, 7.0 |
+| 200–250 | 7.1, 6.5, 6.5, 6.5, 6.5 | 6.5, 6.1, 6.5, 6.5, 7.5 |
+| 250–310 | 6.6, 7.0, 8.5, 8.1, 9.0, 9.0 | 7.6, 8.0, 8.5, 9.5, 9.6, 9.5 |
+| 310–350 | (killed at day 320) | 9.5, 9.1, 8.5, 9.5 |
+
+The first interval of each seed (2.5 and 4.6 s/day) started partway through, so it does not count.
+
+**Findings (measured):**
+- **One process to a core:** with 2 or 3 Godot processes on 4 cores, each simulation ran at **6.1–9.6 s per game day**. No core was shared, so contention does not explain the gap.
+- **Gradual slowdown:** seed 2 went from about 6.1 to about 9.5 s/day between day 210 and day 350, as its population grew to about 145. Seed 1 rose from 6.5 to 9.0 over days 210–310.
+- **Comparison with the benchmark:** **4 to 5 times slower** per game day than the 1.5–1.9 s/day benchmark, on an uncontended core. **This is a real slowdown in the current code,** not contention or the environment, and not just inaccurate estimates. How much comes from the larger population and how much from the newer systems is what PERF-02's profile will show.
+
+**Answers this updates in section 1:** question 6 (progressive slowdown: yes, gradual, rising with population), question 7 (contention: not the cause at 2–3 processes on 4 cores), question 8 (the code is substantially slower: yes, measured).
 
 ## 3. The container restart
 
@@ -60,6 +76,8 @@ The times below come from process start times (`ps`), the end-of-run JSON file t
 - At 02:19:03, the moment the session was woken by an incoming message, a new machine had booted.
 
 **Most likely cause (inference, not proven):** session lifecycle. This environment reclaims a cloud container after a period of inactivity and starts a fresh one when the session is next used. That fits an idle gap after about 01:35, processes dying around 01:50–01:55 (the estimate in 1, item 3), and a fresh boot exactly when the session woke. Resource exhaustion is unlikely: each simulation uses about 190 MB of 16 GB. It cannot be ruled out, because the previous boot's log is gone.
+
+**A second restart, 03:03:26 UTC (measured):** the machine booted again (`/proc/uptime` 49 s at 03:04:15). Both fix12 runs died at day 320 (seed 1) and day 350 (seed 2), 15 and 45 game days from the end. The session had been idle since about 03:02, waiting for the owner's answer to a question. Both restarts came while the session sat waiting, which supports the session-lifecycle explanation.
 
 **Practical consequence:** a long run must not depend on the session staying active. It survives only while the session is busy, or if it can be resumed. See section 4.
 

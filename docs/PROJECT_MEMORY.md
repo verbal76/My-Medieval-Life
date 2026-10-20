@@ -31,6 +31,8 @@ The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is c
 | Expansion specifications (primary): Mining & Industrial (Build 17); Settlement Advancement & Regional Economy (Build 18); NPC Judgment System (Build 19) | `docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf`, `docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf`, `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf` (text copies beside each) |
 | Current work, last verified commit, tests, defects, next tasks | `docs/CURRENT_DEVELOPMENT_STATE.md` |
 | How systems affect each other (INT-### entries, validated) | `docs/SYSTEM_INTERACTION_MANIFEST.md` (`tools/check_interactions.py`) |
+| Design scopes for later work (upper floors and attics) | `docs/design/UPPER_FLOORS_SCOPE.md` |
+| Simulation performance (runtime, timing, restarts, checkpoint evaluation) | `docs/release/SIMULATION_PERFORMANCE.md` |
 | Architecture | `docs/ARCHITECTURE.md`; rules and open questions of the prototype in `docs/BUILD_DECISIONS.md` |
 | Saves: format, safety, migration, carrying a save between builds, recovery | `docs/release/SAVE_CONTINUITY.md`; code in `game/scripts/core/save_store.gd` and `game/scripts/core/save_transfer.gd` |
 | Long-run simulations and their results | `docs/release/LONG_RUN_SIMULATION.md`; harness `game/tests/economy_sim.gd` |
