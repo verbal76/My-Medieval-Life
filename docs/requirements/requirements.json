@@ -15640,7 +15640,7 @@
    "id": "PAR-04",
    "title": "OD-18.4: villagers can craft every recipe the player can, under the same requirements",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Villagers have access to every recipe available to the player, subject to the same skill-level requirements. One authoritative recipe catalog; identical prerequisites; no recipe permanently player-exclusive; crafting through the same inventory and accounting; contextual choices, not crafting everything because they can. Audit the eleven recipes currently unavailable to villagers and close the gap.",
    "description": "OD-18.4: villagers can craft every recipe the player can, under the same requirements",
    "source": "docs/directives/2026-10-20_od18_player_villager_parity.md",
@@ -15651,7 +15651,7 @@
     "check_materials reports no player-only recipe"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "parity_test.gd test_eleven_recipes",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15678,6 +15678,11 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "The eleven recipes have makers through World.work_craft, for a buyer only (INT-157); check_materials shows no player-only recipe; parity_test test_eleven_recipes; all 26 suites passed on this code with PAR-05's rework in the project copy; affected suites rerun here"
     }
    ],
    "target_build": "16"

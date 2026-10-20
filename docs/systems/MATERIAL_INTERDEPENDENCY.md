@@ -19,9 +19,9 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | Standard crafting materials | 21 |
 | Production professions | 10 |
 | Recipes | 37 |
-| Threshold findings | 32 |
+| Threshold findings | 30 |
 | ... with a recorded exception | 14 |
-| ... open (no exception) | 18 |
+| ... open (no exception) | 16 |
 | Orphaned recipes | 0 |
 | Broken references | 0 |
 | Stale or invalid exceptions | 0 |
@@ -33,22 +33,22 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `cart_axle` | 1 | `build_handcart` (carpenter) | none | carpenter | `forge_cart_axle` | none | few uses: exception; few professions: exception |
 | `cart_ironwork` | 1 | `build_handcart` (carpenter) | none | carpenter | `forge_cart_ironwork` | none | few uses: exception; few professions: exception |
 | `cart_wheel` | 1 | `build_handcart` (carpenter) | none | carpenter | `make_cart_wheel` | none | few uses: exception; few professions: exception |
-| `coal` | 4 | `forge_cart_ironwork` (smith); `smelt_copper` (smith); `smelt_gold` (player only); `smelt_iron` (smith) | none | smith | none | laborer, miner | few professions: **open** |
-| `copper_bar` | 3 | `forge_amulet` (player only); `forge_copper_ring` (player only); `forge_copper_sword` (smith) | none | smith | `smelt_copper` | none | few professions: **open** |
+| `coal` | 4 | `forge_cart_ironwork` (smith); `smelt_copper` (smith); `smelt_gold` (smith); `smelt_iron` (smith) | none | smith | none | laborer, miner | few professions: **open** |
+| `copper_bar` | 3 | `forge_amulet` (smith); `forge_copper_ring` (smith); `forge_copper_sword` (smith) | none | smith | `smelt_copper` | none | few professions: **open** |
 | `copper_ore` | 1 | `smelt_copper` (smith) | none | smith | none | laborer, miner | few uses: exception; few professions: exception |
-| `flower` | 3 | `brew_healing_tonic` (sage); `brew_poultice` (sage); `brew_tonic` (player only) | none | sage | none | none | few professions: **open** |
-| `gold_bar` | 1 | `forge_gold_ring` (player only) | none | none | `smelt_gold` | none | few uses: **open**; few professions: **open** |
-| `gold_ore` | 1 | `smelt_gold` (player only) | none | none | none | laborer, miner | few uses: **open**; few professions: **open** |
+| `flower` | 3 | `brew_healing_tonic` (sage); `brew_poultice` (sage); `brew_tonic` (sage) | none | sage | none | none | few professions: **open** |
+| `gold_bar` | 1 | `forge_gold_ring` (smith) | none | smith | `smelt_gold` | none | few uses: **open**; few professions: **open** |
+| `gold_ore` | 1 | `smelt_gold` (smith) | none | smith | none | laborer, miner | few uses: **open**; few professions: **open** |
 | `hide` | 1 | `tan_leather` (tanner) | none | tanner | none | farmer, hunter | few uses: exception; few professions: exception |
-| `iron_bar` | 14 | `craft_plough` (player only); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_cart_ironwork` (smith); `forge_hammer` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (player only); `forge_iron_sword` (smith); `forge_lockpicks` (smith); `forge_padlock` (smith); `forge_pickaxe` (smith) | shop fittings, storefront, workshop | smith | `smelt_iron` | none | few professions: **open** |
+| `iron_bar` | 14 | `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_cart_ironwork` (smith); `forge_hammer` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_lockpicks` (smith); `forge_padlock` (smith); `forge_pickaxe` (smith) | shop fittings, storefront, workshop | carpenter, smith | `smelt_iron` | none | pass |
 | `iron_ore` | 1 | `smelt_iron` (smith) | none | smith | none | laborer, miner | few uses: exception; few professions: exception |
-| `leather` | 6 | `forge_amulet` (player only); `forge_iron_armor` (smith); `forge_iron_helmet` (player only); `forge_iron_sword` (smith); `leather_armor` (player only); `leather_cap` (player only) | none | smith | `tan_leather`, `tan_pelts` | none | few professions: **open** |
+| `leather` | 6 | `forge_amulet` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `leather_armor` (tanner); `leather_cap` (tanner) | none | smith, tanner | `tan_leather`, `tan_pelts` | none | pass |
 | `log` | 5 | `roast_meat` (cook); `saw_planks` (carpenter) | house, loft, workshop | carpenter, cook | none | woodcutter | pass |
 | `meat` | 1 | `roast_meat` (cook) | none | cook | none | farmer, hunter | few uses: **open**; few professions: **open** |
-| `plank` | 13 | `build_handcart` (carpenter); `craft_plough` (player only); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `make_cart_wheel` (carpenter) | house, loft, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
+| `plank` | 13 | `build_handcart` (carpenter); `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `make_cart_wheel` (carpenter) | house, loft, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
 | `rabbit_pelt` | 1 | `tan_pelts` (tanner) | none | tanner | none | hunter | few uses: exception; few professions: exception |
 | `stone` | 3 | none | house, shop fittings, workshop | none | none | laborer, miner | few professions: **open** |
-| `wheat` | 3 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (player only) | none | cook | none | farmer | few professions: **open** |
+| `wheat` | 3 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (cook) | none | cook | none | farmer | few professions: **open** |
 | `wool` | 1 | `weave_cloth` (tanner) | none | tanner | none | none | few uses: **open**; few professions: **open** |
 | `wool_cloth` | 1 | `sew_bandages` (tanner) | none | tanner | `weave_cloth` | none | few uses: **open**; few professions: **open** |
 
@@ -65,15 +65,15 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 
 | Profession | Makes or gathers | Supplies | Resale to merchants | Result |
 |---|---|---|---|---|
-| carpenter | `cart_wheel`, `handcart`, `plank` | smith: plank (recipe forge_pickaxe) | `plank` | pass |
-| cook | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | tavernkeeper: ale (buys it), bread (buys it), cheese (buys it), pottage (buys it), roast_meat (buys it) | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | pass |
+| carpenter | `cart_wheel`, `handcart`, `plank`, `plough` | smith: plank (recipe forge_pickaxe) | `plank`, `plough` | pass |
+| cook | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | sage: ale (recipe brew_strong_tonic); tavernkeeper: ale (buys it), bread (buys it), cheese (buys it), pottage (buys it), roast_meat (buys it) | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | pass |
 | farmer | `feather`, `hide`, `meat`, `wheat` | cook: meat (recipe roast_meat), wheat (recipe cook_pottage); tanner: hide (recipe tan_leather) | `feather`, `hide`, `meat`, `wheat` | pass |
 | hunter | `feather`, `hide`, `meat`, `rabbit_pelt` | cook: meat (recipe roast_meat); tanner: hide (recipe tan_leather), rabbit_pelt (recipe tan_pelts) | `feather`, `hide`, `meat`, `rabbit_pelt` | pass |
-| laborer | `coal`, `copper_ore`, `gold_ore`, `iron_ore`, `stone` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (buys it), iron_ore (recipe smelt_iron) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
-| miner | `coal`, `copper_ore`, `gold_ore`, `iron_ore`, `stone` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (buys it), iron_ore (recipe smelt_iron) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
-| sage | `healing_tonic`, `herbal_poultice` | nobody | `herbal_poultice` | supplies nobody: **open** |
-| smith | `axe`, `cart_axle`, `cart_ironwork`, `copper_bar`, `copper_sword`, `hammer`, `iron_armor`, `iron_bar`, `iron_sword`, `lockpick`, `padlock`, `pickaxe` | carpenter: cart_axle (recipe build_handcart), cart_ironwork (recipe build_handcart); guard: iron_sword (keeps it for its work); laborer: pickaxe (keeps it for its work); miner: pickaxe (keeps it for its work); woodcutter: axe (keeps it for its work) | `axe`, `copper_bar`, `copper_sword`, `hammer`, `iron_armor`, `iron_bar`, `iron_sword`, `pickaxe` | pass |
-| tanner | `leather`, `linen_bandage`, `wool_cloth` | sage: linen_bandage (buys it); smith: leather (recipe forge_iron_sword) | `leather`, `wool_cloth` | pass |
+| laborer | `coal`, `copper_ore`, `gold_ore`, `iron_ore`, `stone` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
+| miner | `coal`, `copper_ore`, `gold_ore`, `iron_ore`, `stone` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
+| sage | `healing_tonic`, `herbal_poultice`, `herbal_tonic`, `strong_healing_tonic` | nobody | `herbal_poultice` | supplies nobody: **open** |
+| smith | `amulet`, `axe`, `cart_axle`, `cart_ironwork`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `lockpick`, `padlock`, `pickaxe` | carpenter: cart_axle (recipe build_handcart), cart_ironwork (recipe build_handcart), iron_bar (recipe craft_plough); guard: iron_sword (keeps it for its work); laborer: pickaxe (keeps it for its work); miner: pickaxe (keeps it for its work); woodcutter: axe (keeps it for its work) | `amulet`, `axe`, `copper_bar`, `copper_ring`, `copper_sword`, `gold_bar`, `gold_ring`, `hammer`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `pickaxe` | pass |
+| tanner | `leather`, `leather_armor`, `leather_cap`, `linen_bandage`, `wool_cloth` | guard: leather_armor (keeps it for its work); sage: linen_bandage (buys it); smith: leather (recipe forge_iron_sword) | `leather`, `leather_armor`, `leather_cap`, `wool_cloth` | pass |
 | woodcutter | `apple_sapling`, `log`, `oak_sapling`, `pine_sapling` | carpenter: log (recipe saw_planks); cook: log (recipe roast_meat) | `log` | pass |
 
 ## Recipes and who runs them
@@ -84,35 +84,35 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `brew_ale` | stove | 3 wheat | 4 ale | cook |
 | `brew_healing_tonic` | stove | 5 flower | 1 healing_tonic | sage |
 | `brew_poultice` | stove | 2 flower | 1 herbal_poultice | sage, households |
-| `brew_strong_tonic` | stove | 1 ale, 2 healing_tonic | 1 strong_healing_tonic | player only |
-| `brew_tonic` | stove | 3 flower | 1 herbal_tonic | player only |
+| `brew_strong_tonic` | stove | 1 ale, 2 healing_tonic | 1 strong_healing_tonic | sage |
+| `brew_tonic` | stove | 3 flower | 1 herbal_tonic | sage |
 | `build_handcart` | workbench | 1 cart_axle, 1 cart_ironwork, 2 cart_wheel, 4 plank | 1 handcart | carpenter, households |
 | `cook_pottage` | stove | 2 wheat | 6 pottage | cook, households |
-| `craft_plough` | workbench | 2 iron_bar, 4 plank | 1 plough | player only |
-| `forge_amulet` | anvil | 1 copper_bar, 1 leather | 1 amulet | player only |
+| `craft_plough` | workbench | 2 iron_bar, 4 plank | 1 plough | carpenter |
+| `forge_amulet` | anvil | 1 copper_bar, 1 leather | 1 amulet | smith |
 | `forge_axe` | anvil | 2 iron_bar, 1 plank | 1 axe | smith |
 | `forge_cart_axle` | anvil | 1 iron_bar, 1 plank | 1 cart_axle | smith |
 | `forge_cart_ironwork` | anvil | 1 coal, 1 iron_bar | 1 cart_ironwork | smith |
-| `forge_copper_ring` | anvil | 1 copper_bar | 1 copper_ring | player only |
+| `forge_copper_ring` | anvil | 1 copper_bar | 1 copper_ring | smith |
 | `forge_copper_sword` | anvil | 2 copper_bar, 1 plank | 1 copper_sword | smith |
-| `forge_gold_ring` | anvil | 1 gold_bar | 1 gold_ring | player only |
+| `forge_gold_ring` | anvil | 1 gold_bar | 1 gold_ring | smith |
 | `forge_hammer` | anvil | 1 iron_bar, 1 plank | 1 hammer | smith |
 | `forge_iron_armor` | anvil | 5 iron_bar, 2 leather | 1 iron_armor | smith |
-| `forge_iron_helmet` | anvil | 2 iron_bar, 1 leather | 1 iron_helmet | player only |
+| `forge_iron_helmet` | anvil | 2 iron_bar, 1 leather | 1 iron_helmet | smith |
 | `forge_iron_sword` | anvil | 3 iron_bar, 1 leather | 1 iron_sword | smith |
 | `forge_lockpicks` | anvil | 1 iron_bar | 3 lockpick | smith |
 | `forge_padlock` | anvil | 2 iron_bar | 1 padlock | smith |
 | `forge_pickaxe` | anvil | 2 iron_bar, 1 plank | 1 pickaxe | smith |
-| `knead_flatbread` | prep | 3 wheat | 1 bread | player only |
-| `leather_armor` | workbench | 4 leather | 1 leather_armor | player only |
-| `leather_cap` | workbench | 2 leather | 1 leather_cap | player only |
+| `knead_flatbread` | prep | 3 wheat | 1 bread | cook |
+| `leather_armor` | workbench | 4 leather | 1 leather_armor | tanner |
+| `leather_cap` | workbench | 2 leather | 1 leather_cap | tanner |
 | `make_cart_wheel` | sawhorse | 3 plank | 1 cart_wheel | carpenter |
 | `press_cheese` | prep | 3 milk | 1 cheese | cook |
 | `roast_meat` | oven | 1 log, 1 meat | 2 roast_meat | cook |
 | `saw_planks` | sawhorse | 1 log | 2 plank | carpenter, households |
 | `sew_bandages` | workbench | 1 wool_cloth | 3 linen_bandage | tanner |
 | `smelt_copper` | forge | 1 coal, 2 copper_ore | 1 copper_bar | smith |
-| `smelt_gold` | forge | 1 coal, 2 gold_ore | 1 gold_bar | player only |
+| `smelt_gold` | forge | 1 coal, 2 gold_ore | 1 gold_bar | smith |
 | `smelt_iron` | forge | 1 coal, 2 iron_ore | 1 iron_bar | smith |
 | `tan_leather` | workbench | 1 hide | 1 leather | tanner |
 | `tan_pelts` | workbench | 2 rabbit_pelt | 1 leather | tanner |
@@ -137,16 +137,14 @@ None.
 | material `copper_ore` | few_professions | consumed by 1 professions (smith), fewer than 2 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet). |
 | material `copper_ore` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet). |
 | material `flower` | few_professions | consumed by 1 professions (sage), fewer than 2 | **none: open** |
-| material `gold_bar` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
+| material `gold_bar` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `gold_bar` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
-| material `gold_ore` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
+| material `gold_ore` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `gold_ore` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `hide` | few_professions | consumed by 1 professions (tanner), fewer than 2 | WDR-001: Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes. |
 | material `hide` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes. |
-| material `iron_bar` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `iron_ore` | few_professions | consumed by 1 professions (smith), fewer than 2 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume. |
 | material `iron_ore` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume. |
-| material `leather` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `meat` | few_professions | consumed by 1 professions (cook), fewer than 2 | **none: open** |
 | material `meat` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `rabbit_pelt` | few_professions | consumed by 1 professions (tanner), fewer than 2 | WDR-001: Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes. |
@@ -157,7 +155,7 @@ None.
 | material `wool` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `wool_cloth` | few_professions | consumed by 1 professions (tanner), fewer than 2 | **none: open** |
 | material `wool_cloth` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
-| profession `sage` | supplies_nobody | none of healing_tonic, herbal_poultice is needed by another profession | **none: open** |
+| profession `sage` | supplies_nobody | none of healing_tonic, herbal_poultice, herbal_tonic, strong_healing_tonic is needed by another profession | **none: open** |
 
 ## Broken references
 

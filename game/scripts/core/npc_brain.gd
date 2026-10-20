@@ -14,7 +14,7 @@ const BUYS := {
 	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6},
 	"carpenter": {"log": 30},
 	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12},          # wool: woven into cloth (Build 13)
-	"sage": {"flower": 20, "linen_bandage": 8},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13)
+	"sage": {"flower": 20, "linen_bandage": 8, "ale": 2},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13); ale for the strong tonic (PAR-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
 	"merchant_raw": {"iron_ore": 20, "copper_ore": 15, "coal": 20, "stone": 40, "log": 20, "plank": 20},
@@ -25,7 +25,7 @@ const BUYS := {
 		"leather_armor": 2, "iron_armor": 2, "leather": 6, "hide": 6, "rabbit_pelt": 6, "feather": 20, "wool": 20, "wool_cloth": 10, "iron_bar": 6, "copper_bar": 6, "gold_bar": 4,
 		# crafted gear that had no buyer (B7-003, owner 2026-10-18): the goods merchant takes a few,
 		# like the other made goods, and the caravan carries the surplus away
-		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2,
+		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
 		"herbal_poultice": 8},                     # households' home-brewed poultices, brought to market (B14)
 }
 # items an NPC keeps for its own work and will not sell
@@ -39,13 +39,16 @@ const OUTLETS := {
 	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
-	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food"],
+	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
 	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
 	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["tanner", "merchant_goods"], "wool_cloth": ["merchant_goods"],
 	"bread": ["tavernkeeper", "merchant_food"], "linen_bandage": ["sage"],
 	"red_berries": ["merchant_food"], "blueberries": ["merchant_food"], "apple": ["merchant_food"], "herbal_poultice": ["merchant_goods"],
 	"pickaxe": ["merchant_goods"], "axe": ["merchant_goods"], "iron_sword": ["merchant_goods"], "copper_sword": ["merchant_goods"],
 	"hammer": ["merchant_goods"], "iron_bar": ["merchant_goods"], "leather_armor": ["merchant_goods"],
+	# PAR-04 (owner OD-18.4): the made goods only the player used to make, and where their makers sell them
+	"copper_ring": ["merchant_goods"], "gold_ring": ["merchant_goods"], "amulet": ["merchant_goods"], "iron_helmet": ["merchant_goods"],
+	"leather_cap": ["merchant_goods"], "gold_bar": ["merchant_goods"], "plough": ["merchant_goods"],
 }
 const FOOD := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple"]
 const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese and egg bread: the cook's, from the pens (Build 13)
@@ -515,6 +518,26 @@ func _carpenter_carts(n: NPC) -> bool:
 	return false
 
 
+## PAR-04 (owner OD-18.4): the carpenter makes a plough at the workbench when the goods merchant wants one, buying the
+## two iron bars it needs with its own coins (from whoever holds them).
+func _carpenter_goods(n: NPC) -> bool:
+	if n.inv.count("plough") > 0:
+		return _plan_sell(n, "plough") if _buyer_for(n, "plough") != null else false
+	if _buyer_for(n, "plough") == null or not _can_make(n, "craft_plough"):
+		return false
+	var rec: Dictionary = GameData.recipes["craft_plough"]
+	if n.inv.has_all(rec["in"]) and _do_recipe(n, "craft_plough"):
+		n.doing = "making a plough"
+		return true
+	if n.inv.count("plank") >= int(rec["in"].plank):
+		var plan := _parts_trip(n, {"iron_bar": rec["in"].iron_bar}, n.coins / 2)
+		if not plan.is_empty():
+			n.doing = "buying iron for a plough"
+			n.plan = plan
+			return true
+	return false
+
+
 ## Who sells a cart part or a handcart: a carpenter, smith or merchant holding one (the nearest first).
 func _part_seller(id: String, n: NPC) -> NPC:
 	var best: NPC = null
@@ -578,7 +601,7 @@ func _plan_cart(n: NPC, house: Dictionary) -> bool:
 	if bench != "" and (parts < whole or maker == null):
 		w.stations[bench].users[n.id] = w.minutes + w.map.data.w * 3 + float(rec.minutes) + 120.0
 		n.doing = "gathering parts for a handcart"
-		n.plan = parts_plan + [go(w.station_use(bench)), work(float(rec.minutes), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
+		n.plan = parts_plan + [go(w.station_use(bench)), work(float(rec.minutes) * Skills.value(n, "crafting", "craft_time", 1.0), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
 		return true
 	if maker != null and n.coins >= whole:
 		n.doing = "buying a handcart"
@@ -747,6 +770,8 @@ func _plan_job(n: NPC) -> bool:
 		"carpenter":
 			if _carpenter_carts(n):
 				return true
+			if _carpenter_goods(n):
+				return true
 			if n.inv.count("plank") >= 30:
 				return _plan_sell(n, "plank") if _buyer_for(n, "plank") else _idle_at_work(n, "waiting for orders")
 			return _crafter(n, ["saw_planks"])
@@ -786,6 +811,12 @@ func _plan_job(n: NPC) -> bool:
 			if n.inv.count("herbal_poultice") < 8 and n.inv.has("flower", 2) and _do_recipe(n, "brew_poultice"):
 				return true
 			if n.inv.count("healing_tonic") < 6 and n.inv.has("flower", 5) and _do_recipe(n, "brew_healing_tonic"):
+				return true
+			# PAR-04: the Apothecary keeps a few herbal tonics, and the strong tonic once its sage can brew it
+			if n.inv.count("strong_healing_tonic") < 2 and n.inv.count("healing_tonic") >= 4 and n.inv.has("ale") and _can_make(n, "brew_strong_tonic") \
+					and _do_recipe(n, "brew_strong_tonic"):
+				return true
+			if n.inv.count("herbal_tonic") < 3 and n.inv.has("flower", 3) and _do_recipe(n, "brew_tonic"):
 				return true
 			n.doing = "pondering lore"
 			n.plan = [go(wander_cell(w.building_door("b_hut") if w.buildings.has("b_hut") else w.building_door(n.home), 3), 0.7), work(60, "", {}, "idle")]
@@ -932,6 +963,10 @@ func _can_make(n: NPC, r: String) -> bool:
 	return n.level(str(rec.skill)) >= int(rec.level)
 
 
+## Goods made only for a buyer (PAR-04): the maker sells all it has of them.
+const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough"]
+
+
 func _crafter(n: NPC, recipes: Array) -> bool:
 	for r in recipes:
 		var rec: Dictionary = GameData.recipes[r]
@@ -958,6 +993,11 @@ func _tanner(n: NPC) -> bool:
 		list.append("weave_cloth")
 	if sage != null and sage.alive and wants(sage, "linen_bandage") >= 3 and n.inv.count("linen_bandage") < 3:
 		list.append("sew_bandages")
+	for id in ["leather_cap", "leather_armor"]:        # PAR-04: for a buyer, once the hides are tanned
+		if n.inv.count(id) > 0 and _buyer_for(n, id) != null:
+			return _plan_sell(n, id)
+		if _buyer_for(n, id) != null and _can_make(n, id):
+			list.append(id)
 	return _crafter(n, list)
 
 
@@ -967,9 +1007,18 @@ func _smith(n: NPC) -> bool:
 		return _do_recipe(n, "smelt_iron")
 	if inv.has_all({"copper_ore": 2, "coal": 1}) and inv.count("copper_bar") < 6:
 		return _do_recipe(n, "smelt_copper")
+	# PAR-04: gold ore is smelted when someone wants the bar or a gold ring, and the smith has Smithing 3
+	if inv.has_all({"gold_ore": 2, "coal": 1}) and inv.count("gold_bar") < 2 and _can_make(n, "smelt_gold") \
+			and (_buyer_for(n, "gold_bar") != null or _buyer_for(n, "gold_ring") != null):
+		return _do_recipe(n, "smelt_gold")
 	# the goods merchant is the smith's wholesale buyer (B7-016): tools beyond the smith's own go to its stall
 	for id in ["pickaxe", "axe", "iron_sword", "copper_sword"]:
 		if inv.count(id) > 1 and _buyer_for(n, id) != null:
+			return _plan_sell(n, id)
+	for id in MADE_TO_ORDER:                      # PAR-04: made for a buyer, so all of it goes
+		if id == "gold_bar" and _buyer_for(n, "gold_ring") != null and _can_make(n, "forge_gold_ring"):
+			continue                              # (a bar a wanted ring needs is forged into it first)
+		if inv.count(id) > 0 and _buyer_for(n, id) != null:
 			return _plan_sell(n, id)
 	# the manor's orders first (EQ-19): the tools it paid for in advance. While one is open the forge keeps its iron
 	# for it and fetches what the tool still lacks (the plank from the carpenter, ore and coal from the raw-goods
@@ -992,7 +1041,14 @@ func _smith(n: NPC) -> bool:
 			continue
 		var out: String = GameData.recipes[r].out.keys()[0]
 		var cap := 1 if out in ["hammer", "iron_armor", "padlock", "cart_axle", "cart_ironwork"] else 3
-		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in):
+		if inv.count(out) < cap and inv.has_all(GameData.recipes[r].in) and _can_make(n, r):
+			wants.append([inv.count(out), r])
+	# PAR-04: the jewellery and the helmet only for a buyer who wants one
+	for r in ["forge_iron_helmet", "forge_copper_ring", "forge_amulet", "forge_gold_ring"]:
+		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
+			continue
+		var out: String = GameData.recipes[r].out.keys()[0]
+		if inv.count(out) < 1 and inv.has_all(GameData.recipes[r].in) and _can_make(n, r) and _buyer_for(n, out) != null:
 			wants.append([inv.count(out), r])
 	wants.sort()
 	if not wants.is_empty():
@@ -1066,6 +1122,9 @@ func _cook(n: NPC) -> bool:
 	if n.inv.has("milk", 3) and n.inv.count("cheese") < 6 and _do_recipe(n, "press_cheese"):
 		return true
 	if n.inv.has_all({"egg": 1, "wheat": 2}) and n.inv.count("bread") < 6 and _do_recipe(n, "bake_egg_bread"):
+		return true
+	# PAR-04: with no egg, plain flatbread when someone wants bread
+	if n.inv.has("wheat", 3) and not n.inv.has("egg") and n.inv.count("bread") < 2 and _buyer_for(n, "bread") != null and _do_recipe(n, "knead_flatbread"):
 		return true
 	if n.inv.has("wheat", 2):
 		return _do_recipe(n, "cook_pottage")

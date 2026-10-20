@@ -28,6 +28,7 @@ func _init() -> void:
 	test_combat()
 	test_trading()
 	test_save_and_migration()
+	test_eleven_recipes()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -231,3 +232,93 @@ func test_save_and_migration() -> void:
 	w4.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w3.to_dict())))
 	check(w4.npc(lone.id).skills.is_empty() and w4.npc(s3.id).skills == s3.skills, "a migrated save, saved and loaded again, is not re-seeded and keeps what was earned")
 	check(w3.npcs.filter(func(n): return n.role == "child").all(func(n): return n.skills.is_empty()), "an older save's children are given none")
+
+
+## PAR-04 (owner OD-18.4): every recipe the player can make has a villager who makes it, when they have the skill, the
+## materials and a buyer who wants it; never merely because they can.
+func test_eleven_recipes() -> void:
+	var w := new_world()
+	var smith := first(w, "smith")
+	var goods: NPC = w.npcs.filter(func(o): return o.alive and w.brain.buy_role(o) == "merchant_goods")[0]
+	var all_goods: Array = w.npcs.filter(func(o): return o.alive and w.brain.buy_role(o) == "merchant_goods")
+	var stock_all := func(id: String, full: bool) -> void:       # every goods merchant has all it wants of id, or none
+		for g: NPC in all_goods:
+			g.inv.items.erase(id)
+			if full:
+				g.inv.add(id, int(NPCBrain.BUYS.merchant_goods[id]))
+	var free_stations := func() -> void:
+		for st in w.stations:
+			w.stations[st].users.clear()
+	# the smith: a gold bar for a buyer, at Smithing 3
+	smith.inv.items.clear()
+	smith.plan.clear()
+	smith.inv.add("gold_ore", 2)
+	smith.inv.add("coal", 1)
+	smith.skills = {"smithing": Skills.xp_for_level(2)}
+	check(not w.brain._smith(smith) or not str(smith.plan[-1].get("args", {}).get("recipe", "")) == "smelt_gold", "below Smithing 3 the smith does not smelt gold")
+	smith.plan.clear()
+	smith.skills = {"smithing": Skills.xp_for_level(3)}
+	check(w.brain._smith(smith) and str(smith.plan[-1].get("args", {}).get("recipe", "")) == "smelt_gold", "at Smithing 3, with a buyer for the bar, the smith smelts gold")
+	# the smith: a copper ring only while someone wants one
+	for rid in [["forge_copper_ring", {"copper_bar": 1}, "copper_ring"], ["forge_iron_helmet", {"iron_bar": 2, "leather": 1}, "iron_helmet"], ["forge_amulet", {"copper_bar": 1, "leather": 1}, "amulet"], ["forge_gold_ring", {"gold_bar": 1}, "gold_ring"]]:
+		smith.inv.items.clear()
+		smith.plan.clear()
+		for id in rid[1]:
+			smith.inv.add(id, int(rid[1][id]))
+		stock_all.call(rid[2], false)
+		free_stations.call()
+		var made: bool = w.brain._smith(smith) and str(smith.plan[-1].get("args", {}).get("recipe", "")) == rid[0]
+		stock_all.call(rid[2], true)                 # every goods merchant has all it wants
+		free_stations.call()
+		smith.plan.clear()
+		var not_made: bool = not (w.brain._smith(smith) and str(smith.plan[-1].get("args", {}).get("recipe", "")) == rid[0])
+		stock_all.call(rid[2], false)
+		check(made and not_made, "the smith forges a %s while the goods merchant wants one, and not once it has enough" % rid[2])
+	# the tanner: a leather cap and leather armour for a buyer
+	var tanner := first(w, "tanner")
+	for rid in [["leather_cap", 2], ["leather_armor", 4]]:
+		tanner.inv.items.clear()
+		tanner.plan.clear()
+		tanner.inv.add("leather", int(rid[1]))
+		stock_all.call("leather_cap", rid[0] != "leather_cap")      # testing the armour: the caps are wanted no more
+		stock_all.call(rid[0], false)
+		free_stations.call()
+		check(w.brain._tanner(tanner) and str(tanner.plan[-1].get("args", {}).get("recipe", "")) == rid[0], "the tanner makes %s for the goods merchant" % rid[0])
+	# the carpenter: a plough for a buyer
+	var carp := first(w, "carpenter")
+	carp.inv.items.clear()
+	carp.plan.clear()
+	carp.inv.add("plank", 4)
+	carp.inv.add("iron_bar", 2)
+	stock_all.call("plough", false)
+	free_stations.call()
+	check(w.brain._carpenter_goods(carp) and str(carp.plan[-1].get("args", {}).get("recipe", "")) == "craft_plough", "the carpenter makes a plough for the goods merchant")
+	# the cook: flatbread when there is no egg and the tavern wants bread
+	var cook := first(w, "cook")
+	cook.inv.items.clear()
+	cook.plan.clear()
+	cook.inv.add("wheat", 3)
+	for o: NPC in w.npcs:
+		if o.job == "tavernkeeper":
+			o.inv.items.erase("bread")
+	free_stations.call()
+	check(w.brain._cook(cook) and str(cook.plan[-1].get("args", {}).get("recipe", "")) == "knead_flatbread", "with no egg, the cook kneads flatbread for the tavern")
+	# the sage: the herbal tonic, and the strong tonic at Cooking 3
+	var sage := w.npc(w.sage_id)
+	sage.inv.items.clear()
+	sage.plan.clear()
+	sage.inv.add("herbal_poultice", 8)
+	sage.inv.add("healing_tonic", 6)
+	sage.inv.add("ale", 1)
+	sage.skills = {"cooking": Skills.xp_for_level(3)}
+	free_stations.call()
+	check(w.brain._plan_job(sage) and str(sage.plan[-1].get("args", {}).get("recipe", "")) == "brew_strong_tonic", "at Cooking 3 the sage brews the strong tonic")
+	sage.plan.clear()
+	sage.inv.items.erase("ale")
+	sage.inv.add("flower", 3)
+	free_stations.call()
+	check(w.brain._plan_job(sage) and str(sage.plan[-1].get("args", {}).get("recipe", "")) == "brew_tonic", "and keeps a few herbal tonics")
+	# made in full through the one craft function: inputs out, outputs in, counted
+	carp.skills = {}
+	var r := w.work_craft(carp, "craft_plough", carp.inv)
+	check(r.result == "ok" and carp.inv.has("plough") and not carp.inv.has("iron_bar"), "a villager's plough uses its inputs and is made by the same function as the player's")

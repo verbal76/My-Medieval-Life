@@ -11,19 +11,19 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 69 |
+| APPROVED — NOT STARTED | 68 |
 | ACTIVE DEVELOPMENT | 8 |
 | PARTIALLY IMPLEMENTED | 33 |
 | IMPLEMENTED — TESTING REQUIRED | 14 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 39 |
 | BLOCKED | 15 |
 | DEFERRED | 9 |
-| COMPLETE AND VERIFIED | 168 |
+| COMPLETE AND VERIFIED | 169 |
 | SUPERSEDED | 20 |
 | CANCELED BY OWNER | 0 |
 | UNKNOWN — INVESTIGATION REQUIRED | 7 |
 | **Total approved** | **382** |
-| Outstanding (not complete, superseded or canceled) | 194 |
+| Outstanding (not complete, superseded or canceled) | 193 |
 
 Also in the register: 30 proposal awaiting an owner decision (not approved), 52 owner decision (open or answered), 22 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
@@ -40,7 +40,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Target | Open entries | of which approved work |
 |---|---|---|
 | Build 15: simulation stabilization | 52 | 50 |
-| Build 16: long-term equilibrium and validation | 30 | 29 |
+| Build 16: long-term equilibrium and validation | 29 | 28 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
 | Build 19: NPC Judgment System | 28 | 14 |
@@ -48,7 +48,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 59 | 16 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **267** | **194** |
+| **Total open** | **266** | **193** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -107,7 +107,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT |  |  |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | approved | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | device check | wildlife sustainability; code and tests done, play check remains |
 
-### Build 16: long-term equilibrium and validation (30)
+### Build 16: long-term equilibrium and validation (29)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -135,7 +135,6 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | approved | APPROVED — NOT STARTED |  |  |
 | PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | APPROVED — NOT STARTED |  |  |
-| PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | APPROVED — NOT STARTED |  |  |
 | PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | approved | APPROVED — NOT STARTED |  | orphans and adoption: households surviving the loss of a provider (EQ-04) |
 | SJD-A | Judgment expansion Gate A: Build 16 stabilization and baseline (seeds, remote commit, known defects); no implementation | approved | APPROVED — NOT STARTED |  | the judgment system's Gate A is the Build 16 baseline itself |
@@ -411,7 +410,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (69)
+## APPROVED — NOT STARTED (68)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -458,7 +457,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
 | PAR-00 | The player is a villager: one set of world rules for player and villagers | docs/directives/2026-10-20_od18_player_villager_parity.md |  |  |  |
 | PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | docs/directives/2026-10-20_od19_dynamic_reserves.md |  |  |  |
-| PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | docs/directives/2026-10-20_od18_player_villager_parity.md |  | after PAR-01 |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -633,7 +631,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | AskUserQuestion answer 2026-10-18T01:39:43Z; owner message #86 01:39Z 'Make the first storyline quest learning fireball from the guy in the Hut to the north' |  |  |  |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | owner message #30 2026-10-17T19:25Z; AskUserQuestion answer 2026-10-17T19:29:10Z |  |  |  |
 
-## COMPLETE AND VERIFIED (168)
+## COMPLETE AND VERIFIED (169)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -775,6 +773,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | PAR-01B | Career changes neither grant nor reset experience | docs/directives/2026-10-20_par_final_consolidated_directive.md | parity_test.gd |  |  |
 | PAR-01C | Experience comes from activities, whatever the occupation | docs/directives/2026-10-20_par_final_consolidated_directive.md | parity_test.gd |  |  |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | docs/directives/2026-10-20_od18_player_villager_parity.md | world_test.gd _par03_rest |  |  |
+| PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | docs/directives/2026-10-20_od18_player_villager_parity.md | parity_test.gd test_eleven_recipes | after PAR-01 |  |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | economy_sim.gd --profile; 10-day fingerprint eeabb2a8 with profiling on | after PERF-01 |  |
 | PERF-03 | Determinism gate for optimizations: baseline fingerprints, then identical fingerprints and ledgers at 10 and 30 days on the same seeds after each change | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py (PASS for both PERF-04 changes) | after PERF-02 |  |
 | PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md | tools/sim_gate.py PASS after each change; economy_sim --profile before and after | after PERF-03 |  |
