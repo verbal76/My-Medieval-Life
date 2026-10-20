@@ -945,6 +945,8 @@ func couples_needing_home() -> Array:
 
 
 func _may_found(o: NPC) -> bool:
+	if o.role == "child":                 # a child, an orphan too, never founds a household (FAM-02)
+		return false
 	if o.household < 3 or o.id == w.reeve_id or o.id == w.sage_id or o.job == "guard":
 		return false
 	for cid in o.children:

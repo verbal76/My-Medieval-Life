@@ -9056,7 +9056,7 @@
    "id": "FAM-02",
    "title": "Both parents dead: dependent children never found households or start construction; an existing household takes them in",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Both parents dead: dependent children never found households or start construction; an existing household takes them in",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 3.2, Part 4.3",
@@ -9067,7 +9067,7 @@
     "Guardianship order (OD-11, owner 2026-10-20): surviving parent, living grandparents, nearest eligible blood relative, another villager's household willing and able; with none, the bandit clan (FAM-07)"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/family_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9079,7 +9079,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "lead",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -9098,6 +9098,11 @@
      "who": "agent",
      "change": "acceptance",
      "why": "owner answer OD-11 (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; workstream",
+     "why": "implemented in game/scripts/core/guardianship.gd (called each dawn from Life.dawn), tested in game/tests/family_test.gd (22 checks); a long run and CI still to confirm"
     }
    ],
    "target_build": "16",
@@ -9108,7 +9113,7 @@
    "id": "FAM-03",
    "title": "Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Informal adoption order: living grandparents (both sides), then the nearest eligible blood relative by genealogy, then another villager's household with a responsible adult; no adoption authority",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.1-4.2",
@@ -9119,7 +9124,7 @@
     "Among equally close eligible relatives (OD-12, owner 2026-10-20): prefer ability to provide care, then household capacity, then access to food and necessities, then the existing relationship with the child, then geographic proximity; a deterministic tie-breaker when still equal"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/family_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9133,7 +9138,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "lead",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -9152,6 +9157,11 @@
      "who": "agent",
      "change": "acceptance",
      "why": "owner answer OD-12 (docs/directives/2026-10-20_owner_answers_OD11_OD12_OD13.md)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; workstream",
+     "why": "implemented in game/scripts/core/guardianship.gd (called each dawn from Life.dawn), tested in game/tests/family_test.gd (22 checks); a long run and CI still to confirm"
     }
    ],
    "target_build": "16",
@@ -9162,7 +9172,7 @@
    "id": "FAM-04",
    "title": "Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Integration: the child becomes a dependant of the receiving household and uses its house; genealogy (mother, father, birth family) is never overwritten; a surname change is allowed and does not corrupt the tree",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.3",
@@ -9172,7 +9182,7 @@
     "Test: genealogy survives transfer and surname change"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/family_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9186,7 +9196,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "lead",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -9199,6 +9209,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; workstream",
+     "why": "implemented in game/scripts/core/guardianship.gd (called each dawn from Life.dawn), tested in game/tests/family_test.gd (22 checks); a long run and CI still to confirm"
     }
    ],
    "target_build": "16",
@@ -9209,7 +9224,7 @@
    "id": "FAM-05",
    "title": "Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Occupancy after a child is taken in is recalculated; any housing need it creates belongs to the receiving household's responsible adult; no house is built automatically",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 4.4",
@@ -9218,7 +9233,7 @@
     "Test: the receiving household's crowding and housing need update; no automatic house"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/family_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9233,7 +9248,7 @@
    "wiki": [],
    "next_action": "",
    "priority": "",
-   "workstream": "",
+   "workstream": "lead",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -9246,6 +9261,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; workstream",
+     "why": "implemented in game/scripts/core/guardianship.gd (called each dawn from Life.dawn), tested in game/tests/family_test.gd (22 checks); a long run and CI still to confirm"
     }
    ],
    "target_build": "16",
@@ -9256,7 +9276,7 @@
    "id": "FAM-06",
    "title": "Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Family scenario tests: the eight family scenarios of the directive, written when the mechanics are implemented",
    "source": "docs/directives/2026-10-20_housing_succession_adoption.md Part 6",
@@ -9265,7 +9285,7 @@
     "Each of the eight scenarios has a passing test before FAM-02..05 close"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/family_test.gd; game/tests/housing_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9292,6 +9312,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "placed on the roadmap"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "the eight scenarios have tests: father dies and mother dies (housing_test.gd, FAM-01); grandparents, nearest relative, another villager, genealogy and surname, orphans do not build, occupancy and no automatic house (family_test.gd)"
     }
    ],
    "target_build": "16",
@@ -9328,7 +9353,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "implement the interim camp dependant (child keeps role, age, genealogy; fed and kept from fights); then tests",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -9349,6 +9374,11 @@
      "who": "agent",
      "change": "depends_on",
      "why": "full integration waits on the bandit-faction system (WDR-016-C, Build 20+); the interim handling does not"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action",
+     "why": "not built yet: an unplaced child stays in place and is counted (orphans_unplaced, tested); the interim bandit-camp dependant needs the camp child's food, safety from the camp's fights and a home-less child path in NPCBrain.decide"
     }
    ],
    "target_build": "16",
