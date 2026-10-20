@@ -1,0 +1,104 @@
+{
+  "format": "mml-material-exceptions/1",
+  "note": "Recorded exceptions to World Design Rules 001 and 002 for tools/check_materials.py (WDR-007-C). Each names one material, profession or recipe, the finding it excuses (few_uses, few_professions, supplies_nobody, orphan), the reason and the rule. An exception whose finding no longer occurs is stale and fails the check. Hand-kept: only genuinely specialized materials are excepted (a feedstock refined by one recipe into a material that at least three recipes consume, or a component of one assembly); every other finding stays open in docs/systems/MATERIAL_INTERDEPENDENCY.md.",
+  "exceptions": [
+    {
+      "material": "iron_ore",
+      "finding": "few_uses",
+      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "iron_ore",
+      "finding": "few_professions",
+      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "copper_ore",
+      "finding": "few_uses",
+      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet).",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "copper_ore",
+      "finding": "few_professions",
+      "reason": "Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet).",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "hide",
+      "finding": "few_uses",
+      "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "hide",
+      "finding": "few_professions",
+      "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "rabbit_pelt",
+      "finding": "few_uses",
+      "reason": "Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "rabbit_pelt",
+      "finding": "few_professions",
+      "reason": "Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "cart_wheel",
+      "finding": "few_uses",
+      "reason": "Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "cart_wheel",
+      "finding": "few_professions",
+      "reason": "Cart component (B14, owner: villagers build carts from scratch or buy the components and assemble): made only to be assembled into a handcart (build_handcart); by design a one-use part.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "cart_axle",
+      "finding": "few_uses",
+      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "cart_axle",
+      "finding": "few_professions",
+      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "cart_ironwork",
+      "finding": "few_uses",
+      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    },
+    {
+      "material": "cart_ironwork",
+      "finding": "few_professions",
+      "reason": "Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain.",
+      "rule": "WDR-001",
+      "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
+    }
+  ]
+}

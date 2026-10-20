@@ -59,6 +59,7 @@ jobs:
           python3 tools/check_interactions.py
           python3 tools/check_requirements.py --against HEAD~1   # no approved requirement lost or closed without a record
           python3 tools/check_resources.py
+          python3 tools/check_materials.py   # material and profession coverage (WDR-007-C); fails on broken references or stale exceptions
 
       - name: Game tests (headless)
         run: |

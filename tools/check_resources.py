@@ -340,6 +340,18 @@ def _ref_ok(root, ref):
     return ""
 
 
+def station_types(ctx):
+    """Every station type a recipe can name: the map's stations, the workshops' (village.json stamps)
+    and a home's furniture (PL2-013: Furniture.STATION_OF maps a spot kind to its station type)."""
+    stations = {s["type"] for s in ctx["village"]["stations"]}
+    for st in ctx["village"].get("stamps", {}).values():
+        stations |= {s["type"] for s in st.get("stations", [])}
+    furn = (ROOT / "game/scripts/core/furniture.gd").read_text(encoding="utf-8")
+    m = re.search(r"const STATION_OF := \{([^}]*)\}", furn)
+    stations |= set(re.findall(r':\s*"([a-z_]+)"', m.group(1))) if m else set()
+    return stations
+
+
 def problems(ctx):
     out = list("resources.json: " + d for d in ctx["dup"])
     res, items, recipes, bal_ = ctx["res"], ctx["items"], ctx["recipes"], ctx["balance"]
@@ -349,13 +361,7 @@ def problems(ctx):
     if res.get("format") != FORMAT:
         out.append("format is %r, not %r" % (res.get("format"), FORMAT))
     tool_types = {it["tool"] for it in items.values() if "tool" in it}
-    stations = {s["type"] for s in ctx["village"]["stations"]}
-    for st in ctx["village"].get("stamps", {}).values():
-        stations |= {s["type"] for s in st.get("stations", [])}
-    # a home's furniture is a station too (PL2-013): Furniture.STATION_OF maps a spot kind to its station type
-    furn = (ROOT / "game/scripts/core/furniture.gd").read_text(encoding="utf-8")
-    m = re.search(r"const STATION_OF := \{([^}]*)\}", furn)
-    stations |= set(re.findall(r':\s*"([a-z_]+)"', m.group(1))) if m else set()
+    stations = station_types(ctx)
 
     def item_ok(where, i):
         if i not in items:
