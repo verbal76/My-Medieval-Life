@@ -1205,6 +1205,13 @@ func _free_sums() -> PackedInt32Array:
 	return sums
 
 
+## The coins household `h` foreseeably needs for its necessities (World.necessity; OD-19), 0 with nobody left.
+func _household_need(h: int) -> int:
+	for o: NPC in w.brain._members(h):
+		return int(w.necessity(o).need)
+	return 0
+
+
 ## A founding household building its house: each morning a helper is hired for the day (out of work
 ## or labouring, by id), or the founder carries the materials themselves (no wage). Materials are
 ## bought with the household's coins, keeping a little for food.
@@ -1219,7 +1226,7 @@ func _keep_building(h: int) -> void:
 		if str(c.site) == str(p.id):
 			return
 	var wage := int(GameData.b("helper_wage"))
-	var reserve := 10 + _tool_reserve(h)
+	var reserve := _household_need(h) + _tool_reserve(h)        # what the household foreseeably needs (OD-19), not a fixed sum
 	var budget: int = w.property.purse(ref) - reserve
 	var helper: NPC = null
 	if budget - wage >= estimate(p.site.need):

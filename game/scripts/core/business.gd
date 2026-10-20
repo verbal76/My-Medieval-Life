@@ -766,8 +766,10 @@ func ceiling(id: String, urgency: int, s := {}, buyer: NPC = null) -> int:
 	return floori(alt * (1.0 + float(GameData.b("stall_urgency_step")) * urgency))
 
 
-func cash_floor(n: NPC) -> int:
-	return w.buyer_reserve(n)
+## The coins `n` keeps back from a purchase at a stall (OD-19): none for a household need (`for_need`: the stall's
+## customers buy food and firewood for their own pantries, needs()), else their reserve.
+func cash_floor(n: NPC, for_need := false) -> int:
+	return 0 if for_need else w.reserve_of(n)
 
 
 ## What an adult really needs: [{item, qty, urgency (0..2), pantry}], most urgent first. Merchants and
@@ -817,7 +819,7 @@ func offer(n: NPC, s: Dictionary) -> Dictionary:
 		var price := price_of(s, id)
 		if price > ceiling(id, int(need.urgency), s, n):
 			continue
-		var afford := (n.coins - cash_floor(n)) / price
+		var afford := (n.coins - cash_floor(n, bool(need.get("pantry", false)) or World.is_necessity(id))) / price
 		var qty := mini(mini(int(need.qty), have), mini(afford, int(GameData.b("stall_buy_max"))))
 		if qty >= 1 and n.inv.can_add(id):
 			return {"item": id, "qty": qty, "price": price, "pantry": bool(need.pantry)}

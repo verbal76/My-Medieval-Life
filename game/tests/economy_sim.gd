@@ -328,8 +328,8 @@ func _sample(start: Dictionary) -> Dictionary:
 		t.min = mini(int(t.min), n.coins)
 		if n.coins < cheapest:
 			t.below_price += 1
-		if n.coins - cheapest < int(GameData.b("trader_cash_floor")):
-			t.below_floor += 1            # cannot buy anything: sales to it need coins - price >= the cash floor
+		if n.coins - cheapest < w.reserve_of(n):
+			t.below_floor += 1            # cannot buy stock: sales to it need coins - price >= its reserve (OD-19)
 		if n.coins == 0:
 			t.zero += 1
 	var merchants := 0

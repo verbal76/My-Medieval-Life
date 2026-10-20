@@ -651,16 +651,116 @@ func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) ->
 	return n
 
 
-## The coins a buyer keeps back for their own needs (OD-18.2, PAR-02: one rule for everyone, whoever sells to
-## them, the player or a villager): a trader keeps trader_cash_floor, anyone else stall_buyer_floor.
-func buyer_reserve(buyer: NPC) -> int:
-	return int(GameData.b("trader_cash_floor")) if NPCBrain.BUYS.has(brain.buy_role(buyer)) else int(GameData.b("stall_buyer_floor"))
+## OD-19 (owner, 2026-10-20) and PAR-02A: a person's foreseeable necessities over reserve_days, from what they can know
+## now (no knowledge of the future): {food, fuel, medicine, rent, income, need, held, reserve}, in coins at today's
+## asking prices. `need` is the household's (food: its members' need less the food its pantry and members hold; fuel:
+## a log a night less the logs held; medicine: one for each member hurt below medicine_use_below with none to hand;
+## rent: leases falling due; income: the wages paid members can expect after the first day, while the treasury can
+## pay them). `reserve` is what `who` keeps of their own coins: the need less what the rest of the household holds.
+## The same calculation for the player (their own food and leases) and every villager; it guides the villagers'
+## spending (can_afford) and is shown to the player, who decides for themselves.
+func necessity(who) -> Dictionary:
+	var days := float(GameData.b("reserve_days"))
+	var people: Array = [who]
+	var stores: Array = [who.inv]
+	var ref := PLAYER
+	if who is NPC:
+		ref = World.npc_ref(who.id)
+		if who.household >= 0 and not households[who.household].get("ended", false):
+			people = brain._members(who.household)
+			stores = [households[who.household].pantry]
+			for m: NPC in people:
+				stores.append(m.inv)
+			ref = World.hh_ref(who.household)
+	var need_pts := 0.0
+	for p in people:
+		need_pts += (NPCBrain.food_factor(p) if p is NPC else 1.0) * 24.0 * float(GameData.b("hunger_per_hour")) * days
+	var have_pts := 0.0
+	var logs := 0
+	var meds := 0
+	for inv: Inventory in stores:
+		for f in NPCBrain.FOOD:
+			have_pts += float(inv.count(f)) * float(GameData.item(f).get("food", 0))
+		logs += inv.count("log")
+		for m in NPCBrain.MEDICINES:
+			meds += inv.count(m)
+	var food := ceili(maxf(0.0, need_pts - have_pts) * _market_price("food"))
+	var fuel := 0
+	if who is NPC and who.household >= 0:
+		fuel = ceili(maxf(0.0, ceilf(days) - float(logs)) * _market_price("log"))
+	var hurt := 0
+	for p in people:
+		if p.alive and p.hp < p.hp_cap() * float(GameData.b("home_production").medicine_use_below):
+			hurt += 1
+	var medicine := ceili(float(maxi(0, hurt - meds)) * _market_price("medicine"))
+	var rent := 0
+	for r in property.records():
+		if tenant_of(r) == ref and int(r.get("rent", 0)) > 0 and int(r.get("due_day", 1 << 30)) <= day() + int(ceilf(days)):
+			rent += int(r.rent) + int(r.get("arrears", 0))
+	var income := 0
+	if who is NPC and treasury >= int(brain.daily_obligations()):
+		for p in people:
+			var wage := int(GameData.b(str(p.job) + "_wage_per_day")) if p is NPC and str(p.job) in ["guard", "reeve"] else 0
+			income += wage * maxi(0, int(ceilf(days)) - 1)
+	var need := maxi(0, food + fuel + medicine + rent - income)
+	var held := 0
+	for p in people:
+		if p != who:
+			held += int(p.coins)
+	return {"food": food, "fuel": fuel, "medicine": medicine, "rent": rent, "income": income, "need": need, "held": held,
+		"reserve": maxi(0, need - held)}
 
 
-## Whether `buyer` will pay `price` and still keep their reserve (buyer_reserve): the one eligibility rule
-## for every purchase from a seller, player or villager.
-func can_afford(buyer: NPC, price: int) -> bool:
-	return buyer.coins - price >= buyer_reserve(buyer)
+## The coins `who` keeps back for their foreseeable necessities (necessity().reserve; PAR-02A), cached for the game hour.
+func reserve_of(who) -> int:
+	var key := (World.npc_ref(who.id) if who is NPC else PLAYER) + "@" + str(int(minutes / 60.0))
+	if not _reserve_cache.has(key):
+		if _reserve_cache.size() > 4000:
+			_reserve_cache.clear()
+		_reserve_cache[key] = int(necessity(who).reserve)
+	return int(_reserve_cache[key])
+
+
+var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived, not saved)
+var _price_cache := {}                # (kind @ game hour) -> coins a unit (_market_price; derived, not saved)
+
+
+## What the market asks now, by what anyone can see: a food point at the cheapest food on sale, a log, a medicine,
+## the lowest asking price among the villagers holding one for sale (else its base value).
+func _market_price(kind: String) -> float:
+	var key := kind + "@" + str(int(minutes / 60.0))
+	if _price_cache.has(key):
+		return float(_price_cache[key])
+	if _price_cache.size() > 200:
+		_price_cache.clear()
+	var ids: Array = NPCBrain.FOOD if kind == "food" else (NPCBrain.MEDICINES if kind == "medicine" else ["log"])
+	var best := INF
+	for id in ids:
+		var per := float(GameData.item(id).get("food", 1)) if kind == "food" else 1.0
+		if per <= 0.0:
+			continue
+		var p := float(GameData.value(id))
+		for o: NPC in npcs:
+			if o.alive and o.role == "adult" and o.inv.has(id) and not brain.keeps(o, id):
+				p = minf(p, float(sell_price(o, id)))
+		best = minf(best, p / per)
+	_price_cache[key] = 0.0 if best == INF else best
+	return float(_price_cache[key])
+
+
+## Whether an item is a necessity a reserve is kept for (OD-19 section 3): food, fuel, medicine.
+static func is_necessity(id: String) -> bool:
+	return id in NPCBrain.FOOD or id in NPCBrain.MEDICINES or id == "log"
+
+
+## Whether `buyer` will pay `price` (OD-19 section 3, PAR-02A): a necessity for their own household (`for_need`: food,
+## firewood, medicine to use) out of any of their coins, reserved ones included; anything else (stock for their trade,
+## materials, goods for resale) only with what is left above their reserve (reserve_of). The one rule for every
+## purchase, whoever sells, the player or a villager (PAR-02).
+func can_afford(buyer: NPC, price: int, for_need := false) -> bool:
+	if for_need:
+		return buyer.coins >= price
+	return buyer.coins - price >= reserve_of(buyer)
 
 
 func buy_price(vendor: NPC, id: String) -> int:
@@ -2444,7 +2544,7 @@ func player_sell(buyer: NPC, id: String, price: int) -> Dictionary:
 ## Sell `qty` of `id` (the quantity control, PL1-03), each unit at its player_quote price, so the buyer's
 ## offer falls as they fill up (Build 13 economy rule 2). Checked first: you carry them, the buyer still
 ## wants that many and their own coins cover the whole bill and their reserve (rule 1: no buying without the
-## money; OD-18.2: the same reserve as for a villager's sale, can_afford), so
+## money; OD-18.2, OD-19: the same reserve as for a villager's sale, can_afford), so
 ## nothing is half-sold for those reasons. Each unit goes through player_sell (marked goods first,
 ## recognition, guard questions), so a stolen piece being recognised stops the sale at that unit; `sold`
 ## says how many went and `paid` what they fetched. Returns {result, text, sold, paid}.

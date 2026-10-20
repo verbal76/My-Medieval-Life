@@ -15546,7 +15546,7 @@
    "id": "PAR-02A",
    "title": "OD-19: a dynamic, necessity-based reserve in place of fixed coin floors",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Replace arbitrary fixed reserves with dynamic, needs-based financial planning. Every villager ... should evaluate the money required to meet their foreseeable necessities ... The reserve is intended to protect essential needs, not prevent the household from satisfying them ... The reserve is part of an agent's financial judgment, not a magical restriction imposed by the game world ... Use the same underlying financial information and calculations for the player and NPC villagers.",
    "description": "OD-19: a dynamic, necessity-based reserve in place of fixed coin floors",
    "source": "docs/directives/2026-10-20_od19_dynamic_reserves.md",
@@ -15558,7 +15558,7 @@
     "Deterministic; coins conserved; saves load"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "reserve_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -15583,6 +15583,11 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target Build 16"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "World.necessity / reserve_of / can_afford(for_need); fixed floors removed; construction keeps the household need; reserve_test 15 checks (the nine scenarios); start_test, play_test, a 30-day run balanced; full suites running"
     }
    ],
    "target_build": "16"

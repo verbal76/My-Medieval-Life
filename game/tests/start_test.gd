@@ -2506,7 +2506,7 @@ func _pl_trade_ui_tests() -> void:
 	p.inv.add("iron_bar", 4)
 	goods.inv.items.erase("iron_bar")
 	var q4: Array = w.player_quote(goods, "iron_bar", 4, false)
-	goods.coins = w.buyer_reserve(goods) + int(q4[0]) + int(q4[1]) + 1     # PAR-02: the buyer keeps their reserve
+	goods.coins = w.reserve_of(goods) + int(q4[0]) + int(q4[1]) + 1     # PAR-02, OD-19: the buyer keeps their reserve
 	ui.show_trade(goods, {"id": "iron_bar", "mode": "sell"})
 	qp = ui.panel_body.get_node_or_null("QuantityPicker")
 	check(qp.max_qty == 2, "a poor buyer limits the sale to what their coins pay for (2)")

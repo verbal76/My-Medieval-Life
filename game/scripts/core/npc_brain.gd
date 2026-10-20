@@ -1906,6 +1906,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				buyer = n
 			var qty := mini(int(a.qty), v.inv.count(a.item))
 			var up := w.deal_price(w.sell_price(v, a.item), buyer, v)
+			var for_need: bool = a.get("pantry", false) or World.is_necessity(a.item) or JOB_TOOL.get(buyer.job, "") == a.item
+			while qty > 0 and not for_need and not w.can_afford(buyer, up * qty):
+				qty -= 1                          # stock and materials: only what leaves the household's reserve (OD-19)
 			while qty > 0 and not w.trade(buyer, v, a.item, qty, up):
 				qty -= 1
 			if qty > 0:

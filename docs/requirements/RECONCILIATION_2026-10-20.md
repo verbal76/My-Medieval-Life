@@ -120,7 +120,7 @@ None.
 | PAR-01B | Career changes neither grant nor reset experience | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-01C | Experience comes from activities, whatever the occupation | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-02 | OD-18.2: one trade eligibility rule (the trader's coin reserve) for player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
-| PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | APPROVED — NOT STARTED | 16 |
+| PAR-02A | OD-19: a dynamic, necessity-based reserve in place of fixed coin floors | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | PAR-03 | OD-18.3: villagers recover health by the player's rest model | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-04 | OD-18.4: villagers can craft every recipe the player can, under the same requirements | approved | COMPLETE AND VERIFIED | 16 |
 | PAR-05 | OD-18.5: crime awareness by legitimate means only, the same for assault and theft | approved | COMPLETE AND VERIFIED | 16 |

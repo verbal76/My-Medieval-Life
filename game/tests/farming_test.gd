@@ -211,12 +211,12 @@ func test_crops() -> void:
 	merchant.coins = 200
 	for o: NPC in w.npcs:                         # only this merchant can pay, so the sums are theirs
 		if o != merchant and o.job == "merchant" and w.farm.sells_seed(o):
-			o.coins = int(GameData.b("trader_cash_floor"))
+			o.coins = w.reserve_of(o)             # nothing to spare above their reserve (OD-19)
 	var src0 := w.coin_sources
 	var tot0 := w.total_coins()
 	var spent: int = w.brain._caravan_seeds()
 	check(spent > 0 and merchant.inv.count("carrot_seed") > 0 and merchant.coins == 200 - spent and w.coin_sources == src0 - spent and w.total_coins() == tot0 - spent, "the caravan sells the merchant seed for %d coins of their own" % spent)
-	merchant.coins = int(GameData.b("trader_cash_floor"))
+	merchant.coins = w.reserve_of(merchant)
 	var mseed := merchant.inv.total()
 	check(w.brain._caravan_seeds() == 0 and merchant.inv.total() == mseed, "a merchant without spare coins gets no seed: never from nowhere")
 	merchant.coins = 200

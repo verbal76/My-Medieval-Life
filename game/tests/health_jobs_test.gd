@@ -88,7 +88,7 @@ func test_apothecary() -> void:
 	check(spent > 0 and sage.coins == 100 - spent and w.coin_sources == src0 - spent, "the caravan sold the sage %d coins' worth, paid by the sage; coins left the village" % spent)
 	check(w.total_coins() == village0 - spent, "the village's coins fell by exactly what the sage paid")
 	check(sage.inv.count("strong_healing_tonic") + sage.inv.count("healing_tonic") + sage.inv.count("herbal_poultice") + sage.inv.count("linen_bandage") <= 40, "restock is bounded")
-	sage.coins = int(GameData.b("trader_cash_floor"))
+	sage.coins = w.reserve_of(sage)             # nothing to spare above their reserve (OD-19)
 	var before := sage.inv.total()
 	check(w.brain._caravan_apothecary() == 0 and sage.inv.total() == before, "a sage with no spare coins gets nothing (not infinite) (cap %d a visit)" % cap)
 

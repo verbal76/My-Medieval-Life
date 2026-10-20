@@ -22,14 +22,19 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 in the afternoon (UTC).
+The validator checks that every ACTIVE DEVELOPMENT id is named here. Updated 2026-10-20 in the evening (UTC).
 
 - **EQ-18 (Build 15):** tool recovery fixed and verified; what remained was OD-16.
 - **EQ-18..21 (Build 15):** complete and verified (EQ-19's earmarked advances are a recorded future improvement).
 - **Build 16:**
   - FAM-07 is implemented and tested, with the owner's clarification of 2026-10-20 (`docs/directives/2026-10-20_fam07_clarification_living_economy.md`): an orphan no household takes lives with the bandit clan. At coming of age they leave for a household that can take them, and stay with the band only with nowhere to go. The fuller adult judgement is FAM-08, future work.
   - The audits DVW-A7, A8 and A12 are done (`docs/release/BUILD_16_AUDITS.md`). The player's own production is now counted in the ledger (`World.player_gain`). The audits' owner questions are OD-18; A12's moves into core remain.
-  - **EQ-06** (the acceptance harness): `economy_sim.gd --scenario kill_smiths|corner_wheat|gift_coins|hunt_out --at DAY`. A carcass left to spoil is now counted (`spoiled_`). The 100-day comparisons are running locally, and the four-seed 365-day runs on Actions (`8d3f623`). Their results go in `docs/release/LONG_RUN_SIMULATION.md`.
+  - **EQ-06** (the acceptance harness): `economy_sim.gd --scenario kill_smiths|corner_wheat|gift_coins|hunt_out --at DAY`. The pre-parity baseline is recorded in `docs/release/LONG_RUN_SIMULATION.md`: the 100-day scenarios on seeds 1-2, and the 365-day runs on seeds 1-4 (Actions 39430585149 on `8d3f623`). Seed 3's 23 starvation deaths are under investigation (B7-015).
+  - **Player-villager parity (PAR-00..05), the owner's OD-18 and the final consolidated directive** (`docs/directives/2026-10-20_od18_player_villager_parity.md`, `docs/directives/2026-10-20_par_final_consolidated_directive.md`):
+    - PAR-01 (with PAR-01A..C) villager skills, PAR-03 rest, PAR-04 the eleven recipes and PAR-05 crime awareness (sight and reports, no hearing) are complete and pushed.
+    - PAR-02A, OD-19's dynamic reserve (`docs/directives/2026-10-20_od19_dynamic_reserves.md`), is implemented (`World.necessity`, `reserve_test.gd`) and was being tested with the full suites; commit it once they pass.
+    - OD-20 (the pickpocket's cry) is open; theft keeps its 2026-10-18 cry until the owner answers.
+  - **Next:** re-run the EQ-06 scenarios (100 days, seeds 1-2) and the 365-day runs (seeds 1-4, Actions) on the parity code; compare with the baseline; investigate seed 3's starvation (B7-015); classify under WDR-022.
   - Then the rest of the Build 16 entries (the ledger's Roadmap), each finding classified under WDR-022.
 - **Living Economy (EXP-D):** the owner's standalone build design, kept as a separate major build (OD-LE-01..15 open). It does not delay Build 16.
 - **EQ-16** (Build 16 objective, world equilibrium) and **DVW-A3** (money supply measurements): they share the 365-day runs. OD-16 is their first question.
@@ -93,7 +98,8 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
   - HOUSE-08 (bed sharing) and HOUSE-09 (now done through the small room), Build 15;
   - FAM-03 and FAM-07 (the bandit-clan fallback, interim until bandit factions, WDR-016-C, Build 20+) are implemented.
 - **OD-16: answered 2026-10-20** ((a), (b), (c); see the register). Formerly: the village's trade economy stops around day 120-140 on seed 1 (the smith out of coins, no iron, no axes, no timber), so no house is finished there. How should money flow back to the essential trades? Options and a recommendation are in the entry and in `docs/release/LONG_RUN_SIMULATION.md`.
-- **OD-18 (new, 2026-10-20):** the player-only perks and rules the DVW-A8 and A12 audits found: NPC skills, the cash floor (with OD-15), rest healing, eleven player-only recipes, and the assault witness radius. The evidence is in `docs/release/BUILD_16_AUDITS.md`.
+- **OD-18, OD-15 and OD-19: answered 2026-10-20** (PAR-00..05, PAR-02A).
+- **OD-20 (open, 2026-10-20):** should a caught pickpocket's cry (the 2026-10-18 theft rules; the Stealth guard_radius perk acts on it) become a report, like assault's?
 - **OD-17 (new, 2026-10-20):** the Game Designer spec's open calls (the hero, the view, Steam Deck labelling), from `docs/game-designer/SPEC_RECONCILIATION.md` section 4 (REC-004, done).
 - **OD-15 (new, 2026-10-20):** should the player's sales stop at a trader's 15-coin floor, as villagers' do? It came up while verifying B7-008; options and a recommendation are in the entry. B7-008 stays BLOCKED on it (its wildlife half is verified).
 - **OD-01..09:** open owner decisions. Some are listed under the build whose design they decide, with the gate "owner decision first".
@@ -104,10 +110,8 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 
 ## Interrupted or fragile processes
 
-- **Running (2026-10-20 afternoon):**
-  - the `long-sims.yml` dispatch on `8d3f623`, seeds 1-4, 365 days (EQ-06), on Actions: check its state before dispatching again;
-  - the local 100-day scenario comparisons (`out/room/s100_*.log`; they die with the container, so re-run them if they are lost).
-- Run 39385942656 (`59057ac`) is finished and recorded.
+- **Running (2026-10-20 evening):** the local full suites on PAR-02A (`out/room/suites15.log`; they die with the container: re-run `game/tests` suites if lost). Nothing on Actions.
+- Runs 39385942656 (`59057ac`) and 39430585149 (`8d3f623`, the pre-parity baseline) are finished and recorded.
 - **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
 - **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.
 - **Never restart a run because context was compacted:** check Actions (or `ps -eo pid,args | grep godot` locally) first.

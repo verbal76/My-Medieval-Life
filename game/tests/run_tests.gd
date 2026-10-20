@@ -882,7 +882,7 @@ func test_trades_and_works() -> void:
 	var spent: int = w.brain._caravan_imports()
 	check(spent > 0 and smith.inv.count("iron_ore") == int(GameData.b("caravan_import_stock").iron_ore), "a smith buys ore from the caravan once the seams are worked out (%d coins)" % spent)
 	check(smiths_cash.call() == cash - spent and w.coin_sources == src - spent, "the coins for imports leave the village")
-	check(smith.coins >= int(GameData.b("trader_cash_floor")), "a smith keeps the trader cash floor")
+	check(smith.coins >= w.reserve_of(smith), "a smith keeps their household's reserve (OD-19)")
 	check(w.total_coins() - w.coin_sources == coins0, "coins conserved through imports")
 	# public works spend the treasury's excess on planks, used up; not without a reeve
 	var carp: NPC = null
@@ -2759,7 +2759,7 @@ func test_build7_economy() -> void:
 	var got := 0
 	for o: NPC in raws:
 		got += o.inv.count("stone")
-		check(o.inv.count("stone") <= int(NPCBrain.BUYS.merchant_raw.stone) and o.coins >= int(GameData.b("trader_cash_floor")), "B7-007: %s buys within the stock cap and keeps the cash floor" % o.name)
+		check(o.inv.count("stone") <= int(NPCBrain.BUYS.merchant_raw.stone) and o.coins >= w.reserve_of(o), "B7-007: %s buys within the stock cap and keeps their reserve" % o.name)
 	var cfg: Dictionary = GameData.b("caravan_stone")
 	var each := maxi(1, roundi(GameData.value("stone") * float(cfg.markup)))
 	check(got > 0 and got <= int(cfg.load) and int(w.stats.get("imported_stone", 0)) == got, "B7-007: the caravan sells at most a cart of stone (%d)" % got)

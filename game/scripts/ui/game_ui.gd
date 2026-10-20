@@ -2255,6 +2255,9 @@ func show_trade(n: NPC, pick := {}) -> void:
 	if not pick.is_empty():
 		_trade_picker(n, pick)
 	var sale: Array = w.brain.for_sale(n)
+	var need := w.necessity(p)                # the same foreseeable-needs reckoning the villagers make (OD-19); yours to heed or not
+	if int(need.need) > 0:
+		_label("Your needs for the next %d days: about %d coins (food %d, rent %d, medicine %d)." % [int(GameData.b("reserve_days")), int(need.need), int(need.food), int(need.rent), int(need.medicine)], 14, Color(0.8, 0.78, 0.7))
 	_label("They sell:", 20, Color(1, 0.85, 0.5))
 	if sale.is_empty():
 		_label("Nothing right now.", 15)
@@ -2334,7 +2337,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 		why = "Your pack is full." if not p.inv.can_add(id) else ("They have none." if stock == 0 else "You cannot afford one.")
 	else:
 		var owned := p.inv.count(id)
-		mx = QuantityPicker.sell_max_priced(prices, maxi(0, n.coins - w.buyer_reserve(n)))     # the buyer keeps their reserve (PAR-02)
+		mx = QuantityPicker.sell_max_priced(prices, maxi(0, n.coins - w.reserve_of(n)))     # a trader buying stock keeps their reserve (OD-19)
 		info = "%s  ·  you have %d  ·  %s wants %d, has %d coins" % [each, owned, n.name, w.brain.wants(n, id), n.coins]
 		why = "They want no more of these." if prices.is_empty() else "They cannot afford one right now."
 	var qp := QuantityPicker.new()

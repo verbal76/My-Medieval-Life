@@ -1,5 +1,5 @@
 {
- "commit": "140df21",
+ "commit": "3f8a47d",
  "days": 30,
  "format": "mml-sim-baseline/1",
  "results": {
@@ -8,28 +8,28 @@
     "alive": 103,
     "animals": {
      "born": {
-      "bird": 31,
+      "bird": 24,
       "boar": 10,
-      "chicken": 14,
+      "chicken": 20,
       "cow": 3,
       "deer": 7,
-      "pig": 6,
-      "rabbit": 42,
-      "sheep": 5
+      "pig": 9,
+      "rabbit": 32,
+      "sheep": 6
      },
      "hunted": {
-      "bird": 24,
-      "boar": 5,
-      "deer": 7,
-      "rabbit": 19
+      "bird": 20,
+      "boar": 4,
+      "deer": 8,
+      "rabbit": 13
      },
      "poached": {
-      "bird": 1
+      "bird": 3
      },
      "slaughtered": {
-      "chicken": 5,
+      "chicken": 9,
       "cow": 1,
-      "pig": 2,
+      "pig": 4,
       "sheep": 2
      },
      "species": {
@@ -42,1309 +42,20 @@
       "bird": {
        "adult": 4,
        "penned": 0,
-       "wild": 11,
-       "young": 7
+       "wild": 10,
+       "young": 6
       },
       "boar": {
        "adult": 4,
-       "penned": 0,
-       "wild": 9,
-       "young": 5
-      },
-      "chicken": {
-       "adult": 8,
-       "penned": 12,
-       "wild": 0,
-       "young": 4
-      },
-      "cow": {
-       "adult": 3,
-       "penned": 5,
-       "wild": 0,
-       "young": 2
-      },
-      "deer": {
-       "adult": 4,
-       "penned": 0,
-       "wild": 7,
-       "young": 3
-      },
-      "fox": {
-       "adult": 4,
-       "penned": 0,
-       "wild": 4,
-       "young": 0
-      },
-      "pig": {
-       "adult": 5,
-       "penned": 7,
-       "wild": 0,
-       "young": 2
-      },
-      "rabbit": {
-       "adult": 11,
-       "penned": 0,
-       "wild": 20,
-       "young": 9
-      },
-      "sheep": {
-       "adult": 3,
-       "penned": 6,
-       "wild": 0,
-       "young": 3
-      },
-      "wolf": {
-       "adult": 4,
-       "penned": 0,
-       "wild": 4,
-       "young": 0
-      }
-     },
-     "starved": {}
-    },
-    "currency": 4578,
-    "deposits": [
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "stone",
-      51
-     ],
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "copper_ore",
-      0
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "stone",
-      80
-     ],
-     [
-      "iron_ore",
-      4
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "stone",
-      39
-     ],
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "copper_ore",
-      0
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "gold_ore",
-      0
-     ]
-    ],
-    "fingerprint": "5d61dfe0069c17838f9273e577c9344b",
-    "households": 24,
-    "item_ledger": {
-     "ale": {
-      "consumed": 72,
-      "end": 12,
-      "exported": 0,
-      "imported": 0,
-      "produced": 60,
-      "start": 24
-     },
-     "amulet": {
-      "consumed": 0,
-      "end": 5,
-      "exported": 6,
-      "imported": 0,
-      "produced": 11,
-      "start": 0
-     },
-     "apple": {
-      "consumed": 0,
-      "end": 4,
-      "exported": 0,
-      "imported": 0,
-      "produced": 4,
-      "start": 0
-     },
-     "axe": {
-      "consumed": 0,
-      "end": 11,
-      "exported": 0,
-      "imported": 0,
-      "produced": 1,
-      "start": 10
-     },
-     "blueberries": {
-      "consumed": 91,
-      "end": 53,
-      "exported": 0,
-      "imported": 0,
-      "produced": 144,
-      "start": 0
-     },
-     "bread": {
-      "consumed": 63,
-      "end": 25,
-      "exported": 5,
-      "imported": 0,
-      "produced": 92,
-      "start": 1
-     },
-     "carrot_seed": {
-      "consumed": 0,
-      "end": 16,
-      "exported": 0,
-      "imported": 4,
-      "produced": 0,
-      "start": 12
-     },
-     "cart_axle": {
-      "consumed": 3,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 5,
-      "start": 0
-     },
-     "cart_ironwork": {
-      "consumed": 3,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 5,
-      "start": 0
-     },
-     "cart_wheel": {
-      "consumed": 6,
-      "end": 9,
-      "exported": 0,
-      "imported": 0,
-      "produced": 15,
-      "start": 0
-     },
-     "cheese": {
-      "consumed": 2,
-      "end": 5,
-      "exported": 0,
-      "imported": 0,
-      "produced": 7,
-      "start": 0
-     },
-     "coal": {
-      "consumed": 122,
-      "end": 94,
-      "exported": 0,
-      "imported": 0,
-      "produced": 200,
-      "start": 16
-     },
-     "copper_bar": {
-      "consumed": 17,
-      "end": 10,
-      "exported": 12,
-      "imported": 0,
-      "produced": 39,
-      "start": 0
-     },
-     "copper_ore": {
-      "consumed": 56,
-      "end": 18,
-      "exported": 0,
-      "imported": 14,
-      "produced": 60,
-      "start": 0
-     },
-     "copper_ring": {
-      "consumed": 0,
-      "end": 6,
-      "exported": 6,
-      "imported": 0,
-      "produced": 12,
-      "start": 0
-     },
-     "copper_sword": {
-      "consumed": 0,
-      "end": 9,
-      "exported": 0,
-      "imported": 0,
-      "produced": 1,
-      "start": 8
-     },
-     "egg": {
-      "consumed": 6,
-      "end": 18,
-      "exported": 0,
-      "imported": 0,
-      "produced": 24,
-      "start": 0
-     },
-     "feather": {
-      "consumed": 1,
-      "end": 28,
-      "exported": 6,
-      "imported": 0,
-      "produced": 35,
-      "start": 0
-     },
-     "flower": {
-      "consumed": 112,
-      "end": 14,
-      "exported": 0,
-      "imported": 0,
-      "produced": 126,
-      "start": 0
-     },
-     "gold_bar": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 3,
-      "imported": 0,
-      "produced": 4,
-      "start": 0
-     },
-     "gold_ore": {
-      "consumed": 6,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 8,
-      "start": 0
-     },
-     "hammer": {
-      "consumed": 0,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 2
-     },
-     "handcart": {
-      "consumed": 2,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 3,
-      "start": 0
-     },
-     "healing_tonic": {
-      "consumed": 0,
-      "end": 4,
-      "exported": 0,
-      "imported": 1,
-      "produced": 0,
-      "start": 3
-     },
-     "herb_seed": {
-      "consumed": 0,
-      "end": 16,
-      "exported": 0,
-      "imported": 4,
-      "produced": 0,
-      "start": 12
-     },
-     "herbal_poultice": {
-      "consumed": 0,
-      "end": 64,
-      "exported": 0,
-      "imported": 2,
-      "produced": 58,
-      "start": 4
-     },
-     "hide": {
-      "consumed": 21,
-      "end": 0,
-      "exported": 0,
-      "imported": 0,
-      "produced": 17,
-      "start": 4
-     },
-     "iron_armor": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 1,
-      "start": 0
-     },
-     "iron_bar": {
-      "consumed": 35,
-      "end": 23,
-      "exported": 63,
-      "imported": 0,
-      "produced": 113,
-      "start": 8
-     },
-     "iron_helmet": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 2,
-      "imported": 0,
-      "produced": 3,
-      "start": 0
-     },
-     "iron_ore": {
-      "consumed": 172,
-      "end": 140,
-      "exported": 0,
-      "imported": 0,
-      "produced": 296,
-      "start": 16
-     },
-     "iron_sword": {
-      "consumed": 0,
-      "end": 8,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 8
-     },
-     "leather": {
-      "consumed": 37,
-      "end": 12,
-      "exported": 1,
-      "imported": 0,
-      "produced": 40,
-      "start": 10
-     },
-     "leather_armor": {
-      "consumed": 0,
-      "end": 8,
-      "exported": 0,
-      "imported": 0,
-      "produced": 2,
-      "start": 6
-     },
-     "leather_cap": {
-      "consumed": 0,
-      "end": 6,
-      "exported": 7,
-      "imported": 0,
-      "produced": 13,
-      "start": 0
-     },
-     "linen_bandage": {
-      "consumed": 0,
-      "end": 10,
-      "exported": 0,
-      "imported": 2,
-      "produced": 0,
-      "start": 8
-     },
-     "lockpick": {
-      "consumed": 0,
-      "end": 6,
-      "exported": 0,
-      "imported": 0,
-      "produced": 6,
-      "start": 0
-     },
-     "log": {
-      "consumed": 472,
-      "end": 205,
-      "exported": 68,
-      "imported": 0,
-      "produced": 709,
-      "start": 36
-     },
-     "meat": {
-      "consumed": 83,
-      "end": 22,
-      "exported": 0,
-      "imported": 0,
-      "produced": 92,
-      "start": 13
-     },
-     "milk": {
-      "consumed": 21,
-      "end": 7,
-      "exported": 0,
-      "imported": 0,
-      "produced": 28,
-      "start": 0
-     },
-     "padlock": {
-      "consumed": 0,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 2,
-      "start": 0
-     },
-     "pickaxe": {
-      "consumed": 0,
-      "end": 16,
-      "exported": 0,
-      "imported": 0,
-      "produced": 1,
-      "start": 15
-     },
-     "plain_clothes": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "plank": {
-      "consumed": 165,
-      "end": 125,
-      "exported": 60,
-      "imported": 0,
-      "produced": 322,
-      "start": 28
-     },
-     "plough": {
-      "consumed": 0,
-      "end": 5,
-      "exported": 6,
-      "imported": 0,
-      "produced": 11,
-      "start": 0
-     },
-     "potato_seed": {
-      "consumed": 0,
-      "end": 16,
-      "exported": 0,
-      "imported": 4,
-      "produced": 0,
-      "start": 12
-     },
-     "pottage": {
-      "consumed": 1358,
-      "end": 161,
-      "exported": 0,
-      "imported": 0,
-      "produced": 1411,
-      "start": 108
-     },
-     "rabbit_pelt": {
-      "consumed": 14,
-      "end": 5,
-      "exported": 0,
-      "imported": 0,
-      "produced": 19,
-      "start": 0
-     },
-     "red_berries": {
-      "consumed": 54,
-      "end": 16,
-      "exported": 0,
-      "imported": 0,
-      "produced": 70,
-      "start": 0
-     },
-     "roast_meat": {
-      "consumed": 101,
-      "end": 85,
-      "exported": 8,
-      "imported": 0,
-      "produced": 186,
-      "start": 8
-     },
-     "rotten_apple": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "rusty_pickaxe": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "rusty_sword": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "stone": {
-      "consumed": 0,
-      "end": 94,
-      "exported": 0,
-      "imported": 0,
-      "produced": 70,
-      "start": 24
-     },
-     "strong_healing_tonic": {
-      "consumed": 0,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 2
-     },
-     "wheat": {
-      "consumed": 1189,
-      "end": 594,
-      "exported": 20,
-      "imported": 0,
-      "produced": 1080,
-      "start": 723
-     },
-     "wheat_seed": {
-      "consumed": 0,
-      "end": 108,
-      "exported": 0,
-      "imported": 4,
-      "produced": 36,
-      "start": 68
-     },
-     "wool": {
-      "consumed": 4,
-      "end": 0,
-      "exported": 0,
-      "imported": 0,
-      "produced": 4,
-      "start": 0
-     },
-     "wool_cloth": {
-      "consumed": 0,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 2,
-      "start": 0
-     }
-    },
-    "leaks": {
-     "currency": 0,
-     "items": {}
-    },
-    "treasury": 445
-   },
-   "30": {
-    "alive": 109,
-    "animals": {
-     "born": {
-      "bird": 83,
-      "boar": 54,
-      "chicken": 51,
-      "cow": 8,
-      "deer": 21,
-      "fox": 4,
-      "pig": 24,
-      "rabbit": 149,
-      "sheep": 17,
-      "wolf": 4
-     },
-     "hunted": {
-      "bird": 51,
-      "boar": 18,
-      "deer": 10,
-      "rabbit": 77
-     },
-     "poached": {
-      "bird": 4,
-      "boar": 1,
-      "rabbit": 2
-     },
-     "slaughtered": {
-      "chicken": 39,
-      "cow": 7,
-      "pig": 19,
-      "sheep": 13
-     },
-     "species": {
-      "bear": {
-       "adult": 2,
-       "penned": 0,
-       "wild": 2,
-       "young": 0
-      },
-      "bird": {
-       "adult": 12,
-       "penned": 0,
-       "wild": 16,
-       "young": 4
-      },
-      "boar": {
-       "adult": 8,
-       "penned": 0,
-       "wild": 19,
-       "young": 11
-      },
-      "chicken": {
-       "adult": 8,
-       "penned": 12,
-       "wild": 0,
-       "young": 4
-      },
-      "cow": {
-       "adult": 3,
-       "penned": 4,
-       "wild": 0,
-       "young": 1
-      },
-      "deer": {
-       "adult": 5,
-       "penned": 0,
-       "wild": 7,
-       "young": 2
-      },
-      "fox": {
-       "adult": 6,
-       "penned": 0,
-       "wild": 8,
-       "young": 2
-      },
-      "pig": {
-       "adult": 5,
-       "penned": 8,
-       "wild": 0,
-       "young": 3
-      },
-      "rabbit": {
-       "adult": 19,
-       "penned": 0,
-       "wild": 30,
-       "young": 11
-      },
-      "sheep": {
-       "adult": 5,
-       "penned": 7,
-       "wild": 0,
-       "young": 2
-      },
-      "wolf": {
-       "adult": 6,
-       "penned": 0,
-       "wild": 8,
-       "young": 2
-      }
-     },
-     "starved": {}
-    },
-    "currency": 4908,
-    "deposits": [
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "stone",
-      1
-     ],
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "copper_ore",
-      0
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "stone",
-      80
-     ],
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "stone",
-      1
-     ],
-     [
-      "iron_ore",
-      0
-     ],
-     [
-      "copper_ore",
-      0
-     ],
-     [
-      "coal",
-      0
-     ],
-     [
-      "gold_ore",
-      0
-     ]
-    ],
-    "fingerprint": "a198df1f573903737678528a8bf2a8fb",
-    "households": 24,
-    "item_ledger": {
-     "ale": {
-      "consumed": 76,
-      "end": 8,
-      "exported": 0,
-      "imported": 0,
-      "produced": 60,
-      "start": 24
-     },
-     "amulet": {
-      "consumed": 0,
-      "end": 5,
-      "exported": 6,
-      "imported": 0,
-      "produced": 11,
-      "start": 0
-     },
-     "apple": {
-      "consumed": 12,
-      "end": 4,
-      "exported": 0,
-      "imported": 0,
-      "produced": 16,
-      "start": 0
-     },
-     "axe": {
-      "consumed": 0,
-      "end": 26,
-      "exported": 7,
-      "imported": 0,
-      "produced": 23,
-      "start": 10
-     },
-     "blueberries": {
-      "consumed": 390,
-      "end": 44,
-      "exported": 0,
-      "imported": 0,
-      "produced": 434,
-      "start": 0
-     },
-     "bread": {
-      "consumed": 63,
-      "end": 25,
-      "exported": 5,
-      "imported": 0,
-      "produced": 92,
-      "start": 1
-     },
-     "carrot_seed": {
-      "consumed": 0,
-      "end": 16,
-      "exported": 0,
-      "imported": 4,
-      "produced": 0,
-      "start": 12
-     },
-     "cart_axle": {
-      "consumed": 13,
-      "end": 3,
-      "exported": 0,
-      "imported": 0,
-      "produced": 16,
-      "start": 0
-     },
-     "cart_ironwork": {
-      "consumed": 13,
-      "end": 3,
-      "exported": 0,
-      "imported": 0,
-      "produced": 16,
-      "start": 0
-     },
-     "cart_wheel": {
-      "consumed": 26,
-      "end": 9,
-      "exported": 0,
-      "imported": 0,
-      "produced": 35,
-      "start": 0
-     },
-     "cheese": {
-      "consumed": 6,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 7,
-      "start": 0
-     },
-     "coal": {
-      "consumed": 244,
-      "end": 58,
-      "exported": 0,
-      "imported": 86,
-      "produced": 200,
-      "start": 16
-     },
-     "copper_bar": {
-      "consumed": 35,
-      "end": 12,
-      "exported": 23,
-      "imported": 0,
-      "produced": 70,
-      "start": 0
-     },
-     "copper_ore": {
-      "consumed": 106,
-      "end": 16,
-      "exported": 0,
-      "imported": 62,
-      "produced": 60,
-      "start": 0
-     },
-     "copper_ring": {
-      "consumed": 0,
-      "end": 6,
-      "exported": 6,
-      "imported": 0,
-      "produced": 12,
-      "start": 0
-     },
-     "copper_sword": {
-      "consumed": 0,
-      "end": 14,
-      "exported": 7,
-      "imported": 0,
-      "produced": 13,
-      "start": 8
-     },
-     "egg": {
-      "consumed": 6,
-      "end": 115,
-      "exported": 0,
-      "imported": 0,
-      "produced": 121,
-      "start": 0
-     },
-     "feather": {
-      "consumed": 4,
-      "end": 117,
-      "exported": 12,
-      "imported": 0,
-      "produced": 133,
-      "start": 0
-     },
-     "flower": {
-      "consumed": 348,
-      "end": 15,
-      "exported": 0,
-      "imported": 0,
-      "produced": 363,
-      "start": 0
-     },
-     "gold_bar": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 3,
-      "imported": 0,
-      "produced": 4,
-      "start": 0
-     },
-     "gold_ore": {
-      "consumed": 6,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 8,
-      "start": 0
-     },
-     "hammer": {
-      "consumed": 0,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 2
-     },
-     "handcart": {
-      "consumed": 13,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 14,
-      "start": 0
-     },
-     "healing_tonic": {
-      "consumed": 0,
-      "end": 4,
-      "exported": 0,
-      "imported": 1,
-      "produced": 0,
-      "start": 3
-     },
-     "herb_seed": {
-      "consumed": 0,
-      "end": 16,
-      "exported": 0,
-      "imported": 4,
-      "produced": 0,
-      "start": 12
-     },
-     "herbal_poultice": {
-      "consumed": 0,
-      "end": 182,
-      "exported": 0,
-      "imported": 2,
-      "produced": 176,
-      "start": 4
-     },
-     "hide": {
-      "consumed": 38,
-      "end": 34,
-      "exported": 0,
-      "imported": 0,
-      "produced": 68,
-      "start": 4
-     },
-     "iron_armor": {
-      "consumed": 0,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 2,
-      "start": 0
-     },
-     "iron_bar": {
-      "consumed": 133,
-      "end": 26,
-      "exported": 79,
-      "imported": 0,
-      "produced": 230,
-      "start": 8
-     },
-     "iron_helmet": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 2,
-      "imported": 0,
-      "produced": 3,
-      "start": 0
-     },
-     "iron_ore": {
-      "consumed": 354,
-      "end": 62,
-      "exported": 0,
-      "imported": 100,
-      "produced": 300,
-      "start": 16
-     },
-     "iron_sword": {
-      "consumed": 0,
-      "end": 12,
-      "exported": 7,
-      "imported": 0,
-      "produced": 11,
-      "start": 8
-     },
-     "leather": {
-      "consumed": 50,
-      "end": 46,
-      "exported": 1,
-      "imported": 0,
-      "produced": 87,
-      "start": 10
-     },
-     "leather_armor": {
-      "consumed": 0,
-      "end": 9,
-      "exported": 0,
-      "imported": 0,
-      "produced": 3,
-      "start": 6
-     },
-     "leather_cap": {
-      "consumed": 0,
-      "end": 6,
-      "exported": 7,
-      "imported": 0,
-      "produced": 13,
-      "start": 0
-     },
-     "linen_bandage": {
-      "consumed": 0,
-      "end": 10,
-      "exported": 0,
-      "imported": 2,
-      "produced": 0,
-      "start": 8
-     },
-     "lockpick": {
-      "consumed": 0,
-      "end": 6,
-      "exported": 0,
-      "imported": 0,
-      "produced": 6,
-      "start": 0
-     },
-     "log": {
-      "consumed": 1476,
-      "end": 176,
-      "exported": 79,
-      "imported": 0,
-      "produced": 1695,
-      "start": 36
-     },
-     "meat": {
-      "consumed": 242,
-      "end": 161,
-      "exported": 1,
-      "imported": 0,
-      "produced": 391,
-      "start": 13
-     },
-     "milk": {
-      "consumed": 21,
-      "end": 86,
-      "exported": 1,
-      "imported": 0,
-      "produced": 108,
-      "start": 0
-     },
-     "padlock": {
-      "consumed": 0,
-      "end": 3,
-      "exported": 0,
-      "imported": 0,
-      "produced": 3,
-      "start": 0
-     },
-     "pickaxe": {
-      "consumed": 0,
-      "end": 21,
-      "exported": 8,
-      "imported": 0,
-      "produced": 14,
-      "start": 15
-     },
-     "plain_clothes": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "plank": {
-      "consumed": 1051,
-      "end": 123,
-      "exported": 66,
-      "imported": 0,
-      "produced": 1212,
-      "start": 28
-     },
-     "plough": {
-      "consumed": 0,
-      "end": 5,
-      "exported": 6,
-      "imported": 0,
-      "produced": 11,
-      "start": 0
-     },
-     "potato_seed": {
-      "consumed": 0,
-      "end": 16,
-      "exported": 0,
-      "imported": 4,
-      "produced": 0,
-      "start": 12
-     },
-     "pottage": {
-      "consumed": 4133,
-      "end": 146,
-      "exported": 0,
-      "imported": 0,
-      "produced": 4171,
-      "start": 108
-     },
-     "rabbit_pelt": {
-      "consumed": 64,
-      "end": 15,
-      "exported": 0,
-      "imported": 0,
-      "produced": 79,
-      "start": 0
-     },
-     "red_berries": {
-      "consumed": 224,
-      "end": 14,
-      "exported": 0,
-      "imported": 0,
-      "produced": 238,
-      "start": 0
-     },
-     "roast_meat": {
-      "consumed": 441,
-      "end": 99,
-      "exported": 8,
-      "imported": 0,
-      "produced": 540,
-      "start": 8
-     },
-     "rotten_apple": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "rusty_pickaxe": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "rusty_sword": {
-      "consumed": 0,
-      "end": 1,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 1
-     },
-     "stone": {
-      "consumed": 87,
-      "end": 95,
-      "exported": 0,
-      "imported": 0,
-      "produced": 158,
-      "start": 24
-     },
-     "strong_healing_tonic": {
-      "consumed": 0,
-      "end": 2,
-      "exported": 0,
-      "imported": 0,
-      "produced": 0,
-      "start": 2
-     },
-     "wheat": {
-      "consumed": 3163,
-      "end": 1140,
-      "exported": 20,
-      "imported": 0,
-      "produced": 3600,
-      "start": 723
-     },
-     "wheat_seed": {
-      "consumed": 0,
-      "end": 124,
-      "exported": 0,
-      "imported": 4,
-      "produced": 52,
-      "start": 68
-     },
-     "wool": {
-      "consumed": 6,
-      "end": 13,
-      "exported": 0,
-      "imported": 0,
-      "produced": 19,
-      "start": 0
-     },
-     "wool_cloth": {
-      "consumed": 0,
-      "end": 4,
-      "exported": 0,
-      "imported": 0,
-      "produced": 4,
-      "start": 0
-     }
-    },
-    "leaks": {
-     "currency": 0,
-     "items": {}
-    },
-    "treasury": 405
-   }
-  },
-  "2": {
-   "10": {
-    "alive": 106,
-    "animals": {
-     "born": {
-      "bird": 14,
-      "boar": 14,
-      "chicken": 12,
-      "cow": 2,
-      "deer": 10,
-      "pig": 9,
-      "rabbit": 28,
-      "sheep": 4
-     },
-     "hunted": {
-      "bird": 11,
-      "boar": 7,
-      "deer": 9,
-      "rabbit": 11
-     },
-     "poached": {},
-     "slaughtered": {
-      "chicken": 6,
-      "pig": 4,
-      "sheep": 1
-     },
-     "species": {
-      "bear": {
-       "adult": 2,
-       "penned": 0,
-       "wild": 2,
-       "young": 0
-      },
-      "bird": {
-       "adult": 6,
        "penned": 0,
        "wild": 10,
-       "young": 4
-      },
-      "boar": {
-       "adult": 3,
-       "penned": 0,
-       "wild": 8,
-       "young": 5
+       "young": 6
       },
       "chicken": {
-       "adult": 8,
-       "penned": 10,
+       "adult": 9,
+       "penned": 12,
        "wild": 0,
-       "young": 2
+       "young": 3
       },
       "cow": {
        "adult": 3,
@@ -1353,10 +64,10 @@
        "young": 2
       },
       "deer": {
-       "adult": 6,
+       "adult": 4,
        "penned": 0,
-       "wild": 11,
-       "young": 5
+       "wild": 7,
+       "young": 3
       },
       "fox": {
        "adult": 4,
@@ -1378,9 +89,9 @@
       },
       "sheep": {
        "adult": 4,
-       "penned": 6,
+       "penned": 7,
        "wild": 0,
-       "young": 2
+       "young": 3
       },
       "wolf": {
        "adult": 4,
@@ -1391,7 +102,7 @@
      },
      "starved": {}
     },
-    "currency": 4559,
+    "currency": 4581,
     "deposits": [
      [
       "iron_ore",
@@ -1403,7 +114,7 @@
      ],
      [
       "stone",
-      45
+      56
      ],
      [
       "iron_ore",
@@ -1427,7 +138,7 @@
      ],
      [
       "iron_ore",
-      17
+      0
      ],
      [
       "coal",
@@ -1435,7 +146,7 @@
      ],
      [
       "stone",
-      46
+      40
      ],
      [
       "iron_ore",
@@ -1454,47 +165,47 @@
       0
      ]
     ],
-    "fingerprint": "a6f2fffbcca274e572af94c35fc7a376",
+    "fingerprint": "1db0921e9985fbeadc7bd83c54a914cb",
     "households": 24,
     "item_ledger": {
      "ale": {
-      "consumed": 41,
-      "end": 11,
+      "consumed": 45,
+      "end": 19,
       "exported": 0,
       "imported": 0,
-      "produced": 28,
+      "produced": 40,
       "start": 24
      },
      "amulet": {
       "consumed": 0,
       "end": 1,
-      "exported": 1,
+      "exported": 0,
       "imported": 0,
-      "produced": 2,
+      "produced": 1,
       "start": 0
      },
      "axe": {
       "consumed": 0,
-      "end": 10,
-      "exported": 0,
+      "end": 16,
+      "exported": 3,
       "imported": 0,
-      "produced": 0,
+      "produced": 9,
       "start": 10
      },
      "blueberries": {
-      "consumed": 107,
-      "end": 39,
+      "consumed": 94,
+      "end": 54,
       "exported": 0,
       "imported": 0,
-      "produced": 146,
+      "produced": 148,
       "start": 0
      },
      "bread": {
-      "consumed": 41,
-      "end": 16,
-      "exported": 8,
+      "consumed": 55,
+      "end": 27,
+      "exported": 5,
       "imported": 0,
-      "produced": 64,
+      "produced": 86,
       "start": 1
      },
      "carrot_seed": {
@@ -1506,107 +217,107 @@
       "start": 12
      },
      "cart_axle": {
-      "consumed": 5,
+      "consumed": 3,
       "end": 1,
       "exported": 0,
       "imported": 0,
-      "produced": 6,
+      "produced": 4,
       "start": 0
      },
      "cart_ironwork": {
-      "consumed": 5,
+      "consumed": 3,
       "end": 1,
       "exported": 0,
       "imported": 0,
-      "produced": 6,
+      "produced": 4,
       "start": 0
      },
      "cart_wheel": {
-      "consumed": 10,
-      "end": 8,
+      "consumed": 6,
+      "end": 9,
       "exported": 0,
       "imported": 0,
-      "produced": 18,
+      "produced": 15,
       "start": 0
      },
      "cheese": {
-      "consumed": 1,
-      "end": 2,
+      "consumed": 3,
+      "end": 5,
       "exported": 0,
       "imported": 0,
-      "produced": 3,
+      "produced": 8,
       "start": 0
      },
      "coal": {
-      "consumed": 107,
-      "end": 109,
+      "consumed": 124,
+      "end": 92,
       "exported": 0,
       "imported": 0,
       "produced": 200,
       "start": 16
      },
      "copper_bar": {
-      "consumed": 6,
-      "end": 10,
+      "consumed": 15,
+      "end": 9,
       "exported": 8,
       "imported": 0,
-      "produced": 24,
+      "produced": 32,
       "start": 0
      },
      "copper_ore": {
-      "consumed": 36,
-      "end": 24,
+      "consumed": 42,
+      "end": 31,
       "exported": 0,
-      "imported": 0,
+      "imported": 13,
       "produced": 60,
       "start": 0
      },
      "copper_ring": {
       "consumed": 0,
-      "end": 1,
-      "exported": 0,
+      "end": 3,
+      "exported": 7,
       "imported": 0,
-      "produced": 1,
+      "produced": 10,
       "start": 0
      },
      "copper_sword": {
       "consumed": 0,
-      "end": 10,
-      "exported": 0,
+      "end": 11,
+      "exported": 1,
       "imported": 0,
-      "produced": 2,
+      "produced": 4,
       "start": 8
      },
      "egg": {
-      "consumed": 4,
-      "end": 18,
+      "consumed": 6,
+      "end": 24,
       "exported": 0,
       "imported": 0,
-      "produced": 22,
+      "produced": 30,
       "start": 0
      },
      "feather": {
-      "consumed": 0,
-      "end": 15,
-      "exported": 8,
+      "consumed": 3,
+      "end": 28,
+      "exported": 10,
       "imported": 0,
-      "produced": 23,
+      "produced": 41,
       "start": 0
      },
      "flower": {
-      "consumed": 150,
+      "consumed": 120,
       "end": 8,
       "exported": 0,
       "imported": 0,
-      "produced": 158,
+      "produced": 128,
       "start": 0
      },
      "gold_bar": {
       "consumed": 0,
-      "end": 3,
-      "exported": 0,
+      "end": 1,
+      "exported": 1,
       "imported": 0,
-      "produced": 3,
+      "produced": 2,
       "start": 0
      },
      "gold_ore": {
@@ -1626,11 +337,11 @@
       "start": 2
      },
      "handcart": {
-      "consumed": 6,
-      "end": 1,
+      "consumed": 3,
+      "end": 0,
       "exported": 0,
       "imported": 0,
-      "produced": 7,
+      "produced": 3,
       "start": 0
      },
      "healing_tonic": {
@@ -1651,34 +362,42 @@
      },
      "herbal_poultice": {
       "consumed": 0,
-      "end": 81,
+      "end": 68,
       "exported": 0,
       "imported": 2,
-      "produced": 75,
+      "produced": 62,
       "start": 4
      },
      "hide": {
-      "consumed": 24,
+      "consumed": 22,
       "end": 0,
       "exported": 0,
       "imported": 0,
-      "produced": 20,
+      "produced": 18,
       "start": 4
      },
      "iron_bar": {
-      "consumed": 35,
-      "end": 15,
-      "exported": 66,
+      "consumed": 58,
+      "end": 19,
+      "exported": 69,
       "imported": 0,
-      "produced": 108,
+      "produced": 138,
       "start": 8
      },
+     "iron_helmet": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 1,
+      "imported": 0,
+      "produced": 2,
+      "start": 0
+     },
      "iron_ore": {
-      "consumed": 164,
-      "end": 135,
+      "consumed": 194,
+      "end": 122,
       "exported": 0,
       "imported": 0,
-      "produced": 283,
+      "produced": 300,
       "start": 16
      },
      "iron_sword": {
@@ -1690,27 +409,27 @@
       "start": 8
      },
      "leather": {
-      "consumed": 32,
-      "end": 6,
-      "exported": 5,
+      "consumed": 34,
+      "end": 4,
+      "exported": 9,
       "imported": 0,
-      "produced": 33,
+      "produced": 37,
       "start": 10
      },
      "leather_armor": {
       "consumed": 0,
-      "end": 7,
+      "end": 9,
       "exported": 0,
       "imported": 0,
-      "produced": 1,
+      "produced": 3,
       "start": 6
      },
      "leather_cap": {
       "consumed": 0,
-      "end": 4,
-      "exported": 11,
+      "end": 5,
+      "exported": 7,
       "imported": 0,
-      "produced": 15,
+      "produced": 12,
       "start": 0
      },
      "linen_bandage": {
@@ -1723,50 +442,50 @@
      },
      "lockpick": {
       "consumed": 0,
-      "end": 3,
+      "end": 7,
       "exported": 0,
       "imported": 0,
-      "produced": 3,
+      "produced": 7,
       "start": 0
      },
      "log": {
-      "consumed": 469,
-      "end": 200,
-      "exported": 85,
+      "consumed": 498,
+      "end": 194,
+      "exported": 82,
       "imported": 0,
-      "produced": 718,
+      "produced": 738,
       "start": 36
      },
      "meat": {
-      "consumed": 95,
-      "end": 16,
+      "consumed": 89,
+      "end": 20,
       "exported": 0,
       "imported": 0,
-      "produced": 98,
+      "produced": 96,
       "start": 13
      },
      "milk": {
-      "consumed": 9,
-      "end": 19,
-      "exported": 2,
+      "consumed": 24,
+      "end": 4,
+      "exported": 0,
       "imported": 0,
-      "produced": 30,
+      "produced": 28,
       "start": 0
      },
      "padlock": {
       "consumed": 0,
-      "end": 1,
+      "end": 2,
       "exported": 0,
       "imported": 0,
-      "produced": 1,
+      "produced": 2,
       "start": 0
      },
      "pickaxe": {
       "consumed": 0,
-      "end": 15,
-      "exported": 0,
+      "end": 19,
+      "exported": 2,
       "imported": 0,
-      "produced": 0,
+      "produced": 6,
       "start": 15
      },
      "plain_clothes": {
@@ -1778,19 +497,19 @@
       "start": 1
      },
      "plank": {
-      "consumed": 158,
-      "end": 128,
-      "exported": 64,
+      "consumed": 182,
+      "end": 127,
+      "exported": 61,
       "imported": 0,
-      "produced": 322,
+      "produced": 342,
       "start": 28
      },
      "plough": {
       "consumed": 0,
-      "end": 4,
-      "exported": 7,
+      "end": 5,
+      "exported": 3,
       "imported": 0,
-      "produced": 11,
+      "produced": 8,
       "start": 0
      },
      "potato_seed": {
@@ -1802,35 +521,35 @@
       "start": 12
      },
      "pottage": {
-      "consumed": 1398,
-      "end": 181,
-      "exported": 30,
+      "consumed": 1319,
+      "end": 222,
+      "exported": 20,
       "imported": 0,
-      "produced": 1501,
+      "produced": 1453,
       "start": 108
      },
      "rabbit_pelt": {
-      "consumed": 6,
-      "end": 5,
+      "consumed": 10,
+      "end": 3,
       "exported": 0,
       "imported": 0,
-      "produced": 11,
+      "produced": 13,
       "start": 0
      },
      "red_berries": {
-      "consumed": 62,
-      "end": 26,
+      "consumed": 61,
+      "end": 21,
       "exported": 0,
       "imported": 0,
-      "produced": 88,
+      "produced": 82,
       "start": 0
      },
      "roast_meat": {
-      "consumed": 108,
-      "end": 74,
-      "exported": 20,
+      "consumed": 139,
+      "end": 67,
+      "exported": 4,
       "imported": 0,
-      "produced": 194,
+      "produced": 202,
       "start": 8
      },
      "rotten_apple": {
@@ -1859,10 +578,10 @@
      },
      "stone": {
       "consumed": 0,
-      "end": 93,
+      "end": 88,
       "exported": 0,
       "imported": 0,
-      "produced": 69,
+      "produced": 64,
       "start": 24
      },
      "strong_healing_tonic": {
@@ -1874,9 +593,9 @@
       "start": 2
      },
      "wheat": {
-      "consumed": 1142,
-      "end": 621,
-      "exported": 40,
+      "consumed": 1170,
+      "end": 613,
+      "exported": 20,
       "imported": 0,
       "produced": 1080,
       "start": 723
@@ -1891,10 +610,10 @@
      },
      "wool": {
       "consumed": 4,
-      "end": 1,
+      "end": 0,
       "exported": 0,
       "imported": 0,
-      "produced": 5,
+      "produced": 4,
       "start": 0
      },
      "wool_cloth": {
@@ -1910,38 +629,37 @@
      "currency": 0,
      "items": {}
     },
-    "treasury": 440
+    "treasury": 425
    },
    "30": {
-    "alive": 113,
+    "alive": 106,
     "animals": {
      "born": {
-      "bird": 55,
-      "boar": 45,
-      "chicken": 43,
-      "cow": 9,
-      "deer": 25,
-      "fox": 2,
-      "pig": 25,
-      "rabbit": 114,
-      "sheep": 16,
+      "bird": 78,
+      "boar": 49,
+      "chicken": 60,
+      "cow": 8,
+      "deer": 23,
+      "pig": 24,
+      "rabbit": 124,
+      "sheep": 15,
       "wolf": 4
      },
      "hunted": {
-      "bird": 37,
-      "boar": 18,
-      "deer": 18,
-      "rabbit": 50
+      "bird": 53,
+      "boar": 15,
+      "deer": 15,
+      "rabbit": 61
      },
      "poached": {
-      "bird": 2,
-      "deer": 1
+      "bird": 6,
+      "rabbit": 2
      },
      "slaughtered": {
-      "chicken": 30,
-      "cow": 7,
+      "chicken": 47,
+      "cow": 6,
       "pig": 20,
-      "sheep": 12
+      "sheep": 11
      },
      "species": {
       "bear": {
@@ -1951,22 +669,22 @@
        "young": 0
       },
       "bird": {
-       "adult": 5,
+       "adult": 8,
        "penned": 0,
-       "wild": 9,
-       "young": 4
+       "wild": 14,
+       "young": 6
       },
       "boar": {
-       "adult": 4,
+       "adult": 8,
        "penned": 0,
-       "wild": 6,
-       "young": 2
+       "wild": 20,
+       "young": 12
       },
       "chicken": {
-       "adult": 9,
+       "adult": 8,
        "penned": 12,
        "wild": 0,
-       "young": 3
+       "young": 4
       },
       "cow": {
        "adult": 3,
@@ -1975,45 +693,45 @@
        "young": 2
       },
       "deer": {
-       "adult": 4,
-       "penned": 0,
-       "wild": 5,
-       "young": 1
-      },
-      "fox": {
-       "adult": 6,
-       "penned": 0,
-       "wild": 6,
-       "young": 0
-      },
-      "pig": {
-       "adult": 6,
-       "penned": 8,
-       "wild": 0,
-       "young": 2
-      },
-      "rabbit": {
        "adult": 5,
        "penned": 0,
        "wild": 8,
        "young": 3
       },
-      "sheep": {
+      "fox": {
        "adult": 4,
+       "penned": 0,
+       "wild": 4,
+       "young": 0
+      },
+      "pig": {
+       "adult": 5,
        "penned": 7,
        "wild": 0,
-       "young": 3
+       "young": 2
+      },
+      "rabbit": {
+       "adult": 9,
+       "penned": 0,
+       "wild": 19,
+       "young": 10
+      },
+      "sheep": {
+       "adult": 5,
+       "penned": 7,
+       "wild": 0,
+       "young": 2
       },
       "wolf": {
-       "adult": 8,
+       "adult": 4,
        "penned": 0,
        "wild": 8,
-       "young": 0
+       "young": 4
       }
      },
      "starved": {}
     },
-    "currency": 4898,
+    "currency": 4910,
     "deposits": [
      [
       "iron_ore",
@@ -2045,7 +763,7 @@
      ],
      [
       "stone",
-      48
+      71
      ],
      [
       "iron_ore",
@@ -2057,7 +775,7 @@
      ],
      [
       "stone",
-      3
+      0
      ],
      [
       "iron_ore",
@@ -2076,55 +794,55 @@
       0
      ]
     ],
-    "fingerprint": "b8b047f9bdbf1dc4879745ee6983a6c1",
+    "fingerprint": "6109c2a94f7c049bbae97efd9551580a",
     "households": 24,
     "item_ledger": {
      "ale": {
-      "consumed": 45,
-      "end": 7,
+      "consumed": 76,
+      "end": 20,
       "exported": 0,
       "imported": 0,
-      "produced": 28,
+      "produced": 72,
       "start": 24
      },
      "amulet": {
       "consumed": 0,
       "end": 1,
-      "exported": 1,
+      "exported": 0,
       "imported": 0,
-      "produced": 2,
+      "produced": 1,
       "start": 0
      },
      "apple": {
-      "consumed": 23,
-      "end": 13,
+      "consumed": 27,
+      "end": 1,
       "exported": 0,
       "imported": 0,
-      "produced": 36,
+      "produced": 28,
       "start": 0
      },
      "axe": {
       "consumed": 0,
-      "end": 16,
-      "exported": 7,
+      "end": 31,
+      "exported": 6,
       "imported": 0,
-      "produced": 13,
+      "produced": 27,
       "start": 10
      },
      "blueberries": {
-      "consumed": 397,
-      "end": 37,
+      "consumed": 350,
+      "end": 46,
       "exported": 0,
       "imported": 0,
-      "produced": 434,
+      "produced": 396,
       "start": 0
      },
      "bread": {
-      "consumed": 43,
-      "end": 14,
-      "exported": 8,
+      "consumed": 108,
+      "end": 24,
+      "exported": 5,
       "imported": 0,
-      "produced": 64,
+      "produced": 136,
       "start": 1
      },
      "carrot_seed": {
@@ -2136,105 +854,105 @@
       "start": 12
      },
      "cart_axle": {
-      "consumed": 18,
-      "end": 1,
+      "consumed": 12,
+      "end": 2,
       "exported": 0,
       "imported": 0,
-      "produced": 19,
+      "produced": 14,
       "start": 0
      },
      "cart_ironwork": {
-      "consumed": 18,
+      "consumed": 12,
       "end": 1,
       "exported": 0,
       "imported": 0,
-      "produced": 19,
+      "produced": 13,
       "start": 0
      },
      "cart_wheel": {
-      "consumed": 36,
-      "end": 6,
+      "consumed": 24,
+      "end": 11,
       "exported": 0,
       "imported": 0,
-      "produced": 42,
+      "produced": 35,
       "start": 0
      },
      "cheese": {
-      "consumed": 2,
+      "consumed": 10,
       "end": 1,
       "exported": 0,
       "imported": 0,
-      "produced": 3,
+      "produced": 11,
       "start": 0
      },
      "coal": {
-      "consumed": 242,
-      "end": 57,
+      "consumed": 210,
+      "end": 36,
       "exported": 0,
-      "imported": 83,
+      "imported": 30,
       "produced": 200,
       "start": 16
      },
      "copper_bar": {
-      "consumed": 28,
-      "end": 12,
-      "exported": 21,
+      "consumed": 37,
+      "end": 6,
+      "exported": 18,
       "imported": 0,
       "produced": 61,
       "start": 0
      },
      "copper_ore": {
-      "consumed": 96,
-      "end": 10,
+      "consumed": 76,
+      "end": 25,
       "exported": 0,
-      "imported": 46,
+      "imported": 41,
       "produced": 60,
       "start": 0
      },
      "copper_ring": {
       "consumed": 0,
-      "end": 1,
-      "exported": 0,
+      "end": 5,
+      "exported": 7,
       "imported": 0,
-      "produced": 1,
+      "produced": 12,
       "start": 0
      },
      "copper_sword": {
       "consumed": 0,
-      "end": 14,
-      "exported": 9,
+      "end": 18,
+      "exported": 7,
       "imported": 0,
-      "produced": 15,
+      "produced": 17,
       "start": 8
      },
      "egg": {
-      "consumed": 4,
-      "end": 105,
+      "consumed": 12,
+      "end": 114,
       "exported": 0,
       "imported": 0,
-      "produced": 109,
+      "produced": 126,
       "start": 0
      },
      "feather": {
-      "consumed": 2,
-      "end": 83,
-      "exported": 14,
+      "consumed": 6,
+      "end": 124,
+      "exported": 23,
       "imported": 0,
-      "produced": 99,
+      "produced": 153,
       "start": 0
      },
      "flower": {
-      "consumed": 418,
-      "end": 11,
+      "consumed": 358,
+      "end": 7,
       "exported": 0,
       "imported": 0,
-      "produced": 429,
+      "produced": 365,
       "start": 0
      },
      "gold_bar": {
       "consumed": 0,
-      "end": 3,
-      "exported": 1,
+      "end": 1,
+      "exported": 3,
       "imported": 0,
       "produced": 4,
       "start": 0
@@ -2256,11 +974,11 @@
       "start": 2
      },
      "handcart": {
-      "consumed": 20,
+      "consumed": 11,
       "end": 1,
       "exported": 0,
       "imported": 0,
-      "produced": 21,
+      "produced": 12,
       "start": 0
      },
      "healing_tonic": {
@@ -2281,18 +999,18 @@
      },
      "herbal_poultice": {
       "consumed": 0,
-      "end": 216,
-      "exported": 0,
+      "end": 186,
+      "exported": 2,
       "imported": 2,
-      "produced": 210,
+      "produced": 182,
       "start": 4
      },
      "hide": {
-      "consumed": 45,
-      "end": 34,
+      "consumed": 54,
+      "end": 16,
       "exported": 0,
       "imported": 0,
-      "produced": 75,
+      "produced": 66,
       "start": 4
      },
      "iron_armor": {
@@ -2304,51 +1022,59 @@
       "start": 0
      },
      "iron_bar": {
-      "consumed": 139,
-      "end": 21,
-      "exported": 78,
+      "consumed": 144,
+      "end": 14,
+      "exported": 77,
       "imported": 0,
-      "produced": 230,
+      "produced": 227,
       "start": 8
      },
+     "iron_helmet": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 1,
+      "imported": 0,
+      "produced": 2,
+      "start": 0
+     },
      "iron_ore": {
-      "consumed": 356,
-      "end": 61,
+      "consumed": 324,
+      "end": 53,
       "exported": 0,
-      "imported": 101,
+      "imported": 61,
       "produced": 300,
       "start": 16
      },
      "iron_sword": {
       "consumed": 0,
       "end": 12,
-      "exported": 6,
+      "exported": 5,
       "imported": 0,
-      "produced": 10,
+      "produced": 9,
       "start": 8
      },
      "leather": {
-      "consumed": 43,
-      "end": 40,
-      "exported": 5,
+      "consumed": 47,
+      "end": 59,
+      "exported": 9,
       "imported": 0,
-      "produced": 78,
+      "produced": 105,
       "start": 10
      },
      "leather_armor": {
       "consumed": 0,
-      "end": 7,
+      "end": 9,
       "exported": 0,
       "imported": 0,
-      "produced": 1,
+      "produced": 3,
       "start": 6
      },
      "leather_cap": {
       "consumed": 0,
-      "end": 4,
-      "exported": 11,
+      "end": 6,
+      "exported": 7,
       "imported": 0,
-      "produced": 15,
+      "produced": 13,
       "start": 0
      },
      "linen_bandage": {
@@ -2361,34 +1087,34 @@
      },
      "lockpick": {
       "consumed": 0,
-      "end": 6,
+      "end": 7,
       "exported": 0,
       "imported": 0,
-      "produced": 6,
+      "produced": 7,
       "start": 0
      },
      "log": {
-      "consumed": 1453,
-      "end": 186,
-      "exported": 88,
+      "consumed": 1481,
+      "end": 188,
+      "exported": 86,
       "imported": 0,
-      "produced": 1691,
+      "produced": 1719,
       "start": 36
      },
      "meat": {
-      "consumed": 248,
+      "consumed": 242,
       "end": 148,
-      "exported": 1,
+      "exported": 0,
       "imported": 0,
-      "produced": 384,
+      "produced": 377,
       "start": 13
      },
      "milk": {
-      "consumed": 9,
-      "end": 99,
-      "exported": 2,
+      "consumed": 33,
+      "end": 75,
+      "exported": 0,
       "imported": 0,
-      "produced": 110,
+      "produced": 108,
       "start": 0
      },
      "padlock": {
@@ -2401,10 +1127,10 @@
      },
      "pickaxe": {
       "consumed": 0,
-      "end": 20,
-      "exported": 8,
+      "end": 27,
+      "exported": 4,
       "imported": 0,
-      "produced": 13,
+      "produced": 16,
       "start": 15
      },
      "plain_clothes": {
@@ -2416,19 +1142,19 @@
       "start": 1
      },
      "plank": {
-      "consumed": 999,
-      "end": 124,
-      "exported": 67,
+      "consumed": 1066,
+      "end": 75,
+      "exported": 61,
       "imported": 0,
-      "produced": 1162,
+      "produced": 1174,
       "start": 28
      },
      "plough": {
       "consumed": 0,
-      "end": 4,
-      "exported": 7,
+      "end": 5,
+      "exported": 3,
       "imported": 0,
-      "produced": 11,
+      "produced": 8,
       "start": 0
      },
      "potato_seed": {
@@ -2440,35 +1166,35 @@
       "start": 12
      },
      "pottage": {
-      "consumed": 4209,
-      "end": 154,
-      "exported": 30,
+      "consumed": 3995,
+      "end": 223,
+      "exported": 20,
       "imported": 0,
-      "produced": 4285,
+      "produced": 4130,
       "start": 108
      },
      "rabbit_pelt": {
-      "consumed": 44,
-      "end": 6,
+      "consumed": 60,
+      "end": 3,
       "exported": 0,
       "imported": 0,
-      "produced": 50,
+      "produced": 63,
       "start": 0
      },
      "red_berries": {
       "consumed": 210,
-      "end": 22,
+      "end": 20,
       "exported": 0,
       "imported": 0,
-      "produced": 232,
+      "produced": 230,
       "start": 0
      },
      "roast_meat": {
-      "consumed": 444,
-      "end": 80,
-      "exported": 20,
+      "consumed": 474,
+      "end": 64,
+      "exported": 4,
       "imported": 0,
-      "produced": 536,
+      "produced": 534,
       "start": 8
      },
      "rotten_apple": {
@@ -2496,11 +1222,11 @@
       "start": 1
      },
      "stone": {
-      "consumed": 119,
-      "end": 94,
+      "consumed": 97,
+      "end": 96,
       "exported": 0,
       "imported": 0,
-      "produced": 189,
+      "produced": 169,
       "start": 24
      },
      "strong_healing_tonic": {
@@ -2512,19 +1238,19 @@
       "start": 2
      },
      "wheat": {
-      "consumed": 3154,
-      "end": 1129,
-      "exported": 40,
+      "consumed": 3267,
+      "end": 1034,
+      "exported": 22,
       "imported": 0,
       "produced": 3600,
       "start": 723
      },
      "wheat_seed": {
       "consumed": 0,
-      "end": 136,
+      "end": 134,
       "exported": 0,
       "imported": 4,
-      "produced": 64,
+      "produced": 62,
       "start": 68
      },
      "wool": {
@@ -2548,7 +1274,1255 @@
      "currency": 0,
      "items": {}
     },
-    "treasury": 498
+    "treasury": 420
+   }
+  },
+  "2": {
+   "10": {
+    "alive": 107,
+    "animals": {
+     "born": {
+      "bird": 12,
+      "boar": 12,
+      "chicken": 16,
+      "cow": 2,
+      "deer": 9,
+      "pig": 8,
+      "rabbit": 14,
+      "sheep": 5
+     },
+     "hunted": {
+      "bird": 11,
+      "boar": 9,
+      "deer": 8,
+      "rabbit": 7
+     },
+     "poached": {
+      "bird": 1
+     },
+     "slaughtered": {
+      "chicken": 5,
+      "cow": 1,
+      "pig": 4,
+      "sheep": 1
+     },
+     "species": {
+      "bear": {
+       "adult": 2,
+       "penned": 0,
+       "wild": 2,
+       "young": 0
+      },
+      "bird": {
+       "adult": 5,
+       "penned": 0,
+       "wild": 7,
+       "young": 2
+      },
+      "boar": {
+       "adult": 4,
+       "penned": 0,
+       "wild": 8,
+       "young": 4
+      },
+      "chicken": {
+       "adult": 8,
+       "penned": 12,
+       "wild": 0,
+       "young": 4
+      },
+      "cow": {
+       "adult": 3,
+       "penned": 4,
+       "wild": 0,
+       "young": 1
+      },
+      "deer": {
+       "adult": 4,
+       "penned": 0,
+       "wild": 6,
+       "young": 2
+      },
+      "fox": {
+       "adult": 4,
+       "penned": 0,
+       "wild": 4,
+       "young": 0
+      },
+      "pig": {
+       "adult": 3,
+       "penned": 7,
+       "wild": 0,
+       "young": 4
+      },
+      "rabbit": {
+       "adult": 7,
+       "penned": 0,
+       "wild": 7,
+       "young": 0
+      },
+      "sheep": {
+       "adult": 4,
+       "penned": 7,
+       "wild": 0,
+       "young": 3
+      },
+      "wolf": {
+       "adult": 4,
+       "penned": 0,
+       "wild": 4,
+       "young": 0
+      }
+     },
+     "starved": {}
+    },
+    "currency": 4561,
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      48
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      80
+     ],
+     [
+      "iron_ore",
+      1
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      45
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "gold_ore",
+      0
+     ]
+    ],
+    "fingerprint": "d62cb76de57a5951d5d48a4be738c96f",
+    "households": 24,
+    "item_ledger": {
+     "ale": {
+      "consumed": 51,
+      "end": 9,
+      "exported": 0,
+      "imported": 0,
+      "produced": 36,
+      "start": 24
+     },
+     "amulet": {
+      "consumed": 0,
+      "end": 4,
+      "exported": 2,
+      "imported": 0,
+      "produced": 6,
+      "start": 0
+     },
+     "axe": {
+      "consumed": 0,
+      "end": 10,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 10
+     },
+     "blueberries": {
+      "consumed": 96,
+      "end": 42,
+      "exported": 0,
+      "imported": 0,
+      "produced": 138,
+      "start": 0
+     },
+     "bread": {
+      "consumed": 50,
+      "end": 40,
+      "exported": 16,
+      "imported": 0,
+      "produced": 105,
+      "start": 1
+     },
+     "carrot_seed": {
+      "consumed": 0,
+      "end": 16,
+      "exported": 0,
+      "imported": 4,
+      "produced": 0,
+      "start": 12
+     },
+     "cart_axle": {
+      "consumed": 3,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 4,
+      "start": 0
+     },
+     "cart_ironwork": {
+      "consumed": 3,
+      "end": 0,
+      "exported": 0,
+      "imported": 0,
+      "produced": 3,
+      "start": 0
+     },
+     "cart_wheel": {
+      "consumed": 6,
+      "end": 8,
+      "exported": 0,
+      "imported": 0,
+      "produced": 14,
+      "start": 0
+     },
+     "cheese": {
+      "consumed": 4,
+      "end": 0,
+      "exported": 0,
+      "imported": 0,
+      "produced": 4,
+      "start": 0
+     },
+     "coal": {
+      "consumed": 112,
+      "end": 104,
+      "exported": 0,
+      "imported": 0,
+      "produced": 200,
+      "start": 16
+     },
+     "copper_bar": {
+      "consumed": 7,
+      "end": 9,
+      "exported": 9,
+      "imported": 0,
+      "produced": 25,
+      "start": 0
+     },
+     "copper_ore": {
+      "consumed": 40,
+      "end": 22,
+      "exported": 0,
+      "imported": 2,
+      "produced": 60,
+      "start": 0
+     },
+     "copper_ring": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 1,
+      "imported": 0,
+      "produced": 2,
+      "start": 0
+     },
+     "copper_sword": {
+      "consumed": 0,
+      "end": 8,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 8
+     },
+     "egg": {
+      "consumed": 12,
+      "end": 9,
+      "exported": 0,
+      "imported": 0,
+      "produced": 21,
+      "start": 0
+     },
+     "feather": {
+      "consumed": 1,
+      "end": 19,
+      "exported": 2,
+      "imported": 0,
+      "produced": 22,
+      "start": 0
+     },
+     "flower": {
+      "consumed": 132,
+      "end": 10,
+      "exported": 0,
+      "imported": 0,
+      "produced": 142,
+      "start": 0
+     },
+     "gold_bar": {
+      "consumed": 0,
+      "end": 2,
+      "exported": 1,
+      "imported": 0,
+      "produced": 3,
+      "start": 0
+     },
+     "gold_ore": {
+      "consumed": 6,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 8,
+      "start": 0
+     },
+     "hammer": {
+      "consumed": 0,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 2
+     },
+     "handcart": {
+      "consumed": 3,
+      "end": 0,
+      "exported": 0,
+      "imported": 0,
+      "produced": 3,
+      "start": 0
+     },
+     "healing_tonic": {
+      "consumed": 0,
+      "end": 4,
+      "exported": 0,
+      "imported": 1,
+      "produced": 0,
+      "start": 3
+     },
+     "herb_seed": {
+      "consumed": 0,
+      "end": 16,
+      "exported": 0,
+      "imported": 4,
+      "produced": 0,
+      "start": 12
+     },
+     "herbal_poultice": {
+      "consumed": 0,
+      "end": 72,
+      "exported": 0,
+      "imported": 2,
+      "produced": 66,
+      "start": 4
+     },
+     "hide": {
+      "consumed": 25,
+      "end": 0,
+      "exported": 0,
+      "imported": 0,
+      "produced": 21,
+      "start": 4
+     },
+     "iron_bar": {
+      "consumed": 29,
+      "end": 18,
+      "exported": 74,
+      "imported": 0,
+      "produced": 113,
+      "start": 8
+     },
+     "iron_ore": {
+      "consumed": 172,
+      "end": 143,
+      "exported": 0,
+      "imported": 0,
+      "produced": 299,
+      "start": 16
+     },
+     "iron_sword": {
+      "consumed": 0,
+      "end": 8,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 8
+     },
+     "leather": {
+      "consumed": 33,
+      "end": 9,
+      "exported": 0,
+      "imported": 0,
+      "produced": 32,
+      "start": 10
+     },
+     "leather_armor": {
+      "consumed": 0,
+      "end": 6,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 6
+     },
+     "leather_cap": {
+      "consumed": 0,
+      "end": 6,
+      "exported": 10,
+      "imported": 0,
+      "produced": 16,
+      "start": 0
+     },
+     "linen_bandage": {
+      "consumed": 0,
+      "end": 10,
+      "exported": 0,
+      "imported": 2,
+      "produced": 0,
+      "start": 8
+     },
+     "log": {
+      "consumed": 453,
+      "end": 199,
+      "exported": 82,
+      "imported": 0,
+      "produced": 698,
+      "start": 36
+     },
+     "meat": {
+      "consumed": 78,
+      "end": 30,
+      "exported": 5,
+      "imported": 0,
+      "produced": 100,
+      "start": 13
+     },
+     "milk": {
+      "consumed": 12,
+      "end": 12,
+      "exported": 6,
+      "imported": 0,
+      "produced": 30,
+      "start": 0
+     },
+     "pickaxe": {
+      "consumed": 0,
+      "end": 15,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 15
+     },
+     "plain_clothes": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "plank": {
+      "consumed": 133,
+      "end": 141,
+      "exported": 62,
+      "imported": 0,
+      "produced": 308,
+      "start": 28
+     },
+     "plough": {
+      "consumed": 0,
+      "end": 4,
+      "exported": 6,
+      "imported": 0,
+      "produced": 10,
+      "start": 0
+     },
+     "potato_seed": {
+      "consumed": 0,
+      "end": 16,
+      "exported": 0,
+      "imported": 4,
+      "produced": 0,
+      "start": 12
+     },
+     "pottage": {
+      "consumed": 1416,
+      "end": 220,
+      "exported": 14,
+      "imported": 0,
+      "produced": 1542,
+      "start": 108
+     },
+     "rabbit_pelt": {
+      "consumed": 2,
+      "end": 5,
+      "exported": 0,
+      "imported": 0,
+      "produced": 7,
+      "start": 0
+     },
+     "red_berries": {
+      "consumed": 49,
+      "end": 23,
+      "exported": 0,
+      "imported": 0,
+      "produced": 72,
+      "start": 0
+     },
+     "roast_meat": {
+      "consumed": 85,
+      "end": 70,
+      "exported": 9,
+      "imported": 0,
+      "produced": 156,
+      "start": 8
+     },
+     "rotten_apple": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "rusty_pickaxe": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "rusty_sword": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "stone": {
+      "consumed": 0,
+      "end": 91,
+      "exported": 0,
+      "imported": 0,
+      "produced": 67,
+      "start": 24
+     },
+     "strong_healing_tonic": {
+      "consumed": 0,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 2
+     },
+     "wheat": {
+      "consumed": 1225,
+      "end": 558,
+      "exported": 20,
+      "imported": 0,
+      "produced": 1080,
+      "start": 723
+     },
+     "wheat_seed": {
+      "consumed": 0,
+      "end": 108,
+      "exported": 0,
+      "imported": 4,
+      "produced": 36,
+      "start": 68
+     },
+     "wool": {
+      "consumed": 4,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 5,
+      "start": 0
+     },
+     "wool_cloth": {
+      "consumed": 0,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 2,
+      "start": 0
+     }
+    },
+    "leaks": {
+     "currency": 0,
+     "items": {}
+    },
+    "treasury": 454
+   },
+   "30": {
+    "alive": 122,
+    "animals": {
+     "born": {
+      "bird": 44,
+      "boar": 44,
+      "chicken": 53,
+      "cow": 10,
+      "deer": 23,
+      "pig": 23,
+      "rabbit": 56,
+      "sheep": 17
+     },
+     "hunted": {
+      "bird": 32,
+      "boar": 19,
+      "deer": 13,
+      "rabbit": 23
+     },
+     "poached": {
+      "bird": 1
+     },
+     "slaughtered": {
+      "chicken": 39,
+      "cow": 7,
+      "pig": 19,
+      "sheep": 13
+     },
+     "species": {
+      "bear": {
+       "adult": 2,
+       "penned": 0,
+       "wild": 2,
+       "young": 0
+      },
+      "bird": {
+       "adult": 5,
+       "penned": 0,
+       "wild": 7,
+       "young": 2
+      },
+      "boar": {
+       "adult": 4,
+       "penned": 0,
+       "wild": 9,
+       "young": 5
+      },
+      "chicken": {
+       "adult": 8,
+       "penned": 10,
+       "wild": 0,
+       "young": 2
+      },
+      "cow": {
+       "adult": 3,
+       "penned": 6,
+       "wild": 0,
+       "young": 3
+      },
+      "deer": {
+       "adult": 5,
+       "penned": 0,
+       "wild": 6,
+       "young": 1
+      },
+      "fox": {
+       "adult": 4,
+       "penned": 0,
+       "wild": 4,
+       "young": 0
+      },
+      "pig": {
+       "adult": 5,
+       "penned": 7,
+       "wild": 0,
+       "young": 2
+      },
+      "rabbit": {
+       "adult": 5,
+       "penned": 0,
+       "wild": 11,
+       "young": 6
+      },
+      "sheep": {
+       "adult": 4,
+       "penned": 7,
+       "wild": 0,
+       "young": 3
+      },
+      "wolf": {
+       "adult": 4,
+       "penned": 0,
+       "wild": 4,
+       "young": 0
+      }
+     },
+     "starved": {}
+    },
+    "currency": 4908,
+    "deposits": [
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "stone",
+      39
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "stone",
+      4
+     ],
+     [
+      "iron_ore",
+      0
+     ],
+     [
+      "copper_ore",
+      0
+     ],
+     [
+      "coal",
+      0
+     ],
+     [
+      "gold_ore",
+      0
+     ]
+    ],
+    "fingerprint": "e3a4bb2f1e081080e6be328fe7da8384",
+    "households": 24,
+    "item_ledger": {
+     "ale": {
+      "consumed": 83,
+      "end": 13,
+      "exported": 0,
+      "imported": 0,
+      "produced": 72,
+      "start": 24
+     },
+     "amulet": {
+      "consumed": 0,
+      "end": 6,
+      "exported": 2,
+      "imported": 0,
+      "produced": 8,
+      "start": 0
+     },
+     "apple": {
+      "consumed": 28,
+      "end": 4,
+      "exported": 0,
+      "imported": 0,
+      "produced": 32,
+      "start": 0
+     },
+     "axe": {
+      "consumed": 0,
+      "end": 15,
+      "exported": 8,
+      "imported": 0,
+      "produced": 13,
+      "start": 10
+     },
+     "blueberries": {
+      "consumed": 355,
+      "end": 51,
+      "exported": 0,
+      "imported": 0,
+      "produced": 406,
+      "start": 0
+     },
+     "bread": {
+      "consumed": 117,
+      "end": 27,
+      "exported": 16,
+      "imported": 0,
+      "produced": 159,
+      "start": 1
+     },
+     "carrot_seed": {
+      "consumed": 0,
+      "end": 16,
+      "exported": 0,
+      "imported": 4,
+      "produced": 0,
+      "start": 12
+     },
+     "cart_axle": {
+      "consumed": 15,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 17,
+      "start": 0
+     },
+     "cart_ironwork": {
+      "consumed": 15,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 17,
+      "start": 0
+     },
+     "cart_wheel": {
+      "consumed": 30,
+      "end": 8,
+      "exported": 0,
+      "imported": 0,
+      "produced": 38,
+      "start": 0
+     },
+     "cheese": {
+      "consumed": 8,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 9,
+      "start": 0
+     },
+     "coal": {
+      "consumed": 242,
+      "end": 50,
+      "exported": 0,
+      "imported": 76,
+      "produced": 200,
+      "start": 16
+     },
+     "copper_bar": {
+      "consumed": 38,
+      "end": 12,
+      "exported": 24,
+      "imported": 0,
+      "produced": 74,
+      "start": 0
+     },
+     "copper_ore": {
+      "consumed": 102,
+      "end": 14,
+      "exported": 0,
+      "imported": 56,
+      "produced": 60,
+      "start": 0
+     },
+     "copper_ring": {
+      "consumed": 0,
+      "end": 3,
+      "exported": 1,
+      "imported": 0,
+      "produced": 4,
+      "start": 0
+     },
+     "copper_sword": {
+      "consumed": 0,
+      "end": 14,
+      "exported": 8,
+      "imported": 0,
+      "produced": 14,
+      "start": 8
+     },
+     "egg": {
+      "consumed": 18,
+      "end": 94,
+      "exported": 0,
+      "imported": 0,
+      "produced": 112,
+      "start": 0
+     },
+     "feather": {
+      "consumed": 1,
+      "end": 100,
+      "exported": 10,
+      "imported": 0,
+      "produced": 111,
+      "start": 0
+     },
+     "flower": {
+      "consumed": 326,
+      "end": 11,
+      "exported": 0,
+      "imported": 0,
+      "produced": 337,
+      "start": 0
+     },
+     "gold_bar": {
+      "consumed": 1,
+      "end": 1,
+      "exported": 1,
+      "imported": 0,
+      "produced": 3,
+      "start": 0
+     },
+     "gold_ore": {
+      "consumed": 6,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 8,
+      "start": 0
+     },
+     "gold_ring": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 1,
+      "start": 0
+     },
+     "hammer": {
+      "consumed": 0,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 2
+     },
+     "handcart": {
+      "consumed": 18,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 19,
+      "start": 0
+     },
+     "healing_tonic": {
+      "consumed": 0,
+      "end": 4,
+      "exported": 0,
+      "imported": 1,
+      "produced": 0,
+      "start": 3
+     },
+     "herb_seed": {
+      "consumed": 0,
+      "end": 16,
+      "exported": 0,
+      "imported": 4,
+      "produced": 0,
+      "start": 12
+     },
+     "herbal_poultice": {
+      "consumed": 0,
+      "end": 168,
+      "exported": 1,
+      "imported": 2,
+      "produced": 163,
+      "start": 4
+     },
+     "hide": {
+      "consumed": 49,
+      "end": 24,
+      "exported": 0,
+      "imported": 0,
+      "produced": 69,
+      "start": 4
+     },
+     "iron_armor": {
+      "consumed": 0,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 2,
+      "start": 0
+     },
+     "iron_bar": {
+      "consumed": 121,
+      "end": 23,
+      "exported": 87,
+      "imported": 0,
+      "produced": 223,
+      "start": 8
+     },
+     "iron_ore": {
+      "consumed": 350,
+      "end": 58,
+      "exported": 0,
+      "imported": 92,
+      "produced": 300,
+      "start": 16
+     },
+     "iron_sword": {
+      "consumed": 0,
+      "end": 12,
+      "exported": 6,
+      "imported": 0,
+      "produced": 10,
+      "start": 8
+     },
+     "leather": {
+      "consumed": 46,
+      "end": 36,
+      "exported": 0,
+      "imported": 0,
+      "produced": 72,
+      "start": 10
+     },
+     "leather_armor": {
+      "consumed": 0,
+      "end": 6,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 6
+     },
+     "leather_cap": {
+      "consumed": 0,
+      "end": 7,
+      "exported": 10,
+      "imported": 0,
+      "produced": 17,
+      "start": 0
+     },
+     "linen_bandage": {
+      "consumed": 0,
+      "end": 10,
+      "exported": 0,
+      "imported": 2,
+      "produced": 0,
+      "start": 8
+     },
+     "lockpick": {
+      "consumed": 0,
+      "end": 8,
+      "exported": 0,
+      "imported": 0,
+      "produced": 8,
+      "start": 0
+     },
+     "log": {
+      "consumed": 1420,
+      "end": 193,
+      "exported": 84,
+      "imported": 0,
+      "produced": 1661,
+      "start": 36
+     },
+     "meat": {
+      "consumed": 193,
+      "end": 157,
+      "exported": 5,
+      "imported": 0,
+      "produced": 342,
+      "start": 13
+     },
+     "milk": {
+      "consumed": 24,
+      "end": 80,
+      "exported": 6,
+      "imported": 0,
+      "produced": 110,
+      "start": 0
+     },
+     "padlock": {
+      "consumed": 0,
+      "end": 3,
+      "exported": 0,
+      "imported": 0,
+      "produced": 3,
+      "start": 0
+     },
+     "pickaxe": {
+      "consumed": 0,
+      "end": 20,
+      "exported": 7,
+      "imported": 0,
+      "produced": 12,
+      "start": 15
+     },
+     "plain_clothes": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "plank": {
+      "consumed": 1016,
+      "end": 115,
+      "exported": 63,
+      "imported": 0,
+      "produced": 1166,
+      "start": 28
+     },
+     "plough": {
+      "consumed": 0,
+      "end": 4,
+      "exported": 6,
+      "imported": 0,
+      "produced": 10,
+      "start": 0
+     },
+     "potato_seed": {
+      "consumed": 0,
+      "end": 16,
+      "exported": 0,
+      "imported": 4,
+      "produced": 0,
+      "start": 12
+     },
+     "pottage": {
+      "consumed": 4370,
+      "end": 189,
+      "exported": 15,
+      "imported": 0,
+      "produced": 4466,
+      "start": 108
+     },
+     "rabbit_pelt": {
+      "consumed": 22,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 23,
+      "start": 0
+     },
+     "red_berries": {
+      "consumed": 189,
+      "end": 13,
+      "exported": 0,
+      "imported": 0,
+      "produced": 202,
+      "start": 0
+     },
+     "roast_meat": {
+      "consumed": 362,
+      "end": 52,
+      "exported": 10,
+      "imported": 0,
+      "produced": 416,
+      "start": 8
+     },
+     "rotten_apple": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "rusty_pickaxe": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "rusty_sword": {
+      "consumed": 0,
+      "end": 1,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 1
+     },
+     "stone": {
+      "consumed": 130,
+      "end": 91,
+      "exported": 0,
+      "imported": 0,
+      "produced": 197,
+      "start": 24
+     },
+     "strong_healing_tonic": {
+      "consumed": 0,
+      "end": 2,
+      "exported": 0,
+      "imported": 0,
+      "produced": 0,
+      "start": 2
+     },
+     "wheat": {
+      "consumed": 3438,
+      "end": 861,
+      "exported": 24,
+      "imported": 0,
+      "produced": 3600,
+      "start": 723
+     },
+     "wheat_seed": {
+      "consumed": 0,
+      "end": 138,
+      "exported": 0,
+      "imported": 4,
+      "produced": 66,
+      "start": 68
+     },
+     "wool": {
+      "consumed": 8,
+      "end": 10,
+      "exported": 0,
+      "imported": 0,
+      "produced": 18,
+      "start": 0
+     },
+     "wool_cloth": {
+      "consumed": 0,
+      "end": 4,
+      "exported": 0,
+      "imported": 0,
+      "produced": 4,
+      "start": 0
+     }
+    },
+    "leaks": {
+     "currency": 0,
+     "items": {}
+    },
+    "treasury": 414
    }
   }
  }

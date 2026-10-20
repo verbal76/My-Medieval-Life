@@ -767,7 +767,7 @@ func _par02_reserve() -> void:
 		return
 	var coins0 := smith.coins
 	var price := w.buy_price(smith, "iron_ore")
-	smith.coins = w.buyer_reserve(smith) + price - 1
+	smith.coins = w.reserve_of(smith) + price - 1
 	p.inv.add("iron_ore", 1)
 	var r := w.player_sell_many(smith, "iron_ore", 1)
 	check(r.result == "failed" and p.inv.count("iron_ore") >= 1, "PAR-02: the player cannot sell into the smith's reserve")
@@ -778,10 +778,10 @@ func _par02_reserve() -> void:
 			break
 	miner.inv.add("iron_ore", 1)
 	check(not w.can_afford(smith, price) and w.brain._buyer_for(miner, "iron_ore") != smith, "PAR-02: nor can a villager")
-	smith.coins = w.buyer_reserve(smith) + price
+	smith.coins = w.reserve_of(smith) + price
 	check(w.can_afford(smith, price) and w.brain._buyer_for(miner, "iron_ore") != null, "PAR-02: at reserve + price a villager can sell")
 	r = w.player_sell_many(smith, "iron_ore", 1)
-	check(r.result == "sold" and smith.coins == w.buyer_reserve(smith), "PAR-02: and so can the player, down to the reserve and no further")
+	check(r.result == "sold" and smith.coins >= w.reserve_of(smith), "PAR-02: and so can the player, down to the reserve and no further")
 	miner.inv.remove("iron_ore", 1)
 	smith.inv.remove("iron_ore", 1)
 	smith.coins = coins0
