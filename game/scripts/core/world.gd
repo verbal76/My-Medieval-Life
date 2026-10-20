@@ -68,6 +68,8 @@ var caravan_purse := 0             # coins the caravan holds to spend on the vil
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
 var log_lines: Array = []
+var profiling := false             # PERF-02: when true, prof collects microseconds per subsystem (diagnostics; changes nothing)
+var prof := {}                     # subsystem -> {us, n}
 var stats := {}                    # running ledger (food made, eaten, exported, meals missed ...) for diagnostics; not saved
 var last_hour := -1
 var guard_posts: Array = []        # patrol points
@@ -241,9 +243,12 @@ func update(real_dt: float) -> void:
 	if map.overworld != null:
 		map.overworld.clock = minutes
 	var h := int(minutes / 60.0)
+	var t := Time.get_ticks_usec() if profiling else 0
 	if h != last_hour:
 		last_hour = h
 		_on_hour(h % 24)
+		if profiling:
+			t = _prof("hourly (incl. daily)", t)
 	for n: NPC in npcs:
 		if not n.alive:
 			continue
@@ -256,9 +261,27 @@ func update(real_dt: float) -> void:
 			if n.tick_acc >= 0.5:
 				_update_npc(n, n.tick_acc)
 				n.tick_acc = 0.0
+	if profiling:
+		t = _prof("villagers (all)", t)
 	fauna.update(real_dt)
+	if profiling:
+		t = _prof("fauna", t)
 	carts.update(real_dt)
+	if profiling:
+		t = _prof("carts", t)
 	_update_player(real_dt, gm)
+	if profiling:
+		_prof("player", t)
+
+
+## PERF-02: add the time since `t0` (microseconds) to subsystem `key`; returns now.
+func _prof(key: String, t0: int) -> int:
+	var now := Time.get_ticks_usec()
+	var e: Dictionary = prof.get(key, {"us": 0, "n": 0})
+	e.us += now - t0
+	e.n += 1
+	prof[key] = e
+	return now
 
 
 ## Days of food the village holds for its people (all food in hands and pantries), updated hourly.
@@ -333,13 +356,20 @@ func _new_day() -> void:
 			tile_changed.emit(Vector2i(pl.x, pl.y), PLANT_LAYER, int(pl.tile))
 	fauna.new_day()
 	farm.daily_products()              # eggs, milk and wool wait in the player's pens (PL2-015)
+	var t := Time.get_ticks_usec() if profiling else 0
 	Life.dawn(self)                    # B8-029: roles by age, old-age deaths, partners, births
+	if profiling:
+		t = _prof("daily: life (ages, deaths, partners, births)", t)
 	brain.dawn()
+	if profiling:
+		t = _prof("daily: brain dawn (work, succession)", t)
 	manor_work.dawn()                  # undone manor jobs are released
 	property.collect_rents()
 	property.relet_stalls()
 	business.daily()                   # the stall's rent (PL1-10)
 	construction.daily()               # helpers' days end; crowded households split; founders build
+	if profiling:
+		_prof("daily: manor, rents, business, construction", t)
 	var cold := 0
 	for hh in households:
 		if not hh.pantry.remove("log"):
@@ -363,8 +393,14 @@ func _update_npc(n: NPC, dt: float) -> void:
 		brain.fight(n, dt)
 		return
 	if n.plan.is_empty():
+		var t := Time.get_ticks_usec() if profiling else 0
 		brain.decide(n)
+		if profiling:
+			_prof("villagers: decide", t)
+	var t2 := Time.get_ticks_usec() if profiling else 0
 	_run_plan(n, dt, gm)
+	if profiling:
+		_prof("villagers: run plan (incl. walking)", t2)
 
 
 func _run_plan(n: NPC, dt: float, gm: float) -> void:

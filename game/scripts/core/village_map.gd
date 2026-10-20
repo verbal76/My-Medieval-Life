@@ -9,6 +9,9 @@ var h: int
 var data: Dictionary
 var solid: PackedByteArray        # 1 = blocked; buildings and the world change it at runtime
 var astar := AStarGrid2D.new()
+var profiling := false             # PERF-02: time path searches (World.profiling sets it)
+var path_us := 0
+var path_calls := 0
 var overworld: Overworld          # the world around the village (null: the village alone, as in the simulation tests)
 
 
@@ -184,7 +187,13 @@ func find_path(from: Vector2i, to: Vector2i) -> PackedVector2Array:
 		to = nearest_walkable(to)
 	if is_solid(from):
 		from = nearest_walkable(from)
-	return astar.get_point_path(from, to, true)
+	if not profiling:
+		return astar.get_point_path(from, to, true)
+	var t := Time.get_ticks_usec()
+	var p := astar.get_point_path(from, to, true)
+	path_us += Time.get_ticks_usec() - t
+	path_calls += 1
+	return p
 
 
 func nearest_walkable(c: Vector2i) -> Vector2i:

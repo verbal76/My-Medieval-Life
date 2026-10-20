@@ -9609,7 +9609,7 @@
    "id": "FR-07",
    "title": "Economy and household simulations in CI (short variant)",
    "kind": "approved",
-   "status": "IMPLEMENTED — TESTING REQUIRED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Economy and household simulations in CI (short variant)",
    "source": "Build 14 audit",
@@ -9618,7 +9618,7 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": ".github/workflows/tests.yml step 'Short economy simulation (FR-07)'",
+   "tests": "tests.yml 'Short economy simulation (FR-07)', run 39368652711",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -9648,6 +9648,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests",
      "why": "tests.yml runs a 10-day seed-1 economy simulation, failing on a leak or any script error; verified when CI passes on staging"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "IMPLEMENTED — TESTING REQUIRED -> COMPLETE AND VERIFIED; tests",
+     "why": "CI run 39368652711 on 0ee0218 passed the new step: a 10-day seed-1 simulation with no leak and no script error"
     }
    ],
    "acceptance_derived": true,
@@ -13448,7 +13453,7 @@
    "id": "PERF-02",
    "title": "Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization",
    "source": "docs/directives/2026-10-20_simulation_performance_audit.md; docs/directives/2026-10-20_build15_followup_performance_clarification.md",
@@ -13458,7 +13463,7 @@
     "Bottlenecks ranked by measured cost"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "economy_sim.gd --profile; 10-day fingerprint eeabb2a8 with profiling on",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -13485,6 +13490,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_reason",
      "why": "placed"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; tests",
+     "why": "profiled 10 and 60 days, seed 1, by subsystem (docs/release/SIMULATION_PERFORMANCE.md section 5a): villagers' decisions 52-55 % (the miners', labourers' and woodcutters' buyer scans about 40 %), wildlife 17-20 %, pathfinding 1 %; profiling leaves the fingerprint unchanged"
     }
    ],
    "target_build": "15",

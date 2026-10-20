@@ -109,6 +109,47 @@ The owner asked that nothing be built until this has been weighed.
 3. Parallel against sequential for two seeds, each in its own save, temp and output paths (PERF-05).
 4. Only then, optimizations, one at a time, each through the determinism gate.
 
+## 5a. Profile by subsystem (PERF-02, measured 2026-10-20)
+
+**How:**
+- `economy_sim.gd --profile` turns on timers in `World.update` (villagers, wildlife, carts, player, the hourly and
+  daily work), in `VillageMap.find_path` and in the harness's own sampling. They only add timers: the 10-day
+  seed-1 fingerprint with profiling on is `eeabb2a8ce8d6ed8e9691867869bc6ee`, the same as without.
+- One process on an idle container, seed 1, staging after `e0c6ca7`.
+- A temporary, uncommitted breakdown inside `NPCBrain.decide` and `_plan_job` gave the finer rows marked *.
+
+**10 days, seed 1:** 44.0 s (4.40 s a game day); 103 villagers and 82 animals alive at the end.
+
+| Subsystem | Time | Share | Calls | Each |
+|---|---|---|---|---|
+| Villagers, all | 34.6 s | 78.5 % | 14,400 steps | 2.4 ms |
+| of which `decide` (choosing what to do next) | 24.3 s | 55.1 % | 56,094 | 433 us |
+| * of which `_plan_job` | 20.3 s | 44.4 % | 41,013 | 494 us |
+| * of which miners (`_miner`) | 10.2 s | 22.8 % | 13,104 | 780 us |
+| * of which labourers (`_miner`) | 4.0 s | 9.0 % | 9,000 | 447 us |
+| * of which woodcutters | 3.3 s | 7.4 % | 8,707 | 381 us |
+| of which running plans and walking | 5.2 s | 11.9 % | 1.57 million | 3 us |
+| Wildlife (`fauna.update`) | 7.3 s | 16.6 % | 14,400 steps | 508 us |
+| Hourly and daily world work | 1.0 s | 2.3 % | 241 hours | 4.1 ms |
+| Player | 0.9 s | 2.0 % | | |
+| Path searches (A*, inside villagers) | 0.5 s | 1.2 % | 18,784 | 28 us |
+| Harness sampling | 0.0 s | 0.1 % | | |
+
+**60 days, seed 1:** 281.1 s (4.68 s a day; 120 villagers, 75 animals). The shares are the same: villagers 75 %,
+`decide` 52 %, wildlife 20 %. Fingerprint `26dc442828d79f9aa50dfc3c25e4516b`.
+
+**Ranked bottlenecks:**
+1. **Villagers' decisions, above all the miners', labourers' and woodcutters' trade choice** (about 40 % of
+   the run). `_miner` asks `_buyer_for` up to 15 times per decision. Each call rescans the whole population
+   for each outlet role (`_with_buy_role`: every villager's `buy_role`), so a decision costs several
+   thousand villager checks.
+2. **Wildlife** (17–20 %), 0.5–0.6 ms per step for about 80 animals.
+3. Everything else is under 3 % each. Path searching is 1 %, so pathfinding is not the problem.
+
+**Not yet explained:** these runs measure 4.4–4.7 s a day, while the year-long runs logged 6–10 s a day later in
+the year. The 365-day profiles on Actions will show whether a cost grows with time (population, households,
+built sites).
+
 ## 6. Long-run reliability (INFRA-01, owner 2026-10-20)
 
 **The problem (measured):** two container restarts on 2026-10-20, both while the session sat idle waiting for an answer, killed the long runs. A long run on the session's own container survives only while the session stays active.
