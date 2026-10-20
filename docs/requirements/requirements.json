@@ -6792,7 +6792,7 @@
    "id": "DVW-A6",
    "title": "Coins and goods conserved across save/load and tier transitions (:31)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Coins and goods conserved across save/load and tier transitions (:31)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 250)",
@@ -6801,7 +6801,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "\"save round trips are not\" tested | Partial: `run_tests.gd:2547,2644,2689,3127`, `start_test.gd:1355` check `total_coins` across load; no goods-across-load or tier-transition test found | PARTIAL (undocumented)",
-   "tests": "",
+   "tests": "game/tests/conservation_test.gd (8 checks); economy_sim 10-day seed 1 fingerprint eeabb2a8 unchanged after the census refactor",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -6826,6 +6826,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; tests",
+     "why": "conservation_test.gd: after two days on both tiers, a JSON save round trip keeps every coin, good (the economy_sim census, now shared in census.gd), deposit, animal and villager; a day after loading the currency balances. Verified when CI passes on staging"
     }
    ],
    "acceptance_derived": true,
