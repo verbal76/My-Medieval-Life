@@ -11199,6 +11199,358 @@
    "roadmap_reason": "owner instruction 2026-10-20, after the seed-2 starvation findings"
   },
   {
+   "id": "FSE-B05",
+   "title": "A pen whose keeper is gone is let again (its animals starved untended)",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "A pen whose keeper is gone is let again (its animals starved untended)",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "When a keeper dies or leaves farming, the pen goes to the next farmer without one, including farmers who take the job later; a test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
+   "id": "FSE-B06",
+   "title": "Bandits' poaching and the clan's camp meals feed them only from real food",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Bandits' poaching and the clan's camp meals feed them only from real food",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "Poaching satisfies hunger only from the game it actually kills; camp meals come from the band's stores; no hunger set from nothing; tests; WDR-022: a band may go hungry"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
+   "id": "FSE-B07",
+   "title": "Villagers can sell flowers to the Apothecary",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Villagers can sell flowers to the Apothecary",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "flower has an outlet (the sage), so foragers sell surplus flowers as the comment at the sage's job says; a test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
+   "id": "FSE-B08",
+   "title": "A hunt cut short releases its claim on the animal",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "A hunt cut short releases its claim on the animal",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "Claims are cleared when a hunter's plan ends without the hunt act (path lost, fight, job change, death); a test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
+   "id": "FSE-B09",
+   "title": "Hunter job openings count only game hunters may take",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Hunter job openings count only game hunters may take",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "market[hunter] counts game kinds above the keep floors, as nearest_game does; a test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
+   "id": "FSE-B10",
+   "title": "The player's kills enter the wildlife ledger",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "The player's kills enter the wildlife ledger",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "_hit_animal records hunted_/slaughtered_ like the villagers' paths, so the animal-count identity balances when the player hunts; a test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
+   "id": "FSE-B11",
+   "title": "The home hearth gives the player and villagers the same recipes",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "The home hearth gives the player and villagers the same recipes",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "One rule for the hearth (villagers cook stove recipes there, the player only oven ones); a test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
+   "id": "FSE-B12",
+   "title": "Hunting experience by one rule for the player and villagers",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "Hunting experience by one rule for the player and villagers",
+   "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
+   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "acceptance": [
+    "Combat xp for a kill (and for slaughter) by the same rule for both (per kill, or per blow for both); a test"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "FSE-09",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "a defect found by the food-security audit (FSE-09)"
+  },
+  {
    "id": "GM-01",
    "title": "Generational memory and historical consequences (the 30-planks chain)",
    "kind": "approved",

@@ -378,6 +378,7 @@ func _new_day() -> void:
 	manor_work.dawn()                  # undone manor jobs are released
 	property.collect_rents()
 	property.relet_stalls()
+	brain.relet_pens()
 	business.daily()                   # the stall's rent (PL1-10)
 	construction.daily()               # helpers' days end; crowded households split; founders build
 	if profiling:
@@ -506,7 +507,7 @@ func _update_player(real_dt: float, gm: float) -> void:
 		return
 	p.hunger = maxf(0.0, p.hunger - gm / 60.0 * float(GameData.b("player_hunger_per_hour")))
 	if p.hunger <= 0.0:
-		damage_player(gm / 60.0 * 3.0, "hunger")
+		damage_player(gm / 60.0 * float(GameData.b("starve_damage_per_hour")), "hunger")     # TIME-04: the villagers' rule
 	p.stamina = minf(p.stamina_cap(), p.stamina + real_dt * float(GameData.b("player_stamina_regen_per_second")))
 	relations.player_tick(gm)          # time spent near villagers builds ties (CRT-10)
 	p.fireball_cd = maxf(0.0, p.fireball_cd - real_dt)

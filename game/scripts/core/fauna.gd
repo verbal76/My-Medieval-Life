@@ -554,6 +554,7 @@ func near(p: Vector2, r: float) -> Array:
 
 ## The nearest wild adult that nobody is hunting yet, leaving every kind at least its breeding stock.
 func nearest_game(from: Vector2, max_d := 200.0) -> Animal:
+	_release_claims()
 	var best: Animal = null
 	var bd := max_d
 	for a: Animal in animals:
@@ -566,6 +567,37 @@ func nearest_game(from: Vector2, max_d := 200.0) -> Animal:
 			bd = d
 			best = a
 	return best
+
+
+## FSE-B08: a claim lasts while its hunter still plans that hunt. A hunt cut short (a lost path, a fight, a new job, the
+## hunter's death) left its claim on a live animal for good: no hunter could take it, and it lowered its kind's count.
+func _release_claims() -> void:
+	for id in claims.keys():
+		var h: NPC = w.npc(int(claims[id]))
+		var hunting := false
+		if h != null and h.alive:
+			for st in h.plan:
+				if str(st.get("act", "")) == "hunt" and int(st.get("args", {}).get("animal", -1)) == int(id):
+					hunting = true
+					break
+		if not hunting:
+			claims.erase(id)
+
+
+## FSE-B09: how many adult game animals hunters may take: per wood and kind, those above the keep floor and the hunters'
+## spare (nearest_game's rule), counting only kinds hunters take.
+func takeable_game() -> int:
+	var seen := {}
+	var n := 0
+	for a: Animal in animals:
+		if not a.alive or not a.wild() or not a.adult(w.minutes) or not bool(a.spec().get("game", true)):
+			continue
+		var key := a.area + "/" + a.species
+		if seen.has(key):
+			continue
+		seen[key] = true
+		n += maxi(0, count(a.area, a.species, true) - int(a.spec().keep) - int(wl().hunter_spare))
+	return n
 
 
 func _claimed(area: String, species: String) -> int:

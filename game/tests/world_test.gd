@@ -43,6 +43,7 @@ func _run() -> void:
 	_succession()
 	_pl_gameplay()
 	_station_conflict()
+	_fse_defects()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -994,3 +995,57 @@ func _station_conflict() -> void:
 	main.continue_game()
 	var w2: World = main.world
 	check(not w2.player_at_station(forge) and w2.stations[forge].users.is_empty(), "after loading, the forge is free: no stale reservation")
+
+
+# ---------------------------------------------------------------- FSE-09: the food-security audit's defects ----------
+func _fse_defects() -> void:
+	var w: World = main.world
+	# TIME-04: the player starves by the villagers' rule
+	var p := w.player
+	p.hunger = 0.0
+	p.hp = p.max_hp
+	var hp0 := p.hp
+	w._update_player(0.0, 60.0)
+	check(is_equal_approx(hp0 - p.hp, float(GameData.b("starve_damage_per_hour"))), "TIME-04: at zero food the player loses %s health an hour, as a villager does (%.2f)" % [str(GameData.b("starve_damage_per_hour")), hp0 - p.hp])
+	p.hp = p.max_hp
+	p.hunger = 100.0
+	# FSE-B10: the player's kills are in the wildlife ledger
+	var prey: Animal = null
+	for a: Animal in w.fauna.animals:
+		if a.alive and a.wild() and bool(a.spec().get("game", true)):
+			prey = a
+			break
+	var key := "hunted_" + prey.species
+	var s0 := float(w.stats.get(key, 0.0))
+	main._hit_animal(prey, 100000.0)
+	check(not prey.alive and float(w.stats.get(key, 0.0)) == s0 + 1.0, "FSE-B10: an animal the player kills is counted as hunted (%s)" % key)
+	# FSE-B05: a pen without a keeper is let again at dawn
+	var pen: Dictionary = {}
+	for id in w.fauna.pens:
+		if w.pen_keeper(w.fauna.pens[id]) != null:
+			pen = w.fauna.pens[id]
+			break
+	w.set_tenant(pen, "")
+	check(w.pen_keeper(pen) == null, "FSE-B05: a pen left with no keeper")
+	w.brain.relet_pens()
+	check(w.pen_keeper(pen) != null and w.pen_keeper(pen).job == "farmer", "FSE-B05: at dawn a farmer with no pen takes it on")
+	# FSE-B08: a claim whose hunt is no longer planned is released
+	var deer: Animal = null
+	for a: Animal in w.fauna.animals:
+		if a.alive and a.wild() and bool(a.spec().get("game", true)):
+			deer = a
+			break
+	var hunter: NPC = w.npcs.filter(func(o): return o.alive and o.job == "hunter")[0]
+	w.fauna.claims[deer.id] = hunter.id
+	hunter.plan = []
+	w.fauna.nearest_game(hunter.pos)
+	check(not w.fauna.claims.has(deer.id), "FSE-B08: a hunt cut short leaves no claim on the animal")
+	# FSE-B09: hunter openings count only what hunters may take
+	var all_wild := 0
+	for a: Animal in w.fauna.animals:
+		if a.alive and a.wild() and a.adult(w.minutes):
+			all_wild += 1
+	check(w.fauna.takeable_game() < all_wild, "FSE-B09: game hunters may take (%d) is fewer than every wild adult (%d): not wolves, foxes, bears or the floors" % [w.fauna.takeable_game(), all_wild])
+	# FSE-B07: the Apothecary is an outlet for flowers
+	check(NPCBrain.OUTLETS.get("flower", []).has("sage"), "FSE-B07: villagers can sell flowers to the Apothecary")
+

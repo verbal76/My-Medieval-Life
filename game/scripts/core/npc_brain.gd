@@ -40,6 +40,7 @@ const OUTLETS := {
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
+	"flower": ["sage"],                       # FSE-B07: the Apothecary buys foragers' flowers (BUYS.sage)
 	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
 	"carrot": ["cook", "merchant_food"], "potato": ["cook", "merchant_food"], "wool": ["tanner", "merchant_goods"], "wool_cloth": ["merchant_goods"],
 	"bread": ["tavernkeeper", "merchant_food"], "linen_bandage": ["sage"],
@@ -869,6 +870,23 @@ func _hand_over_pens(n: NPC) -> void:
 		w.set_tenant(pen, World.npc_ref(next.id) if next else "")
 		if next:
 			w.note("%s %s takes over the %s pen from %s." % [next.name, next.family, pen.kind, n.name])
+
+
+## FSE-B05: a pen with no keeper (its keeper died or left farming when no other farmer was free) goes, each dawn, to a
+## farmer who has none, as an empty stall goes to a merchant (Property.relet_stalls). Before, it stayed untended for good
+## and its animals starved.
+func relet_pens() -> void:
+	var ids := w.fauna.pens.keys()
+	ids.sort()
+	for id in ids:
+		var pen: Dictionary = w.fauna.pens[id]
+		if w.pen_keeper(pen) != null:
+			continue
+		for o: NPC in w.npcs:
+			if o.alive and o.job == "farmer" and _keeper_pen(o).is_empty():
+				w.set_tenant(pen, World.npc_ref(o.id))
+				w.note("%s %s takes on the %s pen, which had no keeper." % [o.name, o.family, pen.kind])
+				break
 
 
 func _manor_id() -> String:
@@ -2852,10 +2870,7 @@ func job_market() -> Dictionary:
 			trees += 1
 	market["woodcutter"] = {"pay": avg.call("woodcutter", 0.0), "open": maxi(0, trees / int(GameData.b("trees_per_woodcutter")) - count.call("woodcutter")),
 		"tool": "axe", "at": Vector2i(15, 15)}
-	var game := 0
-	for a: Animal in w.fauna.animals:
-		if a.wild() and a.adult(w.minutes):
-			game += 1
+	var game: int = w.fauna.takeable_game()        # FSE-B09: only what hunters may take
 	market["hunter"] = {"pay": avg.call("hunter", 0.0), "open": maxi(0, game / int(GameData.b("game_per_hunter")) - count.call("hunter")),
 		"tool": "", "at": Vector2i(15, 15)}
 	var ore := 0

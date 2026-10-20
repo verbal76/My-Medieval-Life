@@ -86,7 +86,7 @@ static func _causes(sys: Callable) -> void:
 	sys.call("death_causes", "Causes of death", [
 		Wiki.p("Villagers and you die of the same few things. The death screen and the village record name the cause."),
 		Wiki.bullets([
-			"Starvation: at 0 food health drains away, %s health a game hour for a villager and 3 for you, until it runs out (\"You starved.\")." % str(GameData.b("starve_damage_per_hour")),
+			"Starvation: at 0 food health drains away, %s health a game hour, for you as for a villager, until it runs out (\"You starved.\")." % str(GameData.b("starve_damage_per_hour")),
 			"Old age: from age %d a small daily chance, rising with age, and certain at %d (\"You died of old age.\")." % [int(lf.mortality_from), int(lf.mortality_certain_at)],
 			"Slain: killed in a fight, by a bandit, a guard or you; for you the screen says who (\"Killed by Wat the guard.\").",
 			"Wild beasts: a %s that bites someone to death (\"Killed by a wolf.\")." % " or a ".join(biters),

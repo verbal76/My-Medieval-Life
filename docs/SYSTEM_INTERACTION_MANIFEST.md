@@ -129,8 +129,8 @@ Rules:
 - **Trigger:** Time passes with hunger at zero.
 - **Source:** `game/scripts/core/world.gd::_update_player`, `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::_update_npc`
 - **Affects:** Food, Health
-- **Expected:** At zero hunger, health falls; at zero health the player or villager dies (INT-016, INT-018). A child's hunger falls `child_food_factor` as fast as an adult's (INT-047).
-- **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`
+- **Expected:** At zero hunger, health falls by `starve_damage_per_hour`, for the player as for a villager (TIME-04; the player's was a literal 3); at zero health the player or villager dies (INT-016, INT-018). A child's hunger falls `child_food_factor` as fast as an adult's (INT-047).
+- **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`, `game/tests/world_test.gd::_fse_defects`
 
 ### INT-012 · Fighting a bandit
 - **Trigger:** The player attacks a bandit.
@@ -243,17 +243,17 @@ Rules:
 
 ### INT-027 · Pens and keepers
 - **Trigger:** Hourly animal update; a keeper's day; a keeper dies or changes job.
-- **Source:** `game/scripts/core/fauna.gd::tick`, `game/scripts/core/fauna.gd::feed`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/npc_brain.gd::_hand_over_pens`
+- **Source:** `game/scripts/core/fauna.gd::tick`, `game/scripts/core/fauna.gd::feed`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/npc_brain.gd::_hand_over_pens`, `game/scripts/core/npc_brain.gd::relet_pens`
 - **Affects:** Livestock, Food, Inventory, Households
-- **Expected:** Animals eat feed from the trough or starve. A fed pair breeds, and babies grow up. Keepers feed from their own wheat, the pantry or bought feed, and slaughter surplus. A pen is the manor's, let to its keeper (tenant "npc:<id>", `World.pen_keeper`, INT-051); it passes to another farmer, the same household first.
-- **Tests:** `game/tests/run_tests.gd::test_animals`, `game/tests/run_tests.gd::test_households_and_work`
+- **Expected:** Animals eat feed from the trough or starve. A fed pair breeds, and babies grow up. Keepers feed from their own wheat, the pantry or bought feed, and slaughter surplus. A pen is the manor's, let to its keeper (tenant "npc:<id>", `World.pen_keeper`, INT-051); it passes to another farmer, the same household first, and a pen left with no keeper goes at dawn to a farmer with none (FSE-B05; before, its animals starved untended).
+- **Tests:** `game/tests/run_tests.gd::test_animals`, `game/tests/run_tests.gd::test_households_and_work`, `game/tests/world_test.gd::_fse_defects`
 
 ### INT-028 · Hunting
 - **Trigger:** A hunter's plan; the player kills a wild animal.
-- **Source:** `game/scripts/core/npc_brain.gd::_hunter`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/fauna.gd::kill`
-- **Affects:** Wildlife, Loot, Inventory, Food
-- **Expected:** The carcass gives meat (half for a baby) and hide. Hunters never take a kind below 2 adults per wood.
-- **Tests:** `game/tests/run_tests.gd::test_animals`, `game/tests/play_test.gd`
+- **Source:** `game/scripts/core/npc_brain.gd::_hunter`, `game/scripts/main.gd::_hit_animal`, `game/scripts/core/fauna.gd::kill`, `game/scripts/core/fauna.gd::nearest_game`, `game/scripts/core/fauna.gd::takeable_game`
+- **Affects:** Wildlife, Loot, Inventory, Food, Employment
+- **Expected:** The carcass gives meat (half for a baby) and hide. Hunters never take a kind below 2 adults per wood. Every kill is in the wildlife ledger, the player's included (FSE-B10). A claim on an animal lasts only while its hunter still plans that hunt (FSE-B08). Hunter openings in the job market count only the game hunters may take (FSE-B09; before, every wild adult, wolves and bears included).
+- **Tests:** `game/tests/run_tests.gd::test_animals`, `game/tests/play_test.gd`, `game/tests/world_test.gd::_fse_defects`
 
 ### INT-029 · The household reckoning and job changes
 - **Trigger:** Each morning, and at once after a death or a job change.
@@ -1328,7 +1328,7 @@ Rules:
 | Relief | INT-024, INT-047, INT-066, INT-159 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089, INT-159 |
 | Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156 |
+| Employment | INT-017, INT-023, INT-028, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080, INT-151 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137, INT-145 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033, INT-067, INT-068, INT-077, INT-081, INT-086, INT-113, INT-127, INT-149 |

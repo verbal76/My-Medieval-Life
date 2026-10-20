@@ -2781,6 +2781,7 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 		keeper = world.pen_keeper(world.fauna.pens[a.area])
 	var what := a.label().to_lower()
 	var beast := a.wild() and bool(a.spec().get("people", false))
+	world.stat(("hunted_" if a.wild() else "slaughtered_") + a.species)     # FSE-B10: the wildlife ledger, as for villagers
 	var bag: Inventory = world.fauna.kill(a)
 	if beast:
 		world.relations.defended(a.pos)        # a wolf or a bear put down near people (CRT-10)
