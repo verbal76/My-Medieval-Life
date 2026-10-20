@@ -376,6 +376,13 @@ func plan_helper(n: NPC) -> bool:
 			return true
 	var ids: Array = need.keys()
 	ids.sort()
+	var own := _own_builder(n, c)
+	if own:
+		for id in ids:                         # what the builder holds goes in first (HOUSE-04)
+			if n.inv.count(id) > 0:
+				n.doing = "bringing %s for the building site" % GameData.item_name(id).to_lower()
+				n.plan = [b.doit("helper_own", {"item": id})]
+				return true
 	var store := store_of(str(c.employer))
 	for id in ids:
 		if store != null and store.has(id):
@@ -388,10 +395,46 @@ func plan_helper(n: NPC) -> bool:
 			n.doing = "buying %s for the building site" % GameData.item_name(id).to_lower()
 			n.plan = [b.go(b._workplace_cell(seller) if seller.job != "laborer" else seller.cell()), b.doit("helper_buy", {"item": id, "seller": seller.id})]
 			return true
+	if own and _make_timber(n, c, need):
+		return true
 	b.once("helper_idle_%d_%d" % [n.id, w.day()], "%s %s can find no materials to carry to %s." % [n.name, n.family, w.property.describe(p)])
 	n.doing = "waiting for building materials"
 	n.plan = [b.go(site_cell), b.work(45, "", {}, "idle")]
 	return true
+
+
+## A builder working on their own household's site (not a hired helper).
+func _own_builder(n: NPC, c: Dictionary) -> bool:
+	return n.household >= 0 and str(c.employer) == World.hh_ref(n.household)
+
+
+## When no timber can be bought, a builder makes their own (owner directive 2026-10-20, housing: "gathering
+## available timber" and "producing materials through existing crafting"; "a villager may gather timber
+## ... and perform the construction personally"): logs they hold beyond the site's log need are sawn into
+## planks at a sawhorse (saw_planks, one log for two planks); with an axe they fell a tree; without one,
+## they buy an axe when the household can pay for it and what the site still costs. True when planned.
+func _make_timber(n: NPC, c: Dictionary, need: Dictionary) -> bool:
+	var b: NPCBrain = w.brain
+	var logs_needed := int(need.get("log", 0))
+	if int(need.get("plank", 0)) > 0 and n.inv.count("log") > logs_needed and b._do_recipe(n, "saw_planks"):
+		n.doing = "sawing planks for the building site"
+		return true
+	if int(need.get("plank", 0)) + logs_needed <= 0:
+		return false
+	if n.inv.has("axe"):
+		var t := w.nearest_tree(n.cell(), 70.0)
+		if t.is_empty():
+			return false
+		t.claimed = n.id
+		var at := Vector2i(t.x, t.y)
+		n.doing = "felling a tree for the building site"
+		n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("chop_minutes")), "chop", {"x": t.x, "y": t.y}, "work", at)]
+		return true
+	var price := b.tool_price(n, "axe")
+	if price > 0 and n.coins >= price and w.property.purse(str(c.employer)) - price >= estimate(need) / 2:
+		w.stat("builder_axes")
+		return b._get_tool(n, "axe")
+	return false
 
 
 ## The nearest villager selling a material whom the helper can pay (from the employer's purse,
@@ -467,6 +510,15 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				w.stat("helper_bought_" + id)
 				got += 1
 			return got > 0
+		"helper_own":                          # the builder's own goods go to the site (HOUSE-04)
+			var id := str(a.item)
+			var k := mini(int(p.site.need.get(id, 0)) - load.count(id), n.inv.count(id))
+			if k <= 0:
+				return false
+			n.inv.remove(id, k)
+			load.add(id, k)
+			w.stat("builder_own_" + id, k)
+			return true
 		"helper_deliver":
 			if w.deliver(p, load, World.npc_ref(n.id)):
 				end_contract(c, "the building is finished")

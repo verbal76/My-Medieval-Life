@@ -631,7 +631,7 @@ func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) ->
 	for o: NPC in npcs:
 		if o == except or not o.alive or o.role in ["child", "bandit"] or o.pos.distance_squared_to(at) > r2:
 			continue
-		if (o.job in jobs or at_post(o)) and o.inv.has(id) and not NPCBrain.KEEPS.get(o.job, []).has(id) \
+		if (o.job in jobs or at_post(o)) and o.inv.has(id) and not brain.keeps(o, id) \
 				and (o.job == "merchant" or not NPCBrain.BUYS.get(brain.buy_role(o), {}).has(id)):     # a trade's own materials are not for sale
 			n += o.inv.count(id)
 	for s: Dictionary in business.premises():
@@ -2156,7 +2156,7 @@ func pickpocket(n: NPC) -> Dictionary:
 		else:
 			var ids := []
 			for id in n.inv.ids():
-				if not NPCBrain.KEEPS.get(n.job, []).has(id) and player.inv.can_add(id):
+				if not brain.keeps(n, id) and player.inv.can_add(id):
 					ids.append(id)
 			if ids.is_empty():
 				return {"ok": true, "what": "", "text": "%s's pockets are empty." % n.name}

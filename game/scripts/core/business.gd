@@ -760,7 +760,7 @@ func attended(s: Dictionary) -> bool:
 func ceiling(id: String, urgency: int, s := {}, buyer: NPC = null) -> int:
 	var alt := maxi(1, roundi(GameData.value(id) * float(GameData.b("price_max"))))
 	for o: NPC in w.npcs:
-		if o != buyer and o.alive and o.role == "adult" and o.inv.has(id) and not NPCBrain.KEEPS.get(o.job, []).has(id) and \
+		if o != buyer and o.alive and o.role == "adult" and o.inv.has(id) and not w.brain.keeps(o, id) and \
 				(o.job in ["smith", "carpenter", "cook", "tavernkeeper", "merchant", "farmer", "woodcutter"]):
 			alt = mini(alt, w.sell_price(o, id, s))
 	return floori(alt * (1.0 + float(GameData.b("stall_urgency_step")) * urgency))

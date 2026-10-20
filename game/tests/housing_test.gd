@@ -38,6 +38,8 @@ func _init() -> void:
 	test_housing_options_weighed()
 	test_baby_while_lodging()
 	test_family_helps_builder()
+	test_builder_makes_timber()
+	test_caravan_keeps_needed_tools()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -691,3 +693,103 @@ func test_family_helps_builder() -> void:
 	c._family_help(h)
 	check(child.coins == 5, "nor a family building a home of its own")
 	w.households[from].erase("build")
+
+
+## HOUSE-04, the owner's housing directive ("gathering available timber", "producing materials through
+## existing crafting"): with no timber for sale, a builder with an axe fells trees, saws the logs into planks
+## at a sawhorse and carries them to the site; every log is felled and every plank sawn, none from nothing.
+func test_builder_makes_timber() -> void:
+	var w := new_world()
+	var c := w.construction
+	var from := crowded_family(w)
+	var builder: NPC = null
+	for o: NPC in w.brain._members(from):
+		if o.role == "adult" and builder == null and c.responsible_adult(from) != o:
+			builder = o
+	check(builder != null, "a grown member to build")
+	if builder == null:
+		return
+	var nh := {"id": w.households.size(), "family": builder.family, "home": "", "members": [], "pantry": Inventory.new(),
+		"founded_from": from, "founded_day": w.day()}
+	w.households.append(nh)
+	var h := int(nh.id)
+	w.households[from].members.erase(builder.id)
+	builder.household = h
+	nh.members.append(builder.id)
+	var ref := World.hh_ref(h)
+	var rect := c.find_ground("house", w.building_door(str(w.households[from].home)), ref)
+	if rect.size == Vector2i.ZERO:
+		check(false, "ground for the new house")
+		return
+	var p := c.place("house", rect, ref)
+	w.start_site(p, "house", ref)
+	nh.build = str(p.id)
+	p.site.need = {"log": 3, "plank": 4}      # a small remainder: three logs and four planks to go
+	for o: NPC in w.npcs:                      # nobody has timber to sell
+		if o != builder:
+			o.inv.remove("log", o.inv.count("log"))
+			o.inv.remove("plank", o.inv.count("plank"))
+	builder.inv.remove("log", builder.inv.count("log"))
+	builder.inv.remove("plank", builder.inv.count("plank"))
+	builder.job = "laborer"
+	builder.coins = 60
+	if not builder.inv.has("axe"):
+		builder.inv.add("axe")
+	var felled0 := int(w.stats.get("felled_log", 0))
+	var sawn0 := int(w.stats.get("made_plank", 0))
+	var own0 := int(w.stats.get("builder_own_log", 0)) + int(w.stats.get("builder_own_plank", 0))
+	for d in 6:
+		for m in 1440:
+			w.update(0.5)
+			w.player.hunger = 100.0
+			if m % 120 == 0:                   # keep the market bare of timber
+				for o: NPC in w.npcs:
+					if o != builder and not c.contracts.any(func(k): return int(k.worker) == o.id):
+						o.inv.remove("log", o.inv.count("log"))
+						o.inv.remove("plank", o.inv.count("plank"))
+		if p.site.get("done", false):
+			break
+	var felled := int(w.stats.get("felled_log", 0)) - felled0
+	var sawn := int(w.stats.get("made_plank", 0)) - sawn0
+	var own := int(w.stats.get("builder_own_log", 0)) + int(w.stats.get("builder_own_plank", 0)) - own0
+	check(felled > 0 and sawn > 0, "trees were felled and planks sawn in the village meanwhile (%d logs, %d planks)" % [felled, sawn])
+	check(own >= 7 or p.site.get("done", false), "and carried their own timber to the site (%d pieces)" % own)
+	check(p.site.get("done", false), "the house is finished with timber the builder made (%s still needed)" % [p.site.get("need", {})])
+
+
+## EQ-07, "economic recovery from missing work tools": the caravan does not buy away a tool that villagers
+## here need. With three woodcutters short of an axe, an axe for each stays for sale; with none short, the
+## surplus above the merchant's stock goes as before.
+func test_caravan_keeps_needed_tools() -> void:
+	var w := new_world()
+	var b: NPCBrain = w.brain
+	var merchant: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and b.buy_role(o) == "merchant_goods" and merchant == null:
+			merchant = o
+	var cutters: Array = w.npcs.filter(func(o: NPC) -> bool: return o.alive and o.job == "woodcutter")
+	check(merchant != null and cutters.size() >= 3, "a goods merchant and three woodcutters")
+	if merchant == null or cutters.size() < 3:
+		return
+	for o: NPC in w.npcs:                      # only the merchant holds axes for sale
+		if o != merchant and (o.job == "smith" or b.buy_role(o) == "merchant_goods"):
+			o.inv.remove("axe", o.inv.count("axe"))
+	merchant.inv.remove("axe", merchant.inv.count("axe"))
+	merchant.inv.add("axe", 4)
+	for i in 3:
+		cutters[i].inv.remove("axe", cutters[i].inv.count("axe"))
+	for i in range(3, cutters.size()):
+		if not cutters[i].inv.has("axe"):
+			cutters[i].inv.add("axe")
+	check(int(b.local_tool_need().axe) >= 3, "three woodcutters need an axe (%d)" % int(b.local_tool_need().axe))
+	var exported := int(w.stats.get("exported_axe", 0))
+	w.caravan_purse = 1000
+	b.caravan()
+	check(merchant.inv.count("axe") >= 3, "the caravan leaves an axe for each of them (%d kept, %d exported)" % [merchant.inv.count("axe"), int(w.stats.get("exported_axe", 0)) - exported])
+	for i in 3:
+		cutters[i].inv.add("axe")
+	var need_now := int(b.local_tool_need().axe)
+	merchant.inv.add("axe", 2)                  # six: two above what the merchant keeps in stock
+	w.caravan_purse = 1000
+	b.caravan()
+	check(need_now > 0 or int(w.stats.get("exported_axe", 0)) > exported, "with nobody short of one, the surplus goes to the caravan as before (%d exported)" % (int(w.stats.get("exported_axe", 0)) - exported))

@@ -58,7 +58,7 @@ func _report(d: int, m: int) -> void:
 				line += " carriers=%s" % [carrying]
 		var doing := []
 		for o: NPC in members:
-			doing.append("%s:%s/%s c%d" % [o.name, o.role, o.job, o.coins])
+			doing.append("%s:%s/%s c%d '%s'%s" % [o.name, o.role, o.job, o.coins, o.doing, " axe" if o.inv.has("axe") else ""])
 		print(line, " | ", ", ".join(doing))
 	if m == 1439:
 		var stock := {}

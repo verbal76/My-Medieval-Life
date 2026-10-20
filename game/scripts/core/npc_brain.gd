@@ -905,7 +905,7 @@ func _crafter(n: NPC, recipes: Array) -> bool:
 			return true
 	# nothing to work on: sell surplus, else wait at the bench for deliveries
 	for id in n.inv.items:
-		if not KEEPS.get(n.job, []).has(id) and _overstock(n, id):
+		if not keeps(n, id) and _overstock(n, id):
 			return _plan_sell(n, id)
 	n.doing = "waiting for materials"
 	n.plan = [go(_workplace_cell(n)), work(30, "", {}, "idle")]
@@ -1174,7 +1174,7 @@ func _prey_for(n: NPC):
 func _plan_sell_all(n: NPC) -> bool:
 	var unsold := ""
 	for id in n.inv.ids():
-		if not KEEPS.get(n.job, []).has(id) and not FOOD.has(id) and OUTLETS.has(id):
+		if not keeps(n, id) and not FOOD.has(id) and OUTLETS.has(id):
 			if _buyer_for(n, id) != null:
 				return _plan_sell(n, id)
 			unsold = id
@@ -1226,6 +1226,15 @@ func buy_role(o: NPC) -> String:
 	return o.job
 
 
+## What a villager keeps rather than sells: their trade's tools (KEEPS) and, while they build their own
+## household's home, the axe they fell its timber with (HOUSE-04).
+func keeps(o: NPC, id: String) -> bool:
+	if KEEPS.get(o.job, []).has(id):
+		return true
+	return id == "axe" and o.household >= 0 and o.household < w.households.size() \
+			and str(w.households[o.household].get("build", "")) != "" and w.construction.responsible_adult(o.household) == o
+
+
 ## How many of `id` this NPC will still buy.
 func wants(o: NPC, id: String) -> int:
 	var caps: Dictionary = BUYS.get(buy_role(o), {})
@@ -1238,7 +1247,7 @@ func wants(o: NPC, id: String) -> int:
 func for_sale(o: NPC) -> Array:
 	var out := []
 	for id in o.inv.ids():
-		if KEEPS.get(o.job, []).has(id):
+		if keeps(o, id):
 			continue
 		if o.role == "child" or o.role == "bandit":
 			continue
@@ -1351,7 +1360,7 @@ const JOB_TOOL := {"woodcutter": "axe", "miner": "pickaxe"}
 func tool_price(n: NPC, tool: String) -> int:
 	var best := -1
 	for o: NPC in w.npcs:
-		if o.alive and o != n and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.has(tool) and not KEEPS.get(o.job, []).has(tool):
+		if o.alive and o != n and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.has(tool) and not keeps(o, tool):
 			var p := w.sell_price(o, tool)
 			best = p if best < 0 else mini(best, p)
 	return best
@@ -1368,11 +1377,27 @@ func tool_short(n: NPC) -> bool:
 	return p < 0 or n.coins < p
 
 
+## How many of each work tool the village's own people need now (EQ-07): workers whose trade needs a tool
+## they lack, and builders of their own household's home who have no axe to fell its timber with.
+func local_tool_need() -> Dictionary:
+	var need := {"axe": 0, "pickaxe": 0}
+	for o: NPC in w.npcs:
+		if not o.alive or o.role != "adult":
+			continue
+		var tool: String = JOB_TOOL.get(o.job, "")
+		if tool != "" and not o.inv.has(tool):
+			need[tool] = int(need[tool]) + 1
+		elif tool != "axe" and not o.inv.has("axe") and o.household >= 0 and str(w.households[o.household].get("build", "")) != "" \
+				and w.construction.responsible_adult(o.household) == o:
+			need.axe = int(need.axe) + 1
+	return need
+
+
 func _get_tool(n: NPC, tool: String) -> bool:
 	# the goods merchant retails tools (the smith's wholesale buyer, B7-016); the smith sells what the merchant lacks
 	for role in ["merchant_goods", "smith"]:
 		for o: NPC in w.npcs:
-			if o.alive and ((o.job == "smith") if role == "smith" else (buy_role(o) == role)) and o.inv.has(tool) and not KEEPS.get(o.job, []).has(tool):
+			if o.alive and ((o.job == "smith") if role == "smith" else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool):
 				if n.coins >= w.sell_price(o, tool):
 					n.doing = "buying a new %s" % tool
 					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
@@ -1779,7 +1804,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if foe:
 				n.target = foe.id
 			return true
-		"helper_take", "helper_buy", "helper_deliver":
+		"helper_take", "helper_buy", "helper_own", "helper_deliver":
 			return w.construction.act(n, what, a)
 	return true
 
@@ -1830,7 +1855,7 @@ func fight(n: NPC, dt: float) -> void:
 		n.coins += take
 		var stolen := ""
 		for id in tnpc.inv.ids():
-			if not KEEPS.get(tnpc.job, []).has(id):
+			if not keeps(tnpc, id):
 				tnpc.inv.remove(id)
 				n.inv.add(id)
 				stolen = id
@@ -2262,7 +2287,7 @@ func evaluate_household(h: int, daily := false) -> Dictionary:
 	for o: NPC in members:
 		assets += o.coins
 		for id in o.inv.ids():
-			if not NPCBrain.FOOD.has(id) and not KEEPS.get(o.job, []).has(id) and _buyer_for(o, id) != null:
+			if not NPCBrain.FOOD.has(id) and not keeps(o, id) and _buyer_for(o, id) != null:
 				assets += mini(o.inv.count(id), wants(_buyer_for(o, id), id)) * GameData.value(id) * float(GameData.b("sell_ratio"))
 	var runway := assets / maxf(0.1, cost)
 	var savings := float(GameData.b("household_savings_days"))
@@ -2578,7 +2603,7 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 ## the master's household (lowest id, so the choice is deterministic). null when the tool is gone.
 func _late_masters_tool(v: Dictionary, tool: String, taker: NPC) -> NPC:
 	var spare := func(o: NPC) -> bool:
-		return o != null and o.alive and o != taker and o.inv.has(tool) and not KEEPS.get(o.job, []).has(tool)
+		return o != null and o.alive and o != taker and o.inv.has(tool) and not keeps(o, tool)
 	var heir := w.npc(int(v.get("heir", -1)))
 	if spare.call(heir):
 		return heir
@@ -2745,6 +2770,15 @@ func caravan() -> void:
 	for f in FOOD:
 		food += w.table_food(f) * float(GameData.item(f).food)
 	var keep_food := food < village_day_food() * float(GameData.b("caravan_food_reserve_days"))
+	# tools the village's own people need are not sold away (EQ-07, "economic recovery from missing work
+	# tools"): as many as there are workers short of one, and builders without an axe, stay for sale here
+	var tool_need := local_tool_need()
+	var tool_stock := {}
+	for o: NPC in w.npcs:
+		if o.alive and (o.job == "smith" or buy_role(o) == "merchant_goods"):
+			for t in tool_need:
+				if not keeps(o, t):
+					tool_stock[t] = int(tool_stock.get(t, 0)) + o.inv.count(t)
 	var lines := []                # [seller, item, units for sale]
 	for o: NPC in w.npcs:
 		if not o.alive or not o.job in ["merchant", "smith"]:
@@ -2773,6 +2807,11 @@ func caravan() -> void:
 				var price := maxi(1, roundi(GameData.value(id) * 0.8))
 				if int(line[2]) <= 0 or price > budget:
 					continue
+				if tool_need.has(id) and int(tool_stock.get(id, 0)) <= int(tool_need[id]):
+					line[2] = 0                              # kept for a villager who needs it
+					w.stat("caravan_tool_kept_" + id)
+					continue
+				tool_stock[id] = int(tool_stock.get(id, 0)) - 1
 				line[2] = int(line[2]) - 1
 				o.inv.remove(id)
 				w.stat("exported_" + id)
