@@ -113,7 +113,10 @@ jobs:
               d = json.load(open(os.path.join(out, "sim.json")))
               last = d["samples"][-1]
               summary.update({"fingerprint": d.get("fingerprint"), "currency": last.get("currency"),
-                              "item_leaks": (last.get("ledger") or {}).get("items"), "alive": (last.get("people") or {}).get("alive")})
+                              "item_leaks": (last.get("ledger") or {}).get("items"), "alive": (last.get("people") or {}).get("alive"),
+                              "people": {k: (last.get("people") or {}).get(k) for k in ("alive", "households", "births", "deaths", "by_job")},
+                              "building": {k: (last.get("building") or {}).get(k) for k in ("sites_started", "sites_finished", "houses_built", "open_sites", "households_split")},
+                              "work": last.get("work"), "events": last.get("events")})
           except Exception as e:
               summary["error"] = "no simulation result: %s" % e
           json.dump(summary, open(os.path.join(out, "summary.json"), "w"), indent=1)
@@ -121,6 +124,7 @@ jobs:
               f.write("### Seed %d, %d days\n\n```json\n%s\n```\n" % (summary["seed"], summary["days"], json.dumps(summary, indent=1)))
           PY
           echo "OUT=$out" >> "$GITHUB_ENV"
+          cat "$out/summary.json"                                      # the outcome at the end, in the log (artifacts are not always reachable)
           tail -n 30 "$out/sim.log"
           if [ "$code" -ne 0 ]; then
             echo "::error::the simulation or its ledger checks failed (exit $code); see sim.log"
