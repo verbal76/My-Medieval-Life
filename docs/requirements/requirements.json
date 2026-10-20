@@ -12125,7 +12125,7 @@
    "id": "FSE-B06",
    "title": "Bandits' poaching and the clan's camp meals feed them only from real food",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Bandits' poaching and the clan's camp meals feed them only from real food",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -12134,17 +12134,19 @@
     "Poaching satisfies hunger only from the game it actually kills; camp meals come from the band's stores; no hunger set from nothing; tests; WDR-022: a band may go hungry"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_fse_defects (FSE-B06), family_test (clan meal)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "6ab7d50"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Owner's answer on the camp fire's fuel; measure band hunger in the next four-seed runs",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12159,6 +12161,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 6ab7d50; tests; next_action",
+     "why": "The band eats only real food from its members' packs (NPCBrain.band_eat); a hungry bandit with nothing poaches into their pack; meat roasted at the camp on deadwood (an explicit difference, owner question in BUILD_16_STATUS section C); clan children eat from the same stores"
     }
    ],
    "target_build": "16",
@@ -12383,7 +12390,7 @@
    "id": "FSE-B11",
    "title": "The home hearth gives the player and villagers the same recipes",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "The home hearth gives the player and villagers the same recipes",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -12392,17 +12399,19 @@
     "One rule for the hearth (villagers cook stove recipes there, the player only oven ones); a test"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "furniture_test (FSE-B11 checks)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "6ab7d50"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Look at the player's hearth craft window in play (a screenshot)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12417,6 +12426,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 6ab7d50; tests; next_action",
+     "why": "One recipe list for the home hearth (Furniture.home_recipes: oven + stove) for the player's craft window and the villagers' home cooking; furniture_test checks it"
     }
    ],
    "target_build": "16",
@@ -12429,7 +12443,7 @@
    "id": "FSE-B12",
    "title": "Hunting experience by one rule for the player and villagers",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Hunting experience by one rule for the player and villagers",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
@@ -12438,17 +12452,19 @@
     "Combat xp for a kill (and for slaughter) by the same rule for both (per kill, or per blow for both); a test"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_fse_defects (FSE-B12)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "6ab7d50"
+   ],
    "parent": "FSE-09",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Measure in the next four-seed runs",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12463,6 +12479,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 6ab7d50; tests; next_action",
+     "why": "Combat xp per kill, 2 a blow the kill takes at the killer's damage (Skills.kill_xp), for player kills, villager hunts and slaughter; world_test::_fse_defects"
     }
    ],
    "target_build": "16",
@@ -23855,7 +23876,7 @@
    "id": "TIME-02",
    "title": "Explicit time units in configuration and code; one shared conversion layer (no third clock)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Explicit time units in configuration and code; one shared conversion layer (no third clock)",
    "source": "docs/directives/2026-10-20_od21_time_model.md",
@@ -23864,10 +23885,12 @@
     "Calendar-dependent values read through shared conversion functions (Life) in years or seasons; operational values stay in hours or days; behaviour identical at year_days 8 (the determinism gate unchanged); a test that calendar values scale with year_days and operational ones do not"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "aging_test::test_time_units; gate identical",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "99e7448"
+   ],
    "parent": "OD-21",
    "depends_on": [
     "TIME-01"
@@ -23876,7 +23899,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Update the older docs' key names (DECISIONS, BUILD_DECISIONS, audits) where they cite renamed keys",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -23891,6 +23914,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: OD-21"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 99e7448; tests; next_action",
+     "why": "Calendar values read in years or seasons through Life's conversion functions (years_to_days, seasons_to_days, ...); balance keys renamed with their unit; the determinism gate identical before and after; aging_test::test_time_units (12 checks)"
     }
    ],
    "target_build": "16",

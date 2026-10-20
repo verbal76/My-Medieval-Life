@@ -58,8 +58,8 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 |---|---|
 | Complete | 29 |
 | In progress | 13 |
-| Pending testing | 11 |
-| Not started | 41 |
+| Pending testing | 15 |
+| Not started | 37 |
 | Blocked | 2 |
 | Deferred | 0 |
 | Superseded | 2 |
@@ -186,13 +186,13 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
 | FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
-| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | Not started |  | Poaching satisfies hunger only from the game it actually kills; camp meals come from the band's stores; no hunger set from nothing; tests; WDR-022: a band may go hungry |  |  |  | Release blocker | M |
+| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | Pending testing | The band eats only real food from its members' packs (NPCBrain.band_eat); a hungry bandit with nothing poaches into their pack; meat roasted at the camp on deadwood (an explicit difference, owner question in BUILD_16_STA | Owner's answer on the camp fire's fuel; measure band hunger in the next four-seed runs | `6ab7d50`, world_test::_fse_defects (FSE-B06), family_test (clan meal) |  |  | Release blocker | M |
 | FSE-B07 | Villagers can sell flowers to the Apothecary | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 | FSE-B08 | A hunt cut short releases its claim on the animal | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 | FSE-B09 | Hunter job openings count only game hunters may take | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 | FSE-B10 | The player's kills enter the wildlife ledger | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
-| FSE-B11 | The home hearth gives the player and villagers the same recipes | Not started |  | One rule for the hearth (villagers cook stove recipes there, the player only oven ones); a test |  |  |  | Release blocker | S |
-| FSE-B12 | Hunting experience by one rule for the player and villagers | Not started |  | Combat xp for a kill (and for slaughter) by the same rule for both (per kill, or per blow for both); a test |  |  |  | Release blocker | S |
+| FSE-B11 | The home hearth gives the player and villagers the same recipes | Pending testing | One recipe list for the home hearth (Furniture.home_recipes: oven + stove) for the player's craft window and the villagers' home cooking; furniture_test checks it | Look at the player's hearth craft window in play (a screenshot) | `6ab7d50`, furniture_test (FSE-B11 checks) |  |  | Release blocker | S |
+| FSE-B12 | Hunting experience by one rule for the player and villagers | Pending testing | Combat xp per kill, 2 a blow the kill takes at the killer's damage (Skills.kill_xp), for player kills, villager hunts and slaughter; world_test::_fse_defects | Measure in the next four-seed runs | `6ab7d50`, world_test::_fse_defects (FSE-B12) |  |  | Release blocker | S |
 
 ### Owner decisions
 
@@ -240,7 +240,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | Complete | docs/design/TIME_MODEL.md (the audit document) |  | `b388bfb` |  |  | Done |  |
-| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | Not started |  | Calendar-dependent values read through shared conversion functions (Life) in years or seasons; operational values stay in hours or days; behaviour identical at year_days 8 (the determinism gate unchanged); a test that ca |  | after TIME-01 |  | Required feature | M |
+| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | Pending testing | Calendar values read in years or seasons through Life's conversion functions (years_to_days, seasons_to_days, ...); balance keys renamed with their unit; the determinism gate identical before and after; aging_test::test_ | Update the older docs' key names (DECISIONS, BUILD_DECISIONS, audits) where they cite renamed keys | `99e7448`, aging_test::test_time_units; gate identical | after TIME-01 |  | Required feature | M |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | Not started |  | Each outlier of OD-21 section 4 with a recommendation and its expected consequences; nothing changed without the owner |  | after TIME-01 |  | Optional | S |
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | Complete | a946ba1 |  | `a946ba1`, world_test |  |  | Done |  |
 

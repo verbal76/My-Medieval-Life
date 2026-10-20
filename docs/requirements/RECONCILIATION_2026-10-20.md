@@ -97,13 +97,13 @@ None.
 | FSE-17 | Manor relief checks and draws on every food store (amends the B3 relief rule) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FSE-18 | The family chest: a household's food is kept in its pantry, communal; traders keep sellable stock and stock the chest first | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FSE-B05 | A pen whose keeper is gone is let again (its animals starved untended) | approved | COMPLETE AND VERIFIED | 16 |
-| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | APPROVED — NOT STARTED | 16 |
+| FSE-B06 | Bandits' poaching and the clan's camp meals feed them only from real food | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FSE-B07 | Villagers can sell flowers to the Apothecary | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B08 | A hunt cut short releases its claim on the animal | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B09 | Hunter job openings count only game hunters may take | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-B10 | The player's kills enter the wildlife ledger | approved | COMPLETE AND VERIFIED | 16 |
-| FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | APPROVED — NOT STARTED | 16 |
-| FSE-B12 | Hunting experience by one rule for the player and villagers | approved | APPROVED — NOT STARTED | 16 |
+| FSE-B11 | The home hearth gives the player and villagers the same recipes | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
+| FSE-B12 | Hunting experience by one rule for the player and villagers | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | approved | COMPLETE AND VERIFIED | 15 |
 | HOUSE-03 | A persistent housing goal begins before the household can afford it: the plan (existing recipe, materials owned, to buy, cost, own labour, help) is kept and worked toward | approved | COMPLETE AND VERIFIED | 15 |
@@ -198,7 +198,7 @@ None.
 | STALL-05 | The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller) | approved | APPROVED — NOT STARTED | 16 |
 | STALL-06 | Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed | approved | APPROVED — NOT STARTED | 16 |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | COMPLETE AND VERIFIED | 16 |
-| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | APPROVED — NOT STARTED | 16 |
+| TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | APPROVED — NOT STARTED | 16 |
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | approved | COMPLETE AND VERIFIED | 16 |
 | TRADE-01 | Trade-specific purchasing at counters through the shared trade rules (OD-19 reserve, PAR-02) | approved | APPROVED — NOT STARTED | 16 |
