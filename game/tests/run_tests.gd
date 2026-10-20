@@ -1037,7 +1037,9 @@ func test_child_food() -> void:
 			o.inv.remove(f, o.inv.count(f))          # FSE-17: what members carry counts as the household's food
 	w.households[h].pantry.items.clear()
 	w.households[h].pantry.add("wheat", 3)
-	check(is_equal_approx(b.household_food_days(h), 360.0 / (weight * 72.0)), "days of food are counted against the weighted need (%.2f)" % b.household_food_days(h))
+	# 3 wheat: one pot's two grains (2 x 120 points) and an odd grain eaten raw (B7-015)
+	var three := 2.0 * NPCBrain.food_points("wheat") + float(GameData.item("wheat").food)
+	check(is_equal_approx(b.household_food_days(h), three / (weight * 72.0)), "days of food are counted against the weighted need (%.2f)" % b.household_food_days(h))
 	check(is_equal_approx(float(b.evaluate_household(h).need), weight * 72.0), "the household reckoning uses the weighted need")
 	var vill := 0.0
 	for o: NPC in w.npcs:
@@ -1074,7 +1076,9 @@ func test_child_food() -> void:
 	b.market_food_points = 0.0
 	b._relief(10.0, 100.0)
 	var given: int = w.households[h].pantry.count("wheat")
-	check(given == ceili(3.0 * weight * 72.0 / 120.0), "relief grain is 3 days of the weighted need (%d wheat)" % given)
+	var want := ceili(3.0 * weight * 72.0 / 120.0)
+	want += want % NPCBrain.pottage_batch()              # in whole pots (B7-015)
+	check(given == want, "relief grain is 3 days of the weighted need, in whole pots (%d wheat)" % given)
 	# a farmer keeps 3 days of the household's weighted need
 	var farmer: NPC = w.npcs.filter(func(o): return o.job == "farmer")[0]
 	var keep := int(GameData.b("granary_keep_buffer")) + b.reserve(farmer, "wheat") + ceili(b.household_day_food(farmer.household) * float(GameData.b("granary_keep_household_days")) / 120.0)

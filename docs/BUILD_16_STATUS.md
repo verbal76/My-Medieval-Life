@@ -106,7 +106,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, FARM 7, FSE
 
 | ID | Item | Status | Implemented | Remains | Evidence | Blockers / depends | Owner? | Class | Size |
 |---|---|---|---|---|---|---|---|---|---|
-| B7-015 | Missed meals while food piles up | Pending testing | (B7_ISSUES:58) / "Diagnosed; needs a design decision" / AWAIT-OWNER (recorded) / Partial code: guards provision households (INT-072), `87b3663` / Owner decision / Register not updated with INT-072 | As recorded in the source document; evidence named in implementation and tests | `9db091b`, reserve_test.gd (relief) |  |  | Testing and verification | S |
+| B7-015 | Missed meals while food piles up | Pending testing | (B7_ISSUES:58) / "Diagnosed; needs a design decision" / AWAIT-OWNER (recorded) / Partial code: guards provision households (INT-072), `87b3663` / Owner decision / Register not updated with INT-072 | Four-seed 365-day runs on the new staging head; classify any death | `9db091b`, reserve_test (B7-015 checks), run_tests (weighted need) |  |  | Testing and verification | S |
 | B7-016 | Tanners/goods merchants end at 0 coins | Blocked | (B7_ISSUES:59) / "Diagnosed; proposal P3 awaits owner" / AWAIT-OWNER (recorded) / Partial code: goods merchant retails smith tools, woodcutter sells firewood (INT-073), `9c13794` / Owner P3 / Register not updated | As recorded in the source document; evidence named in implementation and tests |  |  |  | Testing and verification | M |
 
 ### Audits and measurements
