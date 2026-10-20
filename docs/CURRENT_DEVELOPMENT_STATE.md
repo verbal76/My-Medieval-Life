@@ -21,7 +21,7 @@ Old agent worktrees (`.claude/worktrees/*`, branches `pl-*`, `b8-*` and others) 
 
 ## In progress (ACTIVE DEVELOPMENT)
 
-Nine entries, all named here (the validator checks). The ledger's count of eight is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
+Ten entries, all named here (the validator checks). The ledger's count of nine is of approved requirements only; ROAD-01 is an owner decision (kind `decision`, already answered by the owner) being carried out.
 
 - **EQ-07:** correct the 365-day failures under EQ-16. The Build 15 runs below are the evidence.
   - Done so far:
@@ -36,6 +36,8 @@ Nine entries, all named here (the validator checks). The ledger's count of eight
     - crowded families nobody can leave: OD-13 answered by the owner; implemented by HOUSE-08 and HOUSE-09;
     - the fix10 runs (corrected code) to read;
     - unemployment climbs after day 40.
+- **HOUSE-12:** the sleeping loft, approved by the owner (`docs/directives/2026-10-20_loft_and_actions_approval.md`). Implemented and tested per `docs/design/SLEEPING_LOFT.md` (`housing_test.gd`, 76 checks); its long-run effect is still to be measured.
+- **INFRA-02:** the manual GitHub Actions long-simulation workflow, approved; validated against a local 10-day run before it is relied on.
 - **INFRA-01:** long-run reliability after two idle-time container restarts. Options in `docs/release/SIMULATION_PERFORMANCE.md` section 6; the recommendation (long runs on a manual GitHub Actions workflow) waits on the owner.
 - **PERF-01:** the measured answer to the owner's runtime questions, in `docs/release/SIMULATION_PERFORMANCE.md`. PERF-02..06 (profiling, the determinism gate, optimizations, parallel seeds, a checkpoint evaluation) follow the housing work, without disturbing running simulations.
 - **HOUSE-07:** the EQ-07 investigation, tests (`game/tests/housing_test.gd`) and re-runs. Done: the trace, the root causes, the tests. Remaining: the fix10 100-day results.

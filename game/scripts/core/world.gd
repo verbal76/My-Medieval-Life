@@ -1249,6 +1249,39 @@ func interior_for(b: Dictionary) -> Dictionary:
 	return out
 
 
+## A house with a finished sleeping loft (HOUSE-12, owner 2026-10-20): its interior gains the loft's
+## sleeping places, bed spots marked `loft` whose bed and use cell is the ladder, a floor cell inside the
+## house (the first floor cell, in the interior's order, that is no door and no other spot's place). Nobody
+## walks up there: a loft sleeper goes to the ladder and is hidden while asleep (in_loft). The spots come
+## after the house's own beds, so the sleep order gives them to the later sleepers.
+func _with_loft(b: Dictionary, it: Dictionary) -> Dictionary:
+	var beds := int(b.get("loft", 0))
+	if beds <= 0 or it.is_empty():
+		return it
+	var out: Dictionary = it.duplicate(true)
+	var taken := {}
+	for c in out.get("doors", []):
+		taken[Vector2i(int(c[0]), int(c[1]))] = true
+	for s in out.get("spots", []):
+		taken[Vector2i(int(s.at[0]), int(s.at[1]))] = true
+	var ladder := Vector2i(-1, -1)
+	for c in out.get("floor", []):
+		var v := Vector2i(int(c[0]), int(c[1]))
+		if not taken.has(v):
+			ladder = v
+			break
+	if ladder.x < 0:
+		return it
+	for i in beds:
+		out.spots.append({"kind": "bed", "at": [ladder.x, ladder.y], "use": [ladder.x, ladder.y], "head": "left", "tile": -1, "loft": true})
+	return out
+
+
+## A villager asleep up in their house's loft (HOUSE-12): not drawn on the ground floor.
+func in_loft(n: NPC) -> bool:
+	return n.alive and n.anim == "sleep" and bool(home_spot(n, "bed").get("loft", false))
+
+
 ## An interior with the chair spots found in its own tiles (Furniture.with_chairs, PL1-07/PL2-013): the
 ## map's layers for the map's buildings, the stamp's for one the player builds.
 func _with_chairs(b: Dictionary, it: Dictionary) -> Dictionary:
@@ -1276,7 +1309,7 @@ func index_interiors() -> void:
 	var ids := buildings.keys()
 	ids.sort()
 	for id in ids:
-		var it := _with_chairs(buildings[id], interior_for(buildings[id]))
+		var it := _with_loft(buildings[id], _with_chairs(buildings[id], interior_for(buildings[id])))
 		if it.is_empty() or it.area.is_empty():
 			continue
 		interiors[id] = it
@@ -1473,8 +1506,9 @@ func start_site(p: Dictionary, kind := "house", owner := "") -> void:
 	var ground := property.describe(p)
 	farm.give_up_cells(p)              # a field on the ground is ploughed under for the building (PL2-015)
 	p.site = {"kind": kind, "cost": cost, "need": cost.duplicate(), "done": false, "owner": owner if owner != "" else holder_of(p)}
-	var frame: int = map.data.tiles.frame
-	tile_changed.emit(_frame_cell(p), "below", frame)
+	if kind != "loft":                 # a loft goes up under the house's own roof: no frame on its floor
+		var frame: int = map.data.tiles.frame
+		tile_changed.emit(_frame_cell(p), "below", frame)
 	note("%s marks out %s on %s." % [ref_name(str(p.site.owner), true), Construction.kind_name(kind, true), ground])
 
 
@@ -1512,6 +1546,9 @@ func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
 func _finish_site(p: Dictionary) -> void:
 	p.site.done = true
 	var kind := str(p.site.get("kind", "house"))
+	if kind == "loft":
+		_finish_loft(p)
+		return
 	var by := str(p.site.get("owner", holder_of(p)))
 	var fam := player.family if by == PLAYER else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
 	var b := {"id": ("house_" if kind == "house" else "workshop_") + str(p.id), "type": "player_house" if kind == "house" else "workshop",
@@ -1533,6 +1570,19 @@ func _finish_site(p: Dictionary) -> void:
 	note("%s is finished." % cap(property.describe(b)))
 	property._settle(by)               # a family's first house becomes its home
 	construction.on_finished(b)        # a founding household moves in
+
+
+## A sleeping loft is finished (HOUSE-12): no new building; the house gains its loft (World._with_loft) and
+## the parcel's site goes back to the finished house it heads. Its materials are used up in it.
+func _finish_loft(p: Dictionary) -> void:
+	var b := property.building_on(p)
+	var cost: Dictionary = p.site.get("cost", {})
+	for id in cost:
+		stat("used_building_" + str(id), float(cost[id]))
+	b.loft = int(Construction.loft_cfg().beds)
+	p.site = {"kind": "house", "cost": {}, "need": {}, "done": true, "owner": str(p.site.get("owner", holder_of(p)))}
+	index_interiors()
+	note("The sleeping loft in %s is finished." % property.describe(b))
 
 
 ## "the Reed family's house" -> "The Reed family's house".
@@ -1604,6 +1654,10 @@ func cancel_site(p: Dictionary, inv: Inventory) -> Dictionary:
 			left.add(id, int(back[id]))
 	if not left.items.is_empty():
 		loot.append({"pos": Vector2(float(p.door[0]) + 0.5, float(p.door[1]) + 0.5), "inv": left, "coins": 0, "from": "the building site"})
+	if str(p.site.get("kind", "")) == "loft":          # a loft given up: the house it was for stands as it was
+		p.site = {"kind": "house", "cost": {}, "need": {}, "done": true, "owner": str(p.site.get("owner", holder_of(p)))}
+		note("The sleeping loft planned in %s was given up; its materials were taken back." % property.describe(p))
+		return back
 	p.site = {}
 	tile_changed.emit(_frame_cell(p), "below", -1)
 	note("The building site on %s was given up; its materials were taken back." % property.describe(p))

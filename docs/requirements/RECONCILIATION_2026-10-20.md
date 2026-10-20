@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 231 still open, 0 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 42 (33 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **264** = 231 still open from the baseline + 33 added and open |
+| Entries added since | | 43 (34 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 231 still open from the baseline + 34 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (0)
@@ -26,7 +26,7 @@ None.
 
 None.
 
-## Added since the baseline (42)
+## Added since the baseline (43)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -48,8 +48,9 @@ None.
 | HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | approved | PARTIALLY IMPLEMENTED | 15 |
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | APPROVED — NOT STARTED | 15 |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | DEFERRED | 20+ |
-| HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | APPROVED — NOT STARTED | 15 |
+| HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | approved | ACTIVE DEVELOPMENT | 15 |
+| INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | approved | ACTIVE DEVELOPMENT | 15 |
 | MEM-01 | Persistent project memory: PROJECT_MEMORY.md index, CURRENT_DEVELOPMENT_STATE.md handoff, mandatory session-start instructions, checkpoints, safeguards and a fresh-session recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |

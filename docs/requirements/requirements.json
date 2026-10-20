@@ -10423,7 +10423,7 @@
    "id": "HOUSE-12",
    "title": "Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "My preferred direction is to investigate a lightweight sleeping loft rather than implementing a complete multi-level building system during Build 15.",
    "description": "Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor",
    "source": "docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md",
@@ -10434,7 +10434,7 @@
     "Sleeping, occupancy (beds_in, crowding) and household behaviour work with it; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/housing_test.gd test_sleeping_loft, test_housing_options_weighed",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -10444,9 +10444,9 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "owner approval of docs/design/SLEEPING_LOFT.md, then implement and test",
+   "next_action": "long-run measurement on GitHub Actions once validated; then close",
    "priority": "",
-   "workstream": "",
+   "workstream": "lead agent, staging",
    "superseded_by": null,
    "notes": "",
    "history": [
@@ -10464,6 +10464,16 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "integration report written (docs/design/SLEEPING_LOFT.md): fits with no pathfinding or save changes and one hide-while-asleep drawing rule; construction 12 planks + 6 logs for 2 sleeping places (agent proposal); awaiting the owner"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream; next_action",
+     "why": "approved by the owner 2026-10-20 (docs/directives/2026-10-20_loft_and_actions_approval.md): 12 planks, 6 logs, no stone, 2 sleeping places, bed sharing applies, one per house, configurable in balance.json; households weigh their options by circumstances, not loft-first"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; tests; next_action",
+     "why": "implemented as approved (balance.json loft: 12 planks, 6 logs, 2 beds, one per house; built by the site and delivery path; beds only when finished; ladder cell; hidden while asleep; saves unchanged; options weighed by circumstances); housing_test.gd 76 checks pass; long-run effect still to be measured"
     }
    ],
    "target_build": "15",
@@ -10513,6 +10523,56 @@
      "date": "2026-10-20",
      "change": "note",
      "why": "options investigated (SIMULATION_PERFORMANCE.md section 6); recommend a manual GitHub Actions long-run workflow; awaiting the owner"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "note",
+     "why": "owner approved option A (GitHub Actions) as INFRA-02"
+    }
+   ],
+   "target_build": "15"
+  },
+  {
+   "id": "INFRA-02",
+   "title": "Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": null,
+   "description": "Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first",
+   "source": "docs/directives/2026-10-20_loft_and_actions_approval.md section 2",
+   "approval": "owner approval 2026-10-20",
+   "acceptance": [
+    "workflow_dispatch only, with seed and days inputs",
+    "Each run's outputs isolated and uploaded as artifacts with commit, seed, days, runtime, fingerprint and ledger results",
+    "A failing simulation or ledger fails the job",
+    "A 10-day CI run matches a local 10-day run's fingerprint and ledgers before results are relied on"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "INFRA-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead agent, staging",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_loft_and_actions_approval.md section 2"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
+     "why": "approved; started"
     }
    ],
    "target_build": "15"

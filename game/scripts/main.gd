@@ -1231,7 +1231,7 @@ func _sync_sprites() -> void:
 		# children are drawn at half an adult's size, full size once grown (owner, 2026-10-18); the
 		# feet are the sprite's origin, so they stay on the ground
 		s.scale = Vector2.ONE * Life.npc_scale(n, world.minutes)       # child 0.5, adolescent 0.75 (balance.json "life"; B8-029)
-		s.visible = near and not _covered(n)
+		s.visible = near and not _covered(n) and not world.in_loft(n)     # asleep in the loft: up there, unseen
 		if not s.visible:
 			continue
 		if _show_sleeper(n, s) or _show_sitter(n, s):

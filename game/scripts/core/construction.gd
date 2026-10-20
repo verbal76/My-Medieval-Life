@@ -24,7 +24,7 @@ const KINDS := ["house", "smithy", "carpentry", "bakehouse", "kitchen", "apothec
 const STANDALONE := ["house", "smithy", "carpentry", "bakehouse", "kitchen", "apothecary"]
 const MODULES := ["smithy", "carpentry", "bakehouse", "kitchen", "apothecary", "storage", "quarters"]
 const NAMES := {"house": "house", "smithy": "smithy", "carpentry": "carpenter's shop", "bakehouse": "bakehouse",
-	"kitchen": "kitchen", "apothecary": "apothecary", "storage": "storeroom", "quarters": "living quarters"}
+	"kitchen": "kitchen", "apothecary": "apothecary", "storage": "storeroom", "quarters": "living quarters", "loft": "sleeping loft"}
 ## What each module is for, in a few words (menus and the wiki).
 const PURPOSE := {"smithy": "a forge and an anvil", "carpentry": "a workbench and a sawhorse", "bakehouse": "an oven and a stove",
 	"kitchen": "a stove for cooking and brewing", "apothecary": "a stove for tonics and poultices",
@@ -63,6 +63,8 @@ static func is_workshop(kind: String) -> bool:
 
 ## Materials a building of this kind takes (balance.json house_cost, workshop_cost).
 func cost_of(kind: String) -> Dictionary:
+	if kind == "loft":
+		return loft_cfg().cost
 	if kind == "house":
 		return GameData.b("house_cost")
 	return (GameData.b("workshop_cost") as Dictionary).get(kind, GameData.b("house_cost"))
@@ -737,46 +739,132 @@ func start_cost(kind: String, size: Vector2i) -> int:
 	return w.property.land_price(size.x, size.y) + ceili(estimate(cost_of(kind)) * float(GameData.b("found_start_share")))
 
 
-## A crowded household that nobody can leave (the parents of young children, HOUSE-06) enlarges its own
-## house with living quarters, the existing module that adds beds, started and built as a house is
-## (start_cost, then _keep_building). What the household keeps to live on (_keep) is never spent on it.
-## When it cannot start yet, its goal says why: coins to put by, no ground, or quarters already built.
+## A crowded household that nobody can leave (the parents of young children, HOUSE-06) makes more room in
+## its own house, weighing what it can really do (HOUSE-12, owner 2026-10-20: by its size, money, materials,
+## goals and the ground there is; not a loft first by rule):
+## - a sleeping loft under the roof (loft_cfg: its materials and sleeping places), if the house has none;
+## - living quarters beside the house (an existing module), if there is legitimate ground for them.
+## Each option is costed at today's prices less the materials the household already holds. An option that
+## gives the room the household lacks comes before one that does not; then the cheaper. The chosen option
+## starts when the household has its start in hand (start_cost's rule: the ground, and found_start_share of
+## the materials), never from what it keeps to live on; until then its goal says what it saves for. With no
+## option at all, the goal says why, and nothing is tried. An original village house is surveyed first
+## (Property.survey_under, HOUSE-09: nothing paid, nothing changes hands) so its ground can be weighed.
 func _enlarge(h: int) -> void:
 	var hh: Dictionary = w.households[h]
 	var ref := World.hh_ref(h)
 	var house: Dictionary = w.buildings[str(hh.home)]
 	if w.property.anchor_of(house).is_empty():
-		# an original village house has no parcel yet: its ground is surveyed (nothing paid, nothing changes
-		# hands) once the household can afford to start the quarters (HOUSE-09, owner OD-13)
-		var need := start_cost("quarters", footprint("quarters"))
-		var have: int = w.property.purse(ref) - _keep(h, w.brain._members(h).size())
-		if have < need:
-			_goal(h, "crowded", "quarters", need, need - have, "saving for living quarters")
-			return
 		w.property.survey_under(house)
+	var lacking: int = beds_needed(h) - beds_in(str(hh.home))
+	var options := []
+	var blocked := []
+	var no_loft := loft_refusal(house, ref)
+	if no_loft == "":
+		options.append({"plan": "loft", "adds": int(loft_cfg().beds), "start": _start_of(h, cost_of("loft"), 0), "whole": _whole_of(h, cost_of("loft"), 0)})
+	else:
+		blocked.append(no_loft)
 	if w.property.has_module(house, "quarters"):
-		_goal(h, "crowded", "quarters", 0, 0, "the house has its living quarters already; it waits until a grown child can leave")
+		blocked.append("the house has its living quarters already")
+	else:
+		var rect := find_module_slot("quarters", house, ref)
+		var no := "no ground beside the house for living quarters" if rect.size == Vector2i.ZERO else can_place("quarters", rect, ref, house)
+		if no == "":
+			var land: int = w.property.land_price(rect.size.x, rect.size.y)
+			options.append({"plan": "quarters", "rect": rect, "adds": _stamp_beds("quarters"), "start": _start_of(h, cost_of("quarters"), land), "whole": _whole_of(h, cost_of("quarters"), land)})
+		else:
+			blocked.append(no)
+	if options.is_empty():
+		_goal(h, "crowded", "none", 0, 0, "%s; it waits until a grown child can leave or another home can be had" % "; ".join(blocked))
 		return
-	var rect := find_module_slot("quarters", house, ref)
-	var no := "no ground beside the house for living quarters" if rect.size == Vector2i.ZERO else can_place("quarters", rect, ref, house)
-	if no != "":
-		_goal(h, "crowded", "quarters", 0, 0, no)
-		return
-	var cost := start_cost("quarters", rect.size)
+	options.sort_custom(func(a, b) -> bool:
+		var ca := int(a.adds) >= lacking
+		var cb := int(b.adds) >= lacking
+		if ca != cb:
+			return ca
+		if int(a.whole) != int(b.whole):
+			return int(a.whole) < int(b.whole)
+		return str(a.plan) < str(b.plan))
+	var pick: Dictionary = options[0]
 	var spare: int = w.property.purse(ref) - _keep(h, w.brain._members(h).size())
-	if spare < cost:
-		_goal(h, "crowded", "quarters", cost, cost - spare, "saving for living quarters")
+	var need := int(pick.start)
+	var what := "a sleeping loft" if pick.plan == "loft" else "living quarters"
+	if spare < need:
+		_goal(h, "crowded", str(pick.plan), need, need - spare, "saving for %s" % what)
 		return
-	var p := place("quarters", rect, ref, false, house)
+	var p: Dictionary = start_loft(h) if pick.plan == "loft" else place("quarters", pick.rect, ref, false, house)
 	if p.is_empty():
-		_goal(h, "crowded", "quarters", cost, 0, why)
+		_goal(h, "crowded", str(pick.plan), need, 0, why)
 		return
 	hh.build = str(p.id)
-	_goal(h, "crowded", "quarters", cost, 0, "")
+	_goal(h, "crowded", str(pick.plan), need, 0, "")
 	var by := responsible_adult(h)
-	w.note("The %s house is crowded: %s sets about adding living quarters to it." % [hh.family, by.name if by != null else "the family"])
-	w.stat("quarters_started")
+	w.note("The %s house is crowded: %s sets about %s." % [hh.family, by.name if by != null else "the family",
+		"building a sleeping loft under its roof" if pick.plan == "loft" else "adding living quarters to it"])
+	w.stat(str(pick.plan) + "_started")
 	_keep_building(h)
+
+
+## The sleeping loft's settings (balance.json "loft", owner-approved 2026-10-20): cost, beds, per_house.
+static func loft_cfg() -> Dictionary:
+	return GameData.b("loft")
+
+
+## Why this house cannot have a loft started for `ref`, "" if it can: a home `ref` holds, with no loft yet
+## (one per house, loft_cfg().per_house) and no building going on at it.
+func loft_refusal(house: Dictionary, ref: String) -> String:
+	if not w.property.is_home(house) or not w.holds(ref, house):
+		return "a loft goes in a house the household holds"
+	if int(house.get("loft", 0)) > 0 and int(loft_cfg().per_house) <= 1:
+		return "the house has its sleeping loft already"
+	for q in w.property.estate_parcels(house):
+		if not q.site.is_empty() and not q.site.get("done", false):
+			return "building is already going on at the house"
+	return ""
+
+
+## Start a sleeping loft in household `h`'s house (HOUSE-12): its ground is surveyed if it has no parcel
+## (nothing paid), and the house's parcel becomes the site; the materials are delivered as for any
+## building, and the loft's beds exist only when the last load is in (World._finish_loft). {} if refused.
+func start_loft(h: int) -> Dictionary:
+	var ref := World.hh_ref(h)
+	var house: Dictionary = w.buildings.get(str(w.households[h].home), {})
+	why = loft_refusal(house, ref) if not house.is_empty() else "the household has no house"
+	if why != "":
+		return {}
+	var p := w.property.survey_under(house)
+	w.start_site(p, "loft", ref)
+	return p
+
+
+## What starting a building takes in hand: the ground and found_start_share of the materials the household
+## does not already hold, at today's prices.
+func _start_of(h: int, cost: Dictionary, land: int) -> int:
+	return land + ceili(estimate(_still_needed(h, cost)) * float(GameData.b("found_start_share")))
+
+
+## What a building costs the household in all: the ground and the materials it does not already hold.
+func _whole_of(h: int, cost: Dictionary, land: int) -> int:
+	return land + estimate(_still_needed(h, cost))
+
+
+func _still_needed(h: int, cost: Dictionary) -> Dictionary:
+	var pantry: Inventory = w.households[h].pantry
+	var out := {}
+	for id in cost:
+		var k := int(cost[id]) - pantry.count(str(id))
+		if k > 0:
+			out[id] = k
+	return out
+
+
+## The sleeping places a kind's stamp brings (its beds, not straw pallets).
+func _stamp_beds(kind: String) -> int:
+	var n := 0
+	for s in w.map.data.stamps.get(stamp_name(kind), {}).get("interior", {}).get("spots", []):
+		if s.kind == "bed" and int(s.get("tile", -1)) % 100000 != 593:
+			n += 1
+	return n
 
 
 ## Couples who want a home of their own (EQ-07): partners who live in different households, or a grown

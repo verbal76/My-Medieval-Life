@@ -34,6 +34,8 @@ func _init() -> void:
 	test_tool_less_worker()
 	test_bed_sharing()
 	test_quarters_on_an_original_house()
+	test_sleeping_loft()
+	test_housing_options_weighed()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -466,13 +468,125 @@ func test_quarters_on_an_original_house() -> void:
 		if r.size != Vector2i.ZERO and c2.can_place("quarters", r, World.hh_ref(hid), w2.buildings[home]) == "":
 			any_room = true
 	check(not any_room, "(measured) no original house has free ground beside it for the 9x10 quarters on this layout; OD-14")
-	# a crowded family there keeps its goal, with the reason, and no bed appears
-	var w3 := new_world(2)
-	var c3 := w3.construction
-	var h3 := crowded_family(w3)
-	var beds0 := c3.beds_in(str(w3.households[h3].home))
-	c3.responsible_adult(h3).coins += 400
-	c3.daily()
-	var g: Dictionary = c3.housing_goals(h3).get("crowded", {})
-	check(str(g.get("why", "")).contains("no ground") and c3.beds_in(str(w3.households[h3].home)) == beds0 and str(w3.households[h3].get("build", "")) == "",
-		"a crowded family there keeps its goal, saying why (%s), and gains no bed it has not built" % g.get("why", ""))
+	# a crowded family there now builds a sleeping loft (HOUSE-12) instead: see test_sleeping_loft
+
+
+## HOUSE-12 (owner-approved 2026-10-20): a crowded family in an original house with no ground builds a sleeping
+## loft: the materials are bought or taken from its store, delivered and used up; the two sleeping places
+## exist only when the last load is in; ownership and membership are unchanged; one loft per house; a loft
+## sleeper goes to the ladder and is not drawn on the ground floor; the loft survives a save; and with no
+## option left the goal says so and nothing is retried.
+func test_sleeping_loft() -> void:
+	var w := new_world(2)
+	var c := w.construction
+	var h := crowded_family(w)
+	var hh: Dictionary = w.households[h]
+	var ref := World.hh_ref(h)
+	var house: Dictionary = w.buildings[str(hh.home)]
+	var owner0 := w.owner_of(house)
+	var members0: Array = (hh.members as Array).duplicate()
+	var beds0 := c.beds_in(str(hh.home))
+	var pantry: Inventory = hh.pantry
+	pantry.add("log", 6)                              # firewood the family holds: weighed as material it has
+	c.responsible_adult(h).coins += 300
+	var took0 := {}
+	var bought0 := {}
+	for id in c.cost_of("loft"):
+		took0[id] = int(w.stats.get("helper_took_" + str(id), 0))
+		bought0[id] = int(w.stats.get("helper_bought_" + str(id), 0))
+	c.daily()
+	var p: Dictionary = w.plot(str(hh.get("build", "")))
+	check(not p.is_empty() and str(p.site.kind) == "loft" and w.property.building_on(p) == house, "a crowded family with no ground beside its house sets about a sleeping loft (%s)" % [c.housing_goals(h)])
+	if p.is_empty():
+		return
+	check(str(c.housing_goals(h).crowded.plan) == "loft", "its goal records the plan")
+	check(c.beds_in(str(hh.home)) == beds0 and int(house.get("loft", 0)) == 0, "no sleeping place before it is built")
+	check(c.loft_refusal(house, ref) != "", "nothing else is started at the house while it is being built")
+	for d in 15:
+		run_days(w, 1)
+		if p.site.get("done", false) or int(house.get("loft", 0)) > 0:
+			break
+	check(int(house.get("loft", 0)) == int(Construction.loft_cfg().beds), "the household builds the loft (%s left)" % [p.site.get("need", {})])
+	check(c.beds_in(str(hh.home)) == beds0 + int(Construction.loft_cfg().beds), "two more sleeping places once it is finished (%d, was %d)" % [c.beds_in(str(hh.home)), beds0])
+	check(str(p.site.kind) == "house" and p.site.get("done", false) and w.buildings.has(str(house.id)) and w.property.building_on(p) == house, "the house is still the one house, finished; no new building")
+	var supplied := true
+	for id in c.cost_of("loft"):
+		var got := int(w.stats.get("helper_took_" + str(id), 0)) - int(took0[id]) + int(w.stats.get("helper_bought_" + str(id), 0)) - int(bought0[id])
+		supplied = supplied and got >= int(c.cost_of("loft")[id])
+	check(supplied, "every plank and log was taken from the household's store or bought: none from nothing")
+	check(w.owner_of(house) == owner0 and members0.all(func(id): return (hh.members as Array).has(id) or not w.npc(int(id)).alive), "ownership and membership unchanged")
+	check(c.loft_refusal(house, ref).contains("already"), "one loft per house")
+	# a loft sleeper goes to the ladder and is hidden
+	var sleeper: NPC = null
+	for o: NPC in w.brain._members(h):
+		if bool(w.home_spot(o, "bed").get("loft", false)):
+			sleeper = o
+			break
+	check(sleeper != null, "the later sleepers in the household's order sleep in the loft")
+	if sleeper != null:
+		var ladder := w.home_cell(sleeper, "bed")
+		var floor_cells: Array = w.interiors[str(hh.home)].floor.map(func(f): return Vector2i(int(f[0]), int(f[1])))
+		check(floor_cells.has(ladder) and not w.map.is_solid(ladder), "their bed is reached from the ladder, a floor cell inside the house")
+		sleeper.anim = "sleep"
+		check(w.in_loft(sleeper), "asleep up there: not drawn on the ground floor")
+		sleeper.anim = "idle"
+		check(not w.in_loft(sleeper), "awake, they are seen again")
+	# saves keep the loft; an older save without the field loads with no loft
+	var d := w.to_dict()
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(int(w2.buildings[str(house.id)].get("loft", 0)) == 2 and w2.construction.beds_in(str(hh.home)) == c.beds_in(str(hh.home)), "a saved game keeps the loft and its beds")
+	d = JSON.parse_string(JSON.stringify(d))          # a copy: to_dict shares the live building records
+	for bd in d.buildings.values():
+		bd.erase("loft")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
+	check(w3.construction.beds_in(str(hh.home)) == beds0, "a save from before lofts loads with no loft")
+	# nothing left to try: the goal says so, and no site is started again and again
+	while not c.crowded(h):
+		var mom: NPC = c.responsible_adult(h)
+		Life.birth(w, mom if mom.sex == "female" else w.npc(mom.partner), mom if mom.sex != "female" else w.npc(mom.partner), h)
+	c.daily()
+	c.daily()
+	var g: Dictionary = c.housing_goals(h).get("crowded", {})
+	check(str(g.get("plan", "")) == "none" and str(g.why).contains("loft already") and str(hh.get("build", "")) == "", "with the loft built and no ground, the goal says why and nothing is retried (%s; crowded %s, founder %s, build %s)" % [c.housing_goals(h), c.crowded(h), c.founder_of(h), hh.get("build", "")])
+
+
+## HOUSE-12 (owner: weigh the options by circumstances, not a loft first by rule): in a house with ground
+## beside it, a household short of a bed or two takes the cheaper loft; one short of more than a loft gives
+## takes the living quarters, which give enough room.
+func test_housing_options_weighed() -> void:
+	for want_quarters in [false, true]:
+		var w := new_world(2)
+		var c := w.construction
+		var h := crowded_family(w)
+		var hh: Dictionary = w.households[h]
+		var ref := World.hh_ref(h)
+		# the family moves to a house it builds on open ground (so there is room beside it)
+		var p := c.place("house", c.find_ground("house", w.building_door(str(hh.home)), ref), ref)
+		var bag := Inventory.new()
+		for id in p.site.need:
+			bag.add(str(id), int(p.site.need[id]))
+		w.deliver(p, bag)
+		c.move_in(h, "house_" + str(p.id))
+		var guard := 0
+		var lacking := c.beds_needed(h) - c.beds_in(str(hh.home))
+		var target := int(Construction.loft_cfg().beds) + 1 if want_quarters else 1
+		while lacking != target and guard < 60:
+			var kids: Array = w.brain._members(h).filter(func(o: NPC) -> bool: return o.role == "child")
+			if lacking < target:
+				var mom: NPC = c.responsible_adult(h)
+				Life.birth(w, mom if mom.sex == "female" else w.npc(mom.partner), mom if mom.sex != "female" else w.npc(mom.partner), h)
+			elif not kids.is_empty():
+				(hh.members as Array).erase(kids[0].id)
+				kids[0].household = -1
+			lacking = c.beds_needed(h) - c.beds_in(str(hh.home))
+			guard += 1
+		c.responsible_adult(h).coins += 1000
+		c.daily()
+		var site: Dictionary = w.plot(str(hh.get("build", "")))
+		var kind := str(site.site.kind) if not site.is_empty() else "none"
+		if want_quarters:
+			check(kind == "quarters", "short of %d sleeping places, more than a loft gives: living quarters beside the house (%s)" % [lacking, kind])
+		else:
+			check(kind == "loft", "short of one sleeping place: the cheaper sleeping loft (%s)" % kind)
