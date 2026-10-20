@@ -184,6 +184,19 @@ func relief_sources(w: World, fam: NPC) -> void:
 	var ate: bool = w.brain._plan_eat(eater)
 	check(ate and str(eater.plan[0].get("act", "")) == "eat" and str(eater.plan[0].get("args", {}).get("item", "")) == "egg",
 		"parity: a villager with eggs in hand and nothing else eats an egg, as the player can (%s)" % eater.doing)
+	# the household's food is shared: a hungry member takes milk another member carries (B7-015 after FSE-17)
+	strip_village(w, [b])
+	if mb.size() >= 2:
+		var giver: NPC = mb[1]
+		giver.inv.add("milk", 20)
+		eater.hunger = 10.0
+		eater.plan = []
+		var shared: bool = w.brain._plan_eat(eater)
+		var step: Dictionary = eater.plan[1] if eater.plan.size() > 1 else {}
+		check(shared and str(step.get("act", "")) == "share_food" and int(step.get("args", {}).get("from", -1)) == giver.id,
+			"FSE-17: a hungry villager eats the milk a member of the household carries (%s)" % eater.doing)
+		eater.pos = giver.pos
+		check(w.brain.act(eater, str(step.act), step.args) and eater.inv.count("milk") == 1 and giver.inv.count("milk") == 19, "FSE-17: the milk is handed over, one of it, nothing made")
 	strip_village(w, [b])
 	var pb: Inventory = w.households[b].pantry
 	pb.add("meat", 1)

@@ -749,6 +749,11 @@ func _plan_eat(n: NPC) -> bool:
 		n.doing = "eating"
 		n.plan = [work(10, "eat", {}, "idle")]
 		return true
+	# a household's food is shared (FSE-17 counts what every member holds): food a member carries feeds the hungry one
+	# (B7-015, FSE-16: elders starved while a member carried 79 milk, a farmer while another carried 109; the reckoning
+	# called the household fed and relief never came)
+	if not hh.is_empty() and _plan_share_food(n):
+		return true
 	# who pays is decided at the price asked (B7-015: a fixed 2-coin test sent people with 2 coins to a vendor whose
 	# cheapest meal cost 3 to 5, again and again until they starved, while the household's tab could have paid)
 	var payer: NPC = null
@@ -1538,6 +1543,29 @@ func _cook_at_home(n: NPC, pantry: Inventory) -> void:
 		w.stat("home_roasted")
 
 
+## A hungry `n` takes food a member of their household carries: cooked or raw food is eaten where it is handed over,
+## grain is taken home to be cooked. Members' pockets first by the food they hold (the most first). True when planned.
+func _plan_share_food(n: NPC) -> bool:
+	var best: NPC = null
+	var item := ""
+	for m: NPC in _members(n.household):
+		if m == n or not m.alive:
+			continue
+		for f in EDIBLE:
+			if m.inv.count(f) >= (2 if f == "wheat" else 1) and (best == null or m.inv.count(f) > best.inv.count(item)):
+				best = m
+				item = f
+	if best == null:
+		return false
+	n.doing = "eating from the family's stores"
+	if item == "wheat":
+		n.plan = [go(best.cell()), doit("share_food", {"from": best.id, "item": "wheat", "qty": 2})] + _home_meal(n)
+	else:
+		n.plan = [go(best.cell()), doit("share_food", {"from": best.id, "item": item, "qty": 1}), work(10, "eat", {"item": item}, "idle")]
+	w.stat("shared_food_meals")
+	return true
+
+
 ## Whether `n`'s household can roast meat at home now: meat and a log between its pantry and `n`.
 func _can_roast(n: NPC) -> bool:
 	var p: Inventory = w.households[n.household].pantry
@@ -2075,6 +2103,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				w.stat("gov_wages", wage)
 				w.stat("gov_day_labour", wage)
 			return true
+		"share_food":                          # FSE-17: food handed over by a member of the household
+			var g := w.npc(int(a.get("from", -1)))
+			if g == null or not g.alive or g.household != n.household or g.pos.distance_to(n.pos) > 3.0:
+				return false
+			return w.transfer(g.inv, n.inv, str(a.item), mini(int(a.get("qty", 1)), g.inv.count(str(a.item))))
 		"take_pantry":
 			var pantry: Inventory = w.households[n.household].pantry
 			w.transfer(pantry, n.inv, a.item, mini(int(a.qty), pantry.count(a.item)))
