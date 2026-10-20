@@ -78,7 +78,7 @@ All on `af60f94`:
 | Nights without firewood | 6,917 | 6,633 |
 | Fingerprint | `b21ba717e772664848724d5001a4028c` | `0647d6bf82c1f58ad21f95e5aeaca583` |
 
-WILDLIFE_LINE
+**Wildlife at day 365:** pending the local re-run of the same commit (the Actions log does not print it).
 
 ### 5. No known game-breaking defects
 
