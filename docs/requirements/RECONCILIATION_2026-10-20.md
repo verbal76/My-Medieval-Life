@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 230 still open, 1 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 46 (35 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **265** = 230 still open from the baseline + 35 added and open |
+| Entries added since | | 47 (36 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **266** = 230 still open from the baseline + 36 added and open |
 | Open entries moved to another build | | 0 |
 
 ## Closed since the baseline (1)
@@ -28,7 +28,7 @@ None.
 
 None.
 
-## Added since the baseline (46)
+## Added since the baseline (47)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -61,6 +61,7 @@ None.
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | COMPLETE AND VERIFIED | 16 |
 | OD-13 | Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither? | decision | COMPLETE AND VERIFIED | 15 |
 | OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | decision | COMPLETE AND VERIFIED | 15 |
+| OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | decision | BLOCKED | 15 |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT | 15 |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | APPROVED — NOT STARTED | 15 |

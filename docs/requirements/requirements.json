@@ -2819,11 +2819,11 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "owner answer to OD-15; then apply it or close",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Wildlife: verified by refuge_test.gd. Buyers: awaits OD-15.",
    "history": [
     {
      "date": "2026-10-19",
@@ -2834,6 +2834,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 15",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "next_action; notes",
+     "why": "verified 2026-10-20: the wildlife half holds (refuge_test.gd: the player kills every deer in a wood; refuge stock is untouched and young recolonize it, WR-01). The buyer half does not: World.player_sell still lets the player sell a trader to 0 coins; the 15-coin floor for player sales was never approved. Kept BLOCKED on OD-15"
     }
    ],
    "acceptance_derived": true,
@@ -12066,6 +12071,55 @@
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "completes OD-13's house expansion for the original houses",
    "owner_answer": "Phase 1 approved direction: implement appropriately sized additions that allow existing homes to expand when space permits: smaller attached rooms; actual construction (materials, money, labour, time; no free construction); existing ownership, membership and rent preserved; only legitimate buildable ground adjoining the house (no roads, occupied buildings or another household's property without a legitimate transfer); trees and removable vegetation cleared through normal gameplay first; if a ground-floor addition is impossible, evaluate a smaller configuration or an upper-floor/attic conversion, but do not invent an upper-floor system merely to bypass geometry; no guaranteed expansion; persistent goals that reconsider feasible options; HOUSE-08 bed sharing preserved. Do not automatically convert every blocked household to detached quarters. (docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md)"
+  },
+  {
+   "id": "OD-15",
+   "title": "Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)?",
+   "source": "agent, 2026-10-20, verifying B7-008 (docs/release/BUILD_7_ISSUES.md B7-008; World.player_sell)",
+   "approval": "",
+   "acceptance": [
+    "The owner's answer recorded in owner_answer before B7-008's buyer half is changed or closed"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "Today a villager selling to a trader leaves the trader trader_cash_floor (15) coins; the player can sell a trader down to 0 (World.player_sell checks only that the buyer can pay). Options: (a) the same 15-coin floor for the player (one rule for all, World Design Rules); (b) keep it as is: the trader's own choice to spend, and coins flow back as villagers buy. Recommendation: (a), since the same rules apply to everyone and a trader at 0 cannot buy villagers' goods. Nothing changes until the owner answers.",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "agent, 2026-10-20, verifying B7-008 (docs/release/BUILD_7_ISSUES.md B7-008; World.player_sell)"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "notes; target_build",
+     "why": "options and recommendation recorded"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "roadmap_gate; roadmap_reason",
+     "why": "roadmap gate"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "whether player sales keep a trader's floor is a game rule"
   },
   {
    "id": "OPS-01",

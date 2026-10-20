@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **356** |
 | Outstanding (not complete, superseded or canceled) | 209 |
 
-Also in the register: 30 proposal awaiting an owner decision (not approved), 31 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 23 are open (status BLOCKED).
+Also in the register: 30 proposal awaiting an owner decision (not approved), 32 owner decision (open or answered), 21 world design rule, 1 unapproved idea; of the owner decisions, 24 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -39,7 +39,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 
 | Target | Open entries | of which approved work |
 |---|---|---|
-| Build 15: simulation stabilization | 80 | 78 |
+| Build 15: simulation stabilization | 81 | 78 |
 | Build 16: long-term equilibrium and validation | 26 | 26 |
 | Build 17: Mining & Industrial Development | 23 | 18 |
 | Build 18: Settlement Advancement & Regional Economy | 22 | 17 |
@@ -48,9 +48,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Multiplayer track (isolated branch) | 3 | 2 |
 | Waiting on an owner decision | 34 | 7 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **265** | **209** |
+| **Total open** | **266** | **209** |
 
-### Build 15: simulation stabilization (80)
+### Build 15: simulation stabilization (81)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
@@ -105,6 +105,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | HOUSE-09 | Original village houses can take living-quarters expansions (OD-13): the ground under a generated house becomes its parcel so modules attach; the quarters still cost real materials, labour and time | approved | PARTIALLY IMPLEMENTED |  | EQ-07 root cause 1 (owner answer OD-13) |
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | approved | APPROVED — NOT STARTED |  | OD-14 Phase 1, Build 15 stabilization |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | approved | IMPLEMENTED — TESTING REQUIRED |  | OD-14 follow-up, owner's preferred direction |
+| OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | decision | BLOCKED | owner decision first | whether player sales keep a trader's floor is a game rule |
 | OVN-01 | Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority | approved | ACTIVE DEVELOPMENT |  |  |
 | PERF-01 | Simulation performance audit: measured explanation of the runtime growth since the 530-689 s 365-day benchmark (regression, contention, environment or estimates) | approved | ACTIVE DEVELOPMENT |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
 | PERF-02 | Profile a representative 10-day run by subsystem (npc_brain decisions, _run_plan, movement and pathfinding, fauna, hourly and daily world processing, harness sampling) before any optimization | approved | APPROVED — NOT STARTED |  | owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5) |
@@ -618,7 +619,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | docs/release/BUILD_12_FULL_AUDIT.md (audit inventory row 357) |  |  |  |
 | B13-15 | Android signing stability | docs/DEVELOPMENT_LEDGER.md (audit inventory row 190) |  |  |  |
 | B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | docs/release/BUILD_7_ISSUES.md (audit inventory row 47) |  |  |  |
-| B7-008 | Player can drain buyers to 0, kill all wildlife | docs/release/BUILD_7_ISSUES.md (audit inventory row 49) |  |  |  |
+| B7-008 | Player can drain buyers to 0, kill all wildlife | docs/release/BUILD_7_ISSUES.md (audit inventory row 49) |  |  | owner answer to OD-15; then apply it or close |
 | B7-015 | Missed meals while food piles up | docs/release/BUILD_7_ISSUES.md (audit inventory row 56) |  |  |  |
 | B7-016 | Tanners/goods merchants end at 0 coins | docs/release/BUILD_7_ISSUES.md (audit inventory row 57) |  |  |  |
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | owner request 2026-10-19 (DEVELOPMENT_LEDGER ENV-RTK) |  | owner: environment setup script |  |
@@ -814,7 +815,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 23, status BLOCKED) (31)
+## Owner decisions, open and answered (open: 24, status BLOCKED) (32)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -833,6 +834,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md Part 4.5 |
 | OD-13 | Owner decision: crowded families that no member can leave (two parents, young children, often a grandparent, more people than beds). Should young children share beds, so such a family is not crowded? Should the original village houses be extendable with living quarters (the ground under them surveyed as parcels)? Both, or neither? | COMPLETE AND VERIFIED | docs/directives/2026-10-20_housing_succession_adoption.md Part 2 (EQ-07 trace, seed 2: five crowded households, all of this shape) |
 | OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | COMPLETE AND VERIFIED | docs/release/LONG_RUN_SIMULATION.md (EQ-07); measured with housing_test.gd::test_quarters_on_an_original_house |
+| OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | BLOCKED | agent, 2026-10-20, verifying B7-008 (docs/release/BUILD_7_ISSUES.md B7-008; World.player_sell) |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided | COMPLETE AND VERIFIED | docs/DECISIONS.md (audit inventory row 325) |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | ACTIVE DEVELOPMENT | owner messages 2026-10-20 (chat), restated in docs/directives/2026-10-20_project_memory_hardening.md and docs/directives/2026-10-20_permanent_project_memory_hardening.md; recorded in docs/EXPANSION_ROADMAP.md |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
