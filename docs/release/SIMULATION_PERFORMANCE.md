@@ -122,3 +122,17 @@ The owner asked that nothing be built until this has been weighed.
 | **C. Checkpoint and resume** (PERF-06) | Only if the RNG state (not saved today: loading reseeds it), transient brain state and the harness's accumulators are all saved, proved by a broken-at-day-15 30-day run matching an unbroken one | Medium | A missed piece of state silently changes results; must be gated |
 
 **Recommendation:** **A** for every run longer than about 30 minutes, with **B** as a fallback while a run is local. Keep **C** for later, behind its determinism gate. A needs the owner's approval: it adds a workflow and uses GitHub's runners.
+
+### Validation of the GitHub Actions workflow (2026-10-20, INFRA-02)
+
+**Comparison:** the same code (`9ec6b40`), seed 1, 10 days, sampled every 10 days. Local: `out/eq/val10` with its own user data. GitHub: run 39365379504, job 118440940456.
+
+| | Local | GitHub Actions |
+|---|---|---|
+| Fingerprint | `eeabb2a8ce8d6ed8e9691867869bc6ee` | `eeabb2a8ce8d6ed8e9691867869bc6ee` |
+| Deaths | Ivo Stone d3, Mabel Marsh d7, Rose Barley d10 | the same |
+| Currency | total 4298 (villagers 3884, bandits 199, treasury 195, player 20), in 1456, out 85, leak 0 | the same |
+| Item ledger | log 36+696-451-85=196; plank 28+256-89-80=115; iron bar 8+106-44-60=10; no leaks | the same |
+| Runtime | about 2 min (shared container) | 57 s (simulate step) |
+
+**Result:** identical. Long runs now go to GitHub Actions (`.github/workflows/long-sims.yml`, dispatched with `ref=staging/my-medieval-life`; every run records its commit).

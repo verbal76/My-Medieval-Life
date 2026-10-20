@@ -10483,7 +10483,7 @@
    "id": "INFRA-01",
    "title": "Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "The repeated container restarts are now a serious testing reliability issue. Investigate a safe way to preserve long-running test progress or prevent session-idle termination without altering simulation results.",
    "description": "Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results",
    "source": "docs/directives/2026-10-20_sleeping_loft_and_long_run_reliability.md",
@@ -10493,10 +10493,12 @@
     "Whatever is adopted leaves results identical to an unbroken run (or labels them)"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "INFRA-02 validation",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "9ec6b40"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -10528,6 +10530,11 @@
      "date": "2026-10-20",
      "change": "note",
      "why": "owner approved option A (GitHub Actions) as INFRA-02"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 9ec6b40; tests",
+     "why": "solved by INFRA-02: long runs go to GitHub Actions, validated deterministic against local"
     }
    ],
    "target_build": "15"
@@ -10536,7 +10543,7 @@
    "id": "INFRA-02",
    "title": "Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first",
    "source": "docs/directives/2026-10-20_loft_and_actions_approval.md section 2",
@@ -10548,10 +10555,13 @@
     "A 10-day CI run matches a local 10-day run's fingerprint and ledgers before results are relied on"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": ".github/workflows/long-sims.yml run 39365379504",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "9ec6b40",
+    "de76782"
+   ],
    "parent": "INFRA-01",
    "depends_on": [],
    "blockers": [],
@@ -10578,6 +10588,11 @@
      "date": "2026-10-20",
      "change": "note",
      "why": "workflow on staging (9ec6b40); dispatch needs the file on main (404 otherwise); owner permitted (2026-10-20, answer in session: 'Add file to main') one commit to main adding only .github/workflows/long-sims.yml"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 9ec6b40; commit de76782; tests",
+     "why": "validated 2026-10-20: GitHub Actions run 39365379504 (commit 9ec6b40, seed 1, 10 days, 57 s simulate step) matched the local run exactly: fingerprint eeabb2a8ce8d6ed8e9691867869bc6ee, deaths, currency ledger (total 4298, in 1456, out 85, leak 0), item ledger flows, no leaks"
     }
    ],
    "target_build": "15"
@@ -12027,6 +12042,50 @@
      "why": "PR #1 head 3d7bbce is an ancestor of staging: all 83 commits already in staging, no unique work; closed with an explanatory comment 2026-10-20; branch claude/charming-albattani-8jjfya left on GitHub"
     }
    ]
+  },
+  {
+   "id": "OVN-01",
+   "title": "Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Complete Build 15, then Build 16, then Build 17, then proceed to Build 18. Publish qualifying builds as they pass their required gates. If a milestone is blocked, preserve its status honestly and continue other approved work.",
+   "description": "Master overnight directive: autonomous lead-engineer execution of approved work, Builds 15 to 18 strictly in order, the build-completion definition, the skipped-items register, release and decision authority",
+   "source": "docs/directives/2026-10-20_master_overnight_development_directive.md",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "Each build declared complete only against section 4's ten conditions",
+    "docs/SKIPPED_ITEMS.md keeps every deferred item with the fields of section 5",
+    "Morning handoff per section 13 in docs/CURRENT_DEVELOPMENT_STATE.md"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "lead agent",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_master_overnight_development_directive.md"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; target_build; workstream",
+     "why": "received; in force"
+    }
+   ],
+   "target_build": "15"
   },
   {
    "id": "OWN-01",
@@ -16076,6 +16135,52 @@
    "target_build": "15",
    "roadmap_gate": "",
    "roadmap_reason": "the release authorization covering Builds 15 and 16"
+  },
+  {
+   "id": "REL-15-18",
+   "title": "Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": "I explicitly authorize you to create and publish the approved game builds overnight when all applicable release gates pass. ... Do not publicly distribute private test builds.",
+   "description": "Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private",
+   "source": "docs/directives/2026-10-20_master_overnight_development_directive.md section 9",
+   "approval": "owner directive 2026-10-20",
+   "acceptance": [
+    "A release only from a tested, pushed staging commit, all three platforms from one revision, artifacts verified against it",
+    "Draft (private) releases unless the owner approves public visibility"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "REL-14-16"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-20_master_overnight_development_directive.md section 9"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_reason",
+     "why": "placed"
+    }
+   ],
+   "target_build": "15",
+   "roadmap_reason": "covers the release of each build 15-18 as it qualifies"
   },
   {
    "id": "REQ-BANDIT",

@@ -33,6 +33,8 @@ The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is c
 | How systems affect each other (INT-### entries, validated) | `docs/SYSTEM_INTERACTION_MANIFEST.md` (`tools/check_interactions.py`) |
 | Design scopes for later work (upper floors and attics) | `docs/design/UPPER_FLOORS_SCOPE.md` |
 | Simulation performance (runtime, timing, restarts, checkpoint evaluation) | `docs/release/SIMULATION_PERFORMANCE.md` |
+| Skipped (deferred) noncritical items, with severity and reasons | `docs/SKIPPED_ITEMS.md` |
+| The owner's authority split (engineering vs design) and build-completion rules | `docs/directives/2026-10-20_master_overnight_development_directive.md` (sections 2 and 4) |
 | Architecture | `docs/ARCHITECTURE.md`; rules and open questions of the prototype in `docs/BUILD_DECISIONS.md` |
 | Saves: format, safety, migration, carrying a save between builds, recovery | `docs/release/SAVE_CONTINUITY.md`; code in `game/scripts/core/save_store.gd` and `game/scripts/core/save_transfer.gd` |
 | Long-run simulations and their results | `docs/release/LONG_RUN_SIMULATION.md`; harness `game/tests/economy_sim.gd` |
