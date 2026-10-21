@@ -603,6 +603,13 @@
     "npc_counter_tolerance": 1.25,
     "offer_days": 2,
     "keep_days": 14,
-    "notoriety_refuse": 3
+    "notoriety_refuse": 3,
+    "_note_evaluation": "CON-01 completion (agent proposals, provisional; docs/build17/CON01_COMPLETION.md): risk_margin is the share of a time estimate a seller keeps spare and does not promise (a thin seam, a farther tree, a slow day); opportunity_weight scales what the same work time earns a seller in its usual trade (NPC.avg_income) into its least price; cancel_premium is the extra share a seller asks of a buyer for each contract that buyer ended early with it still on record (keep_days).",
+    "risk_margin": 0.15,
+    "opportunity_weight": 1.0,
+    "cancel_premium": 0.1,
+    "_note_signing": "Q18-13 (owner 2026-10-21: ordinary small agreements need no notarization; formal commercial contracts are signed; parties face to face sign without a notary; no remote instant signing). Provisional agent line: a contract worth formal_total coins or more is formal and is concluded only with both parties (the manor by its reeve) within sign_reach tiles in the same place and level; a villager buyer walks to the seller to sign; an agreement not signed within offer_days lapses with nothing set aside. Smaller agreements are concluded where they are made. The courier-notary for parties who cannot meet is Expansion 18's (X18-Q13), not built.",
+    "formal_total": 50,
+    "sign_reach": 3.0
   }
 }

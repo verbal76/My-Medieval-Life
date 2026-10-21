@@ -2248,6 +2248,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return w.farm.buy_seed_item(v, str(a.item), mini(int(a.qty), v.inv.count(str(a.item))), n) == ""
 		"contract_deliver":                                # CON-01: goods handed over on a contract, paid from the coins set aside
 			return w.contracts.npc_deliver(n, int(a.id))
+		"contract_sign":                                   # CON-01, Q18-13: a formal contract signed face to face
+			return w.contracts.npc_sign(n, int(a.id))
 		"buy_stall":
 			return w.business.arrive(n, a)       # a villager at the player's market stall (PL1-10)
 		"stall_stock":

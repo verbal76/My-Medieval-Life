@@ -6,9 +6,19 @@ extends RefCounted
 ## accepts, rejects with its reason, or counteroffers (price, quantity or a later deadline), judged from what it can
 ## really do (evaluate). The same record and the same rules serve player to NPC, NPC to player and NPC to NPC.
 ##
+## Evaluation weighs each of the directive's questions from signals that already exist (no judgment system: that is
+## Expansion 19's, and plugs into price_terms): can it come by the goods (means: stock, mining, felling, its field,
+## a recipe, a seller), skills and tools, the quantity by the deadline (work time, less a risk_margin), the price
+## against the going price, the inputs' cost and its usual earnings (alternatives), its existing obligations (open
+## contracts, manor tool orders, a manor job, a site's carrying, a stall post), its household's needs (OD-19), its tie
+## with the buyer (friends, partners and kin get a friend's price) and risk (payment is set aside; a buyer who ended
+## contracts with it early pays more). Counters go both ways: a seller counters a buyer (evaluate), and a villager
+## buyer answers a seller's counter, or the player's counter to its standing offer, by one rule (buyer_answer).
+##
 ## The record is the Living Economy design's Contract (docs/build17/PROCUREMENT_CONTRACTS.md section 3) in its
 ## smallest form: {id, buyer, seller (World refs: "player", "npc:<id>", "manor"), item, qty, price_each, deadline_day,
-## terms {pay, partial, all_at_once, deposit}, state (offered, accepted, fulfilled, lapsed, cancelled), delivered,
+## terms {pay, partial, all_at_once, deposit}, state (offered, signing, accepted, fulfilled, lapsed,
+## cancelled), delivered,
 ## paid, reserved, route, made_day, history [{day, by, what, qty, price_each, days}]}. Saved with the world.
 ##
 ## Policy (OD-29 defaults): paid on delivery, unit by unit; the buyer's coins for the unpaid value are set aside at
@@ -18,6 +28,13 @@ extends RefCounted
 ## to the buyer and, if the goods did not all come, the tie between the two loses regard; no money penalty; no
 ## renegotiation after acceptance (cancel and offer again). A party's death ends the contract and returns the coins
 ## first (on_death, before what the dead leave passes on).
+##
+## Signing (owner Q18-13, 2026-10-21): an ordinary small agreement (under formal_total coins, a provisional line) is
+## concluded where it is made; a formal contract only face to face (face_to_face; the manor by its reeve), never
+## remotely and at once. The player proposes or accepts one in person through the talk window; a villager buyer whose
+## formal order is agreed in principle at a distance holds a "signing" record (nothing set aside) and walks to the
+## seller (plan, act "contract_sign", npc_sign), where the seller answers afresh; one never signed within offer_days
+## lapses. A courier-notary for parties who cannot meet is Expansion 18's (X18-Q13) and not built.
 ##
 ## Conservation: this module is the only code that moves contract goods and coins. A delivery is one step: the seller's
 ## units leave its pack and reach the buyer only if both can (Inventory), and exactly units x price_each leaves the
@@ -88,6 +105,47 @@ func _pack(ref: String) -> Inventory:
 	return n.inv if n else null
 
 
+## Q18-13 (owner, 2026-10-21): formal commercial contracts are signed, ordinary small agreements are not. The line is a
+## provisional agent default (docs/build17/CON01_COMPLETION.md): a contract worth formal_total coins or more is formal.
+static func formal(total: int) -> bool:
+	return total >= int(cfg().formal_total)
+
+
+## The body that stands for a party when signing: the villager, the player, or for the manor its reeve (the manor's
+## representative the game already uses). null when there is none.
+func _signer(ref: String):
+	if ref == World.PLAYER:
+		return w.player if w.player.alive else null
+	if ref == World.MANOR:
+		var r := w.npc(w.reeve_id)
+		return r if r != null and r.alive else null
+	var n := _npc_of(ref)
+	return n if n != null and n.alive else null
+
+
+## Q18-13: the two parties (or the manor's reeve) are face to face: within sign_reach tiles of each other, in the same
+## place and on the same level (World.present's rule). No remote instant signing: a formal contract is concluded only
+## so. A courier-notary carrying documents to a party who cannot meet is Expansion 18's (X18-Q13), not built here.
+func face_to_face(a_ref: String, b_ref: String) -> bool:
+	var a = _signer(a_ref)
+	var b = _signer(b_ref)
+	if a == null or b == null or a == b:
+		return false
+	var reach := float(cfg().sign_reach)
+	if a is NPC and b is NPC:
+		return w.present((a as NPC).pos, reach).has(b)
+	var n: NPC = b if a is PlayerState else a
+	return w.present(w.player.pos, reach).has(n)
+
+
+## Whether `buyer_ref` already has an order for `id` (any item when "") open, offered or waiting to be signed.
+func waiting_on(buyer_ref: String, id := "") -> bool:
+	for c in list:
+		if c.buyer == buyer_ref and str(c.state) in ["accepted", "offered", "signing"] and (id == "" or c.item == id):
+			return true
+	return false
+
+
 # ---------------------------------------------------------------- queries --------------------
 func get_contract(id: int) -> Dictionary:
 	for c in list:
@@ -142,16 +200,37 @@ func reserved_total() -> int:
 
 
 # ---------------------------------------------------------------- evaluation -----------------
+## What `n` has already promised (the directive's "existing obligations"), read from every mechanism that binds a
+## villager's time, so the one evaluation weighs them all while each stays settled by its own module: its open
+## contracts as seller; the manor's tool orders it is forging (EQ-19, World.manor_orders); a manor job (ManorWork); a
+## day's carrying at a building site (Construction); a post at the player's stall (Business).
+func obligations(n: NPC) -> Dictionary:
+	var me := World.npc_ref(n.id)
+	return {"contracts": open_of(me, "seller").size(),
+		"tool_orders": w.manor_orders.filter(func(x): return int(x.smith) == n.id).size(),
+		"manor_job": not w.manor_work.job_of(me).is_empty(),
+		"site": not w.construction.contract_of(n).is_empty(),
+		"attendant": w.business != null and w.business.is_attendant(n)}
+
+
 ## Game minutes a villager can give contract work from now to the end of day `deadline_day` (work hours only, a
-## share of them: walking, eating and other work take the rest), split with its other open contracts.
+## share of them: walking, eating and other work take the rest), split with its other open contracts and the tool
+## orders it is forging; today is already promised if it holds a manor job, a site's carrying or a stall post.
 func _work_minutes(n: NPC, days: int) -> float:
 	var day_len := (NPCBrain.WORK_END - NPCBrain.WORK_START) * 60.0
 	var now := fmod(w.minutes, World.DAY)
 	var today := clampf(NPCBrain.WORK_END * 60.0 - maxf(now, NPCBrain.WORK_START * 60.0), 0.0, day_len)
 	var mins := (today + float(maxi(0, days - 1)) * day_len) * float(cfg().work_share)
-	if not w.manor_work.job_of(World.npc_ref(n.id)).is_empty() or not w.construction.contract_of(n).is_empty():
-		mins -= minf(today, mins)                    # today already promised to the manor or a building site
-	return mins / float(1 + open_of(World.npc_ref(n.id), "seller").size())
+	var ob := obligations(n)
+	if ob.manor_job or ob.site or ob.attendant:
+		mins -= minf(today, mins)
+	return mins / float(1 + int(ob.contracts) + int(ob.tool_orders))
+
+
+## Units of work time can be trusted to give, with a margin kept for what may go wrong (the directive's "risk and
+## uncertainty": a seam that runs thin, a tree farther off, a slow day): risk_margin of the estimate is not promised.
+static func _by_time(units: float) -> int:
+	return floori(units / (1.0 + float(cfg().risk_margin)))
 
 
 ## How `n` could come by `id`: {stock, rate (units per work minute), cap (units by the deadline besides stock),
@@ -177,7 +256,7 @@ func means(n: NPC, id: String, days: int, price_each := 1 << 30) -> Dictionary:
 			out.why = "source"
 		else:
 			out.rate = 1.0 / (float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0))
-			out.cap = mini(w.quests.deposit_left(id), floori(float(out.rate) * mins))
+			out.cap = mini(w.quests.deposit_left(id), _by_time(float(out.rate) * mins))
 			out.route = "mine"
 	elif id == "log":
 		if not n.inv.has("axe"):
@@ -186,7 +265,7 @@ func means(n: NPC, id: String, days: int, price_each := 1 << 30) -> Dictionary:
 			out.why = "source"
 		else:
 			out.rate = (4.0 + Skills.value(n, "woodcutting", "log_bonus")) / (float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0))
-			out.cap = floori(float(out.rate) * mins)
+			out.cap = _by_time(float(out.rate) * mins)
 			out.route = "chop"
 	elif id == "wheat" and n.job == "farmer":
 		var f: Dictionary = w.brain._field(n.workplace)
@@ -208,7 +287,7 @@ func means(n: NPC, id: String, days: int, price_each := 1 << 30) -> Dictionary:
 			for i in rec["in"]:
 				batches = mini(batches, (n.inv.count(i) - (w.brain.reserve(n, i) if i != id else 0)) / int(rec["in"][i]))
 			var per := int(rec.out[id])
-			var by_time := floori(mins / (float(rec.minutes) * Skills.value(n, str(rec.skill), "craft_time", 1.0))) * per
+			var by_time := _by_time(mins / (float(rec.minutes) * Skills.value(n, str(rec.skill), "craft_time", 1.0))) * per
 			if batches <= 0:
 				out.why = "materials"
 				continue
@@ -258,31 +337,83 @@ func _vendor(n: NPC, id: String, price_each := 1 << 30) -> NPC:
 	return best
 
 
-## The least `n` takes for a unit of `id` from `buyer_ref`: what the goods would fetch anyway (the item's value, or what
-## its best buyer pays now), at least the bought cost and a coin, by its household's needs (OD-19: one short of its
-## reserve takes a sure income for less) and its tie with the buyer (a friend's price).
+## The least `n` takes for a unit of `id` from `buyer_ref` (price_terms' "min").
 func min_price(n: NPC, buyer_ref: String, id: String, m: Dictionary) -> int:
-	var base := float(GameData.value(id))
+	return int(price_terms(n, buyer_ref, id, m).min)
+
+
+## How `n` prices a unit of `id` for `buyer_ref`, term by term (the directive's list; every input already exists):
+##  going        what the goods would fetch anyway: the item's value, or what its best buyer pays now;
+##  cost         what the unit costs it: a bought unit's price and a coin, or a recipe's inputs at their value;
+##  alternatives what the same work time earns it in its usual trade (its average daily income over the last days,
+##               NPC.avg_income, spread over the units a day's contract work yields), times opportunity_weight;
+##  household    its household's needs (OD-19): short of its reserve it takes a sure income for less (needy_factor),
+##               with its reserve covered it asks the full price (comfortable_factor);
+##  relationship a friend, partner or kin is given the friend's price (Relations friend_price), as a friend carries
+##               for free (CRT-06);
+##  risk         payment is no risk (the buyer's coins are set aside at acceptance); a buyer who ended a contract
+##               with it early within keep_days is asked cancel_premium more for each such contract.
+## min = the largest of going, cost and alternatives, times (household - relationship + risk), at least a coin.
+## Deterministic: no random draws. A judgment system (memory, trust, reputation) is Expansion 19's and plugs in here.
+func price_terms(n: NPC, buyer_ref: String, id: String, m: Dictionary) -> Dictionary:
+	var going := float(GameData.value(id))
 	var b: NPC = w.brain._buyer_for(n, id) if NPCBrain.OUTLETS.has(id) and n.inv.has(id) else null
 	if b != null:
 		var p: Array = w.sale_prices(b, n, id, 1)
 		if not p.is_empty():
-			base = maxf(base, float(p[0]))
+			going = maxf(going, float(p[0]))
+	var cost := 0.0
 	if str(m.route) == "buy":
-		base = maxf(base, float(m.cost) + 1.0)
-	var f := float(cfg().needy_factor) if n.coins < w.reserve_of(n) else float(cfg().comfortable_factor)
+		cost = float(m.cost) + 1.0
+	elif str(m.route) == "craft" and GameData.recipes.has(str(m.recipe)):
+		var rec: Dictionary = GameData.recipes[str(m.recipe)]
+		for i in rec["in"]:
+			cost += float(GameData.value(i)) * float(rec["in"][i])
+		cost /= maxf(1.0, float(rec.out[id]))
+	var alt := 0.0
+	if float(m.rate) > 0.0:
+		var per_day := float(m.rate) * (NPCBrain.WORK_END - NPCBrain.WORK_START) * 60.0 * float(cfg().work_share)
+		alt = n.avg_income() / per_day * float(cfg().opportunity_weight)
+	var household := float(cfg().needy_factor) if n.coins < w.reserve_of(n) else float(cfg().comfortable_factor)
 	var rid := rel_id(buyer_ref)
-	if rid != -1 and w.relations.friends(rid, n.id):
-		f -= float(Relations.cfg().friend_price)
-	return maxi(1, roundi(base * f))
+	var close := rid != -1 and close_to(n, rid)
+	var relationship := float(Relations.cfg().friend_price) if close else 0.0
+	var let_down := ended_early_by(buyer_ref, World.npc_ref(n.id))
+	var risk := float(cfg().cancel_premium) * float(let_down)
+	var f := household - relationship + risk
+	return {"going": going, "cost": cost, "alternatives": alt, "household": household, "close": close, "relationship": relationship,
+		"cancelled_on_me": let_down, "risk": risk, "min": maxi(1, roundi(maxf(going, maxf(cost, alt)) * f))}
+
+
+## A friend, partner or kin of `n` (Relations, Life.kin): the ties that get a friend's price.
+func close_to(n: NPC, rid: int) -> bool:
+	if w.relations.friends(rid, n.id) or n.partner == rid:
+		return true
+	if rid == Life.PLAYER_ID:
+		return w.player.partner == n.id or Life.kin(n.id, n.mother, n.father, rid, w.player.mother, w.player.father)
+	var o := w.npc(rid)
+	return o != null and Life.kin(n.id, n.mother, n.father, o.id, o.mother, o.father)
+
+
+## Contracts `buyer_ref` ended early with `seller_ref` (cancelled after acceptance by the buyer) still on record.
+func ended_early_by(buyer_ref: String, seller_ref: String) -> int:
+	var k := 0
+	for c in list:
+		if str(c.state) == "cancelled" and c.buyer == buyer_ref and c.seller == seller_ref and not (c.history as Array).is_empty():
+			var last: Dictionary = c.history[-1]
+			if str(last.what) == "cancel" and str(last.by) == buyer_ref:
+				k += 1
+	return k
 
 
 ## The seller's answer to an offer, the one judgment for every buyer (the player, a villager or the manor):
 ## {answer: "accept" | "counter" | "reject", say (its words), qty, price_each, days, route, recipe, min_price}.
 ## Hard limits: it never accepts what it cannot do. A counter offers its least price, the quantity it can manage, or
 ## the later deadline that makes the whole quantity possible.
+## `terms` records each of the directive's questions as judged (feasible, route, why, capacity, obligations, the price
+## terms of price_terms), so a test or a later judgment system can read why the answer was given.
 func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, days: int) -> Dictionary:
-	var r := {"answer": "reject", "say": "", "qty": qty, "price_each": price_each, "days": days, "route": "", "recipe": "", "min_price": 0}
+	var r := {"answer": "reject", "say": "", "qty": qty, "price_each": price_each, "days": days, "route": "", "recipe": "", "min_price": 0, "terms": {}}
 	if n == null or not n.alive:
 		r.say = "There is nobody to answer."
 		return r
@@ -295,7 +426,9 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	if buyer_ref == World.PLAYER and w.relations.notoriety() >= int(cfg().notoriety_refuse):
 		r.say = "I'll not deal with you. Folk say what you've done."
 		return r
-	if open_of(World.npc_ref(n.id), "seller").size() >= int(cfg().max_open_per_seller):
+	var ob := obligations(n)
+	r.terms.obligations = ob
+	if int(ob.contracts) >= int(cfg().max_open_per_seller):
 		r.say = "I've promised all the work I can take on already."
 		return r
 	var item := GameData.item_name(id).to_lower()
@@ -303,8 +436,11 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	var can := int(m.stock) + int(m.cap)
 	r.route = m.route
 	r.recipe = m.recipe
-	r.min_price = min_price(n, buyer_ref, id, m)
-	if can <= 0:
+	var pt := price_terms(n, buyer_ref, id, m)
+	r.min_price = int(pt.min)
+	r.terms.merge(pt)
+	r.terms.merge({"route": m.route, "why": m.why, "stock": m.stock, "capacity": m.cap})
+	if can <= 0 and not (float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft"]):
 		match str(m.why):
 			"tool:pickaxe", "tool:axe":
 				r.say = "I've no %s to get %s with." % [str(m.why).get_slice(":", 1), item]
@@ -324,15 +460,24 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	var c_qty := qty
 	var c_days := days
 	if can < qty:
-		var rate_day := float(m.rate) * (NPCBrain.WORK_END - NPCBrain.WORK_START) * 60.0 * float(cfg().work_share)
+		# time-bound work (mining, felling, making) may manage it all, or at least something, given more days
 		var more := days
-		if rate_day > 0.0 and str(m.route) in ["mine", "chop", "craft"]:
-			while more < int(cfg().max_days) and int(means(n, id, more, price_each).cap) + int(m.stock) < qty:
+		var by_more := can
+		if float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft"]:
+			while more < int(cfg().max_days) and by_more < qty:
 				more += 1
-		if more > days and int(means(n, id, more, price_each).cap) + int(m.stock) >= qty:
+				by_more = int(means(n, id, more, price_each).cap) + int(m.stock)
+		if by_more >= qty:
 			c_days = more
-		else:
+		elif can > 0:
 			c_qty = can
+		elif by_more > 0:
+			c_days = more                                # nothing by its deadline (the time is promised elsewhere)
+			c_qty = by_more
+		else:
+			r.say = "I've not the time to get %s by then, with what I've promised already." % item
+			r.terms.why = "time"
+			return r
 	var c_price := maxi(price_each, int(r.min_price))
 	if c_qty == qty and c_days == days and c_price == price_each:
 		r.answer = "accept"
@@ -395,7 +540,20 @@ func propose(buyer_ref: String, n: NPC, id: String, qty: int, price_each: int, d
 	r.history = hist
 	if r.answer != "accept":
 		return r
-	var c := _new_record(buyer_ref, World.npc_ref(n.id), id, qty, price_each, days, hist)
+	var seller_ref := World.npc_ref(n.id)
+	if formal(qty * price_each) and not face_to_face(buyer_ref, seller_ref):
+		# Q18-13: no remote instant signing. Agreed in principle only; nothing is set aside until they meet.
+		if buyer_ref == World.PLAYER:
+			return {"answer": "meet", "say": "A contract worth %d coins is signed face to face. Come and see me." % (qty * price_each), "history": hist}
+		var p := _new_record(buyer_ref, seller_ref, id, qty, price_each, days, hist)
+		p.state = "signing"
+		p.route = r.route
+		p.recipe = r.recipe
+		list.append(p)
+		w.stat("contracts_to_sign")
+		r.signing = p
+		return r
+	var c := _new_record(buyer_ref, seller_ref, id, qty, price_each, days, hist)
 	c.route = r.route
 	c.recipe = r.recipe
 	if not _open(c):
@@ -433,6 +591,9 @@ func offer_to_player(b: NPC, id: String, qty: int, price_each: int, days: int) -
 	var c := _new_record(World.npc_ref(b.id), World.PLAYER, id, qty, price_each, days,
 			[{"day": w.day(), "by": World.npc_ref(b.id), "what": "offer", "qty": qty, "price_each": price_each, "days": days}])
 	list.append(c)
+	w.stat("contract_offers_to_player")
+	w.note("%s is looking for %d %s at %d each, which nobody in the village can supply: ask them about a contract." % [w.ref_name(c.buyer, true),
+			qty, GameData.item_name(id).to_lower(), price_each])
 	return c
 
 
@@ -442,12 +603,91 @@ func accept_offer(c: Dictionary) -> String:
 		return "That offer no longer stands."
 	if open_of(World.PLAYER, "seller").size() >= int(cfg().max_open_player):
 		return "You have as many contracts open as you can keep track of (%d)." % int(cfg().max_open_player)
+	if formal(int(c.qty) * int(c.price_each)) and not face_to_face(c.buyer, World.PLAYER):
+		return "A contract worth %d coins is signed face to face: go and see %s." % [int(c.qty) * int(c.price_each), w.ref_name(c.buyer)]
 	var why := fund_refusal(c.buyer, int(c.qty) * int(c.price_each))
 	if why != "" or not _open(c):
 		_end(c, "cancelled", "the buyer can no longer pay")
 		return why if why != "" else "They can no longer pay what they offered."
 	c.history.append({"day": w.day(), "by": World.PLAYER, "what": "accept", "qty": int(c.qty), "price_each": int(c.price_each), "days": int(c.days)})
 	return ""
+
+
+## The player, offered a villager's order (the player is the seller), puts other terms back. The villager answers by
+## buyer_answer from the terms it first offered (the same rule villager buyers use on a seller's counter): if it agrees,
+## the contract opens at the player's terms with its coins set aside ("contract" in the answer); a counter of its own
+## becomes the standing offer's terms; a refusal leaves its offer standing as it was. Nothing is set aside before.
+func counter_offer(c: Dictionary, qty: int, price_each: int, days: int) -> Dictionary:
+	if str(c.get("state", "")) != "offered" or c.seller != World.PLAYER:
+		return {"answer": "refused", "say": "That offer no longer stands."}
+	var b := _npc_of(c.buyer)
+	var first: Dictionary = c.history[0] if not (c.history as Array).is_empty() else c
+	var unit := mini(maxi(1, w.brain.batch_unit(b, c.item)) if b != null else 1, int(first.qty))
+	c.history.append({"day": w.day(), "by": World.PLAYER, "what": "counter", "qty": qty, "price_each": price_each, "days": days})
+	var r := buyer_answer(b, c.item, int(first.qty), int(first.price_each), unit, qty, price_each, days)
+	c.history.append({"day": w.day(), "by": c.buyer, "what": str(r.answer), "qty": int(r.qty), "price_each": int(r.price_each), "days": int(r.days)})
+	match str(r.answer):
+		"accept":
+			c.qty = qty
+			c.price_each = price_each
+			c.days = days
+			var why := accept_offer(c)
+			if why != "":
+				return {"answer": "refused", "say": why}
+			r.contract = c
+		"counter":
+			c.qty = int(r.qty)
+			c.price_each = int(r.price_each)
+			c.days = int(r.days)
+	return r
+
+
+## A villager buyer's answer to terms a seller puts back (a seller's counteroffer to its order, or the player's counter
+## to its offer): the one rule every villager buyer uses. It takes no fewer than `unit` (what is of use to it) and no
+## more than the `own_qty` it asked for, pays at most npc_counter_tolerance above `own_price`, waits at most max_days,
+## and sets aside only coins above its OD-19 reserve (fund_refusal). Terms inside all of these are agreed; otherwise it
+## counters with the nearest terms it would agree to, or refuses with its reason.
+## {answer: "accept" | "counter" | "reject", say, qty, price_each, days}.
+func buyer_answer(b: NPC, id: String, own_qty: int, own_price: int, unit: int, qty: int, price_each: int, days: int) -> Dictionary:
+	var r := {"answer": "reject", "say": "", "qty": qty, "price_each": price_each, "days": days}
+	if b == null or not b.alive or b.role != "adult":
+		r.say = "There is nobody to answer."
+		return r
+	if qty <= 0 or price_each <= 0 or days <= 0:
+		r.say = "That's no kind of offer."
+		return r
+	var item := GameData.item_name(id).to_lower()
+	if qty < unit:
+		r.say = "Fewer than %d %s is no use to me." % [unit, item]
+		return r
+	var top := maxi(own_price, floori(float(own_price) * float(cfg().npc_counter_tolerance)))
+	var c_qty := mini(qty, own_qty)
+	var c_price := mini(price_each, top)
+	var c_days := mini(days, int(cfg().max_days))
+	var me := World.npc_ref(b.id)
+	while c_qty >= unit and fund_refusal(me, c_qty * c_price) != "":
+		c_qty -= 1
+	if c_qty < unit:
+		r.say = "I can't set aside the coins for that."
+		return r
+	if c_qty == qty and c_price == price_each and c_days == days:
+		r.answer = "accept"
+		r.say = "Agreed: %d %s at %d each in %d days." % [qty, item, price_each, days]
+		return r
+	r.answer = "counter"
+	r.qty = c_qty
+	r.price_each = c_price
+	r.days = c_days
+	var parts := []
+	if c_price < price_each:
+		parts.append("%d each is the most I'd pay" % c_price)
+	if c_qty < qty:
+		parts.append(("%d is all I want" if c_qty == own_qty else "%d is all I can pay for") % c_qty)
+	if c_days < days:
+		parts.append("I need them within %d days" % c_days)
+	var said := "; ".join(parts) + "."
+	r.say = said.substr(0, 1).to_upper() + said.substr(1)
+	return r
 
 
 func decline_offer(c: Dictionary) -> void:
@@ -499,6 +739,43 @@ func deliver(c: Dictionary, units: int, into: Inventory = null) -> int:
 		elif s != null and rel_id(c.buyer) != -1:
 			w.relations.helped(rel_id(c.buyer), s, float(Relations.cfg().help_regard) * 0.5)
 	return units
+
+
+## The villager buyer's signing at the end of its walk to the seller (NPCBrain act "contract_sign"; Q18-13). Face to
+## face, the seller answers the offer afresh (evaluate: its means may have changed on the way); its counter is met by
+## buyer_answer's rule. Agreed, the buyer's coins are set aside now and the contract runs from today; refused, the
+## agreement ends with nothing set aside or moved. Not face to face (the seller has moved on): false, the buyer tries
+## again. True when the meeting settled it either way.
+func npc_sign(n: NPC, id: int) -> bool:
+	var c := get_contract(id)
+	var me := World.npc_ref(n.id)
+	if c.is_empty() or str(c.state) != "signing" or c.buyer != me:
+		return false
+	var s := _npc_of(c.seller)
+	if s == null or not s.alive:
+		_end(c, "cancelled", "the seller is gone")
+		return false
+	if not face_to_face(me, c.seller):
+		return false
+	var r := evaluate(s, me, c.item, int(c.qty), int(c.price_each), int(c.days))
+	c.history.append({"day": w.day(), "by": c.seller, "what": str(r.answer), "qty": int(r.qty), "price_each": int(r.price_each), "days": int(r.days)})
+	if str(r.answer) == "counter":
+		var unit := mini(maxi(1, w.brain.batch_unit(n, c.item)), int(c.qty))
+		if str(buyer_answer(n, c.item, int(c.qty), int(c.price_each), unit, int(r.qty), int(r.price_each), int(r.days)).answer) == "accept":
+			c.qty = int(r.qty)
+			c.price_each = int(r.price_each)
+			c.days = int(r.days)
+			r.answer = "accept"
+	if str(r.answer) != "accept" or fund_refusal(me, int(c.qty) * int(c.price_each)) != "" or not _open(c):
+		c.history.append({"day": w.day(), "by": me, "what": "unsigned", "qty": int(c.qty), "price_each": int(c.price_each), "days": int(c.days)})
+		_end(c, "cancelled", "not agreed when they met")
+		w.stat("contracts_unsigned")
+		return true
+	c.route = r.route
+	c.recipe = r.recipe
+	c.history.append({"day": w.day(), "by": me, "what": "sign", "qty": int(c.qty), "price_each": int(c.price_each), "days": int(c.days)})
+	w.stat("contracts_signed")
+	return true
 
 
 ## The villager seller's delivery at the end of its walk (NPCBrain act "contract_deliver"): to a villager buyer's
@@ -566,9 +843,9 @@ func dawn() -> void:
 	for c in list:
 		if is_open(c) and d > int(c.deadline_day):
 			_lapse(c)
-		elif str(c.state) == "offered" and d - int(c.made_day) >= int(cfg().offer_days):
-			_end(c, "cancelled", "the offer was not taken up")
-	list = list.filter(func(c): return str(c.state) in ["accepted", "offered"] or d - int(c.get("ended_day", d)) <= int(cfg().keep_days))
+		elif str(c.state) in ["offered", "signing"] and d - int(c.made_day) >= int(cfg().offer_days):
+			_end(c, "cancelled", "the offer was not taken up" if str(c.state) == "offered" else "never signed")
+	list = list.filter(func(c): return str(c.state) in ["accepted", "offered", "signing"] or d - int(c.get("ended_day", d)) <= int(cfg().keep_days))
 	npc_orders()
 
 
@@ -577,7 +854,7 @@ func dawn() -> void:
 func on_death(n: NPC) -> void:
 	var me := World.npc_ref(n.id)
 	for c in list:
-		if (is_open(c) or str(c.state) == "offered") and (c.buyer == me or c.seller == me):
+		if (is_open(c) or str(c.state) in ["offered", "signing"]) and (c.buyer == me or c.seller == me):
 			_end(c, "cancelled", "%s died" % n.name)
 
 
@@ -595,6 +872,15 @@ func on_player_died() -> void:
 ## the recipe or buys from a seller. Harvests and stock come from its usual work (false: its trade plans the day).
 func plan(n: NPC) -> bool:
 	var me := World.npc_ref(n.id)
+	for c in list:
+		# Q18-13: a buyer with a formal contract agreed in principle walks to the seller to sign it face to face
+		if str(c.state) == "signing" and c.buyer == me:
+			var s := _npc_of(c.seller)
+			if s == null or not s.alive:
+				continue
+			n.doing = "going to %s to sign for %s" % [s.name, GameData.item_name(c.item).to_lower()]
+			n.plan = [w.brain.go(w.brain.beside(s.cell(), n.cell(), s.depth), 1.0, s.depth), w.brain.doit("contract_sign", {"id": int(c.id)})]
+			return true
 	for c in list:
 		if not is_open(c) or c.seller != me or not _alive(c.buyer):
 			continue
@@ -678,9 +964,22 @@ func order_input(b: NPC) -> bool:
 	return false
 
 
+## A villager buyer meets seller `s`'s counter `r` to its order (own_qty at own_price) if buyer_answer agrees to the
+## counter's terms: the contract then opens on them (or, formal and at a distance, awaits signing face to face), with
+## the talk on record. True if it did. Every villager order
+## (businesses' inputs, MIN-C prospectors' kits) answers a counter through this.
+func meet_counter(b: NPC, s: NPC, id: String, own_qty: int, own_price: int, unit: int, r: Dictionary) -> bool:
+	if str(r.get("answer", "")) != "counter":
+		return false
+	if str(buyer_answer(b, id, own_qty, own_price, unit, int(r.qty), int(r.price_each), int(r.days)).answer) != "accept":
+		return false
+	var a := propose(World.npc_ref(b.id), s, id, int(r.qty), int(r.price_each), int(r.days), r.history)
+	return a.has("contract") or a.has("signing")
+
+
 func _offered_by(b: NPC) -> bool:
 	var me := World.npc_ref(b.id)
-	return list.any(func(c): return str(c.state) == "offered" and c.buyer == me)
+	return list.any(func(c): return str(c.state) in ["offered", "signing"] and c.buyer == me)
 
 
 func _order(b: NPC, id: String, qty: int, price: int, days: int) -> bool:
@@ -689,13 +988,10 @@ func _order(b: NPC, id: String, qty: int, price: int, days: int) -> bool:
 		if s == b or not s.alive or s.role != "adult":
 			continue
 		var r := propose(me, s, id, qty, price, days)
-		if r.has("contract"):
+		if r.has("contract") or r.has("signing"):           # signed here, or to be signed when the buyer reaches the seller
 			return true
-		if str(r.answer) == "counter" and int(r.qty) >= w.brain.batch_unit(b, id) \
-				and float(r.price_each) <= float(price) * float(cfg().npc_counter_tolerance) and int(r.days) <= int(cfg().max_days):
-			r = propose(me, s, id, int(r.qty), int(r.price_each), int(r.days), r.history)
-			if r.has("contract"):
-				return true
+		if meet_counter(b, s, id, qty, price, w.brain.batch_unit(b, id), r):
+			return true
 	offer_to_player(b, id, qty, price, days)
 	return false
 
@@ -715,4 +1011,11 @@ func load_dict(d: Dictionary) -> void:
 			r[k] = int(r.get(k, 0))
 		if r.has("ended_day"):
 			r.ended_day = int(r.ended_day)
+		# a record from an earlier Build 17 save may lack the newer keys: the defaults it was made under
+		for k in ["route", "recipe"]:
+			r[k] = str(r.get(k, ""))
+		if not r.get("terms") is Dictionary:
+			r.terms = {"pay": "on_delivery", "partial": true, "all_at_once": false, "deposit": 0}
+		if not r.get("history") is Array:
+			r.history = []
 		list.append(r)

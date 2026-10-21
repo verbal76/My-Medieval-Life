@@ -545,8 +545,7 @@ func _get_kit(n: NPC) -> bool:
 			n.plan = [b.go(b._workplace_cell(o)), b.doit("buy_from", {"vendor": o.id, "item": KIT, "qty": 1})]
 			return true
 	var k: Contracts = w.contracts
-	var waiting := k.open_of(me, "buyer").any(func(c): return str(c.item) == KIT) \
-			or k.list.any(func(c): return str(c.state) == "offered" and str(c.buyer) == me and str(c.item) == KIT)
+	var waiting := k.waiting_on(me, KIT)                     # open, offered, or agreed and to be signed face to face (Q18-13)
 	if not waiting and int(_kit_asked.get(me, -1)) != w.day():
 		_kit_asked[me] = w.day()
 		var price := GameData.value(KIT)
@@ -556,12 +555,8 @@ func _get_kit(n: NPC) -> bool:
 				if s == n or not s.alive or s.role != "adult" or s.job != "smith":
 					continue
 				var r := k.propose(me, s, KIT, 1, price, days)
-				if r.has("contract"):
+				if r.has("contract") or r.has("signing") or k.meet_counter(n, s, KIT, 1, price, 1, r):     # a smith's counter, by every buyer's rule
 					break
-				if str(r.answer) == "counter" and float(r.price_each) <= float(price) * float(Contracts.cfg().npc_counter_tolerance) \
-						and int(r.qty) >= 1 and k.fund_refusal(me, int(r.price_each)) == "":
-					if k.propose(me, s, KIT, 1, int(r.price_each), int(r.days), r.history).has("contract"):
-						break
 	return b._idle_at_work(n, "waiting for a prospector's kit")
 
 

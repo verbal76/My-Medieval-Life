@@ -443,6 +443,19 @@ func _st(k: String) -> float:
 	return float(w.stats.get(k, 0.0))
 
 
+## CON-01: contracts over the run (counters from World.stats) and those on record now, by item and by who to whom.
+func _contracts_summary() -> Dictionary:
+	var items := {}
+	var pairs := {}
+	for c in w.contracts.list:
+		items[str(c.item)] = int(items.get(str(c.item), 0)) + 1
+		var p := "%s>%s:%s" % [str(c.buyer).get_slice(":", 0), str(c.seller).get_slice(":", 0), str(c.state)]
+		pairs[p] = int(pairs.get(p, 0)) + 1
+	return {"made": int(_st("contracts_made")), "units": int(_st("contract_units")), "paid": int(_st("contract_paid")),
+		"lapsed": int(_st("contracts_lapsed")), "cancelled": int(_st("contracts_cancelled")), "offers_to_player": int(_st("contract_offers_to_player")),
+		"reserved_now": w.contracts.reserved_total(), "on_record_by_item": items, "on_record_by_parties": pairs}
+
+
 func _sample(start: Dictionary) -> Dictionary:
 	var s := {"day": w.day(), "clock": w.clock_text(), "fingerprint": _fingerprint()}       # the determinism gate compares these (PERF-03)
 	# people
@@ -967,6 +980,7 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("growth: %s" % JSON.stringify(s.growth))
 	print("trade: %s" % JSON.stringify(s.trade))
 	print("manor work: %s" % JSON.stringify(s.manor_work))
+	print("contracts: %s" % JSON.stringify(_contracts_summary()))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
 	print("events: %s" % JSON.stringify(s.events))
