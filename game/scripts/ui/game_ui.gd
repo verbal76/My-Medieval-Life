@@ -2520,7 +2520,6 @@ func show_craft(station_id: String) -> void:
 		var rec: Dictionary = GameData.recipes[r]
 		var ins := ", ".join(rec.in.keys().map(func(k): return "%d %s (%d)" % [int(rec.in[k]), GameData.item_name(k), p.inv.count(k)]))
 		var outs := ", ".join(rec.out.keys().map(func(k): return "%d %s" % [int(rec.out[k]), GameData.item_name(k)]))
-		var lv_ok := p.level(rec.skill) >= int(rec.level)
 		var h := HBoxContainer.new()
 		h.add_child(_icon(rec.out.keys()[0]))
 		var l := Label.new()
@@ -2529,7 +2528,7 @@ func show_craft(station_id: String) -> void:
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		h.add_child(l)
 		var rr: String = r
-		_button("Make", func(): main.craft(rr, station_id), lv_ok and p.inv.has_all(rec.in) and no == "", h)
+		_button("Make", func(): main.craft(rr, station_id), w.player_craft_refusal(rr) == "" and no == "", h)     # core decides (DVW-A12 R3)
 		panel_body.add_child(h)
 
 

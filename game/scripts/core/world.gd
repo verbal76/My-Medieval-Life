@@ -1290,6 +1290,47 @@ func player_chop(t: Dictionary, side: int, tool: String) -> Dictionary:
 	return {"result": "felled", "logs": int(r.logs), "full": full, "saplings": saplings, "broke": f.broke, "up": f.up}
 
 
+## DVW-A12 R3: why the player cannot make `recipe` now, in the game's words ("" if they can): the recipe's skill level,
+## then its materials in the pack. The station is checked apart (station_refusal).
+func player_craft_refusal(recipe: String) -> String:
+	var r: Dictionary = GameData.recipes[recipe]
+	if player.level(r.skill) < int(r.level):
+		return "Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)]
+	if not player.inv.has_all(r.in):
+		return "You do not have the materials."
+	return ""
+
+
+## DVW-A12 R3: the player sets to work on `recipe` at `station` (the craft window's; without one, a station of the
+## recipe's kind within 2 tiles of the player). Refused if the station is not theirs to use (station_refusal), then by
+## player_craft_refusal. The time: the recipe's minutes at the game's speed, by the skill's craft_time effect; the
+## station is held for the player meanwhile (reserve_for_player). Returns {ok: true, station, secs} or {ok: false, why}.
+func player_craft_begin(recipe: String, station := "") -> Dictionary:
+	var r: Dictionary = GameData.recipes[recipe]
+	var p := player
+	if station == "":
+		for id in stations_of(str(r.station)):
+			if (Vector2(station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
+				station = id
+	if station != "":
+		var no := station_refusal(station)
+		if no != "":
+			return {"ok": false, "why": no}
+	var why := player_craft_refusal(recipe)
+	if why != "":
+		return {"ok": false, "why": why}
+	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(r.skill), "craft_time", 1.0)
+	if station != "":
+		reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
+	return {"ok": true, "station": station, "secs": secs}
+
+
+## DVW-A12 R3: the player's work on `recipe` is done: work_craft from the pack into the pack, as a villager's (PAR-01,
+## PAR-04). Returns work_craft's result.
+func player_craft(recipe: String) -> Dictionary:
+	return work_craft(player, recipe, player.inv)
+
+
 ## PAR-01: a blow of `dmg` (the attacker's, after their own Combat effects) landing on villager `n`: their Combat
 ## damage_taken, then half their armour, as the player's damage_player applies the player's. Returns what it took.
 func harm_npc(n: NPC, dmg: float) -> float:

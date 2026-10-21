@@ -2660,28 +2660,14 @@ func _level_up(skill: String, up: int) -> void:
 ## does not hold is waited for (World.station_refusal); the player's work takes the station meanwhile.
 func craft(recipe: String, station := "") -> void:
 	var r: Dictionary = GameData.recipes[recipe]
-	var p := world.player
-	if station == "":
-		for id in world.stations_of(str(r.station)):
-			if (Vector2(world.station_use(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
-				station = id
-	if station != "":
-		var no := world.station_refusal(station)
-		if no != "":
-			ui.message(no)
-			return
-	if p.level(r.skill) < int(r.level):
-		ui.message("Needs %s level %d." % [GameData.skills[r.skill].name, int(r.level)])
+	var cp := world.player_craft_begin(recipe, station)          # the rules are in core (DVW-A12 R3)
+	if not cp.ok:
+		ui.message(str(cp.why))
 		return
-	if not p.inv.has_all(r.in):
-		ui.message("You do not have the materials.")
-		return
-	var secs := float(r.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(r.skill), "craft_time", 1.0)
-	if station != "":
-		world.reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
+	station = str(cp.station)
 	ui.hide_all()
-	start_action("Crafting", secs, func():
-		var res := world.work_craft(p, recipe, p.inv)           # the same as a villager's (PAR-01, PAR-04)
+	start_action("Crafting", float(cp.secs), func():
+		var res := world.player_craft(recipe)                   # the same as a villager's (PAR-01, PAR-04)
 		if res.result != "ok":
 			return
 		_level_up(str(r.skill), int(res.up))

@@ -1453,6 +1453,7 @@ func _dvw_a12() -> void:
 	main.new_game()
 	_dvw_a12_mining()
 	_dvw_a12_felling()
+	_dvw_a12_crafting()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1521,6 +1522,81 @@ func _dvw_a12_felling() -> void:
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
 	var same := w2.trees.filter(func(t): return int(t.x) == int(tr3.x) and int(t.y) == int(tr3.y))
 	check(same.size() == 1 and same[0].state == "stump", "DVW-A12 R2: the stump is saved")
+	_restore_pack(keep)
+
+
+## Every button under `node` whose text is `text`.
+func _buttons_named(node: Node, text: String) -> Array:
+	var out := []
+	for c in node.get_children():
+		if c is Button and (c as Button).text == text:
+			out.append(c)
+		out.append_array(_buttons_named(c, text))
+	return out
+
+
+## R3: the level and the materials, the station (found within reach, held for the player, refused when not theirs), the
+## time, the inputs used and the outputs made, the counts and xp, the craft window's Make button, the pack over a save.
+func _dvw_a12_crafting() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var sid := ""
+	for id in w.stations_of("sawhorse"):
+		if sid == "" and w.station_refusal(id) == "":
+			sid = id
+	check(sid != "", "DVW-A12 R3: a sawhorse the player may use")
+	var rec: Dictionary = GameData.recipes["saw_planks"]
+	p.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5)
+	check(w.player_craft_refusal("saw_planks") == "You do not have the materials.", "DVW-A12 R3: no log, no planks")
+	var cp := w.player_craft_begin("saw_planks")
+	check(not cp.ok and str(cp.why) == "You do not have the materials." and not w.player_at_station(sid), "DVW-A12 R3: a refused craft does not hold the station")
+	p.inv.add("leather", 4)
+	check(w.player_craft_refusal("leather_armor") == "Needs Crafting level 2.", "DVW-A12 R3: a recipe above the player's level is refused (%s)" % w.player_craft_refusal("leather_armor"))
+	p.inv.add("log", 2)
+	cp = w.player_craft_begin("saw_planks")
+	var want := float(rec.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5
+	check(cp.ok and str(cp.station) == sid and is_equal_approx(float(cp.secs), want) and w.player_at_station(sid), "DVW-A12 R3: at a sawhorse the work takes the recipe's time and holds the station (%s)" % str(cp))
+	w.release_player_station(sid)
+	# a station a villager is working at is refused (it is not the player's)
+	var o: NPC = w.npcs.filter(func(x): return x.alive and x.job == "woodcutter")[0]
+	var o_keep := {"plan": o.plan, "pos": o.pos, "target": o.target, "anim": o.anim}
+	w.stations[sid].users[o.id] = w.minutes + 300.0
+	o.plan = [{"k": "work", "args": {"station": sid}}]
+	o.pos = Vector2(w.station_use(sid)) + Vector2(0.5, 0.5)
+	o.target = -1
+	o.anim = "work"
+	var b := w.player_craft_begin("saw_planks", sid)
+	check(not b.ok and str(b.why).contains("is using the sawhorse") and str(b.why) == w.station_refusal(sid) and not w.player_at_station(sid), "DVW-A12 R3: a station a villager is working at is refused with core's reason (%s)" % str(b.get("why", "")))
+	w.stations[sid].users.erase(o.id)
+	o.plan = o_keep.plan
+	o.pos = o_keep.pos
+	o.target = o_keep.target
+	o.anim = o_keep.anim
+	var made0 := float(w.stats.get("made_plank", 0.0))
+	var used0 := float(w.stats.get("used_log", 0.0))
+	var res := w.player_craft("saw_planks")
+	check(res.result == "ok" and p.inv.count("log") == 1 and p.inv.count("plank") == 2, "DVW-A12 R3: a log in, two planks out")
+	check(float(w.stats.get("made_plank", 0.0)) - made0 == 2.0 and float(w.stats.get("used_log", 0.0)) - used0 == 1.0 and int(p.skills.get("crafting", 0)) == int(rec.xp), "DVW-A12 R3: counted (made_plank, used_log) and the recipe's xp")
+	# the craft window's Make button follows core's refusal
+	main.ui.show_craft(sid)
+	var make_on := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
+	p.inv.remove("log", p.inv.count("log"))
+	main.ui.show_craft(sid)
+	var make_on_none := _buttons_named(main.ui.panel_body, "Make").filter(func(btn): return not btn.disabled).size()
+	check(make_on >= 1 and make_on_none == make_on - 1, "DVW-A12 R3: Make is on for a recipe core allows, off without its materials (%d -> %d)" % [make_on, make_on_none])
+	main.ui.hide_all()
+	# through the interface
+	main.craft("saw_planks", sid)
+	check(main.action.is_empty() and main.ui.toast.text.contains("do not have the materials"), "DVW-A12 R3: the interface shows core's refusal and starts nothing")
+	p.inv.add("log", 1)
+	main.craft("saw_planks", sid)
+	check(not main.action.is_empty() and is_equal_approx(float(main.action.total), want) and str(main.action.get("station", "")) == sid and w.player_at_station(sid), "DVW-A12 R3: the interface starts the work of core's time at the station")
+	_finish_action()
+	check(p.inv.count("plank") == 4 and not p.inv.has("log") and not w.player_at_station(sid), "DVW-A12 R3: the work makes the planks and frees the station")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.player.inv.count("plank") == 4 and int(w2.player.skills.get("crafting", 0)) == 2 * int(rec.xp), "DVW-A12 R3: the planks and the xp are saved")
 	_restore_pack(keep)
 
 
