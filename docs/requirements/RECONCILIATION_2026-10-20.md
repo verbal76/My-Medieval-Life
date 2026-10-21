@@ -10,7 +10,7 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 212 still open, 19 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 173 (85 of them still open) |
+| Entries added since | | 174 (85 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **297** = 212 still open from the baseline + 85 added and open |
 | Open entries moved to another build | | 2 |
 
@@ -49,7 +49,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (173)
+## Added since the baseline (174)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -162,6 +162,7 @@ None.
 | OD-26 | Owner decision 2026-10-21: one shared per-cell farming model for player, households and manor approved as the direction; no yield approved; both switches off; compare several shared yields (between about 0.9 and 3 wheat a cell) with seasonal farming on, identical seeds; investigate the seasonal milk collapse; recommend a yield for approval | decision | COMPLETE AND VERIFIED | 16 |
 | OD-27 | Owner answers to the land and stall questions Q8-Q13 (2026-10-21) | decision | COMPLETE AND VERIFIED | 16 |
 | OD-28 | Owner decisions for Build 17 (2026-10-21): enterable caves and underground mining; one deposit system everywhere; universal negotiated goods contracts; DVW-A12 direction | decision | COMPLETE AND VERIFIED | 17 |
+| OD-29 | Owner decisions (2026-10-21): Build 17 starts now beside Build 16; separate underground maps tied to their surface locations, open pits on the surface; contract defaults provisional | decision | COMPLETE AND VERIFIED | 17 |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |

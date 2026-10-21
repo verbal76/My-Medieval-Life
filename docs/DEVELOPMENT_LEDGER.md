@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **449** |
 | Outstanding (not complete, superseded or canceled) | 225 |
 
-Also in the register: 31 proposal awaiting an owner decision (not approved), 60 owner decision (open or answered), 25 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 31 proposal awaiting an owner decision (not approved), 61 owner decision (open or answered), 25 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -945,7 +945,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 39, status BLOCKED) (60)
+## Owner decisions, open and answered (open: 39, status BLOCKED) (61)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
@@ -978,6 +978,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | OD-26 | Owner decision 2026-10-21: one shared per-cell farming model for player, households and manor approved as the direction; no yield approved; both switches off; compare several shared yields (between about 0.9 and 3 wheat a cell) with seasonal farming on, identical seeds; investigate the seasonal milk collapse; recommend a yield for approval | COMPLETE AND VERIFIED | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |
 | OD-27 | Owner answers to the land and stall questions Q8-Q13 (2026-10-21) | COMPLETE AND VERIFIED | docs/directives/2026-10-21_build16_master_completion_directive.md |
 | OD-28 | Owner decisions for Build 17 (2026-10-21): enterable caves and underground mining; one deposit system everywhere; universal negotiated goods contracts; DVW-A12 direction | COMPLETE AND VERIFIED | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |
+| OD-29 | Owner decisions (2026-10-21): Build 17 starts now beside Build 16; separate underground maps tied to their surface locations, open pits on the surface; contract defaults provisional | COMPLETE AND VERIFIED | docs/directives/2026-10-21_build17_start_underground_contracts.md |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | BLOCKED | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |

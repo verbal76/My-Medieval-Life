@@ -5315,7 +5315,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Policy defaults approved provisionally 2026-10-21 (OD-29): pay on delivery with funds set aside at acceptance; partial delivery paid per unit; buyer-set negotiable deadline; cancellation pays delivered units; default lapses the contract and returns set-aside coins with relationship harm, no money penalty; unpaid value always set aside; all-at-once only if the buyer asks; no renegotiation after acceptance in the first slice",
    "history": [
     {
      "date": "2026-10-21",
@@ -5326,6 +5326,11 @@
      "date": "2026-10-21",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner approved the defaults provisionally"
     }
    ],
    "target_build": "17",
@@ -15284,7 +15289,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Architecture approved 2026-10-21 (OD-29): separate underground maps associated with their surface locations; open pits on the surface",
    "history": [
     {
      "date": "2026-10-21",
@@ -15295,6 +15300,11 @@
      "date": "2026-10-21",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "notes",
+     "why": "Owner chose the architecture"
     }
    ],
    "target_build": "17",
@@ -16783,6 +16793,51 @@
    "target_build": "17",
    "roadmap_gate": "Build 17",
    "roadmap_reason": "Owner Build 17 decisions"
+  },
+  {
+   "id": "OD-29",
+   "title": "Owner decisions (2026-10-21): Build 17 starts now beside Build 16; separate underground maps tied to their surface locations, open pits on the surface; contract defaults provisional",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Owner decisions (2026-10-21): Build 17 starts now beside Build 16; separate underground maps tied to their surface locations, open pits on the surface; contract defaults provisional",
+   "source": "docs/directives/2026-10-21_build17_start_underground_contracts.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Recorded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build17_start_underground_contracts.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner_answer; target_build; roadmap_gate; roadmap_reason",
+     "why": "Owner answered"
+    }
+   ],
+   "owner_answer": "Build 17 proceeds now on its own remote branch without disturbing Build 16; underground: separate underground maps associated with their surface locations, open-pit mining on the surface, documented as the approved architecture and designed for expansion; contracts: the documented recommended defaults, provisionally, conflicts with prior owner decisions flagged",
+   "target_build": "17",
+   "roadmap_gate": "Build 17",
+   "roadmap_reason": "Owner Build 17 start"
   },
   {
    "id": "OD-LE-01",
