@@ -1179,3 +1179,30 @@ counted as stock for sale because buyers exist for logs. **A defect of the famil
 next commit: the chest takes the household's firewood, and goods count as trade stock only for the trade that makes,
 sells or uses them. The rise in nights without firewood is the same cause in part (logs in pockets warm nobody) and in
 part households now roasting their own meat (a log a roast); the next year runs measure it.
+
+### Four seeds, 365 days, on `d6d80a4` (family chest, firewood, relief grain in whole pots, FSE-B06/B11/B12, TIME-02), Actions 39516113640 (2026-10-21)
+
+| Day 365 | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| Script errors / currency leak / item leaks | 0 / 0 / none | 0 / 0 / none | 0 / 0 / none | 0 / 0 / none |
+| Starvation deaths (`61750f1` -> `d6d80a4`) | 1 -> **0** | 1 -> **0** | 2 -> **0** | 7 -> **2** |
+| Alive at the end | 136 | 152 | 125 | 102 |
+| Births / deaths of old age | 105 / 69 | 123 / 71 | 95 / 70 | 75 / 71 |
+| Households / houses built | 39 / 10 | 37 / 11 | 39 / 11 | 42 / 9 |
+| Unemployed | 7 | 10 | 3 | 7 |
+| Nights without firewood (`61750f1` -> `d6d80a4`) | 3,185 -> 1,444 | 2,776 -> 1,397 | 2,399 -> 1,996 | 2,303 -> 2,119 |
+| Bandits' market trips / coins left with bandits and loot | 1 / 0 | 4 / 2 | 14 / 0 | 12 / 6 |
+| Fingerprint | `d5a30558...` | `075d86d2...` | `1ed0dfab...` | `d3b55687...` |
+
+**What changed:**
+- **Starvation:** 2 deaths across the four seeds, against 11 on `61750f1` and 31 after parity. Seed 4's two are being
+  classified by a watched local run of the same commit (its fingerprint must match `d3b556878c800d133b81ef7984272c3c`,
+  which also checks determinism across machines).
+- **Firewood:** nights without firewood fell on every seed (by 7-55 %): the family chest now takes the household's logs.
+- **Bandits:** they now eat what they hold (FSE-B06), so the coins they used to hoard reach the market as food purchases
+  early and do not pile up: the bandits and the loot hold 0-6 coins at the end (before: 14-70).
+- **Seed 4's population:** 102 alive (151 on `61750f1`, 127 on `1c7b9f4` locally), with 75 births (122): a smaller,
+  older village; measured, not judged (WDR-022). Whether the two starvation deaths or the births follow from a defect is
+  part of the classification.
+
+**Classification (WDR-022):** integrity held on every seed (no script errors, coins and goods balanced).

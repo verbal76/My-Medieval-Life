@@ -12095,7 +12095,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Read the 1c7b9f4 four-seed run; classify seed 4's deaths one by one",
+   "next_action": "Classify seed 4's two deaths (watched local run of d6d80a4)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12125,6 +12125,11 @@
      "date": "2026-10-20",
      "change": "next_action",
      "why": "Four-seed Actions run on 61750f1: starvation 1/1/2/7 (11; 31 after parity), 0 script errors, ledgers balanced. Firewood defect fixed in 1c7b9f4; four-seed rerun on 1c7b9f4 and a watched seed-4 run classify the rest"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds on d6d80a4 (Actions 39516113640): starvation 0/0/0/2, firewood nights down on every seed, 0 script errors, ledgers balanced; seed 4's two deaths being classified"
     }
    ],
    "target_build": "16",
