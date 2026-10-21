@@ -167,6 +167,17 @@ func _run() -> void:
 		if src == null or not w.trade(p, src, "plank", 1, w.sell_price(src, "plank")):
 			break
 	check(p.inv.count("plank") >= 10, "bought %d planks from the market" % p.inv.count("plank"))
+	# STONE-01: a house is built of dressed blocks: make a mallet at the workbench and dress the quarried stone there
+	p.pos = Vector2(w.station_use(w.stations_of("workbench")[0])) + Vector2(0.5, 0.5)
+	main.craft("make_mallet")
+	finish_action()
+	check(p.inv.has("mallet"), "made a mallet at the workbench")
+	var dressings := 0
+	while p.inv.count("building_block") < 20 and p.inv.count("stone") >= 2 and dressings < 20:
+		dressings += 1
+		main.craft("dress_stone")
+		finish_action()
+	check(p.inv.count("building_block") >= 20, "dressed %d stone into %d building blocks" % [dressings * 2, p.inv.count("building_block")])
 	# the market alone cannot cover a house: fell and saw the rest, as an NPC carpenter would
 	var saws := 0
 	while p.inv.count("plank") < 30 and saws < 30:

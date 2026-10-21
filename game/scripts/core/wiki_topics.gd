@@ -112,7 +112,7 @@ static func _caravan(sys: Callable) -> void:
 		Wiki.h("What it sells"),
 		Wiki.bullets([
 			"Ore and coal: once the village's own seams of one are down to %d or less, each smith buys up to %s." % [int(GameData.b("caravan_import_when_left")), Wiki._and_list((GameData.b("caravan_import_stock") as Dictionary).keys().map(func(k): return "%d %s" % [int(GameData.b("caravan_import_stock")[k]), GameData.item_name(k).to_lower()]))],
-			"Stone: once the village's stone is down to %d or less, a cart of up to %d at %s times its value, for the raw-goods merchants." % [int(GameData.b("caravan_import_when_left")), int(stone.load), str(stone.markup)],
+			"Stone: once the village's stone (its stone seams, the grey rock of worked-out seams and its boulders) is down to %d or less, a cart of up to %d at %s times its value, for the raw-goods merchants." % [int(GameData.b("caravan_import_when_left")), int(stone.load), str(stone.markup)],
 			"Medicine: up to %d pieces a visit for the sage's Apothecary, the scarcest first (%s)." % [int(GameData.b("caravan_apothecary_per_visit")), _names((GameData.b("caravan_apothecary_stock") as Dictionary).keys())],
 			"Seed: up to %d a visit for the food merchant, the scarcest first (%s)." % [int(farm.caravan_seed_per_visit), _names((farm.caravan_seed_stock as Dictionary).keys())]]),
 		Wiki.p("Buyers pay from their own coins and keep back what their household will need over the next %d days: food it has not got, a log a night, medicine for anyone hurt, rent falling due, less wages it can count on. They spend that money only on food, firewood and medicine, so a smith or sage with a hungry family buys less stock, and one with full stores buys freely." % int(GameData.b("reserve_days"))),

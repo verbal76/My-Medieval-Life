@@ -15,7 +15,7 @@ extends SceneTree
 ## Exit code 1 if the currency or any item does not balance.
 
 const STEP := 0.5
-const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "log", "plank", "iron_bar", "copper_bar",
+const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block", "log", "plank", "iron_bar", "copper_bar",
 	"wheat", "meat", "hide", "leather", "pottage", "roast_meat", "ale", "pickaxe", "axe", "hammer"]
 const Census := preload("res://tests/census.gd")
 const MARKET_ROLES := Census.MARKET_ROLES
