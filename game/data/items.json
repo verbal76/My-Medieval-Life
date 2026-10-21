@@ -337,6 +337,9 @@
     },
     "apple_sapling": {"name": "Apple sapling", "type": "resource", "value": 3, "plant": "apple"},
     "prospecting_kit": {"name": "Prospector's kit", "type": "tool", "tool": "prospecting_kit", "value": 34, "durability": 40, "speed": 1.0},
-    "ore_sample": {"name": "Rock sample", "type": "resource", "value": 0}
+    "ore_sample": {"name": "Rock sample", "type": "resource", "value": 0},
+    "topsoil": {"name": "Topsoil", "type": "resource", "value": 0},
+    "dirt": {"name": "Dirt", "type": "resource", "value": 0},
+    "spoil": {"name": "Spoil", "type": "resource", "value": 0}
   }
 }

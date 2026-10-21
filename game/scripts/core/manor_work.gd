@@ -19,6 +19,10 @@ extends RefCounted
 ##    capability allows, one "trial" pit at a time for the best find it knows (Discovery.trial_dig, a pickaxe).
 ##    Both are paid for the labour, whatever is found. Manor hands take no surveys (their wage is their pay, and
 ##    the assay fees are the worker's).
+##  - MIN-E (OpenPits): for a find no trial pit can reach any more, the manor stakes an open pit near the readings it
+##    knows and posts one "excavate" job at a time while it still wants the pit dug: dig a load (`carry_ore` units,
+##    the carrying rule) with a pickaxe into the job's load, tip the earth onto the pit's spoil heaps and bring any
+##    stone to the works yard. Paid at the quarry job's rate a unit (no wage of its own); the pit may miss (WDR-022).
 ## A household under a day of food is not left waiting: its relief is delivered at once, as before.
 ##
 ## Jobs are paid from the treasury, set aside when a job is taken (the treasury keeps
@@ -28,7 +32,7 @@ extends RefCounted
 ## Carried goods ride in the job's own load (never the worker's pack), so they cannot be sold, eaten or
 ## lost; a dead worker's load goes back. Every number is provisional — balance review pending.
 
-const KINDS := ["haul", "quarry", "mend", "survey", "trial"]
+const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate"]
 const ORDER := ["pantry", "granary", "yard"]        # hauling priority by destination: relief first
 const MATERIALS := ["plank", "stone", "log", "iron_bar"]
 
@@ -271,6 +275,41 @@ func post_discovery() -> void:
 			_post({"kind": "trial", "clue": str(t.clue.id), "qty": 1, "site": [t.cell.x, t.cell.y], "wage": int(dc.trial_wage)})
 
 
+## MIN-E, the reeve's evening: the manor's open pit is dug a load at a time (one "excavate" job at a time) while it is
+## still wanted (OpenPits.manor_wants: its find not opened, cells not yet down to the rock); with no pit, one is staked
+## for a find no trial pit can reach any more (OpenPits.manor_target) when the treasury could pay a load's digging.
+func post_pits() -> void:
+	var pp: OpenPits = w.pits
+	for j in jobs.duplicate():           # a pit no longer wanted takes its untaken job down
+		if j.kind == "excavate" and j.taker == "" and not pp.manor_wants(pp.pit(int(j.pit))):
+			jobs.erase(j)
+	if jobs.any(func(j): return j.kind == "excavate"):
+		return
+	var job := {"kind": "excavate", "qty": excavate_load(), "wage": excavate_wage()}
+	var p := pp.manor_pit()
+	if p.is_empty():
+		if not can_fund(job, ""):
+			return
+		var t := pp.manor_target()
+		if t.is_empty():
+			return
+		p = pp.open_pit(World.MANOR, t.origin, str(t.clue.id))
+		if p.is_empty():
+			return
+	job.pit = int(p.id)
+	_post(job)
+
+
+## A load of excavation: what a villager carries (balance.json carry_ore, the miners' carrying rule).
+static func excavate_load() -> int:
+	return int(ResourceNodes.number(OpenPits.cfg().manor.load))
+
+
+## A load's wage at the quarry job's rate a unit (quarry_wage for quarry_qty), rounded up: no wage of its own.
+static func excavate_wage() -> int:
+	return ceili(float(cfg("quarry_wage")) * float(excavate_load()) / float(cfg("quarry_qty")))
+
+
 ## The samples a survey has taken that are not yet assayed (still carried by its taker).
 func _survey_pending(j: Dictionary) -> Array:
 	return (j.get("sids", []) as Array).filter(func(s): return w.prospecting.samples.has(str(int(s))))
@@ -360,7 +399,7 @@ func open_for(who: String) -> Array:
 	for j in jobs:
 		if j.taker != "" or not can_fund(j, who):
 			continue
-		if j.kind in ["quarry", "trial"] and not _has_pick(who):
+		if j.kind in ["quarry", "trial", "excavate"] and not _has_pick(who):
 			continue
 		if j.kind == "survey" and (is_staff(who) or not _has_kit(who) or _who(who).coins < int(j.qty) * int(Prospecting.cfg().assay.fee)):
 			continue                 # the assay fees are paid on the way, the wage at the end: a worker needs them in hand
@@ -372,7 +411,7 @@ func open_for(who: String) -> Array:
 func _rank(j: Dictionary) -> int:
 	if j.kind == "haul":
 		return ORDER.find(str(j.to.kind))
-	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6}.get(str(j.kind), 7)
+	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7}.get(str(j.kind), 8)
 
 
 func _has_kit(who: String) -> bool:
@@ -421,12 +460,20 @@ func release(j: Dictionary) -> void:
 					lots.append(l)
 				for id in j.load.ids():
 					w.transfer(j.load, l.inv, id, j.load.count(id))
+			"excavate":
+				var p := w.pits.pit(int(j.pit))      # MIN-E: earth back onto its pit's heaps, stone to the yard
+				if not p.is_empty():
+					w.pits.tip(p, j.load, true)
+				for id in j.load.ids():
+					w.transfer(j.load, yard, id, j.load.count(id))
 			_:
 				for id in j.load.ids():
 					w.transfer(j.load, yard, id, j.load.count(id))
 	j.taker = ""
 	j.day = -1
-	if j.kind in ["quarry", "survey", "trial"]:
+	if j.kind == "excavate":
+		j.erase("site")
+	if j.kind in ["quarry", "survey", "trial", "excavate"]:
 		jobs.erase(j)              # the reeve posts it again when the works still lack stone (or the find is still wanted)
 
 
@@ -446,7 +493,42 @@ func step(j: Dictionary) -> String:
 			return "assay" if not _survey_pending(j).is_empty() else "report"
 		"trial":
 			return "dig"
+		"excavate":
+			var p := w.pits.pit(int(j.pit))
+			if j.load.total() < int(j.qty) and w.pits.manor_wants(p):
+				return "excavate"
+			for id in OpenPits.earth_items():
+				if j.load.count(id) > 0:
+					return "tip"
+			return "put" if j.load.total() > 0 else "excavate"
 	return ""
+
+
+## MIN-E: the cell an excavation digs next: the one its taker was sent to while it can still be dug, else the pit's
+## next (OpenPits.next_dig) from where the taker stands. `planning`: a villager choosing where to go may pick the cell
+## it stands on (it steps off it to dig).
+func excavate_cell(j: Dictionary, planning := false) -> Vector2i:
+	var p := w.pits.pit(int(j.pit))
+	if p.is_empty():
+		return Vector2i(-1, -1)
+	if j.has("site"):
+		var c := Vector2i(int(j.site[0]), int(j.site[1]))
+		if w.pits.dig_ground_refusal(p, c) == "":
+			return c
+	var o = _who(str(j.taker))
+	var from: Vector2i = Vector2i(o.pos.floor()) if o != null else yard_cell()
+	return w.pits.next_dig(p, from, from if planning else Vector2i(-1, -1))
+
+
+## MIN-E: the spoil heap an excavation tips onto: the first of its pit's with room (or its first).
+func heap_cell(j: Dictionary) -> Vector2i:
+	var p := w.pits.pit(int(j.pit))
+	if p.is_empty() or (p.heaps as Array).is_empty():
+		return yard_cell()
+	for h in p.heaps:
+		if (h.inv as Inventory).total() < w.pits.heap_cap(p):
+			return Vector2i(int(h.x), int(h.y))
+	return Vector2i(int(p.heaps[0].x), int(p.heaps[0].y))
 
 
 ## Where the next step is done.
@@ -462,6 +544,11 @@ func step_cell(j: Dictionary) -> Vector2i:
 			return yard_cell()
 		"mend", "dig":
 			return Vector2i(int(j.site[0]), int(j.site[1]))
+		"excavate":
+			var c := excavate_cell(j)
+			return c if c.x >= 0 else yard_cell()
+		"tip":
+			return heap_cell(j)
 		"sample":
 			return survey_spot(j)
 		"assay":
@@ -494,6 +581,9 @@ func describe(j: Dictionary) -> String:
 		"trial":
 			var c := w.prospecting.clue(str(j.clue))
 			return "Dig a trial pit by %s %s with a pickaxe, looking for ore (%d hours)" % [w.prospecting.stain(c), w.prospecting.place(c), roundi(float(Discovery.cfg().trial.minutes) / 60.0)]
+		"excavate":
+			var p := w.pits.pit(int(j.pit))
+			return "Dig a load of %d from the manor's open pit %s with a pickaxe, tip the earth on its spoil heap and bring any stone to the works yard" % [int(j.qty), w.where(OpenPits.rect(p)) if not p.is_empty() else "in the village"]
 	return ""
 
 
@@ -552,8 +642,11 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				_unload(j.load, j.to)
 				_finish(j, who)
 				return true
-			# quarry: the stone goes into the yard (the player brings it in their pack)
-			if who == "player":
+			# quarry: the stone goes into the yard (the player brings it in their pack); an excavation's rides in its load
+			if j.kind == "excavate":
+				for id in j.load.ids():
+					w.transfer(j.load, yard, id, j.load.count(id))
+			elif who == "player":
 				if pack.count("stone") < int(j.qty):
 					return false
 				w.transfer(pack, yard, "stone", int(j.qty))
@@ -623,6 +716,38 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			if r.broke and o is NPC:
 				w.note("%s %s's pickaxe broke." % [o.name, o.family])
 			_finish(j, who)
+			return true
+		"excavate":
+			var o = _who(who)
+			var p := w.pits.pit(int(j.pit))
+			var cell := excavate_cell(j)
+			if o == null or p.is_empty() or cell.x < 0:
+				last_refusal = "There is nothing in the pit that can be dug now."
+				if j.load.total() == 0 and who != "player":
+					release(j)
+				return false
+			var tool: String = o.tool_of("pickaxe") if o is PlayerState else "pickaxe"
+			var r := w.pits.dig(o, p, cell, j.load, tool)
+			if r.result != "ok":
+				last_refusal = str(r.why)
+				j.erase("site")
+				return false
+			if not (r.exposed as Dictionary).is_empty():
+				j.found = true
+			if r.broke and o is NPC:
+				w.note("%s %s's pickaxe broke." % [o.name, o.family])
+			return true
+		"tip":
+			var p := w.pits.pit(int(j.pit))
+			if p.is_empty():
+				release(j)
+				return false
+			var moved := w.pits.tip(p, j.load)
+			if moved.is_empty():
+				last_refusal = "The spoil heaps are full or blocked."
+				return false
+			if j.load.total() == 0:
+				_finish(j, who)
 			return true
 		"mend":
 			for id in j.load.ids():
@@ -726,6 +851,22 @@ func plan(n: NPC) -> bool:
 				return true
 			n.doing = "taking the survey's samples to the assayer"
 			n.plan = [b.go(b._workplace_cell(a)), b.doit("mj_step", {"job": int(j.id)}), b.work(float(Prospecting.cfg().assay.minutes) + 10.0, "", {}, "idle")]
+		"excavate":
+			var p := w.pits.pit(int(j.pit))
+			j.erase("site")
+			var at := excavate_cell(j, true)
+			if not n.inv.has("pickaxe") or p.is_empty() or at.x < 0:
+				release(j)
+				return false
+			j.site = [at.x, at.y]
+			var i := OpenPits.index(p, at)
+			n.doing = "digging the manor's open pit"
+			n.plan = [b.go(w.pits.stand_for(p, i, n.cell())), b.work(OpenPits.minutes_of(int(p.dug[i])) * Skills.value(n, "mining", "mine_time", 1.0), "mj_step", {"job": int(j.id)}, "swing", at)]
+		"tip":
+			n.doing = "tipping earth on the spoil heap"
+			var hc := step_cell(j)
+			var stand := w.pits.stand_beside(hc, n.cell())
+			n.plan = [b.go(stand if stand.x >= 0 else b.beside(hc, n.cell())), b.doit("mj_step", {"job": int(j.id)})]
 		"dig":
 			if not n.inv.has("pickaxe"):
 				release(j)

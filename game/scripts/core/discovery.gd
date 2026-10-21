@@ -192,22 +192,34 @@ func _open_seam(c: Dictionary, cell: Vector2i, ref: String) -> Dictionary:
 	return d
 
 
-## The cells a party would dig for clue `c`, best first: clear cells (ground_refusal), nearest the mean of the cells
-## where the samples it knows of found the ore (else the stain), ties in the clue's hashed spot order.
-func dig_cells(c: Dictionary, ref: String) -> Array:
+## MIN-E: a pit dug down to the rock within reach of clue `c`'s body opens it on `cell` by the trial pit's own rule
+## (OpenPits._expose): the same ordinary seam, host rock, counting and note.
+func expose(c: Dictionary, cell: Vector2i, ref: String) -> Dictionary:
+	return _open_seam(c, cell, ref)
+
+
+## Where party `ref` would look for clue `c`'s ore: the mean of the cells where the samples it knows of found the ore,
+## else the stain.
+func aim(c: Dictionary, ref: String) -> Vector2:
 	var sum := Vector2.ZERO
 	var k := 0
 	for r in w.prospecting.records:
 		if str(r.clue) == str(c.id) and str(r.ore) != "" and w.prospecting.knows(ref, r):
 			sum += Vector2(int(r.x), int(r.y))
 			k += 1
-	var aim := sum / float(k) if k > 0 else Vector2(int(c.x), int(c.y))
+	return sum / float(k) if k > 0 else Vector2(int(c.x), int(c.y))
+
+
+## The cells a party would dig for clue `c`, best first: clear cells (ground_refusal), nearest the mean of the cells
+## where the samples it knows of found the ore (else the stain), ties in the clue's hashed spot order.
+func dig_cells(c: Dictionary, ref: String) -> Array:
+	var at := aim(c, ref)
 	var ranked := []
 	var spots: Array = c.spots
 	for i in spots.size():
 		var cell: Vector2i = spots[i]
 		if ground_refusal(c, cell) == "":
-			ranked.append([Vector2(cell).distance_squared_to(aim), i, cell])
+			ranked.append([Vector2(cell).distance_squared_to(at), i, cell])
 	ranked.sort()
 	return ranked.map(func(r): return r[2])
 
@@ -381,8 +393,11 @@ func tool_stock(tool: String) -> int:
 	return n
 
 
-## Built mining structures of a kind: pit ramps (MIN-E) and timber supports (MIN-F) are not built yet, so none.
-func structures(_what: String) -> int:
+## Built mining structures of a kind: pit ramps (MIN-E: an open pit whose ramp is dug down to its floor, OpenPits);
+## timber supports (MIN-F) are not built yet, so none.
+func structures(what: String) -> int:
+	if what == "pit_ramp" and w.pits != null:
+		return w.pits.ramps_done()
 	return 0
 
 

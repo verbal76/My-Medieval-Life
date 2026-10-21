@@ -839,9 +839,68 @@
       ],
       "status": "implemented",
       "risk": "A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). MIN-D: a body is opened into an ordinary seam only by a trial pit dug within reach of it (Discovery.trial_dig); most pits miss and a clue takes a finite number."
+    },
+    "open_pit": {
+      "name": "Open pit",
+      "category": "mineral",
+      "origin": "natural",
+      "match": {
+        "kind": "pit"
+      },
+      "where": "Staked on clear common ground of the village by the player (with a pickaxe in hand) or by the manor (for a find no trial pit can reach any more): a square of size cells (open_pit.json) with a clear border and spoil heaps beside it; on the surface only (OD-29)",
+      "verb": "Digging",
+      "action_label": "Dig the open pit",
+      "action": "interact",
+      "tool": "pickaxe",
+      "tool_required": true,
+      "tool_hint": "You need a pickaxe to dig. The smith sells them, or forge one at the anvil (2 iron bars and a plank).",
+      "skill": "mining",
+      "level": 1,
+      "minutes": 25,
+      "time_note": "Each layer's minutes a unit (open_pit.json layers: topsoil 20, dirt 25, spoil 30, stone 25) for a villager, by the Mining mine_time effect; the player's swing is timed as a mining swing (OpenPits.player_secs).",
+      "action_cost": {
+        "stamina": 0,
+        "tool_wear": 1,
+        "note": "No stamina. The pickaxe wears `wear` (1) a unit unless the Mining tool_wear_save effect spares it; each unit earns `xp` (4) Mining xp."
+      },
+      "yields": {
+        "topsoil": 1,
+        "dirt": 1,
+        "spoil": 1,
+        "stone": 1
+      },
+      "yield_notes": "One unit a dig, of the layer the cell is down to: under every cell the same finite layers (open_pit.json: 2 topsoil, 3 dirt, 3 spoil, then 8 stone), counted dug_<item>. A cell is dug to its ring's depth (terraces: the edge 2 layers, the next ring 3, the middle 4); the ramp's cells stay walkable. Dug down to the rock, a cell (not the ramp) opens a prospecting body within expose_reach as an ordinary seam (Discovery.expose).",
+      "total": "A pit's whole ground (OpenPits.volume, counted pit_ground_<item> when it is staked): for a 5 x 5 pit 50 topsoil, 75 dirt, 27 spoil and 8 stone.",
+      "depletion": "finite",
+      "regeneration": "None: a pit's ground only falls as it is dug, and rises only by backfill (the earth put back, counted backfilled_<item>). No new pit appears by itself: one is staked by someone.",
+      "owner": "Its staker: the player's pit is the player's to dig; the manor's is dug only through its excavate job (ManorWork). The ground is common land: no rights are made (MIN-C-Q2).",
+      "theft": "Never theft: nobody digs another's pit outside the manor's job.",
+      "npc_harvest": true,
+      "npc_note": "MIN-E: villagers dig the manor's pit through its excavate job (ManorWork.post_pits, plan, do_step: a load of carry_ore units into the job's load, the earth tipped on the pit's spoil heaps, stone to the works yard; paid at the quarry job's rate a unit). A miner whose ore is worked out takes it as it takes a trial pit (NPCBrain._miner).",
+      "player_harvest": true,
+      "gather": true,
+      "range": 1,
+      "range_note": "A pit cell beside the player, ahead or one of its neighbours (main.gd _pit_targets); a heap beside the player for tipping or taking earth. Each unit is a Use: Gather mode's repeated harvest does not reach pits (ResourceNodes.node_at finds seams, trees, plants, fields and animals).",
+      "icon": "dirt",
+      "sources": [
+        "game/scripts/core/open_pit.gd::open_pit",
+        "game/scripts/core/open_pit.gd::dig",
+        "game/scripts/core/open_pit.gd::backfill",
+        "game/scripts/core/open_pit.gd::tip",
+        "game/scripts/core/manor_work.gd::post_pits",
+        "game/scripts/main.gd::_pit_targets"
+      ],
+      "status": "implemented",
+      "risk": "Space: the village's dense ground holds few pit sites (66 on the static layout), so the manor stakes a pit only where a known find lies near one; a pit dug for a find may expose nothing (WDR-022). Whether topsoil, dirt, spoil, quarry stone and building blocks are different goods, and what earth is used for beyond backfill, are the owner's open questions (MIN_E_OPEN_PIT.md)."
     }
   },
   "materials": {"nails": [{"use": "building", "text": "B14-07: forged from iron bars at the anvil (forge_nails) and used up building wooden stairs (4 a rim cell) and walkways (3 a rim cell) through a mountain's cliff rim.", "source": "game/scripts/core/terrain.gd::build"}], 
+    "topsoil": [{"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was topsoil (OpenPits.backfill, counted backfilled_topsoil): the pit's ground rises by it.", "source": "game/scripts/core/open_pit.gd::backfill"},
+      {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take): a heap is a solid cell while it holds anything.", "source": "game/scripts/core/open_pit.gd::tip"}],
+    "dirt": [{"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was dirt (OpenPits.backfill, counted backfilled_dirt).", "source": "game/scripts/core/open_pit.gd::backfill"},
+      {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).", "source": "game/scripts/core/open_pit.gd::tip"}],
+    "spoil": [{"use": "backfill", "text": "MIN-E: put back into an open pit cell whose last unit dug was spoil (OpenPits.backfill, counted backfilled_spoil).", "source": "game/scripts/core/open_pit.gd::backfill"},
+      {"use": "storage", "text": "MIN-E: tipped onto the pit's spoil heaps and taken back from them (OpenPits.tip, take).", "source": "game/scripts/core/open_pit.gd::tip"}],
     "ore_sample": [{"use": "assay", "text": "Read by a smith at the forge for a fee, with a coal (Prospecting.assay, MIN-C): the sample is used up and its reading becomes a record its holder and the smith know.", "source": "game/scripts/core/prospecting.gd::assay"}],
     "coal": [{"use": "fuel", "text": "An assay at the forge burns assay.fuel (one coal) of the smith's (Prospecting.assay, MIN-C).", "source": "game/scripts/core/prospecting.gd::assay"}],
     "log": [
@@ -936,6 +995,9 @@
     {"id": "decor", "what": "Decorative map tiles (flowers, cliffs and rock faces, worked-out seams, stumps' surroundings)", "reason": "Map art with no game object behind it.", "source": "tools/build_village.py"}
   ],
   "exceptions": [
+    {"item": "topsoil", "finding": "import", "reason": "MIN-E: earth comes only from the finite ground of the open pits staked in the village (OpenPits: each cell's layers, counted pit_ground_ when staked); nothing brings more, and none is meant to: the ground is finite (WDR-022).", "status": "implemented"},
+    {"item": "dirt", "finding": "import", "reason": "MIN-E: earth comes only from the finite ground of the open pits staked in the village (OpenPits); nothing brings more, and none is meant to.", "status": "implemented"},
+    {"item": "spoil", "finding": "import", "reason": "MIN-E: spoil comes only from the finite ground of the open pits staked in the village (OpenPits); nothing brings more, and none is meant to.", "status": "implemented"},
     {"item": "ore_sample", "finding": "import", "reason": "MIN-C: rock samples come only from the clues' finite search areas (samples_per_clue a clue, one a cell); nothing brings more, and none is meant to: once the village's clues are sampled out, new ground to read is MIN-D's (deeper strata, the larger map). The finite source is the design, not a gap.", "status": "implemented"},
     {"item": "feather", "finding": "no_consumer", "reason": "A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them.", "status": "implemented"},
     {"item": "handcart", "finding": "no_consumer", "reason": "B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; it is not consumed but used: pulled storage, parked at home or a cart hub, and households' market runs (carts in play, B14-06, game/scripts/core/carts.gd).", "status": "implemented"},

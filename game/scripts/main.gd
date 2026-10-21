@@ -10,6 +10,8 @@ var map: VillageMap
 var world: World
 var view: MapView
 var ow_view: OverworldView     # the world outside the village (chunks round the camera)
+var pit_view: PitView          # MIN-E: the open pits and their spoil heaps (drawn from World.pits)
+var _pit_site := {}            # MIN-E: the last site looked at for staking a pit ({key, ok}: the cheap check, cached)
 var actors: Node2D
 var above: Node2D
 const MARKER_Z := 20                 # markers draw over roofs and canopies (their layers are z 10 in `above`)
@@ -198,6 +200,8 @@ func _ready() -> void:
 				ui.show_trade(sage)
 			"farm_tilled", "farm_growing", "farm_pen":
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
+			"open_pit", "open_pit_dug":
+				_pit_shot(shot_panel == "open_pit_dug")  # MIN-E: an open pit part dug (or dug out), its spoil heaps, people beside it
 			"small_room", "small_room_inside":
 				_room_shot(shot_panel == "small_room_inside")   # HOUSE-10: the small room built against b_v1_house
 			"employer_star":
@@ -938,6 +942,10 @@ func _build_scene() -> void:
 	ghost.z_index = MARKER_Z
 	above.add_child(ghost)
 	view.build(map, above, actors)             # overlay tiles of solid cells are drawn among the characters (B8-025)
+	pit_view = PitView.new()                     # MIN-E: open pits and spoil heaps, on the ground under the "below" layers
+	view.add_child(pit_view)
+	view.move_child(pit_view, view.layer("below0").get_index())
+	pit_view.setup(view, world.pits)
 	_draw_village_exits()
 	tree_view.setup(world)
 	_replace_tree_tiles()
@@ -1962,6 +1970,7 @@ func _find_target() -> void:
 	var here: Array = []
 	here.append_array(_fit_targets(world.place_of(p.pos)))
 	here.append_array(_prospect_targets(cands))           # MIN-C: a clue's ground underfoot, a smith who can assay
+	here.append_array(_pit_targets(cands))                # MIN-E: the player's own open pit and spoil heaps, or ground to stake one
 	# B14 carts: the one you pull can be let go anywhere; a cart beside you can be pulled (yours) or opened
 	var pulling: Dictionary = world.carts.pulled_by(World.PLAYER)
 	if not pulling.is_empty():
@@ -2161,6 +2170,8 @@ func _manor_label(j: Dictionary) -> String:
 		"put":
 			if j.kind == "quarry":
 				return "Bring %d stone to the works yard (you have %d)" % [int(j.qty), world.player.inv.count("stone")]
+			if j.kind == "excavate":
+				return "Bring the pit's stone to the works yard"
 			return "Put the manor's goods in %s" % mw.dest_name(j.to)
 		"mend":
 			return "Mend %s (%d hours)" % [str(j.get("place", "the road")), roundi(float(ManorWork.cfg("mend_minutes")) / 60.0)]
@@ -2172,6 +2183,10 @@ func _manor_label(j: Dictionary) -> String:
 			return "Tell the manor what the survey's samples showed"
 		"dig":
 			return "Dig the manor's trial pit here (%d hours)" % roundi(float(Discovery.cfg().trial.minutes) / 60.0)
+		"excavate":
+			return "Dig the manor's open pit here (%d of %d dug)" % [j.load.total(), int(j.qty)]
+		"tip":
+			return "Tip the manor's earth onto the spoil heap"
 	return ""
 
 
@@ -2456,6 +2471,22 @@ func _use() -> void:
 			_assay(target.npc)
 		"trial_dig":
 			_trial_dig(target.clue, target.cell, str(target.tool))
+		"pit_stake":
+			_pit_stake(target.origin)
+		"pit_dig":
+			_pit_dig(target.pit, target.cell, str(target.tool))
+		"pit_fill":
+			var r := world.pits.backfill(target.pit, target.cell, p.inv)
+			ui.message("You put back a unit of %s." % GameData.item_name(str(r.item)).to_lower() if r.result == "ok" else str(r.why))
+		"pit_tip":
+			var moved := world.pits.tip(target.pit, p.inv)
+			ui.message("You tip %s onto the spoil heap." % _goods_text(moved) if not moved.is_empty() else "The spoil heaps are full.")
+		"pit_take":
+			var got := world.pits.take(target.pit, str(target.item), 10, p.inv)
+			if got > 0:
+				_gain("+%d %s" % [got, GameData.item_name(str(target.item))], str(target.item))
+			else:
+				ui.message("Your pack is full.")
 		"deposit":
 			var dep: Dictionary = target.dep
 			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
@@ -2578,11 +2609,13 @@ func _use() -> void:
 			var finish := func(ok: bool) -> void:
 				if not ok:
 					ui.message("You need %d stone for the manor: mine it at the stone seams." % int(mj.qty) if mj.kind == "quarry"
-							else (mw.last_refusal if mj.kind in ["survey", "trial"] and mw.last_refusal != "" else "There is nothing here to take."))
+							else (mw.last_refusal if mj.kind in ["survey", "trial", "excavate"] and mw.last_refusal != "" else "There is nothing here to take."))
 				elif mw.job_of("player").is_empty():
 					var found := ""
 					if mj.kind == "trial":
 						found = " The pit strikes ore: a new seam is opened." if mj.get("found", false) else " The pit finds no ore."
+					elif mj.kind == "excavate" and mj.get("found", false):
+						found = " The pit has struck ore: a new seam is opened."
 					ui.message("Work for the manor done.%s The manor pays you %d coins." % [found, pay])
 				elif mj.kind == "survey":
 					ui.message(ui._manor_next(mj))
@@ -2597,6 +2630,20 @@ func _use() -> void:
 				start_action("Sampling", Prospecting.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
 			elif step == "dig":
 				start_action("Digging a trial pit", Discovery.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "pickaxe")
+			elif step == "excavate":
+				var pit := world.pits.pit(int(mj.pit))
+				var cell := mw.excavate_cell(mj)
+				var pick := p.tool_of("pickaxe")
+				if pit.is_empty() or cell.x < 0 or pick == "":
+					ui.message("You need a pickaxe to dig." if pick == "" else "There is nothing in the pit that can be dug now.")
+					return
+				start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), pick), func():
+					var was: int = mj.load.total()
+					var ok := mw.do_step(mj, "player", p.inv)
+					if ok and mj.load.total() > was:
+						ui.message("Dug for the manor: %d of %d. %s" % [mj.load.total(), int(mj.qty), ui._manor_next(mj)])
+					else:
+						finish.call(ok), "swing", "pickaxe")
 			else:
 				finish.call(mw.do_step(mj, "player", p.inv))
 
@@ -2632,6 +2679,99 @@ func _prospect_targets(cands: Array) -> Array:
 			if str(t.get("kind", "")) in ["npc", "shop"] and (t.npc as NPC).job == "smith" and not world.asleep(t.npc):
 				out.append({"kind": "assay", "npc": t.npc, "label": "Ask %s to assay a rock sample (%d coins)" % [(t.npc as NPC).name, int(Prospecting.cfg().assay.fee)]})
 	return out
+
+
+## MIN-E: what the open pits offer here (OpenPits: the rules are core's, the same as a villager's). The player's own
+## pit: dig the cell ahead (or beside it) with a pickaxe, put a unit back that the pack holds (the last dug goes back
+## first), tip the pack's earth onto its spoil heap, take earth from the heap. The manor's pit is dug only through its
+## job (the manor_job target). With a pickaxe in hand and nothing else in front, the ground ahead may be staked for a
+## pit (a cheap look here; the full check when it is used).
+func _pit_targets(cands: Array) -> Array:
+	var out := []
+	var pp: OpenPits = world.pits
+	if pp == null or world.player_level != 0:
+		return out
+	var p := world.player
+	var ahead := Vector2i((p.pos + facing_vec() * 1.0).floor())
+	var mine := Vector2i(p.pos.floor())
+	for dc in [Vector2i.ZERO, Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+		var cell: Vector2i = ahead + dc
+		if maxi(absi(cell.x - mine.x), absi(cell.y - mine.y)) > 1 or cell == mine:
+			continue
+		var hp := pp.heap_at(cell)
+		if not hp.is_empty() and str(hp.pit.owner) == World.PLAYER:
+			var earth := 0
+			for id in OpenPits.earth_items():
+				earth += p.inv.count(id)
+			if earth > 0:
+				out.append({"kind": "pit_tip", "id": "heap@%d,%d" % [cell.x, cell.y], "pit": hp.pit, "label": "Tip your earth onto the spoil heap (%d)" % earth})
+			for id in OpenPits.earth_items():
+				if pp.heap_count(hp.pit, id) > 0:
+					out.append({"kind": "pit_take", "id": "heap@%d,%d:%s" % [cell.x, cell.y, id], "pit": hp.pit, "item": id,
+							"label": "Take %s from the spoil heap (%d there)" % [GameData.item_name(id).to_lower(), pp.heap_count(hp.pit, id)]})
+			break
+		var pit := pp.pit_at(cell)
+		if pit.is_empty() or str(pit.owner) != World.PLAYER:
+			continue
+		var i := OpenPits.index(pit, cell)
+		var pick := p.tool_of("pickaxe")
+		if pick != "" and pp.dig_ground_refusal(pit, cell) == "":
+			var item := OpenPits.item_of(int(pit.dug[i]))
+			out.append({"kind": "pit_dig", "id": "pit@%d,%d" % [cell.x, cell.y], "pit": pit, "cell": cell, "tool": pick,
+					"label": "Dig %s from your open pit (%d of the %s left here)" % [GameData.item_name(item).to_lower(), OpenPits.cum(OpenPits.depth_of(int(pit.dug[i])) + 1) - int(pit.dug[i]), "ramp" if OpenPits.is_ramp(i) else "layer"]})
+		if pp.fill_refusal(pit, cell, p.inv) == "":
+			out.append({"kind": "pit_fill", "id": "fill@%d,%d" % [cell.x, cell.y], "pit": pit, "cell": cell,
+					"label": "Put back a unit of %s" % GameData.item_name(OpenPits.item_of(int(pit.dug[i]) - 1)).to_lower()})
+		if not out.is_empty():
+			break
+	if out.is_empty() and cands.is_empty() and p.tool != "" and GameData.item(p.tool).get("tool", "") == "pickaxe":
+		var origin := OpenPits.origin_ahead(ahead, facing_vec())
+		var key := "%d,%d" % [origin.x, origin.y]
+		if str(_pit_site.get("key", "")) != key or int(_pit_site.get("at", -1)) != int(world.minutes):
+			_pit_site = {"key": key, "at": int(world.minutes), "ok": pp.site_open(origin)}
+		if _pit_site.ok:
+			out.append({"kind": "pit_stake", "id": "stake@" + key, "origin": origin,
+					"label": "Mark out an open pit here (%d by %d, with its spoil heaps)" % [OpenPits.size(), OpenPits.size()]})
+	return out
+
+
+## "3 topsoil and 2 dirt": goods moved, in words.
+func _goods_text(goods: Dictionary) -> String:
+	var parts := []
+	for id in goods:
+		parts.append("%d %s" % [int(goods[id]), GameData.item_name(id).to_lower()])
+	return " and ".join(parts)
+
+
+## MIN-E: stake an open pit ahead (OpenPits.open_pit, after its full site check).
+func _pit_stake(origin: Vector2i) -> void:
+	var why := world.pits.site_refusal(origin)
+	if why != "":
+		ui.message(why)
+		return
+	world.pits.open_pit(World.PLAYER, origin)
+	ui.message("You mark out an open pit. Dig it with your pickaxe; tip the earth on its spoil heaps.")
+
+
+## MIN-E: dig a unit from cell `cell` of the player's pit, timed as a mining swing (OpenPits.dig: the unit to the pack,
+## the pickaxe wears, Mining xp; down at the rock a body within reach is opened as a seam).
+func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.pits.dig_refusal(p, pit, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Digging", world.pits.player_secs(pit, OpenPits.index(pit, cell), tool), func():
+		var r := world.pits.dig(p, pit, cell, p.inv, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		if not (r.exposed as Dictionary).is_empty():
+			ui.message("The pit strikes %s: a new seam is opened." % GameData.item_name(str(r.exposed.ore)).to_lower())
+		if r.broke:
+			ui.message("Your pickaxe broke.")
+		_level_up("mining", int(r.up)), "swing", "pickaxe")
 
 
 ## MIN-C: take a rock sample from the ground underfoot, timed as a mining swing (Prospecting.take_sample: the kit
@@ -4078,6 +4218,53 @@ func _room_shot(inside: bool) -> void:
 ## calls the game uses (till, sow, grow by the clock, fence a pen, buy stock). `kind`: farm_tilled (an L-shaped
 ## field of tilled soil), farm_growing (the field sown with four crops, some ripe) or farm_pen (two pens with
 ## animals beside the field).
+## MIN-E screenshots: the clear site nearest the warp point is staked and dug by a villager by the rules (OpenPits.dig,
+## the earth tipped on the heaps): part way, or (`full`) to its floor. The villager stands on the ramp, the player at
+## the pit's edge.
+func _pit_shot(full: bool) -> void:
+	var pp: OpenPits = world.pits
+	var aim := shot_warp if shot_warp != Vector2.INF else world.player.pos
+	var origin := pp.best_site(aim)
+	var bd := 1e9
+	for y in map.h if origin.x <= -1000 else 0:                    # none near: the clear site nearest the aim anywhere
+		for x in map.w:
+			var o := Vector2i(x, y)
+			if Vector2(o).distance_squared_to(aim) < bd and pp.site_open(o) and pp.site_refusal(o) == "":
+				bd = Vector2(o).distance_squared_to(aim)
+				origin = o
+	if origin.x <= -1000:
+		print("open_pit shot: no clear site within %d cells of %s" % [int(OpenPits.cfg().manor.site_search), aim])
+		return
+	print("open_pit shot: a pit at %s" % origin)
+	var pit := pp.open_pit(World.MANOR, origin)
+	var n: NPC = world.brain._first_with_job("laborer")
+	if n == null:
+		n = world.npcs[0]
+	n.inv.add("pickaxe", 40)
+	var far := Vector2(world.manor_work.yard_cell()) + Vector2(0.5, 0.5)
+	for o: NPC in world.npcs:
+		if OpenPits.rect(pit).grow(2).has_point(o.cell()):
+			o.pos = far
+	world.player.pos = far
+	var units := 0
+	var budget := 1000 if full else 70
+	while units < budget:
+		var c := pp.next_dig(pit, n.cell(), n.cell())
+		if c.x < 0:
+			break
+		n.pos = Vector2(pp.stand_for(pit, OpenPits.index(pit, c), n.cell())) + Vector2(0.5, 0.5)
+		if pp.dig(n, pit, c, n.inv, "pickaxe").result != "ok":
+			break
+		units += 1
+		pp.tip(pit, n.inv)
+	var s := OpenPits.size()
+	n.pos = Vector2(OpenPits.cell_of(pit, s + s / 2)) + Vector2(0.5, 0.5)     # on the ramp, a ring down
+	n.plan = [{"k": "work", "min": 600.0, "anim": "work"}]
+	world.player.pos = Vector2(int(pit.x) + s, int(pit.y) + s) + Vector2(0.5, 0.5)       # at the south-east corner of the border
+	follow_at = _in_view((Vector2(int(pit.x), int(pit.y)) + Vector2(s, s) / 2.0 + Vector2(0, 2.5)) * T)
+	camera.position = follow_at
+
+
 func _farm_shot(kind: String) -> void:
 	var p := world.player
 	p.coins = 3000

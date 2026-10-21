@@ -1582,6 +1582,8 @@ func _manor_next(j: Dictionary) -> String:
 		"put":
 			if j.kind == "quarry":
 				return "Next: bring %d stone to the manor's works yard (you have %d)." % [int(j.qty), main.world.player.inv.count("stone")]
+			if j.kind == "excavate":
+				return "Next: bring the pit's stone to the manor's works yard."
 			return "Next: take it to %s." % mw.dest_name(j.to)
 		"mend":
 			return "Next: mend %s." % str(j.get("place", "the road"))
@@ -1593,6 +1595,10 @@ func _manor_next(j: Dictionary) -> String:
 			return "Next: tell the manor what the samples showed (at the manor's door)."
 		"dig":
 			return "Next: dig the trial pit where the reeve marked it."
+		"excavate":
+			return "Next: dig the manor's open pit (%d of %d dug)." % [j.load.total(), int(j.qty)]
+		"tip":
+			return "Next: tip the earth onto the pit's spoil heap."
 	return ""
 
 

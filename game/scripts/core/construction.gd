@@ -1193,6 +1193,11 @@ func _free_sums() -> PackedInt32Array:
 		mark.call(Rect2i(int(w.stations[id].use[0]), int(w.stations[id].use[1]), 1, 1))
 	for e in w.containers + w.deposits:
 		mark.call(Rect2i(int(e.x), int(e.y), 1, 1))
+	if w.pits != null:                    # MIN-E: an open pit with its border, and its spoil heaps
+		for p in w.pits.pits:
+			mark.call(OpenPits.rect(p).grow(1))
+			for h in p.heaps:
+				mark.call(Rect2i(int(h.x), int(h.y), 1, 1))
 	for t in w.trees:
 		if t.state == "grown":
 			mark.call(Rect2i(int(t.x), int(t.y), 1, 1))

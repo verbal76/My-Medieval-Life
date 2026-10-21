@@ -317,6 +317,8 @@ func site_refusal(c: Vector2i, ref: String) -> String:
 		for d in w.deposits:
 			if Vector2i(int(d.x), int(d.y)) == cell:
 				return "the mine"
+		if w.pits != null and w.pits.ground_refusal(cell) != "":
+			return "an open pit"
 	for sid in w.stalls:
 		var o: Dictionary = w.stalls[sid]
 		if Vector2i(int(o.x), int(o.y)).distance_to(c) < 3.0 or Vector2i(int(o.use[0]), int(o.use[1])).distance_to(Vector2(c)) < 2.0:
