@@ -529,7 +529,52 @@ func _sample(start: Dictionary) -> Dictionary:
 	s.ledger = _ledger(start)
 	s.player = {"alive": w.player.alive, "hp": snappedf(w.player.hp, 0.1), "min_hp": snappedf(player_min_hp, 0.1), "hours_hurt": player_attacked}
 	s.events = events.duplicate()
+	s.farm = _farm()
 	return s
+
+
+## FARM-08 (owner, 2026-10-21): the farming economy for the shared-yield comparison: the fields, the pens and their
+## feed, the grain flows and the market's grain price. Prices are read with the caches restored (a reading must not
+## change the run, as for --watch-from).
+func _farm() -> Dictionary:
+	var pc: Dictionary = w._price_cache.duplicate()
+	var rc: Dictionary = w._reserve_cache.duplicate()
+	var price := 0
+	var farmers_wheat := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "farmer":
+			farmers_wheat += o.inv.count("wheat")
+			if o.inv.count("wheat") > 0:
+				var pr := w.sell_price(o, "wheat")
+				price = pr if price == 0 else mini(price, pr)
+	w._price_cache = pc
+	w._reserve_cache = rc
+	var fields := {}
+	for f in w.fields:
+		fields[str(f.state)] = int(fields.get(str(f.state), 0)) + 1
+	var pens := {}
+	for id in w.fauna.pens:
+		var pen: Dictionary = w.fauna.pens[id]
+		var k := str(pen.kind)
+		var row: Dictionary = pens.get(k, {"animals": 0, "well_fed": 0, "trough": 0, "keepers": 0})
+		for a: Animal in w.fauna.animals:
+			if a.alive and a.area == pen.id:
+				row.animals = int(row.animals) + 1
+				if w.fauna.well_fed(a):
+					row.well_fed = int(row.well_fed) + 1
+		row.trough = int(row.trough) + int(pen.trough)
+		row.keepers = int(row.keepers) + (1 if w.pen_keeper(pen) != null else 0)
+		pens[k] = row
+	var st := {}
+	for k in ["made_wheat", "used_wheat_seed", "made_wheat_seed", "farm_seed_saved", "field_unsown_no_seed", "feed_eaten_wheat",
+			"farm_made_milk", "farm_made_egg", "farm_made_wool", "exported_wheat", "imported_wheat_seed", "gov_relief_grain"]:
+		st[k] = int(_st(k))
+	for k in w.stats:
+		if str(k).begins_with("slaughtered_") or str(k).begins_with("starved_cow") or str(k).begins_with("starved_sheep") \
+				or str(k).begins_with("starved_chicken") or str(k).begins_with("starved_pig"):
+			st[k] = int(w.stats[k])
+	return {"wheat_price": price, "farmers_wheat": farmers_wheat, "granary_wheat": w.granary.count("wheat"), "famine": w.famine(),
+		"food_days": snappedf(w.food_days, 0.01), "fields": fields, "pens": pens, "stats": st}
 
 
 ## Stats `prefix + id` for each id with a non-zero value.

@@ -855,6 +855,15 @@ func _fse12_shared_fields() -> void:
 	var got: int = n.inv.count("wheat") + w.households[n.household].pantry.count("wheat") - wh0
 	check(got == 10 * int(Farming.crops().wheat.yield) and n.inv.count("wheat_seed") == 10 * int(Farming.crops().wheat.seeds_back) and float(w.stats.get("made_wheat_seed", 0.0)) == made0 + 10.0,
 			"FSE-12: the cut gives the crop of the sown cells (%d wheat) and their seed back (%d)" % [got, n.inv.count("wheat_seed")])
+	# FARM-08: one shared wheat yield for the comparison, the same for the manor's fields and the player's cells
+	var keep_y = GameData.balance.get("shared_wheat_yield", 0)
+	GameData.balance["shared_wheat_yield"] = 1.5
+	var cells_total := 0
+	for i in 200:
+		cells_total += w.farm.cell_yield("wheat", Vector2i(i, 7))
+	check(Farming.field_crop(10) == 15 and absf(float(cells_total) / 200.0 - 1.5) < 0.15 and w.farm.cell_yield("carrot", Vector2i(1, 1)) == int(Farming.crops().carrot.yield),
+			"FARM-08: a shared yield of 1.5 gives a field 15 for 10 cells and a player's cells %.2f on average; other crops keep their own" % (float(cells_total) / 200.0))
+	GameData.balance["shared_wheat_yield"] = keep_y
 	for o: NPC in ws:
 		o.inv.remove("wheat_seed", o.inv.count("wheat_seed"))
 		o.inv.add("wheat_seed", held[o.id][0])

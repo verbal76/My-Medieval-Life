@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 213 still open, 18 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 160 (85 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **298** = 213 still open from the baseline + 85 added and open |
+| Entries added since | | 162 (86 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **299** = 213 still open from the baseline + 86 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (18)
@@ -48,7 +48,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (160)
+## Added since the baseline (162)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -81,6 +81,7 @@ None.
 | FARM-05 | Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming) | approved | APPROVED — NOT STARTED | 16 |
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | APPROVED — NOT STARTED | 16 |
+| FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | approved | APPROVED — NOT STARTED | 16 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | COMPLETE AND VERIFIED | 16 |
@@ -150,6 +151,7 @@ None.
 | OD-23 | What the manor's fields cost their farmers (lease, crop share, or free to any farmer) | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-24 | Rent for villager merchants' stalls (pay as the player does, or the player's pitch free) | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-25 | Owner decision resolution for Build 16 (2026-10-21): FARM-07 2 coins a week; FARM-01/02 variable plots, materials from the perimeter; STALL-01/05 5% of completed sales after audits, rounding not approved; FSE-12 behind a switch with comparison; FSE-13 comparison then review; FSE-B06 deadwood interim; OD-20 witness reports; EQ-22 buying by need; OD-17 still blocked; DVW-A12 to Build 17; DVW-B6 to Build 18 | decision | COMPLETE AND VERIFIED | 16 |
+| OD-26 | Owner decision 2026-10-21: one shared per-cell farming model for player, households and manor approved as the direction; no yield approved; both switches off; compare several shared yields (between about 0.9 and 3 wheat a cell) with seasonal farming on, identical seeds; investigate the seasonal milk collapse; recommend a yield for approval | decision | COMPLETE AND VERIFIED | 16 |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |

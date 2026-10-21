@@ -254,7 +254,7 @@ func harvest_goods(c: Vector2i) -> Dictionary:
 	if cell.is_empty() or cell.state != "ripe":
 		return {}
 	var cr: Dictionary = crops()[cell.crop]
-	var out := {str(cr.item): int(cr.yield)}
+	var out := {str(cr.item): cell_yield(str(cell.crop), c)}
 	if int(cr.seeds_back) > 0:
 		out[str(cr.seed)] = int(cr.seeds_back)
 	return out
@@ -611,6 +611,28 @@ static func seasonal_fields() -> bool:
 	return int(GameData.b("seasonal_village_farming")) == 1
 
 
+## FARM-08 (owner, 2026-10-21): one shared per-cell yield for the player's and the manor's wheat under comparison. With
+## balance `shared_wheat_yield` above 0 (a comparison setting, 0 in the game), a wheat cell yields that many on average:
+## the whole part always, the fraction by a hash of the cell and the day (deterministic, no RNG draw). 0: the crop's own.
+static func wheat_yield() -> float:
+	var y := float(GameData.b("shared_wheat_yield"))
+	return y if y > 0.0 else float(crops().wheat.yield)
+
+
+func cell_yield(crop: String, c: Vector2i) -> int:
+	if crop != "wheat" or float(GameData.b("shared_wheat_yield")) <= 0.0:
+		return int(crops()[crop].yield)
+	var y := wheat_yield()
+	var whole := int(floor(y))
+	var frac := y - float(whole)
+	return whole + (1 if frac > 0.0 and float(absi(hash([c.x, c.y, w.day()])) % 1000) / 1000.0 < frac else 0)
+
+
+## The crop of `sown` cells of a manor field at the shared yield (FARM-08): rounded to whole grain.
+static func field_crop(sown: int) -> int:
+	return roundi(float(sown) * wheat_yield())
+
+
 static func field_cells(f: Dictionary) -> int:
 	return int(f.w) * int(f.h)
 
@@ -655,7 +677,7 @@ func sow_field(n: NPC, f: Dictionary) -> int:
 	if sown > 0:
 		w.stat("used_" + seed, float(sown))
 		f.sown = sown
-		f.crop = sown * int(crops().wheat.yield)
+		f.crop = field_crop(sown)
 	return sown
 
 

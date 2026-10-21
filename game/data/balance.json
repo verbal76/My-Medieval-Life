@@ -165,6 +165,7 @@
   "counter_serve_minutes": 30,
   "shared_manor_farming": 0,
   "seasonal_village_farming": 0,
+  "shared_wheat_yield": 0,
   "stall_rent_day": 5,
   "stall_evict_days": 2,
   "stall_range": 7,

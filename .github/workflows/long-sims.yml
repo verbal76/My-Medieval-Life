@@ -27,6 +27,10 @@ on:
         description: "Balance overrides for a comparison run, space-separated key=value (e.g. shared_manor_farming=1); empty for none"
         default: ""
         required: false
+      variants:
+        description: "Comparison variants: several 'set' strings separated by '|' (e.g. 'shared_wheat_yield=1|shared_wheat_yield=2'); each runs on every seed; empty: the one 'set'"
+        default: ""
+        required: false
 
 permissions:
   contents: read
@@ -43,24 +47,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      seeds: ${{ steps.seeds.outputs.list }}
+      jobs: ${{ steps.seeds.outputs.jobs }}
     steps:
       - id: seeds
         env:
           SEEDS: ${{ inputs.seeds }}
           DAYS: ${{ inputs.days }}
           EVERY: ${{ inputs.every }}
+          SET: ${{ inputs.set }}
+          VARIANTS: ${{ inputs.variants }}
         run: |
           python3 - <<'PY'
           import json, os, re, sys
           seeds = [s.strip() for s in os.environ["SEEDS"].split(",") if s.strip()]
+          variants = [v.strip() for v in os.environ.get("VARIANTS", "").split("|") if v.strip()] or [os.environ.get("SET", "").strip()]
+          if len(variants) > 8 or not all(re.fullmatch(r"([A-Za-z0-9_.]+=[0-9.]+( |$))*", v) for v in variants):
+              sys.exit("variants: at most 8, each space-separated key=number pairs")
           ok = seeds and all(re.fullmatch(r"\d{1,9}", s) for s in seeds) and len(seeds) <= 8
           ok = ok and re.fullmatch(r"\d{1,4}", os.environ["DAYS"]) and 1 <= int(os.environ["DAYS"]) <= 730
           ok = ok and re.fullmatch(r"\d{1,3}", os.environ["EVERY"]) and int(os.environ["EVERY"]) >= 1
           if not ok:
               sys.exit("seeds must be 1-8 whole numbers, days 1-730, every >= 1")
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write("list=" + json.dumps([int(s) for s in seeds]) + "\n")
+              jobs = [{"seed": int(s), "vi": i, "sets": v} for i, v in enumerate(variants) for s in seeds]
+              f.write("jobs=" + json.dumps(jobs) + "\n")
           PY
 
   sim:
@@ -69,9 +79,9 @@ jobs:
     timeout-minutes: 330
     strategy:
       fail-fast: false
-      max-parallel: 2          # at most two runners at once
+      max-parallel: 4          # at most four runners at once (comparison matrices: variants x seeds)
       matrix:
-        seed: ${{ fromJSON(needs.plan.outputs.seeds) }}
+        include: ${{ fromJSON(needs.plan.outputs.jobs) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -95,9 +105,10 @@ jobs:
           SEED: ${{ matrix.seed }}
           DAYS: ${{ inputs.days }}
           EVERY: ${{ inputs.every }}
-          SETS: ${{ inputs.set }}
+          SETS: ${{ matrix.sets }}
+          VI: ${{ matrix.vi }}
         run: |
-          out="$RUNNER_TEMP/sim-seed$SEED-days$DAYS"
+          out="$RUNNER_TEMP/sim-v$VI-seed$SEED-days$DAYS"
           mkdir -p "$out/userdata" "$out/tmp"
           export XDG_DATA_HOME="$out/userdata" TMPDIR="$out/tmp"     # this run's own Godot user:// and temp files
           godot=~/godot-bin/godot
@@ -130,6 +141,7 @@ jobs:
           PY
           echo "OUT=$out" >> "$GITHUB_ENV"
           cat "$out/summary.json"                                      # the outcome at the end, in the log (artifacts are not always reachable)
+          python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print('FARMLINE', json.dumps({'sets': sys.argv[2], 'seed': int(sys.argv[3]), 'farm': d['samples'][-1].get('farm'), 'wheat': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('wheat'), 'wheat_seed': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('wheat_seed'), 'milk': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('milk'), 'food': {k: d['samples'][-1]['food'].get(k) for k in ('starvation_deaths', 'missed_meal_no_money', 'missed_meal_no_food_for_sale', 'relief_grain', 'mean_hunger')}, 'famine_samples': sum(1 for x in d['samples'] if (x.get('farm') or {}).get('famine')), 'samples': len(d['samples'])}))" "$out/sim.json" "$SETS" "$SEED" || true
           tail -n 30 "$out/sim.log"
           if [ "$code" -ne 0 ]; then
             echo "::error::the simulation or its ledger checks failed (exit $code); see sim.log"
@@ -145,7 +157,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: sim-seed${{ matrix.seed }}-days${{ inputs.days }}
+          name: sim-v${{ matrix.vi }}-seed${{ matrix.seed }}-days${{ inputs.days }}
           path: |
             ${{ env.OUT }}/sim.json
             ${{ env.OUT }}/sim.log

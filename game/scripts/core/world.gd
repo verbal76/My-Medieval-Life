@@ -1440,7 +1440,7 @@ func grow_field(f: Dictionary) -> void:
 	if f.state == "growing" and minutes >= f.ready:
 		f.state = "ripe"
 		# the old field model's fixed yield; under the shared model (FSE-12) the crop of the cells sown (Farming.sow_field)
-		f.crop = int(f.get("sown", 0)) * int(Farming.crops().wheat.yield) if Farming.shared_manor() else int(GameData.b("field_yield"))
+		f.crop = Farming.field_crop(int(f.get("sown", 0))) if Farming.shared_manor() else int(GameData.b("field_yield"))
 		f.ripe_at = f.ready
 		_field_tiles(f)
 
