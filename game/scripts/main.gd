@@ -916,7 +916,7 @@ func _build_scene() -> void:
 	add_child(blood_layer)
 	var clues := ClueView.new()                   # MIN-C: prospecting stains on the ground, under the characters
 	blood_layer.add_child(clues)
-	clues.setup(world.prospecting, T)
+	clues.setup(world.prospecting, T, func(c: Vector2i) -> bool: return world.plant_at(c).is_empty() and not world.map.is_solid(c))
 	actors = Node2D.new()
 	actors.y_sort_enabled = true
 	add_child(actors)

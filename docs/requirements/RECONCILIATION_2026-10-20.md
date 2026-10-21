@@ -51,7 +51,7 @@ entry leaves the register or changes without a history entry.
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
-| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | PARTIALLY IMPLEMENTED | 17 | 2026-10-21: R1-R3, R7-R9, R12, R14 moved from UI into World with no behaviour change; the remaining rules are in progress on wip/b17-dvwa12b |
+| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | IMPLEMENTED — TESTING REQUIRED | 17 | 2026-10-21: All audited rules R1-R21 now in core (World/PlayerState); one intended change: a sleeper's pocket refused beyond 1.8 tiles; merged into wip/build17 (fcefbc9); all 42 suites pass on the merged tree |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 18 | 2026-10-21: Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md) |
 
 ## Reopened since the baseline (0)

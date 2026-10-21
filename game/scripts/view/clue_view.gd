@@ -10,7 +10,9 @@ var tile := 16
 var marks: Array = []          # [Rect2 in pixels, Color]
 
 
-func setup(p: Prospecting, tile_px: int) -> void:
+## `open_ground(cell) -> bool`, when given, keeps a mark only if every cell it touches is bare ground: no fleck is
+## painted over a plant or a solid object drawn in the map's "below" layer (the stains are in the soil).
+func setup(p: Prospecting, tile_px: int, open_ground := Callable()) -> void:
 	tile = tile_px
 	marks.clear()
 	if p == null:
@@ -25,8 +27,18 @@ func setup(p: Prospecting, tile_px: int) -> void:
 			var off := Vector2(h % span, (h >> 8) % span) - Vector2(span - tile, span - tile) / 2.0
 			var size := 3 if i < 3 else (2 if i < 6 else 1)
 			var a := 0.55 if i < 6 else 0.75
-			marks.append([Rect2(base + off, Vector2(size, size)), Color(float(rgb[0]), float(rgb[1]), float(rgb[2]), a)])
+			var r := Rect2(base + off, Vector2(size, size))
+			if open_ground.is_valid() and not _on_open_ground(r, open_ground):
+				continue
+			marks.append([r, Color(float(rgb[0]), float(rgb[1]), float(rgb[2]), a)])
 	queue_redraw()
+
+
+func _on_open_ground(r: Rect2, open_ground: Callable) -> bool:
+	for corner in [r.position, r.end - Vector2.ONE]:
+		if not open_ground.call(Vector2i((corner / tile).floor())):
+			return false
+	return true
 
 
 func _draw() -> void:

@@ -7073,7 +7073,7 @@
    "id": "DVW-A12",
    "title": "Keep rules in `core/`, not UI; audit list (:37)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Keep rules in `core/`, not UI; audit list (:37)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256)",
@@ -7082,11 +7082,12 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "Plan: an audit list | none; `main.gd` still holds crime and storefront-target rules per DVW | NOT-STARTED",
-   "tests": "run_tests, world_test, parity_test",
+   "tests": "world_test 339, run_tests 3536, start_test 499, play_test 37, skills_test, all 42 suites 0 failures",
    "playtest": [],
    "branch": "",
    "commits": [
-    "e51c37d"
+    "e51c37d",
+    "7ab2a2c"
    ],
    "parent": null,
    "depends_on": [],
@@ -7129,6 +7130,11 @@
      "date": "2026-10-21",
      "change": "DEFERRED -> PARTIALLY IMPLEMENTED; commit e51c37d; tests",
      "why": "R1-R3, R7-R9, R12, R14 moved from UI into World with no behaviour change; the remaining rules are in progress on wip/b17-dvwa12b"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; commit 7ab2a2c; tests",
+     "why": "All audited rules R1-R21 now in core (World/PlayerState); one intended change: a sleeper's pocket refused beyond 1.8 tiles; merged into wip/build17 (fcefbc9); all 42 suites pass on the merged tree"
     }
    ],
    "acceptance_derived": true,
@@ -15178,7 +15184,8 @@
    "playtest": [],
    "branch": "",
    "commits": [
-    "7b83fe8"
+    "7b83fe8",
+    "HEAD"
    ],
    "parent": "EXP-A",
    "depends_on": [
@@ -15221,6 +15228,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "Visual check (lead, 2026-10-21): rendered at seed 1, clue c104_5 copper beside the player at 3x: faint blue-green flecks on grass, drawn under actors, nothing over UI; subtle by design, contrast may be raised later if players miss them; clues beside roads and buildings not yet looked at"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit HEAD",
+     "why": "Visual check across terrain (lead, 2026-10-21): 12 clues on seeds 1 and 2 on grass, dirt, road, beside a stall, a boulder and plants, under canopies; stains under actors, trees, roofs and UI; deterministic per seed; one fleck over a plant fixed (marks skip plant and solid cells) and re-shot; copper on grass is faint, kept as is"
     }
    ],
    "target_build": "17",
