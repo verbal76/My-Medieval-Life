@@ -3222,6 +3222,9 @@ func _field_workers(f: Dictionary) -> int:
 func seek_work() -> void:
 	var market := job_market()
 	var cooldown := int(GameData.b("job_switch_cooldown_days"))
+	# EQ-03: a hunter in woods with no game left above its floors (Fauna.takeable_game: the keep and the hunters' spare,
+	# by real counts) has no work to do, and looks for other work as an adult out of work does
+	var no_game: bool = w.fauna.takeable_game() == 0
 	for h in w.households.size():
 		var econ: Dictionary = w.households[h].get("econ", {})
 		if econ.is_empty():
@@ -3231,7 +3234,7 @@ func seek_work() -> void:
 		for n: NPC in members:
 			if n.role != "adult" or n.job in ["guard", "reeve", "sage"]:
 				continue
-			var unemployed := n.job == "" or tool_short(n)
+			var unemployed := n.job == "" or tool_short(n) or (n.job == "hunter" and no_game)
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
 			if not unemployed:
 				var settling := n.left_job != "" and w.day() - n.job_since < cooldown     # just changed jobs: give it time
