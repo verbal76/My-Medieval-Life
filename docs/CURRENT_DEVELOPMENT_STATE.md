@@ -91,7 +91,7 @@ The complete list is the ledger's "Real-device verification queue". None of thes
 Updated 2026-10-20 about 10:00 UTC under the overnight directive (OVN-01): Builds 15 to 18 in order. The overnight report for the owner is `docs/release/OVERNIGHT_REPORT_2026-10-20.md`.
 
 1. **Build 15: complete** (released 2026-10-20, `docs/release/BUILD_15_PACKET.md`).
-2. **Build 16, now** (plan: `docs/BUILD_16_STATUS.md` section E): read the four-seed run on `d6d80a4`, classify any death, close FSE-16/17/18, B7-015, FSE-B06/B11/B12 on it; then ARM-01 with CTR-01..03; then, as the owner answers section C, FARM-06, FARM-01..05, STALL-01..06, SEED/MERCH, CTR/SHOP/TRADE, FSE-13/12/15; the verification items EQ-01..06, EQ-09, DVW-A3/A5, WDR-005-C; then Build 17 and Build 18, in order.
+2. **Build 16, now** (plan: `docs/BUILD_16_STATUS.md` section E; owner decisions of 2026-10-21 in `docs/directives/2026-10-21_build16_owner_decision_resolution.md`): read the three Actions runs above; write the FSE-12 and FSE-13 comparison reports for the owner (activation needs the owner); merge the seed worker's SEED-02..04/MERCH-01; then SHOP-01/TRADE-01 (counters buying by need), PICK-01/EQ-22 readings awaiting the owner; FARM-01..05 and STALL-01..06 wait on the audit's six owner questions (status doc section C, 8-13); ARM-01 and CTR-01..03 await the owner's device playtest; then Build 17, Build 18 in order.
 3. Open Build 15 entries that are not code: DVW-A14 (the whole-life play-through, item 8 of the testing checklist), REC-003 (the owner's confirmation of the API 36 policy), and the device checks.
 
 Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_ITEMS.md`): carts have no collision, so no route is ever blocked.
@@ -115,7 +115,7 @@ Skipped (deferred) items: one, WDR-010-C's cart-route feedback (`docs/SKIPPED_IT
 
 ## Interrupted or fragile processes
 
-- **Running (2026-10-20, late):** on Actions, `long-sims.yml`, seeds 1-4, 365 days, on `d6d80a4` (every fix so far; the run on `1c7b9f4` was cancelled as superseded). Read its jobs' log tails (the deaths block is about 150 lines from the end). Nothing running locally.
+- **Running (2026-10-21):** on Actions, `long-sims.yml`, one after another: run 39523615798 (acceptance, four seeds, 365 days, `1fefddb`), run 39525733581 (FSE-12 comparison, `set: shared_manor_farming=1`, `09c8cb1`), run 39526774144 (FSE-13 comparison, `set: seasonal_village_farming=1`, `df54ef1`). Read each job's log tail (summary about 150 lines from the end). A worker builds SEED-02..04 and MERCH-01 in its own worktree (merged by the lead after the suites and gate). Nothing running locally.
 - Runs 39385942656 (`59057ac`) and 39430585149 (`8d3f623`, the pre-parity baseline) are finished and recorded.
 - **Long runs belong on Actions** (INFRA-02): dispatch `long-sims.yml` with `ref=staging/my-medieval-life` and inputs seeds, days, every. Local runs die with the container.
 - **Local scratch output** in `out/` (git-ignored) is not a record: only the written reports are.
