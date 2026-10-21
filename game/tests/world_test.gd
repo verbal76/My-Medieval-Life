@@ -44,6 +44,7 @@ func _run() -> void:
 	_pl_gameplay()
 	_station_conflict()
 	_fse_defects()
+	_dvw_a12()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -1443,4 +1444,102 @@ func _fse_defects() -> void:
 			check(w.brain.band_eat(b0) and not b1.inv.has("bread"), "FSE-B06: the band's stores are shared: a bandit eats a comrade's bread")
 	# FSE-B07: the Apothecary is an outlet for flowers
 	check(NPCBrain.OUTLETS.get("flower", []).has("sage"), "FSE-B07: villagers can sell flowers to the Apothecary")
+
+
+# ---------------------------------------------------------------- DVW-A12 ---------------------
+## DVW-A12 (owner, 2026-10-21 directive section 6): the player's mining, felling and crafting rules live in core
+## (World.player_*); the interface only shows them. Each rule is checked in core, then through the interface.
+func _dvw_a12() -> void:
+	main.new_game()
+	_dvw_a12_mining()
+
+
+## A clean pack for one rule's checks; returns what to restore.
+func _fresh_pack() -> Dictionary:
+	var p: PlayerState = main.world.player
+	var keep := {"inv": p.inv, "tool": p.tool, "skills": p.skills.duplicate(), "pos": p.pos}
+	p.inv = Inventory.new()
+	p.tool = ""
+	p.skills = {}
+	return keep
+
+
+## The middle of an open cell next to `cell` from which it is in reach.
+func _beside(cell: Vector2i) -> Vector2:
+	for dd in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1)]:
+		var at := Vector2(cell + dd) + Vector2(0.5, 0.5)
+		if not main.map.is_solid(cell + dd) and main.world.reaches(at, Vector2(cell) + Vector2(0.5, 0.5)):
+			return at
+	return Vector2(cell) + Vector2(0.5, 1.5)
+
+
+func _restore_pack(keep: Dictionary) -> void:
+	var p: PlayerState = main.world.player
+	p.inv = keep.inv
+	p.tool = keep.tool
+	p.skills = keep.skills
+	p.pos = keep.pos
+
+
+## R1: a pickaxe is needed, gold needs Mining 3, the swing time, the ore to the pack (or set down), the wear, a broken
+## pickaxe leaving the hand, 8 xp an ore, the ledger count, the seam's fall kept over a save.
+func _dvw_a12_mining() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var seam := {"x": 0, "y": 0, "ore": "iron_ore", "amount": 5}
+	var gold := {"x": 0, "y": 0, "ore": "gold_ore", "amount": 5}
+	var mp := w.player_mine_plan(seam)
+	check(not mp.ok and str(mp.why) == "Requires a pickaxe. The smith sells them.", "DVW-A12 R1: no pickaxe, no mining (%s)" % str(mp.get("why", "")))
+	p.inv.add("rusty_pickaxe")
+	p.inv.add("pickaxe")
+	mp = w.player_mine_plan(gold)
+	check(not mp.ok and str(mp.why) == "Gold needs Mining level 3.", "DVW-A12 R1: gold needs Mining 3 before the swing starts")
+	mp = w.player_mine_plan(seam)
+	var want := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item("pickaxe").get("speed", 1.0))
+	check(mp.ok and str(mp.tool) == "pickaxe" and is_equal_approx(float(mp.secs), want), "DVW-A12 R1: the best pickaxe in the pack, and the swing time by its speed (%s)" % str(mp))
+	p.skills = {"mining": Skills.xp_for_level(3)}
+	check(w.player_mine_plan(gold).ok and is_equal_approx(float(w.player_mine_plan(seam).secs), want * Skills.value(p, "mining", "mine_time", 1.0)), "DVW-A12 R1: at Mining 3 gold can be mined, and the swing takes the Mining time")
+	p.skills = {}
+	var mined0 := float(w.stats.get("mined_iron_ore", 0.0))
+	var r := w.player_mine(seam, "pickaxe")
+	check(r.result == "ok" and not r.full and p.inv.count("iron_ore") == int(r.n) and int(seam.amount) == 5 - int(r.n), "DVW-A12 R1: the ore goes into the pack and comes out of the seam (%s)" % str(r))
+	check(float(w.stats.get("mined_iron_ore", 0.0)) - mined0 == float(r.n) and int(p.skills.get("mining", 0)) == 8 * int(r.n), "DVW-A12 R1: counted (mined_) and 8 xp an ore")
+	check(int(p.inv.durability.get("pickaxe", 0)) == int(GameData.item("pickaxe").durability) - 1, "DVW-A12 R1: the swing wears the pickaxe by one")
+	check(w.player_mine(gold, "pickaxe").result == "gold" and int(gold.amount) == 5, "DVW-A12 R1: the swing itself refuses gold below Mining 3, and takes nothing")
+	# a broken pickaxe leaves the hand
+	p.tool = "pickaxe"
+	p.inv.durability["pickaxe"] = 1
+	r = w.player_mine(seam, "pickaxe")
+	check(r.result == "ok" and r.broke and not p.inv.has("pickaxe") and p.tool == "", "DVW-A12 R1: a pickaxe that breaks is gone from the pack and the hand")
+	check(w.player_mine_plan(seam).tool == "rusty_pickaxe", "DVW-A12 R1: the next swing takes the other pickaxe")
+	# a full pack: the ore is set down, not lost
+	p.inv.remove("iron_ore", p.inv.count("iron_ore"))
+	p.inv.add("log", 1)
+	p.inv.max_stacks = p.inv.ids().size()
+	var loot0 := w.loot.size()
+	r = w.player_mine(seam, "rusty_pickaxe")
+	check(r.result == "ok" and r.full and w.loot.size() == loot0 + 1 and (w.loot[-1].inv as Inventory).count("iron_ore") == int(r.n), "DVW-A12 R1: with a full pack the ore is set down at the player's feet (%s)" % str(r))
+	w.loot.remove_at(w.loot.size() - 1)
+	main._sync_loot()
+	seam.amount = 0
+	check(w.player_mine(seam, "rusty_pickaxe").result == "out", "DVW-A12 R1: a worked-out seam gives nothing")
+	# through the interface: core's refusal is shown, and a real seam is mined by the action
+	p.inv = Inventory.new()
+	var d: Dictionary = w.nearest_deposit(Vector2i(p.pos), ["stone", "iron_ore", "coal"])
+	p.pos = _beside(Vector2i(int(d.x), int(d.y)))
+	main.target = {"kind": "deposit", "dep": d, "label": "Mine"}
+	main._use()
+	check(main.action.is_empty() and main.ui.toast.text.contains("Requires a pickaxe"), "DVW-A12 R1: the interface shows core's refusal and starts nothing (%s)" % main.ui.toast.text)
+	p.inv.add("pickaxe")
+	var left := int(d.amount)
+	main.target = {"kind": "deposit", "dep": d, "label": "Mine"}
+	main._use()
+	check(not main.action.is_empty() and is_equal_approx(float(main.action.total), want), "DVW-A12 R1: the interface starts a swing of core's time")
+	_finish_action()
+	check(int(d.amount) < left and p.inv.count(str(d.ore)) >= 1, "DVW-A12 R1: the finished swing mines the seam (%d -> %d)" % [left, int(d.amount)])
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(int(w2.deposit_at(Vector2i(int(d.x), int(d.y))).amount) == int(d.amount), "DVW-A12 R1: the mined seam is saved as it was left")
+	_restore_pack(keep)
 

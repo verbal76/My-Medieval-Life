@@ -1221,6 +1221,34 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 	return {"result": "ok", "up": Skills.gain(who, str(r.skill), int(r.xp))}
 
 
+## DVW-A12 R1: whether the player may start mining seam or boulder `d`, and how long the swing takes. A pickaxe is
+## needed (the best one in the pack), and gold ore needs Mining level 3 (work_mine checks it again at the swing).
+## The time: balance.json mine_minutes at the game's speed, by the pickaxe's speed and the Mining mine_time effect.
+## Returns {ok: true, tool, secs} or {ok: false, why}.
+func player_mine_plan(d: Dictionary) -> Dictionary:
+	var p := player
+	var pick := p.tool_of("pickaxe")
+	if pick == "":
+		return {"ok": false, "why": "Requires a pickaxe. The smith sells them."}
+	if str(d.get("ore", "")) == "gold_ore" and not Skills.has(p, "mining", "gold"):
+		return {"ok": false, "why": "Gold needs Mining level 3."}
+	var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0)) * Skills.value(p, "mining", "mine_time", 1.0)
+	return {"ok": true, "tool": pick, "secs": secs}
+
+
+## DVW-A12 R1: the player's swing at seam `d` with pickaxe `tool`, when the swing's time is up: work_mine, as a miner's
+## (PAR-01), into the pack (a full pack sets the ore down: `full`); a broken pickaxe leaves the hand empty.
+## Returns work_mine's result plus `full` (the pack could not take the ore).
+func player_mine(d: Dictionary, tool: String) -> Dictionary:
+	var p := player
+	var full := not p.inv.can_add(str(d.get("ore", "stone")))
+	var r := work_mine(p, d, p.inv, tool)
+	r["full"] = full
+	if r.result == "ok" and r.broke and p.tool == tool:
+		p.tool = ""
+	return r
+
+
 ## PAR-01: a blow of `dmg` (the attacker's, after their own Combat effects) landing on villager `n`: their Combat
 ## damage_taken, then half their armour, as the player's damage_player applies the player's. Returns what it took.
 func harm_npc(n: NPC, dmg: float) -> float:

@@ -2416,31 +2416,25 @@ func _use() -> void:
 				world.loot.remove_at(target.i)
 		"deposit":
 			var dep: Dictionary = target.dep
-			var pick := p.tool_of("pickaxe")
-			if pick == "":
-				ui.message("Requires a pickaxe. The smith sells them.")
+			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
+			if not mp.ok:
+				ui.message(str(mp.why))
 				return
-			if dep.ore == "gold_ore" and not Skills.has(p, "mining", "gold"):
-				ui.message("Gold needs Mining level 3.")
-				return
-			var secs := float(GameData.b("mine_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6 / float(GameData.item(pick).get("speed", 1.0)) * Skills.value(p, "mining", "mine_time", 1.0)
-			start_action("Mining", secs, func():
-				var full := not p.inv.can_add(str(dep.get("ore", "stone")))
-				var r := world.work_mine(p, dep, p.inv, pick)          # the same swing as a miner's (PAR-01)
+			var pick: String = mp.tool
+			start_action("Mining", float(mp.secs), func():
+				var r := world.player_mine(dep, pick)                  # the same swing as a miner's (PAR-01)
 				if r.result == "out":
 					ui.message("The seam is worked out.")
 					return
 				if r.result == "gold":
 					ui.message("Gold needs Mining level 3.")
 					return
-				if full:
+				if r.full:
 					ui.message("Your pack is full: the ore is left at your feet.")
 				else:
 					_gain("+%d %s" % [int(r.n), GameData.item_name(str(r.ore))], str(r.ore))
 				if r.broke:
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
-					if p.tool == pick:
-						p.tool = ""
 				_level_up("mining", int(r.up)), "swing", pick)
 		"tree":
 			var axe := p.tool_of("axe")
