@@ -1307,7 +1307,7 @@ Rules:
 ### INT-160 · The manor's fields under the shared farming model (FSE-12, FARM-06; behind a switch)
 - **Trigger:** A farmer sows or cuts a manor field while balance `shared_manor_farming` is 1.
 - **Source:** `game/scripts/core/farming.gd::sow_field`, `game/scripts/core/farming.gd::seed_back`, `game/scripts/core/farming.gd::field_work_minutes`, `game/scripts/core/npc_brain.gd::_farmer`, `game/scripts/core/world.gd::hour`, `game/scripts/core/population.gd::populate`
-- **Affects:** Farming, Inventory, Population
+- **Affects:** Fields, Inventory, Households, Ledger
 - **Expected:** (owner, 2026-10-21: behind a test switch, compared before activation; off in the baseline) Sowing takes one wheat seed a cell from the field's farmers' packs, then their households' pantries, as many cells as there is seed; with none the field stays unsown (`field_unsown_no_seed`). The crop is the sown cells times the crop's `yield`, and the cutter gets `seeds_back` seed a sown cell; sowing, cutting and ploughing take the player's time a cell. A new world under the switch starts its farmers with a field's seed between them (a world-setup assumption for the comparison). Off, the old model is untouched: a field yields `field_yield`, sown without seed, the farmer keeping `seed_keep` seed up to `seed_cap`. Seed used and returned are in the ledger (`used_wheat_seed`, `made_wheat_seed`). The comparison runs with `--set shared_manor_farming=1` (economy_sim, and the `set` input of long-sims.yml).
 - **Tests:** `game/tests/world_test.gd::_fse12_shared_fields`
 
@@ -1326,7 +1326,7 @@ Rules:
 | Combat | INT-004, INT-012, INT-013, INT-032, INT-068, INT-088, INT-108, INT-156 |
 | Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051, INT-064, INT-067, INT-068, INT-069, INT-100, INT-102, INT-109, INT-117, INT-146, INT-148 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030, INT-086, INT-113, INT-117, INT-154 |
-| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051, INT-064, INT-067, INT-068, INT-089, INT-122, INT-123, INT-124, INT-125, INT-130, INT-160 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040, INT-057, INT-065, INT-066, INT-067, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-103, INT-106, INT-111, INT-121, INT-140, INT-141, INT-143, INT-145, INT-147, INT-152, INT-156 |
 | Crafting | INT-021, INT-035, INT-036, INT-051, INT-058, INT-067, INT-069, INT-070, INT-073, INT-075, INT-083, INT-092, INT-099, INT-103, INT-107, INT-114, INT-129, INT-132, INT-133, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-151, INT-152, INT-154, INT-156, INT-157 |
 | Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-072, INT-073, INT-075, INT-076, INT-083, INT-103, INT-108, INT-114, INT-116, INT-117, INT-118, INT-119, INT-120, INT-124, INT-125, INT-128, INT-129, INT-131, INT-134, INT-135, INT-136, INT-137, INT-138, INT-139, INT-141, INT-142, INT-143, INT-144, INT-146, INT-147, INT-148, INT-149, INT-151, INT-152, INT-154, INT-156, INT-157, INT-158, INT-159 |
@@ -1335,7 +1335,7 @@ Rules:
 | Wages | INT-023, INT-029, INT-059, INT-066, INT-083 |
 | Relief | INT-024, INT-047, INT-066, INT-159 |
 | Granary | INT-024, INT-025, INT-031, INT-047, INT-054, INT-066, INT-089, INT-159 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054, INT-059, INT-060, INT-062, INT-064, INT-066, INT-072, INT-073, INT-075, INT-078, INT-079, INT-080, INT-093, INT-095, INT-096, INT-100, INT-102, INT-118, INT-119, INT-134, INT-135, INT-136, INT-138, INT-141, INT-142, INT-143, INT-145, INT-146, INT-147, INT-148, INT-151, INT-152, INT-153, INT-155, INT-158, INT-159, INT-160 |
 | Employment | INT-017, INT-023, INT-028, INT-029, INT-037, INT-046, INT-047, INT-055, INT-059, INT-063, INT-066, INT-067, INT-074, INT-075, INT-078, INT-080, INT-083, INT-084, INT-085, INT-089, INT-112, INT-114, INT-119, INT-133, INT-135, INT-136, INT-137, INT-139, INT-154, INT-155, INT-156 |
 | Inheritance | INT-017, INT-062, INT-075, INT-080, INT-151 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051, INT-067, INT-077, INT-081, INT-113, INT-126, INT-127, INT-128, INT-137, INT-145 |
@@ -1343,7 +1343,7 @@ Rules:
 | Bandits | INT-012, INT-014, INT-050, INT-149, INT-153, INT-154 |
 | Building | INT-018, INT-026, INT-030, INT-031, INT-036, INT-048, INT-051, INT-052, INT-054, INT-056, INT-057, INT-059, INT-060, INT-065, INT-066, INT-067, INT-069, INT-070, INT-079, INT-090, INT-091, INT-092, INT-093, INT-094, INT-119, INT-126, INT-130, INT-132, INT-133, INT-148, INT-151, INT-152, INT-153, INT-158 |
 | Workshops | INT-021, INT-030, INT-058, INT-085, INT-092, INT-107 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-030, INT-046, INT-054, INT-065, INT-066, INT-083, INT-125, INT-149, INT-151, INT-152, INT-154, INT-160 |
 | Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048, INT-059, INT-060, INT-062, INT-066, INT-067, INT-070, INT-071, INT-074, INT-075, INT-076, INT-077, INT-082, INT-084, INT-086, INT-087, INT-094, INT-098, INT-104, INT-105, INT-115, INT-116, INT-120, INT-126, INT-128, INT-130, INT-132, INT-134, INT-146, INT-148, INT-149, INT-150, INT-151, INT-153, INT-154, INT-156 |
 | Interface | INT-001, INT-002, INT-004, INT-012, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052, INT-057, INT-058, INT-061, INT-062, INT-066, INT-068, INT-069, INT-070, INT-071, INT-074, INT-076, INT-077, INT-078, INT-081, INT-082, INT-084, INT-085, INT-086, INT-087, INT-088, INT-095, INT-096, INT-097, INT-098, INT-100, INT-112, INT-140, INT-142, INT-146, INT-148, INT-149, INT-150 |
 | Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055, INT-100, INT-101, INT-104, INT-146 |
