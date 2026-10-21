@@ -22157,11 +22157,13 @@
    "acceptance": [
     "Written audit of what exists, with code references"
    ],
-   "implementation": "",
+   "implementation": "docs/BUILD_16_STATUS.md, findings for the owner's sections 1-8 (seeds and propagation)",
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "38b987e"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -22188,6 +22190,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED",
      "why": "The audit is written (BUILD_16_STATUS.md, findings for sections 1-8) with code references; the work it found is SEED-02..04"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 38b987e; implementation",
+     "why": "Evidence: the written audit in docs/BUILD_16_STATUS.md (findings for sections 1-8)"
     }
    ],
    "target_build": "16",
