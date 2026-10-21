@@ -2286,6 +2286,8 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			_button("Agree", func():
 				var why := k.accept_offer(cc)
 				done.call(why if why != "" else "Agreed: %d %s for %s." % [int(cc.qty), item, n.name]), true, h)
+			_button("Counter", func():
+				show_contract(n, {"counter": int(cc.id), "item": str(cc.item), "qty": int(cc.qty), "price": int(cc.price_each), "days": int(cc.days)}), true, h)
 			_button("Decline", func():
 				k.decline_offer(cc)
 				done.call(""), true, h)
@@ -2309,7 +2311,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			_button("Withdraw", func(): done.call(k.cancel(cc, World.PLAYER)), true, h)
 	if not reply.is_empty():
 		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
-		if str(reply.answer) == "counter":
+		if str(reply.answer) == "counter" and not reply.get("from_buyer", false):     # a buyer's counter is its standing offer, above
 			var ct: Dictionary = t.duplicate()
 			ct.qty = int(reply.qty)
 			ct.price = int(reply.price_each)
@@ -2321,6 +2323,9 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 					show_contract(n, {}, r2)
 				else:
 					show_contract(n, ct, r2))
+	if t.has("counter"):
+		_counter_terms(n, t)
+		return
 	_label("Propose a contract: what you want from %s, how many, the price for each and how many days they have. Your coins for it are set aside when they agree, and paid as the goods come." % n.name, 16)
 	var all: bool = t.get("all", false)
 	var grid := GridContainer.new()
@@ -2355,28 +2360,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 		nt.all = not all
 		show_contract(n, nt))
 	if str(t.get("item", "")) != "":
-		var step := func(key: String, by: int, hi: int) -> void:
-			var nt: Dictionary = t.duplicate()
-			nt[key] = clampi(int(nt[key]) + by, 1, hi)
-			show_contract(n, nt)
-		for row in [["Quantity", "qty", 999, [-10, -1], [1, 10]], ["Price each", "price", 999, [-1], [1]], ["Days", "days", int(Contracts.cfg().max_days), [-1], [1]]]:
-			var h := HBoxContainer.new()
-			h.alignment = BoxContainer.ALIGNMENT_CENTER
-			panel_body.add_child(h)
-			var key: String = row[1]
-			var hi: int = row[2]
-			for by in row[3]:
-				var bb: int = by
-				_button(str(bb), func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
-			var l := Label.new()
-			l.text = "%s: %d" % [row[0], int(t[key])]
-			l.custom_minimum_size = Vector2(200, 0)
-			l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			l.add_theme_font_size_override("font_size", 20)
-			h.add_child(l)
-			for by in row[4]:
-				var bb: int = by
-				_button("+%d" % bb, func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
+		_term_steppers(n, t)
 		var total := int(t.qty) * int(t.price)
 		_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), GameData.item_name(str(t.item)).to_lower(), int(t.price), total,
 				w.day() + int(t.days)], 18)
@@ -2388,6 +2372,50 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			else:
 				show_contract(n, t, r), p.coins >= total)
 	_button("Back", func(): _talk_view(n, Dialogue.opening(w, n)))
+
+
+## The quantity, price-each and days rows of the contract window, each with - and + buttons (touch, pad, keyboard).
+func _term_steppers(n: NPC, t: Dictionary) -> void:
+	var step := func(key: String, by: int, hi: int) -> void:
+		var nt: Dictionary = t.duplicate()
+		nt[key] = clampi(int(nt[key]) + by, 1, hi)
+		show_contract(n, nt)
+	for row in [["Quantity", "qty", 999, [-10, -1], [1, 10]], ["Price each", "price", 999, [-1], [1]], ["Days", "days", int(Contracts.cfg().max_days), [-1], [1]]]:
+		var h := HBoxContainer.new()
+		h.alignment = BoxContainer.ALIGNMENT_CENTER
+		panel_body.add_child(h)
+		var key: String = row[1]
+		var hi: int = row[2]
+		for by in row[3]:
+			var bb: int = by
+			_button(str(bb), func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
+		var l := Label.new()
+		l.text = "%s: %d" % [row[0], int(t[key])]
+		l.custom_minimum_size = Vector2(200, 0)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.add_theme_font_size_override("font_size", 20)
+		h.add_child(l)
+		for by in row[4]:
+			var bb: int = by
+			_button("+%d" % bb, func(): step.call(key, bb, hi), true, h).custom_minimum_size = Vector2(64, 48)
+
+
+## CON-01: the player's counter to a villager's standing offer (the player supplies): the goods are the villager's to
+## name, the quantity, price and days the player's to put back. The villager answers by Contracts.counter_offer.
+func _counter_terms(n: NPC, t: Dictionary) -> void:
+	var w: World = main.world
+	var k: Contracts = w.contracts
+	var item := GameData.item_name(str(t.item)).to_lower()
+	_label("Your terms for supplying %s with %s: how many, the price for each and the days you need." % [n.name, item], 16)
+	_term_steppers(n, t)
+	_label("%d %s at %d each = %d coins, by the end of day %d." % [int(t.qty), item, int(t.price), int(t.qty) * int(t.price), w.day() + int(t.days)], 18)
+	_button("Put these terms to %s" % n.name, func():
+		var r := k.counter_offer(k.get_contract(int(t.counter)), int(t.qty), int(t.price), int(t.days))
+		r.from_buyer = true
+		if r.has("contract"):
+			message("Contract made: you supply %d %s to %s." % [int(t.qty), item, n.name])
+		show_contract(n, {}, r))
+	_button("Back", func(): show_contract(n))
 
 
 ## What the player can give: food, flowers, ale, clothes, jewellery, medicine and useful things in the pack

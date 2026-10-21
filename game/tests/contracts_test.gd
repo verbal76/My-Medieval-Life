@@ -36,6 +36,14 @@ func _init() -> void:
 	test_death_of_a_party()
 	test_save_and_load()
 	test_parity()
+	test_evaluation_terms()
+	test_time_counter()
+	test_buyer_answers()
+	test_npc_meets_counter()
+	test_player_counters_npc_offer()
+	test_offer_saved_and_older_saves()
+	test_determinism()
+	test_signing()
 	# the talk window, in the game itself (its buttons are what touch, pad and keyboard press)
 	DirAccess.make_dir_recursive_absolute("user://test_saves/contracts_test")
 	main = load("res://scenes/main.tscn").instantiate()
@@ -117,6 +125,19 @@ func test_window() -> void:
 	check(_press("Cancel") and str(c.state) == "cancelled" and coins(w) == c0, "and may cancel: the rest comes back")
 	ui.show_talk(m)
 	check(_press("Propose a contract"), "with nothing open the choice reads \"Propose a contract\" again")
+	# a villager's standing order to the player, countered in the window (NPC to player, counters both ways)
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.coins = 5000
+	w.player.pos = smith.pos
+	var off: Dictionary = w.contracts.offer_to_player(smith, "coal", 10, 8, 3)
+	ui.show_contract(smith)
+	check(_shows("asks you for 10 coal") and _press("Counter"), "the offer is listed with Agree, Counter and Decline")
+	for i in 20:
+		_press_on("Price each", "+1")
+	check(_shows("Price each: 28") and _press("Put these terms"), "the player raises the price and puts the terms back")
+	check(str(off.state) == "offered" and int(off.price_each) == floori(8 * float(Contracts.cfg().npc_counter_tolerance)) and _shows("most I'd pay"),
+			"the smith counters with the most it pays; the offer now stands on those terms")
+	check(_press("Agree") and str(off.state) == "accepted" and int(off.reserved) == 10 * int(off.price_each), "agreeing to it face to face opens the contract")
 	ui.hide_all()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -132,7 +153,15 @@ func miner(w: World) -> NPC:
 	var m: NPC = w.brain._first_with_job("miner")
 	if not m.inv.has("pickaxe"):
 		m.inv.add("pickaxe")
+	w.player.pos = m.pos          # face to face (Q18-13: formal contracts are signed in person); far() parts them
 	return m
+
+
+## Send the player far from everyone (no one is face to face with them).
+func far(w: World) -> void:
+	w.player.pos = Vector2(2, 2)
+	while not w.present(w.player.pos, float(Contracts.cfg().sign_reach)).is_empty():
+		w.player.pos += Vector2(3, 0)
 
 
 func coins(w: World) -> int:
@@ -323,6 +352,7 @@ func test_npc_to_npc() -> void:
 	miner(w)
 	var c0 := coins(w)
 	check(w.contracts.order_input(smith), "the smith places an order")
+	_sign_pending(w, smith)
 	var mine: Array = w.contracts.open_of(World.npc_ref(smith.id), "buyer")
 	check(not mine.is_empty() and str(mine[0].item) == "coal", "a smith with no coal and nobody selling any orders it from another villager")
 	if mine.is_empty():
@@ -336,6 +366,14 @@ func test_npc_to_npc() -> void:
 	check(w.contracts.npc_deliver(s, int(c.id)) and smith.inv.count("coal") == sc + int(c.qty) and str(c.state) == "fulfilled", "the coal is delivered and paid")
 	check(coins(w) == c0, "and coins are conserved")
 	check(not w.contracts.order_input(smith) or str(w.contracts.list[-1].item) != "coal", "a smith holding coal orders no more of it")
+
+
+## A formal order made at a distance waits to be signed: the buyer walks to the seller (here: put beside it) and signs.
+func _sign_pending(w: World, b: NPC) -> void:
+	for c in w.contracts.list.duplicate():
+		if str(c.state) == "signing" and c.buyer == World.npc_ref(b.id):
+			b.pos = w.npc(World.ref_id(c.seller)).pos
+			w.contracts.npc_sign(b, int(c.id))
 
 
 func test_npc_offer_to_player() -> void:
@@ -353,6 +391,7 @@ func test_npc_offer_to_player() -> void:
 	var c: Dictionary = offers[0]
 	var c0 := coins(w)
 	var sm := smith.coins
+	w.player.pos = smith.pos
 	check(w.contracts.accept_offer(c) == "" and str(c.state) == "accepted" and smith.coins == sm - int(c.reserved), "the player accepts; the smith's coins are set aside")
 	w.player.inv.add("coal", 1)
 	var pc := w.player.coins
@@ -429,3 +468,315 @@ func test_parity() -> void:
 	w.relations.tie(Life.PLAYER_ID, m.id).friends = true
 	var f := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 2, 3)
 	check(int(f.min_price) <= int(a.min_price), "a friend is asked no more (%d, a stranger %d)" % [int(f.min_price), int(a.min_price)])
+
+
+## Each of the directive's questions is weighed and on record (evaluate's terms): obligations, household needs,
+## competing opportunities (its usual earnings), the relationship and risk.
+func test_evaluation_terms() -> void:
+	var w := new_world()
+	w.player.coins = 5000
+	var m := miner(w)
+	var smith: NPC = w.brain._first_with_job("smith")
+	m.income_days = []
+	var a := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 2, 3)
+	var t: Dictionary = a.terms
+	check(t.has("obligations") and t.has("household") and t.has("alternatives") and t.has("relationship") and t.has("risk") and t.has("going"),
+			"the answer records every term it weighed (%s)" % str(t.keys()))
+	m.income_days = [400, 400, 400, 400, 400]
+	var b := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 2, 3)
+	check(float(b.terms.alternatives) > float(t.alternatives) and int(b.min_price) > int(a.min_price),
+			"a villager who earns well in its own trade asks more for the same work (%d, idle %d)" % [int(b.min_price), int(a.min_price)])
+	var purse := m.coins
+	m.coins = 0
+	var needy := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 2, 3)
+	m.coins = 100000
+	var rich := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 2, 3)
+	m.coins = purse
+	check(int(needy.min_price) <= int(rich.min_price) and float(rich.terms.household) == float(Contracts.cfg().comfortable_factor),
+			"a household short of its needs takes less than one with its reserve covered (%d, %d)" % [int(needy.min_price), int(rich.min_price)])
+	var stranger := w.contracts.evaluate(m, World.npc_ref(smith.id), "iron_ore", 3, 2, 3)
+	var old_partner := m.partner
+	m.partner = smith.id
+	var kin := w.contracts.evaluate(m, World.npc_ref(smith.id), "iron_ore", 3, 2, 3)
+	m.partner = old_partner
+	check(bool(kin.terms.close) and not bool(stranger.terms.close) and int(kin.min_price) < int(stranger.min_price),
+			"a partner is given a friend's price (%d, a stranger %d)" % [int(kin.min_price), int(stranger.min_price)])
+	var c: Dictionary = w.contracts.propose(World.PLAYER, m, "iron_ore", 1, int(b.min_price), 3).get("contract", {})
+	check(not c.is_empty() and w.contracts.cancel(c, World.PLAYER) == "", "the player orders and then cancels")
+	var after := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 2, 3)
+	check(int(after.terms.cancelled_on_me) == 1 and float(after.terms.risk) > 0.0 and int(after.min_price) > int(b.min_price),
+			"a buyer who ended a contract early is asked more: risk (%d, before %d)" % [int(after.min_price), int(b.min_price)])
+	var quit: Dictionary = w.contracts.propose(World.PLAYER, m, "coal", 1, 500, 3).get("contract", {})
+	if not quit.is_empty():
+		w.contracts.cancel(quit, World.npc_ref(m.id))
+	check(int(w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 2, 3).terms.cancelled_on_me) == 1, "a seller's own withdrawal is not held against the buyer")
+	w.manor_orders.append({"smith": smith.id, "tool": "axe", "for": m.id, "paid": 0, "day": w.day()})
+	var ob: Dictionary = w.contracts.obligations(smith)
+	check(int(ob.tool_orders) == 1 and int(ob.contracts) == 0 and not bool(ob.manor_job), "a smith's manor tool orders count among its obligations")
+	var e := w.contracts.evaluate(smith, World.PLAYER, "iron_ore", 1, 50, 3)
+	check((e.terms.get("obligations", {}) as Dictionary).has("tool_orders"), "and are weighed in its answer")
+
+
+## Time: a villager whose working day is nearly over cannot promise ore by tonight, and asks for more days.
+func test_time_counter() -> void:
+	var w := new_world()
+	w.player.coins = 500
+	var m := miner(w)
+	m.inv.remove("iron_ore", m.inv.count("iron_ore"))
+	var day0 := float(w.day()) * World.DAY
+	w.minutes = day0 + (NPCBrain.WORK_END - 0.05) * 60.0
+	var r := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 50, 1)
+	check(str(r.answer) == "counter" and int(r.days) > 1 and int(r.qty) == 3, "at the end of the working day 3 ore by tonight is countered with more days: \"%s\"" % str(r.say))
+	w.minutes = day0 + 8.0 * 60.0
+	var r2 := w.contracts.evaluate(m, World.PLAYER, "iron_ore", 3, 50, 1)
+	check(str(r2.answer) == "accept", "in the morning the same offer is accepted (\"%s\")" % str(r2.say))
+
+
+## The buyer's side: the one rule a villager buyer answers a seller's terms by.
+func test_buyer_answers() -> void:
+	var w := new_world()
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.coins = 5000
+	var k := w.contracts
+	var tol := float(Contracts.cfg().npc_counter_tolerance)
+	var a := k.buyer_answer(smith, "coal", 10, 8, 4, 10, 8, 3)
+	check(str(a.answer) == "accept", "its own terms are agreed")
+	a = k.buyer_answer(smith, "coal", 10, 8, 4, 10, floori(8 * tol), 3)
+	check(str(a.answer) == "accept", "a price within npc_counter_tolerance is agreed")
+	a = k.buyer_answer(smith, "coal", 10, 8, 4, 10, 30, 3)
+	check(str(a.answer) == "counter" and int(a.price_each) == floori(8 * tol) and str(a.say).contains("most"), "a dearer price is countered with the most it pays: \"%s\"" % str(a.say))
+	a = k.buyer_answer(smith, "coal", 10, 8, 4, 2, 8, 3)
+	check(str(a.answer) == "reject" and str(a.say).contains("no use"), "fewer than it can use is refused: \"%s\"" % str(a.say))
+	a = k.buyer_answer(smith, "coal", 10, 8, 4, 25, 8, 3)
+	check(str(a.answer) == "counter" and int(a.qty) == 10, "more than it asked for is countered with what it wants")
+	a = k.buyer_answer(smith, "coal", 10, 8, 4, 10, 8, 99)
+	check(str(a.answer) == "counter" and int(a.days) == int(Contracts.cfg().max_days), "too long a wait is countered with max_days")
+	smith.coins = w.reserve_of(smith) + 20
+	a = k.buyer_answer(smith, "coal", 10, 8, 1, 10, 8, 3)
+	check(str(a.answer) == "counter" and int(a.qty) * 8 <= 20 and str(a.say).contains("pay for"), "it sets aside only coins above its household's reserve: \"%s\"" % str(a.say))
+	smith.coins = w.reserve_of(smith)
+	a = k.buyer_answer(smith, "coal", 10, 8, 1, 10, 8, 3)
+	check(str(a.answer) == "reject", "with nothing to spare it refuses")
+
+
+## NPC to NPC: a business's order countered by the seller is met when the counter is within what it pays.
+func test_npc_meets_counter() -> void:
+	var w := new_world()
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.coins = 5000
+	var m := miner(w)
+	m.inv.remove("coal", m.inv.count("coal"))
+	m.income_days = [60, 60, 60, 60, 60]
+	smith.pos = m.pos                # face to face, so a formal contract is signed at once
+	var least := int(w.contracts.evaluate(m, World.npc_ref(smith.id), "coal", 4, 1, 3).min_price)
+	var tol := float(Contracts.cfg().npc_counter_tolerance)
+	var price := maxi(1, floori(float(least) / tol))
+	while floori(float(price) * tol) < least:
+		price += 1
+	var c0 := coins(w)
+	var r := w.contracts.propose(World.npc_ref(smith.id), m, "coal", 4, price, 3)
+	check(price < least and str(r.answer) == "counter", "the miner counters a price under its least (%d < %d): \"%s\"" % [price, least, str(r.get("say", ""))])
+	if str(r.answer) == "counter":
+		check(w.contracts.meet_counter(smith, m, "coal", 4, price, 1, r), "the smith meets the counter, within its tolerance")
+		var mine: Array = w.contracts.open_of(World.npc_ref(smith.id), "buyer")
+		var c: Dictionary = mine[-1] if not mine.is_empty() else {}
+		check(not c.is_empty() and int(c.price_each) == least and int(c.reserved) == int(c.qty) * least and (c.history as Array).size() == 4 and coins(w) == c0,
+				"the contract opens at the counter's price, the coins set aside, the talk on record")
+	var w2 := new_world()
+	var smith2: NPC = w2.brain._first_with_job("smith")
+	smith2.coins = 5000
+	var m2 := miner(w2)
+	m2.income_days = [60, 60, 60, 60, 60]
+	var r2 := w2.contracts.propose(World.npc_ref(smith2.id), m2, "coal", 4, 1, 3)
+	check(least <= 1 or (str(r2.answer) == "counter" and not w2.contracts.meet_counter(smith2, m2, "coal", 4, 1, 1, r2) and w2.contracts.list.is_empty()),
+			"a counter far above what it pays is not met; nothing opens")
+
+
+## NPC to player, with counters both ways: the player puts other terms to a villager's standing offer.
+func test_player_counters_npc_offer() -> void:
+	var w := new_world()
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.coins = 5000
+	var k := w.contracts
+	w.player.pos = smith.pos
+	var c := k.offer_to_player(smith, "coal", 10, 8, 3)
+	check(str(c.state) == "offered" and int(c.reserved) == 0 and k.reserved_total() == 0, "a villager's offer to the player sets nothing aside yet")
+	var c0 := coins(w)
+	var unit := maxi(1, w.brain.batch_unit(smith, "coal"))
+	if unit > 1:
+		var low := k.counter_offer(c, unit - 1, 8, 3)
+		check(str(low.answer) == "reject" and str(c.state) == "offered" and int(c.qty) == 10 and int(c.price_each) == 8, "too few is refused and the offer stands as it was")
+	var dear := k.counter_offer(c, 10, 40, 3)
+	var top := floori(8 * float(Contracts.cfg().npc_counter_tolerance))
+	check(str(dear.answer) == "counter" and int(c.price_each) == top and str(c.state) == "offered" and k.reserved_total() == 0,
+			"a price far above its own is countered: the offer now stands at %d each, still nothing set aside" % int(c.price_each))
+	var ok := k.counter_offer(c, 10, top, 4)
+	check(str(ok.answer) == "accept" and ok.has("contract") and str(c.state) == "accepted" and int(c.reserved) == 10 * top and int(c.days) == 4,
+			"the player's terms within what it pays are agreed: the contract opens, its coins set aside")
+	check(coins(w) == c0 and str(k.counter_offer(c, 10, top, 4).answer) == "refused", "coins only moved; an accepted offer takes no more counters")
+	w.player.inv.add("coal", 3)
+	var pc := w.player.coins
+	check(k.deliver(c, 3) == 3 and w.player.coins == pc + 3 * top and k.deliver(c, 3) == 0, "the player delivers and is paid once (no second payment for the same goods)")
+	var sm := smith.coins
+	check(k.cancel(c, World.PLAYER) == "" and smith.coins == sm + 7 * top and int(c.reserved) == 0, "the player withdraws: the smith's set-aside coins for the rest come back")
+	check(coins(w) == c0, "every coin only moved (%d)" % (coins(w) - c0))
+	var d := k.offer_to_player(smith, "coal", 10, 8, 3)
+	k.counter_offer(d, 10, 40, 3)
+	w.minutes += World.DAY * 3
+	k.dawn()
+	check(str(d.state) == "cancelled" and int(d.reserved) == 0, "a countered offer not taken up is withdrawn after offer_days, nothing held")
+
+
+## Open contracts and standing offers survive a save and load; saves from before (Build 16, and early Build 17
+## records without the newer keys) load.
+func test_offer_saved_and_older_saves() -> void:
+	var w := new_world()
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.coins = 5000
+	w.player.coins = 500
+	var offer := w.contracts.offer_to_player(smith, "coal", 10, 8, 3)
+	var m := miner(w)
+	var open: Dictionary = w.contracts.propose(World.PLAYER, m, "iron_ore", 4, 20, 3).get("contract", {})
+	check(not open.is_empty(), "a contract is open before saving")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	var o2: Dictionary = w2.contracts.get_contract(int(offer.id))
+	check(str(o2.get("state", "")) == "offered" and not w2.contracts.get_contract(int(open.get("id", -1))).is_empty() and w2.total_coins() == w.total_coins(),
+			"an open contract and a standing offer are saved and loaded, every coin there")
+	w2.player.pos = w2.npc(smith.id).pos
+	var ok := w2.contracts.counter_offer(o2, 10, 8, 3)
+	check(str(ok.answer) == "accept" and int(o2.reserved) == 80, "the loaded offer can still be agreed to")
+	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	for key in ["contracts", "prospecting", "discovery", "underground"]:
+		old.erase(key)
+	old.save_version = 16
+	old.format = "mml-save/16"
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), old)
+	check(w3.contracts.list.is_empty() and w3.contracts.next_id == 1 and w3.contracts.reserved_total() == 0, "a Build 16 save loads with no contracts and nothing set aside")
+	var early: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	for c in early.contracts.list:
+		for key in ["terms", "route", "recipe", "history"]:
+			c.erase(key)
+	var w4 := World.new()
+	w4.load_dict(VillageMap.load_default(), early)
+	var c4: Dictionary = w4.contracts.get_contract(int(open.get("id", -1)))
+	var m4: NPC = w4.npc(m.id)
+	m4.inv.add("iron_ore", 4)
+	check(not c4.is_empty() and str((c4.terms as Dictionary).get("pay", "")) == "on_delivery" and w4.contracts.deliver(c4, 4) == 4 and str(c4.state) == "fulfilled",
+			"an early Build 17 record without the newer keys loads with its defaults and is delivered")
+
+
+## Determinism: the same world and the same day give the same orders, answers and records.
+func test_determinism() -> void:
+	var out := []
+	for i in 2:
+		var w := new_world(3)
+		_clear_item(w, "coal")
+		for o: NPC in w.npcs:
+			if o.job == "smith":
+				o.coins = 800
+		w.contracts.dawn()
+		var e := w.contracts.evaluate(miner(w), World.PLAYER, "iron_ore", 30, 2, 2)
+		out.append(JSON.stringify([w.contracts.to_dict(), e]))
+	check(out[0] == out[1] and out[0].contains("\"id\":1"), "two runs of the same seed make the same contracts and answers")
+
+
+## Q18-13 (owner 2026-10-21): an ordinary small agreement needs no signing; a formal contract (formal_total coins or
+## more) is concluded only face to face, never remotely and at once. Incomplete, rejected, interrupted and completed.
+func test_signing() -> void:
+	var w := new_world()
+	w.player.coins = 1000
+	var m := miner(w)
+	m.inv.remove("iron_ore", m.inv.count("iron_ore"))
+	var formal := int(Contracts.cfg().formal_total)
+	far(w)
+	var c0 := coins(w)
+	var small := w.contracts.propose(World.PLAYER, m, "iron_ore", 1, formal - 1, 3)
+	check(small.has("contract") and int(small.contract.reserved) == formal - 1, "a small agreement (%d coins) is concluded at a distance, unsigned" % (formal - 1))
+	w.contracts.cancel(small.contract, World.PLAYER)
+	var big := w.contracts.propose(World.PLAYER, m, "iron_ore", 2, formal, 3)
+	check(str(big.answer) == "meet" and not big.has("contract") and w.player.coins == 1000 and coins(w) == c0 and w.contracts.reserved_total() == 0,
+			"a formal contract asked for at a distance is not concluded: \"%s\"; nothing set aside" % str(big.get("say", "")))
+	w.player.pos = m.pos
+	big = w.contracts.propose(World.PLAYER, m, "iron_ore", 2, formal, 3)
+	check(big.has("contract") and int(big.contract.reserved) == 2 * formal and coins(w) == c0, "face to face the same contract is signed and the coins set aside")
+	w.contracts.cancel(big.contract, World.PLAYER)
+	# the player as seller of a villager's formal order: accepted only in person
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.coins = 5000
+	var off := w.contracts.offer_to_player(smith, "coal", 10, formal, 3)
+	far(w)
+	check(w.contracts.accept_offer(off) != "" and str(off.state) == "offered" and int(off.reserved) == 0, "the player cannot accept a villager's formal order from afar")
+	w.player.pos = smith.pos
+	check(w.contracts.accept_offer(off) == "" and str(off.state) == "accepted", "in person they can")
+	w.contracts.cancel(off, World.PLAYER)
+
+	# NPC to NPC at a distance: agreed in principle, signed when the buyer reaches the seller
+	var w2 := new_world()
+	var b: NPC = w2.brain._first_with_job("smith")
+	b.coins = 5000
+	var s := miner(w2)
+	s.inv.remove("coal", s.inv.count("coal"))
+	b.pos = s.pos + Vector2(40, 0)
+	if not w2.present(b.pos, 3.0).is_empty() and w2.present(b.pos, 3.0).has(s):
+		b.pos = s.pos + Vector2(0, 40)
+	var c1 := coins(w2)
+	var g1 := goods(w2)
+	var r := w2.contracts.propose(World.npc_ref(b.id), s, "coal", 10, formal, 5)
+	check(r.has("signing") and not r.has("contract"), "a villager's formal order at a distance waits to be signed")
+	if not r.has("signing"):
+		return
+	var p: Dictionary = r.signing
+	check(str(p.state) == "signing" and int(p.reserved) == 0 and w2.contracts.reserved_total() == 0 and b.coins == 5000 and coins(w2) == c1,
+			"nothing is set aside before signing")
+	check(not w2.contracts.waiting_on(World.npc_ref(b.id), "iron_ore") and w2.contracts.waiting_on(World.npc_ref(b.id), "coal"), "the buyer counts it as an order it is waiting on")
+	w2.minutes = float(w2.day()) * World.DAY + 9.0 * 60.0
+	check(w2.contracts.plan(b) and str(b.plan[-1].get("act", "")) == "contract_sign", "the buyer walks to the seller to sign")
+	check(not w2.brain.act(b, "contract_sign", b.plan[-1].args) and str(p.state) == "signing", "not yet face to face: nothing is signed (no remote signing)")
+	b.pos = s.pos
+	check(w2.brain.act(b, "contract_sign", b.plan[-1].args) and str(p.state) == "accepted" and int(p.reserved) == int(p.qty) * int(p.price_each),
+			"face to face it is signed and the buyer's coins set aside (%s)" % str((p.history as Array).map(func(h): return h.what)))
+	check(coins(w2) == c1 and goods(w2) == g1, "signing only set coins aside")
+	s.inv.add("coal", int(p.qty))
+	check(w2.contracts.npc_deliver(s, int(p.id)) and str(p.state) == "fulfilled" and coins(w2) == c1, "completed: delivered and paid")
+
+	# interrupted: the seller dies before signing; and an agreement never signed lapses
+	var w3 := new_world()
+	var b3: NPC = w3.brain._first_with_job("smith")
+	b3.coins = 5000
+	var s3 := miner(w3)
+	b3.pos = s3.pos + Vector2(40, 0)
+	var c3 := coins(w3)
+	var g3 := goods(w3)
+	var p3: Dictionary = w3.contracts.propose(World.npc_ref(b3.id), s3, "coal", 10, formal, 5).get("signing", {})
+	var p4: Dictionary = {}
+	for o: NPC in w3.npcs:
+		if o != s3 and o != b3 and o.alive and o.role == "adult" and o.inv.has("pickaxe"):
+			o.pos = s3.pos + Vector2(0, 60)
+			p4 = w3.contracts.propose(World.npc_ref(b3.id), o, "stone", 10, formal, 5).get("signing", {})
+			break
+	w3.kill(s3, "illness")
+	check(not p3.is_empty() and str(p3.state) == "cancelled" and int(p3.reserved) == 0, "interrupted: the seller dies before signing; the agreement ends")
+	if not p4.is_empty():
+		w3.minutes += World.DAY * int(Contracts.cfg().offer_days)
+		w3.contracts.dawn()
+		check(str(p4.state) == "cancelled" and str(p4.get("why", "")) == "never signed", "an agreement never signed lapses after offer_days")
+	check(w3.contracts.reserved_total() == 0 and coins(w3) == c3, "no reservation made, no coin moved")
+	var g3b := goods(w3)
+	for k in ["coal", "stone"]:
+		check(int(g3b.get(k, 0)) == int(g3.get(k, 0)), "no %s moved" % k)
+
+	# rejected at the meeting: the seller can no longer do it
+	var w4 := new_world()
+	var b4: NPC = w4.brain._first_with_job("smith")
+	b4.coins = 5000
+	var s4 := miner(w4)
+	_clear_item(w4, "coal")
+	b4.pos = s4.pos + Vector2(40, 0)
+	var p5: Dictionary = w4.contracts.propose(World.npc_ref(b4.id), s4, "coal", 10, formal, 5).get("signing", {})
+	s4.inv.remove("pickaxe", s4.inv.count("pickaxe"))
+	b4.pos = s4.pos
+	var c5 := coins(w4)
+	check(not p5.is_empty() and w4.contracts.npc_sign(b4, int(p5.id)) and str(p5.state) == "cancelled" and int(p5.reserved) == 0 and coins(w4) == c5 and b4.coins == 5000,
+			"rejected when they meet (no pickaxe now): the agreement ends, nothing set aside")
