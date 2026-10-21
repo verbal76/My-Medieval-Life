@@ -253,6 +253,9 @@ generated data. One implementation per concern.
   - Decide minor implementation details yourself, document them (`docs/DECISIONS.md`, agent decision) and continue;
     escalate only what changes the game's vision, contradicts an explicit owner decision, adds significant cost, or
     commits to an irreversible architecture.
+  - **Build 17 exception (owner, 2026-10-21, B17-DIR, `docs/directives/2026-10-21_build17_combined_integration_direction.md`):**
+    do not publish a new APK, Windows or Linux distributable without the owner's explicit approval; when Build 17's gate
+    passes, report its readiness and wait.
   - Pushes go only to staging and `wip/*` branches; merging to `main` still needs the owner.
 - **Work preservation (owner, mandatory; a permanent part of the workflow).** Commit completed work
   locally (a local commit is not a push). Never reset or clean a tree in a way that loses work; never
