@@ -603,6 +603,13 @@ static func shared_manor() -> bool:
 	return int(GameData.b("shared_manor_farming")) == 1
 
 
+## FSE-13 (owner, 2026-10-21: comparison first, then owner review): with balance `seasonal_village_farming` 1, the
+## manor's fields follow the player's seasons: sown only in `sow_seasons`, growing an hour's share at `season_rate`
+## (none in winter). Off (0), the old model: a field ripens field_grow_seasons after sowing whatever the season.
+static func seasonal_fields() -> bool:
+	return int(GameData.b("seasonal_village_farming")) == 1
+
+
 static func field_cells(f: Dictionary) -> int:
 	return int(f.w) * int(f.h)
 

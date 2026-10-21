@@ -1212,6 +1212,10 @@ func _farmer(n: NPC) -> bool:
 			var cut := w.farm.field_work_minutes(int(f.get("sown", 0)), "cut") if Farming.shared_manor() else 90.0
 			n.plan = [go(spot), work(cut, "harvest", {"field": f.id}, "work")]
 		"tilled":
+			if Farming.seasonal_fields() and not w.farm.can_sow_now():
+				n.doing = "waiting for the sowing season"     # FSE-13: no sowing in winter, as for the player
+				n.plan = [go(spot), work(60, "", {}, "idle")]
+				return true
 			if Farming.shared_manor() and w.farm.field_seed(f) <= 0:
 				n.doing = "no seed to sow the field"          # FSE-12: no seed, no sowing (no free seed)
 				w.stat("field_unsown_no_seed")
@@ -2151,7 +2155,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"sow":
 			var f := _field(a.field)
-			if f.is_empty() or f.state != "tilled":
+			if f.is_empty() or f.state != "tilled" or (Farming.seasonal_fields() and not w.farm.can_sow_now()):
 				return false
 			if Farming.shared_manor() and w.farm.sow_field(n, f) <= 0:
 				return false

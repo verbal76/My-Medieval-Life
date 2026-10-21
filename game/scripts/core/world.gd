@@ -325,12 +325,7 @@ func _on_hour(h: int) -> void:
 	carts.hour()                       # B14: the attendant unloads the player's cart at a cart stop
 	relations.hour(h)                  # shared hours build friendships and romances (CRT-08)
 	for f in fields:                   # a crop is ripe when it has grown, not at the next sunrise
-		if f.state == "growing" and minutes >= f.ready:
-			f.state = "ripe"
-			# the old field model's fixed yield; under the shared model (FSE-12) the crop of the cells sown (Farming.sow_field)
-			f.crop = int(f.get("sown", 0)) * int(Farming.crops().wheat.yield) if Farming.shared_manor() else int(GameData.b("field_yield"))
-			f.ripe_at = f.ready
-			_field_tiles(f)
+		grow_field(f)
 	if h == 6:
 		_new_day()
 	if h == 17 and last_reeve_day != day():
@@ -1361,6 +1356,20 @@ static func field_cell_tile(base: int, w: int, h: int, i: int, j: int, cols: int
 
 ## Days a sown field takes to ripen: field_grow_seasons calendar seasons (TIME-02). The one place to make it
 ## depend on the season (B8-029's calendar arrives with seasons later: a hook, not a mechanic yet).
+## A field's hour: under FSE-13's switch it grows an hour's share at the season's rate, as the player's crops do; it is
+## ripe when it has grown (not at the next sunrise).
+func grow_field(f: Dictionary) -> void:
+	if f.state == "growing" and Farming.seasonal_fields():
+		f.progress = float(f.get("progress", 0.0)) + farm.season_rate() / (field_grow_days(f) * 24.0)
+		f.ready = 1.0e18 if float(f.progress) < 1.0 else minutes     # (not INF: fields are saved as JSON)
+	if f.state == "growing" and minutes >= f.ready:
+		f.state = "ripe"
+		# the old field model's fixed yield; under the shared model (FSE-12) the crop of the cells sown (Farming.sow_field)
+		f.crop = int(f.get("sown", 0)) * int(Farming.crops().wheat.yield) if Farming.shared_manor() else int(GameData.b("field_yield"))
+		f.ripe_at = f.ready
+		_field_tiles(f)
+
+
 func field_grow_days(_f: Dictionary) -> float:
 	return Life.seasons_to_days(float(GameData.b("field_grow_seasons")))
 
@@ -1375,6 +1384,9 @@ func set_field(f: Dictionary, state: String) -> void:
 	f.state = state
 	if state == "growing":
 		f.ready = minutes + field_grow_days(f) * DAY
+		if Farming.seasonal_fields():     # FSE-13: ripe when its seasonal growth is done (hour())
+			f.progress = 0.0
+			f.ready = 1.0e18
 	elif state == "ripe":
 		f.ripe_at = minutes
 	_field_tiles(f)

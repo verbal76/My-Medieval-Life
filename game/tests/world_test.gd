@@ -496,6 +496,7 @@ func _pl_gameplay() -> void:
 	_pick01_reports()
 	_ctr01_counters()
 	_fse12_shared_fields()
+	_fse13_seasonal_fields()
 	_par03_rest()
 	_pl2_006()
 	_pl2_007()
@@ -863,6 +864,40 @@ func _fse12_shared_fields() -> void:
 	f.erase("sown")
 	w.set_field(f, str(saved.state))
 	GameData.balance["shared_manor_farming"] = keep_sw
+
+
+## FSE-13: behind the switch, the manor's fields keep the player's seasons: no sowing in winter, growth at the season's
+## rate (none in winter, half in autumn). Off, the old model is untouched.
+func _fse13_seasonal_fields() -> void:
+	var w: World = main.world
+	var keep_sw = GameData.balance.get("seasonal_village_farming", 0)
+	GameData.balance["seasonal_village_farming"] = 1
+	var m0 := w.minutes
+	var f: Dictionary = w.fields[1]
+	var saved := f.duplicate(true)
+	var n: NPC = w.field_workers(f)[0]
+	var year := floorf(w.minutes / (World.DAY * float(Life.year_days()))) * World.DAY * float(Life.year_days())
+	var season_days := float(Life.year_days()) / 4.0
+	w.minutes = year + 3.0 * season_days * World.DAY + 8.0 * 60.0          # winter
+	w.set_field(f, "tilled")
+	check(w.season() == "Winter" and not w.brain.act(n, "sow", {"field": f.id}) and f.state == "tilled", "FSE-13: nothing is sown on a manor field in winter (%s)" % w.season())
+	w.minutes = year + 8.0 * 60.0                                         # spring
+	check(w.season() == "Spring" and w.brain.act(n, "sow", {"field": f.id}) and f.state == "growing", "FSE-13: sown in spring")
+	w.grow_field(f)
+	var spring := float(f.progress)
+	w.minutes = year + 2.0 * season_days * World.DAY + 8.0 * 60.0         # autumn
+	w.grow_field(f)
+	var autumn := float(f.progress) - spring
+	w.minutes = year + 3.0 * season_days * World.DAY + 8.0 * 60.0         # winter
+	w.grow_field(f)
+	var winter := float(f.progress) - spring - autumn
+	check(spring > 0.0 and is_equal_approx(autumn, spring * 0.5) and winter == 0.0 and f.state == "growing",
+			"FSE-13: an hour's growth at the season's rate (spring %.4f, autumn %.4f, winter %.4f)" % [spring, autumn, winter])
+	for k in saved:
+		f[k] = saved[k]
+	f.erase("progress")
+	w.minutes = m0
+	GameData.balance["seasonal_village_farming"] = keep_sw
 
 
 func _pick01_reports() -> void:
