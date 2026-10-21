@@ -367,3 +367,49 @@ economic outcome** (WDR-022), not a defect: every loss has a recorded cause and 
 tracing the keeper's daily income and spending would settle it. Also noted, unverified by the lead: most surviving herds
 produced about 1,450 milk with 930-1,410 unsold at day 365, and the season label appears to change about every 2 days in
 these runs. No recommendation is made here; the switches stay off until the owner decides.
+
+## Keeper diagnostic (owner directive 2026-10-21, `docs/directives/2026-10-21_farm08_keeper_diagnostic.md`)
+
+One probe run, read-only hooks, on commit `dbbb66a`: seed 3, `shared_manor_farming=1 seasonal_village_farming=1
+shared_wheat_yield=2`, 55 days; it reproduces the reference run exactly (same fingerprint, herd gone on day 49, farmers
+1,780 wheat, chests 1,665). No switches-off run was needed. Probe and full trace kept outside the repository (lead's
+scratchpad `farm08diag/`).
+
+**Confirmed facts.**
+- The keeper (NPC 39, a farmer) started with 28 coins and held 0 after buying his last 7 wheat on day 7 (09:00); 0-16
+  after, 0-2 from day 22. Every coin change was a trade (tax, rent, wages and household transfers fall on the household's
+  richest member). Feed is bought from the keeper's own coins only (`npc_brain.gd` around line 1340).
+- Account to day 49: income 213 (milk 70 units for 138, cull meat 49, wheat seed 24, hide 2); spending 241 (feed wheat
+  99 units for 198 at price 2 in 22 purchases, firewood 21, planks and stone 10, seed 6, bread and ale 6); 28 + 213 - 241 = 0.
+  The household's coins fell from 130 (day 0) to 7 (from day 24).
+- Milk: 176 produced, all collected, 70 sold (steady to day 19, sporadic after); up to 27 held unsold with 0 coins
+  (`HOUR d47 h09 coins=0 milk=27`); villagers ate 99 raw; cheese making stalled (`used_milk` 33 from day 21 to 40). Even all
+  176 sold at 2 buys about 176 wheat; the herd ate about 800.
+- Feed was physically available and reachable (4-11 farmers or food merchants awake with 66-2,192 spare wheat at price 2;
+  22 successful purchases from three sellers) but not affordable: 143 of 146 "no feed" events were "no coins".
+- Sequence: coins 0 on day 7; first no-feed day 8; culls to the breeding stock days 9-11; days 11-47 each cutting of his
+  field fills the trough with a fixed 4 days of feed (`npc_brain.gd:2251-2253`); cuttings on days 4, 10, 14, 19, 25, 28,
+  34, 38, 43, 49 (gaps 3-6 days; the trough also emptied before the cuttings of days 25 and 34); trough empty day 47 noon;
+  the bull and both cows starved by day 49 06:00; his field was cut on day 49 16:00 (124 wheat to him), too late. The last
+  gap was 6 days because the field sown on day 43 grew at half rate in autumn and not at all in winter.
+- Seasons: two game days a season is the owner's design (`balance.json` `year_days` 8, `season_days` [2,2,2,2], B8-029,
+  owner-approved 2026-10-19, `docs/DECISIONS.md`), read by `Life.season_index`; the harness's `--set` cannot change it.
+  Not a test acceleration and not a defect.
+
+**Classification.**
+1. Legitimate economic consequence: a keeper who cannot pay gets nothing; the herd is culled to breeding stock and
+   starves across a long gap. No rule failed and nothing leaked.
+2. Economic balance concerns: (a) a herd costs about 24-48 coins a day in grain at the floor price and earns at most about
+   8; (b) a cutting fills the trough with a fixed 4 days of feed while seasonal fields are cut 3-6 days apart; (c) milk
+   demand saturates (70 of 176 sold, cheese stalled); (d) the whole household impoverished.
+3. Implementation defect: none established (ruled out: the switch blocking sales, unreachable markets, a hidden drain, the
+   keeper's buying logic).
+4. Unresolved: (a) **crop allocation** - the whole crop goes to whichever farmer finishes the cutting (`take_crop(f, 1 << 30)`,
+   `npc_brain.gd:2241-2243`) though `world.gd:2166-2167` calls it "the farmers' who work it"; the keeper spent about 72
+   hours harvesting and received grain once (day 49). Whether this is intended or a defect is not settled; the co-farmer
+   is unverified. (b) Why the cook stopped making cheese.
+
+**Smallest corrective options (none applied; owner decision):** fill the trough until the next expected harvest under
+seasonal fields; size the herd to the keeper's grain or raise milk's value; investigate the cheese outlet, then milk caps
+or another buyer; let feed purchases draw on the household purse as meals do, or granary sales to keepers; first log who
+cuts each field and, if the crop is meant to be shared, split it among the field's workers or reserve the keeper's share.
