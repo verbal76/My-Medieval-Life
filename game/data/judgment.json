@@ -44,12 +44,12 @@
     "per_meeting": 2, "daily_budget": 6, "max_hops": 3, "min_confidence": 150, "share_net_at": -20000,
     "misattribute_permille": 0
   },
-  "_decision_note": "Decision weighting (spec s.7; SJD-Q03, Q04, Q09, Q13). The live decision code supplies the feasible candidates and their factor values (0..100000: milli-points on the spec's 0..100 scale); judgment adds one factor, disposition = 50 points + NET, clamped to 0..100 points (the spec's worked example: NET -6.59 -> 43.41), weighted like any other. utility = sum(weight permille x factor) / 1000. ambivalence = min(GOOD, BAD), clamped to 0..100 points (SJD-Q04; weight 0). forgo: the utility of doing without (a purchase must beat it). selection: argmax (ties to the lowest id) or margin (a seeded pick among options within margin of the best). trait_spread_permille: per-person weight differences from the seed (0: everyone weighs alike).",
+  "_decision_note": "Decision weighting (spec s.7; SJD-Q03, Q04, Q09, Q13). The live decision code supplies the feasible candidates and their factor values (0..100000: milli-points on the spec's 0..100 scale); judgment adds one factor, disposition = 50 points + NET, clamped to 0..100 points (the spec's worked example: NET -6.59 -> 43.41), weighted like any other. utility = sum(weight permille x factor) / 1000. ambivalence = min(GOOD, BAD), clamped to 0..100 points (SJD-Q04; weight 0). live_order: the live code's own order of preference (first 100 points, 10 less for each after), so with every judgment neutral the live choice stands and any change is judgment's (price weight 0 until calibrated). forgo: the utility of doing without (a purchase must beat it). selection: argmax (ties to the lowest id) or margin (a seeded pick among options within margin of the best). trait_spread_permille: per-person weight differences from the seed (0: everyone weighs alike).",
   "decision": {
     "disposition_mid": 50000, "selection": "argmax", "margin": 2000, "trait_spread_permille": 0,
     "profiles": {
       "trade_buy": {"weights": {"necessity": 300, "sole_source": 250, "affordability": 150, "urgency": 200, "disposition": 100, "ambivalence": 0}, "forgo": 50000},
-      "trade_sell": {"weights": {"necessity": 300, "price": 400, "disposition": 150, "ambivalence": 0}, "forgo": 0}
+      "trade_sell": {"weights": {"live_order": 400, "necessity": 300, "price": 0, "disposition": 150, "ambivalence": 0}, "forgo": 0}
     }
   }
 }

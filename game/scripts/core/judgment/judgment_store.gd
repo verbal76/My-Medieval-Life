@@ -37,10 +37,15 @@ var unread := {}         # a saved section this version cannot read: kept and wr
 var last_trace := {}     # the last interpretation's parts (diagnostics: "why was the theft rated 0.55 BAD?")
 
 
+static var _cfg_cache := {}
+
+
+## judgment.json, read once; each caller gets its own copy (a store may be given changed values by a test).
 static func default_cfg() -> Dictionary:
-	var f := FileAccess.open("res://data/judgment.json", FileAccess.READ)
-	var d: Dictionary = JSON.parse_string(f.get_as_text())
-	return d
+	if _cfg_cache.is_empty():
+		var f := FileAccess.open("res://data/judgment.json", FileAccess.READ)
+		_cfg_cache = JSON.parse_string(f.get_as_text())
+	return _cfg_cache.duplicate(true)
 
 
 func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 0) -> void:
@@ -208,11 +213,24 @@ func _permanent(b: Dictionary) -> bool:
 	return int(definition(str(b.type)).get("severity", 0)) >= int(c("memory").permanent_severity)
 
 
+## Whether an actor list ([[id, share], ...]) names `who`.
+static func _names(actors: Array, who: int) -> bool:
+	for a in actors:
+		if int(a[0]) == who:
+			return true
+	return false
+
+
+## Forget a memory. Its points stay in the ledger (unless retract_on_forget); its contribution record goes too, since
+## only a held belief can be corrected, and the fact's knowers keep the dedup key until the event retires, so hearing
+## of it again adds nothing (memory use stays within capacity per person, not per event known).
 func _forget(observer: int, ev: int) -> void:
 	(memories[observer] as Dictionary).erase(ev)
 	_stat("forgotten")
 	if bool(c("memory").retract_on_forget):
 		_post(observer, ev, {})
+	else:
+		(contrib.get(observer, {}) as Dictionary).erase(ev)
 
 
 # ---------------------------------------------------------------- interpretation -----------------
@@ -231,7 +249,7 @@ func interpret(observer: int, ev: int, actor: int, b: Dictionary) -> Dictionary:
 	if affected.has(observer):
 		p = int(ic.affected)
 		parts.role = "affected"
-	elif not good and (b.actors as Array).any(func(a): return int(a[0]) == observer):
+	elif not good and _names(b.actors, observer):
 		p = int(ic.accomplice)
 		parts.role = "accomplice"
 	else:
@@ -441,7 +459,7 @@ func tell(teller: int, listener: int) -> int:
 			continue
 		if not belief(listener, ev).is_empty() or has_contribution(listener, ev):
 			continue
-		if (b.actors as Array).any(func(a): return int(a[0]) == listener):
+		if _names(b.actors, listener):
 			continue
 		pick.append([-int(b.sal), int(ev)])
 	if pick.is_empty():
@@ -484,6 +502,10 @@ func advance_day(d: int) -> void:
 	var m := c("memory")
 	var fade := int(m.salience_fade_permille)
 	var below := int(m.forget_below)
+	var perm := {}                      # the event types that never fade (looked up once, not per memory)
+	for t in cfg.events:
+		if int(cfg.events[t].severity) >= int(m.permanent_severity):
+			perm[t] = true
 	var obs := memories.keys()
 	obs.sort()
 	for o in obs:
@@ -491,7 +513,7 @@ func advance_day(d: int) -> void:
 		var gone := []
 		for ev in mem:
 			var b: Dictionary = mem[ev]
-			if _permanent(b):
+			if perm.has(b.type):
 				continue
 			var s := int(b.sal)
 			for i in steps:
@@ -542,7 +564,7 @@ func inspect(observer: int, subject: int) -> Dictionary:
 	evs.sort()
 	for ev in evs:
 		var b: Dictionary = mem[ev]
-		if (b.actors as Array).any(func(a): return int(a[0]) == subject):
+		if _names(b.actors, subject):
 			var gb: Array = ((contrib.get(observer, {}) as Dictionary).get(ev, {}) as Dictionary).get(subject, [0, 0])
 			why.append({"event": int(ev), "type": b.type, "src": b.src, "by": b.by, "conf": b.conf, "points": gb})
 	return {"good": l[0], "bad": l[1], "net": int(l[0]) - int(l[1]), "contributions": l[2], "memories": why}

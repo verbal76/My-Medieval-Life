@@ -85,6 +85,7 @@ var brain
 var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 var relations: Relations      # friendship, courting and marriage (CRT-01..07)
+var judgment = null           # PROSPECTIVE (Expansion 19, PROS-19): a JudgmentStore, or null (off; JudgmentLive)
 
 
 func _init() -> void:
@@ -101,6 +102,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	relations = Relations.new(self)
+	if JudgmentLive.enabled():
+		JudgmentLive.attach(self)      # PROSPECTIVE (PROS-19): off unless judgment.json enables it
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
@@ -375,6 +378,8 @@ func _new_day() -> void:
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
 	manor_work.dawn()                  # undone manor jobs are released
+	if judgment != null:
+		judgment.advance_day(d)        # PROSPECTIVE (PROS-19): memories fade, old events retire
 	property.collect_rents()
 	property.relet_stalls()
 	brain.relet_pens()
@@ -1543,6 +1548,8 @@ func kill(n: NPC, cause: String) -> void:
 	n.target = -1
 	if cause.begins_with("slain by %s" % player.name) and n.role != "bandit":
 		relations.slain_by_player(n)       # family and friends never forget it (CRT-12)
+		if judgment != null:
+			JudgmentLive.on_killing(self, n, Life.PLAYER_ID)        # PROSPECTIVE (PROS-19)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	var heir := _heir(n)
 	if heir != null and not cause.begins_with("slain"):
@@ -2208,6 +2215,8 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 			"items": taken.duplicate(), "qty": count, "value": worth})
 	if worth > 0:
 		stat("player_stolen_value", worth)
+	if judgment != null:
+		JudgmentLive.on_theft(self, kind, victim, seen, worth)     # PROSPECTIVE (PROS-19)
 	if seen.size() > 0:
 		note("%s %s was seen %s%s." % [player.name, player.family, ("taking " + what) if deed == "" else deed.replace("try to", "trying to"),
 				(" (" + victim.name + " " + victim.family + "'s)") if victim and deed == "" else ""])
@@ -2301,6 +2310,8 @@ func aware_of_attack(at: Vector2, victim: NPC) -> Dictionary:
 ## id, or -2 for the player); the victim and the others who saw it carry a report to a guard (report_crime). Returns
 ## how many guards answered at once.
 func raise_alarm(aware: Dictionary, attacker: int) -> int:
+	if judgment != null:
+		JudgmentLive.on_attack(self, attacker, aware)              # PROSPECTIVE (PROS-19)
 	var k := 0
 	for n: NPC in aware.seen:
 		if n.job == "guard":
@@ -3197,7 +3208,7 @@ func to_dict() -> Dictionary:
 	var ns := []
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
-	return {
+	var out := {
 		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
 		"manor_work": manor_work.to_dict(),
@@ -3210,6 +3221,9 @@ func to_dict() -> Dictionary:
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 		"relations": relations.to_dict(),
 	}
+	if judgment != null:
+		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
+	return out
 
 
 func load_dict(m: VillageMap, d: Dictionary) -> void:
@@ -3225,6 +3239,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
+	judgment = null
+	if d.has("judgment") or JudgmentLive.enabled():                # PROSPECTIVE (PROS-19): Build 16 saves have none
+		JudgmentLive.attach(self).load_dict(d.get("judgment", {}))
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)

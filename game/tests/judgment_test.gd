@@ -390,7 +390,7 @@ func test_feasibility() -> void:
 func test_selection_policies() -> void:
 	var c := cfg()
 	var j := store(c)
-	var cands := [{"id": "a", "counterparty": 10, "factors": {"price": 50000}}, {"id": "b", "counterparty": 11, "factors": {"price": 50000}}]
+	var cands := [{"id": "a", "counterparty": 10, "factors": {"live_order": 50000}}, {"id": "b", "counterparty": 11, "factors": {"live_order": 50000}}]
 	check(str(JudgmentWeighting.choose(j, c, JOHN, "trade_sell", cands).chosen) == "a", "argmax: a tie keeps the live code's own order")
 	c.decision.selection = "margin"
 	var picks := {}
@@ -400,7 +400,7 @@ func test_selection_policies() -> void:
 		if day < 2:
 			check(str(JudgmentWeighting.choose(j, c, JOHN, "trade_sell", cands, [day]).chosen) == str(r.chosen), "margin pick day %d is reproducible" % day)
 	check(picks.size() == 2, "margin (SJD-Q09 option): near-equal options are picked among by a seeded hash")
-	cands[1].factors.price = 10000
+	cands[1].factors.live_order = 10000
 	check(str(JudgmentWeighting.choose(j, c, JOHN, "trade_sell", cands, [3]).chosen) == "a", "...but never an option outside the margin")
 
 

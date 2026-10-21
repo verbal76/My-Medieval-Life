@@ -10,6 +10,7 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
+##       [--judgment]   (PROS-19 prospective: attach the judgment prototype, off by default; prints its counts at the end)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
 ## Exit code 1 if the currency or any item does not balance.
@@ -71,6 +72,9 @@ func _init() -> void:
 		printerr("economy_sim: the world did not set up (a script failed to load); see the errors above")
 		quit(2)
 		return
+	if "--judgment" in args:              # PROSPECTIVE (PROS-19): a run with the judgment prototype attached
+		JudgmentLive.attach(w)
+		print("judgment: attached (prototype)")
 	w.event.connect(_on_event)
 	w.brain.track_misses = true
 	w.trade_hook = _on_trade
@@ -123,6 +127,8 @@ func _init() -> void:
 				print("WATCH MISS ", str(e))
 	var final: Dictionary = samples[-1]
 	_print_final(final, start, seed, days, secs)
+	if w.judgment != null:
+		print("judgment: %s; stats %s" % [JSON.stringify(w.judgment.counts()), JSON.stringify(w.judgment.stats)])
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "every": every, "step": STEP,

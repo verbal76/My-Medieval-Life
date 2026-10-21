@@ -1560,6 +1560,8 @@ func _plan_sell(n: NPC, id: String) -> bool:
 
 
 func _buyer_for(n: NPC, id: String) -> NPC:
+	if w.judgment != null:
+		return JudgmentLive.pick_buyer(w, self, n, id)      # PROSPECTIVE (PROS-19): off unless judgment is attached
 	for outlet in OUTLETS.get(id, []):
 		for b in _with_buy_role(outlet):
 			if b != n and b.alive and w.purchase_qty(b, n, id, maxi(1, n.inv.count(id))) > 0:     # TRADE-01: the one rule
