@@ -334,6 +334,9 @@ func _uptake_run() -> Array:
 	var ref := World.hh_ref(h)
 	var need := fp.land_requirement(h)
 	check(need >= 1, "the household's land requirement: %d cells for a year's food" % need)
+	var per_adult := 24.0 * float(GameData.b("hunger_per_hour")) * Life.year_days() / fp.cell_food_per_year()
+	check(per_adult < 1.7, "FSE-15: an adult needs %.2f cells a year at the net yield (not the 1.7 assumed before)" % per_adult)
+	check(fp.labour_cells(h) >= need, "its able members can tend that many cells (%d)" % fp.labour_cells(h))
 	# poor: nothing above its reserve, it takes nothing
 	for o: NPC in w.brain._members(h):
 		o.coins = 0

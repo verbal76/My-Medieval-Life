@@ -31,6 +31,7 @@ const BATCH_MINUTES := 60.0                          # a work step covers at mos
 var w
 var cells := {}        # Vector2i -> {crop, state: tilled | growing | ripe, progress, plot}: villager households' field cells
 var busy := {}         # Vector2i -> game minute until which a member is on the way to work it (not saved)
+var tried := {}        # "npc id:item" -> the day a member last went to buy it for the plot (once a day; not saved)
 var why := ""          # why the last claim() failed
 
 
@@ -569,7 +570,7 @@ func _plan_buy_seed(n: NPC, want: int) -> bool:
 		var price: int = w.farm.seed_item_price(seed, n)
 		while qty > 0 and not w.can_afford(n, price * qty):
 			qty -= 1
-		if qty <= 0:
+		if qty <= 0 or not _first_try(n, seed):
 			return false
 		n.doing = "buying seed for the family's plot"
 		n.plan = [w.brain.go(w.brain._workplace_cell(v) if v.job != "farmer" else v.cell()), w.brain.doit("buy_seed", {"vendor": v.id, "item": seed, "qty": qty})]
@@ -592,12 +593,23 @@ func _plan_buy_materials(n: NPC, p: Dictionary) -> bool:
 		var price: int = w.sell_price(v, id)
 		while qty > 0 and not w.can_afford(n, price * qty):
 			qty -= 1
-		if qty <= 0:
+		if qty <= 0 or not _first_try(n, id):
 			return false
 		n.doing = "buying %s for the family's fence" % GameData.item_name(id).to_lower()
 		n.plan = [w.brain.go(w.brain._workplace_cell(v) if v.job != "laborer" else v.cell()), w.brain.doit("buy_from", {"vendor": v.id, "item": id, "qty": qty})]
 		return true
 	return false
+
+
+## A member goes to buy an item for the plot once a day at most (a sale that falls through is not chased all evening).
+func _first_try(n: NPC, item: String) -> bool:
+	var key := "%d:%s" % [n.id, item]
+	if int(tried.get(key, -1)) == w.day():
+		return false
+	if tried.size() > 2000:
+		tried.clear()
+	tried[key] = w.day()
+	return true
 
 
 ## A member's farm steps (NPCBrain.act): the work on the cells, re-checked when it is done; the fence.
@@ -632,9 +644,26 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 ## a year, against what one cell nets a year: the shared wheat yield (FARM-08) as cooked grain (one valuation,
 ## NPCBrain.food_points) for each crop the sowing seasons allow at their growth rate (Farming.season_rate over the
 ## calendar). The seed is not counted against it: a cell gives back its seeds_back, the one seed it was sown with.
+## Capped by the household's labour (labour_cells). The game models no crop losses besides the seed.
 func land_requirement(h: int) -> int:
 	var need: float = w.brain.household_day_food(h) * float(Life.year_days())
-	return maxi(1, ceili(need / maxf(0.001, cell_food_per_year())))
+	return mini(maxi(1, ceili(need / maxf(0.001, cell_food_per_year()))), labour_cells(h))
+
+
+## The cells a household's able members can keep sown and harvested, crop after crop: the time their days leave
+## (an adult's evening from WORK_END to SLEEP, or the working day when out of work; an elder's working day) over one
+## crop's days, at the player's minutes a cell for sowing and harvesting (ploughing is done once). At least 1.
+func labour_cells(h: int) -> int:
+	var per_cell := task_minutes("sow", false) + task_minutes("harvest", false)
+	var day_minutes := 0.0
+	for o: NPC in w.brain._members(h):
+		if not able(o):
+			continue
+		if o.role == "adult" and o.job != "":
+			day_minutes += (NPCBrain.SLEEP - NPCBrain.WORK_END) * 60.0
+		else:
+			day_minutes += (NPCBrain.WORK_END - NPCBrain.WORK_START) * 60.0
+	return maxi(1, floori(day_minutes * Farming.crop_days("wheat") / per_cell))
 
 
 ## Food points one wheat cell nets in a year of the calendar's seasons.
