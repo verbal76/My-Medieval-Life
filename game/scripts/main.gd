@@ -2164,6 +2164,14 @@ func _manor_label(j: Dictionary) -> String:
 			return "Put the manor's goods in %s" % mw.dest_name(j.to)
 		"mend":
 			return "Mend %s (%d hours)" % [str(j.get("place", "the road")), roundi(float(ManorWork.cfg("mend_minutes")) / 60.0)]
+		"sample":
+			return "Take a rock sample for the manor's survey (%d of %d)" % [int(j.taken) + 1, int(j.qty)]
+		"assay":
+			return "Have the survey's samples assayed here (%d coins each)" % int(Prospecting.cfg().assay.fee)
+		"report":
+			return "Tell the manor what the survey's samples showed"
+		"dig":
+			return "Dig the manor's trial pit here (%d hours)" % roundi(float(Discovery.cfg().trial.minutes) / 60.0)
 	return ""
 
 
@@ -2446,6 +2454,8 @@ func _use() -> void:
 			_sample(target.clue, target.cell)
 		"assay":
 			_assay(target.npc)
+		"trial_dig":
+			_trial_dig(target.clue, target.cell, str(target.tool))
 		"deposit":
 			var dep: Dictionary = target.dep
 			var mp := world.player_mine_plan(dep)                     # the rules are in core (DVW-A12 R1)
@@ -2567,14 +2577,26 @@ func _use() -> void:
 			var pay := int(mj.reserved)
 			var finish := func(ok: bool) -> void:
 				if not ok:
-					ui.message("You need %d stone for the manor: mine it at the stone seams." % int(mj.qty) if mj.kind == "quarry" else "There is nothing here to take.")
+					ui.message("You need %d stone for the manor: mine it at the stone seams." % int(mj.qty) if mj.kind == "quarry"
+							else (mw.last_refusal if mj.kind in ["survey", "trial"] and mw.last_refusal != "" else "There is nothing here to take."))
 				elif mw.job_of("player").is_empty():
-					ui.message("Work for the manor done. The manor pays you %d coins." % pay)
+					var found := ""
+					if mj.kind == "trial":
+						found = " The pit strikes ore: a new seam is opened." if mj.get("found", false) else " The pit finds no ore."
+					ui.message("Work for the manor done.%s The manor pays you %d coins." % [found, pay])
+				elif mj.kind == "survey":
+					ui.message(ui._manor_next(mj))
 				else:
 					ui.message("You take the manor's goods. %s" % ui._manor_next(mj))
-			if mw.step(mj) == "mend":
+			mw.last_refusal = ""
+			var step := mw.step(mj)
+			if step == "mend":
 				var secs := float(ManorWork.cfg("mend_minutes")) / float(GameData.b("game_minutes_per_second")) * 0.6
 				start_action("Mending", secs, func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
+			elif step == "sample":
+				start_action("Sampling", Prospecting.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "hammer")
+			elif step == "dig":
+				start_action("Digging a trial pit", Discovery.player_secs(), func(): finish.call(mw.do_step(mj, "player", p.inv)), "swing", "pickaxe")
 			else:
 				finish.call(mw.do_step(mj, "player", p.inv))
 
@@ -2598,6 +2620,13 @@ func _prospect_targets(cands: Array) -> Array:
 		elif pr.samples_left(c) > 0:
 			out.append({"kind": "sample", "id": key, "clue": c, "cell": cell,
 					"label": "Take a rock sample here (%s nearby; %d samples left round it)" % [pr.stain(c), pr.samples_left(c)]})
+	# MIN-D: a trial pit on clear ground of a clue's area in front of the player, with a pickaxe (Discovery.trial_dig)
+	var ahead := Vector2i((p.pos + facing_vec() * 1.0).floor())
+	var ca := pr.area_at(ahead)
+	var pick := p.tool_of("pickaxe")
+	if not ca.is_empty() and pick != "" and world.discovery.ground_refusal(ca, ahead) == "":
+		out.append({"kind": "trial_dig", "id": "%s@%d,%d" % [ca.id, ahead.x, ahead.y], "clue": ca, "cell": ahead, "tool": pick,
+				"label": "Dig a trial pit here (%s nearby; %d hours; %d pits left round it)" % [pr.stain(ca), roundi(float(Discovery.cfg().trial.minutes) / 60.0), world.discovery.trials_left(ca)]})
 	if p.inv.has(Prospecting.ITEM):
 		for t in cands:
 			if str(t.get("kind", "")) in ["npc", "shop"] and (t.npc as NPC).job == "smith" and not world.asleep(t.npc):
@@ -2622,6 +2651,28 @@ func _sample(c: Dictionary, cell: Vector2i) -> void:
 		if r.broke:
 			ui.message("Your prospector's kit is worn out.")
 		_level_up("mining", int(r.up)), "swing", "hammer")
+
+
+## MIN-D: dig a trial pit on the cell ahead, timed as a mining swing (Discovery.trial_dig: the pickaxe wears, Mining
+## xp; within reach of the clue's body a seam is opened there, else nothing is found).
+func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
+	var p := world.player
+	var why := world.discovery.trial_refusal(p, c, cell, tool)
+	if why != "":
+		ui.message(why)
+		return
+	start_action("Digging a trial pit", Discovery.player_secs(), func():
+		var r := world.discovery.trial_dig(p, c, cell, tool)
+		if r.result != "ok":
+			ui.message(str(r.why))
+			return
+		if (r.found as Dictionary).is_empty():
+			ui.message("The trial pit finds no ore.")
+		else:
+			ui.message("The trial pit strikes %s: a new seam is opened." % GameData.item_name(str(r.found.ore)).to_lower())
+		if r.broke:
+			ui.message("Your pickaxe broke.")
+		_level_up("mining", int(r.up)), "swing", "pickaxe")
 
 
 ## MIN-C: smith `n` assays the oldest rock sample the player carries (Prospecting.assay: the fee, the coal, the forge

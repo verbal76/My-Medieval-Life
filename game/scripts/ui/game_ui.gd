@@ -1585,6 +1585,14 @@ func _manor_next(j: Dictionary) -> String:
 			return "Next: take it to %s." % mw.dest_name(j.to)
 		"mend":
 			return "Next: mend %s." % str(j.get("place", "the road"))
+		"sample":
+			return "Next: take a rock sample by %s (%d of %d taken)." % [main.world.prospecting.stain(main.world.prospecting.clue(str(j.clue))), int(j.taken), int(j.qty)]
+		"assay":
+			return "Next: have a smith at the forge assay the survey's samples."
+		"report":
+			return "Next: tell the manor what the samples showed (at the manor's door)."
+		"dig":
+			return "Next: dig the trial pit where the reeve marked it."
 	return ""
 
 

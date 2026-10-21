@@ -308,17 +308,18 @@ func assayer_refusal(who, a: NPC) -> String:
 	return ""
 
 
-## Smith `a` assays the oldest sample `who` carries: the sample and the fuel are used up, the fee passes from `who`'s
+## Smith `a` assays the oldest sample `who` carries (or sample `pick`, if they carry it: MIN-D, a survey's own first): the sample and the fuel are used up, the fee passes from `who`'s
 ## purse to the smith's, the smith works the forge for the assay's minutes (the forge is theirs meanwhile) and earns
 ## Smithing xp, and the reading becomes a record that `who` and the smith know. Returns {result: "ok" | "refused", why,
 ## record, up}.
-func assay(who, a: NPC) -> Dictionary:
+func assay(who, a: NPC, pick := -1) -> Dictionary:
 	var why := assayer_refusal(who, a)
 	if why != "":
 		return {"result": "refused", "why": why}
 	var ac: Dictionary = cfg().assay
 	var bag := bag_of(who)
-	var sid: int = int(bag.pop_front())
+	var sid: int = pick if pick >= 0 and bag.has(pick) else int(bag.front())
+	bag.erase(sid)
 	var s: Dictionary = samples.get(str(sid), {})
 	samples.erase(str(sid))
 	who.inv.remove(ITEM, 1)
@@ -470,6 +471,8 @@ func plan(n: NPC) -> bool:
 			n.doing = "reporting a find to the manor"
 			n.plan = [b.go(w.building_door(b._manor_id())), b.doit("report_find", {"id": int(rec.id)})]
 			return true
+	if w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek_kind(n, ["survey"]):
+		return true                       # MIN-D: the manor's commissioned survey, paid work, before prospecting on its own
 	var bag := bag_of(n)
 	var spot := next_spot(n) if bag.size() < int(cfg().carry_samples) else {}
 	if not bag.is_empty() and spot.is_empty():

@@ -785,15 +785,21 @@ func _ledger(start: Dictionary) -> Dictionary:
 			bad[id] = row
 	var dep := []
 	var mined_by_ore := {}
+	# MIN-D: a seam opened by a trial pit during the run starts at 0 here and enters the books as found_<ore> (its host
+	# rock as found_stone): start + found - end = mined
 	for i in w.deposits.size():
 		var ore: String = w.deposits[i].ore
-		mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + int(start.deposits[i]) - int(w.deposits[i].amount)
+		var s0 := int(start.deposits[i]) if i < (start.deposits as Array).size() else 0
+		mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + s0 - int(w.deposits[i].amount)
+	for ore in ["iron_ore", "coal", "copper_ore", "gold_ore"]:
+		if d.call("found_" + ore) != 0:
+			mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + d.call("found_" + ore)
 	# MIN-B: the other stone pools: worked-out seams' host rock, the village's boulders (villagers quarry both now)
 	var hosts_now := _hosts()
 	var host_fall := 0
 	for i in hosts_now.size():
-		host_fall += int(start.hosts[i]) - int(hosts_now[i]) if i < (start.hosts as Array).size() else 0
-	mined_by_ore["stone"] = int(mined_by_ore.get("stone", 0)) + host_fall + int(start.boulders) - _boulder_stone()
+		host_fall += (int(start.hosts[i]) if i < (start.hosts as Array).size() else 0) - int(hosts_now[i])
+	mined_by_ore["stone"] = int(mined_by_ore.get("stone", 0)) + host_fall + d.call("found_stone") + int(start.boulders) - _boulder_stone()
 	for ore in mined_by_ore:
 		var counted: int = d.call("mined_" + ore)
 		if counted != int(mined_by_ore[ore]):

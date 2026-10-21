@@ -825,7 +825,7 @@
       "owner": "Nobody: the ground's minerals are nobody's (the manor's mining rights are only proposed, P1.2).",
       "theft": "Never theft.",
       "npc_harvest": true,
-      "npc_note": "MIN-C: a prospector (job prospector) samples the nearest clue it has taken fewer than samples_per_visit samples from, carries up to carry_samples to a smith for assay, and reports finds to the manor (Prospecting.plan). No villager takes up prospecting by itself yet: that is MIN-D's adoption.",
+      "npc_note": "MIN-C: a prospector (job prospector) samples the nearest clue it has taken fewer than samples_per_visit samples from, carries up to carry_samples to a smith for assay, and reports finds to the manor (Prospecting.plan). MIN-D: a villager takes up prospecting by the labour market (Discovery.prospector_place, from mining capability 1), and the manor commissions surveys of clues on its job board (ManorWork survey: samples, assays, a report; paid for the labour).",
       "player_harvest": true,
       "gather": true,
       "range": 1,
@@ -838,7 +838,7 @@
         "game/scripts/main.gd::_prospect_targets"
       ],
       "status": "implemented",
-      "risk": "A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). Opening a found body into a deposit is MIN-D's."
+      "risk": "A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). MIN-D: a body is opened into an ordinary seam only by a trial pit dug within reach of it (Discovery.trial_dig); most pits miss and a clue takes a finite number."
     }
   },
   "materials": {"nails": [{"use": "building", "text": "B14-07: forged from iron bars at the anvil (forge_nails) and used up building wooden stairs (4 a rim cell) and walkways (3 a rim cell) through a mountain's cliff rim.", "source": "game/scripts/core/terrain.gd::build"}], 

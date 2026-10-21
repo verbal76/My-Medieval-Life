@@ -1029,6 +1029,9 @@ func _miner(n: NPC) -> bool:
 	ores = ores.filter(func(o: String) -> bool: return _buyer_for(n, o) != null and _can_mine(n, o))
 	var d: Dictionary = w.nearest_seam(n, ores) if not ores.is_empty() else {}        # MIN-A: the gallery's seams too
 	if d.is_empty():
+		# MIN-D: a miner whose ore is worked out digs the manor's trial pit for new ore, if one is posted (paid work)
+		if n.job == "miner" and w.hour() < float(GameData.b("manor_jobs").get("latest_start", 15)) and w.manor_work.seek_kind(n, ["trial"]):
+			return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
 		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
@@ -2535,6 +2538,7 @@ func reeve_day() -> void:
 	# stone for the works from the village's own seams, when the yard lacks it (a job for the reeve's list)
 	if budget > 0:
 		w.manor_work.post_quarry()
+	w.manor_work.post_discovery()                    # MIN-D: a survey or a trial pit, as the village's mining capability allows
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
 	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
 		if id == "stone" and quarrying:
@@ -3298,6 +3302,7 @@ func job_market() -> Dictionary:
 	ore += w.quarry_stone_left()            # MIN-B: the stone left to quarry is work too
 	market["miner"] = {"pay": avg.call("miner", 0.0), "open": maxi(0, ore / int(GameData.b("ore_per_miner")) - count.call("miner") - count.call("laborer")),
 		"tool": "pickaxe", "at": Vector2i(w.map.data.mine.yard[0], w.map.data.mine.yard[1])}
+	market["prospector"] = w.discovery.prospector_place(avg.call("prospector", 0.0))     # MIN-D: adoption by the job rules
 	return market
 
 
@@ -3337,7 +3342,7 @@ func seek_work() -> void:
 			var best := ""
 			var best_score := -1e9
 			var home := w.building_door(n.home)
-			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner"]:
+			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector"]:
 				var opt: Dictionary = market[job]
 				if int(opt.open) <= 0 or job == n.job:
 					continue

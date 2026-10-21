@@ -297,9 +297,9 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Total:** samples_per_clue (4) samples a clue, one a cell of its area; about a third of the village's 15-cell blocks hold a clue (clue_percent), some over a mineral body (true_percent), the rest misleading.
 - **Depletion:** finite. None: a cell sampled stays sampled and a clue sampled out stays so (saved in prospecting.taken). The stain itself stays.
 - **Owner:** Nobody: the ground's minerals are nobody's (the manor's mining rights are only proposed, P1.2). **Theft:** Never theft.
-- **Harvested by:** the player yes; villagers yes. MIN-C: a prospector (job prospector) samples the nearest clue it has taken fewer than samples_per_visit samples from, carries up to carry_samples to a smith for assay, and reports finds to the manor (Prospecting.plan). No villager takes up prospecting by itself yet: that is MIN-D's adoption.
+- **Harvested by:** the player yes; villagers yes. MIN-C: a prospector (job prospector) samples the nearest clue it has taken fewer than samples_per_visit samples from, carries up to carry_samples to a smith for assay, and reports finds to the manor (Prospecting.plan). MIN-D: a villager takes up prospecting by the labour market (Discovery.prospector_place, from mining capability 1), and the manor commissions surveys of clues on its job board (ManorWork survey: samples, assays, a report; paid for the labour).
 - **Gather mode:** yes. **Icon:** `ore_sample`.
-- **Risk:** A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). Opening a found body into a deposit is MIN-D's.
+- **Risk:** A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). MIN-D: a body is opened into an ordinary seam only by a trial pit dug within reach of it (Discovery.trial_dig); most pits miss and a clue takes a finite number.
 - **Code:** `game/scripts/core/prospecting.gd::generate`, `game/scripts/core/prospecting.gd::take_sample`, `game/scripts/core/prospecting.gd::plan`, `game/scripts/main.gd::_prospect_targets`
 
 ### `red_berry_bush` · Red berry bush
@@ -569,7 +569,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `pig_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `player_field` | Not at risk: the player's crops are theirs alone and the manor's fields are untouched. |
 | `player_pen` | Not at risk: bounded by product_cap and the animals' own pen caps. |
-| `prospect_clue` | A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). Opening a found body into a deposit is MIN-D's. |
+| `prospect_clue` | A clue is a hint, not a deposit: sampling and assays cost time, coal and coins and may find nothing (WDR-022). MIN-D: a body is opened into an ordinary seam only by a trial pit dug within reach of it (Discovery.trial_dig); most pits miss and a clue takes a finite number. |
 | `red_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `stone_seam` | Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B). |

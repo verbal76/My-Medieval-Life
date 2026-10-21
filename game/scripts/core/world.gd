@@ -89,6 +89,7 @@ var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
 var relations: Relations      # friendship, courting and marriage (CRT-01..07)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
+var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")
 var prospecting: Prospecting  # MIN-C: clues, samples and assays (scripts/core/prospecting.gd); clues generated from the seed, the rest saved in "prospecting"
 var underground: Underground  # MIN-A: the levels below the surface and their portals (generated from the seed, not saved)
 var player_level := 0         # MIN-A: the depth the player is on (0 the surface, -1 the mine gallery); saved in "underground"
@@ -188,6 +189,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	quests.refresh()
 	quests.start_story()
 	manor_work = ManorWork.new(self)
+	discovery = Discovery.create(self)  # MIN-D: the mining capability the settlers start with (derived, no rng draw)
 	note("Day 1 begins in the village.")
 
 
@@ -384,6 +386,7 @@ func _new_day() -> void:
 	Life.dawn(self)                    # B8-029: roles by age, old-age deaths, partners, births
 	if profiling:
 		t = _prof("daily: life (ages, deaths, partners, births)", t)
+	discovery.dawn()                   # MIN-D: the settlement's mining capability, from what the village has this morning
 	brain.dawn()
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
@@ -1013,6 +1016,8 @@ func sync_boulders() -> void:
 	for d in deposits:                   # MIN-B: host rock quarried away (its cell is open since the load)
 		if d.has("host") and int(d.amount) <= 0 and int(d.host.amount) <= 0 and level_of(d) == 0:
 			tile_changed.emit(Vector2i(int(d.x), int(d.y)), "below", -1)
+		elif d.has("found") and int(d.amount) > 0 and level_of(d) == 0:     # MIN-D: a seam opened by a trial pit
+			tile_changed.emit(Vector2i(int(d.x), int(d.y)), "below", int(map.data.tiles.ore.get(str(d.ore), map.data.tiles.ore.stone)))
 
 
 func tree_at(c: Vector2i) -> Dictionary:
@@ -3386,7 +3391,7 @@ func buy_plot(p: Dictionary) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 17          # 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 17          # 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -3745,6 +3750,7 @@ func to_dict() -> Dictionary:
 		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
 		"underground": {"gen": Underground.GEN_VERSION, "player_level": player_level},
 		"prospecting": prospecting.to_dict(),
+		"discovery": discovery.to_dict(),
 	}
 
 
@@ -3913,6 +3919,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		quests.migrate_reserves()
 	manor_work = ManorWork.new(self)
 	manor_work.load_dict(d.get("manor_work", {}))    # older saves: nothing in lots, the yard or jobs
+	discovery = Discovery.create(self)
+	discovery.load_dict(d.get("discovery", {}))      # MIN-D: saves before it have nothing dug; levels from the world
 	if int(d.get("save_version", 1)) == 7:
 		quests.drop_manor_quarry()                   # version 7's single manor job gives way to the job board
 	_move_plots_to_map(m)
