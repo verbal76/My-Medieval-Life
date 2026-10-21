@@ -28043,6 +28043,51 @@
    "target_build": "18"
   },
   {
+   "id": "X18-Q12-BOOTH",
+   "title": "Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "the couriers will need booths in each city/village/major business and have regular routes, and you should be able to select people and businesses you know in a negotiation to select a special delivery",
+   "description": "Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows",
+   "source": "docs/directives/2026-10-21_courier_booths_known_recipients.md",
+   "approval": "owner message 2026-10-21",
+   "acceptance": [
+    "A courier booth exists per settlement and major business, built and staffed through existing building, stall and job systems",
+    "Regular routes run from booths at their established flat fee",
+    "A special delivery's recipient is chosen only from the people and businesses the buyer knows (existing acquaintance records), the same for player and villagers",
+    "Goods and fees move atomically; nothing delivered free; no coins created"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "X18-Q12",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_courier_booths_known_recipients.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
    "id": "X18-Q13",
    "title": "Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements",
    "kind": "approved",

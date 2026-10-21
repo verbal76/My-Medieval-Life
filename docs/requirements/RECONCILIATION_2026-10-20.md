@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 203 still open, 28 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 189 (81 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **283** = 203 still open from the baseline + 81 added and open |
+| Entries added since | | 190 (82 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **284** = 203 still open from the baseline + 82 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (28)
@@ -58,7 +58,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (189)
+## Added since the baseline (190)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -249,6 +249,7 @@ None.
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not | rule | COMPLETE AND VERIFIED |  |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | approved | ACTIVE DEVELOPMENT | 15 |
 | X18-Q12 | Implement Q18-12 transport: flat-rate fees on regular routes or scheduled delivery, negotiated special deliveries, self-collection; smoke tests | approved | ACTIVE DEVELOPMENT | 18 |
+| X18-Q12-BOOTH | Courier booths in each city, village and major business, serving regular routes (flat fee per load or scheduled delivery); special deliveries negotiated by choosing a recipient among the people and businesses the buyer knows | approved | ACTIVE DEVELOPMENT | 18 |
 | X18-Q13 | Implement Q18-13 signing: small agreements unsigned; formal contracts and ownership transfers signed face to face, or through a courier-notary with legal skill carrying the documents; no remote instant signing; smoke tests for incomplete, rejected, interrupted and completed agreements | approved | ACTIVE DEVELOPMENT | 18 |
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | approved | ACTIVE DEVELOPMENT | 18 |
 
