@@ -146,3 +146,31 @@ early Build 17 record without the newer keys; determinism of orders and answers 
 formal refused at a distance and signed in person, the player accepting a formal order only in person, NPC buyer walks
 and signs, interrupted by a death, never signed and lapsed, rejected at the meeting, completed); the talk window's
 Counter button.
+
+Results on `02563a8`'s code (2026-10-21): contracts_test 135 checks, 0 failures; prospecting_test 54/0;
+discovery_test 65/0; business_test 160/0; relations_test 79/0; world_test 339/0; run_tests 3536/0; start_test
+499 steps/0; play_test 37 steps/0; parity_test 55/0; conservation_test 8/0; wiki_test all passed; Python
+`unittest discover -s tests` 105 tests OK.
+
+## 9. The 30-day run (seed 1), measured
+
+`economy_sim --days 30 --seed 1`, before (the first slice, `9f229f7`, with only the new summary line) and after:
+
+| | Before | After |
+|---|---|---|
+| LEAKS | currency 0; items {} | currency 0; items {} |
+| Contracts made (opened) | 12 | 6 |
+| Units delivered / coins paid | 38 / 240 | 15 / 142 |
+| NPC-to-NPC on record at the end | 6 fulfilled, 1 open | 2 fulfilled |
+| Offers to the player (on record) | 25 withdrawn, 3 standing | 27 withdrawn, 4 standing (55 made over the run) |
+| Lapsed / cancelled | 0 / 0 | 0 / 0 |
+| Prospecting kits made | 2 | 1 |
+| Day 30: alive, other deaths, starved | 110, 4, 0 | 108, 6, 0 |
+| Day 30: food days, unemployed, treasury | 5.3, 2, 484 | 6.6, 1, 564 |
+
+Fewer villager contracts open: sellers now price in their inputs, their usual earnings and a risk margin, so more
+counters fall outside a buyer's 25 % tolerance, and formal orders wait to be signed in person. Which term accounts for
+how much was not isolated (no extra runs, per the testing philosophy). The other differences are the ordinary
+divergence of one seeded run (no deaths by starvation; no conservation fault). Outcomes are measured, not targets
+(WDR-022). A villager's order offered to the player writes one log line; over 30 days that was 55 lines (at most
+`npc_orders_per_day` a morning).
