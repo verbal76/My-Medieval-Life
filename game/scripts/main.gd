@@ -2910,44 +2910,36 @@ func fireball() -> void:
 	if world.player_level != 0:
 		ui.message("Nothing to fight here.")      # MIN-A: nobody but the player goes below yet
 		return
-	if not p.spells.get("fireball", false):
-		ui.message("You do not know any spells. The Sage in the hut north of the tavern teaches them.")
+	var cast := world.player_cast_fireball()          # knowing it, the cooldown, the stamina and the xp are core's (R11)
+	if not cast.ok:
+		if str(cast.why) != "":
+			ui.message(str(cast.why))
 		return
-	var cd := Skills.value(p, "magic", "fireball_cooldown", float(GameData.b("fireball_cooldown")))
-	var cost := float(GameData.b("fireball_stamina")) * Skills.value(p, "magic", "fireball_stamina", 1.0)
-	if p.fireball_cd > 0.0 or p.stamina < cost:
-		return
-	p.fireball_cd = cd
-	p.stamina -= cost
 	player_sprite.play("throw", true)
 	var node := Sprite2D.new()
 	node.texture = load("res://assets/icons/fireball.png")
 	node.z_index = 5
 	actors.add_child(node)
-	projectiles.append({"node": node, "pos": p.pos + facing_vec() * 0.6, "dir": facing_vec(), "left": 8.0})
-	_xp("magic", 6)
+	projectiles.append({"node": node, "pos": p.pos + facing_vec() * 0.6, "dir": facing_vec(), "left": World.FIREBALL_RANGE})
 
 
 func _projectiles_step(delta: float) -> void:
 	for pr in projectiles.duplicate():
-		var step: Vector2 = pr.dir * 9.0 * delta
+		var step: Vector2 = pr.dir * World.FIREBALL_SPEED * delta
 		pr.pos += step
 		pr.left -= step.length()
 		pr.node.position = pr.pos * T
 		pr.node.rotation += delta * 12.0
-		var hit := false
-		var dmg := 14.0 * Skills.value(world.player, "magic", "fireball_damage", 1.0)
-		for n: NPC in world.present(pr.pos, 0.6):
-			_hit(n, dmg)
-			hit = true
-			break
-		if not hit:
-			for a: Animal in world.fauna.near(pr.pos, 0.6):
-				_hit_animal(a, dmg)
-				hit = true
-				break
+		var h := world.player_fireball_hit(pr.pos)       # who it strikes, the harm and the xp are core's (DVW-A12 R11)
+		var hit: bool = h.who != null
+		if h.who is NPC:
+			_hit_fx(sprites.get(h.who.id), h.who.max_hp, float(h.before) - float(h.dealt), float(h.dealt))
+		elif h.who is Animal:
+			_hit_fx(animal_sprites.get(h.who.id), float(h.before), float(h.before) - float(h.dealt), float(h.dealt))
+			if str(h.guard) != "":
+				ui.message(str(h.guard))
 		if hit:
-			_xp("magic", 6)                    # a spell that lands teaches more than one that is cast
+			_level_up("magic", int(h.up))
 		if hit or pr.left <= 0.0 or map.is_solid_world(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):
 			pr.node.queue_free()
 			projectiles.erase(pr)

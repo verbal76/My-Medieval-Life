@@ -1455,6 +1455,48 @@ func player_hit_npc(n: NPC, dmg: float) -> Dictionary:
 	return {"dealt": dealt, "killed": killed}
 
 
+## DVW-A12 R11: Fireball (owner, DECISIONS.md:57). Its base damage, its speed (tiles a second), how far it flies, and
+## how near it must pass someone to strike them.
+const FIREBALL_DAMAGE := 14.0
+const FIREBALL_SPEED := 9.0
+const FIREBALL_RANGE := 8.0
+const FIREBALL_HIT_RADIUS := 0.6
+
+
+## DVW-A12 R11: the player casts Fireball: refused if it is not known (with the reason), or silently while it cools
+## down or without the stamina (balance fireball_cooldown and fireball_stamina, by the Magic tier); a cast starts the
+## cooldown, spends the stamina and earns 6 Magic xp. Returns {ok, why}.
+func player_cast_fireball() -> Dictionary:
+	var p := player
+	if not p.spells.get("fireball", false):
+		return {"ok": false, "why": "You do not know any spells. The Sage in the hut north of the tavern teaches them."}
+	var cd := Skills.value(p, "magic", "fireball_cooldown", float(GameData.b("fireball_cooldown")))
+	var cost := float(GameData.b("fireball_stamina")) * Skills.value(p, "magic", "fireball_stamina", 1.0)
+	if p.fireball_cd > 0.0 or p.stamina < cost:
+		return {"ok": false, "why": ""}
+	p.fireball_cd = cd
+	p.stamina -= cost
+	player_xp("magic", 6)
+	return {"ok": true, "why": ""}
+
+
+## DVW-A12 R11: a fireball in flight at `pos` strikes the first villager within FIREBALL_HIT_RADIUS, else the first
+## animal: FIREBALL_DAMAGE by the Magic fireball_damage tier, as the player's blow (player_hit_npc, player_hit_animal),
+## and a spell that lands earns 6 more Magic xp (`up`: a new level, shown by the caller after the hit). Returns {who:
+## the one struck or null, before: their health before, dealt, guard: a guard's words, up}.
+func player_fireball_hit(pos: Vector2) -> Dictionary:
+	var dmg := FIREBALL_DAMAGE * Skills.value(player, "magic", "fireball_damage", 1.0)
+	for n: NPC in present(pos, FIREBALL_HIT_RADIUS):
+		var before := n.hp
+		var h := player_hit_npc(n, dmg)
+		return {"who": n, "before": before, "dealt": h.dealt, "guard": "", "up": player.gain("magic", 6)}
+	for a: Animal in fauna.near(pos, FIREBALL_HIT_RADIUS):
+		var before := a.hp
+		var h := player_hit_animal(a, dmg)
+		return {"who": a, "before": before, "dealt": dmg, "guard": h.guard, "up": player.gain("magic", 6)}
+	return {"who": null}
+
+
 ## DVW-A12 R10: a blow of the player's of `dmg` lands on animal `a`. Still alive, it is provoked (a wolf or a bear
 ## fights back, B14). Killed: Combat xp by Skills.kill_xp (per kill, as a villager's, FSE-B12), the wildlife ledger
 ## (hunted_ or slaughtered_, FSE-B10), its meat and hide left where it fell, a wolf or bear put down near people a

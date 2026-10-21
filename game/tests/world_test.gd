@@ -1463,6 +1463,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_loot()
 	_dvw_a12_xp()
 	_dvw_a12_livestock()
+	_dvw_a12_cast()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2002,6 +2003,51 @@ func _dvw_a12_livestock() -> void:
 	while w.loot.size() > loot0:
 		w.loot.remove_at(w.loot.size() - 1)
 	main._sync_loot()
+	_restore_pack(keep)
+
+
+## R11: casting Fireball: refused unknown, silent while cooling down or tired; a cast costs stamina, starts the
+## cooldown and earns 6 xp; a fireball that strikes harms by the base damage and earns 6 more; through the interface.
+func _dvw_a12_cast() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var keep := _fresh_pack()
+	var spells0: Dictionary = p.spells.duplicate()
+	p.spells.erase("fireball")
+	var c := w.player_cast_fireball()
+	check(not c.ok and str(c.why).contains("do not know"), "DVW-A12 R11: an unknown spell is refused with the reason")
+	p.spells["fireball"] = true
+	p.fireball_cd = 0.0
+	p.stamina = 100.0
+	var cost := float(GameData.b("fireball_stamina"))
+	c = w.player_cast_fireball()
+	check(c.ok and is_equal_approx(p.stamina, 100.0 - cost) and is_equal_approx(p.fireball_cd, float(GameData.b("fireball_cooldown"))) and int(p.skills.get("magic", 0)) == 6, "DVW-A12 R11: a cast spends the stamina, starts the cooldown and earns 6 xp")
+	c = w.player_cast_fireball()
+	check(not c.ok and str(c.why) == "" and int(p.skills.get("magic", 0)) == 6, "DVW-A12 R11: cooling down, nothing (and no message)")
+	p.fireball_cd = 0.0
+	p.stamina = cost - 1.0
+	check(not w.player_cast_fireball().ok and is_equal_approx(p.stamina, cost - 1.0), "DVW-A12 R11: without the stamina, nothing")
+	# a strike
+	var v: NPC = w.npcs.filter(func(x): return x.alive and x.role == "adult" and x.job != "guard")[2]
+	v.target = -1
+	var at := v.pos + Vector2(0.3, 0)
+	var struck: NPC = w.present(at, World.FIREBALL_HIT_RADIUS)[0]       # the first one there (it may not be v)
+	var hp0 := struck.hp
+	var want := maxf(0.5, World.FIREBALL_DAMAGE * Skills.value(struck, "combat", "damage_taken", 1.0) - struck.armor * 0.5)
+	var h := w.player_fireball_hit(at)
+	check(h.who == struck and is_equal_approx(struck.hp, hp0 - want) and is_equal_approx(float(h.dealt), want) and int(p.skills.get("magic", 0)) == 12, "DVW-A12 R11: a fireball that strikes harms by %.0f and earns 6 more xp" % World.FIREBALL_DAMAGE)
+	check(w.player_fireball_hit(Vector2(-50, -50)).who == null, "DVW-A12 R11: nobody there, no strike")
+	# through the interface: a cast and its flight
+	p.fireball_cd = 0.0
+	p.stamina = 100.0
+	main.player_sprite.dir = 0
+	var n0: int = main.projectiles.size()
+	main.fireball()
+	check(main.projectiles.size() == n0 + 1 and int(p.skills.get("magic", 0)) == 18, "DVW-A12 R11: the interface's cast is core's")
+	for i in 40:
+		main._projectiles_step(0.05)
+	check(main.projectiles.size() == n0, "DVW-A12 R11: the fireball ends within its range")
+	p.spells = spells0
 	_restore_pack(keep)
 
 
