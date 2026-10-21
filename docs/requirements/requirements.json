@@ -9743,7 +9743,7 @@
    "id": "EXP-A",
    "title": "Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "Purpose: Expand how settlements discover, extract, process, transport, and use finite natural resources.",
    "description": "Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification)",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -9801,6 +9801,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 17",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "Audit 2026-10-21: the umbrella for Build 17's mining expansion is under way: MIN-A..D implemented, MIN-E and CON-01 in progress, MIN-F, MIN-G not started"
     }
    ],
    "target_build": "17",
@@ -15249,7 +15254,7 @@
    "id": "MIN-C-Q1",
    "title": "Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "Support manor commissioning without assuming the manor is the exclusive potential employer. Preserve compatibility with the existing negotiated-contract system.",
    "description": "Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts",
    "source": "docs/directives/2026-10-21_build17_combined_integration_direction.md",
@@ -15258,10 +15263,12 @@
     "The manor can commission prospecting; other buyers can too through CON-01; no mining-specific wage"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "discovery_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "b0506db"
+   ],
    "parent": "MIN-C",
    "depends_on": [],
    "blockers": [],
@@ -15283,6 +15290,11 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit b0506db; tests",
+     "why": "Audit 2026-10-21: MIN-D gives manor commissioning (survey and trial-pit postings on the job board) and independent prospecting; commissioning by other buyers waits on a service-contract rule (MIN-D-Q1)"
     }
    ],
    "target_build": "17"
@@ -15725,7 +15737,7 @@
    "id": "MIN-H",
    "title": "Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence)",
    "source": "docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md",
@@ -15734,10 +15746,12 @@
     "Architecture selected by the owner from the A/B/C comparison; player and NPC movement, mining, transport, transitions, saves and rendering underground; the same deposit system as the surface"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "underground_test 95",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a659f42"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -15764,6 +15778,11 @@
      "date": "2026-10-21",
      "change": "notes",
      "why": "Owner chose the architecture"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit a659f42; tests",
+     "why": "Audit 2026-10-21: the MIN-A adit gallery is an enterable underground level tied to a surface portal, with NPC pathing through the level router, the surface fading when the player is below, and persistence (save v17); natural caves and further underground spaces are not built (MIN-F)"
     }
    ],
    "target_build": "17",

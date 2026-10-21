@@ -11,9 +11,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 55 |
+| APPROVED — NOT STARTED | 52 |
 | ACTIVE DEVELOPMENT | 13 |
-| PARTIALLY IMPLEMENTED | 32 |
+| PARTIALLY IMPLEMENTED | 35 |
 | IMPLEMENTED — TESTING REQUIRED | 31 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
@@ -161,16 +161,16 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | ECON-P1.2 | Manor mining rights, royalty, quota, stone reserve (:72) | proposal | BLOCKED |  | older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D) |
 | ECON-P1.4 | Prospecting new seams (:74) | proposal | BLOCKED |  | older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D) |
 | ECON-P1.5 | Distant quarry (:75) | proposal | BLOCKED |  | older deposit proposals; inputs to the mining phases (candidates to supersede by MIN-B..D) |
-| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
+| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | approved | PARTIALLY IMPLEMENTED |  | the Mining & Industrial Development expansion |
 | MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | approved | IMPLEMENTED — TESTING REQUIRED |  | the Mining & Industrial Development expansion |
 | MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | approved | IMPLEMENTED — TESTING REQUIRED |  | the Mining & Industrial Development expansion |
 | MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | approved | IMPLEMENTED — TESTING REQUIRED |  | the Mining & Industrial Development expansion |
-| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | APPROVED — NOT STARTED |  |  |
+| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | PARTIALLY IMPLEMENTED |  |  |
 | MIN-D | Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption | approved | IMPLEMENTED — TESTING REQUIRED |  | the Mining & Industrial Development expansion |
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | approved | APPROVED — NOT STARTED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | approved | APPROVED — NOT STARTED | depends on MIN-A | open-pit and underground mining; may slip to 20+ if MIN-A finds the terrain cannot carry depth (document section 7) |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | approved | APPROVED — NOT STARTED |  | the Mining & Industrial Development expansion |
-| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | APPROVED — NOT STARTED | Build 17 | Owner Build 17 decisions 2026-10-21 |
+| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | PARTIALLY IMPLEMENTED | Build 17 | Owner Build 17 decisions 2026-10-21 |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | decision | BLOCKED | owner decision first | deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits) |
 | PL1-12 | Red flowering plant not pickable | approved | IMPLEMENTED — TESTING REQUIRED |  | the red plant in the overworld needs an overworld generator version, done with the geological clues (MIN-C) |
 | REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | approved | BLOCKED | owner decision first | wear and maintenance give tools, supports and carts real upkeep (industrial chains) |
@@ -434,7 +434,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (55)
+## APPROVED — NOT STARTED (52)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -447,7 +447,6 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-B5 | Predictable taxes with hysteresis, announced | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 277) |  |  |  |
 | DVW-B7 | Life chronicle, titles, memorial | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 279) |  |  |  |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 281) |  |  |  |
-| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf |  | after SET-A; after SET-B; after SET-C; after SET-D; after SET-E | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |  | after SJD-A; after SJD-B; after SJD-C; after SJD-D; after SJD-E; after SJD-F; after SJD-G; after SJD-H | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx; docs/directives/2026-10-20_fam07_clarification_living_economy.md |  |  |  |
@@ -464,11 +463,9 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17 |  |  |  |
-| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | docs/directives/2026-10-21_build17_combined_integration_direction.md |  |  |  |
 | MIN-E | Mining expansion phase E: Open-pit excavation, spoil, dirt and topsoil as materials, ramps, hauling and geological layers (where the architecture supports them) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-D |  |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-E |  |
 | MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-F |  |
-| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md |  |  |  |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | docs/directives/2026-10-20_od14_housing_expansion_procedural_villages.md Phase 2 |  |  |  |
@@ -512,7 +509,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (32)
+## PARTIALLY IMPLEMENTED (35)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -525,9 +522,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | DVW-A13 | Every visible object has a use (:38) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 257) |  |  |  |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 273) |  |  | harms lower regard; gossip spreads deeds |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
+| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf |  | after MIN-A; after MIN-B; after MIN-C; after MIN-D; after MIN-E; after MIN-F; after MIN-G | see docs/EXPANSION_ROADMAP.md; begins after the Build 16 baseline |
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `68a3611`; world_test::_fse12_shared_fields |  | Activated with FSE-12 after the owner's review |
 | FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md | `68a3611`; world_test::_fse12_shared_fields | after FSE-16 | Owner's choice: (a) the player's yield as is, (b) one lower per-cell yield for everyone, (c) fewer cells sown; decided with FSE-13 |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md | `01a83f0`; world_test::_fse13_seasonal_fields | after FSE-12 | Owner's review of docs/design/FSE13_COMPARISON.md; recommendation: pair with farm plots and FSE-12 and compare again |
+| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | docs/directives/2026-10-21_build17_combined_integration_direction.md | `b0506db`; discovery_test |  |  |
+| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md | `a659f42`; underground_test 95 |  |  |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |

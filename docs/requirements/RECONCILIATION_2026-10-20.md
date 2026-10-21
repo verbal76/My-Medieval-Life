@@ -152,13 +152,13 @@ None.
 | MEM-02 | Permanent project memory: index covers every listed source (incl. the 231-entry reconciliation), 8-step session start, baseline of the 231 open and 142 closed entries, 9-question recovery test | approved | COMPLETE AND VERIFIED | 15 |
 | MERCH-01 | A village seed merchant or booth selling crop and flower seed, berry cuttings and fruit-tree seed or saplings, with real stock, coins and restocking | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | rule | COMPLETE AND VERIFIED | 16 |
-| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | APPROVED — NOT STARTED | 17 |
+| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | approved | PARTIALLY IMPLEMENTED | 17 |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | decision | BLOCKED | owner decision |
 | MIN-C-Q3 | The smith remains the assayer; no separate assayer profession without approval | approved | COMPLETE AND VERIFIED |  |
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | decision | BLOCKED | owner decision |
 | MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | decision | BLOCKED | owner decision |
 | MIN-D-Q3 | Should trial pits yield dirt or topsoil items (with MIN-E's item decision)? | decision | BLOCKED | owner decision |
-| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | APPROVED — NOT STARTED | 17 |
+| MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | approved | PARTIALLY IMPLEMENTED | 17 |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | decision | SUPERSEDED | 16 |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | decision | COMPLETE AND VERIFIED | 16 |
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | decision | COMPLETE AND VERIFIED | 16 |
