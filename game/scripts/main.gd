@@ -2035,6 +2035,9 @@ func _find_target() -> void:
 	here = fronts + here
 	here.reverse()
 	cands.append_array(here)
+	var stall_build := _stall_build_target()          # STALL-01: offered last, only with the planks in the pack
+	if not stall_build.is_empty():
+		cands.append(stall_build)
 	if not farm_low.is_empty():                          # tilling: the plough in hand makes it the first choice, else the last
 		if p.tool != "" and GameData.item(p.tool).get("tool", "") == "plough":
 			cands.push_front(farm_low[0])
@@ -2165,6 +2168,8 @@ func _shop_target(post: Dictionary) -> Dictionary:
 		return {"kind": "summon", "id": post.id, "label": "Ring for service at %s" % world.counters.counter_name(post.id)}
 	if post.stall:
 		var s: Dictionary = world.stalls[post.id]
+		if Stalls.is_built(s):
+			return _built_stall_target(s)
 		if Business.is_pitch(s):
 			var mine := world.tenant_of(s) == World.PLAYER
 			if not mine and world.tenant_of(s) != "":
@@ -2172,6 +2177,27 @@ func _shop_target(post: Dictionary) -> Dictionary:
 			return {"kind": "stall", "id": post.id, "label": "Manage your market stall" if mine else "Rent this market pitch (%d coins a day)" % Business.rent_day()}
 		return _container_target({"id": post.id, "kind": "stall", "x": int(s.x), "y": int(s.y), "at": post.id})
 	return {"kind": "info", "label": "The tavern counter: nobody is serving", "text": "Nobody is serving at the counter now."}
+
+
+## A market stall someone built (STALL-01): the player's own is managed (stock, OPEN / CLOSE, settlement); another's
+## shows whose it is and what it holds.
+func _built_stall_target(s: Dictionary) -> Dictionary:
+	if world.holds(World.PLAYER, s):
+		return {"kind": "stall", "id": str(s.id), "label": "Manage your market stall (%s)" % ("open" if world.business.stalls.is_open(s) else "closed")}
+	return {"kind": "stall", "id": str(s.id), "label": "%s's market stall" % world.ref_name(world.holder_of(s), true)}
+
+
+## Build a market stall on the ground in front (STALL-01, owner Q10: three planks from the pack): offered while the
+## player carries the planks, stands outdoors and the ground in front is a legal site. {} otherwise.
+func _stall_build_target() -> Dictionary:
+	var p := world.player
+	if not p.inv.has_all(Stalls.cost()) or world.place_of(p.pos) != "" or facing_vec().y > -0.5:
+		return {}                       # facing up: the awning goes in front, the player stands where buyers will
+	var c := Vector2i((p.pos + facing_vec() * 0.9).floor())
+	if world.business.stalls.site_refusal(c, World.PLAYER) != "":
+		return {}
+	var need := Stalls.cost()
+	return {"kind": "stall_build", "c": c, "label": "Build a market stall here (%s)" % ", ".join(need.keys().map(func(k): return "%d %s" % [int(need[k]), GameData.item_name(k).to_lower()]))}
 
 
 ## In a room of the player's: its shop counter (open or manage the shop) and fitting the room out (PL1-10 stage 3).
@@ -2333,6 +2359,9 @@ func _use() -> void:
 		"front_build":
 			var why := world.business.build_storefront(world.buildings[str(target.id)])
 			ui.message(why if why != "" else "Your storefront stands by the door. List goods at its counter.")
+		"stall_build":
+			var why := world.construction.build_stall(World.PLAYER, target.c, p.inv)
+			ui.message(why if why != "" else "Your market stall stands. Put goods in it and open it; it sells while you are away.")
 		"front_open":
 			var why := world.business.open_front(world.buildings[str(target.id)])
 			ui.message(why if why != "" else "Your storefront is open.")

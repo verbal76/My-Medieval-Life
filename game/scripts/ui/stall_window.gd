@@ -111,9 +111,13 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 			return
 		return
 	if not biz.is_mine(s):
+		if Stalls.is_built(s):
+			_others_view(ui, w, s)
+			return
 		_rent_view(ui, w, s)
 		return
 	var shop := Business.is_shop(s)
+	var built := Stalls.is_built(s)
 	var rent := biz.rent_of(s)
 	var b: Dictionary = biz.building_of(s)
 	var what := "shop" if shop else "stall"
@@ -122,7 +126,11 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 		_picker(ui, w, s, pick)
 	var owing := int(s.get("missed", 0)) > 0
 	var here := biz.attended(s)
-	if owing:
+	if biz.stalls.is_market(s):
+		_session_section(ui, w, s, id)
+	if built:
+		pass                                  # no rent: the 5% sales lease (the session section above)
+	elif owing:
 		ui._label("%s owing: sales are stopped. Pay %d coins to open again; the manor takes it back if it stays unpaid." % ["Licence" if shop else "Rent", rent * maxi(1, w.day() - int(s.paid_day))], 17, COLD)
 		ui._button("Pay the %s" % ("licence" if shop else "rent"), func():
 			var why := biz.pay_arrears(s)
@@ -152,25 +160,29 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 	var acts := HBoxContainer.new()
 	acts.add_theme_constant_override("separation", 8)
 	ui.panel_body.add_child(acts)
-	if till > 0:
+	if till > 0 and not biz.stalls.is_market(s):
 		ui._button("Collect %d coins" % till, func():
 			ui.message("You collect %d coins from the till." % biz.collect(s))
 			show(ui, id), true, acts)
-	ui._button("Close the %s" % what, func():
-		ui.message(biz.close(s))
-		ui.hide_all(), true, acts)
+	if not built:
+		ui._button("Give up the pitch" if not shop else "Close the shop", func():
+			ui.message(biz.close(s))
+			ui.hide_all(), true, acts)
 	if shop:
 		ui._button("Fit out the room", func(): FitWindow.show(ui, id), true, acts)
 		ui._label(w.fitting.summary(b), 14)
-	elif not bool(s.get("large", false)):
+	elif not bool(s.get("large", false)) and not built:
 		var why := biz.upgrade_refusal(s)
 		ui._button("Larger stall: %d coins, then %d a day" % [int(GameData.b("stall_large_cost")), int(GameData.b("stall_large_rent_day"))], func():
 			var r := biz.upgrade(s)
 			ui.message(r if r != "" else "Your stall is larger now: more goods, a display, a wider reach.")
 			show(ui, id), why == "", acts)
 		ui._label("A larger stall holds %d kinds of goods (now %d) and has a display that draws buyers from %.1f times as far." % [int(GameData.b("stall_large_listings")), biz.listing_cap(s), float(GameData.b("stall_large_reach"))], 14)
-	ui._label("Closing returns every item and the till to you." + (" The counter and shelves stay in the room." if shop else ""), 14)
-	_attendant_section(ui, w, s, id)
+	if built:
+		ui._label("Your own stall: no rent. Closing settles the sales; the unsold goods stay in it. Take them back below.", 14)
+	else:
+		ui._label(("Giving up the pitch settles the sales and returns every item and the rest of the till to you." if not shop else "Closing returns every item and the till to you.") + (" The counter and shelves stay in the room." if shop else ""), 14)
+		_attendant_section(ui, w, s, id)
 	ui._label("For sale (%d of %d kinds):" % [s.stock.size(), biz.listing_cap(s)], 20, Color(1, 0.85, 0.5))
 	var stock: Dictionary = s.stock
 	if stock.is_empty():
@@ -238,7 +250,7 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 	for i in range(sales.size() - 1, maxi(-1, sales.size() - 9), -1):
 		var e: Dictionary = sales[i]
 		ui._label("Day %d, %02d:00  %s bought %d %s for %d coins%s" % [int(e.day) + 1, int(e.hour), e.who, int(e.qty), GameData.item_name(e.item).to_lower(), int(e.qty) * int(e.price),
-			"  (sold by your attendant)" if str(e.get("by", "")) == "attendant" else ""], 15)
+			{"attendant": "  (sold by your attendant)", "unattended": "  (sold while you were away)"}.get(str(e.get("by", "")), "")], 15)
 	_to_top.call_deferred(ui)          # after the focus has been given: a rebuilt window reads from its top
 
 
@@ -280,6 +292,57 @@ static func _attendant_section(ui: GameUI, w: World, s: Dictionary, id: String) 
 			show(ui, id))
 		h.add_child(hb)
 		ui.panel_body.add_child(h)
+
+
+## OPEN STALL / CLOSE STALL and the session's settlement (STALL-03..05, owner 2026-10-21 Q8, Q13): what the open
+## session has sold (held in the till, not to be taken until it is closed), what closing would pay the manor, the
+## last settlement.
+static func _session_section(ui: GameUI, w: World, s: Dictionary, id: String) -> void:
+	var st: Stalls = w.business.stalls
+	var open := st.is_open(s)
+	var held := st.unsettled(s)
+	var due := st.due(s)
+	if open:
+		ui._label(("OPEN: villagers who need these goods come and buy, whether or not you are here." if Stalls.is_built(s)
+				else "OPEN: it sells while you or your attendant are at it.") + " It closes by itself when it sells out.", 16, GOLD)
+	else:
+		ui._label("CLOSED: nothing sells until you open it. Restock it below, then open it again.", 16, COLD)
+	ui._label("This session: %d coins of sales, held in the till until the stall is closed. On closing the manor takes %d%% of the sales: %d coins now%s; the rest is yours." % [held, Stalls.pct(), due.x,
+			(" (%d hundredths of a coin carried to the next settlement)" % due.y) if due.y > 0 else ""], 15)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	ui.panel_body.add_child(row)
+	if open:
+		ui._button("Close the stall and settle", func():
+			ui.message("You close the stall. " + st.settle_text(s, st.close(s)))
+			show(ui, id), true, row)
+	else:
+		var why := st.open_refusal(s, World.PLAYER)
+		ui._button("Open the stall", func():
+			var r := st.open(s, World.PLAYER)
+			ui.message(r if r != "" else "Your stall is open.")
+			show(ui, id), why == "", row)
+		if held > 0 or int(s.get("till", 0)) > 0:
+			ui._button("Settle the till", func():
+				ui.message(st.settle_text(s, st.close(s)))
+				show(ui, id), true, row)
+	var log: Array = s.get("settlements", [])
+	if not log.is_empty():
+		var e: Dictionary = log[-1]
+		ui._label("Last settled day %d, %02d:00 (%s): sales %d, to the manor %d, to you %d." % [int(e.day) + 1, int(e.hour), str(e.why), int(e.gross), int(e.commission), int(e.net)], 14)
+
+
+## Someone else's built stall: whose it is and whether it is open (buying is done by the villagers who need its goods).
+static func _others_view(ui: GameUI, w: World, s: Dictionary) -> void:
+	var st: Stalls = w.business.stalls
+	ui._open("stall", "A market stall")
+	ui._label("%s's market stall: %s." % [w.ref_name(w.holder_of(s), true), "open" if st.is_open(s) else "closed"], 17)
+	var stock: Dictionary = s.get("stock", {})
+	var ids: Array = stock.keys()
+	ids.sort()
+	for it in ids:
+		ui._label("%s x%d, %d coins each" % [GameData.item_name(it), int(stock[it]), w.business.price_of(s, it)], 15)
+	ui._button("Close", ui.hide_all)
 
 
 static func _to_top(ui: GameUI) -> void:
