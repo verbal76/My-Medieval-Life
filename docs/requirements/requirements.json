@@ -21382,6 +21382,148 @@
    "roadmap_reason": "production chains in player shops, coops, hired farm help, draught animals: industry and specialization"
   },
   {
+   "id": "PROS-01",
+   "title": "Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates",
+   "kind": "rule",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Authorize immediate prospective development for Expansions 18 and 19 while Expansion 17 remains the primary active development milestone.",
+   "description": "Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates",
+   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "wip/expansion18-preparation and wip/expansion19-preparation exist on GitHub, branched from a stable baseline (19 not from 18)",
+    "Neither merges into staging or a release branch, nor publishes a build, before its reconciliation gate (18 after Build 17 complete, 19 after Build 18 complete)",
+    "Per-expansion progress kept: implemented and tested, provisional, dependencies, risks, owner decisions, branch head, readiness from verified tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "PROS-18",
+   "title": "Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "Begin implementation of independently developable components",
+   "description": "Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests)",
+   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Code and tests on wip/expansion18-preparation; provisional interfaces and fixtures for Build 17 mining and industry; no duplicate mining system"
+   ],
+   "implementation": "",
+   "tests": "settlement_test 63, regional_test 67, caravan_compare 20/50; run_tests, world_test, start_test, parity_test, conservation_test, business_test",
+   "playtest": [],
+   "branch": "wip/expansion18-preparation",
+   "commits": [
+    "8eec56e"
+   ],
+   "parent": "PROS-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit 8eec56e; tests; branch",
+     "why": "Rounds 1-3 on wip/expansion18-preparation (8eec56e): capability and specialization (mining read-only from MIN-D through an adapter; one-evaluator merge plan in docs/expansion18/DESIGN.md section 8), settlement holdings and reports, regional supply and demand, routes and haulage, competition and cooperation, caravan comparison harness; Q18-9 (levels scale pay and output, factors 1.0) and Q18-10 (any party buys, fetches or pays a carter) applied; settlement_test 63, regional_test 67, caravan_compare 50 checks; regression suites pass. SET-D not started (Q18-6, Q18-7, Q18-12, Q18-13, live CON-01)"
+    }
+   ],
+   "target_build": "18"
+  },
+  {
+   "id": "PROS-19",
+   "title": "Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests)",
+   "kind": "approved",
+   "status": "ACTIVE DEVELOPMENT",
+   "owner_wording": "The judgment system must influence choices, not dictate them.",
+   "description": "Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests)",
+   "source": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Code and tests on wip/expansion19-preparation in isolated scenarios with provisional adapters; the live NPC decision system is not replaced; SJD-Q01..Q14 stay open for the owner"
+   ],
+   "implementation": "",
+   "tests": "judgment_test 99, judgment_live_test 26, judgment_perf 10; sim_gate identical when off",
+   "playtest": [],
+   "branch": "wip/expansion19-preparation",
+   "commits": [
+    "e05d367"
+   ],
+   "parent": "PROS-01",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_parallel_prospective_development_18_19.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "commit e05d367; tests; branch",
+     "why": "Round 1 on wip/expansion19-preparation (e05d367): memory with provenance, signed opinions, need-vs-opinion weighting (iron example both ways), gossip, provisional save section, live hooks off by default; judgment_test 99, judgment_live_test 26, judgment_perf 10 checks; gate identical with judgment off; 10-day sim with judgment on: no leaks. Not ready for live use: SJD-Q01,Q02,Q06,Q07,Q08,Q10,Q11,Q14 block it; daily update over phone frame budget (round 2 in progress)"
+    }
+   ],
+   "target_build": "19"
+  },
+  {
    "id": "PVG-01",
    "title": "Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space)",
    "kind": "approved",
@@ -21988,6 +22130,218 @@
    "target_build": "owner decision",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "waiting on an owner decision, not development work"
+  },
+  {
+   "id": "Q18-10",
+   "title": "Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Anyone may purchase goods from another settlement, including individual villagers, households, merchants, businesses, and settlement treasuries.",
+   "description": "Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Decision recorded; Expansion 18 implements buying by any holder through the existing negotiation, contract, inventory, transport and conservation systems"
+   ],
+   "implementation": "Recorded owner decision; implementation follows in PROS-18",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; implementation",
+     "why": "Owner decision recorded in docs/DECISIONS.md and the directive file"
+    }
+   ],
+   "target_build": "18",
+   "owner_answer": "Anyone (villagers, households, merchants, businesses, settlement treasuries) may buy from another settlement, and either fetches the goods personally or negotiates and pays a willing carter or delivery service. No free delivery, no merchant-only buying, no coins or goods created; existing negotiation, contract, inventory, transport and conservation systems, no duplicates."
+  },
+  {
+   "id": "Q18-11",
+   "title": "What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect)",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "open owner question raised by PROS-18 implementing Q18-9",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "Q18-12",
+   "title": "May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "open owner question raised by PROS-18 implementing Q18-10",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "Q18-13",
+   "title": "Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should CON-01 contracts gain parties for households and off-map settlements, or should a household buy through a named member and a region through a named merchant?",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "open owner question raised by PROS-18 implementing Q18-10",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "Q18-9",
+   "title": "Settlement capability levels affect pay scales and production output only; never a permission gate",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": "Capability levels affect pay scales and production output only. They must never function as permission gates or prevent an NPC, player, or settlement from performing an activity.",
+   "description": "Settlement capability levels affect pay scales and production output only; never a permission gate",
+   "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
+   "approval": "owner decision 2026-10-21",
+   "acceptance": [
+    "Decision recorded; no capability level gates an activity (MIN-D gates removed on wip/build17; Expansion 18 model reports and scales only)"
+   ],
+   "implementation": "Recorded owner decision; implementation follows in PROS-18",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "PROS-18",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; implementation",
+     "why": "Owner decision recorded in docs/DECISIONS.md and the directive file"
+    }
+   ],
+   "target_build": "18",
+   "owner_answer": "Capability levels affect pay scales and production output only; never a permission gate. A settlement with mining capability level 0 can still mine if it has the resources, tools and access."
   },
   {
    "id": "REC-001",

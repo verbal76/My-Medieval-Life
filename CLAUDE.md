@@ -29,6 +29,9 @@ are. No file is read automatically because it exists: do these steps, in order, 
    before the build before it meets every condition of OVN-01 section 4; never answer an
    open owner decision, merge into `main` or `wip/multiplayer` into staging, or publish outside the release
    authorization in force.
+   Exception (owner, 2026-10-21, PROS-01, `docs/directives/2026-10-21_parallel_prospective_development_18_19.md`):
+   prospective Expansion 18 and 19 code is developed on `wip/expansion18-preparation` and `wip/expansion19-preparation`,
+   isolated, never merged or released before its reconciliation gate (18 after Build 17 is complete, 19 after Build 18).
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
