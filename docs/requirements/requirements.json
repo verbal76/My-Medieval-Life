@@ -3345,7 +3345,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Four-seed 365-day runs on the new staging head; classify any death",
+   "next_action": "Close on the 62b7488 four-seed run if it holds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -3380,6 +3380,11 @@
      "date": "2026-10-21",
      "change": "tests",
      "why": "Seed 4 on d6d80a4: 2 deaths, classified a defect (the chest's firewood not topped up from trade stock) and fixed; all 27 suites pass; gate re-baselined, no leaks"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
     }
    ],
    "acceptance_derived": true,
@@ -11888,7 +11893,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Comparison runs with --set seasonal_village_farming=1; report per the owner's list; owner authorization before activation",
+   "next_action": "Owner's review of docs/design/FSE13_COMPARISON.md; recommendation: pair with farm plots and FSE-12 and compare again",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -11913,6 +11918,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 01a83f0; tests; next_action",
      "why": "Seasonal manor fields behind balance seasonal_village_farming (off; gate identical): no winter sowing, hourly growth at the season's rate; world_test::_fse13_seasonal_fields. Comparison runs and the owner's review next"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Comparison done (Actions 39526774144 against 39523615798): seasonal fields cut the grain year by 26-28 %, the pens' milk by 44-90 %, starvation 8-27 a seed against 0; report docs/design/FSE13_COMPARISON.md; not activated, awaiting the owner"
     }
    ],
    "target_build": "16",
@@ -12045,7 +12055,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "FSE-17 (relief sources) and the eating and cooking parity, then rerun seed 2 for 365 days and compare with the 5625505 baseline",
+   "next_action": "Close on the 62b7488 four-seed run if it holds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12065,6 +12075,11 @@
      "date": "2026-10-20",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 9db091b; tests; next_action",
      "why": "Every death analysed from an exact reproduction of the baseline (docs/design/FOOD_SECURITY_AUDIT.md section 2); two defects fixed (9db091b, tests in reserve_test.gd that fail on the old code); the relief-source and eating/cooking-parity defects remain (FSE-17 and the parity work); closes when the seed-2 year rerun is compared with the baseline"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
     }
    ],
    "target_build": "16",
@@ -12100,7 +12115,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Compare the 365-day runs (Actions, seeds 1-4) with the baselines; record in LONG_RUN_SIMULATION.md",
+   "next_action": "Close on the 62b7488 four-seed run if it holds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12120,6 +12135,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; next_action",
      "why": "Relief takes the granary first, then any edible food from any seller cheapest point first, raw meat for the logs to roast it, and other households' food beyond their reserve horizon; a household's food counts all it holds; one food valuation everywhere; tests in reserve_test.gd::relief_sources; all 27 suites pass; closes after the 365-day comparison with the 5625505 baseline"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
     }
    ],
    "target_build": "16",
@@ -12156,7 +12176,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Classify seed 4's two deaths (watched local run of d6d80a4)",
+   "next_action": "Close on the 62b7488 four-seed run if it holds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12191,6 +12211,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Four seeds on d6d80a4 (Actions 39516113640): starvation 0/0/0/2, firewood nights down on every seed, 0 script errors, ledgers balanced; seed 4's two deaths being classified"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
     }
    ],
    "target_build": "16",
@@ -12280,7 +12305,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Measure band hunger in the four-seed runs; record the deadwood dependency with bandit factions",
+   "next_action": "Close on the 62b7488 four-seed run if it holds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12305,6 +12330,11 @@
      "date": "2026-10-21",
      "change": "owner decision recorded: deadwood cooking retained as an interim exception",
      "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
     }
    ],
    "target_build": "16",
@@ -12550,7 +12580,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Look at the player's hearth craft window in play (a screenshot)",
+   "next_action": "Close on the 62b7488 four-seed run if it holds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12570,6 +12600,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 6ab7d50; tests; next_action",
      "why": "One recipe list for the home hearth (Furniture.home_recipes: oven + stove) for the player's craft window and the villagers' home cooking; furniture_test checks it"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
     }
    ],
    "target_build": "16",
@@ -12603,7 +12638,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Measure in the next four-seed runs",
+   "next_action": "Close on the 62b7488 four-seed run if it holds",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12623,6 +12658,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 6ab7d50; tests; next_action",
      "why": "Combat xp per kill, 2 a blow the kill takes at the killer's damage (Skills.kill_xp), for player kills, villager hunts and slaughter; world_test::_fse_defects"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Four seeds, 365 days on 1fefddb (Actions 39523615798): starvation 0/0/0/0, 0 script errors, ledgers balanced; to be closed when the run on 62b7488 (with seasonal berries) confirms"
     }
    ],
    "target_build": "16",

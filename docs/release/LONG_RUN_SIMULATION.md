@@ -1214,3 +1214,24 @@ goods stay in the pack for sale, FSE-18). The household's reckoning counted ever
 the meat counted as roastable (2.16 days) and relief did not come, but the logs never reached the hearth: the chest's
 top-up for traders took food only. **A defect**, the same class as Simon Brook's (seed 2), fixed in the next commit: a
 trader home puts in the logs to roast the chest's meat, up to the reserve horizon, from trade stock if need be.
+
+### Four seeds, 365 days, on `1fefddb` (EQ-22 caravan by need, PICK-01, the chest's firewood top-up), Actions 39523615798 (2026-10-21)
+
+| Day 365 | Seed 1 | Seed 2 | Seed 3 | Seed 4 |
+|---|---|---|---|---|
+| Script errors / ledgers | 0 / balanced | 0 / balanced | 0 / balanced | 0 / balanced |
+| Starvation deaths (`d6d80a4` -> `1fefddb`) | 0 -> **0** | 0 -> **0** | 0 -> **0** | 2 -> **0** |
+| Alive at the end | 124 | 126 | 106 | 143 |
+| Births / deaths of old age | 94 / 70 | 96 / 70 | 76 / 70 | 115 / 72 |
+| Households / houses built | 38 / 10 | 35 / 8 | 31 / 7 | 41 / 10 |
+| Unemployed | 1 | 10 | 1 | 13 |
+| Nights without firewood (`d6d80a4` -> `1fefddb`) | 1,444 -> 1,466 | 1,397 -> 1,463 | 1,996 -> 1,414 | 2,119 -> 1,760 |
+| Leather made / exported (caravan by need) | 990 / 223 | 1,287 / 326 | 871 / 288 | 946 / 356 |
+| Fingerprint | `3de8cbbf...` | `a492689a...` | `9be23f36...` | `1687a78e...` |
+
+**No starvation death on any seed** (31 after parity; 11 with the first family chest; 2 on `d6d80a4`, a defect fixed in
+`1fefddb`). Measured, not required (WDR-022). Integrity held on every seed. The fixes since are seed propagation and
+seasonal berry bushes (`62b7488`), measured by run 39529507848.
+
+**FSE-13 comparison (seasonal village farming, switch on), Actions 39526774144:** starvation 27 / 25 / 22 / 8 against
+0 on the baseline above; the full report is `docs/design/FSE13_COMPARISON.md`. The switch stays off.
