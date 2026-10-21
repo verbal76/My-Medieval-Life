@@ -33,7 +33,7 @@ static func _cliff_ways(sys: Callable) -> void:
 		"cliff steps stairs walkway mountain plateau climb rim nails mallet carpentry")
 
 
-# Contracts (evaluate, means, price_terms, obligations, propose, fund_refusal, formal, face_to_face, npc_sign,
+# Contracts (evaluate, means, price_terms, obligations, ContractServices (means, going, plan, step, player_report), propose, fund_refusal, formal, face_to_face, npc_sign,
 # buyer_answer, counter_offer, deliver, cancel, _lapse, dawn, on_death, plan, order_input); GameUI.show_contract.
 static func _contracts(sys: Callable) -> void:
 	var c := Contracts.cfg()
@@ -47,6 +47,8 @@ static func _contracts(sys: Callable) -> void:
 		Wiki.p("When they agree, the whole price is set aside from the buyer's purse: it cannot be spent on anything else, and it is paid out unit by unit as the goods are handed over. Goods can come a few at a time. A villager working on a contract mines, fells, makes or buys what it owes and brings it to a villager buyer's workplace, or to your family chest if you have a home; otherwise you collect it in the contract window. When you are the one supplying, you hand the goods over in the same window and are paid for each."),
 		Wiki.h("Ending a contract"),
 		Wiki.p("Either side can end a contract: what was delivered stays paid, and the rest of the coins set aside go back to the buyer. A contract not finished by its day lapses the next morning: the coins go back, and the one who did not deliver loses the buyer's regard. There is no fine. A contract cannot be changed once agreed; end it and offer another. If either side dies, it ends and the coins go back first. You can keep up to %d contracts as buyer and %d as supplier." % [int(c.max_open_player), int(c.max_open_player)]),
+		Wiki.h("Hiring for work"),
+		Wiki.p("A contract can be for work instead of goods, in the same window and by the same rules: digging your own open pit (so many units, with their pickaxe; the earth goes on the pit's spoil heaps and any stone to your chest, or you collect it from them), or surveying a stain (so many rock samples with their own prospector's kit, each assayed by a smith at their cost and the reading told to you). The price is for each unit of the work, judged against what the manor pays for the same work. The coins are set aside when it is agreed and paid as each unit is really done: agreeing does no work. A villager may also offer you such work; you do it yourself and report it to them in person."),
 		Wiki.h("Villagers' own contracts"),
 		Wiki.p("Villagers use the same contracts. A business that has none of the materials its trade works and finds nobody selling any orders them from another villager who can supply them, at its own buying price; up to %d such orders are made each morning. If nobody in the village can, the order is offered to you: talk to them and it is in their contract window for %d days, where you can agree, decline or counter with your own quantity, price and days. They pay up to %d%% over their own price, want no fewer than they can use and no more than they asked for, and answer with the most they will pay." % [int(c.npc_orders_per_day), int(c.offer_days), roundi((float(c.npc_counter_tolerance) - 1.0) * 100.0)]),
 		Wiki.links(["sys:trading", "sys:decay", "job:miner", "job:smith"])], "contract order supply deliver commission negotiate counteroffer deadline procurement")

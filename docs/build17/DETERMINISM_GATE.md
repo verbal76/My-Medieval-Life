@@ -24,7 +24,7 @@ Suites run on the final code (after the Q18-9 change): discovery 65, prospecting
 contracts 75, world 339, run_tests 3536, start 499 steps, play 37 steps, parity 55, treasury 23, skills (pass); all 0
 failures. Before that change all 42 suites passed on the DVW-A12 merge.
 
-## Pending re-baseline
+## Superseded note: pending re-baseline (done below)
 
 CON-01's completion (merged at `9a56fcc`) changes behaviour (fewer contracts, signing in person), so the baseline above
 describes the code of `b4d1223` and no longer matches the head. It is recorded once more after MIN-E is merged rather
@@ -36,3 +36,17 @@ CON-01's own 30-day run (no leaks) are the conservation evidence for the newer c
 - Actions run 39656594571 (`tests.yml`, workflow_dispatch on `wip/build17` at `9f229f7`, the MIN-A..D code): **success**,
   2026-10-21 18:52-19:00 UTC. The first CI run on the Build 17 branch (every suite in `tests.yml` plus the 10-day,
   seed-1 leak check).
+
+## 2026-10-21, after CON-01 completion and MIN-E (code of `70900c0`)
+
+Baseline re-recorded (`--write`) once for both changes, then a second run: `determinism gate: PASS, identical to the
+baseline`. Suites on the same code: openpit 66, contracts 135, discovery 65, prospecting 54, quarry 39, underground 95,
+crafts 20, world 339, run_tests 3537, start 499 steps, play 37 steps, parity 55, conservation 8, business 160, all 0
+failures; check_resources, check_materials, check_assets 0 problems; Python unittest OK.
+
+| Seed | Day | Fingerprint | Alive | Households | Currency | Leaks |
+|---|---|---|---|---|---|---|
+| 1 | 10 | `70990eea7661c4d477872ce9532c5760` | 101 | 24 | 4581 | currency 0, items {} |
+| 1 | 30 | `e0f09912c01ec33944144171ca4d51ca` | 104 | 24 | 4909 | currency 0, items {} |
+| 2 | 10 | `06629e3bf08d77378ce65a4bf604d6bc` | 111 | 24 | 4388 | currency 0, items {} |
+| 2 | 30 | `55e36bea0034d69f6ca425cb9644d5fd` | 118 | 24 | 4918 | currency 0, items {} |

@@ -138,6 +138,26 @@ func test_window() -> void:
 	check(str(off.state) == "offered" and int(off.price_each) == floori(8 * float(Contracts.cfg().npc_counter_tolerance)) and _shows("most I'd pay"),
 			"the smith counters with the most it pays; the offer now stands on those terms")
 	check(_press("Agree") and str(off.state) == "accepted" and int(off.reserved) == 10 * int(off.price_each), "agreeing to it face to face opens the contract")
+	# CON-02: hiring a villager for work in the same window (a service the game performs: digging the player's pit)
+	var site := Vector2i(-1, -1)
+	for y in w.map.h:
+		for x in w.map.w:
+			if site.x < 0 and w.pits.site_open(Vector2i(x, y)) and w.pits.site_refusal(Vector2i(x, y)) == "":
+				site = Vector2i(x, y)
+	var pit := w.pits.open_pit(World.PLAYER, site) if site.x >= 0 else {}
+	var m2 := miner(w)
+	w.player.coins = 500
+	ui.show_contract(m2)
+	check(not pit.is_empty() and _press("Dig your open pit") and _shows("units at"), "the window offers to hire the miner to dig the player's open pit")
+	var before := w.contracts.open_of(World.PLAYER, "buyer").size()
+	_press_on("Price each", "+1")
+	_press_on("Price each", "+1")
+	_press("Propose")
+	var made: Array = w.contracts.open_of(World.PLAYER, "buyer").filter(func(x): return Contracts.is_service(x))
+	check(made.size() == 1 or _shows("least I'd take"), "proposing it makes a service contract, or the miner answers with its terms")
+	if made.is_empty() and _press("Agree:"):
+		made = w.contracts.open_of(World.PLAYER, "buyer").filter(func(x): return Contracts.is_service(x))
+	check(made.size() == 1 and w.contracts.open_of(World.PLAYER, "buyer").size() == before + 1 and _shows("works for you"), "the service is listed in the window")
 	ui.hide_all()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
