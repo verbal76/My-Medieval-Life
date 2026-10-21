@@ -45,6 +45,9 @@
     "make_timber_support": {"station": "sawhorse", "in": {"log": 1, "plank": 2}, "out": {"timber_support": 1}, "minutes": 30, "skill": "crafting", "xp": 5, "level": 1},
     "make_track_section": {"station": "workbench", "in": {"plank": 2, "nails": 4}, "out": {"track_section": 1}, "minutes": 25, "skill": "crafting", "xp": 5, "level": 1},
     "build_minecart": {"station": "workbench", "in": {"cart_wheel": 4, "cart_axle": 2, "cart_ironwork": 2, "plank": 6}, "out": {"minecart": 1}, "minutes": 120, "skill": "crafting", "xp": 35, "level": 1},
-    "make_ladder": {"station": "workbench", "in": {"plank": 3, "nails": 6}, "out": {"ladder": 1}, "minutes": 40, "skill": "crafting", "xp": 8, "level": 1}
+    "make_ladder": {"station": "workbench", "in": {"plank": 3, "nails": 6}, "out": {"ladder": 1}, "minutes": 40, "skill": "crafting", "xp": 8, "level": 1},
+    "forge_shovel_blade": {"station": "anvil", "in": {"iron_bar": 1}, "out": {"shovel_blade": 1}, "minutes": 30, "skill": "smithing", "xp": 8, "level": 1},
+    "make_shovel_haft": {"station": "workbench", "in": {"plank": 1}, "out": {"shovel_haft": 1}, "minutes": 20, "skill": "crafting", "xp": 4, "level": 1},
+    "assemble_shovel": {"station": "workbench", "in": {"shovel_haft": 1, "shovel_blade": 1}, "out": {"shovel": 1}, "minutes": 20, "skill": "crafting", "xp": 5, "level": 1}
   }
 }

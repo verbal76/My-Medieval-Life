@@ -819,7 +819,8 @@ func _ledger(start: Dictionary) -> Dictionary:
 		var counted: int = d.call("mined_" + ore)
 		if counted != int(mined_by_ore[ore]):
 			dep.append({"ore": ore, "taken_from_deposits": mined_by_ore[ore], "mined_counted": counted})
-	# MIN-E: the open pits' ground, a pool per item: start + staked (pit_ground_) - end = dug - backfilled
+	# MIN-E: the open pits' ground, a pool per item: start + staked (pit_ground_) - end = dug - backfilled. MIN-D-Q3: a
+	# trial pit's earth enters the books as trial_ground_ when it is dug (all of it at once: nothing is left in a trial pit)
 	var pits_now: Dictionary = w.pits.ground_left()
 	var pit_ids := {}
 	for id in pits_now:
@@ -829,8 +830,10 @@ func _ledger(start: Dictionary) -> Dictionary:
 	for k in w.stats:
 		if str(k).begins_with("pit_ground_"):
 			pit_ids[str(k).substr(11)] = true
+		if str(k).begins_with("trial_ground_"):
+			pit_ids[str(k).substr(13)] = true
 	for id in pit_ids:
-		var fall: int = int(start.get("pits", {}).get(id, 0)) + d.call("pit_ground_" + id) - int(pits_now.get(id, 0))
+		var fall: int = int(start.get("pits", {}).get(id, 0)) + d.call("pit_ground_" + id) + d.call("trial_ground_" + id) - int(pits_now.get(id, 0))
 		var net: int = d.call("dug_" + id) - d.call("backfilled_" + id)
 		if fall != net:
 			dep.append({"pit": id, "taken_from_pits": fall, "dug_counted": net})

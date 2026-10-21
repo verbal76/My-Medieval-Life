@@ -16,12 +16,13 @@ extends RefCounted
 ##  - MIN-D (Discovery): the manor commissions prospecting as ordinary work: one "survey" at a time (take
 ##    `survey_samples` rock samples of a clue it has heard nothing of with one's own kit, have them assayed at a
 ##    smith's forge, paying the fees from the wage, and report the readings at the manor), and once its mining
-##    capability allows, one "trial" pit at a time for the best find it knows (Discovery.trial_dig, a pickaxe).
+##    capability allows, one "trial" pit at a time for the best find it knows (Discovery.trial_dig, a shovel: MIN-E-Q4).
 ##    Both are paid for the labour, whatever is found. Manor hands take no surveys (their wage is their pay, and
 ##    the assay fees are the worker's).
 ##  - MIN-E (OpenPits): for a find no trial pit can reach any more, the manor stakes an open pit near the readings it
 ##    knows and posts one "excavate" job at a time while it still wants the pit dug: dig a load (`carry_ore` units,
-##    the carrying rule) with a pickaxe into the job's load, tip the earth onto the pit's spoil heaps and bring any
+##    the carrying rule) with a shovel for the earth and a pickaxe for the rock (MIN-E-Q4; a load ends early when its
+##    digger's tools can dig no cell left) into the job's load, tip the earth onto the pit's spoil heaps and bring any
 ##    stone to the works yard. Paid at the quarry job's rate a unit (no wage of its own); the pit may miss (WDR-022).
 ##  - MIN-F2 (Q2): while its works lack stone and a sound timber support holds a face below ground, one "tunnel" job at
 ##    a time: cut a load (`carry_ore` units) at that face with a pickaxe into the job's load (MineWorks.dig: real rock,
@@ -509,7 +510,7 @@ func open_for(who: String) -> Array:
 	for j in jobs:
 		if j.taker != "" or not can_fund(j, who):
 			continue
-		if j.kind in ["quarry", "trial", "excavate", "tunnel"] and not _has_pick(who):
+		if j.kind in ["quarry", "trial", "excavate", "tunnel"] and not can_dig(j, who):
 			continue
 		if j.kind in ["tunnel", "backfill"] and who == World.PLAYER:
 			continue                 # MIN-F2: the player tunnels and fills with their own hands (and orders the fill)
@@ -534,10 +535,49 @@ func _has_kit(who: String) -> bool:
 
 
 func _has_pick(who: String) -> bool:
-	if who == "player":
-		return w.player.tool_of("pickaxe") != ""
-	var n := w.npc(int(who.substr(4)))
-	return n != null and n.inv.has("pickaxe")
+	return _has_tool(who, "pickaxe")
+
+
+func _has_tool(who: String, kind: String) -> bool:
+	return OpenPits.held_tool(_who(who), kind) != ""
+
+
+## Owner MIN-E-Q4 (2026-10-21): whether `who` holds the tool a digging job needs: a quarry's rock a pickaxe; a trial pit's
+## earth a shovel (Discovery trial.tool); an excavation some cell of its pit whose next layer they can dig with what they
+## hold (a shovel for the earth, a pickaxe for the rock); a tunnel's face the kind of its next unit (MineWorks.tool_kind:
+## rock a pickaxe, rubble or fill a shovel). The same rule for the player and every villager.
+func can_dig(j: Dictionary, who: String) -> bool:
+	match str(j.kind):
+		"trial":
+			return _has_tool(who, str(Discovery.cfg().trial.get("tool", "shovel")))
+		"excavate":
+			var p := w.pits.pit(int(j.get("pit", -1)))
+			var kinds := OpenPits.kinds_held(_who(who))
+			if p.is_empty() or kinds.is_empty():
+				return false
+			return w.pits.next_dig(p, yard_cell(), Vector2i(-1, -1), kinds).x >= 0
+		"tunnel":
+			if not j.has("site"):
+				return _has_pick(who)
+			return _has_tool(who, w.mine_works.tool_kind(int(j.level), Vector2i(int(j.site[0]), int(j.site[1]))))
+	return _has_pick(who)
+
+
+## MIN-SHOVEL: whether an open job of the manor's earthwork (a trial pit, or an excavation whose next cells are earth),
+## fundable for `who`, is closed to them only for want of a shovel (a miner then buys one, NPCBrain._miner).
+func shovel_would_open(who: String) -> bool:
+	var o = _who(who)
+	if o == null or OpenPits.held_tool(o, "shovel") != "":
+		return false
+	for j in jobs:
+		if j.taker != "" or not can_fund(j, who) or not str(j.kind) in ["trial", "excavate"]:
+			continue
+		if str(j.kind) == "trial":
+			return true
+		var p := w.pits.pit(int(j.get("pit", -1)))
+		if not p.is_empty() and not can_dig(j, who) and w.pits.next_dig(p, yard_cell(), Vector2i(-1, -1), OpenPits.kinds_held(o) + ["shovel"]).x >= 0:
+			return true
+	return false
 
 
 ## Take a job: its wage is set aside from the treasury. False (with last_refusal) if it cannot be.
@@ -635,8 +675,8 @@ func step(j: Dictionary) -> String:
 			return "fetch" if j.load.total() == 0 else "fill"
 		"excavate":
 			var p := w.pits.pit(int(j.pit))
-			if j.load.total() < int(j.qty) and w.pits.manor_wants(p):
-				return "excavate"
+			if j.load.total() < int(j.qty) and w.pits.manor_wants(p) and (j.load.total() == 0 or excavate_cell(j).x >= 0):
+				return "excavate"               # (a load ends early when its digger's tools can dig no cell left, MIN-E-Q4)
 			for id in OpenPits.earth_items():
 				if j.load.count(id) > 0:
 					return "tip"
@@ -651,13 +691,16 @@ func excavate_cell(j: Dictionary, planning := false) -> Vector2i:
 	var p := w.pits.pit(int(j.pit))
 	if p.is_empty():
 		return Vector2i(-1, -1)
+	var o = _who(str(j.taker))
+	var kinds: Array = OpenPits.kinds_held(o) if o != null else []     # MIN-E-Q4: only cells its digger's tools can dig
+	if o != null and kinds.is_empty():
+		return Vector2i(-1, -1)
 	if j.has("site"):
 		var c := Vector2i(int(j.site[0]), int(j.site[1]))
-		if w.pits.dig_ground_refusal(p, c) == "":
+		if w.pits.dig_ground_refusal(p, c) == "" and (kinds.is_empty() or kinds.has(w.pits.tool_needed(p, c))):
 			return c
-	var o = _who(str(j.taker))
 	var from: Vector2i = Vector2i(o.pos.floor()) if o != null else yard_cell()
-	return w.pits.next_dig(p, from, from if planning else Vector2i(-1, -1))
+	return w.pits.next_dig(p, from, from if planning else Vector2i(-1, -1), kinds)
 
 
 ## MIN-E: the spoil heap an excavation tips onto: the first of its pit's with room (or its first).
@@ -722,14 +765,14 @@ func describe(j: Dictionary) -> String:
 			return "Survey %s %s: take %d rock samples with your prospector's kit, have a smith assay them (the fees are yours) and tell the manor what they show" % [w.prospecting.stain(c), w.prospecting.place(c), int(j.qty)]
 		"trial":
 			var c := w.prospecting.clue(str(j.clue))
-			return "Dig a trial pit by %s %s with a pickaxe, looking for ore (%d hours)" % [w.prospecting.stain(c), w.prospecting.place(c), roundi(float(Discovery.cfg().trial.minutes) / 60.0)]
+			return "Dig a trial pit by %s %s with a shovel, looking for ore (%d hours)" % [w.prospecting.stain(c), w.prospecting.place(c), roundi(float(Discovery.cfg().trial.minutes) / 60.0)]
 		"tunnel":
 			return "Cut a load of %d from the rock face below ground with a pickaxe and bring it to the works yard" % int(j.qty)
 		"backfill":
 			return "For the player: carry spoil from the mine's mouth down below ground and put %d back into a passage (%d placed)" % [int(j.qty), int(j.placed)]
 		"excavate":
 			var p := w.pits.pit(int(j.pit))
-			return "Dig a load of %d from the manor's open pit %s with a pickaxe, tip the earth on its spoil heap and bring any stone to the works yard" % [int(j.qty), w.where(OpenPits.rect(p)) if not p.is_empty() else "in the village"]
+			return "Dig a load of %d from the manor's open pit %s (a shovel for earth, a pickaxe for rock), tip the earth on its spoil heap and bring any stone to the works yard" % [int(j.qty), w.where(OpenPits.rect(p)) if not p.is_empty() else "in the village"]
 	return ""
 
 
@@ -845,7 +888,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			var c := w.prospecting.clue(str(j.clue))
 			if o == null:
 				return false
-			var tool: String = o.tool_of("pickaxe") if o is PlayerState else "pickaxe"
+			var tool := OpenPits.held_tool(o, str(Discovery.cfg().trial.get("tool", "shovel")))
 			var cell := Vector2i(int(j.site[0]), int(j.site[1]))
 			if dv.ground_refusal(c, cell) != "":
 				var other := dv.next_cell(c)          # the ground changed: the next best clear cell, or the job ends
@@ -862,7 +905,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				return false
 			j.found = not (r.found as Dictionary).is_empty()
 			if r.broke and o is NPC:
-				w.note("%s %s's pickaxe broke." % [o.name, o.family])
+				w.note("%s %s's %s broke." % [o.name, o.family, GameData.item_name(tool).to_lower()])
 			_finish(j, who)
 			return true
 		"excavate":
@@ -874,7 +917,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				if j.load.total() == 0 and who != "player":
 					release(j)
 				return false
-			var tool: String = o.tool_of("pickaxe") if o is PlayerState else "pickaxe"
+			var tool := OpenPits.held_tool(o, w.pits.tool_needed(p, cell))     # MIN-E-Q4: a shovel for earth, a pickaxe for rock
 			var r := w.pits.dig(o, p, cell, j.load, tool)
 			if r.result != "ok":
 				last_refusal = str(r.why)
@@ -883,7 +926,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			if not (r.exposed as Dictionary).is_empty():
 				j.found = true
 			if r.broke and o is NPC:
-				w.note("%s %s's pickaxe broke." % [o.name, o.family])
+				w.note("%s %s's %s broke." % [o.name, o.family, GameData.item_name(tool).to_lower()])
 			return true
 		"cut":
 			var o = _who(who)
@@ -893,7 +936,8 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				if j.load.total() == 0 and who != "player":
 					release(j)
 				return false
-			var r: Dictionary = w.mine_works.dig(o, face, j.load, o.tool_of("pickaxe") if o is PlayerState else "pickaxe")
+			var ctool := OpenPits.held_tool(o, w.mine_works.tool_kind(int(j.level), face))   # rock a pickaxe, rubble a shovel
+			var r: Dictionary = w.mine_works.dig(o, face, j.load, ctool)
 			if r.result != "ok":
 				last_refusal = str(r.why)
 				return false
@@ -904,7 +948,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				if not nf.is_empty():
 					j.site = [nf.cell.x, nf.cell.y]
 			if r.broke and o is NPC:
-				w.note("%s %s's pickaxe broke." % [o.name, o.family])
+				w.note("%s %s's %s broke." % [o.name, o.family, GameData.item_name(ctool).to_lower()])
 			return true
 		"fetch":
 			var want: int = mini(int(GameData.b("carry_ore")), int(j.qty) - int(j.placed))
@@ -1059,7 +1103,7 @@ func plan(n: NPC) -> bool:
 			var p := w.pits.pit(int(j.pit))
 			j.erase("site")
 			var at := excavate_cell(j, true)
-			if not n.inv.has("pickaxe") or p.is_empty() or at.x < 0:
+			if p.is_empty() or at.x < 0:
 				release(j)
 				return false
 			j.site = [at.x, at.y]
@@ -1069,7 +1113,7 @@ func plan(n: NPC) -> bool:
 		"cut":
 			var face := Vector2i(int(j.site[0]), int(j.site[1]))
 			var lv := int(j.level)
-			if not n.inv.has("pickaxe") or w.mine_works.face_refusal(lv, face) != "":
+			if OpenPits.held_tool(n, w.mine_works.tool_kind(lv, face)) == "" or w.mine_works.face_refusal(lv, face) != "":
 				release(j)
 				return false
 			n.doing = "cutting a tunnel for the manor"
@@ -1097,7 +1141,7 @@ func plan(n: NPC) -> bool:
 			var stand := w.pits.stand_beside(hc, n.cell())
 			n.plan = [b.go(stand if stand.x >= 0 else b.beside(hc, n.cell())), b.doit("mj_step", {"job": int(j.id)})]
 		"dig":
-			if not n.inv.has("pickaxe"):
+			if OpenPits.held_tool(n, str(Discovery.cfg().trial.get("tool", "shovel"))) == "":
 				release(j)
 				return false
 			var at := step_cell(j)
