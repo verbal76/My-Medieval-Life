@@ -1684,12 +1684,12 @@ func cancel_action(why := "") -> void:
 ## when the balance's sprint_toggle is on. It needs stamina and ends when that is gone; the speed
 ## multiplier is returned and the cost taken (net of the regeneration the world just added).
 func _sprint_step(delta: float) -> float:
-	var p := world.player
-	if sprint_latched and not sprinting and p.stamina >= float(GameData.b("sprint_min_stamina")):
+	var p := world.player                 # the stamina rules are PlayerState's (DVW-A12 R19); the input latches are here
+	if sprint_latched and not sprinting and p.can_sprint():
 		sprinting = true
 	if not bool(GameData.b("sprint_toggle")):
 		if Input.is_action_pressed("sprint"):
-			if not sprinting and not sprint_spent and p.stamina >= float(GameData.b("sprint_min_stamina")):
+			if not sprinting and not sprint_spent and p.can_sprint():
 				sprinting = true
 		else:
 			sprint_spent = false
@@ -1697,22 +1697,21 @@ func _sprint_step(delta: float) -> float:
 				sprinting = false
 	if not sprinting:
 		return 1.0
-	p.stamina = maxf(0.0, p.stamina - (float(GameData.b("sprint_stamina_per_sec")) + float(GameData.b("player_stamina_regen_per_second"))) * delta)
-	if p.stamina <= 0.0:
+	if not p.sprint_drain(delta):
 		sprinting = false            # out of breath: back to walking until Shift is let go and pressed again
 		sprint_spent = true
 		if sprint_latched:
 			sprint_latched = false
 			ui.set_sprint_mode(false)
 		return 1.0
-	return float(GameData.b("sprint_speed"))
+	return PlayerState.sprint_speed()
 
 
 ## Sprint on or off (LT; Shift when sprint_toggle is on). It cannot start without some stamina.
 func toggle_sprint() -> void:
 	if sprinting:
 		sprinting = false
-	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")) and action.is_empty():
+	elif world.player.can_sprint() and action.is_empty():
 		sprinting = true
 
 
@@ -1723,13 +1722,13 @@ func toggle_run_latch() -> void:
 	if sprint_latched:
 		sprint_latched = false
 		sprinting = false
-	elif world.player.stamina >= float(GameData.b("sprint_min_stamina")):
+	elif world.player.can_sprint():
 		sprint_latched = true
 	ui.set_sprint_mode(sprint_latched)
 
 
 func _sprint_scale() -> float:
-	return float(GameData.b("sprint_speed")) if sprinting else 1.0
+	return PlayerState.sprint_speed() if sprinting else 1.0
 
 
 ## The direction to walk this frame towards move_to, around walls and trees: the route comes

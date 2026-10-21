@@ -1468,6 +1468,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_field_owner()
 	_dvw_a12_theft_last()
 	_dvw_a12_rest()
+	_dvw_a12_sprint()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -2188,6 +2189,32 @@ func _dvw_a12_rest() -> void:
 	w.minutes = day0 + 11.0 * 60.0
 	main._rest_now()
 	check(is_equal_approx(p.hp, p.hp_cap()) and main.ui.toast.text.begins_with("You rest."), "DVW-A12 R18: the interface's rest is core's")
+
+
+## R19: a sprint needs sprint_min_stamina to start, costs its stamina net of regeneration, ends out of breath; the
+## interface's toggle follows PlayerState.
+func _dvw_a12_sprint() -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var need := float(GameData.b("sprint_min_stamina"))
+	p.stamina = need - 0.5
+	check(not p.can_sprint(), "DVW-A12 R19: below sprint_min_stamina no sprint starts")
+	main.sprinting = false
+	main.cancel_action("")
+	main.toggle_sprint()
+	check(not main.sprinting, "DVW-A12 R19: nor through the interface's toggle")
+	p.stamina = need
+	check(p.can_sprint(), "DVW-A12 R19: at it, one can")
+	main.toggle_sprint()
+	check(main.sprinting, "DVW-A12 R19: the toggle turns it on")
+	main.sprinting = false
+	var cost := float(GameData.b("sprint_stamina_per_sec")) + float(GameData.b("player_stamina_regen_per_second"))
+	p.stamina = 50.0
+	check(p.sprint_drain(0.5) and is_equal_approx(p.stamina, 50.0 - cost * 0.5), "DVW-A12 R19: half a second costs half the net rate")
+	p.stamina = cost * 0.25
+	check(not p.sprint_drain(0.5) and p.stamina == 0.0, "DVW-A12 R19: out of breath at nothing, never below")
+	check(PlayerState.sprint_speed() == float(GameData.b("sprint_speed")), "DVW-A12 R19: the sprint's speed is the balance's")
+	p.stamina = p.stamina_cap()
 
 
 ## A clean pack for one rule's checks; returns what to restore.
