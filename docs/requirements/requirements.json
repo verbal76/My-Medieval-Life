@@ -7311,7 +7311,7 @@
    "id": "DVW-A5",
    "title": "Exploit-player test (arbitrage, round trips, cornering, flooding) (:30)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Exploit-player test (arbitrage, round trips, cornering, flooding) (:30)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 249)",
@@ -7320,10 +7320,12 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "VERIFIED analysis: profit from Trading 4, ~35% at Trading 10; **owner question: is honest arbitrage intended?** | No arbitrage/exploit test in `game/tests` | NOT-STARTED (+ AWAIT-OWNER on intent)",
-   "tests": "",
+   "tests": "exploit_test (36 checks); 30 suites; gate identical",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "1dd89fa"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -7350,6 +7352,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 1dd89fa; tests",
+     "why": "exploit_test tries round trips, arbitrage, cornering, flooding and split deals against the real trade code: no coin or item created, none found a defect; round trips lose at every Trading level"
     }
    ],
    "acceptance_derived": true,
@@ -8722,7 +8729,7 @@
    "id": "EQ-04",
    "title": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "When a carpenter dies, another NPC should eventually be capable of entering that profession.",
    "description": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8737,7 +8744,9 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "1e88118"
+   ],
    "parent": "EQ-16",
    "depends_on": [],
    "blockers": [],
@@ -8766,6 +8775,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 1e88118",
+     "why": "Reeve succession (1e88118) integrated; guard succession and the failed-business test in wip/b16-misc2 (89ee852) awaiting integration"
     }
    ],
    "target_build": "16",
@@ -21283,7 +21297,7 @@
    "id": "REC-001",
    "title": "Adoption and orphan guardianship (NPCs and the player)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Adoption is an intended feature of this game. ... If adoption is missing, document the required implementation and propose rules before adding the new mechanic.",
    "description": "When a child's parents die, the child gets a guardian or adoptive household (family first, then willing suitable households), household membership, food needs and inheritance update at once, and the player can adopt under the same rules. #46 asked for the rules to be proposed before implementation.",
    "source": "owner message #46 2026-10-17T22:58Z (MASTER DEVELOPMENT PROMPT, section 10 'ADOPTION AND ORPHAN CARE', scenarios 11 and 16); reaffirmed #47 2026-10-17T23:35Z section 17.4 ('Orphaned children should have possible adoption or guardianship paths. Family members may receive priority, followed by suitable willing households') and 17.5 ('The player must be eligible for marriage, children, household formation, and adoption under the same basic systems as NPCs')",
@@ -21293,10 +21307,12 @@
    ],
    "acceptance_derived": true,
    "implementation": "Not implemented. The only mention in code is a comment in game/scripts/core/npc_brain.gd:2137 ('marriage, births and adoption will call it too'); no adopt/orphan/guardian logic in game/scripts. docs/BUILD_DECISIONS.md 'Known gaps' (line 442) still lists adoption as missing. Partnering, births and heirs exist (life.gd, B8-029). No requirement id in the ledger, queue, audits or docs/requirements/requirements.json covers adoption.",
-   "tests": "",
+   "tests": "family_test (51 checks); 30 suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "04a8eb9"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -21323,6 +21339,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 04a8eb9; tests",
+     "why": "Orphans take their household's stores; the player's partner household in the guardianship order; player_adopt with 'Offer a home'. Open for the owner: a player without a partner cannot adopt (no player household); the orphaned household's house still goes to the manor; the player-adoption rule needs confirming (owner #46)"
     }
    ],
    "target_build": "16",
@@ -25139,7 +25160,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Procurement and relief part done (e992044: relief from the granary's own stock, bought relief through the granary); commission to the treasury in wip/b16-stalls, leases and purchases in wip/b16-farms (both via existing accounting); then the four-seed runs",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -25159,6 +25180,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Worker D's part integrated"
     }
    ],
    "target_build": "16",

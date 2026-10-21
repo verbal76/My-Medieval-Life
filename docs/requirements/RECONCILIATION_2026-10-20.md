@@ -7,14 +7,14 @@ entry leaves the register or changes without a history entry.
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 213 still open, 18 closed since |
+| Open entries (rules excluded) | 231 | 212 still open, 19 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
 | Entries added since | | 172 (91 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **304** = 213 still open from the baseline + 91 added and open |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **303** = 212 still open from the baseline + 91 added and open |
 | Open entries moved to another build | | 2 |
 
-## Closed since the baseline (18)
+## Closed since the baseline (19)
 
 | ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
 |---|---|---|---|---|---|---|---|
@@ -24,6 +24,7 @@ entry leaves the register or changes without a history entry.
 | B7-015 | Missed meals while food piles up | approved | BLOCKED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: Two four-seed 365-day acceptance runs with no starvation death, 0 script errors and balanced ledgers (1fefddb, Actions 39523615798; 62b7488, Actions 39529507848), with its tests passing in all 27 suites |
 | DVW-A2 | Rotate several dated save backups, not one `.bak` (:27) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: three dated backups and the Continue fallback are in save_store.gd and main.gd; tests pass at af60f94 |
 | DVW-A4 | Faucet and drain ledger for coins and each item (:29) | approved | APPROVED — NOT STARTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: economy_sim prints FAUCETS AND DRAINS at the end of every run and keeps ledger.table in its JSON: coins in (caravan purchases, newcomers' purses) and out (caravan sales), and per good start, made, imported, used, exported, end, kept apart from trade inside the village; checked on a 3-day seed-1 run (balanced, every good listed) |
+| DVW-A5 | Exploit-player test (arbitrage, round trips, cornering, flooding) (:30) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-21: exploit_test tries round trips, arbitrage, cornering, flooding and split deals against the real trade code: no coin or item created, none found a defect; round trips lose at every Trading level |
 | DVW-A6 | Coins and goods conserved across save/load and tier transitions (:31) | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: conservation_test.gd checks coins, goods, deposits, animals and villagers across a save round trip on both simulation tiers; passes at af60f94; a Build 14 save also loads, plays, re-saves and reloads with coins unchanged |
 | DVW-A7 | Over-production from raising skills by use (:32) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-20: Audit docs/release/BUILD_16_AUDITS.md: skill over-production is a legitimate outcome (finite inputs, purses cap sales); the one defect, player production missing from the ledger, fixed via World.player_gain; the invariant comment names the approved skill effects |
 | DVW-A8 | Audit player-only perks vs same rules (:33) | approved | APPROVED — NOT STARTED | 16 | COMPLETE AND VERIFIED | 16 | 2026-10-20: Audit docs/release/BUILD_16_AUDITS.md lists 16 player-only perks with their recorded reasons; no code defect; the gaps needing a ruling are OD-18 |
