@@ -83,8 +83,11 @@ parties of the same place do not trade here (that is the local market).
 
 The first shadow runs counted the village's daily use of ore and coal as import demand, though its own seams supply them.
 Now `MiningCapabilityAdapter.local_supply("village")` gives what the village's own reachable seams still hold (MIN-D:
-`_quarry_sources` filtered by `villagers_reach`, only while the mining level is 1 or more, since at 0 nobody can dig; on
-this branch the Build 16 seams in `World.deposits` stand in); `SettlementReport.parties` gives it to the traders whose
+`_quarry_sources` filtered by `villagers_reach`; on this branch the Build 16 seams in `World.deposits` stand in), when
+someone can really dig it: a living adult villager with a pickaxe to hand (pack, household store or the manor's yard, as
+MIN-D counts tools). Owner Q18-9: the level never decides this (a level-0 village with ore, a miner and a pickaxe still
+counts its own ore, tested); it only scales the expected output through the mining output factor (1.0 until Q18-11),
+never past what the seams hold; `SettlementReport.parties` gives it to the traders whose
 trade buys that ore, and `RegionalMarket.demand` subtracts it. It is never stock and never for sale: ore still in the
 ground is not goods. The settlement model itself still reads no deposit.
 

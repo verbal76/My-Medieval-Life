@@ -35,7 +35,8 @@ tests and the shadow harness, and waits for the reconciliation gate (after Build
   `World.underground.portals`, `World._quarry_sources`, `villagers_reach`, `level_of`) and tested against a fake World with
   those members. Live on this branch (no Build 17 code): level 0, source `unavailable`.
 - **The village's own ore** (`local_supply`) counts against its regional ore demand (MIN-D's reachable seams; on this
-  branch the Build 16 seams).
+  branch the Build 16 seams) when a living adult has a pickaxe to hand; the mining level does not decide it (Q18-9,
+  corrected 2026-10-21: an earlier version required level 1), it only scales it through the output factor (1.0).
 - **Thresholds and first industries** in `settlement_industries.json` (agent proposals; Q18-2).
 - **Market parameters** (`reserve_days` 6, `scarcity_premium` 1.0, `cash_floor` 20, `preferred_margin_pct` 10) and
   **transport** (carrier 12 units, handcart 60, terrain factors).
@@ -93,6 +94,8 @@ Decided 2026-10-21 (`docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_
 (levels affect pay and output only, never a gate) and **Q18-10** (anyone may buy; the buyer fetches or pays a willing
 carter; nothing free, nothing created).
 
+Q18-11, Q18-12 and Q18-13 are in the register on staging as open owner questions.
+
 Open: Q18-1 (skills for farming, carpentry, masonry, tanning), Q18-2 (thresholds, first industries), Q18-3 (closed purse
 or explicit regional income), Q18-4 (number and character of off-map regions), Q18-5 (barter and credit), Q18-6 (may
 abstract regions meet "two settlements develop different profiles"), Q18-7 (migration out), Q18-8 (SET-E stays 20+), as
@@ -108,8 +111,8 @@ worded in the engineering plan, section 5. New:
 
 ## Integration-readiness estimate (from tests actually run)
 
-- Run on this branch (latest round, private `XDG_DATA_HOME`): `settlement_test` (63 checks), `regional_test` (67 checks),
-  `caravan_compare` 10 days (20 checks) and 30 days seed 1 (50 checks), all passing; the regression set `run_tests` (3535),
+- Run on this branch (latest round, private `XDG_DATA_HOME`): `settlement_test` (66 checks), `regional_test` (67 checks),
+  `caravan_compare` 10 days (20 checks), all passing; in the round before, `caravan_compare` 30 days seed 1 (50 checks); the regression set `run_tests` (3535),
   `world_test` (200), `start_test` (499 steps), `parity_test` (55), `conservation_test` (8), `business_test` (160) passing;
   `python3 -m unittest discover -s tests` passing (this round); `economy_sim --days 30 --seed 1` (`LEAKS: currency 0; items {}`) run in the
   first round, when the one live-code touch (the census move) was made; nothing in live code changed since.

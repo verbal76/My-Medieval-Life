@@ -131,8 +131,16 @@ func test_mining_adapter() -> void:
 	w2.setup(VillageMap.load_default(), 1)
 	var lv := SettlementIndustries.levels(SettlementFacts.from_world(w2, a))
 	check(lv.mining == 2, "the industry model takes mining from MIN-D through the adapter (2), never re-derives it")
+	# owner Q18-9: the level never decides it; the real conditions do (reachable ore, an adult with a pickaxe)
 	fake.discovery.lv = 0
-	check(a.local_supply("village").is_empty(), "at mining 0 (nobody can dig) the village's seams are not its supply")
+	check(int(a.local_supply("village").get("iron_ore", 0)) == 30,
+		"at mining level 0, with ore within reach, a miner and a pickaxe, the village still counts its own ore (Q18-9: no gate)")
+	(fake.npcs[0] as NPC).inv.remove("pickaxe")
+	check(a.local_supply("village").is_empty(), "with nobody holding a pickaxe (pack, household or yard) its seams are not its supply")
+	fake.manor_work.yard.add("pickaxe")
+	check(int(a.local_supply("village").get("iron_ore", 0)) == 30, "a pickaxe in the manor's yard is to hand for any adult")
+	(fake.npcs[0] as NPC).alive = false
+	check(a.local_supply("village").is_empty(), "with no living adult nobody can dig, whatever the tools")
 
 
 ## Schema compatibility (evidence for the one-evaluator plan, DESIGN.md section 8): MIN-D's mining block, copied as a
@@ -179,10 +187,24 @@ class FakeUnderground:
 	var portals := [{"ends": [{"level": 0}, {"level": -1}]}]
 
 
+class FakeYard:
+	extends RefCounted
+	var yard := Inventory.new()
+
+
 class FakeMinDWorld:
 	extends RefCounted
 	var discovery := FakeDiscovery.new()
 	var underground := FakeUnderground.new()
+	var npcs := [_miner()]
+	var households := []
+	var manor_work := FakeYard.new()
+	static func _miner() -> NPC:
+		var n := NPC.new()
+		n.role = "adult"
+		n.job = "miner"
+		n.inv.add("pickaxe")
+		return n
 	var deposits := [{"x": 1, "y": 1, "ore": "iron_ore", "amount": 30}, {"x": 2, "y": 2, "ore": "coal", "amount": 12, "far": true},
 		{"x": 3, "y": 3, "ore": "iron_ore", "amount": 0}]
 	func _quarry_sources(ores: Array) -> Array:

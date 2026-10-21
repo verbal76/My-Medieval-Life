@@ -23,7 +23,8 @@ extends RefCounted
 ##   portals(id)        -> [depth]                 records(id) -> {"discovery": n}
 ##   deposit_access(id) -> [deposit level with reachable ore or stone]
 ##   local_supply(id)   -> {ore: units} the settlement's own reachable seams hold (for regional demand: what the
-##                         village can dig itself is not an import need). Only while its mining level is 1 or more.
+##                         village can dig itself is not an import need), when an adult with a pickaxe can dig it; the
+##                         level only scales it (Q18-9: never a gate).
 ## Sources: fixture(table) for tests and abstract settlements; live(world); none().
 
 const MAX_LEVEL := 4
@@ -117,21 +118,49 @@ func deposit_access(settlement_id: String) -> Array:
 	return out
 
 
-## What the settlement's own reachable seams still hold, by ore, while its mining level is at least 1 (someone can dig
-## it): regional demand counts it as the village's own supply (DESIGN.md "Ore demand"). On this branch (no MIN-D) the
-## village's fixed seams in World.deposits stand in, all reachable as in Build 16; the level then comes from nobody, so
-## the Build 16 rule "a miner and a pickaxe" is not re-derived: the seams count whenever any are left (provisional).
+## What the settlement's own reachable seams still hold, by ore, when someone there can dig it: regional demand counts
+## it as the village's own supply (DESIGN.md "Ore demand"). Owner Q18-9 (2026-10-21): a level never decides whether an
+## activity happens -- "a settlement with mining capability level 0 can still mine if the necessary resources, tools, and
+## access are available" -- so this rests on the real conditions only: reachable ore left (MIN-D's reachable seams; on
+## this branch the Build 16 seams in World.deposits, all reachable) and a living adult villager with a pickaxe to hand
+## (in their pack, their household's store or the manor's yard, as MIN-D counts tools). The level only scales the
+## expected output, through the mining output factor (1.0 until the owner sets it, Q18-11), and never past what the
+## seams hold.
 func local_supply(settlement_id: String) -> Dictionary:
 	if _mode == "fixture":
 		return (_fixture.get(settlement_id, {}) as Dictionary).get("local_supply", {}).duplicate()
-	if _mode != "live" or settlement_id != VILLAGE or _world == null:
+	if _mode != "live" or settlement_id != VILLAGE or _world == null or not _can_dig():
 		return {}
-	if has_min_d() and int(capability(settlement_id).level) < 1:
-		return {}
+	var f := SettlementIndustries.output_factor("mining", int(capability(settlement_id).level))
 	var out := {}
 	for d in _reachable(settlement_id):
 		out[str(d.ore)] = int(out.get(str(d.ore), 0)) + int(d.amount)
+	for ore in out:
+		out[ore] = mini(int(out[ore]), int(floor(float(out[ore]) * f + 1e-9)))
 	return out
+
+
+## Whether a living adult villager can dig: one holding a pickaxe, or any adult while a pickaxe lies in a household's
+## store or the manor's yard (MIN-D's tool count). Reads the World's people and stores; decides nothing by level.
+func _can_dig() -> bool:
+	if not "npcs" in _world:
+		return false
+	var adults := false
+	for n in _world.npcs:
+		if not n.alive or n.role != "adult":
+			continue
+		adults = true
+		if n.inv.has("pickaxe"):
+			return true
+	if not adults:
+		return false
+	if "households" in _world:
+		for hh in _world.households:
+			if (hh.pantry as Inventory).has("pickaxe"):
+				return true
+	if "manor_work" in _world and _world.get("manor_work") != null:
+		return (_world.manor_work.yard as Inventory).has("pickaxe")
+	return false
 
 
 func _reachable(settlement_id: String) -> Array:
