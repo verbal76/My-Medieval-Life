@@ -10,6 +10,8 @@ extends RefCounted
 ## Its store is a chest-like unit ("cart:<id>", Chests): the owner's to fill, anyone else's to take from
 ## only as theft. Cart stops (carts.stops) are parking places by the market: a cart of the player's parked
 ## at one is unloaded into the player's stall store by their attendant (the delivery service). Saved whole.
+## DVW-B4: a cart wears by the tiles it is pulled (`worn`, saved; decay.cart_tiles in all): its condition is shown in
+## words (Decay.condition); a worn-out cart falls apart where it stands and what it held is left lying there (loot).
 
 var w
 var carts: Array = []          # Dictionary records, by id
@@ -35,7 +37,7 @@ func by_id(id: int) -> Dictionary:
 func place(owner: String, at: Vector2) -> Dictionary:
 	var inv := Inventory.new()
 	inv.max_stacks = int(cfg().stacks)
-	var c := {"id": next_id, "owner": owner, "pos": at, "store": inv, "puller": "", "facing": Vector2.DOWN}
+	var c := {"id": next_id, "owner": owner, "pos": at, "store": inv, "puller": "", "facing": Vector2.DOWN, "worn": 0.0}
 	next_id += 1
 	carts.append(c)
 	w.stat("carts_set_down")
@@ -141,8 +143,35 @@ func update(_dt: float) -> void:
 			continue
 		var d: Vector2 = at - (c.pos as Vector2)
 		if d.length() > float(cfg().trail):
-			c.pos = at - d.normalized() * float(cfg().trail)
+			var to: Vector2 = at - d.normalized() * float(cfg().trail)
+			c.worn = float(c.get("worn", 0.0)) + (to - (c.pos as Vector2)).length()     # DVW-B4: wear by the tiles pulled
+			c.pos = to
 			c.facing = d.normalized()
+	for c in carts.duplicate():
+		if float(c.get("worn", 0.0)) >= float(Decay.cfg().cart_tiles):
+			fall_apart(c)
+
+
+## DVW-B4: how worn a cart is, in words ("new", "worn", "well worn", "falling apart").
+func condition(c: Dictionary) -> String:
+	var full := float(Decay.cfg().cart_tiles)
+	return Decay.condition(full - float(c.get("worn", 0.0)), full)
+
+
+## A worn-out cart falls apart where it stands: the cart is gone (carts_broken), and what it held is left lying there,
+## for its owner to take up (loot), so no good is lost with it.
+func fall_apart(c: Dictionary) -> void:
+	var inv: Inventory = c.store
+	var held := inv.total()
+	if held > 0:
+		var bag := Inventory.new()
+		for id in inv.ids():
+			bag.add(id, inv.count(id))
+		w.loot.append({"pos": c.pos, "inv": bag, "coins": 0, "from": "a broken cart"})
+	carts.erase(c)
+	w.stat("carts_broken")
+	var who := whose(c)
+	w.note("%s cart fell apart from wear%s." % [who.substr(0, 1).to_upper() + who.substr(1), ", and its load lies where it stood" if held > 0 else ""])
 
 
 ## The attendant of the player's stall unloads a cart of the player's parked at a cart stop near it into the
@@ -181,7 +210,8 @@ func unload(c: Dictionary, s: Dictionary) -> int:
 func to_dict() -> Dictionary:
 	var out := []
 	for c in carts:
-		out.append({"id": c.id, "owner": c.owner, "pos": [c.pos.x, c.pos.y], "store": (c.store as Inventory).to_dict(), "puller": c.puller})
+		out.append({"id": c.id, "owner": c.owner, "pos": [c.pos.x, c.pos.y], "store": (c.store as Inventory).to_dict(), "puller": c.puller,
+			"worn": float(c.get("worn", 0.0))})
 	return {"next_id": next_id, "carts": out}
 
 
@@ -192,4 +222,4 @@ func load_dict(d: Dictionary) -> void:
 		var inv := Inventory.from_dict(r.store)
 		inv.max_stacks = int(cfg().stacks)
 		carts.append({"id": int(r.id), "owner": str(r.owner), "pos": Vector2(float(r.pos[0]), float(r.pos[1])), "store": inv,
-			"puller": str(r.get("puller", "")), "facing": Vector2.DOWN})
+			"puller": str(r.get("puller", "")), "facing": Vector2.DOWN, "worn": float(r.get("worn", 0.0))})     # older saves: unworn

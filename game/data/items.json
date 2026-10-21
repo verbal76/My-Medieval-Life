@@ -165,13 +165,15 @@
       "name": "Leather armour",
       "type": "armor",
       "value": 30,
-      "armor": 3
+      "armor": 3,
+      "durability": 300
     },
     "iron_armor": {
       "name": "Iron armour",
       "type": "armor",
       "value": 80,
-      "armor": 6
+      "armor": 6,
+      "durability": 600
     },
     "rusty_sword": {
       "name": "Rusty sword",
@@ -259,19 +261,22 @@
       "name": "Plain clothes",
       "type": "armor",
       "value": 2,
-      "armor": 0
+      "armor": 0,
+      "durability": 240
     },
     "leather_cap": {
       "name": "Leather cap",
       "type": "head",
       "value": 14,
-      "armor": 1
+      "armor": 1,
+      "durability": 240
     },
     "iron_helmet": {
       "name": "Iron helmet",
       "type": "head",
       "value": 36,
-      "armor": 2
+      "armor": 2,
+      "durability": 480
     },
     "copper_ring": {
       "name": "Copper ring",

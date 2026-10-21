@@ -105,6 +105,16 @@ func _data_tests() -> void:
 	check(ms.contains("3 plank") and ms.contains("open stall") and ms.contains("close stall") and ms.contains("everything has sold") and ms.contains("5%") and ms.contains("daily rent"),
 		"the market stall guide: 3 planks, OPEN / CLOSE, settlement on closing or selling out, the manor's 5% on every stall, the pitches' rent")
 	check("guide:market_stall" in w.search("market stall commission"), "search finds the market stall guide")
+	# CON-01 contracts and DVW-B4 spoiling and wear
+	var con: String = w.pages.get("sys:contracts", {}).get("text", "")
+	check(con.contains("propose a contract") and con.contains("set aside") and con.contains("lapses") and con.contains("there is no fine")
+			and con.contains("%d contracts at once" % int(Contracts.cfg().max_open_per_seller)) and con.contains("villagers use the same contracts"),
+		"the contracts page: proposing, coins set aside, lapsing without a fine, the seller's limit, villagers' own orders")
+	check("sys:contracts" in w.search("contract") and "sys:contracts" in w.search("counteroffer"), "search finds the contracts page")
+	var dec: String = w.pages.get("sys:decay", {}).get("text", "")
+	check(dec.contains("wheat") and dec.contains("handcart") and dec.contains("falling apart") and "sys:decay" in w.search("spoil"), "the spoiling and wear page, found by searching spoil")
+	check(w.pages["item:wheat"].text.contains("spoil a day") and w.pages["item:leather_armor"].text.contains("days worn") and not w.pages["item:iron_ore"].text.contains("spoil"),
+		"item pages say how food keeps and how long armour lasts; ore keeps")
 	# other systems add pages
 	Wiki.add_provider(func(wk: Wiki): wk.add_page("sys:test_extra", "Extra system", "systems", [Wiki.p("A test page about glowworms.")]))
 	var w2 := Wiki.build()

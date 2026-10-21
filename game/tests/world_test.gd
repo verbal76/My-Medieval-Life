@@ -589,9 +589,10 @@ func _pl2_004() -> void:
 	w.loot.append({"pos": Vector2(6.5, 5.5), "inv": Inventory.from_dict({"meat": 1}), "coins": 0, "from": "Somebody", "t": w.minutes - 4.0 * 1440.0})
 	var n0 := w.loot.size()
 	var spoiled0 := float(w.stats.get("spoiled_meat", 0.0))
+	var decay0 := float(w.stats.get("decay_meat", 0.0))        # DVW-B4: meat in store spoils at dawn too, counted apart
 	w._new_day()
 	check(w.loot.size() == n0 - 1, "PL2-004: a carcass spoils after %d days, a dead person's belongings stay" % int(World.ANIMAL_LOOT_DAYS))
-	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
+	check(float(w.stats.get("spoiled_meat", 0.0)) - spoiled0 - (float(w.stats.get("decay_meat", 0.0)) - decay0) == 2.0, "EQ-06: what spoils is counted (spoiled_meat), so the goods ledger balances")
 	w.loot.clear()
 	main._sync_loot()
 
