@@ -12,8 +12,9 @@ extends RefCounted
 ## What spoils is counted as spoiled_<item> (the goods ledger's drain, as carcasses left lying already are), and the
 ## same again as decay_<item> (diagnostics: the part of spoiled_ that is stores spoiling, not carcasses).
 ##
-## Wear: clothes and armour worn wear by one a day of wear (items.json durability, in days worn): the player's body
-## and head slots, and a villager's own armour (the guards' leather). When one wears out it is gone (broke_<item>, as
+## Wear: clothes and armour worn wear by one a day of wear (items.json durability, in days worn), and by blow_wear more
+## for each blow taken: the player's body and head slots, and a villager's own armour (the guards' leather). A guard
+## whose armour wore out buys another from a seller with its own coins (plan_rearm). When one wears out it is gone (broke_<item>, as
 ## tools are counted): the player's slot is emptied, a villager loses its protection. Carts wear by the tiles they are
 ## pulled (decay.cart_tiles); a worn-out cart falls apart and what it held is left lying where it stood (loot), so no
 ## good is lost with it. Conditions are shown in words (condition): new, worn, well worn, falling apart.
@@ -122,24 +123,83 @@ static func dawn(w: World) -> void:
 ## A day's wear of the clothes and armour people wear: the player's body and head slots, and each living villager's own
 ## armour (the first armour item it holds, by id: the guards' leather).
 static func wear_clothes(w: World) -> void:
-	var p := w.player
-	if p.alive:
-		for slot in WORN_SLOTS:
-			var id := str(p.get(slot))
-			if id != "" and p.inv.has(id) and p.inv.wear(id, 1):
-				w.stat("broke_" + id)
-				w.note("Your %s wore out." % GameData.item_name(id).to_lower())
-				if not p.inv.has(id):
-					p.set(slot, "")
-					p.fit_caps()
+	wear_player(w, 1)
 	for n: NPC in w.npcs:
-		if not n.alive:
-			continue
-		var id := worn_armour(n)
-		if id != "" and n.inv.wear(id, 1):
+		if n.alive:
+			wear_npc(w, n, 1)
+
+
+## Wear what the player wears (body and head) by `amount`; a piece worn out is gone and its slot empties.
+static func wear_player(w: World, amount: int) -> void:
+	var p := w.player
+	if not p.alive:
+		return
+	for slot in WORN_SLOTS:
+		var id := str(p.get(slot))
+		if id != "" and p.inv.has(id) and p.inv.wear(id, amount):
 			w.stat("broke_" + id)
-			if not n.inv.has(id):
-				n.armor = maxf(0.0, n.armor - float(GameData.item(id).get("armor", 0)))
+			w.note("Your %s wore out." % GameData.item_name(id).to_lower())
+			if not p.inv.has(id):
+				p.set(slot, "")
+				p.fit_caps()
+
+
+## Wear a villager's own armour by `amount`; worn out, it is gone and its protection with it.
+static func wear_npc(w: World, n: NPC, amount: int) -> void:
+	var id := worn_armour(n)
+	if id != "" and n.inv.wear(id, amount):
+		w.stat("broke_" + id)
+		if not n.inv.has(id):
+			n.armor = maxf(0.0, n.armor - float(GameData.item(id).get("armor", 0)))
+
+
+## A blow taken (World.damage_player, World.harm_npc): what is worn takes decay.blow_wear more wear. Hunger and spoiled
+## food are not blows.
+static func blow_player(w: World, source: String) -> void:
+	if source in ["hunger", "spoiled food"]:
+		return
+	wear_player(w, int(cfg().blow_wear))
+
+
+static func blow_npc(w: World, n: NPC) -> void:
+	if n.alive:
+		wear_npc(w, n, int(cfg().blow_wear))
+
+
+## A guard whose armour wore out buys decay.rearm_item again from a villager selling it, with its own coins, by the
+## ordinary buying rule (NPCBrain act buy_from; World.can_afford keeps its household's reserve): nothing is given. In
+## shop hours, and only when it can pay now. Once it holds armour again, the armour's protection comes back (never
+## lowering what it has). True when it set off to buy (NPCBrain._guard).
+static func plan_rearm(w: World, n: NPC) -> bool:
+	var have := worn_armour(n)
+	if have != "":
+		n.armor = maxf(n.armor, float(GameData.item(have).get("armor", 0)))
+		return false
+	var h := w.hour()
+	if h < NPCBrain.WORK_START or h >= NPCBrain.WORK_END or n.role != "adult":
+		return false
+	var item := str(cfg().rearm_item)
+	var v := armour_seller(w, n, item)
+	if v == null:
+		return false
+	n.doing = "buying new %s" % GameData.item_name(item).to_lower()
+	n.plan = [w.brain.go(w.brain._workplace_cell(v)), w.brain.doit("buy_from", {"vendor": v.id, "item": item, "qty": 1})]
+	return true
+
+
+## The villager selling `item` that `n` can pay for now (the cheapest, then the lowest id), or null: someone holding one
+## it does not keep (the goods merchant, the tanner who makes it), at the price it would ask `n`, within World.can_afford.
+static func armour_seller(w: World, n: NPC, item: String) -> NPC:
+	var best: NPC = null
+	var best_p := 1 << 30
+	for o: NPC in w.npcs:
+		if o == n or not o.alive or o.role != "adult" or not o.inv.has(item) or w.brain.keeps(o, item):
+			continue
+		var price := w.deal_price(w.sell_price(o, item), n, o)
+		if price < best_p and w.can_afford(n, price, false, item):
+			best = o
+			best_p = price
+	return best
 
 
 ## The armour item a villager wears: the first armour or head piece it holds that wears (items.json durability), by id.

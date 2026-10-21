@@ -27,6 +27,8 @@ func _init() -> void:
 	test_clothes_and_armour()
 	test_carts()
 	test_save()
+	test_blows()
+	test_rearm()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -154,3 +156,58 @@ func test_save() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
 	check(float(w3.carts.carts[0].worn) == 0.0, "an older save's carts load unworn")
+
+
+## A blow taken wears what is worn (not hunger or spoiled food), the player's and a villager's alike.
+func test_blows() -> void:
+	var w := new_world()
+	var p := w.player
+	var full := int(GameData.item("plain_clothes").durability)
+	var bw := int(Decay.cfg().blow_wear)
+	w.damage_player(1.0, "hunger")
+	w.damage_player(1.0, "spoiled food")
+	check(int(p.inv.durability.get("plain_clothes", full)) == full, "hunger and spoiled food do not wear clothes")
+	w.damage_player(1.0, "a wolf")
+	check(int(p.inv.durability.get("plain_clothes", full)) == full - bw, "a blow wears the clothes worn by %d" % bw)
+	var g: NPC = w.brain._first_with_job("guard")
+	var gf := int(GameData.item("leather_armor").durability)
+	w.harm_npc(g, 2.0)
+	check(int(g.inv.durability.get("leather_armor", gf)) == gf - bw, "a blow wears a guard's armour by the same rule")
+	g.inv.durability["leather_armor"] = bw
+	var a0 := g.armor
+	w.harm_npc(g, 1.0)
+	check(not g.inv.has("leather_armor") and g.armor < a0 and int(w.stats.get("broke_leather_armor", 0)) == 1, "blows can wear it out; its protection goes")
+
+
+## A guard whose armour wore out buys leather armour from a real seller with its own coins; nothing is given.
+func test_rearm() -> void:
+	var w := new_world()
+	var g: NPC = w.brain._first_with_job("guard")
+	g.inv.remove("leather_armor", g.inv.count("leather_armor"))
+	g.armor = 0.0
+	w.minutes = floorf(w.minutes / World.DAY) * World.DAY + 10.0 * 60.0
+	for o: NPC in w.npcs:
+		if o != g:
+			o.inv.remove("leather_armor", o.inv.count("leather_armor"))
+	g.coins = 500
+	check(not Decay.plan_rearm(w, g), "with nobody selling armour, the guard does without")
+	var seller: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and w.brain.buy_role(o) == "merchant_goods":
+			seller = o
+			break
+	check(seller != null, "the goods merchant")
+	if seller == null:
+		return
+	seller.inv.add("leather_armor")
+	var c0 := w.total_coins()
+	var g0 := g.coins
+	var s0 := seller.coins
+	g.coins = 0
+	check(not Decay.plan_rearm(w, g), "a guard without the coins does not set off")
+	g.coins = g0
+	check(Decay.plan_rearm(w, g) and str(g.plan[-1].get("act", "")) == "buy_from" and int(g.plan[-1].args.vendor) == seller.id, "a guard with coins goes to buy it from the merchant")
+	check(w.brain.act(g, "buy_from", g.plan[-1].args), "and buys it")
+	check(g.inv.has("leather_armor") and not seller.inv.has("leather_armor") and g.coins < g0 and seller.coins - s0 == g0 - g.coins and w.total_coins() == c0,
+		"paid from its own purse to the seller (%d coins): nothing given, coins only moved" % (g0 - g.coins))
+	check(not Decay.plan_rearm(w, g) and g.armor == float(GameData.item("leather_armor").armor), "wearing it, its protection is back")
