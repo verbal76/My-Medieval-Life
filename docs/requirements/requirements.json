@@ -21777,7 +21777,7 @@
    "id": "Q18-11",
    "title": "What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect)",
    "kind": "decision",
-   "status": "BLOCKED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect)",
    "source": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md",
@@ -21806,6 +21806,96 @@
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-21_expansion18_decisions_q18_9_q18_10.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "BLOCKED -> PARTIALLY IMPLEMENTED; target_build; owner_answer",
+     "why": "Owner approved the structure (Expansion 18 master directive section 5): every productive industry uses levels 0-10, level 0 is baseline not inability; separate PayMultiplier and OutputMultiplier per industry and level over the existing base pay and output; diminishing returns as the initial model; productivity never creates raw materials and is never applied twice. Still open: the numbers per industry (Q18-11A) and how experience, tools, facilities and infrastructure compose the rating (Q18-11B)"
+    }
+   ],
+   "target_build": "18",
+   "owner_answer": "Levels 0-10 for all productive industries; AdjustedPay = BasePay x PayMultiplier(industry, level); AdjustedOutput = BaseOutput x OutputMultiplier(industry, level); diminishing returns; industry-specific; numbers and composition not yet approved."
+  },
+  {
+   "id": "Q18-11A",
+   "title": "Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved)",
+   "source": "docs/directives/2026-10-21_expansion18_master_directive.md",
+   "approval": "open owner question, master directive section 9",
+   "acceptance": [
+    "Owner approves numbers per industry"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "Q18-11",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_master_directive.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "Q18-11B",
+   "title": "How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval)",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval)",
+   "source": "docs/directives/2026-10-21_expansion18_master_directive.md",
+   "approval": "open owner question, master directive sections 6 and 9",
+   "acceptance": [
+    "Owner chooses among presented options"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "Q18-11",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_expansion18_master_directive.md"
     },
     {
      "date": "2026-10-21",
