@@ -10535,7 +10535,7 @@
    "id": "FARM-06",
    "title": "Manor fields need seed and labour like any farm (no free seed, crops or materials)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": null,
    "description": "Manor fields need seed and labour like any farm (no free seed, crops or materials)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10544,17 +10544,19 @@
     "Sowing a manor field takes seed from a real store (FSE-11), by the shared model; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_fse12_shared_fields",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "68a3611"
+   ],
    "parent": "OD-23",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Activated with FSE-12 after the owner's review",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10569,6 +10571,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 68a3611; tests; next_action",
+     "why": "Manor fields take real seed under the FSE-12 switch (off until the owner reviews the comparison)"
     }
    ],
    "target_build": "16",
@@ -11781,7 +11788,7 @@
    "id": "FSE-12",
    "title": "One agricultural model for player and village farming (parity)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "PARTIALLY IMPLEMENTED",
    "owner_wording": "Establish a shared underlying agricultural model for player and NPC farming. Do not arbitrarily increase village yields or decrease player yields just to make the numbers match.",
    "description": "One agricultural model for player and village farming (parity)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -11793,10 +11800,12 @@
     "Comparison runs, old model against new: yields, labour, seed use, food supply, economic effects; not activated universally until the owner reviews them; the switch is for testing and migration, not a lasting difference"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "world_test::_fse12_shared_fields",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "68a3611"
+   ],
    "parent": "FSE-00",
    "depends_on": [
     "FSE-16"
@@ -11805,7 +11814,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -11835,6 +11844,11 @@
      "date": "2026-10-21",
      "change": "owner decision recorded",
      "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 68a3611; tests; next_action",
+     "why": "Shared per-cell model for the manor's fields behind balance shared_manor_farming (off in the baseline; gate identical): seed a cell, crop and seed back a sown cell, per-cell labour; world_test::_fse12_shared_fields. Comparison runs (old vs new, four seeds, 365 days) next, then the owner's review"
     }
    ],
    "target_build": "16",

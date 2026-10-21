@@ -78,7 +78,7 @@ None.
 | FARM-03 | Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers) | approved | APPROVED — NOT STARTED | 16 |
 | FARM-04 | Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required | approved | APPROVED — NOT STARTED | 16 |
 | FARM-05 | Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming) | approved | APPROVED — NOT STARTED | 16 |
-| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | APPROVED — NOT STARTED | 16 |
+| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | APPROVED — NOT STARTED | 16 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | COMPLETE AND VERIFIED | 16 |
@@ -92,7 +92,7 @@ None.
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | approved | APPROVED — NOT STARTED | owner decision |
 | FSE-11 | Village sowing consumes seed (seed consumption correction) | approved | SUPERSEDED | 16 |
-| FSE-12 | One agricultural model for player and village farming (parity) | approved | APPROVED — NOT STARTED | 16 |
+| FSE-12 | One agricultural model for player and village farming (parity) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | 16 |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | 16 |

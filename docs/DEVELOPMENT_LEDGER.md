@@ -11,9 +11,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 
 | Status | Count |
 |---|---|
-| APPROVED — NOT STARTED | 91 |
+| APPROVED — NOT STARTED | 89 |
 | ACTIVE DEVELOPMENT | 10 |
-| PARTIALLY IMPLEMENTED | 35 |
+| PARTIALLY IMPLEMENTED | 37 |
 | IMPLEMENTED — TESTING REQUIRED | 22 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 43 |
 | BLOCKED | 14 |
@@ -141,12 +141,12 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | FARM-03 | Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FARM-04 | Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FARM-05 | Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
-| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
+| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner decisions OD-22..24, 2026-10-20 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
 | FSE-08 | The directive's 25 deterministic tests (section 17) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | section 18: audit first, then only defects and small foundations in Build 16 |
-| FSE-12 | One agricultural model for player and village farming (parity) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
+| FSE-12 | One agricultural model for player and village farming (parity) | approved | PARTIALLY IMPLEMENTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | approved | APPROVED — NOT STARTED | Build 16 in development (OVN-01) | owner follow-up 2026-10-20: a tracked Build 16 task |
@@ -454,7 +454,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | phone, controller | PARTIALLY IMPLEMENTED |
 | WR-01 | Protected wildlife breeding refuges, offspring cohorts and dispersal | a device check | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED |
 
-## APPROVED — NOT STARTED (91)
+## APPROVED — NOT STARTED (89)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -486,12 +486,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | FARM-03 | Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  |  |
 | FARM-04 | Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  |  |
 | FARM-05 | Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  |  |
-| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  |  |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md |  |  | Implement with FARM-01: confirm Property's weekly lease charges a farm plot 2 coins whatever its size (no size formula) |
 | FR-02 | Forgotten Memories waterfalls, fences and props | owner message 2026-10-19 |  |  | With B14-07 |
 | FR-03 | A campfire for cooking raw meat outside the village | owner request in Build 8 testing (BUILD_8_ISSUES) |  |  |  |
 | FSE-10 | Living-economy build: gardens, rented land and pens, side hunting, household stalls, multiple incomes, goal-driven individual choices (class D) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after EXP-D |  |
-| FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-16 |  |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-12 |  |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | docs/directives/2026-10-20_agricultural_findings_followup.md |  |  |  |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | docs/directives/2026-10-20_agricultural_findings_followup.md |  | after FSE-11; after FSE-12; after FSE-13 |  |
@@ -565,7 +563,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | docs/directives/2026-10-20_master_overnight_development_directive.md section 9 |  | after REL-14-16 | Build 16 when it meets OVN-01 section 4 and OVN-02 section 5 |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | docs/directives/2026-10-20_final_development_mandate.md |  |  |  |
 
-## PARTIALLY IMPLEMENTED (35)
+## PARTIALLY IMPLEMENTED (37)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -579,8 +577,10 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | EQ-02 | Nature sustains itself: reproduction, aging, predation, competition, dispersal, habitat, local extinction, recolonization, recovery | docs/directives/2026-10-19_build16_world_equilibrium.md | `b15208a` | after WR-01 |  |
 | EQ-05 | The player is the disruptive variable: no hidden protection of the world from player consequences | docs/directives/2026-10-19_build16_world_equilibrium.md |  |  |  |
 | EQ-06 | Build 16 acceptance simulations: multi-seed, player inactive, 100 and 365 days and generations, plus player-intervention scenarios | docs/directives/2026-10-19_build16_world_equilibrium.md | economy_sim.gd scenarios; world_test.gd | after EQ-01; after EQ-02; after EQ-03; after EQ-04; after EQ-05 |  |
+| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md | `68a3611`; world_test::_fse12_shared_fields |  | Activated with FSE-12 after the owner's review |
 | FSE-08 | The directive's 25 deterministic tests (section 17) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  |  |  |
+| FSE-12 | One agricultural model for player and village farming (parity) | docs/directives/2026-10-20_agricultural_findings_followup.md | `68a3611`; world_test::_fse12_shared_fields | after FSE-16 | Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | docs/DECISIONS.md (audit inventory row 324) |  | after B13-15 |  |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | docs/DECISIONS.md (audit inventory row 335) |  |  | More side-quest templates |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | docs/DECISIONS.md (audit inventory row 338) |  | after FR-08 |  |

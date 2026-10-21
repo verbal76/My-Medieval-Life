@@ -57,9 +57,9 @@ in a few large new systems (family farms, stalls, counters, seed propagation, th
 | Status | Items |
 |---|---|
 | Complete | 31 |
-| In progress | 11 |
+| In progress | 13 |
 | Pending testing | 21 |
-| Not started | 33 |
+| Not started | 31 |
 | Blocked | 2 |
 | Deferred | 0 |
 | Superseded | 2 |
@@ -154,7 +154,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 | FARM-03 | Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers) | Not started |  | Villagers use Farming's cells, seed, seasons and labour as the player does; tests |  |  |  | Required feature | L |
 | FARM-04 | Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required | Not started |  | Any household member able to work tends, harvests; the harvest goes to the family chest (FSE-18); tests |  |  |  | Required feature | M |
 | FARM-05 | Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming) | Not started |  | A household's decision weighs food security, coins, labour and land available; some do, some do not; measured on the seed runs |  |  |  | Required feature | L |
-| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | Not started |  | Sowing a manor field takes seed from a real store (FSE-11), by the shared model; tests |  |  |  | Required feature | M |
+| FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | In progress | Manor fields take real seed under the FSE-12 switch (off until the owner reviews the comparison) | Activated with FSE-12 after the owner's review | `68a3611`, world_test::_fse12_shared_fields |  |  | Required feature | M |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the own | Not started |  | Implement with FARM-01: confirm Property's weekly lease charges a farm plot 2 coins whatever its size (no size formula) |  |  |  | Required feature | S |
 
 ### Food security, relief, family chest
@@ -172,7 +172,7 @@ Added since Build 16 began, by family: AGENT 1, ARM 1, B16 1, CTR 4, EQ 1, FARM 
 | FSE-08 | The directive's 25 deterministic tests (section 17) | In progress | The 25 tests are mapped (docs/design/FOOD_SECURITY_AUDIT.md section 7); the tests for implemented systems exist in part (reserve_test, world_test::_fse_defects); the rest follow their features | Each of the 25 mapped to an existing test, a new test for an implemented system, or the build whose feature it needs |  |  |  | Required feature | M |
 | FSE-09 | Build 16 food-security defects and foundations (classes B and C) | In progress | Defects fixed: tab, relief order, relief sources, food valuation, eating and cooking parity, B05, B07-B10, TIME-04; open: B06, B11, B12 | Each defect fixed with a regression test; each foundation small, tested, baselined before and after |  |  |  | Required feature | M |
 | FSE-11 | Village sowing consumes seed (seed consumption correction) | Superseded | Covered by FARM-06 (OD-23: manor farms get no free seed; village sowing takes real seed), the owner's later decision |  |  | superseded by FARM-06 |  | Superseded |  |
-| FSE-12 | One agricultural model for player and village farming (parity) | Not started |  | Why the yields differ explained (crop definitions, labor, land abstraction, growth rules, duplicated code); Player and village fields use one model of land, seed, time, labor, seasons and skills; consequences tested befo |  | after FSE-16 |  | Required feature | L |
+| FSE-12 | One agricultural model for player and village farming (parity) | In progress | Shared per-cell model for the manor's fields behind balance shared_manor_farming (off in the baseline; gate identical): seed a cell, crop and seed back a sown cell, per-cell labour; world_test::_fse12_shared_fields. Comp | Comparison runs with --set shared_manor_farming=1 against the baseline; report yields, labour, seed use, food, economy | `68a3611`, world_test::_fse12_shared_fields | after FSE-16 |  | Required feature | L |
 | FSE-13 | Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review) | Not started |  | Village fields follow the same season rates as player crops, behind a switch that is off in the baseline; Compared with the baseline: annual production, seasonal inventories, prices, household food access, starvation, po |  | after FSE-12 |  | Required feature | M |
 | FSE-14 | Dynamic land planning: design and safe foundations (land rental for plots and pens) | Not started |  | Design for land supply, rental of small and large plots and pens, legitimate rent; foundations in Build 16 only where safe; the rest scheduled with the living-economy build (FSE-10) |  |  |  | Required feature | M |
 | FSE-15 | Recalculate the land requirement after the seed, season and parity corrections | Not started |  | Productive capacity recalculated with labor availability and net edible yield after seed and losses |  | after FSE-11; after FSE-12; after FSE-13 |  | Required feature | S |
