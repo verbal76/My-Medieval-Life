@@ -28371,6 +28371,11 @@
      "date": "2026-10-21",
      "change": "target_build; notes",
      "why": "Placed in Expansion 18 by the owner"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "note",
+     "why": "Owner STONE-Q2 (2026-10-21): dressing efficiency by skill (STONE-04 on wip/build17) is part of the same Expansion 18 work; values to be proposed to the owner"
     }
    ],
    "target_build": "18"

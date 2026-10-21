@@ -101,6 +101,9 @@ C replaces today's fixed thresholds, CRT-12's notoriety refusal and the single r
   and general procurement contracts (CON-01/CON-02). It shares its production mechanics with personal stone dressing
   (STONE-02) and the finer repair-material split (STONE-03), both also Expansion 18. Expansion 19 adds no second
   stonecutting profession. Not a Build 17 release blocker.
+- **Skill-based stone dressing (STONE-04, owner STONE-Q2, 2026-10-21) → Expansion 18**, with X18-STONECUT, STONE-02 and
+  STONE-03: blocks recovered depend on the worker's skill (existing skill and capability systems), the rest conserved
+  as waste or spoil; the skill-to-efficiency values are proposed to the owner before they are locked. Build 17 keeps 1:1.
 
 ## Proposed sequence (agent proposal, before ROAD-01; superseded where it differs)
 
