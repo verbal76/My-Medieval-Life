@@ -15764,7 +15764,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "CI and the determinism re-baseline",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -15784,6 +15784,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; tests; implementation; next_action",
      "why": "Reviewed after the equipment merge: manor hands already take open deliveries unpaid through ManorWork.seek (the hand fallback existed). Added only the missing reeve part: ManorWork.reeve_fallback (the reeve takes an open haul only when no living manor hand is free, before latest_start), and is_staff counts the reeve so no wage is paid twice. Physical load and put through the existing haul steps; deliver_now for urgent relief untouched. job_board_test 28/0 (12 new LOG-01 checks); run_tests 3544, world 339, equip 51, discovery 65, start 499, parity_mining 62, underground_struct 90, business 160, housing 115 all 0 failures. Awaiting CI and the determinism re-baseline"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "owner decision"
@@ -16432,7 +16437,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Determinism re-baseline, CI, MIN-G 365-day runs",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -16457,6 +16462,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 9a7b513; tests; implementation; next_action; workstream",
      "why": "Lead merged wip/b17-equip (9a7b513) into wip/build17 without conflicts; equip_test 51/0, underground_struct 90/0, parity_mining, job_board, early_game, stone and wiki re-run on the merge and pass; worker's run_tests 3544/0, world 339, start 499, underground and underground_ext pass on its merge with f082790 (fixed a household-split regression: a carpenter now holds back only the mallet the manor ordered). Awaiting the determinism re-baseline, CI and MIN-G"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
@@ -16691,7 +16701,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "CI and the determinism re-baseline after the equipment merge",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -16716,6 +16726,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
      "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
@@ -16745,7 +16760,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "CI and the determinism re-baseline after the equipment merge",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -16770,6 +16785,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
      "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
@@ -17102,7 +17122,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Determinism re-baseline, CI, MIN-G 365-day runs",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -17127,6 +17147,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 9a7b513; tests; implementation; next_action; workstream",
      "why": "Lead merged wip/b17-equip (9a7b513) into wip/build17 without conflicts; equip_test 51/0, underground_struct 90/0, parity_mining, job_board, early_game, stone and wiki re-run on the merge and pass; worker's run_tests 3544/0, world 339, start 499, underground and underground_ext pass on its merge with f082790 (fixed a household-split regression: a carpenter now holds back only the mallet the manor ordered). Awaiting the determinism re-baseline, CI and MIN-G"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
@@ -17583,7 +17608,7 @@
    "id": "MIN-G",
    "title": "Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "ACTIVE DEVELOPMENT",
    "owner_wording": null,
    "description": "Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning",
    "source": "docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf",
@@ -17632,6 +17657,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Plan consolidated under SIM-01: no separate 30/90/100-day runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
+     "why": "Gate passed on cd7439c; dispatching long-sims.yml on wip/build17: seeds 1,2,3,4, 365 days, every 10 (one monitored run per seed, SIM-01)"
     }
    ],
    "target_build": "17",
@@ -17769,7 +17799,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "CI and the determinism re-baseline after the equipment merge",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -17799,6 +17829,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "No code change needed: the existing refusals held; parity_mining_test covers them"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
@@ -17828,7 +17863,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "CI and the determinism re-baseline after the equipment merge",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -17858,6 +17893,11 @@
      "date": "2026-10-21",
      "change": "note",
      "why": "Not yet looked at on screen: the shovel icons and the trial-earth pile (headless only); visual review before the readiness report"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
@@ -17887,7 +17927,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "CI and the determinism re-baseline after the equipment merge",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -17912,6 +17952,11 @@
      "date": "2026-10-21",
      "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit fbdc8fc; tests; implementation; next_action; workstream",
      "why": "Lead merged wip/b17-parity (fbdc8fc) into wip/build17 without conflicts; parity_mining_test 62/0, early_game, job_board, stone and wiki tests re-run on the merge and pass; worker's full list passed on its merge with e671072. Awaiting the gate re-baseline after MIN-EQUIP/MIN-COLLAPSE and CI. Design: docs/build17/MIN_PARITY_SHOVELS.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
@@ -28809,7 +28854,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Determinism gate re-baseline once after the parity and equipment merges",
+   "next_action": "MIN-G one 365-day run per seed 1-4",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28839,6 +28884,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "CI Tests run 39678592892 on 0a086af (the STONE-01 + wiki merge) passed"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Determinism gate PASS on cd7439c (baseline written, second run identical, seeds 1-2, days 10/30, no leaks); CI Tests 39689213264 on cd7439c success. Remaining: MIN-G 365-day runs (SIM-01)"
     }
    ],
    "target_build": "17"
