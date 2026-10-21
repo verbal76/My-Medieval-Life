@@ -613,17 +613,23 @@ func _claimed(area: String, species: String) -> int:
 ## near its cap (spare males first), or null.
 ## With `short_of_feed`, the pen does not have to be full: the keeper culls rather than let the
 ## breeding stock starve (young ones last, as they give only half the meat).
+## FARM-08B: the breeding stock is the adults in their prime (Animal.breeds); the elderly no longer breed, so they go
+## before the young that would replace them (a keeper short of feed culled the calves and kept the old cows, and the
+## herd died out of old age).
 func surplus(pen: Dictionary, short_of_feed := false) -> Animal:
 	var kind: String = pen.kind
 	if not short_of_feed and count(pen.id, kind) < cap(pen.id, kind) - 1:
 		return null
 	var males := []
 	var females := []
+	var elders := []
 	var young := []
 	for a: Animal in animals:
 		if a.alive and a.area == pen.id:
 			if not a.adult(w.minutes):
 				young.append(a)
+			elif a.elderly(w.minutes):
+				elders.append(a)
 			else:
 				(males if a.sex == "m" else females).append(a)
 	var keep := int(GameData.b("animals")[kind].keep)
@@ -631,6 +637,8 @@ func surplus(pen: Dictionary, short_of_feed := false) -> Animal:
 		return males[0]
 	if females.size() > keep:
 		return females[0]
+	if not elders.is_empty():
+		return elders[0]
 	if short_of_feed and not young.is_empty():
 		return young[0]
 	return null

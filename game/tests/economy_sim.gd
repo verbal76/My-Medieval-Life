@@ -354,7 +354,39 @@ func _herd_hour() -> void:
 		var has := kp != null and (kp.inv.has("wheat") or (kp.household >= 0 and (w.households[kp.household].pantry as Inventory).has("wheat")))
 		var why := "no_keeper" if kp == null or not kp.alive else ("asleep" if w.asleep(kp) else ("keeper_has_grain" if has else "no_grain"))
 		row[why] = int(row[why]) + 1
+		if why == "no_grain":
+			var ng := _no_grain_why(kp, pen)
+			row[ng] = int(row.get(ng, 0)) + 1
 		herd_care[k] = row
+
+
+## FARM-08B: why a keeper without grain went short: an awake farmer or food merchant held grain to spare (a full three-day
+## lot, or only part of one), only sleeping sellers did, grain lay only in other households' chests, or nowhere but the
+## granary; and whether the keeper could pay for a full lot.
+func _no_grain_why(kp: NPC, pen: Dictionary) -> String:
+	var lot := w.fauna.daily_need(pen) * 3
+	var best := 0
+	var asleep := false
+	for o: NPC in w.npcs:
+		if not o.alive or o == kp or not (o.job == "farmer" or w.brain.buy_role(o) == "merchant_food"):
+			continue
+		var spare: int = o.inv.count("wheat") - w.brain.reserve(o, "wheat")
+		if spare <= 0:
+			continue
+		if w.asleep(o):
+			asleep = true
+		else:
+			best = maxi(best, spare)
+	if best >= lot:
+		return "ng_lot_held" if kp.coins >= World.sell_price_at("wheat", best) * lot else "ng_lot_no_coins"
+	if best > 0:
+		return "ng_part_lot"
+	if asleep:
+		return "ng_sellers_asleep"
+	for i in w.households.size():
+		if i != kp.household and (w.households[i].pantry as Inventory).has("wheat"):
+			return "ng_chests_only"
+	return "ng_none"
 
 
 ## FARM-08B: the herds at the end of a day: adults by sex, young, the well fed, the females ready to breed and whether a
@@ -390,7 +422,7 @@ func _herd_day(day: int) -> void:
 		for key in w.stats:
 			var sk := str(key)
 			if sk.ends_with("_" + k) and (sk.begins_with("born_") or sk.begins_with("starved_") or sk.begins_with("old_age_") \
-					or sk.begins_with("slaughter_") or sk.begins_with("keeper_no_feed_") or sk.begins_with("farm_bought_")) \
+					or sk.begins_with("slaughter_") or sk.begins_with("keeper_no_feed_") or sk.begins_with("keeper_no_coins_") or sk.begins_with("farm_bought_")) \
 					or sk.begins_with("eaten_%s_by_" % k) or sk.begins_with("fox_took_" + k):
 				st[sk] = int(w.stats[key])
 		var key_now := str([r, st])
@@ -398,7 +430,8 @@ func _herd_day(day: int) -> void:
 			continue
 		herd_last[k] = key_now
 		herd_log.append({"day": day, "season": w.season(), "kind": k, "herd": r, "trough": int(pen.trough),
-			"need": w.fauna.daily_need(pen), "keeper": w.pen_keeper(pen) != null, "stats": st, "wheat": wheat})
+			"need": w.fauna.daily_need(pen), "keeper": w.pen_keeper(pen) != null, "stats": st, "wheat": wheat,
+			"keeper_coins": w.pen_keeper(pen).coins if w.pen_keeper(pen) != null else -1})
 
 
 # ---------------------------------------------------------------- sampling -------------------

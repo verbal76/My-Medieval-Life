@@ -1292,6 +1292,12 @@ func reserve(n: NPC, id: String) -> int:
 	return 0 if pen.is_empty() else w.fauna.daily_need(pen) * (1 if w.famine() else 4)
 
 
+## FARM-08B: the feed a keeper still lacks to hold its reserve (0 for anyone keeping no pen): a buyer of wheat whom
+## the farmers keep grain in hand for (_sale_stock), as they do for the cook and the food merchant.
+func feed_want(o: NPC) -> int:
+	return maxi(0, reserve(o, "wheat") - o.inv.count("wheat"))
+
+
 func _keeper(n: NPC) -> bool:
 	var pen := _keeper_pen(n)
 	if pen.is_empty():
@@ -1328,15 +1334,27 @@ func _keeper(n: NPC) -> bool:
 		if pantry.has("wheat"):
 			n.plan = [go(w.home_cell(n, "chest")), doit("take_pantry", {"item": "wheat", "qty": need * 3}), go(at), feed_step]
 			return true
-		var qty := need * 3
+		# FARM-08B: as much of three days' feed as a seller can spare and the keeper can pay for, as the player may buy
+		# any number (buy_from sells a part lot): from the seller who can supply the most (the first of equals)
+		var seller: NPC = null
+		var qty := 0
+		var offered := false
 		for o: NPC in w.npcs:
-			if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") \
-					and o.inv.count("wheat") - reserve(o, "wheat") >= qty and n.coins >= w.sell_price(o, "wheat") * qty:
-				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": qty}), go(at), feed_step]
-				return true
+			if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food"):
+				var spare := o.inv.count("wheat") - reserve(o, "wheat")
+				offered = offered or spare > 0
+				var can := mini(mini(need * 3, spare), n.coins / maxi(1, w.sell_price(o, "wheat")))
+				if can > qty:
+					seller = o
+					qty = can
+		if seller != null:
+			n.plan = [go(_workplace_cell(seller) if seller.job != "farmer" else seller.cell()), doit("buy_from", {"vendor": seller.id, "item": "wheat", "qty": qty}), go(at), feed_step]
+			return true
 		# no feed to be had and not enough for tomorrow morning: cull beyond the breeding stock and
 		# sell the meat for feed money
 		w.stat("keeper_no_feed_" + str(pen.kind))       # FARM-08B: a keeper found no grain to feed with (counted, changes nothing)
+		if offered:
+			w.stat("keeper_no_coins_" + str(pen.kind))  # of which: grain was for sale, but the keeper could not pay for one
 		var cull: Animal = w.fauna.surplus(pen, true) if int(pen.trough) < need else null
 		if cull != null:
 			once("cull_%d_%d" % [n.id, w.day()], "%s %s has no feed for the %s and culls one." % [n.name, n.family, GameData.b("animals")[pen.kind].name.to_lower()])
@@ -1708,6 +1726,8 @@ func _sale_stock(n: NPC, f: String) -> int:
 	for o: NPC in w.npcs:
 		if o.alive and o != n and o.household != n.household and OUTLETS.get(f, []).any(func(r): return o.job == r or buy_role(o) == r):
 			k += wants(o, f)
+		elif f == "wheat" and o.alive and o != n and o.household != n.household:
+			k += feed_want(o)                   # FARM-08B: a pen keeper short of feed buys grain too
 	return k
 
 
