@@ -49,6 +49,8 @@ var levels: Array = []          # the deep levels made by shafts (World.undergro
 var taken := {}                 # item -> units taken out of the ground (rock and rubble; the books)
 var fill_out := 0               # spoil units of fill dug out again (the books)
 var last_dawn := -1
+var trapped := {}               # MIN-COLLAPSE: "player" or "npc:<id>" -> "level,x,y" of the cave-in they are trapped in
+var supply: MineSupply          # MIN-EQUIP: who makes, buys and orders the equipment (not saved: it holds no state)
 
 
 static func cfg() -> Dictionary:
@@ -60,6 +62,7 @@ static func cfg() -> Dictionary:
 static func create(world: World) -> MineWorks:
 	var m := MineWorks.new()
 	m.w = world
+	m.supply = MineSupply.new(world)
 	return m
 
 
@@ -212,6 +215,8 @@ func dig_refusal(who, c: Vector2i, tool := "pickaxe") -> String:
 	if why != "":
 		return why
 	var at := _cell_of(who)
+	if at == c and is_trapped(who):
+		return ""                                        # MIN-COLLAPSE: digging oneself out of the rubble
 	if maxi(absi(at.x - c.x), absi(at.y - c.y)) > 1 or at == c or w.underground.is_solid(level, at):
 		return "Stand at the face to cut it."
 	return ""
@@ -247,6 +252,7 @@ func dig(who, c: Vector2i, into: Inventory, tool := "pickaxe") -> Dictionary:
 		w._work_goods(who, into, item, 1, "cut_")
 		if fill + rubble < cell_units() and _map(level, c).is_solid(c):
 			_map(level, c).set_solid(c, false)
+			_free_trapped(level, c)
 			done = true
 	else:
 		var u := cut_at(level, c)
@@ -393,12 +399,14 @@ func supported(level: int, c: Vector2i) -> bool:
 
 
 ## Why `who` cannot set up a timber support on floor cell `c` of their level ("" if they can): the support in their
-## inventory, a mallet, floor below the surface, none there yet, within reach.
-func support_refusal(who, c: Vector2i) -> String:
+## inventory (or `from`: MIN-EQUIP, a manor job's load holding the works yard's support and mallet), a mallet, floor
+## below the surface, none there yet, within reach.
+func support_refusal(who, c: Vector2i, from: Inventory = null) -> String:
 	var sc: Dictionary = cfg().support
-	if not who.inv.has(str(sc.item)):
+	var inv: Inventory = from if from != null else who.inv
+	if not inv.has(str(sc.item)):
 		return "You need a timber support (the carpenter's work: logs and planks at the sawhorse)."
-	if not _has_tool(who, str(sc.tool)):
+	if not _has_tool_in(inv, str(sc.tool)):
 		return "You need a mallet to set up a support."
 	var level := level_of(who)
 	if level == 0 or w.underground == null:
@@ -415,17 +423,18 @@ func support_refusal(who, c: Vector2i) -> String:
 
 ## `who` sets up a timber support on `c`: the support leaves their inventory (used_timber_support), the mallet wears,
 ## Crafting xp; it stands whole (stability.full). {result, why, broke, up}.
-func place_support(who, c: Vector2i) -> Dictionary:
-	var why := support_refusal(who, c)
+func place_support(who, c: Vector2i, from: Inventory = null) -> Dictionary:
+	var why := support_refusal(who, c, from)
 	if why != "":
 		return {"result": "refused", "why": why}
 	var sc: Dictionary = cfg().support
-	who.inv.remove(str(sc.item), 1)
+	var inv: Inventory = from if from != null else who.inv
+	inv.remove(str(sc.item), 1)
 	w.stat("used_" + str(sc.item))
 	var level := level_of(who)
 	supports.append([level, c.x, c.y, int(cfg().stability.full)])
 	w.stat("supports_set_up")
-	var broke := w._work_wear(who, str(sc.tool), int(sc.wear), str(sc.skill), "")
+	var broke := _wear(who, inv, str(sc.tool), int(sc.wear), str(sc.skill))
 	var up := Skills.gain(who, str(sc.skill), int(sc.xp))
 	changed.emit(level, c)
 	return {"result": "ok", "why": "", "broke": broke, "up": up}
@@ -438,15 +447,16 @@ func support_count() -> int:
 ## Q1: why `who` cannot repair the worn support or ladder at `c` ("" if they can): something worn there (a support on
 ## their level at `c`, or a ladder in the shaft whose mouth is `c`), a mallet, the repair goods in their inventory,
 ## within reach.
-func repair_refusal(who, c: Vector2i) -> String:
+func repair_refusal(who, c: Vector2i, from: Inventory = null) -> String:
 	var level := level_of(who)
 	var what := _repairable(level, c)
 	if what == "":
 		return "There is nothing worn there to repair."
 	var rc: Dictionary = cfg()[what]
-	if not _has_tool(who, str(rc.tool)):
+	var inv: Inventory = from if from != null else who.inv
+	if not _has_tool_in(inv, str(rc.tool)):
 		return "You need a mallet to repair it."
-	if not who.inv.has_all(rc.repair):
+	if not inv.has_all(rc.repair):
 		return "A repair needs %s." % _goods_words(rc.repair)
 	var at := _cell_of(who)
 	if maxi(absi(at.x - c.x), absi(at.y - c.y)) > 1:
@@ -467,15 +477,16 @@ func _repairable(level: int, c: Vector2i) -> String:
 
 ## Q1: `who` repairs the support or ladder at `c` with the repair goods (used_<item>), the mallet wears, Crafting xp: it
 ## is whole again. Backfill never does this. {result, why, what, broke, up}.
-func repair(who, c: Vector2i) -> Dictionary:
-	var why := repair_refusal(who, c)
+func repair(who, c: Vector2i, from: Inventory = null) -> Dictionary:
+	var why := repair_refusal(who, c, from)
 	if why != "":
 		return {"result": "refused", "why": why}
 	var level := level_of(who)
 	var what := _repairable(level, c)
 	var rc: Dictionary = cfg()[what]
+	var inv: Inventory = from if from != null else who.inv
 	for id in rc.repair:
-		who.inv.remove(str(id), int(rc.repair[id]))
+		inv.remove(str(id), int(rc.repair[id]))
 		w.stat("used_" + str(id), float(rc.repair[id]))
 	var full := int(cfg().stability.full)
 	if what == "support":
@@ -483,7 +494,7 @@ func repair(who, c: Vector2i) -> Dictionary:
 	else:
 		shaft_at(level, c).ladder = full
 	w.stat(what + "s_repaired")
-	var broke := w._work_wear(who, str(rc.tool), int(rc.wear), str(rc.skill), "")
+	var broke := _wear(who, inv, str(rc.tool), int(rc.wear), str(rc.skill))
 	var up := Skills.gain(who, str(rc.skill), int(rc.xp))
 	changed.emit(level, c)
 	return {"result": "ok", "why": "", "what": what, "broke": broke, "up": up}
@@ -581,12 +592,14 @@ func dawn() -> void:
 
 
 ## Cell `c` of `level` gives way: the roof rock falls in and fills it (rubble: spoil units, the cell's room less any fill
-## it holds), it is solid, a support on it is crushed (track under it stays), and anyone, any cart or pile on it is
-## moved to the nearest floor. No goods are made or lost: the rubble is ground until it is dug out (counted then).
+## it holds), it is solid, a support on it is crushed (track under it stays). MIN-COLLAPSE: each person on it survives or
+## dies (`caught`); a cart or pile on it stays buried in the rubble until it is dug out. No goods are made or lost: the
+## rubble is ground until it is dug out (counted then).
 func collapse(level: int, c: Vector2i) -> void:
 	var lm := _map(level, c)
 	if lm == null or lm.is_solid(c):
 		return
+	var held := stability(level, c)                   # how well the roof was held as it fell (the survival rule's input)
 	var rubble := cell_units() - fill_at(level, c)
 	_set_held(level, c, fill_at(level, c), rubble)
 	lm.set_solid(c, true)
@@ -596,26 +609,83 @@ func collapse(level: int, c: Vector2i) -> void:
 		w.stat("supports_crushed")
 	w.stat("tunnel_collapses")
 	w.stat("collapse_rubble", float(rubble))
-	_clear_cell(level, c, lm)
 	w.note("A tunnel below ground has caved in %s." % w.where(Rect2i(c.x, c.y, 1, 1)))
+	caught(level, c, held)
 	changed.emit(level, c)
 
 
-## Whoever and whatever is on `c` of `level` goes to the nearest floor of that level.
-func _clear_cell(level: int, c: Vector2i, lm: LevelMap) -> void:
-	var to := Vector2(lm.nearest_walkable(c)) + Vector2(0.5, 0.5)
-	if w.player_level == level and _cell_of(w.player) == c:
-		w.player.pos = to
+## MIN-COLLAPSE (owner MIN-F2-Q2, Build 17: survive or die, no injury): every person on cell `c` of `level` as it fills
+## (the player, villagers) survives when a hash of the world seed, the day, the cell and the person (0..999) is under
+## collapse.survive_base + collapse.survive_per_held x `held` (how well the roof was held as it fell: a well-propped
+## roof that gives way leaves more room to live) -- deterministic for a state and seed; the numbers are tunables for
+## review, not policy. The dead die by the existing paths (World.kill for a villager: heir, household, notes, the
+## brain's consequences; World.damage_player for the player: the heir takes over). A survivor scrambles into an open
+## passage beside the cell (its four sides first, then the corners; the first open one in that order), if there is
+## one; with none, they are trapped in the rubble (`trapped`) and stay there, unable to act, until someone digs the cell
+## out (the trapped player may dig at it from inside). Nothing else moves them. Returns [[ref, survived], ...].
+func caught(level: int, c: Vector2i, held: float) -> Array:
+	var out := []
+	var cc: Dictionary = cfg().collapse
+	var lm := _map(level, c)
+	var people := []
+	if w.player.alive and w.player_level == level and _cell_of(w.player) == c:
+		people.append(w.player)
 	for n: NPC in w.npcs:
 		if n.alive and n.depth == level and n.cell() == c:
-			n.pos = to
-			n.plan.clear()
-	for cart in w.carts.carts:
-		if World.level_of(cart) == level and Vector2i((cart.pos as Vector2).floor()) == c:
-			cart.pos = to
-	for l in w.loot:
-		if World.level_of(l) == level and Vector2i((l.pos as Vector2).floor()) == c:
-			l.pos = to
+			people.append(n)
+	var survive := int(cc.survive_base) + int(float(cc.survive_per_held) * clampf(held, 0.0, 1.0))
+	for who in people:
+		var pk := -1 if who is PlayerState else int((who as NPC).id)
+		var roll := Overworld.hash32(w.seed, 7301 + w.day(), (level + 16) * 65536 + c.y * 256 + c.x, pk + 2) % 1000
+		var ref := World.PLAYER if who is PlayerState else World.npc_ref(int(who.id))
+		if roll >= survive:
+			w.stat("collapse_deaths")
+			if who is PlayerState:
+				w.damage_player(1.0e9, "crushed in a mine collapse")
+			else:
+				w.kill(who, "crushed in a mine collapse")
+			out.append([ref, false])
+			continue
+		w.stat("collapse_survivors")
+		var to := _escape(lm, c)
+		if to.x >= 0:
+			who.pos = Vector2(to) + Vector2(0.5, 0.5)
+			w.stat("collapse_escaped")
+		else:
+			trapped[ref] = key(level, c)
+			w.stat("collapse_trapped")
+			w.note("Someone is trapped in the rubble below ground: the cave-in must be dug out to free them.")
+		if who is NPC:
+			(who as NPC).plan.clear()
+		out.append([ref, true])
+	return out
+
+
+## The open passage a survivor steps into from `c`: its four sides, then its corners (a corner only when a side beside
+## it is open, as anyone walks), the first open floor in that order; (-1, -1) if none.
+static func _escape(lm: LevelMap, c: Vector2i) -> Vector2i:
+	for d: Vector2i in VillageMap.SIDES:
+		if not lm.is_solid(c + d):
+			return c + d
+	for d in [Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]:
+		var n: Vector2i = c + d
+		if not lm.is_solid(n) and (not lm.is_solid(Vector2i(n.x, c.y)) or not lm.is_solid(Vector2i(c.x, n.y))):
+			return n
+	return Vector2i(-1, -1)
+
+
+## Whether `who` is trapped in a cave-in (MIN-COLLAPSE).
+func is_trapped(who) -> bool:
+	return trapped.has(World.PLAYER if who is PlayerState else World.npc_ref(int(who.id)))
+
+
+## A cave-in cell dug open again frees whoever was trapped in it.
+func _free_trapped(level: int, c: Vector2i) -> void:
+	var k := key(level, c)
+	for ref in trapped.keys():
+		if str(trapped[ref]) == k:
+			trapped.erase(ref)
+			w.stat("collapse_freed")
 
 
 # ---------------------------------------------------------------- shafts (Q4) ----------------
@@ -782,7 +852,8 @@ func shaft_secs(c: Vector2i, tool: String) -> float:
 
 ## Why `who` cannot set a ladder into the shaft at `c` ("" if they can): a finished, clear shaft with no ladder, a ladder
 ## and a mallet, standing beside its mouth on its top level.
-func ladder_refusal(who, c: Vector2i) -> String:
+func ladder_refusal(who, c: Vector2i, from: Inventory = null) -> String:
+	var inv: Inventory = from if from != null else who.inv
 	var level := level_of(who)
 	var sh := shaft_at(level, c)
 	var lc: Dictionary = cfg().ladder
@@ -794,9 +865,9 @@ func ladder_refusal(who, c: Vector2i) -> String:
 		return "A ladder stands in the shaft already."
 	if _ladder_wall(_map(level - 1, c), c).x < 0:
 		return "There is no rock face below to set a ladder against."
-	if not who.inv.has(str(lc.item)):
+	if not inv.has(str(lc.item)):
 		return "You need a ladder (made at the workbench from planks and nails)."
-	if not _has_tool(who, str(lc.tool)):
+	if not _has_tool_in(inv, str(lc.tool)):
 		return "You need a mallet to set the ladder."
 	var at := _cell_of(who)
 	if maxi(absi(at.x - c.x), absi(at.y - c.y)) > 1 or at == c:
@@ -806,14 +877,15 @@ func ladder_refusal(who, c: Vector2i) -> String:
 
 ## `who` sets a ladder into the shaft at `c`: the ladder leaves their inventory (used_ladder); the shaft becomes a portal
 ## (kind "shaft") between its mouth's stand on the top level and its landing below, which the level router uses.
-func install_ladder(who, c: Vector2i) -> Dictionary:
-	var why := ladder_refusal(who, c)
+func install_ladder(who, c: Vector2i, from: Inventory = null) -> Dictionary:
+	var why := ladder_refusal(who, c, from)
 	if why != "":
 		return {"result": "refused", "why": why}
 	var level := level_of(who)
 	var sh := shaft_at(level, c)
 	var lc: Dictionary = cfg().ladder
-	who.inv.remove(str(lc.item), 1)
+	var inv: Inventory = from if from != null else who.inv
+	inv.remove(str(lc.item), 1)
 	w.stat("used_" + str(lc.item))
 	sh.ladder = int(cfg().stability.full)
 	var at := _cell_of(who)
@@ -829,7 +901,7 @@ func install_ladder(who, c: Vector2i) -> Dictionary:
 	sh.door = [wall.x, wall.y]
 	_link(sh)
 	w.stat("ladders_set")
-	var broke := w._work_wear(who, str(lc.tool), int(lc.wear), str(lc.skill), "")
+	var broke := _wear(who, inv, str(lc.tool), int(lc.wear), str(lc.skill))
 	var up := Skills.gain(who, str(lc.skill), int(lc.xp))
 	changed.emit(level, c)
 	return {"result": "ok", "why": "", "broke": broke, "up": up}
@@ -872,8 +944,9 @@ func _collapse_shaft(sh: Dictionary) -> void:
 	var c := Vector2i(int(sh.x), int(sh.y))
 	var below := _map(int(sh.level) - 1, c)
 	if below != null and not below.is_solid(c):
-		_clear_cell(int(sh.level) - 1, c, below)
+		var held := stability(int(sh.level), c)
 		below.set_solid(c, true)
+		caught(int(sh.level) - 1, c, held)          # whoever stands at the ladder's foot
 		sh.landing = 0
 		sh.dug = maxi(0, int(sh.dug) - 1)            # the landing's roof is part of the fall: it is cut again
 		sh.rubble = int(sh.rubble) + 1
@@ -1106,6 +1179,32 @@ func crossing_ok(leg_from: Dictionary, leg_to: Dictionary, portal := {}) -> bool
 	return track_at(int(leg_from.level), leg_from.stand) and track_at(int(leg_to.level), leg_to.stand)
 
 
+func _has_tool_in(inv: Inventory, kind: String) -> bool:
+	for id in inv.ids():
+		if str(GameData.item(id).get("tool", "")) == kind:
+			return true
+	return false
+
+
+## Wear the first tool of `kind` in `inv` (the worker's pack, or a job's load holding the works yard's tool) by
+## `amount`, as World._work_wear does for a pack; a break is counted. True if it broke.
+func _wear(who, inv: Inventory, kind: String, amount: int, skill: String) -> bool:
+	if inv == who.inv:
+		var own := ""
+		for id in inv.ids():
+			if str(GameData.item(id).get("tool", "")) == kind:
+				own = id
+				break
+		return w._work_wear(who, own, amount, skill, "") if own != "" else false
+	for id in inv.ids():
+		if str(GameData.item(id).get("tool", "")) == kind:
+			if inv.wear(id, amount):
+				w.stat("broke_" + id)
+				return true
+			return false
+	return false
+
+
 func _has_tool(who, kind: String) -> bool:
 	for id in who.inv.ids():
 		if str(GameData.item(id).get("tool", "")) == kind:
@@ -1251,6 +1350,12 @@ func cart_fetch_plan(n: NPC, d: Dictionary) -> Array:
 ## The minecart steps of a miner's plan (NPCBrain.act): load the ore carried into the cart (as much as it has room for),
 ## take hold of it, let it go, or take its load and let it go (the claim is let go too). False ends the plan.
 func cart_act(n: NPC, what: String, a: Dictionary) -> bool:
+	if what == "mc_place":                          # MIN-EQUIP: the household's new minecart set on the rails
+		var cell := Vector2i(int(a.get("x", -1)), int(a.get("y", -1)))
+		var r := set_down_minecart(n, World.hh_ref(n.household), cell)
+		if r.result == "ok":
+			w.stat("minecarts_set_down_by_miners")
+		return r.result == "ok"
 	var cart: Dictionary = w.carts.by_id(int(a.get("cart", -1)))
 	var ref := World.npc_ref(n.id)
 	if cart.is_empty() or str(cart.get("claim", "")) not in ["", ref] or not w.carts.may_use(cart, ref):
@@ -1315,7 +1420,7 @@ func to_dict() -> Dictionary:
 		sh.append(s.duplicate(true))
 	return {"gen": GEN_VERSION, "opened": opened.duplicate(true), "cut": cut.duplicate(), "supports": supports.duplicate(true), "track": tr,
 		"cells": cells.duplicate(true), "shafts": sh, "levels": levels.duplicate(), "taken": taken.duplicate(), "fill_out": fill_out,
-		"last_dawn": last_dawn}
+		"last_dawn": last_dawn, "trapped": trapped.duplicate()}
 
 
 ## A saved state (absent: nothing cut, set up or laid). The deep levels are made first, then every opened cell is floor
@@ -1382,3 +1487,7 @@ func load_dict(d: Dictionary) -> void:
 		taken[str(k)] = int(tk[k])
 	fill_out = int(d.get("fill_out", 0))
 	last_dawn = int(d.get("last_dawn", -1))
+	trapped = {}
+	var tp: Dictionary = d.get("trapped", {})
+	for r in tp:
+		trapped[str(r)] = str(tp[r])

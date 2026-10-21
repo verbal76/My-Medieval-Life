@@ -30,7 +30,7 @@ const JOB_TEXT := {
 	"prospector": "Reads stains and flecks in the ground, takes rock samples with a prospector's kit and has a smith assay them; reports finds to the manor. Takes the manor's surveys. See Prospecting and trial pits.",
 	"laborer": "Day labour: mines and quarries stone, hauls and does odd work where it is needed; dresses quarried stone into building blocks when builders want them.",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
-	"carpenter": "Buys logs and saws them into planks.",
+	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
 	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
 	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
 	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them.",
@@ -120,6 +120,7 @@ static func build() -> Wiki:
 	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
 	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks
 	add_provider(WikiExcavation.add_pages)     # Build 17: shovels and pickaxes, trial-pit earth, where to dig, capability
+	add_provider(WikiMineEquipment.add_pages)     # MIN-EQUIP, MIN-COLLAPSE (wiki_mine_equipment.gd)
 	for c in providers:
 		if c.is_valid():
 			c.call(w)

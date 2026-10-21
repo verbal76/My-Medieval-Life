@@ -605,7 +605,7 @@ func _carpenter_goods(n: NPC) -> bool:
 ## one, and sells what it has made to that buyer; with no buyer, or without the skill or the wood, it goes on with its
 ## other work (false).
 func _carpenter_mallet(n: NPC) -> bool:
-	if n.inv.count("mallet") > 0:
+	if n.inv.count("mallet") > 0 and not keeps(n, "mallet"):   # (one made for the manor's order is not for sale: MIN-EQUIP)
 		return _plan_sell(n, "mallet") if _buyer_for(n, "mallet") != null else false
 	if not _can_make(n, "make_mallet") or not n.inv.has_all(GameData.recipes["make_mallet"]["in"]):
 		return false
@@ -943,6 +943,8 @@ func _plan_job(n: NPC) -> bool:
 		"prospector":
 			return w.prospecting.plan(n)          # MIN-C: clues, samples and the assayer (Prospecting.plan)
 		"carpenter":
+			if w.mine_works.supply.carpenter_work(n):   # MIN-EQUIP: the manor's supports, ladders, mallets; a miner's minecart
+				return true
 			if _carpenter_carts(n):
 				return true
 			if _carpenter_goods(n):
@@ -1109,6 +1111,10 @@ func _miner(n: NPC) -> bool:
 	var carried := 0
 	for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
 		carried += n.inv.count(o)
+	var mcp := w.mine_works.supply.miner_cart_plan(n) if carried == 0 else []
+	if not mcp.is_empty():
+		n.plan = mcp                   # MIN-EQUIP: the household's minecart, bought with the miner's coins and set on the rails
+		return true
 	if carried >= int(GameData.b("carry_ore")):
 		var haul := w.mine_works.cart_haul_plan(n, not w.nearest_seam(n, ores).is_empty()) if n.depth != 0 else []
 		if not haul.is_empty():
@@ -1205,7 +1211,8 @@ func _can_make(n: NPC, r: String) -> bool:
 
 
 ## Goods made only for a buyer (PAR-04): the maker sells all it has of them.
-const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet", "shovel_blade"]
+const MADE_TO_ORDER := ["iron_helmet", "copper_ring", "amulet", "gold_ring", "gold_bar", "leather_cap", "plough", "nails", "mallet", "shovel_blade",
+	"timber_support", "ladder", "minecart"]       # MIN-EQUIP: the carpenter's, for the manor's orders and a miner's household
 
 
 func _crafter(n: NPC, recipes: Array) -> bool:
@@ -1742,6 +1749,10 @@ func keeps(o: NPC, id: String) -> bool:
 		return true
 	if o.job == "smith" and w.manor_orders.any(func(x): return int(x.smith) == o.id and str(x.tool) == id):
 		return true                                   # forged for the manor's order (EQ-19)
+	if o.job == "carpenter":                          # MIN-EQUIP: only as many as the manor has ordered from it are held back
+		var ordered := w.manor_orders.filter(func(x): return int(x.smith) == o.id and str(x.tool) == id).size()
+		if ordered > 0 and o.inv.count(id) <= ordered:
+			return true
 	return id == "axe" and o.household >= 0 and o.household < w.households.size() \
 			and str(w.households[o.household].get("build", "")) != "" and w.construction.responsible_adult(o.household) == o
 
@@ -2450,7 +2461,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"mj_step", "mj_mine":
 			return w.manor_work.act(n, what, a)
-		"mc_load", "mc_hitch", "mc_park", "mc_unload":
+		"mc_load", "mc_hitch", "mc_park", "mc_unload", "mc_place":
 			return w.mine_works.cart_act(n, what, a)       # MIN-F2 (Q3): a miner's minecart haul
 		"day_labour":
 			var wage := int(GameData.b("day_labour_wage"))
@@ -2652,6 +2663,8 @@ func reeve_day() -> void:
 	w.manor_work.post_discovery()                    # MIN-D: a survey or a trial pit, as the village's mining capability allows
 	w.manor_work.post_pits()                         # MIN-E: a load of the manor's open pit, or a pit staked for a find out of a trial's reach
 	w.manor_work.post_tunnels()                      # MIN-F2: a load cut at a supported face below ground, while the works lack stone
+	w.mine_works.supply.procure()                    # MIN-EQUIP: the supports, repair goods, ladders and mallet its shore work needs
+	w.manor_work.post_shore()                        # MIN-EQUIP: set up, repair or ladder below ground, with the yard's goods
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
 	for id in ["plank", "stone", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths
 		if id == "stone" and quarrying:
@@ -2860,12 +2873,18 @@ func _order_for(o: NPC) -> Dictionary:
 func _deliver_orders() -> void:
 	for x in w.manor_orders.duplicate():
 		var smith := w.npc(int(x.smith))
-		if smith == null or not smith.alive or smith.job != "smith" or w.day() - int(x.day) > int(GameData.b("manor_order_days")):
+		if smith == null or not smith.alive or smith.job not in ["smith", "carpenter"] or w.day() - int(x.day) > int(GameData.b("manor_order_days")):
 			w.manor_orders.erase(x)                   # (an order not met in time lapses: its worker is free to seek other work)
 			w.stat("gov_tool_order_lapsed")
 			continue
 		var tool := str(x.tool)
 		if not smith.inv.has(tool):
+			continue
+		if int(x["for"]) == -1:                       # MIN-EQUIP: ordered for the manor's works yard
+			smith.inv.remove(tool)
+			w.manor_work.yard.add(tool)
+			w.manor_orders.erase(x)
+			w.stat("gov_equipment_delivered_" + tool)
 			continue
 		var to: NPC = null
 		var first := w.npc(int(x["for"]))

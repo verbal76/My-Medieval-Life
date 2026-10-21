@@ -32,6 +32,10 @@ extends RefCounted
 ##    Backfill Tunnel action), its wage paid by the player and held in the order until done; a worker carries the spoil
 ##    the player leaves at the order's depot (the mouth's surface stand) down to the cell in loads and puts it back a
 ##    unit at a time (MineWorks.fill). Cancelled or given up, what is placed stays and the rest is left where it lies.
+##  - MIN-EQUIP: "shore" jobs, posted when the works yard holds their goods (MineSupply.shore_wanted): set up a timber
+##    support beside a face the manor would tunnel ("prop"), repair a worn support ("repair") or set a ladder into a
+##    shaft whose ladder is gone ("ladder"), with the yard's goods and its mallet carried in the job's load (the mallet
+##    comes back to the yard); paid at the mending rate (`mend_wage`: no wage of its own).
 ## A household under a day of food is not left waiting: its relief is delivered at once, as before.
 ##
 ## Jobs are paid from the treasury, set aside when a job is taken (the treasury keeps
@@ -41,7 +45,7 @@ extends RefCounted
 ## Carried goods ride in the job's own load (never the worker's pack), so they cannot be sold, eaten or
 ## lost; a dead worker's load goes back. Every number is provisional — balance review pending.
 
-const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate", "tunnel", "backfill"]
+const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate", "tunnel", "backfill", "shore"]
 const ORDER := ["pantry", "granary", "yard"]        # hauling priority by destination: relief first
 const MATERIALS := ["plank", "stone", "log", "iron_bar"]
 
@@ -409,6 +413,34 @@ func is_player_order(j: Dictionary) -> bool:
 	return str(j.get("payer", "")) == World.PLAYER
 
 
+## MIN-EQUIP, the reeve's evening (after the manor's purchases, MineSupply.procure): one shore job for each piece of shore
+## work the manor wants (MineSupply.shore_wanted) whose goods, and a mallet, the works yard holds and no other shore job
+## has claimed.
+func post_shore() -> void:
+	var claimed := {}
+	for j in jobs:
+		if j.kind == "shore" and j.load.total() == 0:
+			var g := MineSupply.goods_for(str(j.mode))
+			for id in g:
+				claimed[id] = int(claimed.get(id, 0)) + int(g[id])
+	var mallet_free: bool = yard.count("mallet") > jobs.filter(func(j): return j.kind == "shore" and j.load.total() == 0).size()
+	for s in w.mine_works.supply.shore_wanted():
+		if not mallet_free:
+			return
+		var g := MineSupply.goods_for(str(s.mode))
+		var ok := true
+		for id in g:
+			if yard.count(id) - int(claimed.get(id, 0)) < int(g[id]):
+				ok = false
+		if not ok:
+			continue
+		for id in g:
+			claimed[id] = int(claimed.get(id, 0)) + int(g[id])
+		_post({"kind": "shore", "mode": str(s.mode), "level": int(s.level), "site": [s.cell.x, s.cell.y], "qty": 1, "wage": int(cfg("mend_wage"))})
+		w.stat("shore_jobs_posted")
+		mallet_free = yard.count("mallet") > jobs.filter(func(j): return j.kind == "shore" and j.load.total() == 0).size()
+
+
 ## A load of excavation: what a villager carries (balance.json carry_ore, the miners' carrying rule).
 static func excavate_load() -> int:
 	return int(ResourceNodes.number(OpenPits.cfg().manor.load))
@@ -512,7 +544,7 @@ func open_for(who: String) -> Array:
 			continue
 		if j.kind in ["quarry", "trial", "excavate", "tunnel"] and not can_dig(j, who):
 			continue
-		if j.kind in ["tunnel", "backfill"] and who == World.PLAYER:
+		if j.kind in ["tunnel", "backfill", "shore"] and who == World.PLAYER:
 			continue                 # MIN-F2: the player tunnels and fills with their own hands (and orders the fill)
 		if j.kind == "backfill" and (is_staff(who) or (j.stock as Inventory).total() + j.load.total() == 0):
 			continue                 # a player's order pays its own workers, and waits for the player's spoil
@@ -526,7 +558,7 @@ func open_for(who: String) -> Array:
 func _rank(j: Dictionary) -> int:
 	if j.kind == "haul":
 		return ORDER.find(str(j.to.kind))
-	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9}.get(str(j.kind), 10)
+	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9, "shore": 2}.get(str(j.kind), 10)     # MIN-EQUIP: shoring with the yard's goods comes before mending
 
 
 func _has_kit(who: String) -> bool:
@@ -642,7 +674,7 @@ func release(j: Dictionary) -> void:
 	j.day = -1
 	if j.kind == "excavate":
 		j.erase("site")
-	if j.kind in ["quarry", "survey", "trial", "excavate", "tunnel"]:
+	if j.kind in ["quarry", "survey", "trial", "excavate", "tunnel", "shore"]:
 		jobs.erase(j)              # the reeve posts it again when the works still lack stone (or the find is still wanted)
 
 
@@ -662,6 +694,10 @@ func step(j: Dictionary) -> String:
 			return "assay" if not _survey_pending(j).is_empty() else "report"
 		"trial":
 			return "dig"
+		"shore":
+			if int(j.get("done", 0)) > 0:
+				return "put"
+			return "take" if j.load.total() == 0 else "prop"
 		"tunnel":
 			var face := Vector2i(int(j.site[0]), int(j.site[1]))
 			if j.load.total() < int(j.qty) and w.mine_works.face_refusal(int(j.level), face) == "":
@@ -766,6 +802,10 @@ func describe(j: Dictionary) -> String:
 		"trial":
 			var c := w.prospecting.clue(str(j.clue))
 			return "Dig a trial pit by %s %s with a shovel, looking for ore (%d hours)" % [w.prospecting.stain(c), w.prospecting.place(c), roundi(float(Discovery.cfg().trial.minutes) / 60.0)]
+		"shore":
+			return {"prop": "Take a timber support and the mallet from the works yard and set the support up below ground beside the rock face the manor will tunnel",
+				"repair": "Take a plank and the mallet from the works yard and repair a worn timber support below ground",
+				"ladder": "Take a ladder and the mallet from the works yard and set it into a shaft below ground"}.get(str(j.mode), "Shore work below ground")
 		"tunnel":
 			return "Cut a load of %d from the rock face below ground with a pickaxe and bring it to the works yard" % int(j.qty)
 		"backfill":
@@ -798,6 +838,8 @@ func _goods_words(inv: Inventory, most: int) -> String:
 ## Do the next step for this worker, where they stand. Returns true when the step was done; a
 ## finished job pays its wage.
 func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
+	if j.kind == "shore":
+		return _shore_step(j, who)
 	match step(j):
 		"take":
 			if j.kind == "haul":
@@ -1002,6 +1044,49 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 	return false
 
 
+## MIN-EQUIP: a shore job's step. "take": its goods and the mallet from the works yard into the job's load; "prop": set
+## up, repair or set the ladder (MineWorks, with the load's goods and mallet); "put": the mallet (and anything left)
+## back into the yard, and the job is done and paid.
+func _shore_step(j: Dictionary, who: String) -> bool:
+	match step(j):
+		"take":
+			var g := MineSupply.goods_for(str(j.mode))
+			if not yard.has_all(g) or not yard.has("mallet"):
+				last_refusal = "The works yard lacks what the job needs."
+				release(j)
+				return false
+			for id in g:
+				w.transfer(yard, j.load, id, int(g[id]))
+			w.transfer(yard, j.load, "mallet", 1)
+			return true
+		"prop":
+			var o = _who(who)
+			if o == null:
+				return false
+			var c := Vector2i(int(j.site[0]), int(j.site[1]))
+			var mw: MineWorks = w.mine_works
+			var r: Dictionary = {}
+			match str(j.mode):
+				"prop":
+					r = mw.place_support(o, c, j.load)
+				"repair":
+					r = mw.repair(o, c, j.load)
+				"ladder":
+					r = mw.install_ladder(o, c, j.load)
+			if r.get("result", "") != "ok":
+				last_refusal = str(r.get("why", ""))
+				release(j)                                 # the place changed: the goods go back, the work is weighed again
+				return false
+			j.done = 1
+			return true
+		"put":
+			for id in j.load.ids():
+				w.transfer(j.load, yard, id, j.load.count(id))
+			_finish(j, who)
+			return true
+	return false
+
+
 ## A villager quarrying: one unit from the nearest stone seam into the job's load.
 func mine_into(j: Dictionary, n: NPC, dep: Dictionary) -> bool:
 	var r := w.work_mine(n, dep, j.load)                    # the player's swing (PAR-01)
@@ -1110,6 +1195,13 @@ func plan(n: NPC) -> bool:
 			var i := OpenPits.index(p, at)
 			n.doing = "digging the manor's open pit"
 			n.plan = [b.go(w.pits.stand_for(p, i, n.cell())), b.work(OpenPits.minutes_of(int(p.dug[i])) * Skills.value(n, "mining", "mine_time", 1.0), "mj_step", {"job": int(j.id)}, "swing", at)]
+		"prop":
+			var site := Vector2i(int(j.site[0]), int(j.site[1]))
+			var lv := int(j.level)
+			var mc: Dictionary = MineWorks.cfg().support if str(j.mode) != "ladder" else MineWorks.cfg().ladder
+			n.doing = {"prop": "setting up a timber support for the manor", "repair": "repairing a timber support for the manor", "ladder": "setting a ladder in a shaft for the manor"}.get(str(j.mode), "shoring for the manor")
+			var stand: Vector2i = w.mine_works.fill_stand(lv, site, n.cell() if n.depth == lv else site)
+			n.plan = [b.go(stand, 1.0, lv), b.work(float(mc.get("repair_minutes", mc.minutes)) if str(j.mode) == "repair" else float(mc.minutes), "mj_step", {"job": int(j.id)}, "work", site)]
 		"cut":
 			var face := Vector2i(int(j.site[0]), int(j.site[1]))
 			var lv := int(j.level)

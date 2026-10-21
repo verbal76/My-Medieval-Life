@@ -589,6 +589,7 @@ func _sample(start: Dictionary) -> Dictionary:
 		"deposits_exhausted": w.deposits.filter(func(d): return int(d.amount) <= 0).size(), "trees": tree_states,
 		"mined": _keys_with("mined_", ["iron_ore", "copper_ore", "gold_ore", "coal", "stone"]),
 		"dug": _keys_with("dug_", ["topsoil", "dirt", "spoil", "stone"]), "pits": w.pits.pits.size(), "pit_seams": int(_st("pit_seams")),
+		"underground": _keys_with("", ["tunnel_cells_opened", "supports_set_up", "supports_repaired", "shore_jobs_posted", "manor_job_tunnel", "manor_job_shore", "gov_mine_equipment", "minecart_hauls", "minecarts_set_down_by_miners", "shafts_sunk", "tunnel_collapses", "collapse_deaths", "collapse_survivors", "seams_found_below"]),
 		"felled_trees": int(_st("trees_felled")), "felled_logs": int(_st("felled_log")), "burned_logs": int(_st("burned_log")),
 		"broke": _keys_with("broke_", ["pickaxe", "axe", "hammer"])}
 	# wildlife
