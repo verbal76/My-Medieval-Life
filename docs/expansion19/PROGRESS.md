@@ -4,14 +4,33 @@ Reporting fields from the owner directive `docs/directives/2026-10-21_parallel_p
 (PROS-01, PROS-19). Design, decisions and the owner-question table: `docs/expansion19/DESIGN.md`. Nothing here is
 integrated gameplay: everything is off in the game, nothing is merged into staging, no build is made.
 
-Updated 2026-10-21 (round 3: word of mouth spread over frames).
+Updated 2026-10-21 (round 4: the owner's SJD decisions implemented on the branch).
 
 ## Branch and latest pushed commit
 
 `wip/expansion19-preparation`, branched from staging `b721616` (Build 16 released, plus records). Round 1: `3005d6f`
 (isolated prototype), `221ac6f` (live adapter, off), `efbd31c` (performance suite, documents), `e05d367`. Round 2: `ff19cb2`, `693e0c3`
-(compact records, sliced daily update, trade-hook shortcut, measurements). Round 3: the commits that add this update
-(gossip queue, cheaper telling, the scheduled option, measurements). The pushed head is the branch head on GitHub.
+(compact records, sliced daily update, trade-hook shortcut, measurements). Round 3: `940a989`, `6615da4` (gossip queue, cheaper telling, the scheduled option, measurements). Round 4: the
+commits that add this update (the owner's SJD decisions, Q14 integrations, the decay demonstration). The pushed head is
+the branch head on GitHub.
+
+## Owner decisions of 2026-10-21: implemented and pending
+
+The owner answered SJD-Q01, Q02, Q06, Q07, Q08, Q10, Q11 and Q14
+(`docs/directives/2026-10-21_expansion19_sjd_final_decisions.md`, on staging; the register answers are on staging
+`a900a56`). The rules and the tests are in DESIGN.md section 5.1. Approved design is not the same as implemented
+gameplay: everything below is on the isolated branch, and all of it is off in the game.
+
+| Decision | Implemented on the branch (tested) | Still pending |
+|---|---|---|
+| Q01 facts, zero interpretation | yes (`test_q01_facts_and_zero`) | which NEUTRAL types get personal rules (none set) |
+| Q02 slow decay, murder permanent | yes, with fading and permanent ledger parts (`test_q02_decay_and_murder`, `judgment_decay_demo` 24 checks) | **the rate**: 3 permille a day proposed, unapproved; demonstration in DESIGN.md section 11 |
+| Q06 trust from the relationship number | yes, Relations regard (`test_q06_trust`, `test_q06_live_trust`) | calibration of the proposed numbers |
+| Q07 no hop limit, real encounters only | yes (`test_q07_no_hop_limit`) | the live `Relations.harmed` instant spread (conflict 1) |
+| Q08 morality, loyalty, law separate | yes (`test_q08_morality`) | CRT-06's friendly guard (conflict 3) |
+| Q10 no numbers to the player | yes: no UI reads judgment (`test_q10_no_numbers_in_ui`); refusals in words | player-facing attitude words at Gate E |
+| Q11 permanent memories | yes (`test_q11_permanent_memories`; perf checks ordinary memory bounded and old facts permanent) | `permanent_personal_severity` 2000 is a proposal |
+| Q14 universal integration | six existing decision points wired, each off by default, each tested both ways (DESIGN.md section 9.1) | contracts (Build 17 CON-01), favours, villager proposals (CRT-12, conflict 2), help and trade event feeds (section 9.2) |
 
 ## Implemented and tested
 
@@ -27,10 +46,24 @@ Updated 2026-10-21 (round 3: word of mouth spread over frames).
 | Large-population performance | `judgment_perf.gd` | 19 checks at 100 / 500 / 2000 people, live and stress event rates, hour by hour (memory bound, facts within horizon, save round trip, determinism); figures and budgets in DESIGN.md section 7 |
 | Round 2: compact records (packed arrays) | `JudgmentStore` | memory at 500 people 10.7 -> 4.0 MB (live rate), 57.9 -> 16.1 MB (stress); every perf scenario's final state hash identical before and after |
 | Round 2: daily update sliced over the day's hours, catch-up on touch | `JudgmentStore.begin_day/dawn_hour/dawn_slice`, World hooks | `judgment_test.gd` (105 in all): sliced and whole updates agree on every telling, choice, opinion and the end state hash over twelve days with newcomers, also with retraction, a fading view and rumours on; largest update hour at 500 people live: 11.38 ms (one call) -> 0.55 ms median day |
+| Round 4: the owner's rules Q01, Q02, Q06, Q07, Q08, Q10, Q11 | `JudgmentStore`, `JudgmentSocial.regard`, `judgment.json` | `judgment_test.gd` 164 checks (one test per decision); `judgment_decay_demo.gd` 24 |
+| Round 4: Q14 integrations (buyer, timber seller, helper hire, taking work, befriending, courting) | `JudgmentLive`, one guarded line each in `NPCBrain`, `Construction`, `Business`, `Relations` | `judgment_live_test.gd` 53 checks: judgment changes the choice, need or closeness or attraction outweighs it, feasibility never overridden, neutral judgment = the live choice |
 | Round 3: word of mouth queued and told a few a tick; reads first tell the meetings they depend on | `JudgmentStore.meet_hourly/meet_later/gossip_tick/_flush_for` | `judgment_test.gd` (129 in all): same tellings, every read along the way, beliefs and end state as telling at once (also with retraction, a fading view and rumours), and the test fails if the flush is removed; perf: spread = told at once = round 2's end state at every size and rate; at 500 people live, frame p99 1.03 -> 0.87 ms and p99.9 5.66 -> 2.15 ms |
 | Round 3: cheaper telling (cached settings, no formatting, packed sort, "nothing new" shortcut) | `JudgmentStore.tell/interpret/evaluate/_post` | results unchanged (same state hashes as round 2 at every size and rate) |
 | Round 3 option: scheduled timing (off) | `gossip.timing` "scheduled" | `test_scheduled_gossip`: told at its own minute, never before, kept in a save, deterministic; frames p99 0.62 / p99.9 1.25 ms at 500 people live; results differ by design |
 | Round 2: trade-hook shortcut | `JudgmentLive._first_stands` | `judgment_live_test.gd` (27): picks exactly as the full scan over twelve opinion mixes; economy_sim 10 days seed 1: about +20% wall time before, about +5% after, no leaks, same fingerprint |
+
+Round 4 regression evidence (judgment off), on this branch before the round-4 push:
+- **Judgment suites:** `judgment_test` 164, `judgment_live_test` 53, `judgment_decay_demo` 24, `judgment_perf` 23
+  checks, 0 failures.
+- **Game suites:** `run_tests` 3535, `world_test` 200, `relations_test` 79, `parity_test` 55, `conservation_test` 8,
+  `save_transfer_test` 21 checks, 0 failures.
+- **Python unittest:** 105 OK.
+- **Determinism gate:** `tools/sim_gate.py` **PASS, identical to the baseline**.
+- **Judgment on:** the 10-day `economy_sim --judgment`, seed 1, had no currency or item leak and the baseline
+  fingerprint. It made 1,599 tellings (499 before the hop limit was removed) and 1,101 belief upgrades, and its
+  decision points recorded 32,864 sale choices, 245 timber-seller choices, 34 befriending checks and 15 courtship
+  choices. No household hired a helper in those 10 days.
 
 Round 3 regression evidence (judgment off), on this branch before the round-3 push: `judgment_test` 129,
 `judgment_live_test` 27, `judgment_perf` 23, `run_tests` 3535, `world_test` 200, `relations_test` 79, `parity_test` 55,
@@ -75,6 +108,14 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 
 - Hooks touch `world.gd`, `relations.gd`, `npc_brain.gd` (one guarded line each, plus the save section): small but
   real merge points with Build 17 and 18 changes to the same functions.
+- Round 4 frame cost (DESIGN.md section 12): with the owner's rules, the frame p99 at 500 people at the live rate rose
+  from 0.87 to 1.45 ms here. The causes are the daily decay over every ledger, stories travelling further, and belief
+  upgrades. Not chased (no more speculative optimisation rounds); a result-neutral fix (lazy decay) is described there.
+- Permanent memories grow without a cap by design (Q11). At the stress rate, assault victims accumulate them (1,646 at
+  500 people over 40 days) under the proposed `permanent_personal_severity` 2000. At the live rate there were 23.
+- Conflicts with existing mechanics, not resolved here (DESIGN.md section 10): `Relations.harmed`'s instant spread to
+  kin and friends (Q07), CRT-12's fixed notoriety and regard thresholds (Q14), CRT-06's friendly guard waiving a fine
+  (Q08), and regard serving as both trust and harm (Q06).
 - Gossip's frame cost (DESIGN.md section 7, round 3): at 500 people at the live rate, 99 frames in 100 now fit the
   phone budget on the 4x assumption (0.87 ms here). The rarest frames do not: 1 in 1000 reaches 2.15 ms here (about
   8.6 ms on the phone), when a read must first tell a long chain of queued meetings. Keeping the result identical
@@ -94,11 +135,14 @@ item leak, and the day-10 fingerprint equals the baseline's (the few events of a
 
 ## Outstanding owner decisions
 
-All fourteen remain open. Blocking live integration (per DESIGN.md section 5 and the roadmap reconciliation): SJD-Q01
-(NEUTRAL events), Q02 (decay), Q06 (confidence and rumour), Q07 (replacing today's instant harm spread), Q08 (law,
-morality, loyalty), Q10 (what the player sees), Q11 (persistence by severity), Q14 (first live domain). Tunable, with
-provisional values in data: Q03, Q04, Q05, Q09, Q12, Q13 (unless run-time learning is wanted). Also Q19-0 (whether the
-TUNABLE/OWNER split is accepted).
+- **Answered 2026-10-21:** Q01, Q02, Q06, Q07, Q08, Q10, Q11, Q14 (see above).
+- **Still provisional:** Q03, Q04, Q05, Q09, Q12, Q13.
+- **Pending:** X19-Q-TIMING, with "spread" as the default; "scheduled" is not enabled.
+- **Needed from the owner before live integration (Gate E):**
+  - the Q02 decay rate;
+  - the four conflicts in DESIGN.md section 10 (instant harm spread, CRT-12 thresholds, CRT-06 friendly guard, and
+    whether `permanent_personal_severity` should include being assaulted).
+- None of these blocks further prospective work on this branch.
 
 ## Integration-readiness (from tests actually run)
 

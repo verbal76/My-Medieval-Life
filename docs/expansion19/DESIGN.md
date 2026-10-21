@@ -2,9 +2,11 @@
 
 PROSPECTIVE work (owner directive `docs/directives/2026-10-21_parallel_prospective_development_18_19.md`, register
 PROS-01, PROS-19) on `wip/expansion19-preparation`, branched from staging `b721616` (the released Build 16 plus
-records). Nothing here is integrated gameplay, nothing is merged or released, and no open owner question
-(SJD-Q01..Q14) is answered: where the code needs an answer it is a parameter in `game/data/judgment.json` with a
-**provisional default**, listed in section 5. Source: the Judgment and Decision Engine master spec
+records). Nothing here is integrated gameplay, and nothing is merged or released. **The owner answered SJD-Q01, Q02,
+Q06, Q07, Q08, Q10, Q11 and Q14 on 2026-10-21** (`docs/directives/2026-10-21_expansion19_sjd_final_decisions.md`,
+on staging): their rules are in section 5 and implemented in round 4. Q03, Q04, Q05, Q09, Q12 and Q13 stay
+provisional, and X19-Q-TIMING stays pending with "spread" as the default. Where code needs a number the owner did not
+set, it is a parameter in `game/data/judgment.json` with a proposed value (section 5a). Source: the Judgment and Decision Engine master spec
 (`docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf`, "spec s.N"), gates SJD-C and SJD-D,
 and the question analysis `origin/wip/roadmap-docs:docs/roadmap/19_SJD_RECONCILIATION.md`.
 
@@ -47,17 +49,26 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
 4. **Contribution** I = S x P x C (confidence policy), split by actor share; I >= 0 adds to the baseline's ledger,
    I < 0 to the other; contributions are never negative; one active contribution per observer, actor and event,
    replaced by difference, so repeats and corrections never double count (spec s.5.1).
-5. **Ledgers** observer -> subject: lifetime GOOD, BAD, contribution count, and an effective view that fades only
-   if `effective_fade_permille` > 0 (default 0). NET = GOOD - BAD.
-6. **Memory bounds.** `capacity` memories a person; salience = severity x confidence, fading `salience_fade_permille`
-   a day; forgotten under `forget_below`; events at `permanent_severity` (killing) never fade. Forgetting keeps the
-   points (`retract_on_forget` false). Events retire after `horizon_days`: past it nobody can tell or correct them,
-   and their dedup keys go with the fact, which bounds memory use while keeping invariant 4.
-7. **Sharing.** When two people spend time together each may tell the other their most salient memories the other
-   lacks: per meeting and per day budgets, only to someone they judge above `share_net_at`, at most `max_hops`,
-   never under `min_confidence`, never about the listener's own deed. Confidence falls by `hop_factor` and the
-   listener's credibility of the teller (their judgment of the teller). Optional distortion: a seeded chance that a
-   rumour names the teller's most disliked person (`misattribute_permille`, default 0); learning the truth reverses it.
+5. **Ledgers** (round 4, Q02) observer -> subject: lifetime GOOD and BAD (history, never decay), the contribution
+   count, a fading part (GOOD, BAD; decays at `decay.ordinary_permille_per_day`) and a permanent part (GOOD, BAD; from
+   a murder, never decays). NET = (fading + permanent GOOD) - (fading + permanent BAD). A contribution goes to the part
+   its event type sets, so a correction or retraction comes off the same part.
+6. **Memory** (round 4, Q11). Ordinary memories: `capacity` a person; salience = severity x confidence, fading
+   `salience_fade_permille` a day; forgotten under `forget_below`. Permanent memories never fade, are never pushed out
+   and are not counted in `capacity`: a murder always, anything at `permanent_severity`, and for the one it happened
+   to anything at `permanent_personal_severity`. Forgetting keeps the judgment, which then fades by decay. Ordinary
+   events retire after `horizon_days`; permanent records (a murder, or any fact someone remembers permanently) never do.
+7. **Sharing** (round 4, Q06, Q07). Only when two people actually spend time together (Relations' shared hours, told a
+   few a tick, round 3). Each may tell the other up to `per_meeting` of their most salient memories the other does not
+   hold or holds less surely, within the teller's `daily_budget`, only to someone they judge above `share_net_at`,
+   never about the listener's own deed. There is **no hop limit and no confidence floor**. Confidence = the teller's x
+   `hop_factor` x credibility. Credibility is the listener's trust in the immediate teller, from the existing Relations
+   regard (`credibility_stranger` at 0, up to 1000 at 100), moved a little by their judgment of the teller. Along a
+   chain it is the product of the links. Each person judges an event once. A belief is replaced only by a strictly more
+   confident telling, which updates its contribution in place. An ordinary story travels until it is too faint to
+   remember (salience = severity x confidence); a murder, never forgotten, travels as far as meetings carry it (tested
+   over 39 links). Optional distortion: a seeded chance that a rumour names the teller's most disliked person
+   (`misattribute_permille`, default 0); learning the truth reverses it.
 8. **Decision weighting.** `JudgmentWeighting.choose(store, cfg, chooser, profile, candidates)`: the live code
    supplies feasible candidates and factors (0..100 points in milli); `disposition` = 50 + NET clamped to 0..100
    (reproduces the spec's -6.59 -> 43.41 and 81.841 exactly), `sole_source`, `ambivalence` filled in; utility =
@@ -86,31 +97,74 @@ today (events as facts, beliefs with provenance, GOOD/BAD contributions and ledg
   `gossip.timing` ("hour"). The `_dry` shortcut cache is never saved and is capped at 20,000 pairs.
 - **A19-10** (round 3, an option, not chosen) `gossip.timing` "scheduled" tells each meeting at its own minute. It gives
   smaller frames but different results, so it is left for the lead or the owner to choose.
+- **A19-11** (round 4) A belief is replaced only by a strictly more confident telling (Q06 updates). Together with the
+  per-event knowers this bounds processing without a hop limit (Q07). The round-3 "nothing new to tell" cache was
+  removed because trust can change.
+- **A19-12** (round 4) Decay of a fading part takes at least 0.001 point a day while anything is left, so remainders
+  fade out instead of sticking at the rounding threshold.
+- **A19-13** (round 4) Q14 adapters use the live order as a factor, so with neutral judgments every decision point
+  makes exactly the live choice. Each point has its own `decision.integration` flag.
 - **A19-6** Live hooks are guarded by `World.judgment != null`; it is null unless `judgment.json` `enabled` is true
   (false) or a test attaches a store. With it null, no hook runs any code beyond the null check.
 
-## 5. Owner questions: provisional defaults and what they block
+## 5. Owner questions
 
-None is answered. Each is a parameter; the default is what the isolated tests run with, labelled provisional.
+### 5.1 OWNER ANSWERED (2026-10-21; rules quoted in short, the directive is the record)
 
-| Question | Parameter(s) | Provisional default | Blocks live integration? |
+| Question | Owner's rule | Implemented in round 4 (tests) | Pending |
 |---|---|---|---|
-| SJD-Q01 NEUTRAL events | `neutral_events` | false (owner's GOOD/BAD rule; NEUTRAL types exist, refused) | Yes (event schema, Gate C per the reconciliation) |
-| SJD-Q02 decay | `memory.retract_on_forget`, `memory.effective_fade_permille` | no retraction, no fade (lifetime totals; only memory detail fades) | Yes |
-| SJD-Q03 thresholds | one ledger scale; `decision.trait_spread_permille` | one scale, spread 0 | No (tunable) |
-| SJD-Q04 ambivalence | `ambivalence` factor weight | stored, weight 0 | No (tunable) |
-| SJD-Q05 prior bias | `interpret.prior_bias_*` | ambiguous events only, 0.01 per point, cap 0.15, never for the affected | No (tunable; spec approves a capped bias) |
-| SJD-Q06 confidence | `belief.confidence_policy`, `confidence_threshold` | multiplier, with a separate belief layer | Yes |
-| SJD-Q07 gossip reach | `gossip.*` | 2 a meeting, 6 a day, 3 hops, credibility by judgment | Yes for replacing `Relations.harmed`'s instant spread |
-| SJD-Q08 law, morality, loyalty | `interpret.kin_of_actor`, `friend_of_actor` | loyalty softens condemnation (0.4, 0.7); legal status not modelled | Yes |
-| SJD-Q09 best or near-best | `decision.selection`, `margin` | argmax (margin implemented and tested) | No (tunable) |
-| SJD-Q10 player visibility | none (developer `inspect` and `explain` only) | nothing shown to the player | Yes |
-| SJD-Q11 persistence by severity | `memory.permanent_severity`, `salience_fade_permille` | killings permanent, others fade | Yes |
-| SJD-Q12 what is scored | catalog, `min_value` | the spec's seed severities; min_value 0 | No (tunable) |
-| SJD-Q13 weights | `decision.profiles`, `trait_spread_permille` | data profiles; no run-time learning | No (data); yes if learning is wanted |
-| SJD-Q14 first domain | the `_buyer_for` prototype hook (`trade_sell`: live order 0.4, need for coin 0.3, disposition 0.15, price 0) | trade (the reconciliation's recommendation), off | Yes |
+| SJD-Q01 facts and zero | "An event is a fact"; each observer may assign "positive, negative, or zero"; zero needs no third ledger; facts may still be "remembered, discussed, and used"; no automatic moral significance for ordinary facts | NEUTRAL facts are always recorded, remembered and told; P = 0 posts nothing; a NEUTRAL type scores only by an optional per-observer `personal` rule, none set (`test_q01_facts_and_zero`, with the owner's marriage example as a fixture rule) | Which NEUTRAL types, if any, get personal rules (content, not code) |
+| SJD-Q02 decay | Ordinary judgments "fade very slowly"; "Murder is a permanent exception"; for players and NPCs alike; keep provenance so both coexist; propose a conservative rate and demonstrate it, not silently chosen | Fading and permanent parts in every ledger, routed by event type; lifetime totals kept; decay daily on the fading parts only (`test_q02_decay_and_murder`; the 365-day demonstration, section 11) | **The rate**: 3 permille a day is PROPOSED, unapproved |
+| SJD-Q06 confidence and trust | Confidence from "how much that listener trusts the person telling the story"; "the existing friendship or relationship number must influence" it; firsthand distinct; chains reflect transmission; never re-award on re-hearing; update the existing belief | Credibility from Relations regard (no second friendship system); witnesses firsthand; product along the chain; re-hearing ignored; a more credible telling replaces the belief and its contribution (`test_q06_trust`, `test_q06_live_trust`) | The numbers (`credibility_stranger` 500, `hop_factor` 900, judgment adjustment 10 a point) are proposals |
+| SJD-Q07 gossip reach | "Remove the fixed maximum number of retellings"; spread only through "real conversations and encounters"; no broadcast or teleportation; exchange limits per conversation may remain; no loops, duplicates or unlimited processing | `max_hops` and `min_confidence` removed; `per_meeting` and `daily_budget` kept; dedup by event identity (knowers) and strictly-increasing confidence (`test_q07_no_hop_limit`: a murder 39 links down a line, one meeting a day, each person judged once, processing ends, nobody hears without a meeting) | The live `Relations.harmed` instant spread conflicts (section 10) |
+| SJD-Q08 morality, loyalty, law | Interpretation from "personal morality, relationships, loyalties, and the people affected"; "The legal system is separate"; keep crime reporting and guards; "Do not create a second legal system" | Personal morality per person and family of deeds (`morality_spread_permille`, proposal 150), kin and friend loyalty, ties to victims and beneficiaries, rivals; nothing legal in the store (`test_q08_morality`) | CRT-06's friendly guard (section 10) |
+| SJD-Q10 what the player sees | No exact numbers in normal gameplay; attitudes through behaviour; numbers stay in developer diagnostics | No UI script reads judgment (`test_q10_no_numbers_in_ui`); refusals are words; `inspect` and `explain` remain | Player-facing words for attitudes, when judgment goes live (Gate E) |
+| SJD-Q11 permanent memories | Murder permanent; other significant events by configurable severity and personal significance; not the ordinary horizon; survive save, load and compaction; ordinary memory bounded | Permanent memory flag, outside capacity, never fades; facts of permanent memories never retire; saved and reloaded (`test_q11_permanent_memories`; perf: ordinary memory within 24 at every size) | `permanent_personal_severity` 2000 (being assaulted or rescued oneself) is a proposal |
+| SJD-Q14 universal integration | Judgment influences "every applicable NPC decision"; existing decision authority remains; "shared weighting and evaluation interfaces"; never override feasibility or conservation; staged; document unsupported domains | Six existing decision points through `JudgmentWeighting` (section 9), each behind the off switch, each tested both ways | Further domains (section 9.2); CON-01 on Build 17 |
 
-Also open from the reconciliation: **Q19-0**, whether the owner accepts the TUNABLE/OWNER split this table uses.
+### 5.2 Still provisional (not separately approved)
+
+| Question | Parameter(s) | Provisional value |
+|---|---|---|
+| SJD-Q03 thresholds | one ledger scale; `decision.trait_spread_permille` | one scale, spread 0 |
+| SJD-Q04 ambivalence | `ambivalence` factor weight | stored, weight 0 |
+| SJD-Q05 prior bias | `interpret.prior_bias_*` | ambiguous events only, 0.01 a point, cap 0.15, never the affected |
+| SJD-Q09 best or near-best | `decision.selection`, `margin` | argmax |
+| SJD-Q12 what is scored | catalog, `min_value` | the spec's seed severities; min_value 0 |
+| SJD-Q13 weights | `decision.profiles`, `trait_spread_permille` | data profiles; no run-time learning |
+| X19-Q-TIMING | `gossip.timing` | "hour" (spread); "scheduled" not enabled |
+
+### 5a. Reconciliation of every judgment.json setting and code path with the decisions
+
+Classes: **config** (a value only), **code** (code changed in round 4), **integration** (needs an existing decision
+system to call the shared interface).
+
+| Setting or code path | Decision | Class | State |
+|---|---|---|---|
+| `neutral_events` (removed) | Q01 | code | NEUTRAL facts always recorded |
+| `events.*.personal` | Q01 | config | none set (no automatic moral meaning) |
+| `events.killing.permanent` | Q02, Q11 | config + code | murder: permanent memory and never-decaying judgment |
+| `events.*` severities, `min_value`, `ambiguous` | Q12, Q05 | config | provisional |
+| `interpret.affected/kin/friend/bystander/rival/accomplice`, `kin_of_actor`, `friend_of_actor` | Q08 | config | proposals implementing the owner's rule |
+| `interpret.morality_spread_permille` | Q08 | code + config | new; 150 proposed |
+| `interpret.prior_bias_*` | Q05 | config | provisional |
+| `belief.credibility_stranger`, `credibility_permille_per_point`, `credibility_min` (replacing `credibility_base`) | Q06 | code + config | credibility from Relations regard |
+| `belief.hop_factor` | Q06 | config | 900 proposed (loss per retelling) |
+| `belief.confidence_policy`, `confidence_threshold` | Q06 | config | multiplier |
+| `gossip.max_hops`, `gossip.min_confidence` (removed) | Q07 | code | no hop limit, no floor |
+| `gossip.per_meeting`, `daily_budget` | Q07 | config | kept as exchange limits |
+| `gossip.share_net_at`, `misattribute_permille` | Q07 | config | proposals (0: no distortion) |
+| `gossip.pump_per_tick`, `timing` | X19-Q-TIMING | config | "hour" |
+| `memory.effective_fade_permille` (removed) -> `decay.ordinary_permille_per_day` | Q02 | code + config | 3 proposed, unapproved |
+| `memory.permanent_severity`, `permanent_personal_severity` | Q11 | code + config | 3000; 2000 proposed |
+| `memory.capacity`, `salience_fade_permille`, `forget_below`, `horizon_days` | Q11 | config | ordinary memory only |
+| `memory.retract_on_forget` | Q02 | config | false (judgment fades by decay instead) |
+| `decision.profiles.*`, `integration.*` | Q14 | integration | six points wired (section 9) |
+| `JudgmentStore.inspect`, `JudgmentWeighting.explain` | Q10 | code | developer only |
+| `NPCBrain._buyer_for`, `_seller_of` | Q14 | integration | wired, off |
+| `Construction._keep_building`, `Construction.hire`, `Business.hire` | Q14 | integration | wired, off |
+| `Relations._befriend_if_close`, `_villagers_court` | Q14 | integration | wired, off |
+| `Relations.harmed`, `notoriety`, `refusal` (CRT-10, CRT-12), `World.guard_confront` (CRT-06) | Q07, Q08, Q14 | integration (conflict) | not changed (section 10) |
 
 ## 6. Assumptions
 
@@ -272,3 +326,126 @@ bandit robberies (`World.raise_alarm`), the player killing a villager (`World.ki
   word of mouth, judgment -> whom a villager sells to) at reconciliation, when ids can be assigned on the Build 18
   baseline without colliding with Build 17 and 18's entries. The hooks are off, so no live interaction exists yet.
 - `.github/workflows/tests.yml` lists the three judgment suites on this branch; it runs only on staging pushes.
+
+## 9. Q14: universal integration plan and status (round 4)
+
+### 9.1 Wired (each behind the off switch: a store attached and `decision.integration.<point>` set)
+
+All go through the one shared interface (`JudgmentWeighting.choose`), with adapters in `JudgmentLive`. The existing
+code still decides who is feasible; with every judgment neutral the live choice stands.
+
+| Decision point (existing code) | What judgment weighs | Tests: judgment changes it / other factors outweigh it / feasibility |
+|---|---|---|
+| Whom a villager sells to (`NPCBrain._buyer_for`) | live order, need for coin, the seller's judgment of each buyer | avoids a disliked buyer when another can buy; still sells when every buyer is disliked; never outside the live buyers |
+| Whom a household buys timber from (`NPCBrain._seller_of`) | live order, the buyer's judgment | goes to the other seller with logs; the only seller left is used despite dislike; no seller with logs, no purchase however liked |
+| Whom a building household hires (`Construction._keep_building`) | live order, the household head's judgment; only those who would take the work | hires another; disliking everyone still hires; never someone who cannot be hired or would refuse |
+| Whether a villager takes work (`Construction.hire`, `Business.hire`, for the player and for households alike) | need for coin, the wage, the worker's judgment of the employer, against doing without | a villager with coin refuses a disliked employer (in words); the same villager with no coin accepts; a neutral one does an unpaid favour |
+| Whether two villagers become friends (`Relations._befriend_if_close`) | closeness (regard) and the lower of their two judgments, at the live threshold | a dislike holds back a just-close-enough friendship; great closeness outweighs it; a high opinion never befriends below the threshold |
+| Whom a single villager courts (`Relations._villagers_court`) | attraction and the villager's judgment, among the live candidates | the slightly less attractive but not disliked one; much greater attraction outweighs dislike; no candidate, no interest |
+
+With judgment on for 10 village days (`economy_sim --judgment`, seed 1) there were no currency or item leaks (section 12).
+
+### 9.2 Not wired yet, and why
+
+| Domain (owner's list) | Status | Dependency |
+|---|---|---|
+| Negotiated contracts and services | not in Build 16 | CON-01 `evaluate` exists only on `wip/build17`: integrate at the Build 18/19 reconciliation through the same interface |
+| Business relationships (stall custom, supplier loyalty) | partly: trade choices above | Expansion 18 settlement trade and the Living Economy actors (proposed Build 20) |
+| Requests for favours, cooperation and assistance | candidates: relatives' house help (HOUSE-04, `Construction` family help), food relief | relief is the manor's (an institution, no personal judgment); HOUSE-04 family help could weigh judgment (next stage) |
+| Courtship proposals and marriage acceptance between villagers | not wired | conflicts with CRT-12's fixed regard threshold (section 10): needs the owner's choice first |
+| Player's courtship, gifts, quests | not wired | player-facing; Q10 words and CRT rules |
+| Crime reporting, testimony | deliberately not wired | Q08: law is separate; reporting stays World's |
+| Villagers' thefts | no record exists | DVW-B2 (no villager crime record): nothing to observe |
+| Help, gifts, rescue, fair or cheating trade as judged events | feeds not wired (round 2 list) | wiring them changes live behaviour when on; staged after Gate E |
+
+## 10. Conflicts between the owner's decisions and existing mechanics (not resolved here; live behaviour unchanged)
+
+1. **`Relations.harmed` (CRT-10, CRT-12) vs Q07.** A crime against a villager instantly lowers the ties of their kin
+   (`kin_harm_share` 0.6) and friends (`friend_harm_share` 0.4) with the player, whether or not they learned of it. That
+   is an instant broadcast, which Q07 forbids for judgment. Options:
+   - (a) keep it, as the tie's own rule (regard, not moral judgment), and add judgment beside it (today's state);
+   - (b) when judgment goes live, stop the instant spread and let word of mouth carry the harm;
+   - (c) keep only the victim's own loss in `harmed`.
+   Recommendation: (b) at Gate E, since Q07 is explicit; it changes CRT-12 outcomes, so it needs the owner's nod.
+2. **CRT-12 notoriety and killings vs Q14 and Q11.** A proposal to a known killer, or above `notoriety_refuse` crimes
+   seen, is refused by a fixed threshold (`Relations.refusal`); `marry_regard` is a fixed regard bar. Q14 asks for
+   weighted influence, not a threshold. Options:
+   - (a) keep CRT-12 for the player and leave villagers' proposals unweighted;
+   - (b) replace the threshold with judgment as a weighted factor beside attraction (a murder's permanent BAD would
+     still weigh heavily);
+   - (c) keep the killer rule as an absolute refusal (owner's earlier rule) and weigh the rest.
+   Recommendation: (c).
+3. **CRT-06 friendly guard vs Q08.** A guard who is the player's friend lets them off with a warning
+   (`World.guard_confront`), and a friend nearby halves the fine. Q08: "A guard can personally like someone while still
+   enforcing the law." Options:
+   - (a) keep CRT-06 as the owner's earlier, explicit rule;
+   - (b) the guard enforces always, and friendship shows only in words;
+   - (c) friendship may reduce the fine but never waive it.
+   This needs the owner. Nothing in the judgment code touches it.
+4. **Regard as trust (Q06) and regard as harm.** Q06 reuses Relations regard as trust. But `harmed` also lowers regard
+   when a crime is seen, so a crime against someone lowers how far they believe the culprit's stories. That is coherent
+   but couples two concepts. No action proposed; noted for calibration.
+5. **Regard decay vs Q02.** `Relations.dawn` cools ties without contact (0.5 a day), which is much faster than the
+   proposed judgment decay. These are different concepts (closeness and moral judgment, spec invariant 7). No conflict
+   in code; noted so the two rates are not confused.
+6. **Ordinary stories and Q07.** With no hop limit, an ordinary story still stops when it becomes too faint to remember:
+   salience is severity x confidence, and confidence falls along the chain. This is Q11's ordinary forgetting, not a
+   count. If the owner wants ordinary stories to travel further, raise `hop_factor`, or base a told memory's salience
+   on severity alone.
+
+## 11. Q02 decay demonstration (`game/tests/judgment_decay_demo.gd`, 365 game days, judgment only)
+
+On day 0 Bob is robbed ten times by a thief (10 BAD), sees the thief murder his cousin (kin 0.55 x 3 = 1.65 BAD,
+permanent), and is helped twenty times by a neighbour (10 GOOD). Bob's NET at days 0 / 8 / 30 / 90 / 180 / 365. A game
+year is 8 days.
+
+| Rate (permille a day) | Half-life (days) | Thief, 10 thefts | Thief, thefts + murder | Helper, 20 helps |
+|---|---|---|---|---|
+| 0 (off) | none | -10.0 throughout | -11.65 throughout | 10.0 throughout |
+| 1 | 693 | -10.0 / -9.92 / -9.70 / -9.14 / -8.35 / -6.95 | -11.65 / ... / -8.60 | 10.0 / ... / 6.95 |
+| 2 | 346 | -10.0 / -9.84 / -9.42 / -8.35 / -6.98 / -4.82 | -11.65 / ... / -6.47 | 10.0 / ... / 4.82 |
+| **3 (proposed)** | **231** | -10.0 / -9.76 / -9.14 / -7.63 / -5.82 / -3.34 | -11.65 / -11.41 / -10.79 / -9.28 / -7.47 / -4.99 | 10.0 / 9.76 / 9.14 / 7.63 / 5.82 / 3.34 |
+| 5 | 138 | -10.0 / ... / -1.60 | -11.65 / ... / -3.25 | 10.0 / ... / 1.60 |
+| 10 | 69 | -10.0 / ... / -0.25 | -11.65 / ... / -1.90 | 10.0 / ... / 0.25 |
+
+At every rate the murder's 1.65 BAD is unchanged on day 365, fading parts never grow or go negative, and the lifetime
+totals (11.65 BAD, 10 GOOD) are kept as history (24 checks). At the proposed 3 permille, the decisions' disposition
+toward the thief moves from 38.35 on day 0 to 40.72 on day 90 and 45.01 on day 365: an old grudge softens over decades
+of game time but never vanishes while a murder is part of it. Small remainders fade out (at least 0.001 a day) rather
+than sticking. **The rate is not approved.**
+
+## 12. Round 4 evidence
+
+All run on this branch, judgment off unless stated:
+
+| Suite | Checks |
+|---|---|
+| `judgment_test` | 164 |
+| `judgment_live_test` | 53 |
+| `judgment_decay_demo` | 24 |
+| `judgment_perf` | 23 |
+| `run_tests` | 3535 |
+| `world_test` | 200 |
+| `relations_test` | 79 |
+| `parity_test` | 55 |
+| `conservation_test` | 8 |
+| `save_transfer_test` | 21 |
+
+All had 0 failures. Python unittest: 105 OK. `tools/sim_gate.py`: see PROGRESS.md. `economy_sim --judgment`, 10 days,
+seed 1: see PROGRESS.md.
+
+**Performance after the owner's rules** (`judgment_perf.gd`, spread, live rate, 500 people):
+- **Frames:** p99 1.45 ms (round 3: 0.87); p99.9 3.78 ms (round 3: 2.15).
+- **Per day:** 208 ms (round 3: 150).
+- **Memory:** 5.9 MB, plus 23 permanent memories.
+- **At stress:** the permanent memories grow (1,646 at 500 people over 40 days, mostly assault victims at
+  `permanent_personal_severity` 2000). Ordinary memory stays bounded.
+
+The rise has three causes:
+- the daily decay now touches every ledger with a fading part (about 35 ledgers a person);
+- stories travel further (no hop limit);
+- more confident tellings now update beliefs.
+
+The owner accepted the round-3 p99 and asked for no more speculative optimisation rounds, so this is reported, not
+chased. A ready fix if wanted: apply the decay lazily, when a ledger is read or changed (same daily steps in the same
+order, so the same results), instead of every ledger at dawn.
