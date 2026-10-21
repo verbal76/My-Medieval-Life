@@ -43,7 +43,9 @@ AREA = [("FSE-B", "Food-security defects"), ("FSE", "Food security, relief, fami
         ("STALL", "Market stalls"), ("PAR", "Player-villager parity"), ("TIME", "Time model"), ("FAM", "Families and orphans"),
         ("REC", "Families and orphans"), ("EQ", "Equilibrium and acceptance"), ("WDR", "Equilibrium and acceptance"),
         ("WR", "Wildlife"), ("DVW", "Audits and measurements"), ("B7", "Economy defects"), ("OD", "Owner decisions"),
-        ("SJD", "Judgment gate"), ("B16", "Status audit")]
+        ("SJD", "Judgment gate"), ("B16", "Status audit"), ("PICK", "Theft and crime"),
+        ("CTR", "Counters, shopkeepers and trade"), ("SHOP", "Counters, shopkeepers and trade"), ("TRADE", "Counters, shopkeepers and trade"),
+        ("ARM", "Counters, shopkeepers and trade"), ("SEED", "Seeds and propagation"), ("MERCH", "Seeds and propagation")]
 
 
 def entries(text: str) -> list:

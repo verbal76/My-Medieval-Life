@@ -6847,7 +6847,7 @@
    "id": "DVW-A12",
    "title": "Keep rules in `core/`, not UI; audit list (:37)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "DEFERRED",
    "owner_wording": null,
    "description": "Keep rules in `core/`, not UI; audit list (:37)",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256)",
@@ -6866,11 +6866,11 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Start of Build 17",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner 2026-10-21: deferred to the start of Build 17; acceptance kept; not complete; existing functionality kept; no new UI-dependent gameplay rules meanwhile; a Build 16 defect gets a narrow fix only.",
    "history": [
     {
      "date": "2026-10-19",
@@ -6886,10 +6886,15 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
      "why": "Audit list done (BUILD_16_AUDITS.md, R1-R22, with a move order); the moves into core are not started; player production accounting already in core (World.player_gain)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "deferral approved by the owner; status PARTIALLY IMPLEMENTED -> DEFERRED; target_build 16 -> 17",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "16",
+   "target_build": "17",
    "roadmap_gate": "",
    "roadmap_reason": "rules in core/, not UI: a code audit before the expansions build on it",
    "b16_class": "deferral",
@@ -7822,7 +7827,7 @@
    "id": "DVW-B6",
    "title": "Wildlife wandering in from the overworld",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "DEFERRED",
    "owner_wording": null,
    "description": "Wildlife wandering in from the overworld",
    "source": "docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 278)",
@@ -7841,11 +7846,11 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Build 18",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner 2026-10-21: deferred to Build 18 (settlement and regional economy); design and acceptance kept; existing wildlife defects still fixed in Build 16.",
    "history": [
     {
      "date": "2026-10-19",
@@ -7856,10 +7861,15 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "deferral approved by the owner; status APPROVED — NOT STARTED -> DEFERRED; target_build 16 -> 18",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "acceptance_derived": true,
-   "target_build": "16",
+   "target_build": "18",
    "roadmap_gate": "",
    "roadmap_reason": "wildlife wandering in from the overworld: recolonization (EQ-02)",
    "b16_class": "deferral",
@@ -9351,14 +9361,16 @@
   {
    "id": "EQ-22",
    "title": "Caravan buying order: smiths first starves the hide and leather chain after parity",
-   "kind": "proposal",
+   "kind": "approved",
    "status": "APPROVED — NOT STARTED",
    "owner_wording": "Agent finding 2026-10-20: the caravan's finite budget serves the smiths' lines first (agent rule); with PAR-01 skills the smiths' metal goods take most of it, and tanners' leather and hunters' hides go unsold. Proposal: serve all sellers in turn. A balance change: owner decision.",
    "description": "Caravan buying order: smiths first starves the hide and leather chain after parity",
    "source": "docs/release/LONG_RUN_SIMULATION.md",
-   "approval": "",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "Owner decides; if approved, the caravan serves sellers in turn and the 100-day comparison is re-run"
+    "The unconditional smiths-first order removed; the caravan buys by actual demand and need: inventory needs, production requirements, its funds, merchant stock, prices, competing demand",
+    "Within the same resource and currency conservation rules; no guaranteed purchase for every business; no arbitrary equal split of funds",
+    "Deterministic; the effect measured against the baseline; tests"
    ],
    "implementation": "",
    "tests": "",
@@ -9371,7 +9383,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Read the caravan's buying code (World caravan) and replace its fixed order with need-ranked buying",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -9386,9 +9398,16 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target: owner decision"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded; kind proposal -> approved; target_build owner decision -> 16",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "16",
+   "b16_class": "required",
+   "complexity": "M"
   },
   {
    "id": "EXP-A",
@@ -10232,9 +10251,13 @@
    "owner_wording": null,
    "description": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
-   "approval": "owner decisions 2026-10-20 (approved)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "Lease through Property (green-square placement, the house-lease path), real coins to the treasury, the plot registered as leased; tests"
+    "Variable plot sizes within the existing land system (the 5x6 proposal rejected); placement by the green-square interface",
+    "Validation: land boundaries, existing leases, terrain, obstructions, accessibility",
+    "2 coins a week (FARM-07) whatever the size: no plot-size pricing formula; a conflict with the lease rules documented, not resolved by changing the price",
+    "NPC households choose a plot size by their needs, resources, finances, labour and goals; not every household farms or farms the same size",
+    "Player and NPCs through the same mechanics; tests"
    ],
    "implementation": "",
    "tests": "",
@@ -10262,6 +10285,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -10278,9 +10306,13 @@
    "owner_wording": null,
    "description": "Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
-   "approval": "owner decisions 2026-10-20 (approved)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "No farm on paying the lease; clearing and fencing are construction work with real materials and labour; tests"
+    "Trees and other obstructions cleared first",
+    "Fence and gate from real logs and stone, the quantities computed from the plot's actual perimeter and fence and gate geometry by the existing construction and resource rules (no fixed amount)",
+    "An existing construction recipe used where one fits; a missing fence or gate recipe reported with the smallest consistent addition, for the owner's approval, before any is added",
+    "Real construction labour; nothing free for NPCs (fences, gates, tools, seeds, materials)",
+    "The developed land can be ploughed, planted, tended and harvested; tests"
    ],
    "implementation": "",
    "tests": "",
@@ -10293,7 +10325,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Audit the existing fence, pen and gate construction definitions (pens use planks today) before coding; report a gap with the smallest addition",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10308,6 +10340,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -10508,9 +10545,12 @@
    "owner_wording": null,
    "description": "The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
-   "approval": "owner decisions 2026-10-20 (approved)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "The framework's initial-and-weekly distinction preserved; the reading reported to the owner as a remaining ambiguity before any new charge"
+    "2 coins a week through the existing lease scheduling and accounting (Property), for player and NPC households alike; revenue to the treasury",
+    "No duplicate charge and no secondary land fee; the existing rules for ownership, missed payments, expiry and access apply; no new penalty or eviction mechanic",
+    "The lease grants access only: no field built and no materials supplied; the household develops the land (FARM-02)",
+    "Tests"
    ],
    "implementation": "",
    "tests": "",
@@ -10523,7 +10563,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Implement with FARM-01: confirm Property's weekly lease charges a farm plot 2 coins whatever its size (no size formula)",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -10538,6 +10578,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -11700,10 +11745,12 @@
    "owner_wording": "Establish a shared underlying agricultural model for player and NPC farming. Do not arbitrarily increase village yields or decrease player yields just to make the numbers match.",
    "description": "One agricultural model for player and village farming (parity)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
-   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
     "Why the yields differ explained (crop definitions, labor, land abstraction, growth rules, duplicated code)",
-    "Player and village fields use one model of land, seed, time, labor, seasons and skills; consequences tested before activation"
+    "Player and village fields use one model of land, seed, time, labor, seasons and skills; consequences tested before activation",
+    "Owner 2026-10-21: the manor's six fields move to the shared per-cell model behind a test switch; resource and labour accounting preserved; real seed; deterministic",
+    "Comparison runs, old model against new: yields, labour, seed use, food supply, economic effects; not activated universally until the owner reviews them; the switch is for testing and migration, not a lasting difference"
    ],
    "implementation": "",
    "tests": "",
@@ -11743,6 +11790,11 @@
      "date": "2026-10-20",
      "change": "BLOCKED -> APPROVED — NOT STARTED; blockers",
      "why": "OD-22 settles family farms on the established (player's per-cell) mechanics (FARM-03); whether the manor's six fields also move to the per-cell model is reported to the owner as a remaining question"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -11759,10 +11811,13 @@
    "owner_wording": "approved for implementation and testing, not immediate baseline activation ... Bring any major balance consequences back for owner review before activating the corrected seasonal model in the release baseline.",
    "description": "Seasonal farming for village fields (implemented and tested in isolation; activation needs owner review)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
-   "approval": "owner follow-up 2026-10-20 (registers the four agricultural gaps as Build 16 tasks)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
     "Village fields follow the same season rates as player crops, behind a switch that is off in the baseline",
-    "Compared with the baseline: annual production, seasonal inventories, prices, household food access, starvation, population; reported to the owner before activation"
+    "Compared with the baseline: annual production, seasonal inventories, prices, household food access, starvation, population; reported to the owner before activation",
+    "Owner 2026-10-21: comparison first, then owner review; not enabled because tests pass",
+    "The comparison reports planting opportunities by season, growth and harvest timing, yields, seed use, household food, manor production, NPC farming decisions, starvation and food security, economic consequences, determinism",
+    "The calendar kept: a year is 8 game days, four seasons of 2 (never 365 days a year)"
    ],
    "implementation": "",
    "tests": "",
@@ -11792,6 +11847,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: owner follow-up 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -12134,9 +12194,10 @@
    "owner_wording": null,
    "description": "Bandits' poaching and the clan's camp meals feed them only from real food",
    "source": "docs/design/FOOD_SECURITY_AUDIT.md section 6 (class B)",
-   "approval": "owner directive 2026-10-20, section 18 class B (defects: existing promised behaviour broken)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "Poaching satisfies hunger only from the game it actually kills; camp meals come from the band's stores; no hunger set from nothing; tests; WDR-022: a band may go hungry"
+    "Poaching satisfies hunger only from the game it actually kills; camp meals come from the band's stores; no hunger set from nothing; tests; WDR-022: a band may go hungry",
+    "Owner 2026-10-21: the deadwood camp fire kept as an interim exception; wood gathering and supply belong to bandit factions (WDR-016-C), not Build 16"
    ],
    "implementation": "",
    "tests": "world_test::_fse_defects (FSE-B06), family_test (clan meal)",
@@ -12146,16 +12207,18 @@
     "6ab7d50"
    ],
    "parent": "FSE-09",
-   "depends_on": [],
+   "depends_on": [
+    "WDR-016-C"
+   ],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Owner's answer on the camp fire's fuel; measure band hunger in the next four-seed runs",
+   "next_action": "Measure band hunger in the four-seed runs; record the deadwood dependency with bandit factions",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner 2026-10-21: the deadwood camp fire is approved as an interim exception until bandit factions (WDR-016-C), not unlimited food; a band without food goes hungry.",
    "history": [
     {
      "date": "2026-10-20",
@@ -12171,6 +12234,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 6ab7d50; tests; next_action",
      "why": "The band eats only real food from its members' packs (NPCBrain.band_eat); a hungry bandit with nothing poaches into their pack; meat roasted at the camp on deadwood (an explicit difference, owner question in BUILD_16_STATUS section C); clan children eat from the same stores"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded: deadwood cooking retained as an interim exception",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -15414,7 +15482,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner 2026-10-21: remains BLOCKED; the agent's recommendations are not approvals; present the entry and wait for explicit decisions.",
    "history": [
     {
      "date": "2026-10-20",
@@ -15425,6 +15493,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "raised from the spec reconciliation"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner reply recorded: remains blocked, no new approval",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -15538,13 +15611,13 @@
    "id": "OD-20",
    "title": "PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's?",
    "kind": "decision",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Asked 2026-10-20 with OD-19; not yet answered. Theft keeps its 2026-10-18 cry for now.",
    "description": "PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's?",
    "source": "docs/directives/2026-10-20_par_final_consolidated_directive.md",
    "approval": "",
    "acceptance": [
-    "The owner answers; theft follows the answer"
+    "Answered by the owner 2026-10-21; implemented in PICK-01"
    ],
    "implementation": "",
    "tests": "",
@@ -15572,9 +15645,15 @@
      "date": "2026-10-20",
      "change": "target_build",
      "why": "Roadmap target: owner decision"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded; status APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; target_build owner decision -> 16",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
-   "target_build": "owner decision"
+   "target_build": "16",
+   "owner_answer": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md): APPROVED: use the witnessed-crime reporting system. A caught pickpocket generates a witness report consistent with the existing crime and judgment design; awareness from legitimate witnesses only; no omniscient guards; reports follow the existing communication rules; not every incident an audible alarm; not the Build 19 Judgment expansion."
   },
   {
    "id": "OD-21",
@@ -15770,6 +15849,47 @@
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "an owner decision raised by the food-security audit",
    "owner_answer": "Owner, 2026-10-20 (docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md): Market stalls on a 5% sales commission, built by anyone, selling unattended, closing when sold out or by hand"
+  },
+  {
+   "id": "OD-25",
+   "title": "Owner decision resolution for Build 16 (2026-10-21): FARM-07 2 coins a week; FARM-01/02 variable plots, materials from the perimeter; STALL-01/05 5% of completed sales after audits, rounding not approved; FSE-12 behind a switch with comparison; FSE-13 comparison then review; FSE-B06 deadwood interim; OD-20 witness reports; EQ-22 buying by need; OD-17 still blocked; DVW-A12 to Build 17; DVW-B6 to Build 18",
+   "kind": "decision",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Owner decision resolution for Build 16 (2026-10-21): FARM-07 2 coins a week; FARM-01/02 variable plots, materials from the perimeter; STALL-01/05 5% of completed sales after audits, rounding not approved; FSE-12 behind a switch with comparison; FSE-13 comparison then review; FSE-B06 deadwood interim; OD-20 witness reports; EQ-22 buying by need; OD-17 still blocked; DVW-A12 to Build 17; DVW-B6 to Build 18",
+   "source": "docs/directives/2026-10-21_build16_owner_decision_resolution.md",
+   "approval": "owner directive 2026-10-21",
+   "acceptance": [
+    "Every decision recorded on its entries with history lines; OD-17 left blocked; the deferrals recorded"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build16_owner_decision_resolution.md"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions 2026-10-21",
+   "b16_class": "done",
+   "owner_answer": "Owner directive 2026-10-21, saved verbatim in docs/directives/2026-10-21_build16_owner_decision_resolution.md"
   },
   {
    "id": "OD-LE-01",
@@ -18599,6 +18719,49 @@
    ],
    "target_build": "15",
    "roadmap_reason": "owner priority: after Build 15 stabilization and EQ-07 housing (owner order 4-5)"
+  },
+  {
+   "id": "PICK-01",
+   "title": "A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm",
+   "kind": "approved",
+   "status": "APPROVED — NOT STARTED",
+   "owner_wording": null,
+   "description": "A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm",
+   "source": "docs/directives/2026-10-21_build16_owner_decision_resolution.md",
+   "approval": "owner decision 2026-10-21 (OD-20)",
+   "acceptance": [
+    "Theft caught in the act is reported by the victim and witnesses who saw it through the existing witness and report rules; unseen thefts unknown to the guards; no alarm cry by default; consistent with PAR-05; tests"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [
+    "OD-20"
+   ],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_build16_owner_decision_resolution.md"
+    }
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16 in development (OVN-01)",
+   "roadmap_reason": "owner decisions 2026-10-21",
+   "b16_class": "required",
+   "complexity": "S"
   },
   {
    "id": "PL1-01",
@@ -23550,9 +23713,12 @@
    "owner_wording": null,
    "description": "Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
-   "approval": "owner decisions 2026-10-20 (approved)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "Placement by green squares, clearing, the existing stall material definitions, construction labour; tests"
+    "Audit first: the existing stall construction recipes, land arrangements, merchant stalls; an established recipe used where it fits; missing requirements or recipe conflicts reported before inventing a replacement (the 6 planks + 1 iron bar proposal not adopted)",
+    "A location through the approved land and placement system; the site cleared; construction with real materials and labour",
+    "Real inventory placed in the stall; OPEN STALL; it sells while the owner is elsewhere; customers pay with real money; it closes when its saleable stock is gone; CLOSE STALL by hand; unsold stock stays the owner's",
+    "Player and NPCs through the same mechanics; tests"
    ],
    "implementation": "",
    "tests": "",
@@ -23565,7 +23731,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "The stall audit (construction, land, merchant stalls, the 5-coin pitch rent, settlement) before implementation",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -23580,6 +23746,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",
@@ -23734,9 +23905,14 @@
    "owner_wording": null,
    "description": "The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
-   "approval": "owner decisions 2026-10-20 (approved)",
+   "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "Commission transferred from the proceeds to the treasury; balances in the coin ledger; replaces the 5-coin daily stall rent and villager merchants' free stalls; tests"
+    "5% of completed sales only, settled when the session closes (by hand or when sold out); never on unsold stock, asking prices or hypothetical sales (100 sold: 5 to the treasury, 95 to the owner)",
+    "Settlement audit: when revenue is recorded, how 5% is computed, fractions, when coins move, how sessions close, how an interrupted session is recovered, inventory and coin conservation",
+    "Rounding: an existing authoritative monetary rounding convention where one applies; otherwise the options presented to the owner and approval asked before any new rule",
+    "No duplicate charge; no session settled twice",
+    "Replaces the flat pitch rent for stalls under the OD-24 model; existing free stalls and the 5-coin daily pitch rent audited: which locations OD-24 covers and which are distinct arrangements, none converted silently",
+    "Tests"
    ],
    "implementation": "",
    "tests": "",
@@ -23749,7 +23925,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Settlement audit, then the rounding question if no convention applies",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -23764,6 +23940,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "owner decision recorded",
+     "why": "Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)"
     }
    ],
    "target_build": "16",

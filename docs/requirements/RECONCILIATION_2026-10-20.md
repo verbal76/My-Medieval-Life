@@ -10,9 +10,9 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 214 still open, 17 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 158 (92 of them still open) |
+| Entries added since | | 160 (92 of them still open) |
 | **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **306** = 214 still open from the baseline + 92 added and open |
-| Open entries moved to another build | | 0 |
+| Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (17)
 
@@ -36,15 +36,18 @@ entry leaves the register or changes without a history entry.
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | approved | ACTIVE DEVELOPMENT | 15 | SUPERSEDED | 15 | 2026-10-20: Builds 14 and 15 released; Builds 15-18 are under REL-15-18 and OVN-02 |
 | WDR-007-C | Comply with World Design Rule 7: Automated Compliance | approved | PARTIALLY IMPLEMENTED | 15 | COMPLETE AND VERIFIED | 15 | 2026-10-20: tools/check_materials.py generates docs/systems/MATERIAL_INTERDEPENDENCY.md from the recipe data (uses, consuming professions, who each trade supplies, orphaned recipes, broken references, exceptions) and runs in CI; tests/test_check_materials.py has positive and negative fixtures (13 tests) |
 
-## Moved to another build since the baseline (0)
+## Moved to another build since the baseline (2)
 
-None.
+| ID | Item | Kind | Baseline status | Baseline build | Status now | Build now | Last history |
+|---|---|---|---|---|---|---|---|
+| DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 17 | 2026-10-21: Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md) |
+| DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED | 16 | DEFERRED | 18 | 2026-10-21: Owner, 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md) |
 
 ## Reopened since the baseline (0)
 
 None.
 
-## Added since the baseline (158)
+## Added since the baseline (160)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -60,7 +63,7 @@ None.
 | EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | approved | COMPLETE AND VERIFIED | 15 |
 | EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | approved | COMPLETE AND VERIFIED | 15 |
 | EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | approved | COMPLETE AND VERIFIED | 15 |
-| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | proposal | APPROVED — NOT STARTED | owner decision |
+| EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | approved | APPROVED — NOT STARTED | 16 |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | approved | APPROVED — NOT STARTED | owner decision |
 | FAM-01 | Household succession: when one parent dies the surviving parent (either sex) becomes responsible for the dependants and every household decision; the household keeps functioning | approved | IMPLEMENTED — TESTING REQUIRED | 15 |
 | FAM-02 | Both parents dead: dependent children never found households or start construction; an existing household takes them in | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
@@ -140,11 +143,12 @@ None.
 | OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | decision | BLOCKED | 16 |
 | OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-19 | PAR-02: the universal coin-reserve threshold | decision | COMPLETE AND VERIFIED | owner decision |
-| OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | decision | APPROVED — NOT STARTED | owner decision |
+| OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | decision | COMPLETE AND VERIFIED | 16 |
 | OD-21 | Explicit time model and calendar consistency (approved architectural decision) | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-22 | Which definition the shared farming model starts from (per-cell, per-field, or an explicit difference) | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-23 | What the manor's fields cost their farmers (lease, crop share, or free to any farmer) | decision | COMPLETE AND VERIFIED | owner decision |
 | OD-24 | Rent for villager merchants' stalls (pay as the player does, or the player's pitch free) | decision | COMPLETE AND VERIFIED | owner decision |
+| OD-25 | Owner decision resolution for Build 16 (2026-10-21): FARM-07 2 coins a week; FARM-01/02 variable plots, materials from the perimeter; STALL-01/05 5% of completed sales after audits, rounding not approved; FSE-12 behind a switch with comparison; FSE-13 comparison then review; FSE-B06 deadwood interim; OD-20 witness reports; EQ-22 buying by need; OD-17 still blocked; DVW-A12 to Build 17; DVW-B6 to Build 18 | decision | COMPLETE AND VERIFIED | 16 |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | decision | BLOCKED | owner decision |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | decision | BLOCKED | owner decision |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | decision | BLOCKED | owner decision |
@@ -178,6 +182,7 @@ None.
 | PERF-04 | Small, measured, low-risk optimizations (indexes or caches for NPC scans, fauna membership sets, hot-loop config reads) that pass the determinism gate; no bigger STEP, no disabled systems, no shortcuts | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-05 | Parallel seeds: two seeds as separate processes with isolated save, temp and output paths, against the same two run sequentially | approved | COMPLETE AND VERIFIED | 15 |
 | PERF-06 | Long-simulation checkpoint and resume: evaluate design and determinism risks before any implementation (owner: do not implement until evaluated) | approved | COMPLETE AND VERIFIED | 15 |
+| PICK-01 | A caught pickpocket raises a witness report through World.witness (OD-20), as assault does (PAR-05): awareness only from legitimate witnesses, no omniscient guards, not always an audible alarm | approved | APPROVED — NOT STARTED | 16 |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | approved | APPROVED — NOT STARTED | 20+ |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | approved | APPROVED — NOT STARTED | 20+ |
