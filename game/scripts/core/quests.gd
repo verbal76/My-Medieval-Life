@@ -194,7 +194,7 @@ func reserved_total() -> int:
 func deposit_left(id: String) -> int:
 	var left := 0
 	for d in w.deposits:
-		if d.ore == id:
+		if d.ore == id and w.villagers_reach(d):       # MIN-A: seams below count once villagers can reach them
 			left += int(d.amount)
 	return left
 

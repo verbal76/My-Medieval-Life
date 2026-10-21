@@ -54,7 +54,7 @@ Approved with it (directive 2026-10-21 sections 3 and 4, and the owner's choices
 | Item | Design | Label |
 |---|---|---|
 | Place | Under the mine hill (`tools/build_village.py::mine_hill`, rows 2-9, x 38-59), entered by the existing adit at (48, 9) | APPROVED (OD-29: "starting with the existing adit") |
-| Floor rule | Floor only under the hill's static rock (surface cells solid in `village.json`), so nothing on the surface ever stands over the gallery's floor. This keeps every surface rule (building placement, sapling refusals, villager paths) unaffected, and keeps surface people out of reach of the player below, until the same-level guards of section 4 exist everywhere | DESIGN |
+| Floor rule | Floor only where the hill's static rock (surface cells solid in `village.json`) lies over the cell and all eight of its neighbours (the entrance passage excepted), so at least one cell of rock separates any surface walker from the gallery's floor. This keeps every surface rule (building placement, sapling refusals, villager paths) unaffected, and keeps surface people out of reach of the player below, until the same-level guards of section 4 exist everywhere | DESIGN |
 | Shape | Winding passages carved by seeded "worms" from the entrance, one to three chambers (irregular blobs), smoothed by a cellular-automaton pass, then every floor cell not reachable from the entrance filled back with rock (no black-hole cells, DVW-A10) | DESIGN |
 | Seams | Placed on rock cells beside the floor (cave walls), never beside the entrance. Each is an ordinary `World.deposits` record with `"level": -1` (section 6). Kinds and counts come from `underground.json`; each seam's amount is the village map's own per-seam amount for that ore (`village.json` "deposits": iron ore 60, coal 50, stone 80, copper ore 30), so no new quantity formula is introduced | DESIGN (the counts are an agent decision; the owner may change them in data) |
 
@@ -84,7 +84,7 @@ A portal joins two ends. Each end is `{level, stand, door}`: `stand` is the walk
 | Crossing | `World.player_through(dir)`: if the player's cell is a portal's stand and `dir` points at its door, the player moves to the other end and `World.player_level` changes. Called by Main after each movement step, and when a tap-to-walk ends at a stand with its goal on the door. Refused while the player pulls a cart ("The cart will not go down the adit.": carts below are MIN-F's rails) | DESIGN |
 | NPC router (next step, not in this branch) | `NPC.level` (saved; absent = 0). A plan step `{k: "go", to, level}` whose level differs from the walker's expands into: go to the nearest portal stand on its own level (the level's A*), cross, go on (the other level's A*). `World._walk` asks the map of the walker's level. The portal graph is tiny (one portal per entrance), so the route is a breadth-first search over portals, with no new cost on the surface | DESIGN |
 | Scheduling (next step) | `World.villager_levels` lists the levels villagers can reach. It is `[0]` until the NPC router exists; then `[0, -1]`. Miners pick seams with `nearest_deposit(from, ores, level)` per reachable level, preferring the walker's own level | DESIGN |
-| Path cost | One extra `AStarGrid2D` the size of the gallery's region (about 30 x 12 cells, 360 points), against the village's 10,800 | DESIGN (estimate) |
+| Path cost | One extra `AStarGrid2D` the size of the gallery's region (24 x 10 cells, 240 points, for the adit gallery), against the village's 10,800; the gallery has 56 to 81 floor cells for seeds 1, 2 and 7 | VERIFIED (measured) |
 
 ## 4. Rules across levels
 
@@ -93,12 +93,12 @@ their levels. **DESIGN:** a helper `World.same_level(a_level, b_level)` and, per
 
 | Site | Today | In this branch | Next step |
 |---|---|---|---|
-| The player's target list (`main.gd::_find_target`) | surface lookups | Below ground a level-only finder: seams and loot of the player's level | - |
-| Taps (`main.gd::_tap`) | surface lookups | Below ground: walk only | tap a seam to mine |
+| The player's target list (`main.gd::_find_target`) | surface lookups | Below ground a level-only finder (`_find_target_below`): seams and loot of the player's level; the seam target is the surface's own, so Use mines it by `World.work_mine` | - |
+| Taps (`main.gd::_tap`) | surface lookups | A tap on the adit (either side) walks to its stand and goes through. Below ground: walk, take a pile of the level, or use the seam beside the player | Gather mode below (`ResourceNodes.node_at` is surface-only) |
 | Attack and Fireball | surface creatures and projectiles | Refused below ground ("Nothing to fight here.") | when NPCs and animals can be below |
 | Loot | no level | `"level"` on loot dropped below (absent = 0); the surface lists skip it; guards never recover it | - |
 | Guards recovering loot (`NPCBrain._loot_to_recover`, `recover_loot`) | all loot | Skip loot below (one-line hooks) | villagers below |
-| Fauna aggression (`Fauna._foe_pos`, `_hunt_people`), fights (`NPCBrain.fight`, `_prey_for`), witnesses (`World.near`), `present`, `reaches` | player's position only | Not changed: the gallery's floor lies only under solid rock, so no surface actor can stand within reach of the player below except at the adit itself | `same_level` guard in each, before any gallery reaches under walkable ground |
+| Fauna aggression (`Fauna._foe_pos`, `_hunt_people`), fights (`NPCBrain.fight`, `_prey_for`), witnesses (`World.near`), `present`, `reaches` | player's position only | Not changed: at least one rock cell lies between the gallery's floor and any surface walker, so no surface actor stands within reach of the player below except at the adit itself (where the player is between the two stands) | `same_level` guard in each, before any gallery reaches under walkable ground |
 
 ## 5. Saving
 
@@ -221,6 +221,6 @@ Design only; Build 18 implements the model. Sources: Settlement spec sections 4 
 | MIN-A record (this document) | MIN-B..E, G as planned in `BUILD_17_PLAN.md` |
 | `LevelMap`, `Underground` registry and generator, `underground.json` | The NPC level router, `NPC.level`, `villager_levels = [0, -1]` |
 | The adit portal pair, player crossing, collision and tap-walk below | Same-level guards in fauna, fights, witnesses, `present`, `reaches` |
-| Level seams as deposit records; level-keyed lookups and load merge | Tap-to-mine and Gather mode below (they use surface lookups) |
+| Level seams as deposit records; level-keyed lookups and load merge | Gather mode below (`ResourceNodes.node_at` uses surface lookups) |
 | Player level and loot level saved (SAVE_VERSION 17) | Carts, animals and NPCs below; rails, supports, lighting as a need (MIN-F) |
 | `LevelView`, fade, darkness overlay | Cave-specific art (supports, torches) through the asset skill |

@@ -160,3 +160,13 @@ free tileset's "overworld" corner wangset; `dirt_path` (16 entries, indexed by w
 south, west the road joins) from its "pathways" edge wangset; `trees` are the village's own
 (trunk, top, bottom) stamps with a look group; `rock`, `flowers`, `bushes` and `sapling` are paid-tileset
 tiles. `tests/test_tools.py` checks the file is what the tool writes.
+
+`game/data/underground.json` (`mml-underground/1`, hand-kept; MIN-A, `docs/build17/MIN_A_ARCHITECTURE.md`) describes
+the underground galleries `Underground` (`game/scripts/core/underground.gd`) generates from the world seed. Each
+gallery has an `id`, a `level` (depth: -1 is the first level below the surface), the `portal` joining it to the
+surface (`stand`: the walkable surface cell in front of the entrance; `door`: the rock cell the entrance is drawn on,
+which is the gallery's own inner stand), the generator's sizes (`max_half_w`, `max_depth`, `entry_len`, `worms`,
+`worm_steps`, `wide_percent`, `chambers`, `chamber_rx`, `chamber_ry`), its `seams` (an `ore` and a `count`, and an
+optional `amount`; otherwise the village's own per-seam amount for that ore) and the `tiles` it is drawn with
+(village.json tile values for `floor` and `wall`, the `deep_shade` of the rock away from the floor, the `ground`
+colour round it). A change that alters a gallery for an existing seed bumps `Underground.GEN_VERSION`.
