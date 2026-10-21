@@ -10,7 +10,7 @@ feature it needs. Test names are `file::function` under `game/tests/`; every fil
 | 2 | Productive land required per villager | FSE-15 (recalculate the land requirement), Worker A of the Build 16 push | Build 16, in progress |
 | 3 | Crop planting, growth and harvest | `farming_test::test_crops`, `world_test::_fse12_shared_fields`, `world_test::_fse13_seasonal_fields` | Covered |
 | 4 | Seed retention and consumption | `farming_test::test_household_seed`, `farming_test::test_propagation`, `world_test::_fse12_shared_fields` (seed sown and returned) | Covered |
-| 5 | Failed harvests | No crop-failure mechanic exists and no register entry asks for one. A field left unsown for want of seed is counted (`field_unsown_no_seed`) | **Owner question**: is crop failure (weather, blight) wanted, and in which build? Not invented here |
+| 5 | Failed harvests | Crop failure and weather are in the Living Economy build's list (`docs/design/FOOD_SECURITY_AUDIT.md` section 6, class D; FSE-10). Today only a field left unsown for want of seed is counted (`field_unsown_no_seed`) | Later build |
 | 6 | Non-farmers growing food | FARM-03/FARM-04 (family plots, household labour), Worker A; `farming_test::test_crops` covers the player, a non-farmer | Build 16, in progress |
 | 7 | Land rental and rent payments | `property_test::test_rules`, `business_test::_rent` / `_rent_daily`; farmland leases FARM-01/FARM-07, Worker A | Covered for houses and stalls; farmland in progress |
 | 8 | Livestock acquisition, care, reproduction and production | `farming_test::test_pens_and_animals`, `aging_test::test_animals`; the cattle investigation FARM-08B | Covered; FARM-08B open |
@@ -33,5 +33,5 @@ feature it needs. Test names are `file::function` under `game/tests/`; every fil
 | 25 | Player and NPC through the same systems | `parity_test` (skills, recipes, trade), `world_test::_par02_reserve`, `_par03_rest`, `_par05_awareness` | Covered |
 
 **Summary:** 13 covered (1, 3, 4, 8, 10, 14, 17, 19, 21, 22, 23, 24, 25); 4 in progress in Build 16 (2, 6, 7 for
-farmland, 18 for the new stalls); 7 belonging to the goal-driven economy that the owner placed in the Living Economy
-build (9, 11, 12, 13, 15, 16, 20); 1 owner question (5).
+farmland, 18 for the new stalls); 8 belonging to the goal-driven economy that the owner placed in the Living Economy
+build (5, 9, 11, 12, 13, 15, 16, 20).

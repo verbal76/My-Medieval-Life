@@ -11971,7 +11971,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Mapped (docs/design/FSE08_TEST_MAP.md): 13 covered, 4 in the Build 16 push (2, 6, 7, 18), 7 in the Living Economy build, 1 owner question (5, crop failure). Close when the push's farm and stall tests land",
+   "next_action": "Mapped (docs/design/FSE08_TEST_MAP.md): 13 covered, 4 in the Build 16 push (2, 6, 7, 18), 8 in the Living Economy build. Close when the push's farm and stall tests land",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -11996,6 +11996,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "The 25 tests mapped to existing tests, Build 16 work in progress, or the build whose feature they need"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Item 5 (crop failure) belongs to the Living Economy build (audit class D)"
     }
    ],
    "target_build": "16",
@@ -12027,7 +12032,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Every class B defect is closed (FSE-B05..B12); class C foundations done except FSE-14 (Worker A, land planning). Close with FSE-14",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -12047,6 +12052,11 @@
      "date": "2026-10-20",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED",
      "why": "Defects fixed: tab, relief order, relief sources, food valuation, eating and cooking parity, B05, B07-B10, TIME-04; open: B06, B11, B12"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Children re-checked 2026-10-21"
     }
    ],
    "target_build": "16",
