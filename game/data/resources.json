@@ -793,13 +793,13 @@
       "risk": "Not at risk: bounded by product_cap and the animals' own pen caps."
     }
   },
-  "materials": {
+  "materials": {"nails": [{"use": "building", "text": "B14-07: forged from iron bars at the anvil (forge_nails) and used up building wooden stairs (4 a rim cell) and walkways (3 a rim cell) through a mountain's cliff rim.", "source": "game/scripts/core/terrain.gd::build"}], 
     "log": [
       {"use": "fuel", "text": "Household firewood: every household burns a log from its pantry each night; a household without one is cold (noted, stat burned_log).", "source": "game/scripts/core/world.gd::_new_day"},
       {"use": "fuel", "text": "Villagers buy a log for the pantry in the evening from a carpenter or the raw-goods merchant.", "source": "game/scripts/core/npc_brain.gd::_plan_evening"},
       {"use": "manor_job", "text": "Bought by the manor for repairs and carried to the works yard (haul), then used up mending (mend).", "source": "game/scripts/core/npc_brain.gd::reeve_day"}
     ],
-    "plank": [
+    "plank": [{"use": "building", "text": "B14-07: wooden stairs (3 a rim cell) and walkways (2 a rim cell) built through a mountain's cliff rim in the world outside (with nails, a mallet and Crafting 2).", "source": "game/scripts/core/terrain.gd::build"}, 
       {"use": "manor_job", "text": "Bought for repairs and public works, carried to the works yard (haul) and used up mending (mend).", "source": "game/scripts/core/npc_brain.gd::_public_works"},
       {"use": "building", "text": "Fence round family farmland (FARM-02, owner Q9): one plank per 3 fence cells of the plot's perimeter, the gate cell free (the player pen's rule), used up.", "source": "game/scripts/core/farm_plots.gd::build_fence"}
     ],

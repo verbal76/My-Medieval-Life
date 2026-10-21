@@ -1407,6 +1407,8 @@ func _hunter(n: NPC) -> bool:
 
 func _guard(n: NPC, h: float) -> void:
 	_take_guard_post(n)
+	if Decay.plan_rearm(w, n):            # DVW-B4: armour worn out is bought again from a seller, with its own coins
+		return
 	var on_duty := (h >= WAKE and h < SLEEP) if n.workplace == "day" else (h >= SLEEP - 1.0 or h < WAKE + 1.0)
 	var shops_open := h >= WORK_START and h < WORK_END
 	if not on_duty:

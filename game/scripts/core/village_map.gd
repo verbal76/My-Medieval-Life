@@ -27,8 +27,49 @@ static func load_default() -> VillageMap:
 		for x in m.w:
 			m.solid[y * m.w + x] = 1 if row[x] == "1" else 0
 	m.normalise_rocks()
+	m.sealed = m.seal_pockets()
 	m._setup_astar()
 	return m
+
+
+var sealed: Array = []             # DVW-A10: open cells of the map no one can walk to, made solid on load (seal_pockets)
+
+
+## DVW-A10 (no black holes): an open cell of the village that cannot be walked to from the player's start (four-neighbour
+## steps over the map's collision: a gap left between furniture, walls and fences) is made solid, so nothing is ever placed,
+## spawned or left standing where it could not get out. Interiors are reached through their doors and stay open. The map
+## data is unchanged (no generator change): the rule applies to every map on load. Returns the cells sealed, in order.
+func seal_pockets() -> Array:
+	var sp = data.spawns.player
+	var start := Vector2i(int(sp[0]), int(sp[1]))
+	if is_solid(start):
+		return []
+	var seen := {start: true}
+	var q := [start]
+	while not q.is_empty():
+		var c: Vector2i = q.pop_back()
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = c + d
+			if not seen.has(n) and not is_solid(n):
+				seen[n] = true
+				q.append(n)
+	var out := []
+	for y in h:
+		for x in w:
+			var c := Vector2i(x, y)
+			if not seen.has(c) and solid[y * w + x] == 0:
+				solid[y * w + x] = 1
+				out.append(c)
+	if not out.is_empty():
+		# and it is no longer an interior's floor (World.interior_for reads these: nothing is placed on it)
+		var gone := {}
+		for c: Vector2i in out:
+			gone[c] = true
+		for b in data.get("buildings", []):
+			var it: Dictionary = b.get("interior", {})
+			if it.has("floor"):
+				it.floor = (it.floor as Array).filter(func(f): return not gone.has(Vector2i(int(f[0]), int(f[1]))))
+	return out
 
 
 func _setup_astar() -> void:

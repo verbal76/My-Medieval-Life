@@ -18,6 +18,8 @@ var tree_sink: TreeView               # draws the chunks' trees as sprites (set 
 var tops_set := {}                    # canopy top tile -> true
 var _center := Vector2i(1 << 30, 1 << 30)
 var _pending: Array[Vector2i] = []
+var _works_seen := -1                 # B14-07: Overworld.works_version last drawn
+var _works_tex := {}                  # way kind ("steps_ns", "stairs_ew", ...) -> its 16 px tile (game/assets/terrain)
 
 
 func setup(src: MapView, o: Overworld, load_radius: int) -> void:
@@ -63,7 +65,37 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 			n += 1
 	if budget < 0 and tree_sink != null:
 		tree_sink.flush()
+	if overworld.works_version != _works_seen:
+		_works_seen = overworld.works_version
+		for c: Vector2i in chunks:
+			_draw_works(c)
 	canopy.update(feet, delta)
+
+
+## B14-07: the steps, stairs and walkways through a cliff's rim in a loaded chunk, each a 16 px tile over its cell, under
+## the characters (drawn again whenever a way is made).
+func _draw_works(cc: Vector2i) -> void:
+	var c: Dictionary = chunks.get(cc, {})
+	if c.is_empty():
+		return
+	var layer: Node2D = c.works
+	for k in layer.get_children():
+		k.queue_free()
+	var cells: Array = overworld.works.keys().filter(func(w: Vector2i) -> bool: return Overworld.chunk_of(w) == cc)
+	cells.sort()
+	for cell: Vector2i in cells:
+		var kind := str(overworld.works[cell])
+		var file := ("steps" if kind.begins_with("steps") else kind) + ".png"
+		if not _works_tex.has(file):
+			_works_tex[file] = load("res://assets/terrain/" + file) if ResourceLoader.exists("res://assets/terrain/" + file) else null
+		if _works_tex[file] == null:
+			continue
+		var sp := Sprite2D.new()
+		sp.texture = _works_tex[file]
+		sp.centered = false
+		sp.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		sp.position = Vector2(cell * MapView.T)
+		layer.add_child(sp)
 
 
 func _layer(root: Node2D, z: int) -> TileMapLayer:
@@ -101,8 +133,12 @@ func _build(cc: Vector2i) -> void:
 				set_tile(objects, cell, v)
 	if tree_sink != null:
 		tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
-	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops}
+	var works := Node2D.new()             # B14-07: steps, stairs and walkways, over the ground and the cliff's rim
+	works.name = "works"
+	root.add_child(works)
+	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops, "works": works}
 	above_layers.append(tops)
+	_draw_works(cc)
 
 
 func _free(cc: Vector2i) -> void:

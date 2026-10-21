@@ -547,6 +547,7 @@ func damage_player(amount: float, source: String) -> void:
 		return
 	p.hp -= maxf(0.0, amount * Skills.value(p, "combat", "damage_taken", 1.0) - p.defense() * 0.5) if source != "hunger" else amount
 	p.last_damage = source              # what hurt the player last: the death screen's cause (B8-020)
+	Decay.blow_player(self, source)     # DVW-B4: a blow wears the armour and clothes worn
 	if p.hp <= 0.0:
 		p.alive = false
 		p.death_cause = source
@@ -1370,6 +1371,7 @@ func player_craft(recipe: String) -> Dictionary:
 func harm_npc(n: NPC, dmg: float) -> float:
 	var dealt := maxf(0.5, dmg * Skills.value(n, "combat", "damage_taken", 1.0) - n.armor * 0.5)
 	n.hp -= dealt
+	Decay.blow_npc(self, n)             # DVW-B4: a blow wears the armour worn
 	return dealt
 
 

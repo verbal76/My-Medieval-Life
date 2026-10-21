@@ -18,7 +18,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 |---|---|
 | Standard crafting materials | 21 |
 | Production professions | 10 |
-| Recipes | 37 |
+| Recipes | 39 |
 | Threshold findings | 30 |
 | ... with a recorded exception | 14 |
 | ... open (no exception) | 16 |
@@ -40,12 +40,12 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `gold_bar` | 1 | `forge_gold_ring` (smith) | none | smith | `smelt_gold` | none | few uses: **open**; few professions: **open** |
 | `gold_ore` | 1 | `smelt_gold` (smith) | none | smith | none | laborer, miner | few uses: **open**; few professions: **open** |
 | `hide` | 1 | `tan_leather` (tanner) | none | tanner | none | farmer, hunter | few uses: exception; few professions: exception |
-| `iron_bar` | 14 | `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_cart_ironwork` (smith); `forge_hammer` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_lockpicks` (smith); `forge_padlock` (smith); `forge_pickaxe` (smith) | shop fittings, storefront, workshop | carpenter, smith | `smelt_iron` | none | pass |
+| `iron_bar` | 15 | `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_cart_ironwork` (smith); `forge_hammer` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_lockpicks` (smith); `forge_nails` (player only); `forge_padlock` (smith); `forge_pickaxe` (smith) | shop fittings, storefront, workshop | carpenter, smith | `smelt_iron` | none | pass |
 | `iron_ore` | 1 | `smelt_iron` (smith) | none | smith | none | laborer, miner | few uses: exception; few professions: exception |
 | `leather` | 6 | `forge_amulet` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `leather_armor` (tanner); `leather_cap` (tanner) | none | smith, tanner | `tan_leather`, `tan_pelts` | none | pass |
-| `log` | 5 | `roast_meat` (cook); `saw_planks` (carpenter) | house, loft, workshop | carpenter, cook | none | woodcutter | pass |
+| `log` | 6 | `make_mallet` (player only); `roast_meat` (cook); `saw_planks` (carpenter) | house, loft, workshop | carpenter, cook | none | woodcutter | pass |
 | `meat` | 1 | `roast_meat` (cook) | none | cook | none | farmer, hunter | few uses: **open**; few professions: **open** |
-| `plank` | 14 | `build_handcart` (carpenter); `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `make_cart_wheel` (carpenter) | house, loft, market stall, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
+| `plank` | 15 | `build_handcart` (carpenter); `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `make_cart_wheel` (carpenter); `make_mallet` (player only) | house, loft, market stall, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
 | `rabbit_pelt` | 1 | `tan_pelts` (tanner) | none | tanner | none | hunter | few uses: exception; few professions: exception |
 | `stone` | 3 | none | house, shop fittings, workshop | none | none | laborer, miner | few professions: **open** |
 | `wheat` | 3 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (cook) | none | cook | none | farmer | few professions: **open** |
@@ -101,12 +101,14 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `forge_iron_helmet` | anvil | 2 iron_bar, 1 leather | 1 iron_helmet | smith |
 | `forge_iron_sword` | anvil | 3 iron_bar, 1 leather | 1 iron_sword | smith |
 | `forge_lockpicks` | anvil | 1 iron_bar | 3 lockpick | smith |
+| `forge_nails` | anvil | 1 iron_bar | 12 nails | player only |
 | `forge_padlock` | anvil | 2 iron_bar | 1 padlock | smith |
 | `forge_pickaxe` | anvil | 2 iron_bar, 1 plank | 1 pickaxe | smith |
 | `knead_flatbread` | prep | 3 wheat | 1 bread | cook |
 | `leather_armor` | workbench | 4 leather | 1 leather_armor | tanner |
 | `leather_cap` | workbench | 2 leather | 1 leather_cap | tanner |
 | `make_cart_wheel` | sawhorse | 3 plank | 1 cart_wheel | carpenter |
+| `make_mallet` | workbench | 1 log, 1 plank | 1 mallet | player only |
 | `press_cheese` | prep | 3 milk | 1 cheese | cook |
 | `roast_meat` | oven | 1 log, 1 meat | 2 roast_meat | cook, households |
 | `saw_planks` | sawhorse | 1 log | 2 plank | carpenter, households |

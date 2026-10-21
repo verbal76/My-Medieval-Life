@@ -2842,6 +2842,55 @@
    "member": "Png/Horse.png",
    "transform": "every 96 px cell reduced by 1/3 (box, alpha cut at 128) to 32 px frames",
    "sha256": "eae23438c4138dd96f49de7717014a90c985975d47f1cdfb91d5ecf540fc72f2"
+  },
+  {
+   "file": "assets/terrain/walkway_ns.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "the 16 x 16 middle of frame 0's planks at (8, 12), 1:1",
+   "sha256": "c5d4211ed3f1026f2c77cbf8ae5312f7f7f65dcfca21fa10090c2bc36e8d59c8"
+  },
+  {
+   "file": "assets/terrain/stairs_ns.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "frame 0's planks at (8, 12), 1:1, a riser line darkened to 0.62 every 4 rows",
+   "sha256": "dfcad12ad55176ffbec992664834cbc46534dff72d70574adef1fc06dad28958"
+  },
+  {
+   "file": "assets/terrain/walkway_ew.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "the 16 x 16 middle of frame 1's planks at (48, 20), 1:1",
+   "sha256": "111f3406a56314f70457ea8fa8499d66bcd9783814db8789b399e9db3a0a575c"
+  },
+  {
+   "file": "assets/terrain/stairs_ew.png",
+   "source": "MiniWorldSprites.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Bridge.png",
+   "transform": "frame 1's planks at (48, 20), 1:1, a riser line darkened to 0.62 every 4 columns",
+   "sha256": "891d24941af8f5a1c59b631b68cc2178748fe3c674eba53af2d4543e7d5f7cd4"
+  },
+  {
+   "file": "assets/icons/nails.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Metal/Metal-Nugget-03.png",
+   "transform": "copied unchanged",
+   "sha256": "71b9830288e958e82b26a0a340746718db287641b0303759c3af62e6b3c6bc6e"
+  },
+  {
+   "file": "assets/icons/mallet.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Tools/Hammer-15.png",
+   "transform": "copied unchanged",
+   "sha256": "362ad7188cddd06fe1b6574efe47f59fb01c569a4b96689bae6d2592c397cc63"
+  },
+  {
+   "file": "assets/terrain/steps.png",
+   "source": "ForgottenMemories.zip",
+   "member": "TileSet.png",
+   "transform": "the 32 x 32 piece of the laid-stone paving at (1472, 608), reduced 1/2 (box), a step line darkened to 0.62 every 4 rows",
+   "sha256": "f6915916f816a78d7b3ea05b5beb14c28caa1854f1a25a66b7a29d0fe28460d2"
   }
  ]
 }
