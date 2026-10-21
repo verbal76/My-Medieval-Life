@@ -10711,7 +10711,7 @@
    "id": "FARM-08A",
    "title": "No script error when a homeless household's couple or founder looks for a building site",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "No script error when a homeless household's couple or founder looks for a building site",
    "source": "Actions run 39580481791 (FARM-08 yield matrix), seed 2 at shared_wheat_yield 2.5: 37 SCRIPT ERRORs at World.building_door from Construction._found_couple",
@@ -10720,10 +10720,12 @@
     "Construction._found_couple, Construction._found and Guardianship ranking look up a household's place through World.household_cell, which falls back to a member's cell when the household has no house standing; an aging_test check reproduces the error without the fix; suites green; the variant re-run on the fixed commit ends with 0 script errors"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "aging_test (135 checks); suites40; sim_gate PASS",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "49c530a"
+   ],
    "parent": "FARM-08",
    "depends_on": [],
    "blockers": [],
@@ -10740,8 +10742,21 @@
      "date": "2026-10-21",
      "change": "entered in the register",
      "why": "Actions run 39580481791 (FARM-08 yield matrix), seed 2 at shared_wheat_yield 2.5: 37 SCRIPT ERRORs at World.building_door from Construction._found_couple"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 49c530a; tests",
+     "why": "World.household_cell; aging_test reproduces the script error without the fix; 27 suites green, gate identical"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "Roadmap target"
     }
-   ]
+   ],
+   "target_build": "16",
+   "roadmap_gate": "Build 16",
+   "roadmap_reason": "Script error found by the FARM-08 comparison"
   },
   {
    "id": "FR-01",

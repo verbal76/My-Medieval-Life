@@ -10,8 +10,8 @@ entry leaves the register or changes without a history entry.
 | Open entries (rules excluded) | 231 | 213 still open, 18 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 162 (85 of them still open) |
-| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **298** = 213 still open from the baseline + 85 added and open |
+| Entries added since | | 163 (86 of them still open) |
+| **Open entries now** (rules excluded; the Roadmap total in the ledger) | | **299** = 213 still open from the baseline + 86 added and open |
 | Open entries moved to another build | | 2 |
 
 ## Closed since the baseline (18)
@@ -48,7 +48,7 @@ entry leaves the register or changes without a history entry.
 
 None.
 
-## Added since the baseline (162)
+## Added since the baseline (163)
 
 | ID | Item | Kind | Status | Build |
 |---|---|---|---|---|
@@ -82,6 +82,7 @@ None.
 | FARM-06 | Manor fields need seed and labour like any farm (no free seed, crops or materials) | approved | PARTIALLY IMPLEMENTED | 16 |
 | FARM-07 | The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner | approved | APPROVED — NOT STARTED | 16 |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | approved | ACTIVE DEVELOPMENT | 16 |
+| FARM-08A | No script error when a homeless household's couple or founder looks for a building site | approved | IMPLEMENTED — TESTING REQUIRED | 16 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | ACTIVE DEVELOPMENT | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | COMPLETE AND VERIFIED | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | COMPLETE AND VERIFIED | 16 |
