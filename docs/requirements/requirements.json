@@ -8645,7 +8645,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Every bullet mapped to tests (wildlife, refuge, aging, ecology_test); multi-generation survival from the four-seed 365-day runs",
    "priority": "build 15",
    "workstream": "world equilibrium",
    "superseded_by": null,
@@ -8665,6 +8665,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Mapped by Worker D"
     }
    ],
    "target_build": "16",
@@ -8677,7 +8682,7 @@
    "id": "EQ-03",
    "title": "Humans and nature affect each other through real NPC decisions",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "Neither system should exist independently as a disconnected background simulation.",
    "description": "Humans and nature affect each other through real NPC decisions",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8687,10 +8692,12 @@
     "Harvests, predators, depletion and wildlife numbers change NPC decisions"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "ecology_test (14 checks)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "152ffa2"
+   ],
    "parent": "EQ-16",
    "depends_on": [],
    "blockers": [],
@@ -8717,6 +8724,11 @@
      "date": "2026-10-20",
      "change": "roadmap: 16",
      "why": "owner's five-build roadmap reconciliation 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> IMPLEMENTED — TESTING REQUIRED; commit 152ffa2; tests",
+     "why": "Hunting, predators and depletion change villagers' work by real counts; a hunter with no game takes other work; reacting to predators directly would be a new mechanic (owner)"
     }
    ],
    "target_build": "16",
@@ -8729,7 +8741,7 @@
    "id": "EQ-04",
    "title": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "When a carpenter dies, another NPC should eventually be capable of entering that profession.",
    "description": "A functioning society survives individual losses (succession of trades, households, leadership, businesses)",
    "source": "docs/directives/2026-10-19_build16_world_equilibrium.md",
@@ -8741,11 +8753,12 @@
     "A failed business's role is filled by another or by trade"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "succession_test (26 checks)",
    "playtest": [],
    "branch": "",
    "commits": [
-    "1e88118"
+    "1e88118",
+    "89ee852"
    ],
    "parent": "EQ-16",
    "depends_on": [],
@@ -8780,6 +8793,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> PARTIALLY IMPLEMENTED; commit 1e88118",
      "why": "Reeve succession (1e88118) integrated; guard succession and the failed-business test in wip/b16-misc2 (89ee852) awaiting integration"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> IMPLEMENTED — TESTING REQUIRED; commit 89ee852; tests",
+     "why": "Reeve and guard posts pass on through the succession of posts; a failed business's post is taken up"
     }
    ],
    "target_build": "16",
@@ -10423,7 +10441,7 @@
    "id": "FARM-01",
    "title": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Farmland plots: any household (player or villager) leases a small plot through the existing lease framework at 2 coins, registered so no one else can claim it",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10436,10 +10454,12 @@
     "Player and NPCs through the same mechanics; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test (104 checks); suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3fd88ae"
+   ],
    "parent": "OD-22",
    "depends_on": [],
    "blockers": [],
@@ -10471,6 +10491,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; next_action",
      "why": "Owner answered Q8-Q13 (OD-27); work assigned in the coordinated push"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
+     "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -10483,7 +10508,7 @@
    "id": "FARM-02",
    "title": "Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Developing farmland: clear trees and obstructions, then build a fence and gate from logs and stone through the normal construction system",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10496,10 +10521,12 @@
     "The developed land can be ploughed, planted, tended and harvested; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test (104 checks); suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3fd88ae"
+   ],
    "parent": "OD-22",
    "depends_on": [],
    "blockers": [],
@@ -10531,6 +10558,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; next_action",
      "why": "Owner answered Q8-Q13 (OD-27); work assigned in the coordinated push"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
+     "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -10543,7 +10575,7 @@
    "id": "FARM-03",
    "title": "Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Ploughing and sowing a family plot with real seed by the established farming mechanics (one model for player and villagers)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10552,10 +10584,12 @@
     "Villagers use Farming's cells, seed, seasons and labour as the player does; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test (104 checks); suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3fd88ae"
+   ],
    "parent": "OD-22",
    "depends_on": [],
    "blockers": [],
@@ -10582,6 +10616,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
+     "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -10594,7 +10633,7 @@
    "id": "FARM-04",
    "title": "Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Household participation: family members work the plot by age, ability, skill and time; no farmer occupation required",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10603,10 +10642,12 @@
     "Any household member able to work tends, harvests; the harvest goes to the family chest (FSE-18); tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test (104 checks); suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3fd88ae"
+   ],
    "parent": "OD-22",
    "depends_on": [],
    "blockers": [],
@@ -10633,6 +10674,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
+     "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -10645,7 +10691,7 @@
    "id": "FARM-05",
    "title": "Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Whether a household takes up a plot: from its circumstances, needs, skills, resources and opportunities (no quota, no forced farming)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -10654,10 +10700,12 @@
     "A household's decision weighs food security, coins, labour and land available; some do, some do not; measured on the seed runs"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test (104 checks); suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3fd88ae"
+   ],
    "parent": "OD-22",
    "depends_on": [],
    "blockers": [],
@@ -10684,6 +10732,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
+     "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -10749,22 +10802,21 @@
    "id": "FARM-07",
    "title": "The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "The farmland lease's recurring charge: 2 coins under the existing weekly lease framework (first week at once), ambiguity reported to the owner",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
    "approval": "owner decision 2026-10-21 (docs/directives/2026-10-21_build16_owner_decision_resolution.md)",
    "acceptance": [
-    "2 coins a week through the existing lease scheduling and accounting (Property), for player and NPC households alike; revenue to the treasury",
-    "No duplicate charge and no secondary land fee; the existing rules for ownership, missed payments, expiry and access apply; no new penalty or eviction mechanic",
-    "The lease grants access only: no field built and no materials supplied; the household develops the land (FARM-02)",
-    "Tests"
+    "The weekly lease is the existing rent rule by area (ceil(Property.land_price x weekly_rent_share)): 2 coins for a 16-30 cell plot, the approved baseline; larger plots pay more (owner Q11, OD-27, superseding the earlier flat 2 coins); purchased land pays no lease; paid to the treasury under the existing lease scheduling and accounting"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test (104 checks); suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "3fd88ae"
+   ],
    "parent": "OD-23",
    "depends_on": [],
    "blockers": [],
@@ -10796,6 +10848,16 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; next_action",
      "why": "Owner answered Q8-Q13 (OD-27); work assigned in the coordinated push"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 3fd88ae; tests",
+     "why": "Farmland as Property parcels priced by area (existing formulas), fence by the pen rule plus stone (gate_stone 2, provisional, owner to confirm), household work and uptake; integrated; awaiting the four-seed runs"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "acceptance rewritten to the owner's Q11 answer",
+     "why": "OD-27: area-based lease and purchase prices; the 2-coin lease is the reference for the baseline plot, not a flat price"
     }
    ],
    "target_build": "16",
@@ -10833,7 +10895,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "Dispatch long-sims with variants shared_wheat_yield 1.0/1.5/2.0/2.5/3.0, both switches on, four seeds, 365 days; report",
+   "next_action": "Report written (docs/design/FARM08_YIELD_COMPARISON.md, provisional 2.0 a cell); 365-day variants on the integrated commit, then the owner's decision; switches stay off",
    "priority": "",
    "workstream": "lead",
    "superseded_by": null,
@@ -10848,6 +10910,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; workstream; next_action",
      "why": "Milk drop investigated (seed 1, 120 days, seasonal off vs on): feed availability through the famine rule (grain gone, herds culled, troughs empty, breeding stock starved), not a defect; recorded in docs/design/FSE13_COMPARISON.md. The yield matrix comes next"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "next_action",
+     "why": "Worker C report integrated"
     }
    ],
    "target_build": "16",
@@ -10923,7 +10990,7 @@
    "id": "FARM-08B",
    "title": "Cattle decline under the shared and seasonal farming model: investigation",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Cattle decline under the shared and seasonal farming model: investigation",
    "source": "docs/directives/2026-10-21_farm08_cattle_investigation.md",
@@ -10932,10 +10999,12 @@
     "Report, per seed over 365 days: starting cattle; births and deaths; causes and timing of deaths; feed available against feed eaten; whether cattle can reach their feed; seasonal and winter effects; breeding eligibility and whether breeding happens; labour, scheduling or pathfinding failures in animal care; why the old model keeps cattle on three seeds and the new one loses them. Legitimate decline is told apart from defects; defects are fixed; no cattle, feed or births are injected"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "herd_test (19 checks, 10 fail on the old code); 40/120-day local runs",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "463861a"
+   ],
    "parent": "FARM-08",
    "depends_on": [],
    "blockers": [],
@@ -10962,6 +11031,11 @@
      "date": "2026-10-21",
      "change": "b16_class; complexity",
      "why": "Classified for the Build 16 status"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 463861a; tests",
+     "why": "Three defects fixed (whole-lot feed buying, grain locked in chests, elderly kept as breeding stock); remaining loss legitimate (keeper cannot afford feed between seasonal harvests); nine answers in FARM08_YIELD_COMPARISON.md 5.4; awaiting the 365-day variants"
     }
    ],
    "target_build": "16",
@@ -10974,7 +11048,7 @@
    "id": "FARM-08C",
    "title": "Wheat price floor: record as an economic finding",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Wheat price floor: record as an economic finding",
    "source": "docs/directives/2026-10-21_farm08_cattle_investigation.md",
@@ -10986,7 +11060,9 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "463861a"
+   ],
    "parent": "FARM-08",
    "depends_on": [],
    "blockers": [],
@@ -11013,6 +11089,11 @@
      "date": "2026-10-21",
      "change": "b16_class; complexity",
      "why": "Classified for the Build 16 status"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> COMPLETE AND VERIFIED; commit 463861a",
+     "why": "Recorded in docs/design/FARM08_YIELD_COMPARISON.md: the asking price cannot fall below 0.8 of value (wheat 2); 2-4 range; any seller with 14+ asks 2; no pricing change"
     }
    ],
    "target_build": "16",
@@ -11025,7 +11106,7 @@
    "id": "FARM-09",
    "title": "Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "AUTOMATED TESTS PASSED — PLAYTEST REQUIRED",
    "owner_wording": null,
    "description": "Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm",
    "source": "docs/directives/2026-10-21_build16_master_completion_directive.md",
@@ -11034,10 +11115,15 @@
     "The house-plot placement flow adapted: first corner, drag, rectangle grows and shrinks, validity preview, live lease and purchase price (Property.land_price and rent_of by area), confirm; insufficient funds refuse; no overlap; NPCs use the same pricing; tests"
    ],
    "implementation": "",
-   "tests": "",
-   "playtest": [],
+   "tests": "farm_place_test (25 checks; mouse, touch, keys/pad); xvfb screenshots",
+   "playtest": [
+    "Touch drag on an Android phone",
+    "Physical gamepad"
+   ],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "a36a0ab"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -11064,6 +11150,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> AUTOMATED TESTS PASSED — PLAYTEST REQUIRED; commit a36a0ab; tests",
+     "why": "Drag placement with live lease and purchase price; device check (touch, physical pad) needed"
     }
    ],
    "target_build": "16",
@@ -12015,7 +12106,7 @@
    "id": "FSE-08",
    "title": "The directive's 25 deterministic tests (section 17)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "The directive's 25 deterministic tests (section 17)",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -12024,10 +12115,12 @@
     "Each of the 25 mapped to an existing test, a new test for an implemented system, or the build whose feature it needs"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "docs/design/FSE08_TEST_MAP.md; farm_plots_test, stalls_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "268895c"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -12064,6 +12157,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Item 5 (crop failure) belongs to the Living Economy build (audit class D)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; commit 268895c; tests",
+     "why": "All 25 mapped: 17 to tests (2, 6, 7, 18 now by farm_plots_test and stalls_test), 8 to the Living Economy build"
     }
    ],
    "target_build": "16",
@@ -12076,7 +12174,7 @@
    "id": "FSE-09",
    "title": "Build 16 food-security defects and foundations (classes B and C)",
    "kind": "approved",
-   "status": "PARTIALLY IMPLEMENTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Build 16 food-security defects and foundations (classes B and C)",
    "source": "docs/directives/2026-10-20_food_security_goal_driven_economy.md",
@@ -12088,7 +12186,9 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "268895c"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -12120,6 +12220,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Children re-checked 2026-10-21"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "PARTIALLY IMPLEMENTED -> COMPLETE AND VERIFIED; commit 268895c",
+     "why": "Every class B defect closed (FSE-B05..B12); class C foundations done (FSE-17, cooking parity, TIME-02, FSE-14)"
     }
    ],
    "target_build": "16",
@@ -12384,7 +12489,7 @@
    "id": "FSE-14",
    "title": "Dynamic land planning: design and safe foundations (land rental for plots and pens)",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "The six existing fields must not remain the permanent agricultural capacity of a growing village. However, the answer is not to automatically create another field whenever population increases.",
    "description": "Dynamic land planning: design and safe foundations (land rental for plots and pens)",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -12393,10 +12498,12 @@
     "Design for land supply, rental of small and large plots and pens, legitimate rent; foundations in Build 16 only where safe; the rest scheduled with the living-economy build (FSE-10)"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test (foundations)",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "268895c"
+   ],
    "parent": "FSE-00",
    "depends_on": [],
    "blockers": [],
@@ -12418,6 +12525,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: owner follow-up 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit 268895c; tests",
+     "why": "Design written (docs/design/FSE14_LAND_PLANNING.md): land supply, Build 16 foundations, small and large plots and pens on rent as proposals; the rest scheduled with FSE-10 per the acceptance"
     }
    ],
    "target_build": "16",
@@ -12430,7 +12542,7 @@
    "id": "FSE-15",
    "title": "Recalculate the land requirement after the seed, season and parity corrections",
    "kind": "approved",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": "Do not treat 1.7 field cells per adult as a permanent land requirement.",
    "description": "Recalculate the land requirement after the seed, season and parity corrections",
    "source": "docs/directives/2026-10-20_agricultural_findings_followup.md",
@@ -12439,10 +12551,12 @@
     "Productive capacity recalculated with labor availability and net edible yield after seed and losses"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "farm_plots_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "27a1be5"
+   ],
    "parent": "FSE-00",
    "depends_on": [
     "FSE-11",
@@ -12468,6 +12582,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: owner follow-up 2026-10-20"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit 27a1be5; tests",
+     "why": "FarmPlots.land_requirement: a year's food need against a cell's net yearly yield after seed, capped by labour: 0.64 cells per adult (was 1.7 assumed)"
     }
    ],
    "target_build": "16",
@@ -24542,7 +24661,7 @@
    "id": "STALL-01",
    "title": "Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24554,10 +24673,12 @@
     "Player and NPCs through the same mechanics; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "stalls_test (104 checks), business_test; suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "afef91d"
+   ],
    "parent": "OD-24",
    "depends_on": [],
    "blockers": [],
@@ -24589,6 +24710,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; next_action",
      "why": "Owner answered Q8-Q13 (OD-27); work assigned in the coordinated push"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
+     "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -24601,7 +24727,7 @@
    "id": "STALL-02",
    "title": "A stall's own inventory: goods are moved into it for sale and are in one place only",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "A stall's own inventory: goods are moved into it for sale and are in one place only",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24610,10 +24736,12 @@
     "Goods transferred, never duplicated; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "stalls_test (104 checks), business_test; suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "afef91d"
+   ],
    "parent": "OD-24",
    "depends_on": [],
    "blockers": [],
@@ -24640,6 +24768,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
+     "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -24652,7 +24785,7 @@
    "id": "STALL-03",
    "title": "OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "OPEN STALL: the stall sells unattended to real buyers through the existing market; auto-closes when sold out, with a notification",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24661,10 +24794,12 @@
     "No owner presence needed; purchases only by buyers with needs and coins; auto-close and notice; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "stalls_test (104 checks), business_test; suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "afef91d"
+   ],
    "parent": "OD-24",
    "depends_on": [],
    "blockers": [],
@@ -24691,6 +24826,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; next_action",
      "why": "Owner answered Q8-Q13 (OD-27); work assigned in the coordinated push"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
+     "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -24703,7 +24843,7 @@
    "id": "STALL-04",
    "title": "CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "CLOSE STALL: sales stop, the unsold goods stay in the stall, the session's sales are totalled",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24712,10 +24852,12 @@
     "Manual close, restock and reopen; tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "stalls_test (104 checks), business_test; suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "afef91d"
+   ],
    "parent": "OD-24",
    "depends_on": [],
    "blockers": [],
@@ -24742,6 +24884,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
+     "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -24754,7 +24901,7 @@
    "id": "STALL-05",
    "title": "The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "The realm's 5% commission on each session's actual sales, through real coins (100 sold: 5 to the treasury, 95 to the seller)",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24768,10 +24915,12 @@
     "Tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "stalls_test (104 checks), business_test; suites",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "afef91d"
+   ],
    "parent": "OD-24",
    "depends_on": [],
    "blockers": [],
@@ -24803,6 +24952,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT; next_action",
      "why": "Owner answered Q8-Q13 (OD-27); work assigned in the coordinated push"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
+     "why": "Built stalls, stall inventory, unattended sales, close-to-settle with the exact 5 % to the treasury on every stall (OD-27); integrated on wip/b16-integration; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
@@ -24815,7 +24969,7 @@
    "id": "STALL-06",
    "title": "Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "Villager households build, stock, open, close and restock stalls by the player's mechanics, selling surplus with the family's needs weighed",
    "source": "docs/directives/2026-10-20_od22_od23_od24_farms_leases_stalls.md",
@@ -24824,10 +24978,12 @@
     "The OD-19/FSE-18 reserve is weighed, not an absolute bar; no guaranteed sales; measured on the seed runs"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "stalls_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "afef91d"
+   ],
    "parent": "OD-24",
    "depends_on": [],
    "blockers": [],
@@ -24854,6 +25010,11 @@
      "date": "2026-10-21",
      "change": "APPROVED — NOT STARTED -> ACTIVE DEVELOPMENT",
      "why": "Assigned in the coordinated Build 16 push (owner master directive 2026-10-21)"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit afef91d; tests",
+     "why": "Households build, stock, open and restock stalls by the player's rules; stall sales to be measured in the four-seed runs (acceptance); grain is not sold through stalls (needs an owner rule on how much grain a household keeps)"
     }
    ],
    "target_build": "16",
@@ -24985,7 +25146,7 @@
    "id": "TIME-03",
    "title": "Recommended time retuning (outliers): proposals only, owner review before any change",
    "kind": "proposal",
-   "status": "APPROVED — NOT STARTED",
+   "status": "COMPLETE AND VERIFIED",
    "owner_wording": null,
    "description": "Recommended time retuning (outliers): proposals only, owner review before any change",
    "source": "docs/directives/2026-10-20_od21_time_model.md",
@@ -24997,7 +25158,9 @@
    "tests": "",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "8542a33"
+   ],
    "parent": "OD-21",
    "depends_on": [
     "TIME-01"
@@ -25021,6 +25184,11 @@
      "date": "2026-10-20",
      "change": "target_build; roadmap_gate; roadmap_reason",
      "why": "Roadmap target: OD-21"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "APPROVED — NOT STARTED -> COMPLETE AND VERIFIED; commit 8542a33",
+     "why": "Proposals only, as the entry asks: docs/design/TIME03_RETUNING_PROPOSALS.md (P1-P9, U1-U7) for the owner's review; no data changed"
     }
    ],
    "target_build": "16",
@@ -25141,7 +25309,7 @@
    "id": "TREAS-01",
    "title": "The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": null,
    "description": "The manor treasury as the village reserve: fees in, real purchases out, relief from owned stock",
    "source": "docs/directives/2026-10-21_build16_master_completion_directive.md",
@@ -25150,10 +25318,12 @@
     "Lease, purchase and commission income reaches w.treasury; in shortage the manor buys real goods from real sellers with treasury coins and relief uses only owned stock; no money or goods from nothing; no parallel treasury; conservation tests and the gate"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "treasury_test, stalls_test, farm_plots_test",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "1de1bcc"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -25185,6 +25355,11 @@
      "date": "2026-10-21",
      "change": "next_action",
      "why": "Worker D's part integrated"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 1de1bcc; tests",
+     "why": "Commission, leases and purchases reach the treasury through existing accounting; relief from the manor's own stock; awaiting the four-seed runs"
     }
    ],
    "target_build": "16",
