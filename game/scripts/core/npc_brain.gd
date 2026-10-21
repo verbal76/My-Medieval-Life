@@ -645,7 +645,7 @@ func _plan_cart(n: NPC, house: Dictionary) -> bool:
 	if bench != "" and (parts < whole or maker == null):
 		w.stations[bench].users[n.id] = w.minutes + w.map.data.w * 3 + float(rec.minutes) + 120.0
 		n.doing = "gathering parts for a handcart"
-		n.plan = parts_plan + [go(w.station_use(bench)), work(float(rec.minutes) * Skills.value(n, "crafting", "craft_time", 1.0), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
+		n.plan = parts_plan + [go(w.station_use(bench)), work(CapabilityHook.work_time(float(rec.minutes), "carpentry", Skills.value(n, "crafting", "craft_time", 1.0)), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
 		return true
 	if maker != null and n.coins >= whole:
 		n.doing = "buying a handcart"
@@ -1015,7 +1015,9 @@ func _miner(n: NPC) -> bool:
 		return _idle_at_work(n, "waiting for ore buyers")
 	var at := Vector2i(d.x, d.y)
 	n.doing = "mining %s" % GameData.item_name(d.ore).to_lower()
-	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), "mine", {"x": d.x, "y": d.y}, "work", at)]
+	# X18 HOOK (Expansion 18, X18-SIM): CapabilityHook is off in the game (exactly base x skill time); analysis runs only
+	var mins := CapabilityHook.work_time(float(GameData.b("mine_minutes")), "mining", Skills.value(n, "mining", "mine_time", 1.0))
+	n.plan = [go(beside(at, n.cell())), work(mins, "mine", {"x": d.x, "y": d.y}, "work", at)]
 	return true
 
 
@@ -1053,7 +1055,8 @@ func _woodcutter(n: NPC) -> bool:
 	t.claimed = n.id
 	var at := Vector2i(t.x, t.y)
 	n.doing = "felling a tree"
-	n.plan = [go(beside(at, n.cell())), work(float(GameData.b("chop_minutes")) * Skills.value(n, "woodcutting", "chop_time", 1.0), "chop", {"x": t.x, "y": t.y}, "work", at)]
+	var mins := CapabilityHook.work_time(float(GameData.b("chop_minutes")), "forestry", Skills.value(n, "woodcutting", "chop_time", 1.0))   # X18 HOOK
+	n.plan = [go(beside(at, n.cell())), work(mins, "chop", {"x": t.x, "y": t.y}, "work", at)]
 	return true
 
 
@@ -1251,7 +1254,7 @@ func _farmer(n: NPC) -> bool:
 	match "hired" if f.state == "ripe" and not w.quests.hired_on(f).is_empty() else st:
 		"ripe":
 			n.doing = "harvesting wheat"
-			var cut := w.farm.field_work_minutes(int(f.get("sown", 0)), "cut") if Farming.shared_manor() else 90.0
+			var cut := CapabilityHook.time(w.farm.field_work_minutes(int(f.get("sown", 0)), "cut") if Farming.shared_manor() else 90.0, "farming")   # X18 HOOK
 			n.plan = [go(spot), work(cut, "harvest", {"field": f.id}, "work")]
 		"tilled":
 			if Farming.seasonal_fields() and not w.farm.can_sow_now():
@@ -1264,7 +1267,7 @@ func _farmer(n: NPC) -> bool:
 				n.plan = [go(spot), work(60, "", {}, "idle")]
 				return true
 			n.doing = "sowing"
-			var sow := w.farm.field_work_minutes(mini(Farming.field_cells(f), w.farm.field_seed(f)), "sow") if Farming.shared_manor() else 45.0
+			var sow := CapabilityHook.time(w.farm.field_work_minutes(mini(Farming.field_cells(f), w.farm.field_seed(f)), "sow") if Farming.shared_manor() else 45.0, "farming")   # X18 HOOK
 			n.plan = [go(spot), work(sow, "sow", {"field": f.id}, "work")]
 		_:
 			if n.inv.count("wheat") > reserve(n, "wheat") and _buyer_for(n, "wheat") != null:
@@ -1879,7 +1882,7 @@ func _do_recipe(n: NPC, r: String) -> bool:
 	# the station is reserved for the walk there and the work, plus an hour's slack
 	w.stations[st].users[n.id] = w.minutes + w.map.data.w + float(rec.minutes) + 60.0
 	n.doing = "%s" % r.replace("_", " ")
-	var mins := float(rec.minutes) * Skills.value(n, str(rec.skill), "craft_time", 1.0)
+	var mins := CapabilityHook.work_time(float(rec.minutes), CapabilityHook.recipe_industry(r), Skills.value(n, str(rec.skill), "craft_time", 1.0))   # X18 HOOK
 	n.plan = [go(w.station_use(st)), work(mins, "craft", {"recipe": r, "station": st}, "work", _station_at(st))]
 	return true
 

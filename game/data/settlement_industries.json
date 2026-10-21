@@ -422,6 +422,48 @@
           "smithing": 0.28
         },
         "pay_ratio": 0.4
+      },
+      "conservative": {
+        "label": "UNAPPROVED test hypothesis (owner directive 2026-10-21, X18-SIM): about +10% output and +5% pay at level 10, every industry, the owner's diminishing-returns shape",
+        "shape": "owner_candidate",
+        "output_max": {
+          "mining": 0.1,
+          "forestry": 0.1,
+          "carpentry": 0.1,
+          "smithing": 0.1,
+          "farming": 0.1,
+          "tanning": 0.1,
+          "trade": 0.1
+        },
+        "pay_ratio": 0.5
+      },
+      "moderate": {
+        "label": "UNAPPROVED test hypothesis (X18-SIM): about +20% output and +8% pay at level 10 (the owner's example)",
+        "shape": "owner_candidate",
+        "output_max": {
+          "mining": 0.2,
+          "forestry": 0.2,
+          "carpentry": 0.2,
+          "smithing": 0.2,
+          "farming": 0.2,
+          "tanning": 0.2,
+          "trade": 0.2
+        },
+        "pay_ratio": 0.4
+      },
+      "aggressive": {
+        "label": "UNAPPROVED test hypothesis (X18-SIM): about +35% output and +15% pay at level 10",
+        "shape": "owner_candidate",
+        "output_max": {
+          "mining": 0.35,
+          "forestry": 0.35,
+          "carpentry": 0.35,
+          "smithing": 0.35,
+          "farming": 0.35,
+          "tanning": 0.35,
+          "trade": 0.35
+        },
+        "pay_ratio": 0.428571
       }
     },
     "unmapped_external": "An external industry (mining: MIN-D stages 1-4) has no agreed mapping to the 0-10 scale (a reconciliation item, DESIGN.md section 8): its multipliers stay 1.0 until the mapping is decided.",

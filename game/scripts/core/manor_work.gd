@@ -215,7 +215,7 @@ func refresh() -> void:
 	var free := yard.total() - claimed
 	while free >= int(cfg("mend_load")) and not sites.is_empty():
 		var site: Array = sites[next_id % sites.size()]
-		_post({"kind": "mend", "qty": int(cfg("mend_load")), "site": [site[0].x, site[0].y], "place": site[1], "wage": int(cfg("mend_wage"))})
+		_post({"kind": "mend", "qty": int(cfg("mend_load")), "site": [site[0].x, site[0].y], "place": site[1], "wage": CapabilityHook.pay(int(cfg("mend_wage")), "carpentry")})   # X18 HOOK: off in the game
 		free -= int(cfg("mend_load"))
 
 
@@ -238,7 +238,7 @@ func post_quarry() -> void:
 		return
 	if _works_stock("stone") >= 2 * int(cfg("mend_load")):
 		return
-	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": int(cfg("quarry_wage"))})
+	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": CapabilityHook.pay(int(cfg("quarry_wage")), "mining")})   # X18 HOOK: off in the game
 
 
 ## Materials for the works the manor already holds or has bought: the yard and lots bound for it.
@@ -545,7 +545,7 @@ func plan(n: NPC) -> bool:
 				release(j)
 				return false
 			var at := Vector2i(d.x, d.y)
-			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(GameData.b("mine_minutes")) * Skills.value(n, "mining", "mine_time", 1.0), "mj_mine", {"job": int(j.id), "x": d.x, "y": d.y}, "work", at)]
+			n.plan = [b.go(b.beside(at, n.cell())), b.work(CapabilityHook.work_time(float(GameData.b("mine_minutes")), "mining", Skills.value(n, "mining", "mine_time", 1.0)), "mj_mine", {"job": int(j.id), "x": d.x, "y": d.y}, "work", at)]
 		"mend":
 			var at := step_cell(j)
 			n.plan = [b.go(b.beside(at, n.cell())), b.work(float(cfg("mend_minutes")), "mj_step", {"job": int(j.id)}, "work", at)]

@@ -10,6 +10,8 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/economy_sim.gd -- --days 30 [--seed 1] [--every 1] [--out path.json]
 ##       [--watch-from DAY]   (B7-015: hourly lines for households near starving, and each death, from DAY)
 ##       [--set key=value]...   (override a top-level balance.json number for a comparison run, e.g. --set manor_job_reserve_days=10)
+##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report]   (Expansion 18 X18-SIM,
+##       analysis only: tests/capability_metrics.gd)
 ## Steps of 0.5 s (one game minute), as households_sim, econ_report and earn_sim do; the abstract tier
 ## of World.update runs a distant NPC once per 0.5 s, so a larger step would change the rules applied.
 ## Exit code 1 if the currency or any item does not balance.
@@ -18,6 +20,7 @@ const STEP := 0.5
 const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "log", "plank", "iron_bar", "copper_bar",
 	"wheat", "meat", "hide", "leather", "pottage", "roast_meat", "ale", "pickaxe", "axe", "hammer"]
 const Census := preload("res://tests/census.gd")
+const CapMetrics := preload("res://tests/capability_metrics.gd")     # X18-SIM (Expansion 18): analysis switch, off unless asked
 const MARKET_ROLES := Census.MARKET_ROLES
 
 var w: World
@@ -63,6 +66,8 @@ func _init() -> void:
 			var kv: PackedStringArray = args[i + 1].split("=", true, 1)
 			GameData.balance[kv[0]] = float(kv[1])
 			print("balance override: %s = %s" % [kv[0], kv[1]])
+	var cap_on := CapMetrics.wanted(args)          # X18-SIM: --capability L --cap-profile P --cap-scenario S (analysis only)
+	var cap_info := CapMetrics.pre_setup(args) if cap_on else {}
 	var t0 := Time.get_ticks_msec()
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
@@ -76,6 +81,9 @@ func _init() -> void:
 	w.trade_hook = _on_trade
 	w.npc_died.connect(_on_died)
 	player_min_hp = w.player.hp
+	if cap_on:
+		CapMetrics.post_setup(cap_info, w)
+	var cap0 := CapMetrics.snapshot(w) if cap_on else {}
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources,
 		"deposits": w.deposits.map(func(d): return int(d.amount)), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
@@ -123,6 +131,8 @@ func _init() -> void:
 				print("WATCH MISS ", str(e))
 	var final: Dictionary = samples[-1]
 	_print_final(final, start, seed, days, secs)
+	if cap_on:
+		print("CAPABILITY " + JSON.stringify(CapMetrics.report(cap_info, w, cap0, days)))
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "every": every, "step": STEP,
