@@ -12,9 +12,9 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | Status | Count |
 |---|---|
 | APPROVED — NOT STARTED | 51 |
-| ACTIVE DEVELOPMENT | 14 |
+| ACTIVE DEVELOPMENT | 13 |
 | PARTIALLY IMPLEMENTED | 34 |
-| IMPLEMENTED — TESTING REQUIRED | 33 |
+| IMPLEMENTED — TESTING REQUIRED | 34 |
 | AUTOMATED TESTS PASSED — PLAYTEST REQUIRED | 44 |
 | BLOCKED | 14 |
 | DEFERRED | 10 |
@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **454** |
 | Outstanding (not complete, superseded or canceled) | 207 |
 
-Also in the register: 32 proposal awaiting an owner decision (not approved), 86 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 50 are open (status BLOCKED).
+Also in the register: 32 proposal awaiting an owner decision (not approved), 92 owner decision (open or answered), 27 world design rule, 1 unapproved idea; of the owner decisions, 56 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -46,9 +46,9 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | Build 19: NPC Judgment System | 29 | 15 |
 | Build 20 or later (outside the five builds) | 44 | 42 |
 | Multiplayer track (isolated branch) | 3 | 2 |
-| Waiting on an owner decision | 71 | 17 |
+| Waiting on an owner decision | 77 | 17 |
 | Owner or external action (not development work) | 6 | 6 |
-| **Total open** | **291** | **207** |
+| **Total open** | **297** | **207** |
 
 ### Build 15: simulation stabilization (52)
 
@@ -154,7 +154,7 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | approved | BLOCKED | owner decision first | the mine wage belongs with mining labour economics; still the owner's call (OD-01) |
 | B7-007 | Deposits never refill; no stone source | approved | PARTIALLY IMPLEMENTED |  | deposit sustainability is answered by the mining expansion (quarry, prospecting, finite hidden deposits) |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | IMPLEMENTED — TESTING REQUIRED | Build 17 | Owner Build 17 decisions 2026-10-21 |
-| CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | ACTIVE DEVELOPMENT |  |  |
+| CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | IMPLEMENTED — TESTING REQUIRED |  |  |
 | DVW-A10 | No black-hole spaces (:35) | approved | IMPLEMENTED — TESTING REQUIRED |  | cliff steps, stairs and walkways need the terrain/elevation audit (MIN-A) |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | IMPLEMENTED — TESTING REQUIRED |  | rules in core/, not UI: a code audit before the expansions build on it |
 | DVW-B4 | Goods decay (grain spoils, clothes/armour/carts wear) | approved | IMPLEMENTED — TESTING REQUIRED | owner decision first | wear and maintenance give tools, supports and carts real upkeep (industrial chains) |
@@ -299,11 +299,17 @@ status BLOCKED (the ledger's owner-decisions section lists them all).
 | DGA-D3 | Connectivity with no server | proposal | PARTIALLY IMPLEMENTED |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT |  | the multiplayer track stays isolated on its own branch until the owner authorizes integration |
 
-### Waiting on an owner decision (71)
+### Waiting on an owner decision (77)
 
 | ID | Item | Kind | Status | Gate | Why here |
 |---|---|---|---|---|---|
 | B13-15 | Android signing stability | approved | BLOCKED | owner decision first | signing key deferred by the owner; cloud saves and the formal platform entry need the owner |
+| CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | decision | BLOCKED |  |  |
+| CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | decision | BLOCKED |  |  |
+| CON02-S-3 | Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule? | decision | BLOCKED |  |  |
+| CON02-S-4 | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)? | decision | BLOCKED |  |  |
+| CON02-S-5 | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? | decision | BLOCKED |  |  |
+| CON02-S-6 | Confirm the 50-coin formal signing line for services as for goods | decision | BLOCKED |  |  |
 | DGA-D1 | Meaning of "isometric" | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D10 | Formal platform/engine approval (U1, U2) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
 | DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | proposal | BLOCKED | owner decision first | waiting on an owner decision, not development work |
@@ -496,13 +502,12 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Graveyard and headstones with GM-01 |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Design factions and careers |
 
-## ACTIVE DEVELOPMENT (14)
+## ACTIVE DEVELOPMENT (13)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | owner message 2026-10-20 (section 9: Build 16 complete status audit and remaining work) |  |  |  |
 | B16-READY | Build 16 development audit and release-readiness report | docs/directives/2026-10-21_build16_audit_release_readiness.md |  |  |  |
-| CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md |  |  |  |
 | DVW-A3 | Re-measure money supply, 100 and 365 days, 2-3 seeds, no player (:28) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 247) |  |  | measured by the Build 15 runs (docs/release/LONG_RUN_SIMULATION.md): coins grow from about 2900 to about 6000 in 100 days with the 30-coin caravan; finish with the 365-day results |
 | FARM-08 | Shared-yield comparison: the per-cell model and seasonal farming together at several yields (0.9-3 a cell), identical seeds; grain produced/consumed/sold/stored/unsold, seed use and recovery, labour a harvest, food security and starvation causes, manor and family-farm viability, prices and demand, livestock feed and milk, seasonal timing; the milk collapse explained; a recommended yield for the owner's approval | docs/directives/2026-10-21_fse12_fse13_farming_decision.md |  | after FSE-12; after FSE-13 | Report written (docs/design/FARM08_YIELD_COMPARISON.md, provisional 2.0 a cell); 365-day variants on the integrated commit, then the owner's decision; switches stay off |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | docs/directives/2026-10-20_food_security_goal_driven_economy.md |  | after PAR-00; after OD-19; after PAR-02A |  |
@@ -554,7 +559,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | WR-01; owner decision OD-01 on deposits |
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | VP-01 |
 
-## IMPLEMENTED — TESTING REQUIRED (33)
+## IMPLEMENTED — TESTING REQUIRED (34)
 
 | ID | Requirement | Source | Evidence | Blockers / depends on | Next action |
 |---|---|---|---|---|---|
@@ -562,6 +567,7 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | docs/release/BUILD_7_ISSUES.md (audit inventory row 50) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | B7-014 | Caravan grows currency ~12x a year | docs/release/BUILD_7_ISSUES.md (audit inventory row 55) |  | owner decision after comparison | Four-way comparison runs, then owner decision |
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | docs/directives/2026-10-21_build17_architecture_mining_contracts_decisions.md | `daf08f3`, `02563a8`; contracts_test 135; prospecting 54, discovery 65, business 160, relations 79, world 339, run_tests 3536, start 499, play 37, parity 55, conservation 8; economy_sim 30d seed 1 no leaks |  |  |
+| CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md | `0954de3`; services_test 51, contracts_test 138, openpit 66, discovery 65, prospecting 54, world 339, run_tests 3537, start 499, parity 55, conservation 8; economy_sim 30d seed 1 identical, no leaks |  |  |
 | DVW-A10 | No black-hole spaces (:35) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 254) | `3edd5af`; terrain_test |  |  |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 256) | `e51c37d`, `7ab2a2c`; world_test 339, run_tests 3536, start_test 499, play_test 37, skills_test, all 42 suites 0 failures |  | Start of Build 17 |
 | DVW-A14 | Play one whole life before each release (:39) | docs/reference/DESIGNING_VIRTUAL_WORLDS.md (audit inventory row 258) |  |  | the owner's or a tester's play-through on Build 15 |
@@ -944,11 +950,17 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | owner message #149 2026-10-18T20:43Z Phase 1 |  |  |  |
 | WDR-003-C | Comply with World Design Rule 3: Meaningful Recipes | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |  |  | Document each counted recipe's purpose |
 
-## Owner decisions, open and answered (open: 50, status BLOCKED) (86)
+## Owner decisions, open and answered (open: 56, status BLOCKED) (92)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | CARAVAN-TMP | The daily caravan allowance is a labelled, adjustable temporary stand-in for unsimulated outside settlements during Builds 15-16 (30 coins a day) | IMPLEMENTED — TESTING REQUIRED | docs/directives/2026-10-20_two_decisions_three_expansions.md |
+| CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | BLOCKED | docs/build17/CON02_SERVICES.md |
+| CON02-S-2 | Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)? | BLOCKED | docs/build17/CON02_SERVICES.md |
+| CON02-S-3 | Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule? | BLOCKED | docs/build17/CON02_SERVICES.md |
+| CON02-S-4 | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)? | BLOCKED | docs/build17/CON02_SERVICES.md |
+| CON02-S-5 | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? | BLOCKED | docs/build17/CON02_SERVICES.md |
+| CON02-S-6 | Confirm the 50-coin formal signing line for services as for goods | BLOCKED | docs/build17/CON02_SERVICES.md |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | BLOCKED | docs/directives/2026-10-21_build17_combined_integration_direction.md |
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | COMPLETE AND VERIFIED | docs/build17/MIN_D_DISCOVERY.md |
 | MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | BLOCKED | docs/build17/MIN_D_DISCOVERY.md |

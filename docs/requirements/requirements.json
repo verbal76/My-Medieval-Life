@@ -5416,7 +5416,7 @@
    "id": "CON-02",
    "title": "Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules)",
    "kind": "approved",
-   "status": "ACTIVE DEVELOPMENT",
+   "status": "IMPLEMENTED — TESTING REQUIRED",
    "owner_wording": "The universal CON-01 system must support contracts for labor and services, not only goods procurement.",
    "description": "Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules)",
    "source": "docs/directives/2026-10-21_build17_con01_final_decisions_service_contracts.md",
@@ -5430,10 +5430,12 @@
     "Services needing missing gameplay are recorded as dependencies; payment questions documented as owner options"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "services_test 51, contracts_test 138, openpit 66, discovery 65, prospecting 54, world 339, run_tests 3537, start 499, parity 55, conservation 8; economy_sim 30d seed 1 identical, no leaks",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "0954de3"
+   ],
    "parent": "CON-01",
    "depends_on": [],
    "blockers": [],
@@ -5455,9 +5457,266 @@
      "date": "2026-10-21",
      "change": "target_build",
      "why": "target set"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "ACTIVE DEVELOPMENT -> IMPLEMENTED — TESTING REQUIRED; commit 0954de3; tests",
+     "why": "Built on wip/b17-con02 (843cfaa) and merged: services in the one CON-01 engine, all three directions, counters, signing, one payment path; services built: dig the buyer's open pit, survey a stain; others recorded as dependencies; services_test 51, contracts_test 138 and 9 related suites 0 failures; 30-day run byte-identical to 70900c0 (no villager hires services yet: option S-5)"
     }
    ],
    "target_build": "17"
+  },
+  {
+   "id": "CON02-S-1",
+   "title": "Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)?",
+   "source": "docs/build17/CON02_SERVICES.md",
+   "approval": "open owner option from CON-02",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/CON02_SERVICES.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON02-S-2",
+   "title": "Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Pay for work or for results: is a barren survey reading paid (current default: yes, work is paid)?",
+   "source": "docs/build17/CON02_SERVICES.md",
+   "approval": "open owner option from CON-02",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/CON02_SERVICES.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON02-S-3",
+   "title": "Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Incomplete or disputed service work: lapse with the reserve returned and finished units paid (current default), or another rule?",
+   "source": "docs/build17/CON02_SERVICES.md",
+   "approval": "open owner option from CON-02",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/CON02_SERVICES.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON02-S-4",
+   "title": "Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)?",
+   "source": "docs/build17/CON02_SERVICES.md",
+   "approval": "open owner option from CON-02",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/CON02_SERVICES.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON02-S-5",
+   "title": "Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)?",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)?",
+   "source": "docs/build17/CON02_SERVICES.md",
+   "approval": "open owner option from CON-02",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/CON02_SERVICES.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
+  },
+  {
+   "id": "CON02-S-6",
+   "title": "Confirm the 50-coin formal signing line for services as for goods",
+   "kind": "decision",
+   "status": "BLOCKED",
+   "owner_wording": null,
+   "description": "Confirm the 50-coin formal signing line for services as for goods",
+   "source": "docs/build17/CON02_SERVICES.md",
+   "approval": "open owner option from CON-02",
+   "acceptance": [
+    "Owner decides"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": "CON-02",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/build17/CON02_SERVICES.md"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "target_build",
+     "why": "awaiting the owner"
+    }
+   ],
+   "target_build": "owner decision"
   },
   {
    "id": "CQ-01",
