@@ -235,19 +235,23 @@ generated data. One implementation per concern.
   economic outcomes are measured and analysed, never pass/fail thresholds unless an approved requirement sets one. Do not
   rerun year-long simulations in pursuit of favourable statistics.
 - Visual output must actually be looked at before it is reported as verified.
-- **Release policy (owner, 2026-10-18; supersedes earlier release rules).** Never build a release,
-  upload, publish, deploy or distribute without the owner's explicit approval for that occasion: not
-  after a fix, a milestone or a passing test. Local tests and compiles are fine. Fixes accumulate;
-  the current release stays the test build until the owner approves the next. Pushes go only to
-  staging and `wip/*` branches (above); other branches, the active PR's branch included, need
-  explicit approval. An approved test build may come from an approved staging commit without
-  merging into `main`. Linux, Windows and Android are always built from the same exact commit, and
-  the build files are kept in GitHub Releases, never only on the cloud machine.
-- When the accumulated changes are stable, stop and ask, with a release-readiness report:
-  changes since the last build, known issues, test results, manifest updates, save compatibility,
-  Linux / Windows / Android readiness, confirmation that all three have the same features and
-  content, and the proposed shared build number. On approval, run `.github/workflows/release.yml`
-  by hand (it never runs on a push): all three platforms come from one revision with one number.
+- **Release policy (owner standing directive 2026-10-21, `docs/directives/2026-10-21_standing_continuous_release_directive.md`;
+  supersedes the 2026-10-18 rule that each release needs the owner's approval for that occasion).** Development runs on a
+  continuous develop, test, release and advance model:
+  - When a milestone (a build's approved scope) is complete and its automated gate passes (suites, determinism gate,
+    conservation, the four-seed runs of the normal game, save migration, three-platform export), run
+    `.github/workflows/release.yml` by hand and publish its APK, Windows and Linux packages to GitHub Releases without
+    asking again; reuse valid test evidence on unchanged code. All three platforms come from one exact commit and one
+    build number, and the files live in GitHub Releases, never only on the cloud machine.
+  - Visibility: releases are made with the workflow's default `private` (a draft release in the Releases tab, visible to
+    the owner and collaborators); `public` stays behind the owner's `public-release` environment approval (the owner's
+    master directive of 2026-10-21: "Do not publish a public release").
+  - The owner's playtesting is informal and never a release gate; device checks stay recorded in the register's
+    `playtest` field. Move on to the next approved build once a release is out.
+  - Decide minor implementation details yourself, document them (`docs/DECISIONS.md`, agent decision) and continue;
+    escalate only what changes the game's vision, contradicts an explicit owner decision, adds significant cost, or
+    commits to an irreversible architecture.
+  - Pushes go only to staging and `wip/*` branches; merging to `main` still needs the owner.
 - **Work preservation (owner, mandatory; a permanent part of the workflow).** Commit completed work
   locally (a local commit is not a push). Never reset or clean a tree in a way that loses work; never
   overwrite another agent's work; integrate agents' changes through the lead agent.

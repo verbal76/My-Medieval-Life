@@ -25,7 +25,7 @@ the ledger before this register is kept in `docs/requirements/LEDGER_ARCHIVE_202
 | **Total approved** | **449** |
 | Outstanding (not complete, superseded or canceled) | 225 |
 
-Also in the register: 31 proposal awaiting an owner decision (not approved), 60 owner decision (open or answered), 24 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
+Also in the register: 31 proposal awaiting an owner decision (not approved), 60 owner decision (open or answered), 25 world design rule, 1 unapproved idea; of the owner decisions, 39 are open (status BLOCKED).
 These counts are of approved requirements only: an owner decision being carried out (status ACTIVE DEVELOPMENT) is counted under
 the owner decisions, not here. The Roadmap total below counts every open entry of every kind but rules.
 
@@ -1010,12 +1010,13 @@ PLAYTEST REQUIRED). Automated tests do not count as device verification.
 | SJD-Q13 | Judgment open decision: How should individual decision weights be learned, configured or tuned? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 | SJD-Q14 | Judgment open decision: Which domain gets the first live integration after the prototype? | BLOCKED | docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf |
 
-## World design rule (24)
+## World design rule (25)
 
 | ID | Item | Status | Source |
 |---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | COMPLETE AND VERIFIED | docs/directives/2026-10-20_controlled_parallel_development.md |
+| REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | COMPLETE AND VERIFIED | docs/directives/2026-10-21_standing_continuous_release_directive.md |
 | WDR-001 | World Design Rule 1: Material Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
 | WDR-002 | World Design Rule 2: Professional Interdependency | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |
 | WDR-003 | World Design Rule 3: Meaningful Recipes | COMPLETE AND VERIFIED | docs/WORLD_DESIGN_RULES.md (owner's World Design Rules v1.0, expanded reference, docs/directives/My_Medieval_Life_World_Design_Rules_Expanded.pdf, 2026-10-19) |

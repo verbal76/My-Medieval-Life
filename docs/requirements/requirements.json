@@ -22337,6 +22337,42 @@
    "roadmap_reason": "covers the release of each build 15-18 as it qualifies"
   },
   {
+   "id": "REL-CONT",
+   "title": "Standing release model: continuous develop, test, release, advance; minor decisions made and documented",
+   "kind": "rule",
+   "status": "COMPLETE AND VERIFIED",
+   "owner_wording": null,
+   "description": "Standing release model: continuous develop, test, release, advance; minor decisions made and documented",
+   "source": "docs/directives/2026-10-21_standing_continuous_release_directive.md",
+   "approval": "owner standing directive 2026-10-21",
+   "acceptance": [
+    "CLAUDE.md section 5 release policy rewritten; each completed milestone released through release.yml to GitHub Releases (private draft unless the owner approves public); playtesting never a gate; minor decisions documented, consequential ones escalated"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "",
+   "commits": [],
+   "parent": null,
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-21",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-21_standing_continuous_release_directive.md"
+    }
+   ]
+  },
+  {
    "id": "REQ-BANDIT",
    "title": "Bandit factions, criminal careers and outlaw leadership",
    "kind": "approved",

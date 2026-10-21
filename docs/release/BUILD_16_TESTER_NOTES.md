@@ -45,6 +45,5 @@ installing, as always.
 - Not tried on a physical phone, controller or Windows PC: the touch drag for farmland, the armoury counter's A press
   and the stall windows need a device check.
 - A player without a partner cannot adopt (there is no player household yet).
-- The gate stone (2) is a provisional number awaiting the owner.
 - The village can still struggle by design ("A village is allowed to fail. The simulation is not.").
 - No audio; some art is stand-in.
