@@ -77,6 +77,10 @@ SUPPORTED** (the architecture does not carry it; documented, not invented).
 
 ## 5. Not supported (NOT SUPPORTED; documented, not invented)
 
+**Superseded in part (2026-10-21):** the owner answered questions 1-5 of section 4 (MIN-F2,
+`docs/directives/2026-10-21_build17_minf_q1_q5_decisions.md`): collapses, support wear and repair, hidden ore, manor
+tunnel jobs, minecart preference, shafts and player-directed backfill are built; see `MIN_F2_STRUCTURE.md`.
+
 - Collapse, ventilation, lighting as a need, flooding: not simulated (atmosphere-only darkness stays as MIN-A).
 - A cave outside the hill: the village grid has no other static rock; the overworld's mountains are out of villagers'
   reach.

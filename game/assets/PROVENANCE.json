@@ -772,6 +772,13 @@
    "sha256": "5dd354e98b38d296fb76292a9e8e448561b17b610deb92e1f21f5f91db5d0997"
   },
   {
+   "file": "assets/icons/ladder.png",
+   "source": "16x16 Survival RPG Icons.zip",
+   "member": "16x16 Survival RPG Icons/Wood/Sticks-01.png",
+   "transform": "copied unchanged",
+   "sha256": "133d38413fa27302f8a93638f8e749b9f5defd4f65e6f37a79c4a1e0ea6fe33c"
+  },
+  {
    "file": "assets/icons/leather.png",
    "source": "16x16 Survival RPG Icons.zip",
    "member": "16x16 Survival RPG Icons/Textile/Leather-Fabric-07.png",

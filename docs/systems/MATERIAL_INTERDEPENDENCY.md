@@ -18,7 +18,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 |---|---|
 | Standard crafting materials | 22 |
 | Production professions | 10 |
-| Recipes | 43 |
+| Recipes | 44 |
 | Threshold findings | 32 |
 | ... with a recorded exception | 14 |
 | ... open (no exception) | 18 |
@@ -45,8 +45,8 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `leather` | 7 | `forge_amulet` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_prospecting_kit` (player only); `leather_armor` (tanner); `leather_cap` (tanner) | none | smith, tanner | `tan_leather`, `tan_pelts` | none | pass |
 | `log` | 7 | `make_mallet` (carpenter); `make_timber_support` (player only); `roast_meat` (cook); `saw_planks` (carpenter) | house, loft, workshop | carpenter, cook | none | woodcutter | pass |
 | `meat` | 1 | `roast_meat` (cook) | none | cook | none | farmer, hunter | few uses: **open**; few professions: **open** |
-| `nails` | 1 | `make_track_section` (player only) | none | none | `forge_nails` | none | few uses: **open**; few professions: **open** |
-| `plank` | 19 | `build_handcart` (carpenter); `build_minecart` (player only); `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `forge_prospecting_kit` (player only); `make_cart_wheel` (carpenter); `make_mallet` (carpenter); `make_timber_support` (player only); `make_track_section` (player only) | house, loft, market stall, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
+| `nails` | 2 | `make_ladder` (player only); `make_track_section` (player only) | none | none | `forge_nails` | none | few uses: **open**; few professions: **open** |
+| `plank` | 20 | `build_handcart` (carpenter); `build_minecart` (player only); `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_copper_sword` (smith); `forge_hammer` (smith); `forge_pickaxe` (smith); `forge_prospecting_kit` (player only); `make_cart_wheel` (carpenter); `make_ladder` (player only); `make_mallet` (carpenter); `make_timber_support` (player only); `make_track_section` (player only) | house, loft, market stall, shop fittings, storefront, workshop | carpenter, smith | `saw_planks` | none | pass |
 | `rabbit_pelt` | 1 | `tan_pelts` (tanner) | none | tanner | none | hunter | few uses: exception; few professions: exception |
 | `stone` | 3 | none | house, shop fittings, workshop | none | none | laborer, miner | few professions: **open** |
 | `wheat` | 3 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (cook) | none | cook | none | farmer | few professions: **open** |
@@ -111,6 +111,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `leather_armor` | workbench | 4 leather | 1 leather_armor | tanner |
 | `leather_cap` | workbench | 2 leather | 1 leather_cap | tanner |
 | `make_cart_wheel` | sawhorse | 3 plank | 1 cart_wheel | carpenter |
+| `make_ladder` | workbench | 6 nails, 3 plank | 1 ladder | player only |
 | `make_mallet` | workbench | 1 log, 1 plank | 1 mallet | carpenter |
 | `make_timber_support` | sawhorse | 1 log, 2 plank | 1 timber_support | player only |
 | `make_track_section` | workbench | 4 nails, 2 plank | 1 track_section | player only |
@@ -155,7 +156,7 @@ None.
 | material `meat` | few_professions | consumed by 1 professions (cook), fewer than 2 | **none: open** |
 | material `meat` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `nails` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
-| material `nails` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
+| material `nails` | few_uses | 2 meaningful uses (2 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `rabbit_pelt` | few_professions | consumed by 1 professions (tanner), fewer than 2 | WDR-001: Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes. |
 | material `rabbit_pelt` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: a raw pelt whose one processing step is tanning (tan_pelts, the tanner); its product, leather, is consumed by six distinct recipes. |
 | material `stone` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |

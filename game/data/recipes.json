@@ -44,6 +44,7 @@
     "build_handcart": {"station": "workbench", "in": {"cart_wheel": 2, "cart_axle": 1, "cart_ironwork": 1, "plank": 4}, "out": {"handcart": 1}, "minutes": 90, "skill": "crafting", "xp": 30, "level": 1},
     "make_timber_support": {"station": "sawhorse", "in": {"log": 1, "plank": 2}, "out": {"timber_support": 1}, "minutes": 30, "skill": "crafting", "xp": 5, "level": 1},
     "make_track_section": {"station": "workbench", "in": {"plank": 2, "nails": 4}, "out": {"track_section": 1}, "minutes": 25, "skill": "crafting", "xp": 5, "level": 1},
-    "build_minecart": {"station": "workbench", "in": {"cart_wheel": 4, "cart_axle": 2, "cart_ironwork": 2, "plank": 6}, "out": {"minecart": 1}, "minutes": 120, "skill": "crafting", "xp": 35, "level": 1}
+    "build_minecart": {"station": "workbench", "in": {"cart_wheel": 4, "cart_axle": 2, "cart_ironwork": 2, "plank": 6}, "out": {"minecart": 1}, "minutes": 120, "skill": "crafting", "xp": 35, "level": 1},
+    "make_ladder": {"station": "workbench", "in": {"plank": 3, "nails": 6}, "out": {"ladder": 1}, "minutes": 40, "skill": "crafting", "xp": 8, "level": 1}
   }
 }

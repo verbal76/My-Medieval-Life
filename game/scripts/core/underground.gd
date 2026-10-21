@@ -14,25 +14,121 @@ extends RefCounted
 ## own mouth on the surface (its own portal) and its own salt, so its passages are not the gallery's. Maps of different
 ## levels may lie under the same ground (levels stack); `levels_at` lists every level a point may lie on.
 
-const GEN_VERSION := 2                 # 2 (MIN-F): the natural cave under the hill added (the adit gallery is unchanged)
+const GEN_VERSION := 3                 # 2 (MIN-F): the natural cave under the hill added (the adit gallery is unchanged);
+                                       # 3 (MIN-F2): hidden ore in the deep rock of every level (nothing visible moved)
 const SURFACE := 0
 
 var seed := 1
 var maps: Array = []                   # LevelMap, sorted by id
-var portals: Array = []                # {id, ends: [{level, stand: Vector2i, door: Vector2i}, {...}]}
+var portals: Array = []                # {id, ends: [{level, stand: Vector2i, door: Vector2i}, {...}]}; MIN-F2 shafts: kind "shaft"
 var seams: Array = []                  # the generated seams, as deposit records {x, y, ore, amount, level}
+var hidden: Array = []                 # MIN-F2 (Q2): ore in the deep rock, generated from the seed, not in World.deposits
+                                       # (nobody knows of it) until a tunnel opens a cell beside it; records as seams'
 var specs := {}                        # map id -> its gallery entry in underground.json (tiles, for the view)
+var _village: VillageMap
+var _deep: Dictionary = {}             # underground.json "deep": the template of a level made below the cave by a shaft
 
 
 static func create(world_seed: int, village: VillageMap) -> Underground:
 	var u := Underground.new()
 	u.seed = world_seed
+	u._village = village
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/underground.json"))
+	u._deep = data.get("deep", {})
 	var galleries: Array = data.galleries.duplicate()
 	galleries.sort_custom(func(a, b): return str(a.id) < str(b.id))
 	for g in galleries:
 		u._make_gallery(g, village)
 	return u
+
+
+# ---------------------------------------------------------------- MIN-F2: deep levels, shafts, hidden ore ----
+## A level below the cave, made when the first shaft reaches it (MIN-F2, Q4): all rock under the same ground as the
+## map above it (`like`), its hidden ore placed by the same generator (its own salt), the deep template's tiles.
+## Bounded by mine_works.json shaft.deepest. Returns the new map (or the one there already).
+func add_level(level: int, like: LevelMap) -> LevelMap:
+	for m: LevelMap in maps:
+		if m.level == level:
+			return m
+	var g: Dictionary = _deep.duplicate(true)
+	g.id = "deep_%d" % -level
+	g.level = level
+	var m := LevelMap.new(str(g.id), level, like.region)
+	m.setup_astar()
+	maps.append(m)
+	maps.sort_custom(func(a: LevelMap, b: LevelMap): return a.id < b.id)
+	specs[m.id] = g
+	_salt = int(g.get("salt", 3000)) - level * 100
+	_place_hidden(g, m)
+	_salt = 0
+	return m
+
+
+func add_portal(p: Dictionary) -> void:
+	portals.append(p)
+
+
+func remove_portal(id: String) -> void:
+	for p in portals.duplicate():
+		if str(p.id) == id:
+			portals.erase(p)
+
+
+## The hidden seam at a cell of a level, or {}.
+func hidden_at(level: int, c: Vector2i) -> Dictionary:
+	for h in hidden:
+		if int(h.level) == level and int(h.x) == c.x and int(h.y) == c.y:
+			return h
+	return {}
+
+
+## Hidden ore a save already holds as an exposed seam (by level and cell) is not hidden any more.
+func drop_found(deposits: Array) -> void:
+	var have := {}
+	for d in deposits:
+		have[Vector3i(int(d.get("level", 0)), int(d.x), int(d.y))] = true
+	hidden = hidden.filter(func(h): return not have.has(Vector3i(int(h.level), int(h.x), int(h.y))))
+
+
+## Hidden ore of a level map: in rock with rock all round it (never beside any floor, so nothing shows), under the
+## hill's static rock, inside the map's edge, no two within two cells, in a hashed order (the world seed and the map's
+## salt); the village's own amount for its ore, as the visible seams.
+func _place_hidden(g: Dictionary, m: LevelMap) -> void:
+	var specs_h: Array = g.get("hidden", [])
+	if specs_h.is_empty() or _village == null:
+		return
+	var amount_of := {}
+	for d in _village.data.deposits:
+		if not amount_of.has(str(d.ore)):
+			amount_of[str(d.ore)] = int(d.amount)
+	var cands := []
+	for c in m.cells():
+		if not m.region.grow(-1).has_point(c) or not under_rock(_village, c):
+			continue
+		var deep := true
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if not m.is_solid(c + Vector2i(dx, dy)):
+					deep = false
+		for s in seams:
+			if int(s.level) == m.level and maxi(absi(int(s.x) - c.x), absi(int(s.y) - c.y)) <= 1:
+				deep = false
+		if deep:
+			cands.append([Overworld.hash32(seed, 61 + _salt, c.x, c.y), c.y, c.x])
+	cands.sort()
+	var taken: Array[Vector2i] = []
+	var ci := 0
+	for spec in specs_h:
+		for k in int(spec.count):
+			while ci < cands.size():
+				var c := Vector2i(int(cands[ci][2]), int(cands[ci][1]))
+				ci += 1
+				if taken.any(func(t: Vector2i): return maxi(absi(t.x - c.x), absi(t.y - c.y)) <= 2):
+					continue
+				taken.append(c)
+				var ore := str(spec.ore)
+				hidden.append({"x": c.x, "y": c.y, "ore": ore, "amount": int(spec.get("amount", amount_of.get(ore, 0))), "level": m.level})
+				break
 
 
 # ---------------------------------------------------------------- lookups --------------------
@@ -174,6 +270,8 @@ func fingerprint() -> String:
 		parts.append("%s %d %s\n%s" % [m.id, m.level, str(m.region), m.to_text()])
 	for s in seams:
 		parts.append("%d,%d,%d,%s,%d" % [int(s.level), int(s.x), int(s.y), str(s.ore), int(s.amount)])
+	for h in hidden:
+		parts.append("hidden %d,%d,%d,%s,%d" % [int(h.level), int(h.x), int(h.y), str(h.ore), int(h.amount)])
 	return "\n".join(parts)
 
 
@@ -321,6 +419,7 @@ func _make_gallery(g: Dictionary, village: VillageMap) -> void:
 		{"level": SURFACE, "stand": surface_stand, "door": door},
 		{"level": level, "stand": door, "door": surface_stand}]})
 	_place_seams(g, m, village, rock, door)
+	_place_hidden(g, m)                  # MIN-F2: after the visible seams, so they are unchanged
 	_salt = 0
 
 

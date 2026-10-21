@@ -23,6 +23,14 @@ extends RefCounted
 ##    knows and posts one "excavate" job at a time while it still wants the pit dug: dig a load (`carry_ore` units,
 ##    the carrying rule) with a pickaxe into the job's load, tip the earth onto the pit's spoil heaps and bring any
 ##    stone to the works yard. Paid at the quarry job's rate a unit (no wage of its own); the pit may miss (WDR-022).
+##  - MIN-F2 (Q2): while its works lack stone and a sound timber support holds a face below ground, one "tunnel" job at
+##    a time: cut a load (`carry_ore` units) at that face with a pickaxe into the job's load (MineWorks.dig: real rock,
+##    the tunnel extended, hidden ore exposed if it lies there) and bring it to the works yard; paid at the quarry job's
+##    rate a unit (no wage of its own). The manor knows nothing of hidden ore: it picks the face by the works alone.
+##  - MIN-F2 (Q5): a "backfill" order is the player's, never the manor's: made only by order_backfill (the player's
+##    Backfill Tunnel action), its wage paid by the player and held in the order until done; a worker carries the spoil
+##    the player leaves at the order's depot (the mouth's surface stand) down to the cell in loads and puts it back a
+##    unit at a time (MineWorks.fill). Cancelled or given up, what is placed stays and the rest is left where it lies.
 ## A household under a day of food is not left waiting: its relief is delivered at once, as before.
 ##
 ## Jobs are paid from the treasury, set aside when a job is taken (the treasury keeps
@@ -32,7 +40,7 @@ extends RefCounted
 ## Carried goods ride in the job's own load (never the worker's pack), so they cannot be sold, eaten or
 ## lost; a dead worker's load goes back. Every number is provisional — balance review pending.
 
-const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate"]
+const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate", "tunnel", "backfill"]
 const ORDER := ["pantry", "granary", "yard"]        # hauling priority by destination: relief first
 const MATERIALS := ["plank", "stone", "log", "iron_bar"]
 
@@ -300,6 +308,106 @@ func post_pits() -> void:
 	_post(job)
 
 
+## MIN-F2 (Q2), the reeve's evening: one tunnel job at a time while the works lack stone (the quarry's rule) and a sound
+## support holds a face below ground (MineWorks.manor_face); a job whose face is gone is taken down untaken.
+func post_tunnels() -> void:
+	for j in jobs.duplicate():
+		if j.kind == "tunnel" and j.taker == "" and w.mine_works.face_refusal(int(j.level), Vector2i(int(j.site[0]), int(j.site[1]))) != "":
+			jobs.erase(j)
+	if jobs.any(func(j): return j.kind == "tunnel"):
+		return
+	if _works_stock("stone") >= 2 * int(cfg("mend_load")):
+		return
+	var job := {"kind": "tunnel", "qty": excavate_load(), "wage": excavate_wage()}
+	if not can_fund(job, ""):
+		return
+	var f: Dictionary = w.mine_works.manor_face()
+	if f.is_empty():
+		return
+	job.level = int(f.level)
+	job.site = [f.cell.x, f.cell.y]
+	_post(job)
+
+
+## MIN-F2 (Q5): the player orders floor cell `cell` of `level` backfilled with `units` units of spoil, paying the wage
+## (backfill.order_rate a unit, at least 1) now: it is held in the order until a worker finishes it. The order's depot is
+## the surface stand of the mouth that leads to that level, where the player leaves the spoil. "" or why not.
+func order_backfill(level: int, cell: Vector2i, units: int) -> String:
+	var why: String = w.mine_works.fill_ground_refusal(level, cell)
+	if why != "":
+		return why
+	for j in jobs:
+		if j.kind == "backfill" and int(j.level) == level and int(j.site[0]) == cell.x and int(j.site[1]) == cell.y:
+			return "That passage is already ordered filled."
+	var room: int = MineWorks.cell_units() - w.mine_works.fill_at(level, cell)
+	units = clampi(units, 1, room)
+	var wage := maxi(1, units * int(MineWorks.cfg().backfill.order_rate))
+	if w.player.coins < wage:
+		return "The order's wage is %d coins: you have too few." % wage
+	var leg := w.underground.next_leg(0, level)
+	if leg.is_empty():
+		return "There is no way down to that passage."
+	var j := {"kind": "backfill", "payer": World.PLAYER, "level": level, "site": [cell.x, cell.y], "qty": units, "placed": 0,
+		"depot": [int(leg.from.stand.x), int(leg.from.stand.y)], "stock": Inventory.new(), "wage": wage}
+	_post(j)
+	j.reserved = wage
+	w.player.coins -= wage
+	w.stat("backfill_orders")
+	return ""
+
+
+## The player's open backfill order for `cell` of `level`, or {}.
+func backfill_order(level: int, cell: Vector2i) -> Dictionary:
+	for j in jobs:
+		if j.kind == "backfill" and int(j.level) == level and int(j.site[0]) == cell.x and int(j.site[1]) == cell.y:
+			return j
+	return {}
+
+
+## MIN-F2 (Q5): the player leaves `qty` spoil from `from` at an order's depot (standing there). Units moved.
+func stock_backfill(j: Dictionary, from: Inventory, qty: int) -> int:
+	var item := str(MineWorks.cfg().backfill.item)
+	var q := mini(qty, from.count(item))
+	if q > 0:
+		w.transfer(from, j.stock, item, q)
+	return q
+
+
+## The spoil an order still needs brought to its depot (placed, carried and waiting counted).
+func backfill_needs(j: Dictionary) -> int:
+	return maxi(0, int(j.qty) - int(j.placed) - j.load.total() - (j.stock as Inventory).total())
+
+
+## MIN-F2 (Q5): the player cancels an order: the wage held goes back to the player; a worker on it sets down what they
+## carry where they stand; the spoil at the depot is left lying there; the fill placed stays in the passage.
+func cancel_backfill(j: Dictionary) -> void:
+	if j.taker != "":
+		var o = _who(str(j.taker))
+		if o != null and j.load.total() > 0:
+			_drop(j.load, o.pos, int(o.depth) if o is NPC else w.player_level, "spoil a worker set down")
+		j.taker = ""
+	if (j.stock as Inventory).total() > 0:
+		_drop(j.stock, Vector2(int(j.depot[0]), int(j.depot[1])) + Vector2(0.5, 0.5), 0, "the backfill order's spoil")
+	w.player.coins += int(j.reserved)
+	j.reserved = 0
+	jobs.erase(j)
+	w.stat("backfill_orders_cancelled")
+
+
+func _drop(inv: Inventory, at: Vector2, level: int, from: String) -> void:
+	var bag := Inventory.new()
+	for id in inv.ids():
+		w.transfer(inv, bag, id, inv.count(id))
+	var l := {"pos": at, "inv": bag, "coins": 0, "from": from, "t": w.minutes}
+	if level != 0:
+		l.level = level
+	w.loot.append(l)
+
+
+func is_player_order(j: Dictionary) -> bool:
+	return str(j.get("payer", "")) == World.PLAYER
+
+
 ## A load of excavation: what a villager carries (balance.json carry_ore, the miners' carrying rule).
 static func excavate_load() -> int:
 	return int(ResourceNodes.number(OpenPits.cfg().manor.load))
@@ -387,6 +495,8 @@ func is_staff(who: String) -> bool:
 ## treasury starts at 270, under the 460 that ten days need, so with the long reserve no paid work
 ## existed until about day 12.
 func can_fund(j: Dictionary, who: String) -> bool:
+	if is_player_order(j):
+		return true                   # MIN-F2: the player's order holds its wage already
 	if is_staff(who):
 		return true
 	return w.treasury - int(j.wage) >= w.brain.daily_obligations() * float(GameData.b("manor_job_reserve_days"))
@@ -399,8 +509,12 @@ func open_for(who: String) -> Array:
 	for j in jobs:
 		if j.taker != "" or not can_fund(j, who):
 			continue
-		if j.kind in ["quarry", "trial", "excavate"] and not _has_pick(who):
+		if j.kind in ["quarry", "trial", "excavate", "tunnel"] and not _has_pick(who):
 			continue
+		if j.kind in ["tunnel", "backfill"] and who == World.PLAYER:
+			continue                 # MIN-F2: the player tunnels and fills with their own hands (and orders the fill)
+		if j.kind == "backfill" and (is_staff(who) or (j.stock as Inventory).total() + j.load.total() == 0):
+			continue                 # a player's order pays its own workers, and waits for the player's spoil
 		if j.kind == "survey" and (is_staff(who) or not _has_kit(who) or _who(who).coins < int(j.qty) * int(Prospecting.cfg().assay.fee)):
 			continue                 # the assay fees are paid on the way, the wage at the end: a worker needs them in hand
 		out.append(j)
@@ -411,7 +525,7 @@ func open_for(who: String) -> Array:
 func _rank(j: Dictionary) -> int:
 	if j.kind == "haul":
 		return ORDER.find(str(j.to.kind))
-	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7}.get(str(j.kind), 8)
+	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9}.get(str(j.kind), 10)
 
 
 func _has_kit(who: String) -> bool:
@@ -438,8 +552,9 @@ func take(j: Dictionary, who: String) -> bool:
 	if not can_fund(j, who):
 		last_refusal = "The manor's chest can't spare that wage today."
 		return false
-	j.reserved = 0 if is_staff(who) else int(j.wage)
-	w.treasury -= int(j.reserved)
+	if not is_player_order(j):
+		j.reserved = 0 if is_staff(who) else int(j.wage)
+		w.treasury -= int(j.reserved)
 	j.taker = who
 	j.day = w.day()
 	w.stat("manor_jobs_taken")
@@ -449,6 +564,20 @@ func take(j: Dictionary, who: String) -> bool:
 ## Give a job up: the wage back to the treasury, what it carried back where it came from (a quarry's
 ## stone to the yard). The job stays posted for someone else.
 func release(j: Dictionary) -> void:
+	if is_player_order(j):
+		# MIN-F2: the player's order keeps its wage; spoil carried goes back into the depot only where the worker stands
+		# at it, else it is set down where they stand (the fill placed stays)
+		var o = _who(str(j.taker))
+		if j.load.total() > 0 and o != null:
+			var at_depot: bool = (o is PlayerState or int(o.depth) == 0) and Vector2(o.pos).distance_to(Vector2(int(j.depot[0]), int(j.depot[1])) + Vector2(0.5, 0.5)) < 2.0
+			if at_depot:
+				for id in j.load.ids():
+					w.transfer(j.load, j.stock, id, j.load.count(id))
+			else:
+				_drop(j.load, o.pos, int(o.depth) if o is NPC else w.player_level, "spoil a worker set down")
+		j.taker = ""
+		j.day = -1
+		return
 	w.treasury += int(j.reserved)
 	j.reserved = 0
 	if j.load.total() > 0:
@@ -473,7 +602,7 @@ func release(j: Dictionary) -> void:
 	j.day = -1
 	if j.kind == "excavate":
 		j.erase("site")
-	if j.kind in ["quarry", "survey", "trial", "excavate"]:
+	if j.kind in ["quarry", "survey", "trial", "excavate", "tunnel"]:
 		jobs.erase(j)              # the reeve posts it again when the works still lack stone (or the find is still wanted)
 
 
@@ -493,6 +622,17 @@ func step(j: Dictionary) -> String:
 			return "assay" if not _survey_pending(j).is_empty() else "report"
 		"trial":
 			return "dig"
+		"tunnel":
+			var face := Vector2i(int(j.site[0]), int(j.site[1]))
+			if j.load.total() < int(j.qty) and w.mine_works.face_refusal(int(j.level), face) == "":
+				return "cut"
+			return "put" if j.load.total() > 0 else "cut"
+		"backfill":
+			var site := Vector2i(int(j.site[0]), int(j.site[1]))
+			var full: bool = w.mine_works.fill_at(int(j.level), site) >= MineWorks.cell_units()
+			if int(j.placed) >= int(j.qty) or full:
+				return "return" if j.load.total() > 0 else "done"
+			return "fetch" if j.load.total() == 0 else "fill"
 		"excavate":
 			var p := w.pits.pit(int(j.pit))
 			if j.load.total() < int(j.qty) and w.pits.manor_wants(p):
@@ -549,6 +689,8 @@ func step_cell(j: Dictionary) -> Vector2i:
 			return c if c.x >= 0 else yard_cell()
 		"tip":
 			return heap_cell(j)
+		"fetch", "return":
+			return Vector2i(int(j.depot[0]), int(j.depot[1]))
 		"sample":
 			return survey_spot(j)
 		"assay":
@@ -581,6 +723,10 @@ func describe(j: Dictionary) -> String:
 		"trial":
 			var c := w.prospecting.clue(str(j.clue))
 			return "Dig a trial pit by %s %s with a pickaxe, looking for ore (%d hours)" % [w.prospecting.stain(c), w.prospecting.place(c), roundi(float(Discovery.cfg().trial.minutes) / 60.0)]
+		"tunnel":
+			return "Cut a load of %d from the rock face below ground with a pickaxe and bring it to the works yard" % int(j.qty)
+		"backfill":
+			return "For the player: carry spoil from the mine's mouth down below ground and put %d back into a passage (%d placed)" % [int(j.qty), int(j.placed)]
 		"excavate":
 			var p := w.pits.pit(int(j.pit))
 			return "Dig a load of %d from the manor's open pit %s with a pickaxe, tip the earth on its spoil heap and bring any stone to the works yard" % [int(j.qty), w.where(OpenPits.rect(p)) if not p.is_empty() else "in the village"]
@@ -632,8 +778,10 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			while want > 0 and yard.total() > 0:
 				var best := ""
 				for id in yard.ids():
-					if best == "" or yard.count(id) > yard.count(best):
-						best = id
+					if id in MATERIALS and (best == "" or yard.count(id) > yard.count(best)):
+						best = id                  # MIN-F2: tunnel spoil kept in the yard mends nothing
+				if best == "":
+					break
 				w.transfer(yard, j.load, best, 1)
 				want -= 1
 			return j.load.total() > 0
@@ -643,7 +791,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				_finish(j, who)
 				return true
 			# quarry: the stone goes into the yard (the player brings it in their pack); an excavation's rides in its load
-			if j.kind == "excavate":
+			if j.kind in ["excavate", "tunnel"]:
 				for id in j.load.ids():
 					w.transfer(j.load, yard, id, j.load.count(id))
 			elif who == "player":
@@ -737,6 +885,57 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			if r.broke and o is NPC:
 				w.note("%s %s's pickaxe broke." % [o.name, o.family])
 			return true
+		"cut":
+			var o = _who(who)
+			var face := Vector2i(int(j.site[0]), int(j.site[1]))
+			if o == null or w.mine_works.face_refusal(int(j.level), face) != "":
+				last_refusal = "The rock face cannot be cut now."
+				if j.load.total() == 0 and who != "player":
+					release(j)
+				return false
+			var r: Dictionary = w.mine_works.dig(o, face, j.load, o.tool_of("pickaxe") if o is PlayerState else "pickaxe")
+			if r.result != "ok":
+				last_refusal = str(r.why)
+				return false
+			if not (r.exposed as Array).is_empty():
+				j.found = true
+			if r.opened:
+				var nf: Dictionary = w.mine_works.manor_face(int(j.level), face)     # the heading goes on from here
+				if not nf.is_empty():
+					j.site = [nf.cell.x, nf.cell.y]
+			if r.broke and o is NPC:
+				w.note("%s %s's pickaxe broke." % [o.name, o.family])
+			return true
+		"fetch":
+			var want: int = mini(int(GameData.b("carry_ore")), int(j.qty) - int(j.placed))
+			var item := str(MineWorks.cfg().backfill.item)
+			var q := mini(want, (j.stock as Inventory).count(item))
+			if q <= 0:
+				last_refusal = "There is no spoil at the depot yet."
+				return false
+			w.transfer(j.stock, j.load, item, q)
+			return true
+		"fill":
+			var o = _who(who)
+			if o == null:
+				return false
+			var r: Dictionary = w.mine_works.fill(o, Vector2i(int(j.site[0]), int(j.site[1])), j.load)
+			if r.result != "ok":
+				last_refusal = str(r.why)
+				return false
+			j.placed = int(j.placed) + 1
+			if step(j) == "done":
+				_finish(j, who)
+			return true
+		"return":
+			for id in j.load.ids():
+				w.transfer(j.load, j.stock, id, j.load.count(id))
+			if step(j) == "done":
+				_finish(j, who)
+			return true
+		"done":
+			_finish(j, who)
+			return true
 		"tip":
 			var p := w.pits.pit(int(j.pit))
 			if p.is_empty():
@@ -779,8 +978,13 @@ func _finish(j: Dictionary, who: String) -> void:
 		if n:
 			n.coins += pay
 			n.earned += pay
-	w.stat("gov_wages", pay)
-	w.stat("gov_manor_jobs", pay)
+	if is_player_order(j):
+		w.stat("player_order_wages", pay)     # MIN-F2: the player's coins, held in the order
+		if (j.stock as Inventory).total() > 0:  # spoil left at the depot stays there, the player's to take up
+			_drop(j.stock, Vector2(int(j.depot[0]), int(j.depot[1])) + Vector2(0.5, 0.5), 0, "the backfill order's spoil")
+	else:
+		w.stat("gov_wages", pay)
+		w.stat("gov_manor_jobs", pay)
 	w.stat("manor_jobs_done")
 	w.stat("manor_job_" + str(j.kind))
 	jobs.erase(j)
@@ -862,6 +1066,31 @@ func plan(n: NPC) -> bool:
 			var i := OpenPits.index(p, at)
 			n.doing = "digging the manor's open pit"
 			n.plan = [b.go(w.pits.stand_for(p, i, n.cell())), b.work(OpenPits.minutes_of(int(p.dug[i])) * Skills.value(n, "mining", "mine_time", 1.0), "mj_step", {"job": int(j.id)}, "swing", at)]
+		"cut":
+			var face := Vector2i(int(j.site[0]), int(j.site[1]))
+			var lv := int(j.level)
+			if not n.inv.has("pickaxe") or w.mine_works.face_refusal(lv, face) != "":
+				release(j)
+				return false
+			n.doing = "cutting a tunnel for the manor"
+			n.plan = [b.go(b.beside(face, n.cell() if n.depth == lv else face, lv), 1.0, lv),
+				b.work(w.mine_works.npc_minutes_at(lv, face, n), "mj_step", {"job": int(j.id)}, "swing", face)]
+		"fill":
+			var site := Vector2i(int(j.site[0]), int(j.site[1]))
+			var lv := int(j.level)
+			n.doing = "backfilling a passage below ground for the player"
+			n.plan = [b.go(w.mine_works.fill_stand(lv, site, n.cell() if n.depth == lv else site), 1.0, lv),
+				b.work(float(MineWorks.cfg().backfill.minutes), "mj_step", {"job": int(j.id)}, "work", site)]
+		"fetch":
+			if (j.stock as Inventory).total() == 0:
+				release(j)
+				return false
+			n.doing = "fetching spoil for a backfill"
+			n.plan = [b.go(Vector2i(int(j.depot[0]), int(j.depot[1]))), b.doit("mj_step", {"job": int(j.id)})]
+		"return":
+			n.plan = [b.go(Vector2i(int(j.depot[0]), int(j.depot[1]))), b.doit("mj_step", {"job": int(j.id)})]
+		"done":
+			n.plan = [b.doit("mj_step", {"job": int(j.id)})]
 		"tip":
 			n.doing = "tipping earth on the spoil heap"
 			var hc := step_cell(j)
@@ -924,6 +1153,8 @@ func goods() -> Dictionary:
 	add.call(yard)
 	for j in jobs:
 		add.call(j.load)
+		if j.has("stock"):
+			add.call(j.stock)               # MIN-F2: spoil left at a backfill order's depot
 	return out
 
 
@@ -951,6 +1182,8 @@ func to_dict() -> Dictionary:
 	for j in jobs:
 		var d: Dictionary = j.duplicate()
 		d.load = j.load.to_dict()
+		if j.has("stock"):
+			d.stock = (j.stock as Inventory).to_dict()
 		js.append(d)
 	return {"lots": ls, "yard": yard.to_dict(), "jobs": js, "next_id": next_id}
 
@@ -966,10 +1199,10 @@ func load_dict(d: Dictionary) -> void:
 	yard = Inventory.from_dict(d.get("yard", {}))
 	for jd in d.get("jobs", []):
 		var j: Dictionary = jd.duplicate()
-		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken"]:
+		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken", "level", "placed"]:
 			if j.has(k):
 				j[k] = int(j[k])
-		for k in ["site", "at"]:
+		for k in ["site", "at", "depot"]:
 			if j.has(k):
 				j[k] = [int(j[k][0]), int(j[k][1])]
 		if j.has("sids"):
@@ -977,5 +1210,7 @@ func load_dict(d: Dictionary) -> void:
 		if j.has("to") and j.to.has("hh"):
 			j.to.hh = int(j.to.hh)
 		j.load = Inventory.from_dict(jd.get("load", {}))
+		if jd.has("stock"):
+			j.stock = Inventory.from_dict(jd.stock)
 		jobs.append(j)
 	next_id = int(d.get("next_id", 1))
