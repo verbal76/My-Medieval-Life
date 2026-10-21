@@ -557,7 +557,7 @@ func open_for(who: String) -> Array:
 func _rank(j: Dictionary) -> int:
 	if j.kind == "haul":
 		return ORDER.find(str(j.to.kind))
-	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9, "shore": 4}.get(str(j.kind), 10)
+	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9, "shore": 2}.get(str(j.kind), 10)     # MIN-EQUIP: shoring with the yard's goods comes before mending
 
 
 func _has_kit(who: String) -> bool:
