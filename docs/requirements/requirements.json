@@ -3326,7 +3326,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "(B7_ISSUES:58) | \"Diagnosed; needs a design decision\" | AWAIT-OWNER (recorded) | Partial code: guards provision households (INT-072), `87b3663` | Owner decision | Register not updated with INT-072",
-   "tests": "reserve_test (B7-015 checks), run_tests (weighted need)",
+   "tests": "reserve_test (B7-015)",
    "playtest": [],
    "branch": "",
    "commits": [
@@ -3368,6 +3368,11 @@
      "date": "2026-10-20",
      "change": "tests; next_action",
      "why": "Seed 4 on 1c7b9f4 (watched): 1 starvation death (7 on 61750f1), classified a defect (one relief grain a day valued as cooked pottage) and fixed: grain counts in whole pots, relief gives grain in whole pots"
+    },
+    {
+     "date": "2026-10-21",
+     "change": "tests",
+     "why": "Seed 4 on d6d80a4: 2 deaths, classified a defect (the chest's firewood not topped up from trade stock) and fixed; all 27 suites pass; gate re-baselined, no leaks"
     }
    ],
    "acceptance_derived": true,
