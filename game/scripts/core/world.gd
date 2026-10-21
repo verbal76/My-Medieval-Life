@@ -3024,6 +3024,26 @@ func player_gain(id: String, n: int, kind := "made_") -> int:
 	return 0
 
 
+## DVW-A12 R12: the player learns Fireball from `teacher` (the sage, DECISIONS.md:57): balance.json fireball_price
+## coins go from the player to the teacher, the spell is known, 100 Magic xp is earned, and a story quest to learn it is
+## completed (Quests.on_learned). Refused if it is known already or the player cannot pay. `thanks`: the story's
+## thanks line from the teacher, read before the quest is completed ("" for none). Returns {ok, why, thanks}.
+func player_learn_fireball(teacher: NPC) -> Dictionary:
+	var price := int(GameData.b("fireball_price"))
+	if player.spells.get("fireball", false):
+		return {"ok": false, "why": "You know Fireball."}
+	if player.coins < price:
+		return {"ok": false, "why": "You need %d coins." % price}
+	player.coins -= price
+	teacher.coins += price
+	player.spells["fireball"] = true
+	player.gain("magic", 100)
+	var story: Dictionary = quests.active_from(teacher)
+	var thanks := quests.line(story, "thanks") if not story.is_empty() else ""
+	quests.on_learned("fireball")
+	return {"ok": true, "why": "", "thanks": thanks}
+
+
 ## The player buys a building plot; the price goes to the manor's treasury (Property.buy).
 func buy_plot(p: Dictionary) -> bool:
 	return property.buy(p, PLAYER) == ""

@@ -2183,21 +2183,15 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 		var price := int(GameData.b("fireball_price"))
 		var known: bool = w.player.spells.get("fireball", false)
 		_talk_choice(choices, "Learn Fireball (%d coins)" % price if not known else "You know Fireball", func():
-			if w.player.coins >= price:
-				w.player.coins -= price
-				n.coins += price
-				w.player.spells["fireball"] = true
-				w.player.gain("magic", 100)
-				var story: Dictionary = w.quests.active_from(n)
-				var thanks := w.quests.line(story, "thanks") if not story.is_empty() else ""
-				w.quests.on_learned("fireball")
+			var learned := w.player_learn_fireball(n)          # the price, the payment and the spell are core's (DVW-A12 R12)
+			if learned.ok:
 				message("You learned Fireball. Press F (or the Fire button) to cast it; it uses stamina.")
-				if thanks != "":
-					_talk_view(n, thanks)
+				if str(learned.thanks) != "":
+					_talk_view(n, str(learned.thanks))
 				else:
 					hide_all()
 			else:
-				message("You need %d coins." % price), not known)
+				message(str(learned.why)), not known)
 	if n.id == w.reeve_id:
 		_talk_choice(choices, "Land and houses", func(): show_land(n))
 	# owner rule: the player may pick the pocket of someone beside them (World.pickpocket)

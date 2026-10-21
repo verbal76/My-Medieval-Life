@@ -1455,6 +1455,7 @@ func _dvw_a12() -> void:
 	_dvw_a12_felling()
 	_dvw_a12_crafting()
 	_dvw_a12_combat()
+	_dvw_a12_fireball()
 
 
 ## R2: an axe is needed, only a mature tree, the felling time, the blows, the logs to the pack (or set down), the
@@ -1669,6 +1670,32 @@ func _dvw_a12_combat() -> void:
 	var v2 := w2.npc(victim.id)
 	check(v2 != null and not v2.alive and w2.npc(far.id).memory.has("attacked by %s" % p.name), "DVW-A12 R8, R9: the death and the victim's memory of the attack are saved (the stats are session counters, not saved)")
 	_restore_pack(keep)
+
+
+## R12: learning Fireball: refused without the price, then the price moves from the player to the sage (no coin made
+## or lost), the spell is known, 100 Magic xp, refused once known; the interface's choice uses core; kept over a save.
+func _dvw_a12_fireball() -> void:
+	main.new_game()
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var sage := w.npc(w.sage_id)
+	var price := int(GameData.b("fireball_price"))
+	p.spells.erase("fireball")
+	p.skills.erase("magic")
+	p.coins = price - 1
+	var c0 := sage.coins
+	var r := w.player_learn_fireball(sage)
+	check(not r.ok and str(r.why) == "You need %d coins." % price and p.coins == price - 1 and sage.coins == c0 and not p.spells.get("fireball", false), "DVW-A12 R12: without the price nothing is paid or learned")
+	p.coins = price + 5
+	var sum0 := p.coins + sage.coins
+	r = w.player_learn_fireball(sage)
+	check(r.ok and p.coins == 5 and sage.coins == c0 + price and p.coins + sage.coins == sum0, "DVW-A12 R12: the price goes from the player to the sage, no coin made or lost")
+	check(p.spells.get("fireball", false) and int(p.skills.get("magic", 0)) == 100, "DVW-A12 R12: the spell is known and 100 Magic xp earned")
+	r = w.player_learn_fireball(sage)
+	check(not r.ok and p.coins == 5 and sage.coins == c0 + price, "DVW-A12 R12: once known it is not sold again")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(w2.player.spells.get("fireball", false) and w2.player.coins == 5 and w2.npc(sage.id).coins == sage.coins, "DVW-A12 R12: the spell and both purses are saved")
 
 
 ## A clean pack for one rule's checks; returns what to restore.
