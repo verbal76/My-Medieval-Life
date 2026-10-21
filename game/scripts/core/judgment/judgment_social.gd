@@ -12,8 +12,9 @@ var _kin := {}
 var _friends := {}
 
 
-static func _k(a: int, b: int) -> String:
-	return "%d:%d" % [mini(a, b), maxi(a, b)]
+## A pair's key: both ids offset to stay positive (the player is -2), the lower in the high bits.
+static func _k(a: int, b: int) -> int:
+	return ((mini(a, b) + 1024) << 32) | (maxi(a, b) + 1024)
 
 
 ## Family: parents, children, siblings, partners.

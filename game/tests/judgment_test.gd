@@ -57,6 +57,8 @@ func _init() -> void:
 	test_save_and_migration()
 	test_determinism()
 	test_sliced_day()
+	test_spread_gossip()
+	test_scheduled_gossip()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -512,3 +514,118 @@ func test_sliced_day() -> void:
 	j.begin_day(2)
 	var left := j.dawn_hour()
 	check(left == 0, "dawn_hour works through the queue (%d left)" % left)
+
+
+## Round 3: an hour's meetings queued (meet_later) and told a few a tick (gossip_pump), with events, decisions and
+## reads of people's beliefs and opinions between the ticks, give exactly the tellings, beliefs, opinions and end state
+## that telling every meeting the moment it happens (meet) gives; with the default settings and with retraction, a
+## fading view and distorted rumours on; also with the daily update sliced.
+func test_spread_gossip() -> void:
+	var variants := [{}, {"retract": true, "fade": 100, "mis": 300}]
+	for v in variants:
+		var out := []
+		for mode in ["now", "spread"]:
+			var c := cfg()
+			c.memory.capacity = 6
+			c.memory.horizon_days = 4
+			if v.has("retract"):
+				c.memory.retract_on_forget = true
+				c.memory.effective_fade_permille = int(v.fade)
+				c.gossip.misattribute_permille = int(v.mis)
+			var j := JudgmentStore.new(c, JudgmentSocial.new().set_kin(1, 2).set_friends(3, 4).set_kin(5, 6), 5)
+			var log := []
+			var queued_max := 0
+			for d in 10:
+				var people := 24 + d * 2
+				for hr in 24:
+					if hr == 6:
+						j.begin_day(d)
+					j.dawn_hour()
+					var i := d * 24 + hr
+					for e in 2:
+						var actor := JudgmentMath.hash_ints([i, e, 1]) % people
+						var other := (actor + 1 + JudgmentMath.hash_ints([i, e, 2]) % 7) % people
+						var type: String = ["theft", "help_minor", "assault", "gift", "trade_fair"][(i + e) % 5]
+						var bad := str(j.definition(type).polarity) == "BAD"
+						var ev := j.publish(type, [actor], [other] if bad else [], [] if bad else [other])
+						j.observe_all(ev, [(other + 2) % people, (other + 3) % people])
+					if hr >= 7 and hr < 21:
+						for m in 12:                                   # the hour's meetings, all at once (Relations.hour)
+							var a := JudgmentMath.hash_ints([i, m, 3]) % people
+							var b := (a + 1 + JudgmentMath.hash_ints([i, m, 4]) % 5) % people
+							if mode == "now":
+								j.meet(a, b)
+							else:
+								j.meet_later(a, b)
+					queued_max = maxi(queued_max, j.gossip_queued())
+					for tick in 6:                                     # the hour's ticks
+						if mode == "spread":
+							j.gossip_pump(2)
+						var who := JudgmentMath.hash_ints([i, tick, 5]) % people
+						if tick == 2:
+							var r := JudgmentWeighting.choose(j, c, who, "trade_buy", [
+								{"id": 1, "counterparty": (who + 1) % people, "factors": {"necessity": 40000, "affordability": 60000, "urgency": 10000}},
+								{"id": 2, "counterparty": (who + 2) % people, "factors": {"necessity": 40000, "affordability": 60000, "urgency": 10000}}])
+							log.append(str(r.chosen))
+						if tick == 4:
+							var ev2 := j.publish("assault", [who], [(who + 3) % people])
+							j.observe_all(ev2, [(who + 4) % people])
+						log.append(j.net(who, (who + 1) % people))
+						log.append(j.memory_count(who))
+			var beliefs := []
+			for o in 44:
+				for ev in range(1, j.next_event):
+					var b := j.belief(o, ev)
+					if not b.is_empty():
+						beliefs.append([o, ev, b.src, b.by, b.hops, b.conf])
+			out.append([j.state_hash(), log, beliefs, int(j.stats.get("tellings", 0)), queued_max, int(j.stats.get("gossip_flushes", 0))])
+		var name := "with retraction, fading view and rumours" if v.has("retract") else "default settings"
+		check(out[1][4] > 0 and out[1][5] > 0, "spread gossip (%s): meetings really waited in the queue (up to %d) and reads flushed what they needed (%d times)" % [name, out[1][4], out[1][5]])
+		check(out[0][3] == out[1][3], "spread gossip (%s): the same number of tellings (%d)" % [name, out[0][3]])
+		check(out[0][1] == out[1][1], "spread gossip (%s): every opinion, memory count and choice read between ticks is the same" % name)
+		check(out[0][2] == out[1][2], "spread gossip (%s): the same beliefs, provenance and confidence (%d beliefs)" % [name, out[0][2].size()])
+		check(out[0][0] == out[1][0], "spread gossip (%s): the same end state, hash for hash" % name)
+	var j := store()
+	var ev := j.publish("theft", [THIEF], [BOB])
+	j.observe(ev, BOB)
+	j.meet_later(BOB, STRANGER)
+	j.meet_later(STRANGER, COUSIN)
+	check(j.gossip_queued() == 2 and j.belief(COUSIN, ev).src == "rumour" and j.gossip_queued() == 0,
+			"reading the cousin's belief tells first the two meetings word passed through to reach her")
+	j.meet_later(BOB, FRIEND)
+	j.meet_later(JOHN, VERBAL)
+	j.belief(FRIEND, ev)
+	check(j.gossip_queued() == 1, "...and only those: a meeting of other people stays queued")
+	check(j.gossip_pump() == 0, "the pump tells what is left")
+
+
+## Round 3 option, gossip.timing "scheduled" (off by default; a design choice, since it changes when word passes): each
+## meeting is told at its own seeded minute of the hour; nothing is told before its minute; a save keeps the meetings
+## still to come; the same seed gives the same minutes and the same result.
+func test_scheduled_gossip() -> void:
+	var c := cfg()
+	c.gossip.timing = "scheduled"
+	var hashes := []
+	for run in 2:
+		var j := store(c)
+		var ev := j.publish("theft", [THIEF], [BOB])
+		j.observe(ev, BOB)
+		j.meet_hourly(BOB, STRANGER, 600)
+		j.meet_hourly(BOB, COUSIN, 600)
+		var minutes := []
+		for mm in j._sched:
+			minutes.append(int(mm))
+		minutes.sort()
+		check(minutes.size() >= 1 and minutes[0] >= 600 and minutes[-1] < 660, "scheduled: meetings fall within their hour (minutes %s)" % str(minutes))
+		j.gossip_tick(minutes[0] - 1)
+		check(j.belief(STRANGER, ev).is_empty() and j.belief(COUSIN, ev).is_empty(), "scheduled: nothing is told before its minute, even when read")
+		var d := j.to_dict()
+		check(d.has("scheduled") and (d.scheduled as Array).size() == 2, "scheduled: a save keeps the meetings still to come")
+		var j2 := store(c)
+		j2.load_dict(JSON.parse_string(JSON.stringify(d)))
+		j.gossip_tick(659)
+		j2.gossip_tick(659)
+		check(str(j.belief(STRANGER, ev).src) == "told" and str(j.belief(COUSIN, ev).src) == "told", "scheduled: told when the minute comes")
+		check(j.state_hash() == j2.state_hash(), "scheduled: saved and reloaded before the minute, the same result after it")
+		hashes.append(j.state_hash())
+	check(hashes[0] == hashes[1], "scheduled: the same seed gives the same minutes and the same result")

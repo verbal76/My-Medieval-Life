@@ -260,6 +260,8 @@ func update(real_dt: float) -> void:
 		_on_hour(h % 24)
 		if profiling:
 			t = _prof("hourly (incl. daily)", t)
+	if judgment != null:
+		judgment.gossip_tick(int(minutes))   # PROSPECTIVE (PROS-19): a few of the hour's queued meetings are told each tick
 	for n: NPC in npcs:
 		if not n.alive:
 			continue

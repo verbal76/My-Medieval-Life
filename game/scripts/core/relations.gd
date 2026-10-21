@@ -529,7 +529,7 @@ func share(a: int, b: int, kind: String) -> void:
 		return
 	t.hour_key = hk
 	if w.judgment != null:
-		w.judgment.meet(a, b)                       # PROSPECTIVE (PROS-19): time together, word passes on
+		w.judgment.meet_hourly(a, b, hk * 60)      # PROSPECTIVE (PROS-19): time together, word passes on (told over the next ticks)
 	var d: int = w.day()
 	if int(t.get("shared_day", -1)) != d:
 		t.shared_day = d

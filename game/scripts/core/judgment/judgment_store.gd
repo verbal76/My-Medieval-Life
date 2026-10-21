@@ -26,6 +26,19 @@ extends RefCounted
 ## person's daily update depends only on their own records and the day, so the sliced update gives exactly the state
 ## the whole update at dawn gives (advance_day, which is begin_day then finish_dawn), whatever happens in between
 ## (judgment_test: same end state, hash for hash).
+##
+## Word of mouth is spread over frames (round 3, frame cost): meet_later(a, b) queues a meeting (Relations.share's hour
+## queues them all at once) and gossip_pump() tells a few each tick, in order. A meeting reads and changes only its two
+## people's records, so before anything reads or changes a person's records, the queued meetings that person depends on
+## are told first: the person's last queued meeting and, walking back, every earlier one sharing someone with a meeting
+## already taken (the dependency closure, _flush_for). Those left behind share nobody with them, so they commute. The
+## result is the same as telling every meeting the moment it is queued (meet), whenever the pump runs (judgment_test:
+## same tellings, beliefs and end state). This is gossip.timing "hour" (the default): the hour's meetings count as told
+## at the hour's start, as in rounds 1 and 2.
+## gossip.timing "scheduled" (an alternative, off by default; it changes results, so it is a design choice): each
+## meeting is told at its own minute of the hour (a seeded hash of the pair and the hour), when gossip_tick reaches that
+## minute; reads never need to tell anything first, so no frame carries more than that minute's meetings. Meetings not
+## yet told are saved with the section ("scheduled").
 
 const FORMAT := "mml-judgment/1"
 const VERSION := 1
@@ -88,6 +101,40 @@ var _below := 0
 var _eff_fade := 0
 var _retract := false
 var _slices := 24
+# gossip and belief settings, looked up once (tell runs often)
+var _g_per := 2
+var _g_budget := 6
+var _g_hops := 3
+var _g_minconf := 150
+var _g_share_at := -20000
+var _g_mis := 0
+var _b_hop := 700
+var _b_cred_base := 800
+var _b_cred_pp := 20
+var _b_cred_min := 200
+var _g_pump := 8
+var _i := PackedInt64Array()             # interpret: affected, accomplice, kin, friend, bystander, rival, rival_net_at,
+                                         # kin_of_actor, friend_of_actor, prior_bias_permille_per_point, prior_bias_cap
+var _b_policy := 0                       # confidence_policy: 0 multiplier, 1 threshold, 2 both
+var _b_thr := 300
+const SAL_ROOM := 1 << 20                # salience is far below this; tell sorts (SAL_ROOM - sal) << 40 | event id
+
+# the gossip queue: meetings told later, in order
+var _gq := PackedInt64Array()            # a, b, a, b, ...
+var _gdone := PackedByteArray()          # 1 once told
+var _ghead := 0                          # the first meeting not yet told
+var _glast := {}                         # person -> their last queued meeting's index
+var _gflushing := false
+var _g_sched := false                    # gossip.timing "scheduled"
+var _sched := {}                         # minute -> PackedInt64Array [a, b, ...] in the order queued (scheduled timing)
+var _snext := -1                         # the next minute whose meetings are still to tell (-1: none queued yet)
+# "nothing new to tell": a teller's memories only gain or change through learn and correct (_mver counts those), and
+# what a listener already knows only grows until the event retires, so a telling that found nothing finds nothing again
+# while the teller's count is unchanged (_dry), on any later day too (fading, forgetting and retiring only take away).
+# A pure shortcut: never saved; emptied at a dawn when it holds more than DRY_CAP pairs.
+var _mver := {}                          # person -> how many times their memories gained or changed
+const DRY_CAP := 20000
+var _dry := {}                           # teller and listener -> the teller's _mver when they last had nothing new
 
 
 static var _cfg_cache := {}
@@ -121,6 +168,26 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_eff_fade = int(m.effective_fade_permille)
 	_retract = bool(m.retract_on_forget)
 	_slices = maxi(1, int(m.get("dawn_slices", 24)))
+	var g: Dictionary = cfg.gossip
+	var bc: Dictionary = cfg.belief
+	_g_per = int(g.per_meeting)
+	_g_budget = int(g.daily_budget)
+	_g_hops = int(g.max_hops)
+	_g_minconf = int(g.min_confidence)
+	_g_share_at = int(g.share_net_at)
+	_g_mis = int(g.misattribute_permille)
+	_g_pump = maxi(1, int(g.get("pump_per_tick", 8)))
+	_g_sched = str(g.get("timing", "hour")) == "scheduled"
+	_b_hop = int(bc.hop_factor)
+	_b_cred_base = int(bc.credibility_base)
+	_b_cred_pp = int(bc.credibility_permille_per_point)
+	_b_cred_min = int(bc.credibility_min)
+	var ic: Dictionary = cfg.interpret
+	for k in ["affected", "accomplice", "kin", "friend", "bystander", "rival", "rival_net_at", "kin_of_actor", "friend_of_actor",
+			"prior_bias_permille_per_point", "prior_bias_cap"]:
+		_i.append(int(ic[k]))
+	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
+	_b_thr = int(bc.confidence_threshold)
 
 
 func _stat(k: String, v := 1) -> void:
@@ -225,6 +292,7 @@ func definition(type: String) -> Dictionary:
 ## An explicit correction of the facts (spec s.3.1: events are immutable; a mistake is corrected by a revision that
 ## keeps the original). Those who learn of it re-judge through correct().
 func revise_fact(ev: int, actors: Array) -> void:
+	flush_gossip()
 	if not facts.has(ev):
 		return
 	var f: PackedInt64Array = facts[ev]
@@ -314,13 +382,14 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 			_stat("dup_ignored")
 			return false
 		old_sal = old[M_SAL]
-	elif src in ["told", "rumour"] and has_contribution(observer, ev):
+	elif SOURCES.find(src) >= TOLD and has_contribution(observer, ev):
 		_stat("dup_ignored")                       # judged before and since forgotten: hearing it again adds nothing
 		return false
 	var f: PackedInt64Array = facts[ev]
 	var t := f[F_TYPE]
 	var sal := JudgmentMath.scale(_sev[t], conf) if _pol[t] != 0 else int(c("memory").get("neutral_salience", 500))
 	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors)
+	_mver[observer] = int(_mver.get(observer, 0)) + 1
 	_stat("beliefs")
 	_judge(observer, ev)
 	_bound(observer)
@@ -346,6 +415,7 @@ func correct(observer: int, ev: int, new_actors: Array = []) -> void:
 	var m: PackedInt64Array = mem[ev]
 	var acts: Array = _fact_actors(facts[ev]) if new_actors.is_empty() else _shares(new_actors)
 	mem[ev] = _pack_mem(m[M_TYPE], m[M_DAY], m[M_SRC], m[M_BY], m[M_HOPS], maxi(m[M_CONF], int(c("belief").witnessed)), m[M_SAL], acts)
+	_mver[observer] = int(_mver.get(observer, 0)) + 1
 	_stat("corrections")
 	_judge(observer, ev)
 
@@ -387,49 +457,48 @@ func _forget(observer: int, ev: int) -> void:
 ## by their tie to the affected (kin, friend, a rival reverses it); loyalty to the actor softens condemnation; on
 ## ambiguous events only, prior judgment of the actor may bias the reading, capped (SJD-Q05).
 func interpret(observer: int, ev: int, actor: int, believed: Array) -> Dictionary:
-	var ic := c("interpret")
 	var f: PackedInt64Array = facts[ev]
 	var good := _pol[f[F_TYPE]] == 1
 	var affected := _fact_people(f, 1 if good else 0)
 	var parts := {}
 	var p := 0
 	if affected.has(observer):
-		p = int(ic.affected)
+		p = _i[0]
 		parts.role = "affected"
 	elif not good and _names(believed, observer):
-		p = int(ic.accomplice)
+		p = _i[1]
 		parts.role = "accomplice"
 	else:
 		parts.role = "bystander"
-		p = int(ic.bystander)
+		p = _i[4]
 		var best := -1
 		for v in affected:
-			var pv := int(ic.bystander)
+			var pv := _i[4]
 			var why := "bystander"
-			if social.kin(observer, int(v)):
-				pv = int(ic.kin)
-				why = "kin of %d" % int(v)
-			elif social.friends(observer, int(v)):
-				pv = int(ic.friend)
-				why = "friend of %d" % int(v)
-			elif net(observer, int(v)) <= int(ic.rival_net_at):
-				pv = int(ic.rival)
-				why = "rival of %d" % int(v)
+			if social.kin(observer, v):
+				pv = _i[2]
+				why = "kin"
+			elif social.friends(observer, v):
+				pv = _i[3]
+				why = "friend"
+			elif net(observer, v) <= _i[6]:
+				pv = _i[5]
+				why = "rival"
 			if best < 0 or absi(pv) > absi(p) or (absi(pv) == absi(p) and pv > p):
 				p = pv
 				parts.role = why
+				parts.of = v
 				best = 1
 	parts.base = p
 	if not good and p > 0 and parts.role != "affected":
 		if social.kin(observer, actor):
-			p = JudgmentMath.scale(p, int(ic.kin_of_actor))
+			p = JudgmentMath.scale(p, _i[7])
 			parts.loyalty = "kin of actor"
 		elif social.friends(observer, actor):
-			p = JudgmentMath.scale(p, int(ic.friend_of_actor))
+			p = JudgmentMath.scale(p, _i[8])
 			parts.loyalty = "friend of actor"
 	if _amb[f[F_TYPE]] == 1 and parts.role != "affected":
-		var bias := JudgmentMath.clampi_(JudgmentMath.mul_div(net(observer, actor), int(ic.prior_bias_permille_per_point), 1000),
-				-int(ic.prior_bias_cap), int(ic.prior_bias_cap))
+		var bias := JudgmentMath.clampi_(JudgmentMath.mul_div(net(observer, actor), _i[9], 1000), -_i[10], _i[10])
 		p += bias if good else -bias
 		parts.prior_bias = bias if good else -bias
 	p = JudgmentMath.clampi_(p, -JudgmentMath.ONE, JudgmentMath.ONE)
@@ -452,12 +521,10 @@ func evaluate(observer: int, ev: int, actor: int, share: int, conf: int, believe
 	if _pol[t] == 0 or actor == observer:
 		return [0, 0]
 	var parts := interpret(observer, ev, actor, believed)
-	var bc := c("belief")
-	var pol := str(bc.confidence_policy)
 	var impact := 0
-	if (pol == "threshold" or pol == "both") and conf < int(bc.confidence_threshold):
+	if _b_policy != 0 and conf < _b_thr:
 		impact = 0
-	elif pol == "threshold":
+	elif _b_policy == 1:
 		impact = JudgmentMath.scale(_sev[t], int(parts.p))
 	else:
 		impact = JudgmentMath.mul_div(_sev[t] * int(parts.p), conf, 1000000)
@@ -466,10 +533,9 @@ func evaluate(observer: int, ev: int, actor: int, share: int, conf: int, believe
 	parts.confidence = conf
 	parts.impact = impact
 	last_trace = parts
-	var good := _pol[t] == 1
 	if impact == 0:
 		return [0, 0]
-	if (impact > 0) == good:
+	if (impact > 0) == (_pol[t] == 1):
 		return [absi(impact), 0]
 	return [0, absi(impact)]
 
@@ -498,31 +564,35 @@ func _post(observer: int, ev: int, want: Dictionary) -> void:
 		contrib[observer] = {}
 		_add_person(observer)
 	var mine: Dictionary = contrib[observer]
-	var had := {}
-	if mine.has(ev):
-		var row: PackedInt64Array = mine[ev]
-		for i in range(0, row.size(), 3):
-			had[row[i]] = [row[i + 1], row[i + 2]]
-	var actors := {}
-	for a in had:
-		actors[a] = true
+	var row: PackedInt64Array = mine.get(ev, PackedInt64Array())
+	var ids := []                                  # every actor in the old row or the new, ascending
+	for i in range(0, row.size(), 3):
+		ids.append(row[i])
 	for a in want:
-		actors[a] = true
-	var ids := actors.keys()
-	ids.sort()
+		if not ids.has(a):
+			ids.append(a)
+	if ids.size() > 1:
+		ids.sort()
 	var out := PackedInt64Array()
 	for a in ids:
-		var o: Array = had.get(a, [0, 0])
+		var og := 0
+		var ob := 0
+		for i in range(0, row.size(), 3):
+			if row[i] == a:
+				og = row[i + 1]
+				ob = row[i + 2]
 		var n: Array = want.get(a, [0, 0])
-		if int(n[0]) != 0 or int(n[1]) != 0:
-			out.append(int(a))
-			out.append(int(n[0]))
-			out.append(int(n[1]))
-		if o[0] == n[0] and o[1] == n[1]:
+		var ng := int(n[0])
+		var nb := int(n[1])
+		if ng != 0 or nb != 0:
+			out.append(a)
+			out.append(ng)
+			out.append(nb)
+		if og == ng and ob == nb:
 			continue
-		var was := int(o[0]) != 0 or int(o[1]) != 0
-		var now := int(n[0]) != 0 or int(n[1]) != 0
-		_ledger_add(observer, int(a), int(n[0]) - int(o[0]), int(n[1]) - int(o[1]), 1 if now and not was else (-1 if was and not now else 0))
+		var was := og != 0 or ob != 0
+		var now := ng != 0 or nb != 0
+		_ledger_add(observer, a, ng - og, nb - ob, 1 if now and not was else (-1 if was and not now else 0))
 		_stat("contributions")
 	if out.is_empty():
 		mine.erase(ev)
@@ -641,8 +711,15 @@ func most_disliked(observer: int, besides := -999) -> int:
 
 
 # ---------------------------------------------------------------- information sharing ------------
-## Two people spend time together (Relations.share's hour, or a test): each may tell the other (tell).
+## Two people spend time together (a test, or a caller that wants the result now): each may tell the other (tell),
+## at once, after the queued meetings either of them depends on. Returns how many were told.
 func meet(a: int, b: int) -> int:
+	_flush_for(a)
+	_flush_for(b)
+	return _meet_now(a, b)
+
+
+func _meet_now(a: int, b: int) -> int:
 	if not memories.has(a) and not memories.has(b):
 		return 0                                   # neither knows anything to tell
 	var t := Time.get_ticks_usec()
@@ -651,6 +728,152 @@ func meet(a: int, b: int) -> int:
 	var k := tell(lo, hi) + tell(hi, lo)
 	timing.meet_us = int(timing.get("meet_us", 0)) + Time.get_ticks_usec() - t
 	return k
+
+
+## Queue a meeting to be told later (Relations.share's hour): the same result as meet() now (see the header).
+func meet_later(a: int, b: int) -> void:
+	if a == b:
+		return
+	_glast[a] = _gq.size() / 2
+	_glast[b] = _gq.size() / 2
+	_gq.append(a)
+	_gq.append(b)
+	_gdone.append(0)
+
+
+## The live entry point (Relations.share): two people spent the hour starting at game minute `hour_minute` together.
+## "hour" timing queues the meeting (meet_later); "scheduled" sets it at its own minute of that hour (meet_at).
+func meet_hourly(a: int, b: int, hour_minute: int) -> void:
+	if _g_sched:
+		var lo := mini(a, b) + 1024
+		var hi := maxi(a, b) + 1024
+		var h := ((lo * 73856093) ^ (hi * 19349663) ^ ((hour_minute / 60) * 83492791) ^ (world_seed * 2654435)) & 0x7FFFFFFF
+		meet_at(a, b, hour_minute + h % 60)              # a cheap seeded spread: an hour's meetings are queued in one frame
+	else:
+		meet_later(a, b)
+
+
+## Scheduled timing: a meeting told when gossip_tick reaches game minute `at` (same-minute meetings in the order queued).
+func meet_at(a: int, b: int, at: int) -> void:
+	if a == b:
+		return
+	var row: PackedInt64Array = _sched.get(at, PackedInt64Array())
+	row.append(a)
+	row.append(b)
+	_sched[at] = row
+	if _snext < 0 or at < _snext:
+		_snext = at
+
+
+## The live tick (World.update): "hour" timing tells gossip.pump_per_tick queued meetings; "scheduled" tells every
+## meeting whose minute has come (up to game minute `now`).
+func gossip_tick(now: int) -> void:
+	if _g_sched:
+		_tell_due(now)
+	else:
+		gossip_pump()
+
+
+func _tell_due(now: int) -> void:
+	if _sched.is_empty() or _snext > now:
+		return
+	var t := Time.get_ticks_usec()
+	var mins := _sched.keys()
+	mins.sort()
+	for mm in mins:
+		if int(mm) > now:
+			_snext = int(mm)
+			break
+		var row: PackedInt64Array = _sched[mm]
+		_sched.erase(mm)
+		for i in range(0, row.size(), 2):
+			_meet_now(row[i], row[i + 1])
+	if _sched.is_empty():
+		_snext = -1
+	timing.due_us = int(timing.get("due_us", 0)) + Time.get_ticks_usec() - t
+
+
+func gossip_queued() -> int:
+	var n := 0
+	for mm in _sched:
+		n += (_sched[mm] as PackedInt64Array).size() / 2
+	for i in range(_ghead, _gdone.size()):
+		if _gdone[i] == 0:
+			n += 1
+	return n
+
+
+## Tell up to `k` queued meetings in order (gossip.pump_per_tick when k < 0); World.update calls it each tick.
+## Returns how many are still queued.
+func gossip_pump(k := -1) -> int:
+	if _ghead >= _gdone.size():
+		return 0
+	var t := Time.get_ticks_usec()
+	var left := _g_pump if k < 0 else k
+	var was := _gflushing
+	_gflushing = true
+	while _ghead < _gdone.size() and left > 0:
+		if _gdone[_ghead] == 0:
+			_gdone[_ghead] = 1
+			_meet_now(_gq[2 * _ghead], _gq[2 * _ghead + 1])
+			left -= 1
+		_ghead += 1
+	_gflushing = was
+	_gtrim()
+	timing.pump_us = int(timing.get("pump_us", 0)) + Time.get_ticks_usec() - t
+	return gossip_queued()
+
+
+func flush_gossip() -> void:
+	while _ghead < _gdone.size():
+		gossip_pump(1 << 30)
+
+
+## Tell, in order, the queued meetings `o` depends on: their last one and every earlier one sharing someone with a
+## meeting already taken (walking back). The rest share nobody with these, so leaving them queued changes nothing.
+func _flush_for(o: int) -> void:
+	if _gflushing or _ghead >= _gdone.size() or not _glast.has(o):
+		return
+	var last := int(_glast[o])
+	if last < _ghead or _gdone[last] == 1:
+		return
+	var t := Time.get_ticks_usec()
+	var who := {o: true}
+	var take := PackedInt64Array()
+	var i := last
+	while i >= _ghead:
+		if _gdone[i] == 0:
+			var a := _gq[2 * i]
+			var b := _gq[2 * i + 1]
+			if who.has(a) or who.has(b):
+				take.append(i)
+				who[a] = true
+				who[b] = true
+		i -= 1
+	_gflushing = true
+	for j in range(take.size() - 1, -1, -1):
+		var m := take[j]
+		_gdone[m] = 1
+		_meet_now(_gq[2 * m], _gq[2 * m + 1])
+	_gflushing = false
+	while _ghead < _gdone.size() and _gdone[_ghead] == 1:
+		_ghead += 1
+	_gtrim()
+	_stat("gossip_flushes")
+	var took := Time.get_ticks_usec() - t
+	timing.flush_us = int(timing.get("flush_us", 0)) + took
+	if took > int(timing.get("flush_max_us", 0)):
+		timing.flush_max_us = took
+		timing.flush_max_meetings = take.size()
+
+
+## Once every queued meeting is told, empty the queue.
+func _gtrim() -> void:
+	if _ghead >= _gdone.size():
+		_gq = PackedInt64Array()
+		_gdone = PackedByteArray()
+		_ghead = 0
+		_glast.clear()
 
 
 ## `teller` tells `listener` up to gossip.per_meeting of their most salient memories the listener does not hold
@@ -664,38 +887,46 @@ func tell(teller: int, listener: int) -> int:
 		return 0
 	_cu(teller)
 	_cu(listener)
-	var mem: Dictionary = memories.get(teller, {})
+	var mem: Dictionary = memories[teller]
 	if mem.is_empty():
 		return 0
-	var g := c("gossip")
-	if int(told_today.get(teller, 0)) >= int(g.daily_budget) or net(teller, listener) <= int(g.share_net_at):
+	var pair := JudgmentSocial._k(teller, listener) * 2 + (1 if teller < listener else 0)
+	var ver := int(_mver.get(teller, 0))
+	if int(_dry.get(pair, -1)) == ver:
+		_stat("dry_skips")
+		return 0                                   # nothing new since they last found nothing to tell
+	if int(told_today.get(teller, 0)) >= _g_budget or net(teller, listener) <= _g_share_at:
 		return 0
-	var bc := c("belief")
 	var heard: Dictionary = memories.get(listener, {})
-	var pick := []
+	var mine: Dictionary = contrib.get(listener, {})
+	var keys := PackedInt64Array()
 	for ev in mem:
 		var m: PackedInt64Array = mem[ev]
-		if not facts.has(ev) or m[M_HOPS] >= int(g.max_hops) or m[M_CONF] < int(g.min_confidence):
+		if m[M_HOPS] >= _g_hops or m[M_CONF] < _g_minconf or heard.has(ev) or mine.has(ev) or not facts.has(ev):
 			continue
-		if heard.has(ev) or has_contribution(listener, ev) or _mem_names(m, listener):
+		var kn: PackedInt64Array = knowers.get(ev, PackedInt64Array())
+		var at := kn.bsearch(listener)
+		if at < kn.size() and kn[at] == listener:
 			continue
-		pick.append([-m[M_SAL], int(ev)])
-	if pick.is_empty():
+		if _mem_names(m, listener):
+			continue
+		keys.append(((SAL_ROOM - m[M_SAL]) << 40) | int(ev))
+	if keys.is_empty():
+		_dry[pair] = ver
 		return 0
-	pick.sort()
-	var cred := JudgmentMath.clampi_(int(bc.credibility_base) + JudgmentMath.mul_div(net(listener, teller), int(bc.credibility_permille_per_point), 1000),
-			int(bc.credibility_min), JudgmentMath.ONE)
+	keys.sort()
+	var cred := JudgmentMath.clampi_(_b_cred_base + JudgmentMath.mul_div(net(listener, teller), _b_cred_pp, 1000), _b_cred_min, JudgmentMath.ONE)
 	var k := 0
-	for p in pick:
-		if k >= int(g.per_meeting) or int(told_today.get(teller, 0)) >= int(g.daily_budget):
+	for key in keys:
+		if k >= _g_per or int(told_today.get(teller, 0)) >= _g_budget:
 			break
-		var ev := int(p[1])
+		var ev := key & ((1 << 40) - 1)
 		var m: PackedInt64Array = mem[ev]
-		var conf := JudgmentMath.mul_div(m[M_CONF] * int(bc.hop_factor), cred, 1000000)
-		if conf < int(g.min_confidence):
+		var conf := JudgmentMath.mul_div(m[M_CONF] * _b_hop, cred, 1000000)
+		if conf < _g_minconf:
 			continue
 		var actors := _mem_actors(m)
-		if int(g.misattribute_permille) > 0 and JudgmentMath.roll([world_seed, ev, teller, listener]) < int(g.misattribute_permille):
+		if _g_mis > 0 and JudgmentMath.roll([world_seed, ev, teller, listener]) < _g_mis:
 			var other := most_disliked(teller, int(actors[0][0]))
 			if other != -999 and other != listener:
 				actors = [[other, JudgmentMath.ONE]]
@@ -722,7 +953,10 @@ func advance_day(d: int) -> void:
 func begin_day(d: int) -> void:
 	if d <= day:
 		return
+	flush_gossip()                               # the day's meetings belong to it
 	finish_dawn()
+	if _dry.size() > DRY_CAP:
+		_dry.clear()                             # only a shortcut: forgetting it changes no result
 	_steps = d - day
 	day = d
 	told_today.clear()
@@ -800,6 +1034,8 @@ func finish_dawn() -> void:
 ## Catch-up on touch: apply today's update to `o` if it is still pending, before anything reads or changes their
 ## records.
 func _cu(o: int) -> void:
+	if not _gflushing and _ghead < _gdone.size():
+		_flush_for(o)
 	if not _active or not pending(o):
 		return
 	_early[o] = true
@@ -857,6 +1093,7 @@ func inspect(observer: int, subject: int) -> Dictionary:
 
 
 func counts() -> Dictionary:
+	flush_gossip()
 	finish_dawn()
 	var nm := 0
 	var nc := 0
@@ -878,6 +1115,7 @@ func counts() -> Dictionary:
 func to_dict() -> Dictionary:
 	if not unread.is_empty():
 		return unread.duplicate(true)
+	flush_gossip()
 	finish_dawn()
 	var fs := []
 	for id in _sorted(facts):
@@ -907,8 +1145,16 @@ func to_dict() -> Dictionary:
 	var tt := []
 	for t in _sorted(told_today):
 		tt.append([int(t), int(told_today[t])])
-	return {"format": FORMAT, "version": VERSION, "day": day, "next_event": next_event, "facts": fs, "memories": ms,
+	var out := {"format": FORMAT, "version": VERSION, "day": day, "next_event": next_event, "facts": fs, "memories": ms,
 		"contrib": cs, "ledgers": ls, "told_today": tt}
+	if not _sched.is_empty():
+		var sc := []
+		for mm in _sorted(_sched):
+			var row: PackedInt64Array = _sched[mm]
+			for i in range(0, row.size(), 2):
+				sc.append([int(mm), row[i], row[i + 1]])
+		out.scheduled = sc                       # scheduled timing: meetings whose minute has not come yet
+	return out
 
 
 static func _sorted(d: Dictionary) -> Array:
@@ -927,6 +1173,14 @@ func load_dict(d: Dictionary) -> String:
 	_queue = PackedInt64Array()
 	_qi = 0
 	_active = false
+	_gq = PackedInt64Array()
+	_gdone = PackedByteArray()
+	_ghead = 0
+	_glast.clear()
+	_dry.clear()
+	_mver.clear()
+	_sched.clear()
+	_snext = -1
 	unread = {}
 	if d.is_empty():
 		return ""
@@ -981,6 +1235,8 @@ func load_dict(d: Dictionary) -> String:
 		ledgers[int(r[0])][int(r[1])] = PackedInt64Array([int(r[2]), int(r[3]), int(r[4]), int(r[5]), int(r[6])])
 	for r in m.told_today:
 		told_today[int(r[0])] = int(r[1])
+	for r in m.get("scheduled", []):
+		meet_at(int(r[1]), int(r[2]), int(r[0]))
 	for d2 in [memories, contrib, ledgers]:
 		for o in d2:
 			_add_person(int(o))
