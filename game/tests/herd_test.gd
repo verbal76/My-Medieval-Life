@@ -1,7 +1,8 @@
 extends SceneTree
 ## FARM-08B: the cattle investigation's defects, fixed and kept fixed. A pen keeper buys as much feed as a seller can
-## spare and the keeper can pay for (a part lot, as the player may buy), and a keeper short of feed culls the elderly
-## (who no longer breed) before the young that would replace them. Nothing is spawned, fed or paid for by the rules under test.
+## spare and the keeper can pay for (a part lot, as the player may buy), farmers keep grain in hand for keepers short
+## of feed instead of shutting it in the family chest, and a keeper short of feed culls the elderly (who no longer
+## breed) before the young that would replace them. Nothing is spawned, fed or paid for by the rules under test.
 ## Run: godot --headless --path game --script res://tests/herd_test.gd
 
 var failures := 0
@@ -27,6 +28,7 @@ func new_world() -> World:
 func _init() -> void:
 	test_cull_order()
 	test_part_lot()
+	test_grain_kept_for_keepers()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -127,4 +129,34 @@ func test_part_lot() -> void:
 	keeper.plan.clear()
 	w.brain._keeper(keeper)
 	check(int(w.stats.get("keeper_no_coins_cow", 0)) >= 1, "no coins: counted as grain for sale the keeper could not pay for")
+	w.dispose()
+
+
+func test_grain_kept_for_keepers() -> void:
+	var w := new_world()
+	var pen: Dictionary = w.fauna.pen_of("cow")
+	var keeper: NPC = w.pen_keeper(pen)
+	_no_grain(w, pen)
+	# the cook and the food merchant are full of grain: they want none
+	for o: NPC in w.npcs:
+		if o.alive and (o.job == "cook" or w.brain.buy_role(o) == "merchant_food"):
+			o.inv.add("wheat", 200)
+	var farmer: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "farmer" and o.household != keeper.household and w.brain._keeper_pen(o).is_empty() \
+				and o.household >= 0 and not w.households[o.household].get("ended", false):
+			farmer = o
+			break
+	check(farmer != null, "a farmer of another household who keeps no pen")
+	var want: int = w.brain.feed_want(keeper)
+	check(want == w.brain.reserve(keeper, "wheat") and want > 0, "the keeper, holding no grain, lacks its four days' feed (%d)" % want)
+	check(w.brain._sale_stock(farmer, "wheat") >= want, "the farmer counts the keeper's want among the grain buyers will take")
+	var pantry: Inventory = w.households[farmer.household].pantry
+	pantry.add("pottage", 200)                         # the family's food is stocked: nothing goes in for the table
+	farmer.inv.add("wheat", 300)
+	w.brain.stock_family_chest(farmer)
+	check(farmer.inv.count("wheat") >= want, "the farmer keeps %d in hand for the keeper (pack %d, chest %d)" % [want, farmer.inv.count("wheat"), pantry.count("wheat")])
+	# a keeper holding its reserve wants nothing, and the farmer keeps nothing back for it
+	keeper.inv.add("wheat", want)
+	check(w.brain.feed_want(keeper) == 0, "a keeper holding its reserve wants no more")
 	w.dispose()

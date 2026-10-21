@@ -1288,6 +1288,12 @@ func reserve(n: NPC, id: String) -> int:
 	return 0 if pen.is_empty() else w.fauna.daily_need(pen) * (1 if w.famine() else 4)
 
 
+## FARM-08B: the feed a keeper still lacks to hold its reserve (0 for anyone keeping no pen): a buyer of wheat whom
+## the farmers keep grain in hand for (_sale_stock), as they do for the cook and the food merchant.
+func feed_want(o: NPC) -> int:
+	return maxi(0, reserve(o, "wheat") - o.inv.count("wheat"))
+
+
 func _keeper(n: NPC) -> bool:
 	var pen := _keeper_pen(n)
 	if pen.is_empty():
@@ -1715,6 +1721,8 @@ func _sale_stock(n: NPC, f: String) -> int:
 	for o: NPC in w.npcs:
 		if o.alive and o != n and o.household != n.household and OUTLETS.get(f, []).any(func(r): return o.job == r or buy_role(o) == r):
 			k += wants(o, f)
+		elif f == "wheat" and o.alive and o != n and o.household != n.household:
+			k += feed_want(o)                   # FARM-08B: a pen keeper short of feed buys grain too
 	return k
 
 
