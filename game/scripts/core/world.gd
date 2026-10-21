@@ -56,6 +56,7 @@ var property: Property             # the manor's land office: sales, leases, ren
 var front_keepers := {}            # B14: house id -> the villager keeping its storefront now (not saved: a new evening picks again)
 var business: Business             # the player's market stall and the villagers who buy from it (PL1-10)
 var fitting: Fitting               # equipment the player places in their rooms: counters, shelves, stations (PL1-10 stage 3)
+var counters: Counters             # skilled-trade counters: ring, the keeper walks over and serves (CTR-01..03, ARM-01)
 var construction: Construction     # building kinds, placement, hired helpers, households that split
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
@@ -103,6 +104,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	construction = Construction.new(self)
 	business = Business.new(self)
 	fitting = Fitting.new(self)
+	counters = Counters.new(self)
 	for b in m.data.buildings:
 		buildings[b.id] = b.duplicate(true)
 	for s in m.data.stations:
@@ -2444,6 +2446,9 @@ func shop_post(n: NPC) -> Vector2:
 	if n.home != "" and int(front_keepers.get(n.home, -1)) == n.id and buildings.get(n.home, {}).has("front"):
 		var f: Dictionary = buildings[n.home].front               # keeping the household's storefront (B14)
 		return Vector2(int(f.use[0]) + 0.5, int(f.use[1]) + 0.5)
+	for id in counters.serving:                                    # come to a skilled trade's counter (CTR-02)
+		if int(counters.serving[id]) == n.id:
+			return Vector2(station_use(id)) + Vector2(0.5, 0.5)
 	if n.job == "tavernkeeper" and stations.has(n.workplace):
 		return Vector2(station_use(n.workplace)) + Vector2(0.5, 0.5)
 	if n.job == "merchant" and stalls.has(n.workplace) and tenant_of(stalls[n.workplace]) == npc_ref(n.id):
@@ -2462,7 +2467,7 @@ func at_post(n: NPC) -> bool:
 func shopkeeper_at(post: String) -> NPC:
 	var best: NPC = null
 	for n: NPC in npcs:
-		if n.workplace == post and at_post(n) and (best == null or n.id < best.id):
+		if (n.workplace == post or int(counters.serving.get(post, -1)) == n.id) and at_post(n) and (best == null or n.id < best.id):
 			best = n
 	return best
 
@@ -2471,6 +2476,9 @@ func shopkeeper_at(post: String) -> NPC:
 func shop_name(n: NPC) -> String:
 	if n.home != "" and int(front_keepers.get(n.home, -1)) == n.id and at_post(n):
 		return "the %s family's storefront" % n.family
+	for id in counters.serving:
+		if int(counters.serving[id]) == n.id:
+			return counters.counter_name(id)
 	if n.job == "tavernkeeper":
 		return "tavern"
 	return {"raw": "ore and timber stall", "food": "food stall", "goods": "tools and arms stall"}.get(stalls[n.workplace].kind, "stall")
@@ -3067,6 +3075,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	construction = Construction.new(self)
 	business = Business.new(self)
 	fitting = Fitting.new(self)
+	counters = Counters.new(self)
 	minutes = float(d.minutes)
 	last_hour = int(minutes / 60.0)
 	for s in m.data.stations:

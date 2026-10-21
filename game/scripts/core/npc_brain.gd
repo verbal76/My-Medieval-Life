@@ -2185,6 +2185,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			for id in meat.ids():
 				n.inv.add(id, meat.count(id))
 			return true
+		"serve_counter":                      # a keeper's turn at a skilled trade's counter (CTR-02)
+			return w.counters.served(n, str(a.counter))
 		"camp_meal":                          # a clan child eats with the band (FAM-07), from the band's stores
 			if band_eat(n):
 				w.stat("clan_child_meals")

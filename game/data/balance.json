@@ -148,6 +148,7 @@
   "rent_evict_missed": 2,
   "stall_min_coins": 20,
   "_stall_note": "Player market stall (PL1-10 stages 1-2, agent proposals, provisional): rent per game day paid to the manor; mornings of unpaid rent before the manor takes the pitch back; how near (tiles) the player must be for sales; how far (tiles) a villager will walk to buy; buyers sent per game hour; most pieces one visit buys; most kinds of goods listed; sales kept in the record; a buyer pays up to this much more per urgency level over the dearest local price; coins a non-trader keeps back.",
+  "counter_serve_minutes": 30,
   "stall_rent_day": 5,
   "stall_evict_days": 2,
   "stall_range": 7,

@@ -494,6 +494,7 @@ func _pl_gameplay() -> void:
 	_par02_reserve()
 	_par05_awareness()
 	_pick01_reports()
+	_ctr01_counters()
 	_par03_rest()
 	_pl2_006()
 	_pl2_007()
@@ -756,6 +757,70 @@ func _par05_awareness() -> void:
 
 ## PICK-01 (owner OD-20, 2026-10-21): a caught pickpocket is reported by the victim and those who saw it, through
 ## PAR-05's report rules; there is no cry a guard hears, and a pocket picked unseen is known to no guard.
+## ARM-01, CTR-01..03: the armoury counter has no keeper standing at it; the player rings, the smith walks over by the
+## ordinary path and serves there (the shop window), and goes back to work after; out of hours or asleep, the player is told.
+func _ctr01_counters() -> void:
+	var w: World = main.world
+	var p := w.player
+	var m0 := w.minutes
+	var p0 := p.pos
+	var ids: Array = w.counters.all()
+	check(ids.size() >= 1 and str(w.stations[ids[0]].type) == "armory_counter", "CTR-01: the armoury counter is a skilled trade's counter (%s)" % str(ids))
+	var id: String = ids[0]
+	var smiths: Array = w.counters.keepers(id)
+	check(smiths.size() > 0 and smiths.all(func(o): return o.job == "smith"), "ARM-01: the smiths keep the armoury counter (%d)" % smiths.size())
+	var keep := {}
+	for n: NPC in smiths:
+		keep[n.id] = [n.pos, n.plan.duplicate(true), n.anim, n.hunger, n.target, n.doing]
+	w.counters.serving.clear()
+	p.pos = Vector2(w.station_use(id)) + Vector2(0.5, 1.5)
+	var post := {"id": id, "stall": false, "cells": []}
+	check(w.shopkeeper_at(id) == null and main._shop_target(post).kind == "summon", "CTR-02: at the counter with nobody serving, the prompt rings for service (%s)" % main._shop_target(post).label)
+	# at night: told why, nobody comes
+	w.minutes = floorf(w.minutes / World.DAY) * World.DAY + 23.0 * 60.0
+	for n: NPC in smiths:
+		n.anim = "sleep"
+	var r: Dictionary = w.counters.summon(id)
+	check(not r.ok and str(r.text).contains("asleep") and w.counters.server(id) == null, "CTR-03: at night nobody comes and the player is told why (%s)" % r.text)
+	# by day: the first available smith walks over
+	w.minutes = floorf(w.minutes / World.DAY) * World.DAY + 10.0 * 60.0
+	for n: NPC in smiths:
+		n.anim = "idle"
+		n.hunger = 100.0
+		n.target = -1
+		n.plan = [w.brain.work(120, "", {}, "work")]
+	var start: Vector2 = smiths[0].pos
+	r = w.counters.summon(id)
+	var s: NPC = r.npc
+	check(r.ok and s != null and s.plan[0].k == "go" and w.counters.server(id) == s, "CTR-02: by day the smith comes (%s)" % r.text)
+	var again: Dictionary = w.counters.summon(id)
+	check(again.npc == s and str(again.text).contains("on the way"), "CTR-03: ringing again sends nobody else (%s)" % again.text)
+	var steps := 0
+	while not (w.at_post(s) and s.plan[0].k == "work") and steps < 3000:
+		w._update_npc(s, 0.05)
+		steps += 1
+	check(w.at_post(s) and w.shopkeeper_at(id) == s and main._shop_target(post).kind == "shop", "CTR-02: walked over (%d steps from %s), at the counter the smith serves: the shop window (%s)" % [steps, str(start), w.shop_name(s)])
+	s.work_left = 0.0
+	w._update_npc(s, 0.05)
+	check(w.counters.server(id) == s and w.at_post(s), "CTR-03: while the player is at the counter, the smith stays to serve")
+	# the player leaves: the turn ends and the smith goes back to work
+	p.pos = Vector2(116.5, 86.5)
+	s.work_left = 0.0
+	w._update_npc(s, 0.05)
+	check(w.counters.server(id) == null and not w.at_post(s), "CTR-03: with the player gone, the smith goes back to work")
+	for n: NPC in smiths:
+		var k: Array = keep[n.id]
+		n.pos = k[0]
+		n.plan = k[1]
+		n.anim = k[2]
+		n.hunger = k[3]
+		n.target = k[4]
+		n.doing = k[5]
+	w.counters.serving.clear()
+	w.minutes = m0
+	p.pos = p0
+
+
 func _pick01_reports() -> void:
 	var w: World = main.world
 	var p := w.player

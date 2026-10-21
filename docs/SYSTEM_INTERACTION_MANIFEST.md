@@ -379,14 +379,15 @@ Rules:
 
 ### INT-041 · Shops: a counter or stall with its keeper serves the player
 - **Trigger:** The player uses (or taps) the tavern counter or a market stall, or a shopkeeper standing at it.
-- **Source:** `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_shop_target`, `game/scripts/main.gd::approach`, `game/scripts/main.gd::interact`, `game/scripts/main.gd::_usable_at`, `game/scripts/core/world.gd::at_post`, `game/scripts/core/world.gd::shopkeeper_at`, `game/scripts/ui/game_ui.gd::show_trade`
+- **Source:** `game/scripts/main.gd::_find_target`, `game/scripts/main.gd::_shop_target`, `game/scripts/main.gd::approach`, `game/scripts/main.gd::interact`, `game/scripts/main.gd::_usable_at`, `game/scripts/core/world.gd::at_post`, `game/scripts/core/world.gd::shopkeeper_at`, `game/scripts/core/counters.gd::summon`, `game/scripts/ui/game_ui.gd::show_trade`
 - **Affects:** Market, Interface
 - **Expected:**
   - A tavern keeper within 2.5 tiles of the counter's use cell, or a merchant within 2.5 tiles of their stall, alive, awake and not fighting, is at their post. The prompt reads "Buy from <name> (tavern)" or "(food stall)" etc., and using it opens their trade window directly, titled "Buy from ...", with a "Talk to <name>" button.
   - Approached at their post, a shopkeeper always serves (the shop opens; never a brush-off bubble), unless they have quest business, which opens the conversation as before (INT-039).
+  - Skilled-trade counters (CTR-01..03, ARM-01; `game/scripts/core/counters.gd`): a counter station whose type is in `Counters.KEEPERS` (the Smithy and Armory's `armory_counter`, kept by the smiths) has nobody standing at it. At it, the prompt rings for service; the first keeper able to come (alive, awake, in working hours, not fighting, not hungry enough to eat, not on a building contract) is given a plan to walk there by the ordinary path and serve for `counter_serve_minutes`, renewed while the player stays; work in hand is put down and its station freed (a recipe takes its materials only when done). Serving there, the keeper is at their post (`World.shop_post`), so the ordinary trade window opens. Otherwise the player is told who cannot come and why. One service a counter at a time; a second ring says who is on the way. Not saved (villagers' plans are not).
   - A tapped counter, stall or container is walked to and used on arrival (touch); keys and the pad use what the player faces.
   - The counter with nobody at it says so; a stall with its merchant away is the merchant's goods (INT-043).
-- **Tests:** `game/tests/start_test.gd`
+- **Tests:** `game/tests/start_test.gd`, `game/tests/world_test.gd::_ctr01_counters`
 
 ### INT-042 · Containers hold their owners' stock; the keepers set the tavern's tables
 - **Trigger:** A new world or a load; each game hour (the tavern opens and closes, `tavern_hours`).

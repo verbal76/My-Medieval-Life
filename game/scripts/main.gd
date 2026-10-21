@@ -2132,6 +2132,9 @@ func _shop_posts() -> Array:
 	for id in world.stations_of("tavern_counter"):
 		var st: Dictionary = world.stations[id]
 		out.append({"id": id, "stall": false, "cells": [Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5), Vector2(int(st.at[0]) + 0.5, int(st.at[1]) + 0.5)]})
+	for id in world.counters.all():                   # skilled trades' counters (CTR-01)
+		var st: Dictionary = world.stations[id]
+		out.append({"id": id, "stall": false, "cells": [Vector2(int(st.use[0]) + 0.5, int(st.use[1]) + 0.5), Vector2(int(st.at[0]) + 0.5, int(st.at[1]) + 0.5)]})
 	var ids := world.stalls.keys()
 	ids.sort()
 	for id in ids:
@@ -2146,6 +2149,11 @@ func _shop_target(post: Dictionary) -> Dictionary:
 	var keeper := world.shopkeeper_at(post.id)
 	if keeper:
 		return {"kind": "shop", "npc": keeper, "label": "Trade with %s (%s)" % [keeper.name, world.shop_name(keeper)]}
+	if world.counters.is_counter(post.id):
+		var on_way := world.counters.server(post.id)
+		if on_way != null:
+			return {"kind": "info", "label": "%s is coming to %s" % [on_way.name, world.counters.counter_name(post.id)], "text": "%s %s is on the way." % [on_way.name, on_way.family]}
+		return {"kind": "summon", "id": post.id, "label": "Ring for service at %s" % world.counters.counter_name(post.id)}
 	if post.stall:
 		var s: Dictionary = world.stalls[post.id]
 		if Business.is_pitch(s):
@@ -2327,6 +2335,8 @@ func _use() -> void:
 			ui.message("You let go of the cart." + (" It stands at %s." % world.carts.stop_at(p.pos).name if not world.carts.stop_at(p.pos).is_empty() else ""))
 		"fitout":
 			ui.show_fitout(str(target.id))
+		"summon":
+			ui.message(world.counters.summon(str(target.id)).text)
 		"info":
 			ui.message(target.text)
 		"container":

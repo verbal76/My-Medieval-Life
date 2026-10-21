@@ -28,7 +28,7 @@ const JOB_TEXT := {
 	"laborer": "Day labour: mines, hauls and does odd work where it is needed.",
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks.",
-	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil.",
+	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
 	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
 	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them.",
 	"cook": "Cooks wheat and meat into pottage and roast meat, and at the kitchen's preparation table presses milk into cheese and bakes egg bread for the tavern and the food stall.",
@@ -387,6 +387,8 @@ func _stations() -> void:
 	for t in where:
 		var rs := GameData.recipes_at(t)
 		var blocks := [p("Found: %s." % ", ".join(where[t]))]
+		if Counters.KEEPERS.has(t):           # a skilled trade's counter (CTR-01..03)
+			blocks.append(p("Nobody stands at this counter all day. Ring for service here and one of the %s who keep it walks over and serves you, if one can come: not asleep, in working hours (%d:00 to %d:00), not eating or fighting. Otherwise you are told why. They put down the work in hand and go back to it when you leave." % [", ".join((Counters.KEEPERS[t] as Array).map(func(j): return j + "s")), int(NPCBrain.WORK_START), int(NPCBrain.WORK_END)]))
 		if rs.is_empty():
 			blocks.append(p("No crafting here; it is a place to use (trade, draw water, ride)."))
 		else:
